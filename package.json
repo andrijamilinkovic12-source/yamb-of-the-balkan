@@ -1,0 +1,16 @@
+{
+  "name": "yamb-online",
+  "version": "1.0.0",
+  "description": "Yamb Multiplayer Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
