@@ -14,31 +14,20 @@
         :root {
             /* DARK GOLD - PREFINED GLASSMORPHISM (Default) */
             --bg-base: #0a0a0a; 
-            --bg-gradient-1: #2c2c2c; 
-            --bg-gradient-2: #000000;
-            
-            --gold-main: #D4AF37; 
-            --gold-glow: rgba(212, 175, 55, 0.4);
-            --text-main: #FFFFFF; 
-            --text-muted: #bbbbbb;
-            
+            --bg-gradient-1: #2c2c2c; --bg-gradient-2: #000000;
+            --gold-main: #D4AF37; --gold-glow: rgba(212, 175, 55, 0.4);
+            --text-main: #FFFFFF; --text-muted: #bbbbbb;
             --glass-bg: rgba(255, 255, 255, 0.03); 
             --glass-panel: rgba(20, 20, 20, 0.70); 
             --glass-border: 1px solid rgba(212, 175, 55, 0.15); 
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-
             --dice-bg: linear-gradient(145deg, #2b2b2b, #1a1a1a); 
             --dice-border: rgba(212, 175, 55, 0.2);
-            --dice-color: #ccc; 
-            --dice-active: #fff;
-            
+            --dice-color: #ccc; --dice-active: #fff;
             --grid-cell-bg: rgba(255, 255, 255, 0.03); 
             --grid-header-bg: rgba(212, 175, 55, 0.1); 
-            
-            --input-bg: #222; 
-            --input-border: #444;
-            --danger: #ff4444; 
-            --success: #4CAF50;
+            --input-bg: #222; --input-border: #444;
+            --danger: #ff4444; --success: #4CAF50;
             
             /* Logic Colors */
             --col-nadole: #4fc3f7; --col-nagore: #ef5350; --col-sredina: #ffa726; 
@@ -50,12 +39,10 @@
             --bg-base: #e0e5ec; --bg-gradient-1: #f0f2f5; --bg-gradient-2: #cbd1d9;
             --gold-main: #b8962e; --gold-glow: rgba(184, 150, 46, 0.3);
             --text-main: #2c3e50; --text-muted: #5f6c7b;
-            --glass-bg: rgba(0, 0, 0, 0.05); 
-            --glass-panel: rgba(255, 255, 255, 0.85);
+            --glass-bg: rgba(0, 0, 0, 0.05); --glass-panel: rgba(255, 255, 255, 0.85);
             --glass-border: 1px solid rgba(0, 0, 0, 0.1);
             --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            --dice-bg: linear-gradient(135deg, #ffffff, #e6e6e6); 
-            --dice-border: rgba(0,0,0,0.15);
+            --dice-bg: linear-gradient(135deg, #ffffff, #e6e6e6); --dice-border: rgba(0,0,0,0.15);
             --dice-color: #777; --dice-active: #000;
             --grid-cell-bg: rgba(0,0,0,0.04); --grid-header-bg: rgba(0,0,0,0.08);
             --input-bg: #fff; --input-border: #ccc;
@@ -65,11 +52,8 @@
 
         /* MEDIUM GOLD (Vesela) THEME */
         body.medium-theme {
-            --bg-base: #4A148C; 
-            --bg-gradient-1: #7B1FA2; 
-            --bg-gradient-2: #FF6F00; 
-            --gold-main: #FFD700; 
-            --gold-glow: rgba(255, 215, 0, 0.6);
+            --bg-base: #4A148C; --bg-gradient-1: #7B1FA2; --bg-gradient-2: #FF6F00; 
+            --gold-main: #FFD700; --gold-glow: rgba(255, 215, 0, 0.6);
             --text-main: #FFFFFF; --text-muted: #E1BEE7;
             --glass-bg: rgba(255, 255, 255, 0.15); 
             --glass-panel: rgba(60, 10, 90, 0.75); 
@@ -77,11 +61,9 @@
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
             --dice-bg: linear-gradient(135deg, #FFECB3, #FFCA28); 
             --dice-border: rgba(255, 255, 255, 0.5);
-            --dice-color: #BF360C; 
-            --dice-active: #000;
+            --dice-color: #BF360C; --dice-active: #000;
             --grid-cell-bg: rgba(255, 255, 255, 0.1); --grid-header-bg: rgba(0, 0, 0, 0.2);
             --input-bg: rgba(0, 0, 0, 0.3); --input-border: var(--gold-main);
-            
             --col-nadole: #29B6F6; --col-nagore: #FF5252; --col-sredina: #FFA726; 
             --col-rucno: #E040FB; --col-najava: #FFD700; --col-slobodna: #BDBDBD;
         }
@@ -100,7 +82,6 @@
 
         #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
-        /* --- SCREENS --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -111,7 +92,6 @@
         .screen.active { opacity: 1; visibility: visible; transform: scale(1); z-index: 10; }
         .hidden { display: none !important; }
 
-        /* --- UI COMPONENTS --- */
         .menu-title { font-size: 2.5rem; margin-bottom: 30px; text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .menu-subtitle { font-weight:300; font-size:1.2rem; color:var(--gold-main); display: block; letter-spacing: 2px; }
         
@@ -129,7 +109,6 @@
         .btn-danger { border-color: var(--danger); color: var(--danger); }
         .menu-divider { margin: 10px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); }
 
-        /* --- CUSTOM MODAL --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); z-index: 2000;
@@ -154,7 +133,6 @@
         .cm-btn-ok { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); }
         .cm-btn-cancel { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
 
-        /* --- CHAT POPUP --- */
         .chat-float-btn {
             position: fixed; bottom: 140px; right: 20px; width: 50px; height: 50px; border-radius: 50%;
             background: var(--gold-main); color: #000; display: flex; align-items: center; justify-content: center;
@@ -165,74 +143,29 @@
         .chat-notification.active { display: block; }
         
         .chat-window {
-            position: fixed; 
-            bottom: 200px; right: 20px; 
-            width: 300px; height: 350px;
+            position: fixed; bottom: 200px; right: 20px; width: 300px; height: 350px;
             background: var(--glass-panel); border: 1px solid var(--gold-main); border-radius: 15px; 
-            display: flex; flex-direction: column;
-            z-index: 9999; opacity: 0; visibility: hidden; 
+            display: flex; flex-direction: column; z-index: 9999; opacity: 0; visibility: hidden; 
             box-shadow: var(--glass-shadow);
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
         }
         .chat-window.active { opacity: 1; visibility: visible; }
-        
-        .chat-header { 
-            padding: 10px; background: rgba(255,255,255,0.05); border-bottom: var(--glass-border); 
-            display: flex; justify-content: space-between; align-items: center; 
-            font-weight: bold; color: var(--gold-main); font-size: 0.9rem;
-            cursor: move; touch-action: none;
-        }
+        .chat-header { padding: 10px; background: rgba(255,255,255,0.05); border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--gold-main); font-size: 0.9rem; cursor: move; touch-action: none; }
         .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        
-        .chat-footer { 
-            padding: 10px; 
-            border-top: var(--glass-border); 
-            display: flex; 
-            gap: 8px; 
-            align-items: center;
-            background: rgba(0,0,0,0.2);
-        }
-        
-        .btn-chat-send {
-            flex-shrink: 0;
-            width: 40px; height: 40px; border-radius: 50%; border:none;
-            background: var(--gold-main); color: #000; font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-        }
-        
+        .chat-footer { padding: 10px; border-top: var(--glass-border); display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,0.2); }
+        .btn-chat-send { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; border:none; background: var(--gold-main); color: #000; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; word-wrap: break-word; }
         .msg-incoming { align-self: flex-start; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-left-radius: 2px; }
         .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
 
-        /* --- GAME SCENE --- */
         #game-scene { justify-content: flex-start; padding: 0; background: transparent; overflow: hidden; }
-        
-        .game-header { 
-            width: 100%; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: var(--glass-border); background: var(--glass-panel); 
-            z-index: 20; height: 50px; flex-shrink: 0;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        }
-        
+        .game-header { width: 100%; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: var(--glass-border); background: var(--glass-panel); z-index: 20; height: 50px; flex-shrink: 0; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .game-content { display: flex; width: 100%; height: calc(100% - 50px); overflow: hidden; position: relative; }
         .left-panel { flex: 1; display: flex; flex-direction: column; padding: 10px; overflow: hidden; }
-        
-        .right-sidebar { 
-            width: 300px; background: var(--glass-panel); border-left: var(--glass-border); 
-            display: flex; flex-direction: column; padding: 15px; 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        }
+        .right-sidebar { width: 300px; background: var(--glass-panel); border-left: var(--glass-border); display: flex; flex-direction: column; padding: 15px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 
         .tables-wrapper { flex: 1; overflow-y: auto; overflow-x: auto; display: flex; justify-content: center; gap: 20px; padding-bottom: 20px; }
-        
-        .player-table { 
-            min-width: 340px; margin-bottom: 10px; 
-            background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            box-shadow: var(--glass-shadow);
-        }
-        
+        .player-table { min-width: 340px; margin-bottom: 10px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
         .player-name { text-align: center; font-weight: 700; color: var(--gold-main); margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .grid-container { display: grid; grid-template-columns: 1.5fr repeat(6, 1fr); gap: 1px; }
         .grid-cell { height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-muted); background: var(--grid-cell-bg); }
@@ -246,22 +179,12 @@
         .highlight-najava { background: rgba(212, 175, 55, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(212,175,55,0.2); }
         .total-score { font-size: 1.5rem; color: var(--gold-main); text-align: center; margin-top: 5px; font-weight: 800; }
 
-        .controls-area { 
-            min-height: 120px; background: var(--glass-panel); margin-top: 10px; 
-            border-radius: 15px 15px 0 0; border-top: 1px solid var(--gold-main); 
-            display: flex; align-items: center; padding: 10px 15px; z-index: 50; flex-shrink: 0; 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
-        }
-        
+        .controls-area { min-height: 120px; background: var(--glass-panel); margin-top: 10px; border-radius: 15px 15px 0 0; border-top: 1px solid var(--gold-main); display: flex; align-items: center; padding: 10px 15px; z-index: 50; flex-shrink: 0; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.3); }
         .dice-container { display: flex; gap: 8px; justify-content: center; }
-        
         .dice { width: 50px; height: 50px; background: var(--dice-bg); border: 1px solid var(--dice-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--dice-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-        
         @keyframes roll { 0% { transform: rotate(0deg) rotateX(0deg); } 25% { transform: rotate(90deg) rotateX(90deg); } 50% { transform: rotate(180deg) rotateX(180deg); } 75% { transform: rotate(270deg) rotateX(270deg); } 100% { transform: rotate(360deg) rotateX(360deg); } }
         .dice.rolling { animation: roll 0.4s linear infinite; color: var(--gold-main); text-shadow: 0 0 10px var(--gold-glow); }
         .dice.held { border-color: var(--danger); color: var(--danger); transform: translateY(-3px); box-shadow: 0 0 15px rgba(255, 68, 68, 0.4); }
-        
         .game-info { text-align: right; flex: 1; display: flex; flex-direction: column; align-items: flex-end; }
         .status-label { font-size: 1rem; color: var(--gold-main); font-weight: 600; margin-bottom: 5px; }
         .action-btn-group { display: flex; gap: 5px; }
@@ -277,12 +200,7 @@
         .highscore-list { list-style: none; font-size: 0.85rem; color: var(--text-muted); padding: 0; } 
         .highscore-item { padding: 8px 0; border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
         
-        .modal-box { 
-            background: var(--glass-panel); padding: 25px; border-radius: 15px; border: 1px solid var(--gold-main); 
-            width: 90%; max-width: 350px; text-align: center; color: var(--text-main); 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            box-shadow: var(--glass-shadow);
-        }
+        .modal-box { background: var(--glass-panel); padding: 25px; border-radius: 15px; border: 1px solid var(--gold-main); width: 90%; max-width: 350px; text-align: center; color: var(--text-main); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
         .modal-input { width: 100%; padding: 10px; margin: 10px 0; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; }
         .back-btn { position: absolute; top: 20px; left: 20px; background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
         #splash-screen { background: var(--bg-base); z-index: 100; }
@@ -301,7 +219,6 @@
         .rank-3 { background: #CD7F32; color: #000; }
         .hl-mode { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-left: 5px; border: 1px solid var(--glass-border); padding: 2px 5px; border-radius: 4px; }
 
-        /* --- MOBILE OPTIMIZATION SPECIFIC --- */
         @media (max-width: 800px) {
             .right-sidebar { display: none; }
             .game-content { flex-direction: column; }
@@ -309,17 +226,13 @@
             .tables-wrapper { height: calc(100% - 130px); flex-direction: column; align-items: center; justify-content: flex-start; padding: 10px; overflow-y: auto; }
             .player-table { width: 100%; max-width: 400px; margin-bottom: 20px; }
             .controls-area { position: absolute; bottom: 0; left: 0; right: 0; height: 130px; border-radius: 0; background: var(--bg-base); border-top: 2px solid var(--gold-main); padding: 5px 10px; flex-direction: column; justify-content: center; gap: 5px; }
-            
             .dice-container { margin-bottom: 8px; gap: 3px; } 
             .dice { width: 14.5vw; height: 14.5vw; max-width: 70px; max-height: 70px; font-size: 12.5vw; }
-
             .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; }
             .status-label { margin: 0; font-size: 0.9rem; } .btn-throw { width: 100px; }
-            
             .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; }
             .chat-window.active { transform: translateX(-50%); } 
             .chat-float-btn { bottom: 145px; }
-
             #main-menu { padding: 20px 10px; overflow-y: auto; justify-content: flex-start; padding-top: 40px; }
             .menu-title { font-size: 2rem; margin-bottom: 20px; }
             .menu-subtitle { font-size: 1rem; }
@@ -499,7 +412,6 @@
     </div>
 
     <script>
-        // --- CONFETTI SYSTEM ---
         class Confetti {
             constructor() {
                 this.canvas = document.getElementById('confetti-canvas');
@@ -604,22 +516,7 @@
         }
 
         class YambAI {
-            constructor(appInstance) {
-                this.app = appInstance;
-                // IZMENJENO: Nema više 'difficulty' parametra, uvek igra najjače
-            }
-            getGameProgress(sheet) { let filled = 0; let total = 0; KOLONE.forEach(c => { REDOVI_IGRA.forEach(r => { total++; if (sheet[c][r] !== null) filled++; }); }); return filled / total; }
-            countEmptyFields(sheet, col) { let cnt = 0; REDOVI_IGRA.forEach(r => { if (sheet[col][r] === null) cnt++; }); return cnt; }
-            getUpperSum(sheet, col) { let s = 0; ["1", "2", "3", "4", "5", "6"].forEach(r => { if (sheet[col][r] !== null) s += sheet[col][r]; }); return s; }
-            analyzeHand(dice) {
-                const counts = {}; dice.forEach(x => counts[x] = (counts[x] || 0) + 1);
-                const maxCount = Math.max(...Object.values(counts));
-                const valMaxCount = Number(Object.keys(counts).find(key => counts[key] === maxCount));
-                const uniqueDice = [...new Set(dice)].sort((a,b)=>a-b);
-                let bestStraight = []; let maxStraightLen = 0;
-                [[1,2,3,4,5], [2,3,4,5,6]].forEach(seq => { const match = seq.filter(x => uniqueDice.includes(x)); if (match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; } });
-                return { counts, maxCount, valMaxCount, nearKenta: maxStraightLen >= 3 ? bestStraight : [], sum: sum(dice), unique: uniqueDice };
-            }
+            constructor(appInstance) { this.app = appInstance; }
             decideRoll(dice, turnNum, sheet) {
                 const an = this.analyzeHand(dice);
                 if (turnNum === 1 && !this.app.najavaAktivna) {
@@ -628,18 +525,21 @@
                     }
                 }
                 if (turnNum === 3) return this.findBestScore(dice, sheet);
-                
-                // IZMENJENO: Ultimate AI Logic - Agresivnije gađanje Kente
-                // Ako imamo 4 ili 5 vezanih za Kentu, čuvamo ih obavezno
-                if (an.nearKenta.length >= 4) {
-                    return { type: 'hold', hold: dice.map(d => an.nearKenta.includes(d)) };
-                }
-
+                if (an.nearKenta.length >= 4) return { type: 'hold', hold: dice.map(d => an.nearKenta.includes(d)) };
                 if (an.maxCount >= 2) return { type: 'hold', hold: dice.map(d => d === an.valMaxCount) };
                 return { type: 'hold', hold: [false,false,false,false,false,false] };
             }
+            analyzeHand(dice) {
+                const counts = {}; dice.forEach(x => counts[x] = (counts[x] || 0) + 1);
+                const maxCount = Math.max(...Object.values(counts));
+                const valMaxCount = Number(Object.keys(counts).find(key => counts[key] === maxCount));
+                const uniqueDice = [...new Set(dice)].sort((a,b)=>a-b);
+                let bestStraight = [], maxStraightLen = 0;
+                [[1,2,3,4,5], [2,3,4,5,6]].forEach(seq => { const match = seq.filter(x => uniqueDice.includes(x)); if (match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; } });
+                return { counts, maxCount, valMaxCount, nearKenta: maxStraightLen >= 3 ? bestStraight : [], sum: sum(dice), unique: uniqueDice };
+            }
             findBestScore(dice, sheet) {
-                if (this.app.najavaAktivna && this.app.najavljenoPolje) { return { type: 'write', row: this.app.najavljenoPolje.row, col: this.app.najavljenoPolje.col }; }
+                if (this.app.najavaAktivna && this.app.najavljenoPolje) return { type: 'write', row: this.app.najavljenoPolje.row, col: this.app.najavljenoPolje.col };
                 let possible = [];
                 KOLONE.forEach(col => {
                     if (col === "Ručno" || col === "Najava") return;
@@ -663,242 +563,43 @@
                 this.gameActive = false; this.aiMode = false; this.aiDifficulty = "medium"; this.ai = null;
                 this.kockiceVals = [0,0,0,0,0,0]; this.zadrzane = [false,false,false,false,false,false];
                 this.brojBacanja = 0; this.najavaAktivna = false; this.najavljenoPolje = null;
-                this.modeTag = "Solo";
-                this.chatOpen = false; this.unreadMsgs = 0;
-                this.aiPhrases = {
-                    start: ["Srećno!", "Ajde da vidimo šta znaš.", "Spremi se za poraz!", "Jel si vežbao?"],
-                    goodMove: ["Uf, dobro je to.", "Imaš sreće.", "Nije loše, priznajem.", "Kako te hoće kocka..."],
-                    badMove: ["Hahaha, šta uradi to?", "Moglo je to bolje.", "Poklanjaš mi pobedu?", "Hvala na poklonu!"],
-                    aiGood: ["To se traži!", "Gledaj i uči.", "Majstorija.", "YAMB!!!"],
-                    thinking: ["Hmm...", "Teška odluka...", "Čekaj da razmislim.", "Šta sad..."],
-                    win: ["Kao što sam i mislio, bolji sam.", "Dobra partija, ali ja sam pobedio.", "Više sreće drugi put."],
-                    lose: ["Imao si sreće.", "Čestitam, dobro igraš.", "Sledeći put te dobijam."]
-                };
+                this.modeTag = "Solo"; this.chatOpen = false; this.unreadMsgs = 0;
+                this.aiPhrases = { start: ["Srećno!"], goodMove: ["Bravo!"], badMove: ["Moglo je bolje."], aiGood: ["To!"], thinking: ["Hmm..."], win: ["Pobedio sam!"], lose: ["Čestitam!"] };
                 try { const hsData = localStorage.getItem('yamb_highscores_v2'); this.highscores = hsData ? JSON.parse(hsData) : []; } catch(e) { this.highscores = []; }
                 this.socket = null; this.onlineMode = false; this.myOnlineIndex = 0;
                 this.playerName = localStorage.getItem('yamb_player_name') || "Igrač";
                 this.soundEnabled = localStorage.getItem('yamb_sound') === 'true';
                 const savedStats = JSON.parse(localStorage.getItem('yamb_stats'));
                 this.stats = savedStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0 };
-                if(typeof this.stats.losses === 'undefined') this.stats.losses = 0;
-                if(typeof this.stats.totalScoreSum === 'undefined') this.stats.totalScoreSum = 0;
                 this.diceBtns = []; this.soundMgr = new SoundManager(); this.modal = new ModalManager(); this.confetti = new Confetti();
-                
-                // DRAG LOGIC
                 this.dragElement(document.getElementById("chat-window"));
-
-                // Chat Send Fix for Mobile
                 const btnSend = document.getElementById('btn-chat-send');
                 btnSend.addEventListener('click', () => this.sendChat());
                 btnSend.addEventListener('touchend', (e) => { e.preventDefault(); this.sendChat(); });
-
                 document.getElementById('chat-input-field').addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendChat(); });
-                
-                // --- THEME LOAD LOGIC UPDATED ---
                 const savedTheme = localStorage.getItem('yamb_theme');
-                if (savedTheme === 'light') document.body.classList.add('light-theme');
-                else if (savedTheme === 'medium') document.body.classList.add('medium-theme');
-                
+                if (savedTheme === 'light') document.body.classList.add('light-theme'); else if (savedTheme === 'medium') document.body.classList.add('medium-theme');
                 setTimeout(() => { this.navigateTo('main-menu'); }, 2500);
                 this.uiInit();
             }
 
-            navigateTo(screenId) {
-                document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-                const target = document.getElementById(screenId); if (target) target.classList.add('active');
-            }
-
-            uiInit() {
-                const diceCont = document.getElementById('dice-container'); diceCont.innerHTML = "";
-                for (let i = 0; i < 6; i++) {
-                    let btn = document.createElement('div'); btn.className = 'dice'; btn.innerText = '';
-                    btn.onclick = () => this.toggleHold(i); diceCont.appendChild(btn); this.diceBtns.push(btn);
-                }
-            }
-
-            // --- DRAGGABLE WINDOW LOGIC ---
-            dragElement(elmnt) {
-                var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-                var header = document.getElementById(elmnt.id + "-header") || document.getElementById("chat-header");
-                if (header) {
-                    header.onmousedown = dragMouseDown;
-                    header.ontouchstart = dragMouseDown; // Mobile support
-                }
-
-                function dragMouseDown(e) {
-                    e = e || window.event;
-                    // Dont prevent default on close button or input, just header drag
-                    if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') {
-                        // get the mouse cursor position at startup:
-                        if(e.type === 'touchstart') {
-                            pos3 = e.touches[0].clientX;
-                            pos4 = e.touches[0].clientY;
-                        } else {
-                            e.preventDefault();
-                            pos3 = e.clientX;
-                            pos4 = e.clientY;
-                        }
-                        document.onmouseup = closeDragElement;
-                        document.onmousemove = elementDrag;
-                        document.ontouchend = closeDragElement;
-                        document.ontouchmove = elementDrag;
-                    }
-                }
-
-                function elementDrag(e) {
-                    e = e || window.event;
-                    let clientX, clientY;
-                    if(e.type === 'touchmove') {
-                        clientX = e.touches[0].clientX;
-                        clientY = e.touches[0].clientY;
-                    } else {
-                        e.preventDefault();
-                        clientX = e.clientX;
-                        clientY = e.clientY;
-                    }
-
-                    pos1 = pos3 - clientX;
-                    pos2 = pos4 - clientY;
-                    pos3 = clientX;
-                    pos4 = clientY;
-                    
-                    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-                    elmnt.style.bottom = "auto"; 
-                    elmnt.style.right = "auto";
-                }
-
-                function closeDragElement() {
-                    document.onmouseup = null;
-                    document.onmousemove = null;
-                    document.ontouchend = null;
-                    document.ontouchmove = null;
-                }
-            }
-
-            toggleChat() {
-                this.chatOpen = !this.chatOpen;
-                const win = document.getElementById('chat-window');
-                const badge = document.getElementById('chat-badge');
-                if (this.chatOpen) {
-                    win.classList.add('active'); badge.classList.remove('active'); this.unreadMsgs = 0;
-                    const body = document.getElementById('chat-body'); body.scrollTop = body.scrollHeight;
-                } else { win.classList.remove('active'); }
-            }
-
-            appendChatMessage(sender, text, type) {
-                const body = document.getElementById('chat-body');
-                const msgDiv = document.createElement('div'); msgDiv.className = `msg-bubble ${type}`;
-                msgDiv.innerHTML = `<strong>${sender}:</strong> ${text}`; body.appendChild(msgDiv); body.scrollTop = body.scrollHeight;
-                if (!this.chatOpen) { this.unreadMsgs++; document.getElementById('chat-badge').classList.add('active'); this.soundMgr.chat(); }
-            }
-
-            sendChat() {
-                const input = document.getElementById('chat-input-field'); 
-                const text = input.value.trim(); 
-                if (!text) return;
-                this.appendChatMessage("Ti", text, "msg-outgoing"); input.value = "";
-                // Keep focus on desktop, but maybe blur on mobile to close keyboard? 
-                // input.focus(); 
-                if (this.onlineMode && this.socket) { this.socket.emit('chat_msg', { roomId: this.roomId, msg: text }); }
-            }
-
-            triggerAiChat(category) {
-                if (!this.aiMode) return;
-                const phrases = this.aiPhrases[category];
-                if (phrases && phrases.length > 0) {
-                    const text = phrases[Math.floor(Math.random() * phrases.length)];
-                    setTimeout(() => { this.appendChatMessage("AI", text, "msg-incoming"); }, 1000 + Math.random() * 2000);
-                }
-            }
-
-            showSettings() {
-                this.navigateTo('settings-screen');
-                document.getElementById('setting-name').value = this.playerName;
-                document.getElementById('setting-sound').checked = this.soundEnabled;
-                document.getElementById('setting-theme').value = localStorage.getItem('yamb_theme') || 'dark';
-            }
-            saveSettings() {
-                const newName = document.getElementById('setting-name').value.trim(); if(newName) this.playerName = newName;
-                this.soundEnabled = document.getElementById('setting-sound').checked;
-                
-                // --- THEME SAVE LOGIC UPDATED ---
-                const selectedTheme = document.getElementById('setting-theme').value;
-                localStorage.setItem('yamb_theme', selectedTheme);
-                document.body.classList.remove('light-theme', 'medium-theme');
-                if (selectedTheme === 'light') document.body.classList.add('light-theme');
-                else if (selectedTheme === 'medium') document.body.classList.add('medium-theme');
-                
-                localStorage.setItem('yamb_player_name', this.playerName); localStorage.setItem('yamb_sound', this.soundEnabled);
-                this.showMainMenu();
-            }
-
-            showStats() { 
-                this.navigateTo('stats-screen'); 
-                document.getElementById('stat-games').innerText = this.stats.games;
-                document.getElementById('stat-high').innerText = this.stats.highscore;
-                document.getElementById('stat-wins').innerText = this.stats.wins;
-                document.getElementById('stat-losses').innerText = this.stats.losses;
-                const avg = this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 0;
-                document.getElementById('stat-avg').innerText = avg;
-                const totalCompetitive = this.stats.wins + this.stats.losses;
-                let rate = 0; if (totalCompetitive > 0) rate = Math.round((this.stats.wins / totalCompetitive) * 100);
-                document.getElementById('stat-rate').innerText = rate + "%";
-            }
-
-            showHighscoresScreen() {
-                this.navigateTo('highscores-screen'); const list = document.getElementById('full-hs-list'); list.innerHTML = "";
-                if (this.highscores.length === 0) { list.innerHTML = "<div style='text-align:center; padding:20px; color:#777;'>Još nema rezultata.</div>"; return; }
-                this.highscores.forEach((entry, i) => {
-                    let li = document.createElement('li'); li.className = 'highscore-item';
-                    let rankClass = i===0?'rank-1':(i===1?'rank-2':(i===2?'rank-3':'rank-other'));
-                    li.innerHTML = `<div style="display:flex; align-items:center;"><span class="rank-badge ${rankClass}">${i+1}</span><div><span style="font-weight:600;">${entry.name}</span><span class="hl-mode">${entry.mode}</span><div style="font-size:0.7rem; color:var(--text-muted);">${entry.date || '-'}</div></div></div><span style="color:var(--gold-main); font-weight:700; font-size:1.1rem;">${entry.score}</span>`;
-                    list.appendChild(li);
-                });
-            }
-
-            saveHighscoreEntry(name, score, mode) {
-                const date = new Date().toLocaleDateString('sr-RS');
-                this.highscores.push({ name, score, mode, date });
-                this.highscores.sort((a,b) => b.score - a.score);
-                this.highscores = this.highscores.slice(0, 20);
-                localStorage.setItem('yamb_highscores_v2', JSON.stringify(this.highscores));
-            }
-
-            updateHighscoresUI() { 
-                const list = document.getElementById('hs-list'); 
-                if(list) { list.innerHTML = ""; this.highscores.slice(0, 10).forEach((hs, i) => { let li = document.createElement('li'); li.className = 'highscore-item'; li.innerHTML = `<span>${i+1}. ${hs.name}</span> <span style="color:var(--gold-main)">${hs.score}</span>`; list.appendChild(li); }); }
-            }
-
-            updateStats(score, resultType) {
-                this.stats.games++; this.stats.totalScoreSum += score;
-                if (score > this.stats.highscore) this.stats.highscore = score;
-                if (resultType === 'win') this.stats.wins++; else if (resultType === 'loss') this.stats.losses++;
-                localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
-            }
-
-            toggleTheme() { 
-                // --- CYCLE THEME LOGIC: DARK -> LIGHT -> MEDIUM -> DARK ---
-                const current = localStorage.getItem('yamb_theme') || 'dark';
-                let next = 'dark';
-                document.body.classList.remove('light-theme', 'medium-theme');
-
-                if (current === 'dark') {
-                    next = 'light';
-                    document.body.classList.add('light-theme');
-                } else if (current === 'light') {
-                    next = 'medium';
-                    document.body.classList.add('medium-theme');
-                } else {
-                    next = 'dark';
-                    // Default classless is dark
-                }
-                localStorage.setItem('yamb_theme', next);
-            }
-            
+            navigateTo(screenId) { document.querySelectorAll('.screen').forEach(el => el.classList.remove('active')); const target = document.getElementById(screenId); if (target) target.classList.add('active'); }
+            uiInit() { const diceCont = document.getElementById('dice-container'); diceCont.innerHTML = ""; for (let i = 0; i < 6; i++) { let btn = document.createElement('div'); btn.className = 'dice'; btn.innerText = ''; btn.onclick = () => this.toggleHold(i); diceCont.appendChild(btn); this.diceBtns.push(btn); } }
+            dragElement(elmnt) { var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0; var header = document.getElementById("chat-header"); if (header) { header.onmousedown = dragMouseDown; header.ontouchstart = dragMouseDown; } function dragMouseDown(e) { e = e || window.event; if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') { if(e.type === 'touchstart') { pos3 = e.touches[0].clientX; pos4 = e.touches[0].clientY; } else { e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; } document.onmouseup = closeDragElement; document.onmousemove = elementDrag; document.ontouchend = closeDragElement; document.ontouchmove = elementDrag; } } function elementDrag(e) { e = e || window.event; let clientX, clientY; if(e.type === 'touchmove') { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; } else { e.preventDefault(); clientX = e.clientX; clientY = e.clientY; } pos1 = pos3 - clientX; pos2 = pos4 - clientY; pos3 = clientX; pos4 = clientY; elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px"; elmnt.style.bottom = "auto"; elmnt.style.right = "auto"; } function closeDragElement() { document.onmouseup = null; document.onmousemove = null; document.ontouchend = null; document.ontouchmove = null; } }
+            toggleChat() { this.chatOpen = !this.chatOpen; const win = document.getElementById('chat-window'); const badge = document.getElementById('chat-badge'); if (this.chatOpen) { win.classList.add('active'); badge.classList.remove('active'); this.unreadMsgs = 0; const body = document.getElementById('chat-body'); body.scrollTop = body.scrollHeight; } else { win.classList.remove('active'); } }
+            appendChatMessage(sender, text, type) { const body = document.getElementById('chat-body'); const msgDiv = document.createElement('div'); msgDiv.className = `msg-bubble ${type}`; msgDiv.innerHTML = `<strong>${sender}:</strong> ${text}`; body.appendChild(msgDiv); body.scrollTop = body.scrollHeight; if (!this.chatOpen) { this.unreadMsgs++; document.getElementById('chat-badge').classList.add('active'); this.soundMgr.chat(); } }
+            sendChat() { const input = document.getElementById('chat-input-field'); const text = input.value.trim(); if (!text) return; this.appendChatMessage("Ti", text, "msg-outgoing"); input.value = ""; if (this.onlineMode && this.socket) { this.socket.emit('chat_msg', { roomId: this.roomId, msg: text }); } }
+            triggerAiChat(category) { if (!this.aiMode) return; const phrases = this.aiPhrases[category]; if (phrases && phrases.length > 0) { const text = phrases[Math.floor(Math.random() * phrases.length)]; setTimeout(() => { this.appendChatMessage("AI", text, "msg-incoming"); }, 1000 + Math.random() * 2000); } }
+            showSettings() { this.navigateTo('settings-screen'); document.getElementById('setting-name').value = this.playerName; document.getElementById('setting-sound').checked = this.soundEnabled; document.getElementById('setting-theme').value = localStorage.getItem('yamb_theme') || 'dark'; }
+            saveSettings() { const newName = document.getElementById('setting-name').value.trim(); if(newName) this.playerName = newName; this.soundEnabled = document.getElementById('setting-sound').checked; const selectedTheme = document.getElementById('setting-theme').value; localStorage.setItem('yamb_theme', selectedTheme); document.body.classList.remove('light-theme', 'medium-theme'); if (selectedTheme === 'light') document.body.classList.add('light-theme'); else if (selectedTheme === 'medium') document.body.classList.add('medium-theme'); localStorage.setItem('yamb_player_name', this.playerName); localStorage.setItem('yamb_sound', this.soundEnabled); this.showMainMenu(); }
+            showStats() { this.navigateTo('stats-screen'); document.getElementById('stat-games').innerText = this.stats.games; document.getElementById('stat-high').innerText = this.stats.highscore; document.getElementById('stat-wins').innerText = this.stats.wins; document.getElementById('stat-losses').innerText = this.stats.losses; const avg = this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 0; document.getElementById('stat-avg').innerText = avg; const totalCompetitive = this.stats.wins + this.stats.losses; let rate = 0; if (totalCompetitive > 0) rate = Math.round((this.stats.wins / totalCompetitive) * 100); document.getElementById('stat-rate').innerText = rate + "%"; }
+            showHighscoresScreen() { this.navigateTo('highscores-screen'); const list = document.getElementById('full-hs-list'); list.innerHTML = ""; if (this.highscores.length === 0) { list.innerHTML = "<div style='text-align:center; padding:20px; color:#777;'>Još nema rezultata.</div>"; return; } this.highscores.forEach((entry, i) => { let li = document.createElement('li'); li.className = 'highscore-item'; let rankClass = i===0?'rank-1':(i===1?'rank-2':(i===2?'rank-3':'rank-other')); li.innerHTML = `<div style="display:flex; align-items:center;"><span class="rank-badge ${rankClass}">${i+1}</span><div><span style="font-weight:600;">${entry.name}</span><span class="hl-mode">${entry.mode}</span><div style="font-size:0.7rem; color:var(--text-muted);">${entry.date || '-'}</div></div></div><span style="color:var(--gold-main); font-weight:700; font-size:1.1rem;">${entry.score}</span>`; list.appendChild(li); }); }
+            saveHighscoreEntry(name, score, mode) { const date = new Date().toLocaleDateString('sr-RS'); this.highscores.push({ name, score, mode, date }); this.highscores.sort((a,b) => b.score - a.score); this.highscores = this.highscores.slice(0, 20); localStorage.setItem('yamb_highscores_v2', JSON.stringify(this.highscores)); }
+            updateHighscoresUI() { const list = document.getElementById('hs-list'); if(list) { list.innerHTML = ""; this.highscores.slice(0, 10).forEach((hs, i) => { let li = document.createElement('li'); li.className = 'highscore-item'; li.innerHTML = `<span>${i+1}. ${hs.name}</span> <span style="color:var(--gold-main)">${hs.score}</span>`; list.appendChild(li); }); } }
+            updateStats(score, resultType) { this.stats.games++; this.stats.totalScoreSum += score; if (score > this.stats.highscore) this.stats.highscore = score; if (resultType === 'win') this.stats.wins++; else if (resultType === 'loss') this.stats.losses++; localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); }
+            toggleTheme() { const current = localStorage.getItem('yamb_theme') || 'dark'; let next = 'dark'; document.body.classList.remove('light-theme', 'medium-theme'); if (current === 'dark') { next = 'light'; document.body.classList.add('light-theme'); } else if (current === 'light') { next = 'medium'; document.body.classList.add('medium-theme'); } else { next = 'dark'; } localStorage.setItem('yamb_theme', next); }
             showMainMenu() { this.navigateTo('main-menu'); }
             showRules() { this.navigateTo('rules-screen'); }
-            // IZMENJENO: showAiMenu je uklonjena jer više nema podmenija
             async quitToMenu() { if (await this.modal.confirm("Da li ste sigurni da želite prekinuti igru?")) { if(this.socket) this.socket.disconnect(); this.showMainMenu(); } }
 
             async setupOnline() {
@@ -907,12 +608,40 @@
                 this.navigateTo('waiting-screen');
                 try { this.socket = io(); } catch(e) { await this.modal.alert("Server nije dostupan.\nPotreban je Node.js backend."); this.showMainMenu(); return; }
                 this.socket.on('connect', () => { document.getElementById('wait-msg').innerText = "Tražim protivnika..."; this.socket.emit('find_game', nickname); });
+                
                 this.socket.on('game_start', (data) => {
-                    this.myOnlineIndex = data.myIndex; this.onlineMode = true; this.modeTag = "Online";
+                    this.myOnlineIndex = data.myIndex; this.onlineMode = true; this.modeTag = "Online"; this.roomId = data.roomId;
                     this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname];
                     this.initScores(); this.currentPlayerIdx = 0; this.startGame();
                 });
-                this.socket.on('remote_move', (data) => { this.allScores[(this.myOnlineIndex===0?1:0)][data.col][data.row] = data.points; this.updateTableVisuals(); this.switchPlayer(); });
+
+                // NOVO: Prijem poteza i prebacivanje reda
+                this.socket.on('remote_move', (data) => { 
+                    const opponentIdx = this.myOnlineIndex === 0 ? 1 : 0;
+                    this.allScores[opponentIdx][data.col][data.row] = data.points; 
+                    this.updateTableVisuals(); 
+                    this.switchPlayer(); 
+                });
+
+                // NOVO: Prijem rolanja kockica od protivnika
+                this.socket.on('remote_roll', (data) => {
+                    this.visualRoll(data.values);
+                    this.brojBacanja = data.bacanje; // Sinhronizujemo broj bacanja
+                    document.getElementById('lbl-status').innerText = `Bacanje: ${data.bacanje} / 3 (Protivnik)`;
+                });
+
+                // NOVO: Prijem zadrzavanja kockica
+                this.socket.on('remote_hold', (data) => {
+                    this.zadrzane[data.index] = data.status;
+                    this.updateDiceVisuals();
+                });
+
+                // NOVO: Prijem najave
+                this.socket.on('remote_announce', (data) => {
+                    this.najavaAktivna = true;
+                    // Vizuelno prikazati najavu ako treba
+                });
+
                 this.socket.on('chat_msg', (data) => { if (data.msg) this.appendChatMessage("Protivnik", data.msg, "msg-incoming"); });
                 this.socket.on('opponent_left', async () => { await this.modal.alert("Protivnik je izašao!"); this.cancelOnline(); });
             }
@@ -921,19 +650,8 @@
             async setupGame(numPlayers, aiMode=false, diff='medium') {
                 this.onlineMode = false; this.players = []; this.allScores = []; this.aiMode = aiMode; this.aiDifficulty = diff;
                 const p1Name = this.playerName; 
-                if (aiMode) { 
-                    this.modeTag = "vs AI"; this.players.push(p1Name); 
-                    // IZMENJENO: Fiksiran AI protivnik na Ultimate
-                    this.players.push(`🤖 AI (Ultimate)`); 
-                    this.ai = new YambAI(this); 
-                } else { 
-                    this.players.push(p1Name);
-                    if (numPlayers === 1) { this.modeTag = "Solo"; } 
-                    else {
-                        this.modeTag = "1 na 1";
-                        for(let i=1; i<numPlayers; i++) { let guestName = await this.modal.prompt(`Ime igrača ${i+1}:`); this.players.push(guestName || `Gost ${i}`); }
-                    }
-                }
+                if (aiMode) { this.modeTag = "vs AI"; this.players.push(p1Name); this.players.push(`🤖 AI (Ultimate)`); this.ai = new YambAI(this); } 
+                else { this.players.push(p1Name); if (numPlayers === 1) { this.modeTag = "Solo"; } else { this.modeTag = "1 na 1"; for(let i=1; i<numPlayers; i++) { let guestName = await this.modal.prompt(`Ime igrača ${i+1}:`); this.players.push(guestName || `Gost ${i}`); } } }
                 this.initScores(); this.currentPlayerIdx = 0; this.startGame();
             }
             initScores() { this.allScores = []; this.players.forEach(() => { let sheet = {}; KOLONE.forEach(c => { sheet[c] = {}; REDOVI_IGRA.forEach(r => sheet[c][r] = null); }); this.allScores.push(sheet); }); }
@@ -959,10 +677,7 @@
                         KOLONE.forEach(col => {
                             let cell = document.createElement('div'); cell.className = 'grid-cell';
                             if (row.includes("ZBIR")) { cell.style.fontWeight = 'bold'; cell.innerText = "0"; cell.id = `sum-${pIdx}-${col}-${row}`; cell.style.color = "var(--gold-main)"; }
-                            else {
-                                let btn = document.createElement('button'); btn.className = 'score-btn'; btn.id = `btn-${pIdx}-${col}-${row}`;
-                                btn.onclick = () => this.writeScore(row, col, pIdx); btn.disabled = true; cell.appendChild(btn);
-                            }
+                            else { let btn = document.createElement('button'); btn.className = 'score-btn'; btn.id = `btn-${pIdx}-${col}-${row}`; btn.onclick = () => this.writeScore(row, col, pIdx); btn.disabled = true; cell.appendChild(btn); }
                             grid.appendChild(cell);
                         });
                     });
@@ -977,13 +692,12 @@
                 this.brojBacanja = 0; this.najavaAktivna = false; this.najavljenoPolje = null;
                 document.getElementById('lbl-status').innerText = "Bacanje: 0 / 3";
 
-                // --- FIX: PROVERA KO JE NA POTEZU ---
                 const isAi = this.players[this.currentPlayerIdx].includes("AI");
                 const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex);
                 const canInteract = !isAi && !isOnlineOpponent;
 
                 const btnBacaj = document.getElementById('btn-bacaj');
-                btnBacaj.disabled = !canInteract; // Disable if AI or Online Opponent
+                btnBacaj.disabled = !canInteract; 
                 btnBacaj.innerText = "BACAJ";
 
                 const btnNajava = document.getElementById('btn-najava');
@@ -994,7 +708,6 @@
                 this.diceBtns.forEach(b => { b.innerText = ""; b.className = 'dice'; });
                 this.highlightCurrentPlayer(); this.updateTableVisuals();
                 
-                // Ako je AI, pokreni njegovu logiku
                 if (isAi) { setTimeout(() => this.runAiTurn(), 1000); }
             }
 
@@ -1006,8 +719,18 @@
             }
 
             toggleHold(i) {
+                // Ako nije moj red online, ne mogu da pipam kocke
+                if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return;
+                
                 if (this.brojBacanja === 0) return;
-                this.zadrzane[i] = !this.zadrzane[i]; this.updateDiceVisuals(); this.soundMgr.click();
+                this.zadrzane[i] = !this.zadrzane[i]; 
+                this.updateDiceVisuals(); 
+                this.soundMgr.click();
+
+                // Emituj hold online
+                if(this.onlineMode) {
+                    this.socket.emit('dice_hold', { roomId: this.roomId, index: i, status: this.zadrzane[i] });
+                }
             }
 
             updateDiceVisuals() {
@@ -1017,48 +740,63 @@
                 });
             }
 
+            // Pomoćna funkcija za vizuelno rolanje kada protivnik baca
+            async visualRoll(finalValues) {
+                this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); });
+                this.soundMgr.roll();
+                for(let k=0; k<8; k++) { 
+                    this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
+                    await sleep(40); 
+                }
+                this.diceBtns.forEach(b => b.classList.remove('rolling'));
+                this.kockiceVals = finalValues;
+                this.updateDiceVisuals();
+            }
+
             async throwDice() {
-                // Dodatna sigurnosna provera
                 const isAiCheck = this.players[this.currentPlayerIdx].includes("AI");
-                const isOnlineCheck = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex);
+                const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex);
                 
-                if (this.brojBacanja >= 3) return;
+                if (this.brojBacanja >= 3 || isOnlineOpponent) return;
                 
                 document.getElementById('btn-bacaj').disabled = true;
                 this.soundMgr.roll();
                 if(this.aiMode && isAiCheck && Math.random() > 0.7) this.triggerAiChat('thinking');
 
-                // ANIMATION START
-                this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); });
+                // Generate values FIRST so we can emit them
+                let newValues = [...this.kockiceVals];
+                for(let i=0; i<6; i++) { if (!this.zadrzane[i]) newValues[i] = Math.floor(Math.random()*6)+1; }
 
+                // Emit roll event ONLINE immediately
+                if (this.onlineMode) {
+                    this.socket.emit('dice_roll', { 
+                        roomId: this.roomId, 
+                        values: newValues, 
+                        bacanje: this.brojBacanja + 1 
+                    });
+                }
+
+                // ANIMATION LOCAL
+                this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); });
                 for(let k=0; k<8; k++) { this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); await sleep(40); }
-                for(let i=0; i<6; i++) { if (!this.zadrzane[i]) this.kockiceVals[i] = Math.floor(Math.random()*6)+1; }
-                
-                // ANIMATION END
                 this.diceBtns.forEach(b => b.classList.remove('rolling'));
 
+                // Set final values
+                this.kockiceVals = newValues;
                 this.brojBacanja++;
                 document.getElementById('lbl-status').innerText = `Bacanje: ${this.brojBacanja} / 3`;
                 this.updateDiceVisuals(); this.updateTableVisuals();
 
-                // --- FIX: PONOVNO UKLJUČIVANJE DUGMADI ---
                 const isAi = this.players[this.currentPlayerIdx].includes("AI");
-                const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex);
                 const canInteract = !isAi && !isOnlineOpponent;
 
                 const btnBacaj = document.getElementById('btn-bacaj');
-                if (this.brojBacanja < 3) {
-                     btnBacaj.disabled = !canInteract; // Only enable if human turn
-                } else { 
-                    btnBacaj.disabled = true; btnBacaj.innerText = "UPIŠI"; 
-                }
+                if (this.brojBacanja < 3) { btnBacaj.disabled = !canInteract; } 
+                else { btnBacaj.disabled = true; btnBacaj.innerText = "UPIŠI"; }
 
                 const btnNajava = document.getElementById('btn-najava');
-                if (this.brojBacanja === 1 && canInteract) { 
-                    btnNajava.disabled = false; btnNajava.classList.add('btn-highlight'); 
-                } else if (!this.najavaAktivna) { 
-                    btnNajava.disabled = true; btnNajava.classList.remove('btn-highlight'); 
-                }
+                if (this.brojBacanja === 1 && canInteract) { btnNajava.disabled = false; btnNajava.classList.add('btn-highlight'); } 
+                else if (!this.najavaAktivna) { btnNajava.disabled = true; btnNajava.classList.remove('btn-highlight'); }
             }
 
             clickNajava() {
@@ -1067,9 +805,11 @@
                 if (!this.najavaAktivna) {
                     this.najavaAktivna = true; btn.innerText = "OPOZOVI"; btn.classList.add('btn-active-toggle'); btn.classList.remove('btn-highlight');
                     document.getElementById('btn-bacaj').disabled = true;
+                    if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'start' });
                 } else {
                     this.najavaAktivna = false; btn.innerText = "Najava"; btn.classList.remove('btn-active-toggle'); btn.classList.add('btn-highlight');
                     document.getElementById('btn-bacaj').disabled = false;
+                    if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' });
                 }
             }
 
@@ -1090,13 +830,15 @@
                 const sheet = this.allScores[pIdx];
                 if (sheet[col][row] !== null) return await this.modal.alert("Popunjeno!");
                 const isHuman = !this.players[pIdx].includes("AI");
+                
                 if (isHuman && this.najavaAktivna) {
                     if (col !== "Najava" || this.najavljenoPolje) { this.soundMgr.error(); return await this.modal.alert("Moraš u NAJAVU!"); }
                     this.najavljenoPolje = {row, col}; this.najavaAktivna = false;
                     document.getElementById(`btn-${pIdx}-${col}-${row}`).classList.add('highlight-najava');
                     const btnN = document.getElementById('btn-najava'); btnN.innerText = `Najava: ${row}`;
                     btnN.disabled = true; btnN.classList.remove('btn-active-toggle');
-                    document.getElementById('btn-bacaj').disabled = false; return;
+                    document.getElementById('btn-bacaj').disabled = false; 
+                    return;
                 }
                 if (col === "Najava" && (!this.najavljenoPolje || this.najavljenoPolje.row !== row)) { this.soundMgr.error(); return await this.modal.alert("Samo najavljeno!"); }
                 if (!this.isValidColumnOrder(row, col, sheet)) { this.soundMgr.error(); return await this.modal.alert("Pogrešan redosled!"); }
@@ -1113,11 +855,13 @@
                 }
 
                 sheet[col][row] = pts; this.soundMgr.score();
-                if (this.onlineMode && isHuman) this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts });
                 
-                // AI Reaction
+                // Ovde emitujemo potez
+                if (this.onlineMode && isHuman) {
+                    this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts });
+                }
+                
                 if (this.aiMode && isHuman) { if (pts >= 40) this.triggerAiChat('goodMove'); else if (pts <= 5) this.triggerAiChat('badMove'); }
-                // Confetti on YAMB
                 if (pts >= 50 && row === "Yamb") this.confetti.start(); setTimeout(() => this.confetti.stop(), 3000);
 
                 this.updateTableVisuals(); this.switchPlayer();
