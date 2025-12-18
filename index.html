@@ -6,33 +6,44 @@
     <title>Yamb of the Balkan - Ultimate Edition</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
-    <script src="/socket.io/socket.io.js"></script>
+    
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 
     <style>
         /* --- 1. THEME ENGINE --- */
         :root {
-            --bg-base: #0a0a0a; --bg-gradient-1: #2c2c2c; --bg-gradient-2: #000000;
+            /* DARK GOLD - PREFINED GLASSMORPHISM (Default) */
+            --bg-base: #0a0a0a; 
+            --bg-gradient-1: #2c2c2c; --bg-gradient-2: #000000;
             --gold-main: #D4AF37; --gold-glow: rgba(212, 175, 55, 0.4);
             --text-main: #FFFFFF; --text-muted: #bbbbbb;
             --glass-bg: rgba(255, 255, 255, 0.03); 
             --glass-panel: rgba(20, 20, 20, 0.70); 
             --glass-border: 1px solid rgba(212, 175, 55, 0.15); 
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            --dice-bg: linear-gradient(145deg, #2b2b2b, #1a1a1a); --dice-border: rgba(212, 175, 55, 0.2);
+            --dice-bg: linear-gradient(145deg, #2b2b2b, #1a1a1a); 
+            --dice-border: rgba(212, 175, 55, 0.2);
             --dice-color: #ccc; --dice-active: #fff;
-            --grid-cell-bg: rgba(255, 255, 255, 0.03); --grid-header-bg: rgba(212, 175, 55, 0.1); 
+            --grid-cell-bg: rgba(255, 255, 255, 0.03); 
+            --grid-header-bg: rgba(212, 175, 55, 0.1); 
             --input-bg: #222; --input-border: #444;
             --danger: #ff4444; --success: #4CAF50;
+            
+            /* Logic Colors */
             --col-nadole: #4fc3f7; --col-nagore: #ef5350; --col-sredina: #ffa726; 
             --col-rucno: #ab47bc; --col-najava: #D4AF37; --col-slobodna: #bdbdbd;
         }
+
+        /* LIGHT THEME */
         body.light-theme {
             --bg-base: #e0e5ec; --bg-gradient-1: #f0f2f5; --bg-gradient-2: #cbd1d9;
             --gold-main: #b8962e; --gold-glow: rgba(184, 150, 46, 0.3);
             --text-main: #2c3e50; --text-muted: #5f6c7b;
             --glass-bg: rgba(0, 0, 0, 0.05); --glass-panel: rgba(255, 255, 255, 0.85);
-            --glass-border: 1px solid rgba(0, 0, 0, 0.1); --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
             --dice-bg: linear-gradient(135deg, #ffffff, #e6e6e6); --dice-border: rgba(0,0,0,0.15);
             --dice-color: #777; --dice-active: #000;
             --grid-cell-bg: rgba(0,0,0,0.04); --grid-header-bg: rgba(0,0,0,0.08);
@@ -40,62 +51,123 @@
             --col-nadole: #0288d1; --col-nagore: #d32f2f; --col-sredina: #f57c00; 
             --col-rucno: #7b1fa2; --col-slobodna: #616161;
         }
+
+        /* MEDIUM GOLD (Vesela) THEME */
         body.medium-theme {
             --bg-base: #4A148C; --bg-gradient-1: #7B1FA2; --bg-gradient-2: #FF6F00; 
             --gold-main: #FFD700; --gold-glow: rgba(255, 215, 0, 0.6);
             --text-main: #FFFFFF; --text-muted: #E1BEE7;
-            --glass-bg: rgba(255, 255, 255, 0.15); --glass-panel: rgba(60, 10, 90, 0.75); 
-            --glass-border: 1px solid rgba(255, 215, 0, 0.3); --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-            --dice-bg: linear-gradient(135deg, #FFECB3, #FFCA28); --dice-border: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.15); 
+            --glass-panel: rgba(60, 10, 90, 0.75); 
+            --glass-border: 1px solid rgba(255, 215, 0, 0.3);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --dice-bg: linear-gradient(135deg, #FFECB3, #FFCA28); 
+            --dice-border: rgba(255, 255, 255, 0.5);
             --dice-color: #BF360C; --dice-active: #000;
             --grid-cell-bg: rgba(255, 255, 255, 0.1); --grid-header-bg: rgba(0, 0, 0, 0.2);
             --input-bg: rgba(0, 0, 0, 0.3); --input-border: var(--gold-main);
             --col-nadole: #29B6F6; --col-nagore: #FF5252; --col-sredina: #FFA726; 
             --col-rucno: #E040FB; --col-najava: #FFD700; --col-slobodna: #BDBDBD;
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--bg-base); background-image: radial-gradient(circle at 50% 30%, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 80%); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; justify-content: center; transition: background 0.5s, color 0.5s; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-base);
+            background-image: radial-gradient(circle at 50% 30%, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 80%);
+            color: var(--text-main);
+            height: 100vh; overflow: hidden;
+            display: flex; justify-content: center;
+            transition: background 0.5s, color 0.5s;
+        }
+
         #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
-        .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s; transform: scale(0.95); z-index: 1; padding: 20px; overflow-y: auto; }
+
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s;
+            transform: scale(0.95); z-index: 1; padding: 20px;
+            overflow-y: auto;
+        }
         .screen.active { opacity: 1; visibility: visible; transform: scale(1); z-index: 10; }
         .hidden { display: none !important; }
+
         .menu-title { font-size: 2.5rem; margin-bottom: 30px; text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .menu-subtitle { font-weight:300; font-size:1.2rem; color:var(--gold-main); display: block; letter-spacing: 2px; }
-        .btn-menu { width: 100%; max-width: 300px; padding: 15px; margin: 8px 0; background: var(--glass-bg); border: var(--glass-border); color: var(--text-main); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; border-radius: 50px; transition: all 0.2s; font-family: 'Montserrat', sans-serif; font-weight: 600; backdrop-filter: blur(5px); box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        
+        .btn-menu {
+            width: 100%; max-width: 300px; padding: 15px; margin: 8px 0;
+            background: var(--glass-bg); border: var(--glass-border); color: var(--text-main);
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
+            border-radius: 50px; transition: all 0.2s; 
+            font-family: 'Montserrat', sans-serif; font-weight: 600;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
         .btn-menu:active { transform: scale(0.95); }
         .btn-primary { border-color: var(--gold-main); color: var(--gold-main); background: rgba(212, 175, 55, 0.05); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
         .btn-danger { border-color: var(--danger); color: var(--danger); }
         .menu-divider { margin: 10px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(8px); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden; transition: 0.3s; 
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .custom-modal { background: var(--glass-panel); padding: 30px; border-radius: 20px; border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow); width: 90%; max-width: 400px; text-align: center; transform: scale(0.8); transition: 0.3s; backdrop-filter: blur(12px); }
+        .custom-modal {
+            background: var(--glass-panel); padding: 30px; border-radius: 20px;
+            border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow);
+            width: 90%; max-width: 400px; text-align: center;
+            transform: scale(0.8); transition: 0.3s;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
         .modal-overlay.active .custom-modal { transform: scale(1); }
         .cm-title { color: var(--gold-main); font-size: 1.4rem; margin-bottom: 15px; font-weight: 700; text-transform: uppercase; }
         .cm-msg { color: var(--text-main); margin-bottom: 25px; line-height: 1.5; font-size: 1rem; }
-        .cm-input { width: 100%; padding: 12px; margin-bottom: 20px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); font-family: 'Montserrat'; font-size: 1rem; text-align: center; border-radius: 8px; }
+        .cm-input { width: 100%; padding: 12px; margin-bottom: 20px; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); font-family: 'Montserrat'; font-size: 1rem; text-align: center; border-radius: 8px;}
         .cm-btn-group { display: flex; justify-content: center; gap: 10px; }
         .cm-btn { padding: 10px 25px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; flex: 1; }
         .cm-btn-ok { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); }
         .cm-btn-cancel { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
-        .chat-float-btn { position: fixed; bottom: 140px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--gold-main); color: #000; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px var(--gold-glow); transition: transform 0.2s; }
+
+        .chat-float-btn {
+            position: fixed; bottom: 140px; right: 20px; width: 50px; height: 50px; border-radius: 50%;
+            background: var(--gold-main); color: #000; display: flex; align-items: center; justify-content: center;
+            font-size: 24px; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px var(--gold-glow); transition: transform 0.2s;
+        }
+        .chat-float-btn:hover { transform: scale(1.1); }
         .chat-notification { position: absolute; top: 0; right: 0; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; border: 2px solid #000; display: none; }
         .chat-notification.active { display: block; }
-        .chat-window { position: fixed; bottom: 200px; right: 20px; width: 300px; height: 350px; background: var(--glass-panel); border: 1px solid var(--gold-main); border-radius: 15px; display: flex; flex-direction: column; z-index: 9999; opacity: 0; visibility: hidden; box-shadow: var(--glass-shadow); backdrop-filter: blur(12px); }
+        
+        .chat-window {
+            position: fixed; bottom: 200px; right: 20px; width: 300px; height: 350px;
+            background: var(--glass-panel); border: 1px solid var(--gold-main); border-radius: 15px; 
+            display: flex; flex-direction: column; z-index: 9999; opacity: 0; visibility: hidden; 
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+        }
         .chat-window.active { opacity: 1; visibility: visible; }
-        .chat-header { padding: 10px; background: rgba(255,255,255,0.05); border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--gold-main); font-size: 0.9rem; cursor: move; }
+        .chat-header { padding: 10px; background: rgba(255,255,255,0.05); border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--gold-main); font-size: 0.9rem; cursor: move; touch-action: none; }
         .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
         .chat-footer { padding: 10px; border-top: var(--glass-border); display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,0.2); }
         .btn-chat-send { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; border:none; background: var(--gold-main); color: #000; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; word-wrap: break-word; }
         .msg-incoming { align-self: flex-start; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-left-radius: 2px; }
         .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
+
         #game-scene { justify-content: flex-start; padding: 0; background: transparent; overflow: hidden; }
-        .game-header { width: 100%; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: var(--glass-border); background: var(--glass-panel); z-index: 20; height: 50px; flex-shrink: 0; backdrop-filter: blur(12px); }
+        .game-header { width: 100%; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: var(--glass-border); background: var(--glass-panel); z-index: 20; height: 50px; flex-shrink: 0; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .game-content { display: flex; width: 100%; height: calc(100% - 50px); overflow: hidden; position: relative; }
         .left-panel { flex: 1; display: flex; flex-direction: column; padding: 10px; overflow: hidden; }
-        .right-sidebar { width: 300px; background: var(--glass-panel); border-left: var(--glass-border); display: flex; flex-direction: column; padding: 15px; backdrop-filter: blur(12px); }
+        .right-sidebar { width: 300px; background: var(--glass-panel); border-left: var(--glass-border); display: flex; flex-direction: column; padding: 15px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+
         .tables-wrapper { flex: 1; overflow-y: auto; overflow-x: auto; display: flex; justify-content: center; gap: 20px; padding-bottom: 20px; }
-        .player-table { min-width: 340px; margin-bottom: 10px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
+        .player-table { min-width: 340px; margin-bottom: 10px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
         .player-name { text-align: center; font-weight: 700; color: var(--gold-main); margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .grid-container { display: grid; grid-template-columns: 1.5fr repeat(6, 1fr); gap: 1px; }
         .grid-cell { height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-muted); background: var(--grid-cell-bg); }
@@ -108,7 +180,8 @@
         .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(212,175,55,0.3); }
         .highlight-najava { background: rgba(212, 175, 55, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(212,175,55,0.2); }
         .total-score { font-size: 1.5rem; color: var(--gold-main); text-align: center; margin-top: 5px; font-weight: 800; }
-        .controls-area { min-height: 120px; background: var(--glass-panel); margin-top: 10px; border-radius: 15px 15px 0 0; border-top: 1px solid var(--gold-main); display: flex; align-items: center; padding: 10px 15px; z-index: 50; flex-shrink: 0; backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.3); }
+
+        .controls-area { min-height: 120px; background: var(--glass-panel); margin-top: 10px; border-radius: 15px 15px 0 0; border-top: 1px solid var(--gold-main); display: flex; align-items: center; padding: 10px 15px; z-index: 50; flex-shrink: 0; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.3); }
         .dice-container { display: flex; gap: 8px; justify-content: center; }
         .dice { width: 50px; height: 50px; background: var(--dice-bg); border: 1px solid var(--dice-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--dice-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
         @keyframes roll { 0% { transform: rotate(0deg) rotateX(0deg); } 25% { transform: rotate(90deg) rotateX(90deg); } 50% { transform: rotate(180deg) rotateX(180deg); } 75% { transform: rotate(270deg) rotateX(270deg); } 100% { transform: rotate(360deg) rotateX(360deg); } }
@@ -123,11 +196,13 @@
         .btn-secondary { background: var(--glass-bg); color: var(--text-main); border: var(--glass-border); }
         .btn-active-toggle { background: var(--danger); color: white; box-shadow: 0 0 10px rgba(255,0,0,0.4); }
         .btn-highlight { background: var(--gold-main) !important; color: black !important; }
+
         .sidebar-header { color: var(--text-muted); font-size: 0.7rem; uppercase; margin: 15px 0 5px 0; border-bottom: var(--glass-border); }
         .chat-input-wrapper { display: flex; gap: 5px; } .chat-input { flex: 1; background: var(--glass-bg); border: var(--glass-border); color: var(--text-main); padding: 8px; border-radius: 4px; }
         .highscore-list { list-style: none; font-size: 0.85rem; color: var(--text-muted); padding: 0; } 
         .highscore-item { padding: 8px 0; border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-box { background: var(--glass-panel); padding: 25px; border-radius: 15px; border: 1px solid var(--gold-main); width: 90%; max-width: 350px; text-align: center; color: var(--text-main); backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
+        
+        .modal-box { background: var(--glass-panel); padding: 25px; border-radius: 15px; border: 1px solid var(--gold-main); width: 90%; max-width: 350px; text-align: center; color: var(--text-main); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
         .modal-input { width: 100%; padding: 10px; margin: 10px 0; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; }
         .back-btn { position: absolute; top: 20px; left: 20px; background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
         #splash-screen { background: var(--bg-base); z-index: 100; }
@@ -259,6 +334,9 @@
     </div>
 
     <script>
+        // IZMENA: URL servera je definisan kao konstanta
+        const SERVER_URL = 'https://yamb-of-the-balkan.onrender.com';
+
         class Confetti { constructor() { this.canvas = document.getElementById('confetti-canvas'); this.ctx = this.canvas.getContext('2d'); this.particles = []; this.resize(); window.addEventListener('resize', () => this.resize()); this.animating = false; } resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; } start() { this.particles = []; this.animating = true; for(let i=0; i<150; i++) this.particles.push(this.createParticle()); this.animate(); } stop() { this.animating = false; this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); } createParticle() { return { x: Math.random() * this.canvas.width, y: Math.random() * this.canvas.height - this.canvas.height, color: ['#D4AF37', '#FFD700', '#FFFFFF', '#ef5350', '#4fc3f7'][Math.floor(Math.random()*5)], size: Math.random() * 8 + 4, speedY: Math.random() * 5 + 2, speedX: Math.random() * 4 - 2, rotation: Math.random() * 360, rotSpeed: Math.random() * 5 - 2 }; } animate() { if(!this.animating) return; this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); this.particles.forEach((p, i) => { p.y += p.speedY; p.x += p.speedX; p.rotation += p.rotSpeed; if(p.y > this.canvas.height) this.particles[i] = this.createParticle(); this.ctx.save(); this.ctx.translate(p.x, p.y); this.ctx.rotate(p.rotation * Math.PI/180); this.ctx.fillStyle = p.color; this.ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size); this.ctx.restore(); }); requestAnimationFrame(() => this.animate()); } }
         class ModalManager { constructor() { this.overlay = document.getElementById('custom-modal-overlay'); this.titleEl = document.getElementById('cm-title'); this.msgEl = document.getElementById('cm-msg'); this.inputEl = document.getElementById('cm-input'); this.btnOk = document.getElementById('cm-ok'); this.btnCancel = document.getElementById('cm-cancel'); this.resolvePromise = null; this.btnOk.onclick = () => this.handleOk(); this.btnCancel.onclick = () => this.handleCancel(); this.inputEl.addEventListener('keydown', (e) => { if(e.key === 'Enter') this.handleOk(); }); } reset() { this.overlay.classList.remove('active'); this.inputEl.classList.add('hidden'); this.btnCancel.classList.add('hidden'); this.inputEl.value = ''; this.resolvePromise = null; } show(title, msg, type = 'alert') { return new Promise((resolve) => { this.resolvePromise = resolve; this.titleEl.innerText = title; this.msgEl.innerHTML = msg.replace(/\n/g, '<br>'); this.inputEl.classList.toggle('hidden', type !== 'prompt'); this.btnCancel.classList.toggle('hidden', type === 'alert'); this.overlay.classList.add('active'); if (type === 'prompt') this.inputEl.focus(); }); } alert(msg, title = "OBAVEŠTENJE") { return this.show(title, msg, 'alert'); } confirm(msg, title = "POTVRDA") { return this.show(title, msg, 'confirm'); } prompt(msg, title = "UNOS") { return this.show(title, msg, 'prompt'); } handleOk() { if (this.resolvePromise) { if (!this.inputEl.classList.contains('hidden')) { this.resolvePromise(this.inputEl.value); } else { this.resolvePromise(true); } } this.reset(); } handleCancel() { if (this.resolvePromise) this.resolvePromise(false); this.reset(); } }
         const DICE_SYMBOLS = {0: "", 1: "1", 2: "2", 3: "3", 4: "4", 5: "5", 6: "6"};
@@ -306,8 +384,7 @@
                 const params = new URLSearchParams(window.location.search);
                 const roomId = params.get('room');
                 if (roomId) {
-                    // Ako ima room ID u linku, automatski pokrećemo join
-                    this.navigateTo('splash-screen'); // Da sakrijemo meni
+                    this.navigateTo('splash-screen'); 
                     setTimeout(async () => {
                         const nickname = await this.modal.prompt("Unesite Vaš nadimak:", "PRIDRUŽIVANJE IGRI");
                         if (nickname) {
@@ -348,8 +425,8 @@
                 // Generiši random sobu
                 const roomId = "yamb-" + Math.random().toString(36).substring(2, 8);
                 
-                // Kreiraj link za deljenje
-                const shareUrl = window.location.origin + window.location.pathname + "?room=" + roomId;
+                // Kreiraj link za deljenje - ISPRAVKA ZA SERVER URL
+                const shareUrl = SERVER_URL + "/?room=" + roomId;
                 
                 this.navigateTo('waiting-screen');
                 document.getElementById('wait-msg').innerText = "Čekam prijatelja...";
@@ -361,7 +438,10 @@
 
             async joinPrivateGame(nickname, roomId) {
                 this.navigateTo('waiting-screen');
-                try { this.socket = io(); } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; }
+                // IZMENA: KORISTIMO SERVER_URL I TRANSPORTS
+                try { 
+                    this.socket = io(SERVER_URL, { transports: ['websocket'] }); 
+                } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; }
                 
                 this.socket.on('connect', () => { 
                     // Šaljemo zahtev za privatnu sobu
@@ -375,9 +455,12 @@
                 const nickname = await this.modal.prompt("Unesite Vaš nadimak:", "ONLINE PRIJAVA");
                 if (!nickname) return;
                 this.navigateTo('waiting-screen');
-                document.getElementById('share-area').classList.add('hidden'); // Sakrij share ako je random
+                document.getElementById('share-area').classList.add('hidden'); 
                 
-                try { this.socket = io(); } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; }
+                // IZMENA: KORISTIMO SERVER_URL I TRANSPORTS
+                try { 
+                    this.socket = io(SERVER_URL, { transports: ['websocket'] }); 
+                } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; }
                 
                 this.socket.on('connect', () => { 
                     document.getElementById('wait-msg').innerText = "Tražim protivnika..."; 
@@ -388,16 +471,13 @@
             }
 
             setupSocketListeners(nickname) {
-                // Slušamo ako je soba puna
                 this.socket.on('room_full', async () => {
                     await this.modal.alert("Ova soba je puna ili igra već traje!");
                     this.cancelOnline();
                 });
 
-                // Čekamo drugog igrača (za hosta)
                 this.socket.on('private_waiting', (data) => {
                     this.roomId = data.roomId;
-                    // Ostajemo na waiting screen-u dok neko ne uđe
                 });
 
                 this.socket.on('game_start', (data) => {
@@ -429,7 +509,6 @@
                         });
                     } catch (err) { console.log('Share canceled'); }
                 } else {
-                    // Fallback copy to clipboard
                     const input = document.getElementById('invite-link');
                     input.select();
                     document.execCommand('copy');
