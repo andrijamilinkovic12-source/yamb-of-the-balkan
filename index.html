@@ -868,37 +868,49 @@
                 const jsonString = JSON.stringify(data);
                 const fileName = `yamb_save_${Date.now()}.json`;
 
-                // Provera da li smo na telefonu (Capacitor)
+                // 1. ANDROID / IOS (CAPACITOR) LOGIKA
                 if (window.Capacitor && window.Capacitor.isNative) {
                     try {
                         const { Filesystem, Directory, Encoding } = Capacitor.Plugins;
 
-                        await Filesystem.writeFile({
+                        // Pokušaj da zatražiš dozvole (bitno za Android 10+)
+                        try {
+                            if (Filesystem.requestPermissions) {
+                                await Filesystem.requestPermissions();
+                            }
+                        } catch (permErr) {
+                            console.warn("Greška pri traženju dozvola:", permErr);
+                        }
+
+                        // Upis u DOCUMENTS folder (mnogo sigurnije od External)
+                        const result = await Filesystem.writeFile({
                             path: fileName,
                             data: jsonString,
-                            directory: Directory.External, // KORISTIMO EXTERNAL UMESTO DOCUMENTS
+                            directory: Directory.Documents, 
                             encoding: Encoding.UTF8,
+                            recursive: true
                         });
 
-                        await this.modal.alert(`Igra je uspešno sačuvana!\nIme fajla: ${fileName}`, "SAČUVANO");
+                        await this.modal.alert(`Igra je sačuvana u Dokumentima!\n\n${result.uri}`, "SAČUVANO");
+
                     } catch (e) {
-                        console.error(e);
-                        // Fallback na Documents ako External ne radi (neki uređaji)
+                        console.error("Save error:", e);
+                        // Fallback - pokušaj da sačuvaš u Cache folder ako Documents ne radi
                         try {
-                             const { Filesystem, Directory, Encoding } = Capacitor.Plugins;
-                             await Filesystem.writeFile({
+                            const { Filesystem, Directory, Encoding } = Capacitor.Plugins;
+                            await Filesystem.writeFile({
                                 path: fileName,
                                 data: jsonString,
-                                directory: Directory.Documents,
-                                encoding: Encoding.UTF8,
+                                directory: Directory.Cache,
+                                encoding: Encoding.UTF8
                             });
-                            await this.modal.alert(`Igra je sačuvana u Dokumentima!\nIme fajla: ${fileName}`, "SAČUVANO");
-                        } catch(err2) {
-                             await this.modal.alert("Greška prilikom čuvanja na telefonu. Proverite dozvole.", "GREŠKA");
+                            await this.modal.alert("Zbog restrikcija, igra je sačuvana u privremenoj memoriji (Cache).", "SAČUVANO (CACHE)");
+                        } catch (err2) {
+                            await this.modal.alert("Aplikacija nema dozvolu za čuvanje fajlova. Proverite podešavanja telefona.", "GREŠKA");
                         }
                     }
                 } else {
-                    // Stari način za Web (Render)
+                    // 2. WEB BROWSER LOGIKA
                     const blob = new Blob([jsonString], {type: "application/json"});
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
