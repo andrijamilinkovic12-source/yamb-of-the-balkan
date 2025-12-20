@@ -16,6 +16,7 @@
     <style>
         /* --- 1. THEME ENGINE --- */
         :root {
+            /* DARK GOLD - PREFINED GLASSMORPHISM (Default) */
             --bg-base: #0a0a0a; 
             --bg-gradient-1: #2c2c2c; --bg-gradient-2: #000000;
             --gold-main: #D4AF37; --gold-glow: rgba(212, 175, 55, 0.4);
@@ -37,6 +38,7 @@
             --col-rucno: #ab47bc; --col-najava: #D4AF37; --col-slobodna: #bdbdbd;
         }
 
+        /* LIGHT THEME */
         body.light-theme {
             --bg-base: #e0e5ec; --bg-gradient-1: #f0f2f5; --bg-gradient-2: #cbd1d9;
             --gold-main: #b8962e; --gold-glow: rgba(184, 150, 46, 0.3);
@@ -52,6 +54,7 @@
             --col-rucno: #7b1fa2; --col-slobodna: #616161;
         }
 
+        /* MEDIUM GOLD (Vesela) THEME */
         body.medium-theme {
             --bg-base: #4A148C; --bg-gradient-1: #7B1FA2; --bg-gradient-2: #FF6F00; 
             --gold-main: #FFD700; --gold-glow: rgba(255, 215, 0, 0.6);
@@ -822,14 +825,26 @@
                         await Filesystem.writeFile({
                             path: fileName,
                             data: jsonString,
-                            directory: Directory.Documents,
+                            directory: Directory.External, // KORISTIMO EXTERNAL UMESTO DOCUMENTS
                             encoding: Encoding.UTF8,
                         });
 
-                        await this.modal.alert(`Igra je uspešno sačuvana u Dokumentima!\nIme fajla: ${fileName}`, "SAČUVANO");
+                        await this.modal.alert(`Igra je uspešno sačuvana!\nIme fajla: ${fileName}`, "SAČUVANO");
                     } catch (e) {
                         console.error(e);
-                        await this.modal.alert("Greška prilikom čuvanja na telefonu: " + e.message);
+                        // Fallback na Documents ako External ne radi (neki uređaji)
+                        try {
+                             const { Filesystem, Directory, Encoding } = Capacitor.Plugins;
+                             await Filesystem.writeFile({
+                                path: fileName,
+                                data: jsonString,
+                                directory: Directory.Documents,
+                                encoding: Encoding.UTF8,
+                            });
+                            await this.modal.alert(`Igra je sačuvana u Dokumentima!\nIme fajla: ${fileName}`, "SAČUVANO");
+                        } catch(err2) {
+                             await this.modal.alert("Greška prilikom čuvanja na telefonu. Proverite dozvole.", "GREŠKA");
+                        }
                     }
                 } else {
                     // Stari način za Web (Render)
