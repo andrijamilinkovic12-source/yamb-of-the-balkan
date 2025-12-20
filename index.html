@@ -8,15 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    
     <script src="capacitor.js"></script>
-    
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
 
     <style>
-        /* --- 1. THEME ENGINE --- */
+        /* --- THEME ENGINE --- */
         :root {
-            /* DARK GOLD - PREFINED GLASSMORPHISM (Default) */
             --bg-base: #0a0a0a; 
             --bg-gradient-1: #2c2c2c; --bg-gradient-2: #000000;
             --gold-main: #D4AF37; --gold-glow: rgba(212, 175, 55, 0.4);
@@ -33,12 +30,10 @@
             --input-bg: #222; --input-border: #444;
             --danger: #ff4444; --success: #4CAF50;
             
-            /* Logic Colors */
             --col-nadole: #4fc3f7; --col-nagore: #ef5350; --col-sredina: #ffa726; 
             --col-rucno: #ab47bc; --col-najava: #D4AF37; --col-slobodna: #bdbdbd;
         }
 
-        /* LIGHT THEME */
         body.light-theme {
             --bg-base: #e0e5ec; --bg-gradient-1: #f0f2f5; --bg-gradient-2: #cbd1d9;
             --gold-main: #b8962e; --gold-glow: rgba(184, 150, 46, 0.3);
@@ -54,7 +49,6 @@
             --col-rucno: #7b1fa2; --col-slobodna: #616161;
         }
 
-        /* MEDIUM GOLD (Vesela) THEME */
         body.medium-theme {
             --bg-base: #4A148C; --bg-gradient-1: #7B1FA2; --bg-gradient-2: #FF6F00; 
             --gold-main: #FFD700; --gold-glow: rgba(255, 215, 0, 0.6);
@@ -198,7 +192,7 @@
         .c-nadole { color: var(--col-nadole); } .c-nagore { color: var(--col-nagore); } .c-sredina { color: var(--col-sredina); } 
         .c-rucno { color: var(--col-rucno); } .c-najava { color: var(--col-najava); } .c-slobodna { color: var(--col-slobodna); }
         .score-btn { width: 100%; height: 100%; border: none; background: transparent; color: var(--text-main); font-weight: bold; cursor: pointer; transition: background 0.2s;}
-        .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(212,175,55,0.3); }
+        .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(212,175,5,0.3); }
         .highlight-najava { background: rgba(212, 175, 55, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(212,175,55,0.2); }
         .total-score { font-size: 1.5rem; color: var(--gold-main); text-align: center; margin-top: 5px; font-weight: 800; }
 
@@ -405,7 +399,6 @@
     </div>
 
     <script>
-        // TVOJ RENDER URL
         const SERVER_URL = 'https://yamb-of-the-balkan.onrender.com';
 
         class Confetti { constructor() { this.canvas = document.getElementById('confetti-canvas'); this.ctx = this.canvas.getContext('2d'); this.particles = []; this.resize(); window.addEventListener('resize', () => this.resize()); this.animating = false; } resize() { this.canvas.width = window.innerWidth; this.canvas.height = window.innerHeight; } start() { this.particles = []; this.animating = true; for(let i=0; i<150; i++) this.particles.push(this.createParticle()); this.animate(); } stop() { this.animating = false; this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); } createParticle() { return { x: Math.random() * this.canvas.width, y: Math.random() * this.canvas.height - this.canvas.height, color: ['#D4AF37', '#FFD700', '#FFFFFF', '#ef5350', '#4fc3f7'][Math.floor(Math.random()*5)], size: Math.random() * 8 + 4, speedY: Math.random() * 5 + 2, speedX: Math.random() * 4 - 2, rotation: Math.random() * 360, rotSpeed: Math.random() * 5 - 2 }; } animate() { if(!this.animating) return; this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); this.particles.forEach((p, i) => { p.y += p.speedY; p.x += p.speedX; p.rotation += p.rotSpeed; if(p.y > this.canvas.height) this.particles[i] = this.createParticle(); this.ctx.save(); this.ctx.translate(p.x, p.y); this.ctx.rotate(p.rotation * Math.PI/180); this.ctx.fillStyle = p.color; this.ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size); this.ctx.restore(); }); requestAnimationFrame(() => this.animate()); } }
@@ -414,11 +407,392 @@
         const UNICODE_DICE = {0: "", 1: "⚀", 2: "⚁", 3: "⚂", 4: "⚃", 5: "⚄", 6: "⚅"};
         const REDOVI_IGRA = ["1", "2", "3", "4", "5", "6", "Max", "Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
         const REDOVI_PRIKAZ = ["1", "2", "3", "4", "5", "6", "ZBIR 1", "Max", "Min", "ZBIR 2", "Triling", "Kenta", "Ful", "Poker", "Yamb", "ZBIR 3"];
+        // --- POPRAVLJENO: Vraćen "Nagore" u listu kolona ---
         const KOLONE = ["Nadole", "Slobodna", "Sredina", "Nagore", "Ručno", "Najava"];
+        
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const sum = arr => arr.reduce((a, b) => a + b, 0);
         class SoundManager { constructor() { this.ctx = window.AudioContext ? new window.AudioContext() : new window.webkitAudioContext(); } playTone(freq, type, duration, vol=0.1) { if (!app.soundEnabled) return; try { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, this.ctx.currentTime); gain.gain.setValueAtTime(vol, this.ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + duration); } catch(e) {} } click() { this.playTone(800, 'sine', 0.05, 0.05); } roll() { if (!app.soundEnabled) return; this.playTone(150, 'square', 0.1, 0.02); } score() { this.playTone(600, 'sine', 0.3, 0.1); setTimeout(()=>this.playTone(900, 'sine', 0.4, 0.1), 100); } error() { this.playTone(150, 'sawtooth', 0.3, 0.1); } win() { if(!app.soundEnabled) return; [0, 200, 400, 600].forEach((t, i) => setTimeout(() => this.playTone(400 + (i*100), 'square', 0.2, 0.1), t)); } chat() { this.playTone(1200, 'sine', 0.1, 0.05); } }
-        class YambAI { constructor(appInstance) { this.app = appInstance; } decideRoll(dice, turnNum, sheet) { const an = this.analyzeHand(dice); if (turnNum === 1 && !this.app.najavaAktivna) { if (an.maxCount >= 4 && this.isAvail(String(an.valMaxCount), "Najava", sheet)) { this.app.clickNajava(); this.app.najavljenoPolje = { row: String(an.valMaxCount), col: 'Najava' }; return { type: 'hold', hold: [true,true,true,true,true,true] }; } } if (turnNum === 3) return this.findBestScore(dice, sheet); if (an.nearKenta.length >= 4) return { type: 'hold', hold: dice.map(d => an.nearKenta.includes(d)) }; if (an.maxCount >= 2) return { type: 'hold', hold: dice.map(d => d === an.valMaxCount) }; return { type: 'hold', hold: [false,false,false,false,false,false] }; } analyzeHand(dice) { const counts = {}; dice.forEach(x => counts[x] = (counts[x] || 0) + 1); const maxCount = Math.max(...Object.values(counts)); const valMaxCount = Number(Object.keys(counts).find(key => counts[key] === maxCount)); const uniqueDice = [...new Set(dice)].sort((a,b)=>a-b); let bestStraight = [], maxStraightLen = 0; [[1,2,3,4,5], [2,3,4,5,6]].forEach(seq => { const match = seq.filter(x => uniqueDice.includes(x)); if (match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; } }); return { counts, maxCount, valMaxCount, nearKenta: maxStraightLen >= 3 ? bestStraight : [], sum: sum(dice), unique: uniqueDice }; } findBestScore(dice, sheet) { if (this.app.najavaAktivna && this.app.najavljenoPolje) return { type: 'write', row: this.app.najavljenoPolje.row, col: this.app.najavljenoPolje.col }; let possible = []; KOLONE.forEach(col => { if (col === "Ručno" || col === "Najava") return; REDOVI_IGRA.forEach(row => { if (this.isAvail(row, col, sheet)) { const best5 = this.app.getBest5(row, dice); const raw = this.app.calcPoints(row, best5); possible.push({val: raw, row, col}); } }); }); possible.sort((a,b) => b.val - a.val); if (possible.length > 0) return { type: 'write', row: possible[0].row, col: possible[0].col }; return { type: 'pass' }; } isAvail(row, col, sheet) { return sheet[col][row] === null && this.app.isValidColumnOrder(row, col, sheet); } }
+        
+        // --- YAMB AI ENGINE v10.1 (UPDATED LOGIC) ---
+        class YambAI {
+            constructor(appInstance, difficulty = 'medium') {
+                this.app = appInstance;
+                this.difficulty = difficulty;
+                this.colPriority = {
+                    "Nadole": 50,
+                    "Nagore": 50,
+                    "Sredina": 40,
+                    "Ručno": 60, 
+                    "Najava": 35,
+                    "Slobodna": 5
+                };
+            }
+
+            decideRoll(dice, turnNum, sheet) {
+                const analysis = this.analyzeHand(dice);
+
+                // --- POTEZ 1: STRATEŠKA PROCENA ---
+                if (turnNum === 1) {
+                    // 1. PROVERA ZA RUČNO
+                    const manualMove = this.checkManualOpprotunity(dice, analysis, sheet);
+                    if (manualMove) {
+                        return { type: 'write', row: manualMove.row, col: 'Ručno' };
+                    }
+
+                    // 2. STANDARDNA NAJAVA
+                    if (!this.app.najavaAktivna) {
+                        let announceTarget = this.checkAnnounceOpportunity(analysis, sheet);
+                        
+                        // 3. PRISILNA NAJAVA
+                        if (!announceTarget) {
+                            announceTarget = this.checkForcedAnnounce(dice, sheet, analysis);
+                        }
+
+                        if (announceTarget) {
+                            this.app.clickNajava();
+                            this.app.najavljenoPolje = { row: announceTarget, col: 'Najava' };
+                            const holdMask = this.getHoldMaskForTarget(dice, announceTarget);
+                            return { type: 'hold', hold: holdMask };
+                        }
+                    }
+                }
+
+                // --- POTEZ 2 i 3 ---
+                if (this.app.najavaAktivna && this.app.najavljenoPolje) {
+                    if (turnNum === 3) {
+                        return { type: 'write', row: this.app.najavljenoPolje.row, col: 'Najava' };
+                    }
+                    const holdMask = this.getHoldMaskForTarget(dice, this.app.najavljenoPolje.row);
+                    return { type: 'hold', hold: holdMask };
+                }
+
+                // 3. POTEZ - MORA SE PISATI
+                if (turnNum === 3) {
+                    const bestMove = this.findBestScore(dice, sheet, true);
+                    if (bestMove) return bestMove;
+                    return this.panicWrite(sheet);
+                }
+
+                // KRAJ POTEZA 1 ili 2 (Hold logic)
+                const bestHold = this.calculateSmartHold(dice, sheet, turnNum);
+                return { type: 'hold', hold: bestHold };
+            }
+
+            // --- LOGIKA ZA PRONALAŽENJE POTEZA ---
+
+            checkManualOpprotunity(dice, an, sheet) {
+                if (!this.isAvail("1", "Ručno", sheet) && !this.isAvail("Yamb", "Ručno", sheet)) {
+                    // Brza provera
+                    const emptyManuals = REDOVI_IGRA.filter(r => sheet["Ručno"][r] === null).length;
+                    if (emptyManuals === 0) return null;
+                }
+
+                let best = null;
+                let maxW = 0;
+
+                REDOVI_IGRA.forEach(row => {
+                    if (this.isAvail(row, "Ručno", sheet)) {
+                        const best5 = this.app.getBest5(row, dice);
+                        const pts = this.app.calcPoints(row, best5);
+                        let w = 0;
+
+                        if (row === "Yamb" && pts >= 50) w = 300; 
+                        else if (row === "Poker" && pts >= 40) w = 150;
+                        else if (row === "Kenta" && pts >= 66) w = 200; 
+                        else if (row === "Kenta" && pts >= 56) w = 120;
+                        else if (row === "Triling" && pts >= 28) w = 60; 
+                        else if (row === "Ful" && pts >= 40) w = 100; 
+
+                        else if (["1","2","3","4","5","6"].includes(row)) {
+                            const val = parseInt(row);
+                            const count = dice.filter(d => d === val).length;
+                            if (count >= 4) w = 180; 
+                            else if (count === 3 && val >= 5) w = 90;
+                            else if (count === 3) w = 50; 
+                        }
+
+                        else if (row === "Max") {
+                            if (pts >= 26) w = 140; 
+                            else if (pts >= 24) w = 70;
+                        }
+                        else if (row === "Min") {
+                            if (pts <= 8) w = 140; 
+                            else if (pts <= 10) w = 70;
+                        }
+
+                        if (w > maxW) { maxW = w; best = { row, points: pts }; }
+                    }
+                });
+                return best;
+            }
+
+            checkAnnounceOpportunity(an, sheet) {
+                if (an.maxCount >= 4) {
+                    if (this.isAvail("Yamb", "Najava", sheet)) return "Yamb";
+                    if (this.isAvail("Poker", "Najava", sheet)) return "Poker";
+                    if (this.isAvail(String(an.valMaxCount), "Najava", sheet)) return String(an.valMaxCount);
+                }
+                if (an.maxCount === 3) {
+                    if (an.valMaxCount >= 4 && this.isAvail(String(an.valMaxCount), "Najava", sheet)) return String(an.valMaxCount);
+                }
+                if (an.nearKenta.length >= 4 && this.isAvail("Kenta", "Najava", sheet)) return "Kenta";
+                
+                if ((an.maxCount === 3 || (an.counts[an.valMaxCount] === 2 && Object.keys(an.counts).length <= 3)) && this.isAvail("Ful", "Najava", sheet)) {
+                    return "Ful";
+                }
+                
+                return null;
+            }
+
+            checkForcedAnnounce(dice, sheet, an) {
+                // --- ENDGAME DETEKTOR ---
+                let nonAnnounceOptions = 0;
+                ["Nadole", "Nagore", "Sredina", "Ručno", "Slobodna"].forEach(col => {
+                    REDOVI_IGRA.forEach(row => {
+                        if (this.isAvail(row, col, sheet)) nonAnnounceOptions++;
+                    });
+                });
+
+                if (nonAnnounceOptions > 8) return null;
+
+                // 1. Da li nam fali Broj (1-6)?
+                for (let i = 6; i >= 1; i--) {
+                    const sVal = String(i);
+                    if (this.isAvail(sVal, "Najava", sheet) && dice.includes(i)) return sVal;
+                }
+
+                // 2. Ostale figure
+                const priorities = ["Kenta", "Ful", "Triling", "Poker", "Yamb", "Max", "Min"];
+                for (let row of priorities) {
+                    if (this.isAvail(row, "Najava", sheet)) {
+                        if (row === "Kenta" && an.nearKenta.length < 2) continue;
+                        return row;
+                    }
+                }
+                
+                // Daj bilo šta ako ništa drugo ne može
+                for (let row of REDOVI_IGRA) {
+                    if (this.isAvail(row, "Najava", sheet)) return row;
+                }
+
+                return null;
+            }
+
+            findBestScore(dice, sheet, isFinalTurn) {
+                let possibleMoves = [];
+                const cols = ["Nadole", "Nagore", "Sredina", "Ručno", "Najava", "Slobodna"];
+
+                cols.forEach(col => {
+                    if (col === "Najava" && !this.app.najavaAktivna) return;
+                    if (this.app.najavaAktivna && col !== "Najava") return;
+
+                    REDOVI_IGRA.forEach(row => {
+                        if (!this.isAvail(row, col, sheet)) return;
+                        if (col === "Najava" && this.app.najavljenoPolje && this.app.najavljenoPolje.row !== row) return;
+
+                        let best5 = this.app.getBest5(row, dice);
+                        let pts = this.app.calcPoints(row, best5);
+                        let isScratch = false;
+
+                        if (col === "Ručno" && this.app.brojBacanja > 1) {
+                            pts = 0; 
+                            isScratch = true;
+                        }
+
+                        let weight = pts;
+                        weight += this.colPriority[col];
+
+                        if (row === "Yamb") {
+                            if (pts >= 50) weight += 500; 
+                            else if (col === "Nagore") weight += 60; 
+                        }
+
+                        if (row === "Max") {
+                            if (pts >= 25) weight += 50; 
+                            else if (pts < 20) weight -= 40;
+                        }
+                        if (row === "Min") {
+                            if (pts <= 8) weight += 50;
+                            else if (pts > 15) weight -= 40;
+                        }
+
+                        if (pts === 0) {
+                             if (col === "Slobodna") weight -= 30; 
+                             else if (isScratch) weight -= 400; 
+                             else weight -= 200; 
+                        }
+
+                        if (["1","2","3","4","5","6"].includes(row) && !isScratch) {
+                            const val = parseInt(row);
+                            const count = dice.filter(d => d === val).length;
+                            if (count >= 4) weight += 100;
+                            else if (count < 3) weight -= 50; 
+                        }
+
+                        if (this.isNextInColumn(row, col, sheet)) weight += 40;
+
+                        possibleMoves.push({ type: 'write', row, col, points: pts, weight });
+                    });
+                });
+
+                possibleMoves.sort((a, b) => b.weight - a.weight);
+
+                if (possibleMoves.length > 0) {
+                    if (isFinalTurn) return possibleMoves[0]; 
+                    if (possibleMoves[0].points > 0 && possibleMoves[0].weight > 60) return possibleMoves[0]; 
+                }
+
+                return null;
+            }
+
+            isNextInColumn(row, col, sheet) {
+                if (col === "Nadole") {
+                    const idx = REDOVI_IGRA.indexOf(row);
+                    if (idx === 0) return true;
+                    if (sheet[col][REDOVI_IGRA[idx-1]] !== null) return true;
+                }
+                
+                if (col === "Nagore") {
+                    const idx = REDOVI_IGRA.indexOf(row);
+                    if (idx === REDOVI_IGRA.length - 1) return true;
+                    if (sheet[col][REDOVI_IGRA[idx+1]] !== null) return true;
+                }
+
+                // --- NOVA LOGIKA ZA SREDINU ---
+                if (col === "Sredina") {
+                    const upBranch = ["Max", "6", "5", "4", "3", "2", "1"];
+                    const downBranch = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
+
+                    // Provera gornje grane (Od Max ka 1)
+                    if (upBranch.includes(row)) {
+                        const idx = upBranch.indexOf(row);
+                        if (idx === 0) return true; // Max je početak grane
+                        if (sheet[col][upBranch[idx-1]] !== null) return true;
+                    }
+
+                    // Provera donje grane (Od Min ka Yambu)
+                    if (downBranch.includes(row)) {
+                        const idx = downBranch.indexOf(row);
+                        if (idx === 0) return true; // Min je početak grane
+                        if (sheet[col][downBranch[idx-1]] !== null) return true;
+                    }
+                }
+
+                return false;
+            }
+
+            panicWrite(sheet) {
+                const sacrificeMap = [
+                    {col: "Ručno", rows: ["Yamb", "Poker", "Kenta", "Triling", "Ful"]}, 
+                    {col: "Ručno", rows: ["1", "2", "3", "4", "5", "6", "Max", "Min"]},
+                    {col: "Slobodna", rows: ["1", "2", "Min", "Max", "3"]}, 
+                    {col: "Sredina", rows: ["1", "2", "Min"]},
+                    {col: "Nadole", rows: ["1", "2"]},
+                    {col: "Nagore", rows: ["1", "2"]},
+                    {col: "Slobodna", rows: ["Triling", "Ful", "Kenta", "Poker", "Yamb"]}, 
+                    {col: "Nadole", rows: ["Yamb", "Poker"]},
+                    {col: "Nagore", rows: ["Yamb", "Poker"]}
+                ];
+
+                for (let plan of sacrificeMap) {
+                    for (let row of plan.rows) {
+                        if (this.isAvail(row, plan.col, sheet)) {
+                            if (plan.col === "Najava" && !this.app.najavaAktivna) continue;
+                            return { type: 'write', row: row, col: plan.col };
+                        }
+                    }
+                }
+                
+                for (let col of ["Ručno", "Slobodna", "Sredina", "Nadole", "Nagore"]) {
+                    if (col === "Najava" && !this.app.najavaAktivna) continue;
+                    for (let row of REDOVI_IGRA) {
+                        if (this.isAvail(row, col, sheet)) return { type: 'write', row: row, col: col };
+                    }
+                }
+                return { type: 'pass' }; 
+            }
+
+            calculateSmartHold(dice, sheet, turnNum) {
+                const an = this.analyzeHand(dice);
+                
+                // 1. Čuvaj Kentu ako je skoro gotova
+                if (an.nearKenta.length >= 4) return dice.map(d => an.nearKenta.includes(d));
+                
+                // 2. Čuvaj Ful / Poker
+                if (an.maxCount === 3) {
+                    const pairVal = dice.find(d => d !== an.valMaxCount && dice.filter(x=>x===d).length >= 2);
+                    if (pairVal) return [true, true, true, true, true, true]; // Već ima ful
+                    return dice.map(d => d === an.valMaxCount);
+                }
+
+                // 3. Čuvaj parove/trilinge ako fale za 1-6
+                if (an.maxCount >= 2) {
+                    if (an.valMaxCount === 1) {
+                         const needOnes = this.isAvail("1", "Nadole", sheet) || this.isAvail("1", "Nagore", sheet);
+                         // Ako nam ne trebaju kečevi za brojeve, možda nam trebaju za Min (vidi dole)
+                         if (!needOnes && an.maxCount < 3) { /* Fall through to Min logic */ }
+                         else return dice.map(d => d === an.valMaxCount);
+                    } else {
+                        return dice.map(d => d === an.valMaxCount);
+                    }
+                }
+                
+                // --- NOVA LOGIKA ZA MIN ---
+                const lowDice = dice.map(d => d <= 2);
+                const lowDiceCount = lowDice.filter(x => x).length;
+
+                if (lowDiceCount >= 2) {
+                    const needMin = ["Nadole", "Nagore", "Sredina", "Slobodna"].some(col => this.isAvail("Min", col, sheet));
+                    if (needMin) {
+                        return lowDice;
+                    }
+                }
+
+                // 4. Stara logika za MAX (lov na šestice)
+                const highDice = dice.map(d => d >= 5);
+                if (highDice.filter(x=>x).length >= 2) return highDice;
+
+                return [false, false, false, false, false, false];
+            }
+
+            isAvail(row, col, sheet) {
+                return sheet[col][row] === null && this.app.isValidColumnOrder(row, col, sheet);
+            }
+
+            getHoldMaskForTarget(dice, row) {
+                if (["1","2","3","4","5","6"].includes(row)) return dice.map(d => d === parseInt(row));
+                if (["Yamb", "Poker", "Triling", "Ful"].includes(row)) {
+                     const counts = {}; dice.forEach(x => counts[x] = (counts[x] || 0) + 1);
+                     let maxVal = dice[0]; let maxC = 0;
+                     for(let k in counts) { if(counts[k] > maxC) { maxC = counts[k]; maxVal = parseInt(k); } }
+                     return dice.map(d => d == maxVal);
+                }
+                if (row === "Kenta") {
+                    const seq1 = [1,2,3,4,5]; const seq2 = [2,3,4,5,6];
+                    const m1 = dice.map(d => seq1.includes(d)); const m2 = dice.map(d => seq2.includes(d));
+                    const c1 = m1.filter(x=>x).length; const c2 = m2.filter(x=>x).length;
+                    const used = new Set();
+                    const targetSeq = c1 > c2 ? seq1 : seq2;
+                    return dice.map(d => { if(targetSeq.includes(d) && !used.has(d)) { used.add(d); return true; } return false; });
+                }
+                return [false,false,false,false,false,false];
+            }
+
+            analyzeHand(dice) {
+                const counts = {}; dice.forEach(x => counts[x] = (counts[x] || 0) + 1);
+                const maxCount = Math.max(...Object.values(counts));
+                const valMaxCount = Number(Object.keys(counts).find(key => counts[key] === maxCount));
+                const uniqueDice = [...new Set(dice)].sort((a,b)=>a-b);
+                let bestStraight = [], maxStraightLen = 0;
+                [[1,2,3,4,5], [2,3,4,5,6]].forEach(seq => {
+                    const match = seq.filter(x => uniqueDice.includes(x));
+                    if (match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; }
+                });
+                return { counts, maxCount, valMaxCount, nearKenta: maxStraightLen >= 3 ? bestStraight : [], unique: uniqueDice };
+            }
+        }
+        // --- KRAJ NOVE AI LOGIKE ---
 
         class YambApp {
             constructor() {
@@ -443,12 +817,10 @@
                 const savedTheme = localStorage.getItem('yamb_theme');
                 if (savedTheme === 'light') document.body.classList.add('light-theme'); else if (savedTheme === 'medium') document.body.classList.add('medium-theme');
                 
-                // PROVERA POZIVNICE NA STARTU
                 setTimeout(() => { 
                     this.checkForInvite();
                 }, 1000);
 
-                // --- IZMENA: PRODUŽENA ANIMACIJA NA 4500ms ---
                 setTimeout(() => { 
                     this.navigateTo('main-menu'); 
                 }, 4500);
@@ -490,7 +862,6 @@
             
             showMainMenu() { 
                 this.navigateTo('main-menu'); 
-                // FIX: Sakrij chat kada se vratimo u meni
                 document.getElementById('chat-float-btn').classList.add('hidden');
                 document.getElementById('chat-window').classList.remove('active');
                 this.chatOpen = false;
@@ -499,37 +870,26 @@
             showRules() { this.navigateTo('rules-screen'); }
             async quitToMenu() { if (await this.modal.confirm("Da li ste sigurni da želite prekinuti igru?")) { if(this.socket) this.socket.disconnect(); this.showMainMenu(); } }
 
-            // --- NOVO: START PRIVATE HOSTING ---
             async startPrivateHosting() {
                 const nickname = await this.modal.prompt("Unesite Vaš nadimak:", "ONLINE PRIJAVA");
                 if (!nickname) return;
-                
-                // Generiši random sobu
                 const roomId = "yamb-" + Math.random().toString(36).substring(2, 8);
-                
-                // Kreiraj link za deljenje - ISPRAVKA ZA SERVER URL
                 const shareUrl = SERVER_URL + "/?room=" + roomId;
-                
                 this.navigateTo('waiting-screen');
                 document.getElementById('wait-msg').innerText = "Čekam prijatelja...";
                 document.getElementById('share-area').classList.remove('hidden');
                 document.getElementById('invite-link').value = shareUrl;
-                
                 this.joinPrivateGame(nickname, roomId);
             }
 
             async joinPrivateGame(nickname, roomId) {
                 this.navigateTo('waiting-screen');
-                // IZMENA: KORISTIMO SERVER_URL I TRANSPORTS
                 try { 
                     this.socket = io(SERVER_URL, { transports: ['websocket'] }); 
                 } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; }
-                
                 this.socket.on('connect', () => { 
-                    // Šaljemo zahtev za privatnu sobu
                     this.socket.emit('join_private_game', { nickname, roomId });
                 });
-
                 this.setupSocketListeners(nickname);
             }
 
@@ -538,17 +898,13 @@
                 if (!nickname) return;
                 this.navigateTo('waiting-screen');
                 document.getElementById('share-area').classList.add('hidden'); 
-                
-                // IZMENA: KORISTIMO SERVER_URL I TRANSPORTS
                 try { 
                     this.socket = io(SERVER_URL, { transports: ['websocket'] }); 
                 } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; }
-                
                 this.socket.on('connect', () => { 
                     document.getElementById('wait-msg').innerText = "Tražim protivnika..."; 
                     this.socket.emit('find_game', nickname); 
                 });
-
                 this.setupSocketListeners(nickname);
             }
 
@@ -557,17 +913,14 @@
                     await this.modal.alert("Ova soba je puna ili igra već traje!");
                     this.cancelOnline();
                 });
-
                 this.socket.on('private_waiting', (data) => {
                     this.roomId = data.roomId;
                 });
-
                 this.socket.on('game_start', (data) => {
                     this.myOnlineIndex = data.myIndex; this.onlineMode = true; this.modeTag = "Online"; this.roomId = data.roomId;
                     this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname];
                     this.initScores(); this.currentPlayerIdx = 0; this.startGame();
                 });
-
                 this.socket.on('remote_move', (data) => { 
                     const opponentIdx = this.myOnlineIndex === 0 ? 1 : 0;
                     this.allScores[opponentIdx][data.col][data.row] = data.points; 
@@ -754,19 +1107,25 @@
                 if (sheet[col][row] !== null) return await this.modal.alert("Popunjeno!");
                 const isHuman = !this.players[pIdx].includes("AI");
                 if (isHuman && this.najavaAktivna) {
-                    if (col !== "Najava" || this.najavljenoPolje) { this.soundMgr.error(); return await this.modal.alert("Moraš u NAJAVU!"); }
+                    if (col !== "Najava") { this.soundMgr.error(); return await this.modal.alert("Uključili ste najavu!\nMorate odabrati polje u koloni NAJAVA koje gađate."); }
                     this.najavljenoPolje = {row, col}; this.najavaAktivna = false;
                     document.getElementById(`btn-${pIdx}-${col}-${row}`).classList.add('highlight-najava');
                     const btnN = document.getElementById('btn-najava'); btnN.innerText = `Najava: ${row}`;
                     btnN.disabled = true; btnN.classList.remove('btn-active-toggle');
                     document.getElementById('btn-bacaj').disabled = false; 
+                    if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'selected', row: row });
                     return;
                 }
-                if (col === "Najava" && (!this.najavljenoPolje || this.najavljenoPolje.row !== row)) { this.soundMgr.error(); return await this.modal.alert("Samo najavljeno!"); }
-                if (!this.isValidColumnOrder(row, col, sheet)) { this.soundMgr.error(); return await this.modal.alert("Pogrešan redosled!"); }
+                if (this.najavljenoPolje) {
+                    if (col !== "Najava" || row !== this.najavljenoPolje.row) { this.soundMgr.error(); return await this.modal.alert(`Najavili ste ${this.najavljenoPolje.row}!\nMorate popuniti to polje (ili upisati 0 u njega).`); }
+                }
+                if (!this.isValidColumnOrder(row, col, sheet)) { this.soundMgr.error(); return await this.modal.alert("Pogrešan redosled popunjavanja kolone!"); }
                 const best5 = this.getBest5(row, this.kockiceVals);
                 let pts = this.calcPoints(row, best5);
-                if (col === "Ručno" && this.brojBacanja > 1) { if(isHuman) { const confirmZero = await this.modal.confirm("Ručno se igra samo u prvom bacanju.\nUpis će biti 0. Da li ste sigurni?"); if (!confirmZero) return; } pts = 0; }
+                if (col === "Ručno" && this.brojBacanja > 1) { 
+                    if(isHuman) { const confirmZero = await this.modal.confirm("Ručno kolona se popunjava samo posle 1. bacanja.\nOvo će biti upisano kao 0 (precrtavanje).\nDa li želite da nastavite?"); if (!confirmZero) return; } 
+                    pts = 0; 
+                }
                 sheet[col][row] = pts; this.soundMgr.score();
                 if (this.onlineMode && isHuman) { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts }); }
                 if (this.aiMode && isHuman) { if (pts >= 40) this.triggerAiChat('goodMove'); else if (pts <= 5) this.triggerAiChat('badMove'); }
@@ -807,13 +1166,11 @@
                     let grandTotal = 0; 
                     
                     KOLONE.forEach(col => { 
-                        // ZBIR 1 (1-6)
                         let sum1 = 0; 
                         ["1","2","3","4","5","6"].forEach(r => { if(data[col][r]!==null) sum1 += data[col][r]; }); 
                         if(sum1 >= 60) sum1 += 30; 
                         document.getElementById(`sum-${idx}-${col}-ZBIR 1`).innerText = sum1; 
                         
-                        // ZBIR 2 (Max, Min) - PROMENJENO PRAVILO
                         let sum2 = 0; 
                         const vMax = data[col]["Max"]; 
                         const vMin = data[col]["Min"]; 
@@ -821,12 +1178,10 @@
                         
                         if (vMax!==null && vMin!==null && v1!==null) {
                             sum2 = (vMax - vMin) * v1;
-                            // NOVO PRAVILO: Bonus 40 ako je rezultat >= 60
                             if (sum2 >= 60) sum2 += 40; 
                         }
                         document.getElementById(`sum-${idx}-${col}-ZBIR 2`).innerText = sum2; 
                         
-                        // ZBIR 3...
                         let sum3 = 0; 
                         ["Triling","Kenta","Ful","Poker","Yamb"].forEach(r => { if(data[col][r]!==null) sum3 += data[col][r]; }); 
                         document.getElementById(`sum-${idx}-${col}-ZBIR 3`).innerText = sum3; 
@@ -852,9 +1207,8 @@
                 }); 
             }
 
-            updateHighscoresUI() { /* Sidebar list not used on mobile */ }
+            updateHighscoresUI() { }
             
-            // --- POPRAVLJENO ČUVANJE IGRE (CAPACITOR + WEB) ---
             async saveGame() {
                 const data = { 
                     players: this.players, 
@@ -868,21 +1222,14 @@
                 const jsonString = JSON.stringify(data);
                 const fileName = `yamb_save_${Date.now()}.json`;
 
-                // 1. ANDROID / IOS (CAPACITOR) LOGIKA
                 if (window.Capacitor && window.Capacitor.isNative) {
                     try {
                         const { Filesystem, Directory, Encoding } = Capacitor.Plugins;
-
-                        // Pokušaj da zatražiš dozvole (bitno za Android 10+)
                         try {
                             if (Filesystem.requestPermissions) {
                                 await Filesystem.requestPermissions();
                             }
-                        } catch (permErr) {
-                            console.warn("Greška pri traženju dozvola:", permErr);
-                        }
-
-                        // Upis u DOCUMENTS folder (mnogo sigurnije od External)
+                        } catch (permErr) { console.warn("Greška pri traženju dozvola:", permErr); }
                         const result = await Filesystem.writeFile({
                             path: fileName,
                             data: jsonString,
@@ -890,12 +1237,8 @@
                             encoding: Encoding.UTF8,
                             recursive: true
                         });
-
                         await this.modal.alert(`Igra je sačuvana u Dokumentima!\n\n${result.uri}`, "SAČUVANO");
-
                     } catch (e) {
-                        console.error("Save error:", e);
-                        // Fallback - pokušaj da sačuvaš u Cache folder ako Documents ne radi
                         try {
                             const { Filesystem, Directory, Encoding } = Capacitor.Plugins;
                             await Filesystem.writeFile({
@@ -905,12 +1248,9 @@
                                 encoding: Encoding.UTF8
                             });
                             await this.modal.alert("Zbog restrikcija, igra je sačuvana u privremenoj memoriji (Cache).", "SAČUVANO (CACHE)");
-                        } catch (err2) {
-                            await this.modal.alert("Aplikacija nema dozvolu za čuvanje fajlova. Proverite podešavanja telefona.", "GREŠKA");
-                        }
+                        } catch (err2) { await this.modal.alert("Aplikacija nema dozvolu za čuvanje fajlova. Proverite podešavanja telefona.", "GREŠKA"); }
                     }
                 } else {
-                    // 2. WEB BROWSER LOGIKA
                     const blob = new Blob([jsonString], {type: "application/json"});
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
@@ -920,9 +1260,7 @@
                 }
             }
 
-            // --- POPRAVLJENO UČITAVANJE IGRE ---
             async loadGameFromFile() {
-                // Pokreće file picker (radi i na webu i na većini Androida kroz WebView)
                 const input = document.createElement('input'); 
                 input.type = 'file'; 
                 input.accept = '.json'; 
@@ -943,9 +1281,7 @@
                             this.highlightCurrentPlayer(); 
                             this.updateTableVisuals(); 
                             this.modal.alert("Igra uspešno učitana!");
-                        } catch (err) { 
-                            this.modal.alert("Greška pri učitavanju fajla!"); 
-                        } 
+                        } catch (err) { this.modal.alert("Greška pri učitavanju fajla!"); } 
                     }; 
                     reader.readAsText(file); 
                 }; 
