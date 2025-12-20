@@ -13,26 +13,14 @@
         
         /* DARK SOFT GOLD (DEFAULT) */
         :root {
-            /* Pozadina: Mekša tamna (Deep Charcoal) umesto skroz crne */
             --bg-base: #121212; 
-            --bg-gradient-1: #2a2a2a; 
-            --bg-gradient-2: #050505;
-
-            /* Zlato: Soft Champagne Gold (#E0C995) umesto oštre žute */
-            --gold-main: #E0C995; 
-            --gold-glow: rgba(224, 201, 149, 0.3); /* Suptilniji sjaj */
-
-            /* Tekst: Off-white za manji kontrast */
-            --text-main: #F0F0F0; 
-            --text-muted: #a0a0a0;
-
-            /* Glassmorphism: Pojačan efekat stakla (veća prozirnost) */
+            --bg-gradient-1: #2a2a2a; --bg-gradient-2: #050505;
+            --gold-main: #E0C995; --gold-glow: rgba(224, 201, 149, 0.3);
+            --text-main: #F0F0F0; --text-muted: #a0a0a0;
             --glass-bg: rgba(255, 255, 255, 0.04); 
-            --glass-panel: rgba(30, 32, 35, 0.60); /* Prozirnije za jači glass efekat */
+            --glass-panel: rgba(30, 32, 35, 0.60);
             --glass-border: 1px solid rgba(224, 201, 149, 0.2); 
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
-
-            /* Ostalo */
             --dice-bg: linear-gradient(145deg, #353535, #222222); 
             --dice-border: rgba(224, 201, 149, 0.3);
             --dice-color: #d0d0d0; --dice-active: #fff;
@@ -40,13 +28,10 @@
             --grid-header-bg: rgba(224, 201, 149, 0.1); 
             --input-bg: #252525; --input-border: #444;
             --danger: #ff5252; --success: #66BB6A;
-            
-            /* Kolone - malo pastelnije nijanse da se slažu sa Soft temom */
             --col-nadole: #81D4FA; --col-nagore: #EF9A9A; --col-sredina: #FFCC80; 
             --col-rucno: #CE93D8; --col-najava: #E0C995; --col-slobodna: #B0BEC5;
         }
 
-        /* LIGHT THEME (Ostaje ista) */
         body.light-theme {
             --bg-base: #e0e5ec; --bg-gradient-1: #f0f2f5; --bg-gradient-2: #cbd1d9;
             --gold-main: #b8962e; --gold-glow: rgba(184, 150, 46, 0.3);
@@ -62,13 +47,11 @@
             --col-rucno: #7b1fa2; --col-slobodna: #616161;
         }
 
-        /* MEDIUM THEME (Ostaje ista) */
         body.medium-theme {
             --bg-base: #4A148C; --bg-gradient-1: #7B1FA2; --bg-gradient-2: #FF6F00; 
             --gold-main: #FFD700; --gold-glow: rgba(255, 215, 0, 0.6);
             --text-main: #FFFFFF; --text-muted: #E1BEE7;
-            --glass-bg: rgba(255, 255, 255, 0.15); 
-            --glass-panel: rgba(60, 10, 90, 0.75); 
+            --glass-bg: rgba(255, 255, 255, 0.15); --glass-panel: rgba(60, 10, 90, 0.75); 
             --glass-border: 1px solid rgba(255, 215, 0, 0.3);
             --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
             --dice-bg: linear-gradient(135deg, #FFECB3, #FFCA28); 
@@ -104,18 +87,12 @@
         .screen.active { opacity: 1; visibility: visible; transform: scale(1); z-index: 10; }
         .hidden { display: none !important; }
 
-        /* IZMENA: Povećan margin-bottom za veći razmak od naslova do dugmadi */
-        .menu-title { 
-            font-size: 2.5rem; 
-            margin-bottom: 60px; /* Bilo je 30px */
-            text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-        }
+        .menu-title { font-size: 2.5rem; margin-bottom: 40px; text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .menu-subtitle { font-weight:300; font-size:1.2rem; color:var(--gold-main); display: block; letter-spacing: 2px; }
         
-        /* IZMENA: Vraćena manja margina za dugmiće (zbijeniji izgled) */
+        /* Desktop styles */
         .btn-menu {
-            width: 100%; max-width: 300px; padding: 15px; 
-            margin: 8px 0; /* Vraćeno na 8px da budu bliže */
+            width: 100%; max-width: 300px; padding: 15px; margin: 8px 0;
             background: var(--glass-bg); border: var(--glass-border); color: var(--text-main);
             font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
             border-radius: 50px; transition: all 0.2s; 
@@ -127,10 +104,8 @@
         .btn-primary { border-color: var(--gold-main); color: var(--gold-main); background: rgba(224, 201, 149, 0.08); box-shadow: 0 0 15px rgba(224, 201, 149, 0.15); }
         .btn-danger { border-color: var(--danger); color: var(--danger); }
         
-        /* Stil za dugme NASTAVI IGRU */
         .btn-resume {
-            border-color: var(--success);
-            color: var(--success);
+            border-color: var(--success); color: var(--success);
             background: rgba(76, 175, 80, 0.1);
             box-shadow: 0 0 15px rgba(76, 175, 80, 0.2);
             font-weight: 700;
@@ -138,21 +113,10 @@
 
         .menu-divider { margin: 10px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); }
 
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7); z-index: 2000;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 0; visibility: hidden; transition: 0.3s; 
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-        }
+        /* Modals and other UI components */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
-        .custom-modal {
-            background: var(--glass-panel); padding: 30px; border-radius: 20px;
-            border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow);
-            width: 90%; max-width: 400px; text-align: center;
-            transform: scale(0.8); transition: 0.3s;
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-        }
+        .custom-modal { background: var(--glass-panel); padding: 30px; border-radius: 20px; border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow); width: 90%; max-width: 400px; text-align: center; transform: scale(0.8); transition: 0.3s; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
         .modal-overlay.active .custom-modal { transform: scale(1); }
         .cm-title { color: var(--gold-main); font-size: 1.4rem; margin-bottom: 15px; font-weight: 700; text-transform: uppercase; }
         .cm-msg { color: var(--text-main); margin-bottom: 25px; line-height: 1.5; font-size: 1rem; }
@@ -162,22 +126,11 @@
         .cm-btn-ok { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); }
         .cm-btn-cancel { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
 
-        .chat-float-btn {
-            position: fixed; bottom: 140px; right: 20px; width: 50px; height: 50px; border-radius: 50%;
-            background: var(--gold-main); color: #000; display: flex; align-items: center; justify-content: center;
-            font-size: 24px; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px var(--gold-glow); transition: transform 0.2s;
-        }
+        .chat-float-btn { position: fixed; bottom: 140px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--gold-main); color: #000; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px var(--gold-glow); transition: transform 0.2s; }
         .chat-float-btn:hover { transform: scale(1.1); }
         .chat-notification { position: absolute; top: 0; right: 0; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; border: 2px solid #000; display: none; }
         .chat-notification.active { display: block; }
-        
-        .chat-window {
-            position: fixed; bottom: 200px; right: 20px; width: 300px; height: 350px;
-            background: var(--glass-panel); border: 1px solid var(--gold-main); border-radius: 15px; 
-            display: flex; flex-direction: column; z-index: 9999; opacity: 0; visibility: hidden; 
-            box-shadow: var(--glass-shadow);
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        }
+        .chat-window { position: fixed; bottom: 200px; right: 20px; width: 300px; height: 350px; background: var(--glass-panel); border: 1px solid var(--gold-main); border-radius: 15px; display: flex; flex-direction: column; z-index: 9999; opacity: 0; visibility: hidden; box-shadow: var(--glass-shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .chat-window.active { opacity: 1; visibility: visible; }
         .chat-header { padding: 10px; background: rgba(255,255,255,0.05); border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; font-weight: bold; color: var(--gold-main); font-size: 0.9rem; cursor: move; touch-action: none; }
         .chat-body { flex: 1; padding: 10px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
@@ -188,69 +141,29 @@
         .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
 
         #game-scene { justify-content: flex-start; padding: 0; background: transparent; overflow: hidden; }
-        
-        .game-header { 
-            width: 100%; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; 
-            border-bottom: var(--glass-border); background: var(--glass-panel); 
-            z-index: 20; height: 50px; flex-shrink: 0;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        }
-        
+        .game-header { width: 100%; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: var(--glass-border); background: var(--glass-panel); z-index: 20; height: 50px; flex-shrink: 0; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .game-content { display: flex; width: 100%; height: calc(100% - 50px); overflow: hidden; position: relative; }
         .left-panel { flex: 1; display: flex; flex-direction: column; padding: 10px; overflow: hidden; }
-        
-        .right-sidebar { 
-            width: 300px; background: var(--glass-panel); border-left: var(--glass-border); 
-            display: flex; flex-direction: column; padding: 15px; 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-        }
-
+        .right-sidebar { width: 300px; background: var(--glass-panel); border-left: var(--glass-border); display: flex; flex-direction: column; padding: 15px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .tables-wrapper { flex: 1; overflow-y: auto; overflow-x: auto; display: flex; justify-content: center; gap: 20px; padding-bottom: 20px; }
-        
-        .player-table { 
-            min-width: 340px; margin-bottom: 10px; 
-            background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            box-shadow: var(--glass-shadow);
-        }
-        
+        .player-table { min-width: 340px; margin-bottom: 10px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
         .player-name { text-align: center; font-weight: 700; color: var(--gold-main); margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .grid-container { display: grid; grid-template-columns: 1.5fr repeat(6, 1fr); gap: 1px; }
         .grid-cell { height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-muted); background: var(--grid-cell-bg); }
         .col-header { font-weight: bold; font-size: 12px; background: var(--grid-header-bg); }
         .row-header { justify-content: flex-end; padding-right: 5px; font-weight: 600; font-size: 10px; text-transform: uppercase; }
         .sum { color: var(--gold-main); }
-        .c-nadole { color: var(--col-nadole); } .c-nagore { color: var(--col-nagore); } .c-sredina { color: var(--col-sredina); } 
-        .c-rucno { color: var(--col-rucno); } .c-najava { color: var(--col-najava); } .c-slobodna { color: var(--col-slobodna); }
+        .c-nadole { color: var(--col-nadole); } .c-nagore { color: var(--col-nagore); } .c-sredina { color: var(--col-sredina); } .c-rucno { color: var(--col-rucno); } .c-najava { color: var(--col-najava); } .c-slobodna { color: var(--col-slobodna); }
         .score-btn { width: 100%; height: 100%; border: none; background: transparent; color: var(--text-main); font-weight: bold; cursor: pointer; transition: background 0.2s;}
         .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(224, 201, 149, 0.3); }
         .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
         .total-score { font-size: 1.5rem; color: var(--gold-main); text-align: center; margin-top: 5px; font-weight: 800; }
-
-        /* --- CONTROLS AREA --- */
-        .controls-area { 
-            min-height: 160px; 
-            background: var(--glass-panel); 
-            margin-top: 10px; 
-            border-radius: 15px 15px 0 0; 
-            border-top: 1px solid var(--gold-main); 
-            display: flex; 
-            align-items: center; 
-            padding: 10px 15px; 
-            z-index: 50; 
-            flex-shrink: 0; 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
-        }
-        
+        .controls-area { min-height: 160px; background: var(--glass-panel); margin-top: 10px; border-radius: 15px 15px 0 0; border-top: 1px solid var(--gold-main); display: flex; align-items: center; padding: 10px 15px; z-index: 50; flex-shrink: 0; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.3); }
         .dice-container { display: flex; gap: 8px; justify-content: center; }
-        
         .dice { width: 50px; height: 50px; background: var(--dice-bg); border: 1px solid var(--dice-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: var(--dice-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-        
         @keyframes roll { 0% { transform: rotate(0deg) rotateX(0deg); } 25% { transform: rotate(90deg) rotateX(90deg); } 50% { transform: rotate(180deg) rotateX(180deg); } 75% { transform: rotate(270deg) rotateX(270deg); } 100% { transform: rotate(360deg) rotateX(360deg); } }
         .dice.rolling { animation: roll 0.4s linear infinite; color: var(--gold-main); text-shadow: 0 0 10px var(--gold-glow); }
         .dice.held { border-color: var(--danger); color: var(--danger); transform: translateY(-3px); box-shadow: 0 0 15px rgba(255, 68, 68, 0.4); }
-        
         .game-info { text-align: right; flex: 1; display: flex; flex-direction: column; align-items: flex-end; }
         .status-label { font-size: 1rem; color: var(--gold-main); font-weight: 600; margin-bottom: 5px; }
         .action-btn-group { display: flex; gap: 5px; }
@@ -260,35 +173,15 @@
         .btn-secondary { background: var(--glass-bg); color: var(--text-main); border: var(--glass-border); }
         .btn-active-toggle { background: var(--danger); color: white; box-shadow: 0 0 10px rgba(255,0,0,0.4); }
         .btn-highlight { background: var(--gold-main) !important; color: black !important; }
-
         .sidebar-header { color: var(--text-muted); font-size: 0.7rem; uppercase; margin: 15px 0 5px 0; border-bottom: var(--glass-border); }
         .chat-input-wrapper { display: flex; gap: 5px; } .chat-input { flex: 1; background: var(--glass-bg); border: var(--glass-border); color: var(--text-main); padding: 8px; border-radius: 4px; }
         .highscore-list { list-style: none; font-size: 0.85rem; color: var(--text-muted); padding: 0; } 
         .highscore-item { padding: 8px 0; border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
-        
-        .modal-box { 
-            background: var(--glass-panel); padding: 25px; border-radius: 15px; border: 1px solid var(--gold-main); 
-            width: 90%; max-width: 350px; text-align: center; color: var(--text-main); 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            box-shadow: var(--glass-shadow);
-        }
+        .modal-box { background: var(--glass-panel); padding: 25px; border-radius: 15px; border: 1px solid var(--gold-main); width: 90%; max-width: 350px; text-align: center; color: var(--text-main); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
         .modal-input { width: 100%; padding: 10px; margin: 10px 0; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; }
         .back-btn { position: absolute; top: 20px; left: 20px; background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; }
         #splash-screen { background: var(--bg-base); z-index: 100; }
-        
-        /* LOGO STIL */
-        .logo-anim { 
-            font-size: 2.5rem; 
-            text-transform: uppercase; 
-            letter-spacing: 4px; 
-            animation: fadeInOut 4.5s forwards; 
-            color: var(--text-main);
-            text-align: center;
-            font-weight: 700;
-            width: 100%;
-            display: block;
-        }
-
+        .logo-anim { font-size: 2.5rem; text-transform: uppercase; letter-spacing: 4px; animation: fadeInOut 4.5s forwards; color: var(--text-main); text-align: center; font-weight: 700; width: 100%; display: block; }
         @keyframes fadeInOut { 0% { opacity: 0; letter-spacing: 0px; } 40% { opacity: 1; letter-spacing: 4px; } 80% { opacity: 1; } 100% { opacity: 0; } }
         .loader { border: 5px solid rgba(125,125,125,0.2); border-top: 5px solid var(--gold-main); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -303,7 +196,7 @@
         .rank-3 { background: #CD7F32; color: #000; }
         .hl-mode { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-left: 5px; border: 1px solid var(--glass-border); padding: 2px 5px; border-radius: 4px; }
 
-        /* --- MOBILE OPTIMIZATION (UPDATED) --- */
+        /* --- MOBILE OPTIMIZATION (COMPACT MENU) --- */
         @media (max-width: 800px) {
             .right-sidebar { display: none; }
             .game-content { flex-direction: column; }
@@ -311,18 +204,9 @@
             .tables-wrapper { height: calc(100% - 130px); flex-direction: column; align-items: center; justify-content: flex-start; padding: 10px; overflow-y: auto; }
             .player-table { width: 100%; max-width: 400px; margin-bottom: 20px; }
             
-            .controls-area { 
-                position: absolute; bottom: 0; left: 0; right: 0; 
-                height: 130px; 
-                border-radius: 0; background: var(--bg-base); 
-                border-top: 2px solid var(--gold-main); 
-                padding: 5px 10px; 
-                flex-direction: column; justify-content: center; gap: 5px; 
-            }
-            
+            .controls-area { position: absolute; bottom: 0; left: 0; right: 0; height: 130px; border-radius: 0; background: var(--bg-base); border-top: 2px solid var(--gold-main); padding: 5px 10px; flex-direction: column; justify-content: center; gap: 5px; }
             .dice-container { margin-bottom: 8px; gap: 3px; } 
             .dice { width: 14.5vw; height: 14.5vw; max-width: 70px; max-height: 70px; font-size: 12.5vw; }
-
             .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; }
             .status-label { margin: 0; font-size: 0.9rem; } .btn-throw { width: 100px; }
             
@@ -330,18 +214,26 @@
             .chat-window.active { transform: translateX(-50%); } 
             .chat-float-btn { bottom: 145px; }
 
-            /* --- IZMENA: Centriranje menija na mobilnom --- */
+            /* --- KOMPAKTAN MENI (DA STANE NA EKRAN) --- */
             #main-menu { 
-                padding: 20px 10px; 
+                padding: 10px 20px; /* Minimalan padding */
                 overflow-y: auto; 
-                /* Vraćamo flex-start da se ređa odozgo, ali guramo padding-om */
-                justify-content: flex-start; 
-                padding-top: 100px; /* Značajno spušteno od vrha (bilo 40px) */
+                justify-content: center; /* Centrirano vertikalno */
+                padding-top: 0; /* Nema guranja odozgo, flex center radi posao */
             }
-            .menu-title { font-size: 2rem; margin-bottom: 60px; /* Veći razmak do dugmadi (bilo 40px) */ }
+            .menu-title { 
+                font-size: 2rem; 
+                margin-bottom: 25px; /* Smanjen razmak do prvog dugmeta */
+            }
             .menu-subtitle { font-size: 1rem; }
-            .btn-menu { width: 95%; max-width: none; padding: 15px; margin: 8px 0; font-size: 0.9rem; }
-            .menu-divider { margin: 12px 0; }
+            
+            .btn-menu { 
+                width: 95%; max-width: none; 
+                padding: 10px; /* Smanjen padding dugmića */
+                margin: 4px 0; /* Smanjen razmak između dugmića */
+                font-size: 0.9rem; 
+            }
+            .menu-divider { margin: 8px 0; }
         }
     </style>
 </head>
@@ -831,7 +723,6 @@
                 return { counts, maxCount, valMaxCount, nearKenta: maxStraightLen >= 3 ? bestStraight : [], unique: uniqueDice };
             }
         }
-        // --- KRAJ NOVE AI LOGIKE ---
 
         class YambApp {
             constructor() {
