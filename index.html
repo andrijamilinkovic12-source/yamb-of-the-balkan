@@ -4,36 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Yamb of the Balkan - Ultimate Edition</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <script src="capacitor.js"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-
+    <script src="capacitor.js"></script> 
+    
     <style>
         /* --- THEME ENGINE --- */
+        
+        /* DARK SOFT GOLD (DEFAULT) */
         :root {
-            --bg-base: #0a0a0a; 
-            --bg-gradient-1: #2c2c2c; --bg-gradient-2: #000000;
-            --gold-main: #D4AF37; --gold-glow: rgba(212, 175, 55, 0.4);
-            --text-main: #FFFFFF; --text-muted: #bbbbbb;
-            --glass-bg: rgba(255, 255, 255, 0.03); 
-            --glass-panel: rgba(20, 20, 20, 0.70); 
-            --glass-border: 1px solid rgba(212, 175, 55, 0.15); 
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            --dice-bg: linear-gradient(145deg, #2b2b2b, #1a1a1a); 
-            --dice-border: rgba(212, 175, 55, 0.2);
-            --dice-color: #ccc; --dice-active: #fff;
-            --grid-cell-bg: rgba(255, 255, 255, 0.03); 
-            --grid-header-bg: rgba(212, 175, 55, 0.1); 
-            --input-bg: #222; --input-border: #444;
-            --danger: #ff4444; --success: #4CAF50;
+            /* Pozadina: Mekša tamna (Deep Charcoal) umesto skroz crne */
+            --bg-base: #121212; 
+            --bg-gradient-1: #2a2a2a; 
+            --bg-gradient-2: #050505;
+
+            /* Zlato: Soft Champagne Gold (#E0C995) umesto oštre žute */
+            --gold-main: #E0C995; 
+            --gold-glow: rgba(224, 201, 149, 0.3); /* Suptilniji sjaj */
+
+            /* Tekst: Off-white za manji kontrast */
+            --text-main: #F0F0F0; 
+            --text-muted: #a0a0a0;
+
+            /* Glassmorphism: Pojačan efekat stakla (veća prozirnost) */
+            --glass-bg: rgba(255, 255, 255, 0.04); 
+            --glass-panel: rgba(30, 32, 35, 0.60); /* Prozirnije za jači glass efekat */
+            --glass-border: 1px solid rgba(224, 201, 149, 0.2); 
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);
+
+            /* Ostalo */
+            --dice-bg: linear-gradient(145deg, #353535, #222222); 
+            --dice-border: rgba(224, 201, 149, 0.3);
+            --dice-color: #d0d0d0; --dice-active: #fff;
+            --grid-cell-bg: rgba(255, 255, 255, 0.02); 
+            --grid-header-bg: rgba(224, 201, 149, 0.1); 
+            --input-bg: #252525; --input-border: #444;
+            --danger: #ff5252; --success: #66BB6A;
             
-            --col-nadole: #4fc3f7; --col-nagore: #ef5350; --col-sredina: #ffa726; 
-            --col-rucno: #ab47bc; --col-najava: #D4AF37; --col-slobodna: #bdbdbd;
+            /* Kolone - malo pastelnije nijanse da se slažu sa Soft temom */
+            --col-nadole: #81D4FA; --col-nagore: #EF9A9A; --col-sredina: #FFCC80; 
+            --col-rucno: #CE93D8; --col-najava: #E0C995; --col-slobodna: #B0BEC5;
         }
 
+        /* LIGHT THEME (Ostaje ista) */
         body.light-theme {
             --bg-base: #e0e5ec; --bg-gradient-1: #f0f2f5; --bg-gradient-2: #cbd1d9;
             --gold-main: #b8962e; --gold-glow: rgba(184, 150, 46, 0.3);
@@ -49,6 +62,7 @@
             --col-rucno: #7b1fa2; --col-slobodna: #616161;
         }
 
+        /* MEDIUM THEME (Ostaje ista) */
         body.medium-theme {
             --bg-base: #4A148C; --bg-gradient-1: #7B1FA2; --bg-gradient-2: #FF6F00; 
             --gold-main: #FFD700; --gold-glow: rgba(255, 215, 0, 0.6);
@@ -90,21 +104,38 @@
         .screen.active { opacity: 1; visibility: visible; transform: scale(1); z-index: 10; }
         .hidden { display: none !important; }
 
-        .menu-title { font-size: 2.5rem; margin-bottom: 30px; text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        /* IZMENA: Povećan margin-bottom za veći razmak od naslova do dugmadi */
+        .menu-title { 
+            font-size: 2.5rem; 
+            margin-bottom: 60px; /* Bilo je 30px */
+            text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+        }
         .menu-subtitle { font-weight:300; font-size:1.2rem; color:var(--gold-main); display: block; letter-spacing: 2px; }
         
+        /* IZMENA: Vraćena manja margina za dugmiće (zbijeniji izgled) */
         .btn-menu {
-            width: 100%; max-width: 300px; padding: 15px; margin: 8px 0;
+            width: 100%; max-width: 300px; padding: 15px; 
+            margin: 8px 0; /* Vraćeno na 8px da budu bliže */
             background: var(--glass-bg); border: var(--glass-border); color: var(--text-main);
             font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
             border-radius: 50px; transition: all 0.2s; 
             font-family: 'Montserrat', sans-serif; font-weight: 600;
-            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .btn-menu:active { transform: scale(0.95); }
-        .btn-primary { border-color: var(--gold-main); color: var(--gold-main); background: rgba(212, 175, 55, 0.05); box-shadow: 0 0 15px rgba(212, 175, 55, 0.1); }
+        .btn-primary { border-color: var(--gold-main); color: var(--gold-main); background: rgba(224, 201, 149, 0.08); box-shadow: 0 0 15px rgba(224, 201, 149, 0.15); }
         .btn-danger { border-color: var(--danger); color: var(--danger); }
+        
+        /* Stil za dugme NASTAVI IGRU */
+        .btn-resume {
+            border-color: var(--success);
+            color: var(--success);
+            background: rgba(76, 175, 80, 0.1);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.2);
+            font-weight: 700;
+        }
+
         .menu-divider { margin: 10px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); }
 
         .modal-overlay {
@@ -120,7 +151,7 @@
             border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow);
             width: 90%; max-width: 400px; text-align: center;
             transform: scale(0.8); transition: 0.3s;
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
         }
         .modal-overlay.active .custom-modal { transform: scale(1); }
         .cm-title { color: var(--gold-main); font-size: 1.4rem; margin-bottom: 15px; font-weight: 700; text-transform: uppercase; }
@@ -192,8 +223,8 @@
         .c-nadole { color: var(--col-nadole); } .c-nagore { color: var(--col-nagore); } .c-sredina { color: var(--col-sredina); } 
         .c-rucno { color: var(--col-rucno); } .c-najava { color: var(--col-najava); } .c-slobodna { color: var(--col-slobodna); }
         .score-btn { width: 100%; height: 100%; border: none; background: transparent; color: var(--text-main); font-weight: bold; cursor: pointer; transition: background 0.2s;}
-        .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(212,175,5,0.3); }
-        .highlight-najava { background: rgba(212, 175, 55, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(212,175,55,0.2); }
+        .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(224, 201, 149, 0.3); }
+        .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
         .total-score { font-size: 1.5rem; color: var(--gold-main); text-align: center; margin-top: 5px; font-weight: 800; }
 
         /* --- CONTROLS AREA --- */
@@ -272,7 +303,7 @@
         .rank-3 { background: #CD7F32; color: #000; }
         .hl-mode { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-left: 5px; border: 1px solid var(--glass-border); padding: 2px 5px; border-radius: 4px; }
 
-        /* --- MOBILE OPTIMIZATION --- */
+        /* --- MOBILE OPTIMIZATION (UPDATED) --- */
         @media (max-width: 800px) {
             .right-sidebar { display: none; }
             .game-content { flex-direction: column; }
@@ -299,11 +330,18 @@
             .chat-window.active { transform: translateX(-50%); } 
             .chat-float-btn { bottom: 145px; }
 
-            #main-menu { padding: 20px 10px; overflow-y: auto; justify-content: flex-start; padding-top: 40px; }
-            .menu-title { font-size: 2rem; margin-bottom: 20px; }
+            /* --- IZMENA: Centriranje menija na mobilnom --- */
+            #main-menu { 
+                padding: 20px 10px; 
+                overflow-y: auto; 
+                /* Vraćamo flex-start da se ređa odozgo, ali guramo padding-om */
+                justify-content: flex-start; 
+                padding-top: 100px; /* Značajno spušteno od vrha (bilo 40px) */
+            }
+            .menu-title { font-size: 2rem; margin-bottom: 60px; /* Veći razmak do dugmadi (bilo 40px) */ }
             .menu-subtitle { font-size: 1rem; }
-            .btn-menu { width: 95%; max-width: none; padding: 12px; margin: 5px 0; font-size: 0.85rem; }
-            .menu-divider { margin: 8px 0; }
+            .btn-menu { width: 95%; max-width: none; padding: 15px; margin: 8px 0; font-size: 0.9rem; }
+            .menu-divider { margin: 12px 0; }
         }
     </style>
 </head>
@@ -339,13 +377,15 @@
     <div id="main-menu" class="screen">
         <h1 class="menu-title">YAMB<br><span class="menu-subtitle">OF THE BALKAN</span></h1>
         
+        <button id="btn-resume-game" class="btn-menu btn-resume hidden" onclick="app.loadSavedGame()">▶ NASTAVI IGRU</button>
+
         <button class="btn-menu btn-primary" onclick="app.setupGame(1)">👤 Solo Igra</button>
         <button class="btn-menu" onclick="app.setupGame(2, true)">🤖 Protiv AI</button>
         <button class="btn-menu" onclick="app.setupGame(2)">👥 Dva Igrača (Hotseat)</button>
         <button class="btn-menu" onclick="app.setupOnline('random')">🌐 Nađi Protivnika (Random)</button>
         <button class="btn-menu" style="border-color: #2196F3; color: #2196F3;" onclick="app.startPrivateHosting()">🔗 Pozovi Prijatelja</button>
         
-        <button class="btn-menu" onclick="app.loadGameFromFile()">📂 Učitaj Igru</button>
+        <button class="btn-menu" onclick="app.loadGameFromFile()">📂 Učitaj Fajl (Backup)</button>
         <div class="menu-divider"></div>
         <button class="btn-menu" onclick="app.showHighscoresScreen()">🏆 TOP LISTA</button>
         <button class="btn-menu" onclick="app.showStats()">📊 Statistika</button>
@@ -383,7 +423,7 @@
 
     <div id="stats-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">STATISTIKA</h2><div class="modal-box" style="width: 100%; max-width: 500px;"><div style="border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px;"><p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">NAJVEĆI SKOR</p><span id="stat-high" style="font-size: 2.5rem; color: var(--gold-main); font-weight: 700;">0</span></div><div class="stat-grid"><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">UKUPNO PARTIJA</span><span id="stat-games" class="stat-val">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">PROSEČAN SKOR</span><span id="stat-avg" class="stat-val c-gold">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">POBEDE</span><span id="stat-wins" class="stat-val c-win">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">PORAZI</span><span id="stat-losses" class="stat-val c-loss">0</span></div></div><div style="margin-top: 15px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px;"><p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">USPEŠNOST</p><span id="stat-rate" style="font-size: 1.5rem; color: var(--text-main); font-weight: 600;">0%</span></div></div></div>
     <div id="highscores-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">TOP LISTA</h2><div class="modal-box" style="width: 100%; max-width: 600px; text-align: left;"><div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--gold-main); padding-bottom: 10px; margin-bottom: 10px; font-weight: bold; color: var(--gold-main);"><span>IGRAČ</span><span>SKOR</span></div><ul id="full-hs-list" class="highscore-list top-list-scroll"></ul></div></div>
-    <div id="settings-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">PODEŠAVANJA</h2><div class="modal-box" style="text-align: left;"><label style="color:var(--text-muted);">Vaše Ime:</label><input type="text" id="setting-name" class="modal-input" placeholder="Igrač"><div style="margin-top: 15px;"><label style="color: var(--text-muted);">Tema:</label><select id="setting-theme" class="modal-input"><option value="dark">Dark Gold (Glass)</option><option value="light">Light Gold</option><option value="medium">Medium Gold (Vesela)</option></select></div><div style="margin-top: 15px;"><label style="display: flex; align-items: center;"><input type="checkbox" id="setting-sound" style="margin-right: 10px;"> Zvučni Efekti</label></div><button class="btn-menu btn-primary" style="margin-top: 20px;" onclick="app.saveSettings()">Sačuvaj</button></div></div>
+    <div id="settings-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">PODEŠAVANJA</h2><div class="modal-box" style="text-align: left;"><label style="color:var(--text-muted);">Vaše Ime:</label><input type="text" id="setting-name" class="modal-input" placeholder="Igrač"><div style="margin-top: 15px;"><label style="color: var(--text-muted);">Tema:</label><select id="setting-theme" class="modal-input"><option value="dark">Dark Soft Gold (Glass)</option><option value="light">Light Gold</option><option value="medium">Medium Gold (Vesela)</option></select></div><div style="margin-top: 15px;"><label style="display: flex; align-items: center;"><input type="checkbox" id="setting-sound" style="margin-right: 10px;"> Zvučni Efekti</label></div><button class="btn-menu btn-primary" style="margin-top: 20px;" onclick="app.saveSettings()">Sačuvaj</button></div></div>
     <div id="rules-screen" class="screen" style="overflow-y: auto;"><button class="back-btn" onclick="app.showMainMenu()">←</button><div style="max-width: 800px; padding: 25px; background: var(--glass-panel); border-radius: 10px; color: var(--text-main); margin-top: 60px; margin-bottom: 20px;"><h2 style="color:var(--gold-main); text-align:center; margin-bottom: 20px;">PRAVILA IGRE</h2><p style="margin-bottom: 15px; font-size: 0.95rem;"><strong>Cilj igre:</strong> Osvojiti što više poena kombinovanjem 5 od 6 kockica. Imate pravo na 3 bacanja po potezu.</p><h3 style="color:var(--gold-main); margin-top:20px; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">KOLONE</h3><ul style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem; margin-top: 10px;"><li><span class="c-nadole">↓ Nadole:</span> Igra se redom od 1 do Yamba.</li><li><span class="c-slobodna">S Slobodna:</span> Može se igrati bilo koje polje u bilo kom trenutku.</li><li><span class="c-nagore">↑ Nagore:</span> Igra se obrnutim redom, od Yamba do 1.</li><li><span class="c-najava">📢 Najava:</span> Nakon prvog bacanja, igrač mora najaviti šta gađa.</li><li><span class="c-rucno">R Ručno:</span> Polje se mora popuniti isključivo posle prvog bacanja.</li><li><span class="c-sredina">⇅ Sredina:</span> Popunjava se <strong>od sredine (Min, Max) ka krajevima (1, Yamb)</strong>.</li></ul><h3 style="color:var(--gold-main); margin-top:20px; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">BODOVANJE</h3><ul style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem; margin-top: 10px;"><li><strong>1 - 6:</strong> Zbir dobijenih brojeva. (Bonus +30 ako je zbir ≥ 60).</li><li><strong>Max:</strong> Što veći zbir 5 kockica.</li><li><strong>Min:</strong> Što manji zbir 5 kockica. <br><em style="color:var(--text-muted)">(Formula: (Max - Min) * Kec). Bonus +40 ako je rezultat ≥ 60.</em></li><li><strong>Triling:</strong> 3 iste + 20 poena.</li><li><strong>Ful:</strong> 3 iste + 2 iste + 30 poena.</li><li><strong>Poker:</strong> 4 iste + 40 poena.</li><li><strong>Yamb:</strong> 5 istih + 50 poena.</li><li><strong>Kenta:</strong> 5 vezanih (66, 56, 46 poena).</li></ul></div></div>
 
     <div id="waiting-screen" class="screen">
@@ -407,7 +447,6 @@
         const UNICODE_DICE = {0: "", 1: "⚀", 2: "⚁", 3: "⚂", 4: "⚃", 5: "⚄", 6: "⚅"};
         const REDOVI_IGRA = ["1", "2", "3", "4", "5", "6", "Max", "Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
         const REDOVI_PRIKAZ = ["1", "2", "3", "4", "5", "6", "ZBIR 1", "Max", "Min", "ZBIR 2", "Triling", "Kenta", "Ful", "Poker", "Yamb", "ZBIR 3"];
-        // --- POPRAVLJENO: Vraćen "Nagore" u listu kolona ---
         const KOLONE = ["Nadole", "Slobodna", "Sredina", "Nagore", "Ručno", "Najava"];
         
         const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -844,7 +883,10 @@
                 }
             }
 
-            navigateTo(screenId) { document.querySelectorAll('.screen').forEach(el => el.classList.remove('active')); const target = document.getElementById(screenId); if (target) target.classList.add('active'); }
+            navigateTo(screenId) { document.querySelectorAll('.screen').forEach(el => el.classList.remove('active')); const target = document.getElementById(screenId); if (target) target.classList.add('active'); 
+                // Ako idemo u main menu, proveri da li postoji saved game
+                if(screenId === 'main-menu') this.checkSavedGame();
+            }
             uiInit() { const diceCont = document.getElementById('dice-container'); diceCont.innerHTML = ""; for (let i = 0; i < 6; i++) { let btn = document.createElement('div'); btn.className = 'dice'; btn.innerText = ''; btn.onclick = () => this.toggleHold(i); diceCont.appendChild(btn); this.diceBtns.push(btn); } }
             dragElement(elmnt) { var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0; var header = document.getElementById("chat-header"); if (header) { header.onmousedown = dragMouseDown; header.ontouchstart = dragMouseDown; } function dragMouseDown(e) { e = e || window.event; if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') { if(e.type === 'touchstart') { pos3 = e.touches[0].clientX; pos4 = e.touches[0].clientY; } else { e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; } document.onmouseup = closeDragElement; document.onmousemove = elementDrag; document.ontouchend = closeDragElement; document.ontouchmove = elementDrag; } } function elementDrag(e) { e = e || window.event; let clientX, clientY; if(e.type === 'touchmove') { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; } else { e.preventDefault(); clientX = e.clientX; clientY = e.clientY; } pos1 = pos3 - clientX; pos2 = pos4 - clientY; pos3 = clientX; pos4 = clientY; elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px"; elmnt.style.bottom = "auto"; elmnt.style.right = "auto"; } function closeDragElement() { document.onmouseup = null; document.onmousemove = null; document.ontouchend = null; document.ontouchmove = null; } }
             toggleChat() { this.chatOpen = !this.chatOpen; const win = document.getElementById('chat-window'); const badge = document.getElementById('chat-badge'); if (this.chatOpen) { win.classList.add('active'); badge.classList.remove('active'); this.unreadMsgs = 0; const body = document.getElementById('chat-body'); body.scrollTop = body.scrollHeight; } else { win.classList.remove('active'); } }
@@ -1136,10 +1178,15 @@
             switchPlayer() {
                 let gameOver = true; this.allScores.forEach(s => { KOLONE.forEach(c => { REDOVI_IGRA.forEach(r => { if (s[c][r] === null) gameOver = false; }); }); });
                 if (gameOver) { this.handleGameOver(); return; }
-                this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length; this.resetTurnLogic();
+                this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length; 
+                this.resetTurnLogic(); 
+                // Auto-save posle svakog poteza
+                this.autoSaveGame();
             }
 
             async handleGameOver() {
+                // Brisanje save-a kad se igra završi
+                localStorage.removeItem('yamb_saved_game');
                 this.gameActive = false; const results = [];
                 this.players.forEach((name, i) => { let total = parseInt(document.getElementById(`total-${i}`).innerText); results.push({name, score: total}); });
                 this.players.forEach((name, i) => { if (!name.includes("AI")) { const score = results[i].score; this.saveHighscoreEntry(name, score, this.modeTag); } });
@@ -1208,8 +1255,23 @@
             }
 
             updateHighscoresUI() { }
+
+            // --- NOVO: FUNKCIJE ZA ČUVANJE U LOCAL STORAGE (JSON BAZA) ---
             
-            async saveGame() {
+            checkSavedGame() {
+                const saved = localStorage.getItem('yamb_saved_game');
+                const btnResume = document.getElementById('btn-resume-game');
+                if (saved) {
+                    btnResume.classList.remove('hidden');
+                } else {
+                    btnResume.classList.add('hidden');
+                }
+            }
+
+            autoSaveGame() {
+                // Ne čuvamo online partije
+                if(this.onlineMode) return;
+                
                 const data = { 
                     players: this.players, 
                     scores: this.allScores, 
@@ -1218,45 +1280,56 @@
                     diff: this.aiDifficulty,
                     date: new Date().toISOString()
                 };
-                
-                const jsonString = JSON.stringify(data);
-                const fileName = `yamb_save_${Date.now()}.json`;
+                localStorage.setItem('yamb_saved_game', JSON.stringify(data));
+            }
 
-                if (window.Capacitor && window.Capacitor.isNative) {
-                    try {
-                        const { Filesystem, Directory, Encoding } = Capacitor.Plugins;
-                        try {
-                            if (Filesystem.requestPermissions) {
-                                await Filesystem.requestPermissions();
-                            }
-                        } catch (permErr) { console.warn("Greška pri traženju dozvola:", permErr); }
-                        const result = await Filesystem.writeFile({
-                            path: fileName,
-                            data: jsonString,
-                            directory: Directory.Documents, 
-                            encoding: Encoding.UTF8,
-                            recursive: true
-                        });
-                        await this.modal.alert(`Igra je sačuvana u Dokumentima!\n\n${result.uri}`, "SAČUVANO");
-                    } catch (e) {
-                        try {
-                            const { Filesystem, Directory, Encoding } = Capacitor.Plugins;
-                            await Filesystem.writeFile({
-                                path: fileName,
-                                data: jsonString,
-                                directory: Directory.Cache,
-                                encoding: Encoding.UTF8
-                            });
-                            await this.modal.alert("Zbog restrikcija, igra je sačuvana u privremenoj memoriji (Cache).", "SAČUVANO (CACHE)");
-                        } catch (err2) { await this.modal.alert("Aplikacija nema dozvolu za čuvanje fajlova. Proverite podešavanja telefona.", "GREŠKA"); }
-                    }
-                } else {
+            // Ažurirano manualno čuvanje
+            async saveGame() {
+                // 1. Uvek sačuvaj lokalno (za Android/Web)
+                this.autoSaveGame();
+                
+                // 2. Ako je na računaru (nije mobilna app), ponudi fajl
+                const isNative = window.Capacitor && window.Capacitor.isNative;
+                
+                if (!isNative) {
+                    const jsonString = JSON.stringify(JSON.parse(localStorage.getItem('yamb_saved_game'))); // uzimamo sveže
                     const blob = new Blob([jsonString], {type: "application/json"});
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
                     a.download = "yamb_save.json";
                     a.click();
+                    this.modal.alert("Igra je sačuvana u pretraživaču i kao fajl!");
+                } else {
+                    this.modal.alert("Igra je uspešno sačuvana!", "SAČUVANO");
+                }
+                
+                // Ažuriraj dugme u meniju (u pozadini)
+                this.checkSavedGame();
+            }
+
+            async loadSavedGame() {
+                try {
+                    const saved = localStorage.getItem('yamb_saved_game');
+                    if (!saved) {
+                        this.modal.alert("Nema sačuvane igre.");
+                        return;
+                    }
+                    const data = JSON.parse(saved);
+                    this.players = data.players; 
+                    this.allScores = data.scores; 
+                    this.currentPlayerIdx = data.current; 
+                    this.aiMode = data.aiMode; 
+                    this.aiDifficulty = data.diff || "medium"; 
+                    if (this.aiMode) this.ai = new YambAI(this, this.aiDifficulty); 
+                    
+                    this.startGame(); 
+                    this.highlightCurrentPlayer(); 
+                    this.updateTableVisuals(); 
+                    this.modal.alert("Igra nastavljena!");
+                } catch (e) {
+                    console.error(e);
+                    this.modal.alert("Greška pri učitavanju igre.");
                 }
             }
 
@@ -1280,7 +1353,9 @@
                             this.startGame(); 
                             this.highlightCurrentPlayer(); 
                             this.updateTableVisuals(); 
-                            this.modal.alert("Igra uspešno učitana!");
+                            this.modal.alert("Igra uspešno učitana iz fajla!");
+                            // Čuvamo i lokalno da može da nastavi
+                            this.autoSaveGame();
                         } catch (err) { this.modal.alert("Greška pri učitavanju fajla!"); } 
                     }; 
                     reader.readAsText(file); 
