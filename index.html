@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Yamb of the Balkan - Ultimate Edition</title>
+    <title>Yamb of the Balkan - Divine Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
     <script src="capacitor.js"></script> 
@@ -28,8 +28,6 @@
             --danger: #ff5252; --success: #66BB6A;
             --col-nadole: #81D4FA; --col-nagore: #EF9A9A; --col-sredina: #FFCC80; 
             --col-rucno: #CE93D8; --col-najava: #E0C995; --col-slobodna: #B0BEC5;
-            
-            /* Safe area varijable */
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left: env(safe-area-inset-left, 0px);
@@ -87,7 +85,6 @@
             opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s;
             transform: scale(0.95); z-index: 1; 
             padding: 20px;
-            /* Safe area padding - ključno za S25 i Tablete */
             padding-top: max(20px, env(safe-area-inset-top)); 
             padding-bottom: max(20px, env(safe-area-inset-bottom));
             padding-left: max(20px, env(safe-area-inset-left));
@@ -144,7 +141,7 @@
         .msg-incoming { align-self: flex-start; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-left-radius: 2px; }
         .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
 
-        /* --- GAME LAYOUT (REDIZAJNIRAN - BEZ SIDEBARA) --- */
+        /* --- GAME LAYOUT --- */
         #game-scene { 
             justify-content: flex-start; 
             padding: 0; 
@@ -178,22 +175,11 @@
             position: relative; 
             padding-left: max(0px, env(safe-area-inset-left));
             padding-right: max(0px, env(safe-area-inset-right));
-            /* Centriranje sadržaja pošto nema desne strane */
             justify-content: center; 
         }
 
-        /* Glavni panel sada zauzima sve */
-        .left-panel { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            padding: 10px; 
-            overflow: hidden; 
-            max-width: 100%; /* Da ne beži */
-        }
+        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 10px; overflow: hidden; max-width: 100%; }
         
-        /* Sidebar je uklonjen u potpunosti */
-
         .tables-wrapper { 
             flex: 1; 
             overflow: auto; 
@@ -236,7 +222,6 @@
 
         .dice-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
         
-        /* FIX ZA KOCKICE - Zadržavamo aspect-ratio 1/1 da budu pravilne */
         .dice { 
             width: clamp(40px, 8vmin, 65px); 
             aspect-ratio: 1 / 1;             
@@ -297,52 +282,20 @@
         .rank-3 { background: #CD7F32; color: #000; }
         .hl-mode { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-left: 5px; border: 1px solid var(--glass-border); padding: 2px 5px; border-radius: 4px; }
 
-        /* ========================================= */
-        /* === MEDIA QUERIES ZA TELEFONE I TABLETE == */
-        /* ========================================= */
-
-        /* 1. SVI TELEFONI I TABLETI U PORTRAIT MODU (DO 1024px) */
         @media (max-width: 1024px) and (orientation: portrait) {
             .game-content { flex-direction: column; }
             .left-panel { padding: 0; width: 100%; display: block; overflow: hidden; }
-            
-            .tables-wrapper { 
-                height: calc(100% - 130px);
-                flex-direction: column; 
-                align-items: center; 
-                justify-content: flex-start; 
-                padding: 10px; 
-                overflow-y: auto; 
-            }
+            .tables-wrapper { height: calc(100% - 130px); flex-direction: column; align-items: center; justify-content: flex-start; padding: 10px; overflow-y: auto; }
             .player-table { width: 100%; max-width: 400px; margin-bottom: 20px; }
-            
-            .controls-area { 
-                position: absolute; bottom: 0; left: 0; right: 0; 
-                height: 130px; 
-                border-radius: 0; 
-                background: var(--bg-base); 
-                border-top: 2px solid var(--gold-main); 
-                padding: 5px 10px; 
-                flex-direction: column; 
-                justify-content: center; 
-                gap: 5px; 
-                padding-bottom: max(5px, env(safe-area-inset-bottom)); 
-            }
-            
+            .controls-area { position: absolute; bottom: 0; left: 0; right: 0; height: 130px; border-radius: 0; background: var(--bg-base); border-top: 2px solid var(--gold-main); padding: 5px 10px; flex-direction: column; justify-content: center; gap: 5px; padding-bottom: max(5px, env(safe-area-inset-bottom)); }
             .dice-container { margin-bottom: 8px; gap: 3px; } 
-            
-            /* Kockice prilagođene za telefon */
             .dice { width: 14.5vw; height: 14.5vw; max-width: 70px; max-height: 70px; font-size: 12.5vw; }
-            
             .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-top: 0; }
             .status-label { margin: 0; font-size: 0.9rem; } 
             .btn-throw { width: 100px; }
-            
             .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; }
             .chat-window.active { transform: translateX(-50%); } 
             .chat-float-btn { bottom: 145px; }
-
-            /* Kompaktan meni za telefone */
             #main-menu { padding: 10px 20px; padding-top: max(20px, env(safe-area-inset-top)); overflow-y: auto; justify-content: center; }
             .menu-title { font-size: 2rem; margin-bottom: 25px; }
             .menu-subtitle { font-size: 1rem; }
@@ -350,7 +303,6 @@
             .menu-divider { margin: 8px 0; }
         }
 
-        /* 2. SAMO MALI TELEFONI U LANDSCAPE MODU (DO 900px) */
         @media (max-width: 900px) and (orientation: landscape) {
             .game-header { min-height: 40px; padding: 5px 15px; }
             .game-content { flex-direction: row; align-items: stretch; }
@@ -363,7 +315,6 @@
             .game-info { width: 100%; align-items: center; flex-direction: column; gap: 10px; margin-left: 0; text-align: center; }
         }
 
-        /* 3. VELIKI TABLETI U LANDSCAPE MODU (901px - 1280px) */
         @media (min-width: 901px) and (max-width: 1280px) and (orientation: landscape) {
             .game-content { flex-direction: row; }
             .controls-area { min-height: 120px; }
@@ -445,7 +396,7 @@
                     <div style="text-align:center; margin-top:5px; padding-bottom: 5px; font-size:0.8rem; color:var(--gold-main);" id="lbl-turn"></div>
                 </div>
             </div>
-            </div>
+        </div>
     </div>
 
     <div id="stats-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">STATISTIKA</h2><div class="modal-box" style="width: 100%; max-width: 500px;"><div style="border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px;"><p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">NAJVEĆI SKOR</p><span id="stat-high" style="font-size: 2.5rem; color: var(--gold-main); font-weight: 700;">0</span></div><div class="stat-grid"><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">UKUPNO PARTIJA</span><span id="stat-games" class="stat-val">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">PROSEČAN SKOR</span><span id="stat-avg" class="stat-val c-gold">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">POBEDE</span><span id="stat-wins" class="stat-val c-win">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">PORAZI</span><span id="stat-losses" class="stat-val c-loss">0</span></div></div><div style="margin-top: 15px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px;"><p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">USPEŠNOST</p><span id="stat-rate" style="font-size: 1.5rem; color: var(--text-main); font-weight: 600;">0%</span></div></div></div>
@@ -474,13 +425,14 @@
         const UNICODE_DICE = {0: "", 1: "⚀", 2: "⚁", 3: "⚂", 4: "⚃", 5: "⚄", 6: "⚅"};
         const REDOVI_IGRA = ["1", "2", "3", "4", "5", "6", "Max", "Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
         const REDOVI_PRIKAZ = ["1", "2", "3", "4", "5", "6", "ZBIR 1", "Max", "Min", "ZBIR 2", "Triling", "Kenta", "Ful", "Poker", "Yamb", "ZBIR 3"];
+        // ISPRAVLJENO: Dodata kolona "Nagore" da se poklapa sa UI tabelom
         const KOLONE = ["Nadole", "Slobodna", "Sredina", "Nagore", "Ručno", "Najava"];
         
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const sum = arr => arr.reduce((a, b) => a + b, 0);
         class SoundManager { constructor() { this.ctx = window.AudioContext ? new window.AudioContext() : new window.webkitAudioContext(); } playTone(freq, type, duration, vol=0.1) { if (!app.soundEnabled) return; try { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, this.ctx.currentTime); gain.gain.setValueAtTime(vol, this.ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + duration); } catch(e) {} } click() { this.playTone(800, 'sine', 0.05, 0.05); } roll() { if (!app.soundEnabled) return; this.playTone(150, 'square', 0.1, 0.02); } score() { this.playTone(600, 'sine', 0.3, 0.1); setTimeout(()=>this.playTone(900, 'sine', 0.4, 0.1), 100); } error() { this.playTone(150, 'sawtooth', 0.3, 0.1); } win() { if(!app.soundEnabled) return; [0, 200, 400, 600].forEach((t, i) => setTimeout(() => this.playTone(400 + (i*100), 'square', 0.2, 0.1), t)); } chat() { this.playTone(1200, 'sine', 0.1, 0.05); } }
         
-        // --- YAMB AI ENGINE v10.1 ---
+        // --- DIVINE YAMB AI ENGINE v12.0 ---
         class YambAI {
             constructor(appInstance, difficulty = 'medium') {
                 this.app = appInstance;
@@ -490,65 +442,97 @@
 
             decideRoll(dice, turnNum, sheet) {
                 const analysis = this.analyzeHand(dice);
+                
+                // --- 1. POTEZ ---
                 if (turnNum === 1) {
                     const manualMove = this.checkManualOpprotunity(dice, analysis, sheet);
                     if (manualMove) return { type: 'write', row: manualMove.row, col: 'Ručno' };
+                    
                     if (!this.app.najavaAktivna) {
-                        let announceTarget = this.checkAnnounceOpportunity(analysis, sheet);
-                        if (!announceTarget) announceTarget = this.checkForcedAnnounce(dice, sheet, analysis);
-                        if (announceTarget) {
+                        const bestAnnounce = this.evaluateAnnouncement(dice, analysis, sheet);
+                        if (bestAnnounce) {
                             this.app.clickNajava();
-                            this.app.najavljenoPolje = { row: announceTarget, col: 'Najava' };
-                            const holdMask = this.getHoldMaskForTarget(dice, announceTarget);
+                            // Simulacija ljudskog klika
+                            this.app.najavljenoPolje = { row: bestAnnounce, col: 'Najava' };
+                            this.app.najavaAktivna = false; 
+                            
+                            const btnId = `btn-${this.app.currentPlayerIdx}-Najava-${bestAnnounce}`;
+                            const btnEl = document.getElementById(btnId);
+                            if(btnEl) btnEl.classList.add('highlight-najava');
+                            const btnN = document.getElementById('btn-najava');
+                            if(btnN) { btnN.innerText = `Najava: ${bestAnnounce}`; btnN.disabled = true; btnN.classList.remove('btn-active-toggle'); }
+
+                            const holdMask = this.getHoldMaskForTarget(dice, bestAnnounce);
                             return { type: 'hold', hold: holdMask };
                         }
                     }
                 }
-                if (this.app.najavaAktivna && this.app.najavljenoPolje) {
-                    if (turnNum === 3) return { type: 'write', row: this.app.najavljenoPolje.row, col: 'Najava' };
-                    const holdMask = this.getHoldMaskForTarget(dice, this.app.najavljenoPolje.row);
-                    return { type: 'hold', hold: holdMask };
+
+                // Ako imamo aktivnu najavu
+                if (this.app.najavljenoPolje) {
+                     if (turnNum === 3) return { type: 'write', row: this.app.najavljenoPolje.row, col: 'Najava' };
+                     const holdMask = this.getHoldMaskForTarget(dice, this.app.najavljenoPolje.row);
+                     return { type: 'hold', hold: holdMask };
                 }
+
+                // --- 3. POTEZ (OBAVEZAN UPIS) ---
                 if (turnNum === 3) {
                     const bestMove = this.findBestScore(dice, sheet, true);
                     if (bestMove) return bestMove;
+                    // Ako nema dobrog poteza, aktiviraj Inteligentno Žrtvovanje
                     return this.panicWrite(sheet);
                 }
+
+                // --- 2. POTEZ (HOLD) ---
                 const bestHold = this.calculateSmartHold(dice, sheet, turnNum);
                 return { type: 'hold', hold: bestHold };
             }
 
+            evaluateAnnouncement(dice, an, sheet) {
+                let bestRow = null; let maxScore = -1;
+                const potentialRows = REDOVI_IGRA.filter(r => this.isAvail(r, "Najava", sheet));
+
+                potentialRows.forEach(row => {
+                    let score = 0;
+                    if (row === "Yamb") { if (an.maxCount >= 4) score = 120; else if (an.maxCount >= 3) score = 45; }
+                    else if (row === "Poker") { if (an.maxCount >= 4) score = 95; else if (an.maxCount >= 3) score = 55; }
+                    else if (row === "Kenta") { if (an.nearKenta.length >= 4) score = 110; else if (an.nearKenta.length >= 3) score = 35; }
+                    else if (row === "Ful") { 
+                        if ((an.maxCount === 3 && Object.keys(an.counts).length <= 3) || an.maxCount >= 4) score = 75;
+                        else if (an.counts[an.valMaxCount] === 2 && Object.keys(an.counts).length <= 3) score = 45; 
+                    }
+                    else if (row === "Triling") { if (an.maxCount >= 3) score = 70; }
+                    else if (["1","2","3","4","5","6"].includes(row)) {
+                        const val = parseInt(row); const count = dice.filter(d => d === val).length;
+                        if (count >= 4) score = 80; else if (count === 3) score = 60;
+                    }
+                    if (score > maxScore) { maxScore = score; bestRow = row; }
+                });
+                if (maxScore >= 35) return bestRow;
+                return null;
+            }
+
             checkManualOpprotunity(dice, an, sheet) {
-                if (!this.isAvail("1", "Ručno", sheet) && !this.isAvail("Yamb", "Ručno", sheet)) { const emptyManuals = REDOVI_IGRA.filter(r => sheet["Ručno"][r] === null).length; if (emptyManuals === 0) return null; }
+                if (!this.isAvail("1", "Ručno", sheet) && !this.isAvail("Yamb", "Ručno", sheet)) { 
+                    const emptyManuals = REDOVI_IGRA.filter(r => sheet["Ručno"][r] === null).length; 
+                    if (emptyManuals === 0) return null; 
+                }
                 let best = null; let maxW = 0;
                 REDOVI_IGRA.forEach(row => {
                     if (this.isAvail(row, "Ručno", sheet)) {
                         const best5 = this.app.getBest5(row, dice); const pts = this.app.calcPoints(row, best5); let w = 0;
-                        if (row === "Yamb" && pts >= 50) w = 300; else if (row === "Poker" && pts >= 40) w = 150; else if (row === "Kenta" && pts >= 66) w = 200; else if (row === "Kenta" && pts >= 56) w = 120; else if (row === "Triling" && pts >= 28) w = 60; else if (row === "Ful" && pts >= 40) w = 100; 
-                        else if (["1","2","3","4","5","6"].includes(row)) { const val = parseInt(row); const count = dice.filter(d => d === val).length; if (count >= 4) w = 180; else if (count === 3 && val >= 5) w = 90; else if (count === 3) w = 50; }
-                        else if (row === "Max") { if (pts >= 26) w = 140; else if (pts >= 24) w = 70; } else if (row === "Min") { if (pts <= 8) w = 140; else if (pts <= 10) w = 70; }
+                        if (row === "Yamb" && pts >= 50) w = 300; 
+                        else if (row === "Poker" && pts >= 40) w = 150; 
+                        else if (row === "Kenta" && pts >= 56) w = 150;
+                        else if (row === "Ful" && pts >= 40) w = 100;
+                        else if (["1","2","3","4","5","6"].includes(row)) { 
+                            const count = dice.filter(d => d === parseInt(row)).length; 
+                            if (count >= 4) w = 180; else if (count === 3) w = 85; 
+                        }
                         if (w > maxW) { maxW = w; best = { row, points: pts }; }
                     }
                 });
                 return best;
-            }
-
-            checkAnnounceOpportunity(an, sheet) {
-                if (an.maxCount >= 4) { if (this.isAvail("Yamb", "Najava", sheet)) return "Yamb"; if (this.isAvail("Poker", "Najava", sheet)) return "Poker"; if (this.isAvail(String(an.valMaxCount), "Najava", sheet)) return String(an.valMaxCount); }
-                if (an.maxCount === 3) { if (an.valMaxCount >= 4 && this.isAvail(String(an.valMaxCount), "Najava", sheet)) return String(an.valMaxCount); }
-                if (an.nearKenta.length >= 4 && this.isAvail("Kenta", "Najava", sheet)) return "Kenta";
-                if ((an.maxCount === 3 || (an.counts[an.valMaxCount] === 2 && Object.keys(an.counts).length <= 3)) && this.isAvail("Ful", "Najava", sheet)) return "Ful";
-                return null;
-            }
-
-            checkForcedAnnounce(dice, sheet, an) {
-                let nonAnnounceOptions = 0; ["Nadole", "Nagore", "Sredina", "Ručno", "Slobodna"].forEach(col => { REDOVI_IGRA.forEach(row => { if (this.isAvail(row, col, sheet)) nonAnnounceOptions++; }); });
-                if (nonAnnounceOptions > 8) return null;
-                for (let i = 6; i >= 1; i--) { const sVal = String(i); if (this.isAvail(sVal, "Najava", sheet) && dice.includes(i)) return sVal; }
-                const priorities = ["Kenta", "Ful", "Triling", "Poker", "Yamb", "Max", "Min"];
-                for (let row of priorities) { if (this.isAvail(row, "Najava", sheet)) { if (row === "Kenta" && an.nearKenta.length < 2) continue; return row; } }
-                for (let row of REDOVI_IGRA) { if (this.isAvail(row, "Najava", sheet)) return row; }
-                return null;
             }
 
             findBestScore(dice, sheet, isFinalTurn) {
@@ -559,47 +543,88 @@
                         if (!this.isAvail(row, col, sheet)) return; if (col === "Najava" && this.app.najavljenoPolje && this.app.najavljenoPolje.row !== row) return;
                         let best5 = this.app.getBest5(row, dice); let pts = this.app.calcPoints(row, best5); let isScratch = false;
                         if (col === "Ručno" && this.app.brojBacanja > 1) { pts = 0; isScratch = true; }
+                        
                         let weight = pts; weight += this.colPriority[col];
-                        if (row === "Yamb") { if (pts >= 50) weight += 500; else if (col === "Nagore") weight += 60; }
-                        if (row === "Max") { if (pts >= 25) weight += 50; else if (pts < 20) weight -= 40; }
-                        if (row === "Min") { if (pts <= 8) weight += 50; else if (pts > 15) weight -= 40; }
-                        if (pts === 0) { if (col === "Slobodna") weight -= 30; else if (isScratch) weight -= 400; else weight -= 200; }
-                        if (["1","2","3","4","5","6"].includes(row) && !isScratch) { const val = parseInt(row); const count = dice.filter(d => d === val).length; if (count >= 4) weight += 100; else if (count < 3) weight -= 50; }
-                        if (this.isNextInColumn(row, col, sheet)) weight += 40;
+                        if (row === "Yamb" && pts >= 50) weight += 1000;
+                        if (row === "Kenta" && pts >= 40) weight += 500;
+                        if (row === "Poker" && pts >= 40) weight += 300;
+                        
+                        if (this.isNextInColumn(row, col, sheet)) weight += 50; // Bonus za redosled
+                        
                         possibleMoves.push({ type: 'write', row, col, points: pts, weight });
                     });
                 });
                 possibleMoves.sort((a, b) => b.weight - a.weight);
-                if (possibleMoves.length > 0) { if (isFinalTurn) return possibleMoves[0]; if (possibleMoves[0].points > 0 && possibleMoves[0].weight > 60) return possibleMoves[0]; }
+                if (possibleMoves.length > 0) return possibleMoves[0];
                 return null;
             }
 
             isNextInColumn(row, col, sheet) {
                 if (col === "Nadole") { const idx = REDOVI_IGRA.indexOf(row); if (idx === 0) return true; if (sheet[col][REDOVI_IGRA[idx-1]] !== null) return true; }
                 if (col === "Nagore") { const idx = REDOVI_IGRA.indexOf(row); if (idx === REDOVI_IGRA.length - 1) return true; if (sheet[col][REDOVI_IGRA[idx+1]] !== null) return true; }
+                
+                // ISPRAVLJENO: AI SREDINA LOGIKA (Max->1 i Min->Yamb)
                 if (col === "Sredina") {
-                    const upBranch = ["Max", "6", "5", "4", "3", "2", "1"]; const downBranch = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
-                    if (upBranch.includes(row)) { const idx = upBranch.indexOf(row); if (idx === 0) return true; if (sheet[col][upBranch[idx-1]] !== null) return true; }
-                    if (downBranch.includes(row)) { const idx = downBranch.indexOf(row); if (idx === 0) return true; if (sheet[col][downBranch[idx-1]] !== null) return true; }
+                    const up = ["Max", "6", "5", "4", "3", "2", "1"]; 
+                    const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
+                    
+                    if (up.includes(row)) { 
+                        const idx = up.indexOf(row); 
+                        if (idx === 0) return true; 
+                        if (sheet[col][up[idx-1]] !== null) return true; 
+                    }
+                    if (down.includes(row)) { 
+                        const idx = down.indexOf(row); 
+                        if (idx === 0) return true; 
+                        if (sheet[col][down[idx-1]] !== null) return true; 
+                    }
+                    return false;
                 }
                 return false;
             }
 
             panicWrite(sheet) {
-                const sacrificeMap = [ {col: "Ručno", rows: ["Yamb", "Poker", "Kenta", "Triling", "Ful"]}, {col: "Ručno", rows: ["1", "2", "3", "4", "5", "6", "Max", "Min"]}, {col: "Slobodna", rows: ["1", "2", "Min", "Max", "3"]}, {col: "Sredina", rows: ["1", "2", "Min"]}, {col: "Nadole", rows: ["1", "2"]}, {col: "Nagore", rows: ["1", "2"]}, {col: "Slobodna", rows: ["Triling", "Ful", "Kenta", "Poker", "Yamb"]}, {col: "Nadole", rows: ["Yamb", "Poker"]}, {col: "Nagore", rows: ["Yamb", "Poker"]} ];
-                for (let plan of sacrificeMap) { for (let row of plan.rows) { if (this.isAvail(row, plan.col, sheet)) { if (plan.col === "Najava" && !this.app.najavaAktivna) continue; return { type: 'write', row: row, col: plan.col }; } } }
-                for (let col of ["Ručno", "Slobodna", "Sredina", "Nadole", "Nagore"]) { if (col === "Najava" && !this.app.najavaAktivna) continue; for (let row of REDOVI_IGRA) { if (this.isAvail(row, col, sheet)) return { type: 'write', row: row, col: col }; } }
-                return { type: 'pass' }; 
+                // Pametno žrtvovanje - traži polje koje najmanje boli
+                const priorityOrder = [
+                    {col: "Ručno", row: "Yamb"}, {col: "Ručno", row: "Poker"}, {col: "Slobodna", row: "1"}, 
+                    {col: "Sredina", row: "1"}, {col: "Nadole", row: "1"}, {col: "Nagore", row: "Yamb"},
+                    {col: "Slobodna", row: "2"}, {col: "Ručno", row: "2"}
+                ];
+                
+                for (let p of priorityOrder) {
+                    if (this.isAvail(p.row, p.col, sheet)) return { type: 'write', row: p.row, col: p.col };
+                }
+                
+                // Ako ništa od prioriteta, daj prvo slobodno
+                for (let col of ["Ručno", "Slobodna", "Sredina", "Nadole", "Nagore"]) { 
+                    if (col === "Najava" && !this.app.najavaAktivna) continue; 
+                    for (let row of REDOVI_IGRA) { if (this.isAvail(row, col, sheet)) return { type: 'write', row: row, col: col }; } 
+                }
+                return { type: 'write', row: '1', col: 'Slobodna' }; // Fallback
             }
 
             calculateSmartHold(dice, sheet, turnNum) {
+                if (this.app.najavljenoPolje) return this.getHoldMaskForTarget(dice, this.app.najavljenoPolje.row);
+                
+                // Analiza šta jurimo
                 const an = this.analyzeHand(dice);
+                
+                // Juri Yamb/Poker
+                if (an.maxCount >= 3) return this.getHoldMaskForTarget(dice, "Yamb");
+                
+                // Juri Kentu
                 if (an.nearKenta.length >= 4) return dice.map(d => an.nearKenta.includes(d));
-                if (an.maxCount === 3) { const pairVal = dice.find(d => d !== an.valMaxCount && dice.filter(x=>x===d).length >= 2); if (pairVal) return [true, true, true, true, true, true]; return dice.map(d => d === an.valMaxCount); }
-                if (an.maxCount >= 2) { if (an.valMaxCount === 1) { const needOnes = this.isAvail("1", "Nadole", sheet) || this.isAvail("1", "Nagore", sheet); if (!needOnes && an.maxCount < 3) { } else return dice.map(d => d === an.valMaxCount); } else { return dice.map(d => d === an.valMaxCount); } }
-                const lowDice = dice.map(d => d <= 2); const lowDiceCount = lowDice.filter(x => x).length;
-                if (lowDiceCount >= 2) { const needMin = ["Nadole", "Nagore", "Sredina", "Slobodna"].some(col => this.isAvail("Min", col, sheet)); if (needMin) return lowDice; }
-                const highDice = dice.map(d => d >= 5); if (highDice.filter(x=>x).length >= 2) return highDice;
+                
+                // Juri Ful (ako ima 2 para ili 3 ista)
+                if (Object.keys(an.counts).length <= 3) return this.getHoldMaskForTarget(dice, "Ful");
+
+                // Juri Max/Min
+                const needMax = ["Nadole", "Nagore", "Slobodna"].some(c => this.isAvail("Max", c, sheet));
+                if (needMax) {
+                    const highDice = dice.filter(d => d >= 4).length;
+                    if (highDice >= 3) return dice.map(d => d >= 4);
+                }
+                
                 return [false, false, false, false, false, false];
             }
 
@@ -607,8 +632,38 @@
 
             getHoldMaskForTarget(dice, row) {
                 if (["1","2","3","4","5","6"].includes(row)) return dice.map(d => d === parseInt(row));
-                if (["Yamb", "Poker", "Triling", "Ful"].includes(row)) { const counts = {}; dice.forEach(x => counts[x] = (counts[x] || 0) + 1); let maxVal = dice[0]; let maxC = 0; for(let k in counts) { if(counts[k] > maxC) { maxC = counts[k]; maxVal = parseInt(k); } } return dice.map(d => d == maxVal); }
-                if (row === "Kenta") { const seq1 = [1,2,3,4,5]; const seq2 = [2,3,4,5,6]; const m1 = dice.map(d => seq1.includes(d)); const m2 = dice.map(d => seq2.includes(d)); const c1 = m1.filter(x=>x).length; const c2 = m2.filter(x=>x).length; const used = new Set(); const targetSeq = c1 > c2 ? seq1 : seq2; return dice.map(d => { if(targetSeq.includes(d) && !used.has(d)) { used.add(d); return true; } return false; }); }
+                if (["Yamb", "Poker", "Triling"].includes(row)) { 
+                    const counts = {}; dice.forEach(x => counts[x] = (counts[x] || 0) + 1); 
+                    let maxVal = dice[0]; let maxC = 0; 
+                    for(let k in counts) { if(counts[k] > maxC || (counts[k]==maxC && parseInt(k)>maxVal)) { maxC = counts[k]; maxVal = parseInt(k); } } 
+                    return dice.map(d => d == maxVal); 
+                }
+                if (row === "Ful") {
+                    const counts = {}; dice.forEach(x => counts[x] = (counts[x] || 0) + 1);
+                    const triples = Object.keys(counts).filter(k => counts[k] >= 3).map(Number);
+                    const pairs = Object.keys(counts).filter(k => counts[k] >= 2).map(Number);
+                    if (triples.length > 0) {
+                        const target3 = Math.max(...triples); 
+                        const remaining = dice.filter(d => d !== target3);
+                        const c2 = {}; remaining.forEach(x => c2[x] = (c2[x]||0)+1);
+                        const p2 = Object.keys(c2).filter(k => c2[k]>=2).map(Number);
+                        const target2 = p2.length > 0 ? Math.max(...p2) : null;
+                        return dice.map(d => d === target3 || d === target2);
+                    }
+                    if (pairs.length >= 2) return dice.map(d => pairs.includes(d));
+                    if (pairs.length === 1) return dice.map(d => d === pairs[0]);
+                    return this.getHoldMaskForTarget(dice, "Yamb");
+                }
+                if (row === "Kenta") { 
+                    const unique = [...new Set(dice)].sort((a,b)=>a-b);
+                    const seq4_low = [1,2,3,4].filter(x=>unique.includes(x)).length;
+                    const seq4_high = [3,4,5,6].filter(x=>unique.includes(x)).length;
+                    let targetSeq = [1,2,3,4,5]; if (seq4_high > seq4_low) targetSeq = [2,3,4,5,6];
+                    const used = new Set(); 
+                    return dice.map(d => { if(targetSeq.includes(d) && !used.has(d)) { used.add(d); return true; } return false; }); 
+                }
+                if (row === "Max") return dice.map(d => d >= 4);
+                if (row === "Min") return dice.map(d => d <= 3);
                 return [false,false,false,false,false,false];
             }
 
@@ -617,7 +672,17 @@
                 const maxCount = Math.max(...Object.values(counts));
                 const valMaxCount = Number(Object.keys(counts).find(key => counts[key] === maxCount));
                 const uniqueDice = [...new Set(dice)].sort((a,b)=>a-b);
-                let bestStraight = [], maxStraightLen = 0; [[1,2,3,4,5], [2,3,4,5,6]].forEach(seq => { const match = seq.filter(x => uniqueDice.includes(x)); if (match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; } });
+                let bestStraight = [], maxStraightLen = 0; 
+                [[1,2,3,4,5], [2,3,4,5,6]].forEach(seq => { 
+                    const match = seq.filter(x => uniqueDice.includes(x)); 
+                    if (match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; } 
+                });
+                if (maxStraightLen < 4) {
+                     [[1,2,3,4], [2,3,4,5], [3,4,5,6]].forEach(seq => {
+                        const match = seq.filter(x => uniqueDice.includes(x));
+                        if (match.length >= 4 && match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; }
+                     });
+                }
                 return { counts, maxCount, valMaxCount, nearKenta: maxStraightLen >= 3 ? bestStraight : [], unique: uniqueDice };
             }
         }
@@ -734,7 +799,6 @@
                 this.updateDiceVisuals(); 
             }
             
-            // --- FIX: ROBUSTNA FUNKCIJA ZA BACANJE ---
             async throwDice() { 
                 const btnBacaj = document.getElementById('btn-bacaj');
                 const btnNajava = document.getElementById('btn-najava');
@@ -794,7 +858,6 @@
                 }
             }
 
-            // --- FIX: FUNKCIJA ZA NAJAVU ---
             clickNajava() { 
                 if (this.brojBacanja !== 1) return; 
                 const btn = document.getElementById('btn-najava'); 
@@ -817,9 +880,45 @@
                 } 
             }
 
-            isValidColumnOrder(row, col, sheet) { if (col === "Nadole") { const idx = REDOVI_IGRA.indexOf(row); if (idx > 0 && sheet["Nadole"][REDOVI_IGRA[idx-1]] === null) return false; } if (col === "Nagore") { const idx = REDOVI_IGRA.indexOf(row); if (idx < REDOVI_IGRA.length-1 && sheet["Nagore"][REDOVI_IGRA[idx+1]] === null) return false; } if (col === "Sredina") { const up = ["Max", "6", "5", "4", "3", "2", "1"]; const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"]; if (up.includes(row)) { const idx = up.indexOf(row); if (idx > 0 && sheet["Sredina"][up[idx-1]] === null) return false; } else if (down.includes(row)) { const idx = down.indexOf(row); if (idx > 0 && sheet["Sredina"][down[idx-1]] === null) return false; } } return true; }
+            isValidColumnOrder(row, col, sheet) { 
+                // Provera za Nadole (od 1 do Yamb)
+                if (col === "Nadole") { 
+                    const idx = REDOVI_IGRA.indexOf(row); 
+                    if (idx > 0 && sheet["Nadole"][REDOVI_IGRA[idx-1]] === null) return false; 
+                } 
+                
+                // Provera za Nagore (od Yamb do 1)
+                if (col === "Nagore") { 
+                    const idx = REDOVI_IGRA.indexOf(row); 
+                    if (idx < REDOVI_IGRA.length-1 && sheet["Nagore"][REDOVI_IGRA[idx+1]] === null) return false; 
+                } 
+                
+                // ISPRAVKA ZA SREDINU: Jedan krak od Max ka 1, drugi od Min ka Yambu
+                if (col === "Sredina") { 
+                    const up = ["Max", "6", "5", "4", "3", "2", "1"]; 
+                    const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"]; 
+                    
+                    // Smer 1: Od Max ka 1
+                    if (up.includes(row)) { 
+                        const idx = up.indexOf(row); 
+                        if (idx === 0) return true; // Max je uvek dostupan ako je prazan
+                        return sheet[col][up[idx-1]] !== null; // Prethodno polje mora biti popunjeno
+                    } 
+                    // Smer 2: Od Min ka Yambu
+                    else if (down.includes(row)) { 
+                        const idx = down.indexOf(row); 
+                        if (idx === 0) return true; // Min je uvek dostupan ako je prazan
+                        return sheet[col][down[idx-1]] !== null; // Prethodno polje mora biti popunjeno
+                    } 
+                    
+                    // Ako red nije ni u jednoj definisanoj putanji za sredinu
+                    return false; 
+                } 
+                
+                // Ostale kolone (Slobodna, Ručno, Najava) nemaju strogi redosled ovde
+                return true; 
+            }
             
-            // --- FIX: UPISIVANJE ---
             async writeScore(row, col, pIdx) { 
                 if (pIdx !== this.currentPlayerIdx) return; 
                 if (this.brojBacanja === 0) { this.soundMgr.error(); return await this.modal.alert("Prvo baci kockice!"); } 
@@ -953,7 +1052,47 @@
             checkSavedGame() { const saved = localStorage.getItem('yamb_saved_game'); const btnResume = document.getElementById('btn-resume-game'); if (saved) { btnResume.classList.remove('hidden'); } else { btnResume.classList.add('hidden'); } }
             autoSaveGame() { if(this.onlineMode) return; const data = { players: this.players, scores: this.allScores, current: this.currentPlayerIdx, aiMode: this.aiMode, diff: this.aiDifficulty, date: new Date().toISOString() }; localStorage.setItem('yamb_saved_game', JSON.stringify(data)); }
             async saveGame() { this.autoSaveGame(); const isNative = window.Capacitor && window.Capacitor.isNative; if (!isNative) { const jsonString = JSON.stringify(JSON.parse(localStorage.getItem('yamb_saved_game'))); const blob = new Blob([jsonString], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = "yamb_save.json"; a.click(); this.modal.alert("Igra je sačuvana u pretraživaču i kao fajl!"); } else { this.modal.alert("Igra je uspešno sačuvana!", "SAČUVANO"); } this.checkSavedGame(); }
-            async loadSavedGame() { try { const saved = localStorage.getItem('yamb_saved_game'); if (!saved) { this.modal.alert("Nema sačuvane igre."); return; } const data = JSON.parse(saved); this.players = data.players; this.allScores = data.scores; this.currentPlayerIdx = data.current; this.aiMode = data.aiMode; this.aiDifficulty = data.diff || "medium"; if (this.aiMode) this.ai = new YambAI(this, this.aiDifficulty); this.startGame(); this.highlightCurrentPlayer(); this.updateTableVisuals(); this.modal.alert("Igra nastavljena!"); } catch (e) { console.error(e); this.modal.alert("Greška pri učitavanju igre."); } }
+            
+            // --- ISPRAVLJEN LOAD SAVE GAME (PREVENCIJA CRASH-A) ---
+            async loadSavedGame() { 
+                try { 
+                    const saved = localStorage.getItem('yamb_saved_game'); 
+                    if (!saved) { this.modal.alert("Nema sačuvane igre."); return; } 
+                    
+                    const data = JSON.parse(saved); 
+                    
+                    // --- MIGRACIJA PODATAKA (POPRAVKA ZA STARE SAVE-OVE) ---
+                    // Ako u starom save-u fale nove kolone (npr. Nagore), dodaj ih prazne
+                    KOLONE.forEach(col => {
+                        this.players.forEach((_, idx) => {
+                             // Provera za svakog igrača
+                             if (data.scores[idx] && !data.scores[idx][col]) {
+                                data.scores[idx][col] = {};
+                                REDOVI_IGRA.forEach(r => data.scores[idx][col][r] = null);
+                            }
+                        });
+                    });
+                    // -------------------------------------------------------
+
+                    this.players = data.players; 
+                    this.allScores = data.scores; 
+                    this.currentPlayerIdx = data.current; 
+                    this.aiMode = data.aiMode; 
+                    this.aiDifficulty = data.diff || "medium"; 
+                    
+                    if (this.aiMode) this.ai = new YambAI(this, this.aiDifficulty); 
+                    
+                    this.startGame(); 
+                    this.highlightCurrentPlayer(); 
+                    this.updateTableVisuals(); 
+                    this.modal.alert("Igra nastavljena!"); 
+                } catch (e) { 
+                    console.error(e); 
+                    this.modal.alert("Greška pri učitavanju igre.\nFormat podataka je zastareo."); 
+                    localStorage.removeItem('yamb_saved_game');
+                } 
+            }
+
             async loadGameFromFile() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = e => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => { try { const data = JSON.parse(ev.target.result); this.players = data.players; this.allScores = data.scores; this.currentPlayerIdx = data.current; this.aiMode = data.aiMode; this.aiDifficulty = data.diff || "medium"; if (this.aiMode) this.ai = new YambAI(this, this.aiDifficulty); this.startGame(); this.highlightCurrentPlayer(); this.updateTableVisuals(); this.modal.alert("Igra uspešno učitana iz fajla!"); this.autoSaveGame(); } catch (err) { this.modal.alert("Greška pri učitavanju fajla!"); } }; reader.readAsText(file); }; input.click(); }
         }
 
