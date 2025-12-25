@@ -29,6 +29,7 @@
             --col-nadole: #81D4FA; --col-nagore: #EF9A9A; --col-sredina: #FFCC80; 
             --col-rucno: #CE93D8; --col-najava: #E0C995; --col-slobodna: #B0BEC5;
             
+            /* Safe area varijable */
             --safe-top: env(safe-area-inset-top, 0px);
             --safe-bottom: env(safe-area-inset-bottom, 0px);
             --safe-left: env(safe-area-inset-left, 0px);
@@ -86,6 +87,7 @@
             opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s;
             transform: scale(0.95); z-index: 1; 
             padding: 20px;
+            /* Safe area padding - ključno za S25 */
             padding-top: max(20px, env(safe-area-inset-top)); 
             padding-bottom: max(20px, env(safe-area-inset-bottom));
             padding-left: max(20px, env(safe-area-inset-left));
@@ -98,6 +100,7 @@
         .menu-title { font-size: 2.5rem; margin-bottom: 40px; text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .menu-subtitle { font-weight:300; font-size:1.2rem; color:var(--gold-main); display: block; letter-spacing: 2px; }
         
+        /* MENU BUTTONS */
         .btn-menu {
             width: 100%; max-width: 300px; padding: 15px; margin: 8px 0;
             background: var(--glass-bg); border: var(--glass-border); color: var(--text-main);
@@ -114,7 +117,7 @@
 
         .menu-divider { margin: 10px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); }
 
-        /* --- MODALS --- */
+        /* MODALS & CHAT */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .custom-modal { background: var(--glass-panel); padding: 30px; border-radius: 20px; border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow); width: 90%; max-width: 400px; text-align: center; transform: scale(0.8); transition: 0.3s; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
@@ -127,7 +130,6 @@
         .cm-btn-ok { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); }
         .cm-btn-cancel { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
 
-        /* --- CHAT --- */
         .chat-float-btn { position: fixed; bottom: 140px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--gold-main); color: #000; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px var(--gold-glow); transition: transform 0.2s; }
         .chat-float-btn:hover { transform: scale(1.1); }
         .chat-notification { position: absolute; top: 0; right: 0; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; border: 2px solid #000; display: none; }
@@ -142,7 +144,7 @@
         .msg-incoming { align-self: flex-start; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-left-radius: 2px; }
         .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
 
-        /* --- GAME LAYOUT & OPTIMIZATION --- */
+        /* --- GAME LAYOUT (DEFAULT - TABLET LANDSCAPE / DESKTOP) --- */
         #game-scene { 
             justify-content: flex-start; 
             padding: 0; 
@@ -171,19 +173,19 @@
         .game-content { 
             display: flex; 
             width: 100%; 
-            height: calc(100% - 60px); /* Oduzmi header */
+            height: calc(100% - 60px); 
             overflow: hidden; 
             position: relative; 
             padding-left: max(0px, env(safe-area-inset-left));
             padding-right: max(0px, env(safe-area-inset-right));
         }
 
-        /* Default layout (Desktop like) */
+        /* Default (Tablet Landscape/Desktop) styles */
         .left-panel { flex: 1; display: flex; flex-direction: column; padding: 10px; overflow: hidden; }
         .right-sidebar { width: 300px; background: var(--glass-panel); border-left: var(--glass-border); display: flex; flex-direction: column; padding: 15px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding-top: 0; }
         .tables-wrapper { 
             flex: 1; 
-            overflow: auto; /* Enable scroll inside wrapper */
+            overflow: auto; 
             display: flex; 
             justify-content: center; 
             align-items: flex-start;
@@ -192,7 +194,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        .player-table { min-width: 320px; margin-bottom: 10px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
+        .player-table { min-width: 340px; margin-bottom: 10px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
         .player-name { text-align: center; font-weight: 700; color: var(--gold-main); margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         
         .grid-container { display: grid; grid-template-columns: 1.5fr repeat(6, 1fr); gap: 1px; }
@@ -206,9 +208,8 @@
         .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
         .total-score { font-size: 1.5rem; color: var(--gold-main); text-align: center; margin-top: 5px; font-weight: 800; }
         
-        /* CONTROLS AREA */
         .controls-area { 
-            min-height: 140px; 
+            min-height: 160px; 
             background: var(--glass-panel); 
             margin-top: 10px; 
             border-radius: 15px 15px 0 0; 
@@ -224,16 +225,16 @@
 
         .dice-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
         
-        /* FIX ZA KOCKICE - ASPCT RATIO JE KLJUČ */
+        /* FIX ZA KOCKICE - Zadržavamo aspect-ratio 1/1 da budu pravilne */
         .dice { 
-            width: clamp(40px, 8vmin, 65px); /* Responsive but limited */
-            aspect-ratio: 1 / 1;             /* UVEK KVADRAT */
-            flex-shrink: 0;                  /* Ne dozvoli spljoštavanje */
+            width: clamp(40px, 8vmin, 65px); 
+            aspect-ratio: 1 / 1;             
+            flex-shrink: 0;                 
             background: var(--dice-bg); 
             border: 1px solid var(--dice-border); 
             border-radius: 8px; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: clamp(24px, 5vmin, 40px); /* Responsive font */
+            font-size: clamp(24px, 5vmin, 40px); 
             color: var(--dice-color); 
             cursor: pointer; 
             transition: transform 0.2s, box-shadow 0.2s; 
@@ -285,25 +286,30 @@
         .rank-3 { background: #CD7F32; color: #000; }
         .hl-mode { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-left: 5px; border: 1px solid var(--glass-border); padding: 2px 5px; border-radius: 4px; }
 
-        /* --- MEDIA QUERIES ZA TABLETE I MOBILNE --- */
+        /* ========================================= */
+        /* === MEDIA QUERIES ZA TELEFONE I TABLETE == */
+        /* ========================================= */
 
-        /* 1. TABLET & MOBILE PORTRAIT (USPRAVNO) */
+        /* 1. SVI TELEFONI I TABLETI U PORTRAIT MODU (DO 1024px) 
+           Ovo vraća tvoj stari izgled za telefone! */
         @media (max-width: 1024px) and (orientation: portrait) {
-            .right-sidebar { display: none; } /* Sakrij sidebar */
+            .right-sidebar { display: none; } /* Sakrij sidebar na telefonu */
             .game-content { flex-direction: column; }
-            .left-panel { padding: 0; width: 100%; }
+            .left-panel { padding: 0; width: 100%; display: block; overflow: hidden; }
             
             .tables-wrapper { 
-                height: calc(100% - 150px); /* Prostor za kontrole dole */
+                height: calc(100% - 130px); /* Vraćamo visinu kako je bila za telefone */
                 flex-direction: column; 
                 align-items: center; 
+                justify-content: flex-start; 
                 padding: 10px; 
+                overflow-y: auto; 
             }
-            .player-table { width: 98%; max-width: 600px; margin-bottom: 20px; }
+            .player-table { width: 100%; max-width: 400px; margin-bottom: 20px; }
             
             .controls-area { 
                 position: absolute; bottom: 0; left: 0; right: 0; 
-                height: 150px; 
+                height: 130px; /* Standardna visina za telefone */
                 border-radius: 0; 
                 background: var(--bg-base); 
                 border-top: 2px solid var(--gold-main); 
@@ -311,89 +317,53 @@
                 flex-direction: column; 
                 justify-content: center; 
                 gap: 5px; 
-                padding-bottom: max(10px, env(safe-area-inset-bottom)); 
+                padding-bottom: max(5px, env(safe-area-inset-bottom)); 
             }
             
-            .dice { 
-                /* Na uspravnim ekranima kockice su malo manje da stane sve */
-                width: clamp(45px, 13vw, 65px); 
-            }
+            .dice-container { margin-bottom: 8px; gap: 3px; } 
             
-            .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-top: 5px;}
+            /* Kockice prilagođene za telefon */
+            .dice { width: 14.5vw; height: 14.5vw; max-width: 70px; max-height: 70px; font-size: 12.5vw; }
             
-            .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 180px; height: 320px; }
+            .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-top: 0; }
+            .status-label { margin: 0; font-size: 0.9rem; } 
+            .btn-throw { width: 100px; }
+            
+            .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; }
             .chat-window.active { transform: translateX(-50%); } 
-            .chat-float-btn { bottom: 165px; }
+            .chat-float-btn { bottom: 145px; }
+
+            /* Kompaktan meni za telefone */
+            #main-menu { padding: 10px 20px; padding-top: max(20px, env(safe-area-inset-top)); overflow-y: auto; justify-content: center; }
+            .menu-title { font-size: 2rem; margin-bottom: 25px; }
+            .menu-subtitle { font-size: 1rem; }
+            .btn-menu { width: 95%; max-width: none; padding: 10px; margin: 4px 0; font-size: 0.9rem; }
+            .menu-divider { margin: 8px 0; }
         }
 
-        /* 2. MOBILE LANDSCAPE (MALI EKRANI POLOŽENO) */
+        /* 2. SAMO MALI TELEFONI U LANDSCAPE MODU (DO 900px) 
+           Ovo je "Kompaktni Landscape" */
         @media (max-width: 900px) and (orientation: landscape) {
             .right-sidebar { display: none; }
-            .game-header { min-height: 40px; padding: 5px 15px; } /* Kompaktniji header */
-            
-            .game-content { 
-                flex-direction: row; /* Kontrole levo/desno, tabela u sredini */
-                align-items: stretch;
-            }
-            
-            .left-panel { 
-                flex-direction: row; /* Tabela levo, kontrole desno */
-                width: 100%;
-                padding: 0;
-            }
-
-            .tables-wrapper {
-                flex: 1; /* Tabela uzima veći deo */
-                height: 100%;
-                padding: 10px;
-                align-items: flex-start;
-                justify-content: center;
-            }
-            
-            .player-table {
-                width: auto;
-                min-width: 300px;
-                height: auto;
-                margin-bottom: 0;
-            }
-
-            .controls-area {
-                width: 160px; /* Fiksna širina za kontrole sa strane */
-                height: 100%;
-                margin-top: 0;
-                border-radius: 0;
-                border-top: none;
-                border-left: 1px solid var(--gold-main);
-                flex-direction: column;
-                justify-content: center;
-                gap: 15px;
-                padding-right: max(10px, env(safe-area-inset-right));
-            }
-            
+            .game-header { min-height: 40px; padding: 5px 15px; }
+            .game-content { flex-direction: row; align-items: stretch; }
+            .left-panel { flex-direction: row; width: 100%; padding: 0; }
+            .tables-wrapper { flex: 1; height: 100%; padding: 10px; align-items: flex-start; justify-content: center; }
+            .player-table { width: auto; min-width: 300px; height: auto; margin-bottom: 0; }
+            .controls-area { width: 160px; height: 100%; margin-top: 0; border-radius: 0; border-top: none; border-left: 1px solid var(--gold-main); flex-direction: column; justify-content: center; gap: 15px; padding-right: max(10px, env(safe-area-inset-right)); }
             .dice-container { flex-direction: row; flex-wrap: wrap; width: 100%; justify-content: center; }
-            .dice { width: 45px; } /* Manje kockice da stanu */
-            
-            .game-info { 
-                width: 100%; 
-                align-items: center; 
-                flex-direction: column; 
-                gap: 10px; 
-                margin-left: 0;
-                text-align: center;
-            }
+            .dice { width: 45px; } 
+            .game-info { width: 100%; align-items: center; flex-direction: column; gap: 10px; margin-left: 0; text-align: center; }
         }
 
-        /* 3. TABLET LANDSCAPE (VELIKI TABLETI POLOŽENO npr. S6 Lite) */
+        /* 3. VELIKI TABLETI U LANDSCAPE MODU (901px - 1280px) 
+           Ovo je ono što si tražio za Tablet mod - LIČI NA DESKTOP */
         @media (min-width: 901px) and (max-width: 1280px) and (orientation: landscape) {
-            /* Ovde želimo da liči na desktop, ali sa većim touch targetima */
-            .right-sidebar { display: block; width: 250px; } /* Vraćamo sidebar */
+            .right-sidebar { display: block; width: 250px; } /* Sidebar je vidljiv! */
             .game-content { flex-direction: row; }
-            
-            .controls-area {
-                min-height: 120px; /* Malo kompaktnije kontrole dole */
-            }
+            .controls-area { min-height: 120px; }
             .dice { width: 60px; }
-            .player-table { min-width: 380px; } /* Malo šira tabela */
+            .player-table { min-width: 380px; }
         }
 
     </style>
