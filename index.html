@@ -167,44 +167,51 @@
             display: flex; 
             justify-content: center; 
             align-items: flex-start;
-            padding: 5px; 
+            padding: 2px; 
             -webkit-overflow-scrolling: touch;
         }
 
         .player-table { 
             width: 100%; 
-            max-width: 600px; /* Limit širine na tabletima */
+            /* Maksimalna širina za tablete da ne bude preširoko, ali 98% na telefonu */
+            max-width: 800px; 
             background: var(--glass-panel); 
             border-radius: 10px; 
             border: var(--glass-border); 
             padding: 2px; 
             backdrop-filter: blur(12px); 
             box-shadow: var(--glass-shadow); 
+            margin-bottom: 5px;
         }
         
         .player-name { text-align: center; font-weight: 700; color: var(--gold-main); font-size: 0.9rem; margin: 3px 0; }
         
         .grid-container { 
             display: grid; 
-            grid-template-columns: 1.4fr repeat(6, 1fr); 
+            /* Prva kolona fleksibilna ali min 40px, ostale dele prostor jednako */
+            grid-template-columns: minmax(40px, 1.3fr) repeat(6, 1fr); 
             gap: 1px; 
-            font-size: clamp(10px, 1.5vh, 14px); /* Fluidni font za tabelu */
+            width: 100%;
+            /* Fluidni font: min 11px, max 16px zavisno od visine ekrana */
+            font-size: clamp(11px, 1.6vh, 16px); 
         }
         
         .grid-cell { 
-            aspect-ratio: 2.8 / 1; /* Održava proporciju ćelije */
+            /* KLJUČNO: Umesto aspect-ratio koristimo fluidnu visinu */
+            height: clamp(26px, 4.2vh, 45px);
             display: flex; align-items: center; justify-content: center; 
             color: var(--text-muted); background: var(--grid-cell-bg); 
+            overflow: hidden;
         }
         
         /* Sticky Headers za tabelu da se ne gube pri skrolu na malim ekranima */
         .col-header { position: sticky; top: 0; z-index: 5; font-weight: bold; background: var(--grid-header-bg); backdrop-filter: blur(5px); }
         
-        .row-header { justify-content: flex-end; padding-right: 5px; font-weight: 600; font-size: 0.85em; text-transform: uppercase; }
+        .row-header { justify-content: flex-end; padding-right: 5px; font-weight: 600; font-size: 0.85em; text-transform: uppercase; white-space: nowrap; }
         .sum { color: var(--gold-main); font-weight: bold; }
         .c-nadole { color: var(--col-nadole); } .c-nagore { color: var(--col-nagore); } .c-sredina { color: var(--col-sredina); } .c-rucno { color: var(--col-rucno); } .c-najava { color: var(--col-najava); } .c-slobodna { color: var(--col-slobodna); }
         
-        .score-btn { width: 100%; height: 100%; border: none; background: transparent; color: var(--text-main); font-weight: bold; cursor: pointer; font-size: inherit; }
+        .score-btn { width: 100%; height: 100%; border: none; background: transparent; color: var(--text-main); font-weight: bold; cursor: pointer; font-size: inherit; padding: 0; }
         .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(224, 201, 149, 0.3); }
         .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
         .total-score { font-size: 1.2rem; color: var(--gold-main); text-align: center; margin-top: 2px; font-weight: 800; }
@@ -276,15 +283,16 @@
             .action-btn-group { flex-direction: row; width: auto; gap: 10px; }
             .btn-throw { width: 100px; }
             .dice { width: 13vw; height: 13vw; max-width: 60px; max-height: 60px; font-size: 8vw; }
+            .player-table { width: 98%; } /* Na telefonima koristi skoro celu širinu */
         }
 
         /* 2. TABLETS PORTRAIT (7-inch & 10-inch) - Širina 600px do 1024px */
         @media (min-width: 600px) and (orientation: portrait) {
-            .player-table { width: 80%; margin: 0 auto; }
-            .grid-container { font-size: 1.8vh; } /* Veći font za tabelu */
-            .grid-cell { height: 3.5vh; }
+            .player-table { width: 90%; margin: 0 auto; }
+            .grid-container { font-size: 1.8vh; gap: 2px; } 
+            .grid-cell { height: 4vh; } /* Na tabletima malo viša polja */
             .dice { width: 8vh; height: 8vh; font-size: 4vh; }
-            .controls-area { padding: 20px; }
+            .controls-area { padding: 20px; gap: 20px;}
             .game-info { justify-content: center; gap: 20px; }
             .btn-throw { padding: 15px 40px; font-size: 1.2rem; width: auto; }
             .status-label { font-size: 1.2rem; }
@@ -298,6 +306,7 @@
             .tables-wrapper { width: 70%; padding: 5px; }
             .player-table { width: 100%; margin-bottom: 0; height: 100%; display: flex; flex-direction: column; }
             .grid-container { flex: 1; align-content: center; } /* Centriraj grid vertikalno */
+            .grid-cell { height: auto; } /* Ovde neka auto jer je flex container */
             .controls-area { 
                 width: 30%; height: 100%; border-top: none; border-left: 1px solid var(--gold-main); 
                 flex-direction: column; justify-content: center; gap: 10px; padding: 5px;
