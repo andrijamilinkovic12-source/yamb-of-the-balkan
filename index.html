@@ -320,7 +320,7 @@
             /* TABELE ISPOD JEDNA DRUGE (COLUMN) */
             .tables-wrapper {
                 flex-direction: column; /* Eksplicitno jedna ispod druge */
-                padding-bottom: 200px; /* Dodatni prostor dole da kontrole ne pokriju tabelu */
+                padding-bottom: 220px; /* Još više prostora za kontrole */
             }
             /* Smanjena tabla u uspravnom modu na tabletu */
             .player-table { 
@@ -333,10 +333,8 @@
             .grid-cell { height: 4vh; } 
             .dice { width: 8vh; height: 8vh; font-size: 4vh; }
             
-            /* KONTROLE "LIFT UP" - Lebdeći panel */
+            /* KONTROLE "LIFT UP" - Lebdeći panel - REORGANIZOVAN */
             .controls-area { 
-                padding: 20px; 
-                gap: 20px;
                 position: absolute; /* Fixirano na dnu panela */
                 bottom: 60px; /* PODIGNUTO JOŠ VIŠE */
                 left: 50%;
@@ -347,13 +345,53 @@
                 margin-bottom: max(10px, var(--safe-bottom)); 
                 box-shadow: 0 10px 30px rgba(0,0,0,0.5);
                 z-index: 100;
+                
+                /* Layout promene za jasnocu */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding-top: 50px; /* Prostor za naslov igrača */
+                padding-bottom: 20px;
+                gap: 20px;
             }
 
-            .game-info { justify-content: center; gap: 20px; }
-            .btn-throw { padding: 15px 40px; font-size: 1.2rem; width: auto; }
-            /* Izdvojeno ko je na potezu */
-            #lbl-turn { font-size: 1.4rem !important; font-weight: 800; margin-top: 10px; }
-            .status-label { font-size: 1.2rem; }
+            /* ISTICANJE KO JE NA POTEZU */
+            #lbl-turn { 
+                position: absolute;
+                top: 15px;
+                left: 0;
+                width: 100%;
+                font-size: 1.6rem !important; /* Veće */
+                font-weight: 800;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                color: var(--gold-main) !important;
+                text-shadow: 0 0 10px rgba(224, 201, 149, 0.6);
+            }
+
+            .game-info { 
+                width: 100%;
+                justify-content: center; 
+                gap: 20px; 
+                flex-direction: row; /* Dugmići i status u red */
+            }
+            
+            .action-btn-group {
+                flex-direction: row;
+                gap: 20px;
+            }
+
+            .btn-throw { 
+                padding: 15px 50px; /* Veće dugme */
+                font-size: 1.3rem; 
+                width: auto; 
+            }
+            .status-label { 
+                font-size: 1.3rem; 
+                margin-bottom: 0; /* Poravnaj sa dugmićima */
+                align-self: center;
+            }
         }
 
         /* 3. LANDSCAPE PHONES (Compact height) */
@@ -375,7 +413,7 @@
             .action-btn-group { flex-direction: column; width: 80%; }
         }
 
-        /* 4. TABLETS LANDSCAPE (10-inch+) */
+        /* 4. TABLETS LANDSCAPE (10-inch+) - OPTIMIZOVANO */
         @media (min-width: 901px) and (orientation: landscape) {
             .game-content { flex-direction: column; justify-content: flex-start; padding: 10px; }
             .left-panel { max-width: 100%; flex-direction: column; gap: 10px; height: 100%; }
@@ -389,40 +427,62 @@
                 justify-content: center;
                 flex-wrap: wrap; 
                 gap: 40px; /* Veliki razmak između tabela */
-                padding-bottom: 120px; /* Mesto za kontrole */
+                padding-bottom: 140px; /* Mesto za kontrole */
                 overflow-y: auto;
             }
             
             .player-table {
-                /* Smanjena širina da sigurno stanu dve */
-                width: 40%; 
-                max-width: 450px; /* Limit širine */
+                /* POVEĆANO da iskoristi prostor */
+                width: 42%; 
+                max-width: 500px; 
                 margin-bottom: 10px;
             }
 
             /* Smanjene ćelije da stane vertikalno na ekran */
             .grid-cell { height: 25px; font-size: 13px; }
 
-            /* KONTROLE "LIFT UP" Landscape */
+            /* KONTROLE "LIFT UP" Landscape - ŠIRE I PREGLEDNIJE */
             .controls-area { 
                 position: absolute;
                 bottom: 20px;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 80%;
+                width: 70%; /* Malo šire za landscape */
                 height: auto; 
-                min-height: 90px;
-                max-height: 120px; 
+                min-height: 100px;
+                
                 border: 1px solid var(--gold-main); border-radius: 20px; 
-                flex-direction: row; justify-content: space-around; gap: 20px; padding: 15px;
+                flex-direction: row; 
+                justify-content: space-evenly; /* Ravnomerno raspoređeno */
+                align-items: center;
+                gap: 30px; 
+                padding: 15px 30px;
+                
                 margin-bottom: max(10px, var(--safe-bottom));
                 background: var(--glass-panel);
                 backdrop-filter: blur(20px);
                 z-index: 100;
             }
             
-            .dice { width: 50px; height: 50px; font-size: 24px; }
+            /* Veće kockice jer ima mesta */
+            .dice { width: 55px; height: 55px; font-size: 28px; }
             .grid-container { gap: 1px; }
+            
+            /* Bolji raspored info dela */
+            .game-info {
+                flex-direction: row;
+                gap: 20px;
+                align-items: center;
+            }
+            .action-btn-group {
+                flex-direction: row;
+                width: auto;
+                gap: 15px;
+            }
+            .btn-throw {
+                padding: 10px 30px;
+                font-size: 1.1rem;
+            }
         }
 
         /* Modals & Chat Misc */
