@@ -144,7 +144,7 @@
         .msg-incoming { align-self: flex-start; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-left-radius: 2px; }
         .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
 
-        /* --- GAME LAYOUT (DEFAULT - TABLET LANDSCAPE / DESKTOP) --- */
+        /* --- GAME LAYOUT (REDIZAJNIRAN - BEZ SIDEBARA) --- */
         #game-scene { 
             justify-content: flex-start; 
             padding: 0; 
@@ -178,11 +178,22 @@
             position: relative; 
             padding-left: max(0px, env(safe-area-inset-left));
             padding-right: max(0px, env(safe-area-inset-right));
+            /* Centriranje sadržaja pošto nema desne strane */
+            justify-content: center; 
         }
 
-        /* Default (Tablet Landscape/Desktop) styles */
-        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 10px; overflow: hidden; }
-        .right-sidebar { width: 300px; background: var(--glass-panel); border-left: var(--glass-border); display: flex; flex-direction: column; padding: 15px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding-top: 0; }
+        /* Glavni panel sada zauzima sve */
+        .left-panel { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 10px; 
+            overflow: hidden; 
+            max-width: 100%; /* Da ne beži */
+        }
+        
+        /* Sidebar je uklonjen u potpunosti */
+
         .tables-wrapper { 
             flex: 1; 
             overflow: auto; 
@@ -292,7 +303,6 @@
 
         /* 1. SVI TELEFONI I TABLETI U PORTRAIT MODU (DO 1024px) */
         @media (max-width: 1024px) and (orientation: portrait) {
-            .right-sidebar { display: none; }
             .game-content { flex-direction: column; }
             .left-panel { padding: 0; width: 100%; display: block; overflow: hidden; }
             
@@ -342,7 +352,6 @@
 
         /* 2. SAMO MALI TELEFONI U LANDSCAPE MODU (DO 900px) */
         @media (max-width: 900px) and (orientation: landscape) {
-            .right-sidebar { display: none; }
             .game-header { min-height: 40px; padding: 5px 15px; }
             .game-content { flex-direction: row; align-items: stretch; }
             .left-panel { flex-direction: row; width: 100%; padding: 0; }
@@ -356,7 +365,6 @@
 
         /* 3. VELIKI TABLETI U LANDSCAPE MODU (901px - 1280px) */
         @media (min-width: 901px) and (max-width: 1280px) and (orientation: landscape) {
-            .right-sidebar { display: block; width: 250px; }
             .game-content { flex-direction: row; }
             .controls-area { min-height: 120px; }
             .dice { width: 60px; }
@@ -437,8 +445,7 @@
                     <div style="text-align:center; margin-top:5px; padding-bottom: 5px; font-size:0.8rem; color:var(--gold-main);" id="lbl-turn"></div>
                 </div>
             </div>
-            <div class="right-sidebar"><div class="sidebar-header">TOP LISTA</div><ul class="highscore-list" id="hs-list"></ul></div>
-        </div>
+            </div>
     </div>
 
     <div id="stats-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">STATISTIKA</h2><div class="modal-box" style="width: 100%; max-width: 500px;"><div style="border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px;"><p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">NAJVEĆI SKOR</p><span id="stat-high" style="font-size: 2.5rem; color: var(--gold-main); font-weight: 700;">0</span></div><div class="stat-grid"><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">UKUPNO PARTIJA</span><span id="stat-games" class="stat-val">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">PROSEČAN SKOR</span><span id="stat-avg" class="stat-val c-gold">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">POBEDE</span><span id="stat-wins" class="stat-val c-win">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">PORAZI</span><span id="stat-losses" class="stat-val c-loss">0</span></div></div><div style="margin-top: 15px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px;"><p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">USPEŠNOST</p><span id="stat-rate" style="font-size: 1.5rem; color: var(--text-main); font-weight: 600;">0%</span></div></div></div>
@@ -655,7 +662,7 @@
             showStats() { this.navigateTo('stats-screen'); document.getElementById('stat-games').innerText = this.stats.games; document.getElementById('stat-high').innerText = this.stats.highscore; document.getElementById('stat-wins').innerText = this.stats.wins; document.getElementById('stat-losses').innerText = this.stats.losses; const avg = this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 0; document.getElementById('stat-avg').innerText = avg; const totalCompetitive = this.stats.wins + this.stats.losses; let rate = 0; if (totalCompetitive > 0) rate = Math.round((this.stats.wins / totalCompetitive) * 100); document.getElementById('stat-rate').innerText = rate + "%"; }
             showHighscoresScreen() { this.navigateTo('highscores-screen'); const list = document.getElementById('full-hs-list'); list.innerHTML = ""; if (this.highscores.length === 0) { list.innerHTML = "<div style='text-align:center; padding:20px; color:#777;'>Još nema rezultata.</div>"; return; } this.highscores.forEach((entry, i) => { let li = document.createElement('li'); li.className = 'highscore-item'; let rankClass = i===0?'rank-1':(i===1?'rank-2':(i===2?'rank-3':'rank-other')); li.innerHTML = `<div style="display:flex; align-items:center;"><span class="rank-badge ${rankClass}">${i+1}</span><div><span style="font-weight:600;">${entry.name}</span><span class="hl-mode">${entry.mode}</span><div style="font-size:0.7rem; color:var(--text-muted);">${entry.date || '-'}</div></div></div><span style="color:var(--gold-main); font-weight:700; font-size:1.1rem;">${entry.score}</span>`; list.appendChild(li); }); }
             saveHighscoreEntry(name, score, mode) { const date = new Date().toLocaleDateString('sr-RS'); this.highscores.push({ name, score, mode, date }); this.highscores.sort((a,b) => b.score - a.score); this.highscores = this.highscores.slice(0, 20); localStorage.setItem('yamb_highscores_v2', JSON.stringify(this.highscores)); }
-            updateHighscoresUI() { const list = document.getElementById('hs-list'); if(list) { list.innerHTML = ""; this.highscores.slice(0, 10).forEach((hs, i) => { let li = document.createElement('li'); li.className = 'highscore-item'; li.innerHTML = `<span>${i+1}. ${hs.name}</span> <span style="color:var(--gold-main)">${hs.score}</span>`; list.appendChild(li); }); } }
+            updateHighscoresUI() { /* Sidebar lista je uklonjena */ }
             updateStats(score, resultType) { this.stats.games++; this.stats.totalScoreSum += score; if (score > this.stats.highscore) this.stats.highscore = score; if (resultType === 'win') this.stats.wins++; else if (resultType === 'loss') this.stats.losses++; localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); }
             toggleTheme() { const current = localStorage.getItem('yamb_theme') || 'dark'; let next = 'dark'; document.body.classList.remove('light-theme', 'medium-theme'); if (current === 'dark') { next = 'light'; document.body.classList.add('light-theme'); } else if (current === 'light') { next = 'medium'; document.body.classList.add('medium-theme'); } else { next = 'dark'; } localStorage.setItem('yamb_theme', next); }
             showMainMenu() { this.navigateTo('main-menu'); document.getElementById('chat-float-btn').classList.add('hidden'); document.getElementById('chat-window').classList.remove('active'); this.chatOpen = false; }
@@ -673,7 +680,7 @@
             startGame() { this.navigateTo('game-scene'); this.createScoreTables(); this.resetTurnLogic(); this.gameActive = true; this.updateHighscoresUI(); document.getElementById('chat-body').innerHTML = ""; const chatBtn = document.getElementById('chat-float-btn'); if (this.modeTag === "Solo" || this.modeTag === "1 na 1") { chatBtn.classList.add('hidden'); } else { chatBtn.classList.remove('hidden'); if(this.aiMode) this.triggerAiChat('start'); } }
             createScoreTables() { const container = document.getElementById('tables-container'); container.innerHTML = ''; this.players.forEach((player, pIdx) => { const tableDiv = document.createElement('div'); tableDiv.className = 'player-table'; tableDiv.id = `ptable-${pIdx}`; const nameDiv = document.createElement('div'); nameDiv.className = 'player-name'; nameDiv.innerText = player; tableDiv.appendChild(nameDiv); const grid = document.createElement('div'); grid.className = 'grid-container'; ["", "↓", "S", "⇅", "↑", "R", "📢"].forEach((s, i) => { let d = document.createElement('div'); d.className = 'grid-cell col-header ' + ["", "c-nadole", "c-slobodna", "c-sredina", "c-nagore", "c-rucno", "c-najava"][i]; d.innerText = s; grid.appendChild(d); }); REDOVI_PRIKAZ.forEach(row => { let lbl = document.createElement('div'); lbl.className = 'grid-cell row-header' + (row.includes("ZBIR") ? " sum" : ""); lbl.innerText = row; grid.appendChild(lbl); KOLONE.forEach(col => { let cell = document.createElement('div'); cell.className = 'grid-cell'; if (row.includes("ZBIR")) { cell.style.fontWeight = 'bold'; cell.innerText = "0"; cell.id = `sum-${pIdx}-${col}-${row}`; cell.style.color = "var(--gold-main)"; } else { let btn = document.createElement('button'); btn.className = 'score-btn'; btn.id = `btn-${pIdx}-${col}-${row}`; btn.onclick = () => this.writeScore(row, col, pIdx); btn.disabled = true; cell.appendChild(btn); } grid.appendChild(cell); }); }); tableDiv.appendChild(grid); let totalDiv = document.createElement('div'); totalDiv.className = 'total-score'; totalDiv.id = `total-${pIdx}`; totalDiv.innerText = "0"; tableDiv.appendChild(totalDiv); container.appendChild(tableDiv); }); }
             
-            // --- FIX: POTPUNO REVIDIRANA FUNKCIJA BACANJA ---
+            // --- POTPUNO REVIDIRANA LOGIKA BACANJA ---
             resetTurnLogic() { 
                 this.kockiceVals = [0,0,0,0,0,0]; 
                 this.zadrzane = [false,false,false,false,false,false]; 
@@ -727,68 +734,221 @@
                 this.updateDiceVisuals(); 
             }
             
-            // --- FIX: ISPRAVLJENA LOGIKA ZA DUGME BACAJ ---
+            // --- FIX: ROBUSTNA FUNKCIJA ZA BACANJE ---
             async throwDice() { 
-                const isAiCheck = this.players[this.currentPlayerIdx].includes("AI"); 
+                const btnBacaj = document.getElementById('btn-bacaj');
+                const btnNajava = document.getElementById('btn-najava');
                 const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex); 
                 
+                // Uklonili smo isAiCheck jer je blokirao AI da izvrši funkciju
                 if (this.brojBacanja >= 3 || isOnlineOpponent) return; 
+                if (this.najavaAktivna) { await this.modal.alert("Morate prvo odabrati polje za najavu!"); return; }
+
+                btnBacaj.disabled = true; 
                 
-                const btnBacaj = document.getElementById('btn-bacaj');
-                btnBacaj.disabled = true; // Zabrani klik dok se vrti
-                
-                this.soundMgr.roll(); 
-                if(this.aiMode && isAiCheck && Math.random() > 0.7) this.triggerAiChat('thinking'); 
-                
-                let newValues = [...this.kockiceVals]; 
-                for(let i=0; i<6; i++) { if (!this.zadrzane[i]) newValues[i] = Math.floor(Math.random()*6)+1; } 
-                
-                if (this.onlineMode) { this.socket.emit('dice_roll', { roomId: this.roomId, values: newValues, bacanje: this.brojBacanja + 1 }); } 
-                
-                // Animacija
-                this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); 
-                for(let k=0; k<8; k++) { 
-                    this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
-                    await sleep(40); 
-                } 
-                this.diceBtns.forEach(b => b.classList.remove('rolling')); 
-                
-                this.kockiceVals = newValues; 
-                this.brojBacanja++; 
-                document.getElementById('lbl-status').innerText = `Bacanje: ${this.brojBacanja} / 3`; 
-                this.updateDiceVisuals(); 
-                this.updateTableVisuals(); 
-                
-                // --- KLJUČNI FIX: EKSPLICITNO AKTIVIRANJE DUGMETA ---
-                if (this.brojBacanja < 3) { 
-                    // Ako nije 3. bacanje, i ako je moj red (nije AI, nije online protivnik), OMOGUĆI dugme
-                    if (!isAiCheck && !isOnlineOpponent) {
-                        btnBacaj.disabled = false;
+                try {
+                    this.soundMgr.roll(); 
+                    
+                    let newValues = [...this.kockiceVals]; 
+                    for(let i=0; i<6; i++) { if (!this.zadrzane[i]) newValues[i] = Math.floor(Math.random()*6)+1; } 
+                    
+                    if (this.onlineMode) { this.socket.emit('dice_roll', { roomId: this.roomId, values: newValues, bacanje: this.brojBacanja + 1 }); } 
+                    
+                    this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); 
+                    for(let k=0; k<6; k++) { 
+                        this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
+                        await sleep(50); 
+                    } 
+                    this.diceBtns.forEach(b => b.classList.remove('rolling')); 
+                    
+                    this.kockiceVals = newValues; 
+                    this.brojBacanja++; 
+                    document.getElementById('lbl-status').innerText = `Bacanje: ${this.brojBacanja} / 3`; 
+                    this.updateDiceVisuals(); 
+                    
+                } catch(e) {
+                    console.error("Greška pri bacanju:", e);
+                } finally {
+                    try {
+                        this.updateTableVisuals();
+                    } catch(err) { console.error("Greška pri osvežavanju tabele:", err); }
+
+                    // Provera da li je AI na potezu - ako jeste, dugme ostaje disabled za tebe
+                    const isAi = this.players[this.currentPlayerIdx].includes("AI");
+
+                    if (this.brojBacanja < 3 && !isAi && !isOnlineOpponent) { 
+                        btnBacaj.disabled = false; 
+                        btnBacaj.innerText = "BACAJ";
+                    } else { 
+                        btnBacaj.disabled = true; 
+                        btnBacaj.innerText = "UPIŠI"; 
+                    } 
+                    
+                    if (this.brojBacanja === 1 && !isAi) { 
+                        btnNajava.disabled = false; 
+                        btnNajava.classList.add('btn-highlight'); 
+                    } else { 
+                        btnNajava.disabled = true; 
+                        btnNajava.classList.remove('btn-highlight'); 
                     }
-                } else { 
+                }
+            }
+
+            // --- FIX: FUNKCIJA ZA NAJAVU ---
+            clickNajava() { 
+                if (this.brojBacanja !== 1) return; 
+                const btn = document.getElementById('btn-najava'); 
+                const btnBacaj = document.getElementById('btn-bacaj');
+
+                if (!this.najavaAktivna) { 
+                    this.najavaAktivna = true; 
+                    btn.innerText = "OPOZOVI"; 
+                    btn.classList.add('btn-active-toggle'); 
+                    btn.classList.remove('btn-highlight'); 
                     btnBacaj.disabled = true; 
-                    btnBacaj.innerText = "UPIŠI"; 
-                } 
-                
-                const btnNajava = document.getElementById('btn-najava'); 
-                if (this.brojBacanja === 1 && !isAiCheck && !isOnlineOpponent) { 
-                    btnNajava.disabled = false; 
-                    btnNajava.classList.add('btn-highlight'); 
-                } else if (!this.najavaAktivna) { 
-                    btnNajava.disabled = true; 
-                    btnNajava.classList.remove('btn-highlight'); 
+                    if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'start' }); 
+                } else { 
+                    this.najavaAktivna = false; 
+                    btn.innerText = "Najava"; 
+                    btn.classList.remove('btn-active-toggle'); 
+                    btn.classList.add('btn-highlight'); 
+                    btnBacaj.disabled = false; 
+                    if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); 
                 } 
             }
 
-            clickNajava() { if (this.brojBacanja !== 1) return; const btn = document.getElementById('btn-najava'); if (!this.najavaAktivna) { this.najavaAktivna = true; btn.innerText = "OPOZOVI"; btn.classList.add('btn-active-toggle'); btn.classList.remove('btn-highlight'); document.getElementById('btn-bacaj').disabled = true; if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'start' }); } else { this.najavaAktivna = false; btn.innerText = "Najava"; btn.classList.remove('btn-active-toggle'); btn.classList.add('btn-highlight'); document.getElementById('btn-bacaj').disabled = false; if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); } }
             isValidColumnOrder(row, col, sheet) { if (col === "Nadole") { const idx = REDOVI_IGRA.indexOf(row); if (idx > 0 && sheet["Nadole"][REDOVI_IGRA[idx-1]] === null) return false; } if (col === "Nagore") { const idx = REDOVI_IGRA.indexOf(row); if (idx < REDOVI_IGRA.length-1 && sheet["Nagore"][REDOVI_IGRA[idx+1]] === null) return false; } if (col === "Sredina") { const up = ["Max", "6", "5", "4", "3", "2", "1"]; const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"]; if (up.includes(row)) { const idx = up.indexOf(row); if (idx > 0 && sheet["Sredina"][up[idx-1]] === null) return false; } else if (down.includes(row)) { const idx = down.indexOf(row); if (idx > 0 && sheet["Sredina"][down[idx-1]] === null) return false; } } return true; }
-            async writeScore(row, col, pIdx) { if (pIdx !== this.currentPlayerIdx) return; if (this.brojBacanja === 0) { this.soundMgr.error(); return await this.modal.alert("Prvo baci kockice!"); } const sheet = this.allScores[pIdx]; if (sheet[col][row] !== null) return await this.modal.alert("Popunjeno!"); const isHuman = !this.players[pIdx].includes("AI"); if (isHuman && this.najavaAktivna) { if (col !== "Najava") { this.soundMgr.error(); return await this.modal.alert("Uključili ste najavu!\nMorate odabrati polje u koloni NAJAVA koje gađate."); } this.najavljenoPolje = {row, col}; this.najavaAktivna = false; document.getElementById(`btn-${pIdx}-${col}-${row}`).classList.add('highlight-najava'); const btnN = document.getElementById('btn-najava'); btnN.innerText = `Najava: ${row}`; btnN.disabled = true; btnN.classList.remove('btn-active-toggle'); document.getElementById('btn-bacaj').disabled = false; if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'selected', row: row }); return; } if (this.najavljenoPolje) { if (col !== "Najava" || row !== this.najavljenoPolje.row) { this.soundMgr.error(); return await this.modal.alert(`Najavili ste ${this.najavljenoPolje.row}!\nMorate popuniti to polje (ili upisati 0 u njega).`); } } if (!this.isValidColumnOrder(row, col, sheet)) { this.soundMgr.error(); return await this.modal.alert("Pogrešan redosled popunjavanja kolone!"); } const best5 = this.getBest5(row, this.kockiceVals); let pts = this.calcPoints(row, best5); if (col === "Ručno" && this.brojBacanja > 1) { if(isHuman) { const confirmZero = await this.modal.confirm("Ručno kolona se popunjava samo posle 1. bacanja.\nOvo će biti upisano kao 0 (precrtavanje).\nDa li želite da nastavite?"); if (!confirmZero) return; } pts = 0; } sheet[col][row] = pts; this.soundMgr.score(); if (this.onlineMode && isHuman) { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts }); } if (this.aiMode && isHuman) { if (pts >= 40) this.triggerAiChat('goodMove'); else if (pts <= 5) this.triggerAiChat('badMove'); } if (pts >= 50 && row === "Yamb") this.confetti.start(); setTimeout(() => this.confetti.stop(), 3000); this.updateTableVisuals(); this.switchPlayer(); }
+            
+            // --- FIX: UPISIVANJE ---
+            async writeScore(row, col, pIdx) { 
+                if (pIdx !== this.currentPlayerIdx) return; 
+                if (this.brojBacanja === 0) { this.soundMgr.error(); return await this.modal.alert("Prvo baci kockice!"); } 
+                
+                const sheet = this.allScores[pIdx]; 
+                if (sheet[col][row] !== null) return await this.modal.alert("Popunjeno!"); 
+                
+                const isHuman = !this.players[pIdx].includes("AI"); 
+                
+                if (isHuman && this.najavaAktivna) { 
+                    if (col !== "Najava") { 
+                        this.soundMgr.error(); 
+                        return await this.modal.alert("Uključili ste najavu!\nMorate odabrati polje u koloni NAJAVA koje gađate."); 
+                    } 
+                    
+                    this.najavljenoPolje = {row, col}; 
+                    this.najavaAktivna = false; 
+                    
+                    document.getElementById(`btn-${pIdx}-${col}-${row}`).classList.add('highlight-najava'); 
+                    
+                    const btnN = document.getElementById('btn-najava'); 
+                    btnN.innerText = `Najava: ${row}`; 
+                    btnN.disabled = true; 
+                    btnN.classList.remove('btn-active-toggle'); 
+                    
+                    const btnBacaj = document.getElementById('btn-bacaj');
+                    btnBacaj.disabled = false;
+                    btnBacaj.innerText = "BACAJ";
+                    
+                    if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'selected', row: row }); 
+                    
+                    return; 
+                } 
+                
+                if (this.najavljenoPolje) { 
+                    if (col !== "Najava" || row !== this.najavljenoPolje.row) { 
+                        this.soundMgr.error(); 
+                        return await this.modal.alert(`Najavili ste ${this.najavljenoPolje.row}!\nMorate popuniti to polje (ili upisati 0 u njega).`); 
+                    } 
+                } 
+                
+                if (!this.isValidColumnOrder(row, col, sheet)) { this.soundMgr.error(); return await this.modal.alert("Pogrešan redosled popunjavanja kolone!"); } 
+                
+                const best5 = this.getBest5(row, this.kockiceVals); 
+                let pts = this.calcPoints(row, best5); 
+                
+                if (col === "Ručno" && this.brojBacanja > 1) { 
+                    if(isHuman) { 
+                        const confirmZero = await this.modal.confirm("Ručno kolona se popunjava samo posle 1. bacanja.\nOvo će biti upisano kao 0 (precrtavanje).\nDa li želite da nastavite?"); 
+                        if (!confirmZero) return; 
+                    } 
+                    pts = 0; 
+                } 
+                
+                sheet[col][row] = pts; 
+                this.soundMgr.score(); 
+                
+                if (this.onlineMode && isHuman) { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts }); } 
+                if (this.aiMode && isHuman) { if (pts >= 40) this.triggerAiChat('goodMove'); else if (pts <= 5) this.triggerAiChat('badMove'); } 
+                if (pts >= 50 && row === "Yamb") this.confetti.start(); 
+                setTimeout(() => this.confetti.stop(), 3000); 
+                
+                this.updateTableVisuals(); 
+                this.switchPlayer(); 
+            }
+            
             switchPlayer() { let gameOver = true; this.allScores.forEach(s => { KOLONE.forEach(c => { REDOVI_IGRA.forEach(r => { if (s[c][r] === null) gameOver = false; }); }); }); if (gameOver) { this.handleGameOver(); return; } this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length; this.resetTurnLogic(); this.autoSaveGame(); }
             async handleGameOver() { localStorage.removeItem('yamb_saved_game'); this.gameActive = false; const results = []; this.players.forEach((name, i) => { let total = parseInt(document.getElementById(`total-${i}`).innerText); results.push({name, score: total}); }); this.players.forEach((name, i) => { if (!name.includes("AI")) { const score = results[i].score; this.saveHighscoreEntry(name, score, this.modeTag); } }); results.sort((a,b) => b.score - a.score); const oldHighscore = this.stats.highscore; const myScore = results.find(r => r.name === this.players[0]).score; const isNewRecord = myScore > oldHighscore; let resultType = 'solo'; if (this.players.length > 1) { if (results[0].name === this.players[0]) resultType = 'win'; else resultType = 'loss'; } this.updateStats(myScore, resultType); this.soundMgr.win(); let title = "KRAJ IGRE"; let message = ""; if (this.players.length === 1) { if (isNewRecord) { this.confetti.start(); setTimeout(() => this.confetti.stop(), 5000); title = "🎉 NOVI REKORD! 🏆"; message = `BRAVO! Nadmašili ste sami sebe!\n\nNovi rekord: <span style="color:var(--gold-main); font-weight:bold;">${myScore}</span> poena.`; } else { title = "DOBRA PARTIJA"; message = `Osvojili ste <span style="color:var(--gold-main);">${myScore}</span> poena.\nViše sreće drugi put!\nVaš rekord ostaje: ${oldHighscore}`; } } else { const winner = results[0]; const loser = results[results.length - 1]; title = `🏆 POBEDNIK: ${winner.name.toUpperCase()}!`; const quotes = ["Glavu gore, kockice su varljive!", "Dobar otpor, ali protivnik je imao više sreće.", "Sledeći put je tvoja pobeda!", "Nije važno pobediti, važno je učestvovati.", "Samo vežbom do savršenstva."]; const quote = quotes[Math.floor(Math.random() * quotes.length)]; message = `Rezultat: <span style="color:var(--success)">${winner.score}</span> vs <span style="color:var(--danger)">${loser.score}</span>\n\n${loser.name}, ${quote}`; if(this.aiMode) { if (winner.name.includes("AI")) this.triggerAiChat('win'); else this.triggerAiChat('lose'); } } await this.modal.alert(message, title); this.showMainMenu(); }
             async runAiTurn() { const aiIdx = this.currentPlayerIdx; const sheet = this.allScores[aiIdx]; if (this.brojBacanja === 0) { await this.throwDice(); setTimeout(() => this.runAiTurn(), 800); return; } const decision = this.ai.decideRoll(this.kockiceVals, this.brojBacanja, sheet); if (decision.type === 'write') { const best5 = this.getBest5(decision.row, this.kockiceVals); const pts = this.calcPoints(decision.row, best5); if (pts > 50) this.triggerAiChat('aiGood'); this.writeScore(decision.row, decision.col, aiIdx); } else if (decision.type === 'hold') { this.zadrzane = decision.hold; this.updateDiceVisuals(); await this.throwDice(); setTimeout(() => this.runAiTurn(), 800); } }
             getBest5(row, dice) { const d = [...dice]; if (row === "Min") return d.sort((a,b)=>a-b).slice(0,5); if (row === "Max") return d.sort((a,b)=>b-a).slice(0,5); if (row === "Kenta") { const u = [...new Set(d)].sort((a,b)=>a-b); if ([2,3,4,5,6].every(v=>u.includes(v))) return [2,3,4,5,6]; if ([1,2,3,4,5].every(v=>u.includes(v))) return [1,2,3,4,5]; return d.sort((a,b)=>b-a).slice(0,5); } if (row === "Ful") { const c={}; d.forEach(x=>c[x]=(c[x]||0)+1); const k=Object.keys(c).map(Number); if(k.some(x=>c[x]>=5)) return Array(5).fill(k.find(x=>c[x]>=5)); const threes=k.filter(x=>c[x]>=3); const pairs=k.filter(x=>c[x]>=2); let cands=[]; threes.forEach(t=>{pairs.forEach(p=>{if(t!==p)cands.push([...Array(3).fill(t),...Array(2).fill(p)])})}); if(cands.length>0) return cands.sort((a,b)=>sum(b)-sum(a))[0]; } if (["1","2","3","4","5","6"].includes(row)) { const t=parseInt(row); const match=d.filter(x=>x===t); const rest=d.filter(x=>x!==t).sort((a,b)=>b-a); return [...match,...rest].slice(0,5); } const c={}; d.forEach(x=>c[x]=(c[x]||0)+1); d.sort((a,b)=>{if(c[b]!==c[a])return c[b]-c[a]; return b-a}); return d.slice(0,5); }
             calcPoints(row, v) { const s = sum(v); if (["1","2","3","4","5","6"].includes(row)) return v.filter(x=>x===parseInt(row)).length * parseInt(row); if (row === "Max" || row === "Min") return s; if (row === "Triling") { const c={}; v.forEach(x=>c[x]=(c[x]||0)+1); if(Object.values(c).some(cnt=>cnt>=3)) return (3*Number(Object.keys(c).find(k=>c[k]>=3)))+20; return 0; } if (row === "Kenta") { const u=[...new Set(v)].sort((a,b)=>a-b); const k1=[1,2,3,4,5].every(x=>u.includes(x)); const k2=[2,3,4,5,6].every(x=>u.includes(x)); if(k1||k2) { if(this.brojBacanja===1) return 66; if(this.brojBacanja===2) return 56; return 46; } return 0; } if (row === "Ful") { const c={}; v.forEach(x=>c[x]=(c[x]||0)+1); if (Object.values(c).includes(5)||(Object.values(c).includes(3)&&Object.values(c).includes(2))) return s+30; return 0; } if (row === "Poker") { const c={}; v.forEach(x=>c[x]=(c[x]||0)+1); if(Object.values(c).some(cnt=>cnt>=4)) return (Number(Object.keys(c).find(k=>c[k]>=4))*4)+40; return 0; } if (row === "Yamb") { const c={}; v.forEach(x=>c[x]=(c[x]||0)+1); if(Object.values(c).some(cnt=>cnt>=5)) return (Number(Object.keys(c).find(k=>c[k]>=5))*5)+50; return 0; } return 0; }
-            updateTableVisuals() { this.players.forEach((p, idx) => { const data = this.allScores[idx]; let grandTotal = 0; KOLONE.forEach(col => { let sum1 = 0; ["1","2","3","4","5","6"].forEach(r => { if(data[col][r]!==null) sum1 += data[col][r]; }); if(sum1 >= 60) sum1 += 30; document.getElementById(`sum-${idx}-${col}-ZBIR 1`).innerText = sum1; let sum2 = 0; const vMax = data[col]["Max"]; const vMin = data[col]["Min"]; const v1 = data[col]["1"]; if (vMax!==null && vMin!==null && v1!==null) { sum2 = (vMax - vMin) * v1; if (sum2 >= 60) sum2 += 40; } document.getElementById(`sum-${idx}-${col}-ZBIR 2`).innerText = sum2; let sum3 = 0; ["Triling","Kenta","Ful","Poker","Yamb"].forEach(r => { if(data[col][r]!==null) sum3 += data[col][r]; }); document.getElementById(`sum-${idx}-${col}-ZBIR 3`).innerText = sum3; grandTotal += sum1 + sum2 + sum3; REDOVI_PRIKAZ.forEach(row => { const btn = document.getElementById(`btn-${idx}-${col}-${row}`); const val = data[col][row]; btn.classList.remove('highlight-najava'); if (val !== null) { btn.innerText = val; btn.classList.add('filled'); btn.disabled = true; } else { btn.innerText = ""; btn.classList.remove('filled'); const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex && idx === this.myOnlineIndex); const isLocalTurn = (!this.onlineMode && idx === this.currentPlayerIdx && !this.players[idx].includes("AI")); if ((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0) btn.disabled = false; else btn.disabled = true; if (this.najavljenoPolje && this.najavljenoPolje.row === row && this.najavljenoPolje.col === col) btn.classList.add('highlight-najava'); } }); }); document.getElementById(`total-${idx}`).innerText = grandTotal; }); }
+            updateTableVisuals() { 
+                this.players.forEach((p, idx) => { 
+                    const data = this.allScores[idx]; 
+                    let grandTotal = 0; 
+                    
+                    KOLONE.forEach(col => { 
+                        let sum1 = 0; 
+                        ["1","2","3","4","5","6"].forEach(r => { if(data[col][r]!==null) sum1 += data[col][r]; }); 
+                        if(sum1 >= 60) sum1 += 30; 
+                        document.getElementById(`sum-${idx}-${col}-ZBIR 1`).innerText = sum1; 
+                        
+                        let sum2 = 0; 
+                        const vMax = data[col]["Max"]; const vMin = data[col]["Min"]; const v1 = data[col]["1"]; 
+                        if (vMax!==null && vMin!==null && v1!==null) { 
+                            sum2 = (vMax - vMin) * v1; 
+                            if (sum2 >= 60) sum2 += 40; 
+                        } 
+                        document.getElementById(`sum-${idx}-${col}-ZBIR 2`).innerText = sum2; 
+                        
+                        let sum3 = 0; 
+                        ["Triling","Kenta","Ful","Poker","Yamb"].forEach(r => { if(data[col][r]!==null) sum3 += data[col][r]; }); 
+                        document.getElementById(`sum-${idx}-${col}-ZBIR 3`).innerText = sum3; 
+                        
+                        grandTotal += sum1 + sum2 + sum3; 
+                        
+                        REDOVI_PRIKAZ.forEach(row => { 
+                            const btn = document.getElementById(`btn-${idx}-${col}-${row}`); 
+                            if (!btn) return; 
+                            
+                            const val = data[col][row]; 
+                            btn.classList.remove('highlight-najava'); 
+                            
+                            if (val !== null) { 
+                                btn.innerText = val; 
+                                btn.classList.add('filled'); 
+                                btn.disabled = true; 
+                            } else { 
+                                btn.innerText = ""; 
+                                btn.classList.remove('filled'); 
+                                
+                                const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex && idx === this.myOnlineIndex); 
+                                const isLocalTurn = (!this.onlineMode && idx === this.currentPlayerIdx && !this.players[idx].includes("AI")); 
+                                
+                                if ((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0) {
+                                    btn.disabled = false;
+                                } else {
+                                    btn.disabled = true;
+                                }
+                                
+                                if (this.najavljenoPolje && this.najavljenoPolje.row === row && this.najavljenoPolje.col === col) {
+                                    btn.classList.add('highlight-najava'); 
+                                }
+                            } 
+                        }); 
+                    }); 
+                    document.getElementById(`total-${idx}`).innerText = grandTotal; 
+                }); 
+            }
             updateHighscoresUI() { }
             checkSavedGame() { const saved = localStorage.getItem('yamb_saved_game'); const btnResume = document.getElementById('btn-resume-game'); if (saved) { btnResume.classList.remove('hidden'); } else { btnResume.classList.add('hidden'); } }
             autoSaveGame() { if(this.onlineMode) return; const data = { players: this.players, scores: this.allScores, current: this.currentPlayerIdx, aiMode: this.aiMode, diff: this.aiDifficulty, date: new Date().toISOString() }; localStorage.setItem('yamb_saved_game', JSON.stringify(data)); }
