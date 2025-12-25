@@ -72,7 +72,10 @@
             background: var(--bg-base);
             background-image: radial-gradient(circle at 50% 30%, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 80%);
             color: var(--text-main);
-            height: 100vh; width: 100vw; overflow: hidden;
+            /* KORISTIMO DVH za mobilne browsere */
+            height: 100dvh; 
+            width: 100vw; 
+            overflow: hidden;
             display: flex; justify-content: center;
             transition: background 0.5s, color 0.5s;
         }
@@ -84,37 +87,243 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s;
             transform: scale(0.95); z-index: 1; 
-            padding: 20px;
-            padding-top: max(20px, env(safe-area-inset-top)); 
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-            padding-left: max(20px, env(safe-area-inset-left));
-            padding-right: max(20px, env(safe-area-inset-right));
-            overflow-y: auto;
+            padding-top: max(10px, var(--safe-top)); 
+            padding-bottom: max(10px, var(--safe-bottom));
+            padding-left: max(10px, var(--safe-left));
+            padding-right: max(10px, var(--safe-right));
         }
         .screen.active { opacity: 1; visibility: visible; transform: scale(1); z-index: 10; }
         .hidden { display: none !important; }
 
-        .menu-title { font-size: 2.5rem; margin-bottom: 40px; text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .menu-subtitle { font-weight:300; font-size:1.2rem; color:var(--gold-main); display: block; letter-spacing: 2px; }
+        /* --- RESPONSIVNI MENU --- */
+        #main-menu { overflow-y: auto; padding: 20px; }
+        .menu-title { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: 5vh; text-align: center; line-height: 1.2; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .menu-subtitle { font-weight:300; font-size: 0.4em; color:var(--gold-main); display: block; letter-spacing: 2px; }
         
-        /* MENU BUTTONS */
         .btn-menu {
-            width: 100%; max-width: 300px; padding: 15px; margin: 8px 0;
+            width: 100%; max-width: 350px; padding: 15px; margin: 1vh 0;
             background: var(--glass-bg); border: var(--glass-border); color: var(--text-main);
-            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; cursor: pointer;
+            font-size: clamp(0.9rem, 2vh, 1.1rem); 
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
             border-radius: 50px; transition: all 0.2s; 
             font-family: 'Montserrat', sans-serif; font-weight: 600;
             backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .btn-menu:active { transform: scale(0.95); }
         .btn-primary { border-color: var(--gold-main); color: var(--gold-main); background: rgba(224, 201, 149, 0.08); box-shadow: 0 0 15px rgba(224, 201, 149, 0.15); }
         .btn-danger { border-color: var(--danger); color: var(--danger); }
         .btn-resume { border-color: var(--success); color: var(--success); background: rgba(76, 175, 80, 0.1); box-shadow: 0 0 15px rgba(76, 175, 80, 0.2); font-weight: 700; }
-
+        
         .menu-divider { margin: 10px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); }
 
-        /* MODALS & CHAT */
+
+        /* --- GAME LAYOUT & COMPACT VISIBILITY --- */
+        #game-scene { 
+            justify-content: flex-start; 
+            padding: 0; 
+            background: transparent; 
+            overflow: hidden; 
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .game-header { 
+            width: 100%; 
+            padding: 8px 15px; 
+            padding-top: max(8px, var(--safe-top));
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: var(--glass-border); 
+            background: var(--glass-panel); 
+            z-index: 20; 
+            flex-shrink: 0; 
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
+        }
+        
+        .game-content { 
+            display: flex; 
+            width: 100%; 
+            flex: 1; /* Zauzmi sav preostali prostor */
+            overflow: hidden; 
+            position: relative; 
+            padding-bottom: var(--safe-bottom);
+        }
+
+        .left-panel { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            width: 100%; 
+            height: 100%;
+            overflow: hidden; 
+        }
+        
+        /* --- TABLES AREA --- */
+        .tables-wrapper { 
+            flex: 1; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+            display: flex; 
+            justify-content: center; 
+            align-items: flex-start;
+            padding: 5px; 
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .player-table { 
+            width: 100%; 
+            max-width: 600px; /* Limit širine na tabletima */
+            background: var(--glass-panel); 
+            border-radius: 10px; 
+            border: var(--glass-border); 
+            padding: 2px; 
+            backdrop-filter: blur(12px); 
+            box-shadow: var(--glass-shadow); 
+        }
+        
+        .player-name { text-align: center; font-weight: 700; color: var(--gold-main); font-size: 0.9rem; margin: 3px 0; }
+        
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: 1.4fr repeat(6, 1fr); 
+            gap: 1px; 
+            font-size: clamp(10px, 1.5vh, 14px); /* Fluidni font za tabelu */
+        }
+        
+        .grid-cell { 
+            aspect-ratio: 2.8 / 1; /* Održava proporciju ćelije */
+            display: flex; align-items: center; justify-content: center; 
+            color: var(--text-muted); background: var(--grid-cell-bg); 
+        }
+        
+        /* Sticky Headers za tabelu da se ne gube pri skrolu na malim ekranima */
+        .col-header { position: sticky; top: 0; z-index: 5; font-weight: bold; background: var(--grid-header-bg); backdrop-filter: blur(5px); }
+        
+        .row-header { justify-content: flex-end; padding-right: 5px; font-weight: 600; font-size: 0.85em; text-transform: uppercase; }
+        .sum { color: var(--gold-main); font-weight: bold; }
+        .c-nadole { color: var(--col-nadole); } .c-nagore { color: var(--col-nagore); } .c-sredina { color: var(--col-sredina); } .c-rucno { color: var(--col-rucno); } .c-najava { color: var(--col-najava); } .c-slobodna { color: var(--col-slobodna); }
+        
+        .score-btn { width: 100%; height: 100%; border: none; background: transparent; color: var(--text-main); font-weight: bold; cursor: pointer; font-size: inherit; }
+        .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(224, 201, 149, 0.3); }
+        .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
+        .total-score { font-size: 1.2rem; color: var(--gold-main); text-align: center; margin-top: 2px; font-weight: 800; }
+        
+        /* --- CONTROLS AREA (DICE) --- */
+        .controls-area { 
+            background: var(--glass-panel); 
+            border-top: 1px solid var(--gold-main); 
+            display: flex; 
+            align-items: center; 
+            padding: 5px 10px; 
+            z-index: 50; 
+            flex-shrink: 0; 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.3); 
+            /* Compact layout defaults */
+            flex-direction: row; 
+            justify-content: space-between;
+            min-height: 12vh;
+            max-height: 140px;
+        }
+
+        .dice-container { 
+            display: flex; gap: 1vw; justify-content: center; flex-wrap: nowrap; 
+        }
+        
+        .dice { 
+            /* Kockice skaliraju u odnosu na manju dimenziju ekrana (vmin) */
+            width: clamp(35px, 11vmin, 70px); 
+            height: clamp(35px, 11vmin, 70px);            
+            flex-shrink: 0;                 
+            background: var(--dice-bg); 
+            border: 1px solid var(--dice-border); 
+            border-radius: 15%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: clamp(20px, 7vmin, 40px); 
+            color: var(--dice-color); 
+            cursor: pointer; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .dice.rolling { animation: roll 0.4s linear infinite; color: var(--gold-main); text-shadow: 0 0 10px var(--gold-glow); }
+        .dice.held { border-color: var(--danger); color: var(--danger); transform: translateY(-5%); box-shadow: 0 0 10px rgba(255, 68, 68, 0.4); }
+        @keyframes roll { 0% { transform: rotate(0deg) rotateX(0deg); } 25% { transform: rotate(90deg) rotateX(90deg); } 50% { transform: rotate(180deg) rotateX(180deg); } 75% { transform: rotate(270deg) rotateX(270deg); } 100% { transform: rotate(360deg) rotateX(360deg); } }
+
+        .game-info { 
+            display: flex; flex-direction: column; align-items: flex-end; justify-content: center; 
+            margin-left: 10px; min-width: 100px;
+        }
+        .status-label { font-size: clamp(0.7rem, 2vmin, 1rem); color: var(--gold-main); font-weight: 600; margin-bottom: 5px; white-space: nowrap;}
+        .action-btn-group { display: flex; flex-direction: column; gap: 5px; width: 100%; align-items: flex-end;}
+        .game-btn { 
+            padding: 8px 12px; border-radius: 20px; border: none; font-weight: bold; 
+            font-size: clamp(0.7rem, 2vmin, 0.9rem); 
+            text-transform: uppercase; white-space: nowrap; cursor: pointer; width: 100%;
+        }
+        .btn-throw { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); transition: transform 0.1s; }
+        .btn-throw:active { transform: scale(0.95); }
+        .btn-secondary { background: var(--glass-bg); color: var(--text-main); border: var(--glass-border); }
+        .btn-active-toggle { background: var(--danger); color: white; box-shadow: 0 0 10px rgba(255,0,0,0.4); }
+        .btn-highlight { background: var(--gold-main) !important; color: black !important; }
+
+        /* --- BREAKPOINTS: SPECIFIC OPTIMIZATION --- */
+
+        /* 1. PORTRAIT PHONES (Default layout handled above, tweaking details) */
+        @media (orientation: portrait) {
+            .controls-area { flex-direction: column; gap: 10px; min-height: auto; padding-bottom: max(10px, var(--safe-bottom)); }
+            .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; }
+            .action-btn-group { flex-direction: row; width: auto; gap: 10px; }
+            .btn-throw { width: 100px; }
+            .dice { width: 13vw; height: 13vw; max-width: 60px; max-height: 60px; font-size: 8vw; }
+        }
+
+        /* 2. TABLETS PORTRAIT (7-inch & 10-inch) - Širina 600px do 1024px */
+        @media (min-width: 600px) and (orientation: portrait) {
+            .player-table { width: 80%; margin: 0 auto; }
+            .grid-container { font-size: 1.8vh; } /* Veći font za tabelu */
+            .grid-cell { height: 3.5vh; }
+            .dice { width: 8vh; height: 8vh; font-size: 4vh; }
+            .controls-area { padding: 20px; }
+            .game-info { justify-content: center; gap: 20px; }
+            .btn-throw { padding: 15px 40px; font-size: 1.2rem; width: auto; }
+            .status-label { font-size: 1.2rem; }
+        }
+
+        /* 3. LANDSCAPE PHONES (Compact height) */
+        @media (max-width: 900px) and (orientation: landscape) {
+            .game-header { padding: 2px 15px; min-height: 35px; }
+            .game-content { flex-direction: row; }
+            .left-panel { flex-direction: row; }
+            .tables-wrapper { width: 70%; padding: 5px; }
+            .player-table { width: 100%; margin-bottom: 0; height: 100%; display: flex; flex-direction: column; }
+            .grid-container { flex: 1; align-content: center; } /* Centriraj grid vertikalno */
+            .controls-area { 
+                width: 30%; height: 100%; border-top: none; border-left: 1px solid var(--gold-main); 
+                flex-direction: column; justify-content: center; gap: 10px; padding: 5px;
+            }
+            .dice-container { flex-wrap: wrap; width: 100%; }
+            .dice { width: 8vh; height: 8vh; font-size: 4vh; }
+            .game-info { margin: 0; align-items: center; text-align: center; }
+            .action-btn-group { flex-direction: column; width: 80%; }
+        }
+
+        /* 4. TABLETS LANDSCAPE (10-inch+) */
+        @media (min-width: 901px) and (orientation: landscape) {
+            .game-content { flex-direction: row; justify-content: center; padding: 20px; }
+            .left-panel { max-width: 1200px; flex-direction: row; gap: 20px; }
+            .tables-wrapper { flex: 2; height: 100%; align-items: center; }
+            .controls-area { 
+                flex: 1; height: auto; max-height: 500px; align-self: center;
+                border: 1px solid var(--gold-main); border-radius: 15px; 
+                flex-direction: column; justify-content: center; gap: 20px; padding: 30px;
+            }
+            .dice { width: 60px; height: 60px; font-size: 30px; }
+            .grid-container { gap: 2px; }
+            .grid-cell { height: 35px; font-size: 16px; }
+        }
+
+        /* Modals & Chat Misc */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .custom-modal { background: var(--glass-panel); padding: 30px; border-radius: 20px; border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow); width: 90%; max-width: 400px; text-align: center; transform: scale(0.8); transition: 0.3s; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
@@ -140,188 +349,33 @@
         .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; word-wrap: break-word; }
         .msg-incoming { align-self: flex-start; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-left-radius: 2px; }
         .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
-
-        /* --- GAME LAYOUT --- */
-        #game-scene { 
-            justify-content: flex-start; 
-            padding: 0; 
-            background: transparent; 
-            overflow: hidden; 
-        }
         
-        .game-header { 
-            width: 100%; 
-            padding: 10px 15px; 
-            padding-top: max(10px, env(safe-area-inset-top));
-            padding-left: max(15px, env(safe-area-inset-left)); 
-            padding-right: max(15px, env(safe-area-inset-right));
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            border-bottom: var(--glass-border); 
-            background: var(--glass-panel); 
-            z-index: 20; 
-            height: auto; 
-            min-height: 50px;
-            flex-shrink: 0; 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
-        }
-        
-        .game-content { 
-            display: flex; 
-            width: 100%; 
-            height: calc(100% - 60px); 
-            overflow: hidden; 
-            position: relative; 
-            padding-left: max(0px, env(safe-area-inset-left));
-            padding-right: max(0px, env(safe-area-inset-right));
-            justify-content: center; 
-        }
-
-        .left-panel { flex: 1; display: flex; flex-direction: column; padding: 10px; overflow: hidden; max-width: 100%; }
-        
-        .tables-wrapper { 
-            flex: 1; 
-            overflow: auto; 
-            display: flex; 
-            justify-content: center; 
-            align-items: flex-start;
-            gap: 20px; 
-            padding-bottom: 20px; 
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .player-table { min-width: 340px; margin-bottom: 10px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 5px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
-        .player-name { text-align: center; font-weight: 700; color: var(--gold-main); margin-bottom: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        
-        .grid-container { display: grid; grid-template-columns: 1.5fr repeat(6, 1fr); gap: 1px; }
-        .grid-cell { height: 28px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-muted); background: var(--grid-cell-bg); }
-        .col-header { font-weight: bold; font-size: 12px; background: var(--grid-header-bg); }
-        .row-header { justify-content: flex-end; padding-right: 5px; font-weight: 600; font-size: 10px; text-transform: uppercase; }
-        .sum { color: var(--gold-main); }
-        .c-nadole { color: var(--col-nadole); } .c-nagore { color: var(--col-nagore); } .c-sredina { color: var(--col-sredina); } .c-rucno { color: var(--col-rucno); } .c-najava { color: var(--col-najava); } .c-slobodna { color: var(--col-slobodna); }
-        .score-btn { width: 100%; height: 100%; border: none; background: transparent; color: var(--text-main); font-weight: bold; cursor: pointer; transition: background 0.2s;}
-        .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(224, 201, 149, 0.3); }
-        .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
-        .total-score { font-size: 1.5rem; color: var(--gold-main); text-align: center; margin-top: 5px; font-weight: 800; }
-        
-        .controls-area { 
-            min-height: 160px; 
-            background: var(--glass-panel); 
-            margin-top: 10px; 
-            border-radius: 15px 15px 0 0; 
-            border-top: 1px solid var(--gold-main); 
-            display: flex; 
-            align-items: center; 
-            padding: 10px 15px; 
-            z-index: 50; 
-            flex-shrink: 0; 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.3); 
-        }
-
-        .dice-container { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-        
-        .dice { 
-            width: clamp(40px, 8vmin, 65px); 
-            aspect-ratio: 1 / 1;             
-            flex-shrink: 0;                 
-            background: var(--dice-bg); 
-            border: 1px solid var(--dice-border); 
-            border-radius: 8px; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: clamp(24px, 5vmin, 40px); 
-            color: var(--dice-color); 
-            cursor: pointer; 
-            transition: transform 0.2s, box-shadow 0.2s; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
-        }
-
-        @keyframes roll { 0% { transform: rotate(0deg) rotateX(0deg); } 25% { transform: rotate(90deg) rotateX(90deg); } 50% { transform: rotate(180deg) rotateX(180deg); } 75% { transform: rotate(270deg) rotateX(270deg); } 100% { transform: rotate(360deg) rotateX(360deg); } }
-        .dice.rolling { animation: roll 0.4s linear infinite; color: var(--gold-main); text-shadow: 0 0 10px var(--gold-glow); }
-        .dice.held { border-color: var(--danger); color: var(--danger); transform: translateY(-3px); box-shadow: 0 0 15px rgba(255, 68, 68, 0.4); }
-        
-        .game-info { text-align: right; flex: 1; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; margin-left: 15px;}
-        .status-label { font-size: 1rem; color: var(--gold-main); font-weight: 600; margin-bottom: 5px; }
-        .action-btn-group { display: flex; gap: 5px; }
-        .game-btn { padding: 8px 12px; border-radius: 20px; border: none; font-weight: bold; font-size: 0.75rem; text-transform: uppercase; white-space: nowrap; }
-        .btn-throw { background: var(--gold-main); color: #000; box-shadow: 0 0 15px var(--gold-glow); padding: 10px 20px; font-size: 0.9rem; transition: transform 0.1s; }
-        .btn-throw:active { transform: scale(0.95); }
-        .btn-secondary { background: var(--glass-bg); color: var(--text-main); border: var(--glass-border); }
-        .btn-active-toggle { background: var(--danger); color: white; box-shadow: 0 0 10px rgba(255,0,0,0.4); }
-        .btn-highlight { background: var(--gold-main) !important; color: black !important; }
-        
-        .sidebar-header { color: var(--text-muted); font-size: 0.7rem; uppercase; margin: 15px 0 5px 0; border-bottom: var(--glass-border); }
-        .chat-input-wrapper { display: flex; gap: 5px; } .chat-input { flex: 1; background: var(--glass-bg); border: var(--glass-border); color: var(--text-main); padding: 8px; border-radius: 4px; }
-        .highscore-list { list-style: none; font-size: 0.85rem; color: var(--text-muted); padding: 0; } 
-        .highscore-item { padding: 8px 0; border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-box { background: var(--glass-panel); padding: 25px; border-radius: 15px; border: 1px solid var(--gold-main); width: 90%; max-width: 350px; text-align: center; color: var(--text-main); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
-        .modal-input { width: 100%; padding: 10px; margin: 10px 0; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; }
-        
-        .back-btn { 
-            position: absolute; 
-            top: max(20px, env(safe-area-inset-top)); 
-            left: 20px; 
-            background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; 
-            z-index: 100;
-        }
-        
-        #splash-screen { background: var(--bg-base); z-index: 100; padding: 0;}
-        .logo-anim { font-size: 2.5rem; text-transform: uppercase; letter-spacing: 4px; animation: fadeInOut 4.5s forwards; color: var(--text-main); text-align: center; font-weight: 700; width: 100%; display: block; }
-        @keyframes fadeInOut { 0% { opacity: 0; letter-spacing: 0px; } 40% { opacity: 1; letter-spacing: 4px; } 80% { opacity: 1; } 100% { opacity: 0; } }
-        .loader { border: 5px solid rgba(125,125,125,0.2); border-top: 5px solid var(--gold-main); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .back-btn { position: absolute; top: max(20px, var(--safe-top)); left: 20px; background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; z-index: 100;}
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
         .stat-item { background: var(--glass-bg); padding: 10px; border-radius: 8px; border: var(--glass-border); }
         .stat-val { font-size: 1.2rem; font-weight: bold; display: block; margin-top: 5px; }
         .c-win { color: var(--success); } .c-loss { color: var(--danger); } .c-gold { color: var(--gold-main); }
-        .top-list-scroll { max-height: 60vh; overflow-y: auto; margin-top: 10px; }
+        .modal-box { background: var(--glass-panel); padding: 25px; border-radius: 15px; border: 1px solid var(--gold-main); width: 90%; max-width: 350px; text-align: center; color: var(--text-main); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); }
+        .modal-input { width: 100%; padding: 10px; margin: 10px 0; background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text-main); border-radius: 6px; }
+        .highscore-list { list-style: none; font-size: 0.85rem; color: var(--text-muted); padding: 0; width: 100%;}
+        .highscore-item { padding: 8px 0; border-bottom: var(--glass-border); display: flex; justify-content: space-between; align-items: center; }
+        .top-list-scroll { max-height: 60vh; overflow-y: auto; margin-top: 10px; width: 100%;}
         .rank-badge { display: inline-block; width: 25px; height: 25px; background: var(--glass-bg); border-radius: 50%; text-align: center; line-height: 25px; margin-right: 10px; font-weight: bold; font-size: 0.8rem; }
         .rank-1 { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); }
         .rank-2 { background: #C0C0C0; color: #000; }
         .rank-3 { background: #CD7F32; color: #000; }
         .hl-mode { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-left: 5px; border: 1px solid var(--glass-border); padding: 2px 5px; border-radius: 4px; }
+        
+        .logo-anim { font-size: clamp(2rem, 5vw, 4rem); text-transform: uppercase; letter-spacing: 4px; animation: fadeInOut 4.5s forwards; color: var(--text-main); text-align: center; font-weight: 700; width: 100%; display: block; }
+        @keyframes fadeInOut { 0% { opacity: 0; letter-spacing: 0px; } 40% { opacity: 1; letter-spacing: 4px; } 80% { opacity: 1; } 100% { opacity: 0; } }
+        .loader { border: 5px solid rgba(125,125,125,0.2); border-top: 5px solid var(--gold-main); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         @media (max-width: 1024px) and (orientation: portrait) {
-            .game-content { flex-direction: column; }
-            .left-panel { padding: 0; width: 100%; display: block; overflow: hidden; }
-            .tables-wrapper { height: calc(100% - 130px); flex-direction: column; align-items: center; justify-content: flex-start; padding: 10px; overflow-y: auto; }
-            .player-table { width: 100%; max-width: 400px; margin-bottom: 20px; }
-            .controls-area { position: absolute; bottom: 0; left: 0; right: 0; height: 130px; border-radius: 0; background: var(--bg-base); border-top: 2px solid var(--gold-main); padding: 5px 10px; flex-direction: column; justify-content: center; gap: 5px; padding-bottom: max(5px, env(safe-area-inset-bottom)); }
-            .dice-container { margin-bottom: 8px; gap: 3px; } 
-            .dice { width: 14.5vw; height: 14.5vw; max-width: 70px; max-height: 70px; font-size: 12.5vw; }
-            .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; margin-top: 0; }
-            .status-label { margin: 0; font-size: 0.9rem; } 
-            .btn-throw { width: 100px; }
             .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; }
             .chat-window.active { transform: translateX(-50%); } 
             .chat-float-btn { bottom: 145px; }
-            #main-menu { padding: 10px 20px; padding-top: max(20px, env(safe-area-inset-top)); overflow-y: auto; justify-content: center; }
-            .menu-title { font-size: 2rem; margin-bottom: 25px; }
-            .menu-subtitle { font-size: 1rem; }
-            .btn-menu { width: 95%; max-width: none; padding: 10px; margin: 4px 0; font-size: 0.9rem; }
-            .menu-divider { margin: 8px 0; }
         }
-
-        @media (max-width: 900px) and (orientation: landscape) {
-            .game-header { min-height: 40px; padding: 5px 15px; }
-            .game-content { flex-direction: row; align-items: stretch; }
-            .left-panel { flex-direction: row; width: 100%; padding: 0; }
-            .tables-wrapper { flex: 1; height: 100%; padding: 10px; align-items: flex-start; justify-content: center; }
-            .player-table { width: auto; min-width: 300px; height: auto; margin-bottom: 0; }
-            .controls-area { width: 160px; height: 100%; margin-top: 0; border-radius: 0; border-top: none; border-left: 1px solid var(--gold-main); flex-direction: column; justify-content: center; gap: 15px; padding-right: max(10px, env(safe-area-inset-right)); }
-            .dice-container { flex-direction: row; flex-wrap: wrap; width: 100%; justify-content: center; }
-            .dice { width: 45px; } 
-            .game-info { width: 100%; align-items: center; flex-direction: column; gap: 10px; margin-left: 0; text-align: center; }
-        }
-
-        @media (min-width: 901px) and (max-width: 1280px) and (orientation: landscape) {
-            .game-content { flex-direction: row; }
-            .controls-area { min-height: 120px; }
-            .dice { width: 60px; }
-            .player-table { min-width: 380px; }
-        }
-
     </style>
 </head>
 <body>
