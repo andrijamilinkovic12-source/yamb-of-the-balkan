@@ -29,8 +29,7 @@
             --col-nadole: #81D4FA; --col-nagore: #EF9A9A; --col-sredina: #FFCC80; 
             --col-rucno: #CE93D8; --col-najava: #E0C995; --col-slobodna: #B0BEC5;
             
-            /* --- SAFE AREA FIX ZA HONOR / XIAOMI / NOVE TELEFONE --- */
-            /* Povećane vrednosti: 45px gore (za kameru) i 35px dole (za gesture bar) */
+            /* --- SAFE AREA --- */
             --safe-top: max(45px, env(safe-area-inset-top)); 
             --safe-bottom: max(35px, env(safe-area-inset-bottom));
             --safe-left: env(safe-area-inset-left, 0px);
@@ -75,7 +74,7 @@
             background: var(--bg-base);
             background-image: radial-gradient(circle at 50% 30%, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 80%);
             color: var(--text-main);
-            height: 100dvh; /* Dynamic Height za mobilne browsere */
+            height: 100dvh; 
             width: 100vw; 
             overflow: hidden;
             display: flex; justify-content: center;
@@ -89,7 +88,6 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s;
             transform: scale(0.95); z-index: 1; 
-            /* Ovi padding-i su generalni, ali ćemo ih pregaziti za Game Screen */
             padding-left: max(10px, var(--safe-left));
             padding-right: max(10px, var(--safe-right));
             overflow: hidden; 
@@ -97,7 +95,11 @@
         .screen.active { opacity: 1; visibility: visible; transform: scale(1); z-index: 10; }
         .hidden { display: none !important; }
 
-        /* --- ORIENTATION LOCK (ZAVESA) --- */
+        /* --- ORIENTATION LOCK --- */
+        @media screen and (orientation: landscape) and (max-width: 1150px) {
+            #rotate-lock-overlay { display: flex; }
+        }
+        
         #rotate-lock-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-base); z-index: 99999;
@@ -111,142 +113,60 @@
         .rotate-sub { font-size: 0.9rem; color: var(--text-muted); padding: 0 20px; line-height: 1.5; }
         @keyframes rotateIcon { 0% { transform: rotate(0deg); } 25% { transform: rotate(-90deg); } 100% { transform: rotate(-90deg); } }
 
-        @media screen and (orientation: landscape) and (max-width: 1020px) {
-            #rotate-lock-overlay { display: flex; }
-        }
-
-        /* --- MENI OPTIMIZACIJA ZA JEDAN EKRAN (BEZ SKROLA) --- */
+        /* --- MENI --- */
         #main-menu { 
             overflow: hidden; 
-            /* Koristimo Safe Area padding da se meni ne podvuče pod status bar */
             padding-top: var(--safe-top); 
             padding-bottom: var(--safe-bottom);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-evenly; /* Raspoređuje elemente jednako */
-            align-items: center;    
-            gap: 2px; /* Mali razmak između dugmića */
+            display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; gap: 2px;
         }
         
         .menu-title { 
-            font-size: clamp(1.8rem, 5vw, 2.5rem); 
-            margin: 0; /* Uklanjamo margine da uštedimo prostor */
-            text-align: center; line-height: 1.1; 
-            color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-            flex-shrink: 0;
-            padding-bottom: 1vh;
+            font-size: clamp(1.8rem, 5vw, 2.5rem); margin: 0; text-align: center; line-height: 1.1; 
+            color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); flex-shrink: 0; padding-bottom: 1vh;
         }
         .menu-subtitle { font-weight:300; font-size: 0.4em; color:var(--gold-main); display: block; letter-spacing: 2px; }
         
         .btn-menu {
-            width: 100%; max-width: 350px; 
-            padding: 12px; /* Malo tanji dugmići */
-            margin: 2px 0; /* Minimalna margina */
+            width: 100%; max-width: 350px; padding: 12px; margin: 2px 0; 
             background: var(--glass-bg); border: var(--glass-border); color: var(--text-main);
-            font-size: clamp(0.7rem, 1.8vh, 0.95rem); /* Dinamički font */
-            text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
-            border-radius: 50px; transition: all 0.2s; 
-            font-family: 'Montserrat', sans-serif; font-weight: 600;
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-            flex-shrink: 1; /* Dozvoli dugmićima da se smanje ako je ekran baš mali */
-            min-height: 35px;
+            font-size: clamp(0.7rem, 1.8vh, 0.95rem); text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
+            border-radius: 50px; transition: all 0.2s; font-family: 'Montserrat', sans-serif; font-weight: 600;
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); flex-shrink: 1; min-height: 35px;
         }
         .btn-menu:active { transform: scale(0.95); }
         .btn-primary { border-color: var(--gold-main); color: var(--gold-main); background: rgba(224, 201, 149, 0.08); box-shadow: 0 0 15px rgba(224, 201, 149, 0.15); }
         .btn-danger { border-color: var(--danger); color: var(--danger); }
         .btn-resume { border-color: var(--success); color: var(--success); background: rgba(76, 175, 80, 0.1); box-shadow: 0 0 15px rgba(76, 175, 80, 0.2); font-weight: 700; }
-        
         .menu-divider { margin: 2px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); flex-shrink: 0;}
 
-
-        /* --- GAME LAYOUT & SAFE AREA FIXES --- */
+        /* --- GAME LAYOUT & CONTROLS --- */
         #game-scene { 
-            justify-content: flex-start; 
-            padding: 0; /* Reset paddinga jer Game Header i Content to rade sami */
-            background: transparent; 
-            overflow: hidden; 
-            display: flex;
-            flex-direction: column;
-            width: 100%; height: 100%;
+            justify-content: flex-start; padding: 0; background: transparent; overflow: hidden; display: flex; flex-direction: column; width: 100%; height: 100%;
         }
         
-        /* HEADER KOJI GUTA STATUS BAR */
         .game-header { 
-            width: 100%; 
-            /* Dodajemo Safe Top na visinu headera */
-            padding-top: var(--safe-top); 
-            padding-bottom: 5px;
-            padding-left: 15px; padding-right: 15px;
-            /* Min visina osigurava da dugmići nisu isečeni kamerom */
+            width: 100%; padding-top: var(--safe-top); padding-bottom: 5px; padding-left: 15px; padding-right: 15px; 
             min-height: calc(50px + var(--safe-top)); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-end; /* Poravnanje pri dnu headera */
-            border-bottom: var(--glass-border); 
-            background: var(--glass-panel); 
-            z-index: 20; 
-            flex-shrink: 0; 
+            display: flex; justify-content: space-between; align-items: flex-end; 
+            border-bottom: var(--glass-border); background: var(--glass-panel); z-index: 20; flex-shrink: 0; 
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
         }
         
-        .game-content { 
-            display: flex; 
-            width: 100%; 
-            flex: 1; 
-            overflow: hidden; 
-            position: relative; 
-            /* Safe bottom dodajemo ovde da kontrole ne odu pod navigaciju */
-            padding-bottom: var(--safe-bottom);
-        }
-
+        .game-content { display: flex; width: 100%; flex: 1; overflow: hidden; position: relative; padding-bottom: 0; }
         .left-panel { flex: 1; display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; }
         
         .tables-wrapper { 
-            flex: 1; 
-            overflow-y: auto; 
-            overflow-x: hidden;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: flex-start; 
-            padding: 2px; 
-            -webkit-overflow-scrolling: touch;
-            width: 100%;
-            /* Dodatni padding na dnu skrola da se vidi zadnji red */
-            padding-bottom: 20px; 
+            flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; 
+            padding: 2px; -webkit-overflow-scrolling: touch; width: 100%; 
+            /* Bitno: ostavljamo malo paddinga na dnu da zadnji red ne bude slepljen */
+            padding-bottom: 10px;
         }
 
-        .player-table { 
-            width: 98%; 
-            max-width: 800px; 
-            background: var(--glass-panel); 
-            border-radius: 10px; 
-            border: var(--glass-border); 
-            padding: 2px; 
-            backdrop-filter: blur(12px); 
-            box-shadow: var(--glass-shadow); 
-            margin-bottom: 0; 
-            flex-shrink: 1; 
-            display: flex; flex-direction: column;
-        }
-        
+        .player-table { width: 98%; max-width: 800px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 2px; backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); margin-bottom: 0; flex-shrink: 1; display: flex; flex-direction: column; }
         .player-name { text-align: center; font-weight: 700; color: var(--gold-main); font-size: 0.9rem; margin: 3px 0; }
-        
-        .grid-container { 
-            display: grid; 
-            grid-template-columns: minmax(40px, 1.3fr) repeat(6, 1fr); 
-            gap: 1px; 
-            width: 100%;
-            font-size: clamp(10.5px, 1.5vh, 15px); 
-        }
-        
-        .grid-cell { 
-            height: clamp(20px, 3.3vh, 38px);
-            display: flex; align-items: center; justify-content: center; 
-            color: var(--text-muted); background: var(--grid-cell-bg); 
-            overflow: hidden;
-        }
-        
+        .grid-container { display: grid; grid-template-columns: minmax(40px, 1.3fr) repeat(6, 1fr); gap: 1px; width: 100%; font-size: clamp(10.5px, 1.5vh, 15px); }
+        .grid-cell { height: clamp(20px, 3.3vh, 38px); display: flex; align-items: center; justify-content: center; color: var(--text-muted); background: var(--grid-cell-bg); overflow: hidden; }
         .col-header { position: sticky; top: 0; z-index: 5; font-weight: bold; background: var(--grid-header-bg); backdrop-filter: blur(5px); }
         .row-header { justify-content: flex-end; padding-right: 5px; font-weight: 600; font-size: 0.85em; text-transform: uppercase; white-space: nowrap; }
         .sum { color: var(--gold-main); font-weight: bold; }
@@ -257,107 +177,119 @@
         .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
         .total-score { font-size: 1.2rem; color: var(--gold-main); text-align: center; margin-top: 2px; font-weight: 800; }
         
-        /* --- CONTROLS AREA (DICE) --- */
+        /* GENERAL STYLES FOR CONTROLS */
         .controls-area { 
-            background: var(--glass-panel); 
-            border-top: 1px solid var(--gold-main); 
-            display: flex; 
-            align-items: center; 
-            padding: 5px 10px; 
-            z-index: 50; 
-            flex-shrink: 0; 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); 
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.3); 
-            flex-direction: row; 
-            justify-content: space-between;
-            min-height: 12vh;
-            max-height: 140px;
+            background: var(--glass-panel); border-top: 1px solid var(--gold-main); display: flex; align-items: center; padding: 5px 10px; z-index: 50; flex-shrink: 0; 
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.3); flex-direction: row; justify-content: space-between; 
+            min-height: 12vh; max-height: 140px;
         }
 
         .dice-container { display: flex; gap: 1vw; justify-content: center; flex-wrap: nowrap; }
         
-        /* OVERKILL DICES (VELIKE TAČKICE) */
         .dice { 
-            width: clamp(35px, 11vmin, 70px); 
-            height: clamp(35px, 11vmin, 70px);            
-            flex-shrink: 0;                 
-            background: var(--dice-bg); 
-            border: 1px solid var(--dice-border); 
-            border-radius: 15%; 
-            display: flex; align-items: center; justify-content: center; 
-            /* FONT KOJI POPUNJAVA CELU KOCKU */
-            font-size: clamp(65px, 22vmin, 120px); 
-            line-height: 1;
-            padding: 0;
-            overflow: hidden; 
-            color: var(--dice-color); 
-            cursor: pointer; 
-            transition: transform 0.2s, box-shadow 0.2s; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            width: clamp(35px, 11vmin, 70px); height: clamp(35px, 11vmin, 70px); flex-shrink: 0; background: var(--dice-bg); border: 1px solid var(--dice-border); border-radius: 15%; 
+            display: flex; align-items: center; justify-content: center; font-size: clamp(65px, 22vmin, 120px); line-height: 1; padding: 0; overflow: hidden; 
+            color: var(--dice-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
         
         .dice.rolling { animation: roll 0.4s linear infinite; color: var(--gold-main); text-shadow: 0 0 10px var(--gold-glow); }
         .dice.held { border-color: var(--danger); color: var(--danger); transform: translateY(-5%); box-shadow: 0 0 10px rgba(255, 68, 68, 0.4); }
         @keyframes roll { 0% { transform: rotate(0deg) rotateX(0deg); } 25% { transform: rotate(90deg) rotateX(90deg); } 50% { transform: rotate(180deg) rotateX(180deg); } 75% { transform: rotate(270deg) rotateX(270deg); } 100% { transform: rotate(360deg) rotateX(360deg); } }
 
-        .game-info { 
-            display: flex; flex-direction: column; align-items: flex-end; justify-content: center; 
-            margin-left: 10px; min-width: 100px;
-        }
+        .game-info { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; margin-left: 10px; min-width: 100px; }
         .status-label { font-size: clamp(0.7rem, 2vmin, 1rem); color: var(--gold-main); font-weight: 600; margin-bottom: 5px; white-space: nowrap;}
         .action-btn-group { display: flex; flex-direction: column; gap: 5px; width: 100%; align-items: flex-end;}
-        .game-btn { 
-            padding: 8px 12px; border-radius: 20px; border: none; font-weight: bold; 
-            font-size: clamp(0.7rem, 2vmin, 0.9rem); 
-            text-transform: uppercase; white-space: nowrap; cursor: pointer; width: 100%;
-        }
+        .game-btn { padding: 8px 12px; border-radius: 20px; border: none; font-weight: bold; font-size: clamp(0.7rem, 2vmin, 0.9rem); text-transform: uppercase; white-space: nowrap; cursor: pointer; width: 100%; }
         .btn-throw { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); transition: transform 0.1s; }
         .btn-throw:active { transform: scale(0.95); }
         .btn-secondary { background: var(--glass-bg); color: var(--text-main); border: var(--glass-border); }
         .btn-active-toggle { background: var(--danger); color: white; box-shadow: 0 0 10px rgba(255,0,0,0.4); }
         .btn-highlight { background: var(--gold-main) !important; color: black !important; }
 
+        /* --- ANIMACIJA --- */
+        .logo-anim { 
+            font-size: clamp(1.8rem, 6vw, 3.5rem); 
+            text-transform: uppercase; letter-spacing: 4px; 
+            animation: fadeInOut 4.5s forwards; 
+            color: var(--text-main); text-align: center; font-weight: 700; 
+            width: 100%; display: block; line-height: 1.4; 
+        }
+        @keyframes fadeInOut { 0% { opacity: 0; letter-spacing: 0px; } 40% { opacity: 1; letter-spacing: 4px; } 80% { opacity: 1; } 100% { opacity: 0; } }
+        .loader { border: 5px solid rgba(125,125,125,0.2); border-top: 5px solid var(--gold-main); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         /* --- BREAKPOINTS --- */
 
         /* 1. PORTRAIT PHONES */
         @media (orientation: portrait) {
-            .controls-area { flex-direction: column; gap: 10px; min-height: auto; 
-                /* Dodajemo siguran prostor ispod kontrola za Honor gesture bar */
-                padding-bottom: max(10px, var(--safe-bottom)); 
+            .controls-area { 
+                flex-direction: column; gap: 10px; min-height: auto; 
+                padding-bottom: max(10px, var(--safe-bottom)); /* Safe area za gesture bar */
             }
             .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; }
             .action-btn-group { flex-direction: row; flex: 1; gap: 8px; margin-left: 10px; }
             .btn-throw { width: auto; flex: 2; }
             #btn-najava { width: auto; flex: 1; padding: 8px 4px; font-size: 0.75rem; }
-            /* OGROMNE KOCKICE */
             .dice { width: 13vw; height: 13vw; max-width: 60px; max-height: 60px; font-size: 16vw; }
             .player-table { width: 98%; } 
         }
 
-        /* 2. TABLETS PORTRAIT */
+        /* 2. TABLETS PORTRAIT - REVIDIRANO ZA FULL SCREEN BEZ LEBDENJA */
         @media (min-width: 600px) and (orientation: portrait) {
-            .logo-anim { max-width: 60%; margin: 0 auto; font-size: 4rem; }
-            .tables-wrapper { flex-direction: column; padding-bottom: 220px; }
-            .player-table { width: 75%; margin: 0 auto; margin-bottom: 30px; }
-            .grid-container { font-size: 1.8vh; gap: 2px; } 
-            .grid-cell { height: 4vh; } 
+            .logo-anim { width: 100%; margin: 0 auto; font-size: clamp(3rem, 8vw, 5rem); }
+            
+            /* Tabela uzima sav prostor između headera i kontrola */
+            .tables-wrapper { 
+                flex: 1; 
+                width: 100%;
+                display: flex; 
+                flex-direction: column;
+                justify-content: flex-start; /* Počinje od vrha */
+                padding-bottom: 10px;
+                overflow-y: auto; /* Skroluje se ako ne stane */
+            }
+            
+            .player-table { width: 85%; margin: 0 auto; margin-bottom: 20px; }
+            
+            /* Dinamička veličina fonta i ćelija da bi stalo u jedan ekran */
+            .grid-container { font-size: clamp(1.5vh, 2vw, 2.2vh); gap: 1px; } 
+            .grid-cell { height: clamp(3.5vh, 5vw, 5vh); } 
             .dice { width: 8vh; height: 8vh; font-size: 9vh; }
             
+            /* KONTROLE SU SADA FIKSIRANE NA DNU (STATIC), NE LEBDE */
             .controls-area { 
-                position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%);
-                width: 80%; border-radius: 20px; border: 1px solid var(--gold-main);
-                margin-bottom: max(10px, var(--safe-bottom)); box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
-                display: flex; flex-direction: column; justify-content: center; align-items: center;
-                padding-top: 50px; padding-bottom: 20px; gap: 20px;
+                position: relative; /* Vraćamo u normalan tok */
+                bottom: auto; left: auto; transform: none;
+                width: 100%; 
+                border-radius: 0; 
+                border: none;
+                border-top: 1px solid var(--gold-main);
+                background: var(--glass-panel);
+                margin: 0;
+                padding: 10px 20px;
+                /* Veoma bitno: Safe bottom + padding */
+                padding-bottom: max(15px, var(--safe-bottom)); 
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+                z-index: 100;
+                display: flex; flex-direction: row; justify-content: space-between; align-items: center;
+                gap: 20px;
+                min-height: auto;
             }
-            #lbl-turn { position: absolute; top: 15px; left: 0; width: 100%; font-size: 1.6rem !important; font-weight: 800; text-transform: uppercase; color: var(--gold-main) !important; text-shadow: 0 0 10px rgba(224, 201, 149, 0.6); }
-            .game-info { width: 100%; justify-content: center; gap: 20px; flex-direction: row; }
-            .action-btn-group { flex-direction: row; gap: 20px; }
-            .btn-throw { padding: 15px 50px; font-size: 1.3rem; width: auto; }
-            .status-label { font-size: 1.3rem; margin-bottom: 0; align-self: center; }
+            
+            #lbl-turn { 
+                position: static; /* Vraćamo u normalan tok */
+                width: auto; 
+                font-size: 1.2rem !important; 
+                margin: 0;
+            }
+            
+            .game-info { width: auto; justify-content: center; gap: 15px; flex-direction: row; flex: 1; justify-content: flex-end;}
+            .action-btn-group { flex-direction: row; gap: 15px; width: auto; }
+            .btn-throw { padding: 12px 30px; font-size: 1.1rem; width: auto; }
+            .status-label { font-size: 1.1rem; margin-bottom: 0; align-self: center; white-space: nowrap;}
         }
 
-        /* 3. LANDSCAPE PHONES */
+        /* 3. LANDSCAPE PHONES AND SMALL TABLETS (<1150px) */
         @media (max-width: 900px) and (orientation: landscape) {
             .game-header { padding: 2px 15px; min-height: 35px; padding-top: var(--safe-top); }
             .game-content { flex-direction: row; }
@@ -373,8 +305,8 @@
             .action-btn-group { flex-direction: column; width: 80%; }
         }
 
-        /* 4. TABLETS LANDSCAPE (10-inch+) */
-        @media (min-width: 901px) and (orientation: landscape) {
+        /* 4. LARGE TABLETS LANDSCAPE (10-inch+) */
+        @media (min-width: 1151px) and (orientation: landscape) {
             .game-content { flex-direction: column; justify-content: flex-start; padding: 10px; padding-bottom: var(--safe-bottom); }
             .left-panel { max-width: 100%; flex-direction: column; gap: 10px; height: 100%; }
             .tables-wrapper { flex: 1; height: auto; align-items: flex-start; flex-direction: row; justify-content: center; flex-wrap: wrap; gap: 40px; padding-bottom: 140px; overflow-y: auto; }
@@ -431,18 +363,6 @@
         .rank-3 { background: #CD7F32; color: #000; }
         .hl-mode { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-left: 5px; border: 1px solid var(--glass-border); padding: 2px 5px; border-radius: 4px; }
         
-        /* --- SMANJENA ANIMACIJA --- */
-        .logo-anim { 
-            font-size: clamp(1.8rem, 4vw, 3rem); 
-            text-transform: uppercase; letter-spacing: 4px; 
-            animation: fadeInOut 4.5s forwards; 
-            color: var(--text-main); text-align: center; font-weight: 700; 
-            width: 100%; display: block; 
-        }
-        @keyframes fadeInOut { 0% { opacity: 0; letter-spacing: 0px; } 40% { opacity: 1; letter-spacing: 4px; } 80% { opacity: 1; } 100% { opacity: 0; } }
-        .loader { border: 5px solid rgba(125,125,125,0.2); border-top: 5px solid var(--gold-main); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         @media (max-width: 1024px) and (orientation: portrait) {
             .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; }
             .chat-window.active { transform: translateX(-50%); } 
@@ -481,7 +401,7 @@
 
     <div id="splash-screen" class="screen active">
         <div class="logo-anim">
-            YAMB OF THE <span style="color:var(--gold-main)">BALKAN</span>
+            YAMB OF THE <br> <span style="color:var(--gold-main)">BALKAN</span>
         </div>
     </div>
 
@@ -517,6 +437,7 @@
             <div class="left-panel">
                 <div class="tables-wrapper" id="tables-container"></div>
                 <div class="controls-area">
+                    <div style="text-align:center; font-size:0.8rem; color:var(--gold-main); font-weight: bold; margin-right: 15px;" id="lbl-turn"></div>
                     <div class="dice-container" id="dice-container"></div>
                     <div class="game-info">
                         <div class="status-label" id="lbl-status">Bacanje: 0 / 3</div>
@@ -525,7 +446,6 @@
                             <button id="btn-bacaj" class="game-btn btn-throw" onclick="app.throwDice()">BACAJ</button>
                         </div>
                     </div>
-                    <div style="text-align:center; margin-top:5px; padding-bottom: 5px; font-size:0.8rem; color:var(--gold-main);" id="lbl-turn"></div>
                 </div>
             </div>
         </div>
@@ -846,7 +766,7 @@
                 this.uiInit();
             }
 
-            checkForInvite() { const params = new URLSearchParams(window.location.search); const roomId = params.get('room'); if (roomId) { this.navigateTo('splash-screen'); setTimeout(async () => { const nickname = await this.modal.prompt("Unesite Vaš nadimak:", "PRIDRUŽIVANJE IGRI"); if (nickname) { this.joinPrivateGame(nickname, roomId); } else { this.navigateTo('main-menu'); } }, 500); } }
+            checkForInvite() { const params = new URLSearchParams(window.location.search); const roomId = params.get('room'); if (roomId) { this.navigateTo('splash-screen'); setTimeout(() => { const nickname = this.playerName; this.joinPrivateGame(nickname, roomId); }, 500); } }
             navigateTo(screenId) { document.querySelectorAll('.screen').forEach(el => el.classList.remove('active')); const target = document.getElementById(screenId); if (target) target.classList.add('active'); if(screenId === 'main-menu') this.checkSavedGame(); }
             uiInit() { const diceCont = document.getElementById('dice-container'); diceCont.innerHTML = ""; for (let i = 0; i < 6; i++) { let btn = document.createElement('div'); btn.className = 'dice'; btn.innerText = ''; btn.onclick = () => this.toggleHold(i); diceCont.appendChild(btn); this.diceBtns.push(btn); } }
             dragElement(elmnt) { var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0; var header = document.getElementById("chat-header"); if (header) { header.onmousedown = dragMouseDown; header.ontouchstart = dragMouseDown; } function dragMouseDown(e) { e = e || window.event; if(e.target.tagName !== 'INPUT' && e.target.tagName !== 'BUTTON') { if(e.type === 'touchstart') { pos3 = e.touches[0].clientX; pos4 = e.touches[0].clientY; } else { e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; } document.onmouseup = closeDragElement; document.onmousemove = elementDrag; document.ontouchend = closeDragElement; document.ontouchmove = elementDrag; } } function elementDrag(e) { e = e || window.event; let clientX, clientY; if(e.type === 'touchmove') { clientX = e.touches[0].clientX; clientY = e.touches[0].clientY; } else { e.preventDefault(); clientX = e.clientX; clientY = e.clientY; } pos1 = pos3 - clientX; pos2 = pos4 - clientY; pos3 = clientX; pos4 = clientY; elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px"; elmnt.style.bottom = "auto"; elmnt.style.right = "auto"; } function closeDragElement() { document.onmouseup = null; document.onmousemove = null; document.ontouchend = null; document.ontouchmove = null; } }
@@ -866,9 +786,9 @@
             showRules() { this.navigateTo('rules-screen'); }
             async quitToMenu() { if (await this.modal.confirm("Da li ste sigurni da želite prekinuti igru?")) { if(this.socket) this.socket.disconnect(); this.showMainMenu(); } }
 
-            async startPrivateHosting() { const nickname = await this.modal.prompt("Unesite Vaš nadimak:", "ONLINE PRIJAVA"); if (!nickname) return; const roomId = "yamb-" + Math.random().toString(36).substring(2, 8); const shareUrl = SERVER_URL + "/?room=" + roomId; this.navigateTo('waiting-screen'); document.getElementById('wait-msg').innerText = "Čekam prijatelja..."; document.getElementById('share-area').classList.remove('hidden'); document.getElementById('invite-link').value = shareUrl; this.joinPrivateGame(nickname, roomId); }
+            async startPrivateHosting() { const nickname = this.playerName; if (!nickname) return; const roomId = "yamb-" + Math.random().toString(36).substring(2, 8); const shareUrl = SERVER_URL + "/?room=" + roomId; this.navigateTo('waiting-screen'); document.getElementById('wait-msg').innerText = "Čekam prijatelja..."; document.getElementById('share-area').classList.remove('hidden'); document.getElementById('invite-link').value = shareUrl; this.joinPrivateGame(nickname, roomId); }
             async joinPrivateGame(nickname, roomId) { this.navigateTo('waiting-screen'); try { this.socket = io(SERVER_URL, { transports: ['websocket'] }); } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; } this.socket.on('connect', () => { this.socket.emit('join_private_game', { nickname, roomId }); }); this.setupSocketListeners(nickname); }
-            async setupOnline(mode = 'random') { const nickname = await this.modal.prompt("Unesite Vaš nadimak:", "ONLINE PRIJAVA"); if (!nickname) return; this.navigateTo('waiting-screen'); document.getElementById('share-area').classList.add('hidden'); try { this.socket = io(SERVER_URL, { transports: ['websocket'] }); } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; } this.socket.on('connect', () => { document.getElementById('wait-msg').innerText = "Tražim protivnika..."; this.socket.emit('find_game', nickname); }); this.setupSocketListeners(nickname); }
+            async setupOnline(mode = 'random') { const nickname = this.playerName; if (!nickname) return; this.navigateTo('waiting-screen'); document.getElementById('share-area').classList.add('hidden'); try { this.socket = io(SERVER_URL, { transports: ['websocket'] }); } catch(e) { await this.modal.alert("Server nije dostupan."); this.showMainMenu(); return; } this.socket.on('connect', () => { document.getElementById('wait-msg').innerText = "Tražim protivnika..."; this.socket.emit('find_game', nickname); }); this.setupSocketListeners(nickname); }
             setupSocketListeners(nickname) { this.socket.on('room_full', async () => { await this.modal.alert("Ova soba je puna ili igra već traje!"); this.cancelOnline(); }); this.socket.on('private_waiting', (data) => { this.roomId = data.roomId; }); this.socket.on('game_start', (data) => { this.myOnlineIndex = data.myIndex; this.onlineMode = true; this.modeTag = "Online"; this.roomId = data.roomId; this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname]; this.initScores(); this.currentPlayerIdx = 0; this.startGame(); }); this.socket.on('remote_move', (data) => { const opponentIdx = this.myOnlineIndex === 0 ? 1 : 0; this.allScores[opponentIdx][data.col][data.row] = data.points; this.updateTableVisuals(); this.switchPlayer(); }); this.socket.on('remote_roll', (data) => { this.visualRoll(data.values); this.brojBacanja = data.bacanje; document.getElementById('lbl-status').innerText = `Bacanje: ${data.bacanje} / 3 (Protivnik)`; }); this.socket.on('remote_hold', (data) => { this.zadrzane[data.index] = data.status; this.updateDiceVisuals(); }); this.socket.on('remote_announce', (data) => { this.najavaAktivna = true; }); this.socket.on('chat_msg', (data) => { if (data.msg) this.appendChatMessage("Protivnik", data.msg, "msg-incoming"); }); this.socket.on('opponent_left', async () => { await this.modal.alert("Protivnik je izašao!"); this.cancelOnline(); }); }
             async shareInvite() { const link = document.getElementById('invite-link').value; if (navigator.share) { try { await navigator.share({ title: 'Yamb of the Balkan', text: 'Ajde na partiju Yamba!', url: link }); } catch (err) { console.log('Share canceled'); } } else { const input = document.getElementById('invite-link'); input.select(); document.execCommand('copy'); await this.modal.alert("Link je kopiran! Pošalji ga prijatelju."); } }
             cancelOnline() { if(this.socket) this.socket.disconnect(); this.showMainMenu(); window.history.pushState({}, document.title, window.location.pathname); }
@@ -906,7 +826,19 @@
                 if (isAi) { setTimeout(() => this.runAiTurn(), 1000); } 
             }
 
-            highlightCurrentPlayer() { document.querySelectorAll('.player-table').forEach(el => {el.style.border = "var(--glass-border)"; el.style.boxShadow="none"}); const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`); if(activeTbl) { activeTbl.style.border = "2px solid var(--gold-main)"; if(window.innerWidth <= 800) activeTbl.scrollIntoView({ behavior: 'smooth', block: 'center' }); } document.getElementById('lbl-turn').innerText = this.players[this.currentPlayerIdx] + " je na potezu"; }
+            highlightCurrentPlayer() { 
+                document.querySelectorAll('.player-table').forEach(el => {el.style.border = "var(--glass-border)"; el.style.boxShadow="none"}); 
+                const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`); 
+                if(activeTbl) { 
+                    activeTbl.style.border = "2px solid var(--gold-main)"; 
+                    // AUTO SCROLL LOGIKA ZA TABLETE/TELEFONE
+                    // Ako je više od 1 igrača (bilo AI ili čovek), skroluj na aktivnu tablu
+                    if(this.players.length > 1) {
+                        activeTbl.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+                    }
+                } 
+                document.getElementById('lbl-turn').innerText = this.players[this.currentPlayerIdx] + " je na potezu"; 
+            }
             
             toggleHold(i) { 
                 if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return; 
