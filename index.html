@@ -29,7 +29,8 @@
             --col-nadole: #81D4FA; --col-nagore: #EF9A9A; --col-sredina: #FFCC80; 
             --col-rucno: #CE93D8; --col-najava: #E0C995; --col-slobodna: #B0BEC5;
             
-            /* --- SAFE AREA --- */
+            /* --- SAFE AREA (HONOR/XIAOMI/ALCATEL FIX) --- */
+            /* Margine koje osiguravaju da sadržaj ne uđe u status bar ili navigaciju */
             --safe-top: max(45px, env(safe-area-inset-top)); 
             --safe-bottom: max(35px, env(safe-area-inset-bottom));
             --safe-left: env(safe-area-inset-left, 0px);
@@ -83,11 +84,13 @@
 
         #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
+        /* --- GLAVNI KONTEJNER ZA EKRANE --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s;
             transform: scale(0.95); z-index: 1; 
+            /* Globalni padding za sve ekrane OSIM Game Scene koji ima svoj raspored */
             padding-left: max(10px, var(--safe-left));
             padding-right: max(10px, var(--safe-right));
             overflow: hidden; 
@@ -96,6 +99,7 @@
         .hidden { display: none !important; }
 
         /* --- ORIENTATION LOCK --- */
+        /* ZAKLJUČAVANJE ROTACIJE ZA SVE UREĐAJE UŽE OD 1150px U LANDSCAPE-u */
         @media screen and (orientation: landscape) and (max-width: 1150px) {
             #rotate-lock-overlay { display: flex; }
         }
@@ -140,7 +144,7 @@
         .btn-resume { border-color: var(--success); color: var(--success); background: rgba(76, 175, 80, 0.1); box-shadow: 0 0 15px rgba(76, 175, 80, 0.2); font-weight: 700; }
         .menu-divider { margin: 2px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); flex-shrink: 0;}
 
-        /* --- GAME LAYOUT & CONTROLS --- */
+        /* --- GAME LAYOUT & CONTROLS (FLEX STRUKTURA) --- */
         #game-scene { 
             justify-content: flex-start; padding: 0; background: transparent; overflow: hidden; display: flex; flex-direction: column; width: 100%; height: 100%;
         }
@@ -153,17 +157,19 @@
             backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
         }
         
+        /* Flex 1: Zauzima SVE između Headera i Kontrola */
         .game-content { display: flex; width: 100%; flex: 1; overflow: hidden; position: relative; padding-bottom: 0; }
         .left-panel { flex: 1; display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; }
         
+        /* Skrolabilni kontejner za tabele */
         .tables-wrapper { 
             flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; 
             padding: 2px; -webkit-overflow-scrolling: touch; width: 100%; 
-            /* Bitno: ostavljamo malo paddinga na dnu da zadnji red ne bude slepljen */
+            /* Malo prostora na dnu skrola */
             padding-bottom: 10px;
         }
 
-        .player-table { width: 98%; max-width: 800px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 2px; backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); margin-bottom: 0; flex-shrink: 1; display: flex; flex-direction: column; }
+        .player-table { width: 98%; max-width: 800px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 2px; backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); margin-bottom: 0; flex-shrink: 1; display: flex; flex-direction: column; transition: opacity 0.3s; }
         .player-name { text-align: center; font-weight: 700; color: var(--gold-main); font-size: 0.9rem; margin: 3px 0; }
         .grid-container { display: grid; grid-template-columns: minmax(40px, 1.3fr) repeat(6, 1fr); gap: 1px; width: 100%; font-size: clamp(10.5px, 1.5vh, 15px); }
         .grid-cell { height: clamp(20px, 3.3vh, 38px); display: flex; align-items: center; justify-content: center; color: var(--text-muted); background: var(--grid-cell-bg); overflow: hidden; }
@@ -177,7 +183,7 @@
         .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
         .total-score { font-size: 1.2rem; color: var(--gold-main); text-align: center; margin-top: 2px; font-weight: 800; }
         
-        /* GENERAL STYLES FOR CONTROLS */
+        /* CONTROLS STYLING (Default - menja se u media query) */
         .controls-area { 
             background: var(--glass-panel); border-top: 1px solid var(--gold-main); display: flex; align-items: center; padding: 5px 10px; z-index: 50; flex-shrink: 0; 
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.3); flex-direction: row; justify-content: space-between; 
@@ -220,11 +226,11 @@
 
         /* --- BREAKPOINTS --- */
 
-        /* 1. PORTRAIT PHONES */
+        /* 1. PORTRAIT PHONES (i TABLETI manji od 600px širine) */
         @media (orientation: portrait) {
             .controls-area { 
                 flex-direction: column; gap: 10px; min-height: auto; 
-                padding-bottom: max(10px, var(--safe-bottom)); /* Safe area za gesture bar */
+                padding-bottom: max(10px, var(--safe-bottom)); 
             }
             .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; }
             .action-btn-group { flex-direction: row; flex: 1; gap: 8px; margin-left: 10px; }
@@ -234,31 +240,30 @@
             .player-table { width: 98%; } 
         }
 
-        /* 2. TABLETS PORTRAIT - REVIDIRANO ZA FULL SCREEN BEZ LEBDENJA */
+        /* 2. TABLETS PORTRAIT - OPTIMIZACIJA ZA JEDAN EKRAN (Bez preklapanja) */
         @media (min-width: 600px) and (orientation: portrait) {
             .logo-anim { width: 100%; margin: 0 auto; font-size: clamp(3rem, 8vw, 5rem); }
             
-            /* Tabela uzima sav prostor između headera i kontrola */
+            /* Tabela ima fleksibilnu visinu i skroluje se UNUTAR omotača */
             .tables-wrapper { 
                 flex: 1; 
                 width: 100%;
                 display: flex; 
                 flex-direction: column;
-                justify-content: flex-start; /* Počinje od vrha */
+                justify-content: flex-start;
                 padding-bottom: 10px;
-                overflow-y: auto; /* Skroluje se ako ne stane */
+                overflow-y: auto; /* Ključno: Scroll samo ovde */
             }
             
             .player-table { width: 85%; margin: 0 auto; margin-bottom: 20px; }
             
-            /* Dinamička veličina fonta i ćelija da bi stalo u jedan ekran */
             .grid-container { font-size: clamp(1.5vh, 2vw, 2.2vh); gap: 1px; } 
             .grid-cell { height: clamp(3.5vh, 5vw, 5vh); } 
             .dice { width: 8vh; height: 8vh; font-size: 9vh; }
             
-            /* KONTROLE SU SADA FIKSIRANE NA DNU (STATIC), NE LEBDE */
+            /* KONTROLE ZALEPLJENE NA DNO EKRANA (Ali ne lebde preko tabele) */
             .controls-area { 
-                position: relative; /* Vraćamo u normalan tok */
+                position: relative; /* Deo layout toka */
                 bottom: auto; left: auto; transform: none;
                 width: 100%; 
                 border-radius: 0; 
@@ -267,7 +272,7 @@
                 background: var(--glass-panel);
                 margin: 0;
                 padding: 10px 20px;
-                /* Veoma bitno: Safe bottom + padding */
+                /* Safe bottom + padding */
                 padding-bottom: max(15px, var(--safe-bottom)); 
                 box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
                 z-index: 100;
@@ -277,7 +282,7 @@
             }
             
             #lbl-turn { 
-                position: static; /* Vraćamo u normalan tok */
+                position: static; 
                 width: auto; 
                 font-size: 1.2rem !important; 
                 margin: 0;
@@ -289,23 +294,7 @@
             .status-label { font-size: 1.1rem; margin-bottom: 0; align-self: center; white-space: nowrap;}
         }
 
-        /* 3. LANDSCAPE PHONES AND SMALL TABLETS (<1150px) */
-        @media (max-width: 900px) and (orientation: landscape) {
-            .game-header { padding: 2px 15px; min-height: 35px; padding-top: var(--safe-top); }
-            .game-content { flex-direction: row; }
-            .left-panel { flex-direction: row; }
-            .tables-wrapper { width: 70%; padding: 5px; padding-bottom: var(--safe-bottom); }
-            .player-table { width: 100%; margin-bottom: 0; height: 100%; display: flex; flex-direction: column; }
-            .grid-container { flex: 1; align-content: center; } 
-            .grid-cell { height: auto; } 
-            .controls-area { width: 30%; height: 100%; border-top: none; border-left: 1px solid var(--gold-main); flex-direction: column; justify-content: center; gap: 10px; padding: 5px; padding-bottom: var(--safe-bottom); }
-            .dice-container { flex-wrap: wrap; width: 100%; }
-            .dice { width: 8vh; height: 8vh; font-size: 9vh; }
-            .game-info { margin: 0; align-items: center; text-align: center; }
-            .action-btn-group { flex-direction: column; width: 80%; }
-        }
-
-        /* 4. LARGE TABLETS LANDSCAPE (10-inch+) */
+        /* 3. LANDSCAPE - SAMO ZA VELIKE UREĐAJE (>1150px) */
         @media (min-width: 1151px) and (orientation: landscape) {
             .game-content { flex-direction: column; justify-content: flex-start; padding: 10px; padding-bottom: var(--safe-bottom); }
             .left-panel { max-width: 100%; flex-direction: column; gap: 10px; height: 100%; }
@@ -826,15 +815,25 @@
                 if (isAi) { setTimeout(() => this.runAiTurn(), 1000); } 
             }
 
+            // --- AUTO SCROLL FUNKCIJA (Prikazuje trenutnog igrača) ---
             highlightCurrentPlayer() { 
-                document.querySelectorAll('.player-table').forEach(el => {el.style.border = "var(--glass-border)"; el.style.boxShadow="none"}); 
+                document.querySelectorAll('.player-table').forEach(el => {
+                    el.style.border = "var(--glass-border)"; 
+                    el.style.boxShadow="none";
+                    el.style.opacity = "0.7"; 
+                }); 
+                
                 const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`); 
                 if(activeTbl) { 
                     activeTbl.style.border = "2px solid var(--gold-main)"; 
-                    // AUTO SCROLL LOGIKA ZA TABLETE/TELEFONE
-                    // Ako je više od 1 igrača (bilo AI ili čovek), skroluj na aktivnu tablu
+                    activeTbl.style.boxShadow = "0 0 15px rgba(224, 201, 149, 0.2)";
+                    activeTbl.style.opacity = "1"; 
+
+                    // AUTO SCROLL: Ako ima više igrača (2+, AI ili Online), automatski fokusiraj tablu
                     if(this.players.length > 1) {
-                        activeTbl.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+                        setTimeout(() => {
+                            activeTbl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                        }, 100); 
                     }
                 } 
                 document.getElementById('lbl-turn').innerText = this.players[this.currentPlayerIdx] + " je na potezu"; 
