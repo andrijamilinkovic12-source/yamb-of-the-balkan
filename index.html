@@ -212,7 +212,6 @@
         }
 
         /* 2. MALI TABLETI (7" - 9") - Sirina od 600px do 899px */
-        /* UMANJENA TABLA + SPUŠTENA LINIJA */
         @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
             .logo-anim { font-size: 4rem; }
             
@@ -220,32 +219,31 @@
                 justify-content: flex-start; 
                 padding-bottom: 0;
                 overflow-y: hidden; 
+                padding-top: 2vh; /* Dodato malo lufta gore */
             }
             
             .player-table { 
-                width: 90%; /* Bilo 95%, smanjeno da ne udara u ivice */
-                max-width: 600px; /* Bilo 700px, suženo */
+                width: 94%; /* Povećano sa 90% - šire */
+                max-width: 680px; /* Povećano sa 600px */
                 margin: 0 auto;
                 margin-top: 5px;
             }
 
-            .grid-container { font-size: 1.6vh; }
-            .grid-cell { height: 3.2vh; } /* Smanjena visina ćelija */
+            .grid-container { font-size: 1.7vh; } /* Malo veći font */
+            .grid-cell { height: 3.5vh; } /* Povećano sa 3.2vh - duže */
 
             .controls-area {
                 position: relative;
                 width: 100%;
                 padding: 10px 15px;
                 padding-bottom: max(15px, var(--safe-bottom));
-                
-                /* SPUŠTANJE LINIJE */
-                margin-top: 2vh; 
-                border-top: 1px solid var(--gold-main); /* Jasna granica */
+                margin-top: 1vh; /* Smanjen razmak da stane duža tabela */
+                border-top: 1px solid var(--gold-main);
                 
                 display: grid;
-                grid-template-columns: 1.2fr 1.8fr 1fr; /* Prilagođeno da kockice ne udaraju */
+                grid-template-columns: 1.2fr 1.8fr 1fr;
                 align-items: center;
-                gap: 15px; /* Veći razmak */
+                gap: 15px;
             }
 
             #lbl-turn { 
@@ -254,7 +252,7 @@
                 background: rgba(224, 201, 149, 0.1);
                 border-radius: 15px;
                 padding: 5px;
-                font-size: 1rem !important;
+                font-size: 1.1rem !important;
                 margin-bottom: 5px;
                 order: -1;
             }
@@ -262,58 +260,56 @@
             .dice-container { 
                 grid-column: 1 / 3; 
                 justify-content: flex-start; 
-                gap: 10px; /* Manji razmak između kockica da stanu */
+                gap: 12px; 
             }
-            /* Manje kockice da ne gaze dugmice */
-            .dice { width: 6vh; height: 6vh; font-size: 4vh; border-radius: 10px; }
+            .dice { width: 6.5vh; height: 6.5vh; font-size: 4.5vh; border-radius: 12px; } /* Malo veće kockice */
 
             .game-info { 
                 grid-column: 3 / 4; 
                 display: flex; flex-direction: column; gap: 8px; justify-content: center; 
                 width: 100%;
             }
-            .status-label { font-size: 0.8rem; text-align: center; margin-bottom: 0;}
+            .status-label { font-size: 0.9rem; text-align: center; margin-bottom: 0;}
             .action-btn-group { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-            .btn-throw { height: 45px; font-size: 1rem; width: 100%; }
-            #btn-najava { height: 35px; font-size: 0.85rem; }
+            .btn-throw { height: 50px; font-size: 1.1rem; width: 100%; }
+            #btn-najava { height: 40px; font-size: 0.9rem; }
         }
 
         /* 3. VELIKI TABLETI (10" +) - Sirina preko 900px */
-        /* UMANJENA TABLA + SPUŠTENA LINIJA + PREGLEDNOST */
         @media (min-width: 900px) and (orientation: portrait) {
-            .tables-wrapper { padding-top: 3vh; }
+            .tables-wrapper { padding-top: 2vh; }
             .player-table { 
-                width: 80%; /* Bilo 90% */
-                max-width: 700px; /* Bilo 850px */
+                width: 90%; /* Povećano sa 80% */
+                max-width: 850px; /* Povećano sa 700px */
             }
-            .grid-container { font-size: 2vh; gap: 1px; } 
-            .grid-cell { height: 3.5vh; } /* Smanjeno sa 4.5vh */
+            .grid-container { font-size: 2.2vh; gap: 1px; } 
+            .grid-cell { height: 4.0vh; } /* Povećano sa 3.5vh - značajno duže */
             
             .controls-area { 
-                padding: 30px 40px; /* Veći padding gore da spusti sadržaj */
+                padding: 30px 40px;
                 padding-bottom: max(30px, var(--safe-bottom));
                 display: flex; flex-direction: row; justify-content: space-between; align-items: center;
                 gap: 30px;
-                margin-top: auto; /* Gura kontrole na dno kontejnera */
+                margin-top: auto;
             }
             
             #lbl-turn { 
-                font-size: 1.3rem !important; 
+                font-size: 1.5rem !important; 
                 background: var(--glass-bg);
-                padding: 8px 20px;
+                padding: 10px 25px;
                 border-radius: 30px;
                 border: 1px solid var(--gold-main);
                 white-space: nowrap;
             }
             
-            .dice-container { gap: 15px; }
-            .dice { width: 70px; height: 70px; font-size: 45px; border-radius: 15px; } /* Smanjeno sa 90px */
+            .dice-container { gap: 20px; }
+            .dice { width: 80px; height: 80px; font-size: 50px; border-radius: 18px; } /* Veće kocke */
             
-            .game-info { flex-direction: row; gap: 20px; align-items: center; }
-            .action-btn-group { flex-direction: row; gap: 15px; }
-            .btn-throw { padding: 15px 30px; font-size: 1.2rem; height: auto; border-radius: 30px;}
-            #btn-najava { padding: 15px 25px; font-size: 1rem; height: auto; }
-            .status-label { font-size: 1.1rem; }
+            .game-info { flex-direction: row; gap: 25px; align-items: center; }
+            .action-btn-group { flex-direction: row; gap: 20px; }
+            .btn-throw { padding: 15px 40px; font-size: 1.4rem; height: auto; border-radius: 30px;}
+            #btn-najava { padding: 15px 30px; font-size: 1.1rem; height: auto; }
+            .status-label { font-size: 1.3rem; }
         }
 
         /* 4. LANDSCAPE (Desktop & Large Tablets) */
@@ -321,14 +317,24 @@
             .game-content { flex-direction: column; justify-content: flex-start; padding: 10px; padding-bottom: var(--safe-bottom); }
             .left-panel { max-width: 100%; flex-direction: column; gap: 10px; height: 100%; }
             .tables-wrapper { flex: 1; height: auto; align-items: flex-start; flex-direction: row; justify-content: center; flex-wrap: wrap; gap: 40px; padding-bottom: 140px; overflow-y: auto; }
-            .player-table { width: 42%; max-width: 500px; margin-bottom: 10px; }
-            .grid-cell { height: 25px; font-size: 13px; }
-            .controls-area { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 70%; height: auto; min-height: 100px; border: 1px solid var(--gold-main); border-radius: 20px; flex-direction: row; justify-content: space-evenly; align-items: center; gap: 30px; padding: 15px 30px; margin-bottom: max(10px, var(--safe-bottom)); background: var(--glass-panel); backdrop-filter: blur(20px); z-index: 100; }
-            .dice { width: 55px; height: 55px; font-size: 65px; }
+            
+            .player-table { 
+                width: 45%; /* Povećano sa 42% */
+                max-width: 600px; /* Povećano sa 500px - šire */
+                margin-bottom: 15px; 
+            }
+            
+            .grid-cell { 
+                height: 30px; /* Povećano sa 25px - duže */
+                font-size: 15px; /* Malo veći font */
+            }
+            
+            .controls-area { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 75%; height: auto; min-height: 110px; border: 1px solid var(--gold-main); border-radius: 20px; flex-direction: row; justify-content: space-evenly; align-items: center; gap: 30px; padding: 15px 30px; margin-bottom: max(10px, var(--safe-bottom)); background: var(--glass-panel); backdrop-filter: blur(20px); z-index: 100; }
+            .dice { width: 60px; height: 60px; font-size: 40px; }
             .grid-container { gap: 1px; }
             .game-info { flex-direction: row; gap: 20px; align-items: center; }
             .action-btn-group { flex-direction: row; width: auto; gap: 15px; }
-            .btn-throw { padding: 10px 30px; font-size: 1.1rem; }
+            .btn-throw { padding: 12px 40px; font-size: 1.2rem; }
         }
 
         /* Modals & Misc (Ostaje isto) */
