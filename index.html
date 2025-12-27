@@ -109,7 +109,6 @@
 
 
         /* --- ROTATE LOCK (SAMO ZA MOBILNE TELEFONE) --- */
-        /* Promenjeno sa 899px na 600px da bi tableti mogli da rotiraju, a telefoni ne */
         @media screen and (orientation: landscape) and (max-height: 600px) {
             #rotate-lock-overlay { display: flex !important; }
         }
@@ -220,25 +219,25 @@
                 justify-content: flex-start; 
                 padding-bottom: 0;
                 overflow-y: hidden; 
-                padding-top: 2vh; /* Dodato malo lufta gore */
+                padding-top: 1vh; /* Smanjeno sa 2vh - da malo povuče tabelu gore */
             }
             
             .player-table { 
-                width: 94%; /* Povećano sa 90% - šire */
-                max-width: 680px; /* Povećano sa 600px */
+                width: 94%; 
+                max-width: 680px; 
                 margin: 0 auto;
                 margin-top: 5px;
             }
 
-            .grid-container { font-size: 1.7vh; } /* Malo veći font */
-            .grid-cell { height: 3.5vh; } /* Povećano sa 3.2vh - duže */
+            .grid-container { font-size: 1.6vh; } /* Smanjeno sa 1.7vh za nijansu */
+            .grid-cell { height: 3.2vh; } /* Smanjeno sa 3.5vh - za nijansu kraca tabela */
 
             .controls-area {
                 position: relative;
                 width: 100%;
                 padding: 10px 15px;
                 padding-bottom: max(15px, var(--safe-bottom));
-                margin-top: 1vh; /* Smanjen razmak da stane duža tabela */
+                margin-top: 1vh; 
                 border-top: 1px solid var(--gold-main);
                 
                 display: grid;
@@ -263,7 +262,7 @@
                 justify-content: flex-start; 
                 gap: 12px; 
             }
-            .dice { width: 6.5vh; height: 6.5vh; font-size: 4.5vh; border-radius: 12px; } /* Malo veće kockice */
+            .dice { width: 6.5vh; height: 6.5vh; font-size: 4.5vh; border-radius: 12px; } 
 
             .game-info { 
                 grid-column: 3 / 4; 
@@ -502,30 +501,41 @@
         const sum = arr => arr.reduce((a, b) => a + b, 0);
         class SoundManager { constructor() { this.ctx = window.AudioContext ? new window.AudioContext() : new window.webkitAudioContext(); } playTone(freq, type, duration, vol=0.1) { if (!app.soundEnabled) return; try { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, this.ctx.currentTime); gain.gain.setValueAtTime(vol, this.ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + duration); } catch(e) {} } click() { this.playTone(800, 'sine', 0.05, 0.05); } roll() { if (!app.soundEnabled) return; this.playTone(150, 'square', 0.1, 0.02); } score() { this.playTone(600, 'sine', 0.3, 0.1); setTimeout(()=>this.playTone(900, 'sine', 0.4, 0.1), 100); } error() { this.playTone(150, 'sawtooth', 0.3, 0.1); } win() { if(!app.soundEnabled) return; [0, 200, 400, 600].forEach((t, i) => setTimeout(() => this.playTone(400 + (i*100), 'square', 0.2, 0.1), t)); } chat() { this.playTone(1200, 'sine', 0.1, 0.05); } }
         
-        // --- DIVINE YAMB AI ENGINE v12.0 ---
+        // --- DIVINE YAMB AI ENGINE v14.0 (NAJAVA FIX) ---
         class YambAI {
             constructor(appInstance, difficulty = 'medium') {
                 this.app = appInstance;
                 this.difficulty = difficulty;
-                this.colPriority = { "Nadole": 50, "Nagore": 50, "Sredina": 40, "Ručno": 60, "Najava": 35, "Slobodna": 5 };
+                // Povećan prioritet za Najavu da se ne bi zaglavio na kraju
+                this.colPriority = { "Nadole": 55, "Nagore": 55, "Sredina": 45, "Ručno": 65, "Najava": 60, "Slobodna": 5 };
             }
 
             decideRoll(dice, turnNum, sheet) {
                 const analysis = this.analyzeHand(dice);
+                const emptyStats = this.getEmptyStats(sheet);
                 
                 // --- 1. POTEZ ---
                 if (turnNum === 1) {
+                    // Da li smo u "tesnacu" sa Najavom? (Ako je ostalo malo polja, a Najava je prazna)
+                    const forceNajava = (emptyStats.najava > 0 && (emptyStats.total < 15 || emptyStats.najava > emptyStats.others));
+
+                    // 1. Proveri Ručnu (Osim ako ne MORAMO da jurimo najavu)
                     const manualMove = this.checkManualOpprotunity(dice, analysis, sheet);
-                    if (manualMove) return { type: 'write', row: manualMove.row, col: 'Ručno' };
+                    // Ako je ručna fenomenalna (Yamb, Kenta, Poker), uvek je uzmi
+                    if (manualMove && manualMove.points >= 40) return { type: 'write', row: manualMove.row, col: 'Ručno' };
+                    // Ako nije fenomenalna, a moramo da popunimo najavu, preskoči ručnu
+                    if (manualMove && !forceNajava) return { type: 'write', row: manualMove.row, col: 'Ručno' };
                     
                     if (!this.app.najavaAktivna) {
-                        const bestAnnounce = this.evaluateAnnouncement(dice, analysis, sheet);
+                        // Prosleđujemo 'forceNajava' flag
+                        const bestAnnounce = this.evaluateAnnouncement(dice, analysis, sheet, forceNajava);
+                        
                         if (bestAnnounce) {
                             this.app.clickNajava();
-                            // Simulacija ljudskog klika
                             this.app.najavljenoPolje = { row: bestAnnounce, col: 'Najava' };
                             this.app.najavaAktivna = false; 
                             
+                            // UI update simulacija
                             const btnId = `btn-${this.app.currentPlayerIdx}-Najava-${bestAnnounce}`;
                             const btnEl = document.getElementById(btnId);
                             if(btnEl) btnEl.classList.add('highlight-najava');
@@ -547,9 +557,8 @@
 
                 // --- 3. POTEZ (OBAVEZAN UPIS) ---
                 if (turnNum === 3) {
-                    const bestMove = this.findBestScore(dice, sheet, true);
+                    const bestMove = this.findBestScore(dice, sheet);
                     if (bestMove) return bestMove;
-                    // Ako nema dobrog poteza, aktiviraj Inteligentno Žrtvovanje
                     return this.panicWrite(sheet);
                 }
 
@@ -558,74 +567,170 @@
                 return { type: 'hold', hold: bestHold };
             }
 
-            evaluateAnnouncement(dice, an, sheet) {
-                let bestRow = null; let maxScore = -1;
+            getEmptyStats(sheet) {
+                let total = 0; let najava = 0;
+                for(let col in sheet) {
+                    for(let row in sheet[col]) {
+                        if(sheet[col][row] === null) {
+                            total++;
+                            if(col === "Najava") najava++;
+                        }
+                    }
+                }
+                return { total, najava, others: total - najava };
+            }
+
+            evaluateAnnouncement(dice, an, sheet, force = false) {
+                let bestRow = null; 
+                let maxScore = -9999;
                 const potentialRows = REDOVI_IGRA.filter(r => this.isAvail(r, "Najava", sheet));
+
+                if (potentialRows.length === 0) return null;
 
                 potentialRows.forEach(row => {
                     let score = 0;
-                    if (row === "Yamb") { if (an.maxCount >= 4) score = 120; else if (an.maxCount >= 3) score = 45; }
-                    else if (row === "Poker") { if (an.maxCount >= 4) score = 95; else if (an.maxCount >= 3) score = 55; }
-                    else if (row === "Kenta") { if (an.nearKenta.length >= 4) score = 110; else if (an.nearKenta.length >= 3) score = 35; }
+                    
+                    // 1. FIGURE (Yamb, Poker, Ful, Triling)
+                    if (row === "Yamb") { 
+                        if (an.maxCount >= 4) score = 150; 
+                        else if (an.maxCount >= 3) score = 60; 
+                    }
+                    else if (row === "Poker") { 
+                        if (an.maxCount >= 4) score = 120; 
+                        else if (an.maxCount >= 3) score = 70; 
+                        else if (an.maxCount >= 2) score = 20; // Rizikuj poker na 2 ista ako moraš
+                    }
                     else if (row === "Ful") { 
-                        if ((an.maxCount === 3 && Object.keys(an.counts).length <= 3) || an.maxCount >= 4) score = 75;
-                        else if (an.counts[an.valMaxCount] === 2 && Object.keys(an.counts).length <= 3) score = 45; 
+                        if (an.maxCount >= 3) score = 90;
+                        else if (Object.keys(an.counts).length <= 3) score = 50; // Dva para ili slično
                     }
-                    else if (row === "Triling") { if (an.maxCount >= 3) score = 70; }
+                    else if (row === "Triling") { 
+                        if (an.maxCount >= 3) score = 80;
+                        else if (an.maxCount >= 2) score = 30;
+                    }
+                    else if (row === "Kenta") {
+                        if (an.nearKenta.length >= 4) score = 110; 
+                        else if (an.nearKenta.length >= 3) score = 40;
+                    }
+
+                    // 2. MIN / MAX (Ovo je falilo)
+                    else if (row === "Max") {
+                        const sum = dice.reduce((a,b)=>a+b, 0);
+                        const highCount = dice.filter(d => d >= 4).length;
+                        if (sum >= 22) score = 90;
+                        else if (highCount >= 3) score = 60;
+                    }
+                    else if (row === "Min") {
+                        const sum = dice.reduce((a,b)=>a+b, 0);
+                        const lowCount = dice.filter(d => d <= 3).length;
+                        if (sum <= 12) score = 90;
+                        else if (lowCount >= 3) score = 60;
+                    }
+
+                    // 3. BROJEVI (1-6)
                     else if (["1","2","3","4","5","6"].includes(row)) {
-                        const val = parseInt(row); const count = dice.filter(d => d === val).length;
-                        if (count >= 4) score = 80; else if (count === 3) score = 60;
+                        const val = parseInt(row); 
+                        const count = dice.filter(d => d === val).length;
+                        if (count >= 4) score = 100;
+                        else if (count === 3) score = 75;
+                        else if (count === 2) score = 40; // Par je dovoljan za najavu ako nema boljeg
+                        else if (count === 1) score = 10;
                     }
+
                     if (score > maxScore) { maxScore = score; bestRow = row; }
                 });
-                if (maxScore >= 35) return bestRow;
+
+                // Ako je "force" uključen (malo polja ostalo), vrati najbolje šta god da je, samo da ne bude 0 potencijal
+                if (force) {
+                    // Ako imamo bilo kakvu šansu (score > 10), najavi. 
+                    // Ako je baš sve krš, najavi prvi slobodan broj ili Min/Max
+                    if (maxScore > 10) return bestRow;
+                    // Fallback: Najavi Max ili Min ili Brojeve, izbegavaj Yamb/Poker ako nema šanse
+                    const fallback = potentialRows.find(r => ["1","2","3","4","5","6","Min","Max"].includes(r));
+                    return fallback || potentialRows[0];
+                }
+
+                // Normalan režim: najavi samo ako je dobra prilika
+                if (maxScore >= 40) return bestRow;
+                
                 return null;
             }
 
             checkManualOpprotunity(dice, an, sheet) {
-                if (!this.isAvail("1", "Ručno", sheet) && !this.isAvail("Yamb", "Ručno", sheet)) { 
-                    const emptyManuals = REDOVI_IGRA.filter(r => sheet["Ručno"][r] === null).length; 
-                    if (emptyManuals === 0) return null; 
-                }
+                const isFirstOrLastTurn = (this.isAvail("1", "Nadole", sheet) || this.isAvail("Yamb", "Nadole", sheet));
+                
                 let best = null; let maxW = 0;
                 REDOVI_IGRA.forEach(row => {
                     if (this.isAvail(row, "Ručno", sheet)) {
                         const best5 = this.app.getBest5(row, dice); const pts = this.app.calcPoints(row, best5); let w = 0;
-                        if (row === "Yamb" && pts >= 50) w = 300; 
-                        else if (row === "Poker" && pts >= 40) w = 150; 
-                        else if (row === "Kenta" && pts >= 56) w = 150;
-                        else if (row === "Ful" && pts >= 40) w = 100;
+                        
+                        // Ručna prioriteti
+                        if (row === "Yamb" && pts >= 50) w = 600; 
+                        else if (row === "Kenta" && pts >= 56) w = 500;
+                        else if (row === "Poker" && pts >= 40) w = 400; 
+                        else if (row === "Ful" && pts >= 30) w = 300;
                         else if (["1","2","3","4","5","6"].includes(row)) { 
                             const count = dice.filter(d => d === parseInt(row)).length; 
-                            if (count >= 4) w = 180; else if (count === 3) w = 85; 
+                            if (count >= 5) w = 300; 
+                            else if (count === 4) w = 200; 
                         }
+                        else if (row === "Min" && pts < 8 && pts > 0) w = 250; 
+                        else if (row === "Max" && pts > 25) w = 250; 
+
                         if (w > maxW) { maxW = w; best = { row, points: pts }; }
                     }
                 });
                 return best;
             }
 
-            findBestScore(dice, sheet, isFinalTurn) {
-                let possibleMoves = []; const cols = ["Nadole", "Nagore", "Sredina", "Ručno", "Najava", "Slobodna"];
+            findBestScore(dice, sheet) {
+                let possibleMoves = []; 
+                const cols = ["Nadole", "Nagore", "Sredina", "Ručno", "Najava", "Slobodna"];
+                
                 cols.forEach(col => {
-                    if (col === "Najava" && !this.app.najavaAktivna) return; if (this.app.najavaAktivna && col !== "Najava") return;
+                    if (col === "Najava" && !this.app.najavaAktivna) return; 
+                    if (this.app.najavaAktivna && col !== "Najava") return;
+                    
                     REDOVI_IGRA.forEach(row => {
-                        if (!this.isAvail(row, col, sheet)) return; if (col === "Najava" && this.app.najavljenoPolje && this.app.najavljenoPolje.row !== row) return;
-                        let best5 = this.app.getBest5(row, dice); let pts = this.app.calcPoints(row, best5); let isScratch = false;
-                        if (col === "Ručno" && this.app.brojBacanja > 1) { pts = 0; isScratch = true; }
+                        if (!this.isAvail(row, col, sheet)) return; 
+                        if (col === "Najava" && this.app.najavljenoPolje && this.app.najavljenoPolje.row !== row) return;
                         
-                        let weight = pts; weight += this.colPriority[col];
-                        if (row === "Yamb" && pts >= 50) weight += 1000;
-                        if (row === "Kenta" && pts >= 40) weight += 500;
-                        if (row === "Poker" && pts >= 40) weight += 300;
+                        let best5 = this.app.getBest5(row, dice); 
+                        let pts = this.app.calcPoints(row, best5); 
+                        if (col === "Ručno" && this.app.brojBacanja > 1) pts = 0;
                         
-                        if (this.isNextInColumn(row, col, sheet)) weight += 50; // Bonus za redosled
+                        let weight = pts; 
+                        weight += this.colPriority[col];
+
+                        // Logika bodovanja (Ista kao pre, ali malo tunirana)
+                        if (row === "Min") {
+                            if (pts > 0 && pts <= 10) weight += 150;
+                            else if (pts > 20) weight -= 500;
+                            else if (pts === 0) weight -= 1000;
+                            weight += (30 - pts) * 3; 
+                        }
+                        else if (row === "Max") {
+                            if (pts >= 24) weight += 100;
+                            else if (pts < 15) weight -= 300;
+                        }
+                        else if (["1","2","3","4","5","6"].includes(row)) {
+                            const count = dice.filter(d => d === parseInt(row)).length;
+                            if (count >= 4) weight += 120;
+                            else if (count === 3) weight += 40;
+                            else if (count < 2) weight -= 200;
+                        }
                         
+                        if (this.isNextInColumn(row, col, sheet) && pts > 0) weight += 200;
+
                         possibleMoves.push({ type: 'write', row, col, points: pts, weight });
                     });
                 });
+
                 possibleMoves.sort((a, b) => b.weight - a.weight);
-                if (possibleMoves.length > 0) return possibleMoves[0];
+                if (possibleMoves.length > 0) {
+                     if (possibleMoves[0].weight < -200) return null; // Ako je sve užasno, probaj panicWrite
+                     return possibleMoves[0];
+                }
                 return null;
             }
 
@@ -633,68 +738,54 @@
                 if (col === "Nadole") { const idx = REDOVI_IGRA.indexOf(row); if (idx === 0) return true; if (sheet[col][REDOVI_IGRA[idx-1]] !== null) return true; }
                 if (col === "Nagore") { const idx = REDOVI_IGRA.indexOf(row); if (idx === REDOVI_IGRA.length - 1) return true; if (sheet[col][REDOVI_IGRA[idx+1]] !== null) return true; }
                 
-                // ISPRAVLJENO: AI SREDINA LOGIKA (Max->1 i Min->Yamb)
                 if (col === "Sredina") {
                     const up = ["Max", "6", "5", "4", "3", "2", "1"]; 
                     const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
-                    
                     if (up.includes(row)) { 
-                        const idx = up.indexOf(row); 
-                        if (idx === 0) return true; 
-                        if (sheet[col][up[idx-1]] !== null) return true; 
+                        const idx = up.indexOf(row); if (idx === 0) return true; if (sheet[col][up[idx-1]] !== null) return true; 
                     }
                     if (down.includes(row)) { 
-                        const idx = down.indexOf(row); 
-                        if (idx === 0) return true; 
-                        if (sheet[col][down[idx-1]] !== null) return true; 
+                        const idx = down.indexOf(row); if (idx === 0) return true; if (sheet[col][down[idx-1]] !== null) return true; 
                     }
                     return false;
                 }
-                return false;
+                return true;
             }
 
             panicWrite(sheet) {
-                // Pametno žrtvovanje - traži polje koje najmanje boli
-                const priorityOrder = [
-                    {col: "Ručno", row: "Yamb"}, {col: "Ručno", row: "Poker"}, {col: "Slobodna", row: "1"}, 
-                    {col: "Sredina", row: "1"}, {col: "Nadole", row: "1"}, {col: "Nagore", row: "Yamb"},
-                    {col: "Slobodna", row: "2"}, {col: "Ručno", row: "2"}
-                ];
-                
-                for (let p of priorityOrder) {
-                    if (this.isAvail(p.row, p.col, sheet)) return { type: 'write', row: p.row, col: p.col };
+                // Poslednja linija odbrane - mora vratiti nešto validno
+                const allCols = ["Ručno", "Slobodna", "Sredina", "Nadole", "Nagore"];
+                for (let col of allCols) {
+                    if (col === "Najava") continue; // Najava se ne može panic-write na 3. potezu ako nije najavljena
+                    
+                    const sacrificeOrder = ["1", "2", "3", "Triling", "4", "5", "6", "Max", "Min", "Kenta", "Ful", "Poker", "Yamb"];
+                    for (let row of sacrificeOrder) {
+                        if (this.isAvail(row, col, sheet)) return { type: 'write', row: row, col: col };
+                    }
                 }
-                
-                // Ako ništa od prioriteta, daj prvo slobodno
-                for (let col of ["Ručno", "Slobodna", "Sredina", "Nadole", "Nagore"]) { 
-                    if (col === "Najava" && !this.app.najavaAktivna) continue; 
-                    for (let row of REDOVI_IGRA) { if (this.isAvail(row, col, sheet)) return { type: 'write', row: row, col: col }; } 
-                }
-                return { type: 'write', row: '1', col: 'Slobodna' }; // Fallback
+                // Ako baš ništa nema (nemoguće osim ako je samo Najava ostala, a to rešava Turn 1 logika)
+                return { type: 'write', row: '1', col: 'Slobodna' }; 
             }
 
             calculateSmartHold(dice, sheet, turnNum) {
                 if (this.app.najavljenoPolje) return this.getHoldMaskForTarget(dice, this.app.najavljenoPolje.row);
                 
-                // Analiza šta jurimo
                 const an = this.analyzeHand(dice);
-                
-                // Juri Yamb/Poker
+                // Standardni hold logic...
                 if (an.maxCount >= 3) return this.getHoldMaskForTarget(dice, "Yamb");
-                
-                // Juri Kentu
                 if (an.nearKenta.length >= 4) return dice.map(d => an.nearKenta.includes(d));
-                
-                // Juri Ful (ako ima 2 para ili 3 ista)
                 if (Object.keys(an.counts).length <= 3) return this.getHoldMaskForTarget(dice, "Ful");
-
-                // Juri Max/Min
+                
                 const needMax = ["Nadole", "Nagore", "Slobodna"].some(c => this.isAvail("Max", c, sheet));
                 if (needMax) {
                     const highDice = dice.filter(d => d >= 4).length;
                     if (highDice >= 3) return dice.map(d => d >= 4);
                 }
-                
+                const needMin = ["Nadole", "Nagore", "Slobodna"].some(c => this.isAvail("Min", c, sheet));
+                if (needMin) {
+                    const lowDice = dice.filter(d => d <= 3).length;
+                    if (lowDice >= 3) return dice.map(d => d <= 2);
+                }
                 return [false, false, false, false, false, false];
             }
 
@@ -713,10 +804,8 @@
                     const triples = Object.keys(counts).filter(k => counts[k] >= 3).map(Number);
                     const pairs = Object.keys(counts).filter(k => counts[k] >= 2).map(Number);
                     if (triples.length > 0) {
-                        const target3 = Math.max(...triples); 
-                        const remaining = dice.filter(d => d !== target3);
-                        const c2 = {}; remaining.forEach(x => c2[x] = (c2[x]||0)+1);
-                        const p2 = Object.keys(c2).filter(k => c2[k]>=2).map(Number);
+                        const target3 = Math.max(...triples); const remaining = dice.filter(d => d !== target3);
+                        const c2 = {}; remaining.forEach(x => c2[x] = (c2[x]||0)+1); const p2 = Object.keys(c2).filter(k => c2[k]>=2).map(Number);
                         const target2 = p2.length > 0 ? Math.max(...p2) : null;
                         return dice.map(d => d === target3 || d === target2);
                     }
@@ -733,7 +822,7 @@
                     return dice.map(d => { if(targetSeq.includes(d) && !used.has(d)) { used.add(d); return true; } return false; }); 
                 }
                 if (row === "Max") return dice.map(d => d >= 4);
-                if (row === "Min") return dice.map(d => d <= 3);
+                if (row === "Min") return dice.map(d => d <= 2);
                 return [false,false,false,false,false,false];
             }
 
