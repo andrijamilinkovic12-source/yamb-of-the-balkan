@@ -29,8 +29,6 @@
             --col-nadole: #81D4FA; --col-nagore: #EF9A9A; --col-sredina: #FFCC80; 
             --col-rucno: #CE93D8; --col-najava: #E0C995; --col-slobodna: #B0BEC5;
             
-            /* --- SAFE AREA (HONOR/XIAOMI/ALCATEL FIX) --- */
-            /* Margine koje osiguravaju da sadržaj ne uđe u status bar ili navigaciju */
             --safe-top: max(45px, env(safe-area-inset-top)); 
             --safe-bottom: max(35px, env(safe-area-inset-bottom));
             --safe-left: env(safe-area-inset-left, 0px);
@@ -84,13 +82,12 @@
 
         #confetti-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
-        /* --- GLAVNI KONTEJNER ZA EKRANE --- */
+        /* --- SCREENS --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s;
             transform: scale(0.95); z-index: 1; 
-            /* Globalni padding za sve ekrane OSIM Game Scene koji ima svoj raspored */
             padding-left: max(10px, var(--safe-left));
             padding-right: max(10px, var(--safe-right));
             overflow: hidden; 
@@ -98,10 +95,22 @@
         .screen.active { opacity: 1; visibility: visible; transform: scale(1); z-index: 10; }
         .hidden { display: none !important; }
 
-        /* --- ORIENTATION LOCK --- */
-        /* ZAKLJUČAVANJE ROTACIJE ZA SVE UREĐAJE UŽE OD 1150px U LANDSCAPE-u */
+        /* --- ANIMACIJA --- */
+        .logo-anim { 
+            font-size: clamp(1.8rem, 6vw, 3.5rem); 
+            text-transform: uppercase; letter-spacing: 4px; 
+            animation: fadeInOut 4.5s forwards; 
+            color: var(--text-main); text-align: center; font-weight: 700; 
+            width: 100%; display: block; line-height: 1.4; 
+        }
+        @keyframes fadeInOut { 0% { opacity: 0; letter-spacing: 0px; } 40% { opacity: 1; letter-spacing: 4px; } 80% { opacity: 1; } 100% { opacity: 0; } }
+        .loader { border: 5px solid rgba(125,125,125,0.2); border-top: 5px solid var(--gold-main); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
+        /* --- ROTATE LOCK --- */
         @media screen and (orientation: landscape) and (max-width: 1150px) {
-            #rotate-lock-overlay { display: flex; }
+            #rotate-lock-overlay { display: flex !important; }
         }
         
         #rotate-lock-overlay {
@@ -117,184 +126,190 @@
         .rotate-sub { font-size: 0.9rem; color: var(--text-muted); padding: 0 20px; line-height: 1.5; }
         @keyframes rotateIcon { 0% { transform: rotate(0deg); } 25% { transform: rotate(-90deg); } 100% { transform: rotate(-90deg); } }
 
-        /* --- MENI --- */
+        /* --- MENU --- */
         #main-menu { 
-            overflow: hidden; 
-            padding-top: var(--safe-top); 
-            padding-bottom: var(--safe-bottom);
+            padding-top: var(--safe-top); padding-bottom: var(--safe-bottom);
             display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; gap: 2px;
         }
-        
-        .menu-title { 
-            font-size: clamp(1.8rem, 5vw, 2.5rem); margin: 0; text-align: center; line-height: 1.1; 
-            color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); flex-shrink: 0; padding-bottom: 1vh;
-        }
+        .menu-title { font-size: clamp(1.8rem, 5vw, 2.5rem); margin: 0; text-align: center; line-height: 1.1; color: var(--text-main); text-shadow: 0 4px 10px rgba(0,0,0,0.5); flex-shrink: 0; padding-bottom: 1vh; }
         .menu-subtitle { font-weight:300; font-size: 0.4em; color:var(--gold-main); display: block; letter-spacing: 2px; }
-        
-        .btn-menu {
-            width: 100%; max-width: 350px; padding: 12px; margin: 2px 0; 
-            background: var(--glass-bg); border: var(--glass-border); color: var(--text-main);
-            font-size: clamp(0.7rem, 1.8vh, 0.95rem); text-transform: uppercase; letter-spacing: 1px; cursor: pointer;
-            border-radius: 50px; transition: all 0.2s; font-family: 'Montserrat', sans-serif; font-weight: 600;
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); flex-shrink: 1; min-height: 35px;
-        }
+        .btn-menu { width: 100%; max-width: 350px; padding: 12px; margin: 2px 0; background: var(--glass-bg); border: var(--glass-border); color: var(--text-main); font-size: clamp(0.7rem, 1.8vh, 0.95rem); text-transform: uppercase; letter-spacing: 1px; cursor: pointer; border-radius: 50px; transition: all 0.2s; font-family: 'Montserrat', sans-serif; font-weight: 600; backdrop-filter: blur(8px); flex-shrink: 1; min-height: 35px; }
         .btn-menu:active { transform: scale(0.95); }
         .btn-primary { border-color: var(--gold-main); color: var(--gold-main); background: rgba(224, 201, 149, 0.08); box-shadow: 0 0 15px rgba(224, 201, 149, 0.15); }
         .btn-danger { border-color: var(--danger); color: var(--danger); }
         .btn-resume { border-color: var(--success); color: var(--success); background: rgba(76, 175, 80, 0.1); box-shadow: 0 0 15px rgba(76, 175, 80, 0.2); font-weight: 700; }
         .menu-divider { margin: 2px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); flex-shrink: 0;}
 
-        /* --- GAME LAYOUT & CONTROLS (FLEX STRUKTURA) --- */
-        #game-scene { 
-            justify-content: flex-start; padding: 0; background: transparent; overflow: hidden; display: flex; flex-direction: column; width: 100%; height: 100%;
-        }
-        
+        /* --- GAME LAYOUT GENERIC --- */
+        #game-scene { justify-content: flex-start; padding: 0; background: transparent; overflow: hidden; display: flex; flex-direction: column; width: 100%; height: 100%; }
         .game-header { 
             width: 100%; padding-top: var(--safe-top); padding-bottom: 5px; padding-left: 15px; padding-right: 15px; 
-            min-height: calc(50px + var(--safe-top)); 
-            display: flex; justify-content: space-between; align-items: flex-end; 
+            min-height: calc(50px + var(--safe-top)); display: flex; justify-content: space-between; align-items: flex-end; 
             border-bottom: var(--glass-border); background: var(--glass-panel); z-index: 20; flex-shrink: 0; 
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); 
+            backdrop-filter: blur(12px); 
         }
-        
-        /* Flex 1: Zauzima SVE između Headera i Kontrola */
         .game-content { display: flex; width: 100%; flex: 1; overflow: hidden; position: relative; padding-bottom: 0; }
         .left-panel { flex: 1; display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; }
         
-        /* Skrolabilni kontejner za tabele */
-        .tables-wrapper { 
-            flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; 
-            padding: 2px; -webkit-overflow-scrolling: touch; width: 100%; 
-            /* Malo prostora na dnu skrola */
-            padding-bottom: 10px;
-        }
-
-        .player-table { width: 98%; max-width: 800px; background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 2px; backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); margin-bottom: 0; flex-shrink: 1; display: flex; flex-direction: column; transition: opacity 0.3s; }
+        /* TABLE GENERIC */
+        .tables-wrapper { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2px; -webkit-overflow-scrolling: touch; width: 100%; }
+        .player-table { background: var(--glass-panel); border-radius: 10px; border: var(--glass-border); padding: 2px; backdrop-filter: blur(12px); box-shadow: var(--glass-shadow); margin-bottom: 0; flex-shrink: 1; display: flex; flex-direction: column; transition: opacity 0.3s; }
         .player-name { text-align: center; font-weight: 700; color: var(--gold-main); font-size: 0.9rem; margin: 3px 0; }
-        .grid-container { display: grid; grid-template-columns: minmax(40px, 1.3fr) repeat(6, 1fr); gap: 1px; width: 100%; font-size: clamp(10.5px, 1.5vh, 15px); }
-        .grid-cell { height: clamp(20px, 3.3vh, 38px); display: flex; align-items: center; justify-content: center; color: var(--text-muted); background: var(--grid-cell-bg); overflow: hidden; }
+        .grid-container { display: grid; grid-template-columns: minmax(40px, 1.3fr) repeat(6, 1fr); gap: 1px; width: 100%; }
+        .grid-cell { display: flex; align-items: center; justify-content: center; color: var(--text-muted); background: var(--grid-cell-bg); overflow: hidden; }
         .col-header { position: sticky; top: 0; z-index: 5; font-weight: bold; background: var(--grid-header-bg); backdrop-filter: blur(5px); }
         .row-header { justify-content: flex-end; padding-right: 5px; font-weight: 600; font-size: 0.85em; text-transform: uppercase; white-space: nowrap; }
         .sum { color: var(--gold-main); font-weight: bold; }
         .c-nadole { color: var(--col-nadole); } .c-nagore { color: var(--col-nagore); } .c-sredina { color: var(--col-sredina); } .c-rucno { color: var(--col-rucno); } .c-najava { color: var(--col-najava); } .c-slobodna { color: var(--col-slobodna); }
-        
         .score-btn { width: 100%; height: 100%; border: none; background: transparent; color: var(--text-main); font-weight: bold; cursor: pointer; font-size: inherit; padding: 0; }
         .score-btn.filled { color: var(--gold-main); font-weight: 700; text-shadow: 0 0 5px rgba(224, 201, 149, 0.3); }
         .highlight-najava { background: rgba(224, 201, 149, 0.25) !important; border: 1px solid var(--gold-main); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.2); }
         .total-score { font-size: 1.2rem; color: var(--gold-main); text-align: center; margin-top: 2px; font-weight: 800; }
-        
-        /* CONTROLS STYLING (Default - menja se u media query) */
-        .controls-area { 
-            background: var(--glass-panel); border-top: 1px solid var(--gold-main); display: flex; align-items: center; padding: 5px 10px; z-index: 50; flex-shrink: 0; 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.3); flex-direction: row; justify-content: space-between; 
-            min-height: 12vh; max-height: 140px;
-        }
 
-        .dice-container { display: flex; gap: 1vw; justify-content: center; flex-wrap: nowrap; }
-        
+        /* CONTROLS GENERIC */
+        .controls-area { 
+            background: var(--glass-panel); border-top: 1px solid var(--gold-main); display: flex; z-index: 50; flex-shrink: 0; 
+            backdrop-filter: blur(15px); box-shadow: 0 -5px 20px rgba(0,0,0,0.3); 
+        }
+        .dice-container { display: flex; justify-content: center; flex-wrap: nowrap; }
         .dice { 
-            width: clamp(35px, 11vmin, 70px); height: clamp(35px, 11vmin, 70px); flex-shrink: 0; background: var(--dice-bg); border: 1px solid var(--dice-border); border-radius: 15%; 
-            display: flex; align-items: center; justify-content: center; font-size: clamp(65px, 22vmin, 120px); line-height: 1; padding: 0; overflow: hidden; 
+            flex-shrink: 0; background: var(--dice-bg); border: 1px solid var(--dice-border); border-radius: 15%; 
+            display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; 
             color: var(--dice-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         }
-        
         .dice.rolling { animation: roll 0.4s linear infinite; color: var(--gold-main); text-shadow: 0 0 10px var(--gold-glow); }
         .dice.held { border-color: var(--danger); color: var(--danger); transform: translateY(-5%); box-shadow: 0 0 10px rgba(255, 68, 68, 0.4); }
-        @keyframes roll { 0% { transform: rotate(0deg) rotateX(0deg); } 25% { transform: rotate(90deg) rotateX(90deg); } 50% { transform: rotate(180deg) rotateX(180deg); } 75% { transform: rotate(270deg) rotateX(270deg); } 100% { transform: rotate(360deg) rotateX(360deg); } }
-
-        .game-info { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; margin-left: 10px; min-width: 100px; }
-        .status-label { font-size: clamp(0.7rem, 2vmin, 1rem); color: var(--gold-main); font-weight: 600; margin-bottom: 5px; white-space: nowrap;}
-        .action-btn-group { display: flex; flex-direction: column; gap: 5px; width: 100%; align-items: flex-end;}
-        .game-btn { padding: 8px 12px; border-radius: 20px; border: none; font-weight: bold; font-size: clamp(0.7rem, 2vmin, 0.9rem); text-transform: uppercase; white-space: nowrap; cursor: pointer; width: 100%; }
+        @keyframes roll { 0% { transform: rotate(0deg); } 25% { transform: rotate(90deg); } 50% { transform: rotate(180deg); } 75% { transform: rotate(270deg); } 100% { transform: rotate(360deg); } }
+        
+        .status-label { color: var(--gold-main); font-weight: 600; white-space: nowrap; text-align: right;}
+        .game-btn { border-radius: 20px; border: none; font-weight: bold; text-transform: uppercase; white-space: nowrap; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center;}
         .btn-throw { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); transition: transform 0.1s; }
         .btn-throw:active { transform: scale(0.95); }
         .btn-secondary { background: var(--glass-bg); color: var(--text-main); border: var(--glass-border); }
         .btn-active-toggle { background: var(--danger); color: white; box-shadow: 0 0 10px rgba(255,0,0,0.4); }
         .btn-highlight { background: var(--gold-main) !important; color: black !important; }
 
-        /* --- ANIMACIJA --- */
-        .logo-anim { 
-            font-size: clamp(1.8rem, 6vw, 3.5rem); 
-            text-transform: uppercase; letter-spacing: 4px; 
-            animation: fadeInOut 4.5s forwards; 
-            color: var(--text-main); text-align: center; font-weight: 700; 
-            width: 100%; display: block; line-height: 1.4; 
-        }
-        @keyframes fadeInOut { 0% { opacity: 0; letter-spacing: 0px; } 40% { opacity: 1; letter-spacing: 4px; } 80% { opacity: 1; } 100% { opacity: 0; } }
-        .loader { border: 5px solid rgba(125,125,125,0.2); border-top: 5px solid var(--gold-main); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* --- BREAKPOINTS: REŠENJE ZA UREĐAJE --- */
 
-        /* --- BREAKPOINTS --- */
-
-        /* 1. PORTRAIT PHONES (i TABLETI manji od 600px širine) */
-        @media (orientation: portrait) {
+        /* 1. MOBILNI TELEFONI (Portrait < 600px) */
+        @media (max-width: 599px) and (orientation: portrait) {
             .controls-area { 
-                flex-direction: column; gap: 10px; min-height: auto; 
-                padding-bottom: max(10px, var(--safe-bottom)); 
+                flex-direction: column; gap: 8px; padding: 10px; padding-bottom: max(10px, var(--safe-bottom)); 
             }
-            .game-info { width: 100%; align-items: center; flex-direction: row; justify-content: space-between; margin-left: 0; }
-            .action-btn-group { flex-direction: row; flex: 1; gap: 8px; margin-left: 10px; }
-            .btn-throw { width: auto; flex: 2; }
-            #btn-najava { width: auto; flex: 1; padding: 8px 4px; font-size: 0.75rem; }
-            .dice { width: 13vw; height: 13vw; max-width: 60px; max-height: 60px; font-size: 16vw; }
-            .player-table { width: 98%; } 
+            .player-table { width: 98%; }
+            .grid-container { font-size: clamp(10px, 1.5vh, 14px); }
+            .grid-cell { height: clamp(20px, 3.3vh, 32px); }
+            .dice-container { gap: 2vw; margin-bottom: 5px; }
+            .dice { width: 13vw; height: 13vw; max-width: 55px; max-height: 55px; font-size: 16vw; }
+            
+            /* Turn indicator integrisan u kontrole */
+            #lbl-turn { font-size: 0.8rem; margin-bottom: 5px; width: 100%; text-align: center; }
+            
+            .game-info { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; }
+            .status-label { font-size: 0.8rem; }
+            .action-btn-group { display: flex; gap: 5px; flex: 1; }
+            .btn-throw { padding: 10px; font-size: 0.9rem; flex: 2; }
+            #btn-najava { padding: 10px; font-size: 0.75rem; flex: 1; }
         }
 
-        /* 2. TABLETS PORTRAIT - OPTIMIZACIJA ZA JEDAN EKRAN (Bez preklapanja) */
-        @media (min-width: 600px) and (orientation: portrait) {
-            .logo-anim { width: 100%; margin: 0 auto; font-size: clamp(3rem, 8vw, 5rem); }
+        /* 2. MALI TABLETI (7" - 9") - Sirina od 600px do 899px */
+        @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
+            .logo-anim { font-size: 4rem; }
             
-            /* Tabela ima fleksibilnu visinu i skroluje se UNUTAR omotača */
             .tables-wrapper { 
-                flex: 1; 
-                width: 100%;
-                display: flex; 
-                flex-direction: column;
-                justify-content: flex-start;
-                padding-bottom: 10px;
-                overflow-y: auto; /* Ključno: Scroll samo ovde */
+                justify-content: flex-start; /* Da tabela bude pri vrhu */
+                padding-bottom: 0;
+                overflow-y: hidden; /* Sprecavamo scroll celog wrappera ako stane */
             }
             
-            .player-table { width: 85%; margin: 0 auto; margin-bottom: 20px; }
+            .player-table { 
+                width: 95%; /* Siroka tabela */
+                max-width: 700px;
+                margin: 0 auto;
+                margin-top: 5px;
+            }
+
+            .grid-container { font-size: 1.8vh; }
+            .grid-cell { height: 3.8vh; } /* Visoke celije za laksi dodir */
+
+            .controls-area {
+                position: relative;
+                width: 100%;
+                padding: 10px 15px;
+                padding-bottom: max(15px, var(--safe-bottom));
+                margin-top: 0; /* Priblizavamo tabeli */
+                
+                display: grid;
+                grid-template-columns: 1fr 2fr 1fr; /* Levo info, Sredina kocke, Desno dugmici */
+                align-items: center;
+                gap: 10px;
+            }
+
+            /* Sekcija 1: Info o potezu (Levo) */
+            #lbl-turn { 
+                grid-column: 1 / 4; /* Potez ide na vrh kontrola */
+                text-align: center; 
+                background: rgba(224, 201, 149, 0.1);
+                border-radius: 15px;
+                padding: 5px;
+                font-size: 1rem !important;
+                margin-bottom: 5px;
+                order: -1;
+            }
+
+            /* Sekcija 2: Kockice (Sredina) */
+            .dice-container { 
+                grid-column: 1 / 3; /* Zauzimaju levo i sredinu */
+                justify-content: flex-start; 
+                gap: 15px; 
+            }
+            .dice { width: 7vh; height: 7vh; font-size: 5vh; border-radius: 12px; }
+
+            /* Sekcija 3: Dugmici i status (Desno) */
+            .game-info { 
+                grid-column: 3 / 4; 
+                display: flex; flex-direction: column; gap: 8px; justify-content: center; 
+                width: 100%;
+            }
+            .status-label { font-size: 0.9rem; text-align: center; margin-bottom: 0;}
+            .action-btn-group { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+            .btn-throw { height: 50px; font-size: 1.1rem; width: 100%; }
+            #btn-najava { height: 40px; font-size: 0.9rem; }
+        }
+
+        /* 3. VELIKI TABLETI (10" +) - Sirina preko 900px */
+        @media (min-width: 900px) and (orientation: portrait) {
+            .tables-wrapper { padding-top: 2vh; }
+            .player-table { width: 90%; max-width: 850px; }
+            .grid-container { font-size: 2.2vh; gap: 2px; } 
+            .grid-cell { height: 4.5vh; } /* Vrlo komotna velicina polja */
             
-            .grid-container { font-size: clamp(1.5vh, 2vw, 2.2vh); gap: 1px; } 
-            .grid-cell { height: clamp(3.5vh, 5vw, 5vh); } 
-            .dice { width: 8vh; height: 8vh; font-size: 9vh; }
-            
-            /* KONTROLE ZALEPLJENE NA DNO EKRANA (Ali ne lebde preko tabele) */
             .controls-area { 
-                position: relative; /* Deo layout toka */
-                bottom: auto; left: auto; transform: none;
-                width: 100%; 
-                border-radius: 0; 
-                border: none;
-                border-top: 1px solid var(--gold-main);
-                background: var(--glass-panel);
-                margin: 0;
-                padding: 10px 20px;
-                /* Safe bottom + padding */
-                padding-bottom: max(15px, var(--safe-bottom)); 
-                box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
-                z-index: 100;
+                padding: 20px 40px;
+                padding-bottom: max(30px, var(--safe-bottom));
                 display: flex; flex-direction: row; justify-content: space-between; align-items: center;
-                gap: 20px;
-                min-height: auto;
+                gap: 30px;
             }
             
             #lbl-turn { 
-                position: static; 
-                width: auto; 
-                font-size: 1.2rem !important; 
-                margin: 0;
+                font-size: 1.5rem !important; 
+                background: var(--glass-bg);
+                padding: 10px 20px;
+                border-radius: 30px;
+                border: 1px solid var(--gold-main);
             }
             
-            .game-info { width: auto; justify-content: center; gap: 15px; flex-direction: row; flex: 1; justify-content: flex-end;}
-            .action-btn-group { flex-direction: row; gap: 15px; width: auto; }
-            .btn-throw { padding: 12px 30px; font-size: 1.1rem; width: auto; }
-            .status-label { font-size: 1.1rem; margin-bottom: 0; align-self: center; white-space: nowrap;}
+            .dice-container { gap: 20px; }
+            .dice { width: 90px; height: 90px; font-size: 50px; border-radius: 18px; }
+            
+            .game-info { flex-direction: row; gap: 30px; align-items: center; }
+            .action-btn-group { flex-direction: row; gap: 20px; }
+            .btn-throw { padding: 15px 40px; font-size: 1.3rem; height: auto; border-radius: 30px;}
+            #btn-najava { padding: 15px 30px; font-size: 1rem; height: auto; }
+            .status-label { font-size: 1.2rem; }
         }
 
-        /* 3. LANDSCAPE - SAMO ZA VELIKE UREĐAJE (>1150px) */
+        /* 4. LANDSCAPE (Desktop & Large Tablets) */
         @media (min-width: 1151px) and (orientation: landscape) {
             .game-content { flex-direction: column; justify-content: flex-start; padding: 10px; padding-bottom: var(--safe-bottom); }
             .left-panel { max-width: 100%; flex-direction: column; gap: 10px; height: 100%; }
@@ -309,7 +324,7 @@
             .btn-throw { padding: 10px 30px; font-size: 1.1rem; }
         }
 
-        /* Modals & Chat Misc */
+        /* Modals & Misc (Ostaje isto) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .custom-modal { background: var(--glass-panel); padding: 30px; border-radius: 20px; border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow); width: 90%; max-width: 400px; text-align: center; transform: scale(0.8); transition: 0.3s; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
@@ -781,7 +796,7 @@
             setupSocketListeners(nickname) { this.socket.on('room_full', async () => { await this.modal.alert("Ova soba je puna ili igra već traje!"); this.cancelOnline(); }); this.socket.on('private_waiting', (data) => { this.roomId = data.roomId; }); this.socket.on('game_start', (data) => { this.myOnlineIndex = data.myIndex; this.onlineMode = true; this.modeTag = "Online"; this.roomId = data.roomId; this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname]; this.initScores(); this.currentPlayerIdx = 0; this.startGame(); }); this.socket.on('remote_move', (data) => { const opponentIdx = this.myOnlineIndex === 0 ? 1 : 0; this.allScores[opponentIdx][data.col][data.row] = data.points; this.updateTableVisuals(); this.switchPlayer(); }); this.socket.on('remote_roll', (data) => { this.visualRoll(data.values); this.brojBacanja = data.bacanje; document.getElementById('lbl-status').innerText = `Bacanje: ${data.bacanje} / 3 (Protivnik)`; }); this.socket.on('remote_hold', (data) => { this.zadrzane[data.index] = data.status; this.updateDiceVisuals(); }); this.socket.on('remote_announce', (data) => { this.najavaAktivna = true; }); this.socket.on('chat_msg', (data) => { if (data.msg) this.appendChatMessage("Protivnik", data.msg, "msg-incoming"); }); this.socket.on('opponent_left', async () => { await this.modal.alert("Protivnik je izašao!"); this.cancelOnline(); }); }
             async shareInvite() { const link = document.getElementById('invite-link').value; if (navigator.share) { try { await navigator.share({ title: 'Yamb of the Balkan', text: 'Ajde na partiju Yamba!', url: link }); } catch (err) { console.log('Share canceled'); } } else { const input = document.getElementById('invite-link'); input.select(); document.execCommand('copy'); await this.modal.alert("Link je kopiran! Pošalji ga prijatelju."); } }
             cancelOnline() { if(this.socket) this.socket.disconnect(); this.showMainMenu(); window.history.pushState({}, document.title, window.location.pathname); }
-            async setupGame(numPlayers, aiMode=false, diff='medium') { this.onlineMode = false; this.players = []; this.allScores = []; this.aiMode = aiMode; this.aiDifficulty = diff; const p1Name = this.playerName; if (aiMode) { this.modeTag = "vs AI"; this.players.push(p1Name); this.players.push(`🤖 AI (Ultimate)`); this.ai = new YambAI(this); } else { this.players.push(p1Name); if (numPlayers === 1) { this.modeTag = "Solo"; } else { this.modeTag = "1 na 1"; for(let i=1; i<numPlayers; i++) { let guestName = await this.modal.prompt(`Ime igrača ${i+1}:`); this.players.push(guestName || `Gost ${i}`); } } } this.initScores(); this.currentPlayerIdx = 0; this.startGame(); }
+            async setupGame(numPlayers, aiMode=false, diff='medium') { this.onlineMode = false; this.players = []; this.allScores = []; this.aiMode = aiMode; this.aiDifficulty = diff; const p1Name = this.playerName; if (aiMode) { this.modeTag = "vs AI"; this.players.push(p1Name); this.players.push(`🤖 AI (Ultimate)`); this.ai = new YambAI(this); } else { this.modeTag = "Solo"; this.players.push(p1Name); if (numPlayers === 1) { this.modeTag = "Solo"; } else { this.modeTag = "1 na 1"; for(let i=1; i<numPlayers; i++) { let guestName = await this.modal.prompt(`Ime igrača ${i+1}:`); this.players.push(guestName || `Gost ${i}`); } } } this.initScores(); this.currentPlayerIdx = 0; this.startGame(); }
             initScores() { this.allScores = []; this.players.forEach(() => { let sheet = {}; KOLONE.forEach(c => { sheet[c] = {}; REDOVI_IGRA.forEach(r => sheet[c][r] = null); }); this.allScores.push(sheet); }); }
             startGame() { this.navigateTo('game-scene'); this.createScoreTables(); this.resetTurnLogic(); this.gameActive = true; this.updateHighscoresUI(); document.getElementById('chat-body').innerHTML = ""; const chatBtn = document.getElementById('chat-float-btn'); if (this.modeTag === "Solo" || this.modeTag === "1 na 1") { chatBtn.classList.add('hidden'); } else { chatBtn.classList.remove('hidden'); if(this.aiMode) this.triggerAiChat('start'); } }
             createScoreTables() { const container = document.getElementById('tables-container'); container.innerHTML = ''; this.players.forEach((player, pIdx) => { const tableDiv = document.createElement('div'); tableDiv.className = 'player-table'; tableDiv.id = `ptable-${pIdx}`; const nameDiv = document.createElement('div'); nameDiv.className = 'player-name'; nameDiv.innerText = player; tableDiv.appendChild(nameDiv); const grid = document.createElement('div'); grid.className = 'grid-container'; ["", "↓", "S", "⇅", "↑", "R", "📢"].forEach((s, i) => { let d = document.createElement('div'); d.className = 'grid-cell col-header ' + ["", "c-nadole", "c-slobodna", "c-sredina", "c-nagore", "c-rucno", "c-najava"][i]; d.innerText = s; grid.appendChild(d); }); REDOVI_PRIKAZ.forEach(row => { let lbl = document.createElement('div'); lbl.className = 'grid-cell row-header' + (row.includes("ZBIR") ? " sum" : ""); lbl.innerText = row; grid.appendChild(lbl); KOLONE.forEach(col => { let cell = document.createElement('div'); cell.className = 'grid-cell'; if (row.includes("ZBIR")) { cell.style.fontWeight = 'bold'; cell.innerText = "0"; cell.id = `sum-${pIdx}-${col}-${row}`; cell.style.color = "var(--gold-main)"; } else { let btn = document.createElement('button'); btn.className = 'score-btn'; btn.id = `btn-${pIdx}-${col}-${row}`; btn.onclick = () => this.writeScore(row, col, pIdx); btn.disabled = true; cell.appendChild(btn); } grid.appendChild(cell); }); }); tableDiv.appendChild(grid); let totalDiv = document.createElement('div'); totalDiv.className = 'total-score'; totalDiv.id = `total-${pIdx}`; totalDiv.innerText = "0"; tableDiv.appendChild(totalDiv); container.appendChild(tableDiv); }); }
