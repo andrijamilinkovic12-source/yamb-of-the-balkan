@@ -108,7 +108,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 
-        /* --- ROTATE LOCK (SAMO ZA MOBILNE TELEFONE) --- */
+        /* --- ROTATE LOCK --- */
         @media screen and (orientation: landscape) and (max-height: 600px) {
             #rotate-lock-overlay { display: flex !important; }
         }
@@ -189,146 +189,56 @@
         .btn-active-toggle { background: var(--danger); color: white; box-shadow: 0 0 10px rgba(255,0,0,0.4); }
         .btn-highlight { background: var(--gold-main) !important; color: black !important; }
 
-        /* --- BREAKPOINTS: REŠENJE ZA UREĐAJE --- */
-
-        /* 1. MOBILNI TELEFONI (Portrait < 600px) */
+        /* --- BREAKPOINTS --- */
         @media (max-width: 599px) and (orientation: portrait) {
-            .controls-area { 
-                flex-direction: column; gap: 8px; padding: 10px; padding-bottom: max(10px, var(--safe-bottom)); 
-            }
+            .controls-area { flex-direction: column; gap: 8px; padding: 10px; padding-bottom: max(10px, var(--safe-bottom)); }
             .player-table { width: 98%; }
             .grid-container { font-size: clamp(10px, 1.5vh, 14px); }
             .grid-cell { height: clamp(20px, 3.3vh, 32px); }
             .dice-container { gap: 2vw; margin-bottom: 5px; }
             .dice { width: 13vw; height: 13vw; max-width: 55px; max-height: 55px; font-size: 16vw; }
-            
             #lbl-turn { font-size: 0.8rem; margin-bottom: 5px; width: 100%; text-align: center; }
-            
             .game-info { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; }
             .status-label { font-size: 0.8rem; }
             .action-btn-group { display: flex; gap: 5px; flex: 1; }
             .btn-throw { padding: 10px; font-size: 0.9rem; flex: 2; }
             #btn-najava { padding: 10px; font-size: 0.75rem; flex: 1; }
         }
-
-        /* 2. MALI TABLETI (7" - 9") - Sirina od 600px do 899px */
         @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
             .logo-anim { font-size: 4rem; }
-            
-            .tables-wrapper { 
-                justify-content: flex-start; 
-                padding-bottom: 0;
-                overflow-y: hidden; 
-                padding-top: 1vh; /* Smanjeno sa 2vh - da malo povuče tabelu gore */
-            }
-            
-            .player-table { 
-                width: 94%; 
-                max-width: 680px; 
-                margin: 0 auto;
-                margin-top: 5px;
-            }
-
-            .grid-container { font-size: 1.6vh; } /* Smanjeno sa 1.7vh za nijansu */
-            .grid-cell { height: 3.2vh; } /* Smanjeno sa 3.5vh - za nijansu kraca tabela */
-
-            .controls-area {
-                position: relative;
-                width: 100%;
-                padding: 10px 15px;
-                padding-bottom: max(15px, var(--safe-bottom));
-                margin-top: 1vh; 
-                border-top: 1px solid var(--gold-main);
-                
-                display: grid;
-                grid-template-columns: 1.2fr 1.8fr 1fr;
-                align-items: center;
-                gap: 15px;
-            }
-
-            #lbl-turn { 
-                grid-column: 1 / 4; 
-                text-align: center; 
-                background: rgba(224, 201, 149, 0.1);
-                border-radius: 15px;
-                padding: 5px;
-                font-size: 1.1rem !important;
-                margin-bottom: 5px;
-                order: -1;
-            }
-
-            .dice-container { 
-                grid-column: 1 / 3; 
-                justify-content: flex-start; 
-                gap: 12px; 
-            }
+            .tables-wrapper { justify-content: flex-start; padding-bottom: 0; overflow-y: hidden; padding-top: 1vh; }
+            .player-table { width: 94%; max-width: 680px; margin: 0 auto; margin-top: 5px; }
+            .grid-container { font-size: 1.6vh; } .grid-cell { height: 3.2vh; }
+            .controls-area { position: relative; width: 100%; padding: 10px 15px; padding-bottom: max(15px, var(--safe-bottom)); margin-top: 1vh; border-top: 1px solid var(--gold-main); display: grid; grid-template-columns: 1.2fr 1.8fr 1fr; align-items: center; gap: 15px; }
+            #lbl-turn { grid-column: 1 / 4; text-align: center; background: rgba(224, 201, 149, 0.1); border-radius: 15px; padding: 5px; font-size: 1.1rem !important; margin-bottom: 5px; order: -1; }
+            .dice-container { grid-column: 1 / 3; justify-content: flex-start; gap: 12px; }
             .dice { width: 6.5vh; height: 6.5vh; font-size: 4.5vh; border-radius: 12px; } 
-
-            .game-info { 
-                grid-column: 3 / 4; 
-                display: flex; flex-direction: column; gap: 8px; justify-content: center; 
-                width: 100%;
-            }
+            .game-info { grid-column: 3 / 4; display: flex; flex-direction: column; gap: 8px; justify-content: center; width: 100%; }
             .status-label { font-size: 0.9rem; text-align: center; margin-bottom: 0;}
             .action-btn-group { display: flex; flex-direction: column; gap: 8px; width: 100%; }
             .btn-throw { height: 50px; font-size: 1.1rem; width: 100%; }
             #btn-najava { height: 40px; font-size: 0.9rem; }
         }
-
-        /* 3. VELIKI TABLETI (10" +) - Sirina preko 900px */
         @media (min-width: 900px) and (orientation: portrait) {
             .tables-wrapper { padding-top: 2vh; }
-            .player-table { 
-                width: 90%; /* Povećano sa 80% */
-                max-width: 850px; /* Povećano sa 700px */
-            }
-            .grid-container { font-size: 2.2vh; gap: 1px; } 
-            .grid-cell { height: 4.0vh; } /* Povećano sa 3.5vh - značajno duže */
-            
-            .controls-area { 
-                padding: 30px 40px;
-                padding-bottom: max(30px, var(--safe-bottom));
-                display: flex; flex-direction: row; justify-content: space-between; align-items: center;
-                gap: 30px;
-                margin-top: auto;
-            }
-            
-            #lbl-turn { 
-                font-size: 1.5rem !important; 
-                background: var(--glass-bg);
-                padding: 10px 25px;
-                border-radius: 30px;
-                border: 1px solid var(--gold-main);
-                white-space: nowrap;
-            }
-            
+            .player-table { width: 90%; max-width: 850px; }
+            .grid-container { font-size: 2.2vh; gap: 1px; } .grid-cell { height: 4.0vh; }
+            .controls-area { padding: 30px 40px; padding-bottom: max(30px, var(--safe-bottom)); display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 30px; margin-top: auto; }
+            #lbl-turn { font-size: 1.5rem !important; background: var(--glass-bg); padding: 10px 25px; border-radius: 30px; border: 1px solid var(--gold-main); white-space: nowrap; }
             .dice-container { gap: 20px; }
-            .dice { width: 80px; height: 80px; font-size: 50px; border-radius: 18px; } /* Veće kocke */
-            
+            .dice { width: 80px; height: 80px; font-size: 50px; border-radius: 18px; }
             .game-info { flex-direction: row; gap: 25px; align-items: center; }
             .action-btn-group { flex-direction: row; gap: 20px; }
             .btn-throw { padding: 15px 40px; font-size: 1.4rem; height: auto; border-radius: 30px;}
             #btn-najava { padding: 15px 30px; font-size: 1.1rem; height: auto; }
             .status-label { font-size: 1.3rem; }
         }
-
-        /* 4. LANDSCAPE (Desktop & Large Tablets) */
         @media (min-width: 1151px) and (orientation: landscape) {
             .game-content { flex-direction: column; justify-content: flex-start; padding: 10px; padding-bottom: var(--safe-bottom); }
             .left-panel { max-width: 100%; flex-direction: column; gap: 10px; height: 100%; }
             .tables-wrapper { flex: 1; height: auto; align-items: flex-start; flex-direction: row; justify-content: center; flex-wrap: wrap; gap: 40px; padding-bottom: 140px; overflow-y: auto; }
-            
-            .player-table { 
-                width: 45%; /* Povećano sa 42% */
-                max-width: 600px; /* Povećano sa 500px - šire */
-                margin-bottom: 15px; 
-            }
-            
-            .grid-cell { 
-                height: 30px; /* Povećano sa 25px - duže */
-                font-size: 15px; /* Malo veći font */
-            }
-            
+            .player-table { width: 45%; max-width: 600px; margin-bottom: 15px; }
+            .grid-cell { height: 30px; font-size: 15px; }
             .controls-area { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); width: 75%; height: auto; min-height: 110px; border: 1px solid var(--gold-main); border-radius: 20px; flex-direction: row; justify-content: space-evenly; align-items: center; gap: 30px; padding: 15px 30px; margin-bottom: max(10px, var(--safe-bottom)); background: var(--glass-panel); backdrop-filter: blur(20px); z-index: 100; }
             .dice { width: 60px; height: 60px; font-size: 40px; }
             .grid-container { gap: 1px; }
@@ -337,7 +247,7 @@
             .btn-throw { padding: 12px 40px; font-size: 1.2rem; }
         }
 
-        /* Modals & Misc (Ostaje isto) */
+        /* Modals */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: 0.3s; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .custom-modal { background: var(--glass-panel); padding: 30px; border-radius: 20px; border: 1px solid var(--gold-main); box-shadow: var(--glass-shadow); width: 90%; max-width: 400px; text-align: center; transform: scale(0.8); transition: 0.3s; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
@@ -350,6 +260,7 @@
         .cm-btn-ok { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); }
         .cm-btn-cancel { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
 
+        /* Chat */
         .chat-float-btn { position: fixed; bottom: 140px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: var(--gold-main); color: #000; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; z-index: 1000; box-shadow: 0 0 15px var(--gold-glow); transition: transform 0.2s; }
         .chat-float-btn:hover { transform: scale(1.1); }
         .chat-notification { position: absolute; top: 0; right: 0; width: 12px; height: 12px; background: var(--danger); border-radius: 50%; border: 2px solid #000; display: none; }
@@ -363,7 +274,13 @@
         .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; word-wrap: break-word; }
         .msg-incoming { align-self: flex-start; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-left-radius: 2px; }
         .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
+        @media (max-width: 1024px) and (orientation: portrait) {
+            .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; }
+            .chat-window.active { transform: translateX(-50%); } 
+            .chat-float-btn { bottom: 145px; }
+        }
         
+        /* Stats & Highscores */
         .back-btn { position: absolute; top: max(20px, var(--safe-top)); left: 20px; background: none; border: none; color: var(--text-main); font-size: 1.5rem; cursor: pointer; z-index: 100;}
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
         .stat-item { background: var(--glass-bg); padding: 10px; border-radius: 8px; border: var(--glass-border); }
@@ -379,12 +296,13 @@
         .rank-2 { background: #C0C0C0; color: #000; }
         .rank-3 { background: #CD7F32; color: #000; }
         .hl-mode { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-left: 5px; border: 1px solid var(--glass-border); padding: 2px 5px; border-radius: 4px; }
-        
-        @media (max-width: 1024px) and (orientation: portrait) {
-            .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; }
-            .chat-window.active { transform: translateX(-50%); } 
-            .chat-float-btn { bottom: 145px; }
-        }
+
+        /* --- HIGHSCORE TABS (NOVO) --- */
+        .hs-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; width: 100%; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
+        .hs-tab-btn { background: transparent; border: none; color: var(--text-muted); font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 0.9rem; padding: 8px 16px; cursor: pointer; text-transform: uppercase; transition: 0.3s; border-radius: 20px; }
+        .hs-tab-btn.active { color: #000; background: var(--gold-main); box-shadow: 0 0 10px var(--gold-glow); }
+        .loading-text { text-align: center; padding: 20px; color: var(--text-muted); font-style: italic; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
     </style>
 </head>
 <body>
@@ -469,7 +387,33 @@
     </div>
 
     <div id="stats-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">STATISTIKA</h2><div class="modal-box" style="width: 100%; max-width: 500px;"><div style="border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; margin-bottom: 15px;"><p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">NAJVEĆI SKOR</p><span id="stat-high" style="font-size: 2.5rem; color: var(--gold-main); font-weight: 700;">0</span></div><div class="stat-grid"><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">UKUPNO PARTIJA</span><span id="stat-games" class="stat-val">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">PROSEČAN SKOR</span><span id="stat-avg" class="stat-val c-gold">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">POBEDE</span><span id="stat-wins" class="stat-val c-win">0</span></div><div class="stat-item"><span style="font-size: 0.8rem; color: var(--text-muted);">PORAZI</span><span id="stat-losses" class="stat-val c-loss">0</span></div></div><div style="margin-top: 15px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 8px;"><p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 5px;">USPEŠNOST</p><span id="stat-rate" style="font-size: 1.5rem; color: var(--text-main); font-weight: 600;">0%</span></div></div></div>
-    <div id="highscores-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">TOP LISTA</h2><div class="modal-box" style="width: 100%; max-width: 600px; text-align: left;"><div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--gold-main); padding-bottom: 10px; margin-bottom: 10px; font-weight: bold; color: var(--gold-main);"><span>IGRAČ</span><span>SKOR</span></div><ul id="full-hs-list" class="highscore-list top-list-scroll"></ul></div></div>
+    
+    <div id="highscores-screen" class="screen">
+        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <h2 class="menu-title">TOP LISTA</h2>
+        
+        <div class="modal-box" style="width: 100%; max-width: 600px; text-align: left; height: 70vh; display: flex; flex-direction: column;">
+            
+            <div class="hs-tabs">
+                <button id="tab-local" class="hs-tab-btn active" onclick="app.switchHsTab('local')">LOKALNA</button>
+                <button id="tab-global" class="hs-tab-btn" onclick="app.switchHsTab('global')">GLOBALNA 🌍</button>
+            </div>
+    
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--gold-main); padding-bottom: 10px; margin-bottom: 10px; font-weight: bold; color: var(--gold-main); flex-shrink: 0;">
+                <span>IGRAČ</span>
+                <span>SKOR</span>
+            </div>
+    
+            <div style="position: relative; flex: 1; overflow: hidden;">
+                <ul id="local-hs-list" class="highscore-list top-list-scroll" style="height: 100%; position: absolute; top: 0; left: 0;"></ul>
+                
+                <ul id="global-hs-list" class="highscore-list top-list-scroll hidden" style="height: 100%; position: absolute; top: 0; left: 0;">
+                    <div class="loading-text">Učitavam podatke sa servera...</div>
+                </ul>
+            </div>
+        </div>
+    </div>
+
     <div id="settings-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">PODEŠAVANJA</h2><div class="modal-box" style="text-align: left;"><label style="color:var(--text-muted);">Vaše Ime:</label><input type="text" id="setting-name" class="modal-input" placeholder="Igrač"><div style="margin-top: 15px;"><label style="color: var(--text-muted);">Tema:</label><select id="setting-theme" class="modal-input"><option value="dark">Dark Soft Gold (Glass)</option><option value="light">Light Gold</option><option value="medium">Medium Gold (Vesela)</option></select></div><div style="margin-top: 15px;"><label style="display: flex; align-items: center;"><input type="checkbox" id="setting-sound" style="margin-right: 10px;"> Zvučni Efekti</label></div><button class="btn-menu btn-primary" style="margin-top: 20px;" onclick="app.saveSettings()">Sačuvaj</button></div></div>
     <div id="rules-screen" class="screen" style="overflow-y: auto;"><button class="back-btn" onclick="app.showMainMenu()">←</button><div style="max-width: 800px; padding: 25px; background: var(--glass-panel); border-radius: 10px; color: var(--text-main); margin-top: 60px; margin-bottom: 20px;"><h2 style="color:var(--gold-main); text-align:center; margin-bottom: 20px;">PRAVILA IGRE</h2><p style="margin-bottom: 15px; font-size: 0.95rem;"><strong>Cilj igre:</strong> Osvojiti što više poena kombinovanjem 5 od 6 kockica. Imate pravo na 3 bacanja po potezu.</p><h3 style="color:var(--gold-main); margin-top:20px; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">KOLONE</h3><ul style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem; margin-top: 10px;"><li><span class="c-nadole">↓ Nadole:</span> Igra se redom od 1 do Yamba.</li><li><span class="c-slobodna">S Slobodna:</span> Može se igrati bilo koje polje u bilo kom trenutku.</li><li><span class="c-nagore">↑ Nagore:</span> Igra se obrnutim redom, od Yamba do 1.</li><li><span class="c-najava">📢 Najava:</span> Nakon prvog bacanja, igrač mora najaviti šta gađa.</li><li><span class="c-rucno">R Ručno:</span> Polje se mora popuniti isključivo posle prvog bacanja.</li><li><span class="c-sredina">⇅ Sredina:</span> Popunjava se <strong>od sredine (Min, Max) ka krajevima (1, Yamb)</strong>.</li></ul><h3 style="color:var(--gold-main); margin-top:20px; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">BODOVANJE</h3><ul style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem; margin-top: 10px;"><li><strong>1 - 6:</strong> Zbir dobijenih brojeva. (Bonus +30 ako je zbir ≥ 60).</li><li><strong>Max:</strong> Što veći zbir 5 kockica.</li><li><strong>Min:</strong> Što manji zbir 5 kockica. <br><em style="color:var(--text-muted)">(Formula: (Max - Min) * Kec). Bonus +40 ako je rezultat ≥ 60.</em></li><li><strong>Triling:</strong> 3 iste + 20 poena.</li><li><strong>Ful:</strong> 3 iste + 2 iste + 30 poena.</li><li><strong>Poker:</strong> 4 iste + 40 poena.</li><li><strong>Yamb:</strong> 5 istih + 50 poena.</li><li><strong>Kenta:</strong> 5 vezanih (66, 56, 46 poena).</li></ul></div></div>
 
@@ -494,48 +438,34 @@
         const UNICODE_DICE = {0: "", 1: "⚀", 2: "⚁", 3: "⚂", 4: "⚃", 5: "⚄", 6: "⚅"};
         const REDOVI_IGRA = ["1", "2", "3", "4", "5", "6", "Max", "Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
         const REDOVI_PRIKAZ = ["1", "2", "3", "4", "5", "6", "ZBIR 1", "Max", "Min", "ZBIR 2", "Triling", "Kenta", "Ful", "Poker", "Yamb", "ZBIR 3"];
-        // ISPRAVLJENO: Dodata kolona "Nagore" da se poklapa sa UI tabelom
         const KOLONE = ["Nadole", "Slobodna", "Sredina", "Nagore", "Ručno", "Najava"];
         
         const sleep = ms => new Promise(r => setTimeout(r, ms));
         const sum = arr => arr.reduce((a, b) => a + b, 0);
         class SoundManager { constructor() { this.ctx = window.AudioContext ? new window.AudioContext() : new window.webkitAudioContext(); } playTone(freq, type, duration, vol=0.1) { if (!app.soundEnabled) return; try { const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); osc.type = type; osc.frequency.setValueAtTime(freq, this.ctx.currentTime); gain.gain.setValueAtTime(vol, this.ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration); osc.connect(gain); gain.connect(this.ctx.destination); osc.start(); osc.stop(this.ctx.currentTime + duration); } catch(e) {} } click() { this.playTone(800, 'sine', 0.05, 0.05); } roll() { if (!app.soundEnabled) return; this.playTone(150, 'square', 0.1, 0.02); } score() { this.playTone(600, 'sine', 0.3, 0.1); setTimeout(()=>this.playTone(900, 'sine', 0.4, 0.1), 100); } error() { this.playTone(150, 'sawtooth', 0.3, 0.1); } win() { if(!app.soundEnabled) return; [0, 200, 400, 600].forEach((t, i) => setTimeout(() => this.playTone(400 + (i*100), 'square', 0.2, 0.1), t)); } chat() { this.playTone(1200, 'sine', 0.1, 0.05); } }
         
-        // --- DIVINE YAMB AI ENGINE v14.0 (NAJAVA FIX) ---
+        // --- DIVINE YAMB AI ENGINE v14.0 ---
         class YambAI {
             constructor(appInstance, difficulty = 'medium') {
                 this.app = appInstance;
                 this.difficulty = difficulty;
-                // Povećan prioritet za Najavu da se ne bi zaglavio na kraju
                 this.colPriority = { "Nadole": 55, "Nagore": 55, "Sredina": 45, "Ručno": 65, "Najava": 60, "Slobodna": 5 };
             }
 
             decideRoll(dice, turnNum, sheet) {
                 const analysis = this.analyzeHand(dice);
                 const emptyStats = this.getEmptyStats(sheet);
-                
-                // --- 1. POTEZ ---
                 if (turnNum === 1) {
-                    // Da li smo u "tesnacu" sa Najavom? (Ako je ostalo malo polja, a Najava je prazna)
                     const forceNajava = (emptyStats.najava > 0 && (emptyStats.total < 15 || emptyStats.najava > emptyStats.others));
-
-                    // 1. Proveri Ručnu (Osim ako ne MORAMO da jurimo najavu)
                     const manualMove = this.checkManualOpprotunity(dice, analysis, sheet);
-                    // Ako je ručna fenomenalna (Yamb, Kenta, Poker), uvek je uzmi
                     if (manualMove && manualMove.points >= 40) return { type: 'write', row: manualMove.row, col: 'Ručno' };
-                    // Ako nije fenomenalna, a moramo da popunimo najavu, preskoči ručnu
                     if (manualMove && !forceNajava) return { type: 'write', row: manualMove.row, col: 'Ručno' };
-                    
                     if (!this.app.najavaAktivna) {
-                        // Prosleđujemo 'forceNajava' flag
                         const bestAnnounce = this.evaluateAnnouncement(dice, analysis, sheet, forceNajava);
-                        
                         if (bestAnnounce) {
                             this.app.clickNajava();
                             this.app.najavljenoPolje = { row: bestAnnounce, col: 'Najava' };
                             this.app.najavaAktivna = false; 
-                            
-                            // UI update simulacija
                             const btnId = `btn-${this.app.currentPlayerIdx}-Najava-${bestAnnounce}`;
                             const btnEl = document.getElementById(btnId);
                             if(btnEl) btnEl.classList.add('highlight-najava');
@@ -547,22 +477,16 @@
                         }
                     }
                 }
-
-                // Ako imamo aktivnu najavu
                 if (this.app.najavljenoPolje) {
                      if (turnNum === 3) return { type: 'write', row: this.app.najavljenoPolje.row, col: 'Najava' };
                      const holdMask = this.getHoldMaskForTarget(dice, this.app.najavljenoPolje.row);
                      return { type: 'hold', hold: holdMask };
                 }
-
-                // --- 3. POTEZ (OBAVEZAN UPIS) ---
                 if (turnNum === 3) {
                     const bestMove = this.findBestScore(dice, sheet);
                     if (bestMove) return bestMove;
                     return this.panicWrite(sheet);
                 }
-
-                // --- 2. POTEZ (HOLD) ---
                 const bestHold = this.calculateSmartHold(dice, sheet, turnNum);
                 return { type: 'hold', hold: bestHold };
             }
@@ -584,99 +508,33 @@
                 let bestRow = null; 
                 let maxScore = -9999;
                 const potentialRows = REDOVI_IGRA.filter(r => this.isAvail(r, "Najava", sheet));
-
                 if (potentialRows.length === 0) return null;
-
                 potentialRows.forEach(row => {
                     let score = 0;
-                    
-                    // 1. FIGURE (Yamb, Poker, Ful, Triling)
-                    if (row === "Yamb") { 
-                        if (an.maxCount >= 4) score = 150; 
-                        else if (an.maxCount >= 3) score = 60; 
-                    }
-                    else if (row === "Poker") { 
-                        if (an.maxCount >= 4) score = 120; 
-                        else if (an.maxCount >= 3) score = 70; 
-                        else if (an.maxCount >= 2) score = 20; // Rizikuj poker na 2 ista ako moraš
-                    }
-                    else if (row === "Ful") { 
-                        if (an.maxCount >= 3) score = 90;
-                        else if (Object.keys(an.counts).length <= 3) score = 50; // Dva para ili slično
-                    }
-                    else if (row === "Triling") { 
-                        if (an.maxCount >= 3) score = 80;
-                        else if (an.maxCount >= 2) score = 30;
-                    }
-                    else if (row === "Kenta") {
-                        if (an.nearKenta.length >= 4) score = 110; 
-                        else if (an.nearKenta.length >= 3) score = 40;
-                    }
-
-                    // 2. MIN / MAX (Ovo je falilo)
-                    else if (row === "Max") {
-                        const sum = dice.reduce((a,b)=>a+b, 0);
-                        const highCount = dice.filter(d => d >= 4).length;
-                        if (sum >= 22) score = 90;
-                        else if (highCount >= 3) score = 60;
-                    }
-                    else if (row === "Min") {
-                        const sum = dice.reduce((a,b)=>a+b, 0);
-                        const lowCount = dice.filter(d => d <= 3).length;
-                        if (sum <= 12) score = 90;
-                        else if (lowCount >= 3) score = 60;
-                    }
-
-                    // 3. BROJEVI (1-6)
-                    else if (["1","2","3","4","5","6"].includes(row)) {
-                        const val = parseInt(row); 
-                        const count = dice.filter(d => d === val).length;
-                        if (count >= 4) score = 100;
-                        else if (count === 3) score = 75;
-                        else if (count === 2) score = 40; // Par je dovoljan za najavu ako nema boljeg
-                        else if (count === 1) score = 10;
-                    }
-
+                    if (row === "Yamb") { if (an.maxCount >= 4) score = 150; else if (an.maxCount >= 3) score = 60; }
+                    else if (row === "Poker") { if (an.maxCount >= 4) score = 120; else if (an.maxCount >= 3) score = 70; else if (an.maxCount >= 2) score = 20; }
+                    else if (row === "Ful") { if (an.maxCount >= 3) score = 90; else if (Object.keys(an.counts).length <= 3) score = 50; }
+                    else if (row === "Triling") { if (an.maxCount >= 3) score = 80; else if (an.maxCount >= 2) score = 30; }
+                    else if (row === "Kenta") { if (an.nearKenta.length >= 4) score = 110; else if (an.nearKenta.length >= 3) score = 40; }
+                    else if (row === "Max") { const sum = dice.reduce((a,b)=>a+b, 0); const highCount = dice.filter(d => d >= 4).length; if (sum >= 22) score = 90; else if (highCount >= 3) score = 60; }
+                    else if (row === "Min") { const sum = dice.reduce((a,b)=>a+b, 0); const lowCount = dice.filter(d => d <= 3).length; if (sum <= 12) score = 90; else if (lowCount >= 3) score = 60; }
+                    else if (["1","2","3","4","5","6"].includes(row)) { const val = parseInt(row); const count = dice.filter(d => d === val).length; if (count >= 4) score = 100; else if (count === 3) score = 75; else if (count === 2) score = 40; else if (count === 1) score = 10; }
                     if (score > maxScore) { maxScore = score; bestRow = row; }
                 });
-
-                // Ako je "force" uključen (malo polja ostalo), vrati najbolje šta god da je, samo da ne bude 0 potencijal
-                if (force) {
-                    // Ako imamo bilo kakvu šansu (score > 10), najavi. 
-                    // Ako je baš sve krš, najavi prvi slobodan broj ili Min/Max
-                    if (maxScore > 10) return bestRow;
-                    // Fallback: Najavi Max ili Min ili Brojeve, izbegavaj Yamb/Poker ako nema šanse
-                    const fallback = potentialRows.find(r => ["1","2","3","4","5","6","Min","Max"].includes(r));
-                    return fallback || potentialRows[0];
-                }
-
-                // Normalan režim: najavi samo ako je dobra prilika
+                if (force) { if (maxScore > 10) return bestRow; const fallback = potentialRows.find(r => ["1","2","3","4","5","6","Min","Max"].includes(r)); return fallback || potentialRows[0]; }
                 if (maxScore >= 40) return bestRow;
-                
                 return null;
             }
 
             checkManualOpprotunity(dice, an, sheet) {
-                const isFirstOrLastTurn = (this.isAvail("1", "Nadole", sheet) || this.isAvail("Yamb", "Nadole", sheet));
-                
                 let best = null; let maxW = 0;
                 REDOVI_IGRA.forEach(row => {
                     if (this.isAvail(row, "Ručno", sheet)) {
                         const best5 = this.app.getBest5(row, dice); const pts = this.app.calcPoints(row, best5); let w = 0;
-                        
-                        // Ručna prioriteti
-                        if (row === "Yamb" && pts >= 50) w = 600; 
-                        else if (row === "Kenta" && pts >= 56) w = 500;
-                        else if (row === "Poker" && pts >= 40) w = 400; 
-                        else if (row === "Ful" && pts >= 30) w = 300;
-                        else if (["1","2","3","4","5","6"].includes(row)) { 
-                            const count = dice.filter(d => d === parseInt(row)).length; 
-                            if (count >= 5) w = 300; 
-                            else if (count === 4) w = 200; 
-                        }
-                        else if (row === "Min" && pts < 8 && pts > 0) w = 250; 
-                        else if (row === "Max" && pts > 25) w = 250; 
-
+                        if (row === "Yamb" && pts >= 50) w = 600; else if (row === "Kenta" && pts >= 56) w = 500;
+                        else if (row === "Poker" && pts >= 40) w = 400; else if (row === "Ful" && pts >= 30) w = 300;
+                        else if (["1","2","3","4","5","6"].includes(row)) { const count = dice.filter(d => d === parseInt(row)).length; if (count >= 5) w = 300; else if (count === 4) w = 200; }
+                        else if (row === "Min" && pts < 8 && pts > 0) w = 250; else if (row === "Max" && pts > 25) w = 250; 
                         if (w > maxW) { maxW = w; best = { row, points: pts }; }
                     }
                 });
@@ -686,106 +544,59 @@
             findBestScore(dice, sheet) {
                 let possibleMoves = []; 
                 const cols = ["Nadole", "Nagore", "Sredina", "Ručno", "Najava", "Slobodna"];
-                
                 cols.forEach(col => {
                     if (col === "Najava" && !this.app.najavaAktivna) return; 
                     if (this.app.najavaAktivna && col !== "Najava") return;
-                    
                     REDOVI_IGRA.forEach(row => {
                         if (!this.isAvail(row, col, sheet)) return; 
                         if (col === "Najava" && this.app.najavljenoPolje && this.app.najavljenoPolje.row !== row) return;
-                        
-                        let best5 = this.app.getBest5(row, dice); 
-                        let pts = this.app.calcPoints(row, best5); 
+                        let best5 = this.app.getBest5(row, dice); let pts = this.app.calcPoints(row, best5); 
                         if (col === "Ručno" && this.app.brojBacanja > 1) pts = 0;
-                        
-                        let weight = pts; 
-                        weight += this.colPriority[col];
-
-                        // Logika bodovanja (Ista kao pre, ali malo tunirana)
-                        if (row === "Min") {
-                            if (pts > 0 && pts <= 10) weight += 150;
-                            else if (pts > 20) weight -= 500;
-                            else if (pts === 0) weight -= 1000;
-                            weight += (30 - pts) * 3; 
-                        }
-                        else if (row === "Max") {
-                            if (pts >= 24) weight += 100;
-                            else if (pts < 15) weight -= 300;
-                        }
-                        else if (["1","2","3","4","5","6"].includes(row)) {
-                            const count = dice.filter(d => d === parseInt(row)).length;
-                            if (count >= 4) weight += 120;
-                            else if (count === 3) weight += 40;
-                            else if (count < 2) weight -= 200;
-                        }
-                        
+                        let weight = pts; weight += this.colPriority[col];
+                        if (row === "Min") { if (pts > 0 && pts <= 10) weight += 150; else if (pts > 20) weight -= 500; else if (pts === 0) weight -= 1000; weight += (30 - pts) * 3; }
+                        else if (row === "Max") { if (pts >= 24) weight += 100; else if (pts < 15) weight -= 300; }
+                        else if (["1","2","3","4","5","6"].includes(row)) { const count = dice.filter(d => d === parseInt(row)).length; if (count >= 4) weight += 120; else if (count === 3) weight += 40; else if (count < 2) weight -= 200; }
                         if (this.isNextInColumn(row, col, sheet) && pts > 0) weight += 200;
-
                         possibleMoves.push({ type: 'write', row, col, points: pts, weight });
                     });
                 });
-
                 possibleMoves.sort((a, b) => b.weight - a.weight);
-                if (possibleMoves.length > 0) {
-                     if (possibleMoves[0].weight < -200) return null; // Ako je sve užasno, probaj panicWrite
-                     return possibleMoves[0];
-                }
+                if (possibleMoves.length > 0) { if (possibleMoves[0].weight < -200) return null; return possibleMoves[0]; }
                 return null;
             }
 
             isNextInColumn(row, col, sheet) {
                 if (col === "Nadole") { const idx = REDOVI_IGRA.indexOf(row); if (idx === 0) return true; if (sheet[col][REDOVI_IGRA[idx-1]] !== null) return true; }
                 if (col === "Nagore") { const idx = REDOVI_IGRA.indexOf(row); if (idx === REDOVI_IGRA.length - 1) return true; if (sheet[col][REDOVI_IGRA[idx+1]] !== null) return true; }
-                
                 if (col === "Sredina") {
-                    const up = ["Max", "6", "5", "4", "3", "2", "1"]; 
-                    const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
-                    if (up.includes(row)) { 
-                        const idx = up.indexOf(row); if (idx === 0) return true; if (sheet[col][up[idx-1]] !== null) return true; 
-                    }
-                    if (down.includes(row)) { 
-                        const idx = down.indexOf(row); if (idx === 0) return true; if (sheet[col][down[idx-1]] !== null) return true; 
-                    }
+                    const up = ["Max", "6", "5", "4", "3", "2", "1"]; const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
+                    if (up.includes(row)) { const idx = up.indexOf(row); if (idx === 0) return true; if (sheet[col][up[idx-1]] !== null) return true; }
+                    if (down.includes(row)) { const idx = down.indexOf(row); if (idx === 0) return true; if (sheet[col][down[idx-1]] !== null) return true; }
                     return false;
                 }
                 return true;
             }
 
             panicWrite(sheet) {
-                // Poslednja linija odbrane - mora vratiti nešto validno
                 const allCols = ["Ručno", "Slobodna", "Sredina", "Nadole", "Nagore"];
                 for (let col of allCols) {
-                    if (col === "Najava") continue; // Najava se ne može panic-write na 3. potezu ako nije najavljena
-                    
+                    if (col === "Najava") continue;
                     const sacrificeOrder = ["1", "2", "3", "Triling", "4", "5", "6", "Max", "Min", "Kenta", "Ful", "Poker", "Yamb"];
-                    for (let row of sacrificeOrder) {
-                        if (this.isAvail(row, col, sheet)) return { type: 'write', row: row, col: col };
-                    }
+                    for (let row of sacrificeOrder) { if (this.isAvail(row, col, sheet)) return { type: 'write', row: row, col: col }; }
                 }
-                // Ako baš ništa nema (nemoguće osim ako je samo Najava ostala, a to rešava Turn 1 logika)
                 return { type: 'write', row: '1', col: 'Slobodna' }; 
             }
 
             calculateSmartHold(dice, sheet, turnNum) {
                 if (this.app.najavljenoPolje) return this.getHoldMaskForTarget(dice, this.app.najavljenoPolje.row);
-                
                 const an = this.analyzeHand(dice);
-                // Standardni hold logic...
                 if (an.maxCount >= 3) return this.getHoldMaskForTarget(dice, "Yamb");
                 if (an.nearKenta.length >= 4) return dice.map(d => an.nearKenta.includes(d));
                 if (Object.keys(an.counts).length <= 3) return this.getHoldMaskForTarget(dice, "Ful");
-                
                 const needMax = ["Nadole", "Nagore", "Slobodna"].some(c => this.isAvail("Max", c, sheet));
-                if (needMax) {
-                    const highDice = dice.filter(d => d >= 4).length;
-                    if (highDice >= 3) return dice.map(d => d >= 4);
-                }
+                if (needMax) { const highDice = dice.filter(d => d >= 4).length; if (highDice >= 3) return dice.map(d => d >= 4); }
                 const needMin = ["Nadole", "Nagore", "Slobodna"].some(c => this.isAvail("Min", c, sheet));
-                if (needMin) {
-                    const lowDice = dice.filter(d => d <= 3).length;
-                    if (lowDice >= 3) return dice.map(d => d <= 2);
-                }
+                if (needMin) { const lowDice = dice.filter(d => d <= 3).length; if (lowDice >= 3) return dice.map(d => d <= 2); }
                 return [false, false, false, false, false, false];
             }
 
@@ -832,16 +643,8 @@
                 const valMaxCount = Number(Object.keys(counts).find(key => counts[key] === maxCount));
                 const uniqueDice = [...new Set(dice)].sort((a,b)=>a-b);
                 let bestStraight = [], maxStraightLen = 0; 
-                [[1,2,3,4,5], [2,3,4,5,6]].forEach(seq => { 
-                    const match = seq.filter(x => uniqueDice.includes(x)); 
-                    if (match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; } 
-                });
-                if (maxStraightLen < 4) {
-                     [[1,2,3,4], [2,3,4,5], [3,4,5,6]].forEach(seq => {
-                        const match = seq.filter(x => uniqueDice.includes(x));
-                        if (match.length >= 4 && match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; }
-                     });
-                }
+                [[1,2,3,4,5], [2,3,4,5,6]].forEach(seq => { const match = seq.filter(x => uniqueDice.includes(x)); if (match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; } });
+                if (maxStraightLen < 4) { [[1,2,3,4], [2,3,4,5], [3,4,5,6]].forEach(seq => { const match = seq.filter(x => uniqueDice.includes(x)); if (match.length >= 4 && match.length > maxStraightLen) { maxStraightLen = match.length; bestStraight = match; } }); }
                 return { counts, maxCount, valMaxCount, nearKenta: maxStraightLen >= 3 ? bestStraight : [], unique: uniqueDice };
             }
         }
@@ -869,12 +672,7 @@
                 const savedTheme = localStorage.getItem('yamb_theme');
                 if (savedTheme === 'light') document.body.classList.add('light-theme'); else if (savedTheme === 'medium') document.body.classList.add('medium-theme');
                 
-                // --- POKUŠAJ JS ZABRANE ROTACIJE ---
-                // Ovo radi na Androidu kada je aplikacija instalirana/fullscreen
-                if (screen.orientation && screen.orientation.lock) {
-                    try { screen.orientation.lock('portrait').catch(e => { /* Ignore ako ne uspe */ }); } catch(e){}
-                }
-
+                if (screen.orientation && screen.orientation.lock) { try { screen.orientation.lock('portrait').catch(e => { }); } catch(e){} }
                 setTimeout(() => { this.checkForInvite(); }, 1000);
                 setTimeout(() => { this.navigateTo('main-menu'); }, 4500);
                 this.uiInit();
@@ -891,9 +689,111 @@
             showSettings() { this.navigateTo('settings-screen'); document.getElementById('setting-name').value = this.playerName; document.getElementById('setting-sound').checked = this.soundEnabled; document.getElementById('setting-theme').value = localStorage.getItem('yamb_theme') || 'dark'; }
             saveSettings() { const newName = document.getElementById('setting-name').value.trim(); if(newName) this.playerName = newName; this.soundEnabled = document.getElementById('setting-sound').checked; const selectedTheme = document.getElementById('setting-theme').value; localStorage.setItem('yamb_theme', selectedTheme); document.body.classList.remove('light-theme', 'medium-theme'); if (selectedTheme === 'light') document.body.classList.add('light-theme'); else if (selectedTheme === 'medium') document.body.classList.add('medium-theme'); localStorage.setItem('yamb_player_name', this.playerName); localStorage.setItem('yamb_sound', this.soundEnabled); this.showMainMenu(); }
             showStats() { this.navigateTo('stats-screen'); document.getElementById('stat-games').innerText = this.stats.games; document.getElementById('stat-high').innerText = this.stats.highscore; document.getElementById('stat-wins').innerText = this.stats.wins; document.getElementById('stat-losses').innerText = this.stats.losses; const avg = this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 0; document.getElementById('stat-avg').innerText = avg; const totalCompetitive = this.stats.wins + this.stats.losses; let rate = 0; if (totalCompetitive > 0) rate = Math.round((this.stats.wins / totalCompetitive) * 100); document.getElementById('stat-rate').innerText = rate + "%"; }
-            showHighscoresScreen() { this.navigateTo('highscores-screen'); const list = document.getElementById('full-hs-list'); list.innerHTML = ""; if (this.highscores.length === 0) { list.innerHTML = "<div style='text-align:center; padding:20px; color:#777;'>Još nema rezultata.</div>"; return; } this.highscores.forEach((entry, i) => { let li = document.createElement('li'); li.className = 'highscore-item'; let rankClass = i===0?'rank-1':(i===1?'rank-2':(i===2?'rank-3':'rank-other')); li.innerHTML = `<div style="display:flex; align-items:center;"><span class="rank-badge ${rankClass}">${i+1}</span><div><span style="font-weight:600;">${entry.name}</span><span class="hl-mode">${entry.mode}</span><div style="font-size:0.7rem; color:var(--text-muted);">${entry.date || '-'}</div></div></div><span style="color:var(--gold-main); font-weight:700; font-size:1.1rem;">${entry.score}</span>`; list.appendChild(li); }); }
-            saveHighscoreEntry(name, score, mode) { const date = new Date().toLocaleDateString('sr-RS'); this.highscores.push({ name, score, mode, date }); this.highscores.sort((a,b) => b.score - a.score); this.highscores = this.highscores.slice(0, 20); localStorage.setItem('yamb_highscores_v2', JSON.stringify(this.highscores)); }
-            updateHighscoresUI() { /* Sidebar lista je uklonjena */ }
+            
+            // --- NOVE METODE ZA HIGHSCORES ---
+            showHighscoresScreen() { 
+                this.navigateTo('highscores-screen'); 
+                this.switchHsTab('local'); // Reset na lokalno pri ulasku
+            }
+
+            switchHsTab(tab) {
+                const btnLocal = document.getElementById('tab-local');
+                const btnGlobal = document.getElementById('tab-global');
+                const listLocal = document.getElementById('local-hs-list');
+                const listGlobal = document.getElementById('global-hs-list');
+
+                if (tab === 'local') {
+                    btnLocal.classList.add('active');
+                    btnGlobal.classList.remove('active');
+                    listLocal.classList.remove('hidden');
+                    listGlobal.classList.add('hidden');
+                    this.updateHighscoresUI(); // Učitaj lokalne
+                } else {
+                    btnLocal.classList.remove('active');
+                    btnGlobal.classList.add('active');
+                    listLocal.classList.add('hidden');
+                    listGlobal.classList.remove('hidden');
+                    this.fetchGlobalHighscores(); // Povuci globalne
+                }
+            }
+
+            fetchGlobalHighscores() {
+                const list = document.getElementById('global-hs-list');
+                list.innerHTML = '<div class="loading-text">Povezujem se sa serverom...</div>';
+
+                // Ako nemamo socket (nismo igrali online), konektuj se
+                if (!this.socket || !this.socket.connected) {
+                    try {
+                        this.socket = io(SERVER_URL, { transports: ['websocket'] });
+                        this.setupGlobalSocketListeners();
+                    } catch(e) {
+                        list.innerHTML = '<div style="text-align:center; padding:20px; color:#ef5350;">Greška pri konekciji.</div>';
+                        return;
+                    }
+                } else {
+                    if(!this.socket.hasListeners('global_highscores_data')) {
+                        this.setupGlobalSocketListeners();
+                    }
+                }
+                this.socket.emit('get_global_highscores');
+            }
+
+            setupGlobalSocketListeners() {
+                this.socket.on('global_highscores_data', (data) => {
+                    this.renderHighscoreList(data, 'global-hs-list');
+                });
+                this.socket.on('connect_error', () => {
+                    const list = document.getElementById('global-hs-list');
+                    if(list) list.innerHTML = '<div style="text-align:center; padding:20px; color:#ef5350;">Server nije dostupan.</div>';
+                });
+            }
+
+            saveHighscoreEntry(name, score, mode) { 
+                const date = new Date().toLocaleDateString('sr-RS'); 
+                this.highscores.push({ name, score, mode, date }); 
+                this.highscores.sort((a,b) => b.score - a.score); 
+                this.highscores = this.highscores.slice(0, 20); 
+                localStorage.setItem('yamb_highscores_v2', JSON.stringify(this.highscores)); 
+            }
+            
+            updateHighscoresUI() { 
+                this.renderHighscoreList(this.highscores, 'local-hs-list');
+            }
+
+            renderHighscoreList(data, elementId) {
+                const list = document.getElementById(elementId);
+                list.innerHTML = "";
+                
+                if (!data || data.length === 0) {
+                    list.innerHTML = "<div style='text-align:center; padding:20px; color:#777;'>Još nema rezultata.</div>";
+                    return;
+                }
+
+                data.forEach((entry, i) => {
+                    let li = document.createElement('li');
+                    li.className = 'highscore-item';
+                    let rankClass = i===0?'rank-1':(i===1?'rank-2':(i===2?'rank-3':'rank-other'));
+                    
+                    // Highlight ako sam to ja (na globalnoj listi)
+                    let isMeStyle = (elementId === 'global-hs-list' && entry.name === this.playerName && entry.score == this.stats.highscore) 
+                                    ? "border-left: 3px solid var(--gold-main); padding-left:5px;" : "";
+
+                    li.innerHTML = `
+                        <div style="display:flex; align-items:center; ${isMeStyle}">
+                            <span class="rank-badge ${rankClass}">${i+1}</span>
+                            <div>
+                                <span style="font-weight:600;">${entry.name}</span>
+                                <span class="hl-mode">${entry.mode || 'Solo'}</span>
+                                <div style="font-size:0.7rem; color:var(--text-muted);">${entry.date || '-'}</div>
+                            </div>
+                        </div>
+                        <span style="color:var(--gold-main); font-weight:700; font-size:1.1rem;">${entry.score}</span>
+                    `;
+                    list.appendChild(li);
+                });
+            }
+            // ------------------------------------
+
             updateStats(score, resultType) { this.stats.games++; this.stats.totalScoreSum += score; if (score > this.stats.highscore) this.stats.highscore = score; if (resultType === 'win') this.stats.wins++; else if (resultType === 'loss') this.stats.losses++; localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); }
             toggleTheme() { const current = localStorage.getItem('yamb_theme') || 'dark'; let next = 'dark'; document.body.classList.remove('light-theme', 'medium-theme'); if (current === 'dark') { next = 'light'; document.body.classList.add('light-theme'); } else if (current === 'light') { next = 'medium'; document.body.classList.add('medium-theme'); } else { next = 'dark'; } localStorage.setItem('yamb_theme', next); }
             showMainMenu() { this.navigateTo('main-menu'); document.getElementById('chat-float-btn').classList.add('hidden'); document.getElementById('chat-window').classList.remove('active'); this.chatOpen = false; }
@@ -911,7 +811,6 @@
             startGame() { this.navigateTo('game-scene'); this.createScoreTables(); this.resetTurnLogic(); this.gameActive = true; this.updateHighscoresUI(); document.getElementById('chat-body').innerHTML = ""; const chatBtn = document.getElementById('chat-float-btn'); if (this.modeTag === "Solo" || this.modeTag === "1 na 1") { chatBtn.classList.add('hidden'); } else { chatBtn.classList.remove('hidden'); if(this.aiMode) this.triggerAiChat('start'); } }
             createScoreTables() { const container = document.getElementById('tables-container'); container.innerHTML = ''; this.players.forEach((player, pIdx) => { const tableDiv = document.createElement('div'); tableDiv.className = 'player-table'; tableDiv.id = `ptable-${pIdx}`; const nameDiv = document.createElement('div'); nameDiv.className = 'player-name'; nameDiv.innerText = player; tableDiv.appendChild(nameDiv); const grid = document.createElement('div'); grid.className = 'grid-container'; ["", "↓", "S", "⇅", "↑", "R", "📢"].forEach((s, i) => { let d = document.createElement('div'); d.className = 'grid-cell col-header ' + ["", "c-nadole", "c-slobodna", "c-sredina", "c-nagore", "c-rucno", "c-najava"][i]; d.innerText = s; grid.appendChild(d); }); REDOVI_PRIKAZ.forEach(row => { let lbl = document.createElement('div'); lbl.className = 'grid-cell row-header' + (row.includes("ZBIR") ? " sum" : ""); lbl.innerText = row; grid.appendChild(lbl); KOLONE.forEach(col => { let cell = document.createElement('div'); cell.className = 'grid-cell'; if (row.includes("ZBIR")) { cell.style.fontWeight = 'bold'; cell.innerText = "0"; cell.id = `sum-${pIdx}-${col}-${row}`; cell.style.color = "var(--gold-main)"; } else { let btn = document.createElement('button'); btn.className = 'score-btn'; btn.id = `btn-${pIdx}-${col}-${row}`; btn.onclick = () => this.writeScore(row, col, pIdx); btn.disabled = true; cell.appendChild(btn); } grid.appendChild(cell); }); }); tableDiv.appendChild(grid); let totalDiv = document.createElement('div'); totalDiv.className = 'total-score'; totalDiv.id = `total-${pIdx}`; totalDiv.innerText = "0"; tableDiv.appendChild(totalDiv); container.appendChild(tableDiv); }); }
             
-            // --- POTPUNO REVIDIRANA LOGIKA BACANJA ---
             resetTurnLogic() { 
                 this.kockiceVals = [0,0,0,0,0,0]; 
                 this.zadrzane = [false,false,false,false,false,false]; 
@@ -919,368 +818,203 @@
                 this.najavaAktivna = false; 
                 this.najavljenoPolje = null; 
                 document.getElementById('lbl-status').innerText = "Bacanje: 0 / 3"; 
-                
                 const isAi = this.players[this.currentPlayerIdx].includes("AI"); 
                 const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex); 
                 const canInteract = !isAi && !isOnlineOpponent; 
-                
                 const btnBacaj = document.getElementById('btn-bacaj'); 
-                btnBacaj.disabled = !canInteract; // Ako je moj red, dugme je AKTIVNO
+                btnBacaj.disabled = !canInteract;
                 btnBacaj.innerText = "BACAJ"; 
-                
                 const btnNajava = document.getElementById('btn-najava'); 
                 btnNajava.disabled = true; 
                 btnNajava.innerText = "Najava"; 
                 btnNajava.classList.remove('btn-active-toggle'); 
-                
                 this.diceBtns.forEach(b => { b.innerText = ""; b.className = 'dice'; }); 
                 this.highlightCurrentPlayer(); 
                 this.updateTableVisuals(); 
-                
                 if (isAi) { setTimeout(() => this.runAiTurn(), 1000); } 
             }
 
-            // --- AUTO SCROLL FUNKCIJA (Prikazuje trenutnog igrača) ---
             highlightCurrentPlayer() { 
-                document.querySelectorAll('.player-table').forEach(el => {
-                    el.style.border = "var(--glass-border)"; 
-                    el.style.boxShadow="none";
-                    el.style.opacity = "0.7"; 
-                }); 
-                
+                document.querySelectorAll('.player-table').forEach(el => { el.style.border = "var(--glass-border)"; el.style.boxShadow="none"; el.style.opacity = "0.7"; }); 
                 const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`); 
                 if(activeTbl) { 
                     activeTbl.style.border = "2px solid var(--gold-main)"; 
                     activeTbl.style.boxShadow = "0 0 15px rgba(224, 201, 149, 0.2)";
                     activeTbl.style.opacity = "1"; 
-
-                    // AUTO SCROLL: Ako ima više igrača (2+, AI ili Online), automatski fokusiraj tablu
-                    if(this.players.length > 1) {
-                        setTimeout(() => {
-                            activeTbl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-                        }, 100); 
-                    }
+                    if(this.players.length > 1) { setTimeout(() => { activeTbl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }); }, 100); }
                 } 
                 document.getElementById('lbl-turn').innerText = this.players[this.currentPlayerIdx] + " je na potezu"; 
             }
             
-            toggleHold(i) { 
-                if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return; 
-                if (this.brojBacanja === 0) return; 
-                this.zadrzane[i] = !this.zadrzane[i]; 
-                this.updateDiceVisuals(); 
-                this.soundMgr.click(); 
-                if(this.onlineMode) { this.socket.emit('dice_hold', { roomId: this.roomId, index: i, status: this.zadrzane[i] }); } 
-            }
-            
+            toggleHold(i) { if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return; if (this.brojBacanja === 0) return; this.zadrzane[i] = !this.zadrzane[i]; this.updateDiceVisuals(); this.soundMgr.click(); if(this.onlineMode) { this.socket.emit('dice_hold', { roomId: this.roomId, index: i, status: this.zadrzane[i] }); } }
             updateDiceVisuals() { this.diceBtns.forEach((b, i) => { if (this.brojBacanja > 0) { b.innerText = UNICODE_DICE[this.kockiceVals[i]]; b.className = this.zadrzane[i] ? 'dice held' : 'dice active'; } else { b.innerText = ""; b.className = 'dice'; } }); }
-            
-            async visualRoll(finalValues) { 
-                this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); 
-                this.soundMgr.roll(); 
-                for(let k=0; k<8; k++) { 
-                    this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
-                    await sleep(40); 
-                } 
-                this.diceBtns.forEach(b => b.classList.remove('rolling')); 
-                this.kockiceVals = finalValues; 
-                this.updateDiceVisuals(); 
-            }
+            async visualRoll(finalValues) { this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); this.soundMgr.roll(); for(let k=0; k<8; k++) { this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); await sleep(40); } this.diceBtns.forEach(b => b.classList.remove('rolling')); this.kockiceVals = finalValues; this.updateDiceVisuals(); }
             
             async throwDice() { 
                 const btnBacaj = document.getElementById('btn-bacaj');
                 const btnNajava = document.getElementById('btn-najava');
                 const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex); 
-                
-                // Uklonili smo isAiCheck jer je blokirao AI da izvrši funkciju
                 if (this.brojBacanja >= 3 || isOnlineOpponent) return; 
                 if (this.najavaAktivna) { await this.modal.alert("Morate prvo odabrati polje za najavu!"); return; }
-
                 btnBacaj.disabled = true; 
-                
                 try {
                     this.soundMgr.roll(); 
-                    
                     let newValues = [...this.kockiceVals]; 
                     for(let i=0; i<6; i++) { if (!this.zadrzane[i]) newValues[i] = Math.floor(Math.random()*6)+1; } 
-                    
                     if (this.onlineMode) { this.socket.emit('dice_roll', { roomId: this.roomId, values: newValues, bacanje: this.brojBacanja + 1 }); } 
-                    
                     this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); 
-                    for(let k=0; k<6; k++) { 
-                        this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
-                        await sleep(50); 
-                    } 
+                    for(let k=0; k<6; k++) { this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); await sleep(50); } 
                     this.diceBtns.forEach(b => b.classList.remove('rolling')); 
-                    
                     this.kockiceVals = newValues; 
                     this.brojBacanja++; 
                     document.getElementById('lbl-status').innerText = `Bacanje: ${this.brojBacanja} / 3`; 
                     this.updateDiceVisuals(); 
-                    
-                } catch(e) {
-                    console.error("Greška pri bacanju:", e);
-                } finally {
-                    try {
-                        this.updateTableVisuals();
-                    } catch(err) { console.error("Greška pri osvežavanju tabele:", err); }
-
-                    // Provera da li je AI na potezu - ako jeste, dugme ostaje disabled za tebe
+                } catch(e) { console.error("Greška pri bacanju:", e); } finally {
+                    try { this.updateTableVisuals(); } catch(err) { console.error("Greška pri osvežavanju tabele:", err); }
                     const isAi = this.players[this.currentPlayerIdx].includes("AI");
-
-                    if (this.brojBacanja < 3 && !isAi && !isOnlineOpponent) { 
-                        btnBacaj.disabled = false; 
-                        btnBacaj.innerText = "BACAJ";
-                    } else { 
-                        btnBacaj.disabled = true; 
-                        btnBacaj.innerText = "UPIŠI"; 
-                    } 
-                    
-                    if (this.brojBacanja === 1 && !isAi) { 
-                        btnNajava.disabled = false; 
-                        btnNajava.classList.add('btn-highlight'); 
-                    } else { 
-                        btnNajava.disabled = true; 
-                        btnNajava.classList.remove('btn-highlight'); 
-                    }
+                    if (this.brojBacanja < 3 && !isAi && !isOnlineOpponent) { btnBacaj.disabled = false; btnBacaj.innerText = "BACAJ"; } else { btnBacaj.disabled = true; btnBacaj.innerText = "UPIŠI"; } 
+                    if (this.brojBacanja === 1 && !isAi) { btnNajava.disabled = false; btnNajava.classList.add('btn-highlight'); } else { btnNajava.disabled = true; btnNajava.classList.remove('btn-highlight'); }
                 }
             }
 
-            clickNajava() { 
-                if (this.brojBacanja !== 1) return; 
-                const btn = document.getElementById('btn-najava'); 
-                const btnBacaj = document.getElementById('btn-bacaj');
-
-                if (!this.najavaAktivna) { 
-                    this.najavaAktivna = true; 
-                    btn.innerText = "OPOZOVI"; 
-                    btn.classList.add('btn-active-toggle'); 
-                    btn.classList.remove('btn-highlight'); 
-                    btnBacaj.disabled = true; 
-                    if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'start' }); 
-                } else { 
-                    this.najavaAktivna = false; 
-                    btn.innerText = "Najava"; 
-                    btn.classList.remove('btn-active-toggle'); 
-                    btn.classList.add('btn-highlight'); 
-                    btnBacaj.disabled = false; 
-                    if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); 
-                } 
-            }
-
+            clickNajava() { if (this.brojBacanja !== 1) return; const btn = document.getElementById('btn-najava'); const btnBacaj = document.getElementById('btn-bacaj'); if (!this.najavaAktivna) { this.najavaAktivna = true; btn.innerText = "OPOZOVI"; btn.classList.add('btn-active-toggle'); btn.classList.remove('btn-highlight'); btnBacaj.disabled = true; if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'start' }); } else { this.najavaAktivna = false; btn.innerText = "Najava"; btn.classList.remove('btn-active-toggle'); btn.classList.add('btn-highlight'); btnBacaj.disabled = false; if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); } }
             isValidColumnOrder(row, col, sheet) { 
-                // Provera za Nadole (od 1 do Yamb)
-                if (col === "Nadole") { 
-                    const idx = REDOVI_IGRA.indexOf(row); 
-                    if (idx > 0 && sheet["Nadole"][REDOVI_IGRA[idx-1]] === null) return false; 
-                } 
-                
-                // Provera za Nagore (od Yamb do 1)
-                if (col === "Nagore") { 
-                    const idx = REDOVI_IGRA.indexOf(row); 
-                    if (idx < REDOVI_IGRA.length-1 && sheet["Nagore"][REDOVI_IGRA[idx+1]] === null) return false; 
-                } 
-                
-                // ISPRAVKA ZA SREDINU: Jedan krak od Max ka 1, drugi od Min ka Yambu
+                if (col === "Nadole") { const idx = REDOVI_IGRA.indexOf(row); if (idx > 0 && sheet["Nadole"][REDOVI_IGRA[idx-1]] === null) return false; } 
+                if (col === "Nagore") { const idx = REDOVI_IGRA.indexOf(row); if (idx < REDOVI_IGRA.length-1 && sheet["Nagore"][REDOVI_IGRA[idx+1]] === null) return false; } 
                 if (col === "Sredina") { 
-                    const up = ["Max", "6", "5", "4", "3", "2", "1"]; 
-                    const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"]; 
-                    
-                    // Smer 1: Od Max ka 1
-                    if (up.includes(row)) { 
-                        const idx = up.indexOf(row); 
-                        if (idx === 0) return true; // Max je uvek dostupan ako je prazan
-                        return sheet[col][up[idx-1]] !== null; // Prethodno polje mora biti popunjeno
-                    } 
-                    // Smer 2: Od Min ka Yambu
-                    else if (down.includes(row)) { 
-                        const idx = down.indexOf(row); 
-                        if (idx === 0) return true; // Min je uvek dostupan ako je prazan
-                        return sheet[col][down[idx-1]] !== null; // Prethodno polje mora biti popunjeno
-                    } 
-                    
-                    // Ako red nije ni u jednoj definisanoj putanji za sredinu
+                    const up = ["Max", "6", "5", "4", "3", "2", "1"]; const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"]; 
+                    if (up.includes(row)) { const idx = up.indexOf(row); if (idx === 0) return true; return sheet[col][up[idx-1]] !== null; } 
+                    else if (down.includes(row)) { const idx = down.indexOf(row); if (idx === 0) return true; return sheet[col][down[idx-1]] !== null; } 
                     return false; 
                 } 
-                
-                // Ostale kolone (Slobodna, Ručno, Najava) nemaju strogi redosled ovde
                 return true; 
             }
             
             async writeScore(row, col, pIdx) { 
                 if (pIdx !== this.currentPlayerIdx) return; 
                 if (this.brojBacanja === 0) { this.soundMgr.error(); return await this.modal.alert("Prvo baci kockice!"); } 
-                
                 const sheet = this.allScores[pIdx]; 
                 if (sheet[col][row] !== null) return await this.modal.alert("Popunjeno!"); 
-                
                 const isHuman = !this.players[pIdx].includes("AI"); 
-                
                 if (isHuman && this.najavaAktivna) { 
-                    if (col !== "Najava") { 
-                        this.soundMgr.error(); 
-                        return await this.modal.alert("Uključili ste najavu!\nMorate odabrati polje u koloni NAJAVA koje gađate."); 
-                    } 
-                    
-                    this.najavljenoPolje = {row, col}; 
-                    this.najavaAktivna = false; 
-                    
+                    if (col !== "Najava") { this.soundMgr.error(); return await this.modal.alert("Uključili ste najavu!\nMorate odabrati polje u koloni NAJAVA koje gađate."); } 
+                    this.najavljenoPolje = {row, col}; this.najavaAktivna = false; 
                     document.getElementById(`btn-${pIdx}-${col}-${row}`).classList.add('highlight-najava'); 
-                    
-                    const btnN = document.getElementById('btn-najava'); 
-                    btnN.innerText = `Najava: ${row}`; 
-                    btnN.disabled = true; 
-                    btnN.classList.remove('btn-active-toggle'); 
-                    
-                    const btnBacaj = document.getElementById('btn-bacaj');
-                    btnBacaj.disabled = false;
-                    btnBacaj.innerText = "BACAJ";
-                    
+                    const btnN = document.getElementById('btn-najava'); btnN.innerText = `Najava: ${row}`; btnN.disabled = true; btnN.classList.remove('btn-active-toggle'); 
+                    const btnBacaj = document.getElementById('btn-bacaj'); btnBacaj.disabled = false; btnBacaj.innerText = "BACAJ";
                     if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'selected', row: row }); 
-                    
                     return; 
                 } 
-                
                 if (this.najavljenoPolje) { 
-                    if (col !== "Najava" || row !== this.najavljenoPolje.row) { 
-                        this.soundMgr.error(); 
-                        return await this.modal.alert(`Najavili ste ${this.najavljenoPolje.row}!\nMorate popuniti to polje (ili upisati 0 u njega).`); 
-                    } 
+                    if (col !== "Najava" || row !== this.najavljenoPolje.row) { this.soundMgr.error(); return await this.modal.alert(`Najavili ste ${this.najavljenoPolje.row}!\nMorate popuniti to polje (ili upisati 0 u njega).`); } 
                 } 
-                
                 if (!this.isValidColumnOrder(row, col, sheet)) { this.soundMgr.error(); return await this.modal.alert("Pogrešan redosled popunjavanja kolone!"); } 
-                
-                const best5 = this.getBest5(row, this.kockiceVals); 
-                let pts = this.calcPoints(row, best5); 
-                
+                const best5 = this.getBest5(row, this.kockiceVals); let pts = this.calcPoints(row, best5); 
                 if (col === "Ručno" && this.brojBacanja > 1) { 
-                    if(isHuman) { 
-                        const confirmZero = await this.modal.confirm("Ručno kolona se popunjava samo posle 1. bacanja.\nOvo će biti upisano kao 0 (precrtavanje).\nDa li želite da nastavite?"); 
-                        if (!confirmZero) return; 
-                    } 
+                    if(isHuman) { const confirmZero = await this.modal.confirm("Ručno kolona se popunjava samo posle 1. bacanja.\nOvo će biti upisano kao 0 (precrtavanje).\nDa li želite da nastavite?"); if (!confirmZero) return; } 
                     pts = 0; 
                 } 
-                
-                sheet[col][row] = pts; 
-                this.soundMgr.score(); 
-                
+                sheet[col][row] = pts; this.soundMgr.score(); 
                 if (this.onlineMode && isHuman) { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts }); } 
                 if (this.aiMode && isHuman) { if (pts >= 40) this.triggerAiChat('goodMove'); else if (pts <= 5) this.triggerAiChat('badMove'); } 
                 if (pts >= 50 && row === "Yamb") this.confetti.start(); 
                 setTimeout(() => this.confetti.stop(), 3000); 
-                
                 this.updateTableVisuals(); 
                 this.switchPlayer(); 
             }
             
             switchPlayer() { let gameOver = true; this.allScores.forEach(s => { KOLONE.forEach(c => { REDOVI_IGRA.forEach(r => { if (s[c][r] === null) gameOver = false; }); }); }); if (gameOver) { this.handleGameOver(); return; } this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length; this.resetTurnLogic(); this.autoSaveGame(); }
-            async handleGameOver() { localStorage.removeItem('yamb_saved_game'); this.gameActive = false; const results = []; this.players.forEach((name, i) => { let total = parseInt(document.getElementById(`total-${i}`).innerText); results.push({name, score: total}); }); this.players.forEach((name, i) => { if (!name.includes("AI")) { const score = results[i].score; this.saveHighscoreEntry(name, score, this.modeTag); } }); results.sort((a,b) => b.score - a.score); const oldHighscore = this.stats.highscore; const myScore = results.find(r => r.name === this.players[0]).score; const isNewRecord = myScore > oldHighscore; let resultType = 'solo'; if (this.players.length > 1) { if (results[0].name === this.players[0]) resultType = 'win'; else resultType = 'loss'; } this.updateStats(myScore, resultType); this.soundMgr.win(); let title = "KRAJ IGRE"; let message = ""; if (this.players.length === 1) { if (isNewRecord) { this.confetti.start(); setTimeout(() => this.confetti.stop(), 5000); title = "🎉 NOVI REKORD! 🏆"; message = `BRAVO! Nadmašili ste sami sebe!\n\nNovi rekord: <span style="color:var(--gold-main); font-weight:bold;">${myScore}</span> poena.`; } else { title = "DOBRA PARTIJA"; message = `Osvojili ste <span style="color:var(--gold-main);">${myScore}</span> poena.\nViše sreće drugi put!\nVaš rekord ostaje: ${oldHighscore}`; } } else { const winner = results[0]; const loser = results[results.length - 1]; title = `🏆 POBEDNIK: ${winner.name.toUpperCase()}!`; const quotes = ["Glavu gore, kockice su varljive!", "Dobar otpor, ali protivnik je imao više sreće.", "Sledeći put je tvoja pobeda!", "Nije važno pobediti, važno je učestvovati.", "Samo vežbom do savršenstva."]; const quote = quotes[Math.floor(Math.random() * quotes.length)]; message = `Rezultat: <span style="color:var(--success)">${winner.score}</span> vs <span style="color:var(--danger)">${loser.score}</span>\n\n${loser.name}, ${quote}`; if(this.aiMode) { if (winner.name.includes("AI")) this.triggerAiChat('win'); else this.triggerAiChat('lose'); } } await this.modal.alert(message, title); this.showMainMenu(); }
+            
+            async handleGameOver() { 
+                localStorage.removeItem('yamb_saved_game'); 
+                this.gameActive = false; 
+                const results = []; 
+                this.players.forEach((name, i) => { let total = parseInt(document.getElementById(`total-${i}`).innerText); results.push({name, score: total}); }); 
+                
+                // --- SLANJE GLOBALNOG SKORA ---
+                const myName = this.playerName;
+                const myScoreEntry = results.find(r => r.name === myName);
+                if (myScoreEntry && !myName.includes("AI")) {
+                    // Šaljemo skor serveru ako je Solo igra i ako igrač nije AI
+                    if ((this.players.length === 1 || this.onlineMode) && !this.aiMode) {
+                        try {
+                            if (!this.socket || !this.socket.connected) { this.socket = io(SERVER_URL, { transports: ['websocket'] }); }
+                            this.socket.emit('submit_score', {
+                                name: myName,
+                                score: myScoreEntry.score,
+                                mode: this.onlineMode ? 'Online' : 'Solo',
+                                date: new Date().toLocaleDateString('sr-RS')
+                            });
+                        } catch (e) { console.log("Nije uspelo slanje skora na server"); }
+                    }
+                    // Lokalni skor
+                    this.saveHighscoreEntry(myName, myScoreEntry.score, this.modeTag);
+                }
+                // -----------------------------
+
+                results.sort((a,b) => b.score - a.score); 
+                const oldHighscore = this.stats.highscore; 
+                const myScore = results.find(r => r.name === this.players[0]).score; 
+                const isNewRecord = myScore > oldHighscore; 
+                let resultType = 'solo'; 
+                if (this.players.length > 1) { if (results[0].name === this.players[0]) resultType = 'win'; else resultType = 'loss'; } 
+                this.updateStats(myScore, resultType); 
+                this.soundMgr.win(); 
+                let title = "KRAJ IGRE"; let message = ""; 
+                if (this.players.length === 1) { 
+                    if (isNewRecord) { this.confetti.start(); setTimeout(() => this.confetti.stop(), 5000); title = "🎉 NOVI REKORD! 🏆"; message = `BRAVO! Nadmašili ste sami sebe!\n\nNovi rekord: <span style="color:var(--gold-main); font-weight:bold;">${myScore}</span> poena.`; } 
+                    else { title = "DOBRA PARTIJA"; message = `Osvojili ste <span style="color:var(--gold-main);">${myScore}</span> poena.\nViše sreće drugi put!\nVaš rekord ostaje: ${oldHighscore}`; } 
+                } else { 
+                    const winner = results[0]; const loser = results[results.length - 1]; 
+                    title = `🏆 POBEDNIK: ${winner.name.toUpperCase()}!`; 
+                    const quotes = ["Glavu gore, kockice su varljive!", "Dobar otpor, ali protivnik je imao više sreće.", "Sledeći put je tvoja pobeda!"]; 
+                    const quote = quotes[Math.floor(Math.random() * quotes.length)]; 
+                    message = `Rezultat: <span style="color:var(--success)">${winner.score}</span> vs <span style="color:var(--danger)">${loser.score}</span>\n\n${loser.name}, ${quote}`; 
+                    if(this.aiMode) { if (winner.name.includes("AI")) this.triggerAiChat('win'); else this.triggerAiChat('lose'); } 
+                } 
+                await this.modal.alert(message, title); 
+                this.showMainMenu(); 
+            }
+
             async runAiTurn() { const aiIdx = this.currentPlayerIdx; const sheet = this.allScores[aiIdx]; if (this.brojBacanja === 0) { await this.throwDice(); setTimeout(() => this.runAiTurn(), 800); return; } const decision = this.ai.decideRoll(this.kockiceVals, this.brojBacanja, sheet); if (decision.type === 'write') { const best5 = this.getBest5(decision.row, this.kockiceVals); const pts = this.calcPoints(decision.row, best5); if (pts > 50) this.triggerAiChat('aiGood'); this.writeScore(decision.row, decision.col, aiIdx); } else if (decision.type === 'hold') { this.zadrzane = decision.hold; this.updateDiceVisuals(); await this.throwDice(); setTimeout(() => this.runAiTurn(), 800); } }
             getBest5(row, dice) { const d = [...dice]; if (row === "Min") return d.sort((a,b)=>a-b).slice(0,5); if (row === "Max") return d.sort((a,b)=>b-a).slice(0,5); if (row === "Kenta") { const u = [...new Set(d)].sort((a,b)=>a-b); if ([2,3,4,5,6].every(v=>u.includes(v))) return [2,3,4,5,6]; if ([1,2,3,4,5].every(v=>u.includes(v))) return [1,2,3,4,5]; return d.sort((a,b)=>b-a).slice(0,5); } if (row === "Ful") { const c={}; d.forEach(x=>c[x]=(c[x]||0)+1); const k=Object.keys(c).map(Number); if(k.some(x=>c[x]>=5)) return Array(5).fill(k.find(x=>c[x]>=5)); const threes=k.filter(x=>c[x]>=3); const pairs=k.filter(x=>c[x]>=2); let cands=[]; threes.forEach(t=>{pairs.forEach(p=>{if(t!==p)cands.push([...Array(3).fill(t),...Array(2).fill(p)])})}); if(cands.length>0) return cands.sort((a,b)=>sum(b)-sum(a))[0]; } if (["1","2","3","4","5","6"].includes(row)) { const t=parseInt(row); const match=d.filter(x=>x===t); const rest=d.filter(x=>x!==t).sort((a,b)=>b-a); return [...match,...rest].slice(0,5); } const c={}; d.forEach(x=>c[x]=(c[x]||0)+1); d.sort((a,b)=>{if(c[b]!==c[a])return c[b]-c[a]; return b-a}); return d.slice(0,5); }
             calcPoints(row, v) { const s = sum(v); if (["1","2","3","4","5","6"].includes(row)) return v.filter(x=>x===parseInt(row)).length * parseInt(row); if (row === "Max" || row === "Min") return s; if (row === "Triling") { const c={}; v.forEach(x=>c[x]=(c[x]||0)+1); if(Object.values(c).some(cnt=>cnt>=3)) return (3*Number(Object.keys(c).find(k=>c[k]>=3)))+20; return 0; } if (row === "Kenta") { const u=[...new Set(v)].sort((a,b)=>a-b); const k1=[1,2,3,4,5].every(x=>u.includes(x)); const k2=[2,3,4,5,6].every(x=>u.includes(x)); if(k1||k2) { if(this.brojBacanja===1) return 66; if(this.brojBacanja===2) return 56; return 46; } return 0; } if (row === "Ful") { const c={}; v.forEach(x=>c[x]=(c[x]||0)+1); if (Object.values(c).includes(5)||(Object.values(c).includes(3)&&Object.values(c).includes(2))) return s+30; return 0; } if (row === "Poker") { const c={}; v.forEach(x=>c[x]=(c[x]||0)+1); if(Object.values(c).some(cnt=>cnt>=4)) return (Number(Object.keys(c).find(k=>c[k]>=4))*4)+40; return 0; } if (row === "Yamb") { const c={}; v.forEach(x=>c[x]=(c[x]||0)+1); if(Object.values(c).some(cnt=>cnt>=5)) return (Number(Object.keys(c).find(k=>c[k]>=5))*5)+50; return 0; } return 0; }
             updateTableVisuals() { 
                 this.players.forEach((p, idx) => { 
-                    const data = this.allScores[idx]; 
-                    let grandTotal = 0; 
-                    
+                    const data = this.allScores[idx]; let grandTotal = 0; 
                     KOLONE.forEach(col => { 
-                        let sum1 = 0; 
-                        ["1","2","3","4","5","6"].forEach(r => { if(data[col][r]!==null) sum1 += data[col][r]; }); 
-                        if(sum1 >= 60) sum1 += 30; 
-                        document.getElementById(`sum-${idx}-${col}-ZBIR 1`).innerText = sum1; 
-                        
-                        let sum2 = 0; 
-                        const vMax = data[col]["Max"]; const vMin = data[col]["Min"]; const v1 = data[col]["1"]; 
-                        if (vMax!==null && vMin!==null && v1!==null) { 
-                            sum2 = (vMax - vMin) * v1; 
-                            if (sum2 >= 60) sum2 += 40; 
-                        } 
-                        document.getElementById(`sum-${idx}-${col}-ZBIR 2`).innerText = sum2; 
-                        
-                        let sum3 = 0; 
-                        ["Triling","Kenta","Ful","Poker","Yamb"].forEach(r => { if(data[col][r]!==null) sum3 += data[col][r]; }); 
-                        document.getElementById(`sum-${idx}-${col}-ZBIR 3`).innerText = sum3; 
-                        
+                        let sum1 = 0; ["1","2","3","4","5","6"].forEach(r => { if(data[col][r]!==null) sum1 += data[col][r]; }); 
+                        if(sum1 >= 60) sum1 += 30; document.getElementById(`sum-${idx}-${col}-ZBIR 1`).innerText = sum1; 
+                        let sum2 = 0; const vMax = data[col]["Max"]; const vMin = data[col]["Min"]; const v1 = data[col]["1"]; 
+                        if (vMax!==null && vMin!==null && v1!==null) { sum2 = (vMax - vMin) * v1; if (sum2 >= 60) sum2 += 40; } document.getElementById(`sum-${idx}-${col}-ZBIR 2`).innerText = sum2; 
+                        let sum3 = 0; ["Triling","Kenta","Ful","Poker","Yamb"].forEach(r => { if(data[col][r]!==null) sum3 += data[col][r]; }); document.getElementById(`sum-${idx}-${col}-ZBIR 3`).innerText = sum3; 
                         grandTotal += sum1 + sum2 + sum3; 
-                        
                         REDOVI_PRIKAZ.forEach(row => { 
-                            const btn = document.getElementById(`btn-${idx}-${col}-${row}`); 
-                            if (!btn) return; 
-                            
-                            const val = data[col][row]; 
-                            btn.classList.remove('highlight-najava'); 
-                            
-                            if (val !== null) { 
-                                btn.innerText = val; 
-                                btn.classList.add('filled'); 
-                                btn.disabled = true; 
-                            } else { 
-                                btn.innerText = ""; 
-                                btn.classList.remove('filled'); 
-                                
+                            const btn = document.getElementById(`btn-${idx}-${col}-${row}`); if (!btn) return; 
+                            const val = data[col][row]; btn.classList.remove('highlight-najava'); 
+                            if (val !== null) { btn.innerText = val; btn.classList.add('filled'); btn.disabled = true; } else { 
+                                btn.innerText = ""; btn.classList.remove('filled'); 
                                 const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex && idx === this.myOnlineIndex); 
                                 const isLocalTurn = (!this.onlineMode && idx === this.currentPlayerIdx && !this.players[idx].includes("AI")); 
-                                
-                                if ((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0) {
-                                    btn.disabled = false;
-                                } else {
-                                    btn.disabled = true;
-                                }
-                                
-                                if (this.najavljenoPolje && this.najavljenoPolje.row === row && this.najavljenoPolje.col === col) {
-                                    btn.classList.add('highlight-najava'); 
-                                }
+                                if ((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0) { btn.disabled = false; } else { btn.disabled = true; } 
+                                if (this.najavljenoPolje && this.najavljenoPolje.row === row && this.najavljenoPolje.col === col) { btn.classList.add('highlight-najava'); } 
                             } 
                         }); 
                     }); 
                     document.getElementById(`total-${idx}`).innerText = grandTotal; 
                 }); 
             }
-            updateHighscoresUI() { }
             checkSavedGame() { const saved = localStorage.getItem('yamb_saved_game'); const btnResume = document.getElementById('btn-resume-game'); if (saved) { btnResume.classList.remove('hidden'); } else { btnResume.classList.add('hidden'); } }
             autoSaveGame() { if(this.onlineMode) return; const data = { players: this.players, scores: this.allScores, current: this.currentPlayerIdx, aiMode: this.aiMode, diff: this.aiDifficulty, date: new Date().toISOString() }; localStorage.setItem('yamb_saved_game', JSON.stringify(data)); }
             async saveGame() { this.autoSaveGame(); const isNative = window.Capacitor && window.Capacitor.isNative; if (!isNative) { const jsonString = JSON.stringify(JSON.parse(localStorage.getItem('yamb_saved_game'))); const blob = new Blob([jsonString], {type: "application/json"}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = "yamb_save.json"; a.click(); this.modal.alert("Igra je sačuvana u pretraživaču i kao fajl!"); } else { this.modal.alert("Igra je uspešno sačuvana!", "SAČUVANO"); } this.checkSavedGame(); }
-            
-            // --- ISPRAVLJEN LOAD SAVE GAME (PREVENCIJA CRASH-A) ---
             async loadSavedGame() { 
                 try { 
-                    const saved = localStorage.getItem('yamb_saved_game'); 
-                    if (!saved) { this.modal.alert("Nema sačuvane igre."); return; } 
-                    
-                    const data = JSON.parse(saved); 
-                    
-                    // --- MIGRACIJA PODATAKA (POPRAVKA ZA STARE SAVE-OVE) ---
-                    // Ako u starom save-u fale nove kolone (npr. Nagore), dodaj ih prazne
-                    KOLONE.forEach(col => {
-                        this.players.forEach((_, idx) => {
-                             // Provera za svakog igrača
-                             if (data.scores[idx] && !data.scores[idx][col]) {
-                                data.scores[idx][col] = {};
-                                REDOVI_IGRA.forEach(r => data.scores[idx][col][r] = null);
-                            }
-                        });
-                    });
-                    // -------------------------------------------------------
-
-                    this.players = data.players; 
-                    this.allScores = data.scores; 
-                    this.currentPlayerIdx = data.current; 
-                    this.aiMode = data.aiMode; 
-                    this.aiDifficulty = data.diff || "medium"; 
-                    
-                    if (this.aiMode) this.ai = new YambAI(this, this.aiDifficulty); 
-                    
-                    this.startGame(); 
-                    this.highlightCurrentPlayer(); 
-                    this.updateTableVisuals(); 
-                    this.modal.alert("Igra nastavljena!"); 
-                } catch (e) { 
-                    console.error(e); 
-                    this.modal.alert("Greška pri učitavanju igre.\nFormat podataka je zastareo."); 
-                    localStorage.removeItem('yamb_saved_game');
-                } 
+                    const saved = localStorage.getItem('yamb_saved_game'); if (!saved) { this.modal.alert("Nema sačuvane igre."); return; } const data = JSON.parse(saved); 
+                    KOLONE.forEach(col => { this.players.forEach((_, idx) => { if (data.scores[idx] && !data.scores[idx][col]) { data.scores[idx][col] = {}; REDOVI_IGRA.forEach(r => data.scores[idx][col][r] = null); } }); });
+                    this.players = data.players; this.allScores = data.scores; this.currentPlayerIdx = data.current; this.aiMode = data.aiMode; this.aiDifficulty = data.diff || "medium"; 
+                    if (this.aiMode) this.ai = new YambAI(this, this.aiDifficulty); this.startGame(); this.highlightCurrentPlayer(); this.updateTableVisuals(); this.modal.alert("Igra nastavljena!"); 
+                } catch (e) { console.error(e); this.modal.alert("Greška pri učitavanju igre.\nFormat podataka je zastareo."); localStorage.removeItem('yamb_saved_game'); } 
             }
-
             async loadGameFromFile() { const input = document.createElement('input'); input.type = 'file'; input.accept = '.json'; input.onchange = e => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => { try { const data = JSON.parse(ev.target.result); this.players = data.players; this.allScores = data.scores; this.currentPlayerIdx = data.current; this.aiMode = data.aiMode; this.aiDifficulty = data.diff || "medium"; if (this.aiMode) this.ai = new YambAI(this, this.aiDifficulty); this.startGame(); this.highlightCurrentPlayer(); this.updateTableVisuals(); this.modal.alert("Igra uspešno učitana iz fajla!"); this.autoSaveGame(); } catch (err) { this.modal.alert("Greška pri učitavanju fajla!"); } }; reader.readAsText(file); }; input.click(); }
         }
 
