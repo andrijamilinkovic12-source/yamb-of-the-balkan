@@ -108,8 +108,8 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 
-        /* --- ROTATE LOCK --- */
-        @media screen and (orientation: landscape) and (max-width: 1150px) {
+        /* --- ROTATE LOCK (STROGA ZABRANA ZA MOBILE I MALE TABLETE) --- */
+        @media screen and (orientation: landscape) and (max-height: 899px) {
             #rotate-lock-overlay { display: flex !important; }
         }
         
@@ -202,7 +202,6 @@
             .dice-container { gap: 2vw; margin-bottom: 5px; }
             .dice { width: 13vw; height: 13vw; max-width: 55px; max-height: 55px; font-size: 16vw; }
             
-            /* Turn indicator integrisan u kontrole */
             #lbl-turn { font-size: 0.8rem; margin-bottom: 5px; width: 100%; text-align: center; }
             
             .game-info { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; }
@@ -213,41 +212,44 @@
         }
 
         /* 2. MALI TABLETI (7" - 9") - Sirina od 600px do 899px */
+        /* UMANJENA TABLA + SPUŠTENA LINIJA */
         @media (min-width: 600px) and (max-width: 899px) and (orientation: portrait) {
             .logo-anim { font-size: 4rem; }
             
             .tables-wrapper { 
-                justify-content: flex-start; /* Da tabela bude pri vrhu */
+                justify-content: flex-start; 
                 padding-bottom: 0;
-                overflow-y: hidden; /* Sprecavamo scroll celog wrappera ako stane */
+                overflow-y: hidden; 
             }
             
             .player-table { 
-                width: 95%; /* Siroka tabela */
-                max-width: 700px;
+                width: 90%; /* Bilo 95%, smanjeno da ne udara u ivice */
+                max-width: 600px; /* Bilo 700px, suženo */
                 margin: 0 auto;
                 margin-top: 5px;
             }
 
-            .grid-container { font-size: 1.8vh; }
-            .grid-cell { height: 3.8vh; } /* Visoke celije za laksi dodir */
+            .grid-container { font-size: 1.6vh; }
+            .grid-cell { height: 3.2vh; } /* Smanjena visina ćelija */
 
             .controls-area {
                 position: relative;
                 width: 100%;
                 padding: 10px 15px;
                 padding-bottom: max(15px, var(--safe-bottom));
-                margin-top: 0; /* Priblizavamo tabeli */
+                
+                /* SPUŠTANJE LINIJE */
+                margin-top: 2vh; 
+                border-top: 1px solid var(--gold-main); /* Jasna granica */
                 
                 display: grid;
-                grid-template-columns: 1fr 2fr 1fr; /* Levo info, Sredina kocke, Desno dugmici */
+                grid-template-columns: 1.2fr 1.8fr 1fr; /* Prilagođeno da kockice ne udaraju */
                 align-items: center;
-                gap: 10px;
+                gap: 15px; /* Veći razmak */
             }
 
-            /* Sekcija 1: Info o potezu (Levo) */
             #lbl-turn { 
-                grid-column: 1 / 4; /* Potez ide na vrh kontrola */
+                grid-column: 1 / 4; 
                 text-align: center; 
                 background: rgba(224, 201, 149, 0.1);
                 border-radius: 15px;
@@ -257,56 +259,61 @@
                 order: -1;
             }
 
-            /* Sekcija 2: Kockice (Sredina) */
             .dice-container { 
-                grid-column: 1 / 3; /* Zauzimaju levo i sredinu */
+                grid-column: 1 / 3; 
                 justify-content: flex-start; 
-                gap: 15px; 
+                gap: 10px; /* Manji razmak između kockica da stanu */
             }
-            .dice { width: 7vh; height: 7vh; font-size: 5vh; border-radius: 12px; }
+            /* Manje kockice da ne gaze dugmice */
+            .dice { width: 6vh; height: 6vh; font-size: 4vh; border-radius: 10px; }
 
-            /* Sekcija 3: Dugmici i status (Desno) */
             .game-info { 
                 grid-column: 3 / 4; 
                 display: flex; flex-direction: column; gap: 8px; justify-content: center; 
                 width: 100%;
             }
-            .status-label { font-size: 0.9rem; text-align: center; margin-bottom: 0;}
+            .status-label { font-size: 0.8rem; text-align: center; margin-bottom: 0;}
             .action-btn-group { display: flex; flex-direction: column; gap: 8px; width: 100%; }
-            .btn-throw { height: 50px; font-size: 1.1rem; width: 100%; }
-            #btn-najava { height: 40px; font-size: 0.9rem; }
+            .btn-throw { height: 45px; font-size: 1rem; width: 100%; }
+            #btn-najava { height: 35px; font-size: 0.85rem; }
         }
 
         /* 3. VELIKI TABLETI (10" +) - Sirina preko 900px */
+        /* UMANJENA TABLA + SPUŠTENA LINIJA + PREGLEDNOST */
         @media (min-width: 900px) and (orientation: portrait) {
-            .tables-wrapper { padding-top: 2vh; }
-            .player-table { width: 90%; max-width: 850px; }
-            .grid-container { font-size: 2.2vh; gap: 2px; } 
-            .grid-cell { height: 4.5vh; } /* Vrlo komotna velicina polja */
+            .tables-wrapper { padding-top: 3vh; }
+            .player-table { 
+                width: 80%; /* Bilo 90% */
+                max-width: 700px; /* Bilo 850px */
+            }
+            .grid-container { font-size: 2vh; gap: 1px; } 
+            .grid-cell { height: 3.5vh; } /* Smanjeno sa 4.5vh */
             
             .controls-area { 
-                padding: 20px 40px;
+                padding: 30px 40px; /* Veći padding gore da spusti sadržaj */
                 padding-bottom: max(30px, var(--safe-bottom));
                 display: flex; flex-direction: row; justify-content: space-between; align-items: center;
                 gap: 30px;
+                margin-top: auto; /* Gura kontrole na dno kontejnera */
             }
             
             #lbl-turn { 
-                font-size: 1.5rem !important; 
+                font-size: 1.3rem !important; 
                 background: var(--glass-bg);
-                padding: 10px 20px;
+                padding: 8px 20px;
                 border-radius: 30px;
                 border: 1px solid var(--gold-main);
+                white-space: nowrap;
             }
             
-            .dice-container { gap: 20px; }
-            .dice { width: 90px; height: 90px; font-size: 50px; border-radius: 18px; }
+            .dice-container { gap: 15px; }
+            .dice { width: 70px; height: 70px; font-size: 45px; border-radius: 15px; } /* Smanjeno sa 90px */
             
-            .game-info { flex-direction: row; gap: 30px; align-items: center; }
-            .action-btn-group { flex-direction: row; gap: 20px; }
-            .btn-throw { padding: 15px 40px; font-size: 1.3rem; height: auto; border-radius: 30px;}
-            #btn-najava { padding: 15px 30px; font-size: 1rem; height: auto; }
-            .status-label { font-size: 1.2rem; }
+            .game-info { flex-direction: row; gap: 20px; align-items: center; }
+            .action-btn-group { flex-direction: row; gap: 15px; }
+            .btn-throw { padding: 15px 30px; font-size: 1.2rem; height: auto; border-radius: 30px;}
+            #btn-najava { padding: 15px 25px; font-size: 1rem; height: auto; }
+            .status-label { font-size: 1.1rem; }
         }
 
         /* 4. LANDSCAPE (Desktop & Large Tablets) */
