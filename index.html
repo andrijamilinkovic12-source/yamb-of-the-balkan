@@ -108,8 +108,9 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
 
-        /* --- ROTATE LOCK (STROGA ZABRANA ZA MOBILE I MALE TABLETE) --- */
-        @media screen and (orientation: landscape) and (max-height: 899px) {
+        /* --- ROTATE LOCK (SAMO ZA MOBILNE TELEFONE) --- */
+        /* Promenjeno sa 899px na 600px da bi tableti mogli da rotiraju, a telefoni ne */
+        @media screen and (orientation: landscape) and (max-height: 600px) {
             #rotate-lock-overlay { display: flex !important; }
         }
         
@@ -394,7 +395,7 @@
     <div id="rotate-lock-overlay">
         <div class="rotate-icon">↻</div>
         <div class="rotate-msg">MOLIMO OKRENITE UREĐAJ</div>
-        <div class="rotate-sub">Ova igra je optimizovana za uspravni prikaz<br>na telefonima i manjim tabletima.</div>
+        <div class="rotate-sub">Ova igra je optimizovana za uspravni prikaz<br>na telefonima.</div>
     </div>
 
     <div id="custom-modal-overlay" class="modal-overlay">
@@ -778,6 +779,13 @@
                 document.getElementById('chat-input-field').addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendChat(); });
                 const savedTheme = localStorage.getItem('yamb_theme');
                 if (savedTheme === 'light') document.body.classList.add('light-theme'); else if (savedTheme === 'medium') document.body.classList.add('medium-theme');
+                
+                // --- POKUŠAJ JS ZABRANE ROTACIJE ---
+                // Ovo radi na Androidu kada je aplikacija instalirana/fullscreen
+                if (screen.orientation && screen.orientation.lock) {
+                    try { screen.orientation.lock('portrait').catch(e => { /* Ignore ako ne uspe */ }); } catch(e){}
+                }
+
                 setTimeout(() => { this.checkForInvite(); }, 1000);
                 setTimeout(() => { this.navigateTo('main-menu'); }, 4500);
                 this.uiInit();
