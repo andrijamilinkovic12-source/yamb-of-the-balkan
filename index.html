@@ -1061,24 +1061,45 @@
                 const sheet = this.allScores[pIdx]; 
                 if (sheet[col][row] !== null) return await this.modal.alert("Popunjeno!"); 
                 const isHuman = !this.players[pIdx].includes("AI"); 
+
+                // --- ISPRAVKA: ZABRANA UPISA U NAJAVU AKO NIJE NAJAVLJENO ---
+                // Dozvoljavamo upis ako je 1. bacanje (tretiramo kao rucno-najavu)
+                // Ali ako je bacanje > 1, MORA biti prethodno najavljeno.
+                if (col === "Najava" && !this.najavljenoPolje && !this.najavaAktivna && this.brojBacanja > 1) {
+                    this.soundMgr.error();
+                    return await this.modal.alert("Ovu kolonu morate najaviti!\nNajava se vrši isključivo nakon prvog bacanja pritiskom na dugme 'Najava'.");
+                }
+                // -------------------------------------------------------------
+
                 if (isHuman && this.najavaAktivna) { 
                     if (col !== "Najava") { this.soundMgr.error(); return await this.modal.alert("Uključili ste najavu!\nMorate odabrati polje u koloni NAJAVA koje gađate."); } 
                     this.najavljenoPolje = {row, col}; this.najavaAktivna = false; 
+                    
+                    // Vizuelno označimo odabrano polje
                     document.getElementById(`btn-${pIdx}-${col}-${row}`).classList.add('highlight-najava'); 
+                    
                     const btnN = document.getElementById('btn-najava'); btnN.innerText = `Najava: ${row}`; btnN.disabled = true; btnN.classList.remove('btn-active-toggle'); 
                     const btnBacaj = document.getElementById('btn-bacaj'); btnBacaj.disabled = false; btnBacaj.innerText = "BACAJ";
+                    
                     if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'selected', row: row }); 
+                    
+                    // Ovde radimo return jer smo samo REZERVISALI polje, nismo upisali rezultat
                     return; 
                 } 
+                
                 if (this.najavljenoPolje) { 
                     if (col !== "Najava" || row !== this.najavljenoPolje.row) { this.soundMgr.error(); return await this.modal.alert(`Najavili ste ${this.najavljenoPolje.row}!\nMorate popuniti to polje (ili upisati 0 u njega).`); } 
                 } 
+                
                 if (!this.isValidColumnOrder(row, col, sheet)) { this.soundMgr.error(); return await this.modal.alert("Pogrešan redosled popunjavanja kolone!"); } 
+                
                 const best5 = this.getBest5(row, this.kockiceVals); let pts = this.calcPoints(row, best5); 
+                
                 if (col === "Ručno" && this.brojBacanja > 1) { 
                     if(isHuman) { const confirmZero = await this.modal.confirm("Ručno kolona se popunjava samo posle 1. bacanja.\nOvo će biti upisano kao 0 (precrtavanje).\nDa li želite da nastavite?"); if (!confirmZero) return; } 
                     pts = 0; 
                 } 
+                
                 sheet[col][row] = pts; this.soundMgr.score(); 
                 if (this.onlineMode && isHuman) { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts }); } 
                 if (this.aiMode && isHuman) { if (pts >= 40) this.triggerAiChat('goodMove'); else if (pts <= 5) this.triggerAiChat('badMove'); } 
