@@ -66,7 +66,7 @@
             --col-rucno: #E040FB; --col-najava: #FFD700; --col-slobodna: #BDBDBD;
         }
 
-        /* --- WINTER HOLIDAY THEME --- */
+        /* --- WINTER HOLIDAY THEME (OPTIMIZED) --- */
         body.winter-theme {
             --bg-base: #020c1b; 
             --bg-gradient-1: #0a192f; 
@@ -99,30 +99,36 @@
             --col-slobodna: #b0bec5;
         }
 
-        /* Snežna animacija */
-        body.winter-theme::before,
-        body.winter-theme::after {
+        /* Snežna animacija - OPTIMIZOVANA ZA PERFORMANSE */
+        body.winter-theme::before {
             content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0;
+            /* Smanjen broj gradijenata da ne guši CPU */
             background-image: 
-                radial-gradient(4px 4px at 100px 50px, #fff, transparent),
-                radial-gradient(6px 6px at 200px 150px, #fff, transparent),
-                radial-gradient(3px 3px at 300px 250px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(4px 4px at 400px 350px, #fff, transparent),
-                radial-gradient(6px 6px at 500px 100px, rgba(255,255,255,0.7), transparent),
-                radial-gradient(3px 3px at 50px 200px, #fff, transparent),
-                radial-gradient(4px 4px at 150px 300px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(6px 6px at 250px 400px, #fff, transparent),
-                radial-gradient(3px 3px at 350px 500px, rgba(255,255,255,0.7), transparent);
-            background-size: 650px 650px;
-            animation: snowAnim 12s linear infinite;
+                radial-gradient(3px 3px at 100px 50px, #fff, transparent),
+                radial-gradient(4px 4px at 200px 150px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(3px 3px at 300px 250px, #fff, transparent),
+                radial-gradient(4px 4px at 50px 200px, rgba(255,255,255,0.9), transparent);
+            background-size: 400px 400px; /* Manji pattern za lakše renderovanje */
+            animation: snowAnim 10s linear infinite;
             opacity: 0.3;
+            will-change: background-position; /* Forsira GPU */
         }
-        body.winter-theme::after {
-            background-size: 400px 400px;
-            animation: snowAnim 8s linear infinite reverse;
-            opacity: 0.2;
+        /* Uklonjen drugi sloj snega (::after) radi FPS-a */
+        body.winter-theme::after { display: none; }
+
+        @keyframes snowAnim { 0% { background-position: 0 0; } 100% { background-position: 0 400px; } }
+
+        /* ISKLJUČIVANJE BLUR-a ZA WINTER TEMU (Ključno za A71 i slabije telefone) */
+        body.winter-theme .glass-panel,
+        body.winter-theme .game-header,
+        body.winter-theme .controls-area,
+        body.winter-theme .modal-box,
+        body.winter-theme .custom-modal {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background: rgba(10, 25, 45, 0.95) !important; /* Jača boja pozadine umesto blura */
+            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
         }
-        @keyframes snowAnim { 0% { background-position: 0 0; } 100% { background-position: 0 650px; } }
 
         /* --- WINTER DECOR (Deda Mraz & Jelke) --- */
         .winter-decor {
