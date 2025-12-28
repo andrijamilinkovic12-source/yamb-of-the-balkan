@@ -66,6 +66,105 @@
             --col-rucno: #E040FB; --col-najava: #FFD700; --col-slobodna: #BDBDBD;
         }
 
+        /* --- WINTER HOLIDAY THEME --- */
+        body.winter-theme {
+            --bg-base: #020c1b; 
+            --bg-gradient-1: #0a192f; 
+            --bg-gradient-2: #000000;
+            --gold-main: #ff4d4d; /* Praznična crvena */
+            --gold-glow: rgba(255, 77, 77, 0.4);
+            --text-main: #e6f1ff; 
+            --text-muted: #8892b0;
+            
+            --glass-bg: rgba(200, 230, 255, 0.05); 
+            --glass-panel: rgba(18, 30, 50, 0.75);
+            --glass-border: 1px solid rgba(169, 219, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            
+            --dice-bg: linear-gradient(145deg, #ffffff, #dceeff); 
+            --dice-border: rgba(255, 255, 255, 0.8);
+            --dice-color: #0a192f; 
+            --dice-active: #d32f2f;
+            
+            --grid-cell-bg: rgba(255, 255, 255, 0.03); 
+            --grid-header-bg: rgba(255, 255, 255, 0.08); 
+            --input-bg: #112240; 
+            --input-border: #ff4d4d;
+
+            --col-nadole: #4fc3f7; 
+            --col-nagore: #ff5252; 
+            --col-sredina: #66bb6a; 
+            --col-rucno: #e040fb; 
+            --col-najava: #ffd700; 
+            --col-slobodna: #b0bec5;
+        }
+
+        /* Snežna animacija */
+        body.winter-theme::before,
+        body.winter-theme::after {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0;
+            background-image: 
+                radial-gradient(4px 4px at 100px 50px, #fff, transparent),
+                radial-gradient(6px 6px at 200px 150px, #fff, transparent),
+                radial-gradient(3px 3px at 300px 250px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(4px 4px at 400px 350px, #fff, transparent),
+                radial-gradient(6px 6px at 500px 100px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(3px 3px at 50px 200px, #fff, transparent),
+                radial-gradient(4px 4px at 150px 300px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(6px 6px at 250px 400px, #fff, transparent),
+                radial-gradient(3px 3px at 350px 500px, rgba(255,255,255,0.7), transparent);
+            background-size: 650px 650px;
+            animation: snowAnim 12s linear infinite;
+            opacity: 0.3;
+        }
+        body.winter-theme::after {
+            background-size: 400px 400px;
+            animation: snowAnim 8s linear infinite reverse;
+            opacity: 0.2;
+        }
+        @keyframes snowAnim { 0% { background-position: 0 0; } 100% { background-position: 0 650px; } }
+
+        /* --- WINTER DECOR (Deda Mraz & Jelke) --- */
+        .winter-decor {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; /* Klikovi prolaze kroz dekoraciju */
+            z-index: 1; /* IZA glavnog ekrana koji je na z-index: 10 */
+            display: none; 
+            overflow: hidden;
+        }
+        body.winter-theme .winter-decor { display: block; }
+
+        /* Siluete četinara u pozadini */
+        .winter-trees {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 20vh;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath fill='rgba(255,255,255,0.05)' d='M0 25 L5 15 L10 25 L15 10 L20 25 L25 12 L30 25 L35 18 L40 25 L45 8 L50 25 L55 16 L60 25 L65 14 L70 25 L75 10 L80 25 L85 15 L90 25 L95 12 L100 25 Z' /%3E%3Cpath fill='rgba(255,255,255,0.03)' d='M0 25 L12 25 L6 5 Z M20 25 L32 25 L26 8 Z M50 25 L62 25 L56 6 Z M80 25 L92 25 L86 9 Z' /%3E%3C/svg%3E");
+            background-size: 150% 100%;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+
+        /* Deda Mraz animacija - SILUETA */
+        .santa-flying {
+            position: absolute; 
+            top: 25%; /* Leti negde na sredini visine */
+            right: -250px;
+            font-size: 4rem; 
+            color: transparent; /* Sakrivamo originalne boje emojija */
+            text-shadow: 0 0 0 rgba(255, 255, 255, 0.15); /* Pravimo belu, prozirnu senku */
+            animation: santaFly 40s linear infinite; /* Veoma sporo kretanje */
+            z-index: 1; 
+            white-space: nowrap;
+            filter: blur(0.5px); /* Blago zamućenje za filmski efekat */
+            transform: scaleX(-1); /* Okrećemo ga da gleda u pravcu leta ako treba */
+        }
+
+        @keyframes santaFly {
+            0% { transform: translateX(0) translateY(0) rotate(2deg); right: -250px; }
+            50% { transform: translateX(-60vw) translateY(40px) rotate(-1deg); }
+            100% { transform: translateX(-150vw) translateY(-20px) rotate(2deg); right: 120%; }
+        }
+
+
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; }
         
         body {
@@ -87,7 +186,7 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             opacity: 0; visibility: hidden; transition: opacity 0.4s, transform 0.4s;
-            transform: scale(0.95); z-index: 1; 
+            transform: scale(0.95); z-index: 10; /* Igra je IZNAD dekoracije */
             padding-left: max(10px, var(--safe-left));
             padding-right: max(10px, var(--safe-right));
             overflow: hidden; 
@@ -307,6 +406,11 @@
 </head>
 <body>
 
+    <div class="winter-decor">
+        <div class="winter-trees"></div>
+        <div class="santa-flying">🦌🦌🛷🎅</div>
+    </div>
+
     <canvas id="confetti-canvas"></canvas>
 
     <div id="rotate-lock-overlay">
@@ -414,7 +518,28 @@
         </div>
     </div>
 
-    <div id="settings-screen" class="screen"><button class="back-btn" onclick="app.showMainMenu()">←</button><h2 class="menu-title">PODEŠAVANJA</h2><div class="modal-box" style="text-align: left;"><label style="color:var(--text-muted);">Vaše Ime:</label><input type="text" id="setting-name" class="modal-input" placeholder="Igrač"><div style="margin-top: 15px;"><label style="color: var(--text-muted);">Tema:</label><select id="setting-theme" class="modal-input"><option value="dark">Dark Soft Gold (Glass)</option><option value="light">Light Gold</option><option value="medium">Medium Gold (Vesela)</option></select></div><div style="margin-top: 15px;"><label style="display: flex; align-items: center;"><input type="checkbox" id="setting-sound" style="margin-right: 10px;"> Zvučni Efekti</label></div><button class="btn-menu btn-primary" style="margin-top: 20px;" onclick="app.saveSettings()">Sačuvaj</button></div></div>
+    <div id="settings-screen" class="screen">
+        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <h2 class="menu-title">PODEŠAVANJA</h2>
+        <div class="modal-box" style="text-align: left;">
+            <label style="color:var(--text-muted);">Vaše Ime:</label>
+            <input type="text" id="setting-name" class="modal-input" placeholder="Igrač">
+            <div style="margin-top: 15px;">
+                <label style="color: var(--text-muted);">Tema:</label>
+                <select id="setting-theme" class="modal-input">
+                    <option value="dark">Dark Soft Gold (Glass)</option>
+                    <option value="light">Light Gold</option>
+                    <option value="medium">Medium Gold (Vesela)</option>
+                    <option value="winter">Winter Holiday ❄️🎄</option>
+                </select>
+            </div>
+            <div style="margin-top: 15px;">
+                <label style="display: flex; align-items: center;"><input type="checkbox" id="setting-sound" style="margin-right: 10px;"> Zvučni Efekti</label>
+            </div>
+            <button class="btn-menu btn-primary" style="margin-top: 20px;" onclick="app.saveSettings()">Sačuvaj</button>
+        </div>
+    </div>
+    
     <div id="rules-screen" class="screen" style="overflow-y: auto;"><button class="back-btn" onclick="app.showMainMenu()">←</button><div style="max-width: 800px; padding: 25px; background: var(--glass-panel); border-radius: 10px; color: var(--text-main); margin-top: 60px; margin-bottom: 20px;"><h2 style="color:var(--gold-main); text-align:center; margin-bottom: 20px;">PRAVILA IGRE</h2><p style="margin-bottom: 15px; font-size: 0.95rem;"><strong>Cilj igre:</strong> Osvojiti što više poena kombinovanjem 5 od 6 kockica. Imate pravo na 3 bacanja po potezu.</p><h3 style="color:var(--gold-main); margin-top:20px; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">KOLONE</h3><ul style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem; margin-top: 10px;"><li><span class="c-nadole">↓ Nadole:</span> Igra se redom od 1 do Yamba.</li><li><span class="c-slobodna">S Slobodna:</span> Može se igrati bilo koje polje u bilo kom trenutku.</li><li><span class="c-nagore">↑ Nagore:</span> Igra se obrnutim redom, od Yamba do 1.</li><li><span class="c-najava">📢 Najava:</span> Nakon prvog bacanja, igrač mora najaviti šta gađa.</li><li><span class="c-rucno">R Ručno:</span> Polje se mora popuniti isključivo posle prvog bacanja.</li><li><span class="c-sredina">⇅ Sredina:</span> Popunjava se <strong>od sredine (Min, Max) ka krajevima (1, Yamb)</strong>.</li></ul><h3 style="color:var(--gold-main); margin-top:20px; font-size: 1.1rem; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px;">BODOVANJE</h3><ul style="margin-left: 20px; line-height: 1.6; font-size: 0.9rem; margin-top: 10px;"><li><strong>1 - 6:</strong> Zbir dobijenih brojeva. (Bonus +30 ako je zbir ≥ 60).</li><li><strong>Max:</strong> Što veći zbir 5 kockica.</li><li><strong>Min:</strong> Što manji zbir 5 kockica. <br><em style="color:var(--text-muted)">(Formula: (Max - Min) * Kec). Bonus +40 ako je rezultat ≥ 60.</em></li><li><strong>Triling:</strong> 3 iste + 20 poena.</li><li><strong>Ful:</strong> 3 iste + 2 iste + 30 poena.</li><li><strong>Poker:</strong> 4 iste + 40 poena.</li><li><strong>Yamb:</strong> 5 istih + 50 poena.</li><li><strong>Kenta:</strong> 5 vezanih (66, 56, 46 poena).</li></ul></div></div>
 
     <div id="waiting-screen" class="screen">
@@ -669,8 +794,11 @@
                 btnSend.addEventListener('click', () => this.sendChat());
                 btnSend.addEventListener('touchend', (e) => { e.preventDefault(); this.sendChat(); });
                 document.getElementById('chat-input-field').addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendChat(); });
+                
                 const savedTheme = localStorage.getItem('yamb_theme');
-                if (savedTheme === 'light') document.body.classList.add('light-theme'); else if (savedTheme === 'medium') document.body.classList.add('medium-theme');
+                if (savedTheme === 'light') document.body.classList.add('light-theme'); 
+                else if (savedTheme === 'medium') document.body.classList.add('medium-theme');
+                else if (savedTheme === 'winter') document.body.classList.add('winter-theme');
                 
                 if (screen.orientation && screen.orientation.lock) { try { screen.orientation.lock('portrait').catch(e => { }); } catch(e){} }
                 setTimeout(() => { this.checkForInvite(); }, 1000);
@@ -687,7 +815,24 @@
             sendChat() { const input = document.getElementById('chat-input-field'); const text = input.value.trim(); if (!text) return; this.appendChatMessage("Ti", text, "msg-outgoing"); input.value = ""; if (this.onlineMode && this.socket) { this.socket.emit('chat_msg', { roomId: this.roomId, msg: text }); } }
             triggerAiChat(category) { if (!this.aiMode) return; const phrases = this.aiPhrases[category]; if (phrases && phrases.length > 0) { const text = phrases[Math.floor(Math.random() * phrases.length)]; setTimeout(() => { this.appendChatMessage("AI", text, "msg-incoming"); }, 1000 + Math.random() * 2000); } }
             showSettings() { this.navigateTo('settings-screen'); document.getElementById('setting-name').value = this.playerName; document.getElementById('setting-sound').checked = this.soundEnabled; document.getElementById('setting-theme').value = localStorage.getItem('yamb_theme') || 'dark'; }
-            saveSettings() { const newName = document.getElementById('setting-name').value.trim(); if(newName) this.playerName = newName; this.soundEnabled = document.getElementById('setting-sound').checked; const selectedTheme = document.getElementById('setting-theme').value; localStorage.setItem('yamb_theme', selectedTheme); document.body.classList.remove('light-theme', 'medium-theme'); if (selectedTheme === 'light') document.body.classList.add('light-theme'); else if (selectedTheme === 'medium') document.body.classList.add('medium-theme'); localStorage.setItem('yamb_player_name', this.playerName); localStorage.setItem('yamb_sound', this.soundEnabled); this.showMainMenu(); }
+            
+            saveSettings() { 
+                const newName = document.getElementById('setting-name').value.trim(); 
+                if(newName) this.playerName = newName; 
+                this.soundEnabled = document.getElementById('setting-sound').checked; 
+                const selectedTheme = document.getElementById('setting-theme').value; 
+                localStorage.setItem('yamb_theme', selectedTheme); 
+                
+                document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme'); 
+                if (selectedTheme === 'light') document.body.classList.add('light-theme'); 
+                else if (selectedTheme === 'medium') document.body.classList.add('medium-theme'); 
+                else if (selectedTheme === 'winter') document.body.classList.add('winter-theme');
+                
+                localStorage.setItem('yamb_player_name', this.playerName); 
+                localStorage.setItem('yamb_sound', this.soundEnabled); 
+                this.showMainMenu(); 
+            }
+
             showStats() { this.navigateTo('stats-screen'); document.getElementById('stat-games').innerText = this.stats.games; document.getElementById('stat-high').innerText = this.stats.highscore; document.getElementById('stat-wins').innerText = this.stats.wins; document.getElementById('stat-losses').innerText = this.stats.losses; const avg = this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 0; document.getElementById('stat-avg').innerText = avg; const totalCompetitive = this.stats.wins + this.stats.losses; let rate = 0; if (totalCompetitive > 0) rate = Math.round((this.stats.wins / totalCompetitive) * 100); document.getElementById('stat-rate').innerText = rate + "%"; }
             
             // --- NOVE METODE ZA HIGHSCORES ---
@@ -795,7 +940,27 @@
             // ------------------------------------
 
             updateStats(score, resultType) { this.stats.games++; this.stats.totalScoreSum += score; if (score > this.stats.highscore) this.stats.highscore = score; if (resultType === 'win') this.stats.wins++; else if (resultType === 'loss') this.stats.losses++; localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); }
-            toggleTheme() { const current = localStorage.getItem('yamb_theme') || 'dark'; let next = 'dark'; document.body.classList.remove('light-theme', 'medium-theme'); if (current === 'dark') { next = 'light'; document.body.classList.add('light-theme'); } else if (current === 'light') { next = 'medium'; document.body.classList.add('medium-theme'); } else { next = 'dark'; } localStorage.setItem('yamb_theme', next); }
+            
+            toggleTheme() { 
+                const current = localStorage.getItem('yamb_theme') || 'dark'; 
+                let next = 'dark'; 
+                document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme'); 
+                
+                if (current === 'dark') { 
+                    next = 'light'; 
+                    document.body.classList.add('light-theme'); 
+                } else if (current === 'light') { 
+                    next = 'medium'; 
+                    document.body.classList.add('medium-theme'); 
+                } else if (current === 'medium') {
+                    next = 'winter';
+                    document.body.classList.add('winter-theme');
+                } else { 
+                    next = 'dark'; 
+                } 
+                localStorage.setItem('yamb_theme', next); 
+            }
+
             showMainMenu() { this.navigateTo('main-menu'); document.getElementById('chat-float-btn').classList.add('hidden'); document.getElementById('chat-window').classList.remove('active'); this.chatOpen = false; }
             showRules() { this.navigateTo('rules-screen'); }
             async quitToMenu() { if (await this.modal.confirm("Da li ste sigurni da želite prekinuti igru?")) { if(this.socket) this.socket.disconnect(); this.showMainMenu(); } }
@@ -935,7 +1100,6 @@
                 const myName = this.playerName;
                 const myScoreEntry = results.find(r => r.name === myName);
                 if (myScoreEntry && !myName.includes("AI")) {
-                    // Šaljemo skor serveru ako je Solo igra i ako igrač nije AI
                     if ((this.players.length === 1 || this.onlineMode) && !this.aiMode) {
                         try {
                             if (!this.socket || !this.socket.connected) { this.socket = io(SERVER_URL, { transports: ['websocket'] }); }
@@ -947,11 +1111,9 @@
                             });
                         } catch (e) { console.log("Nije uspelo slanje skora na server"); }
                     }
-                    // Lokalni skor
                     this.saveHighscoreEntry(myName, myScoreEntry.score, this.modeTag);
                 }
-                // -----------------------------
-
+                
                 results.sort((a,b) => b.score - a.score); 
                 const oldHighscore = this.stats.highscore; 
                 const myScore = results.find(r => r.name === this.players[0]).score; 
