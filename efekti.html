@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Riznica - Efekti</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- THEME ENGINE --- */
+        :root {
+            --bg-base: #121212; 
+            --bg-gradient-1: #2a2a2a; --bg-gradient-2: #050505;
+            --gold-main: #E0C995; --gold-glow: rgba(224, 201, 149, 0.3);
+            --text-main: #F0F0F0; --text-muted: #a0a0a0;
+            --glass-bg: rgba(255, 255, 255, 0.04); 
+            --glass-panel: rgba(30, 32, 35, 0.60);
+            --glass-border: 1px solid rgba(224, 201, 149, 0.2); 
+            --success: #66BB6A; --danger: #ff5252;
+            --safe-top: max(45px, env(safe-area-inset-top)); 
+            --safe-bottom: max(35px, env(safe-area-inset-bottom));
+        }
+
+        body.light-theme { 
+            --bg-base: #e0e5ec; 
+            --bg-gradient-1: #f0f2f5; --bg-gradient-2: #cbd1d9;
+            --gold-main: #b8962e; 
+            --text-main: #2c3e50; 
+            --glass-panel: rgba(255, 255, 255, 0.85);
+            --glass-border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        body.medium-theme { 
+            --bg-base: #4A148C; 
+            --bg-gradient-1: #7B1FA2; --bg-gradient-2: #FF6F00;
+            --gold-main: #FFD700; 
+            --text-main: #FFFFFF; 
+            --glass-panel: rgba(60, 10, 90, 0.75);
+        }
+
+        body.winter-theme { 
+            --bg-base: #020c1b; 
+            --bg-gradient-1: #0a192f; --bg-gradient-2: #000000;
+            --gold-main: #ff4d4d; 
+            --text-main: #e6f1ff; 
+            --glass-panel: rgba(18, 30, 50, 0.90);
+            --glass-border: 1px solid rgba(169, 219, 255, 0.2);
+        }
+
+        /* --- GLOBAL --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { 
+            background: var(--bg-base); 
+            background-image: radial-gradient(circle at 50% 30%, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 80%);
+            color: var(--text-main); font-family: 'Montserrat', sans-serif; 
+            margin: 0; height: 100dvh; display: flex; flex-direction: column; align-items: center; overflow: hidden; 
+            transition: background 0.5s, color 0.5s;
+        }
+        
+        .header { 
+            width: 100%; padding-top: var(--safe-top); padding-bottom: 10px; padding-left: 20px; padding-right: 20px;
+            display: flex; align-items: center; justify-content: flex-end; 
+            border-bottom: var(--glass-border); background: var(--glass-panel); 
+            backdrop-filter: blur(12px); z-index: 10; min-height: calc(60px + var(--safe-top));
+        }
+
+        .back-btn { 
+            position: absolute; top: max(20px, var(--safe-top)); left: 20px; 
+            background: none; border: none; color: var(--text-main); 
+            font-size: 1.5rem; cursor: pointer; z-index: 100; font-weight: bold;
+        }
+        
+        .balance-group { display: flex; align-items: center; gap: 10px; }
+
+        .balance-display { 
+            background: var(--glass-bg); padding: 8px 15px; border-radius: 20px; 
+            border: 1px solid var(--gold-main); font-weight: bold; color: var(--gold-main); 
+            display: flex; align-items: center; gap: 8px; font-size: 0.9rem;
+            box-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .ad-btn-small {
+            background: linear-gradient(135deg, #2196F3, #0D47A1); 
+            border: 1px solid #64B5F6; color: white;
+            padding: 8px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;
+            cursor: pointer; display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 0 10px rgba(33, 150, 243, 0.4); animation: pulseBtn 2s infinite;
+        }
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        .nav-tabs { display: flex; gap: 8px; margin: 15px 0; padding: 0 10px; flex-wrap: wrap; justify-content: center;}
+        .tab-btn { 
+            background: var(--glass-bg); border: var(--glass-border); color: var(--text-muted); 
+            padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 600; 
+            font-family: inherit; transition: 0.3s; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;
+        }
+        .tab-btn.active { 
+            background: rgba(224, 201, 149, 0.15); color: var(--gold-main); border-color: var(--gold-main);
+            box-shadow: 0 0 15px var(--gold-glow);
+        }
+
+        .content-area { 
+            flex: 1; width: 100%; 
+            max-width: 900px; /* PROMENJENO SA 800 NA 900px */
+            overflow-y: auto; -webkit-overflow-scrolling: touch;
+            padding: 10px; padding-bottom: var(--safe-bottom);
+            display: flex; flex-direction: column; gap: 20px; z-index: 5; 
+        }
+
+        .category-section { width: 100%; }
+        .category-header {
+            font-size: 0.85rem; color: var(--gold-main); text-transform: uppercase;
+            letter-spacing: 2px; border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 5px; margin-bottom: 15px; margin-left: 5px;
+            font-weight: 700; opacity: 0.9;
+        }
+        
+        /* Grid sistem */
+        .category-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            gap: 8px; /* SMANJENO SA 10 NA 8px */
+        }
+
+        .card { 
+            background: var(--glass-panel); border: var(--glass-border); border-radius: 16px; 
+            padding: 10px; /* SMANJENO SA 12 NA 10px */
+            display: flex; flex-direction: column; align-items: center; text-align: center; 
+            position: relative; transition: 0.2s; overflow: hidden;
+        }
+        .card.active-effect { 
+            border: 2px solid var(--gold-main); box-shadow: 0 0 20px var(--gold-glow); 
+            background: rgba(224, 201, 149, 0.08); 
+        }
+
+        /* --- PREVIEW STYLES --- */
+        .effect-preview-box { width: 100%; height: 70px; border-radius: 10px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; position: relative; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.3); }
+        
+        .prev-confetti { background: linear-gradient(45deg, #1a1a1a, #2a2a2a); }
+        .prev-confetti::before { content: "🎉"; filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); animation: bounce 2s infinite; }
+        
+        .prev-gold_rain { background: radial-gradient(circle, #2a2a2a, #000); }
+        .prev-gold_rain::before { content: "💰"; font-size: 1.5rem; animation: fall 1.5s infinite linear; text-shadow: 0 0 10px gold; }
+        
+        .prev-fireflies { background: radial-gradient(circle at bottom, #0f2027, #203a43, #2c5364); }
+        .prev-fireflies::before { content: "✨"; filter: hue-rotate(90deg) drop-shadow(0 0 8px #ffff00); animation: floatUp 3s infinite ease-in-out; }
+        @keyframes floatUp { 0% { transform: translateY(10px) scale(0.8); opacity: 0.5; } 50% { transform: translateY(-5px) scale(1.2); opacity: 1; } 100% { transform: translateY(-15px) scale(0.8); opacity: 0.5; } }
+
+        .prev-fireworks { background: linear-gradient(to bottom, #000000, #1a1a2e); }
+        .prev-fireworks::before { content: "🎆"; font-size: 2.2rem; filter: drop-shadow(0 0 10px #ff00ff); animation: explode 1.5s infinite; }
+        @keyframes explode { 0% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.2); opacity: 1; } 100% { transform: scale(1.5); opacity: 0; } }
+
+        .prev-glass { background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); background-size: cover; }
+        .glass-overlay { position: absolute; width: 60%; height: 60%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transform: rotate(-10deg); }
+        
+        .prev-shadow { background: #333; }
+        .shadow-overlay { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, transparent 30%, #000 90%); }
+        .prev-shadow::after { content: "🌑"; font-size: 1.5rem; z-index: 0; opacity: 0.7; }
+        
+        .prev-thunder { background: #1a1a2e; }
+        .prev-thunder::before { content: "⚡"; color: #ffeb3b; text-shadow: 0 0 15px #ffeb3b; animation: flash 1s infinite; }
+        
+        .prev-neon { background: #000; border: 1px solid #333; }
+        .neon-line { position: absolute; width: 100%; height: 2px; background: #0f0; box-shadow: 0 0 10px #0f0, 0 0 20px #0f0; top: 50%; animation: scan 2s infinite ease-in-out; }
+        
+        .prev-balkan { background: linear-gradient(to right, #c31432, #240b36); }
+        .prev-balkan::before { content: "🎺"; font-size: 2rem; animation: shake 0.5s infinite; }
+        
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
+        @keyframes shake { 0% { transform: rotate(0deg); } 25% { transform: rotate(10deg); } 75% { transform: rotate(-10deg); } }
+        @keyframes fall { 0% { transform: translateY(-20px); opacity:0; } 50% { opacity:1; } 100% { transform: translateY(20px); opacity:0; } }
+
+        .title { color: var(--gold-main); font-weight: bold; margin-bottom: 5px; font-size: 0.9rem; }
+        .desc { font-size: 0.65rem; color: var(--text-muted); margin-bottom: 5px; min-height: 25px; display: flex; align-items: center; justify-content: center;}
+        .duration { font-size: 0.6rem; color: var(--success); font-weight: bold; margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; background: rgba(102, 187, 106, 0.1); padding: 3px 6px; border-radius: 8px;}
+        .price { font-size: 0.8rem; margin-bottom: 5px; color: var(--text-muted); }
+        .old-price { text-decoration: line-through; color: var(--danger); font-size: 0.7rem; margin-right: 5px;}
+
+        .btn-group { width: 100%; margin-top: auto; display: flex; flex-direction: column; gap: 5px; }
+        
+        .btn-action { 
+            padding: 8px 16px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; width: 100%; margin-top: auto; text-transform: uppercase; font-size: 0.7rem; 
+        }
+        .btn-buy { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); transition: 0.2s; }
+        .btn-equip { background: transparent; border: 1px solid var(--success); color: var(--success); }
+        .btn-active { background: var(--success); color: #fff; cursor: default; box-shadow: 0 0 10px rgba(102, 187, 106, 0.3); }
+        .req-text { color: var(--danger); font-size: 0.6rem; margin-top: 5px; font-weight: bold; }
+        
+        .btn-discount {
+            background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: #64B5F6;
+            font-size: 0.65rem; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+        .btn-discount:active { background: rgba(33, 150, 243, 0.4); }
+
+        /* AD OVERLAY & MODALS */
+        #ad-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 11000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .ad-content { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #222, #000); }
+        .ad-text { color: white; font-size: 1.5rem; margin-bottom: 20px; font-weight: bold; }
+        .ad-spinner { border: 5px solid #333; border-top: 5px solid #2196F3; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        .ad-timer-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.5); color: white; padding: 5px 10px; border-radius: 10px; border: 1px solid #555; font-size: 0.9rem; }
+        .ad-close-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: white; border: 2px solid white; border-radius: 50%; width: 30px; height: 30px; display: none; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- REWARD NOTIFICATION MODAL --- */
+        #reward-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 10000; display: none;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        .reward-card {
+            background: linear-gradient(135deg, rgba(30,30,30,0.9), rgba(10,10,10,0.95));
+            border: 2px solid var(--gold-main);
+            box-shadow: 0 0 30px var(--gold-glow), inset 0 0 20px rgba(224, 201, 149, 0.1);
+            padding: 30px; border-radius: 20px; width: 90%; max-width: 350px;
+            text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+        }
+        .reward-icon { font-size: 4rem; animation: floatIcon 2s ease-in-out infinite; filter: drop-shadow(0 0 15px var(--gold-glow)); }
+        @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .reward-title { color: var(--gold-main); font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .reward-msg { color: var(--text-main); font-size: 1rem; line-height: 1.5; }
+        .reward-amount { color: var(--success); font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 10px rgba(76, 175, 80, 0.4); display: block; margin: 10px 0; }
+        
+        .btn-claim {
+            background: var(--gold-main); color: #000; border: none; padding: 12px 30px;
+            font-size: 1rem; font-weight: bold; border-radius: 30px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s; text-transform: uppercase;
+            width: 100%; margin-top: 10px;
+        }
+        .btn-claim:active { transform: scale(0.95); }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+        .modal-card { background: linear-gradient(135deg, rgba(30,30,30,0.95), rgba(10,10,10,0.98)); border: 1px solid var(--gold-main); box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(224, 201, 149, 0.05); padding: 25px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        .modal-icon { font-size: 3rem; margin-bottom: 5px; }
+        .modal-title { color: var(--gold-main); font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .modal-msg { color: var(--text-main); font-size: 0.9rem; line-height: 1.4; color: #ccc;}
+        .modal-btn-group { display: flex; gap: 10px; width: 100%; margin-top: 10px; }
+        .modal-btn { flex: 1; padding: 12px; border-radius: 25px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
+        .btn-modal-cancel { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
+        .btn-modal-confirm { background: var(--gold-main); color: #000; box-shadow: 0 0 15px var(--gold-glow); }
+        .btn-modal-ok { background: var(--gold-main); color: #000; width: 100%; }
+
+        /* --- SCROLLBAR (FIXED) --- */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 2px; }
+    </style>
+</head>
+<body>
+
+    <div id="ad-overlay">
+        <div class="ad-content">
+            <div class="ad-timer-badge">Preostalo: <span id="ad-countdown">5</span>s</div>
+            <button id="ad-close" class="ad-close-btn">✕</button>
+            <div class="ad-spinner"></div>
+            <div class="ad-text">POPUST SE UČITAVA...</div>
+            <p style="color:#aaa; font-size:0.8rem;">(Simulacija AdMob Reward Videa)</p>
+        </div>
+    </div>
+
+    <div id="reward-modal">
+        <div class="reward-card">
+            <div class="reward-icon">💰</div>
+            <div class="reward-title">NAGRADA!</div>
+            <div class="reward-msg">
+                Uspešno ste odgledali reklamu.
+                <span class="reward-amount">+500 DUKATA</span>
+            </div>
+            <button class="btn-claim" onclick="closeRewardModal()">HVALA</button>
+        </div>
+    </div>
+
+    <div id="notification-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div id="notif-icon" class="modal-icon">✅</div>
+            <div id="notif-title" class="modal-title">USPEH</div>
+            <div id="notif-msg" class="modal-msg">Poruka ide ovde.</div>
+            <button class="modal-btn btn-modal-ok" onclick="closeNotification()">U REDU</button>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon">🛒</div>
+            <div class="modal-title">POTVRDA</div>
+            <div id="confirm-msg" class="modal-msg">Da li želite da kupite ovo?</div>
+            <div class="modal-btn-group">
+                <button class="modal-btn btn-modal-cancel" onclick="closeConfirmModal()">OTKAŽI</button>
+                <button id="btn-confirm-buy" class="modal-btn btn-modal-confirm">KUPI</button>
+            </div>
+        </div>
+    </div>
+
+    <button class="back-btn" onclick="window.location.href='riznica.html'">←</button>
+
+    <div class="header">
+        <div class="balance-group">
+            <button class="ad-btn-small" onclick="watchAdForMoney()">
+                <span>📺 +500</span>
+            </button>
+            <div class="balance-display">💰 <span id="balance">0</span></div>
+        </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn" onclick="window.location.href='riznica.html'">TROFEJI 🏆</button>
+        <button class="tab-btn" onclick="window.location.href='kockice.html'">KOCKICE 🎲</button>
+        <button class="tab-btn active">EFEKTI ✨</button>
+    </div>
+
+    <div id="content-container" class="content-area"></div>
+
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('yamb_theme') || 'dark';
+            if (savedTheme === 'light') document.body.classList.add('light-theme');
+            else if (savedTheme === 'medium') document.body.classList.add('medium-theme');
+            else if (savedTheme === 'winter') document.body.classList.add('winter-theme');
+        })();
+
+        // --- DEFINICIJA EFEKATA ---
+        const EFFECTS = [
+            // 1. STANDARDNE PROSLAVE
+            { 
+                id: 'confetti', name: 'Konfete', price: 0, 
+                desc: 'Klasična proslava Yamba.', duration: '3 sekunde', 
+                category: '🎉 STANDARDNE PROSLAVE', cssClass: 'prev-confetti', innerHtml: '' 
+            },
+            { 
+                id: 'gold_rain', name: 'Zlatna Kiša', price: 10000, 
+                desc: 'Padaju dukati sa vrha ekrana.', duration: '4 sekunde', 
+                category: '🎉 STANDARDNE PROSLAVE', cssClass: 'prev-gold_rain', innerHtml: '' 
+            },
+            { 
+                id: 'fireflies', name: 'Magični Svici', price: 5000, 
+                desc: 'Nežne svetleće kuglice koje lebde ka nebu.', duration: '4 sekunde', 
+                category: '🎉 STANDARDNE PROSLAVE', cssClass: 'prev-fireflies', innerHtml: '' 
+            },
+
+            // 2. ATMOSFERA & MODERNO
+            { 
+                id: 'glass', name: 'Staklena Prizma', price: 12000, 
+                desc: 'Pretvara ekran u zamućeno staklo.', duration: 'Trajno', 
+                category: '💎 ATMOSFERA & STIL', cssClass: 'prev-glass', innerHtml: '<div class="glass-overlay"></div>' 
+            },
+            { 
+                id: 'shadow', name: 'Fokus Senka', price: 8000, 
+                desc: 'Zatamnjuje sve osim aktivne kolone.', duration: 'Trajno', 
+                category: '💎 ATMOSFERA & STIL', cssClass: 'prev-shadow', innerHtml: '<div class="shadow-overlay"></div>' 
+            },
+            { 
+                id: 'neon_pulse', name: 'Neon Puls', price: 15000, 
+                desc: 'Cyberpunk linije skeniraju ekran.', duration: '2 sekunde', 
+                category: '💎 ATMOSFERA & STIL', cssClass: 'prev-neon', innerHtml: '<div class="neon-line"></div>' 
+            },
+
+            // 3. SPEKTAKL (Teži efekti)
+            { 
+                id: 'thunder', name: 'Gromovnik', price: 20000, 
+                desc: 'Ekran se trese uz udar groma.', duration: '1 sekunda', 
+                category: '⚡ SPEKTAKL & ZABAVA', req: 'sveti_ilija', reqName: 'Sveti Ilija', cssClass: 'prev-thunder', innerHtml: '' 
+            },
+            { 
+                id: 'balkan', name: 'Svadba', price: 25000, 
+                desc: 'Trubači, pare i opštenarodno veselje.', duration: '5 sekundi', 
+                category: '⚡ SPEKTAKL & ZABAVA', cssClass: 'prev-balkan', innerHtml: '' 
+            },
+            { 
+                id: 'fireworks', name: 'Grandiozni Vatromet', price: 30000, 
+                desc: 'Eksplozija boja za prave pobednike.', duration: '5 sekundi', 
+                category: '⚡ SPEKTAKL & ZABAVA', cssClass: 'prev-fireworks', innerHtml: '' 
+            }
+        ];
+
+        let unlocked = JSON.parse(localStorage.getItem('yamb_unlocked')) || ['first_play', 'default', 'confetti'];
+        let balance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+        let activeEffect = localStorage.getItem('yamb_active_effect') || 'confetti';
+        
+        let discountedItems = {}; 
+
+        const balEl = document.getElementById('balance');
+        balEl.innerText = balance;
+
+        const container = document.getElementById('content-container');
+
+        function render() {
+            container.innerHTML = '';
+            const grouped = {};
+            EFFECTS.forEach(ef => {
+                if (!grouped[ef.category]) grouped[ef.category] = [];
+                grouped[ef.category].push(ef);
+            });
+
+            for (const [categoryName, items] of Object.entries(grouped)) {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'category-section';
+                
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'category-header';
+                headerDiv.innerText = categoryName;
+                sectionDiv.appendChild(headerDiv);
+
+                const gridDiv = document.createElement('div');
+                gridDiv.className = 'category-grid';
+
+                items.forEach(item => {
+                    const isUnlocked = unlocked.includes(item.id);
+                    const isActive = activeEffect === item.id;
+                    const reqMet = !item.req || unlocked.includes(item.req);
+
+                    const card = document.createElement('div');
+                    card.className = `card ${isActive ? 'active-effect' : ''}`;
+
+                    let displayPriceHtml = item.price + ' 💰';
+                    let currentPrice = item.price;
+                    let showDiscountBtn = false;
+
+                    if (discountedItems[item.id]) {
+                        currentPrice = Math.max(0, item.price - 200);
+                        displayPriceHtml = `<span class="old-price">${item.price}</span> ${currentPrice} 💰`;
+                    } else if (!isUnlocked && reqMet && item.price > 0) {
+                        showDiscountBtn = true;
+                    }
+
+                    let btnHtml = '';
+                    if (isActive) {
+                        btnHtml = `<button class="btn-action btn-active">AKTIVNO</button>`;
+                    } else if (isUnlocked) {
+                        btnHtml = `<button class="btn-action btn-equip" onclick="equip('${item.id}')">KORISTI</button>`;
+                    } else {
+                        if (reqMet) {
+                            btnHtml = `<div class="btn-group">
+                                <button class="btn-action btn-buy" onclick="openConfirmModal('${item.id}', '${item.name}', ${currentPrice})">KUPI</button>
+                                ${showDiscountBtn ? `<button class="btn-action btn-discount" onclick="watchAdForDiscount('${item.id}')">📺 % -200</button>` : ''}
+                            </div>`;
+                        } else {
+                            btnHtml = `<div class="req-text">Otključaj trofej: ${item.reqName}</div>`;
+                        }
+                    }
+
+                    card.innerHTML = `
+                        <div class="effect-preview-box ${item.cssClass}">${item.innerHtml}</div>
+                        <div class="title">${item.name}</div>
+                        <div class="duration">⏱ ${item.duration}</div>
+                        <div class="desc">${item.desc}</div>
+                        <div class="price">${isUnlocked ? '✔ Kupljeno' : displayPriceHtml}</div>
+                        ${btnHtml}
+                    `;
+                    gridDiv.appendChild(card);
+                });
+
+                sectionDiv.appendChild(gridDiv);
+                container.appendChild(sectionDiv);
+            }
+        }
+
+        function showNotification(title, msg, icon='✅', type='success') {
+            document.getElementById('notif-title').innerText = title;
+            document.getElementById('notif-msg').innerText = msg;
+            document.getElementById('notif-icon').innerText = icon;
+            document.getElementById('notif-title').style.color = type === 'error' ? 'var(--danger)' : 'var(--gold-main)';
+            document.getElementById('notification-modal').style.display = 'flex';
+        }
+
+        function closeNotification() {
+            document.getElementById('notification-modal').style.display = 'none';
+        }
+
+        function openConfirmModal(id, name, price) {
+            if (balance < price) {
+                showNotification("NEDOVOLJNO NOVCA", "Nemate dovoljno dukata za ovu kupovinu.", "❌", "error");
+                return;
+            }
+            document.getElementById('confirm-msg').innerHTML = `Da li želite da kupite <b>${name}</b> za <b style="color:var(--gold-main)">${price}</b> dukata?`;
+            
+            const btnConfirm = document.getElementById('btn-confirm-buy');
+            const newBtn = btnConfirm.cloneNode(true);
+            btnConfirm.parentNode.replaceChild(newBtn, btnConfirm);
+            
+            newBtn.onclick = () => {
+                closeConfirmModal();
+                performBuy(id, price, name);
+            };
+            
+            document.getElementById('confirm-modal').style.display = 'flex';
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').style.display = 'none';
+        }
+
+        function performBuy(id, price, name) {
+            balance -= price;
+            unlocked.push(id);
+            localStorage.setItem('yamb_dukati', balance);
+            localStorage.setItem('yamb_unlocked', JSON.stringify(unlocked));
+            balEl.innerText = balance;
+            render();
+            showNotification("USPEŠNA KUPOVINA", `Kupili ste ${name}!`, "🎉");
+        }
+
+        function watchAdForDiscount(itemId) {
+            document.querySelector('.ad-text').innerText = "POPUST SE UČITAVA...";
+            simulateAd(() => {
+                discountedItems[itemId] = true;
+                render();
+            });
+        }
+
+        function watchAdForMoney() {
+            document.querySelector('.ad-text').innerText = "NAGRADA SE UČITAVA...";
+            simulateAd(() => {
+                balance += 500;
+                localStorage.setItem('yamb_dukati', balance);
+                balEl.innerText = balance;
+                showRewardModal();
+            });
+        }
+
+        function showRewardModal() {
+            const modal = document.getElementById('reward-modal');
+            modal.style.display = 'flex';
+        }
+
+        function closeRewardModal() {
+            const modal = document.getElementById('reward-modal');
+            modal.style.display = 'none';
+        }
+
+        function simulateAd(callback) {
+            const overlay = document.getElementById('ad-overlay');
+            const counter = document.getElementById('ad-countdown');
+            const closeBtn = document.getElementById('ad-close');
+            let timeLeft = 5; 
+            counter.innerText = timeLeft;
+            overlay.style.display = 'flex';
+            closeBtn.style.display = 'none';
+            const interval = setInterval(() => {
+                timeLeft--;
+                counter.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    closeBtn.style.display = 'flex';
+                }
+            }, 1000);
+            closeBtn.onclick = () => {
+                overlay.style.display = 'none';
+                if(callback) callback();
+            };
+        }
+
+        window.equip = function(id) {
+            activeEffect = id;
+            localStorage.setItem('yamb_active_effect', id);
+            render();
+        };
+
+        render();
+    </script>
+</body>
+</html>
