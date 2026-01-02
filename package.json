@@ -1,18 +1,18 @@
 {
-  "name": "yamb_pro",
+  "name": "yamb-online",
   "version": "1.0.0",
-  "main": "app.js",
+  "description": "Yamb Multiplayer Server",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "@capacitor-community/admob": "^8.0.0",
-    "@capacitor/android": "^8.0.0",
-    "@capacitor/cli": "^8.0.0",
-    "@capacitor/core": "^8.0.0"
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4",
+    "mongoose": "^8.0.0", 
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   }
 }
