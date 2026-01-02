@@ -5,378 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Riznica - Kockice</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* --- THEME ENGINE --- */
-        :root {
-            --bg-base: #121212; 
-            --bg-gradient-1: #2a2a2a; --bg-gradient-2: #050505;
-            --gold-main: #E0C995; --gold-glow: rgba(224, 201, 149, 0.3);
-            --text-main: #F0F0F0; --text-muted: #a0a0a0;
-            --glass-bg: rgba(255, 255, 255, 0.04); 
-            --glass-panel: rgba(30, 32, 35, 0.60);
-            --glass-border: 1px solid rgba(224, 201, 149, 0.2); 
-            --success: #66BB6A; --danger: #ff5252;
-            --safe-top: max(45px, env(safe-area-inset-top)); 
-            --safe-bottom: max(35px, env(safe-area-inset-bottom));
-        }
-
-        body.light-theme { 
-            --bg-base: #e0e5ec; 
-            --bg-gradient-1: #f0f2f5; --bg-gradient-2: #cbd1d9;
-            --gold-main: #b8962e; 
-            --text-main: #2c3e50; 
-            --glass-panel: rgba(255, 255, 255, 0.85);
-            --glass-border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        body.medium-theme { 
-            --bg-base: #4A148C; 
-            --bg-gradient-1: #7B1FA2; --bg-gradient-2: #FF6F00;
-            --gold-main: #FFD700; 
-            --text-main: #FFFFFF; 
-            --glass-panel: rgba(60, 10, 90, 0.75);
-        }
-
-        body.winter-theme { 
-            --bg-base: #020c1b; 
-            --bg-gradient-1: #0a192f; --bg-gradient-2: #000000;
-            --gold-main: #ff4d4d; 
-            --text-main: #e6f1ff; 
-            --glass-panel: rgba(18, 30, 50, 0.90);
-            --glass-border: 1px solid rgba(169, 219, 255, 0.2);
-        }
-
-        /* --- GLOBAL --- */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { 
-            background: var(--bg-base); 
-            background-image: radial-gradient(circle at 50% 30%, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 80%);
-            color: var(--text-main); font-family: 'Montserrat', sans-serif; 
-            margin: 0; height: 100dvh; display: flex; flex-direction: column; align-items: center; overflow: hidden; 
-            transition: background 0.5s, color 0.5s;
-        }
-        
-        .header { 
-            width: 100%; padding-top: var(--safe-top); padding-bottom: 10px; padding-left: 20px; padding-right: 20px;
-            display: flex; align-items: center; justify-content: flex-end; 
-            border-bottom: var(--glass-border); background: var(--glass-panel); 
-            backdrop-filter: blur(12px); z-index: 10; min-height: calc(60px + var(--safe-top));
-        }
-
-        .back-btn { 
-            position: absolute; top: max(20px, var(--safe-top)); left: 20px; 
-            background: none; border: none; color: var(--text-main); 
-            font-size: 1.5rem; cursor: pointer; z-index: 100; font-weight: bold;
-        }
-        
-        .balance-group { display: flex; align-items: center; gap: 10px; }
-
-        .balance-display { 
-            background: var(--glass-bg); padding: 8px 15px; border-radius: 20px; 
-            border: 1px solid var(--gold-main); font-weight: bold; color: var(--gold-main); 
-            display: flex; align-items: center; gap: 8px; font-size: 0.9rem;
-            box-shadow: 0 0 10px var(--gold-glow);
-        }
-
-        .ad-btn-small {
-            background: linear-gradient(135deg, #2196F3, #0D47A1); 
-            border: 1px solid #64B5F6; color: white;
-            padding: 8px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: bold;
-            cursor: pointer; display: flex; align-items: center; gap: 5px;
-            box-shadow: 0 0 10px rgba(33, 150, 243, 0.4); animation: pulseBtn 2s infinite;
-        }
-        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        .nav-tabs { display: flex; gap: 8px; margin: 15px 0; padding: 0 10px; flex-wrap: wrap; justify-content: center;}
-        .tab-btn { 
-            background: var(--glass-bg); border: var(--glass-border); color: var(--text-muted); 
-            padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 600; 
-            font-family: inherit; transition: 0.3s; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px;
-        }
-        .tab-btn.active { 
-            background: rgba(224, 201, 149, 0.15); color: var(--gold-main); border-color: var(--gold-main);
-            box-shadow: 0 0 15px var(--gold-glow);
-        }
-
-        .content-area { 
-            flex: 1; width: 100%; 
-            max-width: 900px; /* PROMENJENO SA 800 NA 900px */
-            overflow-y: auto; -webkit-overflow-scrolling: touch;
-            padding: 10px; padding-bottom: var(--safe-bottom);
-            display: flex; flex-direction: column; gap: 20px;
-            z-index: 5; 
-        }
-
-        .category-section { width: 100%; }
-        
-        .category-header {
-            font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase;
-            letter-spacing: 2px; border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 5px; margin-bottom: 15px; margin-left: 5px;
-            display: flex; align-items: center; gap: 10px; font-weight: bold;
-        }
-
-        .category-grid {
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
-            gap: 8px; /* SMANJENO SA 12 NA 8px DA BUDE ISTO KAO TROFEJI */
-        }
-
-        .card { 
-            background: var(--glass-panel); border: var(--glass-border); border-radius: 12px; 
-            padding: 10px; /* SMANJENO SA 15 NA 10px */
-            display: flex; flex-direction: column; align-items: center; text-align: center; 
-            position: relative; transition: 0.2s; 
-        }
-        .card.active-skin { 
-            border: 2px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-glow); 
-            background: rgba(224, 201, 149, 0.08); 
-        }
-
-        /* --- VIZUELIZACIJA KOCKICA --- */
-        .dice-preview { 
-            width: 55px; height: 55px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 32px; margin-bottom: 12px; 
-            box-shadow: 2px 4px 8px rgba(0,0,0,0.5);
-            transition: transform 0.2s;
-            position: relative;
-            overflow: hidden;
-        }
-        .card:active .dice-preview { transform: scale(0.9); }
-
-        .preview-default { background: linear-gradient(135deg, #ffffff, #e0e0e0); color: #222; border: 1px solid #ccc; }
-        .preview-classic_red { background: linear-gradient(135deg, #d32f2f, #b71c1c); color: #fff; border: 1px solid #a00000; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
-        .preview-classic_blue { background: linear-gradient(135deg, #1976D2, #0D47A1); color: #fff; border: 1px solid #002171; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
-        .preview-classic_black { background: linear-gradient(135deg, #333, #000); color: #fff; border: 1px solid #444; }
-
-        .preview-wood { 
-            background-color: #8D6E63;
-            background-image: 
-                repeating-linear-gradient(45deg, rgba(78, 52, 46, 0.4) 0px, transparent 2px, transparent 5px, rgba(78, 52, 46, 0.4) 7px),
-                linear-gradient(to bottom, #8D6E63, #5D4037);
-            color: #3E2723; border: 1px solid #4E342E; text-shadow: 0 1px 0 rgba(255,255,255,0.2); 
-        }
-
-        .preview-marble { 
-            background-color: #fff;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(0,0,0,0.1) 0%, transparent 40%),
-                radial-gradient(circle at 80% 20%, rgba(0,0,0,0.15) 0%, transparent 30%),
-                linear-gradient(120deg, #f5f5f5, #e0e0e0);
-            color: #444; border: 1px solid #ccc; 
-        }
-        
-        .preview-gold { 
-            background: linear-gradient(135deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C); 
-            color: #fff; border: 1px solid #B8860B; text-shadow: 0 1px 2px rgba(0,0,0,0.5); 
-        }
-
-        .preview-carbon { 
-            background: 
-                linear-gradient(27deg, #151515 5px, transparent 5px) 0 5px,
-                linear-gradient(207deg, #151515 5px, transparent 5px) 10px 0px,
-                linear-gradient(27deg, #222 5px, transparent 5px) 0px 10px,
-                linear-gradient(207deg, #222 5px, transparent 5px) 10px 5px,
-                linear-gradient(90deg, #1b1b1b 10px, transparent 10px),
-                linear-gradient(#1d1d1d 25%, #1a1a1a 25%, #1a1a1a 50%, transparent 50%, transparent 75%, #242424 75%, #242424);
-            background-color: #131313;
-            background-size: 20px 20px;
-            color: #aaa; border: 1px solid #000;
-        }
-
-        .preview-neon_blue { background: #000; border: 2px solid #00E5FF; color: #00E5FF; box-shadow: 0 0 15px #00E5FF, inset 0 0 10px #00E5FF; text-shadow: 0 0 8px #00E5FF; }
-        .preview-neon_pink { background: #000; border: 2px solid #FF4081; color: #FF4081; box-shadow: 0 0 15px #FF4081, inset 0 0 10px #FF4081; text-shadow: 0 0 8px #FF4081; }
-        .preview-neon_green { background: #000; border: 2px solid #00E676; color: #00E676; box-shadow: 0 0 15px #00E676, inset 0 0 10px #00E676; text-shadow: 0 0 8px #00E676; }
-        .preview-stealth { background: linear-gradient(135deg, #2c3e50, #000000); border: 1px solid #34495e; color: #7f8c8d; opacity: 0.8; }
-
-        .preview-glass_clear { background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1)); border: 1px solid rgba(255,255,255,0.6); color: #fff; box-shadow: inset 0 0 15px rgba(255,255,255,0.2); }
-        .preview-glass_ruby { background: linear-gradient(135deg, rgba(220, 20, 60, 0.6), rgba(100, 0, 0, 0.4)); border: 1px solid rgba(255, 100, 100, 0.5); color: #ffb3b3; box-shadow: inset 0 0 15px rgba(220, 20, 60, 0.4); }
-        .preview-glass_emerald { background: linear-gradient(135deg, rgba(46, 204, 113, 0.5), rgba(0, 100, 50, 0.4)); border: 1px solid rgba(100, 255, 150, 0.5); color: #d0f0c0; box-shadow: inset 0 0 15px rgba(46, 204, 113, 0.4); }
-        .preview-glass_sapphire { background: linear-gradient(135deg, rgba(65, 105, 225, 0.5), rgba(0, 0, 100, 0.4)); border: 1px solid rgba(100, 150, 255, 0.5); color: #c0d0ff; box-shadow: inset 0 0 15px rgba(65, 105, 225, 0.4); }
-
-        .preview-magma { 
-            background: radial-gradient(circle, #ffeb3b 10%, #ff9800 40%, #b71c1c 90%);
-            color: #fff; border: 2px solid #ff5722; 
-            box-shadow: 0 0 10px #ff5722; text-shadow: 0 0 2px #000;
-            animation: magmaPulse 3s infinite alternate;
-        }
-        @keyframes magmaPulse { 0% { box-shadow: 0 0 10px #ff5722; } 100% { box-shadow: 0 0 20px #ff9800; } }
-
-        .preview-galaxy { 
-            background: radial-gradient(circle at 30% 30%, #a18cd1 0%, #302b63 50%, #0f0c29 100%);
-            color: #fff; border: 1px solid #a18cd1; 
-            box-shadow: 0 0 10px rgba(161, 140, 209, 0.5);
-        }
-        
-        .preview-retro { 
-            background-color: #9bbc0f; 
-            background-image: linear-gradient(transparent 50%, rgba(0,0,0,0.1) 50%), linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.1) 50%);
-            background-size: 4px 4px;
-            color: #0f380f; border: 3px solid #0f380f; 
-            font-family: 'Courier New', monospace; font-weight: 900; 
-        }
-        
-        .preview-hologram { 
-            background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2)); 
-            border: 1px solid rgba(255,255,255,0.8); color: white; 
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.3);
-            text-shadow: 2px 0 #00ffff, -2px 0 #ff00ff;
-        }
-
-        .title { color: var(--gold-main); font-weight: bold; margin-bottom: 5px; font-size: 0.85rem; text-transform: uppercase;}
-        .price { font-size: 0.8rem; margin-bottom: 5px; color: var(--text-muted); }
-        .old-price { text-decoration: line-through; color: var(--danger); font-size: 0.7rem; margin-right: 5px;}
-        
-        .btn-group { width: 100%; margin-top: auto; display: flex; flex-direction: column; gap: 5px; }
-        
-        .btn-action { 
-            padding: 8px 16px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; width: 100%; text-transform: uppercase; font-size: 0.75rem; 
-        }
-        .btn-buy { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); transition: 0.2s;}
-        .btn-buy:active { transform: scale(0.95); }
-        .btn-equip { background: transparent; border: 1px solid var(--success); color: var(--success); }
-        .btn-active { background: var(--success); color: #fff; cursor: default; box-shadow: 0 0 10px rgba(102, 187, 106, 0.3); }
-        
-        .btn-discount {
-            background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: #64B5F6;
-            font-size: 0.65rem; padding: 5px; display: flex; align-items: center; justify-content: center; gap: 5px;
-        }
-        .btn-discount:active { background: rgba(33, 150, 243, 0.4); }
-
-        /* --- STILIZOVANI MODALI --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 10000; display: none;
-            align-items: center; justify-content: center;
-            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-        }
-        
-        .modal-card {
-            background: linear-gradient(135deg, rgba(30,30,30,0.95), rgba(10,10,10,0.98));
-            border: 1px solid var(--gold-main);
-            box-shadow: 0 0 30px rgba(0,0,0,0.8), inset 0 0 20px rgba(224, 201, 149, 0.05);
-            padding: 25px; border-radius: 20px; width: 85%; max-width: 320px;
-            text-align: center; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-        }
-        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-        .modal-icon { font-size: 3rem; margin-bottom: 5px; }
-        .modal-title { color: var(--gold-main); font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-        .modal-msg { color: var(--text-main); font-size: 0.9rem; line-height: 1.4; color: #ccc;}
-        
-        .modal-btn-group { display: flex; gap: 10px; width: 100%; margin-top: 10px; }
-        .modal-btn { flex: 1; padding: 12px; border-radius: 25px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
-        .btn-modal-cancel { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
-        .btn-modal-confirm { background: var(--gold-main); color: #000; box-shadow: 0 0 15px var(--gold-glow); }
-        .btn-modal-ok { background: var(--gold-main); color: #000; width: 100%; }
-
-        /* AD OVERLAY */
-        #ad-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 11000; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .ad-content { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(circle, #222, #000); }
-        .ad-text { color: white; font-size: 1.5rem; margin-bottom: 20px; font-weight: bold; }
-        .ad-spinner { border: 5px solid #333; border-top: 5px solid #2196F3; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        .ad-timer-badge { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.5); color: white; padding: 5px 10px; border-radius: 10px; border: 1px solid #555; font-size: 0.9rem; }
-        .ad-close-btn { position: absolute; top: 20px; right: 20px; background: transparent; color: white; border: 2px solid white; border-radius: 50%; width: 30px; height: 30px; display: none; align-items: center; justify-content: center; cursor: pointer; font-weight: bold; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* --- REWARD NOTIFICATION MODAL --- */
-        #reward-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 10000; display: none;
-            align-items: center; justify-content: center;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-        }
-        .reward-card {
-            background: linear-gradient(135deg, rgba(30,30,30,0.9), rgba(10,10,10,0.95));
-            border: 2px solid var(--gold-main);
-            box-shadow: 0 0 30px var(--gold-glow), inset 0 0 20px rgba(224, 201, 149, 0.1);
-            padding: 30px; border-radius: 20px; width: 90%; max-width: 350px;
-            text-align: center; animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-        }
-        .reward-icon { font-size: 4rem; animation: floatIcon 2s ease-in-out infinite; filter: drop-shadow(0 0 15px var(--gold-glow)); }
-        @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        
-        .reward-title { color: var(--gold-main); font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
-        .reward-msg { color: var(--text-main); font-size: 1rem; line-height: 1.5; }
-        .reward-amount { color: var(--success); font-size: 1.8rem; font-weight: bold; text-shadow: 0 0 10px rgba(76, 175, 80, 0.4); display: block; margin: 10px 0; }
-        
-        .btn-claim {
-            background: var(--gold-main); color: #000; border: none; padding: 12px 30px;
-            font-size: 1rem; font-weight: bold; border-radius: 30px; cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: transform 0.2s; text-transform: uppercase;
-            width: 100%; margin-top: 10px;
-        }
-        .btn-claim:active { transform: scale(0.95); }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 2px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div id="ad-overlay">
-        <div class="ad-content">
-            <div class="ad-timer-badge">Preostalo: <span id="ad-countdown">5</span>s</div>
-            <button id="ad-close" class="ad-close-btn">✕</button>
-            <div class="ad-spinner"></div>
-            <div class="ad-text">POPUST SE UČITAVA...</div>
-            <p style="color:#aaa; font-size:0.8rem;">(Simulacija AdMob Reward Videa)</p>
-        </div>
-    </div>
-
-    <div id="reward-modal">
-        <div class="reward-card">
-            <div class="reward-icon">💰</div>
-            <div class="reward-title">NAGRADA!</div>
-            <div class="reward-msg">
-                Uspešno ste odgledali reklamu.
-                <span class="reward-amount">+500 DUKATA</span>
-            </div>
-            <button class="btn-claim" onclick="closeRewardModal()">HVALA</button>
-        </div>
-    </div>
-
-    <div id="notification-modal" class="modal-overlay">
-        <div class="modal-card">
-            <div id="notif-icon" class="modal-icon">✅</div>
-            <div id="notif-title" class="modal-title">USPEH</div>
-            <div id="notif-msg" class="modal-msg">Poruka ide ovde.</div>
-            <button class="modal-btn btn-modal-ok" onclick="closeNotification()">U REDU</button>
-        </div>
-    </div>
-
-    <div id="confirm-modal" class="modal-overlay">
-        <div class="modal-card">
-            <div class="modal-icon">🛒</div>
-            <div class="modal-title">POTVRDA</div>
-            <div id="confirm-msg" class="modal-msg">Da li želite da kupite ovo?</div>
-            <div class="modal-btn-group">
-                <button class="modal-btn btn-modal-cancel" onclick="closeConfirmModal()">OTKAŽI</button>
-                <button id="btn-confirm-buy" class="modal-btn btn-modal-confirm">KUPI</button>
-            </div>
-        </div>
-    </div>
+    <div id="ad-overlay"><div class="ad-content"><div class="ad-timer-badge">Preostalo: <span id="ad-countdown">5</span>s</div><button id="ad-close" class="ad-close-btn">✕</button><div class="ad-spinner"></div><div class="ad-text">POPUST SE UČITAVA...</div><p style="color:#aaa; font-size:0.8rem;">(Simulacija AdMob Reward Videa)</p></div></div>
+    <div id="reward-modal"><div class="reward-card"><div class="reward-icon">💰</div><div class="reward-title">NAGRADA!</div><div class="reward-msg">Uspešno ste odgledali reklamu.<span class="reward-amount">+500 DUKATA</span></div><button class="btn-claim" onclick="closeRewardModal()">HVALA</button></div></div>
+    <div id="notification-modal" class="modal-overlay"><div class="modal-card"><div id="notif-icon" class="modal-icon">✅</div><div id="notif-title" class="modal-title">USPEH</div><div id="notif-msg" class="modal-msg">Poruka ide ovde.</div><button class="modal-btn btn-modal-ok" onclick="closeNotification()">U REDU</button></div></div>
+    <div id="confirm-modal" class="modal-overlay"><div class="modal-card"><div class="modal-icon">🛒</div><div class="modal-title">POTVRDA</div><div id="confirm-msg" class="modal-msg">Da li želite da kupite ovo?</div><div class="modal-btn-group"><button class="modal-btn btn-modal-cancel" onclick="closeConfirmModal()">OTKAŽI</button><button id="btn-confirm-buy" class="modal-btn btn-modal-confirm">KUPI</button></div></div></div>
 
     <button class="back-btn" onclick="window.location.href='riznica.html'">←</button>
-
     <div class="header">
         <div class="balance-group">
-            <button class="ad-btn-small" onclick="watchAdForMoney()">
-                <span>📺 +500</span>
-            </button>
+            <button class="ad-btn-small" onclick="watchAdForMoney()"><span>📺 +500</span></button>
             <div class="balance-display">💰 <span id="balance">0</span></div>
         </div>
     </div>
-
     <div class="nav-tabs">
         <button class="tab-btn" onclick="window.location.href='riznica.html'">TROFEJI 🏆</button>
         <button class="tab-btn active">KOCKICE 🎲</button>
         <button class="tab-btn" onclick="window.location.href='efekti.html'">EFEKTI ✨</button>
     </div>
-
     <div id="content-container" class="content-area"></div>
 
     <script>
@@ -417,7 +65,6 @@
 
         const balEl = document.getElementById('balance');
         balEl.innerText = balance;
-
         const container = document.getElementById('content-container');
 
         function render() {
@@ -427,36 +74,29 @@
                 if (!grouped[skin.category]) grouped[skin.category] = [];
                 grouped[skin.category].push(skin);
             });
-
             for (const [categoryName, items] of Object.entries(grouped)) {
                 const sectionDiv = document.createElement('div');
                 sectionDiv.className = 'category-section';
-                
                 const headerDiv = document.createElement('div');
                 headerDiv.className = 'category-header';
                 headerDiv.innerText = categoryName;
                 sectionDiv.appendChild(headerDiv);
-
                 const gridDiv = document.createElement('div');
                 gridDiv.className = 'category-grid';
-
                 items.forEach(item => {
                     const isUnlocked = unlocked.includes(item.id);
                     const isActive = activeSkin === item.id;
                     const card = document.createElement('div');
                     card.className = `card ${isActive ? 'active-skin' : ''}`;
-
                     let displayPriceHtml = item.price + ' 💰';
                     let currentPrice = item.price;
                     let showDiscountBtn = false;
-
                     if (discountedItems[item.id]) {
                         currentPrice = Math.max(0, item.price - 200);
                         displayPriceHtml = `<span class="old-price">${item.price}</span> ${currentPrice} 💰`;
                     } else if (!isUnlocked && item.price > 0) {
                         showDiscountBtn = true;
                     }
-
                     let btnHtml = '';
                     if (isActive) {
                         btnHtml = `<button class="btn-action btn-active">AKTIVNO</button>`;
@@ -468,21 +108,13 @@
                             ${showDiscountBtn ? `<button class="btn-action btn-discount" onclick="watchAdForDiscount('${item.id}')">📺 % -200</button>` : ''}
                         </div>`;
                     }
-
-                    card.innerHTML = `
-                        <div class="dice-preview preview-${item.id}">⚅</div>
-                        <div class="title">${item.name}</div>
-                        <div class="price">${isUnlocked ? '✔ Kupljeno' : displayPriceHtml}</div>
-                        ${btnHtml}
-                    `;
+                    card.innerHTML = `<div class="dice-preview preview-${item.id}">⚅</div><div class="title">${item.name}</div><div class="price">${isUnlocked ? '✔ Kupljeno' : displayPriceHtml}</div>${btnHtml}`;
                     gridDiv.appendChild(card);
                 });
-
                 sectionDiv.appendChild(gridDiv);
                 container.appendChild(sectionDiv);
             }
         }
-
         function showNotification(title, msg, icon='✅', type='success') {
             document.getElementById('notif-title').innerText = title;
             document.getElementById('notif-msg').innerText = msg;
@@ -490,34 +122,17 @@
             document.getElementById('notif-title').style.color = type === 'error' ? 'var(--danger)' : 'var(--gold-main)';
             document.getElementById('notification-modal').style.display = 'flex';
         }
-
-        function closeNotification() {
-            document.getElementById('notification-modal').style.display = 'none';
-        }
-
+        function closeNotification() { document.getElementById('notification-modal').style.display = 'none'; }
         function openConfirmModal(id, name, price) {
-            if (balance < price) {
-                showNotification("NEDOVOLJNO NOVCA", "Nemate dovoljno dukata za ovu kupovinu.", "❌", "error");
-                return;
-            }
+            if (balance < price) { showNotification("NEDOVOLJNO NOVCA", "Nemate dovoljno dukata za ovu kupovinu.", "❌", "error"); return; }
             document.getElementById('confirm-msg').innerHTML = `Da li želite da kupite <b>${name}</b> za <b style="color:var(--gold-main)">${price}</b> dukata?`;
-            
             const btnConfirm = document.getElementById('btn-confirm-buy');
             const newBtn = btnConfirm.cloneNode(true);
             btnConfirm.parentNode.replaceChild(newBtn, btnConfirm);
-            
-            newBtn.onclick = () => {
-                closeConfirmModal();
-                performBuy(id, price, name);
-            };
-            
+            newBtn.onclick = () => { closeConfirmModal(); performBuy(id, price, name); };
             document.getElementById('confirm-modal').style.display = 'flex';
         }
-
-        function closeConfirmModal() {
-            document.getElementById('confirm-modal').style.display = 'none';
-        }
-
+        function closeConfirmModal() { document.getElementById('confirm-modal').style.display = 'none'; }
         function performBuy(id, price, name) {
             balance -= price;
             unlocked.push(id);
@@ -527,35 +142,16 @@
             render();
             showNotification("USPEŠNA KUPOVINA", `Kupili ste ${name}!`, "🎉");
         }
-
         function watchAdForDiscount(itemId) {
             document.querySelector('.ad-text').innerText = "POPUST SE UČITAVA...";
-            simulateAd(() => {
-                discountedItems[itemId] = true;
-                render();
-            });
+            simulateAd(() => { discountedItems[itemId] = true; render(); });
         }
-
         function watchAdForMoney() {
             document.querySelector('.ad-text').innerText = "NAGRADA SE UČITAVA...";
-            simulateAd(() => {
-                balance += 500;
-                localStorage.setItem('yamb_dukati', balance);
-                balEl.innerText = balance;
-                showRewardModal();
-            });
+            simulateAd(() => { balance += 500; localStorage.setItem('yamb_dukati', balance); balEl.innerText = balance; showRewardModal(); });
         }
-
-        function showRewardModal() {
-            const modal = document.getElementById('reward-modal');
-            modal.style.display = 'flex';
-        }
-
-        function closeRewardModal() {
-            const modal = document.getElementById('reward-modal');
-            modal.style.display = 'none';
-        }
-
+        function showRewardModal() { document.getElementById('reward-modal').style.display = 'flex'; }
+        function closeRewardModal() { document.getElementById('reward-modal').style.display = 'none'; }
         function simulateAd(callback) {
             const overlay = document.getElementById('ad-overlay');
             const counter = document.getElementById('ad-countdown');
@@ -567,23 +163,11 @@
             const interval = setInterval(() => {
                 timeLeft--;
                 counter.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    closeBtn.style.display = 'flex';
-                }
+                if (timeLeft <= 0) { clearInterval(interval); closeBtn.style.display = 'flex'; }
             }, 1000);
-            closeBtn.onclick = () => {
-                overlay.style.display = 'none';
-                if(callback) callback();
-            };
+            closeBtn.onclick = () => { overlay.style.display = 'none'; if(callback) callback(); };
         }
-
-        window.equip = function(id) {
-            activeSkin = id;
-            localStorage.setItem('yamb_active_skin', id);
-            render();
-        };
-
+        window.equip = function(id) { activeSkin = id; localStorage.setItem('yamb_active_skin', id); render(); };
         render();
     </script>
 </body>
