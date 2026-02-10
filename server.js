@@ -5,6 +5,7 @@ const http = require('http');
 const { Server } = require("socket.io");
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path'); // Dodato za rad sa putanjama fajlova
 
 // Inicijalizacija aplikacije
 const app = express();
@@ -22,14 +23,23 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
+// --- SERVIRANJE STATIČKIH FAJLOVA (KLJUČNO ZA RAD LINKA) ---
+// Ovo omogućava da server šalje css, js i slike iz istog foldera
+app.use(express.static(path.join(__dirname, '.')));
+
 // --- MONGODB KONEKCIJA ---
 const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI)
-.then(() => console.log('✅ MongoDB connected!'))
-.catch(err => {
-    console.error('❌ MongoDB connection error:', err.message);
-});
+// Provera da li postoji Mongo URI pre konekcije da ne puca server ako nije podešen
+if (MONGO_URI) {
+    mongoose.connect(MONGO_URI)
+    .then(() => console.log('✅ MongoDB connected!'))
+    .catch(err => {
+        console.error('❌ MongoDB connection error:', err.message);
+    });
+} else {
+    console.log('⚠️ UPOZORENJE: MONGO_URI nije podešen u .env fajlu. Baza neće raditi.');
+}
 
 // --- MODEL PODATAKA ---
 const ScoreSchema = new mongoose.Schema({
@@ -42,11 +52,13 @@ const ScoreSchema = new mongoose.Schema({
 const Score = mongoose.model('Score', ScoreSchema);
 
 // --- REST API RUTE ---
+
+// GLAVNA RUTA: Kada neko otvori link, šaljemo mu index.html (IGRU)
 app.get('/', (req, res) => {
-    res.send("Yamb Server is Running!");
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// --- GLOBALNE PROMENLJIVE ---
+// --- GLOBALNE PROMENLJIVE ZA IGRU ---
 let waitingPlayer = null; // Igrač koji čeka random partiju
 let privateRooms = {};    // Sobe za privatne igre (waiting rooms)
 let playerRooms = {};     // KLJUČNO: Mapa SocketID -> RoomID (Gde se ko trenutno igra)
@@ -63,6 +75,8 @@ io.on('connection', (socket) => {
     // ==================================================================
     socket.on('get_global_highscores', async (period) => {
         try {
+            if (!MONGO_URI) return; // Ako nema baze, ne radi ništa
+
             let filter = {};
             const now = new Date();
             
@@ -77,12 +91,15 @@ io.on('connection', (socket) => {
             const scores = await Score.find(filter).sort({ score: -1 }).limit(50);
             socket.emit('global_highscores_data', scores);
         } catch (err) {
+            console.error("Greška pri dohvatanju skorova:", err);
             socket.emit('global_highscores_data', []); 
         }
     });
 
     socket.on('submit_score', async (data) => {
         try {
+            if (!MONGO_URI) return;
+
             const finalName = data.name || data.playerName || "Nepoznat Igrač";
             if (!data.score) return;
             
@@ -121,7 +138,7 @@ io.on('connection', (socket) => {
                 socket.join(roomId);
                 opponentSocket.join(roomId);
 
-                // Upisujemo u mapu gde se ko nalazi (OVO JE BITNO ZA SINHRONIZACIJU)
+                // Upisujemo u mapu gde se ko nalazi
                 playerRooms[socket.id] = roomId;
                 playerRooms[opponentId] = roomId;
 
@@ -157,10 +174,19 @@ io.on('connection', (socket) => {
     socket.on('join_private_game', ({ nickname, roomId }) => {
         console.log(`🏠 Zahtev za Private sobu: ${roomId} od ${nickname}`);
 
+        if (!roomId) {
+            socket.emit('error_msg', "Nevažeći ID sobe.");
+            return;
+        }
+
         // Scenarijo 1: Soba ne postoji (Kreiraj je i čekaj)
         if (!privateRooms[roomId]) {
             privateRooms[roomId] = { p1: { id: socket.id, name: nickname } };
             socket.join(roomId);
+            
+            // Obeležimo da je igrač u ovoj sobi (iako čeka)
+            playerRooms[socket.id] = roomId;
+
             socket.emit('private_waiting', { roomId });
             console.log(`--> Soba ${roomId} kreirana. Čeka se P2.`);
         } 
@@ -176,16 +202,23 @@ io.on('connection', (socket) => {
                 console.log("--> Host je nestao. Postajem novi host.");
                 privateRooms[roomId] = { p1: { id: socket.id, name: nickname } };
                 socket.join(roomId);
+                playerRooms[socket.id] = roomId;
                 socket.emit('private_waiting', { roomId });
                 return;
+            }
+
+            // Provera da isti igrač ne pokušava da igra sam sa sobom (u istom browseru/tabu)
+            if (p1.id === socket.id) {
+                return; // Ignoriši dupli zahtev
             }
 
             // Ako je host tu, pridruži se kao P2
             privateRooms[roomId].p2 = { id: socket.id, name: nickname };
             socket.join(roomId);
 
-            // Upisujemo u mapu soba (ISTO KAO KOD RANDOM IGRE)
+            // Upisujemo u mapu soba
             playerRooms[socket.id] = roomId;
+            // P1 je već upisan pri kreiranju, ali za svaki slučaj:
             playerRooms[p1.id] = roomId;
 
             console.log(`⚔️ PRIVATE MATCH: ${p1.name} vs ${nickname} u sobi ${roomId}`);
@@ -204,7 +237,7 @@ io.on('connection', (socket) => {
                 myIndex: 1
             });
 
-            // Brišemo iz liste čekanja jer je igra počela
+            // Brišemo iz liste čekanja jer je igra počela (više niko ne može da uđe)
             delete privateRooms[roomId]; 
         } else {
             // Scenarijo 3: Soba je puna
@@ -215,8 +248,6 @@ io.on('connection', (socket) => {
     // ==================================================================
     // 3. GAMEPLAY RELEJI (UNIVERZALNA SINHRONIZACIJA)
     // ==================================================================
-    // Ovde koristimo 'playerRooms[socket.id]' da nađemo sobu. 
-    // Ne verujemo klijentu šta šalje kao roomId, već koristimo server state.
     
     const relayEvent = (eventName, data) => {
         const roomId = playerRooms[socket.id];
@@ -236,9 +267,8 @@ io.on('connection', (socket) => {
     socket.on('game_over', () => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
-            delete playerRooms[socket.id];
-            // Opciono: izbaci ga iz socket sobe
-            socket.leave(roomId);
+            // Ne brišemo odmah sobu da bi chat mogao da radi na kraju, 
+            // ali možemo označiti kraj. Za sad ostavljamo ovako.
         }
     });
 
@@ -254,7 +284,14 @@ io.on('connection', (socket) => {
         if (activeRoomId) {
             console.log(`📢 Igrač izašao iz aktivne sobe ${activeRoomId}`);
             socket.to(activeRoomId).emit('opponent_left');
+            
+            // Očisti reference
             delete playerRooms[socket.id];
+            
+            // Ako je soba bila u privateRooms (neko je čekao), obriši je
+            if (privateRooms[activeRoomId]) {
+                delete privateRooms[activeRoomId];
+            }
         }
 
         // 2. Provera čekanja za Random igru
@@ -262,11 +299,16 @@ io.on('connection', (socket) => {
             waitingPlayer = null;
         }
 
-        // 3. Provera čekanja za Private igru (Ako je bio host)
+        // 3. Dodatna čistačica za Private sobe (ako je host izašao pre nego što je igra počela)
+        // Ovo je malo "teže" pretraživanje, ali sigurno čisti memoriju
         for (const [roomId, roomData] of Object.entries(privateRooms)) {
             if (roomData.p1 && roomData.p1.id === socket.id) {
                 delete privateRooms[roomId];
                 console.log(`🗑️ Private soba ${roomId} obrisana jer je host izašao.`);
+            }
+            if (roomData.p2 && roomData.p2.id === socket.id) {
+                // Ako je P2 izašao dok se nešto dešavalo (retko, ali moguće)
+                delete privateRooms[roomId].p2;
             }
         }
         
