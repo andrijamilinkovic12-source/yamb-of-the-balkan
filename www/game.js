@@ -145,7 +145,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v6.6 - INVITE LINK FIX");
+        console.log("YambApp v6.7 - INVITE LINK FIXED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -571,13 +571,23 @@ class YambApp {
     }
     
     // --- ONLINE METODE ---
+    
+    // --- KLJUČNA IZMENA ZA SHARE LINK ---
     async startPrivateHosting() { 
         const nickname = this.playerName; 
         if (!nickname) return; 
         const roomId = "yamb-" + Math.random().toString(36).substring(2, 8); 
         
-        // KLJUČNA IZMENA: Koristimo window.location.origin da bi link uvek bio tačan
-        const baseUrl = window.location.origin;
+        let baseUrl = window.location.origin;
+        
+        // 1. Ako postoji definisan SERVER_URL u config.js (Render/Heroku), koristi njega.
+        if (typeof SERVER_URL !== 'undefined' && SERVER_URL.startsWith('http')) {
+            baseUrl = SERVER_URL;
+        }
+        
+        // Ukloni trailing slash ako ga ima
+        if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
+
         const shareUrl = baseUrl + "/?room=" + roomId; 
         
         this.navigateTo('waiting-screen'); 
