@@ -1,0 +1,609 @@
+/* =========================================================
+   THEMES ENGINE (SYNCHRONIZED 3D GEOMETRY + GLOW EFFECTS)
+   Filename: themes.css
+   ========================================================= */
+
+/* --- 1. BASE VARIABLES & PALETTES --- */
+:root {
+    --bg-base: #121212; 
+    --bg-gradient-1: #1e2023; --bg-gradient-2: #000000;
+    
+    /* 3D Gold Palette */
+    --gold-main: #E0C995; 
+    --gold-dark: #8a784d; 
+    --gold-highlight: #fff5da; 
+    --gold-glow: rgba(224, 201, 149, 0.4);
+    
+    /* Contrast Colors */
+    --text-main: #F0F0F0;       
+    --text-filled: #FFFFFF;     
+    --text-sum: #E0C995;        
+    --text-sum-label: #FFD700;
+    --text-muted: #888;
+
+    /* 3D Glass & Surfaces */
+    --glass-bg: linear-gradient(145deg, rgba(40, 40, 40, 0.6), rgba(10, 10, 10, 0.8)); 
+    --glass-panel: linear-gradient(145deg, rgba(35, 35, 40, 0.9), rgba(15, 15, 20, 0.95));
+    --glass-border: 1px solid rgba(224, 201, 149, 0.15); 
+    
+    --glass-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    
+    /* UI Elementi */
+    --modal-bg: linear-gradient(145deg, #1e2023, #0d0d0d);
+    --input-bg: #050505; --input-border: #444;
+    
+    --dice-bg: linear-gradient(145deg, #2a2a2a, #151515); 
+    --dice-border: rgba(224, 201, 149, 0.3);
+    --dice-color: #e0e0e0; --dice-active: #fff;
+
+    --grid-cell-bg: rgba(0, 0, 0, 0.3); 
+    --grid-header-bg: linear-gradient(to bottom, rgba(224, 201, 149, 0.15), rgba(20, 20, 20, 0.8)); 
+    
+    --danger: #ff5252; --success: #66BB6A;
+    --col-nadole: #81D4FA; --col-nagore: #EF9A9A; --col-sredina: #FFCC80; 
+    --col-rucno: #CE93D8; --col-najava: #E0C995; --col-slobodna: #B0BEC5;
+    
+    --safe-top: max(45px, env(safe-area-inset-top)); 
+    --safe-bottom: max(35px, env(safe-area-inset-bottom));
+    --safe-left: env(safe-area-inset-left, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+}
+
+/* =========================================================
+   UNIVERSAL GEOMETRY SYNCHRONIZATION
+   (Ovo primenjuje Valentines oblik na SVE teme)
+   ========================================================= */
+
+/* 1. TABLE GEOMETRY (Nagnuta tabla sa debljinom) */
+body .player-table {
+    transform: perspective(1000px) rotateX(1deg) !important;
+    border-radius: 16px !important;
+    border-style: solid !important;
+    border-width: 2px !important; 
+    margin-bottom: 5px !important;
+    transition: transform 0.3s, box-shadow 0.3s !important;
+}
+
+/* 2. MENU BUTTONS (Pilule sa 5px dubinom) */
+body .btn-menu {
+    border-radius: 50px !important;
+    font-weight: 800 !important;
+    letter-spacing: 1.5px !important;
+    margin-bottom: 12px !important;
+    transform: translateY(0); 
+    transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+body .btn-menu:active {
+    transform: translateY(5px) !important;
+}
+
+/* 3. GAME BUTTONS (Debeli 3D) */
+body .btn-throw,
+body .btn-primary,
+body .btn-secondary,
+body #btn-najava {
+    border-radius: 20px !important;
+    font-weight: 900 !important;
+    transform: translateY(0);
+    transition: all 0.1s;
+}
+body .btn-throw:active,
+body .btn-primary:active,
+body .btn-secondary:active,
+body #btn-najava:active {
+    transform: translateY(5px) !important;
+}
+
+/* =========================================================
+   THEME SPECIFIC STYLES (Colors + 3D Shadows + Glow Effects)
+   ========================================================= */
+
+/* --- 1. DARK THEME (BASE) --- */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .player-table {
+    border-color: rgba(224, 201, 149, 0.15) !important;
+    background: linear-gradient(145deg, rgba(35, 35, 40, 0.9), rgba(15, 15, 20, 0.95)) !important;
+    /* Crna senka za dubinu */
+    box-shadow: 0 10px 0 #000, 0 20px 40px rgba(0, 0, 0, 0.8) !important;
+}
+
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-menu {
+    background: linear-gradient(145deg, #252525, #151515);
+    border: 1px solid rgba(255,255,255,0.05);
+    color: var(--gold-main);
+    /* 5px crna senka */
+    box-shadow: 0 5px 0 #000, 0 10px 20px rgba(0,0,0,0.5) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-menu:active {
+    box-shadow: 0 0 0 #000, inset 0 2px 10px rgba(0,0,0,0.8) !important;
+    border-color: var(--gold-main);
+}
+
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-primary {
+    background: linear-gradient(145deg, #3d341e, #241e0f);
+    border: 1px solid var(--gold-main);
+    color: #fff;
+    text-shadow: 0 0 5px var(--gold-main);
+}
+
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-throw {
+    background: linear-gradient(to bottom, #E0C995, #b89f65);
+    color: #121212;
+    border: 1px solid #FFE082;
+    box-shadow: 0 5px 0 #8a784d, 0 10px 15px rgba(0,0,0,0.5) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-throw:active {
+    box-shadow: 0 0 0 #8a784d, inset 0 2px 5px rgba(0,0,0,0.3) !important;
+}
+
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-secondary,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-najava {
+    background: linear-gradient(145deg, #333, #222);
+    color: var(--text-muted);
+    border: 1px solid #444;
+    box-shadow: 0 5px 0 #000, 0 5px 10px rgba(0,0,0,0.3) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-secondary:active,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-najava:active {
+    box-shadow: 0 0 0 #000, inset 0 2px 5px rgba(0,0,0,0.5) !important;
+    color: var(--gold-main);
+}
+
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .grid-cell {
+    background: #0a0a0a;
+    border: 1px solid rgba(255,255,255,0.03);
+    box-shadow: inset 2px 2px 5px rgba(0,0,0,0.9), inset -1px -1px 0 rgba(255,255,255,0.05);
+    margin: 1px;
+    border-radius: 4px;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .col-header,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .row-header {
+    background: linear-gradient(to bottom, #2a2a2a, #151515);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    border-bottom: 1px solid #333;
+    z-index: 5;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .modal-box,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .card {
+    background: linear-gradient(135deg, #1e2023, #101010) !important;
+    border: 1px solid #333 !important;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.1) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .card.active-skin {
+    border: 1px solid var(--gold-main) !important;
+    box-shadow: 0 0 15px rgba(224, 201, 149, 0.2), inset 0 0 20px rgba(224, 201, 149, 0.1) !important;
+}
+
+/* --- DARK THEME GLOW EFFECTS --- */
+/* 1. UPISANI BROJEVI (Sijaju) */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .score-btn.filled {
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 10px var(--gold-main), 0 0 20px var(--gold-dark);
+    background: radial-gradient(circle, rgba(224, 201, 149, 0.25) 0%, transparent 70%) !important;
+    transition: all 0.3s ease;
+}
+
+/* 2. SUME (BEZ SJAJA - Cista Zlatna/Zuta boja) */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .cell-sum {
+    color: #FFD700 !important; /* Cista zlatna da odskace od bele */
+    font-weight: 700 !important;
+    text-shadow: 1px 1px 0 #000 !important; /* Ostra senka za citljivost, nema blura */
+    background: rgba(255, 215, 0, 0.05) !important; /* Blaga ravna pozadina */
+    border: 1px solid rgba(255, 215, 0, 0.15) !important;
+}
+
+
+/* --- 2. LIGHT THEME --- */
+body.light-theme {
+    --bg-base: #e0e5ec; 
+    --bg-gradient-1: #fdfbf7; --bg-gradient-2: #e6e9f0; 
+    --gold-main: #c5a028; --gold-glow: rgba(197, 160, 40, 0.4);
+    --text-main: #2c3e50; --text-filled: #333333;   
+    --text-sum: #d32f2f; --text-sum-label: #b71c1c;
+    --text-muted: #607d8b;
+    --glass-bg: rgba(255, 255, 255, 0.6); 
+    --glass-panel: rgba(255, 255, 255, 0.85);
+    --glass-border: 1px solid rgba(197, 160, 40, 0.3); 
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    --modal-bg: #f8f9fa; 
+    --input-bg: #ffffff; --input-border: #cfd8dc;
+    --dice-bg: linear-gradient(135deg, #ffffff, #f0f0f0); --dice-border: #ccc;
+    --dice-color: #333; --dice-active: #000;
+    --grid-cell-bg: rgba(0,0,0,0.03); --grid-header-bg: rgba(255, 255, 255, 0.9);
+    --col-nadole: #0288d1; --col-nagore: #d32f2f; --col-sredina: #f57c00; 
+    --col-rucno: #7b1fa2; --col-najava: #c5a028; --col-slobodna: #455a64;
+}
+
+body.light-theme .player-table {
+    border-color: #c5a028 !important;
+    background: #ffffff !important;
+    /* Braon/Zlatna senka za dubinu */
+    box-shadow: 0 10px 0 #8d6e63, 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+}
+
+body.light-theme .btn-menu {
+    border: none;
+    background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+    color: #37474f;
+    text-shadow: 0 1px 0 rgba(255,255,255,1);
+    /* Siva senka */
+    box-shadow: 0 5px 0 #90a4ae, 0 10px 20px rgba(0, 0, 0, 0.15) !important;
+}
+body.light-theme .btn-menu:active {
+    box-shadow: 0 0 0 #90a4ae, inset 0 2px 10px rgba(0,0,0,0.1) !important;
+}
+
+body.light-theme .btn-primary { 
+    background: linear-gradient(to bottom, #ffd700, #ffca28); 
+    color: #3e2723;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+    box-shadow: 0 5px 0 #c6a700, 0 12px 20px rgba(255, 215, 0, 0.3) !important;
+}
+body.light-theme .btn-primary:active { 
+    box-shadow: 0 0 0 #c6a700, inset 0 2px 10px rgba(62, 39, 35, 0.2) !important;
+}
+
+body.light-theme .btn-throw {
+    background: linear-gradient(to bottom, #ffd700, #fbc02d);
+    color: #3e2723;
+    border: 1px solid #f9a825;
+    box-shadow: 0 5px 0 #c6a700, 0 10px 15px rgba(0,0,0,0.15) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+body.light-theme .btn-throw:active {
+    box-shadow: 0 0 0 #c6a700, inset 0 2px 5px rgba(62, 39, 35, 0.1) !important;
+}
+
+body.light-theme .btn-secondary,
+body.light-theme #btn-najava {
+    background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+    color: #455a64;
+    border: 1px solid #cfd8dc;
+    box-shadow: 0 5px 0 #90a4ae, 0 5px 10px rgba(0,0,0,0.1) !important;
+}
+body.light-theme .btn-secondary:active,
+body.light-theme #btn-najava:active {
+    box-shadow: 0 0 0 #90a4ae, inset 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+body.light-theme .btn-danger { 
+    background: linear-gradient(to bottom, #ff5252, #e53935); 
+    color: white;
+    text-shadow: none;
+    box-shadow: 0 5px 0 #b71c1c, 0 12px 20px rgba(229, 57, 53, 0.3) !important;
+}
+body.light-theme .btn-danger:active { 
+    box-shadow: 0 0 0 #b71c1c, inset 0 2px 10px rgba(0,0,0,0.2) !important;
+}
+
+body.light-theme .grid-cell {
+    border: 1px solid #e0e0e0;
+    background: #f5f5f5; 
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.15); 
+    border-radius: 3px;
+    margin: 0; 
+    transition: background 0.3s;
+    color: #455a64;
+}
+body.light-theme .col-header, 
+body.light-theme .row-header {
+    background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+    border-bottom: 1px solid #ccc;
+    z-index: 2;
+    color: #c5a028;
+    text-shadow: 0 1px 0 #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+body.light-theme .dice {
+    background: linear-gradient(135deg, #fff, #eee);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.15), inset 0 -2px 5px rgba(0,0,0,0.05);
+    border-radius: 14px;
+    border: 1px solid #ccc;
+    color: #333;
+}
+body.light-theme .dice.held {
+    transform: translateY(-8%) scale(1.05); 
+    box-shadow: 0 15px 25px rgba(255, 215, 0, 0.4), 0 0 0 2px #ffd700 !important;
+    z-index: 10;
+    border-color: #ffd700 !important;
+    background: #fffde7;
+}
+body.light-theme::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: radial-gradient(#c5a028 1px, transparent 1px);
+    background-size: 40px 40px; 
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0.15;
+}
+body.light-theme .modal-box, 
+body.light-theme .card {
+    background: #ffffff !important;
+    border: 2px solid #c5a028 !important;
+    box-shadow: 0 15px 0 #e0e0e0, 0 25px 50px rgba(0,0,0,0.15) !important; 
+    transform: translateY(-5px);
+    color: #333;
+}
+body.light-theme .modal-title {
+    color: #c5a028;
+    text-shadow: none;
+}
+
+/* --- LIGHT THEME GLOW EFFECTS --- */
+/* 1. UPISANI BROJEVI (Sijaju) */
+body.light-theme .score-btn.filled {
+    color: #b71c1c !important; /* Tamno crvena */
+    font-weight: 800 !important;
+    text-shadow: 0 0 5px rgba(211, 47, 47, 0.4);
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%) !important;
+}
+
+/* 2. SUME (BEZ SJAJA - Tamno crvena na bez pozadini) */
+body.light-theme .cell-sum {
+    color: #c62828 !important; /* Ostra tamno crvena */
+    font-weight: 900 !important;
+    text-shadow: none !important; /* Nema sjaja */
+    background: #fff8e1 !important; /* Papir zuta pozadina */
+    border-top: 1px solid #c5a028 !important;
+    border-bottom: 1px solid #c5a028 !important;
+}
+
+
+/* --- 3. MEDIUM THEME (VALENTINES - THE REFERENCE MODEL) --- */
+body.medium-theme {
+    --bg-base: #2b0a16; 
+    --bg-gradient-1: #5c1225; --bg-gradient-2: #ff4d6d; 
+    --gold-main: #ffccbc; --gold-glow: rgba(255, 77, 109, 0.4);
+    --text-main: #fff0f3; --text-filled: #ffffff;     
+    --text-sum: #ffca85; --text-sum-label: #ff4d6d; 
+    --text-muted: #f8bbd0;     
+    --glass-bg: rgba(255, 255, 255, 0.1); 
+    --glass-panel: linear-gradient(145deg, rgba(140, 28, 60, 0.85), rgba(80, 10, 30, 0.95)); 
+    --glass-border: 1px solid rgba(255, 204, 188, 0.3); 
+    --glass-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 5px 15px rgba(255, 77, 109, 0.2);
+    --modal-bg: linear-gradient(135deg, #4a0e19, #2b0a16); 
+    --input-bg: rgba(0, 0, 0, 0.3); --input-border: var(--gold-main);
+    --dice-bg: linear-gradient(135deg, #fff0f3, #ffccd5); --dice-border: #fff;
+    --dice-color: #c9184a; --dice-active: #590d22;
+    --grid-cell-bg: rgba(255, 255, 255, 0.08); --grid-header-bg: rgba(255, 255, 255, 0.15);
+    --col-nadole: #81D4FA; --col-nagore: #ff4d6d; --col-sredina: #ffb703; 
+    --col-rucno: #e0aaff; --col-najava: #ffccbc; --col-slobodna: #ced4da;
+}
+
+body.medium-theme .player-table {
+    border-color: rgba(255, 204, 188, 0.5) !important;
+    background: var(--glass-panel);
+    backdrop-filter: blur(10px);
+    /* Bordo senka za dubinu */
+    box-shadow: 0 10px 0 rgba(43, 10, 22, 0.5), 0 20px 40px rgba(255, 77, 109, 0.15) !important; 
+}
+
+body.medium-theme .btn-menu {
+    border: none;
+    background: linear-gradient(to bottom, #ff758f, #c9184a);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    /* Bordo senka */
+    box-shadow: 0 5px 0 #800f2f, 0 12px 20px rgba(255, 77, 109, 0.3) !important; 
+}
+body.medium-theme .btn-menu:active {
+    box-shadow: 0 0 0 #800f2f, inset 0 2px 10px rgba(0,0,0,0.3) !important; 
+}
+
+body.medium-theme .btn-primary { 
+    background: linear-gradient(to bottom, #ffb703, #fb8500); 
+    box-shadow: 0 5px 0 #9e5402, 0 12px 20px rgba(251, 133, 0, 0.3) !important;
+}
+body.medium-theme .btn-primary:active { 
+    box-shadow: 0 0 0 #9e5402, inset 0 2px 10px rgba(0,0,0,0.3) !important; 
+}
+
+body.medium-theme .btn-throw {
+    background: linear-gradient(to bottom, #ff4d6d, #c9184a);
+    color: white;
+    border: 1px solid #a80038;
+    box-shadow: 0 5px 0 #800f2f, 0 10px 15px rgba(0,0,0,0.3) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+body.medium-theme .btn-throw:active {
+    box-shadow: 0 0 0 #800f2f, inset 0 2px 5px rgba(0,0,0,0.3) !important;
+}
+
+body.medium-theme .btn-secondary,
+body.medium-theme #btn-najava {
+    background: linear-gradient(to bottom, #590d22, #2b0a16);
+    color: #ffccd5;
+    border: 1px solid #800f2f;
+    box-shadow: 0 5px 0 #1a040d, 0 5px 10px rgba(0,0,0,0.3) !important;
+}
+body.medium-theme .btn-secondary:active,
+body.medium-theme #btn-najava:active {
+    box-shadow: 0 0 0 #1a040d, inset 0 2px 5px rgba(0,0,0,0.5) !important;
+    color: #fff;
+}
+
+body.medium-theme .btn-danger { 
+    background: linear-gradient(to bottom, #ef233c, #d90429); 
+    box-shadow: 0 5px 0 #6d0215, 0 12px 20px rgba(217, 4, 41, 0.3) !important;
+}
+body.medium-theme .btn-danger:active { 
+    box-shadow: 0 0 0 #6d0215, inset 0 2px 10px rgba(0,0,0,0.3) !important; 
+}
+
+body.medium-theme .grid-cell {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2); 
+    box-shadow: inset 1px 1px 4px rgba(0,0,0,0.4); 
+    border-radius: 3px;
+    margin: 0; 
+    transition: background 0.3s;
+}
+body.medium-theme .col-header, 
+body.medium-theme .row-header {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    border-bottom: none;
+    z-index: 2;
+    color: var(--gold-main);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+body.medium-theme .dice {
+    box-shadow: 0 8px 15px rgba(0,0,0,0.3), inset 0 -2px 5px rgba(0,0,0,0.1);
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.6);
+}
+body.medium-theme .dice.held {
+    transform: translateY(-8%) scale(1.05); 
+    box-shadow: 0 15px 25px rgba(255, 77, 109, 0.5), 0 0 0 2px #ff4d6d !important;
+    z-index: 10;
+    border-color: #ff4d6d !important;
+}
+body.medium-theme::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff4d6d' opacity='0.1'%3E%3Cpath d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E");
+    background-size: 60px 60px; 
+    pointer-events: none;
+    z-index: -1;
+    animation: floatingHearts 20s linear infinite;
+    opacity: 0.6;
+}
+@keyframes floatingHearts {
+    0% { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+}
+body.medium-theme .modal-box, 
+body.medium-theme .card {
+    background: linear-gradient(135deg, #590d22, #2b0a16) !important;
+    border: 2px solid var(--gold-main) !important;
+    box-shadow: 0 15px 0 #2b0a16, 0 25px 50px rgba(0,0,0,0.6) !important; 
+    transform: translateY(-5px);
+}
+
+/* --- MEDIUM THEME GLOW EFFECTS --- */
+/* 1. UPISANI BROJEVI (Sijaju) */
+body.medium-theme .score-btn.filled {
+    color: #fff;
+    font-weight: 800;
+    text-shadow: 0 0 5px #ff4d6d;
+    background: radial-gradient(circle, rgba(255, 77, 109, 0.3) 0%, transparent 80%) !important;
+}
+
+/* 2. SUME (BEZ SJAJA - Breskva boja na flat pozadini) */
+body.medium-theme .cell-sum {
+    color: #ffca85 !important; /* Breskva boja */
+    font-weight: 800 !important;
+    text-shadow: 1px 1px 0 rgba(128, 15, 47, 0.5) !important; /* Bez blura, samo outline */
+    background: rgba(255, 204, 188, 0.1) !important; /* Flat */
+    box-shadow: none !important;
+}
+
+
+/* --- 4. WINTER THEME --- */
+body.winter-theme {
+    --bg-base: #020c1b; --bg-gradient-1: #0a192f; --bg-gradient-2: #000000;
+    --gold-main: #ff4d4d; --gold-glow: rgba(255, 77, 77, 0.4);
+    --text-main: #e6f1ff; --text-filled: #dceeff;     
+    --text-sum: #ff4d4d; --text-sum-label: #ff3333; 
+    --text-muted: #8892b0;
+    --glass-bg: rgba(200, 230, 255, 0.05); --glass-panel: rgba(18, 30, 50, 0.90);
+    --glass-border: 1px solid rgba(169, 219, 255, 0.2);
+    --modal-bg: #0a192f; 
+    --input-bg: #112240; --input-border: #ff4d4d;
+    --dice-bg: linear-gradient(145deg, #ffffff, #dceeff); --dice-border: rgba(255, 255, 255, 0.8);
+    --dice-color: #0a192f; --dice-active: #d32f2f;
+    --col-nadole: #4fc3f7; --col-nagore: #ff5252; --col-sredina: #66bb6a; 
+    --col-rucno: #e040fb; --col-najava: #ffd700; --col-slobodna: #b0bec5;
+}
+
+body.winter-theme .player-table {
+    border-color: rgba(169, 219, 255, 0.4) !important;
+    background: rgba(10, 25, 47, 0.85) !important;
+    backdrop-filter: blur(12px);
+    /* Tamno plava senka za dubinu */
+    box-shadow: 0 10px 0 rgba(2, 12, 27, 0.8), 0 20px 40px rgba(0, 255, 255, 0.1) !important;
+}
+
+body.winter-theme .btn-menu {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: linear-gradient(to bottom, #112240, #0a192f);
+    color: #e6f1ff;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    /* Tamna senka */
+    box-shadow: 0 5px 0 #020c1b, 0 10px 20px rgba(0, 255, 255, 0.1) !important;
+}
+body.winter-theme .btn-menu:active {
+    box-shadow: 0 0 0 #020c1b, inset 0 2px 10px rgba(0,0,0,0.5) !important; 
+}
+
+body.winter-theme .btn-primary { 
+    background: linear-gradient(to bottom, #ff4d4d, #d32f2f); 
+    border: 1px solid #ff1744;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 0 #b71c1c, 0 12px 20px rgba(255, 77, 77, 0.3) !important;
+}
+body.winter-theme .btn-primary:active { 
+    box-shadow: 0 0 0 #b71c1c, inset 0 2px 10px rgba(0,0,0,0.3) !important; 
+}
+
+body.winter-theme .btn-throw {
+    background: linear-gradient(to bottom, #ff4d4d, #c62828);
+    color: white;
+    border: 1px solid #ff8a80;
+    box-shadow: 0 5px 0 #8e0000, 0 10px 15px rgba(0,0,0,0.4) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+body.winter-theme .btn-throw:active {
+    box-shadow: 0 0 0 #8e0000, inset 0 2px 5px rgba(0,0,0,0.3) !important;
+}
+
+body.winter-theme .btn-secondary,
+body.winter-theme #btn-najava {
+    background: linear-gradient(to bottom, #e3f2fd, #90caf9);
+    color: #0d47a1;
+    border: 1px solid #bbdefb;
+    box-shadow: 0 5px 0 #1565c0, 0 5px 10px rgba(0,0,0,0.2) !important;
+}
+body.winter-theme .btn-secondary:active,
+body.winter-theme #btn-najava:active {
+    box-shadow: 0 0 0 #1565c0, inset 0 2px 5px rgba(0,0,0,0.1) !important;
+}
+
+body.winter-theme .modal-box, 
+body.winter-theme .card {
+    background: linear-gradient(135deg, #112240, #0a192f) !important;
+    border: 2px solid #4fc3f7 !important;
+    box-shadow: 0 15px 0 #020c1b, 0 25px 50px rgba(0,0,0,0.5) !important; 
+    transform: translateY(-5px);
+}
+
+/* --- WINTER THEME GLOW EFFECTS --- */
+/* 1. UPISANI BROJEVI (Sijaju - Plavo) */
+body.winter-theme .score-btn.filled {
+    color: #e6f1ff !important;
+    font-weight: 800 !important;
+    text-shadow: 0 0 10px #4fc3f7, 0 0 20px #0288d1;
+    background: radial-gradient(circle, rgba(79, 195, 247, 0.3) 0%, transparent 70%) !important;
+}
+
+/* 2. SUME (BEZ SJAJA - Narandzasta) */
+body.winter-theme .cell-sum {
+    color: #ff9e80 !important; /* Narandzasta da se vidi na plavoj */
+    font-weight: 900 !important;
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.5) !important; /* Ostra senka */
+    background: rgba(255, 61, 0, 0.1) !important; /* Flat */
+    border: 1px solid rgba(255, 77, 77, 0.4);
+}
+
+/* SNEG I DEKORACIJE ZA WINTER THEME */
+body.winter-theme::before { content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; background-image: radial-gradient(3px 3px at 100px 50px, #fff, transparent), radial-gradient(4px 4px at 200px 150px, rgba(255,255,255,0.8), transparent), radial-gradient(3px 3px at 300px 250px, #fff, transparent), radial-gradient(4px 4px at 50px 200px, rgba(255,255,255,0.9), transparent); background-size: 400px 400px; animation: snowAnim 10s linear infinite; opacity: 0.3; will-change: background-position; }
+body.winter-theme .modal-box, body.winter-theme .custom-modal, body.winter-theme .card { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: var(--modal-bg) !important; box-shadow: 0 5px 25px rgba(0,0,0,0.6); }
+@keyframes snowAnim { 0% { background-position: 0 0; } 100% { background-position: 0 400px; } }
+body.winter-theme .winter-decor { display: block; }
+.winter-decor { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; display: none; overflow: hidden; }
+.winter-trees { position: absolute; bottom: 0; left: 0; width: 100%; height: 20vh; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath fill='rgba(255,255,255,0.05)' d='M0 25 L5 15 L10 25 L15 10 L20 25 L25 12 L30 25 L35 18 L40 25 L45 8 L50 25 L55 16 L60 25 L65 14 L70 25 L75 10 L80 25 L85 15 L90 25 L95 12 L100 25 Z' /%3E%3C/svg%3E"); background-size: 150% 100%; background-repeat: no-repeat; pointer-events: none; }
+.santa-flying { position: absolute; top: 25%; right: -250px; font-size: 4rem; color: transparent; text-shadow: 0 0 0 rgba(255, 255, 255, 0.15); animation: santaFly 40s linear infinite; z-index: 1; white-space: nowrap; filter: blur(0.5px); transform: scaleX(-1); }
+@keyframes santaFly { 0% { transform: translateX(0) translateY(0) rotate(2deg); right: -250px; } 50% { transform: translateX(-60vw) translateY(40px) rotate(-1deg); } 100% { transform: translateX(-150vw) translateY(-20px) rotate(2deg); right: 120%; } }

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Yamb of the Balkan - Divine Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css?v=3.8">
+    
+    <script src="languages.js?v=4.2"></script>
+
+    <script src="localforage.min.js?v=3.7"></script>
+    <script src="socket.io.min.js?v=3.7"></script>
+    <script src="capacitor.js"></script>
+</head>
+<body>
+
+    <div class="winter-decor">
+        <div class="winter-trees"></div>
+        <div class="santa-flying">🦌🦌🛷🎅</div>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div id="rotate-lock-overlay">
+        <div class="rotate-icon">↻</div>
+        <div class="rotate-msg" data-lang="rotate_msg">MOLIMO OKRENITE UREĐAJ</div>
+        <div class="rotate-sub" data-lang="rotate_sub">Ova igra je optimizovana za uspravni prikaz<br>na telefonima.</div>
+    </div>
+
+    <div id="custom-modal-overlay" class="modal-overlay">
+        <div class="custom-modal">
+            <div id="cm-title" class="cm-title" data-lang="modal_title_info">OBAVEŠTENJE</div>
+            <div id="cm-msg" class="cm-msg">Poruka ide ovde...</div>
+            <input type="text" id="cm-input" class="cm-input hidden" autocomplete="off">
+            <div class="cm-btn-group">
+                <button id="cm-cancel" class="cm-btn cm-btn-cancel hidden" data-lang="modal_btn_cancel">OTKAŽI</button>
+                <button id="cm-ok" class="cm-btn cm-btn-ok" data-lang="modal_btn_ok">U REDU</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="chat-float-btn" class="chat-float-btn hidden" onclick="app.toggleChat()">💬<div id="chat-badge" class="chat-notification"></div></div>
+    <div id="chat-window" class="chat-window">
+        <div id="chat-header" class="chat-header"><span>CHAT</span><span style="cursor:pointer;" onclick="app.toggleChat()">▼</span></div>
+        <div id="chat-body" class="chat-body"></div>
+        <div class="chat-footer"><input type="text" id="chat-input-field" class="chat-input" placeholder="..."><button id="btn-chat-send" class="btn-chat-send">➤</button></div>
+    </div>
+
+    <div id="splash-screen" class="screen active">
+        <div class="logo-anim">
+            YAMB OF THE <br> <span style="color:var(--gold-main)">BALKAN</span>
+        </div>
+    </div>
+
+    <div id="main-menu" class="screen">
+        <div style="position: absolute; top: 30px; right: 20px; display: flex; gap: 15px; z-index: 100; align-items: center;">
+            <div onclick="setLanguage('sr')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://flagcdn.com/w40/rs.png" alt="SRB" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3);">
+            </div>
+            <div onclick="setLanguage('en')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://flagcdn.com/w40/gb.png" alt="ENG" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3); position: relative; top: 2px;">
+            </div>
+        </div>
+
+        <h1 class="menu-title">YAMB<br><span class="menu-subtitle">OF THE BALKAN</span></h1>
+        
+        <button id="btn-resume-game" class="btn-menu btn-resume hidden" onclick="app.loadSavedGame()" data-lang="menu_resume">▶ NASTAVI IGRU</button>
+
+        <button class="btn-menu btn-primary" onclick="app.setupGame(1)" data-lang="menu_solo">👤 Solo Igra</button>
+        
+        <button class="btn-menu" onclick="app.setupGame(2)" data-lang="menu_dual">👥 Dva Igrača (Hotseat)</button>
+        <button class="btn-menu" onclick="app.setupOnline('random')" data-lang="menu_online">🌐 Nađi Protivnika (Random)</button>
+        <button class="btn-menu" style="border-color: #2196F3; color: #2196F3;" onclick="app.startPrivateHosting()" data-lang="menu_invite">🔗 Pozovi Prijatelja</button>
+        
+        <div class="menu-divider"></div>
+        
+        <button id="btn-daily-challenge" class="btn-menu" style="border-color: #FF5722; color: #FF5722; background: rgba(255,87,34,0.1); display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="app.dailyManager.open()">
+            <div class="live-calendar-icon">
+                <div class="cal-top"></div>
+                <div class="cal-body" id="live-date"></div>
+            </div>
+            <span data-lang="menu_daily">DNEVNI IZAZOV</span>
+        </button>
+        
+        <button class="btn-menu" style="border-color: var(--gold-main); color: var(--gold-main);" onclick="window.location.href='riznica.html'" data-lang="menu_shop">💎 RIZNICA</button>
+
+        <div class="menu-divider"></div>
+        <button class="btn-menu" onclick="app.showHighscoresScreen()" data-lang="menu_hs">🏆 TOP LISTA</button>
+        <button class="btn-menu" onclick="app.showStats()" data-lang="menu_stats">📊 Statistika</button>
+        <button class="btn-menu" onclick="app.showSettings()" data-lang="menu_settings">⚙ Podešavanja</button>
+        <button class="btn-menu" onclick="app.showRules()" data-lang="menu_rules">📖 Pravila</button>
+    </div>
+
+    <div id="game-scene" class="screen">
+        <div class="game-header">
+            <span style="cursor: pointer; opacity: 0.8; color: var(--text-main)" onclick="app.quitToMenu()">✖ <span data-lang="modal_btn_cancel">MENI</span></span>
+            <span style="color:var(--gold-main); font-weight:700;">YAMB PRO</span>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-secondary" style="border-radius:50%; width:30px; height:30px; padding:0;" onclick="app.toggleTheme()">🎨</button>
+            </div>
+        </div>
+        <div class="game-content">
+            <div class="left-panel">
+                <div class="tables-wrapper" id="tables-container"></div>
+                <div class="controls-area">
+                    <div style="text-align:center; font-size:0.8rem; color:var(--gold-main); font-weight: bold; margin-right: 15px;" id="lbl-turn"></div>
+                    <div class="dice-container" id="dice-container"></div>
+                    <div class="game-info">
+                        <div class="status-label" id="lbl-status"></div>
+                        <div class="action-btn-group">
+                            <button id="btn-najava" class="game-btn btn-secondary" onclick="app.clickNajava()" disabled data-lang="game_announce">Najava</button>
+                            <button id="btn-bacaj" class="game-btn btn-throw" onclick="app.throwDice()" data-lang="game_roll">BACAJ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="stats-screen" class="screen">
+        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <h2 class="menu-title" data-lang="menu_stats">STATISTIKA</h2>
+        
+        <div class="modal-box" style="gap: 20px !important;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%;">
+                <div class="stat-item" style="border-color: var(--gold-main); background: rgba(224, 201, 149, 0.05);">
+                    <span style="font-size: 0.7rem; color: var(--gold-main); letter-spacing:1px; font-weight:bold;" data-lang="stat_record">REKORD</span>
+                    <span id="stat-high" class="stat-val c-gold" style="font-size: 1.6rem !important;">0</span>
+                </div>
+                <div class="stat-item">
+                    <span style="font-size: 0.7rem; color: var(--text-muted);" data-lang="stat_total">UKUPNO PARTIJA</span>
+                    <span id="stat-games" class="stat-val">0</span>
+                </div>
+            </div>
+
+            <div style="width: 100%; background: var(--glass-bg); padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.8rem; font-weight:bold;">
+                    <span class="c-win"><span data-lang="stat_wins">POBEDE</span>: <span id="stat-wins">0</span></span>
+                    <span class="c-loss"><span data-lang="stat_losses">PORAZI</span>: <span id="stat-losses">0</span></span>
+                </div>
+                <div style="width: 100%; height: 10px; background: rgba(0,0,0,0.3); border-radius: 5px; overflow: hidden; display: flex;">
+                    <div id="stat-bar-win" style="width: 50%; background: var(--success); height: 100%; transition: width 0.5s;"></div>
+                    <div id="stat-bar-loss" style="width: 50%; background: var(--danger); height: 100%; transition: width 0.5s;"></div>
+                </div>
+                <div style="text-align: center; margin-top: 8px; font-size: 0.7rem; color: var(--text-muted);">
+                    <span data-lang="stat_rate">USPEŠNOST</span>: <span id="stat-rate" style="color: var(--text-main); font-weight: bold;">0%</span>
+                </div>
+            </div>
+
+            <div class="stat-grid" style="margin: 0 !important;">
+                <div class="stat-item">
+                    <span style="font-size: 1.5rem;">🔥</span>
+                    <span style="font-size: 0.65rem; color: var(--text-muted); margin-top:5px; text-transform:uppercase;" data-lang="stat_streak">Vatreni Niz</span>
+                    <span id="stat-streak" class="stat-val" style="color: #FF5722;">0</span>
+                </div>
+                <div class="stat-item">
+                    <span style="font-size: 1.5rem;">📈</span>
+                    <span style="font-size: 0.65rem; color: var(--text-muted); margin-top:5px; text-transform:uppercase;" data-lang="stat_avg">Prosek</span>
+                    <span id="stat-avg" class="stat-val">0</span>
+                </div>
+                <div class="stat-item" onclick="window.location.href='riznica.html'" style="cursor: pointer; position:relative;">
+                    <span style="font-size: 1.5rem;">🏆</span>
+                    <span style="font-size: 0.65rem; color: var(--text-muted); margin-top:5px; text-transform:uppercase;" data-lang="stat_trophies">Trofeji</span>
+                    <span id="stat-trophies" class="stat-val c-gold">0 / 27</span>
+                    <span style="position:absolute; top:5px; right:5px; font-size:0.8rem; color:var(--text-muted);">↗</span>
+                </div>
+                <div class="stat-item">
+                    <span style="font-size: 1.5rem;">💰</span>
+                    <span style="font-size: 0.65rem; color: var(--text-muted); margin-top:5px; text-transform:uppercase;" data-lang="stat_balance">Stanje</span>
+                    <span id="stat-balance" class="stat-val c-gold">0</span>
+                </div>
+            </div>
+
+            <div class="online-counter-box">
+                <div class="live-indicator"></div>
+                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight:bold;">
+                    <span data-lang="stat_online">ONLINE IGRAČA</span>: <span id="live-online-count" style="color: var(--success); font-size: 1rem;">1</span>
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div id="highscores-screen" class="screen">
+        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <h2 class="menu-title" data-lang="menu_hs">TOP LISTA</h2>
+        <div class="modal-box">
+            <div class="hs-tabs">
+                <button id="tab-local" class="hs-tab-btn active" onclick="app.topListManager.switchTab('local')" data-lang="hs_local">LOKALNA</button>
+                <button id="tab-global" class="hs-tab-btn" onclick="app.topListManager.switchTab('global')" data-lang="hs_global">GLOBALNA 🌍</button>
+            </div>
+
+            <div id="global-filters" class="hs-filters hidden">
+                <button class="filter-btn active" onclick="app.topListManager.filterGlobal('weekly')" data-lang="hs_weekly">NEDELJA</button>
+                <button class="filter-btn" onclick="app.topListManager.filterGlobal('monthly')" data-lang="hs_monthly">MESEC</button>
+                <button class="filter-btn" onclick="app.topListManager.filterGlobal('all_time')" data-lang="hs_all_time">SVE</button>
+            </div>
+
+            <div class="hs-list-container">
+                <ul id="local-hs-list" class="highscore-list"></ul>
+                <ul id="global-hs-list" class="highscore-list hidden"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-screen" class="screen">
+        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <h2 class="menu-title" data-lang="menu_settings">PODEŠAVANJA</h2>
+        <div class="modal-box" style="text-align: left;">
+            <label style="color:var(--text-muted);" data-lang="settings_name">Vaše Ime:</label>
+            <input type="text" id="setting-name" class="modal-input" placeholder="Igrač">
+            
+            <div style="margin-top: 15px; text-align: center;">
+                <label style="color: var(--text-muted);">Jezik / Language:</label>
+                <div style="display:flex; gap:10px; margin-top:5px;">
+                    <button class="btn-menu btn-secondary" style="flex:1; padding:10px; font-weight:bold; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="setLanguage('sr')">
+                        <img src="https://flagcdn.com/24x18/rs.png" alt="RS" style="width: 24px; height: 18px;"> SRB
+                    </button>
+                    <button class="btn-menu btn-secondary" style="flex:1; padding:10px; font-weight:bold; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="setLanguage('en')">
+                        <img src="https://flagcdn.com/24x18/gb.png" alt="GB" style="width: 24px; height: 18px; position: relative; top: 2px;"> ENG
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label style="color: var(--text-muted);" data-lang="settings_theme">Tema:</label>
+                <select id="setting-theme" class="modal-input">
+                    <option value="dark">Dark Soft Gold (Glass)</option>
+                    <option value="light">Light Gold</option>
+                    <option value="medium">Valentine's Day (Ljubavna) 💖</option>
+                    <option value="winter">Winter Holiday ❄️🎄</option>
+                </select>
+            </div>
+            <div style="margin-top: 15px;">
+                <label style="display: flex; align-items: center;"><input type="checkbox" id="setting-sound" style="margin-right: 10px;"> <span data-lang="settings_sound">Zvučni Efekti</span></label>
+            </div>
+            <button class="btn-menu btn-primary" style="margin-top: 20px;" onclick="app.saveSettings()" data-lang="settings_save">Sačuvaj</button>
+        </div>
+    </div>
+    
+    <div id="rules-screen" class="screen">
+        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <div class="rules-content">
+             <h2 style="color:var(--gold-main); text-align:center; margin-bottom: 20px;" data-lang="rules_title">PRAVILA IGRE</h2>
+             
+             <div class="rules-section">
+                <h3 data-lang="rules_goal_title">CILJ IGRE</h3>
+                <p data-lang="rules_goal_text">Cilj je osvojiti što više bodova bacanjem 6 kockica i kombinovanjem dobijenih vrednosti u tabelu. Imate 3 bacanja po potezu.</p>
+             </div>
+
+             <div class="rules-section">
+                <h3 data-lang="rules_cols_title">KOLONE</h3>
+                <ul>
+                    <li data-lang="rules_col_down"><strong>NADOLE (↓):</strong> Popunjava se redom od broja 1 do Yamba. Ne sme se preskakati.</li>
+                    <li data-lang="rules_col_free"><strong>SLOBODNA (S):</strong> Može se popunjavati bilo kojim redosledom.</li>
+                    <li data-lang="rules_col_mid"><strong>SREDINA (⇅):</strong> Popunjava se od sredine ka krajevima (od polja MAX i MIN ka 1 i Yamb-u).</li>
+                    <li data-lang="rules_col_up"><strong>NAGORE (↑):</strong> Popunjava se redom od Yamba do broja 1.</li>
+                    <li data-lang="rules_col_man"><strong>RUČNO (R):</strong> Popunjava se isključivo nakon PRVOG bacanja.</li>
+                    <li data-lang="rules_col_ann"><strong>NAJAVA (📢):</strong> Morate najaviti polje nakon prvog bacanja.</li>
+                </ul>
+             </div>
+
+             <div class="rules-section">
+                <h3 data-lang="rules_scoring_title">BODOVANJE</h3>
+                
+                <h4 data-lang="rules_sec1_title">1. SEKCIJA (1-6)</h4>
+                <p data-lang="rules_sec1_text">Sabiraju se samo odgovarajući brojevi. Zbir ≥ 60 donosi +30 poena.</p>
+
+                <h4 data-lang="rules_sec2_title">2. SEKCIJA (MIN-MAX)</h4>
+                <p data-lang="rules_sec2_text">Formula: (Max - Min) * Broj jedinica. Bonus ≥ 60 je +40.</p>
+
+                <h4 data-lang="rules_sec3_title">3. SEKCIJA (KOMBINACIJE)</h4>
+                <ul>
+                    <li data-lang="rules_row_triling_desc"><strong>3 of a Kind:</strong> 3 iste. Zbir + 20.</li>
+                    <li data-lang="rules_row_kenta_desc"><strong>KENTA:</strong> 5 u nizu. 1. bac: 66 | 2. bac: 56 | 3. bac: 46.</li>
+                    <li data-lang="rules_row_full_desc"><strong>FUL:</strong> 3 iste + 2 iste. Zbir + 30.</li>
+                    <li data-lang="rules_row_poker_desc"><strong>4 of a Kind:</strong> 4 iste. Zbir + 40.</li>
+                    <li data-lang="rules_row_yamb_desc"><strong>YAMB:</strong> 5 istih. Zbir + 50.</li>
+                </ul>
+             </div>
+             <br><br>
+        </div>
+        <style>
+            .rules-content { padding: 20px; text-align: left; overflow-y: auto; height: 80vh; }
+            .rules-section { margin-bottom: 25px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; }
+            .rules-section h3 { color: var(--gold-main); border-bottom: 1px solid var(--gold-glow); padding-bottom: 5px; margin-bottom: 15px; font-size: 1.1rem; }
+            .rules-section h4 { color: var(--text-main); margin: 15px 0 8px 0; font-size: 0.95rem; }
+            .rules-section p { margin: 0 0 10px 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+            .rules-section ul { list-style: none; padding: 0; }
+            .rules-section li { font-size: 0.85rem; color: var(--text-main); line-height: 1.5; padding-left: 10px; border-left: 2px solid var(--gold-glow); margin-bottom: 10px; }
+            .rules-section strong { color: var(--gold-main); }
+            .bonus-text { font-weight: bold; color: var(--gold-main) !important; background: rgba(255,215,0,0.1); padding: 5px; border-radius: 4px; display: inline-block; }
+        </style>
+    </div>
+
+    <div id="game-over-screen" class="screen">
+        <div class="logo-anim" style="font-size: 2rem; margin-bottom: 20px;" data-lang="game_over">KRAJ IGRE</div>
+        <div class="modal-box" style="width: 90%; max-width: 400px; text-align: center;">
+            <h2 id="go-title" style="color: var(--gold-main); margin-bottom: 10px;">POBEDA!</h2>
+            <p id="go-msg" style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 20px;">Tekst poruke...</p>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
+                <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="go_msg_solo">Osvojeni Poeni</div>
+                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
+                    <span style="font-size: 2rem;">💰</span>
+                    <span id="go-score" style="font-size: 2.2rem; font-weight: 800; color: var(--gold-main);">0</span>
+                </div>
+            </div>
+            <button id="btn-ad-double" class="btn-menu" style="background: linear-gradient(45deg, #FFD700, #FFA000); color: #000; border: none; font-weight: 800; margin-bottom: 10px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="app.watchAdForDouble()">
+                <span data-lang="go_double">🎥 DUPLIRAJ 💰 (x2)</span>
+            </button>
+            <button class="btn-menu btn-secondary" onclick="app.claimReward(false)" data-lang="go_claim">Preuzmi i Izađi</button>
+        </div>
+    </div>
+
+    <div id="waiting-screen" class="screen">
+        <div class="loader"></div>
+        <h2 style="margin-top: 20px; color:var(--text-main);" data-lang="hs_loading">ČEKAM...</h2>
+        <div id="share-area" class="hidden" style="margin-top:20px; text-align:center;">
+            <p style="color:var(--gold-main); margin-bottom:10px;" data-lang="invite_text">Pošalji ovaj link prijatelju:</p>
+            <input type="text" id="invite-link" class="modal-input" readonly style="font-size:0.8rem; width:100%; margin-bottom:10px;">
+            <button class="btn-menu btn-primary" onclick="app.shareInvite()" data-lang="invite_btn">🔗 PODELI LINK</button>
+        </div>
+        <p id="wait-msg" style="color: var(--text-muted); margin-top:15px;">Tražim server...</p>
+        <button class="btn-menu btn-danger" onclick="app.cancelOnline()" style="margin-top: 30px;" data-lang="modal_btn_cancel">ODUSTANI</button>
+    </div>
+
+    <div id="daily-challenge-screen" class="screen">
+        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        
+        <div class="modal-box daily-challenge-card">
+            <div class="daily-header">
+                <h2 class="menu-title daily-title" data-lang="dc_title">DNEVNI IZAZOV</h2>
+                <p class="daily-desc" data-lang="dc_desc">Zaustavi kockice u pravom trenutku!</p>
+            </div>
+
+            <div class="daily-dice-wrapper">
+                <div class="daily-dice-row">
+                    <div id="dc-die-0" class="dice daily-dice">?</div>
+                    <div id="dc-die-1" class="dice daily-dice">?</div>
+                    <div id="dc-die-2" class="dice daily-dice">?</div>
+                </div>
+                <div class="daily-dice-row">
+                    <div id="dc-die-3" class="dice daily-dice">?</div>
+                    <div id="dc-die-4" class="dice daily-dice">?</div>
+                    <div id="dc-die-5" class="dice daily-dice">?</div>
+                </div>
+            </div>
+
+            <div class="daily-score-box">
+                <span class="daily-label" data-lang="dc_sum">TRENUTNI ZBIR</span>
+                <span id="dc-current-sum" class="daily-value">0</span>
+            </div>
+
+            <div class="daily-actions">
+                <button id="btn-daily-stop" class="btn-throw daily-btn-main" onclick="app.dailyManager.stopDice()">
+                    <span data-lang="dc_stop">STOP 🛑</span>
+                </button>
+                <button class="btn-menu btn-secondary daily-btn-cancel" onclick="app.showMainMenu()" data-lang="modal_btn_cancel">ODUSTANI</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js?v=4.0"></script>
+    <script src="managers.js?v=4.0"></script>
+    
+    <script src="trophyManager.js?v=4.0"></script> 
+
+    <script src="features.js?v=3.7"></script>
+    <script src="toplista.js?v=3.8"></script> 
+    <script src="game.js?v=4.0"></script>
+</body>
+</html>

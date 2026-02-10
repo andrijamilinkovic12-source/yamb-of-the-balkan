@@ -1,0 +1,417 @@
+// languages.js - Centralizovani prevodi (Ažurirano za Highscore Filtere)
+
+const TRANSLATIONS = {
+    sr: {
+        // --- GLAVNI MENI ---
+        "menu_hs": "🏆 TOP LISTA",
+        "menu_solo": "👤 Solo Igra",
+        "menu_dual": "👥 Dva Igrača (Hotseat)",
+        "menu_online": "🌐 Nađi Protivnika (Random)",
+        "menu_invite": "🔗 Pozovi Prijatelja",
+        "menu_daily": "DNEVNI IZAZOV",
+        "menu_shop": "💎 RIZNICA",
+        "menu_stats": "Statistika",
+        "menu_settings": "⚙ Podešavanja",
+        "menu_rules": "📖 Pravila",
+        "menu_resume": "▶ NASTAVI IGRU",
+        
+        // --- PRODAVNICA I RIZNICA ---
+        "tab_trophies": "TROFEJI 🏆",
+        "tab_dice": "KOCKICE 🎲",
+        "tab_effects": "EFEKTI ✨",
+        "balance": "💰", 
+        "btn_buy": "KUPI",
+        "btn_equip": "KORISTI",
+        "btn_active": "AKTIVNO",
+        "btn_bought": "✔ Kupljeno",
+        "msg_no_money": "Nemate dovoljno 💰!", 
+        "msg_confirm_buy": "Želite li kupiti",
+        "shop_unlock": "Otključaj:",
+        "msg_purchase_success": "Uspešna kupovina!",
+        "msg_ad_loading": "Učitavanje reklame...",
+        "msg_discount_loading": "POPUST SE UČITAVA...",
+        "msg_discount_applied": "Popust primenjen! -20%",
+        "msg_ad_cancel": "Reklama prekinuta.",
+        "msg_ad_error": "Greška pri učitavanju reklame.",
+        "msg_ad_reward": "Nagrada od 500 dukata je spremna!",
+        "msg_reward_title": "NAGRADA",
+        
+        // --- KATEGORIJE I TROFEJI ---
+        "category_other": "OSTALO",
+        "title_trophy_won": "🏆 NOVI TROFEJ!",
+        "msg_trophy_won": "Čestitamo! Osvojili ste trofej \"{0}\" i nagradu od {1} dukata!",
+        "msg_trophy_default_desc": "Čestitamo! Pogledajte Riznicu.",
+        "msg_trophy_reward_added": "Nagrada je dodata u Riznicu!",
+        
+        // --- ADMOB SIMULACIJA ---
+        "ad_sim_title": "REKLAMA (SIMULACIJA)",
+        "ad_loading": "UČITAVANJE...",
+        "ad_remaining": "Preostalo:",
+        "ad_sub_text": "(Simulacija AdMob Reward Videa)",
+        "msg_ad_not_ready": "Ovo vidite jer AdMob nije spreman.<br>(Fallback Mode).",
+
+        // --- SISTEMSKE PORUKE ---
+        "rotate_msg": "MOLIMO OKRENITE UREĐAJ",
+        "rotate_sub": "Ova igra je optimizovana za uspravni prikaz<br>na telefonima.",
+        "modal_title_info": "OBAVEŠTENJE",
+        "modal_title_buy": "POTVRDA KUPOVINE",
+        "modal_title_confirm": "POTVRDA",
+        "modal_title_input": "UNOS",
+        "modal_title_reward": "NAGRADA PREUZETA",
+        "modal_btn_ok": "U REDU",
+        "modal_btn_cancel": "OTKAŽI",
+
+        // --- STATISTIKA ---
+        "stat_record": "REKORD",
+        "stat_total": "UKUPNO PARTIJA",
+        "stat_wins": "POBEDE",
+        "stat_losses": "PORAZI",
+        "stat_rate": "USPEŠNOST",
+        "stat_streak": "Vatreni Niz",
+        "stat_avg": "Prosek",
+        "stat_trophies": "Trofeji",
+        "stat_balance": "Stanje",
+        "stat_online": "ONLINE IGRAČA",
+
+        // --- TOP LISTA ---
+        "hs_local": "LOKALNA",
+        "hs_global": "GLOBALNA 🌍",
+        "hs_weekly": "NEDELJA",   // <-- NOVO
+        "hs_monthly": "MESEC",    // <-- NOVO
+        "hs_all_time": "SVE",     // <-- NOVO
+        "hs_player": "IGRAČ",
+        "hs_score": "SKOR",
+        "hs_loading": "UČITAVANJE...",
+        "player_unknown": "Nepoznat",
+        "msg_connecting": "Povezujem se sa serverom...",
+        "msg_no_connection": "Nema internet konekcije.",
+        "msg_no_results": "Još nema rezultata.",
+        "msg_be_first": "Budi prvi!",
+
+        // --- IGRA (GAMEPLAY) ---
+        "game_roll": "BACAJ",
+        "game_write": "UPIŠI",
+        "game_announce": "Najava",
+        "game_announce_cancel": "Otkaži",
+        "game_opponent_turn": "🔒", 
+        "game_opponent_choosing": "🔒", 
+        "game_turn_msg": "je na potezu!",
+        "game_over": "KRAJ IGRE",
+        "prompt_player_name": "Unesite ime igrača",
+        "player_guest": "Gost",
+        "chat_you": "Ti",
+        "chat_opponent": "Protivnik",
+        "lbl_opponent_parens": "(Protivnik)",
+        
+        // KOLONE (SR)
+        "col_down": "↓",
+        "col_free": "S",
+        "col_middle": "⇅",
+        "col_up": "↑",
+        "col_manual": "R",
+        "col_announce": "📢",
+        
+        "row_triling": "Triling",
+        "row_kenta": "Kenta",
+        "row_full": "Ful",
+        "row_poker": "Poker",
+        "row_yamb": "Yamb",
+        "row_min": "Min",
+        "row_max": "Max",
+        "row_sum": "ZBIR",
+        
+        "status_roll": "Bacanje",
+        
+        // --- GAME OVER & ALERT PORUKE ---
+        "go_win": "POBEDA!",
+        "go_loss": "PORAZ",
+        "go_title_great": "🎉 ODLIČNA PARTIJA!",
+        "go_title_good": "DOBRA PARTIJA",
+        "go_msg_win": "Pobednik je",
+        "go_msg_solo": "OSVOJENI POENI",
+        "go_double": "🎥 DUPLIRAJ 💰 (x2)",
+        "go_claim": "Preuzmi i Izađi",
+        "msg_reward_doubled": "Uspešno ste duplirali nagradu!\nUkupno osvojeno:",
+        
+        "alert_roll_first": "Prvo baci kockice!",
+        "alert_filled": "Polje je već popunjeno!",
+        "alert_announce_col": "U ovoj koloni se mora najaviti polje!",
+        "alert_announce_select": "Morate odabrati polje za Najavu!",
+        "alert_wrong_field": "Morate upisati u najavljeno polje!",
+        "alert_wrong_order": "Morate poštovati redosled popunjavanja!",
+        "alert_manual_lock": "Upozorenje: Ako upišete nulu ovde, gubite mogućnost daljeg igranja Ručne kolone!\nDa li ste sigurni?",
+        "alert_quit_confirm": "Da li želite da prekinete partiju?",
+        
+        "msg_room_full": "Ova soba je puna ili igra već traje!",
+        "msg_opponent_left": "Protivnik je izašao!",
+
+        // --- DNEVNI IZAZOV ---
+        "dc_title": "DNEVNI IZAZOV",
+        "dc_desc": "Zaustavi kockice u pravom trenutku!",
+        "dc_stop": "STOP",
+        "dc_sum": "ZBIR",
+        "dc_done": "Već ste odigrali dnevni izazov za danas. Dođite sutra!",
+
+        // --- PODEŠAVANJA ---
+        "settings_name": "Vaše Ime:",
+        "settings_theme": "Tema:",
+        "settings_sound": "Zvučni Efekti",
+        "settings_save": "Sačuvaj",
+
+        // --- PRAVILA (SR) ---
+        "rules_title": "PRAVILA IGRE",
+        "rules_goal_title": "CILJ IGRE",
+        "rules_goal_text": "Cilj je osvojiti što više bodova bacanjem 6 kockica i kombinovanjem dobijenih vrednosti u tabelu. Imate 3 bacanja po potezu.",
+        "rules_cols_title": "KOLONE",
+        "rules_col_down": "<strong>NADOLE (↓):</strong> Popunjava se redom od broja 1 do Yamba. Ne sme se preskakati.",
+        "rules_col_free": "<strong>SLOBODNA (S):</strong> Može se popunjavati bilo kojim redosledom.",
+        "rules_col_mid": "<strong>SREDINA (⇅):</strong> Popunjava se od sredine ka krajevima (od polja MAX i MIN ka 1 i Yamb-u).",
+        "rules_col_up": "<strong>NAGORE (↑):</strong> Popunjava se redom od Yamba do broja 1.",
+        "rules_col_man": "<strong>RUČNO (R):</strong> Popunjava se isključivo nakon PRVOG bacanja.",
+        "rules_col_ann": "<strong>NAJAVA (📢):</strong> Morate najaviti polje nakon prvog bacanja.",
+        "rules_scoring_title": "BODOVANJE",
+        "rules_sec1_title": "1. SEKCIJA (1-6)",
+        "rules_sec1_text": "Sabiraju se samo odgovarajući brojevi. Zbir ≥ 60 donosi +30 poena.",
+        "rules_sec2_title": "2. SEKCIJA (MIN-MAX)",
+        "rules_sec2_text": "Formula: (Max - Min) * Broj jedinica. Ako je rezultat ≥ 60, bonus je +40.",
+        "rules_sec3_title": "3. SEKCIJA (KOMBINACIJE)",
+        "rules_row_triling_desc": "<strong>TRILING:</strong> 3 iste. Zbir + 20.",
+        "rules_row_kenta_desc": "<strong>KENTA:</strong> 5 u nizu. 1. bacanje: 66 | 2. bacanje: 56 | 3. bacanje: 46.",
+        "rules_row_full_desc": "<strong>FUL:</strong> 3 iste + 2 iste. Zbir + 30.",
+        "rules_row_poker_desc": "<strong>POKER:</strong> 4 iste. Zbir + 40.",
+        "rules_row_yamb_desc": "<strong>YAMB:</strong> 5 istih. Zbir + 50.",
+
+        // --- POZIV ---
+        "invite_text": "Pošalji ovaj link prijatelju:",
+        "invite_btn": "🔗 PODELI LINK",
+        "invite_share_msg": "Igrajmo Yamb! Upadaj ovde:",
+        "alert_copied": "Link kopiran!",
+        "alert_copied_title": "KOPIRANO",
+
+        // --- RESUME ---
+        "msg_game_resumed": "Igra nastavljena!",
+        "msg_no_saved_game": "Nema sačuvane igre.",
+        "msg_save_error": "Greška pri učitavanju.\nPodaci su zastareli."
+    },
+    en: {
+        // --- MAIN MENU ---
+        "menu_hs": "🏆 HIGH SCORES",
+        "menu_solo": "👤 Solo Game",
+        "menu_dual": "👥 Two Players (Hotseat)",
+        "menu_online": "🌐 Find Opponent (Random)",
+        "menu_invite": "🔗 Invite Friend",
+        "menu_daily": "DAILY CHALLENGE",
+        "menu_shop": "💎 TREASURY",
+        "menu_stats": "Statistics",
+        "menu_settings": "⚙ Settings",
+        "menu_rules": "📖 Rules",
+        "menu_resume": "▶ RESUME GAME",
+
+        // --- SHOP & TREASURY ---
+        "tab_trophies": "TROPHIES 🏆",
+        "tab_dice": "DICE 🎲",
+        "tab_effects": "EFFECTS ✨",
+        "balance": "💰", 
+        "btn_buy": "BUY",
+        "btn_equip": "EQUIP",
+        "btn_active": "ACTIVE",
+        "btn_bought": "✔ Owned",
+        "msg_no_money": "Not enough 💰!", 
+        "msg_confirm_buy": "Do you want to buy",
+        "shop_unlock": "Unlock:",
+        "msg_purchase_success": "Purchase successful!",
+        "msg_ad_loading": "Loading Ad...",
+        "msg_discount_loading": "LOADING DISCOUNT...",
+        "msg_discount_applied": "Discount applied! -20%",
+        "msg_ad_cancel": "Ad cancelled.",
+        "msg_ad_error": "Error loading Ad.",
+        "msg_ad_reward": "Reward of 500 coins is ready!",
+        "msg_reward_title": "REWARD",
+
+        // --- CATEGORIES & TROPHIES ---
+        "category_other": "OTHER",
+        "title_trophy_won": "🏆 NEW TROPHY!",
+        "msg_trophy_won": "Congratulations! You won trophy \"{0}\" and {1} coins!",
+        "msg_trophy_default_desc": "Congratulations! Check the Treasury.",
+        "msg_trophy_reward_added": "Reward added to Treasury!",
+
+        // --- ADMOB SIMULATION ---
+        "ad_sim_title": "AD (SIMULATION)",
+        "ad_loading": "LOADING...",
+        "ad_remaining": "Remaining:",
+        "ad_sub_text": "(AdMob Reward Video Simulation)",
+        "msg_ad_not_ready": "You see this because AdMob is not ready.<br>(Fallback Mode).",
+
+        // --- SYSTEM MESSAGES ---
+        "rotate_msg": "PLEASE ROTATE DEVICE",
+        "rotate_sub": "This game is optimized for portrait mode<br>on mobile phones.",
+        "modal_title_info": "NOTIFICATION",
+        "modal_title_buy": "CONFIRM PURCHASE",
+        "modal_title_confirm": "CONFIRMATION",
+        "modal_title_input": "INPUT",
+        "modal_title_reward": "REWARD CLAIMED",
+        "modal_btn_ok": "OK",
+        "modal_btn_cancel": "CANCEL",
+
+        // --- STATISTICS ---
+        "stat_record": "RECORD",
+        "stat_total": "TOTAL GAMES",
+        "stat_wins": "WINS",
+        "stat_losses": "LOSSES",
+        "stat_rate": "WIN RATE",
+        "stat_streak": "Hot Streak",
+        "stat_avg": "Average",
+        "stat_trophies": "Trophies",
+        "stat_balance": "Balance",
+        "stat_online": "PLAYERS ONLINE",
+
+        // --- HIGH SCORES ---
+        "hs_local": "LOCAL",
+        "hs_global": "GLOBAL 🌍",
+        "hs_weekly": "WEEKLY",      // <-- NOVO
+        "hs_monthly": "MONTHLY",    // <-- NOVO
+        "hs_all_time": "ALL TIME",  // <-- NOVO
+        "hs_player": "PLAYER",
+        "hs_score": "SCORE",
+        "hs_loading": "LOADING...",
+        "player_unknown": "Unknown",
+        "msg_connecting": "Connecting to server...",
+        "msg_no_connection": "No internet connection.",
+        "msg_no_results": "No results yet.",
+        "msg_be_first": "Be the first!",
+
+        // --- GAMEPLAY ---
+        "game_roll": "ROLL",
+        "game_write": "WRITE",
+        "game_announce": "Announce",
+        "game_announce_cancel": "Cancel",
+        "game_opponent_turn": "🔒", 
+        "game_opponent_choosing": "🔒", 
+        "game_turn_msg": "is playing!",
+        "game_over": "GAME OVER",
+        "prompt_player_name": "Enter name for player",
+        "player_guest": "Guest",
+        "chat_you": "You",
+        "chat_opponent": "Opponent",
+        "lbl_opponent_parens": "(Opponent)",
+
+        // EN KOLONE
+        "col_down": "↓",
+        "col_free": "FREE",
+        "col_middle": "⇅",
+        "col_up": "↑",
+        "col_manual": "HAND",
+        "col_announce": "📢",
+        
+        "row_triling": "3oaK", 
+        "row_kenta": "Straight",
+        "row_full": "FULL H.", 
+        "row_poker": "4oaK",
+        "row_yamb": "Yamb",
+        "row_min": "Min",
+        "row_max": "Max",
+        "row_sum": "SUM",
+        
+        "status_roll": "Roll",
+
+        // --- GAME OVER & ALERTS ---
+        "go_win": "VICTORY!",
+        "go_loss": "DEFEAT",
+        "go_title_great": "🎉 GREAT GAME!",
+        "go_title_good": "GOOD GAME",
+        "go_msg_win": "Winner is",
+        "go_msg_solo": "SCORE",
+        "go_double": "🎥 DOUBLE 💰 (x2)",
+        "go_claim": "Claim & Exit",
+        "msg_reward_doubled": "Reward successfully doubled!\nTotal won:",
+
+        "alert_roll_first": "Roll the dice first!",
+        "alert_filled": "Field is already filled!",
+        "alert_announce_col": "You must announce a field in this column!",
+        "alert_announce_select": "You must select a field to Announce!",
+        "alert_wrong_field": "You must write in the announced field!",
+        "alert_wrong_order": "You must follow the column order!",
+        "alert_manual_lock": "Warning: If you write a zero here, you lose the Hand column!\nAre you sure?",
+        "alert_quit_confirm": "Do you want to quit the game?",
+
+        "msg_room_full": "This room is full or the game is already in progress!",
+        "msg_opponent_left": "Opponent has left!",
+
+        // --- DAILY CHALLENGE ---
+        "dc_title": "DAILY CHALLENGE",
+        "dc_desc": "Stop the dice at the right moment!",
+        "dc_stop": "STOP",
+        "dc_sum": "SUM",
+        "dc_done": "You already played daily challenge today. Come back tomorrow!",
+
+        // --- SETTINGS ---
+        "settings_name": "Your Name:",
+        "settings_theme": "Theme:",
+        "settings_sound": "Sound Effects",
+        "settings_save": "Save",
+
+        // --- RULES (EN) ---
+        "rules_title": "GAME RULES",
+        "rules_goal_title": "OBJECTIVE",
+        "rules_goal_text": "The goal is to score as many points as possible by rolling 6 dice and filling the table. You have 3 rolls per turn.",
+        "rules_cols_title": "COLUMNS",
+        "rules_col_down": "<strong>DOWN (↓):</strong> Must be filled in order from 1 to Yamb. No skipping.",
+        "rules_col_free": "<strong>FREE (S):</strong> Can be filled in any order.",
+        "rules_col_mid": "<strong>MIDDLE (⇅):</strong> Filled from the center towards the ends (from Max and Min fields towards 1 and Yamb).",
+        "rules_col_up": "<strong>UP (↑):</strong> Must be filled in order from Yamb down to 1.",
+        "rules_col_man": "<strong>HAND (R):</strong> Can only be filled after the FIRST roll.",
+        "rules_col_ann": "<strong>ANNOUNCE (📢):</strong> You must announce the field after the first roll.",
+        "rules_scoring_title": "SCORING",
+        "rules_sec1_title": "1. SECTION (1-6)",
+        "rules_sec1_text": "Sum of matching numbers. Total ≥ 60 grants +30 bonus points.",
+        "rules_sec2_title": "2. SECTION (MIN-MAX)",
+        "rules_sec2_text": "Formula: (Max - Min) * Number of Ones. If result ≥ 60, bonus is +40.",
+        "rules_sec3_title": "3. SECTION (COMBINATIONS)",
+        "rules_row_triling_desc": "<strong>3 of a Kind:</strong> 3 matching dice. Sum + 20.",
+        "rules_row_kenta_desc": "<strong>STRAIGHT:</strong> 5 in a row. 1st roll: 66 | 2nd roll: 56 | 3rd roll: 46.",
+        "rules_row_full_desc": "<strong>FULL HOUSE:</strong> 3 of a kind + 2 of a kind. Sum + 30.",
+        "rules_row_poker_desc": "<strong>4 of a Kind:</strong> 4 matching dice. Sum + 40.",
+        "rules_row_yamb_desc": "<strong>YAMB:</strong> 5 matching dice. Sum + 50.",
+
+        // --- INVITE ---
+        "invite_text": "Send this link to a friend:",
+        "invite_btn": "🔗 SHARE LINK",
+        "invite_share_msg": "Let's play Yamb! Join here:",
+        "alert_copied": "Link copied to clipboard!",
+        "alert_copied_title": "COPIED",
+
+        // --- RESUME ---
+        "msg_game_resumed": "Game resumed!",
+        "msg_no_saved_game": "No saved game found.",
+        "msg_save_error": "Error loading game.\nData format is outdated."
+    }
+};
+
+// --- HELPER FUNKCIJE ---
+
+function t(key) {
+    const lang = localStorage.getItem('yamb_lang') || 'sr';
+    return TRANSLATIONS[lang][key] || key;
+}
+
+function setLanguage(lang) {
+    if (lang !== 'sr' && lang !== 'en') return;
+    localStorage.setItem('yamb_lang', lang);
+    location.reload(); 
+}
+
+function applyTranslations() {
+    document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.getAttribute('data-lang');
+        if (key) el.innerHTML = t(key); // Koristimo innerHTML zbog <b> i <strong> tagova
+    });
+    
+    const nameInput = document.getElementById('setting-name');
+    if (nameInput) {
+        nameInput.placeholder = (localStorage.getItem('yamb_lang') === 'en') ? "Player Name" : "Ime Igrača";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    applyTranslations();
+});
