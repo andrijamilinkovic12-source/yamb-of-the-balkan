@@ -145,7 +145,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v6.5 - FIXED NAME BUG");
+        console.log("YambApp v6.6 - INVITE LINK FIX");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -185,15 +185,14 @@ class YambApp {
         
         this.inviteDetected = false;
 
-        // --- POPRAVKA: Sigurno učitavanje imena ---
+        // --- UČITAVANJE IMENA ---
         let storedName = localStorage.getItem('yamb_player_name');
-        // Ako je ime "undefined" (kao string), "null" ili prazno, resetuj ga
         if (!storedName || storedName === "undefined" || storedName === "null") {
             storedName = "Player";
             localStorage.setItem('yamb_player_name', "Player");
         }
         this.playerName = storedName;
-        // ------------------------------------------
+        // ------------------------
         
         const savedSound = localStorage.getItem('yamb_sound');
         this.soundEnabled = savedSound !== 'false'; 
@@ -254,11 +253,15 @@ class YambApp {
 
         document.addEventListener("resume", () => { setTimeout(() => { this.checkForInvite(); }, 500); }, false);
         document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') setTimeout(() => { this.checkForInvite(); }, 500); });
-        setTimeout(() => { this.checkForInvite(); }, 1000);
         
+        // Timeout za splash screen ako nema linka
         this.splashTimeout = setTimeout(() => { 
             if (!this.inviteDetected) this.navigateTo('main-menu'); 
         }, 4500); 
+
+        // DODATNO: Odmah proveri link pri startu
+        setTimeout(() => { this.checkForInvite(); }, 500);
+        this.checkForInvite(); // Direct check
 
         this.handleRotationLock();
         window.addEventListener('resize', () => this.handleRotationLock());
@@ -288,7 +291,10 @@ class YambApp {
         if (!this.socket || !this.socket.connected) {
             try {
                 if (typeof io !== 'undefined') {
-                    this.socket = io(SERVER_URL, { 
+                    // Fallback ako SERVER_URL nije definisan u config.js
+                    const connectionUrl = (typeof SERVER_URL !== 'undefined') ? SERVER_URL : window.location.origin;
+
+                    this.socket = io(connectionUrl, { 
                         transports: ['websocket', 'polling'], 
                         reconnection: true,             
                         reconnectionAttempts: 15,       
@@ -302,6 +308,7 @@ class YambApp {
                         if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
                         if (this.topListManager) this.topListManager.syncOfflineScores();
                         
+                        // Ako smo se upravo konektovali i postoji ?room= u linku, uđi u sobu
                         const params = new URLSearchParams(window.location.search);
                         if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
                     });
@@ -343,6 +350,7 @@ class YambApp {
         const params = new URLSearchParams(window.location.search); 
         const roomId = params.get('room'); 
         if (roomId) { 
+            console.log("Invite detected: " + roomId);
             this.inviteDetected = true;
             if (this.splashTimeout) { clearTimeout(this.splashTimeout); this.splashTimeout = null; }
             this.navigateTo('splash-screen'); 
@@ -567,7 +575,10 @@ class YambApp {
         const nickname = this.playerName; 
         if (!nickname) return; 
         const roomId = "yamb-" + Math.random().toString(36).substring(2, 8); 
-        const shareUrl = SERVER_URL + "/?room=" + roomId; 
+        
+        // KLJUČNA IZMENA: Koristimo window.location.origin da bi link uvek bio tačan
+        const baseUrl = window.location.origin;
+        const shareUrl = baseUrl + "/?room=" + roomId; 
         
         this.navigateTo('waiting-screen'); 
         document.getElementById('wait-msg').innerText = gt('hs_loading'); 
@@ -1131,8 +1142,6 @@ class YambApp {
         if (this.onlineMode) detectedMode = "Online"; else if (this.players.length > 1) detectedMode = "Hotseat";
 
         // --- FIX ZA UNDEFINED IME ---
-        // Sada eksplicitno koristimo this.playerName umesto da čitamo iz niza
-        // koji možda ima problema
         if (detectedMode === 'Solo') {
             myScoreEntry = finalResults[0];
             await this.safeSubmitScore(this.playerName, myScoreEntry.score, 'Solo');
@@ -1141,7 +1150,6 @@ class YambApp {
             const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
             let saveMode = this.onlineMode ? 'Online' : 'Hotseat';
             
-            // I ovde osiguravamo da se ne pošalje null
             await this.safeSubmitScore(winner.name || "Guest", winner.score, saveMode);
             
             myScoreEntry = finalResults.find(r => r.name === this.playerName);
