@@ -23,7 +23,6 @@ app.use(cors());
 app.use(express.json());
 
 // --- MONGODB KONEKCIJA ---
-// Sada čitamo tajnu adresu iz .env fajla da ne bi bila javna na GitHub-u
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
@@ -52,6 +51,10 @@ app.get('/', (req, res) => {
 let waitingPlayer = null; // Igrač koji čeka random partiju
 let privateRooms = {};    // Sobe za privatne igre
 
+// --- NOVO: Mapa igrača i soba (SocketID -> RoomID) ---
+// Ovo nam treba da bismo znali koga da obavestimo kad neko izađe
+let playerRooms = {}; 
+
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
     console.log(`🔗 Novi klijent: ${socket.id}`);
@@ -63,13 +66,11 @@ io.on('connection', (socket) => {
     // 2. TOP LISTA & REZULTATI
     // ==================================================================
 
-    // A) Slanje Top Liste klijentu
     socket.on('get_global_highscores', async (period) => {
         try {
             let filter = {};
             const now = new Date();
             
-            // Logika filtriranja
             if (period === 'weekly') {
                 const lastWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
                 filter.date = { $gte: lastWeek };
@@ -77,12 +78,8 @@ io.on('connection', (socket) => {
                 const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
                 filter.date = { $gte: lastMonth };
             }
-            // 'all_time' vraća sve (prazan filter)
 
-            // Dohvati top 50
             const scores = await Score.find(filter).sort({ score: -1 }).limit(50);
-            
-            // Pošalji nazad SAMO onom ko je tražio
             socket.emit('global_highscores_data', scores);
             
         } catch (err) {
@@ -91,21 +88,15 @@ io.on('connection', (socket) => {
         }
     });
 
-    // B) Upisivanje rezultata (POPRAVLJENO PROTIV UNDEFINED)
     socket.on('submit_score', async (data) => {
         try {
             console.log("📩 Primljen zahtev za upis:", data);
-
-            // "Pametno" traženje imena: Ako nema 'name', probaj 'playerName', pa 'nickname'...
             const finalName = data.name || data.playerName || data.nickname || "Nepoznat Igrač";
 
-            if (!data.score) {
-                console.log("❌ Odbijen rezultat: Nema poena (score)");
-                return;
-            }
+            if (!data.score) return;
             
             const newScore = new Score({
-                playerName: finalName, // Koristimo pronađeno ime
+                playerName: finalName,
                 score: data.score,
                 mode: data.mode || 'Solo',
                 date: data.date || Date.now()
@@ -125,33 +116,31 @@ io.on('connection', (socket) => {
 
     // Random Game
     socket.on('find_game', (nickname) => {
-        // Ako već postoji neko ko čeka
         if (waitingPlayer) {
             const opponentId = waitingPlayer.id;
             const opponentName = waitingPlayer.nickname;
             const roomId = `room_${opponentId}_${socket.id}`;
 
-            // Provera da li je protivnik još uvek tu
             const opponentSocket = io.sockets.sockets.get(opponentId);
 
             if (opponentSocket) {
-                // Resetujemo čekača jer je našao par
                 waitingPlayer = null;
 
-                // Ubaci oba igrača u sobu
                 socket.join(roomId);
                 opponentSocket.join(roomId);
 
+                // --- NOVO: Pamtimo da su ova dva igrača u ovoj sobi ---
+                playerRooms[socket.id] = roomId;
+                playerRooms[opponentId] = roomId;
+
                 console.log(`⚔️ MATCH START: ${nickname} vs ${opponentName} (Room: ${roomId})`);
 
-                // Obavesti P1 (onaj koji je čekao) -> On je Index 0
                 io.to(opponentId).emit('game_start', {
                     roomId: roomId,
                     opponent: nickname,
                     myIndex: 0
                 });
 
-                // Obavesti P2 (ovaj koji je upravo došao) -> On je Index 1
                 socket.emit('game_start', {
                     roomId: roomId,
                     opponent: opponentName,
@@ -159,12 +148,10 @@ io.on('connection', (socket) => {
                 });
 
             } else {
-                // Ako je protivnik nestao dok je čekao, ovaj igrač postaje novi čekač
                 waitingPlayer = { id: socket.id, nickname: nickname };
                 socket.emit('waiting_for_opponent');
             }
         } else {
-            // Nema nikog, stavi ovog na čekanje
             waitingPlayer = { id: socket.id, nickname: nickname };
             socket.emit('waiting_for_opponent');
             console.log(`⏳ ${nickname} čeka protivnika...`);
@@ -173,21 +160,17 @@ io.on('connection', (socket) => {
 
     // Private Game
     socket.on('join_private_game', ({ nickname, roomId }) => {
-        // Kreiranje sobe ako ne postoji
         if (!privateRooms[roomId]) {
             privateRooms[roomId] = { p1: { id: socket.id, name: nickname } };
             socket.join(roomId);
             socket.emit('private_waiting', { roomId });
             console.log(`🏠 Private Room kreirana: ${roomId} od strane ${nickname}`);
         } 
-        // Ulazak drugog igrača
         else if (!privateRooms[roomId].p2) {
             const p1 = privateRooms[roomId].p1;
-            
-            // Provera da li je p1 još tu
             const p1Socket = io.sockets.sockets.get(p1.id);
+            
             if (!p1Socket) {
-                // Ako je p1 otišao, resetuj sobu sa novim igračem
                 privateRooms[roomId] = { p1: { id: socket.id, name: nickname } };
                 socket.join(roomId);
                 socket.emit('private_waiting', { roomId });
@@ -197,9 +180,12 @@ io.on('connection', (socket) => {
             privateRooms[roomId].p2 = { id: socket.id, name: nickname };
             socket.join(roomId);
 
+            // --- NOVO: Pamtimo da su ova dva igrača u ovoj sobi ---
+            playerRooms[socket.id] = roomId;
+            playerRooms[p1.id] = roomId;
+
             console.log(`⚔️ Private Match Start: ${p1.name} vs ${nickname}`);
 
-            // Start igre
             io.to(p1.id).emit('game_start', {
                 roomId: roomId,
                 opponent: nickname,
@@ -212,15 +198,14 @@ io.on('connection', (socket) => {
                 myIndex: 1
             });
 
-            // Brišemo sobu iz liste čekanja jer je puna
-            delete privateRooms[roomId];
+            delete privateRooms[roomId]; // Soba više ne čeka, sad je u igri
         } else {
             socket.emit('room_full');
         }
     });
 
     // ==================================================================
-    // 4. GAMEPLAY RELEJI (Samo prosleđuju podatke drugom igraču)
+    // 4. GAMEPLAY RELEJI
     // ==================================================================
 
     socket.on('dice_roll', (data) => {
@@ -242,13 +227,34 @@ io.on('connection', (socket) => {
     socket.on('chat_msg', (data) => {
         socket.to(data.roomId).emit('chat_msg', data);
     });
+    
+    // --- NOVO: Dodajemo handler za kraj igre da očistimo sobe ---
+    socket.on('game_over', () => {
+        // Ako klijent pošalje signal da je igra gotova, brišemo ga iz mape
+        if (playerRooms[socket.id]) {
+            delete playerRooms[socket.id];
+        }
+    });
 
     // ==================================================================
-    // 5. DISKONEKCIJA
+    // 5. DISKONEKCIJA (AŽURIRANO)
     // ==================================================================
     socket.on('disconnect', () => {
         console.log('❌ Klijent diskonektovan:', socket.id);
         
+        // --- NOVO: Provera da li je igrač bio u aktivnoj sobi ---
+        const activeRoomId = playerRooms[socket.id];
+        
+        if (activeRoomId) {
+            console.log(`📢 Obaveštavam sobu ${activeRoomId} da je protivnik izašao.`);
+            // Šaljemo poruku preostalima u sobi (protivniku)
+            socket.to(activeRoomId).emit('opponent_left');
+            
+            // Brišemo zapis
+            delete playerRooms[socket.id];
+        }
+        // --------------------------------------------------------
+
         // 1. Ako je bio u redu za čekanje, izbaci ga
         if (waitingPlayer && waitingPlayer.id === socket.id) {
             waitingPlayer = null;
