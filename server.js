@@ -26,8 +26,6 @@ app.use(express.json());
 // ==================================================================
 // 1. RUTA ZA ANDROID APP LINKS (ASSETLINKS.JSON)
 // ==================================================================
-// Ovo je ključni deo za tvoj deep link. 
-// Obezbeđuje da se fajl servira kao JSON, čak i ako server ignoriše .foldere
 app.get('/.well-known/assetlinks.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.sendFile(path.join(__dirname, 'www', '.well-known', 'assetlinks.json'));
@@ -36,7 +34,6 @@ app.get('/.well-known/assetlinks.json', (req, res) => {
 // ==================================================================
 // 2. SERVIRANJE STATIČKIH FAJLOVA (IGRA)
 // ==================================================================
-// Ovde kažemo serveru da su tvoji fajlovi (css, js, slike) unutar 'www' foldera
 app.use(express.static(path.join(__dirname, 'www')));
 
 // --- MONGODB KONEKCIJA ---
@@ -82,8 +79,13 @@ io.on('connection', (socket) => {
     io.emit('users_count', io.engine.clientsCount);
 
     // ==================================================================
-    // 3. TOP LISTA & REZULTATI
+    // 3. TOP LISTA & REZULTATI (SA ANTI-CHEAT ZAŠTITOM)
     // ==================================================================
+    
+    // Konstante za validaciju
+    const MAX_SCORE = 3500;       // Limit za skor (teoretski max ~3396)
+    const MAX_NAME_LENGTH = 18;   // Limit za dužinu imena
+
     socket.on('get_global_highscores', async (period) => {
         try {
             if (!MONGO_URI) return; 
@@ -111,9 +113,30 @@ io.on('connection', (socket) => {
         try {
             if (!MONGO_URI) return;
 
-            const finalName = data.name || data.playerName || "Nepoznat Igrač";
-            if (!data.score) return;
+            // 1. PROVERA TIPA PODATAKA
+            if (typeof data.score !== 'number' || isNaN(data.score)) {
+                return; 
+            }
+
+            // 2. PROVERA VREDNOSTI (ANTI-CHEAT)
+            if (data.score < 0 || data.score > MAX_SCORE) {
+                console.log(`🚨 HACK POKUŠAJ: ${socket.id} šalje sumnjiv skor: ${data.score}`);
+                return; // Ignorišemo upis
+            }
+
+            // 3. OBRADA IMENA (Limit 18 karaktera)
+            let finalName = "Nepoznat Igrač";
+            let rawName = data.name || data.playerName;
+
+            if (rawName && typeof rawName === 'string') {
+                finalName = rawName.trim().substring(0, MAX_NAME_LENGTH);
+            }
+
+            if (finalName.length === 0) {
+                finalName = "Nepoznat Igrač";
+            }
             
+            // 4. UPIS U BAZU
             const newScore = new Score({
                 playerName: finalName,
                 score: data.score,
@@ -121,18 +144,24 @@ io.on('connection', (socket) => {
                 date: data.date || Date.now()
             });
             await newScore.save();
+            console.log(`✅ Upisan skor: ${finalName} (${data.score})`);
+
         } catch (err) {
             console.error("Greška pri upisu:", err);
         }
     });
 
     // ==================================================================
-    // 4. MATCHMAKING
+    // 4. MATCHMAKING (FIXED RACE CONDITION)
     // ==================================================================
 
     // --- RANDOM GAME ---
     socket.on('find_game', (nickname) => {
-        // Logika za pronalaženje nasumičnog protivnika
+        // [FIX] Sprečava igrača da igra sam sa sobom ako brzo klikće
+        if (waitingPlayer && waitingPlayer.id === socket.id) {
+            return; 
+        }
+
         if (waitingPlayer) {
             const opponentId = waitingPlayer.id;
             const opponentName = waitingPlayer.nickname;
@@ -164,7 +193,6 @@ io.on('connection', (socket) => {
                 });
 
             } else {
-                // Ako je protivnik u međuvremenu otišao
                 waitingPlayer = { id: socket.id, nickname: nickname };
                 socket.emit('waiting_for_opponent');
             }
@@ -175,7 +203,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- PRIVATE GAME (INVITE FRIEND) ---
+    // --- PRIVATE GAME ---
     socket.on('join_private_game', ({ nickname, roomId }) => {
         console.log(`🏠 Zahtev za Private sobu: ${roomId} od ${nickname}`);
 
@@ -184,7 +212,6 @@ io.on('connection', (socket) => {
             return;
         }
 
-        // Ako soba ne postoji, kreiraj je i postavi ovog igrača kao P1 (Host)
         if (!privateRooms[roomId]) {
             privateRooms[roomId] = { p1: { id: socket.id, name: nickname } };
             socket.join(roomId);
@@ -192,12 +219,10 @@ io.on('connection', (socket) => {
             socket.emit('private_waiting', { roomId });
             console.log(`--> Soba ${roomId} kreirana. Čeka se P2.`);
         } 
-        // Ako soba postoji i fali P2
         else if (!privateRooms[roomId].p2) {
             const p1 = privateRooms[roomId].p1;
             const p1Socket = io.sockets.sockets.get(p1.id);
             
-            // Provera da li je host još uvek tu
             if (!p1Socket) {
                 console.log("--> Host je nestao. Postajem novi host.");
                 privateRooms[roomId] = { p1: { id: socket.id, name: nickname } };
@@ -207,7 +232,7 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            if (p1.id === socket.id) return; // Sprečava da isti igrač igra sam sa sobom u private
+            if (p1.id === socket.id) return; 
 
             privateRooms[roomId].p2 = { id: socket.id, name: nickname };
             socket.join(roomId);
@@ -229,8 +254,6 @@ io.on('connection', (socket) => {
                 myIndex: 1
             });
 
-            // Opciono: brišemo sobu iz liste čekanja jer je igra počela
-            // (ali čuvamo socket sobu za komunikaciju)
             delete privateRooms[roomId]; 
         } else {
             socket.emit('room_full');
@@ -238,12 +261,13 @@ io.on('connection', (socket) => {
     });
 
     // ==================================================================
-    // 5. GAMEPLAY RELEJI (PROSLEĐIVANJE POTEZA)
+    // 5. GAMEPLAY RELEJI & REMATCH LOGIKA
     // ==================================================================
     
     const relayEvent = (eventName, data) => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
+            // Šalji svima u sobi osim meni
             socket.to(roomId).emit(eventName, data);
         }
     };
@@ -253,6 +277,26 @@ io.on('connection', (socket) => {
     socket.on('player_move', (data) => relayEvent('remote_move', data));
     socket.on('announce', (data) => relayEvent('remote_announce', data));
     socket.on('chat_msg', (data) => relayEvent('chat_msg', data));
+
+    // --- REVANŠ SISTEM ---
+    socket.on('game_over', () => {
+        const roomId = playerRooms[socket.id];
+        if (roomId) {
+            console.log(`🏁 Igra završena u sobi: ${roomId}`);
+        }
+    });
+
+    socket.on('request_rematch', () => {
+        relayEvent('rematch_requested', {}); 
+    });
+
+    socket.on('accept_rematch', () => {
+        const roomId = playerRooms[socket.id];
+        if(roomId) {
+            io.in(roomId).emit('rematch_started'); 
+            console.log(`🔄 Revanš pokrenut u sobi: ${roomId}`);
+        }
+    });
     
     // ==================================================================
     // 6. DISKONEKCIJA
@@ -267,7 +311,6 @@ io.on('connection', (socket) => {
             socket.to(activeRoomId).emit('opponent_left');
             delete playerRooms[socket.id];
             
-            // Čišćenje private sobe ako je neko bio u njoj
             if (privateRooms[activeRoomId]) {
                 delete privateRooms[activeRoomId];
             }
@@ -277,7 +320,6 @@ io.on('connection', (socket) => {
             waitingPlayer = null;
         }
 
-        // Čišćenje private soba gde se čeka
         for (const [roomId, roomData] of Object.entries(privateRooms)) {
             if (roomData.p1 && roomData.p1.id === socket.id) {
                 delete privateRooms[roomId];
