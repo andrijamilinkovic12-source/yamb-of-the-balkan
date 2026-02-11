@@ -127,22 +127,28 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-throw:active {
     box-shadow: 0 0 0 #8a784d, inset 0 2px 5px rgba(0,0,0,0.3);
 }
 
-/* Dugme Najava (Dark) */
+/* Dugme Najava (Dark) - FIX */
 body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-secondary,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-najava {
-    background: linear-gradient(to bottom, #3a3a3a, #222222);
-    color: var(--text-muted);
-    border: 1px solid #444;
+    /* Svetlija nijansa sive da bi se videla razlika u odnosu na pozadinu */
+    background: linear-gradient(to bottom, #4a4a4a, #2b2b2b);
+    color: var(--gold-main); /* Zlatna slova za bolji kontrast */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Diskretna ivica */
     font-weight: 800;
     
-    /* 3D Debljina (5px) - Sada crna da se vidi */
-    box-shadow: 0 5px 0 #000, 0 10px 15px rgba(0,0,0,0.5);
+    /* 3D Debljina (5px) - Tamno siva (#1a1a1a) umesto crne da se vidi */
+    box-shadow: 0 5px 0 #1a1a1a, 0 10px 15px rgba(0,0,0,0.6);
+    
+    transition: all 0.1s;
 }
+
+/* Aktivno stanje (pritisak) */
 body:not(.light-theme):not(.medium-theme):not(.winter-theme) .btn-secondary:active,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-najava:active {
     transform: translateY(5px);
-    box-shadow: 0 0 0 #000, inset 0 2px 5px rgba(0,0,0,0.5);
-    color: var(--gold-main);
+    box-shadow: 0 0 0 #1a1a1a, inset 0 2px 5px rgba(0,0,0,0.5);
+    color: #fff;
+    border-color: var(--gold-main);
 }
 
 /* GLOW EFEKTI ZA DARK TEMU (ZLATNO) */
@@ -1235,7 +1241,8 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
    ========================================================= */
 
 /* 1. OSNOVNI OBLIK I POZICIJA */
-#btn-theme-toggle {
+#btn-theme-toggle,
+.game-header .btn-secondary {
     width: 45px;
     height: 45px;
     border-radius: 50%; /* Okruglo dugme */
@@ -1252,17 +1259,20 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     position: relative;
     z-index: 50;
     outline: none;
+    padding: 0;
 }
 
 /* 2. EFEKAT PRITISKA (ZA SVE TEME) */
-#btn-theme-toggle:active {
+#btn-theme-toggle:active,
+.game-header .btn-secondary:active {
     transform: translateY(5px) !important; /* Spuštanje */
 }
 
 /* --- BOJE PO TEMAMA --- */
 
 /* DARK THEME FIX (Original) - Zlatna senka umesto crne da se vidi 3D */
-body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-theme-toggle {
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-theme-toggle,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .game-header .btn-secondary {
     /* Svetliji gradijent na vrhu da se istakne */
     background: linear-gradient(180deg, #3d3d3d 0%, #1a1a1a 100%);
 
@@ -1281,43 +1291,50 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-theme-toggle {
         0 15px 20px rgba(0,0,0,0.8),
         inset 0 2px 0 rgba(255, 255, 255, 0.15);
 }
-body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-theme-toggle:active {
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-theme-toggle:active,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .game-header .btn-secondary:active {
     box-shadow: 0 0 0 #8a784d, inset 0 2px 5px rgba(0,0,0,0.5);
 }
 
 /* LIGHT THEME */
-body.light-theme #btn-theme-toggle {
+body.light-theme #btn-theme-toggle,
+body.light-theme .game-header .btn-secondary {
     background: linear-gradient(to bottom, #ffffff, #e0e0e0);
     border: 1px solid #c5a028;
     color: #c5a028;
     /* 3D Siva senka */
     box-shadow: 0 5px 0 #90a4ae, 0 10px 15px rgba(0,0,0,0.1); 
 }
-body.light-theme #btn-theme-toggle:active {
+body.light-theme #btn-theme-toggle:active,
+body.light-theme .game-header .btn-secondary:active {
     box-shadow: 0 0 0 #90a4ae, inset 0 2px 5px rgba(0,0,0,0.1);
 }
 
 /* MEDIUM THEME (Redesigned - Bordo/Cream) */
-body.medium-theme #btn-theme-toggle {
+body.medium-theme #btn-theme-toggle,
+body.medium-theme .game-header .btn-secondary {
     background: linear-gradient(to bottom, #751829, #4a0e19);
     border: 1px solid #ffccbc;
     color: #ffccbc;
     /* 3D Bordo senka */
     box-shadow: 0 5px 0 #2b0a16, 0 10px 15px rgba(0, 0, 0, 0.3); 
 }
-body.medium-theme #btn-theme-toggle:active {
+body.medium-theme #btn-theme-toggle:active,
+body.medium-theme .game-header .btn-secondary:active {
     box-shadow: 0 0 0 #2b0a16, inset 0 2px 5px rgba(0,0,0,0.3);
 }
 
 /* WINTER THEME */
-body.winter-theme #btn-theme-toggle {
+body.winter-theme #btn-theme-toggle,
+body.winter-theme .game-header .btn-secondary {
     background: linear-gradient(to bottom, #112240, #0a192f);
     border: 1px solid #4fc3f7;
     color: #4fc3f7;
     /* 3D Tamno plava senka */
     box-shadow: 0 5px 0 #020c1b, 0 10px 15px rgba(0, 255, 255, 0.1); 
 }
-body.winter-theme #btn-theme-toggle:active {
+body.winter-theme #btn-theme-toggle:active,
+body.winter-theme .game-header .btn-secondary:active {
     box-shadow: 0 0 0 #020c1b, inset 0 2px 5px rgba(0,0,0,0.5);
 }
 
