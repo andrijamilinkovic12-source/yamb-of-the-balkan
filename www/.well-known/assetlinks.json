@@ -1,0 +1,16 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.yamb.balkan",
+      "sha256_cert_fingerprints": [
+        "EF:22:80:26:AE:31:EE:99:2E:2F:82:B2:E2:A2:A7:BE:6F:3E:79:BD:0C:B6:19:75:01:9D:55:6C:98:C4:54:9B",
+        "56:50:5F:0E:6A:07:D8:A2:4B:30:F5:83:F5:7D:55:07:9C:2C:0A:21:95:3E:2A:0A:F2:16:B9:BE:B5:64:12:16",
+        "4F:16:86:7D:5B:F5:BB:BB:B3:FB:6A:7B:EA:99:F7:EF:E5:86:72:81:69:2B:1E:B6:49:7A:52:CB:C3:1D:49:9E"
+      ]
+    }
+  }
+]
