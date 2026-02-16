@@ -1,4 +1,4 @@
-// config.js - PODACI I KONFIGURACIJA (COMPLETE & UPDATED)
+// config.js - PODACI I KONFIGURACIJA (COMPLETE & FIXED)
 
 // --- 1. GLAVNA PODEŠAVANJA ---
 const CONFIG = {
@@ -17,13 +17,26 @@ const CONFIG = {
     GAME_STATUS: { IDLE: 'idle', ROLLING: 'rolling', FINISHED: 'finished' }
 };
 
-// --- 2. PAMETNI URL (AUTO DETECT) ---
-// Logika: 
-// 1. Ako si na telefonu (Capacitor/Android), hostname NIJE 'localhost', pa ide na Render (HTTPS).
-// 2. Ako si na PC-u (lokalno), hostname JE 'localhost', pa ide na Localhost:3000.
-const SERVER_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
-    ? 'http://localhost:3000' 
-    : 'https://yamb-of-the-balkan.onrender.com';
+// --- 2. PAMETNI URL (ISPRAVKA ZA TELEFON) ---
+// Default: Uvek gađaj pravi server na internetu
+let serverUrl = 'https://yamb-of-the-balkan.onrender.com';
+
+// Provera: Da li smo na lokalnom računaru?
+const isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+// Provera: Da li je ovo mobilna aplikacija? (Capacitor ubacuje ovaj objekat)
+const isNativeApp = (window.Capacitor !== undefined);
+
+// LOGIKA: Koristi localhost:3000 SAMO ako smo na kompjuteru (browser)
+// Ako smo na telefonu (isNativeApp je true), MORAMO koristiti https link, iako telefon misli da je na localhostu.
+if (isLocalhost && !isNativeApp) {
+    serverUrl = 'http://localhost:3000';
+    console.log("🖥️ PC Detect: Koristim Localhost server.");
+} else {
+    console.log("📱 Mobile/Web Detect: Koristim Render server.");
+}
+
+const SERVER_URL = serverUrl;
 
 // --- 3. KONSTANTE ZA IGRU ---
 const UNICODE_DICE = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];

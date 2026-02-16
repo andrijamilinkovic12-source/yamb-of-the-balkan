@@ -147,7 +147,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v6.8 - AUDIO UPGRADE");
+        console.log("YambApp v7.0 - MOBILE FIX");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -236,6 +236,7 @@ class YambApp {
         const savedTheme = localStorage.getItem('yamb_theme');
         this.applyTheme(savedTheme);
         
+        // Inicijalizacija socketa
         this.initSocketConnection();
 
         if (window.Capacitor) {
@@ -287,23 +288,27 @@ class YambApp {
         else if (theme === 'winter') document.body.classList.add('winter-theme');
     }
 
+    // --- KLJUČNA FUNKCIJA ZA SOCKETE ---
     initSocketConnection() {
         if (!this.socket || !this.socket.connected) {
             try {
                 if (typeof io !== 'undefined') {
+                    // SERVER_URL se sada povlači ispravno iz config.js (Fix za Android)
                     const connectionUrl = (typeof SERVER_URL !== 'undefined') ? SERVER_URL : window.location.origin;
+                    
+                    console.log("🔌 Povezujem se na:", connectionUrl);
 
                     this.socket = io(connectionUrl, { 
-                        transports: ['websocket', 'polling'], 
+                        transports: ['websocket'], // <--- FORSIRAMO WEBSOCKET ZA ANDROID/RENDER
                         reconnection: true,             
-                        reconnectionAttempts: 15,       
+                        reconnectionAttempts: 20,       
                         reconnectionDelay: 1000,        
                         timeout: 20000,                 
                         autoConnect: true
                     });
                     
                     this.socket.on('connect', () => {
-                        console.log("Socket connected! ID:", this.socket.id);
+                        console.log("✅ Socket povezan! ID:", this.socket.id);
                         if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
                         if (this.topListManager) this.topListManager.syncOfflineScores();
                         
@@ -318,6 +323,10 @@ class YambApp {
 
                     this.socket.on('global_highscores_data', (data) => { 
                         if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list'); 
+                    });
+                    
+                    this.socket.on('connect_error', (err) => {
+                        console.warn("Socket connection error:", err);
                     });
                 }
             } catch (e) { console.error("Greška pri inicijalizaciji socketa:", e); }

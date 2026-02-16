@@ -1,4 +1,4 @@
-// toplista.js - FIXED & IMPROVED
+// toplista.js - CLEAN & OPTIMIZED
 
 class TopListManager {
     constructor(appContext) {
@@ -14,14 +14,16 @@ class TopListManager {
 
     _t(key) {
         if (typeof t === 'function') return t(key);
-        // Fallback prevodi ako t() funkcija nije dostupna
+        // Fallback prevodi
         const fallback = {
             'player_unknown': 'Nepoznat',
-            'msg_connecting': 'Povezujem se...',
+            'msg_connecting': 'Učitavanje...',
             'msg_no_connection': 'Nema konekcije sa serverom.',
             'msg_no_results': 'Još uvek nema rezultata.',
             'msg_be_first': 'Budi prvi!',
-            'btn_retry': '↻ POKUŠAJ PONOVO'
+            'hs_weekly': 'NEDELJA',
+            'hs_monthly': 'MESEC',
+            'hs_all_time': 'SVE'
         };
         return fallback[key] || key;
     }
@@ -32,6 +34,7 @@ class TopListManager {
     async submitScore(name, score, mode) {
         if (!score || score <= 0) return;
 
+        // Pripremamo objekat za bazu (koristimo 'playerName' da se slaže sa serverom)
         const entry = {
             playerName: name || this._t('player_unknown'), 
             score: parseInt(score),
@@ -40,12 +43,10 @@ class TopListManager {
             synced: false 
         };
 
-        console.log(`[Score] Čuvam lokalno: ${entry.playerName} - ${score}`);
-
         // 1. Uvek prvo sačuvaj lokalno
         await this._saveLocal(entry);
 
-        // 2. Pokušaj odmah da sinhronizuješ
+        // 2. Pokušaj odmah da sinhronizuješ ako ima neta
         this.syncOfflineScores();
     }
 
@@ -53,10 +54,7 @@ class TopListManager {
      * Šalje sve neposlate (unsynced) rezultate na server
      */
     async syncOfflineScores() {
-        if (!this.app.socket || !this.app.socket.connected) {
-            console.log("Nema konekcije, sinhronizacija čeka.");
-            return;
-        }
+        if (!this.app.socket || !this.app.socket.connected) return;
 
         try {
             let scores = [];
@@ -71,7 +69,7 @@ class TopListManager {
 
             for (let i = 0; i < scores.length; i++) {
                 if (!scores[i].synced) {
-                    console.log(`📡 Sinhronizujem skor:`, scores[i]);
+                    console.log(`📡 Sinhronizacija skora: ${scores[i].score}`);
                     this.app.socket.emit('submit_score', scores[i]);
                     scores[i].synced = true;
                     needsUpdate = true;
@@ -84,11 +82,9 @@ class TopListManager {
                 } else {
                     localStorage.setItem(this.storageKey, JSON.stringify(scores));
                 }
-                console.log("✅ Lokalni rezultati ažurirani (označeni kao synced).");
             }
-            
         } catch (e) {
-            console.error("Greška pri sinhronizaciji:", e);
+            console.error("Sync error:", e);
         }
     }
 
@@ -127,9 +123,6 @@ class TopListManager {
         const map = { 'weekly': 0, 'monthly': 1, 'all_time': 2 };
         if (btns[map[period]]) btns[map[period]].classList.add('active');
 
-        const listEl = document.getElementById('global-hs-list');
-        if (listEl) listEl.innerHTML = `<div class="loading-text">${this._t('msg_connecting')}... ⏳</div>`;
-
         this._loadGlobal();
     }
 
@@ -156,12 +149,13 @@ class TopListManager {
                 localStorage.setItem(this.storageKey, JSON.stringify(scores));
             }
             
+            // Ako je trenutno prikazana lokalna lista, osveži je
             const listLocal = document.getElementById('local-hs-list');
             if (listLocal && !listLocal.classList.contains('hidden')) {
                 this.renderList(scores, 'local-hs-list');
             }
         } catch (e) {
-            console.error("Greška pri čuvanju lokalnog skora:", e);
+            console.error("Local save error:", e);
         }
     }
 
@@ -176,7 +170,7 @@ class TopListManager {
             }
             this.renderList(scores, 'local-hs-list');
         } catch (e) {
-            console.error("Greška pri učitavanju:", e);
+            console.error("Local load error:", e);
         }
     }
 
@@ -184,28 +178,25 @@ class TopListManager {
         const listEl = document.getElementById('global-hs-list');
         if (!listEl) return;
 
-        // Prikaži loading samo ako već nije tu
-        if (!listEl.innerHTML.includes('loading-text') && !listEl.innerHTML.includes('hs-item')) {
-             listEl.innerHTML = `<div class="loading-text">${this._t('msg_connecting')} 🌍</div>`;
-        }
+        // Prikaži loading animaciju dok čekamo
+        listEl.innerHTML = `<div class="loading-text" style="color:var(--text-muted); font-size:0.9rem; margin-top:20px;">${this._t('msg_connecting')} ⏳</div>`;
         
         if (this.app.socket && this.app.socket.connected) {
+            // Ako smo povezani, traži podatke
             this.app.socket.emit('get_global_highscores', this.currentGlobalFilter);
         } else {
-            // --- POBOLJŠANO RUKOVANJE GREŠKOM (Retry Button) ---
-            // Render serveri spavaju, pa je korisno imati dugme za ponovni pokušaj
-            listEl.innerHTML = `
-                <div style="text-align:center; padding:20px; color:var(--danger); display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-                    <p style="font-weight:bold; margin-bottom:10px;">${this._t('msg_no_connection')}</p>
-                    <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:15px;">(Server se možda budi...)</p>
-                    <button class="btn-menu btn-primary" style="width:auto; padding: 10px 25px; font-size:0.85rem;" 
-                        onclick="if(window.app) { window.app.initSocketConnection(); setTimeout(() => { window.app.topListManager._loadGlobal() }, 1000); }">
-                        ${this._t('btn_retry') || '↻ POKUŠAJ PONOVO'}
-                    </button>
-                </div>`;
+            // Ako nismo, probaj tihu rekoneksiju
+            this.app.initSocketConnection();
             
-            // Automatski pokušaj rekoneksiju u pozadini
-            if (this.app) this.app.initSocketConnection();
+            // Sačekaj malo pa proveri status (bez dugmića, samo info)
+            setTimeout(() => {
+                if (!this.app.socket || !this.app.socket.connected) {
+                     listEl.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">
+                        <div style="font-size:2rem; margin-bottom:10px; opacity:0.5;">📡</div>
+                        ${this._t('msg_no_connection')}
+                    </div>`;
+                }
+            }, 3000);
         }
     }
 
@@ -217,7 +208,7 @@ class TopListManager {
 
         if (!data || !Array.isArray(data) || data.length === 0) {
             list.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-style:italic;">
-                ${this._t('msg_no_results')}<br><br>${this._t('msg_be_first')} 🎲
+                ${this._t('msg_no_results')}
             </div>`;
             return;
         }
