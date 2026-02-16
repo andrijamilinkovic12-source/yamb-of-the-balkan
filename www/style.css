@@ -494,17 +494,6 @@ body.medium-theme .score-btn.filled {
     background: transparent !important;
 }
 
-/* 7. TABLE DUGME (PALETA) ZA OVU TEMU */
-body.medium-theme #btn-theme-toggle {
-    background: linear-gradient(to bottom, #751829, #4a0e19);
-    border: 1px solid #ffccbc;
-    color: #ffccbc;
-    box-shadow: 0 5px 0 #2b0a16, 0 10px 15px rgba(0, 0, 0, 0.3); 
-}
-body.medium-theme #btn-theme-toggle:active {
-    box-shadow: 0 0 0 #2b0a16, inset 0 2px 5px rgba(0,0,0,0.3);
-}
-
 /* 8. MODALI I KARTICE */
 body.medium-theme .modal-box, 
 body.medium-theme .card {
@@ -1235,106 +1224,97 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 
 
 /* =========================================================
-   3D THEME TOGGLE BUTTON (PALETA) - STYLE & ANIMATION
-   (Integrated and Synchronized with Theme Engine)
+   3D THEME TOGGLE BUTTON (PALETA) - SYNCHRONIZED & FIXED
    ========================================================= */
 
-/* 1. OSNOVNI OBLIK I POZICIJA */
+/* 1. ZAJEDNIČKI STIL (BAZA) - ZA SVE TEME ISTO */
 #btn-theme-toggle,
 .game-header .btn-secondary {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%; /* Okruglo dugme */
+    /* Fiksne dimenzije da ne bude razlike u velicini */
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 1.2rem;
     margin-left: 10px;
-    transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+    padding: 0;
+    outline: none;
     
-    /* 3D START POZICIJA */
-    transform: translateY(0);
+    /* 3D POZICIJA I TRANZICIJA */
     position: relative;
     z-index: 50;
-    outline: none;
-    padding: 0;
+    transform: translateY(0);
+    transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* DEFAULT DEBLJINA IVICE (Ista za sve) */
+    border-style: solid;
+    border-width: 2px; 
 }
 
-/* 2. EFEKAT PRITISKA (ZA SVE TEME) */
+/* 2. EFEKAT KLIKA (ZA SVE TEME ISTO) */
 #btn-theme-toggle:active,
 .game-header .btn-secondary:active {
-    transform: translateY(5px) !important; /* Spuštanje */
+    transform: translateY(5px) !important; /* Dugme ide dole */
+    box-shadow: 0 0 0 transparent !important; /* Senka nestaje (3D efekt) */
 }
 
-/* --- BOJE PO TEMAMA --- */
-
-/* DARK THEME FIX (Original) - Zlatna senka umesto crne da se vidi 3D */
+/* --- TEMA 1: DARK / SOFT GOLD (Baza) --- */
 body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-theme-toggle,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme) .game-header .btn-secondary {
-    /* Svetliji gradijent na vrhu da se istakne */
     background: linear-gradient(180deg, #3d3d3d 0%, #1a1a1a 100%);
-
-    /* Jasna zlatna ivica */
-    border: 2px solid #E0C995;
-
+    border-color: #E0C995;
     color: #E0C995;
-
-    /* KLJUČ ZA 3D:
-       1. 0 6px 0 #... -> Debljina dugmeta (stranica)
-       2. 0 15px 20px ... -> Senka koju dugme baca na podlogu
-       3. inset ... -> Unutrašnji odsjaj na vrhu (staklasti efekt)
-    */
-    box-shadow:
-        0 6px 0 #8a784d,
-        0 15px 20px rgba(0,0,0,0.8),
+    /* Zlatna 3D senka */
+    box-shadow: 
+        0 5px 0 #8a784d, 
+        0 10px 10px rgba(0,0,0,0.5),
         inset 0 2px 0 rgba(255, 255, 255, 0.15);
 }
-body:not(.light-theme):not(.medium-theme):not(.winter-theme) #btn-theme-toggle:active,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme) .game-header .btn-secondary:active {
-    box-shadow: 0 0 0 #8a784d, inset 0 2px 5px rgba(0,0,0,0.5);
-}
 
-/* LIGHT THEME */
+/* --- TEMA 2: LIGHT (Standard) --- */
 body.light-theme #btn-theme-toggle,
 body.light-theme .game-header .btn-secondary {
-    background: linear-gradient(to bottom, #ffffff, #e0e0e0);
-    border: 1px solid #c5a028;
+    background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+    border-color: #c5a028;
     color: #c5a028;
-    /* 3D Siva senka */
-    box-shadow: 0 5px 0 #90a4ae, 0 10px 15px rgba(0,0,0,0.1); 
-}
-body.light-theme #btn-theme-toggle:active,
-body.light-theme .game-header .btn-secondary:active {
-    box-shadow: 0 0 0 #90a4ae, inset 0 2px 5px rgba(0,0,0,0.1);
+    /* Siva/Zlatna 3D senka */
+    box-shadow: 
+        0 5px 0 #9e8d5b, 
+        0 10px 10px rgba(0,0,0,0.15);
 }
 
-/* MEDIUM THEME (Redesigned - Bordo/Cream) */
+/* --- TEMA 3: MEDIUM (Valentine's / Bordo) - POPRAVLJENO --- */
 body.medium-theme #btn-theme-toggle,
 body.medium-theme .game-header .btn-secondary {
-    background: linear-gradient(to bottom, #751829, #4a0e19);
-    border: 1px solid #ffccbc;
-    color: #ffccbc;
-    /* 3D Bordo senka */
-    box-shadow: 0 5px 0 #2b0a16, 0 10px 15px rgba(0, 0, 0, 0.3); 
-}
-body.medium-theme #btn-theme-toggle:active,
-body.medium-theme .game-header .btn-secondary:active {
-    box-shadow: 0 0 0 #2b0a16, inset 0 2px 5px rgba(0,0,0,0.3);
+    /* Svetlo dugme (Krem) da odskače od tamne pozadine */
+    background: linear-gradient(to bottom, #ffccbc, #ffab91);
+    border-color: #ffccbc; 
+    color: #4a0e19; /* Tamna ikonica za kontrast */
+    
+    /* Jaka Bordo 3D senka */
+    box-shadow: 
+        0 5px 0 #b71c1c,  /* Ovo pravi 3D dubinu */
+        0 10px 15px rgba(0, 0, 0, 0.5),
+        inset 0 2px 0 rgba(255,255,255,0.4);
 }
 
-/* WINTER THEME */
+/* --- TEMA 4: WINTER (Plava) --- */
 body.winter-theme #btn-theme-toggle,
 body.winter-theme .game-header .btn-secondary {
     background: linear-gradient(to bottom, #112240, #0a192f);
-    border: 1px solid #4fc3f7;
+    border-color: #4fc3f7;
     color: #4fc3f7;
-    /* 3D Tamno plava senka */
-    box-shadow: 0 5px 0 #020c1b, 0 10px 15px rgba(0, 255, 255, 0.1); 
-}
-body.winter-theme #btn-theme-toggle:active,
-body.winter-theme .game-header .btn-secondary:active {
-    box-shadow: 0 0 0 #020c1b, inset 0 2px 5px rgba(0,0,0,0.5);
+    /* Tamno plava 3D senka */
+    box-shadow: 
+        0 5px 0 #020c1b, 
+        0 10px 15px rgba(0, 255, 255, 0.15),
+        inset 0 2px 0 rgba(255,255,255,0.1);
 }
 
 /* =========================================================
