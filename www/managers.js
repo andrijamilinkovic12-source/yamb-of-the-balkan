@@ -1,6 +1,6 @@
-// managers.js - KOMPLETAN KOD (OPTIMIZOVAN ADMOB v2.0)
+// managers.js - COMPLETE LOGIC (MANAGERS, UI, AUDIO, ADS, EFFECTS)
 
-// --- POMOĆNE FUNKCIJE ZA LOKALIZACIJU ---
+// --- 0. POMOĆNE FUNKCIJE ---
 const getLang = () => localStorage.getItem('yamb_lang') || 'sr';
 const _safeT = (key) => (typeof t !== 'undefined' ? t(key) : key);
 const resolveText = (data) => {
@@ -11,7 +11,7 @@ const resolveText = (data) => {
     return data; 
 };
 
-// --- STATE MANAGER ---
+// --- 1. STATE MANAGER ---
 class StateManager {
     constructor() {
         this.currentPage = 'index';
@@ -20,12 +20,12 @@ class StateManager {
     navigateTo(pageId) { console.log(`Navigating to: ${pageId}`); }
 }
 
-// --- STATS MANAGER ---
+// --- 2. STATS MANAGER ---
 class StatsManager {
     constructor() {
         this.stats = this.loadStats() || {
             wins: 0, losses: 0, totalGames: 0, currentWinStreak: 0, currentLossStreak: 0,
-            balance: 1000, unlockedTrophies: [], highscore: 0
+            balance: CONFIG.INITIAL_BALANCE || 1000, unlockedTrophies: [], highscore: 0
         };
         
         const legacyBalance = parseInt(localStorage.getItem('yamb_dukati'));
@@ -110,75 +110,453 @@ class StatsManager {
     getStats() { return this.stats; }
 }
 
-// --- SOUND MANAGER ---
+// --- 3. MODAL MANAGER (UI) ---
+class ModalManager {
+    constructor() {
+        this.overlay = document.getElementById('custom-modal-overlay');
+        this.title = document.getElementById('cm-title');
+        this.msg = document.getElementById('cm-msg');
+        this.input = document.getElementById('cm-input');
+        this.btnCancel = document.getElementById('cm-cancel');
+        this.btnOk = document.getElementById('cm-ok');
+    }
+    alert(text, title) {
+        const safeTitle = title || _safeT('modal_title_info') || "OBAVEŠTENJE";
+        return new Promise(resolve => {
+            if(!this.overlay) { alert(text); resolve(true); return; } 
+            this.setup(safeTitle, text, false);
+            this.btnOk.onclick = () => { this.close(); resolve(true); };
+            this.open();
+        });
+    }
+    confirm(text) {
+        const safeTitle = _safeT('modal_title_confirm') || "POTVRDA";
+        return new Promise(resolve => {
+            if(!this.overlay) { resolve(confirm(text)); return; }
+            this.setup(safeTitle, text, false);
+            this.btnCancel.classList.remove('hidden');
+            this.btnOk.onclick = () => { this.close(); resolve(true); };
+            this.btnCancel.onclick = () => { this.close(); resolve(false); };
+            this.open();
+        });
+    }
+    prompt(text) {
+        const safeTitle = _safeT('modal_title_input') || "UNOS";
+        return new Promise(resolve => {
+            if(!this.overlay) { resolve(prompt(text)); return; }
+            this.setup(safeTitle, text, true);
+            this.btnOk.onclick = () => { 
+                const val = this.input.value; 
+                this.close(); 
+                resolve(val); 
+            };
+            this.open();
+        });
+    }
+    setup(title, msg, hasInput) {
+        if(this.title) this.title.innerText = title;
+        if(this.msg) this.msg.innerText = msg;
+        if(this.btnCancel) this.btnCancel.classList.add('hidden');
+        if(hasInput && this.input) { this.input.classList.remove('hidden'); this.input.value = ""; this.input.focus(); } 
+        else if (this.input) { this.input.classList.add('hidden'); }
+        
+        if(this.btnOk) { const newOk = this.btnOk.cloneNode(true); this.btnOk.parentNode.replaceChild(newOk, this.btnOk); this.btnOk = newOk; }
+        if(this.btnCancel) { const newCancel = this.btnCancel.cloneNode(true); this.btnCancel.parentNode.replaceChild(newCancel, this.btnCancel); this.btnCancel = newCancel; }
+        
+        if(typeof t !== 'undefined') {
+            if(this.btnOk) this.btnOk.innerText = t('modal_btn_ok') || "U REDU";
+            if(this.btnCancel) this.btnCancel.innerText = t('modal_btn_cancel') || "OTKAŽI";
+        }
+    }
+    open() { if(this.overlay) this.overlay.style.display = 'flex'; }
+    close() { if(this.overlay) this.overlay.style.display = 'none'; }
+}
+
+// --- 4. EFFECT MANAGER (VISUALS) ---
+class EffectManager {
+    constructor() {
+        this.activeEffects = [];
+    }
+    
+    applyPermanent(type) {
+        this.stop(); 
+        if (!type || type === 'none') return;
+        
+        if (type === 'shadow') document.body.classList.add('fx-shadow');
+        if (type === 'neon_pulse') document.body.classList.add('fx-neon_pulse');
+    }
+    
+    trigger(type) {
+        if (type === 'confetti') this.spawnConfetti();
+        if (type === 'gold_rain') this.spawnEmojiRain(['💰', '🪙', '💎', '👑'], 50);
+        if (type === 'fireflies') this.spawnFloatingEmoji(['✨', '🌟', '💫', '🧚'], 40);
+        
+        // --- LEDENO DOBA (SAMO AKTIVNA TABLA) ---
+        if (type === 'ice_age') {
+            let targetTable = null;
+            const tables = document.querySelectorAll('.player-table');
+            
+            tables.forEach(tbl => {
+                if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) {
+                    targetTable = tbl;
+                }
+            });
+
+            if (!targetTable && tables.length > 0) targetTable = tables[0];
+
+            if (targetTable) {
+                targetTable.classList.add('active-ice-table');
+
+                const container = document.createElement('div');
+                container.className = 'ice-overlay-container';
+                
+                container.innerHTML = `
+                    <div class="ice-glass"></div>
+                    <div class="ice-frost-border"></div>
+                    <div class="ice-flake-center">❄️</div>
+                `;
+                
+                targetTable.appendChild(container);
+
+                setTimeout(() => {
+                    container.style.animation = 'iceMeltOut 1.5s forwards';
+                    targetTable.classList.remove('active-ice-table');
+                    
+                    setTimeout(() => {
+                        if (container.parentNode) container.remove();
+                    }, 1500);
+                }, 6000);
+            }
+        }
+
+        if (type === 'thunder') {
+            const flash = document.createElement('div');
+            flash.className = 'anim-thunder';
+            flash.style.position = 'fixed';
+            flash.style.top = '0'; flash.style.left = '0';
+            flash.style.width = '100%'; flash.style.height = '100%';
+            flash.style.background = '#fff';
+            flash.style.zIndex = '99999';
+            flash.style.mixBlendMode = 'overlay';
+            flash.style.pointerEvents = 'none';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 600);
+            document.body.classList.add('fx-balkan'); 
+            setTimeout(() => document.body.classList.remove('fx-balkan'), 500);
+        }
+        if (type === 'balkan') {
+            document.body.classList.add('fx-balkan');
+            const t1 = document.createElement('div'); t1.innerText = '🎺'; t1.className = 'trumpet-icon'; t1.style.left = '10px'; t1.style.bottom = '10px';
+            const t2 = document.createElement('div'); t2.innerText = '🎺'; t2.className = 'trumpet-icon'; t2.style.right = '10px'; t2.style.bottom = '10px'; t2.style.transform = 'scaleX(-1)';
+            document.body.appendChild(t1);
+            document.body.appendChild(t2);
+            this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖'], 40);
+            setTimeout(() => {
+                document.body.classList.remove('fx-balkan');
+                if(t1.parentNode) t1.remove(); 
+                if(t2.parentNode) t2.remove();
+            }, 4000);
+        }
+        if (type === 'fireworks') {
+             for(let i=0; i<8; i++) {
+                 setTimeout(() => this.spawnExplosion(), i * 400);
+             }
+        }
+    }
+    
+    spawnEmojiRain(emojis, count) {
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                const el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.className = 'falling-coin';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 3000);
+            }, Math.random() * 2000);
+        }
+    }
+    
+    spawnFloatingEmoji(emojis, count) {
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                const el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.className = 'firefly';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.setProperty('--rnd-x', (Math.random() * 200 - 100) + 'px');
+                el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 4000);
+            }, Math.random() * 2000);
+        }
+    }
+    
+    spawnExplosion() {
+        const x = Math.random() * window.innerWidth;
+        const y = Math.random() * (window.innerHeight / 2); 
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        for (let i = 0; i < 20; i++) {
+            const el = document.createElement('div');
+            el.innerText = '●'; 
+            el.className = 'firework-particle';
+            el.style.color = color;
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 150 + 50;
+            el.style.setProperty('--dx', Math.cos(angle) * velocity + 'px');
+            el.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 1000);
+        }
+    }
+    
+    spawnConfetti() {
+        if (window.confetti) {
+            window.confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        } else {
+            this.spawnEmojiRain(['🎉', '🎊', '🎈'], 30);
+        }
+    }
+    
+    celebrateYamb() {
+        const active = localStorage.getItem('yamb_active_effect') || 'confetti';
+        this.trigger(active); 
+        document.body.classList.add('fx-neon_pulse');
+        setTimeout(() => document.body.classList.remove('fx-neon_pulse'), 2000);
+    }
+    
+    celebrateWin() {
+        this.trigger('fireworks');
+        setTimeout(() => this.trigger('gold_rain'), 1000);
+    }
+    
+    stop() {
+        document.body.classList.remove('fx-glass', 'fx-shadow', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age');
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container').forEach(e => e.remove());
+        document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
+    }
+}
+
+// --- 5. SOUND MANAGER (WEB AUDIO API SYNTH) ---
 class SoundManager {
     constructor() {
         this.enabled = localStorage.getItem('yamb_sound') !== 'false';
+        
+        // Inicijalizacija AudioContext-a
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         this.ctx = new AudioContext();
+
+        this.audioCache = {};
+        
+        // Učitavanje fajlova ako postoje (fallback je sintisajzer)
+        if (typeof CONFIG !== 'undefined' && CONFIG.SOUNDS) {
+            Object.entries(CONFIG.SOUNDS).forEach(([key, file]) => {
+                this.audioCache[key] = new Audio(`assets/sounds/${file}`);
+                this.audioCache[key].volume = 0.6; 
+            });
+        }
     }
 
-    playTone(freq, type, duration, startTime = 0, volume = 0.08) {
-        if (!this.enabled || !this.ctx) return;
+    // --- GLAVNI METOD ZA PUŠTANJE ---
+    playSound(key, synthCallback) {
+        if (!this.enabled) return;
+        
         if (this.ctx.state === 'suspended') {
             this.ctx.resume().catch(e => console.log("Audio resume failed", e));
         }
 
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-
-        osc.type = type; 
-        osc.frequency.setValueAtTime(freq, this.ctx.currentTime + startTime);
-        
-        gain.gain.setValueAtTime(volume, this.ctx.currentTime + startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + startTime + duration);
-
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-
-        osc.start(this.ctx.currentTime + startTime);
-        osc.stop(this.ctx.currentTime + startTime + duration);
-    }
-
-    click() { this.playTone(600, 'sine', 0.05, 0, 0.05); }
-    score() { this.playTone(800, 'triangle', 0.1, 0, 0.06); }
-    chat() { this.playTone(600, 'sine', 0.1, 0, 0.05); this.playTone(900, 'sine', 0.1, 0.1, 0.05); }
-
-    roll() {
-        if (!this.enabled) return;
-        if (this.ctx.state === 'suspended') this.ctx.resume();
-        const count = 8; 
-        for (let i = 0; i < count; i++) {
-            const randomTimeOffset = Math.random() * 0.03;
-            const time = (i * 0.07) + randomTimeOffset; 
-            const freq = 800 + Math.random() * 800; 
-            this.playTone(freq, 'triangle', 0.05, time, 0.06);
+        if (this.audioCache[key]) {
+            const sound = this.audioCache[key].cloneNode();
+            sound.volume = 0.5;
+            const playPromise = sound.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Fallback na synth ako fajl ne radi
+                    if (synthCallback) synthCallback.call(this);
+                });
+            }
+        } else {
+            if (synthCallback) synthCallback.call(this);
         }
     }
 
+    // --- NOVI KVALITETNIJI ZVUCI (SYNTH) ---
+
+    // 1. MEKANI KLIK
+    click() { 
+        this.playSound('CLICK', () => {
+            const t = this.ctx.currentTime;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(800, t);
+            osc.frequency.exponentialRampToValueAtTime(300, t + 0.1);
+            
+            gain.gain.setValueAtTime(0.15, t);
+            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(t);
+            osc.stop(t + 0.1);
+        });
+    }
+
+    // 2. NAJAVA (Magično zvonce)
+    announce() {
+        this.playSound('ANNOUNCE', () => {
+            const t = this.ctx.currentTime;
+            const freqs = [523.25, 659.25, 783.99, 1046.50]; // C-E-G-C
+
+            freqs.forEach((f, i) => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.type = 'sine'; 
+                osc.frequency.value = f;
+                
+                const start = t + (i * 0.05);
+                
+                gain.gain.setValueAtTime(0, start);
+                gain.gain.linearRampToValueAtTime(0.1, start + 0.05); 
+                gain.gain.exponentialRampToValueAtTime(0.001, start + 0.8); 
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(start);
+                osc.stop(start + 1.0);
+            });
+        });
+    }
+
+    // 3. KOCKICE (Drveni zvuk)
+    roll() {
+        this.playSound('DICE_ROLL', () => {
+            const count = 6; 
+            const now = this.ctx.currentTime;
+            
+            for (let i = 0; i < count; i++) {
+                const offset = i * 0.06 + (Math.random() * 0.02);
+                
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                const filter = this.ctx.createBiquadFilter(); 
+
+                osc.type = 'square'; 
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(400 + Math.random() * 200, now + offset);
+
+                osc.frequency.setValueAtTime(150 + Math.random() * 50, now + offset);
+                
+                gain.gain.setValueAtTime(0.2, now + offset);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.1); 
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                
+                osc.start(now + offset);
+                osc.stop(now + offset + 0.12);
+            }
+        });
+    }
+
+    // 4. UPIS REZULTATA (Chime)
+    score() { 
+        this.playSound('ACHIEVEMENT', () => {
+            const t = this.ctx.currentTime;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            
+            osc.type = 'triangle'; 
+            osc.frequency.setValueAtTime(440, t);
+            osc.frequency.linearRampToValueAtTime(880, t + 0.1); 
+            
+            gain.gain.setValueAtTime(0.1, t);
+            gain.gain.linearRampToValueAtTime(0, t + 0.3);
+            
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(t);
+            osc.stop(t + 0.3);
+        });
+    }
+
+    // 5. POBEDA (Fanfare)
     win() {
-        this.playTone(523.25, 'sine', 0.3, 0, 0.1);    
-        this.playTone(659.25, 'sine', 0.3, 0.2, 0.1);  
-        this.playTone(783.99, 'sine', 0.3, 0.4, 0.1);  
-        this.playTone(1046.50, 'triangle', 0.6, 0.6, 0.08); 
+        this.playSound('WIN', () => {
+            const t = this.ctx.currentTime;
+            const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+            
+            notes.forEach((freq, i) => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.value = freq;
+                
+                const start = t + (i * 0.15);
+                const duration = (i === notes.length - 1) ? 0.8 : 0.2;
+                
+                gain.gain.setValueAtTime(0.15, start);
+                gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+                
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(start);
+                osc.stop(start + duration);
+            });
+        });
     }
 
-    loss() {
-        this.playTone(300, 'sine', 0.4, 0, 0.1);
-        this.playTone(250, 'sine', 0.4, 0.3, 0.1);
-        this.playTone(200, 'triangle', 0.8, 0.6, 0.1);
+    // 6. GREŠKA
+    error() { 
+        const t = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, t);
+        osc.frequency.linearRampToValueAtTime(100, t + 0.15);
+        
+        gain.gain.setValueAtTime(0.1, t);
+        gain.gain.linearRampToValueAtTime(0, t + 0.15);
+        
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.2);
     }
 
+    // 7. TROFEJ
     trophy() {
-        this.playTone(523.25, 'triangle', 0.15, 0, 0.1);
-        this.playTone(659.25, 'triangle', 0.15, 0.1, 0.1);
-        this.playTone(783.99, 'triangle', 0.6, 0.2, 0.1);
+        this.playSound('TROPHY', () => {
+            const t = this.ctx.currentTime;
+            [440, 554.37].forEach(f => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = f;
+                gain.gain.setValueAtTime(0.2, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(t);
+                osc.stop(t + 1.5);
+            });
+        });
     }
-
-    error() { this.playTone(150, 'triangle', 0.2, 0, 0.1); }
+    
+    chat() { this.click(); }
+    loss() { this.error(); }
 }
 
-// --- SHOP MANAGER ---
+// --- 6. SHOP MANAGER ---
 class ShopManager {
     constructor(config) {
         this.type = config.type;
@@ -278,7 +656,6 @@ class ShopManager {
                             let currentPrice = this.discountedItems[item.id] ? Math.floor(item.price * 0.8) : item.price;
                             const safeName = itemName.replace(/'/g, "\\'"); 
                             
-                            // PROVERA STANJA REKLAME ZA DISCOUNT DUGME
                             let discountBtn = '';
                             if(!this.discountedItems[item.id]) {
                                 discountBtn = `<button class="btn-action btn-discount btn-ad-state-aware" onclick="shop.watchAdDiscount('${item.id}')">📺 -20%</button>`;
@@ -312,7 +689,6 @@ class ShopManager {
             this.container.appendChild(section);
         }
         
-        // Osveži UI stanje dugmića nakon renderovanja
         if(window.adMobGlobal) {
             window.adMobGlobal.updateUI(window.adMobGlobal.isAdReady);
         }
@@ -408,7 +784,6 @@ class ShopManager {
 
                  this.updateBalanceDisplay();
                  
-                 // Show success message
                  if (typeof showNotification === 'function') {
                      showNotification(_safeT('msg_reward_title'), "+500 💰", "🎉", "success");
                  } else {
@@ -419,18 +794,16 @@ class ShopManager {
     }
 }
 
-// --- UNAPREĐENI ADMOB CONTROLLER (SMART PRELOAD v2.0) ---
+// --- 7. ADMOB CONTROLLER (TURBO RELOAD) ---
 class AdMobController {
     constructor() {
-        // Tvoj AdMob ID
         this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
         this.adMobPlugin = null;
         this.isAdReady = false; 
         this.isLoading = false; 
         
-        // Retry logika (Smart Backoff)
         this.retryAttempt = 0; 
-        this.maxRetryDelay = 30000; // Max 30s
+        this.maxRetryDelay = 30000; 
         
         this.uiSelectors = ['.btn-ad-double', '#btn-ad-coins', '.btn-discount', '.btn-ad-state-aware']; 
 
@@ -440,29 +813,21 @@ class AdMobController {
 
     async initialize() {
         let attempts = 0;
-        // Proveravamo plugin agresivnije na početku (svakih 500ms)
         const initInterval = setInterval(async () => {
             attempts++;
             if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
                 clearInterval(initInterval);
                 this.adMobPlugin = window.Capacitor.Plugins.AdMob;
-                console.log("✅ AdMob Plugin: PRONAĐEN! Pokrećem inicijalizaciju...");
+                console.log("✅ AdMob Plugin: PRONAĐEN! Pokrećem Turbo Init...");
 
                 try {
-                    await this.adMobPlugin.initialize({
-                        requestTrackingAuthorization: true
-                    });
-                    
+                    await this.adMobPlugin.initialize({ requestTrackingAuthorization: true });
                     await this.setupListeners();
-                    
-                    // ODMAH učitaj prvu reklamu, bez čekanja!
                     this.loadAd(); 
-                    
                 } catch (e) {
                     console.error("AdMob Init Error:", e);
                 }
             } else {
-                // Odustajemo posle 10 sekundi (20 * 500ms)
                 if (attempts >= 20) clearInterval(initInterval);
             }
         }, 500);
@@ -473,68 +838,64 @@ class AdMobController {
     async setupListeners() {
         if (!this.adMobPlugin) return;
 
-        // 1. REKLAMA JE STIGLA
         await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => {
-            console.log("✅ ADMOB: Reklama spremna! (Attempt: " + this.retryAttempt + ")");
+            console.log("✅ ADMOB: Reklama NAPUNJENA i spremna!");
             this.isAdReady = true;
             this.isLoading = false;
-            this.retryAttempt = 0; // Resetujemo brojač grešaka jer smo uspeli
+            this.retryAttempt = 0; 
             this.updateUI(true); 
         });
 
-        // 2. GREŠKA U UČITAVANJU (SMART RETRY)
         await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => {
             this.isAdReady = false;
             this.isLoading = false;
             this.updateUI(false); 
 
-            // Izračunaj pametno vreme čekanja: 2s, 4s, 8s, 16s, 30s (max)
-            // Ovo rešava problem sporog starta!
-            let nextDelay = Math.min(2000 * Math.pow(2, this.retryAttempt), this.maxRetryDelay);
-            
-            console.warn(`❌ ADMOB: Greška. Ponovni pokušaj za ${nextDelay/1000}s.`, err);
+            let nextDelay = 2500; 
+            if (this.retryAttempt > 0) {
+                 nextDelay = Math.min(2500 * Math.pow(1.5, this.retryAttempt), this.maxRetryDelay);
+            }
+            console.warn(`❌ ADMOB: Fail (Attempt ${this.retryAttempt}). Retry za ${nextDelay}ms. Razlog:`, err);
             
             this.retryAttempt++;
             setTimeout(() => this.loadAd(), nextDelay);
         });
 
-        // 3. KORISNIK JE POGLEDAO REKLAMU
         await this.adMobPlugin.addListener('onRewardedVideoAdClosed', () => {
-            console.log("🏁 ADMOB: Reklama zatvorena.");
+            console.log("🏁 ADMOB: Zatvoreno. ODMAH punim sledeću!");
             this.isAdReady = false;
-            this.updateUI(false);
-            this.retryAttempt = 0; // Reset
-            
-            // Odmah pre-loaduj sledeću za kasnije
-            setTimeout(() => this.loadAd(), 100);
+            this.updateUI(false); 
+            this.retryAttempt = 0; 
+            this.loadAd();
         });
     }
 
     async loadAd() {
-        if (this.isAdReady || this.isLoading || !this.adMobPlugin) return;
-        
-        console.log("⏳ ADMOB: Učitavam reklamu...");
+        if (this.isLoading || !this.adMobPlugin) return;
+        if (this.isAdReady) this.isAdReady = false;
+
+        console.log("⏳ ADMOB: Tražim reklamu...");
         this.isLoading = true;
         try {
             await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId });
         } catch (e) {
             console.error("Prepare Error:", e);
             this.isLoading = false;
-            // Ako prepare pukne sinhrono, odmah triggiraj retry logiku
-            this.adMobPlugin.notifyListeners('onRewardedVideoAdFailedToLoad', { error: e });
+            this.retryAttempt++;
+            setTimeout(() => this.loadAd(), 2500); 
         }
     }
     
-    // Metoda koju možeš pozvati kad korisnik uđe u Riznicu da ubrzaš stvar
     triggerHighPriorityLoad() {
-        if (!this.isAdReady && !this.isLoading) {
-            console.log("🚀 ADMOB: Forsirano prioritetno učitavanje!");
-            this.retryAttempt = 0; // Resetujemo da bi pokušao odmah
-            this.loadAd();
+        if (!this.isLoading) {
+            console.log("🚀 ADMOB: Prioritetno osvežavanje!");
+            if (!this.isAdReady) {
+                 this.retryAttempt = 0;
+                 this.loadAd();
+            }
         }
     }
     
-    // Metoda za Game Over ekran da osigura da je reklama spremna za dupliranje
     prepareReward() {
         this.triggerHighPriorityLoad();
     }
@@ -549,11 +910,15 @@ class AdMobController {
                     btn.style.opacity = '1';
                     btn.style.filter = 'none';
                     if (btn.dataset.originalText) btn.innerText = btn.dataset.originalText;
+                    
+                    btn.style.transition = "transform 0.2s";
+                    btn.style.transform = "scale(1.05)";
+                    setTimeout(() => btn.style.transform = "scale(1)", 200);
+                    
                 } else {
                     btn.classList.add('disabled', 'ad-loading');
                     btn.disabled = true;
-                    // Ne menjamo opacity drastično da se vidi loading ikonica (iz CSS-a)
-                    btn.style.opacity = '0.7'; 
+                    btn.style.opacity = '0.6'; 
                     btn.style.filter = 'grayscale(100%)';
                     if (!btn.dataset.originalText) btn.dataset.originalText = btn.innerText;
                 }
@@ -580,21 +945,21 @@ class AdMobController {
                     resolve(false);
                 }
             } else {
-                console.log("⚠️ Korisnik kliknuo, reklama nije spremna. Forsiram load.");
+                console.log("⚠️ Nije spremna. Forsiram load.");
                 this.triggerHighPriorityLoad();
                 
-                const msg = (typeof t !== 'undefined') ? t('msg_ad_loading') : "Učitavanje reklame... Pokušaj ponovo za par sekundi.";
+                const msg = (typeof t !== 'undefined') ? t('msg_ad_loading') : "Učitavanje... Sačekajte trenutak.";
                 if(typeof showNotification === 'function') {
                     showNotification("AdMob", msg, "⏳", "info");
                 } else {
-                    alert(msg);
+                    console.log(msg);
                 }
                 resolve(false);
             }
         });
     }
     
-    // --- SIMULACIJA (BEZ PROMENA) ---
+    // --- SIMULACIJA ---
     createSimulationOverlay() {
         if (document.getElementById('sim-ad-overlay')) return;
         const overlay = document.createElement('div');
@@ -625,7 +990,10 @@ class AdMobController {
     }
 }
 
-// Globalne instance
+// --- GLOBALNE INSTANCE ---
 window.stateManager = new StateManager();
 window.statsManager = new StatsManager();
 window.adMobGlobal = new AdMobController();
+// Nove globalne instance za UI i Efekte
+window.modalManager = new ModalManager(); 
+window.effectManager = new EffectManager();

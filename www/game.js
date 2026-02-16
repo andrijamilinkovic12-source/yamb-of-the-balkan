@@ -1,3 +1,5 @@
+// game.js - MAIN GAME LOGIC (UPDATED AUDIO INTEGRATION)
+
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const sum = (arr) => arr.reduce((a, b) => a + b, 0);
@@ -145,7 +147,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v6.7 - INVITE LINK FIXED");
+        console.log("YambApp v6.8 - AUDIO UPGRADE");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -254,14 +256,12 @@ class YambApp {
         document.addEventListener("resume", () => { setTimeout(() => { this.checkForInvite(); }, 500); }, false);
         document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') setTimeout(() => { this.checkForInvite(); }, 500); });
         
-        // Timeout za splash screen ako nema linka
         this.splashTimeout = setTimeout(() => { 
             if (!this.inviteDetected) this.navigateTo('main-menu'); 
         }, 4500); 
 
-        // DODATNO: Odmah proveri link pri startu
         setTimeout(() => { this.checkForInvite(); }, 500);
-        this.checkForInvite(); // Direct check
+        this.checkForInvite(); 
 
         this.handleRotationLock();
         window.addEventListener('resize', () => this.handleRotationLock());
@@ -291,7 +291,6 @@ class YambApp {
         if (!this.socket || !this.socket.connected) {
             try {
                 if (typeof io !== 'undefined') {
-                    // Fallback ako SERVER_URL nije definisan u config.js
                     const connectionUrl = (typeof SERVER_URL !== 'undefined') ? SERVER_URL : window.location.origin;
 
                     this.socket = io(connectionUrl, { 
@@ -308,7 +307,6 @@ class YambApp {
                         if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
                         if (this.topListManager) this.topListManager.syncOfflineScores();
                         
-                        // Ako smo se upravo konektovali i postoji ?room= u linku, uđi u sobu
                         const params = new URLSearchParams(window.location.search);
                         if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
                     });
@@ -571,21 +569,15 @@ class YambApp {
     }
     
     // --- ONLINE METODE ---
-    
-    // --- KLJUČNA IZMENA ZA SHARE LINK ---
     async startPrivateHosting() { 
         const nickname = this.playerName; 
         if (!nickname) return; 
         const roomId = "yamb-" + Math.random().toString(36).substring(2, 8); 
         
         let baseUrl = window.location.origin;
-        
-        // 1. Ako postoji definisan SERVER_URL u config.js (Render/Heroku), koristi njega.
         if (typeof SERVER_URL !== 'undefined' && SERVER_URL.startsWith('http')) {
             baseUrl = SERVER_URL;
         }
-        
-        // Ukloni trailing slash ako ga ima
         if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
 
         const shareUrl = baseUrl + "/?room=" + roomId; 
@@ -645,9 +637,7 @@ class YambApp {
         
         this.socket.on('game_start', (data) => { 
             console.log("GAME START:", data);
-            
             this.myOnlineIndex = Number(data.myIndex); 
-
             this.onlineMode = true; 
             this.modeTag = "Online"; 
             this.roomId = data.roomId; 
@@ -665,28 +655,22 @@ class YambApp {
                 if (this.allScores[opponentIdx] && this.allScores[opponentIdx][data.col]) {
                     this.allScores[opponentIdx][data.col][data.row] = data.points; 
                     this.updateTableVisuals(); 
-                    
                     this.najavaAktivna = false;
                     const btnNajava = document.getElementById('btn-najava');
                     if(btnNajava) {
                         btnNajava.classList.remove('btn-active-toggle');
                         btnNajava.innerText = gt('game_announce');
                     }
-
                     this.switchPlayer(); 
                 } 
             } catch(e) { console.error("CRITICAL ERROR in remote_move:", e); }
         }); 
 
         this.socket.on('remote_roll', (data) => { 
-            if (data.held && Array.isArray(data.held)) {
-                this.zadrzane = data.held;
-            }
-            
+            if (data.held && Array.isArray(data.held)) { this.zadrzane = data.held; }
             this.brojBacanja = data.bacanje; 
             const statusLbl = document.getElementById('lbl-status');
             if(statusLbl) statusLbl.innerText = `${gt('status_roll')}: ${data.bacanje} / 3 ${gt('lbl_opponent_parens')}`; 
-            
             this.visualRoll(data.values); 
         }); 
 
@@ -698,25 +682,15 @@ class YambApp {
         this.socket.on('remote_announce', (data) => { 
             const btn = document.getElementById('btn-najava');
             const type = data.type || 'start'; 
-            
             if (type === 'start') {
                 this.najavaAktivna = true; 
-                if(btn) { 
-                    btn.classList.add('btn-active-toggle'); 
-                    btn.innerText = gt('game_opponent_choosing'); 
-                }
+                if(btn) { btn.classList.add('btn-active-toggle'); btn.innerText = gt('game_opponent_choosing'); }
             } else if (type === 'cancel') {
                 this.najavaAktivna = false;
-                if(btn) { 
-                    btn.classList.remove('btn-active-toggle'); 
-                    btn.innerText = gt('game_announce'); 
-                }
+                if(btn) { btn.classList.remove('btn-active-toggle'); btn.innerText = gt('game_announce'); }
             } else if (type === 'selected') {
                 this.najavaAktivna = false;
-                if(btn) {
-                    btn.classList.remove('btn-active-toggle');
-                    btn.innerText = `${gt('game_announce')}: ${data.row}`;
-                }
+                if(btn) { btn.classList.remove('btn-active-toggle'); btn.innerText = `${gt('game_announce')}: ${data.row}`; }
             }
         }); 
 
@@ -828,18 +802,14 @@ class YambApp {
                 lbl.className = 'grid-cell row-header' + (row.includes("ZBIR") ? " sum" : ""); 
                 
                 let displayRow = row;
-                
-                if(row.includes("ZBIR")) {
-                    displayRow = row.replace("ZBIR", gt('row_sum') || "SUM");
-                } else if(isNaN(parseInt(row))) {
+                if(row.includes("ZBIR")) { displayRow = row.replace("ZBIR", gt('row_sum') || "SUM"); } 
+                else if(isNaN(parseInt(row))) {
                     let key = "row_" + row.toLowerCase();
                     if (row === "Ful") key = "row_full"; 
-                    
                     displayRow = gt(key) !== key ? gt(key) : row;
                 }
 
                 lbl.innerHTML = displayRow; 
-                
                 grid.appendChild(lbl); 
                 
                 KOLONE.forEach(col => { 
@@ -878,18 +848,12 @@ class YambApp {
         if(statusLbl) statusLbl.innerText = `${gt('status_roll')}: 0 / 3`; 
         
         const btnBacaj = document.getElementById('btn-bacaj'); 
-        
         const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx == this.myOnlineIndex);
         const isLocalGame = !this.onlineMode;
 
         if(btnBacaj) { 
-            if (isMyTurnOnline || isLocalGame) {
-                btnBacaj.disabled = false; 
-                btnBacaj.innerText = gt('game_roll'); 
-            } else {
-                btnBacaj.disabled = true; 
-                btnBacaj.innerText = gt('game_opponent_turn'); 
-            }
+            if (isMyTurnOnline || isLocalGame) { btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll'); } 
+            else { btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn'); }
         }
         
         const btnNajava = document.getElementById('btn-najava'); 
@@ -918,7 +882,6 @@ class YambApp {
     toggleHold(i) { 
         if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return; 
         if (this.brojBacanja === 0) return; 
-        
         if (this.isAnimating) return;
 
         this.zadrzane[i] = !this.zadrzane[i]; 
@@ -1021,6 +984,15 @@ class YambApp {
         
         if (!this.najavaAktivna) { 
             this.najavaAktivna = true; 
+            
+            // --- NOVO: PUSTI ZVUK NAJAVE ---
+            if(this.soundMgr && this.soundMgr.announce) {
+                 this.soundMgr.announce(); 
+            } else {
+                 this.soundMgr.click(); // Fallback
+            }
+            // --------------------------------
+
             btn.innerText = gt('game_announce_cancel'); 
             btn.classList.add('btn-active-toggle'); 
             btn.classList.remove('btn-highlight'); 
@@ -1029,6 +1001,9 @@ class YambApp {
             if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'start' }); 
         } else { 
             this.najavaAktivna = false; 
+            
+            this.soundMgr.click(); // Otkazivanje je običan klik
+
             btn.innerText = gt('game_announce'); 
             btn.classList.remove('btn-active-toggle'); 
             btn.classList.add('btn-highlight'); 
@@ -1159,9 +1134,7 @@ class YambApp {
         else {
             const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
             let saveMode = this.onlineMode ? 'Online' : 'Hotseat';
-            
             await this.safeSubmitScore(winner.name || "Guest", winner.score, saveMode);
-            
             myScoreEntry = finalResults.find(r => r.name === this.playerName);
         }
 
@@ -1176,9 +1149,7 @@ class YambApp {
              if (myIndex !== -1 && this.allScores[myIndex]) {
                  if (window.trophyManager) {
                      let detectedModeForTrophies = this.onlineMode ? "Online" : (this.players.length > 1 ? "Hotseat" : "Solo");
-                     
                      const scoreDiff = winnerScore - myScoreEntry.score; 
-
                      window.trophyManager.checkEndGameTrophies(
                          myScoreEntry.score, 
                          this.allScores[myIndex], 

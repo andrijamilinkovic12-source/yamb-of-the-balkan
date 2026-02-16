@@ -1,4 +1,4 @@
-// features.js - Logika trofeja, skinova i efekata (VERSION WITH AUTO-REWARD & LOCALIZATION FIX)
+// features.js - Logika trofeja, skinova i efekata (OPTIMIZED)
 
 if (typeof window.YambFeatures === 'undefined') {
 
@@ -25,6 +25,7 @@ if (typeof window.YambFeatures === 'undefined') {
         checkMoveEffects(row, pts, isHuman) {
             if (!isHuman) return;
 
+            // 1. THUNDER (Sveti Ilija) - Zadržavamo jer radi specifičnu animaciju scene (drmanje ekrana)
             if (this.app.hasSvetiIlija) {
                 const activeEffect = localStorage.getItem('yamb_active_effect');
                 if (activeEffect === 'thunder') {
@@ -39,6 +40,12 @@ if (typeof window.YambFeatures === 'undefined') {
                 }
             }
 
+            // --- NAPOMENA: UKLONJEN EKSPLICITNI POZIV ZA ICE AGE ---
+            // Razlog: game.js već poziva celebrateYamb() koji automatski aktivira 'ice_age' 
+            // kroz novi kod u managers.js. Ovde bi to bio duplikat.
+
+            // 2. KONFETE (Za skor >= 60, kao dodatna nagrada za dobre poteze)
+            // Ovo ostavljamo jer se pali i za Poker/Ful/Kentu, ne samo za Yamb.
             if (pts >= 60) {
                 if(window.confetti) {
                     window.confetti({ particleCount: 50, spread: 40, origin: { y: 0.7 } });
@@ -59,46 +66,38 @@ if (typeof window.YambFeatures === 'undefined') {
 
             // POMOĆNA FUNKCIJA ZA OTKLJUČAVANJE I ISPLATU
             const unlock = (id) => {
-                // Poziv StatsManageru da proveri da li je već otključan
                 if (window.statsManager.unlockTrophy(id)) {
                      console.log(`🏆 OSVOJEN TROFEJ: ${id}`);
                      
-                     // 1. Pronađi podatke o trofeju u SHOP_DATA (iz config.js)
-                     const trophyData = SHOP_DATA.TROPHIES.find(t => t.id === id);
-                     const rewardAmount = trophyData ? trophyData.reward : 0;
-                     
-                     // FIX: Koristimo resolveText (iz managers.js) da dobijemo preveden naziv trofeja
-                     const title = trophyData ? resolveText(trophyData.title) : "TROPHY";
+                     // Pokušavamo da nađemo podatke o trofeju u globalnoj CONFIG ili SHOP_DATA
+                     let trophyData = null;
+                     if(typeof SHOP_DATA !== 'undefined' && SHOP_DATA.TROPHIES) {
+                         trophyData = SHOP_DATA.TROPHIES.find(t => t.id === id);
+                     } else if (typeof CONFIG !== 'undefined' && CONFIG.TROPHIES) { // Fallback ako je u CONFIG
+                         trophyData = CONFIG.TROPHIES.find(t => t.id === id);
+                     }
 
-                     // 2. ISPLATA NAGRADE (Dodavanje dukata na balans)
+                     const rewardAmount = trophyData ? trophyData.reward : 0;
+                     const lang = localStorage.getItem('yamb_lang') || 'sr';
+                     const title = trophyData ? (trophyData.title[lang] || trophyData.title['sr']) : "TROPHY";
+
                      if (rewardAmount > 0) {
-                         // addBalance je definisana u ShopManageru unutar managers.js
-                         // shop instanca je dostupna u riznica/kockice, ali ovde koristimo globalni stats
                          let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                          currentDukati += rewardAmount;
                          localStorage.setItem('yamb_dukati', currentDukati);
                          
-                         // Sinhronizacija sa StatsManagerom
                          window.statsManager.stats.balance = currentDukati;
                          window.statsManager.saveStats();
-                         console.log(`💰 Isplaćena nagrada: ${rewardAmount} dukata.`);
                      }
                      
-                     // 3. Obaveštenje i zvuk
                      if(this.app.soundMgr) this.app.soundMgr.trophy();
                      
-                     // FIX: Lokalizovana poruka
-                     // Formatiramo poruku: "Čestitamo! Osvojili ste trofej "{0}" i nagradu od {1}..."
-                     let msg = t('msg_trophy_won')
-                        .replace('{0}', title)
-                        .replace('{1}', rewardAmount);
-
                      const modal = this.app.modal || new ModalManager();
-                     modal.alert(msg, t('title_trophy_won'));
+                     modal.alert(`Čestitamo! Osvojili ste trofej "${title}" i nagradu od ${rewardAmount} dukata!`, "🏆 NOVI TROFEJ!");
                 }
             };
 
-            // --- PROVERE USLOVA ---
+            // --- PROVERE USLOVA (Logika ostaje ista) ---
             if (stats.games >= 1) unlock('first_play');
             if (stats.games >= 10) unlock('apprentice');
             if (stats.games >= 50) unlock('veteran');

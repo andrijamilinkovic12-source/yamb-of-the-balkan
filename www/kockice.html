@@ -74,20 +74,8 @@
         }, 1000);
         // ----------------------
 
-        function watchAdDiscount(id) {
-            const loadingText = typeof t === 'function' ? t('msg_discount_loading') : "POPUST SE UČITAVA...";
-            document.querySelector('.ad-text').innerText = loadingText;
-
-            simulateAd(() => {
-                shop.applyDiscount(id);
-                setTimeout(() => {
-                    const defaultText = typeof t === 'function' ? t('ad_loading') : "UČITAVANJE...";
-                    const adTextEl = document.querySelector('.ad-text');
-                    if(adTextEl) adTextEl.innerText = defaultText;
-                }, 500);
-            });
-        }
-
+        // Globalne helper funkcije za modale i simulaciju reklama
+        
         window.closeConfirmModal = function() {
             document.getElementById('confirm-modal').style.display = 'none';
         }

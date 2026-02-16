@@ -924,7 +924,6 @@ body {
 .prev-gold_rain { background: radial-gradient(circle, #2a2a2a, #000); } .prev-gold_rain::before { content: "💰"; font-size: 1.5rem; animation: fall 1.5s infinite linear; text-shadow: 0 0 10px gold; }
 .prev-fireflies { background: radial-gradient(circle at bottom, #0f2027, #203a43, #2c5364); } .prev-fireflies::before { content: "✨"; filter: hue-rotate(90deg) drop-shadow(0 0 8px #ffff00); animation: floatUp 3s infinite ease-in-out; }
 .prev-fireworks { background: linear-gradient(to bottom, #000000, #1a1a2e); } .prev-fireworks::before { content: "🎆"; font-size: 2.2rem; filter: drop-shadow(0 0 10px #ff00ff); animation: explode 1.5s infinite; }
-.prev-glass { background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); background-size: cover; }
 .glass-overlay { position: absolute; width: 60%; height: 60%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transform: rotate(-10deg); }
 .prev-shadow { background: #333; }
 .shadow-overlay { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, transparent 30%, #000 90%); }
@@ -1510,3 +1509,97 @@ body.winter-theme .daily-value {
     text-shadow: 0 0 15px #4fc3f7;
 }
 /* Stop dugme u winter temi će biti crveno (.btn-throw definicija) */
+
+
+/* =========================================================
+   ICE AGE UPDATE (High Level Frost Effect - TABLE ONLY)
+   ========================================================= */
+
+/* 1. SHOP ICON PREVIEW */
+.prev-glass {
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%) !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.4) !important;
+    position: relative;
+}
+.prev-glass::before {
+    content: "❄️";
+    font-size: 2.5rem;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.8));
+    animation: pulseIce 2s infinite alternate;
+}
+
+/* 2. TABLE SPECIFIC STYLES */
+.player-table {
+    position: relative !important; /* Essential for containing the ice */
+}
+
+/* Main Overlay Container */
+.ice-overlay-container {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 60; /* Above grid, below modals */
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    overflow: hidden;
+    opacity: 0;
+    animation: iceFreezeIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* The Ice Texture */
+.ice-glass {
+    position: absolute;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at center, rgba(173, 216, 230, 0.2) 0%, rgba(135, 206, 250, 0.5) 80%, rgba(255, 255, 255, 0.7) 100%);
+    backdrop-filter: blur(4px) contrast(120%) brightness(110%);
+    -webkit-backdrop-filter: blur(4px) contrast(120%) brightness(110%);
+    background-image: 
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, transparent 1px, transparent 10px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0px, transparent 1px, transparent 12px);
+    box-shadow: inset 0 0 30px 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Frosty Borders */
+.ice-frost-border {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    box-shadow: inset 0 0 15px 5px rgba(200, 245, 255, 0.9), inset 0 0 50px rgba(0, 191, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+}
+
+/* Center Snowflake */
+.ice-flake-center {
+    font-size: 5rem;
+    color: rgba(255, 255, 255, 0.6);
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+    animation: icePulse 2s infinite ease-in-out;
+    z-index: 2;
+}
+
+/* Outer Glow for the Table */
+.active-ice-table {
+    box-shadow: 0 0 25px 5px rgba(0, 255, 255, 0.6) !important;
+    border-color: #E0F7FA !important;
+    transition: box-shadow 0.5s, border-color 0.5s;
+}
+
+/* Animations */
+@keyframes iceFreezeIn {
+    0% { opacity: 0; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+}
+@keyframes iceMeltOut {
+    0% { opacity: 1; filter: blur(0px); }
+    100% { opacity: 0; filter: blur(10px); }
+}
+@keyframes icePulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.9; text-shadow: 0 0 20px rgba(255, 255, 255, 0.9); }
+}
