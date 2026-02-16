@@ -1,4 +1,4 @@
-// server.js - KOMPLETAN KOD SA ANTI-CHEAT ZAŠTITOM (TIME VALIDATION)
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS
 
 require('dotenv').config(); 
 
@@ -73,8 +73,7 @@ let waitingPlayer = null;
 let privateRooms = {};    
 let playerRooms = {};     
 
-// --- NOVO: ANTI-CHEAT START TIME MAPA ---
-// Čuva vreme kada je igrač započeo partiju: { socketId: timestamp }
+// --- ANTI-CHEAT START TIME MAPA ---
 let gameStartTimes = {}; 
 
 // --- SOCKET.IO LOGIKA ---
@@ -85,15 +84,15 @@ io.on('connection', (socket) => {
     io.emit('users_count', io.engine.clientsCount);
 
     // ==================================================================
-    // 3. TOP LISTA & REZULTATI (SA ANTI-CHEAT ZAŠTITOM)
+    // 3. TOP LISTA & REZULTATI
     // ==================================================================
     
     // Konstante za validaciju
-    const MAX_SCORE = 3500;       // Limit za skor (teoretski max ~3396)
+    const MAX_SCORE = 3500;       // Limit za skor
     const MAX_NAME_LENGTH = 18;   // Limit za dužinu imena
     const MIN_GAME_DURATION = 120000; // Minimum 2 minuta (120 sekundi)
 
-    // --- NOVO: Listener za početak sesije ---
+    // --- Listener za početak sesije ---
     socket.on('game_session_start', () => {
         gameStartTimes[socket.id] = Date.now();
         console.log(`⏱️ Igrač ${socket.id} započeo partiju u ${new Date().toLocaleTimeString()}`);
@@ -124,7 +123,10 @@ io.on('connection', (socket) => {
 
     socket.on('submit_score', async (data) => {
         try {
-            if (!MONGO_URI) return;
+            if (!MONGO_URI) {
+                console.log("❌ GREŠKA: Pokušaj upisa bez konekcije na bazu!");
+                return;
+            }
 
             // 1. PROVERA TIPA PODATAKA
             if (typeof data.score !== 'number' || isNaN(data.score)) {
@@ -137,18 +139,21 @@ io.on('connection', (socket) => {
                 return; // Ignorišemo upis
             }
 
-            // 3. PROVERA VREMENA (SPEED HACK)
-            // Ako je singleplayer ili hotseat, mora proći određeno vreme
-            // Za online mod ovo je manje kritično jer server prati poteze, ali ne škodi
+            // 3. PROVERA VREMENA (SPEED HACK) - PRIVREMENO ISKLJUČENO !!!
+            // ----------------------------------------------------------
+            // OVO JE BIO DEO KOJI JE BLOKIRAO UPIS JER FRONTEND NE ŠALJE START TIME.
+            // SADA SAMO LOGUJEMO UPOZORENJE, ALI NE RADIMO "return".
+            
             const startTime = gameStartTimes[socket.id];
             
-            // Ako nema start vremena (sumnjivo) ili je igra trajala prekratko
-            // Izuzetak: Ako je skor 0 (odustao odmah), to je ok
             if (data.score > 50 && (!startTime || (Date.now() - startTime < MIN_GAME_DURATION))) {
                 const duration = startTime ? (Date.now() - startTime) : "N/A";
-                console.log(`🚨 HACK POKUŠAJ (Speed): ${socket.id} prebrzo završio igru! Trajanje: ${duration}ms, Skor: ${data.score}`);
-                return; // Ignoriši skor
+                // SAMO LOGUJEMO, NE BLOKIRAMO VIŠE:
+                console.log(`⚠️ UPOZORENJE (Speed): Trajanje: ${duration}ms. Ipak upisujem skor: ${data.score}`);
+                
+                // return;  <--- OVO JE OBRISANO/ZAKOMENTARISANO DA BI UPIS RADIO
             }
+            // ----------------------------------------------------------
 
             // 4. OBRADA IMENA (Limit 18 karaktera)
             let finalName = "Nepoznat Igrač";
@@ -169,24 +174,24 @@ io.on('connection', (socket) => {
                 mode: data.mode || 'Solo',
                 date: data.date || Date.now()
             });
+            
             await newScore.save();
-            console.log(`✅ Upisan skor: ${finalName} (${data.score})`);
+            console.log(`✅ USPEŠAN UPIS: ${finalName} -> ${data.score}`);
             
             // Očisti vreme nakon uspešnog upisa
             delete gameStartTimes[socket.id];
 
         } catch (err) {
-            console.error("Greška pri upisu:", err);
+            console.error("❌ Greška pri upisu u MongoDB:", err);
         }
     });
 
     // ==================================================================
-    // 4. MATCHMAKING (FIXED RACE CONDITION)
+    // 4. MATCHMAKING
     // ==================================================================
 
     // --- RANDOM GAME ---
     socket.on('find_game', (nickname) => {
-        // [FIX] Sprečava igrača da igra sam sa sobom ako brzo klikće
         if (waitingPlayer && waitingPlayer.id === socket.id) {
             return; 
         }
@@ -207,7 +212,6 @@ io.on('connection', (socket) => {
                 playerRooms[socket.id] = roomId;
                 playerRooms[opponentId] = roomId;
                 
-                // Resetujemo timere za oba igrača kad počne online partija
                 gameStartTimes[socket.id] = Date.now();
                 gameStartTimes[opponentId] = Date.now();
 
@@ -273,7 +277,6 @@ io.on('connection', (socket) => {
             playerRooms[socket.id] = roomId;
             playerRooms[p1.id] = roomId;
 
-            // Resetujemo timere
             gameStartTimes[socket.id] = Date.now();
             gameStartTimes[p1.id] = Date.now();
 
@@ -304,7 +307,6 @@ io.on('connection', (socket) => {
     const relayEvent = (eventName, data) => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
-            // Šalji svima u sobi osim meni
             socket.to(roomId).emit(eventName, data);
         }
     };
@@ -331,15 +333,12 @@ io.on('connection', (socket) => {
         const roomId = playerRooms[socket.id];
         if(roomId) {
             io.in(roomId).emit('rematch_started'); 
-            
-            // Resetujemo timere za novu partiju
             const clients = io.sockets.adapter.rooms.get(roomId);
             if(clients) {
                 for (const clientId of clients) {
                     gameStartTimes[clientId] = Date.now();
                 }
             }
-            
             console.log(`🔄 Revanš pokrenut u sobi: ${roomId}`);
         }
     });
@@ -350,7 +349,6 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('❌ Klijent diskonektovan:', socket.id);
         
-        // Očisti timer
         if (gameStartTimes[socket.id]) {
             delete gameStartTimes[socket.id];
         }
@@ -374,7 +372,6 @@ io.on('connection', (socket) => {
         for (const [roomId, roomData] of Object.entries(privateRooms)) {
             if (roomData.p1 && roomData.p1.id === socket.id) {
                 delete privateRooms[roomId];
-                console.log(`🗑️ Private soba ${roomId} obrisana jer je host izašao.`);
             }
             if (roomData.p2 && roomData.p2.id === socket.id) {
                 delete privateRooms[roomId].p2;
