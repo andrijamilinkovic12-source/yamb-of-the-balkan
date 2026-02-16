@@ -12,13 +12,15 @@ const CONFIG = {
         TROPHY: 'trophy.mp3',
         ACHIEVEMENT: 'achievement.mp3',
         CLICK: 'click.mp3',
-        ANNOUNCE: 'announce.mp3' // <-- NOVO: Dodato za zvuk najave
+        ANNOUNCE: 'announce.mp3' 
     },
     GAME_STATUS: { IDLE: 'idle', ROLLING: 'rolling', FINISHED: 'finished' }
 };
 
-// --- 2. PAMETNI URL (AUTO DETECT LOCALHOST) ---
-// Automatski prebacuje na localhost ako testiraš na svom računaru
+// --- 2. PAMETNI URL (AUTO DETECT) ---
+// Logika: 
+// 1. Ako si na telefonu (Capacitor/Android), hostname NIJE 'localhost', pa ide na Render (HTTPS).
+// 2. Ako si na PC-u (lokalno), hostname JE 'localhost', pa ide na Localhost:3000.
 const SERVER_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
     ? 'http://localhost:3000' 
     : 'https://yamb-of-the-balkan.onrender.com';

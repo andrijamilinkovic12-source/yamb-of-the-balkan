@@ -1,4 +1,4 @@
-/* toplista.js - FIXED by Gemini */
+// toplista.js - FIXED & IMPROVED
 
 class TopListManager {
     constructor(appContext) {
@@ -14,7 +14,16 @@ class TopListManager {
 
     _t(key) {
         if (typeof t === 'function') return t(key);
-        return key;
+        // Fallback prevodi ako t() funkcija nije dostupna
+        const fallback = {
+            'player_unknown': 'Nepoznat',
+            'msg_connecting': 'Povezujem se...',
+            'msg_no_connection': 'Nema konekcije sa serverom.',
+            'msg_no_results': 'Još uvek nema rezultata.',
+            'msg_be_first': 'Budi prvi!',
+            'btn_retry': '↻ POKUŠAJ PONOVO'
+        };
+        return fallback[key] || key;
     }
 
     /**
@@ -23,8 +32,6 @@ class TopListManager {
     async submitScore(name, score, mode) {
         if (!score || score <= 0) return;
 
-        // --- POPRAVKA OVDE ---
-        // Koristimo 'playerName' umesto 'name' da se poklopi sa MongoDB šemom
         const entry = {
             playerName: name || this._t('player_unknown'), 
             score: parseInt(score),
@@ -33,7 +40,7 @@ class TopListManager {
             synced: false 
         };
 
-        console.log(`[Score] Čuvam lokalno: ${entry.playerName} - ${score}`); // Logujemo playerName
+        console.log(`[Score] Čuvam lokalno: ${entry.playerName} - ${score}`);
 
         // 1. Uvek prvo sačuvaj lokalno
         await this._saveLocal(entry);
@@ -52,14 +59,19 @@ class TopListManager {
         }
 
         try {
-            let scores = (await localforage.getItem(this.storageKey)) || [];
+            let scores = [];
+            if (window.localforage) {
+                scores = (await localforage.getItem(this.storageKey)) || [];
+            } else {
+                const stored = localStorage.getItem(this.storageKey);
+                if (stored) scores = JSON.parse(stored);
+            }
+
             let needsUpdate = false;
 
             for (let i = 0; i < scores.length; i++) {
                 if (!scores[i].synced) {
-                    // Ovde logujemo šta se tačno šalje radi provere
                     console.log(`📡 Sinhronizujem skor:`, scores[i]);
-                    
                     this.app.socket.emit('submit_score', scores[i]);
                     scores[i].synced = true;
                     needsUpdate = true;
@@ -67,7 +79,11 @@ class TopListManager {
             }
 
             if (needsUpdate) {
-                await localforage.setItem(this.storageKey, scores);
+                if (window.localforage) {
+                    await localforage.setItem(this.storageKey, scores);
+                } else {
+                    localStorage.setItem(this.storageKey, JSON.stringify(scores));
+                }
                 console.log("✅ Lokalni rezultati ažurirani (označeni kao synced).");
             }
             
@@ -87,18 +103,18 @@ class TopListManager {
 
         btnLocal.classList.remove('active');
         btnGlobal.classList.remove('active');
-        listLocal.classList.add('hidden');
-        listGlobal.classList.add('hidden');
+        if (listLocal) listLocal.classList.add('hidden');
+        if (listGlobal) listGlobal.classList.add('hidden');
 
         if (tab === 'local') {
             btnLocal.classList.add('active');
-            listLocal.classList.remove('hidden');
-            if(filtersDiv) filtersDiv.classList.add('hidden'); 
+            if (listLocal) listLocal.classList.remove('hidden');
+            if (filtersDiv) filtersDiv.classList.add('hidden'); 
             this._loadLocal(); 
         } else {
             btnGlobal.classList.add('active');
-            listGlobal.classList.remove('hidden');
-            if(filtersDiv) filtersDiv.classList.remove('hidden'); 
+            if (listGlobal) listGlobal.classList.remove('hidden');
+            if (filtersDiv) filtersDiv.classList.remove('hidden'); 
             this._loadGlobal();
         }
     }
@@ -119,7 +135,14 @@ class TopListManager {
 
     async _saveLocal(newEntry) {
         try {
-            let scores = (await localforage.getItem(this.storageKey)) || [];
+            let scores = [];
+            if (window.localforage) {
+                scores = (await localforage.getItem(this.storageKey)) || [];
+            } else {
+                const stored = localStorage.getItem(this.storageKey);
+                if (stored) scores = JSON.parse(stored);
+            }
+
             scores.push(newEntry);
             scores.sort((a, b) => b.score - a.score);
             
@@ -127,7 +150,11 @@ class TopListManager {
                 scores = scores.slice(0, this.maxEntries);
             }
 
-            await localforage.setItem(this.storageKey, scores);
+            if (window.localforage) {
+                await localforage.setItem(this.storageKey, scores);
+            } else {
+                localStorage.setItem(this.storageKey, JSON.stringify(scores));
+            }
             
             const listLocal = document.getElementById('local-hs-list');
             if (listLocal && !listLocal.classList.contains('hidden')) {
@@ -140,7 +167,13 @@ class TopListManager {
 
     async _loadLocal() {
         try {
-            const scores = (await localforage.getItem(this.storageKey)) || [];
+            let scores = [];
+            if (window.localforage) {
+                scores = (await localforage.getItem(this.storageKey)) || [];
+            } else {
+                const stored = localStorage.getItem(this.storageKey);
+                if (stored) scores = JSON.parse(stored);
+            }
             this.renderList(scores, 'local-hs-list');
         } catch (e) {
             console.error("Greška pri učitavanju:", e);
@@ -149,23 +182,36 @@ class TopListManager {
 
     _loadGlobal() {
         const listEl = document.getElementById('global-hs-list');
-        if(!listEl) return;
+        if (!listEl) return;
 
-        if (!listEl.innerHTML.includes('loading-text')) {
+        // Prikaži loading samo ako već nije tu
+        if (!listEl.innerHTML.includes('loading-text') && !listEl.innerHTML.includes('hs-item')) {
              listEl.innerHTML = `<div class="loading-text">${this._t('msg_connecting')} 🌍</div>`;
         }
         
         if (this.app.socket && this.app.socket.connected) {
             this.app.socket.emit('get_global_highscores', this.currentGlobalFilter);
         } else {
-            listEl.innerHTML = `<div class="loading-text" style="color:var(--danger)">${this._t('msg_no_connection')}</div>`;
-            this.app.initSocketConnection();
+            // --- POBOLJŠANO RUKOVANJE GREŠKOM (Retry Button) ---
+            // Render serveri spavaju, pa je korisno imati dugme za ponovni pokušaj
+            listEl.innerHTML = `
+                <div style="text-align:center; padding:20px; color:var(--danger); display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
+                    <p style="font-weight:bold; margin-bottom:10px;">${this._t('msg_no_connection')}</p>
+                    <p style="font-size:0.7rem; color:var(--text-muted); margin-bottom:15px;">(Server se možda budi...)</p>
+                    <button class="btn-menu btn-primary" style="width:auto; padding: 10px 25px; font-size:0.85rem;" 
+                        onclick="if(window.app) { window.app.initSocketConnection(); setTimeout(() => { window.app.topListManager._loadGlobal() }, 1000); }">
+                        ${this._t('btn_retry') || '↻ POKUŠAJ PONOVO'}
+                    </button>
+                </div>`;
+            
+            // Automatski pokušaj rekoneksiju u pozadini
+            if (this.app) this.app.initSocketConnection();
         }
     }
 
     renderList(data, elementId) {
         const list = document.getElementById(elementId);
-        if(!list) return;
+        if (!list) return;
 
         list.innerHTML = "";
 
@@ -197,11 +243,8 @@ class TopListManager {
                 }
             }
 
-            // --- POPRAVKA PRIKAZA ---
-            // Podržavamo i staro polje 'name' i novo 'playerName'
-            // Ovo rešava problem da se stari lokalni rezultati ne vide
+            // Podrška za stara (name) i nova (playerName) polja
             const displayName = entry.playerName || entry.name || "Nepoznat";
-
             const scoreFormatted = entry.score.toLocaleString(currentLang);
             
             li.innerHTML = `
