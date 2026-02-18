@@ -1583,3 +1583,78 @@ body.winter-theme .daily-value {
     0%, 100% { transform: scale(1); opacity: 0.5; }
     50% { transform: scale(1.1); opacity: 0.9; text-shadow: 0 0 20px rgba(255, 255, 255, 0.9); }
 }
+
+/* =========================================
+   MISSING ANIMATIONS FIX (Fireflies, Rain, Trumpets)
+   ========================================= */
+
+/* 1. ZLATNA KIŠA & KONFETE FALLBACK */
+.falling-coin {
+    position: fixed;
+    top: -50px;
+    font-size: 1.5rem;
+    pointer-events: none;
+    z-index: 99999;
+    animation: coinFall linear forwards; /* Trajanje se definiše u JS */
+}
+
+@keyframes coinFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+/* 2. MAGIČNI SVICI (FIREFLIES) */
+.firefly {
+    position: fixed;
+    bottom: -50px; /* Kreću od dna */
+    font-size: 1.5rem;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    /* Koristimo CSS varijablu --rnd-x koju JS postavlja za horizontalno kretanje */
+    animation: fireflyFloat ease-in-out forwards; 
+}
+
+@keyframes fireflyFloat {
+    0% { 
+        transform: translateY(0) translateX(0) scale(0.5); 
+        opacity: 0; 
+    }
+    20% { opacity: 1; }
+    50% { 
+        /* Pomeraj levo-desno definisan u JS */
+        transform: translateY(-50vh) translateX(var(--rnd-x, 20px)) scale(1.2); 
+    }
+    80% { opacity: 1; }
+    100% { 
+        transform: translateY(-110vh) translateX(0) scale(0.5); 
+        opacity: 0; 
+    }
+}
+
+/* 3. SVADBA (TRUBE) */
+.trumpet-icon {
+    position: fixed;
+    font-size: 4rem;
+    z-index: 99999;
+    pointer-events: none;
+    filter: drop-shadow(0 0 10px gold);
+    animation: trumpetShake 0.5s infinite ease-in-out;
+}
+
+@keyframes trumpetShake {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(-15deg) scale(1.1); }
+    75% { transform: rotate(15deg) scale(1.1); }
+}
+
+/* Fix za rotiranu trubu (desna strana) */
+.trumpet-icon[style*="scaleX(-1)"] {
+    animation: trumpetShakeRight 0.5s infinite ease-in-out;
+}
+
+@keyframes trumpetShakeRight {
+    0%, 100% { transform: scaleX(-1) rotate(0deg) scale(1); }
+    25% { transform: scaleX(-1) rotate(-15deg) scale(1.1); }
+    75% { transform: scaleX(-1) rotate(15deg) scale(1.1); }
+}
