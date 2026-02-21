@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM
 
 require('dotenv').config(); 
 
@@ -411,13 +411,40 @@ io.on('connection', (socket) => {
             return; 
         }
 
-        // Ako je poruka potpuno čista, šaljemo je svima
+        // Ako je poruka potpuno čista, šaljemo je svima (SADA SA SENDER ID ZA DUEL)
         socket.broadcast.emit('global_chat_msg', {
             sender: safeSender,
+            senderId: socket.id, // <-- DODATO ZA DUEL
             msg: safeMsg
         });
         
         console.log(`🌍 GLOBAL CHAT | ${safeSender}: ${safeMsg}`);
+    });
+
+    // ==================================================================
+    // DUEL SISTEM (IZAZOVI IZ CHATA)
+    // ==================================================================
+    socket.on('send_challenge', (data) => {
+        const { targetId, challengerName } = data;
+        io.to(targetId).emit('challenge_received', {
+            challengerId: socket.id,
+            challengerName: challengerName
+        });
+    });
+
+    socket.on('challenge_response', (data) => {
+        const { challengerId, accepted, targetName, challengerName } = data;
+        if (accepted) {
+            // Kreiramo jedinstven Room ID za ovaj duel koristeći ID-jeve oba igrača
+            const roomId = `duel_${challengerId}_${socket.id}`;
+            
+            // Šaljemo obojici da je duel počeo i dajemo im roomId da uđu u istu privatnu sobu
+            io.to(challengerId).emit('duel_start', { roomId, opponentName: targetName });
+            socket.emit('duel_start', { roomId, opponentName: challengerName });
+        } else {
+            // Obaveštavamo izazivača da je duel odbijen
+            io.to(challengerId).emit('challenge_declined', { targetName });
+        }
     });
 
     // --- REVANŠ SISTEM ---

@@ -371,7 +371,12 @@
         <div class="modal-box" style="width: 90%; max-width: 450px; height: 75vh; max-height: 700px; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column;">
             
             <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <span style="color: var(--gold-main); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">🌍 GLOBAL CHAT</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="color: var(--gold-main); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">🌍 GLOBAL CHAT</span>
+                    <span style="font-size: 0.75rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 3px 6px; border-radius: 6px; border: 1px solid var(--success);" title="Trenutno igrača na serveru">
+                        🟢 <span id="global-chat-online-count">1</span>
+                    </span>
+                </div>
                 <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="app.closeGlobalChat()">✖</span>
             </div>
 

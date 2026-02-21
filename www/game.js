@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (UPDATED AUDIO INTEGRATION AND GLOBAL CHAT)
+// game.js - MAIN GAME LOGIC (UPDATED AUDIO INTEGRATION AND GLOBAL CHAT WITH DUELS)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -188,7 +188,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v7.0 - MOBILE FIX");
+        console.log("YambApp v7.0 - MOBILE FIX + DUELS");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -372,9 +372,30 @@ class YambApp {
                         if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
                     });
 
-                    // Osluškivanje globalnog chata sa servera
+                    // Osluškivanje globalnog chata sa servera (SADA PRIMA I SENDER ID)
                     this.socket.on('global_chat_msg', (data) => {
-                        this.appendGlobalChatMessage(data.sender, data.msg, "msg-incoming");
+                        this.appendGlobalChatMessage(data.sender, data.msg, "msg-incoming", data.senderId);
+                    });
+
+                    // --- OSLUŠKIVANJE DUEL IZAZOVA ---
+                    this.socket.on('challenge_received', async (data) => {
+                        const { challengerId, challengerName } = data;
+                        const accepted = await this.modal.confirm(`⚔️ ${challengerName} te izaziva na 1 na 1 duel! Da li prihvataš?`);
+                        this.socket.emit('challenge_response', {
+                            challengerId,
+                            accepted,
+                            targetName: this.playerName,
+                            challengerName: challengerName
+                        });
+                    });
+
+                    this.socket.on('challenge_declined', (data) => {
+                        this.modal.alert(`Igrač ${data.targetName} je odbio duel.`, "ODBIJENO");
+                    });
+
+                    this.socket.on('duel_start', (data) => {
+                        this.closeGlobalChat(); // Zatvaramo globalni chat
+                        this.joinPrivateGame(this.playerName, data.roomId); // Ubacujemo ih u privatnu sobu automatski
                     });
 
                     this.socket.on('users_count', (count) => {
@@ -395,10 +416,17 @@ class YambApp {
     }
 
     updateOnlineCounterUI() {
+        // Ažuriranje brojača na ekranu za statistiku
         const el = document.getElementById('live-online-count');
         if (el) {
             el.style.opacity = 0;
             setTimeout(() => { el.innerText = this.onlineUsersCount; el.style.opacity = 1; }, 200);
+        }
+        
+        // --- NOVO: Ažuriranje brojača u zaglavlju globalnog chata ---
+        const chatEl = document.getElementById('global-chat-online-count');
+        if (chatEl) {
+            chatEl.innerText = this.onlineUsersCount;
         }
     }
 
@@ -572,7 +600,7 @@ class YambApp {
         }
     }
 
-    appendGlobalChatMessage(sender, text, type) { 
+    appendGlobalChatMessage(sender, text, type, senderId = null) { 
         const body = document.getElementById('global-chat-body'); 
         if(!body) return;
         
@@ -584,7 +612,14 @@ class YambApp {
 
         const msgDiv = document.createElement('div'); 
         msgDiv.className = `msg-bubble ${type}`; 
-        msgDiv.innerHTML = `<strong>${sender}:</strong> ${text}`; 
+        
+        // Kreiranje klikabilnog imena za duel (samo tuđe poruke, ne i sistemske)
+        let nameHtml = `<strong>${sender}:</strong>`;
+        if (senderId && senderId !== (this.socket ? this.socket.id : null) && sender !== "Sistem" && type === "msg-incoming") {
+            nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="app.challengePlayer('${senderId}', '${sender}')" title="Izazovi na duel ⚔️">${sender}:</strong>`;
+        }
+        
+        msgDiv.innerHTML = `${nameHtml} ${text}`; 
         body.appendChild(msgDiv); 
         body.scrollTop = body.scrollHeight; // Auto-scroll na dno
         
@@ -602,8 +637,8 @@ class YambApp {
         // Cenzuriši poruku pre prikaza i slanja (Globalni Chat)
         text = cenzurisiPoruku(text);
 
-        // Prikaži tvoju poruku odmah
-        this.appendGlobalChatMessage(this.playerName, text, "msg-outgoing"); 
+        // Prikaži tvoju poruku odmah, prosledi i tvoj socket id
+        this.appendGlobalChatMessage(this.playerName, text, "msg-outgoing", this.socket ? this.socket.id : null); 
         input.value = ""; 
         
         // Pošalji svima preko servera
@@ -611,6 +646,16 @@ class YambApp {
             this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
         } else {
             this.appendGlobalChatMessage("Sistem", "Niste povezani na server.", "msg-incoming");
+        }
+    }
+
+    // --- NOVA FUNKCIJA ZA IZAZIVANJE IGRAČA ---
+    async challengePlayer(targetId, targetName) {
+        if (!this.socket || !this.socket.connected) return;
+        const isConfirmed = await this.modal.confirm(`Želiš li da izazoveš igrača ${targetName} na duel?`);
+        if(isConfirmed) {
+            this.socket.emit('send_challenge', { targetId, challengerName: this.playerName });
+            this.modal.alert(`Izazov je poslat igraču ${targetName}. Čekamo odgovor...`, "⏳ DUEL POSLAT");
         }
     }
     
