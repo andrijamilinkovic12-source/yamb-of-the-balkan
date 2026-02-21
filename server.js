@@ -434,7 +434,17 @@ io.on('connection', (socket) => {
 
     socket.on('challenge_response', (data) => {
         const { challengerId, accepted, targetName, challengerName } = data;
+        
+        // DODATO: Proveravamo da li je izazivač i dalje na serveru
+        const challengerSocket = io.sockets.sockets.get(challengerId);
+
         if (accepted) {
+            if (!challengerSocket) {
+                // Ako je izazivač izašao dok je meta razmišljala
+                socket.emit('error_msg', `Igrač ${challengerName} je u međuvremenu napustio igru.`);
+                return;
+            }
+
             // Kreiramo jedinstven Room ID za ovaj duel koristeći ID-jeve oba igrača
             const roomId = `duel_${challengerId}_${socket.id}`;
             
@@ -442,8 +452,10 @@ io.on('connection', (socket) => {
             io.to(challengerId).emit('duel_start', { roomId, opponentName: targetName });
             socket.emit('duel_start', { roomId, opponentName: challengerName });
         } else {
-            // Obaveštavamo izazivača da je duel odbijen
-            io.to(challengerId).emit('challenge_declined', { targetName });
+            // Obaveštavamo izazivača da je duel odbijen (samo ako je još uvek tu)
+            if (challengerSocket) {
+                io.to(challengerId).emit('challenge_declined', { targetName });
+            }
         }
     });
 

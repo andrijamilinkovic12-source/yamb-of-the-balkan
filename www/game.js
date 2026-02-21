@@ -616,7 +616,7 @@ class YambApp {
         // Kreiranje klikabilnog imena za duel (samo tuđe poruke, ne i sistemske)
         let nameHtml = `<strong>${sender}:</strong>`;
         if (senderId && senderId !== (this.socket ? this.socket.id : null) && sender !== "Sistem" && type === "msg-incoming") {
-            nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="app.challengePlayer('${senderId}', '${sender}')" title="Izazovi na duel ⚔️">${sender}:</strong>`;
+            nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="window.app.challengePlayer('${senderId}', '${sender}')" title="Izazovi na duel ⚔️">${sender}:</strong>`;
         }
         
         msgDiv.innerHTML = `${nameHtml} ${text}`; 
@@ -1503,4 +1503,4 @@ class YambApp {
     }
 }
 
-const app = new YambApp();
+window.app = new YambApp();
