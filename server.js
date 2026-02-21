@@ -440,8 +440,8 @@ io.on('connection', (socket) => {
 
         if (accepted) {
             if (!challengerSocket) {
-                // Ako je izazivač izašao dok je meta razmišljala
-                socket.emit('error_msg', `Igrač ${challengerName} je u međuvremenu napustio igru.`);
+                // Ako je izazivač izašao dok je meta razmišljala (Šaljemo ključ za prevod)
+                socket.emit('error_msg', 'err_opp_left');
                 return;
             }
 

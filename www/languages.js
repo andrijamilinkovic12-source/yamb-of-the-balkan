@@ -1,4 +1,4 @@
-// languages.js - Centralizovani prevodi (Ažurirano za Highscore Filtere i Global Chat)
+// languages.js - Centralizovani prevodi (Ažurirano za Highscore Filtere, Global Chat, Duele i Revanš)
 
 const TRANSLATIONS = {
     sr: {
@@ -102,9 +102,23 @@ const TRANSLATIONS = {
         "chat_you": "Ti",
         "chat_opponent": "Protivnik",
         "lbl_opponent_parens": "(Protivnik)",
+        
+        // --- CHAT & DUELI ---
         "chat_rules_msg": "DOBRODOŠLI U GLOBALNI CHAT!\n\nStrogo je zabranjeno vređanje na rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i upotreba vulgarnosti.\n\nKršenje ovih pravila rezultiraće trajnim isključenjem sa servera.\n\nDa li se slažete sa pravilima?",
         "global_chat_welcome": "Dobrodošli u Globalni Chat! Budite pristojni.",
         "global_chat_placeholder": "Napiši poruku...",
+        "duel_incoming": "⚔️ {0} te izaziva na duel! Prihvataš?",
+        "duel_declined": "Igrač {0} je odbio duel.",
+        "duel_ask": "Želiš li da izazoveš igrača {0} na duel?",
+        "duel_sent": "Izazov poslat igraču {0}. Čekamo odgovor...",
+        "duel_title": "⏳ DUEL POSLAT",
+        "rematch_ask": "Protivnik traži revanš! Da li prihvataš?",
+        "rematch_declined": "Revanš je odbijen.",
+        "rematch_accepted": "Revanš prihvaćen! Spremite se...",
+        "rematch_title": "NOVA PARTIJA",
+        "sys_name": "Sistem",
+        "sys_no_conn": "Niste povezani na server.",
+        "err_opp_left": "Protivnik je u međuvremenu napustio igru.",
         
         // KOLONE (SR)
         "col_down": "↓",
@@ -134,6 +148,7 @@ const TRANSLATIONS = {
         "go_msg_solo": "OSVOJENI POENI",
         "go_double": "🎥 DUPLIRAJ 💰 (x2)",
         "go_claim": "Preuzmi i Izađi",
+        "go_rematch": "🔄 REVANŠ",
         "msg_reward_doubled": "Uspešno ste duplirali nagradu!\nUkupno osvojeno:",
         
         "alert_roll_first": "Prvo baci kockice!",
@@ -297,9 +312,23 @@ const TRANSLATIONS = {
         "chat_you": "You",
         "chat_opponent": "Opponent",
         "lbl_opponent_parens": "(Opponent)",
+        
+        // --- CHAT & DUELS ---
         "chat_rules_msg": "WELCOME TO GLOBAL CHAT!\n\nInsults based on race, religion, nationality, or gender, as well as vulgarity, are strictly prohibited.\n\nViolating these rules will result in a permanent ban.\n\nDo you agree to the rules?",
         "global_chat_welcome": "Welcome to Global Chat! Be polite.",
         "global_chat_placeholder": "Type a message...",
+        "duel_incoming": "⚔️ {0} challenges you to a duel! Accept?",
+        "duel_declined": "Player {0} declined the duel.",
+        "duel_ask": "Do you want to challenge player {0} to a duel?",
+        "duel_sent": "Challenge sent to {0}. Waiting for response...",
+        "duel_title": "⏳ DUEL SENT",
+        "rematch_ask": "Opponent requests a rematch! Do you accept?",
+        "rematch_declined": "Rematch declined.",
+        "rematch_accepted": "Rematch accepted! Get ready...",
+        "rematch_title": "NEW GAME",
+        "sys_name": "System",
+        "sys_no_conn": "You are not connected to the server.",
+        "err_opp_left": "Opponent has left the game in the meantime.",
 
         // EN KOLONE
         "col_down": "↓",
@@ -329,6 +358,7 @@ const TRANSLATIONS = {
         "go_msg_solo": "SCORE",
         "go_double": "🎥 DOUBLE 💰 (x2)",
         "go_claim": "Claim & Exit",
+        "go_rematch": "🔄 REMATCH",
         "msg_reward_doubled": "Reward successfully doubled!\nTotal won:",
 
         "alert_roll_first": "Roll the dice first!",
