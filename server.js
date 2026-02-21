@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA
 
 require('dotenv').config(); 
 
@@ -24,6 +24,69 @@ const io = new Server(server, {
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// ==================================================================
+// 0. FILTER VULGARNOSTI ZA GLOBALNI CHAT (PAMETNI FILTER)
+// ==================================================================
+const zabranjeneReci = [
+    // 1. Opšte uvrede (Balkan)
+    "idiot", "budala", "kreten", "glupan", "majmun", "debil", "stoka",
+
+    // 2. Vulgarne i polne reči (Balkan)
+    "kurv", "jeb", "pizd", "kurac", "sranj", "govn", "pick", "pedere", "pederu",
+
+    // 3. Verske, rasne i nacionalne uvrede (Balkan)
+    "verskauvreda1", "nacionalnauvreda1", "rasnauvreda1", "balij", "ustas", "chetnik", "siptar", "cigan",
+
+    // 4. Psovke, uvrede i vulgarne reči (Engleski)
+    "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy", "slut", "whore", 
+    "faggot", "nigger", "nigga", "bastard", "retard", "crap", "douche", "motherfucker"
+];
+
+// Mapa za prepoznavanje zamena karaktera (Leetspeak i naša slova)
+const charMap = {
+    'a': '[aA@4]',
+    'b': '[bB8]',
+    'c': '[cCčČćĆ]',
+    'd': '[dDđĐ]',
+    'e': '[eE3]',
+    'g': '[gG6]',
+    'i': '[iI1l!L]', 
+    'l': '[lL1iI]', 
+    'o': '[oO0]',
+    's': '[sSšŠ5\\$]',
+    't': '[tT7]',
+    'z': '[zZžŽ]'
+};
+
+// Funkcija koja od obične reči pravi pametni Regex
+function napraviPametniRegex(rec) {
+    let regexStr = '';
+    for (let i = 0; i < rec.length; i++) {
+        let slovo = rec[i].toLowerCase();
+        
+        let pattern = charMap[slovo] || `[${slovo.toLowerCase()}${slovo.toUpperCase()}]`;
+        
+        regexStr += pattern + '+';
+        
+        if (i < rec.length - 1) {
+            regexStr += '[\\W_]*';
+        }
+    }
+    return new RegExp(regexStr, 'gi');
+}
+
+const zabranjeniRegexi = zabranjeneReci.map(rec => napraviPametniRegex(rec));
+
+function cenzurisiPoruku(poruka) {
+    let filtriranaPoruka = poruka;
+    
+    zabranjeniRegexi.forEach(regex => {
+        filtriranaPoruka = filtriranaPoruka.replace(regex, '***');
+    });
+    
+    return filtriranaPoruka;
+}
 
 // ==================================================================
 // 1. RUTA ZA ANDROID APP LINKS (ASSETLINKS.JSON)
@@ -76,6 +139,9 @@ let playerRooms = {};
 // --- ANTI-CHEAT START TIME MAPA ---
 let gameStartTimes = {}; 
 
+// --- SISTEM BANOVANJA (MUTE) ---
+const chatBans = {}; // Format: { "ip_adresa": { strikes: broj, banUntil: timestamp } }
+
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
     console.log(`🔗 Novi klijent: ${socket.id}`);
@@ -88,9 +154,9 @@ io.on('connection', (socket) => {
     // ==================================================================
     
     // Konstante za validaciju
-    const MAX_SCORE = 3500;       // Limit za skor
-    const MAX_NAME_LENGTH = 18;   // Limit za dužinu imena
-    const MIN_GAME_DURATION = 120000; // Minimum 2 minuta (120 sekundi)
+    const MAX_SCORE = 3500;       
+    const MAX_NAME_LENGTH = 18;   
+    const MIN_GAME_DURATION = 120000; 
 
     // --- Listener za početak sesije ---
     socket.on('game_session_start', () => {
@@ -128,34 +194,22 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            // 1. PROVERA TIPA PODATAKA
             if (typeof data.score !== 'number' || isNaN(data.score)) {
                 return; 
             }
 
-            // 2. PROVERA VREDNOSTI (MAX SCORE)
             if (data.score < 0 || data.score > MAX_SCORE) {
                 console.log(`🚨 HACK POKUŠAJ (Value): ${socket.id} šalje nemoguć skor: ${data.score}`);
-                return; // Ignorišemo upis
+                return; 
             }
 
-            // 3. PROVERA VREMENA (SPEED HACK) - PRIVREMENO ISKLJUČENO !!!
-            // ----------------------------------------------------------
-            // OVO JE BIO DEO KOJI JE BLOKIRAO UPIS JER FRONTEND NE ŠALJE START TIME.
-            // SADA SAMO LOGUJEMO UPOZORENJE, ALI NE RADIMO "return".
-            
             const startTime = gameStartTimes[socket.id];
             
             if (data.score > 50 && (!startTime || (Date.now() - startTime < MIN_GAME_DURATION))) {
                 const duration = startTime ? (Date.now() - startTime) : "N/A";
-                // SAMO LOGUJEMO, NE BLOKIRAMO VIŠE:
                 console.log(`⚠️ UPOZORENJE (Speed): Trajanje: ${duration}ms. Ipak upisujem skor: ${data.score}`);
-                
-                // return;  <--- OVO JE OBRISANO/ZAKOMENTARISANO DA BI UPIS RADIO
             }
-            // ----------------------------------------------------------
 
-            // 4. OBRADA IMENA (Limit 18 karaktera)
             let finalName = "Nepoznat Igrač";
             let rawName = data.name || data.playerName;
 
@@ -167,7 +221,6 @@ io.on('connection', (socket) => {
                 finalName = "Nepoznat Igrač";
             }
             
-            // 5. UPIS U BAZU
             const newScore = new Score({
                 playerName: finalName,
                 score: data.score,
@@ -178,7 +231,6 @@ io.on('connection', (socket) => {
             await newScore.save();
             console.log(`✅ USPEŠAN UPIS: ${finalName} -> ${data.score}`);
             
-            // Očisti vreme nakon uspešnog upisa
             delete gameStartTimes[socket.id];
 
         } catch (err) {
@@ -190,7 +242,6 @@ io.on('connection', (socket) => {
     // 4. MATCHMAKING
     // ==================================================================
 
-    // --- RANDOM GAME ---
     socket.on('find_game', (nickname) => {
         if (waitingPlayer && waitingPlayer.id === socket.id) {
             return; 
@@ -240,7 +291,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- PRIVATE GAME ---
     socket.on('join_private_game', ({ nickname, roomId }) => {
         console.log(`🏠 Zahtev za Private sobu: ${roomId} od ${nickname}`);
 
@@ -301,7 +351,7 @@ io.on('connection', (socket) => {
     });
 
     // ==================================================================
-    // 5. GAMEPLAY RELEJI & REMATCH LOGIKA
+    // 5. GAMEPLAY RELEJI, CHAT & REMATCH LOGIKA
     // ==================================================================
     
     const relayEvent = (eventName, data) => {
@@ -315,7 +365,60 @@ io.on('connection', (socket) => {
     socket.on('dice_hold', (data) => relayEvent('remote_hold', data));
     socket.on('player_move', (data) => relayEvent('remote_move', data));
     socket.on('announce', (data) => relayEvent('remote_announce', data));
+    
     socket.on('chat_msg', (data) => relayEvent('chat_msg', data));
+
+    // --- GLOBALNI CHAT LOGIKA SA FILTEROM I BANOVANJEM ---
+    socket.on('global_chat_msg', (data) => {
+        if (!data || !data.msg) return;
+        
+        // Ekstrakcija IP adrese korisnika
+        const clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+        const now = Date.now();
+
+        // 1. Provera da li je korisnik trenutno pod banom
+        if (chatBans[clientIp] && chatBans[clientIp].banUntil > now) {
+            const preostaloMinuta = Math.ceil((chatBans[clientIp].banUntil - now) / 60000);
+            socket.emit('error_msg', `Zabranjeno pisanje! Vaš chat je suspendovan još ${preostaloMinuta} minuta zbog psovanja.`);
+            return; // Prekidamo slanje poruke
+        }
+
+        const safeSender = (data.sender || 'Nepoznat').toString().substring(0, 20);
+        const originalMsg = data.msg.toString().substring(0, 200); 
+
+        // 🛑 PRIMENA PAMETNOG FILTERA NA PORUKU
+        const safeMsg = cenzurisiPoruku(originalMsg);
+
+        // 2. Ako se poruka promenila (sadrži ***), znači da je psovao
+        if (safeMsg !== originalMsg) {
+            // Inicijalizacija korisnika u sistemu ako ga nema
+            if (!chatBans[clientIp]) {
+                chatBans[clientIp] = { strikes: 0, banUntil: 0 };
+            }
+            
+            chatBans[clientIp].strikes += 1; // Povećaj broj prekršaja
+            
+            // Formula za kaznu: 1h, 2h, 4h, 8h... (u milisekundama)
+            const satiBana = Math.pow(2, chatBans[clientIp].strikes - 1);
+            const banTrajanjeMs = satiBana * 60 * 60 * 1000;
+            
+            chatBans[clientIp].banUntil = now + banTrajanjeMs;
+
+            console.log(`🔨 MUTE BAN: IP ${clientIp} je mutiran na ${satiBana}h. (Prekršaj br: ${chatBans[clientIp].strikes})`);
+            
+            // Šaljemo obaveštenje igraču i ODBACUJEMO poruku
+            socket.emit('error_msg', `Chat vam je blokiran na ${satiBana} sat(i) zbog korišćenja zabranjenih reči.`);
+            return; 
+        }
+
+        // Ako je poruka potpuno čista, šaljemo je svima
+        socket.broadcast.emit('global_chat_msg', {
+            sender: safeSender,
+            msg: safeMsg
+        });
+        
+        console.log(`🌍 GLOBAL CHAT | ${safeSender}: ${safeMsg}`);
+    });
 
     // --- REVANŠ SISTEM ---
     socket.on('game_over', () => {
@@ -381,6 +484,25 @@ io.on('connection', (socket) => {
         io.emit('users_count', io.engine.clientsCount);
     });
 });
+
+// ==================================================================
+// 7. GARBAGE COLLECTOR ZA BANOVE (Čisti memoriju)
+// ==================================================================
+setInterval(() => {
+    const now = Date.now();
+    let obrisano = 0;
+    for (const ip in chatBans) {
+        // Ako je ban istekao pre više od 24 sata (praštamo prekršaje nakon nekog vremena)
+        // Ako želiš da pamtiš prekršaje zauvek dok se server ne restartuje, obriši ovaj if blok.
+        if (now > chatBans[ip].banUntil + (24 * 60 * 60 * 1000)) { 
+            delete chatBans[ip];
+            obrisano++;
+        }
+    }
+    if (obrisano > 0) {
+        console.log(`🧹 Očišćeno ${obrisano} isteklih banova iz memorije.`);
+    }
+}, 60 * 60 * 1000); // Pokreće se svakih sat vremena
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {

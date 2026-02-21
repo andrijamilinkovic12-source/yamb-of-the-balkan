@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (UPDATED AUDIO INTEGRATION)
+// game.js - MAIN GAME LOGIC (UPDATED AUDIO INTEGRATION AND GLOBAL CHAT)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -9,6 +9,42 @@ const gt = (key) => {
     if (typeof t === 'function') return t(key);
     return key; 
 };
+
+/* --- FILTER VULGARNOSTI (KLIJENT STRANA) --- */
+const zabranjeneReci = [
+    "idiot", "budala", "kreten", "glupan", "majmun", "debil", "stoka",
+    "kurv", "jeb", "pizd", "kurac", "sranj", "govn", "pick", "pedere", "pederu",
+    "verskauvreda1", "nacionalnauvreda1", "rasnauvreda1", "balij", "ustas", "chetnik", "siptar", "cigan",
+    "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy", "slut", "whore", 
+    "faggot", "nigger", "nigga", "bastard", "retard", "crap", "douche", "motherfucker"
+];
+
+const charMap = {
+    'a': '[aA@4]', 'b': '[bB8]', 'c': '[cCčČćĆ]', 'd': '[dDđĐ]', 'e': '[eE3]',
+    'g': '[gG6]', 'i': '[iI1l!L]', 'l': '[lL1iI]', 'o': '[oO0]', 's': '[sSšŠ5\\$]',
+    't': '[tT7]', 'z': '[zZžŽ]'
+};
+
+function napraviPametniRegex(rec) {
+    let regexStr = '';
+    for (let i = 0; i < rec.length; i++) {
+        let slovo = rec[i].toLowerCase();
+        let pattern = charMap[slovo] || `[${slovo.toLowerCase()}${slovo.toUpperCase()}]`;
+        regexStr += pattern + '+';
+        if (i < rec.length - 1) regexStr += '[\\W_]*';
+    }
+    return new RegExp(regexStr, 'gi');
+}
+
+const zabranjeniRegexi = zabranjeneReci.map(rec => napraviPametniRegex(rec));
+
+function cenzurisiPoruku(poruka) {
+    let filtriranaPoruka = poruka;
+    zabranjeniRegexi.forEach(regex => {
+        filtriranaPoruka = filtriranaPoruka.replace(regex, '***');
+    });
+    return filtriranaPoruka;
+}
 
 /* --- DAILY CHALLENGE MANAGER --- */
 class DailyChallengeManager {
@@ -52,7 +88,12 @@ class DailyChallengeManager {
         for(let i=0; i<6; i++) {
             const el = document.getElementById(`dc-die-${i}`);
             if(el) {
-                el.className = 'dice daily-dice';
+                // 1. Primenjujemo aktivni skin preko YambFeatures klase
+                this.app.features.applySkinToElement(el);
+                
+                // 2. Vraćamo 'daily-dice' jer funkcija iznad resetuje klase samo na 'dice' i 'skin-...'
+                el.classList.add('daily-dice');
+                
                 el.innerText = "?";
                 el.classList.remove('active', 'locked'); 
             }
@@ -208,9 +249,13 @@ class YambApp {
         this.hasSvetiIlija = false;
         this.hasProphet = false;
 
+        // --- ADMOB INICIJALIZACIJA (DODAT INTERSTITIAL) ---
         this.adMob = new AdMobController();
         this.pendingScore = 0; 
-        setTimeout(() => this.adMob.initialize(), 2000);
+        setTimeout(() => {
+            this.adMob.initialize();
+            if(this.adMob.prepareInterstitial) this.adMob.prepareInterstitial(); // DODATO ZA INTERSTITIAL
+        }, 2000);
 
         const dateEl = document.getElementById('live-date');
         if (dateEl) {
@@ -231,6 +276,17 @@ class YambApp {
         const chatInput = document.getElementById('chat-input-field');
         if(chatInput) {
             chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendChat(); });
+        }
+
+        // --- GLOBALNI CHAT LISTENERS ---
+        const btnGlobalSend = document.getElementById('btn-global-send');
+        if(btnGlobalSend) {
+            btnGlobalSend.addEventListener('click', () => this.sendGlobalChat());
+            btnGlobalSend.addEventListener('touchend', (e) => { e.preventDefault(); this.sendGlobalChat(); });
+        }
+        const inputGlobalChat = document.getElementById('global-chat-input');
+        if(inputGlobalChat) {
+            inputGlobalChat.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendGlobalChat(); });
         }
         
         const savedTheme = localStorage.getItem('yamb_theme');
@@ -314,6 +370,11 @@ class YambApp {
                         
                         const params = new URLSearchParams(window.location.search);
                         if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
+                    });
+
+                    // Osluškivanje globalnog chata sa servera
+                    this.socket.on('global_chat_msg', (data) => {
+                        this.appendGlobalChatMessage(data.sender, data.msg, "msg-incoming");
                     });
 
                     this.socket.on('users_count', (count) => {
@@ -461,10 +522,96 @@ class YambApp {
     }
     
     sendChat() { 
-        const input = document.getElementById('chat-input-field'); const text = input.value.trim(); 
+        const input = document.getElementById('chat-input-field'); 
+        let text = input.value.trim(); 
         if (!text) return; 
-        this.appendChatMessage(gt('chat_you'), text, "msg-outgoing"); input.value = ""; 
-        if (this.onlineMode && this.socket) { this.socket.emit('chat_msg', { roomId: this.roomId, msg: text }); } 
+        
+        // Cenzuriši poruku pre prikaza i slanja (Privatni Chat)
+        text = cenzurisiPoruku(text);
+
+        this.appendChatMessage(gt('chat_you'), text, "msg-outgoing"); 
+        input.value = ""; 
+        if (this.onlineMode && this.socket) { 
+            this.socket.emit('chat_msg', { roomId: this.roomId, msg: text }); 
+        } 
+    }
+
+    // --- NOVA FUNKCIJA ZA PRIHVATANJE PRAVILA & OTVARANJE (SA REKLAMOM) ---
+    async openGlobalChat() {
+        const accepted = localStorage.getItem('yamb_chat_rules_accepted');
+        
+        if (!accepted) {
+            const isConfirmed = await this.modal.confirm(gt('chat_rules_msg'));
+            
+            if (isConfirmed) {
+                localStorage.setItem('yamb_chat_rules_accepted', 'true');
+                
+                // Pusti reklamu nakon prihvatanja pravila
+                if(this.adMob && this.adMob.showInterstitial) await this.adMob.showInterstitial();
+                
+                const overlay = document.getElementById('global-chat-overlay');
+                if (overlay) overlay.style.display = 'flex';
+            }
+        } else {
+            // Pusti reklamu pri redovnom ulasku
+            if(this.adMob && this.adMob.showInterstitial) await this.adMob.showInterstitial();
+            
+            const overlay = document.getElementById('global-chat-overlay');
+            if (overlay) overlay.style.display = 'flex';
+        }
+    }
+
+    // --- NOVA FUNKCIJA ZA ZATVARANJE GLOBALNOG CHATA (SA REKLAMOM) ---
+    async closeGlobalChat() {
+        const overlay = document.getElementById('global-chat-overlay');
+        if (overlay) overlay.style.display = 'none';
+        
+        // Pusti reklamu pri izlasku iz chata
+        if(this.adMob && this.adMob.showInterstitial) {
+            await this.adMob.showInterstitial();
+        }
+    }
+
+    appendGlobalChatMessage(sender, text, type) { 
+        const body = document.getElementById('global-chat-body'); 
+        if(!body) return;
+        
+        // Ukloni početnu info poruku ako postoji i ako je prva poruka
+        const infoMsg = body.querySelector('div[style*="text-align: center"]');
+        if (infoMsg && body.children.length === 1) {
+            infoMsg.style.display = 'none';
+        }
+
+        const msgDiv = document.createElement('div'); 
+        msgDiv.className = `msg-bubble ${type}`; 
+        msgDiv.innerHTML = `<strong>${sender}:</strong> ${text}`; 
+        body.appendChild(msgDiv); 
+        body.scrollTop = body.scrollHeight; // Auto-scroll na dno
+        
+        // Zvuk za novu poruku ako nismo mi poslali
+        if (type === "msg-incoming" && this.soundMgr) {
+            this.soundMgr.chat(); 
+        }
+    }
+    
+    sendGlobalChat() { 
+        const input = document.getElementById('global-chat-input'); 
+        let text = input.value.trim(); 
+        if (!text) return; 
+        
+        // Cenzuriši poruku pre prikaza i slanja (Globalni Chat)
+        text = cenzurisiPoruku(text);
+
+        // Prikaži tvoju poruku odmah
+        this.appendGlobalChatMessage(this.playerName, text, "msg-outgoing"); 
+        input.value = ""; 
+        
+        // Pošalji svima preko servera
+        if (this.socket && this.socket.connected) { 
+            this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
+        } else {
+            this.appendGlobalChatMessage("Sistem", "Niste povezani na server.", "msg-incoming");
+        }
     }
     
     showSettings() { 

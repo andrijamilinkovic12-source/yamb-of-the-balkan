@@ -958,6 +958,38 @@ class AdMobController {
             }
         });
     }
+
+    // --- DODATO ZA INTERSTITIAL REKLAME ---
+    async prepareInterstitial() {
+        if (!window.Capacitor || !window.Capacitor.Plugins.AdMob) return;
+        try {
+            await window.Capacitor.Plugins.AdMob.prepareInterstitial({
+                adId: 'ca-app-pub-4319963185096437/2913237519', // Tvoj pravi Interstitial ID
+                isTesting: false, // ⚠️ PREPORUKA: Stavi na 'true' dok testiraš aplikaciju na svom telefonu da izbegneš ban od Google-a!
+                autoShow: false
+            });
+            console.log("AdMob: Interstitial reklama spremna.");
+        } catch (e) {
+            console.warn("AdMob Interstitial prep error:", e);
+        }
+    }
+
+    async showInterstitial() {
+        if (!window.Capacitor || !window.Capacitor.Plugins.AdMob) return false;
+        try {
+            await window.Capacitor.Plugins.AdMob.showInterstitial();
+            
+            // Odmah pripremi sledeću reklamu za kasnije
+            setTimeout(() => { this.prepareInterstitial(); }, 2000);
+            
+            return true;
+        } catch (e) {
+            console.warn("AdMob Interstitial show error:", e);
+            // Ako nije spremna, probaj da je pripremiš za sledeći put
+            this.prepareInterstitial(); 
+            return false;
+        }
+    }
     
     // --- SIMULACIJA ---
     createSimulationOverlay() {

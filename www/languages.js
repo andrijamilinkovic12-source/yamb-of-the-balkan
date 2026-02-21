@@ -1,4 +1,4 @@
-// languages.js - Centralizovani prevodi (Ažurirano za Highscore Filtere)
+// languages.js - Centralizovani prevodi (Ažurirano za Highscore Filtere i Global Chat)
 
 const TRANSLATIONS = {
     sr: {
@@ -76,9 +76,9 @@ const TRANSLATIONS = {
         // --- TOP LISTA ---
         "hs_local": "LOKALNA",
         "hs_global": "GLOBALNA 🌍",
-        "hs_weekly": "NEDELJA",   // <-- NOVO
-        "hs_monthly": "MESEC",    // <-- NOVO
-        "hs_all_time": "SVE",     // <-- NOVO
+        "hs_weekly": "NEDELJA",   
+        "hs_monthly": "MESEC",    
+        "hs_all_time": "SVE",     
         "hs_player": "IGRAČ",
         "hs_score": "SKOR",
         "hs_loading": "UČITAVANJE...",
@@ -102,6 +102,9 @@ const TRANSLATIONS = {
         "chat_you": "Ti",
         "chat_opponent": "Protivnik",
         "lbl_opponent_parens": "(Protivnik)",
+        "chat_rules_msg": "DOBRODOŠLI U GLOBALNI CHAT!\n\nStrogo je zabranjeno vređanje na rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i upotreba vulgarnosti.\n\nKršenje ovih pravila rezultiraće trajnim isključenjem sa servera.\n\nDa li se slažete sa pravilima?",
+        "global_chat_welcome": "Dobrodošli u Globalni Chat! Budite pristojni.",
+        "global_chat_placeholder": "Napiši poruku...",
         
         // KOLONE (SR)
         "col_down": "↓",
@@ -268,9 +271,9 @@ const TRANSLATIONS = {
         // --- HIGH SCORES ---
         "hs_local": "LOCAL",
         "hs_global": "GLOBAL 🌍",
-        "hs_weekly": "WEEKLY",      // <-- NOVO
-        "hs_monthly": "MONTHLY",    // <-- NOVO
-        "hs_all_time": "ALL TIME",  // <-- NOVO
+        "hs_weekly": "WEEKLY",      
+        "hs_monthly": "MONTHLY",    
+        "hs_all_time": "ALL TIME",  
         "hs_player": "PLAYER",
         "hs_score": "SCORE",
         "hs_loading": "LOADING...",
@@ -294,6 +297,9 @@ const TRANSLATIONS = {
         "chat_you": "You",
         "chat_opponent": "Opponent",
         "lbl_opponent_parens": "(Opponent)",
+        "chat_rules_msg": "WELCOME TO GLOBAL CHAT!\n\nInsults based on race, religion, nationality, or gender, as well as vulgarity, are strictly prohibited.\n\nViolating these rules will result in a permanent ban.\n\nDo you agree to the rules?",
+        "global_chat_welcome": "Welcome to Global Chat! Be polite.",
+        "global_chat_placeholder": "Type a message...",
 
         // EN KOLONE
         "col_down": "↓",
@@ -409,6 +415,12 @@ function applyTranslations() {
     const nameInput = document.getElementById('setting-name');
     if (nameInput) {
         nameInput.placeholder = (localStorage.getItem('yamb_lang') === 'en') ? "Player Name" : "Ime Igrača";
+    }
+
+    // --- DODATO ZA GLOBAL CHAT PLACEHOLDER ---
+    const globalChatInput = document.getElementById('global-chat-input');
+    if (globalChatInput) {
+        globalChatInput.placeholder = t('global_chat_placeholder');
     }
 }
 

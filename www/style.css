@@ -1402,25 +1402,75 @@ body.winter-theme .game-header .btn-secondary {
     line-height: 1;
 }
 
-/* Akcije */
+/* Akcije i ulepšano STOP dugme */
 .daily-actions {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
+
 .daily-btn-main {
-    padding: 20px;
-    font-size: 1.5rem;
-    letter-spacing: 3px;
+    padding: 18px;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 4px;
     width: 100%;
+    border-radius: 50px !important; /* Sinhronizovano sa zaobljenim dugmićima */
+    text-transform: uppercase;
     animation: pulseStop 1.5s infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.1s;
 }
 
+/* --- TEMA 1: DARK (Zlatni sjaj i dubina) --- */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .daily-btn-main {
+    box-shadow: 0 8px 0 #8a784d, 0 15px 25px rgba(224, 201, 149, 0.4) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme) .daily-btn-main:active {
+    transform: translateY(8px) scale(0.98);
+    box-shadow: 0 0 0 #8a784d, inset 0 5px 10px rgba(0,0,0,0.5) !important;
+    animation: none;
+}
+
+/* --- TEMA 2: LIGHT (Žuti sjaj) --- */
+body.light-theme .daily-btn-main {
+    box-shadow: 0 8px 0 #c6a700, 0 15px 25px rgba(255, 215, 0, 0.4) !important;
+}
+body.light-theme .daily-btn-main:active {
+    transform: translateY(8px) scale(0.98);
+    box-shadow: 0 0 0 #c6a700, inset 0 5px 10px rgba(62, 39, 35, 0.2) !important;
+    animation: none;
+}
+
+/* --- TEMA 3: MEDIUM (Valentines - Bordo dubina) --- */
+body.medium-theme .daily-btn-main {
+    box-shadow: 0 8px 0 #d84315, 0 15px 25px rgba(255, 204, 188, 0.4) !important;
+}
+body.medium-theme .daily-btn-main:active {
+    transform: translateY(8px) scale(0.98);
+    box-shadow: 0 0 0 #d84315, inset 0 5px 10px rgba(0,0,0,0.3) !important;
+    animation: none;
+}
+
+/* --- TEMA 4: WINTER (Jarko crvena/ledena dubina) --- */
+body.winter-theme .daily-btn-main {
+    box-shadow: 0 8px 0 #8e0000, 0 15px 25px rgba(255, 77, 77, 0.5) !important;
+}
+body.winter-theme .daily-btn-main:active {
+    transform: translateY(8px) scale(0.98);
+    box-shadow: 0 0 0 #8e0000, inset 0 5px 10px rgba(0,0,0,0.4) !important;
+    animation: none;
+}
+
+/* Poboljšana animacija pulsiranja */
 @keyframes pulseStop {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); filter: brightness(1.2); }
-    100% { transform: scale(1); }
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.03); filter: brightness(1.15); }
+    100% { transform: scale(1); filter: brightness(1); }
 }
 
 /* =========================================================
