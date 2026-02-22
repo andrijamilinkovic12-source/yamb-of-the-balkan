@@ -245,12 +245,10 @@ class YambApp {
         this.hasSvetiIlija = false;
         this.hasProphet = false;
 
-        // --- ADMOB INICIJALIZACIJA (SIGURNIJE) ---
-        this.adMob = new AdMobController();
+        // --- ADMOB INICIJALIZACIJA (POPRAVLJENO) ---
+        // Sada koristimo istu instancu kreiranu u managers.js koja kontroliše i simulacije!
+        this.adMob = window.adMobGlobal; 
         this.pendingScore = 0; 
-        setTimeout(() => {
-            this.adMob.initialize();
-        }, 2000);
 
         const dateEl = document.getElementById('live-date');
         if (dateEl) {
@@ -339,7 +337,7 @@ class YambApp {
         else if (theme === 'winter') document.body.classList.add('winter-theme');
     }
 
-    // --- KLJUČNA FUNKCIJA ZA SOCKETE ---
+    // --- KLJUČNA FUNKCIJA ZA SOCKETE (POPRAVLJENA) ---
     initSocketConnection() {
         if (!this.socket || !this.socket.connected) {
             try {
@@ -349,7 +347,7 @@ class YambApp {
                     console.log("🔌 Povezujem se na:", connectionUrl);
 
                     this.socket = io(connectionUrl, { 
-                        transports: ['websocket'],
+                        transports: ['polling', 'websocket'], // VRAĆENO NA POLLING RADI RENDER PLATFORME
                         reconnection: true,             
                         reconnectionAttempts: 20,       
                         reconnectionDelay: 1000,        

@@ -841,7 +841,11 @@ class AdMobController {
                     console.error("AdMob Init Error:", e);
                 }
             } else {
-                if (attempts >= 20) clearInterval(initInterval);
+                if (attempts >= 20) {
+                    clearInterval(initInterval);
+                    console.log("⚠️ AdMob Plugin nije nađen. Palim simulaciju reklama.");
+                    this.updateUI(true); // <-- Otključava simulaciju u browseru!
+                }
             }
         }, 500);
         
