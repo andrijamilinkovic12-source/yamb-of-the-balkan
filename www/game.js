@@ -10,7 +10,7 @@ const gt = (key) => {
     return key; 
 };
 
-/* --- FILTER VULGARNOSTI (KLIJENT STRANA) --- */
+/* --- FILTER VULGARNOSTI (KLIJENT STRANA - koristi se samo za privatni/lokalni chat) --- */
 const zabranjeneReci = [
     "idiot", "budala", "kreten", "glupan", "majmun", "debil", "stoka",
     "kurv", "jeb", "pizd", "kurac", "sranj", "govn", "pick", "pedere", "pederu",
@@ -245,8 +245,7 @@ class YambApp {
         this.hasSvetiIlija = false;
         this.hasProphet = false;
 
-        // --- ADMOB INICIJALIZACIJA (POPRAVLJENO) ---
-        // Sada koristimo istu instancu kreiranu u managers.js koja kontroliše i simulacije!
+        // --- ADMOB INICIJALIZACIJA ---
         this.adMob = window.adMobGlobal; 
         this.pendingScore = 0; 
 
@@ -337,7 +336,7 @@ class YambApp {
         else if (theme === 'winter') document.body.classList.add('winter-theme');
     }
 
-    // --- KLJUČNA FUNKCIJA ZA SOCKETE (POPRAVLJENA) ---
+    // --- KLJUČNA FUNKCIJA ZA SOCKETE ---
     initSocketConnection() {
         if (!this.socket || !this.socket.connected) {
             try {
@@ -347,7 +346,7 @@ class YambApp {
                     console.log("🔌 Povezujem se na:", connectionUrl);
 
                     this.socket = io(connectionUrl, { 
-                        transports: ['polling', 'websocket'], // VRAĆENO NA POLLING RADI RENDER PLATFORME
+                        transports: ['polling', 'websocket'],
                         reconnection: true,             
                         reconnectionAttempts: 20,       
                         reconnectionDelay: 1000,        
@@ -364,8 +363,11 @@ class YambApp {
                         if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
                     });
 
+                    // --- OSLUŠKIVANJE GLOBALNIH PORUKA SA SERVERA ---
                     this.socket.on('global_chat_msg', (data) => {
-                        this.appendGlobalChatMessage(data.sender, data.msg, "msg-incoming", data.senderId);
+                        // Proveravamo da li smo mi poslali ovu poruku da bismo joj dodelili pravu boju (outgoing/incoming)
+                        const isMe = (this.socket && data.senderId === this.socket.id);
+                        this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
                     });
 
                     // --- OSLUŠKIVANJE DUEL IZAZOVA ---
@@ -556,7 +558,7 @@ class YambApp {
         let text = input.value.trim(); 
         if (!text) return; 
         
-        text = cenzurisiPoruku(text);
+        text = cenzurisiPoruku(text); // Lokalni chat se i dalje cenzuriše na klijentu
 
         this.appendChatMessage(gt('chat_you'), text, "msg-outgoing"); 
         input.value = ""; 
@@ -623,17 +625,18 @@ class YambApp {
         }
     }
     
+    // --- SERVER-AUTHORITATIVE GLOBAL CHAT SLANJE ---
     sendGlobalChat() { 
         const input = document.getElementById('global-chat-input'); 
         let text = input.value.trim(); 
         if (!text) return; 
         
-        text = cenzurisiPoruku(text);
-
-        this.appendGlobalChatMessage(this.playerName, text, "msg-outgoing", this.socket ? this.socket.id : null); 
+        // Polje se prazni odmah da korisnik vidi da je pritisnuo send
         input.value = ""; 
         
         if (this.socket && this.socket.connected) { 
+            // Šaljemo originalan (necenzurisan) tekst. 
+            // Server ga cenzuriše i ako je sve ok, vraća svima (uključujući i nama) putem 'global_chat_msg'.
             this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
         } else {
             this.appendGlobalChatMessage(gt('sys_name'), gt('sys_no_conn'), "msg-incoming");
@@ -656,7 +659,7 @@ class YambApp {
         if (btnRematch) {
             btnRematch.disabled = true;
             btnRematch.innerHTML = `<span>⏳ ${gt('hs_loading')}</span>`;
-            btnRematch.style.background = 'linear-gradient(45deg, #FF9800, #F57C00)'; // Narandžasta dok čeka
+            btnRematch.style.background = 'linear-gradient(45deg, #FF9800, #F57C00)';
             btnRematch.style.boxShadow = 'none';
         }
         

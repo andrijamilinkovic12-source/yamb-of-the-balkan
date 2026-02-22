@@ -372,8 +372,10 @@ io.on('connection', (socket) => {
     socket.on('global_chat_msg', (data) => {
         if (!data || !data.msg) return;
         
-        // Ekstrakcija IP adrese korisnika
-        const clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+        // Ekstrakcija IP adrese korisnika (Dodat split zbog sigurnijeg hvatanja iza proxija)
+        let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+        if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
+
         const now = Date.now();
 
         // 1. Provera da li je korisnik trenutno pod banom
@@ -391,30 +393,26 @@ io.on('connection', (socket) => {
 
         // 2. Ako se poruka promenila (sadrži ***), znači da je psovao
         if (safeMsg !== originalMsg) {
-            // Inicijalizacija korisnika u sistemu ako ga nema
             if (!chatBans[clientIp]) {
                 chatBans[clientIp] = { strikes: 0, banUntil: 0 };
             }
+            chatBans[clientIp].strikes += 1; 
             
-            chatBans[clientIp].strikes += 1; // Povećaj broj prekršaja
-            
-            // Formula za kaznu: 1h, 2h, 4h, 8h... (u milisekundama)
             const satiBana = Math.pow(2, chatBans[clientIp].strikes - 1);
             const banTrajanjeMs = satiBana * 60 * 60 * 1000;
-            
             chatBans[clientIp].banUntil = now + banTrajanjeMs;
 
             console.log(`🔨 MUTE BAN: IP ${clientIp} je mutiran na ${satiBana}h. (Prekršaj br: ${chatBans[clientIp].strikes})`);
             
-            // Šaljemo obaveštenje igraču i ODBACUJEMO poruku
             socket.emit('error_msg', `Chat vam je blokiran na ${satiBana} sat(i) zbog korišćenja zabranjenih reči.`);
             return; 
         }
 
-        // Ako je poruka potpuno čista, šaljemo je svima (SADA SA SENDER ID ZA DUEL)
-        socket.broadcast.emit('global_chat_msg', {
+        // KORISTIMO io.emit UMESTO socket.broadcast.emit
+        // Sada i pošiljalac čeka odobrenje servera da bi video svoju poruku
+        io.emit('global_chat_msg', {
             sender: safeSender,
-            senderId: socket.id, // <-- DODATO ZA DUEL
+            senderId: socket.id, 
             msg: safeMsg
         });
         
@@ -426,10 +424,18 @@ io.on('connection', (socket) => {
     // ==================================================================
     socket.on('send_challenge', (data) => {
         const { targetId, challengerName } = data;
-        io.to(targetId).emit('challenge_received', {
-            challengerId: socket.id,
-            challengerName: challengerName
-        });
+        const targetSocket = io.sockets.sockets.get(targetId);
+        
+        // PROVERA: Da li je igrač kom šaljemo izazov uopšte tu?
+        if (targetSocket) {
+            io.to(targetId).emit('challenge_received', {
+                challengerId: socket.id,
+                challengerName: challengerName
+            });
+        } else {
+            // Ako je izašao, obavesti izazivača
+            socket.emit('error_msg', 'Igrač više nije na serveru.');
+        }
     });
 
     socket.on('challenge_response', (data) => {
@@ -531,8 +537,6 @@ setInterval(() => {
     const now = Date.now();
     let obrisano = 0;
     for (const ip in chatBans) {
-        // Ako je ban istekao pre više od 24 sata (praštamo prekršaje nakon nekog vremena)
-        // Ako želiš da pamtiš prekršaje zauvek dok se server ne restartuje, obriši ovaj if blok.
         if (now > chatBans[ip].banUntil + (24 * 60 * 60 * 1000)) { 
             delete chatBans[ip];
             obrisano++;
@@ -541,7 +545,7 @@ setInterval(() => {
     if (obrisano > 0) {
         console.log(`🧹 Očišćeno ${obrisano} isteklih banova iz memorije.`);
     }
-}, 60 * 60 * 1000); // Pokreće se svakih sat vremena
+}, 60 * 60 * 1000); 
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
