@@ -568,6 +568,11 @@ class YambApp {
     async openGlobalChat() {
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
         
+        // Učitavamo reklamu u pozadini dok korisnik otvara chat
+        if (this.adMob && this.adMob.loadInterstitialAd) {
+            this.adMob.loadInterstitialAd();
+        }
+
         if (!accepted) {
             const isConfirmed = await this.modal.confirm(gt('chat_rules_msg'));
             
@@ -585,6 +590,11 @@ class YambApp {
     async closeGlobalChat() {
         const overlay = document.getElementById('global-chat-overlay');
         if (overlay) overlay.style.display = 'none';
+
+        // Prikazujemo reklamu kada korisnik zatvori chat
+        if (this.adMob && this.adMob.showInterstitial) {
+            await this.adMob.showInterstitial();
+        }
     }
 
     appendGlobalChatMessage(sender, text, type, senderId = null) { 
