@@ -570,9 +570,9 @@ class YambApp {
     async openGlobalChat() {
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
         
-        // Učitavamo reklamu u pozadini dok korisnik otvara chat
-        if (this.adMob && this.adMob.loadInterstitialAd) {
-            this.adMob.loadInterstitialAd();
+        // Prikazujemo reklamu PRE nego što se chat otvori (umesto dosadašnjeg load-a)
+        if (this.adMob && this.adMob.showInterstitial) {
+            await this.adMob.showInterstitial();
         }
 
         if (!accepted) {
