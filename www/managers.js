@@ -1021,23 +1021,32 @@ class AdMobController {
         }
     }
 
-    async showInterstitial() {
-        if (!window.Capacitor || !window.Capacitor.Plugins.AdMob) return false;
-        
-        if (this.isInterstitialReady) {
-            try {
-                await window.Capacitor.Plugins.AdMob.showInterstitial();
-                return true;
-            } catch (e) {
-                console.warn("AdMob Interstitial show error:", e);
-                this.isInterstitialReady = false;
-                return false;
+    showInterstitial() {
+        return new Promise(async (resolve) => {
+            // 1. Ako nismo na pravom telefonu (browser), puštamo simulaciju
+            if (!window.Capacitor || !window.Capacitor.Plugins.AdMob) {
+                console.log("🖥️ BROWSER DETEKTOVAN: Prikazujem simulaciju Interstitial reklame.");
+                this.runSimulation(resolve);
+                return;
             }
-        } else {
-            console.log("⚠️ Interstitial nije bio spreman u trenutku poziva.");
-            this.loadInterstitialAd();
-            return false;
-        }
+            
+            // 2. Ako smo na telefonu i reklama je učitana
+            if (this.isInterstitialReady) {
+                try {
+                    await window.Capacitor.Plugins.AdMob.showInterstitial();
+                    resolve(true);
+                } catch (e) {
+                    console.warn("❌ AdMob Interstitial show error:", e);
+                    this.isInterstitialReady = false;
+                    this.loadInterstitialAd(); // Učitaj novu za sledeći put
+                    resolve(false);
+                }
+            } else {
+                console.log("⚠️ Interstitial nije bio spreman u trenutku poziva. Forsiram učitavanje...");
+                this.loadInterstitialAd();
+                resolve(false);
+            }
+        });
     }
     
     // --- SIMULACIJA ZA BROWSER ---
