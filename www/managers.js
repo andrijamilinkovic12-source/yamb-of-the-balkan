@@ -921,10 +921,10 @@ class AdMobController {
         }
     }
 
-    triggerHighPriorityLoad(type) {
-        if (!this.ads[type].isLoading && !this.ads[type].isReady) {
+    triggerHighPriorityLoad(type = 'rewarded') {
+        if (!this.ads[type] || (!this.ads[type].isLoading && !this.ads[type].isReady)) {
             console.log(`🚀 ADMOB (${type}): Forsiram prioritetno osvežavanje!`);
-            this.ads[type].retryCount = 0; // Resetujemo delay za forsirani zahtev
+            if (this.ads[type]) this.ads[type].retryCount = 0; // Resetujemo delay za forsirani zahtev
             this.preloadAd(type);
         }
     }

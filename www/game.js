@@ -184,7 +184,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v7.2 - ONLINE FIXES, TRANSLATIONS & REMATCH ADDED");
+        console.log("YambApp v7.3 - GLOBAL CHAT FIXES APPLIED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -336,89 +336,95 @@ class YambApp {
         else if (theme === 'winter') document.body.classList.add('winter-theme');
     }
 
-    // --- KLJUČNA FUNKCIJA ZA SOCKETE ---
+    // --- KLJUČNA FUNKCIJA ZA SOCKETE (SADA SA PAMETNIM REKONEKTOVANJEM) ---
     initSocketConnection() {
-        if (!this.socket || !this.socket.connected) {
-            try {
-                if (typeof io !== 'undefined') {
-                    const connectionUrl = (typeof SERVER_URL !== 'undefined') ? SERVER_URL : window.location.origin;
-                    
-                    console.log("🔌 Povezujem se na:", connectionUrl);
-
-                    this.socket = io(connectionUrl, { 
-                        transports: ['polling', 'websocket'],
-                        reconnection: true,             
-                        reconnectionAttempts: 20,       
-                        reconnectionDelay: 1000,        
-                        timeout: 20000,                 
-                        autoConnect: true
-                    });
-                    
-                    this.socket.on('connect', () => {
-                        console.log("✅ Socket povezan! ID:", this.socket.id);
-                        if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
-                        if (this.topListManager) this.topListManager.syncOfflineScores();
-                        
-                        const params = new URLSearchParams(window.location.search);
-                        if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
-                    });
-
-                    // --- OSLUŠKIVANJE GLOBALNIH PORUKA SA SERVERA ---
-                    this.socket.on('global_chat_msg', (data) => {
-                        // Proveravamo da li smo mi poslali ovu poruku da bismo joj dodelili pravu boju (outgoing/incoming)
-                        const isMe = (this.socket && data.senderId === this.socket.id);
-                        this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
-                    });
-
-                    // --- OSLUŠKIVANJE DUEL IZAZOVA ---
-                    this.socket.on('challenge_received', async (data) => {
-                        const { challengerId, challengerName } = data;
-                        const accepted = await this.modal.confirm(gt('duel_incoming').replace('{0}', challengerName));
-                        this.socket.emit('challenge_response', {
-                            challengerId,
-                            accepted,
-                            targetName: this.playerName,
-                            challengerName: challengerName
-                        });
-                    });
-
-                    this.socket.on('challenge_declined', (data) => {
-                        this.modal.alert(gt('duel_declined').replace('{0}', data.targetName), gt('modal_title_info'));
-                    });
-
-                    this.socket.on('duel_start', (data) => {
-                        this.closeGlobalChat(); 
-                        this.joinPrivateGame(this.playerName, data.roomId);
-                    });
-
-                    this.socket.on('users_count', (count) => {
-                        this.onlineUsersCount = count;
-                        this.updateOnlineCounterUI();
-                    });
-
-                    this.socket.on('global_highscores_data', (data) => { 
-                        if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list'); 
-                    });
-                    
-                    // SLUŠANJE GREŠAKA (Mute/Ban) - Prevod
-                    this.socket.on('error_msg', (msgKey) => {
-                        let finalMsg = msgKey;
-                        if (typeof t === 'function' && t(msgKey) !== msgKey) {
-                            finalMsg = gt(msgKey);
-                        }
-                        if (this.modal) {
-                            this.modal.alert(finalMsg, gt('modal_title_info'));
-                        } else {
-                            alert(finalMsg);
-                        }
-                    });
-
-                    this.socket.on('connect_error', (err) => {
-                        console.warn("Socket connection error:", err);
-                    });
-                }
-            } catch (e) { console.error("Greška pri inicijalizaciji socketa:", e); }
+        // FIX: Ako socket objekat već postoji, ali je diskonektovan, samo ga zakači ponovo!
+        if (this.socket) {
+            if (!this.socket.connected) {
+                console.log("♻️ Osvežavam prekinutu socket konekciju...");
+                this.socket.connect();
+            }
+            return; // Prekidamo ovde! Na ovaj način sprečavamo DUPLIRANJE događaja u chatu!
         }
+
+        // Ako se socket instancira prvi put
+        try {
+            if (typeof io !== 'undefined') {
+                const connectionUrl = (typeof SERVER_URL !== 'undefined') ? SERVER_URL : window.location.origin;
+                
+                console.log("🔌 Povezujem se prvi put na:", connectionUrl);
+
+                this.socket = io(connectionUrl, { 
+                    transports: ['polling', 'websocket'],
+                    reconnection: true,             
+                    reconnectionAttempts: 20,       
+                    reconnectionDelay: 1000,        
+                    timeout: 20000,                 
+                    autoConnect: true
+                });
+                
+                this.socket.on('connect', () => {
+                    console.log("✅ Socket povezan! ID:", this.socket.id);
+                    if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
+                    if (this.topListManager) this.topListManager.syncOfflineScores();
+                    
+                    const params = new URLSearchParams(window.location.search);
+                    if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
+                });
+
+                // --- OSLUŠKIVANJE GLOBALNIH PORUKA SA SERVERA ---
+                this.socket.on('global_chat_msg', (data) => {
+                    const isMe = (this.socket && data.senderId === this.socket.id);
+                    this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
+                });
+
+                // --- OSLUŠKIVANJE DUEL IZAZOVA ---
+                this.socket.on('challenge_received', async (data) => {
+                    const { challengerId, challengerName } = data;
+                    const accepted = await this.modal.confirm(gt('duel_incoming').replace('{0}', challengerName));
+                    this.socket.emit('challenge_response', {
+                        challengerId,
+                        accepted,
+                        targetName: this.playerName,
+                        challengerName: challengerName
+                    });
+                });
+
+                this.socket.on('challenge_declined', (data) => {
+                    this.modal.alert(gt('duel_declined').replace('{0}', data.targetName), gt('modal_title_info'));
+                });
+
+                this.socket.on('duel_start', (data) => {
+                    this.closeGlobalChat(); 
+                    this.joinPrivateGame(this.playerName, data.roomId);
+                });
+
+                this.socket.on('users_count', (count) => {
+                    this.onlineUsersCount = count;
+                    this.updateOnlineCounterUI();
+                });
+
+                this.socket.on('global_highscores_data', (data) => { 
+                    if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list'); 
+                });
+                
+                this.socket.on('error_msg', (msgKey) => {
+                    let finalMsg = msgKey;
+                    if (typeof t === 'function' && t(msgKey) !== msgKey) {
+                        finalMsg = gt(msgKey);
+                    }
+                    if (this.modal) {
+                        this.modal.alert(finalMsg, gt('modal_title_info'));
+                    } else {
+                        alert(finalMsg);
+                    }
+                });
+
+                this.socket.on('connect_error', (err) => {
+                    console.warn("Socket connection error:", err);
+                });
+            }
+        } catch (e) { console.error("Greška pri inicijalizaciji socketa:", e); }
     }
 
     updateOnlineCounterUI() {
@@ -558,7 +564,7 @@ class YambApp {
         let text = input.value.trim(); 
         if (!text) return; 
         
-        text = cenzurisiPoruku(text); // Lokalni chat se i dalje cenzuriše na klijentu
+        text = cenzurisiPoruku(text); 
 
         this.appendChatMessage(gt('chat_you'), text, "msg-outgoing"); 
         input.value = ""; 
@@ -568,9 +574,10 @@ class YambApp {
     }
 
     async openGlobalChat() {
+        this.initSocketConnection(); // FIX: Budi socket ako je bio ugašen
+
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
         
-        // PRAVI POPRAVLJENI KOD - PRIKAZUJE (showInterstitial), A NE SAMO UČITAVA (load)
         if (this.adMob && this.adMob.showInterstitial) {
             await this.adMob.showInterstitial();
         }
@@ -593,7 +600,6 @@ class YambApp {
         const overlay = document.getElementById('global-chat-overlay');
         if (overlay) overlay.style.display = 'none';
 
-        // Prikazujemo reklamu kada korisnik zatvori chat
         if (this.adMob && this.adMob.showInterstitial) {
             await this.adMob.showInterstitial();
         }
@@ -625,26 +631,32 @@ class YambApp {
         }
     }
     
-    // --- SERVER-AUTHORITATIVE GLOBAL CHAT SLANJE ---
     sendGlobalChat() { 
         const input = document.getElementById('global-chat-input'); 
         let text = input.value.trim(); 
         if (!text) return; 
         
-        // Polje se prazni odmah da korisnik vidi da je pritisnuo send
         input.value = ""; 
         
+        // FIX: Ako se konekcija ugasila, probaj da je obnoviš u letu
         if (this.socket && this.socket.connected) { 
-            // Šaljemo originalan (necenzurisan) tekst. 
-            // Server ga cenzuriše i ako je sve ok, vraća svima (uključujući i nama) putem 'global_chat_msg'.
             this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
         } else {
-            this.appendGlobalChatMessage(gt('sys_name'), gt('sys_no_conn'), "msg-incoming");
+            this.initSocketConnection();
+            setTimeout(() => {
+                if (this.socket && this.socket.connected) {
+                    this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
+                } else {
+                    this.appendGlobalChatMessage(gt('sys_name') || "Sistem", gt('sys_no_conn') || "Niste povezani na server. Pokušajte ponovo.", "msg-incoming");
+                }
+            }, 800);
         }
     }
 
     async challengePlayer(targetId, targetName) {
+        this.initSocketConnection(); // FIX: Uvek osiguraj da je socket tu
         if (!this.socket || !this.socket.connected) return;
+        
         const isConfirmed = await this.modal.confirm(gt('duel_ask').replace('{0}', targetName));
         if(isConfirmed) {
             this.socket.emit('send_challenge', { targetId, challengerName: this.playerName });
@@ -772,6 +784,7 @@ class YambApp {
     
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
+            // Ostavljamo disconnect zato što izlazimo iz partije i sobe.
             if(this.socket) this.socket.disconnect(); 
             this.showMainMenu(); 
         } 
@@ -841,7 +854,6 @@ class YambApp {
         this.socket.off('chat_msg');
         this.socket.off('opponent_left');
         
-        // Brisanje starih listenerea za revanš pre dodavanja novih
         this.socket.off('rematch_requested');
         this.socket.off('rematch_started');
 
@@ -943,19 +955,8 @@ class YambApp {
         }); 
     }
     
-    async shareInvite() { 
-        const link = document.getElementById('invite-link').value; 
-        const shareData = { title: 'Yamb of the Balkan', text: gt('invite_share_msg') + ' ' + link, url: link };
-        if (navigator.share) { try { await navigator.share(shareData); } catch (err) { if (err.name !== 'AbortError') this.fallbackCopy(); } } 
-        else { this.fallbackCopy(); } 
-    }
-
-    async fallbackCopy() {
-        const input = document.getElementById('invite-link'); input.select(); document.execCommand('copy'); 
-        if (this.modal) await this.modal.alert(gt('alert_copied'), gt('alert_copied_title')); else alert(gt('alert_copied'));
-    }
-    
     cancelOnline() { 
+        // Ostavljamo disconnect zato što izlazimo iz pretrage.
         if(this.socket) this.socket.disconnect(); 
         this.showMainMenu(); 
         window.history.pushState({}, document.title, window.location.pathname); 
