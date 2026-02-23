@@ -570,7 +570,7 @@ class YambApp {
     async openGlobalChat() {
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
         
-        // Prikazuje Interstitial pre otvaranja chata
+        // PRAVI POPRAVLJENI KOD - PRIKAZUJE (showInterstitial), A NE SAMO UČITAVA (load)
         if (this.adMob && this.adMob.showInterstitial) {
             await this.adMob.showInterstitial();
         }
@@ -593,7 +593,7 @@ class YambApp {
         const overlay = document.getElementById('global-chat-overlay');
         if (overlay) overlay.style.display = 'none';
 
-        // Prikazuje Interstitial kada se chat zatvori
+        // Prikazujemo reklamu kada korisnik zatvori chat
         if (this.adMob && this.adMob.showInterstitial) {
             await this.adMob.showInterstitial();
         }
