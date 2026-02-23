@@ -527,7 +527,7 @@ class YambApp {
         const onClick = (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); return false; } };
         btn.addEventListener('touchstart', onTouchStart, {passive: false});
         btn.addEventListener('touchmove', onTouchMove, {passive: false});
-        btn.addEventListener('touchend', onTouchEnd);
+        btn.addEventListener('touchmove', onTouchEnd);
         btn.addEventListener('click', onClick, true); 
     }
 
@@ -570,7 +570,7 @@ class YambApp {
     async openGlobalChat() {
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
         
-        // Prikazujemo reklamu PRE nego što se chat otvori (umesto dosadašnjeg load-a)
+        // Prikazuje Interstitial pre otvaranja chata
         if (this.adMob && this.adMob.showInterstitial) {
             await this.adMob.showInterstitial();
         }
@@ -593,7 +593,7 @@ class YambApp {
         const overlay = document.getElementById('global-chat-overlay');
         if (overlay) overlay.style.display = 'none';
 
-        // Prikazujemo reklamu kada korisnik zatvori chat
+        // Prikazuje Interstitial kada se chat zatvori
         if (this.adMob && this.adMob.showInterstitial) {
             await this.adMob.showInterstitial();
         }
