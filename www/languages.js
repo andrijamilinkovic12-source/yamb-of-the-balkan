@@ -151,6 +151,10 @@ const TRANSLATIONS = {
         "go_rematch": "🔄 REVANŠ",
         "msg_reward_doubled": "Uspešno ste duplirali nagradu!\nUkupno osvojeno:",
         
+        // Dodato za ispravku upisa
+        "undo_confirm": "Želite li da ispravite zadnji upis gledanjem reklame?",
+        "undo_title": "Ispravi zadnji upis",
+        
         "alert_roll_first": "Prvo baci kockice!",
         "alert_filled": "Polje je već popunjeno!",
         "alert_announce_col": "U ovoj koloni se mora najaviti polje!",
@@ -361,6 +365,10 @@ const TRANSLATIONS = {
         "go_rematch": "🔄 REMATCH",
         "msg_reward_doubled": "Reward successfully doubled!\nTotal won:",
 
+        // Dodato za ispravku upisa
+        "undo_confirm": "Do you want to correct the last move by watching an ad?",
+        "undo_title": "Undo last move",
+
         "alert_roll_first": "Roll the dice first!",
         "alert_filled": "Field is already filled!",
         "alert_announce_col": "You must announce a field in this column!",
@@ -451,6 +459,12 @@ function applyTranslations() {
     const globalChatInput = document.getElementById('global-chat-input');
     if (globalChatInput) {
         globalChatInput.placeholder = t('global_chat_placeholder');
+    }
+
+    // --- DODATO ZA DUGME ZA VRAĆANJE POTEZA (TOOLTIP) ---
+    const btnUndo = document.getElementById('btn-undo-move');
+    if (btnUndo) {
+        btnUndo.title = t('undo_title');
     }
 }
 

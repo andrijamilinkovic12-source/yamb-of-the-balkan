@@ -105,7 +105,8 @@
             <span style="cursor: pointer; opacity: 0.8; color: var(--text-main)" onclick="app.quitToMenu()">✖ <span data-lang="modal_btn_cancel">MENI</span></span>
             <span style="color:var(--gold-main); font-weight:700;">YAMB PRO</span>
             <div style="display:flex; gap:10px;">
-                <button class="btn-secondary" style="border-radius:50%; width:30px; height:30px; padding:0;" onclick="app.toggleTheme()">🎨</button>
+                <button id="btn-undo-move" class="btn-secondary" style="border-radius:50%; display:none; align-items:center; justify-content:center; padding:0; font-size:1.2rem;" onclick="app.undoLastMove()" title="Ispravi zadnji upis">↩️</button>
+                <button class="btn-secondary" style="border-radius:50%; padding:0;" onclick="app.toggleTheme()">🎨</button>
             </div>
         </div>
         <div class="game-content">

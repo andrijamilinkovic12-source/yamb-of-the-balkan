@@ -854,7 +854,25 @@ class AdMobController {
         // --- REWARDED LISTENERS ---
         await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
         await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
-        await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => this.handleAdDismissed('rewarded'));
+        
+        // 🔥 NOVO: Slušamo kada korisnik ODGLEDA reklamu i dobije nagradu
+        await this.adMobPlugin.addListener('rewardedVideoAdReward', (reward) => {
+            console.log("✅ ADMOB: Korisnik je uspešno odgledao reklamu i dobio nagradu!", reward);
+            if (this.rewardResolve) {
+                this.rewardResolve(true); // Šaljemo true nazad u YambApp i ShopManager
+                this.rewardResolve = null;
+            }
+        });
+
+        await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => {
+            console.log("🏁 ADMOB: Reward zatvoren.");
+            if (this.rewardResolve) {
+                // Ako je korisnik ugasio reklamu pre vremena (nije dobio reward)
+                this.rewardResolve(false); 
+                this.rewardResolve = null;
+            }
+            this.handleAdDismissed('rewarded');
+        });
 
         // --- INTERSTITIAL LISTENERS ---
         await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
@@ -968,10 +986,12 @@ class AdMobController {
 
             if (this.ads.rewarded.isReady) {
                 try {
+                    // 🔥 Ne vraćamo odmah resolve(true)! Čuvamo referencu da je pozove listener.
+                    this.rewardResolve = resolve;
                     await this.adMobPlugin.showRewardVideoAd();
-                    resolve(true);
                 } catch (e) {
-                    console.error("Greška pri prikazu (Reward):", e);
+                    console.error("❌ Greška pri prikazu (Reward):", e);
+                    this.rewardResolve = null;
                     this.handleAdFailed('rewarded', e);
                     resolve(false);
                 }

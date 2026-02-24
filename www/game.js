@@ -184,7 +184,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v7.3 - GLOBAL CHAT FIXES APPLIED");
+        console.log("YambApp v7.5 - UNDO SUPPORT APPLIED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -212,6 +212,7 @@ class YambApp {
         this.chatOpen = false; 
         this.unreadMsgs = 0;
         this.lastGameType = 'normal';
+        this.lastMoveSnapshot = null; // Dodato za pamćenje stanja za "Undo"
         
         this.socket = null; 
         this.onlineMode = false; 
@@ -338,16 +339,14 @@ class YambApp {
 
     // --- KLJUČNA FUNKCIJA ZA SOCKETE (SADA SA PAMETNIM REKONEKTOVANJEM) ---
     initSocketConnection() {
-        // FIX: Ako socket objekat već postoji, ali je diskonektovan, samo ga zakači ponovo!
         if (this.socket) {
             if (!this.socket.connected) {
                 console.log("♻️ Osvežavam prekinutu socket konekciju...");
                 this.socket.connect();
             }
-            return; // Prekidamo ovde! Na ovaj način sprečavamo DUPLIRANJE događaja u chatu!
+            return; 
         }
 
-        // Ako se socket instancira prvi put
         try {
             if (typeof io !== 'undefined') {
                 const connectionUrl = (typeof SERVER_URL !== 'undefined') ? SERVER_URL : window.location.origin;
@@ -372,13 +371,11 @@ class YambApp {
                     if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
                 });
 
-                // --- OSLUŠKIVANJE GLOBALNIH PORUKA SA SERVERA ---
                 this.socket.on('global_chat_msg', (data) => {
                     const isMe = (this.socket && data.senderId === this.socket.id);
                     this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
                 });
 
-                // --- OSLUŠKIVANJE DUEL IZAZOVA ---
                 this.socket.on('challenge_received', async (data) => {
                     const { challengerId, challengerName } = data;
                     const accepted = await this.modal.confirm(gt('duel_incoming').replace('{0}', challengerName));
@@ -574,7 +571,7 @@ class YambApp {
     }
 
     async openGlobalChat() {
-        this.initSocketConnection(); // FIX: Budi socket ako je bio ugašen
+        this.initSocketConnection();
 
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
         
@@ -638,7 +635,6 @@ class YambApp {
         
         input.value = ""; 
         
-        // FIX: Ako se konekcija ugasila, probaj da je obnoviš u letu
         if (this.socket && this.socket.connected) { 
             this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
         } else {
@@ -654,7 +650,7 @@ class YambApp {
     }
 
     async challengePlayer(targetId, targetName) {
-        this.initSocketConnection(); // FIX: Uvek osiguraj da je socket tu
+        this.initSocketConnection(); 
         if (!this.socket || !this.socket.connected) return;
         
         const isConfirmed = await this.modal.confirm(gt('duel_ask').replace('{0}', targetName));
@@ -784,7 +780,6 @@ class YambApp {
     
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
-            // Ostavljamo disconnect zato što izlazimo iz partije i sobe.
             if(this.socket) this.socket.disconnect(); 
             this.showMainMenu(); 
         } 
@@ -921,7 +916,6 @@ class YambApp {
 
         this.socket.on('chat_msg', (data) => { if (data.msg) this.appendChatMessage(gt('chat_opponent'), data.msg, "msg-incoming"); }); 
         
-        // --- Listeneri za revanš ---
         this.socket.on('rematch_requested', async () => {
             const accepted = await this.modal.confirm(gt('rematch_ask'));
             if (accepted) {
@@ -939,7 +933,6 @@ class YambApp {
             });
         });
 
-        // --- Ažuriran opponent_left ---
         this.socket.on('opponent_left', async () => { 
             const btnRematch = document.getElementById('btn-rematch');
             
@@ -956,7 +949,6 @@ class YambApp {
     }
     
     cancelOnline() { 
-        // Ostavljamo disconnect zato što izlazimo iz pretrage.
         if(this.socket) this.socket.disconnect(); 
         this.showMainMenu(); 
         window.history.pushState({}, document.title, window.location.pathname); 
@@ -993,6 +985,10 @@ class YambApp {
         if (this.onlineMode && this.socket) {
             this.socket.emit('game_session_start');
         }
+
+        this.lastMoveSnapshot = null;
+        const btnUndo = document.getElementById('btn-undo-move');
+        if (btnUndo) btnUndo.style.display = 'none';
 
         this.navigateTo('game-scene'); 
         this.createScoreTables(); 
@@ -1142,6 +1138,8 @@ class YambApp {
         this.updateDiceVisuals(); 
         this.soundMgr.click(); 
         if(this.onlineMode) { this.socket.emit('dice_hold', { roomId: this.roomId, index: i, status: this.zadrzane[i] }); } 
+
+        this.autoSaveGame();
     }
     
     updateDiceVisuals() { 
@@ -1176,6 +1174,10 @@ class YambApp {
     }
     
     async throwDice() { 
+        this.lastMoveSnapshot = null;
+        const btnUndo = document.getElementById('btn-undo-move');
+        if (btnUndo) btnUndo.style.display = 'none';
+
         const btnBacaj = document.getElementById('btn-bacaj'); 
         const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex); 
 
@@ -1227,6 +1229,8 @@ class YambApp {
             } else { 
                 if(btnN) {btnN.disabled = true; btnN.classList.remove('btn-highlight'); }
             }
+
+            this.autoSaveGame();
         }
     }
 
@@ -1263,6 +1267,8 @@ class YambApp {
             
             if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); 
         } 
+
+        this.autoSaveGame();
     }
     
     isValidColumnOrder(row, col, sheet) { 
@@ -1320,6 +1326,22 @@ class YambApp {
         
         if (col === 'Najava') { if (pts > 0) { this.consecutiveNajava++; if (this.consecutiveNajava >= 3) this.hasProphet = true; } else { this.consecutiveNajava = 0; } }
         
+        // BELEŽENJE STANJA PRE UPISA (Samo za lokalnu igru)
+        if (!this.onlineMode) {
+            this.lastMoveSnapshot = {
+                pIdx: pIdx,
+                row: row,
+                col: col,
+                diceVals: [...this.kockiceVals],
+                held: [...this.zadrzane],
+                rollCount: this.brojBacanja,
+                najavljenoPolje: this.najavljenoPolje ? { ...this.najavljenoPolje } : null,
+                najavaAktivna: this.najavaAktivna
+            };
+            const btnUndo = document.getElementById('btn-undo-move');
+            if (btnUndo) btnUndo.style.display = 'flex';
+        }
+
         sheet[col][row] = pts; this.soundMgr.score(); 
 
         if (row === "Yamb" && pts > 0) {
@@ -1364,6 +1386,10 @@ class YambApp {
 
     async handleGameOver() { 
         console.log("--- GAME OVER ---");
+
+        this.lastMoveSnapshot = null;
+        const btnUndo = document.getElementById('btn-undo-move');
+        if (btnUndo) btnUndo.style.display = 'none';
         
         if(window.adMobGlobal) window.adMobGlobal.prepareReward(); 
 
@@ -1449,20 +1475,16 @@ class YambApp {
         const btnDouble = document.querySelector('#btn-ad-double span');
         if(btnDouble) btnDouble.innerText = gt('go_double');
 
-        // --- NOVO: LOGIKA ZA REVANŠ DUGME ---
         const btnRematch = document.getElementById('btn-rematch');
         if (this.onlineMode) {
             if (btnRematch) {
-                // Resetujemo dugme u slučaju da je ostalo od prošle partije
                 btnRematch.style.display = 'flex';
                 btnRematch.disabled = false;
                 btnRematch.innerHTML = `<span data-lang="go_rematch">${gt('go_rematch')}</span>`;
                 btnRematch.style.background = 'linear-gradient(45deg, #4CAF50, #2E7D32)';
             }
-            // Obavesti server da je igra završena (server to već sluša radi logovanja)
             if (this.socket) this.socket.emit('game_over');
         } else {
-            // Ako je solo ili hotseat, sakrij dugme
             if (btnRematch) btnRematch.style.display = 'none';
         }
 
@@ -1476,7 +1498,6 @@ class YambApp {
 
     async watchAdForDouble() { const success = await this.adMob.showRewardVideo(); if (success) { this.claimReward(true); } }
     
-    // --- NOVO: FUNKCIJA ZA KLAJM NAGRADE I INTERSTITIAL REKLAMU ---
     async claimReward(doubled) {
         let finalAmount = this.pendingScore;
         
@@ -1505,14 +1526,11 @@ class YambApp {
         if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
         
         if (doubled) { 
-            // Ako je korisnik udvostručio nagradu, već je pogledao reklamu (Rewarded),
-            // pa NE PRIKAZUJEMO Interstitial reklamu i samo se vraćamo u meni.
             this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount}`, gt('modal_title_reward')).then(() => { 
                 this.effectMgr.stop(); 
                 this.showMainMenu(); 
             }); 
         } else { 
-            // Ako korisnik NIJE gledao Reward, sada puštamo Interstitial (ako je spreman) pre menija.
             if (this.adMob && this.adMob.showInterstitial) {
                 await this.adMob.showInterstitial();
             }
@@ -1558,7 +1576,19 @@ class YambApp {
     
     async autoSaveGame() { 
         if(this.onlineMode) return; 
-        const data = { players: this.players, scores: this.allScores, current: this.currentPlayerIdx, aiMode: false, diff: this.aiDifficulty, date: new Date().toISOString() }; 
+        const data = { 
+            players: this.players, 
+            scores: this.allScores, 
+            current: this.currentPlayerIdx, 
+            kockiceVals: this.kockiceVals,
+            zadrzane: this.zadrzane,
+            brojBacanja: this.brojBacanja,
+            najavaAktivna: this.najavaAktivna,
+            najavljenoPolje: this.najavljenoPolje,
+            aiMode: false, 
+            diff: this.aiDifficulty, 
+            date: new Date().toISOString() 
+        }; 
         if(window.localforage) await localforage.setItem('yamb_saved_game', data); 
     }
     
@@ -1567,16 +1597,143 @@ class YambApp {
             const data = await localforage.getItem('yamb_saved_game'); 
             if (!data) { this.modal.alert(gt('msg_no_saved_game')); return; } 
             KOLONE.forEach(col => { this.players.forEach((_, idx) => { if (data.scores[idx] && !data.scores[idx][col]) { data.scores[idx][col] = {}; REDOVI_IGRA.forEach(r => data.scores[idx][col][r] = null); } }); });
-            this.players = data.players; this.allScores = data.scores; this.currentPlayerIdx = data.current; 
+            
+            this.players = data.players; 
+            this.allScores = data.scores; 
+            this.currentPlayerIdx = data.current; 
+            
+            // MID-TURN RESTORE
+            this.kockiceVals = data.kockiceVals || [0,0,0,0,0,0];
+            this.zadrzane = data.zadrzane || [false,false,false,false,false,false];
+            this.brojBacanja = data.brojBacanja || 0;
+            this.najavaAktivna = data.najavaAktivna || false;
+            this.najavljenoPolje = data.najavljenoPolje || null;
+            
             this.aiMode = false; 
             if (this.players.length > 1) this.modeTag = "Hotseat"; else this.modeTag = "Solo";
-            this.startGame(); this.highlightCurrentPlayer(); this.updateTableVisuals(); 
+
+            this.lastMoveSnapshot = null;
+            const btnUndo = document.getElementById('btn-undo-move');
+            if (btnUndo) btnUndo.style.display = 'none';
+
+            // VISUAL RESTORE
+            this.navigateTo('game-scene'); 
+            this.createScoreTables(); 
+            this.gameActive = true; 
+            this.lastGameType = 'normal';
+            document.getElementById('chat-body').innerHTML = ""; 
+            const chatBtn = document.getElementById('chat-float-btn'); 
+            if (this.modeTag === "Solo" || this.modeTag === "Hotseat") { chatBtn.classList.add('hidden'); } else { chatBtn.classList.remove('hidden'); } 
+            this.effectMgr.stop(); this.loadEquippedEffect(); 
+            
+            this.highlightCurrentPlayer(); 
+            this.updateTableVisuals(); 
+            
+            // UI RESTORE (Buttons & text)
+            const statusLbl = document.getElementById('lbl-status');
+            if(statusLbl) statusLbl.innerText = `${gt('status_roll')}: ${this.brojBacanja} / 3`; 
+
+            const btnBacaj = document.getElementById('btn-bacaj');
+            if(btnBacaj) {
+                if (this.brojBacanja < 3) { btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll'); }
+                else { btnBacaj.disabled = true; btnBacaj.innerText = gt('game_write'); }
+            }
+
+            const btnN = document.getElementById('btn-najava');
+            if(btnN) {
+                if (this.najavaAktivna) {
+                    btnN.disabled = false; btnN.innerText = gt('game_announce_cancel'); btnN.classList.add('btn-active-toggle');
+                } else if (this.najavljenoPolje) {
+                    btnN.disabled = true; btnN.innerText = `${gt('game_announce')}: ${this.najavljenoPolje.row}`;
+                } else if (this.brojBacanja === 1) {
+                    btnN.disabled = false; btnN.classList.add('btn-highlight');
+                } else {
+                    btnN.disabled = true; btnN.classList.remove('btn-highlight');
+                }
+            }
+
+            this.updateDiceVisuals();
+
             this.modal.alert(gt('msg_game_resumed')); 
         } catch (e) { 
             console.error(e); 
             this.modal.alert(gt('msg_save_error')); 
             localforage.removeItem('yamb_saved_game'); 
         } 
+    }
+
+    async undoLastMove() {
+        if (!this.lastMoveSnapshot || this.onlineMode) return;
+
+        const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
+        if (!confirmUndo) return;
+
+        // Prikaz Interstitial Reklame pre dozvole
+        if (this.adMob && this.adMob.showInterstitial) {
+            await this.adMob.showInterstitial();
+        }
+
+        const snap = this.lastMoveSnapshot;
+
+        // 1. Vraćamo igrača na onog koji je napravio potez i brišemo poslednji upis
+        this.currentPlayerIdx = snap.pIdx;
+        this.allScores[snap.pIdx][snap.col][snap.row] = null;
+
+        // 2. Vraćamo kompletno stanje kockica, najava i poteza
+        this.kockiceVals = [...snap.diceVals];
+        this.zadrzane = [...snap.held];
+        this.brojBacanja = snap.rollCount;
+        this.najavljenoPolje = snap.najavljenoPolje;
+        this.najavaAktivna = snap.najavaAktivna;
+
+        // 3. Zaustavljamo efekte (npr. ako je proslavio pogrešan Yamb) i osvežavamo tablu
+        this.effectMgr.stop();
+        this.loadEquippedEffect();
+        this.highlightCurrentPlayer();
+        this.updateTableVisuals();
+        this.updateDiceVisuals();
+
+        // 4. Vraćamo stanje dugmića "Bacaj" i "Najava"
+        const btnBacaj = document.getElementById('btn-bacaj');
+        if (btnBacaj) {
+            if (this.brojBacanja < 3) {
+                btnBacaj.disabled = false;
+                btnBacaj.innerText = gt('game_roll') || "BACAJ";
+            } else {
+                btnBacaj.disabled = true;
+                btnBacaj.innerText = gt('game_write') || "UPIŠI";
+            }
+        }
+
+        const btnN = document.getElementById('btn-najava');
+        if (btnN) {
+            if (this.najavaAktivna) {
+                btnN.disabled = false;
+                btnN.innerText = gt('game_announce_cancel') || "OTKAŽI";
+                btnN.classList.add('btn-active-toggle');
+                btnN.classList.remove('btn-highlight');
+            } else if (this.najavljenoPolje) {
+                btnN.disabled = true;
+                btnN.innerText = `${gt('game_announce') || "NAJAVA"}: ${this.najavljenoPolje.row}`;
+                btnN.classList.remove('btn-active-toggle');
+                btnN.classList.remove('btn-highlight');
+            } else if (this.brojBacanja === 1) {
+                btnN.disabled = false;
+                btnN.classList.add('btn-highlight');
+            } else {
+                btnN.disabled = true;
+                btnN.classList.remove('btn-highlight');
+            }
+        }
+
+        const statusLbl = document.getElementById('lbl-status');
+        if (statusLbl) statusLbl.innerText = `${gt('status_roll') || "BACANJE"}: ${this.brojBacanja} / 3`;
+
+        // 5. Sakrivamo Undo dugme (iskorišćeno je za ovaj potez)
+        this.lastMoveSnapshot = null;
+        document.getElementById('btn-undo-move').style.display = 'none';
+
+        this.autoSaveGame();
     }
 }
 
