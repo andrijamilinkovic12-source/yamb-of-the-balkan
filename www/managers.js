@@ -808,8 +808,9 @@ class AdMobController {
             interstitial: { isReady: false, isLoading: false, retryCount: 0 }
         };
         
-        this.baseRetryDelay = 2000;   
-        this.maxRetryDelay = 60000;   
+        // --- OPTIMIZACIJA: Brži retry timer ---
+        this.baseRetryDelay = 1000;   
+        this.maxRetryDelay = 30000;   
         
         this.uiSelectors = ['.btn-ad-double', '#btn-ad-coins', '.btn-discount', '.btn-ad-state-aware']; 
     }
@@ -818,7 +819,6 @@ class AdMobController {
         console.log("🚀 AdMob: Pokrećem inicijalizaciju...");
 
         try {
-            // PRAVILAN NAČIN TRAŽENJA PLUGINA U VANILLA JS
             if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
                 this.adMobPlugin = window.Capacitor.Plugins.AdMob;
             } else if (window.Capacitor && window.Capacitor.registerPlugin) {
@@ -834,7 +834,6 @@ class AdMobController {
                 await this.adMobPlugin.initialize();
                 console.log("🎉 AdMob je spreman za reklame!");
                 
-                // Odmah postavljamo listenere i krećemo sa punjenjem reklama
                 await this.setupListeners();
                 this.triggerHighPriorityLoad('rewarded');
                 this.triggerHighPriorityLoad('interstitial');
@@ -842,7 +841,6 @@ class AdMobController {
                 console.error("❌ AdMob SDK greška pri inicijalizaciji:", err);
             }
         } else {
-            // Ako plugina NEMA, obeležavamo da nismo spremni i gasimo dugmiće
             console.error("⚠️ AdMob Plugin NIJE PRONAĐEN na uređaju! Reklame neće raditi.");
             this.updateUI(false);
         }
@@ -851,15 +849,13 @@ class AdMobController {
     async setupListeners() {
         if (!this.adMobPlugin) return;
 
-        // --- REWARDED LISTENERS (Dodat 'on' prefiks) ---
         await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
         await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
         
-        // 🔥 NOVO: Slušamo kada korisnik ODGLEDA reklamu i dobije nagradu
         await this.adMobPlugin.addListener('onRewardedVideoAdReward', (reward) => {
             console.log("✅ ADMOB: Korisnik je uspešno odgledao reklamu i dobio nagradu!", reward);
             if (this.rewardResolve) {
-                this.rewardResolve(true); // Šaljemo true nazad u YambApp i ShopManager
+                this.rewardResolve(true); 
                 this.rewardResolve = null;
             }
         });
@@ -867,14 +863,12 @@ class AdMobController {
         await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', () => {
             console.log("🏁 ADMOB: Reward zatvoren.");
             if (this.rewardResolve) {
-                // Ako je korisnik ugasio reklamu pre vremena (nije dobio reward)
                 this.rewardResolve(false); 
                 this.rewardResolve = null;
             }
             this.handleAdDismissed('rewarded');
         });
 
-        // --- INTERSTITIAL LISTENERS (Ostaju isti) ---
         await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
         await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
         await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
@@ -900,7 +894,8 @@ class AdMobController {
         if (type === 'rewarded') this.updateUI(false);
 
         this.ads[type].retryCount++;
-        const nextDelay = Math.min(this.baseRetryDelay * Math.pow(1.5, this.ads[type].retryCount), this.maxRetryDelay);
+        // --- OPTIMIZACIJA: Blaži eksponencijalni rast (1.2) ---
+        const nextDelay = Math.min(this.baseRetryDelay * Math.pow(1.2, this.ads[type].retryCount), this.maxRetryDelay);
         
         console.warn(`❌ ADMOB (${type}): Fail (Pokušaj ${this.ads[type].retryCount}). Sledeći pokušaj za ${Math.round(nextDelay)}ms.`, err);
         
@@ -912,6 +907,9 @@ class AdMobController {
         this.ads[type].isReady = false;
         
         if (type === 'rewarded') this.updateUI(false);
+        
+        // --- OPTIMIZACIJA: Reset retry countera pre agresivnog preloada ---
+        this.ads[type].retryCount = 0; 
         this.preloadAd(type);
     }
 
@@ -923,7 +921,6 @@ class AdMobController {
         this.ads[type].isLoading = true;
 
         try {
-            // isTesting: false je OBAVEZNO za produkciju da bi se videle prave reklame
             if (type === 'rewarded') {
                 await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: false });
             } else if (type === 'interstitial') {
@@ -986,7 +983,6 @@ class AdMobController {
 
             if (this.ads.rewarded.isReady) {
                 try {
-                    // 🔥 Ne vraćamo odmah resolve(true)! Čuvamo referencu da je pozove listener.
                     this.rewardResolve = resolve;
                     await this.adMobPlugin.showRewardVideoAd();
                 } catch (e) {
