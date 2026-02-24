@@ -1016,3 +1016,8 @@ window.adMobGlobal = new AdMobController();
 // Nove globalne instance za UI i Efekte
 window.modalManager = new ModalManager(); 
 window.effectManager = new EffectManager();
+
+// 🔥 Pokretanje AdMob-a kada se učita DOM
+document.addEventListener('DOMContentLoaded', () => {
+    window.adMobGlobal.initialize();
+});
