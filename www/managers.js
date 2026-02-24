@@ -821,7 +821,11 @@ class AdMobController {
         let attempts = 0;
         const initInterval = setInterval(async () => {
             attempts++;
-            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
+            if (window.Capacitor && window.Capacitor.registerPlugin) {
+    clearInterval(initInterval);
+    // Ručno povezujemo JS sa Android pluginom
+    this.adMobPlugin = window.Capacitor.registerPlugin('AdMob');
+    console.log("✅ AdMob Plugin: PRONAĐEN! Pokrećem Inicijalizaciju...");
                 clearInterval(initInterval);
                 this.adMobPlugin = window.Capacitor.Plugins.AdMob;
                 console.log("✅ AdMob Plugin: PRONAĐEN! Pokrećem Inicijalizaciju...");
