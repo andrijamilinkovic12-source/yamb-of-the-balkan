@@ -851,12 +851,12 @@ class AdMobController {
     async setupListeners() {
         if (!this.adMobPlugin) return;
 
-        // --- REWARDED LISTENERS ---
-        await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
-        await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
+        // --- REWARDED LISTENERS (Dodat 'on' prefiks) ---
+        await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
+        await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
         
         // 🔥 NOVO: Slušamo kada korisnik ODGLEDA reklamu i dobije nagradu
-        await this.adMobPlugin.addListener('rewardedVideoAdReward', (reward) => {
+        await this.adMobPlugin.addListener('onRewardedVideoAdReward', (reward) => {
             console.log("✅ ADMOB: Korisnik je uspešno odgledao reklamu i dobio nagradu!", reward);
             if (this.rewardResolve) {
                 this.rewardResolve(true); // Šaljemo true nazad u YambApp i ShopManager
@@ -864,7 +864,7 @@ class AdMobController {
             }
         });
 
-        await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => {
+        await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', () => {
             console.log("🏁 ADMOB: Reward zatvoren.");
             if (this.rewardResolve) {
                 // Ako je korisnik ugasio reklamu pre vremena (nije dobio reward)
@@ -874,7 +874,7 @@ class AdMobController {
             this.handleAdDismissed('rewarded');
         });
 
-        // --- INTERSTITIAL LISTENERS ---
+        // --- INTERSTITIAL LISTENERS (Ostaju isti) ---
         await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
         await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
         await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
