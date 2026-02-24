@@ -818,35 +818,33 @@ class AdMobController {
     }
 
     async initialize() {
-        let attempts = 0;
-        const initInterval = setInterval(async () => {
-            attempts++;
-            if (window.Capacitor && window.Capacitor.registerPlugin) {
-    clearInterval(initInterval);
-    // Ručno povezujemo JS sa Android pluginom
-    this.adMobPlugin = window.Capacitor.registerPlugin('AdMob');
-    console.log("✅ AdMob Plugin: PRONAĐEN! Pokrećem Inicijalizaciju...");
-                clearInterval(initInterval);
-                this.adMobPlugin = window.Capacitor.Plugins.AdMob;
-                console.log("✅ AdMob Plugin: PRONAĐEN! Pokrećem Inicijalizaciju...");
+        console.log("🚀 AdMob: Pokrećem inicijalizaciju...");
 
-                try {
-                    await this.adMobPlugin.initialize({ requestTrackingAuthorization: true });
-                    await this.setupListeners();
-                    
-                    // Pokrećemo agresivni preload OBE reklame odmah nakon inicijalizacije
-                    this.preloadAd('rewarded'); 
-                    this.preloadAd('interstitial'); 
-                } catch (e) {
-                    console.error("AdMob Init Error:", e);
-                }
-            } else {
-                if (attempts >= 20) {
-                    clearInterval(initInterval);
-                    console.log("⚠️ AdMob Plugin nije nađen. Palim simulaciju reklama u browseru.");
-                    this.updateUI(true); 
-                }
+        // 1. SILOM RESTRISTRUJEMO PLUGIN (Ovo rešava Capacitor 6 problem)
+        try {
+            if (window.Capacitor && window.Capacitor.registerPlugin) {
+                this.adMobPlugin = window.Capacitor.registerPlugin('AdMob');
             }
+        } catch (e) {
+            console.error("Greška pri registraciji plugina:", e);
+        }
+
+        // 2. PROVERA: Ako plugin sada postoji, inicijalizuj ga
+        if (this.adMobPlugin) {
+            console.log("✅ AdMob Plugin povezan! Pokrećem Google SDK...");
+            try {
+                await this.adMobPlugin.initialize();
+                this.isReady = true;
+                console.log("🎉 AdMob je spreman za reklame!");
+            } catch (err) {
+                console.error("❌ AdMob SDK greška:", err);
+            }
+        } else {
+            // 3. AKO I DALJE NE RADI - Ispisujemo tačan razlog u konzolu
+            console.error("⚠️ AdMob Plugin nije pronađen ni nakon pokušaja registracije.");
+            console.log("Proveri da li je u terminalu odrađeno: npm install @capacitor-community/admob");
+        }
+    }
         }, 500);
         
         this.updateUI(false);
