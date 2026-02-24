@@ -794,60 +794,58 @@ class ShopManager {
     }
 }
 
-// --- 7. ADMOB CONTROLLER (UNAPREĐENI PRELOAD & BACKOFF SISTEM) ---
+// --- 7. ADMOB CONTROLLER (PRODUKCIJA - ČIST NATIVE, BEZ SIMULACIJE) ---
 class AdMobController {
     constructor() {
+        // Tvoji pravi AdMob ID-jevi
         this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
         this.interstitialId = 'ca-app-pub-4319963185096437/2913237519'; 
         
         this.adMobPlugin = null;
         
-        // Unificirano praćenje stanja za sve vrste reklama
         this.ads = {
             rewarded: { isReady: false, isLoading: false, retryCount: 0 },
             interstitial: { isReady: false, isLoading: false, retryCount: 0 }
         };
         
-        // Parametri za Exponential Backoff (Pametno ponavljanje)
-        this.baseRetryDelay = 2000;   // Početno čekanje (2s)
-        this.maxRetryDelay = 60000;   // Maksimalno čekanje (60s)
+        this.baseRetryDelay = 2000;   
+        this.maxRetryDelay = 60000;   
         
         this.uiSelectors = ['.btn-ad-double', '#btn-ad-coins', '.btn-discount', '.btn-ad-state-aware']; 
-
-        this.createSimulationOverlay();
     }
 
     async initialize() {
         console.log("🚀 AdMob: Pokrećem inicijalizaciju...");
 
-        // 1. SILOM RESTRISTRUJEMO PLUGIN (Ovo rešava Capacitor 6 problem)
         try {
-            if (window.Capacitor && window.Capacitor.registerPlugin) {
+            // PRAVILAN NAČIN TRAŽENJA PLUGINA U VANILLA JS
+            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
+                this.adMobPlugin = window.Capacitor.Plugins.AdMob;
+            } else if (window.Capacitor && window.Capacitor.registerPlugin) {
                 this.adMobPlugin = window.Capacitor.registerPlugin('AdMob');
             }
         } catch (e) {
-            console.error("Greška pri registraciji plugina:", e);
+            console.error("Greška pri traženju AdMob plugina:", e);
         }
 
-        // 2. PROVERA: Ako plugin sada postoji, inicijalizuj ga
         if (this.adMobPlugin) {
-            console.log("✅ AdMob Plugin povezan! Pokrećem Google SDK...");
+            console.log("✅ AdMob Plugin pronađen! Pokrećem Google SDK...");
             try {
                 await this.adMobPlugin.initialize();
-                this.isReady = true;
                 console.log("🎉 AdMob je spreman za reklame!");
+                
+                // Odmah postavljamo listenere i krećemo sa punjenjem reklama
+                await this.setupListeners();
+                this.triggerHighPriorityLoad('rewarded');
+                this.triggerHighPriorityLoad('interstitial');
             } catch (err) {
-                console.error("❌ AdMob SDK greška:", err);
+                console.error("❌ AdMob SDK greška pri inicijalizaciji:", err);
             }
         } else {
-            // 3. AKO I DALJE NE RADI - Ispisujemo tačan razlog u konzolu
-            console.error("⚠️ AdMob Plugin nije pronađen ni nakon pokušaja registracije.");
-            console.log("Proveri da li je u terminalu odrađeno: npm install @capacitor-community/admob");
+            // Ako plugina NEMA, obeležavamo da nismo spremni i gasimo dugmiće
+            console.error("⚠️ AdMob Plugin NIJE PRONAĐEN na uređaju! Reklame neće raditi.");
+            this.updateUI(false);
         }
-    }
-        }, 500);
-        
-        this.updateUI(false);
     }
 
     async setupListeners() {
@@ -872,7 +870,7 @@ class AdMobController {
         console.log(`✅ ADMOB (${type}): Reklama NAPUNJENA i spremna!`);
         this.ads[type].isReady = true;
         this.ads[type].isLoading = false;
-        this.ads[type].retryCount = 0; // Resetujemo counter nakon uspeha
+        this.ads[type].retryCount = 0; 
         
         if (type === 'rewarded') this.updateUI(true);
     }
@@ -884,7 +882,6 @@ class AdMobController {
         if (type === 'rewarded') this.updateUI(false);
 
         this.ads[type].retryCount++;
-        // Izračunavanje novog delaya pomoću eksponencijalnog rasta (2s, 3s, 4.5s...)
         const nextDelay = Math.min(this.baseRetryDelay * Math.pow(1.5, this.ads[type].retryCount), this.maxRetryDelay);
         
         console.warn(`❌ ADMOB (${type}): Fail (Pokušaj ${this.ads[type].retryCount}). Sledeći pokušaj za ${Math.round(nextDelay)}ms.`, err);
@@ -897,21 +894,18 @@ class AdMobController {
         this.ads[type].isReady = false;
         
         if (type === 'rewarded') this.updateUI(false);
-        
-        // AGRESIVNI PRELOAD: Odmah zahtevamo novu reklamu u pozadini
         this.preloadAd(type);
     }
 
     async preloadAd(type) {
         if (!this.adMobPlugin) return;
-        
-        // Sprečavamo višestruke istovremene pozive za isti tip
         if (this.ads[type].isLoading || this.ads[type].isReady) return;
 
         console.log(`⏳ ADMOB (${type}): Tražim reklamu u pozadini...`);
         this.ads[type].isLoading = true;
 
         try {
+            // isTesting: false je OBAVEZNO za produkciju da bi se videle prave reklame
             if (type === 'rewarded') {
                 await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: false });
             } else if (type === 'interstitial') {
@@ -926,12 +920,11 @@ class AdMobController {
     triggerHighPriorityLoad(type = 'rewarded') {
         if (!this.ads[type] || (!this.ads[type].isLoading && !this.ads[type].isReady)) {
             console.log(`🚀 ADMOB (${type}): Forsiram prioritetno osvežavanje!`);
-            if (this.ads[type]) this.ads[type].retryCount = 0; // Resetujemo delay za forsirani zahtev
+            if (this.ads[type]) this.ads[type].retryCount = 0; 
             this.preloadAd(type);
         }
     }
 
-    // Zadržano zbog kompatibilnosti sa ostatkom koda
     loadRewardAd() { this.preloadAd('rewarded'); }
     loadInterstitialAd() { this.preloadAd('interstitial'); }
     prepareReward() { this.triggerHighPriorityLoad('rewarded'); }
@@ -968,7 +961,8 @@ class AdMobController {
     showRewardVideo() {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) {
-                this.runSimulation(resolve); 
+                console.warn("🚫 Reklame nisu dostupne. (Nema plugina)");
+                resolve(false); 
                 return;
             }
 
@@ -992,8 +986,8 @@ class AdMobController {
     showInterstitial() {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) {
-                console.log("🖥️ BROWSER DETEKTOVAN: Prikazujem simulaciju Interstitial reklame.");
-                this.runSimulation(resolve);
+                console.warn("🚫 Interstitial reklame nisu dostupne. (Nema plugina)");
+                resolve(false);
                 return;
             }
             
@@ -1012,36 +1006,6 @@ class AdMobController {
                 resolve(false);
             }
         });
-    }
-    
-    // --- SIMULACIJA ZA BROWSER ---
-    createSimulationOverlay() {
-        if (document.getElementById('sim-ad-overlay')) return;
-        const overlay = document.createElement('div');
-        overlay.id = 'sim-ad-overlay';
-        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 99999; display: none; flex-direction: column; align-items: center; justify-content: center; color: white; font-family: sans-serif;';
-        const txtTitle = (typeof resolveText !== 'undefined') ? resolveText('ad_sim_title') : "REKLAMA";
-        overlay.innerHTML = `<div style="font-size: 1.2rem; margin-bottom: 20px;">${txtTitle}</div><div id="sim-spinner" style="border: 4px solid #333; border-top: 4px solid #2196F3; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px;"></div><div id="sim-counter" style="font-size: 3rem; font-weight: bold; color: #2196F3;">5</div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>`;
-        document.body.appendChild(overlay);
-    }
-
-    runSimulation(resolve) {
-        const overlay = document.getElementById('sim-ad-overlay');
-        const counter = document.getElementById('sim-counter');
-        if (!overlay || !counter) { this.createSimulationOverlay(); setTimeout(() => this.runSimulation(resolve), 100); return; }
-        let timeLeft = 5; 
-        counter.innerText = timeLeft; 
-        overlay.style.display = 'flex';
-        
-        const interval = setInterval(() => { 
-            timeLeft--; 
-            counter.innerText = timeLeft; 
-            if (timeLeft <= 0) { 
-                clearInterval(interval); 
-                overlay.style.display = 'none'; 
-                resolve(true); 
-            } 
-        }, 1000);
     }
 }
 
