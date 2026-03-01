@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE
 
 require('dotenv').config(); 
 
@@ -170,13 +170,18 @@ io.on('connection', (socket) => {
 
             let filter = {};
             const now = new Date();
+            // Resetujemo sate, minute i sekunde na početak dana radi tačnosti
+            now.setHours(0, 0, 0, 0);
             
             if (period === 'weekly') {
-                const lastWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-                filter.date = { $gte: lastWeek };
+                // Početak tekuće kalendarske nedelje (Ponedeljak)
+                const dayOfWeek = now.getDay() || 7; // Date.getDay() nedelju računa kao 0, pretvaramo je u 7
+                const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
+                filter.date = { $gte: startOfWeek };
             } else if (period === 'monthly') {
-                const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-                filter.date = { $gte: lastMonth };
+                // Početak tekućeg kalendarskog meseca (1. u mesecu)
+                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                filter.date = { $gte: startOfMonth };
             }
 
             const scores = await Score.find(filter).sort({ score: -1 }).limit(50);
