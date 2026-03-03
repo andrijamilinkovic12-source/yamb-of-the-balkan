@@ -182,7 +182,6 @@ class EffectManager {
         this.stop(); 
         if (!type || type === 'none') return;
         
-        if (type === 'shadow') document.body.classList.add('fx-shadow');
         if (type === 'neon_pulse') document.body.classList.add('fx-neon_pulse');
     }
     
@@ -225,6 +224,43 @@ class EffectManager {
                     setTimeout(() => {
                         if (container.parentNode) container.remove();
                     }, 1500);
+                }, 6000);
+            }
+        }
+
+        // --- CRNA RUPA (BLACK HOLE) ---
+        if (type === 'black_hole') {
+            let targetTable = null;
+            const tables = document.querySelectorAll('.player-table');
+            
+            tables.forEach(tbl => {
+                if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) {
+                    targetTable = tbl;
+                }
+            });
+
+            if (!targetTable && tables.length > 0) targetTable = tables[0];
+
+            if (targetTable) {
+                const rect = targetTable.getBoundingClientRect();
+                const bhContainer = document.createElement('div');
+                bhContainer.className = 'black-hole-container';
+                bhContainer.style.position = 'fixed';
+                bhContainer.style.top = (rect.top + rect.height / 2) + 'px';
+                bhContainer.style.left = (rect.left + rect.width / 2) + 'px';
+                
+                bhContainer.innerHTML = `
+                    <div class="bh-core"></div>
+                    <div class="bh-ring"></div>
+                    <div class="bh-particles"></div>
+                `;
+                document.body.appendChild(bhContainer);
+
+                targetTable.classList.add('anim-suck-in');
+
+                setTimeout(() => {
+                    targetTable.classList.remove('anim-suck-in');
+                    if (bhContainer.parentNode) bhContainer.remove();
                 }, 6000);
             }
         }
@@ -335,9 +371,13 @@ class EffectManager {
     }
     
     stop() {
-        document.body.classList.remove('fx-glass', 'fx-shadow', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age');
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container').forEach(e => e.remove());
+        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age');
+        
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container').forEach(e => e.remove());
+        
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
+        
+        document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
     }
 }
 
