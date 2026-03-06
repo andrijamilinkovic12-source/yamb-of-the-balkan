@@ -71,33 +71,83 @@
             </div>
         </div>
 
-        <h1 class="menu-title">YAMB<br><span class="menu-subtitle">OF THE BALKAN</span></h1>
-        
-        <button id="btn-resume-game" class="btn-menu btn-resume hidden" onclick="app.loadSavedGame()" data-lang="menu_resume">▶ NASTAVI IGRU</button>
-
-        <button class="btn-menu btn-primary" onclick="app.setupGame(1)" data-lang="menu_solo">👤 Solo Igra</button>
-        
-        <button class="btn-menu" onclick="app.setupGame(2)" data-lang="menu_dual">👥 Dva Igrača (Hotseat)</button>
-        <button class="btn-menu" onclick="app.setupOnline('random')" data-lang="menu_online">🌐 Nađi Protivnika (Random)</button>
-        <button class="btn-menu" style="border-color: #2196F3; color: #2196F3;" onclick="app.startPrivateHosting()" data-lang="menu_invite">🔗 Pozovi Prijatelja</button>
-        
-        <div class="menu-divider"></div>
-        
-        <button id="btn-daily-challenge" class="btn-menu" style="border-color: #FF5722; color: #FF5722; background: rgba(255,87,34,0.1); display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="app.dailyManager.open()">
-            <div class="live-calendar-icon">
-                <div class="cal-top"></div>
-                <div class="cal-body" id="live-date"></div>
+        <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
+            
+            <div style="flex: 1; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px);">
+                <div style="position: relative;">
+                    <span style="font-size: 1.3rem;">🌍</span>
+                    <div style="position: absolute; top: 0; right: -5px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success); animation: pulse 2s infinite;"></div>
+                </div>
+                <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
+                <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Online</span>
             </div>
-            <span data-lang="menu_daily">DNEVNI IZAZOV</span>
-        </button>
-        
-        <button class="btn-menu" style="border-color: var(--gold-main); color: var(--gold-main);" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); window.location.href='riznica.html'" data-lang="menu_shop">💎 RIZNICA</button>
 
-        <div class="menu-divider"></div>
-        <button class="btn-menu" onclick="app.showHighscoresScreen()" data-lang="menu_hs">🏆 TOP LISTA</button>
-        <button class="btn-menu" onclick="app.showStats()" data-lang="menu_stats">📊 Statistika</button>
-        <button class="btn-menu" onclick="app.showSettings()" data-lang="menu_settings">⚙ Podešavanja</button>
-        <button class="btn-menu" onclick="app.showRules()" data-lang="menu_rules">📖 Pravila</button>
+            <div style="flex: 1.8; background: linear-gradient(135deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.6) 100%); border: 2px solid var(--gold-main); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 15px rgba(224, 201, 149, 0.1); backdrop-filter: blur(8px); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: -10px; right: -10px; font-size: 3.5rem; opacity: 0.08;">🏆</div>
+                <span style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
+                <span id="league-rank-name" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 1px;">AMATER</span>
+                
+                <div style="width: 90%; height: 6px; background: rgba(0,0,0,0.6); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                    <div id="league-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #E0C995, #FFD700); box-shadow: 0 0 5px #FFD700; transition: width 0.5s;"></div>
+                </div>
+                <span id="league-pts-text" style="font-size: 0.6rem; color: var(--text-main); margin-top: 5px; font-weight: 600;">0 / 5000 PTS</span>
+            </div>
+
+            <div style="flex: 1; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px);">
+                <span style="font-size: 1.3rem;">💰</span>
+                <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
+                <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
+            </div>
+
+        </div>
+        
+        <div class="modes-grid">
+            <div class="mode-btn mode-solo" onclick="app.handleModeClick(1)">
+                <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%;">
+                    <span class="mode-icon">👤</span>
+                    <span class="mode-text" data-lang="menu_solo">Solo Igra</span>
+                </div>
+                <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center;">
+                    <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 1)">▶ NASTAVI</button>
+                    <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 1)">🆕 NOVA IGRA</button>
+                </div>
+            </div>
+            
+            <div class="mode-btn mode-dual" onclick="app.handleModeClick(2)">
+                <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%;">
+                    <span class="mode-icon">👥</span>
+                    <span class="mode-text" data-lang="menu_dual">Dva Igrača</span>
+                </div>
+                <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center;">
+                    <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 2)">▶ NASTAVI</button>
+                    <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 2)">🆕 NOVA IGRA</button>
+                </div>
+            </div>
+            
+            <button class="mode-btn mode-random" onclick="app.setupOnline('random')">
+                <span class="mode-icon">🌐</span>
+                <span class="mode-text" data-lang="menu_online">Random Igrač</span>
+            </button>
+            <button class="mode-btn mode-invite" onclick="app.startPrivateHosting()">
+                <span class="mode-icon">🔗</span>
+                <span class="mode-text" data-lang="menu_invite">Prijatelj</span>
+            </button>
+        </div>
+        
+        <div class="menu-divider" style="margin-top: 5px;"></div>
+        
+        <div class="special-actions-row">
+            <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); window.location.href='riznica.html'" title="Riznica">💎</button>
+            <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert('Turniri stižu uskoro!'); }" title="Turnir">⚔️</button>
+        </div>
+
+        <div class="icon-menu-grid">
+            <button class="btn-square" onclick="app.dailyManager.open()" title="Dnevni izazov">📅</button>
+            <button class="btn-square" onclick="app.showHighscoresScreen()" title="Top Lista">🏆</button>
+            <button class="btn-square" onclick="app.showStats()" title="Statistika">📊</button>
+            <button class="btn-square" onclick="app.showSettings()" title="Podešavanja">⚙</button>
+            <button class="btn-square" onclick="app.showRules()" title="Pravila">📖</button>
+        </div>
     </div>
 
     <div id="game-scene" class="screen">
@@ -180,14 +230,8 @@
                     <span id="stat-balance" class="stat-val c-gold">0</span>
                 </div>
             </div>
-
-            <div class="online-counter-box">
-                <div class="live-indicator"></div>
-                <span style="font-size: 0.8rem; color: var(--text-muted); font-weight:bold;">
-                    <span data-lang="stat_online">ONLINE IGRAČA</span>: <span id="live-online-count" style="color: var(--success); font-size: 1rem;">1</span>
-                </span>
+            
             </div>
-        </div>
     </div>
     
     <div id="highscores-screen" class="screen">
@@ -400,11 +444,66 @@
         </div>
     </div>
 
+    <div id="tournament-screen" class="screen">
+        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <h2 class="menu-title" style="margin-bottom: 20px;">TURNIR ⚔️</h2>
+        
+        <div id="tourney-content" style="width: 100%; max-width: 900px; height: 80vh; overflow-y: auto; display: flex; justify-content: center; align-items: flex-start; padding-bottom: 50px;">
+            </div>
+    </div>
+
+    <script>
+        function updateMainMenuDashboard() {
+            // 1. Dukati
+            const dukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+            const dukatiEl = document.getElementById('menu-dukati-count');
+            if (dukatiEl) dukatiEl.innerText = dukati;
+
+            // 2. Kvartalni Ciklus - Čita ukupan skor iz svih odigranih partija
+            const stats = JSON.parse(localStorage.getItem('yamb_stats')) || { totalScoreSum: 0 };
+            const pts = stats.totalScoreSum || 0;
+            
+            let rank = "AMATER";
+            let nextLevelPts = 5000;
+            
+            if (pts < 5000) { rank = "AMATER"; nextLevelPts = 5000; }
+            else if (pts < 15000) { rank = "PROFI"; nextLevelPts = 15000; }
+            else if (pts < 50000) { rank = "MAJSTOR"; nextLevelPts = 50000; }
+            else { rank = "LEGENDA"; nextLevelPts = pts; } 
+
+            let percent = nextLevelPts === pts ? 100 : Math.min(100, Math.round((pts / nextLevelPts) * 100));
+
+            const rankEl = document.getElementById('league-rank-name');
+            const barEl = document.getElementById('league-progress-bar');
+            const ptsTextEl = document.getElementById('league-pts-text');
+
+            if (rankEl) rankEl.innerText = rank;
+            if (barEl) barEl.style.width = percent + '%';
+            if (ptsTextEl) ptsTextEl.innerText = `${pts} / ${nextLevelPts} PTS`;
+        }
+
+        // Pokreni funkciju kad se očita ekran, i redovno osvežavaj
+        window.addEventListener('load', () => {
+            updateMainMenuDashboard();
+            setInterval(updateMainMenuDashboard, 2000); 
+        });
+    </script>
+
     <script src="config.js?v=4.0"></script>
     <script src="managers.js?v=4.0"></script>
     <script src="trophyManager.js?v=4.0"></script> 
     <script src="features.js?v=3.7"></script>
     <script src="toplista.js?v=3.8"></script> 
+    <script src="turnir.js"></script> 
     <script src="game.js?v=4.0"></script>
+    
+    <script>
+        // Kada se cela igra učita, instancirajmo menadžer za turnire
+        window.addEventListener('load', () => {
+            if (window.app && typeof TournamentManager !== 'undefined') {
+                window.app.tournamentManager = new TournamentManager(window.app);
+            }
+        });
+    </script>
 </body>
 </html>

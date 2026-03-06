@@ -37,14 +37,14 @@
     <div class="header">
         <div class="balance-group">
             <div class="balance-display"><span id="balance">0</span> <span data-lang="balance">dukata</span></div>
-            <button class="btn-add-coins" onclick="shop.watchAdForCoins()">+500 🎬</button>
+            <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 💰 🎬</button>
         </div>
     </div>
 
     <div class="nav-tabs">
         <button class="tab-btn active" data-lang="tab_trophies">TROFEJI 🏆</button>
-        <button class="tab-btn" onclick="window.location.href='kockice.html'" data-lang="tab_dice">KOCKICE 🎲</button>
-        <button class="tab-btn" onclick="window.location.href='efekti.html'" data-lang="tab_effects">EFEKTI ✨</button>
+        <button class="tab-btn" data-lang="tab_dice" onclick="window.location.href='kockice.html'">KOCKICE 🎲</button>
+        <button class="tab-btn" data-lang="tab_effects" onclick="window.location.href='efekti.html'">EFEKTI ✨</button>
     </div>
 
     <div id="shop-container" class="content-area"></div>
@@ -68,12 +68,9 @@
             balanceId: 'balance'
         });
 
-        // --- SMART PRE-LOAD ---
-        // Čim korisnik uđe u Riznicu, učitavamo reklamu u pozadini
         setTimeout(() => {
             if(shop.getAdController()) shop.getAdController().prepareReward();
         }, 1000);
-        // ----------------------
 
         window.closeConfirmModal = function() {
             document.getElementById('confirm-modal').style.display = 'none';
@@ -88,7 +85,6 @@
             const btnBuy = document.getElementById('btn-confirm-buy');
             const btnCancel = document.querySelector('.btn-modal-cancel');
 
-            // Osiguravamo prevod naslova i dugmadi kroz t() funkciju
             title.innerText = titleText || (typeof t === 'function' ? t('modal_title_info') : "OBAVEŠTENJE");
             msg.innerHTML = message;
             

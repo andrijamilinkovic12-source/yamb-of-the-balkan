@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM
 
 require('dotenv').config(); 
 
@@ -141,6 +141,58 @@ let gameStartTimes = {};
 
 // --- SISTEM BANOVANJA (MUTE) ---
 const chatBans = {}; // Format: { "ip_adresa": { strikes: broj, banUntil: timestamp } }
+
+// ==================================================================
+// GLOBALNO STANJE TURNIRA
+// ==================================================================
+let tournamentState = {
+    status: 'registration', // 'registration', 'active', 'finished'
+    players: [],
+    bracket: {
+        qf: [null, null, null, null],
+        sf: [null, null],
+        f: [null]
+    }
+};
+
+// Funkcija koja meša igrače i generiše žreb
+function generateTournamentBracket() {
+    tournamentState.status = 'active';
+    const shuffled = [...tournamentState.players].sort(() => 0.5 - Math.random());
+    
+    const createMatch = (p1, p2) => ({
+        p1, p2, winner: null, time: null, proposedTime: null, proposedBy: null, timeAccepted: false
+    });
+
+    tournamentState.bracket.qf = [
+        createMatch(shuffled[0], shuffled[1]),
+        createMatch(shuffled[2], shuffled[3]),
+        createMatch(shuffled[4], shuffled[5]),
+        createMatch(shuffled[6], shuffled[7])
+    ];
+}
+
+// Funkcija za automatsko unapređivanje pobednika u sledeću rundu
+function advanceTournamentBracket(round, index, winner) {
+    if (round === 'qf') {
+        const sfIndex = Math.floor(index / 2);
+        if (!tournamentState.bracket.sf[sfIndex]) {
+            tournamentState.bracket.sf[sfIndex] = { p1: null, p2: null, winner: null, time: null, proposedTime: null, proposedBy: null, timeAccepted: false };
+        }
+        if (index % 2 === 0) tournamentState.bracket.sf[sfIndex].p1 = winner;
+        else tournamentState.bracket.sf[sfIndex].p2 = winner;
+    } 
+    else if (round === 'sf') {
+        if (!tournamentState.bracket.f[0]) {
+            tournamentState.bracket.f[0] = { p1: null, p2: null, winner: null, time: null, proposedTime: null, proposedBy: null, timeAccepted: false };
+        }
+        if (index % 2 === 0) tournamentState.bracket.f[0].p1 = winner;
+        else tournamentState.bracket.f[0].p2 = winner;
+    } 
+    else if (round === 'f') {
+        tournamentState.status = 'finished';
+    }
+}
 
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
@@ -377,7 +429,7 @@ io.on('connection', (socket) => {
     socket.on('global_chat_msg', (data) => {
         if (!data || !data.msg) return;
         
-        // Ekstrakcija IP adrese korisnika (Dodat split zbog sigurnijeg hvatanja iza proxija)
+        // Ekstrakcija IP adrese korisnika
         let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
         if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
 
@@ -387,13 +439,13 @@ io.on('connection', (socket) => {
         if (chatBans[clientIp] && chatBans[clientIp].banUntil > now) {
             const preostaloMinuta = Math.ceil((chatBans[clientIp].banUntil - now) / 60000);
             socket.emit('error_msg', `Zabranjeno pisanje! Vaš chat je suspendovan još ${preostaloMinuta} minuta zbog psovanja.`);
-            return; // Prekidamo slanje poruke
+            return; 
         }
 
         const safeSender = (data.sender || 'Nepoznat').toString().substring(0, 20);
         const originalMsg = data.msg.toString().substring(0, 200); 
 
-        // 🛑 PRIMENA PAMETNOG FILTERA NA PORUKU
+        // PRIMENA PAMETNOG FILTERA NA PORUKU
         const safeMsg = cenzurisiPoruku(originalMsg);
 
         // 2. Ako se poruka promenila (sadrži ***), znači da je psovao
@@ -413,8 +465,6 @@ io.on('connection', (socket) => {
             return; 
         }
 
-        // KORISTIMO io.emit UMESTO socket.broadcast.emit
-        // Sada i pošiljalac čeka odobrenje servera da bi video svoju poruku
         io.emit('global_chat_msg', {
             sender: safeSender,
             senderId: socket.id, 
@@ -431,39 +481,31 @@ io.on('connection', (socket) => {
         const { targetId, challengerName } = data;
         const targetSocket = io.sockets.sockets.get(targetId);
         
-        // PROVERA: Da li je igrač kom šaljemo izazov uopšte tu?
         if (targetSocket) {
             io.to(targetId).emit('challenge_received', {
                 challengerId: socket.id,
                 challengerName: challengerName
             });
         } else {
-            // Ako je izašao, obavesti izazivača
             socket.emit('error_msg', 'Igrač više nije na serveru.');
         }
     });
 
     socket.on('challenge_response', (data) => {
         const { challengerId, accepted, targetName, challengerName } = data;
-        
-        // DODATO: Proveravamo da li je izazivač i dalje na serveru
         const challengerSocket = io.sockets.sockets.get(challengerId);
 
         if (accepted) {
             if (!challengerSocket) {
-                // Ako je izazivač izašao dok je meta razmišljala (Šaljemo ključ za prevod)
                 socket.emit('error_msg', 'err_opp_left');
                 return;
             }
 
-            // Kreiramo jedinstven Room ID za ovaj duel koristeći ID-jeve oba igrača
             const roomId = `duel_${challengerId}_${socket.id}`;
             
-            // Šaljemo obojici da je duel počeo i dajemo im roomId da uđu u istu privatnu sobu
             io.to(challengerId).emit('duel_start', { roomId, opponentName: targetName });
             socket.emit('duel_start', { roomId, opponentName: challengerName });
         } else {
-            // Obaveštavamo izazivača da je duel odbijen (samo ako je još uvek tu)
             if (challengerSocket) {
                 io.to(challengerId).emit('challenge_declined', { targetName });
             }
@@ -493,6 +535,87 @@ io.on('connection', (socket) => {
                 }
             }
             console.log(`🔄 Revanš pokrenut u sobi: ${roomId}`);
+        }
+    });
+
+    // ==================================================================
+    // TURNIR - SOCKET LOGIKA
+    // ==================================================================
+    
+    // 1. Slanje trenutnog stanja klijentu kad otvori turnir
+    socket.on('tourney_get_state', () => {
+        socket.emit('tourney_state_update', tournamentState);
+    });
+
+    // 2. Prijava igrača
+    socket.on('tourney_register', (playerName) => {
+        if (tournamentState.status === 'registration' && tournamentState.players.length < 8) {
+            if (!tournamentState.players.includes(playerName)) {
+                tournamentState.players.push(playerName);
+                
+                // Ako je 8. igrač ušao, generiši žreb automatski
+                if (tournamentState.players.length === 8) {
+                    generateTournamentBracket();
+                }
+                
+                // Javi svima novo stanje
+                io.emit('tourney_state_update', tournamentState);
+            }
+        }
+    });
+
+    // 3. Dodavanje botova (za testiranje)
+    socket.on('tourney_fill_bots', () => {
+        if (tournamentState.status === 'registration') {
+            while (tournamentState.players.length < 8) {
+                tournamentState.players.push(`Igrač ${Math.floor(Math.random() * 1000)}`);
+            }
+            generateTournamentBracket();
+            io.emit('tourney_state_update', tournamentState);
+        }
+    });
+
+    // 4. Predlaganje termina
+    socket.on('tourney_propose_time', (data) => {
+        const { round, index, proposedTime, playerName } = data;
+        const match = tournamentState.bracket[round][index];
+        
+        if (match && (match.p1 === playerName || match.p2 === playerName)) {
+            match.proposedTime = proposedTime;
+            match.proposedBy = playerName;
+            match.timeAccepted = false;
+            match.time = null;
+            io.emit('tourney_state_update', tournamentState);
+        }
+    });
+
+    // 5. Prihvatanje termina
+    socket.on('tourney_accept_time', (data) => {
+        const { round, index } = data;
+        const match = tournamentState.bracket[round][index];
+        
+        if (match) {
+            match.timeAccepted = true;
+            match.time = match.proposedTime;
+            io.emit('tourney_state_update', tournamentState);
+        }
+    });
+
+    // 6. Pokretanje duela iz turnira
+    socket.on('tourney_start_duel', (data) => {
+        const { matchRoomId, opponentName } = data;
+        socket.broadcast.emit('tourney_duel_ready', { matchRoomId, initiatorSocket: socket.id, targetName: opponentName });
+    });
+
+    // 7. Upis pobednika meča
+    socket.on('tourney_submit_winner', (data) => {
+        const { round, index, winner } = data;
+        const match = tournamentState.bracket[round][index];
+        
+        if (match && match.winner === null) {
+            match.winner = winner;
+            advanceTournamentBracket(round, index, winner);
+            io.emit('tourney_state_update', tournamentState);
         }
     });
     

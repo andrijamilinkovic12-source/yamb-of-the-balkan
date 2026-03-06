@@ -36,7 +36,7 @@
     <div class="header">
         <div class="balance-group">
             <div class="balance-display"><span id="balance">0</span> <span data-lang="balance">dukata</span></div>
-            <button class="btn-add-coins" onclick="shop.watchAdForCoins()">+500 🎬</button>
+            <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 💰 🎬</button>
         </div>
     </div>
 
@@ -56,7 +56,6 @@
             const savedTheme = localStorage.getItem('yamb_theme') || 'dark';
             if (savedTheme !== 'dark') document.body.classList.add(savedTheme + '-theme');
 
-            // Pokretanje prevoda odmah po učitavanju
             if(typeof applyTranslations === 'function') applyTranslations();
         })();
 
@@ -67,14 +66,9 @@
             balanceId: 'balance'
         });
 
-        // --- SMART PRE-LOAD ---
-        // Čim korisnik uđe u prodavnicu Kockica, učitavamo reklamu
         setTimeout(() => {
             if(shop.getAdController()) shop.getAdController().prepareReward();
         }, 1000);
-        // ----------------------
-
-        // Globalne helper funkcije za modale i simulaciju reklama
         
         window.closeConfirmModal = function() {
             document.getElementById('confirm-modal').style.display = 'none';

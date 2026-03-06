@@ -1,4 +1,4 @@
-// languages.js - Centralizovani prevodi (Ažurirano za Highscore Filtere, Global Chat, Duele i Revanš)
+// languages.js - Centralizovani prevodi (Kompletan fajl sa svim dodacima)
 
 const TRANSLATIONS = {
     sr: {
@@ -35,6 +35,7 @@ const TRANSLATIONS = {
         "msg_ad_error": "Greška pri učitavanju reklame.",
         "msg_ad_reward": "Nagrada od 500 dukata je spremna!",
         "msg_reward_title": "NAGRADA",
+        "btn_free_coins": "+ 500 💰 🎬",
         
         // --- KATEGORIJE I TROFEJI ---
         "category_other": "OSTALO",
@@ -50,7 +51,7 @@ const TRANSLATIONS = {
         "ad_sub_text": "(Simulacija AdMob Reward Videa)",
         "msg_ad_not_ready": "Ovo vidite jer AdMob nije spreman.<br>(Fallback Mode).",
 
-        // --- SISTEMSKE PORUKE ---
+        // --- SISTEMSKE PORUKE I GREŠKE ---
         "rotate_msg": "MOLIMO OKRENITE UREĐAJ",
         "rotate_sub": "Ova igra je optimizovana za uspravni prikaz<br>na telefonima.",
         "modal_title_info": "OBAVEŠTENJE",
@@ -60,6 +61,14 @@ const TRANSLATIONS = {
         "modal_title_reward": "NAGRADA PREUZETA",
         "modal_btn_ok": "U REDU",
         "modal_btn_cancel": "OTKAŽI",
+        "err_server_conn": "Greška pri konekciji sa serverom.",
+        "err_title": "GREŠKA",
+        "err_undo_select": "Prvo odaberite polje za ispravku!",
+        "err_feature_wip": "Ova funkcionalnost još nije u potpunosti podržana.",
+        "info_title": "INFO",
+        "err_wait_opponent": "Sačekaj protivnika!",
+        "warning_title": "UPOZORENJE",
+        "err_client_outdated": "Vaša verzija klijenta je zastarela. Molimo osvežite stranicu.",
 
         // --- STATISTIKA ---
         "stat_record": "REKORD",
@@ -87,6 +96,7 @@ const TRANSLATIONS = {
         "msg_no_connection": "Nema internet konekcije.",
         "msg_no_results": "Još nema rezultata.",
         "msg_be_first": "Budi prvi!",
+        "hs_error_load": "Greška pri učitavanju top liste.",
 
         // --- IGRA (GAMEPLAY) ---
         "game_roll": "BACAJ",
@@ -99,11 +109,16 @@ const TRANSLATIONS = {
         "game_over": "KRAJ IGRE",
         "prompt_player_name": "Unesite ime igrača",
         "player_guest": "Gost",
+        "turn_yours": "Vaš potez!",
+        "turn_opp": "igra",
+        "status_choose_field": "Izaberite kolonu i red za upis.",
+        "status_roll_first": "Prvo baci kockice!",
+        "status_undo_click": "Ispravka: Klikni na upisano polje da ga obrišeš.",
+        
+        // --- CHAT & DUELI ---
         "chat_you": "Ti",
         "chat_opponent": "Protivnik",
         "lbl_opponent_parens": "(Protivnik)",
-        
-        // --- CHAT & DUELI ---
         "chat_rules_msg": "DOBRODOŠLI U GLOBALNI CHAT!\n\nStrogo je zabranjeno vređanje na rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i upotreba vulgarnosti.\n\nKršenje ovih pravila rezultiraće trajnim isključenjem sa servera.\n\nDa li se slažete sa pravilima?",
         "global_chat_welcome": "Dobrodošli u Globalni Chat! Budite pristojni.",
         "global_chat_placeholder": "Napiši poruku...",
@@ -119,6 +134,7 @@ const TRANSLATIONS = {
         "sys_name": "Sistem",
         "sys_no_conn": "Niste povezani na server.",
         "err_opp_left": "Protivnik je u međuvremenu napustio igru.",
+        "msg_waiting_response": "Čekam odgovor...",
         
         // KOLONE (SR)
         "col_down": "↓",
@@ -142,6 +158,7 @@ const TRANSLATIONS = {
         // --- GAME OVER & ALERT PORUKE ---
         "go_win": "POBEDA!",
         "go_loss": "PORAZ",
+        "go_draw": "NEREŠENO!",
         "go_title_great": "🎉 ODLIČNA PARTIJA!",
         "go_title_good": "DOBRA PARTIJA",
         "go_msg_win": "Pobednik je",
@@ -150,6 +167,8 @@ const TRANSLATIONS = {
         "go_claim": "Preuzmi i Izađi",
         "go_rematch": "🔄 REVANŠ",
         "msg_reward_doubled": "Uspešno ste duplirali nagradu!\nUkupno osvojeno:",
+        "msg_you_left": "Napustili ste partiju.",
+        "msg_game_finished": "Završili ste partiju.",
         
         // Dodato za ispravku upisa
         "undo_confirm": "Želite li da ispravite zadnji upis gledanjem reklame?",
@@ -213,7 +232,41 @@ const TRANSLATIONS = {
         // --- RESUME ---
         "msg_game_resumed": "Igra nastavljena!",
         "msg_no_saved_game": "Nema sačuvane igre.",
-        "msg_save_error": "Greška pri učitavanju.\nPodaci su zastareli."
+        "msg_save_error": "Greška pri učitavanju.\nPodaci su zastareli.",
+        
+        // --- TURNIR ---
+        "tourney_weekly": "NEDELJNI TURNIR",
+        "tourney_desc": "Turnir 8 igrača. Prijavi se, zagovori termin sa protivnikom i osvoji glavnu nagradu! Turnir traje maksimalno 7 dana.",
+        "tourney_registered": "Prijavljeno igrača:",
+        "tourney_already_registered": "✅ VEĆ STE PRIJAVLJENI",
+        "tourney_register_me": "📝 PRIJAVI ME",
+        "tourney_dev_fill": "[DEV] Napuni turnir",
+        "tourney_qf": "ČETVRTFINALE",
+        "tourney_sf": "POLUFINALE",
+        "tourney_f": "FINALE 🏆",
+        "tourney_tbd": "TBD",
+        "tourney_in_progress": "⏳ U dogovoru",
+        "tourney_winner": "Pobednik:",
+        "tourney_time_agreed": "✅ TERMIN DOGOVOREN",
+        "tourney_start_match": "⚔️ ZAPOČNI MEČ SADA",
+        "tourney_dev_win": "[DEV] Simuliraj pobedu",
+        "tourney_waiting_response": "⏳ ČEKA SE ODGOVOR",
+        "tourney_your_proposal": "Vaš predlog:",
+        "tourney_change_proposal_q": "Želite li da promenite svoj predlog?",
+        "tourney_change_time": "🔄 PROMENI TERMIN",
+        "tourney_opp_proposal": "🔔 PREDLOG PROTIVNIKA",
+        "tourney_accept_time": "✅ PRIHVATI TERMIN",
+        "tourney_not_suit_q": "Ne odgovara Vam? Predložite drugo vreme:",
+        "tourney_propose_other": "🔄 PREDLOŽI DRUGO VREME",
+        "tourney_no_time_yet": "Niste dogovorili termin za ovaj meč.",
+        "tourney_choose_datetime": "IZABERITE DATUM I VREME:",
+        "tourney_schedule_match": "📅 ZAGOVORI MEČ",
+        "tourney_not_your_match": "Ovo nije vaš meč. Prati se rezultat.",
+        "tourney_match_title": "TURNIRSKI MEČ",
+        "tourney_alert_select_time": "Molimo Vas da izaberete datum i vreme pre nego što zakažete!",
+        "tourney_alert_warning": "UPOZORENJE",
+        "tourney_alert_start_match": "Ova funkcija će vas ubaciti u zatvorenu multiplayer sobu sa protivnikom!",
+        "tourney_start_match_title": "ZAPOČNI MEČ"
     },
     en: {
         // --- MAIN MENU ---
@@ -249,6 +302,7 @@ const TRANSLATIONS = {
         "msg_ad_error": "Error loading Ad.",
         "msg_ad_reward": "Reward of 500 coins is ready!",
         "msg_reward_title": "REWARD",
+        "btn_free_coins": "+ 500 💰 🎬",
 
         // --- CATEGORIES & TROPHIES ---
         "category_other": "OTHER",
@@ -264,7 +318,7 @@ const TRANSLATIONS = {
         "ad_sub_text": "(AdMob Reward Video Simulation)",
         "msg_ad_not_ready": "You see this because AdMob is not ready.<br>(Fallback Mode).",
 
-        // --- SYSTEM MESSAGES ---
+        // --- SYSTEM MESSAGES & ERRORS ---
         "rotate_msg": "PLEASE ROTATE DEVICE",
         "rotate_sub": "This game is optimized for portrait mode<br>on mobile phones.",
         "modal_title_info": "NOTIFICATION",
@@ -274,6 +328,14 @@ const TRANSLATIONS = {
         "modal_title_reward": "REWARD CLAIMED",
         "modal_btn_ok": "OK",
         "modal_btn_cancel": "CANCEL",
+        "err_server_conn": "Error connecting to the server.",
+        "err_title": "ERROR",
+        "err_undo_select": "Select a field to correct first!",
+        "err_feature_wip": "This feature is not yet fully supported.",
+        "info_title": "INFO",
+        "err_wait_opponent": "Wait for the opponent!",
+        "warning_title": "WARNING",
+        "err_client_outdated": "Your client version is outdated. Please refresh the page.",
 
         // --- STATISTICS ---
         "stat_record": "RECORD",
@@ -301,6 +363,7 @@ const TRANSLATIONS = {
         "msg_no_connection": "No internet connection.",
         "msg_no_results": "No results yet.",
         "msg_be_first": "Be the first!",
+        "hs_error_load": "Error loading high scores.",
 
         // --- GAMEPLAY ---
         "game_roll": "ROLL",
@@ -313,11 +376,16 @@ const TRANSLATIONS = {
         "game_over": "GAME OVER",
         "prompt_player_name": "Enter name for player",
         "player_guest": "Guest",
+        "turn_yours": "Your turn!",
+        "turn_opp": "is playing",
+        "status_choose_field": "Select a column and row to write.",
+        "status_roll_first": "Roll the dice first!",
+        "status_undo_click": "Undo: Click on a filled field to clear it.",
+        
+        // --- CHAT & DUELS ---
         "chat_you": "You",
         "chat_opponent": "Opponent",
         "lbl_opponent_parens": "(Opponent)",
-        
-        // --- CHAT & DUELS ---
         "chat_rules_msg": "WELCOME TO GLOBAL CHAT!\n\nInsults based on race, religion, nationality, or gender, as well as vulgarity, are strictly prohibited.\n\nViolating these rules will result in a permanent ban.\n\nDo you agree to the rules?",
         "global_chat_welcome": "Welcome to Global Chat! Be polite.",
         "global_chat_placeholder": "Type a message...",
@@ -333,6 +401,7 @@ const TRANSLATIONS = {
         "sys_name": "System",
         "sys_no_conn": "You are not connected to the server.",
         "err_opp_left": "Opponent has left the game in the meantime.",
+        "msg_waiting_response": "Waiting for response...",
 
         // EN KOLONE
         "col_down": "↓",
@@ -356,6 +425,7 @@ const TRANSLATIONS = {
         // --- GAME OVER & ALERTS ---
         "go_win": "VICTORY!",
         "go_loss": "DEFEAT",
+        "go_draw": "DRAW!",
         "go_title_great": "🎉 GREAT GAME!",
         "go_title_good": "GOOD GAME",
         "go_msg_win": "Winner is",
@@ -364,6 +434,8 @@ const TRANSLATIONS = {
         "go_claim": "Claim & Exit",
         "go_rematch": "🔄 REMATCH",
         "msg_reward_doubled": "Reward successfully doubled!\nTotal won:",
+        "msg_you_left": "You left the game.",
+        "msg_game_finished": "You finished the game.",
 
         // Dodato za ispravku upisa
         "undo_confirm": "Do you want to correct the last move by watching an ad?",
@@ -427,7 +499,41 @@ const TRANSLATIONS = {
         // --- RESUME ---
         "msg_game_resumed": "Game resumed!",
         "msg_no_saved_game": "No saved game found.",
-        "msg_save_error": "Error loading game.\nData format is outdated."
+        "msg_save_error": "Error loading game.\nData format is outdated.",
+        
+        // --- TOURNAMENT ---
+        "tourney_weekly": "WEEKLY TOURNAMENT",
+        "tourney_desc": "8 player tournament. Register, schedule a match with your opponent and win the grand prize! The tournament lasts a maximum of 7 days.",
+        "tourney_registered": "Players registered:",
+        "tourney_already_registered": "✅ ALREADY REGISTERED",
+        "tourney_register_me": "📝 REGISTER ME",
+        "tourney_dev_fill": "[DEV] Fill tournament",
+        "tourney_qf": "QUARTERFINALS",
+        "tourney_sf": "SEMIFINALS",
+        "tourney_f": "FINALS 🏆",
+        "tourney_tbd": "TBD",
+        "tourney_in_progress": "⏳ Scheduling",
+        "tourney_winner": "Winner:",
+        "tourney_time_agreed": "✅ TIME AGREED",
+        "tourney_start_match": "⚔️ START MATCH NOW",
+        "tourney_dev_win": "[DEV] Simulate win",
+        "tourney_waiting_response": "⏳ WAITING FOR RESPONSE",
+        "tourney_your_proposal": "Your proposal:",
+        "tourney_change_proposal_q": "Do you want to change your proposal?",
+        "tourney_change_time": "🔄 CHANGE TIME",
+        "tourney_opp_proposal": "🔔 OPPONENT'S PROPOSAL",
+        "tourney_accept_time": "✅ ACCEPT TIME",
+        "tourney_not_suit_q": "Doesn't suit you? Propose another time:",
+        "tourney_propose_other": "🔄 PROPOSE ANOTHER TIME",
+        "tourney_no_time_yet": "You haven't scheduled a time for this match.",
+        "tourney_choose_datetime": "CHOOSE DATE AND TIME:",
+        "tourney_schedule_match": "📅 SCHEDULE MATCH",
+        "tourney_not_your_match": "This is not your match. Following the result.",
+        "tourney_match_title": "TOURNAMENT MATCH",
+        "tourney_alert_select_time": "Please select a date and time before scheduling!",
+        "tourney_alert_warning": "WARNING",
+        "tourney_alert_start_match": "This function will put you in a closed multiplayer room with your opponent!",
+        "tourney_start_match_title": "START MATCH"
     }
 };
 
@@ -455,13 +561,11 @@ function applyTranslations() {
         nameInput.placeholder = (localStorage.getItem('yamb_lang') === 'en') ? "Player Name" : "Ime Igrača";
     }
 
-    // --- DODATO ZA GLOBAL CHAT PLACEHOLDER ---
     const globalChatInput = document.getElementById('global-chat-input');
     if (globalChatInput) {
         globalChatInput.placeholder = t('global_chat_placeholder');
     }
 
-    // --- DODATO ZA DUGME ZA VRAĆANJE POTEZA (TOOLTIP) ---
     const btnUndo = document.getElementById('btn-undo-move');
     if (btnUndo) {
         btnUndo.title = t('undo_title');

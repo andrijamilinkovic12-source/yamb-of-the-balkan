@@ -234,8 +234,8 @@ class TopListManager {
                 }
             }
 
-            // Podrška za stara (name) i nova (playerName) polja
-            const displayName = entry.playerName || entry.name || "Nepoznat";
+            // Podrška za stara (name) i nova (playerName) polja - DODAT PREVOD
+            const displayName = entry.playerName || entry.name || this._t('player_unknown');
             const scoreFormatted = entry.score.toLocaleString(currentLang);
             
             li.innerHTML = `
