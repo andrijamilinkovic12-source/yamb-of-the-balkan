@@ -123,7 +123,6 @@ class ModalManager {
     alert(text, title) {
         const safeTitle = title || _safeT('modal_title_info') || "OBAVEŠTENJE";
         return new Promise(resolve => {
-            // ISPRAVKA: Uklonjen nativni alert kao fallback, ostavljen samo console.warn da bi interfejs ostao čist
             if(!this.overlay) { console.warn("Modal overlay missing! Alert:", text); resolve(true); return; } 
             this.setup(safeTitle, text, false);
             this.btnOk.onclick = () => { this.close(); resolve(true); };
@@ -133,7 +132,6 @@ class ModalManager {
     confirm(text) {
         const safeTitle = _safeT('modal_title_confirm') || "POTVRDA";
         return new Promise(resolve => {
-            // ISPRAVKA: Uklonjen nativni confirm
             if(!this.overlay) { console.warn("Modal overlay missing! Confirm:", text); resolve(false); return; }
             this.setup(safeTitle, text, false);
             this.btnCancel.classList.remove('hidden');
@@ -145,7 +143,6 @@ class ModalManager {
     prompt(text) {
         const safeTitle = _safeT('modal_title_input') || "UNOS";
         return new Promise(resolve => {
-            // ISPRAVKA: Uklonjen nativni prompt
             if(!this.overlay) { console.warn("Modal overlay missing! Prompt:", text); resolve(null); return; }
             this.setup(safeTitle, text, true);
             this.btnOk.onclick = () => { 
@@ -194,55 +191,30 @@ class EffectManager {
         if (type === 'gold_rain') this.spawnEmojiRain(['💰', '🪙', '💎', '👑'], 50);
         if (type === 'fireflies') this.spawnFloatingEmoji(['✨', '🌟', '💫', '🧚'], 40);
         
-        // --- LEDENO DOBA (SAMO AKTIVNA TABLA) ---
         if (type === 'ice_age') {
             let targetTable = null;
             const tables = document.querySelectorAll('.player-table');
-            
-            tables.forEach(tbl => {
-                if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) {
-                    targetTable = tbl;
-                }
-            });
-
+            tables.forEach(tbl => { if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { targetTable = tbl; } });
             if (!targetTable && tables.length > 0) targetTable = tables[0];
 
             if (targetTable) {
                 targetTable.classList.add('active-ice-table');
-
                 const container = document.createElement('div');
                 container.className = 'ice-overlay-container';
-                
-                container.innerHTML = `
-                    <div class="ice-glass"></div>
-                    <div class="ice-frost-border"></div>
-                    <div class="ice-flake-center">❄️</div>
-                `;
-                
+                container.innerHTML = `<div class="ice-glass"></div><div class="ice-frost-border"></div><div class="ice-flake-center">❄️</div>`;
                 targetTable.appendChild(container);
-
                 setTimeout(() => {
                     container.style.animation = 'iceMeltOut 1.5s forwards';
                     targetTable.classList.remove('active-ice-table');
-                    
-                    setTimeout(() => {
-                        if (container.parentNode) container.remove();
-                    }, 1500);
+                    setTimeout(() => { if (container.parentNode) container.remove(); }, 1500);
                 }, 6000);
             }
         }
 
-        // --- CRNA RUPA (BLACK HOLE) ---
         if (type === 'black_hole') {
             let targetTable = null;
             const tables = document.querySelectorAll('.player-table');
-            
-            tables.forEach(tbl => {
-                if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) {
-                    targetTable = tbl;
-                }
-            });
-
+            tables.forEach(tbl => { if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { targetTable = tbl; } });
             if (!targetTable && tables.length > 0) targetTable = tables[0];
 
             if (targetTable) {
@@ -252,33 +224,18 @@ class EffectManager {
                 bhContainer.style.position = 'fixed';
                 bhContainer.style.top = (rect.top + rect.height / 2) + 'px';
                 bhContainer.style.left = (rect.left + rect.width / 2) + 'px';
-                
-                bhContainer.innerHTML = `
-                    <div class="bh-core"></div>
-                    <div class="bh-ring"></div>
-                    <div class="bh-particles"></div>
-                `;
+                bhContainer.innerHTML = `<div class="bh-core"></div><div class="bh-ring"></div><div class="bh-particles"></div>`;
                 document.body.appendChild(bhContainer);
-
                 targetTable.classList.add('anim-suck-in');
-
-                setTimeout(() => {
-                    targetTable.classList.remove('anim-suck-in');
-                    if (bhContainer.parentNode) bhContainer.remove();
-                }, 6000);
+                setTimeout(() => { targetTable.classList.remove('anim-suck-in'); if (bhContainer.parentNode) bhContainer.remove(); }, 6000);
             }
         }
 
         if (type === 'thunder') {
             const flash = document.createElement('div');
             flash.className = 'anim-thunder';
-            flash.style.position = 'fixed';
-            flash.style.top = '0'; flash.style.left = '0';
-            flash.style.width = '100%'; flash.style.height = '100%';
-            flash.style.background = '#fff';
-            flash.style.zIndex = '99999';
-            flash.style.mixBlendMode = 'overlay';
-            flash.style.pointerEvents = 'none';
+            flash.style.position = 'fixed'; flash.style.top = '0'; flash.style.left = '0'; flash.style.width = '100%'; flash.style.height = '100%';
+            flash.style.background = '#fff'; flash.style.zIndex = '99999'; flash.style.mixBlendMode = 'overlay'; flash.style.pointerEvents = 'none';
             document.body.appendChild(flash);
             setTimeout(() => flash.remove(), 600);
             document.body.classList.add('fx-balkan'); 
@@ -288,32 +245,21 @@ class EffectManager {
             document.body.classList.add('fx-balkan');
             const t1 = document.createElement('div'); t1.innerText = '🎺'; t1.className = 'trumpet-icon'; t1.style.left = '10px'; t1.style.bottom = '10px';
             const t2 = document.createElement('div'); t2.innerText = '🎺'; t2.className = 'trumpet-icon'; t2.style.right = '10px'; t2.style.bottom = '10px'; t2.style.transform = 'scaleX(-1)';
-            document.body.appendChild(t1);
-            document.body.appendChild(t2);
+            document.body.appendChild(t1); document.body.appendChild(t2);
             this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖'], 40);
-            setTimeout(() => {
-                document.body.classList.remove('fx-balkan');
-                if(t1.parentNode) t1.remove(); 
-                if(t2.parentNode) t2.remove();
-            }, 4000);
+            setTimeout(() => { document.body.classList.remove('fx-balkan'); if(t1.parentNode) t1.remove(); if(t2.parentNode) t2.remove(); }, 4000);
         }
         if (type === 'fireworks') {
-             for(let i=0; i<8; i++) {
-                 setTimeout(() => this.spawnExplosion(), i * 400);
-             }
+             for(let i=0; i<8; i++) { setTimeout(() => this.spawnExplosion(), i * 400); }
         }
     }
     
     spawnEmojiRain(emojis, count) {
         for (let i = 0; i < count; i++) {
             setTimeout(() => {
-                const el = document.createElement('div');
-                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                el.className = 'falling-coin';
-                el.style.left = Math.random() * 100 + 'vw';
-                el.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                document.body.appendChild(el);
-                setTimeout(() => el.remove(), 3000);
+                const el = document.createElement('div'); el.innerText = emojis[Math.floor(Math.random() * emojis.length)]; el.className = 'falling-coin';
+                el.style.left = Math.random() * 100 + 'vw'; el.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(el); setTimeout(() => el.remove(), 3000);
             }, Math.random() * 2000);
         }
     }
@@ -321,45 +267,28 @@ class EffectManager {
     spawnFloatingEmoji(emojis, count) {
         for (let i = 0; i < count; i++) {
             setTimeout(() => {
-                const el = document.createElement('div');
-                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                el.className = 'firefly';
-                el.style.left = Math.random() * 100 + 'vw';
-                el.style.setProperty('--rnd-x', (Math.random() * 200 - 100) + 'px');
-                el.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                document.body.appendChild(el);
-                setTimeout(() => el.remove(), 4000);
+                const el = document.createElement('div'); el.innerText = emojis[Math.floor(Math.random() * emojis.length)]; el.className = 'firefly';
+                el.style.left = Math.random() * 100 + 'vw'; el.style.setProperty('--rnd-x', (Math.random() * 200 - 100) + 'px'); el.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                document.body.appendChild(el); setTimeout(() => el.remove(), 4000);
             }, Math.random() * 2000);
         }
     }
     
     spawnExplosion() {
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * (window.innerHeight / 2); 
-        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-        const color = colors[Math.floor(Math.random() * colors.length)];
+        const x = Math.random() * window.innerWidth; const y = Math.random() * (window.innerHeight / 2); 
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']; const color = colors[Math.floor(Math.random() * colors.length)];
         for (let i = 0; i < 20; i++) {
-            const el = document.createElement('div');
-            el.innerText = '●'; 
-            el.className = 'firework-particle';
-            el.style.color = color;
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
-            const angle = Math.random() * Math.PI * 2;
-            const velocity = Math.random() * 150 + 50;
-            el.style.setProperty('--dx', Math.cos(angle) * velocity + 'px');
-            el.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
-            document.body.appendChild(el);
-            setTimeout(() => el.remove(), 1000);
+            const el = document.createElement('div'); el.innerText = '●'; el.className = 'firework-particle';
+            el.style.color = color; el.style.left = x + 'px'; el.style.top = y + 'px';
+            const angle = Math.random() * Math.PI * 2; const velocity = Math.random() * 150 + 50;
+            el.style.setProperty('--dx', Math.cos(angle) * velocity + 'px'); el.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
+            document.body.appendChild(el); setTimeout(() => el.remove(), 1000);
         }
     }
     
     spawnConfetti() {
-        if (window.confetti) {
-            window.confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-        } else {
-            this.spawnEmojiRain(['🎉', '🎊', '🎈'], 30);
-        }
+        if (window.confetti) { window.confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); } 
+        else { this.spawnEmojiRain(['🎉', '🎊', '🎈'], 30); }
     }
     
     celebrateYamb() {
@@ -376,11 +305,8 @@ class EffectManager {
     
     stop() {
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age');
-        
         document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container').forEach(e => e.remove());
-        
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
-        
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
     }
 }
@@ -389,12 +315,9 @@ class EffectManager {
 class SoundManager {
     constructor() {
         this.enabled = localStorage.getItem('yamb_sound') !== 'false';
-        
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         this.ctx = new AudioContext();
-
         this.audioCache = {};
-        
         if (typeof CONFIG !== 'undefined' && CONFIG.SOUNDS) {
             Object.entries(CONFIG.SOUNDS).forEach(([key, file]) => {
                 this.audioCache[key] = new Audio(`assets/sounds/${file}`);
@@ -405,20 +328,11 @@ class SoundManager {
 
     playSound(key, synthCallback) {
         if (!this.enabled) return;
-        
-        if (this.ctx.state === 'suspended') {
-            this.ctx.resume().catch(e => console.log("Audio resume failed", e));
-        }
-
+        if (this.ctx.state === 'suspended') { this.ctx.resume().catch(e => console.log("Audio resume failed", e)); }
         if (this.audioCache[key]) {
-            const sound = this.audioCache[key].cloneNode();
-            sound.volume = 0.5;
+            const sound = this.audioCache[key].cloneNode(); sound.volume = 0.5;
             const playPromise = sound.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    if (synthCallback) synthCallback.call(this);
-                });
-            }
+            if (playPromise !== undefined) { playPromise.catch(() => { if (synthCallback) synthCallback.call(this); }); }
         } else {
             if (synthCallback) synthCallback.call(this);
         }
@@ -426,159 +340,78 @@ class SoundManager {
 
     click() { 
         this.playSound('CLICK', () => {
-            const t = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, t);
-            osc.frequency.exponentialRampToValueAtTime(300, t + 0.1);
-            
-            gain.gain.setValueAtTime(0.15, t);
-            gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
-            
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(t);
-            osc.stop(t + 0.1);
+            const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(800, t); osc.frequency.exponentialRampToValueAtTime(300, t + 0.1);
+            gain.gain.setValueAtTime(0.15, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+            osc.connect(gain); gain.connect(this.ctx.destination); osc.start(t); osc.stop(t + 0.1);
         });
     }
 
     announce() {
         this.playSound('ANNOUNCE', () => {
-            const t = this.ctx.currentTime;
-            const freqs = [523.25, 659.25, 783.99, 1046.50]; 
-
+            const t = this.ctx.currentTime; const freqs = [523.25, 659.25, 783.99, 1046.50]; 
             freqs.forEach((f, i) => {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                
-                osc.type = 'sine'; 
-                osc.frequency.value = f;
-                
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.type = 'sine'; osc.frequency.value = f;
                 const start = t + (i * 0.05);
-                
-                gain.gain.setValueAtTime(0, start);
-                gain.gain.linearRampToValueAtTime(0.1, start + 0.05); 
-                gain.gain.exponentialRampToValueAtTime(0.001, start + 0.8); 
-                
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(start);
-                osc.stop(start + 1.0);
+                gain.gain.setValueAtTime(0, start); gain.gain.linearRampToValueAtTime(0.1, start + 0.05); gain.gain.exponentialRampToValueAtTime(0.001, start + 0.8); 
+                osc.connect(gain); gain.connect(this.ctx.destination); osc.start(start); osc.stop(start + 1.0);
             });
         });
     }
 
     roll() {
         this.playSound('DICE_ROLL', () => {
-            const count = 6; 
-            const now = this.ctx.currentTime;
-            
+            const count = 6; const now = this.ctx.currentTime;
             for (let i = 0; i < count; i++) {
                 const offset = i * 0.06 + (Math.random() * 0.02);
-                
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                const filter = this.ctx.createBiquadFilter(); 
-
-                osc.type = 'square'; 
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(400 + Math.random() * 200, now + offset);
-
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain(); const filter = this.ctx.createBiquadFilter(); 
+                osc.type = 'square'; filter.type = 'lowpass'; filter.frequency.setValueAtTime(400 + Math.random() * 200, now + offset);
                 osc.frequency.setValueAtTime(150 + Math.random() * 50, now + offset);
-                
-                gain.gain.setValueAtTime(0.2, now + offset);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.1); 
-
-                osc.connect(filter);
-                filter.connect(gain);
-                gain.connect(this.ctx.destination);
-                
-                osc.start(now + offset);
-                osc.stop(now + offset + 0.12);
+                gain.gain.setValueAtTime(0.2, now + offset); gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.1); 
+                osc.connect(filter); filter.connect(gain); gain.connect(this.ctx.destination);
+                osc.start(now + offset); osc.stop(now + offset + 0.12);
             }
         });
     }
 
     score() { 
         this.playSound('ACHIEVEMENT', () => {
-            const t = this.ctx.currentTime;
-            const osc = this.ctx.createOscillator();
-            const gain = this.ctx.createGain();
-            
-            osc.type = 'triangle'; 
-            osc.frequency.setValueAtTime(440, t);
-            osc.frequency.linearRampToValueAtTime(880, t + 0.1); 
-            
-            gain.gain.setValueAtTime(0.1, t);
-            gain.gain.linearRampToValueAtTime(0, t + 0.3);
-            
-            osc.connect(gain);
-            gain.connect(this.ctx.destination);
-            osc.start(t);
-            osc.stop(t + 0.3);
+            const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+            osc.type = 'triangle'; osc.frequency.setValueAtTime(440, t); osc.frequency.linearRampToValueAtTime(880, t + 0.1); 
+            gain.gain.setValueAtTime(0.1, t); gain.gain.linearRampToValueAtTime(0, t + 0.3);
+            osc.connect(gain); gain.connect(this.ctx.destination); osc.start(t); osc.stop(t + 0.3);
         });
     }
 
     win() {
         this.playSound('WIN', () => {
-            const t = this.ctx.currentTime;
-            const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
-            
+            const t = this.ctx.currentTime; const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
             notes.forEach((freq, i) => {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                
-                osc.type = 'triangle';
-                osc.frequency.value = freq;
-                
-                const start = t + (i * 0.15);
-                const duration = (i === notes.length - 1) ? 0.8 : 0.2;
-                
-                gain.gain.setValueAtTime(0.15, start);
-                gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
-                
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(start);
-                osc.stop(start + duration);
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.type = 'triangle'; osc.frequency.value = freq;
+                const start = t + (i * 0.15); const duration = (i === notes.length - 1) ? 0.8 : 0.2;
+                gain.gain.setValueAtTime(0.15, start); gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
+                osc.connect(gain); gain.connect(this.ctx.destination); osc.start(start); osc.stop(start + duration);
             });
         });
     }
 
     error() { 
-        const t = this.ctx.currentTime;
-        const osc = this.ctx.createOscillator();
-        const gain = this.ctx.createGain();
-        
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, t);
-        osc.frequency.linearRampToValueAtTime(100, t + 0.15);
-        
-        gain.gain.setValueAtTime(0.1, t);
-        gain.gain.linearRampToValueAtTime(0, t + 0.15);
-        
-        osc.connect(gain);
-        gain.connect(this.ctx.destination);
-        osc.start(t);
-        osc.stop(t + 0.2);
+        const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, t); osc.frequency.linearRampToValueAtTime(100, t + 0.15);
+        gain.gain.setValueAtTime(0.1, t); gain.gain.linearRampToValueAtTime(0, t + 0.15);
+        osc.connect(gain); gain.connect(this.ctx.destination); osc.start(t); osc.stop(t + 0.2);
     }
 
     trophy() {
         this.playSound('TROPHY', () => {
             const t = this.ctx.currentTime;
             [440, 554.37].forEach(f => {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = 'sine';
-                osc.frequency.value = f;
-                gain.gain.setValueAtTime(0.2, t);
-                gain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start(t);
-                osc.stop(t + 1.5);
+                const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.type = 'sine'; osc.frequency.value = f;
+                gain.gain.setValueAtTime(0.2, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
+                osc.connect(gain); gain.connect(this.ctx.destination); osc.start(t); osc.stop(t + 1.5);
             });
         });
     }
@@ -736,7 +569,6 @@ class ShopManager {
         }
     }
 
-    // ISPRAVKA: Async metoda kako bi tematski confirm() mogao da se sačeka
     async tryBuy(id, name, price) {
         if (this.balance < price) {
             if (window.modalManager) {
@@ -771,7 +603,6 @@ class ShopManager {
         if(window.app && window.app.soundMgr) window.app.soundMgr.trophy(); 
         else { const sm = new SoundManager(); sm.trophy(); }
 
-        // ISPRAVKA: Tematsko obaveštenje o uspešnoj kupovini
         if (window.modalManager) {
             window.modalManager.alert(_safeT('msg_purchase_success'), _safeT('modal_title_info'));
         }
@@ -802,9 +633,18 @@ class ShopManager {
         this.updateBalanceDisplay();
     }
 
+    // ISPRAVKA: Dodata provera isReady i notifikacija za nagradno dugme
     async watchAdForCoins() {
         const adCtrl = this.getAdController();
         if (adCtrl) {
+             if (!adCtrl.ads.rewarded.isReady) {
+                 if (window.modalManager) {
+                     window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se još učitava ili trenutno nema dostupnih reklama na mreži. Pokušajte ponovo za par sekundi.", _safeT('modal_title_info') || "INFO");
+                 }
+                 adCtrl.prepareReward(); // Forsiraj ponovno učitavanje
+                 return;
+             }
+
              const success = await adCtrl.showRewardVideo();
              if (success) {
                  this.addBalance(500); 
@@ -814,9 +654,8 @@ class ShopManager {
 
                  this.updateBalanceDisplay();
                  
-                 // ISPRAVKA: ModalManager umesto native alert-a
                  if (window.modalManager) {
-                     window.modalManager.alert("+500 💰", _safeT('msg_reward_title'));
+                     window.modalManager.alert("+500 💰", _safeT('msg_reward_title') || "NAGRADA");
                  }
              }
         }
@@ -839,7 +678,8 @@ class AdMobController {
         this.baseRetryDelay = 1000;   
         this.maxRetryDelay = 30000;   
         
-        this.uiSelectors = ['.btn-ad-double', '#btn-ad-coins', '.btn-discount', '.btn-ad-state-aware']; 
+        // ISPRAVKA: Promenjeno #btn-ad-coins u .btn-add-coins kako bi se slagalo sa HTML dugmićima u prodavnici
+        this.uiSelectors = ['.btn-ad-double', '.btn-add-coins', '.btn-discount', '.btn-ad-state-aware']; 
     }
 
     async initialize() {
@@ -955,6 +795,7 @@ class AdMobController {
         });
     }
 
+    // ISPRAVKA: Dodato upozorenje ako se metoda otegne / nije spremna
     showRewardVideo() {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) { resolve(false); return; }
@@ -969,6 +810,9 @@ class AdMobController {
                     resolve(false);
                 }
             } else {
+                if(window.modalManager) {
+                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna na mreži. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
+                }
                 this.triggerHighPriorityLoad('rewarded');
                 resolve(false);
             }

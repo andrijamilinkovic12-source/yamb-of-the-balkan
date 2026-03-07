@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT)
+// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -184,7 +184,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v8.1 - INLINE RESUME BUTTONS ENABLED");
+        console.log("YambApp v8.2 - INLINE RESUME BUTTONS ENABLED + ANTI SPAM");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -218,6 +218,7 @@ class YambApp {
         this.lastGameType = 'normal';
         this.lastMoveSnapshot = null; 
         this.pendingNewGamePlayers = 1;
+        this.lastGlobalMsg = null; // Anti-spam timer za global chat
         
         this.socket = null; 
         this.onlineMode = false; 
@@ -316,7 +317,6 @@ class YambApp {
         }, 4500); 
 
         setTimeout(() => { this.checkForInvite(); }, 500);
-        this.checkForInvite(); 
 
         this.handleRotationLock();
         window.addEventListener('resize', () => this.handleRotationLock());
@@ -344,7 +344,7 @@ class YambApp {
 
     initSocketConnection() {
         if (this.socket) {
-            if (!this.socket.connected) {
+            if (this.socket.disconnected) { // 🔹 ISPRAVKA: Proveravamo samo ako je eksplicitno diskonektovan
                 console.log("♻️ Osvežavam prekinutu socket konekciju...");
                 this.socket.connect();
             }
@@ -358,7 +358,7 @@ class YambApp {
                 console.log("🔌 Povezujem se prvi put na:", connectionUrl);
 
                 this.socket = io(connectionUrl, { 
-                    transports: ['polling', 'websocket'],
+                    transports: ['websocket'], // ISPRAVKA: Samo websocket
                     reconnection: true,             
                     reconnectionAttempts: 20,       
                     reconnectionDelay: 1000,        
@@ -375,6 +375,13 @@ class YambApp {
                     if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
                 });
 
+                this.socket.on('users_count', (count) => {
+                    this.onlineUsersCount = count;
+                    this.updateOnlineCounterUI();
+                });
+
+                // --- 🛡️ OČISTI STARI LISTENER PRE DODAVANJA NOVOG ---
+                this.socket.off('global_chat_msg');
                 this.socket.on('global_chat_msg', (data) => {
                     const isMe = (this.socket && data.senderId === this.socket.id);
                     this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
@@ -398,11 +405,6 @@ class YambApp {
                 this.socket.on('duel_start', (data) => {
                     this.closeGlobalChat(); 
                     this.joinPrivateGame(this.playerName, data.roomId);
-                });
-
-                this.socket.on('users_count', (count) => {
-                    this.onlineUsersCount = count;
-                    this.updateOnlineCounterUI();
                 });
 
                 this.socket.on('global_highscores_data', (data) => { 
@@ -608,6 +610,17 @@ class YambApp {
         const body = document.getElementById('global-chat-body'); 
         if(!body) return;
         
+        // --- 🛡️ ZAŠTITA OD DUPLIRANIH PORUKA ---
+        const sada = Date.now();
+        if (this.lastGlobalMsg && 
+            this.lastGlobalMsg.text === text && 
+            this.lastGlobalMsg.sender === sender && 
+            (sada - this.lastGlobalMsg.time < 1000)) {
+            return; // Ignoriši ako je ista poruka od istog pošiljaoca stigla u zadnjih 1s
+        }
+        this.lastGlobalMsg = { text, sender, time: sada };
+        // ----------------------------------------
+
         const infoMsg = body.querySelector('div[style*="text-align: center"]');
         if (infoMsg && body.children.length === 1) {
             infoMsg.style.display = 'none';
@@ -817,6 +830,37 @@ class YambApp {
         document.getElementById('invite-link').value = shareUrl; 
         
         this.joinPrivateGame(nickname, roomId); 
+    }
+
+    async shareInvite() {
+        const linkInput = document.getElementById('invite-link');
+        if (!linkInput) return;
+        
+        const url = linkInput.value;
+        const shareTitle = gt('invite_text') || 'Yamb of the Balkan';
+        const shareText = 'Pridruži mi se u partiji Yamba! 🎲';
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: shareTitle,
+                    text: shareText,
+                    url: url
+                });
+            } catch (err) {
+                console.log("Deljenje je prekinuto ili nije uspelo:", err);
+            }
+        } else {
+            // Fallback: Kopiranje u clipboard ako Web Share API nije podržan
+            try {
+                await navigator.clipboard.writeText(url);
+                this.soundMgr.click();
+                this.modal.alert(gt('msg_link_copied') || 'Link je kopiran! Pošaljite ga prijatelju.', gt('modal_title_info') || 'INFO');
+            } catch (err) {
+                this.soundMgr.error();
+                this.modal.alert('Ne mogu automatski da kopiram link. Molimo označite ga i kopirajte ručno.', gt('err_title') || 'GREŠKA');
+            }
+        }
     }
     
     async joinPrivateGame(nickname, roomId) { 

@@ -496,14 +496,6 @@
     <script src="toplista.js?v=3.8"></script> 
     <script src="turnir.js"></script> 
     <script src="game.js?v=4.0"></script>
-    
-    <script>
-        // Kada se cela igra učita, instancirajmo menadžer za turnire
-        window.addEventListener('load', () => {
-            if (window.app && typeof TournamentManager !== 'undefined') {
-                window.app.tournamentManager = new TournamentManager(window.app);
-            }
-        });
-    </script>
+
 </body>
 </html>

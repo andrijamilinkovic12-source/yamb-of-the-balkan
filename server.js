@@ -18,7 +18,9 @@ const io = new Server(server, {
     cors: {
         origin: "*", 
         methods: ["GET", "POST"]
-    }
+    },
+    pingInterval: 10000, // Server na svakih 10s proverava da li je igrač i dalje tu
+    pingTimeout: 5000    // Ako telefon ne odgovori u roku od 5s, server odmah briše "duha"
 });
 
 // Middleware
