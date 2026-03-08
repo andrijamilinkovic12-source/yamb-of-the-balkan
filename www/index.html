@@ -16,11 +16,6 @@
 </head>
 <body>
 
-    <div class="winter-decor">
-        <div class="winter-trees"></div>
-        <div class="santa-flying">🦌🦌🛷🎅</div>
-    </div>
-
     <canvas id="confetti-canvas"></canvas>
 
     <div id="rotate-lock-overlay">
@@ -142,7 +137,12 @@
         </div>
 
         <div class="icon-menu-grid">
-            <button class="btn-square" onclick="app.dailyManager.open()" title="Dnevni izazov">📅</button>
+            <button class="btn-square" onclick="app.dailyManager.open()" title="Dnevni izazov" style="padding: 0;">
+                <div style="display:flex; flex-direction:column; align-items:center; width: 34px; height: 36px; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
+                    <div id="live-month" style="background: #d32f2f; color: white; font-size: 0.45rem; width: 100%; text-align: center; font-weight: 800; padding: 2px 0;">MAR</div>
+                    <div id="live-day" style="background: #fff; color: #222; font-size: 0.9rem; width: 100%; text-align: center; font-weight: 900; flex-grow: 1; display: flex; align-items: center; justify-content: center;">07</div>
+                </div>
+            </button>
             <button class="btn-square" onclick="app.showHighscoresScreen()" title="Top Lista">🏆</button>
             <button class="btn-square" onclick="app.showStats()" title="Statistika">📊</button>
             <button class="btn-square" onclick="app.showSettings()" title="Podešavanja">⚙</button>
@@ -278,10 +278,10 @@
             <div style="margin-top: 15px;">
                 <label style="color: var(--text-muted);" data-lang="settings_theme">Tema:</label>
                 <select id="setting-theme" class="modal-input">
-                    <option value="dark">Dark Soft Gold (Glass)</option>
-                    <option value="light">Light Gold</option>
-                    <option value="medium">Valentine's Day (Ljubavna) 💖</option>
-                    <option value="winter">Winter Holiday ❄️🎄</option>
+                    <option value="dark" data-lang="theme_dark">Zelena</option>
+                    <option value="light" data-lang="theme_light">Svetlo Zlato</option>
+                    <option value="medium" data-lang="theme_medium">Trula Višnja 🍒</option>
+                    <option value="winter" data-lang="theme_winter">Plavi Okean 🌊</option>
                 </select>
             </div>
             <div style="margin-top: 15px;">

@@ -196,6 +196,10 @@ const TRANSLATIONS = {
         // --- PODEŠAVANJA ---
         "settings_name": "Vaše Ime:",
         "settings_theme": "Tema:",
+        "theme_dark": "Zelena",
+        "theme_light": "Svetlo Zlato",
+        "theme_medium": "Trula Višnja 🍒",
+        "theme_winter": "Plavi Okean 🌊",
         "settings_sound": "Zvučni Efekti",
         "settings_save": "Sačuvaj",
 
@@ -463,6 +467,10 @@ const TRANSLATIONS = {
         // --- SETTINGS ---
         "settings_name": "Your Name:",
         "settings_theme": "Theme:",
+        "theme_dark": "Green",
+        "theme_light": "Light Gold",
+        "theme_medium": "Cherry Red 🍒",
+        "theme_winter": "Blue Ocean 🌊",
         "settings_sound": "Sound Effects",
         "settings_save": "Save",
 

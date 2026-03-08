@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA
 
 require('dotenv').config(); 
 
@@ -66,11 +66,8 @@ function napraviPametniRegex(rec) {
     let regexStr = '';
     for (let i = 0; i < rec.length; i++) {
         let slovo = rec[i].toLowerCase();
-        
         let pattern = charMap[slovo] || `[${slovo.toLowerCase()}${slovo.toUpperCase()}]`;
-        
         regexStr += pattern + '+';
-        
         if (i < rec.length - 1) {
             regexStr += '[\\W_]*';
         }
@@ -82,11 +79,9 @@ const zabranjeniRegexi = zabranjeneReci.map(rec => napraviPametniRegex(rec));
 
 function cenzurisiPoruku(poruka) {
     let filtriranaPoruka = poruka;
-    
     zabranjeniRegexi.forEach(regex => {
         filtriranaPoruka = filtriranaPoruka.replace(regex, '***');
     });
-    
     return filtriranaPoruka;
 }
 
@@ -145,11 +140,11 @@ let gameStartTimes = {};
 const chatBans = {}; // Format: { "ip_adresa": { strikes: broj, banUntil: timestamp } }
 
 // ==================================================================
-// GLOBALNO STANJE TURNIRA
+// GLOBALNO STANJE TURNIRA (Ažurirano za ID identifikaciju)
 // ==================================================================
 let tournamentState = {
     status: 'registration', // 'registration', 'active', 'finished'
-    players: [],
+    players: [], // Format: [{ id: "usr_...", name: "Ime" }, ...]
     bracket: {
         qf: [null, null, null, null],
         sf: [null, null],
@@ -162,8 +157,15 @@ function generateTournamentBracket() {
     tournamentState.status = 'active';
     const shuffled = [...tournamentState.players].sort(() => 0.5 - Math.random());
     
+    // Sada meč sadrži p1 i p2 objekte i pobednika/predlagača prati preko ID-ja
     const createMatch = (p1, p2) => ({
-        p1, p2, winner: null, time: null, proposedTime: null, proposedBy: null, timeAccepted: false
+        p1: p1, 
+        p2: p2, 
+        winnerId: null, 
+        time: null, 
+        proposedTime: null, 
+        proposedById: null, 
+        timeAccepted: false
     });
 
     tournamentState.bracket.qf = [
@@ -174,34 +176,52 @@ function generateTournamentBracket() {
     ];
 }
 
-// Funkcija za automatsko unapređivanje pobednika u sledeću rundu
-function advanceTournamentBracket(round, index, winner) {
+// Funkcija za automatsko unapređivanje pobednika (kao ceo objekat) u sledeću rundu
+function advanceTournamentBracket(round, index, winnerObj) {
     if (round === 'qf') {
         const sfIndex = Math.floor(index / 2);
         if (!tournamentState.bracket.sf[sfIndex]) {
-            tournamentState.bracket.sf[sfIndex] = { p1: null, p2: null, winner: null, time: null, proposedTime: null, proposedBy: null, timeAccepted: false };
+            tournamentState.bracket.sf[sfIndex] = { p1: null, p2: null, winnerId: null, time: null, proposedTime: null, proposedById: null, timeAccepted: false };
         }
-        if (index % 2 === 0) tournamentState.bracket.sf[sfIndex].p1 = winner;
-        else tournamentState.bracket.sf[sfIndex].p2 = winner;
+        if (index % 2 === 0) tournamentState.bracket.sf[sfIndex].p1 = winnerObj;
+        else tournamentState.bracket.sf[sfIndex].p2 = winnerObj;
     } 
     else if (round === 'sf') {
         if (!tournamentState.bracket.f[0]) {
-            tournamentState.bracket.f[0] = { p1: null, p2: null, winner: null, time: null, proposedTime: null, proposedBy: null, timeAccepted: false };
+            tournamentState.bracket.f[0] = { p1: null, p2: null, winnerId: null, time: null, proposedTime: null, proposedById: null, timeAccepted: false };
         }
-        if (index % 2 === 0) tournamentState.bracket.f[0].p1 = winner;
-        else tournamentState.bracket.f[0].p2 = winner;
+        if (index % 2 === 0) tournamentState.bracket.f[0].p1 = winnerObj;
+        else tournamentState.bracket.f[0].p2 = winnerObj;
     } 
     else if (round === 'f') {
         tournamentState.status = 'finished';
     }
 }
 
+// ==================================================================
+// LOGIKA ZA PRAVILNO BROJANJE ONLINE IGRAČA
+// ==================================================================
+const activeConnections = new Map(); // Mapa koja čuva socket.id -> IP adresa
+
+function updateOnlineCount() {
+    // Pretvaramo sve IP adrese u Set (skup) da bismo eliminisali duplikate.
+    // Ako jedan igrač ima 2 konekcije sa istog IP-a, broji se kao 1 online korisnik.
+    const uniquePlayers = new Set(activeConnections.values());
+    io.emit('users_count', uniquePlayers.size);
+}
+
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
-    console.log(`🔗 Novi klijent: ${socket.id}`);
+    
+    // Ekstrakcija IP adrese korisnika
+    let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
+    if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
 
-    // Pošalji broj online korisnika
-    io.emit('users_count', io.engine.clientsCount);
+    activeConnections.set(socket.id, clientIp);
+    console.log(`🔗 Novi klijent: ${socket.id} (IP: ${clientIp})`);
+
+    // Pošalji broj online korisnika (samo jedinstvene IP adrese)
+    updateOnlineCount();
 
     // ==================================================================
     // 3. TOP LISTA & REZULTATI
@@ -224,16 +244,13 @@ io.on('connection', (socket) => {
 
             let filter = {};
             const now = new Date();
-            // Resetujemo sate, minute i sekunde na početak dana radi tačnosti
             now.setHours(0, 0, 0, 0);
             
             if (period === 'weekly') {
-                // Početak tekuće kalendarske nedelje (Ponedeljak)
-                const dayOfWeek = now.getDay() || 7; // Date.getDay() nedelju računa kao 0, pretvaramo je u 7
+                const dayOfWeek = now.getDay() || 7; 
                 const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
                 filter.date = { $gte: startOfWeek };
             } else if (period === 'monthly') {
-                // Početak tekućeg kalendarskog meseca (1. u mesecu)
                 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
                 filter.date = { $gte: startOfMonth };
             }
@@ -431,7 +448,6 @@ io.on('connection', (socket) => {
     socket.on('global_chat_msg', (data) => {
         if (!data || !data.msg) return;
         
-        // Ekstrakcija IP adrese korisnika
         let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
         if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
 
@@ -541,26 +557,47 @@ io.on('connection', (socket) => {
     });
 
     // ==================================================================
-    // TURNIR - SOCKET LOGIKA
+    // TURNIR - SOCKET LOGIKA (Ažurirano za ID identifikaciju)
     // ==================================================================
     
+    // 0. RESET TURNIRA (Dev opcija)
+    socket.on('tourney_reset', () => {
+        console.log("⚠️ TURNIR JE RESETOVAN OD STRANE KORISNIKA!");
+        tournamentState = {
+            status: 'registration',
+            players: [],
+            bracket: {
+                qf: [null, null, null, null],
+                sf: [null, null],
+                f: [null]
+            }
+        };
+        io.emit('tourney_state_update', tournamentState);
+    });
+
     // 1. Slanje trenutnog stanja klijentu kad otvori turnir
     socket.on('tourney_get_state', () => {
         socket.emit('tourney_state_update', tournamentState);
     });
 
-    // 2. Prijava igrača
-    socket.on('tourney_register', (playerName) => {
+    // 2. Prijava igrača (primi se objekat {id, name})
+    socket.on('tourney_register', (playerData) => {
         if (tournamentState.status === 'registration' && tournamentState.players.length < 8) {
-            if (!tournamentState.players.includes(playerName)) {
-                tournamentState.players.push(playerName);
+            
+            // Provera po ID-ju umesto po imenu
+            const alreadyRegistered = tournamentState.players.find(p => p.id === playerData.id);
+            
+            if (!alreadyRegistered) {
+                tournamentState.players.push({
+                    id: playerData.id,
+                    name: playerData.name
+                });
                 
                 // Ako je 8. igrač ušao, generiši žreb automatski
                 if (tournamentState.players.length === 8) {
                     generateTournamentBracket();
                 }
                 
-                // Javi svima novo stanje
                 io.emit('tourney_state_update', tournamentState);
             }
         }
@@ -570,21 +607,24 @@ io.on('connection', (socket) => {
     socket.on('tourney_fill_bots', () => {
         if (tournamentState.status === 'registration') {
             while (tournamentState.players.length < 8) {
-                tournamentState.players.push(`Igrač ${Math.floor(Math.random() * 1000)}`);
+                tournamentState.players.push({
+                    id: 'bot_' + Math.random().toString(36).substr(2, 9),
+                    name: `Bot ${Math.floor(Math.random() * 1000)}`
+                });
             }
             generateTournamentBracket();
             io.emit('tourney_state_update', tournamentState);
         }
     });
 
-    // 4. Predlaganje termina
+    // 4. Predlaganje termina (praćenje predlagača po ID-ju)
     socket.on('tourney_propose_time', (data) => {
-        const { round, index, proposedTime, playerName } = data;
+        const { round, index, proposedTime, playerId } = data;
         const match = tournamentState.bracket[round][index];
         
-        if (match && (match.p1 === playerName || match.p2 === playerName)) {
+        if (match && (match.p1.id === playerId || match.p2.id === playerId)) {
             match.proposedTime = proposedTime;
-            match.proposedBy = playerName;
+            match.proposedById = playerId;
             match.timeAccepted = false;
             match.time = null;
             io.emit('tourney_state_update', tournamentState);
@@ -605,18 +645,22 @@ io.on('connection', (socket) => {
 
     // 6. Pokretanje duela iz turnira
     socket.on('tourney_start_duel', (data) => {
-        const { matchRoomId, opponentName } = data;
-        socket.broadcast.emit('tourney_duel_ready', { matchRoomId, initiatorSocket: socket.id, targetName: opponentName });
+        const { matchRoomId, targetId, opponentName } = data;
+        socket.broadcast.emit('tourney_duel_ready', { matchRoomId, targetId: targetId, opponentName: opponentName });
     });
 
-    // 7. Upis pobednika meča
+    // 7. Upis pobednika meča (primi se winnerId)
     socket.on('tourney_submit_winner', (data) => {
-        const { round, index, winner } = data;
+        const { round, index, winnerId } = data;
         const match = tournamentState.bracket[round][index];
         
-        if (match && match.winner === null) {
-            match.winner = winner;
-            advanceTournamentBracket(round, index, winner);
+        if (match && match.winnerId === null) {
+            match.winnerId = winnerId;
+            
+            // Nađemo ceo objekat igrača koji je pobedio da bismo ga prosledili dalje
+            const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
+            
+            advanceTournamentBracket(round, index, winnerObj);
             io.emit('tourney_state_update', tournamentState);
         }
     });
@@ -627,6 +671,9 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('❌ Klijent diskonektovan:', socket.id);
         
+        // --- Brisanje IP adrese iz liste aktivnih konekcija ---
+        activeConnections.delete(socket.id);
+
         if (gameStartTimes[socket.id]) {
             delete gameStartTimes[socket.id];
         }
@@ -656,7 +703,8 @@ io.on('connection', (socket) => {
             }
         }
         
-        io.emit('users_count', io.engine.clientsCount);
+        // --- Ažuriraj online korisnike (broji unikatne IP-ove) nakon izlaska ---
+        updateOnlineCount();
     });
 });
 

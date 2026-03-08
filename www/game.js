@@ -1,8 +1,19 @@
-// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT)
+// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const sum = (arr) => arr.reduce((a, b) => a + b, 0);
+
+// Funkcija koja generiše ili preuzima trajni ID igrača
+function getPlayerId() {
+    let id = localStorage.getItem('yamb_player_id');
+    if (!id) {
+        // Kreira nasumičan string (npr. usr_k3x9a1_17100000)
+        id = 'usr_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
+        localStorage.setItem('yamb_player_id', id);
+    }
+    return id;
+}
 
 // INTERNA HELPER FUNKCIJA ZA PREVOD (GT = Game Translate)
 const gt = (key) => {
@@ -231,13 +242,14 @@ class YambApp {
         
         this.inviteDetected = false;
 
-        // --- UČITAVANJE IMENA ---
+        // --- UČITAVANJE IMENA I ID-ja ---
         let storedName = localStorage.getItem('yamb_player_name');
         if (!storedName || storedName === "undefined" || storedName === "null") {
             storedName = gt('player_unknown');
             localStorage.setItem('yamb_player_name', storedName);
         }
         this.playerName = storedName;
+        this.playerId = getPlayerId();
         // ------------------------
         
         const savedSound = localStorage.getItem('yamb_sound');
@@ -256,12 +268,14 @@ class YambApp {
         this.adMob = window.adMobGlobal; 
         this.pendingScore = 0; 
 
-        const dateEl = document.getElementById('live-date');
-        if (dateEl) {
+        // NOVO: Ažuriranje žive ikonice kalendara sa tačnim mesecom i danom
+        const dayEl = document.getElementById('live-day');
+        const monthEl = document.getElementById('live-month');
+        if (dayEl && monthEl) {
             const now = new Date();
-            const day = String(now.getDate()).padStart(2, '0');
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            dateEl.innerText = `${day}.${month}`;
+            const meseci = ['JAN', 'FEB', 'MAR', 'APR', 'MAJ', 'JUN', 'JUL', 'AVG', 'SEP', 'OKT', 'NOV', 'DEC'];
+            dayEl.innerText = String(now.getDate()).padStart(2, '0');
+            monthEl.innerText = meseci[now.getMonth()];
         }
 
         const chatWin = document.getElementById("chat-window");
@@ -344,7 +358,7 @@ class YambApp {
 
     initSocketConnection() {
         if (this.socket) {
-            if (this.socket.disconnected) { // 🔹 ISPRAVKA: Proveravamo samo ako je eksplicitno diskonektovan
+            if (this.socket.disconnected) { 
                 console.log("♻️ Osvežavam prekinutu socket konekciju...");
                 this.socket.connect();
             }
@@ -358,7 +372,7 @@ class YambApp {
                 console.log("🔌 Povezujem se prvi put na:", connectionUrl);
 
                 this.socket = io(connectionUrl, { 
-                    transports: ['websocket'], // ISPRAVKA: Samo websocket
+                    transports: ['websocket'],
                     reconnection: true,             
                     reconnectionAttempts: 20,       
                     reconnectionDelay: 1000,        
@@ -1610,13 +1624,40 @@ class YambApp {
 
         const btnRematch = document.getElementById('btn-rematch');
         if (this.onlineMode) {
+            // PREPOZNAJEMO DA LI JE OVO TURNIRSKA SOBA
+            const isTournament = this.roomId && this.roomId.startsWith('tourney_');
+
             if (btnRematch) {
-                btnRematch.style.display = 'flex';
+                // U turniru nema revanša, pa sakrivamo dugme ako je turnir u pitanju
+                btnRematch.style.display = isTournament ? 'none' : 'flex';
                 btnRematch.disabled = false;
                 btnRematch.innerHTML = `<span data-lang="go_rematch">${gt('go_rematch')}</span>`;
                 btnRematch.style.background = 'linear-gradient(45deg, #4CAF50, #2E7D32)';
             }
-            if (this.socket) this.socket.emit('game_over');
+            
+            if (this.socket) {
+                this.socket.emit('game_over');
+
+                // AUTOMATSKI UPIS TURNIRSKOG POBEDNIKA
+                if (isTournament) {
+                    const amIWinner = (myScoreEntry && winner.name === myScoreEntry.name);
+                    
+                    // Ako sam ja pobednik, šaljem signal serveru da unapredi moj ID u sledeću rundu
+                    if (amIWinner) {
+                        const parts = this.roomId.split('_'); // npr: ['tourney', 'qf', '0', '17100000']
+                        if (parts.length >= 3) {
+                            const round = parts[1];
+                            const index = parseInt(parts[2]);
+                            
+                            this.socket.emit('tourney_submit_winner', { 
+                                round: round, 
+                                index: index, 
+                                winnerId: this.playerId 
+                            });
+                        }
+                    }
+                }
+            }
         } else {
             if (btnRematch) btnRematch.style.display = 'none';
         }
