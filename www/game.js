@@ -1615,7 +1615,22 @@ class YambApp {
                  const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
                  if (winner.name === myScoreEntry.name) resultType = 'win'; else resultType = 'loss'; 
              }
+             
+             // 1. Ažurira lokalnu statistiku i dodaje poene
              this.updateStats(myScoreEntry.score, resultType);
+
+             // 2. NOVO: ODMAH NAKON TOGA, ŠALJE KVARTALNI SKOR NA SERVER
+             if (window.kvartalnaLiga && this.socket && this.socket.connected) {
+                 const qData = window.kvartalnaLiga.quarterData;
+                 const qScores = window.kvartalnaLiga.getScores(); // Ovo sad sadrži osvežen rezultat
+                 
+                 this.socket.emit('submit_league_score', {
+                     playerName: this.playerName,
+                     score: qScores.quarterlyScore,
+                     year: qData.year,
+                     quarter: qData.quarter
+                 });
+             }
         }
         
         this.soundMgr.win(); 

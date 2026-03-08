@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     namespace = "com.yamb.balkan"
     compileSdk = rootProject.ext.compileSdkVersion
+    
     defaultConfig {
         applicationId "com.yamb.balkan"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -16,11 +17,18 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    // --- DODATO: Kompatibilnost za Javu (Firebase i moderne biblioteke ovo zahtevaju) ---
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -44,12 +52,24 @@ dependencies {
     // --- DODATO ZA GDPR (User Messaging Platform) ---
     implementation("com.google.android.ump:user-messaging-platform:2.2.0")
 
-    // --- DODATO ZA REKLAME (Ovo je falilo za MobileAds grešku) ---
+    // --- DODATO ZA REKLAME ---
     implementation 'com.google.android.gms:play-services-ads:23.0.0'
+
+    // --- FIREBASE INTEGRACIJA ---
+    // 1. Firebase BOM - sada ažuriran na najnoviju verziju sa slike
+    implementation platform('com.google.firebase:firebase-bom:34.10.0')
+
+    // 2. Osnovna analitika
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // 3. Moduli za bazu i autentifikaciju
+    implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-auth'      
 }
 
 apply from: 'capacitor.build.gradle'
 
+// --- AKTIVACIJA PLUGINA (Zadržana tvoja odlična logika sa dna fajla) ---
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {

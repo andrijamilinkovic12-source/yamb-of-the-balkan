@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "774107011856",
+    "project_id": "yamb-of-the-balkan",
+    "storage_bucket": "yamb-of-the-balkan.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774107011856:android:4406c318a021df68a02395",
+        "android_client_info": {
+          "package_name": "com.yamb.balkan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8MDB6GhQ3XDUeern3sF_ysGYh-YpEiJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
