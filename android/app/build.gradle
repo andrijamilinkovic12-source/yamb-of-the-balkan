@@ -12,8 +12,7 @@ android {
         versionName "10.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
-            // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
-            // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            // Files and dirs to omit from the packaged assets dir
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
@@ -25,10 +24,10 @@ android {
         }
     }
 
-    // --- DODATO: Kompatibilnost za Javu (Firebase i moderne biblioteke ovo zahtevaju) ---
+    // --- AŽURIRANO: Kompatibilnost za Javu 17 ---
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 }
 
@@ -49,27 +48,22 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
 
-    // --- DODATO ZA GDPR (User Messaging Platform) ---
+    // --- GDPR (User Messaging Platform) ---
     implementation("com.google.android.ump:user-messaging-platform:2.2.0")
 
-    // --- DODATO ZA REKLAME ---
+    // --- REKLAME ---
     implementation 'com.google.android.gms:play-services-ads:23.0.0'
 
     // --- FIREBASE INTEGRACIJA ---
-    // 1. Firebase BOM - sada ažuriran na najnoviju verziju sa slike
     implementation platform('com.google.firebase:firebase-bom:34.10.0')
-
-    // 2. Osnovna analitika
     implementation 'com.google.firebase:firebase-analytics'
-
-    // 3. Moduli za bazu i autentifikaciju
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-auth'      
 }
 
 apply from: 'capacitor.build.gradle'
 
-// --- AKTIVACIJA PLUGINA (Zadržana tvoja odlična logika sa dna fajla) ---
+// --- AKTIVACIJA PLUGINA ---
 try {
     def servicesJSON = file('google-services.json')
     if (servicesJSON.text) {
