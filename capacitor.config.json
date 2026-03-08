@@ -8,5 +8,11 @@
     "allowNavigation": [
       "yamb-of-the-balkan.onrender.com"
     ]
+  },
+  "plugins": {
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": ["google.com"]
+    }
   }
 }
