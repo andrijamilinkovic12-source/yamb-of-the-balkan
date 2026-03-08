@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA + ONLINE IGRACI SA STATISTIKOM I STATUSOM
 
 require('dotenv').config(); 
 
@@ -242,6 +242,44 @@ io.on('connection', (socket) => {
     socket.on('set_my_id', (playerId) => {
         onlinePlayers[playerId] = socket.id;
         registeredSockets[socket.id] = playerId;
+    });
+
+    // ==================================================================
+    // UPRAVLJANJE IMENIMA I LISTOM ONLINE IGRAČA (SA STATISTIKOM)
+    // ==================================================================
+    
+    // Čuvamo ime igrača i statistiku (Pobede/Porazi) u njegovom socketu
+    socket.on('set_player_data', (data) => {
+        socket.playerName = data.name;
+        socket.playerStats = data.stats;
+    });
+
+    // Vraćanje liste svih trenutno prijavljenih soketa (igrača) klijentu
+    socket.on('get_online_players', () => {
+        const playersList = [];
+        
+        io.sockets.sockets.forEach((clientSocket, id) => {
+            // Ako se ID nalazi u playerRooms mapi, znači da je trenutno u partiji
+            const isPlaying = !!playerRooms[id];
+
+            playersList.push({
+                id: id,
+                name: clientSocket.playerName || "Gost",
+                stats: clientSocket.playerStats || { wins: 0, losses: 0 },
+                status: isPlaying ? 'playing' : 'idle'
+            });
+        });
+
+        socket.emit('online_players_list', playersList);
+    });
+
+    // Slušamo kada se igrač vrati u glavni meni da mu sklonimo "Igra u toku" status
+    socket.on('back_to_menu', () => {
+        const roomId = playerRooms[socket.id];
+        if (roomId) {
+            // Neka logička obrada napuštanja sobe ako želimo, ali primarno brišemo iz playerRooms
+            delete playerRooms[socket.id];
+        }
     });
 
     // ==================================================================
@@ -568,16 +606,16 @@ io.on('connection', (socket) => {
     });
 
     // ==================================================================
-    // DUEL SISTEM (IZAZOVI IZ CHATA)
+    // DUEL SISTEM (IZAZOVI IZ CHATA / ONLINE LISTE)
     // ==================================================================
     socket.on('send_challenge', (data) => {
         const { targetId, challengerName } = data;
         const targetSocket = io.sockets.sockets.get(targetId);
         
         if (targetSocket) {
-            io.to(targetId).emit('challenge_received', {
+            socket.to(targetId).emit('incoming_challenge', {
                 challengerId: socket.id,
-                challengerName: challengerName
+                challengerName: challengerName || "Gost"
             });
         } else {
             socket.emit('error_msg', 'Igrač više nije na serveru.');
@@ -585,22 +623,38 @@ io.on('connection', (socket) => {
     });
 
     socket.on('challenge_response', (data) => {
-        const { challengerId, accepted, targetName, challengerName } = data;
+        const { challengerId, accepted } = data;
         const challengerSocket = io.sockets.sockets.get(challengerId);
 
         if (accepted) {
             if (!challengerSocket) {
-                socket.emit('error_msg', 'err_opp_left');
+                socket.emit('error_msg', 'Igrač koji vas je izazvao je napustio server.');
                 return;
             }
 
-            const roomId = `duel_${challengerId}_${socket.id}`;
+            const roomName = `duel_${challengerId}_${socket.id}`;
             
-            io.to(challengerId).emit('duel_start', { roomId, opponentName: targetName });
-            socket.emit('duel_start', { roomId, opponentName: challengerName });
+            socket.join(roomName);
+            challengerSocket.join(roomName);
+
+            // Upisujemo sobe u globalnu mapu da bi releji radili
+            playerRooms[socket.id] = roomName;
+            playerRooms[challengerId] = roomName;
+            gameStartTimes[socket.id] = Date.now();
+            gameStartTimes[challengerId] = Date.now();
+
+            // Emitujemo game_started za oba igrača
+            io.to(roomName).emit('game_started', {
+                room: roomName,
+                player1: challengerId,
+                player2: socket.id
+            });
+            console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
         } else {
             if (challengerSocket) {
-                io.to(challengerId).emit('challenge_declined', { targetName });
+                socket.to(challengerId).emit('challenge_declined', {
+                    message: "Igrač je nažalost odbio vaš izazov."
+                });
             }
         }
     });

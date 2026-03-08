@@ -123,11 +123,11 @@ const TRANSLATIONS = {
         "chat_rules_msg": "DOBRODOŠLI U GLOBALNI CHAT!\n\nStrogo je zabranjeno vređanje na rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i upotreba vulgarnosti.\n\nKršenje ovih pravila rezultiraće trajnim isključenjem sa servera.\n\nDa li se slažete sa pravilima?",
         "global_chat_welcome": "Dobrodošli u Globalni Chat! Budite pristojni.",
         "global_chat_placeholder": "Napiši poruku...",
-        "duel_incoming": "⚔️ {0} te izaziva na duel! Prihvataš?",
-        "duel_declined": "Igrač {0} je odbio duel.",
-        "duel_ask": "Želiš li da izazoveš igrača {0} na duel?",
+        "duel_incoming": "⚔️ Igrač {0} vas izaziva na duel! Prihvatate?",
+        "duel_declined": "Igrač nažalost odbio vaš izazov.",
+        "duel_ask": "Želite li da izazovete igrača {0} na duel?",
         "duel_sent": "Izazov poslat igraču {0}. Čekamo odgovor...",
-        "duel_title": "⏳ DUEL POSLAT",
+        "duel_title": "⏳ IZAZOV",
         "rematch_ask": "Protivnik traži revanš! Da li prihvataš?",
         "rematch_declined": "Revanš je odbijen.",
         "rematch_accepted": "Revanš prihvaćen! Spremite se...",
@@ -136,6 +136,16 @@ const TRANSLATIONS = {
         "sys_no_conn": "Niste povezani na server.",
         "err_opp_left": "Protivnik je u međuvremenu napustio igru.",
         "msg_waiting_response": "Čekam odgovor...",
+        
+        // --- ONLINE IGRAČI MODAL ---
+        "online_players_title": "🟢 ONLINE IGRAČI",
+        "online_searching": "Tražim server...",
+        "online_loading": "Učitavam igrače... ⏳",
+        "online_no_conn": "Niste povezani na server.",
+        "online_no_players": "Trenutno nema drugih igrača.",
+        "online_you": "(Vi)",
+        "online_challenge_btn": "⚔️ IZAZOVI",
+        "online_playing": "⚔️ IGRA U TOKU", // <-- Dodato
         
         // KOLONE (SR)
         "col_down": "↓",
@@ -418,11 +428,11 @@ const TRANSLATIONS = {
         "chat_rules_msg": "WELCOME TO GLOBAL CHAT!\n\nInsults based on race, religion, nationality, or gender, as well as vulgarity, are strictly prohibited.\n\nViolating these rules will result in a permanent ban.\n\nDo you agree to the rules?",
         "global_chat_welcome": "Welcome to Global Chat! Be polite.",
         "global_chat_placeholder": "Type a message...",
-        "duel_incoming": "⚔️ {0} challenges you to a duel! Accept?",
-        "duel_declined": "Player {0} declined the duel.",
+        "duel_incoming": "⚔️ Player {0} challenges you to a duel! Accept?",
+        "duel_declined": "The player declined the duel.",
         "duel_ask": "Do you want to challenge player {0} to a duel?",
         "duel_sent": "Challenge sent to {0}. Waiting for response...",
-        "duel_title": "⏳ DUEL SENT",
+        "duel_title": "⏳ CHALLENGE",
         "rematch_ask": "Opponent requests a rematch! Do you accept?",
         "rematch_declined": "Rematch declined.",
         "rematch_accepted": "Rematch accepted! Get ready...",
@@ -431,6 +441,16 @@ const TRANSLATIONS = {
         "sys_no_conn": "You are not connected to the server.",
         "err_opp_left": "Opponent has left the game in the meantime.",
         "msg_waiting_response": "Waiting for response...",
+        
+        // --- ONLINE PLAYERS MODAL ---
+        "online_players_title": "🟢 PLAYERS ONLINE",
+        "online_searching": "Searching for server...",
+        "online_loading": "Loading players... ⏳",
+        "online_no_conn": "You are not connected to the server.",
+        "online_no_players": "There are no other players at the moment.",
+        "online_you": "(You)",
+        "online_challenge_btn": "⚔️ CHALLENGE",
+        "online_playing": "⚔️ IN GAME", // <-- Dodato
 
         // EN KOLONE
         "col_down": "↓",

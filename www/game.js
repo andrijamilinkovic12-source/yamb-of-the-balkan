@@ -385,6 +385,12 @@ class YambApp {
                     
                     // DODATO: Klijent odmah javlja serveru svoj trajni ID za turnir
                     this.socket.emit('set_my_id', this.playerId);
+                    
+                    // Prijavljujemo ime i statistiku serveru
+                    this.socket.emit('set_player_data', { 
+                        name: this.playerName, 
+                        stats: { wins: this.stats.wins || 0, losses: this.stats.losses || 0 } 
+                    });
 
                     if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
                     if (this.topListManager) this.topListManager.syncOfflineScores();
@@ -405,24 +411,29 @@ class YambApp {
                     this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
                 });
 
-                this.socket.on('challenge_received', async (data) => {
+                // --- DUEL SISTEM ---
+                this.socket.on('incoming_challenge', async (data) => {
                     const { challengerId, challengerName } = data;
-                    const accepted = await this.modal.confirm(gt('duel_incoming').replace('{0}', challengerName));
+                    let text = gt('duel_incoming');
+                    if(text === 'duel_incoming') text = `Igrač {0} vas izaziva na duel! Prihvatate?`;
+                    
+                    const accepted = await this.modal.confirm(text.replace('{0}', challengerName));
                     this.socket.emit('challenge_response', {
-                        challengerId,
-                        accepted,
-                        targetName: this.playerName,
-                        challengerName: challengerName
+                        challengerId: challengerId,
+                        accepted: accepted
                     });
                 });
 
                 this.socket.on('challenge_declined', (data) => {
-                    this.modal.alert(gt('duel_declined').replace('{0}', data.targetName), gt('modal_title_info'));
+                    let text = data.message || gt('duel_declined');
+                    if (text === 'duel_declined') text = "Igrač je nažalost odbio vaš izazov.";
+                    this.modal.alert(text, gt('modal_title_info') || "INFO");
                 });
 
-                this.socket.on('duel_start', (data) => {
+                this.socket.on('game_started', (data) => {
                     this.closeGlobalChat(); 
-                    this.joinPrivateGame(this.playerName, data.roomId);
+                    // Koristimo postojeći joinPrivateGame flow da inicijalizujemo sobu i UI
+                    this.joinPrivateGame(this.playerName, data.room);
                 });
 
                 this.socket.on('global_highscores_data', (data) => { 
@@ -435,7 +446,7 @@ class YambApp {
                         finalMsg = gt(msgKey);
                     }
                     if (this.modal) {
-                        this.modal.alert(finalMsg, gt('err_title') || gt('modal_title_info'));
+                        this.modal.alert(finalMsg, gt('err_title') || gt('modal_title_info') || "INFO");
                     }
                 });
 
@@ -686,10 +697,16 @@ class YambApp {
         this.initSocketConnection(); 
         if (!this.socket || !this.socket.connected) return;
         
-        const isConfirmed = await this.modal.confirm(gt('duel_ask').replace('{0}', targetName));
+        let askText = gt('duel_ask');
+        if (askText === 'duel_ask') askText = `Želite li da izazovete igrača {0} na duel?`;
+
+        const isConfirmed = await this.modal.confirm(askText.replace('{0}', targetName));
         if(isConfirmed) {
             this.socket.emit('send_challenge', { targetId, challengerName: this.playerName });
-            this.modal.alert(gt('duel_sent').replace('{0}', targetName), gt('duel_title'));
+            
+            let sentText = gt('duel_sent');
+            if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
+            this.modal.alert(sentText.replace('{0}', targetName), gt('duel_title') || "IZAZOV");
         }
     }
     
@@ -791,6 +808,14 @@ class YambApp {
         if (resultType === 'win') this.stats.wins++; 
         else if (resultType === 'loss') this.stats.losses++; 
         localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); 
+
+        // Ažuriramo statistiku i na serveru za online listu
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('set_player_data', { 
+                name: this.playerName, 
+                stats: { wins: this.stats.wins, losses: this.stats.losses } 
+            });
+        }
     }
 
     toggleTheme() { 
@@ -807,6 +832,11 @@ class YambApp {
         if(floatBtn) floatBtn.classList.add('hidden'); 
         document.getElementById('chat-window').classList.remove('active'); 
         this.chatOpen = false; 
+
+        // Obaveštavamo server da smo se vratili u meni (skida status "Igra u toku")
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('back_to_menu');
+        }
 
         // Resetovanje dinamičkih dugmića za Nastavi/Nova
         [1, 2].forEach(num => {
