@@ -382,6 +382,10 @@ class YambApp {
                 
                 this.socket.on('connect', () => {
                     console.log("✅ Socket povezan! ID:", this.socket.id);
+                    
+                    // DODATO: Klijent odmah javlja serveru svoj trajni ID za turnir
+                    this.socket.emit('set_my_id', this.playerId);
+
                     if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
                     if (this.topListManager) this.topListManager.syncOfflineScores();
                     

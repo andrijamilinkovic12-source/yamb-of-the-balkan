@@ -571,13 +571,23 @@ class ShopManager {
 
     async tryBuy(id, name, price) {
         if (this.balance < price) {
-            if (window.modalManager) {
+            // Proveri da li postoji stara Modal funkcija unutar Riznica fajlova
+            if (typeof window.showNotification === 'function') {
+                window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!");
+            } else if (window.modalManager && window.modalManager.overlay) {
                 window.modalManager.alert(_safeT('msg_no_money'), _safeT('modal_title_info'));
+            } else {
+                alert("Nemate dovoljno dukata!");
             }
             return;
         }
         
-        if (window.modalManager) {
+        // Prikaz pravog modala zavisno od stranice na kojoj se nalazimo
+        if (typeof window.openConfirmModal === 'function') {
+            // Kockice.html i Efekti.html imaju svoju staru funkciju
+            window.openConfirmModal(id, name, price);
+        } else if (window.modalManager && window.modalManager.overlay) {
+            // Glavna igra koristi novi ModalManager
             const isConfirmed = await window.modalManager.confirm(`${_safeT('msg_confirm_buy')} ${name}?`);
             if (isConfirmed) {
                 this.processTransaction(id, price);
@@ -603,7 +613,10 @@ class ShopManager {
         if(window.app && window.app.soundMgr) window.app.soundMgr.trophy(); 
         else { const sm = new SoundManager(); sm.trophy(); }
 
-        if (window.modalManager) {
+        // Prikaz uspešne kupovine na ispravnom popup-u
+        if (typeof window.showNotification === 'function') {
+            window.showNotification(_safeT('modal_title_info'), _safeT('msg_purchase_success') || "Kupovina uspešna!");
+        } else if (window.modalManager && window.modalManager.overlay) {
             window.modalManager.alert(_safeT('msg_purchase_success'), _safeT('modal_title_info'));
         }
     }
@@ -633,15 +646,16 @@ class ShopManager {
         this.updateBalanceDisplay();
     }
 
-    // ISPRAVKA: Dodata provera isReady i notifikacija za nagradno dugme
     async watchAdForCoins() {
         const adCtrl = this.getAdController();
         if (adCtrl) {
              if (!adCtrl.ads.rewarded.isReady) {
-                 if (window.modalManager) {
-                     window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se još učitava ili trenutno nema dostupnih reklama na mreži. Pokušajte ponovo za par sekundi.", _safeT('modal_title_info') || "INFO");
+                 if (typeof window.showNotification === 'function') {
+                     window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.");
+                 } else if (window.modalManager && window.modalManager.overlay) {
+                     window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna na mreži. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
                  }
-                 adCtrl.prepareReward(); // Forsiraj ponovno učitavanje
+                 adCtrl.prepareReward(); 
                  return;
              }
 
@@ -654,7 +668,9 @@ class ShopManager {
 
                  this.updateBalanceDisplay();
                  
-                 if (window.modalManager) {
+                 if (typeof window.showNotification === 'function') {
+                     window.showNotification(_safeT('msg_reward_title') || "NAGRADA", "+500 💰");
+                 } else if (window.modalManager && window.modalManager.overlay) {
                      window.modalManager.alert("+500 💰", _safeT('msg_reward_title') || "NAGRADA");
                  }
              }
@@ -678,7 +694,6 @@ class AdMobController {
         this.baseRetryDelay = 1000;   
         this.maxRetryDelay = 30000;   
         
-        // ISPRAVKA: Promenjeno #btn-ad-coins u .btn-add-coins kako bi se slagalo sa HTML dugmićima u prodavnici
         this.uiSelectors = ['.btn-ad-double', '.btn-add-coins', '.btn-discount', '.btn-ad-state-aware']; 
     }
 
@@ -795,7 +810,6 @@ class AdMobController {
         });
     }
 
-    // ISPRAVKA: Dodato upozorenje ako se metoda otegne / nije spremna
     showRewardVideo() {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) { resolve(false); return; }
@@ -810,8 +824,10 @@ class AdMobController {
                     resolve(false);
                 }
             } else {
-                if(window.modalManager) {
-                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna na mreži. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.");
+                } else if(window.modalManager && window.modalManager.overlay) {
+                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
                 }
                 this.triggerHighPriorityLoad('rewarded');
                 resolve(false);

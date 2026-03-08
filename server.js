@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA
 
 require('dotenv').config(); 
 
@@ -139,6 +139,10 @@ let gameStartTimes = {};
 // --- SISTEM BANOVANJA (MUTE) ---
 const chatBans = {}; // Format: { "ip_adresa": { strikes: broj, banUntil: timestamp } }
 
+// --- MAPE ZA PRAĆENJE KO JE ONLINE PO ID-ju ---
+const onlinePlayers = {};     // Format: { "usr_123": "socket_id_456" }
+const registeredSockets = {}; // Format: { "socket_id_456": "usr_123" }
+
 // ==================================================================
 // GLOBALNO STANJE TURNIRA (Ažurirano za ID identifikaciju)
 // ==================================================================
@@ -222,6 +226,12 @@ io.on('connection', (socket) => {
 
     // Pošalji broj online korisnika (samo jedinstvene IP adrese)
     updateOnlineCount();
+
+    // Povezivanje trajnog ID-ja sa trenutnim socketom
+    socket.on('set_my_id', (playerId) => {
+        onlinePlayers[playerId] = socket.id;
+        registeredSockets[socket.id] = playerId;
+    });
 
     // ==================================================================
     // 3. TOP LISTA & REZULTATI
@@ -643,10 +653,24 @@ io.on('connection', (socket) => {
         }
     });
 
-    // 6. Pokretanje duela iz turnira
+    // 6. Pokretanje duela iz turnira (SA PROVEROM DA LI JE PROTIVNIK TU)
     socket.on('tourney_start_duel', (data) => {
         const { matchRoomId, targetId, opponentName } = data;
-        socket.broadcast.emit('tourney_duel_ready', { matchRoomId, targetId: targetId, opponentName: opponentName });
+        
+        // Proveravamo da li se protivnikov ID nalazi u mapi aktivnih igrača
+        if (onlinePlayers[targetId]) {
+            // Protivnik je tu! Šaljemo mu poziv direktno na njegov telefon.
+            io.to(onlinePlayers[targetId]).emit('tourney_duel_ready', { 
+                matchRoomId, 
+                targetId: targetId, 
+                opponentName: opponentName 
+            });
+            // Šaljemo VAMA (pošiljaocu) odobrenje da uđete u sobu
+            socket.emit('tourney_join_allowed', matchRoomId);
+        } else {
+            // Protivnik nije u aplikaciji
+            socket.emit('error_msg', `Igrač ${opponentName} trenutno nije u aplikaciji. Dogovorite termin kada je online.`);
+        }
     });
 
     // 7. Upis pobednika meča (primi se winnerId)
@@ -673,6 +697,13 @@ io.on('connection', (socket) => {
         
         // --- Brisanje IP adrese iz liste aktivnih konekcija ---
         activeConnections.delete(socket.id);
+
+        // Uklanjanje igrača iz mape online prisutnosti
+        const pid = registeredSockets[socket.id];
+        if (pid) {
+            delete onlinePlayers[pid];
+        }
+        delete registeredSockets[socket.id];
 
         if (gameStartTimes[socket.id]) {
             delete gameStartTimes[socket.id];

@@ -58,6 +58,11 @@ class TournamentManager {
                         });
                     }
                 });
+
+                // 3. Dozvola servera da je protivnik online i da možete ući u sobu (KORAK 3)
+                this.app.socket.on('tourney_join_allowed', (matchRoomId) => {
+                    this.app.joinPrivateGame(this.app.playerName, matchRoomId);
+                });
             }
         }, 1000);
     }
@@ -401,7 +406,7 @@ class TournamentManager {
         const overlay = document.querySelector('.modal-overlay[style*="display: flex"]');
         if (overlay) overlay.style.display = 'none';
         
-        this.app.joinPrivateGame(this.app.playerName, matchRoomId);
+        // UKLONJENO OTVARANJE SOBE OVDJE - Sada čekamo odobrenje servera (tourney_join_allowed event)
     }
 
     mockWin(round, index) {
