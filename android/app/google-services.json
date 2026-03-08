@@ -12,7 +12,20 @@
           "package_name": "com.yamb.balkan"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "774107011856-f5j9sr5c2tfmc8ag38mo777buahflfdm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yamb.balkan",
+            "certificate_hash": "f7dfabc048c049558ac77921ee90788f36d7c64d"
+          }
+        },
+        {
+          "client_id": "774107011856-m7msqr9afkkigsucnn2fmf4v3ggndier.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA8MDB6GhQ3XDUeern3sF_ysGYh-YpEiJQ"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "774107011856-m7msqr9afkkigsucnn2fmf4v3ggndier.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

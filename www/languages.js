@@ -3,6 +3,7 @@
 const TRANSLATIONS = {
     sr: {
         // --- GLAVNI MENI ---
+        "menu_login": "Prijavi se preko Google-a",
         "menu_hs": "🏆 TOP LISTA",
         "menu_solo": "👤 Solo Igra",
         "menu_dual": "👥 Dva Igrača (Hotseat)",
@@ -297,6 +298,7 @@ const TRANSLATIONS = {
     },
     en: {
         // --- MAIN MENU ---
+        "menu_login": "Sign in with Google",
         "menu_hs": "🏆 HIGH SCORES",
         "menu_solo": "👤 Solo Game",
         "menu_dual": "👥 Two Players (Hotseat)",
