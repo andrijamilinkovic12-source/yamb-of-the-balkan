@@ -51,7 +51,14 @@ class TournamentManager {
                 this.app.socket.on('tourney_duel_ready', (data) => {
                     const myId = localStorage.getItem('yamb_player_id');
                     if (data.targetId === myId) {
-                        this.app.modal.confirm(tt('tourney_opponent_ready') || `${data.opponentName} je pokrenuo vaš turnirski meč. Da li ulazite?`).then(acc => {
+                        let msg = tt('tourney_opponent_ready');
+                        if (msg !== 'tourney_opponent_ready') {
+                            msg = msg.replace('{0}', data.opponentName);
+                        } else {
+                            msg = `${data.opponentName} je pokrenuo vaš turnirski meč. Da li ulazite?`; // Fallback
+                        }
+                        
+                        this.app.modal.confirm(msg).then(acc => {
                             if(acc) {
                                 this.app.joinPrivateGame(this.app.playerName, data.matchRoomId);
                             }
@@ -94,8 +101,8 @@ class TournamentManager {
         // Glavni kontejner sa Tab navigacijom
         container.innerHTML = `
             <div class="nav-tabs" style="justify-content: center; margin-bottom: 20px;">
-                <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')">📋 INFO PRIJAVE</button>
-                <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" ${this.state.status === 'registration' ? 'disabled style="opacity:0.5"' : ''}>🏆 KOSTUR MEČEVA</button>
+                <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')">${tt('tourney_tab_info') || '📋 INFO PRIJAVE'}</button>
+                <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" ${this.state.status === 'registration' ? 'disabled style="opacity:0.5"' : ''}>${tt('tourney_tab_bracket') || '🏆 KOSTUR MEČEVA'}</button>
             </div>
             <div id="tourney-tab-content"></div>
         `;
@@ -118,7 +125,7 @@ class TournamentManager {
 
         let buttonHtml = '';
         if (!isRegistrationOpen) {
-            buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%;">🚀 ${isRegistered ? 'Prijavljeni ste (Turnir u toku)' : 'Turnir je već počeo'}</button>`;
+            buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%;">🚀 ${isRegistered ? (tt('tourney_reg_active_in_progress') || 'Prijavljeni ste (Turnir u toku)') : (tt('tourney_reg_started') || 'Turnir je već počeo')}</button>`;
         } else if (isRegistered) {
             buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%;">✅ ${tt('tourney_already_registered') || 'Već ste prijavljeni'}</button>`;
         } else {
@@ -138,10 +145,10 @@ class TournamentManager {
                     </div>
                     
                     <div style="margin-top: 15px; font-size: 0.8rem; color: var(--text-main); max-height: 120px; overflow-y: auto; text-align: left; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <span style="display:block; color:var(--text-muted); font-size:0.7rem; margin-bottom:5px;">Spisak učesnika:</span>
+                        <span style="display:block; color:var(--text-muted); font-size:0.7rem; margin-bottom:5px;">${tt('tourney_participants_list') || 'Spisak učesnika:'}</span>
                         ${this.state.players.length > 0 ? 
-                            this.state.players.map(p => `<div style="padding: 2px 0;">${p.id === myId ? `<strong style="color:var(--gold-main);">${p.name} (Vi)</strong>` : p.name}</div>`).join('') 
-                            : '<div style="color:var(--text-muted); font-style:italic;">Još uvek nema prijavljenih igrača.</div>'}
+                            this.state.players.map(p => `<div style="padding: 2px 0;">${p.id === myId ? `<strong style="color:var(--gold-main);">${p.name} ${tt('tourney_you') || '(Vi)'}</strong>` : p.name}</div>`).join('') 
+                            : `<div style="color:var(--text-muted); font-style:italic;">${tt('tourney_no_players_yet') || 'Još uvek nema prijavljenih igrača.'}</div>`}
                     </div>
                 </div>
 
@@ -150,7 +157,7 @@ class TournamentManager {
                 </div>
                 
                 <div class="dev-tools-box">
-                    <p class="dev-tools-label">🧪 TEST OPCIJE (Samo za razvoj):</p>
+                    <p class="dev-tools-label">${tt('tourney_dev_options_title') || '🧪 TEST OPCIJE (Samo za razvoj):'}</p>
                     
                     ${isRegistrationOpen && spotsLeft > 0 ? `
                     <button class="btn-menu btn-secondary" style="font-size: 0.8rem; padding: 10px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px;" onclick="app.tournamentManager.fillWithBots()">
@@ -159,7 +166,7 @@ class TournamentManager {
                     ` : ''}
 
                     <button class="btn-menu" style="font-size: 0.8rem; padding: 10px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255, 82, 82, 0.2); border: 1px solid var(--danger); color: var(--danger);" onclick="app.tournamentManager.resetTournament()">
-                        🗑️ Resetuj Turnir (Obriši sve)
+                        ${tt('tourney_dev_reset') || '🗑️ Resetuj Turnir (Obriši sve)'}
                     </button>
                 </div>
             </div>
@@ -187,7 +194,7 @@ class TournamentManager {
         this.app.soundMgr.click();
         if(this.app.socket) {
             this.app.socket.emit('tourney_reset');
-            this.app.modal.alert("Poslat zahtev za resetovanje turnira na server.", "DEV OPCIJA");
+            this.app.modal.alert(tt('tourney_dev_reset_sent') || "Poslat zahtev za resetovanje turnira na server.", tt('tourney_dev_option') || "DEV OPCIJA");
         }
     }
 
@@ -250,7 +257,7 @@ class TournamentManager {
         if (match.timeAccepted && match.time) {
             timeInfo = `<div class="match-time-badge">✅ ${this.formatDate(match.time)}</div>`;
         } else if (match.proposedTime) {
-            timeInfo = `<div class="match-time-badge pending">Dogovor u toku...</div>`;
+            timeInfo = `<div class="match-time-badge pending">${tt('tourney_negotiating') || 'Dogovor u toku...'}</div>`;
         }
 
         return `
@@ -274,14 +281,14 @@ class TournamentManager {
 
         if (match.winnerId) {
             const winnerName = match.winnerId === match.p1.id ? match.p1.name : match.p2.name;
-            akcijeHtml = `<p style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">Pobednik: <strong style="text-transform: uppercase;">${winnerName}</strong> 🏆</p>`;
+            akcijeHtml = `<p style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> 🏆</p>`;
         } 
         else if (isMyMatch) {
             let devActionHtml = `
                 <div style="margin-top: 25px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
-                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 10px;">🧪 TEST OPCIJA (Preskoči meč):</p>
+                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 10px;">${tt('tourney_dev_skip_match') || '🧪 TEST OPCIJA (Preskoči meč):'}</p>
                     <button class="btn-menu btn-secondary" style="font-size: 0.8rem; padding: 8px; width: 100%; border: 1px solid rgba(255,255,255,0.2);" onclick="app.tournamentManager.mockWin('${round}', ${index})">
-                        👑 Simuliraj moju pobedu
+                        ${tt('tourney_dev_sim_win') || '👑 Simuliraj moju pobedu'}
                     </button>
                 </div>
             `;
@@ -300,31 +307,31 @@ class TournamentManager {
                 if (match.proposedById === myId) {
                     akcijeHtml = `
                         <div style="background: rgba(255, 152, 0, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ff9800;">
-                            <p style="color: #ff9800; font-weight: bold; margin-bottom: 5px;">Čeka se odgovor protivnika</p>
-                            <p style="font-size: 0.9rem; color: var(--text-main);">Predložili ste: <strong>${this.formatDate(match.proposedTime)}</strong></p>
+                            <p style="color: #ff9800; font-weight: bold; margin-bottom: 5px;">${tt('tourney_waiting_opp_response') || 'Čeka se odgovor protivnika'}</p>
+                            <p style="font-size: 0.9rem; color: var(--text-main);">${tt('tourney_you_proposed') || 'Predložili ste:'} <strong>${this.formatDate(match.proposedTime)}</strong></p>
                         </div>
                         <div style="text-align: left; margin-bottom: 10px;">
-                            <label style="font-size: 0.75rem; color: var(--text-muted);">Želite da promenite termin?</label>
+                            <label style="font-size: 0.75rem; color: var(--text-muted);">${tt('tourney_want_to_change_time') || 'Želite da promenite termin?'}</label>
                             <input type="datetime-local" id="tourney-time-input" class="modal-input" style="margin-top: 5px; font-size: 1rem;">
                         </div>
-                        <button class="btn-menu btn-secondary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">Promeni predlog</button>
+                        <button class="btn-menu btn-secondary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">${tt('tourney_change_proposal') || 'Promeni predlog'}</button>
                         ${devActionHtml}
                     `;
                 } else {
                     akcijeHtml = `
                         <div style="background: rgba(33, 150, 243, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #2196F3;">
-                            <p style="color: #2196F3; font-weight: bold; margin-bottom: 5px;">Protivnik predlaže vreme:</p>
+                            <p style="color: #2196F3; font-weight: bold; margin-bottom: 5px;">${tt('tourney_opp_proposes_time') || 'Protivnik predlaže vreme:'}</p>
                             <p style="font-size: 1.1rem; color: var(--text-main); font-weight: bold;">${this.formatDate(match.proposedTime)}</p>
                         </div>
-                        <button class="btn-menu" style="width: 100%; background: var(--success); color: white; border: none; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);" onclick="app.tournamentManager.acceptTime('${round}', ${index})">✅ PRIHVATI TERMIN</button>
+                        <button class="btn-menu" style="width: 100%; background: var(--success); color: white; border: none; margin-bottom: 15px; padding: 15px; box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);" onclick="app.tournamentManager.acceptTime('${round}', ${index})">✅ ${tt('tourney_accept_time') || 'PRIHVATI TERMIN'}</button>
                         
                         <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 15px 0;">
                         
                         <div style="text-align: left; margin-bottom: 10px;">
-                            <label style="font-size: 0.75rem; color: var(--text-muted);">Ne odgovara Vam? Predložite drugo vreme:</label>
+                            <label style="font-size: 0.75rem; color: var(--text-muted);">${tt('tourney_not_suit_q') || 'Ne odgovara Vam? Predložite drugo vreme:'}</label>
                             <input type="datetime-local" id="tourney-time-input" class="modal-input" style="margin-top: 5px; font-size: 1rem;">
                         </div>
-                        <button class="btn-menu btn-secondary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">Predloži novo vreme</button>
+                        <button class="btn-menu btn-secondary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">${tt('tourney_propose_new_time') || 'Predloži novo vreme'}</button>
                         ${devActionHtml}
                     `;
                 }
@@ -332,34 +339,36 @@ class TournamentManager {
             else {
                 akcijeHtml = `
                     <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--glass-border);">
-                        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">Vreme odigravanja meča još uvek nije zakazano.</p>
+                        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">${tt('tourney_time_not_scheduled') || 'Vreme odigravanja meča još uvek nije zakazano.'}</p>
                         <div style="text-align: left;">
-                            <label style="font-size: 0.75rem; color: var(--gold-main); font-weight: bold; letter-spacing: 1px;">Izaberite termin za meč:</label>
+                            <label style="font-size: 0.75rem; color: var(--gold-main); font-weight: bold; letter-spacing: 1px;">${tt('tourney_choose_time_match') || 'Izaberite termin za meč:'}</label>
                             <input type="datetime-local" id="tourney-time-input" class="modal-input" style="margin-top: 5px; font-size: 1rem;">
                         </div>
                     </div>
-                    <button class="btn-menu btn-primary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">Zakaži meč</button>
+                    <button class="btn-menu btn-primary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">${tt('tourney_schedule_match') || 'Zakaži meč'}</button>
                     ${devActionHtml}
                 `;
             }
         } 
         else {
-            akcijeHtml = `<p style="color: var(--text-muted); font-size:0.85rem; padding: 20px 0; background: rgba(0,0,0,0.2); border-radius: 8px;">Ovo nije Vaš meč. Čekamo ishod ovog duela.</p>`;
+            akcijeHtml = `<p style="color: var(--text-muted); font-size:0.85rem; padding: 20px 0; background: rgba(0,0,0,0.2); border-radius: 8px;">${tt('tourney_not_your_match') || 'Ovo nije Vaš meč. Čekamo ishod ovog duela.'}</p>`;
         }
 
+        const titleFallback = tt('tourney_match_title') || 'TURNIRSKI MEČ';
+        
         this.app.modal.alert(`
             <div style="text-align:center;">
                 <h3 style="color:var(--gold-main); margin-bottom: 5px; font-size: 1.4rem;">${match.p1.name} <span style="color:var(--text-muted); font-size:0.9rem;">VS</span> ${match.p2.name}</h3>
                 <hr style="border: 0; border-top: 1px solid rgba(255,215,0,0.2); margin: 15px 0;">
                 ${akcijeHtml}
             </div>
-        `, 'TURNIRSKI MEČ ⚔️');
+        `, titleFallback + ' ⚔️');
     }
 
     proposeTime(round, index) {
         const input = document.getElementById('tourney-time-input');
         if (!input || !input.value) {
-            this.app.modal.alert("Molimo Vas da prvo izaberete vreme u kalendaru!", "UPOZORENJE");
+            this.app.modal.alert(tt('tourney_alert_select_time') || "Molimo Vas da prvo izaberete vreme u kalendaru!", tt('tourney_alert_warning') || "UPOZORENJE");
             return;
         }
 

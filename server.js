@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA
 
 require('dotenv').config(); 
 
@@ -111,15 +111,26 @@ if (MONGO_URI) {
     console.log('⚠️ UPOZORENJE: MONGO_URI nije podešen. Baza neće raditi.');
 }
 
-// --- MODEL PODATAKA ---
+// --- MODELI PODATAKA ---
+
+// Glavna Top Lista
 const ScoreSchema = new mongoose.Schema({
     playerName: String,
     score: Number,
     mode: String, 
     date: { type: Date, default: Date.now }
 });
-
 const Score = mongoose.model('Score', ScoreSchema);
+
+// Kvartalna Liga Lista
+const LeagueScoreSchema = new mongoose.Schema({
+    playerName: String,
+    score: Number,
+    year: Number,
+    quarter: Number,
+    date: { type: Date, default: Date.now }
+});
+const LeagueScore = mongoose.model('LeagueScore', LeagueScoreSchema);
 
 // --- REST API RUTE ---
 
@@ -248,6 +259,7 @@ io.on('connection', (socket) => {
         console.log(`⏱️ Igrač ${socket.id} započeo partiju u ${new Date().toLocaleTimeString()}`);
     });
 
+    // GLAVNA TOP LISTA (SVA VREMENA / NEDELJA / MESEC)
     socket.on('get_global_highscores', async (period) => {
         try {
             if (!MONGO_URI) return; 
@@ -321,6 +333,59 @@ io.on('connection', (socket) => {
 
         } catch (err) {
             console.error("❌ Greška pri upisu u MongoDB:", err);
+        }
+    });
+
+    // ==================================================================
+    // KVARTALNA LIGA - SOCKET LOGIKA
+    // ==================================================================
+    
+    // GET: Slanje tabele za Kvartalnu Ligu
+    socket.on('get_league_highscores', async (reqData) => {
+        try {
+            if (!MONGO_URI) {
+                // FALLBACK: Ako baza ne radi, šalje MOCK podatke (za test)
+                socket.emit('league_highscores_data', [
+                    { playerName: "Mock Šampion", score: 105400 },
+                    { playerName: "Mock Igrač", score: 85200 },
+                ]);
+                return;
+            }
+            
+            const { year, quarter } = reqData;
+            
+            // Pronađi top 50 igrača za taj specifični kvartal i godinu
+            const scores = await LeagueScore.find({ year: year, quarter: quarter })
+                                            .sort({ score: -1 })
+                                            .limit(50);
+                                            
+            socket.emit('league_highscores_data', scores);
+        } catch (err) {
+            console.error("Greška pri dohvatanju kvartalne lige:", err);
+            socket.emit('league_highscores_data', []);
+        }
+    });
+
+    // POST: Primanje novog kvartalnog rekorda od igrača
+    socket.on('submit_league_score', async (data) => {
+        try {
+            if (!MONGO_URI) return;
+            if (typeof data.score !== 'number' || isNaN(data.score)) return;
+
+            let finalName = (data.playerName || "Nepoznat Igrač").trim().substring(0, 18);
+            if (finalName.length === 0) finalName = "Nepoznat Igrač";
+
+            // Za ligu ne dodajemo nove redove za svaku partiju, već AŽURIRAMO postojeći 
+            // (upsert: true - ako ne postoji, kreiraće ga. Ako postoji, ažuriraće ga).
+            await LeagueScore.findOneAndUpdate(
+                { playerName: finalName, year: data.year, quarter: data.quarter }, // Kriterijum
+                { $set: { score: data.score, date: Date.now() } }, // Šta se menja
+                { upsert: true, new: true } // Opcije
+            );
+            
+            console.log(`🏆 LIGA UPIS: ${finalName} -> ${data.score} PTS (Q${data.quarter}/${data.year})`);
+        } catch (err) {
+            console.error("Greška pri upisu u kvartalnu ligu:", err);
         }
     });
 

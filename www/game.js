@@ -856,8 +856,24 @@ class YambApp {
         
         const url = linkInput.value;
         const shareTitle = gt('invite_text') || 'Yamb of the Balkan';
-        const shareText = 'Pridruži mi se u partiji Yamba! 🎲';
+        const shareText = gt('invite_share_msg') || 'Pridruži mi se u partiji Yamba! 🎲';
 
+        // 1. POKUŠAJ: Capacitor (Za Native Android/iOS aplikacije)
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Share) {
+            try {
+                await window.Capacitor.Plugins.Share.share({
+                    title: shareTitle,
+                    text: shareText,
+                    url: url,
+                    dialogTitle: 'Podeli link sa prijateljem'
+                });
+                return; // Uspješno podijeljeno, prekidamo daljnje izvršavanje
+            } catch (e) {
+                console.log("Capacitor dijeljenje nije uspjelo, prelazimo na browser metodu:", e);
+            }
+        }
+
+        // 2. POKUŠAJ: Moderni Web preglednici (Web Share API)
         if (navigator.share) {
             try {
                 await navigator.share({
@@ -865,19 +881,28 @@ class YambApp {
                     text: shareText,
                     url: url
                 });
+                return; // Uspješno podijeljeno
             } catch (err) {
-                console.log("Deljenje je prekinuto ili nije uspelo:", err);
+                console.log("Web dijeljenje prekinuto ili nije uspjelo:", err);
             }
-        } else {
-            // Fallback: Kopiranje u clipboard ako Web Share API nije podržan
-            try {
-                await navigator.clipboard.writeText(url);
-                this.soundMgr.click();
-                this.modal.alert(gt('msg_link_copied') || 'Link je kopiran! Pošaljite ga prijatelju.', gt('modal_title_info') || 'INFO');
-            } catch (err) {
-                this.soundMgr.error();
-                this.modal.alert('Ne mogu automatski da kopiram link. Molimo označite ga i kopirajte ručno.', gt('err_title') || 'GREŠKA');
-            }
+        } 
+        
+        // 3. FALLBACK: Kopiranje u clipboard ako ništa od gore navedenog ne radi
+        try {
+            await navigator.clipboard.writeText(shareText + " " + url);
+            this.soundMgr.click();
+            this.modal.alert(gt('alert_copied') || 'Link je kopiran! Pošaljite ga prijatelju.', gt('alert_copied_title') || 'KOPIRANO');
+        } catch (err) {
+            // Stari način kopiranja za starije uređaje
+            const tempInput = document.createElement("input");
+            tempInput.value = shareText + " " + url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            
+            this.soundMgr.click();
+            this.modal.alert(gt('alert_copied') || 'Link je kopiran! Pošaljite ga prijatelju.', gt('alert_copied_title') || 'KOPIRANO');
         }
     }
     

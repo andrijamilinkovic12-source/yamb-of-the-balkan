@@ -721,14 +721,15 @@ class AdMobController {
     async setupListeners() {
         if (!this.adMobPlugin) return;
 
-        await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
-        await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
+        // ISPRAVLJENO: Uklonjeni 'on' prefiksi za rewarded evente
+        await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
+        await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
         
-        await this.adMobPlugin.addListener('onRewardedVideoAdReward', (reward) => {
+        await this.adMobPlugin.addListener('rewardedVideoAdReward', (reward) => {
             if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; }
         });
 
-        await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', () => {
+        await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => {
             if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
             this.handleAdDismissed('rewarded');
         });
@@ -767,6 +768,14 @@ class AdMobController {
         if (this.ads[type].isLoading || this.ads[type].isReady) return;
         this.ads[type].isLoading = true;
 
+        // SIGURNOSNA MERA: Reset statusa učitavanja nakon 15 sekundi
+        const timeoutId = setTimeout(() => {
+            if (this.ads[type].isLoading) {
+                console.warn(`[AdMob] Timeout učitavanja za ${type}. Resetujem stanje.`);
+                this.ads[type].isLoading = false;
+            }
+        }, 15000);
+
         try {
             if (type === 'rewarded') {
                 await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: false });
@@ -774,6 +783,7 @@ class AdMobController {
                 await this.adMobPlugin.prepareInterstitial({ adId: this.interstitialId, isTesting: false, autoShow: false });
             }
         } catch (e) {
+            clearTimeout(timeoutId);
             this.handleAdFailed(type, e);
         }
     }

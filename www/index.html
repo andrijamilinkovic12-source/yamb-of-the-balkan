@@ -77,7 +77,7 @@
                 <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Online</span>
             </div>
 
-            <div style="flex: 1.8; background: linear-gradient(135deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.6) 100%); border: 2px solid var(--gold-main); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 15px rgba(224, 201, 149, 0.1); backdrop-filter: blur(8px); position: relative; overflow: hidden;">
+            <div onclick="if(window.kvartalnaLiga) window.kvartalnaLiga.openModal()" style="flex: 1.8; cursor: pointer; background: linear-gradient(135deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.6) 100%); border: 2px solid var(--gold-main); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 15px rgba(224, 201, 149, 0.1); backdrop-filter: blur(8px); position: relative; overflow: hidden; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="position: absolute; top: -10px; right: -10px; font-size: 3.5rem; opacity: 0.08;">🏆</div>
                 <span style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
                 <span id="league-rank-name" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 1px;">AMATER</span>
@@ -459,9 +459,12 @@
             const dukatiEl = document.getElementById('menu-dukati-count');
             if (dukatiEl) dukatiEl.innerText = dukati;
 
-            // 2. Kvartalni Ciklus - Čita ukupan skor iz svih odigranih partija
-            const stats = JSON.parse(localStorage.getItem('yamb_stats')) || { totalScoreSum: 0 };
-            const pts = stats.totalScoreSum || 0;
+            // 2. Kvartalni Ciklus
+            let pts = 0;
+            if (window.kvartalnaLiga) {
+                // Čitamo samo bodove za TRENUTNI kvartal
+                pts = window.kvartalnaLiga.getScores().quarterlyScore;
+            }
             
             let rank = "AMATER";
             let nextLevelPts = 5000;
@@ -469,7 +472,8 @@
             if (pts < 5000) { rank = "AMATER"; nextLevelPts = 5000; }
             else if (pts < 15000) { rank = "PROFI"; nextLevelPts = 15000; }
             else if (pts < 50000) { rank = "MAJSTOR"; nextLevelPts = 50000; }
-            else { rank = "LEGENDA"; nextLevelPts = pts; } 
+            else if (pts < 100000) { rank = "LEGENDA"; nextLevelPts = 100000; }
+            else { rank = "TITAN"; nextLevelPts = pts; } 
 
             let percent = nextLevelPts === pts ? 100 : Math.min(100, Math.round((pts / nextLevelPts) * 100));
 
@@ -496,6 +500,7 @@
     <script src="toplista.js?v=3.8"></script> 
     <script src="turnir.js"></script> 
     <script src="game.js?v=4.0"></script>
+    <script src="kvartalnaliga.js"></script>
 
 </body>
 </html>
