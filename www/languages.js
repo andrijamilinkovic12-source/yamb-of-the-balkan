@@ -145,7 +145,7 @@ const TRANSLATIONS = {
         "online_no_players": "Trenutno nema drugih igrača.",
         "online_you": "(Vi)",
         "online_challenge_btn": "⚔️ IZAZOVI",
-        "online_playing": "⚔️ IGRA U TOKU", // <-- Dodato
+        "online_playing": "⚔️ IGRA U TOKU",
         
         // KOLONE (SR)
         "col_down": "↓",
@@ -213,6 +213,10 @@ const TRANSLATIONS = {
         "theme_winter": "Plavi Okean 🌊",
         "settings_sound": "Zvučni Efekti",
         "settings_save": "Sačuvaj",
+        "settings_google_account": "Google Nalog",
+        "settings_not_logged_in": "Niste prijavljeni",
+        "settings_logout": "Odjavi se",
+        "msg_logout_confirm": "Da li ste sigurni da želite da se odjavite?",
 
         // --- PRAVILA (SR) ---
         "rules_title": "PRAVILA IGRE",
@@ -450,7 +454,7 @@ const TRANSLATIONS = {
         "online_no_players": "There are no other players at the moment.",
         "online_you": "(You)",
         "online_challenge_btn": "⚔️ CHALLENGE",
-        "online_playing": "⚔️ IN GAME", // <-- Dodato
+        "online_playing": "⚔️ IN GAME",
 
         // EN KOLONE
         "col_down": "↓",
@@ -518,6 +522,10 @@ const TRANSLATIONS = {
         "theme_winter": "Blue Ocean 🌊",
         "settings_sound": "Sound Effects",
         "settings_save": "Save",
+        "settings_google_account": "Google Account",
+        "settings_not_logged_in": "Not logged in",
+        "settings_logout": "Log out",
+        "msg_logout_confirm": "Are you sure you want to log out?",
 
         // --- RULES (EN) ---
         "rules_title": "GAME RULES",

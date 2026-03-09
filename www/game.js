@@ -755,6 +755,15 @@ class YambApp {
         localStorage.setItem('yamb_player_name', this.playerName); 
         localStorage.setItem('yamb_sound', this.soundEnabled); 
         
+        // ---> DODATO: Odmah obavesti server o novom imenu <---
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('set_player_data', { 
+                name: this.playerName, 
+                stats: { wins: this.stats.wins || 0, losses: this.stats.losses || 0 } 
+            });
+        }
+        // --------------------------------------------------------
+
         this.showMainMenu(); 
     }
 
