@@ -3,7 +3,8 @@
  * Ovaj fajl koristi nativni Capacitor plugin za prijavu.
  */
 
-const { FirebaseAuthentication } = Capacitor.Plugins;
+// UKLONJENO: const { FirebaseAuthentication } = Capacitor.Plugins; 
+// Ovu dodelu ćemo raditi dinamički samo kada nam zatreba.
 
 // --- POMOĆNA FUNKCIJA ZA AŽURIRANJE UI-a ---
 function osveziAuthUI(user) {
@@ -11,13 +12,11 @@ function osveziAuthUI(user) {
     const userInfo = document.getElementById('auth-user-info');
     const logoutBtn = document.getElementById('btn-google-logout');
     const nameInput = document.getElementById('setting-name');
-    const userPhoto = document.getElementById('auth-user-photo'); // <-- Dodato za sliku
+    const userPhoto = document.getElementById('auth-user-photo'); 
 
-    // Pomoćna funkcija za prevod unutar JS-a
     const translate = (key, fallback) => (typeof t !== 'undefined') ? t(key) : fallback;
 
     if (user && user.displayName) {
-        // Igrač je ulogovan
         if (loginBtn) loginBtn.style.display = 'none';
         
         if (userInfo) {
@@ -25,7 +24,6 @@ function osveziAuthUI(user) {
             userInfo.style.color = 'var(--gold-main)';
         }
         
-        // Prikazujemo sliku sa Google naloga
         if (userPhoto) {
             const slikaUrl = user.photoUrl || user.photoURL || localStorage.getItem('yamb_player_photo');
             if (slikaUrl) {
@@ -38,11 +36,10 @@ function osveziAuthUI(user) {
         
         if (nameInput) {
             nameInput.value = user.displayName;
-            nameInput.disabled = true; // Zabrani ručno menjanje imena dok je prijavljen
+            nameInput.disabled = true; 
             nameInput.style.opacity = '0.6';
         }
     } else {
-        // Igrač NIJE ulogovan
         if (loginBtn) loginBtn.style.display = 'flex';
         
         if (userInfo) {
@@ -50,7 +47,6 @@ function osveziAuthUI(user) {
             userInfo.style.color = 'var(--text-main)';
         }
         
-        // Sakrivamo sliku
         if (userPhoto) {
             userPhoto.src = '';
             userPhoto.style.display = 'none';
@@ -69,14 +65,16 @@ function osveziAuthUI(user) {
 async function prijaviSe() {
     console.log("Iniciram proces prijave...");
 
-    if (Capacitor.getPlatform() === 'web') {
-        console.warn("Google Auth nativni plugin ne radi u običnom browseru.");
-        alert("Google prijava je dostupna samo u aplikaciji.");
+    // 1. Sigurnosna provera: Da li Capacitor uopšte postoji?
+    if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
+        console.warn("Google Auth nativni plugin nije dostupan u ovom okruženju.");
+        alert("Google prijava je dostupna samo u mobilnoj aplikaciji.");
         return;
     }
 
     try {
-        const result = await FirebaseAuthentication.signInWithGoogle();
+        // Pristupamo pluginu dinamički
+        const result = await Capacitor.Plugins.FirebaseAuthentication.signInWithGoogle();
 
         if (result.user) {
             const user = result.user;
@@ -92,7 +90,6 @@ async function prijaviSe() {
             osveziAuthUI(user);
             alert("Dobrodošli, " + (user.displayName || "Igraču") + "!");
 
-            // Sinhronizacija sa glavnom instancom igre i serverom
             if (window.app && user.displayName) {
                 window.app.playerName = user.displayName;
                 
@@ -120,11 +117,13 @@ async function prijaviSe() {
 
 // --- FUNKCIJA ZA ODJAVU ---
 async function odjaviSe() {
-    if (Capacitor.getPlatform() === 'web') return;
+    // 1. Sigurnosna provera
+    if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
+         return; 
+    }
 
     const msgText = (typeof t !== 'undefined') ? t('msg_logout_confirm') : "Da li ste sigurni da želite da se odjavite?";
 
-    // Pitamo igrača za potvrdu pre nego što ga izlogujemo
     if (window.modalManager && window.modalManager.overlay) {
         const potvrda = await window.modalManager.confirm(msgText);
         if (!potvrda) return;
@@ -133,24 +132,20 @@ async function odjaviSe() {
     }
 
     try {
-        await FirebaseAuthentication.signOut();
+        // Pristupamo pluginu dinamički
+        await Capacitor.Plugins.FirebaseAuthentication.signOut();
         console.log("Korisnik uspešno odjavljen.");
 
-        // Brisanje podataka
         localStorage.removeItem('yamb_player_photo');
         
-        // Vraćanje na generičko ime umesto Google imena
         let defaultName = "Gost_" + Math.floor(Math.random() * 9000 + 1000);
         localStorage.setItem('yamb_player_name', defaultName);
 
-        // Osvežavanje UI-a (prosledimo null da ga prebaci u izlogovan state)
         osveziAuthUI(null);
 
-        // Ažuriranje polja za unos imena
         const nameInput = document.getElementById('setting-name');
         if (nameInput) nameInput.value = defaultName;
 
-        // Ažuriranje igre i servera
         if (window.app) {
             window.app.playerName = defaultName;
             if (window.app.socket && window.app.socket.connected) {
@@ -169,11 +164,16 @@ async function odjaviSe() {
 
 // --- PROVERA STATUSA PRILIKOM UČITAVANJA ---
 async function checkLoginStatus() {
-    if (Capacitor.getPlatform() === 'web') return;
+    // 1. Sigurnosna provera
+    if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
+        osveziAuthUI(null); // Osiguravamo da UI bude u izlogovanom stanju ako nema plugina
+        return; 
+    }
 
     try {
-        const result = await FirebaseAuthentication.getCurrentUser();
-        if (result.user) {
+        // Pristupamo pluginu dinamički
+        const result = await Capacitor.Plugins.FirebaseAuthentication.getCurrentUser();
+        if (result && result.user) {
             console.log("Korisnik je već ulogovan:", result.user.displayName);
             osveziAuthUI(result.user);
             

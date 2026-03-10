@@ -331,7 +331,9 @@ const TRANSLATIONS = {
         "tourney_prize_winner": "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 💰!",
         "tourney_champion_title": "ŠAMPION TURNIRA 🏆",
         "tourney_prize_runnerup": "Kao finalisti, vraćen Vam je ulog od 2500 💰. Više sreće sledeći put!",
-        "tourney_finalist_title": "FINALISTA 🥈"
+        "tourney_finalist_title": "FINALISTA 🥈",
+        "tourney_tab_fame": "👑 SLAVNI",
+        "tourney_hall_of_fame": "DVORANA SLAVNIH (OSVAJAČI)"
     },
     en: {
         // --- MAIN MENU ---
@@ -663,7 +665,9 @@ const TRANSLATIONS = {
         "tourney_prize_winner": "CONGRATULATIONS! You won the tournament and the grand prize of 20,000 💰!",
         "tourney_champion_title": "TOURNAMENT CHAMPION 🏆",
         "tourney_prize_runnerup": "As a finalist, your entry fee of 2500 💰 has been refunded. Better luck next time!",
-        "tourney_finalist_title": "FINALIST 🥈"
+        "tourney_finalist_title": "FINALIST 🥈",
+        "tourney_tab_fame": "👑 HALL OF FAME",
+        "tourney_hall_of_fame": "HALL OF FAME (CHAMPIONS)"
     }
 };
 

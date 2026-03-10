@@ -311,35 +311,50 @@ class EffectManager {
     }
 }
 
-// --- 5. SOUND MANAGER (WEB AUDIO API SYNTH) ---
+// --- 5. SOUND MANAGER (WEB AUDIO API SYNTH ONLY) ---
 class SoundManager {
     constructor() {
         this.enabled = localStorage.getItem('yamb_sound') !== 'false';
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        this.ctx = new AudioContext();
-        this.audioCache = {};
-        if (typeof CONFIG !== 'undefined' && CONFIG.SOUNDS) {
-            Object.entries(CONFIG.SOUNDS).forEach(([key, file]) => {
-                this.audioCache[key] = new Audio(`assets/sounds/${file}`);
-                this.audioCache[key].volume = 0.6; 
-            });
-        }
+        this.ctx = null; // Inicijalizujemo ga tek na prvi klik
+
+        // Globalni listener za "otključavanje" zvuka na mobilnim uređajima
+        const unlockAudio = () => {
+            if (!this.ctx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioContext();
+            }
+            if (this.ctx.state === 'suspended') {
+                this.ctx.resume();
+            }
+            // Skidamo listenere čim se zvuk uspešno otključa
+            document.removeEventListener('touchstart', unlockAudio);
+            document.removeEventListener('click', unlockAudio);
+        };
+
+        // Vezujemo listenere za prvi dodir/klik na ekranu
+        document.addEventListener('touchstart', unlockAudio, { once: true });
+        document.addEventListener('click', unlockAudio, { once: true });
     }
 
-    playSound(key, synthCallback) {
+    playSound(synthCallback) {
         if (!this.enabled) return;
-        if (this.ctx.state === 'suspended') { this.ctx.resume().catch(e => console.log("Audio resume failed", e)); }
-        if (this.audioCache[key]) {
-            const sound = this.audioCache[key].cloneNode(); sound.volume = 0.5;
-            const playPromise = sound.play();
-            if (playPromise !== undefined) { playPromise.catch(() => { if (synthCallback) synthCallback.call(this); }); }
-        } else {
-            if (synthCallback) synthCallback.call(this);
+        
+        // Osigurač: Ako se zvuk pozove pre nego što je korisnik kliknuo išta
+        if (!this.ctx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioContext();
         }
+        
+        if (this.ctx.state === 'suspended') { 
+            this.ctx.resume().catch(e => console.log("Audio resume failed", e)); 
+        }
+        
+        // Pošto nemamo mp3 fajlove, odmah izvršavamo sintisajzer
+        if (synthCallback) synthCallback.call(this);
     }
 
     click() { 
-        this.playSound('CLICK', () => {
+        this.playSound(() => {
             const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
             osc.type = 'sine'; osc.frequency.setValueAtTime(800, t); osc.frequency.exponentialRampToValueAtTime(300, t + 0.1);
             gain.gain.setValueAtTime(0.15, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
@@ -348,7 +363,7 @@ class SoundManager {
     }
 
     announce() {
-        this.playSound('ANNOUNCE', () => {
+        this.playSound(() => {
             const t = this.ctx.currentTime; const freqs = [523.25, 659.25, 783.99, 1046.50]; 
             freqs.forEach((f, i) => {
                 const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
@@ -361,7 +376,7 @@ class SoundManager {
     }
 
     roll() {
-        this.playSound('DICE_ROLL', () => {
+        this.playSound(() => {
             const count = 6; const now = this.ctx.currentTime;
             for (let i = 0; i < count; i++) {
                 const offset = i * 0.06 + (Math.random() * 0.02);
@@ -376,7 +391,7 @@ class SoundManager {
     }
 
     score() { 
-        this.playSound('ACHIEVEMENT', () => {
+        this.playSound(() => {
             const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
             osc.type = 'triangle'; osc.frequency.setValueAtTime(440, t); osc.frequency.linearRampToValueAtTime(880, t + 0.1); 
             gain.gain.setValueAtTime(0.1, t); gain.gain.linearRampToValueAtTime(0, t + 0.3);
@@ -385,7 +400,7 @@ class SoundManager {
     }
 
     win() {
-        this.playSound('WIN', () => {
+        this.playSound(() => {
             const t = this.ctx.currentTime; const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
             notes.forEach((freq, i) => {
                 const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
@@ -398,14 +413,16 @@ class SoundManager {
     }
 
     error() { 
-        const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
-        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, t); osc.frequency.linearRampToValueAtTime(100, t + 0.15);
-        gain.gain.setValueAtTime(0.1, t); gain.gain.linearRampToValueAtTime(0, t + 0.15);
-        osc.connect(gain); gain.connect(this.ctx.destination); osc.start(t); osc.stop(t + 0.2);
+        this.playSound(() => {
+            const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+            osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, t); osc.frequency.linearRampToValueAtTime(100, t + 0.15);
+            gain.gain.setValueAtTime(0.1, t); gain.gain.linearRampToValueAtTime(0, t + 0.15);
+            osc.connect(gain); gain.connect(this.ctx.destination); osc.start(t); osc.stop(t + 0.2);
+        });
     }
 
     trophy() {
-        this.playSound('TROPHY', () => {
+        this.playSound(() => {
             const t = this.ctx.currentTime;
             [440, 554.37].forEach(f => {
                 const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
@@ -681,6 +698,9 @@ class ShopManager {
 // --- 7. ADMOB CONTROLLER (ULTRA-BRZO KEŠIRANJE) ---
 class AdMobController {
     constructor() {
+        // Dodajemo isTesting flag koji možemo lako promeniti za development
+        this.isTestingMode = false; // <-- STAVI OVO NA TRUE TOKOM TESTIRANJA
+
         this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
         this.interstitialId = 'ca-app-pub-4319963185096437/2913237519'; 
         
@@ -796,20 +816,26 @@ class AdMobController {
         
         this.ads[type].isLoading = true;
 
-        // SIGURNOSNA MERA: Ako pukne, resetuj i POKRENI PONOVO
+        // SIGURNOSNA MERA: Ako pukne, resetuj
+        // FIX: Dodat limit za broj uzastopnih timeout pokušaja
         const timeoutId = setTimeout(() => {
             if (this.ads[type].isLoading) {
-                console.warn(`[AdMob] Timeout učitavanja za ${type}. Forsiram novi pokušaj.`);
+                console.warn(`[AdMob] Timeout učitavanja za ${type}.`);
                 this.ads[type].isLoading = false;
-                if (navigator.onLine) this.preloadAd(type); // KLJUČNO OVDJE: Ponovni poziv
+                
+                // Nećemo odmah direktno pozvati this.preloadAd(type) kako bismo izbegli petlju
+                // Umesto toga, pozivamo handleAdFailed čime osiguravamo eksponencijalno čekanje
+                this.handleAdFailed(type, new Error("Ad loading timeout")); 
             }
         }, 15000);
 
         try {
             if (type === 'rewarded') {
-                await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: false });
+                // FIX: Korišćenje isTestingMode zastavice
+                await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: this.isTestingMode });
             } else if (type === 'interstitial') {
-                await this.adMobPlugin.prepareInterstitial({ adId: this.interstitialId, isTesting: false, autoShow: false });
+                // FIX: Korišćenje isTestingMode zastavice
+                await this.adMobPlugin.prepareInterstitial({ adId: this.interstitialId, isTesting: this.isTestingMode, autoShow: false });
             }
             clearTimeout(timeoutId); // Obriši timeout ako je API poziv prošao bez crash-a
         } catch (e) {
@@ -904,4 +930,32 @@ window.effectManager = new EffectManager();
 
 document.addEventListener('DOMContentLoaded', () => {
     window.adMobGlobal.initialize();
+
+    // --- GLOBALNI CLICK LISTENER ZA UI ZVUKOVE ---
+    document.body.addEventListener('click', function(event) {
+        // 1. Pronalazimo najbliži kliknuti element koji je HTML dugme ili tvoja custom dugmad (div-ovi)
+        const target = event.target.closest('button, .mode-btn, .btn-square, .btn-special-square, .hs-tab-btn, .cm-btn, .chat-float-btn, .back-btn, .close-btn');
+
+        if (target) {
+            // 2. Pravimo crnu listu (Ignore List) klasa i ID-jeva
+            // Ovde stavljamo elemente koji VEĆ imaju svoj zvuk (roll, score, error) 
+            // da ne bismo dobili dupli zvuk kada korisnik klikne na njih.
+            const ignoreClasses = ['dice', 'score-btn', 'daily-btn-main'];
+            const ignoreIds = ['btn-bacaj', 'btn-najava'];
+
+            const hasIgnoreClass = ignoreClasses.some(cls => target.classList.contains(cls));
+            const hasIgnoreId = ignoreIds.includes(target.id);
+
+            // 3. Ako element nije na crnoj listi, puštamo standardni "click" zvuk
+            if (!hasIgnoreClass && !hasIgnoreId) {
+                if (window.app && window.app.soundMgr) {
+                    window.app.soundMgr.click();
+                } else if (typeof SoundManager !== 'undefined') {
+                    // Fallback u slučaju da app instanca još nije spremna, a klikne se npr. modal
+                    const sm = new SoundManager();
+                    sm.click();
+                }
+            }
+        }
+    });
 });

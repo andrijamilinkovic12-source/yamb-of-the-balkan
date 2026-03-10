@@ -18,7 +18,7 @@ class TournamentManager {
 
         this.tourneyLeaderboard = []; // Dodat niz za čuvanje tabele osvajača
 
-        this.activeTab = 'info'; // 'info' ili 'bracket'
+        this.activeTab = 'info'; // 'info', 'bracket', ili 'leaderboard'
         
         if (this.app) {
             this.app.openTournament = () => this.open();
@@ -115,20 +115,26 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        // Glavni kontejner sada ima flex-direction: column da spreči horizontalno bežanje HTML-a
+        // Glavni kontejner sa novim rasporedom dugmića (2 gore, 1 dole)
         container.innerHTML = `
-            <div style="display: flex; flex-direction: column; width: 100%; align-items: center;">
+            <div style="display: flex; flex-direction: column; width: 100%; align-items: center; padding: 0 10px;">
                 
-                <div class="nav-tabs" style="justify-content: center; margin-bottom: 20px; width: 100%;">
-                    <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')">${tt('tourney_tab_info') || '📋 INFO PRIJAVE'}</button>
-                    <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" ${this.state.status === 'registration' ? 'disabled style="opacity:0.5"' : ''}>${tt('tourney_tab_bracket') || '🏆 KOSTUR MEČEVA'}</button>
+                <div style="display: flex; justify-content: space-between; width: 100%; gap: 10px; margin-bottom: 10px;">
+                    <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
+                        ${tt('tourney_tab_info') || '📋 INFO'}
+                    </button>
+                    <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" ${this.state.status === 'registration' ? 'disabled style="opacity:0.5"' : ''} style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
+                        ${tt('tourney_tab_bracket') || '🏆 KOSTUR'}
+                    </button>
+                </div>
+                
+                <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+                    <button class="tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('leaderboard')" style="width: 100%; padding: 12px 15px; font-size: 0.85rem; border-radius: 8px; margin: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                        ${tt('tourney_tab_fame') || '👑 SLAVNI'}
+                    </button>
                 </div>
                 
                 <div id="tourney-tab-content" style="width: 100%; display: flex; justify-content: center;"></div>
-
-                <div id="tourney-leaderboard-container" style="display: flex; justify-content: center; width: 100%; margin-top: 40px; margin-bottom: 20px;">
-                    ${this.getLeaderboardHTML()}
-                </div>
 
             </div>
         `;
@@ -137,17 +143,21 @@ class TournamentManager {
         
         if (this.activeTab === 'info') {
             this.renderRegistration(tabContent);
-        } else {
+        } else if (this.activeTab === 'bracket') {
             this.renderBracket(tabContent);
+        } else if (this.activeTab === 'leaderboard') {
+            // RENDERING DVORANE SLAVNIH KAO ZASEBNOG TABA
+            tabContent.innerHTML = this.getLeaderboardHTML();
         }
     }
 
     // --- NOVA METODA: Generiše HTML za Dvoranu Slavnih ---
     getLeaderboardHTML() {
         let leaderboardHtml = `
-            <div class="tourney-leaderboard" style="width: 100%; max-width: 600px; background: var(--glass-panel); padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);">
+            <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 600px;">
+                <div class="tourney-icon-large" style="font-size: 3rem;">👑</div>
                 <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 10px; text-transform: uppercase;">
-                    🏆 ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH (OSVAJAČI)'} 🏆
+                    ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH (OSVAJAČI)'}
                 </h3>
                 <div style="display: flex; flex-direction: column; gap: 8px;">
         `;
@@ -343,7 +353,7 @@ class TournamentManager {
         const sf = this.state.bracket.sf || [];
         const f = this.state.bracket.f || [];
 
-        // Sada se vraća čist kostur (Dvorana slavnih je izvučena ispod)
+        // Čist kostur
         container.innerHTML = `
             <div class="bracket-wrapper" style="width: 100%;">
                 <div class="bracket-col qf">
