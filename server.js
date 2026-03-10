@@ -228,10 +228,18 @@ function advanceTournamentBracket(round, index, winnerObj) {
 const activeConnections = new Map(); // Mapa koja čuva socket.id -> IP adresa
 
 function updateOnlineCount() {
-    // Pretvaramo sve IP adrese u Set (skup) da bismo eliminisali duplikate.
-    // Ako jedan igrač ima 2 konekcije sa istog IP-a, broji se kao 1 online korisnik.
-    const uniquePlayers = new Set(activeConnections.values());
-    io.emit('users_count', uniquePlayers.size);
+    const uniqueKeys = new Set();
+    
+    // Prolazimo kroz sve aktivne sokete i sakupljamo njihove ID-jeve
+    io.sockets.sockets.forEach((clientSocket, id) => {
+        const ip = activeConnections.get(id) || "unknown_ip";
+        // Koristimo isti sistem identifikacije kao i u listi
+        let uniqueKey = registeredSockets[id] || ip;
+        uniqueKeys.add(uniqueKey);
+    });
+
+    // Šaljemo tačan broj jedinstvenih profila/uređaja
+    io.emit('users_count', uniqueKeys.size);
 }
 
 // --- SOCKET.IO LOGIKA ---
