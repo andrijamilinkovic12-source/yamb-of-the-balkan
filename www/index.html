@@ -293,10 +293,20 @@
                 <label style="display: flex; align-items: center;"><input type="checkbox" id="setting-sound" style="margin-right: 10px;"> <span data-lang="settings_sound">Zvučni Efekti</span></label>
             </div>
 
-            <div style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+            <div class="setting-group" style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); text-align: left;">
                 <label style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;" data-lang="settings_google_account">Google Nalog</label>
-                <div id="auth-user-info" style="color: var(--text-main); font-weight: bold; margin: 8px 0;" data-lang="settings_not_logged_in">Niste prijavljeni</div>
-                <button id="btn-google-logout" class="btn-menu btn-danger" style="display: none; padding: 10px; font-size: 0.9rem; margin: 0 auto; width: 80%;" onclick="odjaviSe()" data-lang="settings_logout">Odjavi se</button>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border);">
+                    
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img id="auth-user-photo" src="" alt="Avatar" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); display: none; object-fit: cover; box-shadow: 0 0 10px rgba(255,215,0,0.2);">
+                        <div id="auth-user-info" style="font-size: 0.95rem; color: var(--text-main); font-weight: bold;" data-lang="settings_not_logged_in">Niste prijavljeni</div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 100px;">
+                        <button id="btn-google-logout" class="btn-menu btn-secondary" style="display:none; padding: 8px 10px; font-size: 0.8rem; margin: 0; background: rgba(244,67,54,0.2); border-color: var(--danger); width: 100%; color: white;" onclick="odjaviSe()" data-lang="settings_logout">Odjavi se</button>
+                    </div>
+
+                </div>
             </div>
 
             <button class="btn-menu btn-primary" style="margin-top: 20px;" onclick="app.saveSettings()" data-lang="settings_save">Sačuvaj</button>

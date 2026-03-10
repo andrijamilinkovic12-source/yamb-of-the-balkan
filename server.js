@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA + ONLINE IGRACI SA STATISTIKOM I STATUSOM
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA + ONLINE IGRACI SA STATISTIKOM I STATUSOM (FIX ZA DUPLIRANJE IGRAČA)
 
 require('dotenv').config(); 
 
@@ -254,23 +254,36 @@ io.on('connection', (socket) => {
         socket.playerStats = data.stats;
     });
 
-    // Vraćanje liste svih trenutno prijavljenih soketa (igrača) klijentu
+    // Vraćanje liste svih trenutno prijavljenih soketa (igrača) klijentu - SPREČENO DUPLIRANJE
     socket.on('get_online_players', () => {
-        const playersList = [];
+        const playersMap = new Map(); // Koristimo Mapu da bismo eliminisali duplikate
         
         io.sockets.sockets.forEach((clientSocket, id) => {
-            // Ako se ID nalazi u playerRooms mapi, znači da je trenutno u partiji
             const isPlaying = !!playerRooms[id];
+            
+            // 1. Pokušavamo da grupišemo po trajnom Player ID-ju (najpreciznije)
+            // 2. Ako on fali (npr. stari klijent), koristimo IP adresu + Ime kao prepoznavanje
+            let uniqueKey = registeredSockets[id];
+            if (!uniqueKey) {
+                const ip = activeConnections.get(id) || "unknown_ip";
+                const name = clientSocket.playerName || "Gost";
+                uniqueKey = `${ip}_${name}`;
+            }
 
-            playersList.push({
-                id: id,
-                name: clientSocket.playerName || "Gost",
-                stats: clientSocket.playerStats || { wins: 0, losses: 0 },
-                status: isPlaying ? 'playing' : 'idle'
-            });
+            // Ako igrač (sa istim ID-jem/IP-jem) već postoji u listi, pregazit ćemo ga
+            // SAMO ako je ovaj trenutni socket "u igri" (kako bismo uvijek prikazali status da igra, a ne da je u meniju).
+            if (!playersMap.has(uniqueKey) || isPlaying) {
+                playersMap.set(uniqueKey, {
+                    id: id, // Čuvamo aktuelni socket.id zbog slanja poziva za duel
+                    name: clientSocket.playerName || "Gost",
+                    stats: clientSocket.playerStats || { wins: 0, losses: 0 },
+                    status: isPlaying ? 'playing' : 'idle'
+                });
+            }
         });
 
-        socket.emit('online_players_list', playersList);
+        // Pretvaramo Mapu nazad u niz i šaljemo klijentu (sada bez duplikata!)
+        socket.emit('online_players_list', Array.from(playersMap.values()));
     });
 
     // Slušamo kada se igrač vrati u glavni meni da mu sklonimo "Igra u toku" status
@@ -288,7 +301,7 @@ io.on('connection', (socket) => {
     
     // Konstante za validaciju
     const MAX_SCORE = 3500;       
-    const MAX_NAME_LENGTH = 18;   
+    const MAX_NAME_LENGTH = 24;   // <-- POVEĆAN LIMIT NA 24 KARAKTERA
     const MIN_GAME_DURATION = 120000; 
 
     // --- Listener za početak sesije ---
@@ -410,7 +423,8 @@ io.on('connection', (socket) => {
             if (!MONGO_URI) return;
             if (typeof data.score !== 'number' || isNaN(data.score)) return;
 
-            let finalName = (data.playerName || "Nepoznat Igrač").trim().substring(0, 18);
+            // <-- POVEĆAN LIMIT I ZA KVARTALNU LIGU NA 24 -->
+            let finalName = (data.playerName || "Nepoznat Igrač").trim().substring(0, 24);
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
 
             // Za ligu ne dodajemo nove redove za svaku partiju, već AŽURIRAMO postojeći 
@@ -728,6 +742,22 @@ io.on('connection', (socket) => {
                 }
                 
                 io.emit('tourney_state_update', tournamentState);
+            }
+        }
+    });
+
+    // 2.5 Odjava sa turnira (Povraćaj)
+    socket.on('tourney_unregister', (playerId) => {
+        // Dozvoli odjavu samo ako turnir još uvek prima prijave
+        if (tournamentState.status === 'registration') {
+            const index = tournamentState.players.findIndex(p => p.id === playerId);
+            if (index !== -1) {
+                // Obriši igrača iz niza
+                tournamentState.players.splice(index, 1);
+                
+                // Obavesti sve klijente o novom stanju
+                io.emit('tourney_state_update', tournamentState);
+                console.log(`↩️ Poništena prijava za turnir: ${playerId}`);
             }
         }
     });

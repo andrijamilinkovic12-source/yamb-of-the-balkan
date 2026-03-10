@@ -1,4 +1,4 @@
-// toplista.js - CLEAN & OPTIMIZED
+// toplista.js - CLEAN & OPTIMIZED (Fixed Layout & Name Display)
 
 class TopListManager {
     constructor(appContext) {
@@ -149,7 +149,6 @@ class TopListManager {
                 localStorage.setItem(this.storageKey, JSON.stringify(scores));
             }
             
-            // Ako je trenutno prikazana lokalna lista, osveži je
             const listLocal = document.getElementById('local-hs-list');
             if (listLocal && !listLocal.classList.contains('hidden')) {
                 this.renderList(scores, 'local-hs-list');
@@ -178,17 +177,12 @@ class TopListManager {
         const listEl = document.getElementById('global-hs-list');
         if (!listEl) return;
 
-        // Prikaži loading animaciju dok čekamo
         listEl.innerHTML = `<div class="loading-text" style="color:var(--text-muted); font-size:0.9rem; margin-top:20px;">${this._t('msg_connecting')} ⏳</div>`;
         
         if (this.app.socket && this.app.socket.connected) {
-            // Ako smo povezani, traži podatke
             this.app.socket.emit('get_global_highscores', this.currentGlobalFilter);
         } else {
-            // Ako nismo, probaj tihu rekoneksiju
             this.app.initSocketConnection();
-            
-            // Sačekaj malo pa proveri status (bez dugmića, samo info)
             setTimeout(() => {
                 if (!this.app.socket || !this.app.socket.connected) {
                      listEl.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">
@@ -234,13 +228,12 @@ class TopListManager {
                 }
             }
 
-            // Podrška za stara (name) i nova (playerName) polja - DODAT PREVOD
+            // Čitamo playerName (novo) ili name (staro)
             const displayName = entry.playerName || entry.name || this._t('player_unknown');
             const scoreFormatted = entry.score.toLocaleString(currentLang);
             
             li.innerHTML = `
                 <div class="${rankClass}">${index + 1}</div>
-                
                 <div class="hs-info">
                     <div class="hs-name">${displayName}${crownIcon}</div>
                     <div class="hs-meta">
@@ -248,7 +241,6 @@ class TopListManager {
                         ${dateDisplay ? `<span>• ${dateDisplay}</span>` : ''}
                     </div>
                 </div>
-                
                 <div class="hs-score-pill">${scoreFormatted}</div>
             `;
 

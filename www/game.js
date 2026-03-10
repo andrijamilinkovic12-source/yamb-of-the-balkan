@@ -1721,22 +1721,53 @@ class YambApp {
             if (this.socket) {
                 this.socket.emit('game_over');
 
-                // AUTOMATSKI UPIS TURNIRSKOG POBEDNIKA
+                // AUTOMATSKI UPIS TURNIRSKOG POBEDNIKA I DODELA NAGRADA
                 if (isTournament) {
                     const amIWinner = (myScoreEntry && winner.name === myScoreEntry.name);
+                    const parts = this.roomId.split('_'); // npr: ['tourney', 'qf', '0', '17100000']
                     
-                    // Ako sam ja pobednik, šaljem signal serveru da unapredi moj ID u sledeću rundu
-                    if (amIWinner) {
-                        const parts = this.roomId.split('_'); // npr: ['tourney', 'qf', '0', '17100000']
-                        if (parts.length >= 3) {
-                            const round = parts[1];
-                            const index = parseInt(parts[2]);
-                            
+                    if (parts.length >= 3) {
+                        const round = parts[1];
+                        const index = parseInt(parts[2]);
+                        
+                        // 1. Pobednik šalje serveru signal da ga unapredi u sledeću rundu
+                        if (amIWinner) {
                             this.socket.emit('tourney_submit_winner', { 
                                 round: round, 
                                 index: index, 
                                 winnerId: this.playerId 
                             });
+                        }
+
+                        // 2. Dodela nagrada SAMO ako je odigrano FINALE ('f')
+                        if (round === 'f') {
+                            let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+                            
+                            if (amIWinner) {
+                                // ŠAMPION: Nosi sav ulog od svih 8 igrača (8 * 2500 = 20.000)
+                                currentDukati += 20000; 
+                                setTimeout(() => {
+                                    this.modal.alert(gt('tourney_prize_winner') || "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 💰!", gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆");
+                                    this.effectMgr.trigger('gold_rain'); // Dodatni efekat kiše zlata
+                                }, 1500); // Odloženo da se prvo vidi Game Over ekran
+                            } else {
+                                // FINALISTA: Vraća mu se ulog (2500)
+                                currentDukati += 2500; 
+                                setTimeout(() => {
+                                    this.modal.alert(gt('tourney_prize_runnerup') || "Kao finalisti, vraćen Vam je ulog od 2500 💰. Više sreće sledeći put!", gt('tourney_finalist_title') || "FINALISTA 🥈");
+                                }, 1500);
+                            }
+                            
+                            // Trajno čuvanje novog stanja dukata
+                            localStorage.setItem('yamb_dukati', currentDukati);
+                            if (window.statsManager) {
+                                window.statsManager.stats.balance = currentDukati;
+                                window.statsManager.saveStats();
+                            }
+                            // Osveži prikaz dukata u pozadini
+                            if (typeof updateMainMenuDashboard === 'function') {
+                                updateMainMenuDashboard();
+                            }
                         }
                     }
                 }

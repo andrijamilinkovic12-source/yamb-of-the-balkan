@@ -127,9 +127,24 @@ class TournamentManager {
         if (!isRegistrationOpen) {
             buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%;">🚀 ${isRegistered ? (tt('tourney_reg_active_in_progress') || 'Prijavljeni ste (Turnir u toku)') : (tt('tourney_reg_started') || 'Turnir je već počeo')}</button>`;
         } else if (isRegistered) {
-            buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%;">✅ ${tt('tourney_already_registered') || 'Već ste prijavljeni'}</button>`;
+            buttonHtml = `
+                <button class="btn-menu btn-secondary" style="width: 100%; font-size: 1rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc;" onclick="app.tournamentManager.unregisterPlayer()">
+                    ❌ ${tt('tourney_unregister') || 'ODJAVI SE'} (Povraćaj 2500 💰)
+                </button>
+            `;
         } else {
-            buttonHtml = `<button class="btn-menu btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.registerPlayer()">📝 ${tt('tourney_register_me') || 'PRIJAVI SE'}</button>`;
+            buttonHtml = `<button class="btn-menu btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.registerPlayer()">🎟️ ${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)</button>`;
+        }
+
+        // Prikaz svih 8 mesta na turniru (popunjena i slobodna)
+        let participantsHtml = '';
+        for (let i = 0; i < 8; i++) {
+            if (this.state.players[i]) {
+                const p = this.state.players[i];
+                participantsHtml += `<div style="padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">${i+1}. ${p.id === myId ? `<strong style="color:var(--gold-main);">${p.name} ${tt('tourney_you') || '(Vi)'}</strong>` : p.name}</div>`;
+            } else {
+                participantsHtml += `<div style="padding: 4px 0; color: var(--text-muted); font-style: italic; border-bottom: 1px solid rgba(255,255,255,0.05); opacity: 0.6;">${i+1}. ${tt('tourney_empty_slot') || 'Slobodno mesto'}</div>`;
+            }
         }
 
         container.innerHTML = `
@@ -144,30 +159,14 @@ class TournamentManager {
                         ${this.state.players.length} / 8
                     </div>
                     
-                    <div style="margin-top: 15px; font-size: 0.8rem; color: var(--text-main); max-height: 120px; overflow-y: auto; text-align: left; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <span style="display:block; color:var(--text-muted); font-size:0.7rem; margin-bottom:5px;">${tt('tourney_participants_list') || 'Spisak učesnika:'}</span>
-                        ${this.state.players.length > 0 ? 
-                            this.state.players.map(p => `<div style="padding: 2px 0;">${p.id === myId ? `<strong style="color:var(--gold-main);">${p.name} ${tt('tourney_you') || '(Vi)'}</strong>` : p.name}</div>`).join('') 
-                            : `<div style="color:var(--text-muted); font-style:italic;">${tt('tourney_no_players_yet') || 'Još uvek nema prijavljenih igrača.'}</div>`}
+                    <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-main); text-align: left; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                        <span style="display:block; color:var(--text-muted); font-size:0.75rem; margin-bottom:8px; text-transform:uppercase;">${tt('tourney_participants_list') || 'Spisak učesnika:'}</span>
+                        ${participantsHtml}
                     </div>
                 </div>
 
-                <div>
+                <div style="margin-top: 15px;">
                     ${buttonHtml}
-                </div>
-                
-                <div class="dev-tools-box">
-                    <p class="dev-tools-label">${tt('tourney_dev_options_title') || '🧪 TEST OPCIJE (Samo za razvoj):'}</p>
-                    
-                    ${isRegistrationOpen && spotsLeft > 0 ? `
-                    <button class="btn-menu btn-secondary" style="font-size: 0.8rem; padding: 10px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 5px;" onclick="app.tournamentManager.fillWithBots()">
-                        🤖 ${tt('tourney_dev_fill') || 'Popuni botovima (Simulacija)'}
-                    </button>
-                    ` : ''}
-
-                    <button class="btn-menu" style="font-size: 0.8rem; padding: 10px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255, 82, 82, 0.2); border: 1px solid var(--danger); color: var(--danger);" onclick="app.tournamentManager.resetTournament()">
-                        ${tt('tourney_dev_reset') || '🗑️ Resetuj Turnir (Obriši sve)'}
-                    </button>
                 </div>
             </div>
         `;
@@ -175,26 +174,104 @@ class TournamentManager {
 
     registerPlayer() {
         this.app.soundMgr.click();
-        if(this.app.socket) {
-            const playerData = {
-                id: localStorage.getItem('yamb_player_id'),
-                name: this.app.playerName
-            };
-            this.app.socket.emit('tourney_register', playerData);
+
+        // 1. Provera da li je prijava moguća
+        if (this.state.status !== 'registration' || this.state.players.length >= 8) {
+            this.app.modal.alert(tt('msg_room_full') || "Turnir je popunjen ili je već počeo!");
+            return;
         }
+
+        // 2. Provera stanja dukata
+        const fee = 2500;
+        let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+
+        if (currentBalance < fee) {
+            if(this.app.soundMgr.error) this.app.soundMgr.error();
+            this.app.modal.alert(
+                tt('tourney_not_enough_money') || `Nemate dovoljno dukata za prijavu!\nCena prijave je ${fee} 💰.`, 
+                tt('warning_title') || "UPOZORENJE"
+            );
+            return;
+        }
+
+        // 3. Potvrda pre skidanja dukata
+        const confirmMsg = tt('tourney_confirm_fee') || `Prijava za turnir košta ${fee} 💰.\nDa li želite da se prijavite?`;
+        
+        this.app.modal.confirm(confirmMsg).then(potvrda => {
+            if (potvrda) {
+                // Oduzimanje dukata i ažuriranje baze
+                currentBalance -= fee;
+                localStorage.setItem('yamb_dukati', currentBalance);
+                
+                if (window.statsManager) {
+                    window.statsManager.stats.balance = currentBalance;
+                    window.statsManager.saveStats();
+                }
+                
+                // Osvežavanje Dashboard-a u glavnom meniju da se odmah vidi novi balans
+                if (typeof updateMainMenuDashboard === 'function') {
+                    updateMainMenuDashboard();
+                }
+
+                // Slanje prijave serveru
+                if(this.app.socket) {
+                    const playerData = {
+                        id: localStorage.getItem('yamb_player_id'),
+                        name: this.app.playerName
+                    };
+                    this.app.socket.emit('tourney_register', playerData);
+                }
+            }
+        });
     }
 
-    fillWithBots() {
-        if(this.app.socket) {
-            this.app.socket.emit('tourney_fill_bots');
-        }
-    }
-
-    resetTournament() {
+    async unregisterPlayer() {
         this.app.soundMgr.click();
-        if(this.app.socket) {
-            this.app.socket.emit('tourney_reset');
-            this.app.modal.alert(tt('tourney_dev_reset_sent') || "Poslat zahtev za resetovanje turnira na server.", tt('tourney_dev_option') || "DEV OPCIJA");
+
+        // 1. Provera da li je odjava još uvek moguća
+        if (this.state.status !== 'registration') {
+            this.app.modal.alert(tt('tourney_cannot_unregister') || "Turnir je već počeo, odjava više nije moguća!");
+            return;
+        }
+
+        // 2. Potvrda od korisnika uz upozorenje o reklami
+        const confirmMsg = tt('tourney_confirm_unregister') || "Da li ste sigurni da želite da se odjavite sa turnira?\nPrikazaće se reklama pre povraćaja dukata.";
+        const potvrda = await this.app.modal.confirm(confirmMsg);
+        
+        if (potvrda) {
+            // 3. Prikaz Intersitial Reklame
+            if (window.adMobGlobal && window.adMobGlobal.showInterstitial) {
+                await window.adMobGlobal.showInterstitial();
+            }
+
+            // 4. Povraćaj sredstava (2500 dukata)
+            const refundAmount = 2500;
+            let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+            currentBalance += refundAmount;
+            
+            localStorage.setItem('yamb_dukati', currentBalance);
+            
+            if (window.statsManager) {
+                window.statsManager.stats.balance = currentBalance;
+                window.statsManager.saveStats();
+            }
+            
+            // Osveži glavnu kontrolnu tablu u pozadini
+            if (typeof updateMainMenuDashboard === 'function') {
+                updateMainMenuDashboard();
+            }
+
+            // 5. Javi serveru da ukloni igrača sa liste
+            if (this.app.socket) {
+                const playerId = localStorage.getItem('yamb_player_id');
+                this.app.socket.emit('tourney_unregister', playerId);
+            }
+            
+            // 6. Uspešna notifikacija
+            this.app.modal.alert(
+                tt('tourney_unregistered_success') || "Uspešno ste se odjavili. Vraćeno Vam je 2500 💰.", 
+                tt('modal_title_info') || "INFO"
+            );
         }
     }
 
@@ -284,15 +361,6 @@ class TournamentManager {
             akcijeHtml = `<p style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> 🏆</p>`;
         } 
         else if (isMyMatch) {
-            let devActionHtml = `
-                <div style="margin-top: 25px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px;">
-                    <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 10px;">${tt('tourney_dev_skip_match') || '🧪 TEST OPCIJA (Preskoči meč):'}</p>
-                    <button class="btn-menu btn-secondary" style="font-size: 0.8rem; padding: 8px; width: 100%; border: 1px solid rgba(255,255,255,0.2);" onclick="app.tournamentManager.mockWin('${round}', ${index})">
-                        ${tt('tourney_dev_sim_win') || '👑 Simuliraj moju pobedu'}
-                    </button>
-                </div>
-            `;
-
             if (match.timeAccepted) {
                 akcijeHtml = `
                     <div style="background: rgba(76, 175, 80, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--success);">
@@ -300,7 +368,6 @@ class TournamentManager {
                         <p style="font-size: 1.1rem;">${this.formatDate(match.time)}</p>
                     </div>
                     <button class="btn-menu btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.startDuel('${round}', ${index})">▶ ${tt('tourney_start_match') || 'POKRENI MEČ'}</button>
-                    ${devActionHtml}
                 `;
             } 
             else if (match.proposedTime) {
@@ -315,7 +382,6 @@ class TournamentManager {
                             <input type="datetime-local" id="tourney-time-input" class="modal-input" style="margin-top: 5px; font-size: 1rem;">
                         </div>
                         <button class="btn-menu btn-secondary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">${tt('tourney_change_proposal') || 'Promeni predlog'}</button>
-                        ${devActionHtml}
                     `;
                 } else {
                     akcijeHtml = `
@@ -332,7 +398,6 @@ class TournamentManager {
                             <input type="datetime-local" id="tourney-time-input" class="modal-input" style="margin-top: 5px; font-size: 1rem;">
                         </div>
                         <button class="btn-menu btn-secondary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">${tt('tourney_propose_new_time') || 'Predloži novo vreme'}</button>
-                        ${devActionHtml}
                     `;
                 }
             } 
@@ -346,7 +411,6 @@ class TournamentManager {
                         </div>
                     </div>
                     <button class="btn-menu btn-primary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">${tt('tourney_schedule_match') || 'Zakaži meč'}</button>
-                    ${devActionHtml}
                 `;
             }
         } 
@@ -412,24 +476,6 @@ class TournamentManager {
             this.app.socket.emit('tourney_start_duel', { matchRoomId, targetId: opponent.id, opponentName: opponent.name });
         }
         
-        const overlay = document.querySelector('.modal-overlay[style*="display: flex"]');
-        if (overlay) overlay.style.display = 'none';
-        
-        // UKLONJENO OTVARANJE SOBE OVDJE - Sada čekamo odobrenje servera (tourney_join_allowed event)
-    }
-
-    mockWin(round, index) {
-        this.app.soundMgr.click();
-        const myId = localStorage.getItem('yamb_player_id');
-        
-        if (this.app.socket) {
-            this.app.socket.emit('tourney_submit_winner', { round, index, winnerId: myId });
-        }
-        
-        if (round === 'f') {
-            setTimeout(() => this.app.effectMgr.trigger('fireworks'), 500);
-        }
-
         const overlay = document.querySelector('.modal-overlay[style*="display: flex"]');
         if (overlay) overlay.style.display = 'none';
     }

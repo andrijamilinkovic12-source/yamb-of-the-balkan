@@ -11,6 +11,7 @@ function osveziAuthUI(user) {
     const userInfo = document.getElementById('auth-user-info');
     const logoutBtn = document.getElementById('btn-google-logout');
     const nameInput = document.getElementById('setting-name');
+    const userPhoto = document.getElementById('auth-user-photo'); // <-- Dodato za sliku
 
     // Pomoćna funkcija za prevod unutar JS-a
     const translate = (key, fallback) => (typeof t !== 'undefined') ? t(key) : fallback;
@@ -18,11 +19,23 @@ function osveziAuthUI(user) {
     if (user && user.displayName) {
         // Igrač je ulogovan
         if (loginBtn) loginBtn.style.display = 'none';
+        
         if (userInfo) {
             userInfo.innerText = user.displayName;
             userInfo.style.color = 'var(--gold-main)';
         }
+        
+        // Prikazujemo sliku sa Google naloga
+        if (userPhoto) {
+            const slikaUrl = user.photoUrl || user.photoURL || localStorage.getItem('yamb_player_photo');
+            if (slikaUrl) {
+                userPhoto.src = slikaUrl;
+                userPhoto.style.display = 'block';
+            }
+        }
+        
         if (logoutBtn) logoutBtn.style.display = 'block';
+        
         if (nameInput) {
             nameInput.value = user.displayName;
             nameInput.disabled = true; // Zabrani ručno menjanje imena dok je prijavljen
@@ -31,11 +44,20 @@ function osveziAuthUI(user) {
     } else {
         // Igrač NIJE ulogovan
         if (loginBtn) loginBtn.style.display = 'flex';
+        
         if (userInfo) {
             userInfo.innerText = translate('settings_not_logged_in', "Niste prijavljeni");
             userInfo.style.color = 'var(--text-main)';
         }
+        
+        // Sakrivamo sliku
+        if (userPhoto) {
+            userPhoto.src = '';
+            userPhoto.style.display = 'none';
+        }
+        
         if (logoutBtn) logoutBtn.style.display = 'none';
+        
         if (nameInput) {
             nameInput.disabled = false;
             nameInput.style.opacity = '1';
