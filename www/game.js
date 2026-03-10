@@ -77,6 +77,9 @@ class DailyChallengeManager {
             return;
         }
 
+        // ODMAH beležimo da je izazov započet danas da sprečimo ponovni ulazak
+        localStorage.setItem('yamb_last_daily', today);
+
         this.app.navigateTo('daily-challenge-screen');
         this.resetGame();
         this.startRolling(0); 

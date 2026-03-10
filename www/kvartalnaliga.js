@@ -1,13 +1,16 @@
 // kvartalnaliga.js - Upravljanje kvartalnim ligama i prikaz globalne statistike
 
+// Helper funkcija za lakši prevod unutar ovog fajla
+const _t = (key, fallback) => (typeof t !== 'undefined') ? t(key) : fallback;
+
 class KvartalnaLigaManager {
     constructor() {
         this.ranks = [
-            { id: 'amater', name: 'AMATER', max: 5000, color: '#A0522D', icon: '🥉' },
-            { id: 'profi', name: 'PROFI', max: 15000, color: '#C0C0C0', icon: '🥈' },
-            { id: 'majstor', name: 'MAJSTOR', max: 50000, color: '#FFD700', icon: '🥇' },
-            { id: 'legenda', name: 'LEGENDA', max: 100000, color: '#9C27B0', icon: '💎' },
-            { id: 'titan', name: 'TITAN', max: Infinity, color: '#FF3D00', icon: '⚡' }
+            { id: 'amater', name: _t('rank_amater', 'AMATER'), max: 5000, color: '#A0522D', icon: '🥉' },
+            { id: 'profi', name: _t('rank_profi', 'PROFI'), max: 15000, color: '#C0C0C0', icon: '🥈' },
+            { id: 'majstor', name: _t('rank_majstor', 'MAJSTOR'), max: 50000, color: '#FFD700', icon: '🥇' },
+            { id: 'legenda', name: _t('rank_legenda', 'LEGENDA'), max: 100000, color: '#9C27B0', icon: '💎' },
+            { id: 'titan', name: _t('rank_titan', 'TITAN'), max: Infinity, color: '#FF3D00', icon: '⚡' }
         ];
         this.init();
         this.createModalDOM();
@@ -58,7 +61,7 @@ class KvartalnaLigaManager {
             <div class="modal-box" style="width: 90%; max-width: 420px; height: 85vh; max-height: 800px; padding: 0 !important; display: flex; flex-direction: column; overflow: hidden; position: relative;">
                 
                 <div style="background: rgba(0,0,0,0.2); padding: 15px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
-                    <span style="color: var(--gold-main); font-weight: 800; letter-spacing: 1px;">🏆 KVARTALNA LIGA</span>
+                    <span style="color: var(--gold-main); font-weight: 800; letter-spacing: 1px;">🏆 ${_t('menu_league', 'KVARTALNA LIGA').toUpperCase()}</span>
                     <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="window.kvartalnaLiga.closeModal()">✖</span>
                 </div>
                 
@@ -66,15 +69,15 @@ class KvartalnaLigaManager {
                     </div>
                 
                 <div style="text-align: center; padding: 5px; font-size: 0.7rem; color: var(--text-muted); flex-shrink: 0;">
-                    ← Prevuci levo-desno za svoje lige →
+                    ${_t('league_swipe', '← Prevuci levo-desno za svoje lige →')}
                 </div>
 
                 <div style="background: rgba(0,0,0,0.4); padding: 10px; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); text-align: center; color: var(--gold-main); font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; flex-shrink: 0;">
-                    🌍 TOP LISTA IGRACA - TRENUTNI KVARTAL
+                    ${_t('league_top_list', '🌍 TOP LISTA IGRACA - TRENUTNI KVARTAL')}
                 </div>
 
                 <div id="league-global-list" style="flex: 1; overflow-y: auto; width: 100%; -webkit-overflow-scrolling: touch; padding-bottom: 15px;">
-                    <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">Učitavanje servera... ⏳</div>
+                    <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">${_t('league_loading', 'Učitavanje servera... ⏳')}</div>
                 </div>
 
             </div>
@@ -110,7 +113,7 @@ class KvartalnaLigaManager {
                 <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 0 15px ${rank.color}80);">${rank.icon}</div>
                 <h2 style="color: ${rank.color}; margin-bottom: 5px; letter-spacing: 2px; font-size: 1.3rem;">${rank.name}</h2>
                 <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px;">
-                    ${rank.max === Infinity ? 'Krajnja granica' : 'Do ' + rank.max.toLocaleString('sr-RS') + ' PTS'}
+                    ${rank.max === Infinity ? _t('league_limit', 'Krajnja granica') : _t('league_up_to', 'Do') + ' ' + rank.max.toLocaleString('sr-RS') + ' PTS'}
                 </div>
                 
                 <div style="width: 100%; background: rgba(0,0,0,0.4); height: 10px; border-radius: 5px; border: 1px solid var(--glass-border); overflow: hidden; position: relative;">
@@ -118,7 +121,7 @@ class KvartalnaLigaManager {
                 </div>
                 
                 <div style="margin-top: 10px; font-weight: bold; color: var(--text-main); font-size: 0.9rem;">
-                    ${isUnlocked ? (isCurrent ? progressPts.toLocaleString('sr-RS') + ' / ' + rank.max.toLocaleString('sr-RS') : 'ZAVRŠENO ✔') : 'ZAKLJUČANO 🔒'}
+                    ${isUnlocked ? (isCurrent ? progressPts.toLocaleString('sr-RS') + ' / ' + rank.max.toLocaleString('sr-RS') : _t('league_completed', 'ZAVRŠENO ✔')) : _t('league_locked', 'ZAKLJUČANO 🔒')}
                 </div>
             `;
             slider.appendChild(slide);
@@ -129,8 +132,8 @@ class KvartalnaLigaManager {
         allTimeSlide.style.cssText = 'min-width: 100%; scroll-snap-align: center; padding: 15px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px dashed var(--glass-border);';
         allTimeSlide.innerHTML = `
             <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 0 10px gold);">🌍</div>
-            <h2 style="color: var(--gold-main); margin-bottom: 5px; letter-spacing: 2px; font-size: 1.3rem;">SVA VREMENA</h2>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 15px; text-align: center;">Ukupni poeni od prvog pokretanja.</div>
+            <h2 style="color: var(--gold-main); margin-bottom: 5px; letter-spacing: 2px; font-size: 1.3rem;">${_t('league_all_time', 'SVA VREMENA')}</h2>
+            <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 15px; text-align: center;">${_t('league_all_time_desc', 'Ukupni poeni od prvog pokretanja.')}</div>
             
             <div style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); background: rgba(0,0,0,0.3); padding: 8px 20px; border-radius: 12px; border: 1px solid var(--gold-main);">
                 ${allTimeScore.toLocaleString('sr-RS')} PTS
@@ -145,7 +148,7 @@ class KvartalnaLigaManager {
         if (!list) return;
 
         // Reset statusa u slucaju novog otvaranja
-        list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">Učitavanje igrača... ⏳</div>`;
+        list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">${_t('league_loading', 'Učitavanje servera... ⏳')}</div>`;
 
         // Koristimo app socket ako postoji
         if (window.app && window.app.socket && window.app.socket.connected) {
@@ -162,7 +165,7 @@ class KvartalnaLigaManager {
             });
 
         } else {
-            list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">Niste povezani na server.<br><span style="font-size:0.7rem; opacity:0.6;">Lista nije dostupna u offline modu.</span></div>`;
+            list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">${_t('league_no_conn', 'Niste povezani na server.<br><span style="font-size:0.7rem; opacity:0.6;">Lista nije dostupna u offline modu.</span>')}</div>`;
         }
     }
 
@@ -174,12 +177,11 @@ class KvartalnaLigaManager {
         list.innerHTML = '';
         
         if (!data || data.length === 0) {
-            list.innerHTML = `<div style="text-align:center; padding:30px 20px; color:var(--text-muted); font-size:0.8rem; font-style:italic;">Još uvek nema upisanih rezultata za ovaj kvartal.<br>Budi prvi!</div>`;
+            list.innerHTML = `<div style="text-align:center; padding:30px 20px; color:var(--text-muted); font-size:0.8rem; font-style:italic;">${_t('league_no_results', 'Još uvek nema upisanih rezultata za ovaj kvartal.<br>Budi prvi!')}</div>`;
             return;
         }
 
         data.forEach((entry, index) => {
-            // Iskoristićemo tvoje postojeće CSS klase iz style.css (rank-circle, rank-1, itd.)
             let rankClass = 'rank-circle';
             if (index === 0) rankClass += ' rank-1';
             else if (index === 1) rankClass += ' rank-2';
@@ -207,6 +209,21 @@ class KvartalnaLigaManager {
 
     openModal() {
         this.init(); 
+        
+        // Osvežavamo titule činova pre renderovanja svaki put
+        this.ranks[0].name = _t('rank_amater', 'AMATER');
+        this.ranks[1].name = _t('rank_profi', 'PROFI');
+        this.ranks[2].name = _t('rank_majstor', 'MAJSTOR');
+        this.ranks[3].name = _t('rank_legenda', 'LEGENDA');
+        this.ranks[4].name = _t('rank_titan', 'TITAN');
+
+        // Kreirajmo/osvežimo modal DOM pre renderovanja kako bi uhvatio prevod
+        const existingOverlay = document.getElementById('league-modal-overlay');
+        if (existingOverlay) {
+            existingOverlay.remove(); 
+        }
+        this.createModalDOM();
+
         this.renderSlides();
         document.getElementById('league-modal-overlay').style.display = 'flex';
         

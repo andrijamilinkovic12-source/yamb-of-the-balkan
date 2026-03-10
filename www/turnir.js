@@ -1,4 +1,4 @@
-// turnir.js - LOGIKA ZA ASINHRONE TURNIRE (POVEZANO SA SERVEROM) - ID BAZIRANA IDENTIFIKACIJA
+// turnir.js - LOGIKA ZA ASINHRONE TURNIRE (POVEZANO SA SERVEROM) - ID BAZIRANA IDENTIFIKACIJA SA DVORANOM SLAVNIH
 
 const tt = (key) => {
     if (typeof t === 'function') return t(key);
@@ -15,6 +15,8 @@ class TournamentManager {
             players: [], // Sada sadrži objekte: { id: "usr_...", name: "Ime" }
             bracket: { qf: [], sf: [], f: [] }
         };
+
+        this.tourneyLeaderboard = []; // Dodat niz za čuvanje tabele osvajača
 
         this.activeTab = 'info'; // 'info' ili 'bracket'
         
@@ -42,6 +44,15 @@ class TournamentManager {
                         this.activeTab = 'bracket';
                     }
 
+                    if(document.getElementById('tournament-screen').classList.contains('active')) {
+                        this.render();
+                    }
+                });
+
+                // Prijem liste najboljih igrača na turnirima (Osvajači)
+                this.app.socket.on('tourney_stats_data', (data) => {
+                    this.tourneyLeaderboard = data;
+                    // Osvežava se nezavisno od toga u kom smo tabu!
                     if(document.getElementById('tournament-screen').classList.contains('active')) {
                         this.render();
                     }
@@ -81,9 +92,15 @@ class TournamentManager {
         this.app.navigateTo('tournament-screen');
         if(this.app.socket && this.app.socket.connected) {
             this.app.socket.emit('tourney_get_state');
+            this.app.socket.emit('get_tourney_stats'); // Tražimo statistiku pri otvaranju
         } else {
             this.app.initSocketConnection();
-            setTimeout(() => { if(this.app.socket) this.app.socket.emit('tourney_get_state'); }, 500);
+            setTimeout(() => { 
+                if(this.app.socket) {
+                    this.app.socket.emit('tourney_get_state'); 
+                    this.app.socket.emit('get_tourney_stats'); // Tražimo statistiku
+                }
+            }, 500);
         }
         this.render();
     }
@@ -98,13 +115,22 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        // Glavni kontejner sa Tab navigacijom
+        // Glavni kontejner sada ima flex-direction: column da spreči horizontalno bežanje HTML-a
         container.innerHTML = `
-            <div class="nav-tabs" style="justify-content: center; margin-bottom: 20px;">
-                <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')">${tt('tourney_tab_info') || '📋 INFO PRIJAVE'}</button>
-                <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" ${this.state.status === 'registration' ? 'disabled style="opacity:0.5"' : ''}>${tt('tourney_tab_bracket') || '🏆 KOSTUR MEČEVA'}</button>
+            <div style="display: flex; flex-direction: column; width: 100%; align-items: center;">
+                
+                <div class="nav-tabs" style="justify-content: center; margin-bottom: 20px; width: 100%;">
+                    <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')">${tt('tourney_tab_info') || '📋 INFO PRIJAVE'}</button>
+                    <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" ${this.state.status === 'registration' ? 'disabled style="opacity:0.5"' : ''}>${tt('tourney_tab_bracket') || '🏆 KOSTUR MEČEVA'}</button>
+                </div>
+                
+                <div id="tourney-tab-content" style="width: 100%; display: flex; justify-content: center;"></div>
+
+                <div id="tourney-leaderboard-container" style="display: flex; justify-content: center; width: 100%; margin-top: 40px; margin-bottom: 20px;">
+                    ${this.getLeaderboardHTML()}
+                </div>
+
             </div>
-            <div id="tourney-tab-content"></div>
         `;
 
         const tabContent = document.getElementById('tourney-tab-content');
@@ -114,6 +140,33 @@ class TournamentManager {
         } else {
             this.renderBracket(tabContent);
         }
+    }
+
+    // --- NOVA METODA: Generiše HTML za Dvoranu Slavnih ---
+    getLeaderboardHTML() {
+        let leaderboardHtml = `
+            <div class="tourney-leaderboard" style="width: 100%; max-width: 600px; background: var(--glass-panel); padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);">
+                <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 10px; text-transform: uppercase;">
+                    🏆 ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH (OSVAJAČI)'} 🏆
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+        `;
+        
+        if (!this.tourneyLeaderboard || this.tourneyLeaderboard.length === 0) {
+            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:0.9rem;">Još uvek nema osvajača turnira.</div>`;
+        } else {
+            this.tourneyLeaderboard.forEach((player, idx) => {
+                let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx+1}.`));
+                leaderboardHtml += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+                        <span style="color: white; font-weight: bold;">${rankTrophy} ${player.playerName}</span>
+                        <span style="color: var(--gold-main); font-weight: 900;">${player.wins} 🏆</span>
+                    </div>
+                `;
+            });
+        }
+        leaderboardHtml += `</div></div>`;
+        return leaderboardHtml;
     }
 
     // --- FAZA PRIJAVE / INFO KARTICA ---
@@ -148,7 +201,7 @@ class TournamentManager {
         }
 
         container.innerHTML = `
-            <div class="modal-box tourney-wrapper">
+            <div class="modal-box tourney-wrapper" style="width: 100%;">
                 <div class="tourney-icon-large">🏆</div>
                 <h3 class="tourney-title">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
                 <p class="tourney-desc">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
@@ -290,8 +343,9 @@ class TournamentManager {
         const sf = this.state.bracket.sf || [];
         const f = this.state.bracket.f || [];
 
+        // Sada se vraća čist kostur (Dvorana slavnih je izvučena ispod)
         container.innerHTML = `
-            <div class="bracket-wrapper">
+            <div class="bracket-wrapper" style="width: 100%;">
                 <div class="bracket-col qf">
                     <div class="bracket-header">${tt('tourney_qf') || 'ČETVRTFINALE'}</div>
                     ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}

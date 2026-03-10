@@ -244,7 +244,7 @@ class EffectManager {
         if (type === 'balkan') {
             document.body.classList.add('fx-balkan');
             const t1 = document.createElement('div'); t1.innerText = '🎺'; t1.className = 'trumpet-icon'; t1.style.left = '10px'; t1.style.bottom = '10px';
-            const t2 = document.createElement('div'); t2.innerText = '🎺'; t2.className = 'trumpet-icon'; t2.style.right = '10px'; t2.style.bottom = '10px'; t2.style.transform = 'scaleX(-1)';
+            const t2 = document.createElement('div'); t2.innerText = '🎺'; t2.className = 'trumpet-icon'; t2.style.right = '10px'; t2.bottom = '10px'; t2.style.transform = 'scaleX(-1)';
             document.body.appendChild(t1); document.body.appendChild(t2);
             this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖'], 40);
             setTimeout(() => { document.body.classList.remove('fx-balkan'); if(t1.parentNode) t1.remove(); if(t2.parentNode) t2.remove(); }, 4000);
@@ -678,7 +678,7 @@ class ShopManager {
     }
 }
 
-// --- 7. ADMOB CONTROLLER (PRODUKCIJA - ČIST NATIVE, BEZ SIMULACIJE) ---
+// --- 7. ADMOB CONTROLLER (ULTRA-BRZO KEŠIRANJE) ---
 class AdMobController {
     constructor() {
         this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
@@ -710,8 +710,34 @@ class AdMobController {
             try {
                 await this.adMobPlugin.initialize();
                 await this.setupListeners();
+                
+                // 1. ODMAH POKRENI PUNJENJE
                 this.triggerHighPriorityLoad('rewarded');
                 this.triggerHighPriorityLoad('interstitial');
+
+                // 2. WATCHDOG (ČUVAR): Proverava na svakih 20 sekundi
+                setInterval(() => {
+                    if (!this.ads.rewarded.isReady && !this.ads.rewarded.isLoading && navigator.onLine) {
+                        this.preloadAd('rewarded');
+                    }
+                    if (!this.ads.interstitial.isReady && !this.ads.interstitial.isLoading && navigator.onLine) {
+                        this.preloadAd('interstitial');
+                    }
+                }, 20000);
+
+                // 3. APP LIFECYCLE: Forsiraj punjenje kada se korisnik vrati u aplikaciju
+                document.addEventListener("resume", () => {
+                    this.triggerHighPriorityLoad('rewarded');
+                    this.triggerHighPriorityLoad('interstitial');
+                }, false);
+
+                window.addEventListener("visibilitychange", () => {
+                    if (document.visibilityState === 'visible') {
+                        this.triggerHighPriorityLoad('rewarded');
+                        this.triggerHighPriorityLoad('interstitial');
+                    }
+                });
+
             } catch (err) { console.error("❌ AdMob SDK greška pri inicijalizaciji:", err); }
         } else {
             this.updateUI(false);
@@ -721,7 +747,6 @@ class AdMobController {
     async setupListeners() {
         if (!this.adMobPlugin) return;
 
-        // ISPRAVLJENO: Uklonjeni 'on' prefiksi za rewarded evente
         await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
         await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
         
@@ -751,6 +776,7 @@ class AdMobController {
         this.ads[type].isLoading = false;
         if (type === 'rewarded') this.updateUI(false);
 
+        // Eksponencijalni retry
         this.ads[type].retryCount++;
         const nextDelay = Math.min(this.baseRetryDelay * Math.pow(1.2, this.ads[type].retryCount), this.maxRetryDelay);
         setTimeout(() => this.preloadAd(type), nextDelay);
@@ -760,19 +786,22 @@ class AdMobController {
         this.ads[type].isReady = false;
         if (type === 'rewarded') this.updateUI(false);
         this.ads[type].retryCount = 0; 
-        this.preloadAd(type);
+        // Namerno malo odlaganje da se SDK smiri pre novog poziva
+        setTimeout(() => this.preloadAd(type), 500);
     }
 
     async preloadAd(type) {
-        if (!this.adMobPlugin) return;
+        if (!this.adMobPlugin || !navigator.onLine) return; // Ne pokušavaj ako nema interneta
         if (this.ads[type].isLoading || this.ads[type].isReady) return;
+        
         this.ads[type].isLoading = true;
 
-        // SIGURNOSNA MERA: Reset statusa učitavanja nakon 15 sekundi
+        // SIGURNOSNA MERA: Ako pukne, resetuj i POKRENI PONOVO
         const timeoutId = setTimeout(() => {
             if (this.ads[type].isLoading) {
-                console.warn(`[AdMob] Timeout učitavanja za ${type}. Resetujem stanje.`);
+                console.warn(`[AdMob] Timeout učitavanja za ${type}. Forsiram novi pokušaj.`);
                 this.ads[type].isLoading = false;
+                if (navigator.onLine) this.preloadAd(type); // KLJUČNO OVDJE: Ponovni poziv
             }
         }, 15000);
 
@@ -782,6 +811,7 @@ class AdMobController {
             } else if (type === 'interstitial') {
                 await this.adMobPlugin.prepareInterstitial({ adId: this.interstitialId, isTesting: false, autoShow: false });
             }
+            clearTimeout(timeoutId); // Obriši timeout ako je API poziv prošao bez crash-a
         } catch (e) {
             clearTimeout(timeoutId);
             this.handleAdFailed(type, e);
@@ -837,7 +867,7 @@ class AdMobController {
                 if (typeof window.showNotification === 'function') {
                     window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.");
                 } else if(window.modalManager && window.modalManager.overlay) {
-                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
+                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
                 }
                 this.triggerHighPriorityLoad('rewarded');
                 resolve(false);

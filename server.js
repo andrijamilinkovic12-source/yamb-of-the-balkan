@@ -1,4 +1,4 @@
-// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA + ONLINE IGRACI SA STATISTIKOM I STATUSOM (FIX ZA DUPLIRANJE IGRAČA)
+// server.js - FIX: ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA + ONLINE IGRACI SA STATISTIKOM I STATUSOM (FIX ZA DUPLIRANJE IGRAČA) + DVORANA SLAVNIH (TURNIRI)
 
 require('dotenv').config(); 
 
@@ -132,6 +132,15 @@ const LeagueScoreSchema = new mongoose.Schema({
 });
 const LeagueScore = mongoose.model('LeagueScore', LeagueScoreSchema);
 
+// Statistika Turnira (Osvajači)
+const TourneyStatsSchema = new mongoose.Schema({
+    playerId: String,
+    playerName: String,
+    wins: { type: Number, default: 0 },
+    lastWinDate: { type: Date, default: Date.now }
+});
+const TourneyStats = mongoose.model('TourneyStats', TourneyStatsSchema);
+
 // --- REST API RUTE ---
 
 // GLAVNA RUTA: Fallback na index.html za sve ostalo
@@ -254,35 +263,39 @@ io.on('connection', (socket) => {
         socket.playerStats = data.stats;
     });
 
-    // Vraćanje liste svih trenutno prijavljenih soketa (igrača) klijentu - SPREČENO DUPLIRANJE
+    // Vraćanje liste svih trenutno prijavljenih soketa (igrača) klijentu - SPREČENO DUPLIRANJE GOSTIJU
     socket.on('get_online_players', () => {
-        const playersMap = new Map(); // Koristimo Mapu da bismo eliminisali duplikate
+        const playersMap = new Map(); 
         
         io.sockets.sockets.forEach((clientSocket, id) => {
             const isPlaying = !!playerRooms[id];
             
-            // 1. Pokušavamo da grupišemo po trajnom Player ID-ju (najpreciznije)
-            // 2. Ako on fali (npr. stari klijent), koristimo IP adresu + Ime kao prepoznavanje
-            let uniqueKey = registeredSockets[id];
-            if (!uniqueKey) {
-                const ip = activeConnections.get(id) || "unknown_ip";
-                const name = clientSocket.playerName || "Gost";
-                uniqueKey = `${ip}_${name}`;
-            }
+            const ip = activeConnections.get(id) || "unknown_ip";
+            // Ključ je trajni ID igrača, a ako ga (još) nema, koristimo IP adresu za grupisanje
+            let uniqueKey = registeredSockets[id] || ip;
 
-            // Ako igrač (sa istim ID-jem/IP-jem) već postoji u listi, pregazit ćemo ga
-            // SAMO ako je ovaj trenutni socket "u igri" (kako bismo uvijek prikazali status da igra, a ne da je u meniju).
-            if (!playersMap.has(uniqueKey) || isPlaying) {
-                playersMap.set(uniqueKey, {
-                    id: id, // Čuvamo aktuelni socket.id zbog slanja poziva za duel
-                    name: clientSocket.playerName || "Gost",
-                    stats: clientSocket.playerStats || { wins: 0, losses: 0 },
-                    status: isPlaying ? 'playing' : 'idle'
-                });
+            const playerData = {
+                id: id, // Čuvamo aktuelni socket.id zbog slanja poziva za duel
+                name: clientSocket.playerName || "Gost",
+                stats: clientSocket.playerStats || { wins: 0, losses: 0 },
+                status: isPlaying ? 'playing' : 'idle'
+            };
+
+            // Ako već postoji konekcija sa istim ključem (istim ID-jem ili IP adresom)
+            if (playersMap.has(uniqueKey)) {
+                const existing = playersMap.get(uniqueKey);
+                // Dajemo prioritet konekciji koja ima pravo ime (NIJE "Gost") 
+                // ili onoj koja je trenutno u statusu igre
+                if ((existing.name === "Gost" && playerData.name !== "Gost") || 
+                    (existing.status !== 'playing' && playerData.status === 'playing')) {
+                    playersMap.set(uniqueKey, playerData);
+                }
+            } else {
+                playersMap.set(uniqueKey, playerData);
             }
         });
 
-        // Pretvaramo Mapu nazad u niz i šaljemo klijentu (sada bez duplikata!)
+        // Pretvaramo Mapu nazad u niz i šaljemo klijentu (bez duplikata i duhova!)
         socket.emit('online_players_list', Array.from(playersMap.values()));
     });
 
@@ -723,6 +736,22 @@ io.on('connection', (socket) => {
         socket.emit('tourney_state_update', tournamentState);
     });
 
+    // Slanje statistike turnira (Rang lista)
+    socket.on('get_tourney_stats', async () => {
+        try {
+            if (!MONGO_URI) {
+                // Mock podaci za test ako baza ne radi
+                socket.emit('tourney_stats_data', [{ playerName: "Mock Šampion", wins: 5 }]);
+                return;
+            }
+            const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20);
+            socket.emit('tourney_stats_data', stats);
+        } catch (err) {
+            console.error("Greška pri dohvatanju turnirske statistike:", err);
+            socket.emit('tourney_stats_data', []);
+        }
+    });
+
     // 2. Prijava igrača (primi se objekat {id, name})
     socket.on('tourney_register', (playerData) => {
         if (tournamentState.status === 'registration' && tournamentState.players.length < 8) {
@@ -823,7 +852,7 @@ io.on('connection', (socket) => {
     });
 
     // 7. Upis pobednika meča (primi se winnerId)
-    socket.on('tourney_submit_winner', (data) => {
+    socket.on('tourney_submit_winner', async (data) => {
         const { round, index, winnerId } = data;
         const match = tournamentState.bracket[round][index];
         
@@ -835,6 +864,24 @@ io.on('connection', (socket) => {
             
             advanceTournamentBracket(round, index, winnerObj);
             io.emit('tourney_state_update', tournamentState);
+
+            // AKO JE OVO BILO FINALE - UPIŠI POBEDU U BAZU
+            if (round === 'f') {
+                try {
+                    if (MONGO_URI) {
+                        await TourneyStats.findOneAndUpdate(
+                            { playerId: winnerObj.id },
+                            { $set: { playerName: winnerObj.name, lastWinDate: Date.now() }, $inc: { wins: 1 } },
+                            { upsert: true, new: true }
+                        );
+                        // Emituj osveženu listu svima nakon upisa
+                        const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20);
+                        io.emit('tourney_stats_data', stats);
+                    }
+                } catch (err) {
+                    console.error("Greška pri upisu pobednika turnira u bazu:", err);
+                }
+            }
         }
     });
     
