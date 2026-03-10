@@ -293,12 +293,21 @@
                 <label style="display: flex; align-items: center;"><input type="checkbox" id="setting-sound" style="margin-right: 10px;"> <span data-lang="settings_sound">Zvučni Efekti</span></label>
             </div>
 
-            <div class="setting-group" style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); text-align: left;">
-                <label style="color: var(--text-muted); font-size: 0.8rem; text-transform: uppercase;" data-lang="settings_google_account">Google Nalog</label>
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border);">
+            <div class="setting-group" style="margin-top: 25px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="36px" height="36px" style="display: inline-block; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c10.035,0,18.361-7.443,19.684-17.202l-0.072-0.021C43.834,24.526,44,22.316,43.611,20.083z"/>
+                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                    </svg>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border);">
                     
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <img id="auth-user-photo" src="" alt="Avatar" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); display: none; object-fit: cover; box-shadow: 0 0 10px rgba(255,215,0,0.2);">
+                        <img id="auth-user-photo" src="" alt="Avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Igrač&background=333&color=E0C995';" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); display: none; object-fit: cover; box-shadow: 0 0 10px rgba(255,215,0,0.2);">
                         <div id="auth-user-info" style="font-size: 0.95rem; color: var(--text-main); font-weight: bold;" data-lang="settings_not_logged_in">Niste prijavljeni</div>
                     </div>
 
