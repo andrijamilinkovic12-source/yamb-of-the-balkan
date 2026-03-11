@@ -1,10 +1,7 @@
 /**
  * Yamb of the Balkan - Google Auth
- * Ovaj fajl koristi nativni Capacitor plugin za prijavu.
+ * Ovaj fajl koristi nativni Capacitor plugin za prijavu i sinhronizuje statistiku sa MongoDB-om.
  */
-
-// UKLONJENO: const { FirebaseAuthentication } = Capacitor.Plugins; 
-// Ovu dodelu ćemo raditi dinamički samo kada nam zatreba.
 
 // --- POMOĆNA FUNKCIJA ZA AŽURIRANJE UI-a ---
 function osveziAuthUI(user) {
@@ -61,11 +58,25 @@ function osveziAuthUI(user) {
     }
 }
 
+// --- POMOĆNA FUNKCIJA ZA PAKOVANJE LOKALNE STATISTIKE ---
+function getFullLocalStats() {
+    return {
+        games: (window.app && window.app.stats) ? (window.app.stats.games || 0) : 0,
+        wins: (window.app && window.app.stats) ? (window.app.stats.wins || 0) : 0,
+        losses: (window.app && window.app.stats) ? (window.app.stats.losses || 0) : 0,
+        highscore: (window.app && window.app.stats) ? (window.app.stats.highscore || 0) : 0,
+        totalScoreSum: (window.app && window.app.stats) ? (window.app.stats.totalScoreSum || 0) : 0,
+        balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
+        currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
+        unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
+        leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 }
+    };
+}
+
 // --- FUNKCIJA ZA PRIJAVU ---
 async function prijaviSe() {
     console.log("Iniciram proces prijave...");
 
-    // 1. Sigurnosna provera: Da li Capacitor uopšte postoji?
     if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
         console.warn("Google Auth nativni plugin nije dostupan u ovom okruženju.");
         alert("Google prijava je dostupna samo u mobilnoj aplikaciji.");
@@ -73,13 +84,14 @@ async function prijaviSe() {
     }
 
     try {
-        // Pristupamo pluginu dinamički
         const result = await Capacitor.Plugins.FirebaseAuthentication.signInWithGoogle();
 
         if (result.user) {
             const user = result.user;
             console.log("Uspešna prijava:", user.displayName);
 
+            localStorage.setItem('yamb_uid', user.uid); // Čuvamo UID
+            
             if (user.displayName) {
                 localStorage.setItem('yamb_player_name', user.displayName);
             }
@@ -90,13 +102,15 @@ async function prijaviSe() {
             osveziAuthUI(user);
             alert("Dobrodošli, " + (user.displayName || "Igraču") + "!");
 
-            if (window.app && user.displayName) {
-                window.app.playerName = user.displayName;
+            if (window.app) {
+                window.app.playerId = user.uid; // Menjamo id u aplikaciji
+                if (user.displayName) window.app.playerName = user.displayName;
                 
                 if (window.app.socket && window.app.socket.connected) {
                     window.app.socket.emit('set_player_data', { 
+                        uid: user.uid, 
                         name: window.app.playerName, 
-                        stats: { wins: window.app.stats.wins || 0, losses: window.app.stats.losses || 0 } 
+                        stats: getFullLocalStats()
                     });
                 }
             }
@@ -117,7 +131,6 @@ async function prijaviSe() {
 
 // --- FUNKCIJA ZA ODJAVU ---
 async function odjaviSe() {
-    // 1. Sigurnosna provera
     if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
          return; 
     }
@@ -132,11 +145,11 @@ async function odjaviSe() {
     }
 
     try {
-        // Pristupamo pluginu dinamički
         await Capacitor.Plugins.FirebaseAuthentication.signOut();
         console.log("Korisnik uspešno odjavljen.");
 
         localStorage.removeItem('yamb_player_photo');
+        localStorage.removeItem('yamb_uid'); // Brišemo UID pri odjavi
         
         let defaultName = "Gost_" + Math.floor(Math.random() * 9000 + 1000);
         localStorage.setItem('yamb_player_name', defaultName);
@@ -148,10 +161,12 @@ async function odjaviSe() {
 
         if (window.app) {
             window.app.playerName = defaultName;
+            window.app.playerId = localStorage.getItem('yamb_player_id'); // Vraćamo gost id
+            
             if (window.app.socket && window.app.socket.connected) {
                 window.app.socket.emit('set_player_data', { 
                     name: window.app.playerName, 
-                    stats: { wins: window.app.stats.wins || 0, losses: window.app.stats.losses || 0 } 
+                    stats: getFullLocalStats()
                 });
             }
         }
@@ -164,18 +179,22 @@ async function odjaviSe() {
 
 // --- PROVERA STATUSA PRILIKOM UČITAVANJA ---
 async function checkLoginStatus() {
-    // 1. Sigurnosna provera
     if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
-        osveziAuthUI(null); // Osiguravamo da UI bude u izlogovanom stanju ako nema plugina
+        osveziAuthUI(null); 
         return; 
     }
 
     try {
-        // Pristupamo pluginu dinamički
         const result = await Capacitor.Plugins.FirebaseAuthentication.getCurrentUser();
         if (result && result.user) {
             console.log("Korisnik je već ulogovan:", result.user.displayName);
+            
+            localStorage.setItem('yamb_uid', result.user.uid); // Čuvamo UID ako je detektovan
             osveziAuthUI(result.user);
+            
+            if (window.app) {
+                window.app.playerId = result.user.uid;
+            }
             
             if (window.app && result.user.displayName && window.app.playerName !== result.user.displayName) {
                 window.app.playerName = result.user.displayName;
@@ -183,8 +202,9 @@ async function checkLoginStatus() {
                 
                 if (window.app.socket && window.app.socket.connected) {
                     window.app.socket.emit('set_player_data', { 
+                        uid: result.user.uid, 
                         name: window.app.playerName, 
-                        stats: { wins: window.app.stats.wins || 0, losses: window.app.stats.losses || 0 } 
+                        stats: getFullLocalStats()
                     });
                 }
             }
@@ -203,3 +223,48 @@ document.addEventListener('DOMContentLoaded', () => {
     
     setTimeout(checkLoginStatus, 500);
 });
+
+// === PRIJEM SAČUVANIH REZULTATA IZ MONGODB BAZE ===
+setTimeout(() => {
+    if (window.app && window.app.socket) {
+        window.app.socket.on('sync_local_stats', (dbStats) => {
+            console.log("🔄 Preuzeta cela statistika iz oblaka:", dbStats);
+            
+            window.app.stats = { 
+                games: dbStats.games || 0,
+                wins: dbStats.wins || 0, 
+                losses: dbStats.losses || 0,
+                highscore: dbStats.highscore || 0,
+                totalScoreSum: dbStats.totalScoreSum || 0
+            };
+            localStorage.setItem('yamb_stats', JSON.stringify(window.app.stats));
+            
+            if (window.statsManager) {
+                window.statsManager.stats.wins = dbStats.wins || 0;
+                window.statsManager.stats.losses = dbStats.losses || 0;
+                window.statsManager.stats.totalGames = dbStats.games || 0;
+                window.statsManager.stats.highscore = dbStats.highscore || 0;
+                window.statsManager.stats.balance = dbStats.balance || 0;
+                window.statsManager.stats.currentWinStreak = dbStats.currentWinStreak || 0;
+                window.statsManager.stats.unlockedTrophies = dbStats.unlockedTrophies || [];
+                window.statsManager.saveStats();
+            }
+
+            if (dbStats.balance !== undefined) {
+                localStorage.setItem('yamb_dukati', dbStats.balance);
+            }
+            
+            if (dbStats.leagueData && dbStats.leagueData.year > 0) {
+                localStorage.setItem('yamb_quarter_data', JSON.stringify(dbStats.leagueData));
+                
+                if (window.kvartalnaLiga) {
+                    window.kvartalnaLiga.quarterData = dbStats.leagueData;
+                }
+            }
+            
+            if (typeof updateMainMenuDashboard === 'function') {
+                updateMainMenuDashboard();
+            }
+        });
+    }
+}, 2500);

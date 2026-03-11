@@ -9,16 +9,15 @@ class TournamentManager {
     constructor(app) {
         this.app = app;
         
-        // Prazno početno stanje dok se ne učita sa servera
         this.state = {
             status: 'registration', 
-            players: [], // Sada sadrži objekte: { id: "usr_...", name: "Ime" }
+            players: [], 
             bracket: { qf: [], sf: [], f: [] }
         };
 
-        this.tourneyLeaderboard = []; // Dodat niz za čuvanje tabele osvajača
+        this.tourneyLeaderboard = []; 
 
-        this.activeTab = 'info'; // 'info', 'bracket', ili 'leaderboard'
+        this.activeTab = 'info'; 
         
         if (this.app) {
             this.app.openTournament = () => this.open();
@@ -34,12 +33,10 @@ class TournamentManager {
 
         setTimeout(() => {
             if(this.app && this.app.socket) {
-                // 1. Kada server pošalje novo stanje, osveži UI
                 this.app.socket.on('tourney_state_update', (newState) => {
                     const oldStatus = this.state.status;
                     this.state = newState;
                     
-                    // Ako se turnir upravo napunio i prešao iz prijave u kostur, automatski prebaci tab
                     if (oldStatus === 'registration' && newState.status !== 'registration') {
                         this.activeTab = 'bracket';
                     }
@@ -49,24 +46,21 @@ class TournamentManager {
                     }
                 });
 
-                // Prijem liste najboljih igrača na turnirima (Osvajači)
                 this.app.socket.on('tourney_stats_data', (data) => {
                     this.tourneyLeaderboard = data;
-                    // Osvežava se nezavisno od toga u kom smo tabu!
                     if(document.getElementById('tournament-screen').classList.contains('active')) {
                         this.render();
                     }
                 });
 
-                // 2. Slušač za pokretanje meča od strane protivnika (PROVERA PREKO ID-ja)
                 this.app.socket.on('tourney_duel_ready', (data) => {
-                    const myId = localStorage.getItem('yamb_player_id');
+                    const myId = this.app.playerId; // KORISTIMO GLAVNI ID IZ APP-A (Koji je sada UID ako si logovan)
                     if (data.targetId === myId) {
                         let msg = tt('tourney_opponent_ready');
                         if (msg !== 'tourney_opponent_ready') {
                             msg = msg.replace('{0}', data.opponentName);
                         } else {
-                            msg = `${data.opponentName} je pokrenuo vaš turnirski meč. Da li ulazite?`; // Fallback
+                            msg = `${data.opponentName} je pokrenuo vaš turnirski meč. Da li ulazite?`; 
                         }
                         
                         this.app.modal.confirm(msg).then(acc => {
@@ -77,7 +71,6 @@ class TournamentManager {
                     }
                 });
 
-                // 3. Dozvola servera da je protivnik online i da možete ući u sobu (KORAK 3)
                 this.app.socket.on('tourney_join_allowed', (matchRoomId) => {
                     this.app.joinPrivateGame(this.app.playerName, matchRoomId);
                 });
@@ -86,19 +79,18 @@ class TournamentManager {
     }
 
     open() {
-        // Pametno biranje početnog taba pri otvaranju ekrana
         this.activeTab = this.state.status === 'registration' ? 'info' : 'bracket';
         
         this.app.navigateTo('tournament-screen');
         if(this.app.socket && this.app.socket.connected) {
             this.app.socket.emit('tourney_get_state');
-            this.app.socket.emit('get_tourney_stats'); // Tražimo statistiku pri otvaranju
+            this.app.socket.emit('get_tourney_stats'); 
         } else {
             this.app.initSocketConnection();
             setTimeout(() => { 
                 if(this.app.socket) {
                     this.app.socket.emit('tourney_get_state'); 
-                    this.app.socket.emit('get_tourney_stats'); // Tražimo statistiku
+                    this.app.socket.emit('get_tourney_stats'); 
                 }
             }, 500);
         }
@@ -115,7 +107,6 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        // Glavni kontejner sa novim rasporedom dugmića (2 gore, 1 dole)
         container.innerHTML = `
             <div style="display: flex; flex-direction: column; width: 100%; align-items: center; padding: 0 10px;">
                 
@@ -146,12 +137,10 @@ class TournamentManager {
         } else if (this.activeTab === 'bracket') {
             this.renderBracket(tabContent);
         } else if (this.activeTab === 'leaderboard') {
-            // RENDERING DVORANE SLAVNIH KAO ZASEBNOG TABA
             tabContent.innerHTML = this.getLeaderboardHTML();
         }
     }
 
-    // --- NOVA METODA: Generiše HTML za Dvoranu Slavnih ---
     getLeaderboardHTML() {
         let leaderboardHtml = `
             <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 600px;">
@@ -179,9 +168,8 @@ class TournamentManager {
         return leaderboardHtml;
     }
 
-    // --- FAZA PRIJAVE / INFO KARTICA ---
     renderRegistration(container) {
-        const myId = localStorage.getItem('yamb_player_id');
+        const myId = this.app.playerId;
         const isRegistered = this.state.players.some(p => p.id === myId);
         const isRegistrationOpen = this.state.status === 'registration';
         const spotsLeft = 8 - this.state.players.length;
@@ -199,7 +187,6 @@ class TournamentManager {
             buttonHtml = `<button class="btn-menu btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.registerPlayer()">🎟️ ${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)</button>`;
         }
 
-        // Prikaz svih 8 mesta na turniru (popunjena i slobodna)
         let participantsHtml = '';
         for (let i = 0; i < 8; i++) {
             if (this.state.players[i]) {
@@ -238,13 +225,11 @@ class TournamentManager {
     registerPlayer() {
         this.app.soundMgr.click();
 
-        // 1. Provera da li je prijava moguća
         if (this.state.status !== 'registration' || this.state.players.length >= 8) {
             this.app.modal.alert(tt('msg_room_full') || "Turnir je popunjen ili je već počeo!");
             return;
         }
 
-        // 2. Provera stanja dukata
         const fee = 2500;
         let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
 
@@ -257,12 +242,10 @@ class TournamentManager {
             return;
         }
 
-        // 3. Potvrda pre skidanja dukata
         const confirmMsg = tt('tourney_confirm_fee') || `Prijava za turnir košta ${fee} 💰.\nDa li želite da se prijavite?`;
         
         this.app.modal.confirm(confirmMsg).then(potvrda => {
             if (potvrda) {
-                // Oduzimanje dukata i ažuriranje baze
                 currentBalance -= fee;
                 localStorage.setItem('yamb_dukati', currentBalance);
                 
@@ -271,15 +254,13 @@ class TournamentManager {
                     window.statsManager.saveStats();
                 }
                 
-                // Osvežavanje Dashboard-a u glavnom meniju da se odmah vidi novi balans
                 if (typeof updateMainMenuDashboard === 'function') {
                     updateMainMenuDashboard();
                 }
 
-                // Slanje prijave serveru
                 if(this.app.socket) {
                     const playerData = {
-                        id: localStorage.getItem('yamb_player_id'),
+                        id: this.app.playerId, 
                         name: this.app.playerName
                     };
                     this.app.socket.emit('tourney_register', playerData);
@@ -291,23 +272,19 @@ class TournamentManager {
     async unregisterPlayer() {
         this.app.soundMgr.click();
 
-        // 1. Provera da li je odjava još uvek moguća
         if (this.state.status !== 'registration') {
             this.app.modal.alert(tt('tourney_cannot_unregister') || "Turnir je već počeo, odjava više nije moguća!");
             return;
         }
 
-        // 2. Potvrda od korisnika uz upozorenje o reklami
         const confirmMsg = tt('tourney_confirm_unregister') || "Da li ste sigurni da želite da se odjavite sa turnira?\nPrikazaće se reklama pre povraćaja dukata.";
         const potvrda = await this.app.modal.confirm(confirmMsg);
         
         if (potvrda) {
-            // 3. Prikaz Intersitial Reklame
             if (window.adMobGlobal && window.adMobGlobal.showInterstitial) {
                 await window.adMobGlobal.showInterstitial();
             }
 
-            // 4. Povraćaj sredstava (2500 dukata)
             const refundAmount = 2500;
             let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
             currentBalance += refundAmount;
@@ -319,18 +296,15 @@ class TournamentManager {
                 window.statsManager.saveStats();
             }
             
-            // Osveži glavnu kontrolnu tablu u pozadini
             if (typeof updateMainMenuDashboard === 'function') {
                 updateMainMenuDashboard();
             }
 
-            // 5. Javi serveru da ukloni igrača sa liste
             if (this.app.socket) {
-                const playerId = localStorage.getItem('yamb_player_id');
+                const playerId = this.app.playerId;
                 this.app.socket.emit('tourney_unregister', playerId);
             }
             
-            // 6. Uspešna notifikacija
             this.app.modal.alert(
                 tt('tourney_unregistered_success') || "Uspešno ste se odjavili. Vraćeno Vam je 2500 💰.", 
                 tt('modal_title_info') || "INFO"
@@ -338,7 +312,6 @@ class TournamentManager {
         }
     }
 
-    // --- FAZA IGRANJA (BRACKET KOSTUR KARTICA) ---
     formatDate(dateString) {
         if (!dateString) return '';
         const d = new Date(dateString);
@@ -353,7 +326,6 @@ class TournamentManager {
         const sf = this.state.bracket.sf || [];
         const f = this.state.bracket.f || [];
 
-        // Čist kostur
         container.innerHTML = `
             <div class="bracket-wrapper" style="width: 100%;">
                 <div class="bracket-col qf">
@@ -384,7 +356,7 @@ class TournamentManager {
                 </div>`;
         }
 
-        const myId = localStorage.getItem('yamb_player_id');
+        const myId = this.app.playerId;
         const isMyMatch = match.p1.id === myId || match.p2.id === myId;
         const activeClass = isMyMatch ? 'my-match' : '';
         
@@ -411,12 +383,11 @@ class TournamentManager {
         `;
     }
 
-    // --- MODAL ZA DOGOVOR / POKRETANJE MEČA ---
     openMatchModal(round, index) {
         const match = this.state.bracket[round][index];
         if (!match || !match.p1 || !match.p2) return;
 
-        const myId = localStorage.getItem('yamb_player_id');
+        const myId = this.app.playerId;
         const isMyMatch = match.p1.id === myId || match.p2.id === myId;
         let akcijeHtml = '';
 
@@ -507,7 +478,7 @@ class TournamentManager {
                 round: round,
                 index: index,
                 proposedTime: input.value,
-                playerId: localStorage.getItem('yamb_player_id')
+                playerId: this.app.playerId
             });
         }
         
@@ -528,7 +499,7 @@ class TournamentManager {
 
     startDuel(round, index) {
         const match = this.state.bracket[round][index];
-        const myId = localStorage.getItem('yamb_player_id');
+        const myId = this.app.playerId;
         const opponent = match.p1.id === myId ? match.p2 : match.p1;
         
         const matchRoomId = `tourney_${round}_${index}_${Date.now()}`;
@@ -536,7 +507,6 @@ class TournamentManager {
         this.app.soundMgr.click();
         
         if (this.app.socket) {
-            // Šaljemo Target ID kako bi server bio 100% precizan koga zove
             this.app.socket.emit('tourney_start_duel', { matchRoomId, targetId: opponent.id, opponentName: opponent.name });
         }
         

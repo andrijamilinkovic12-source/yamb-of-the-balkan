@@ -232,10 +232,17 @@ class TopListManager {
             const displayName = entry.playerName || entry.name || this._t('player_unknown');
             const scoreFormatted = entry.score.toLocaleString(currentLang);
             
+            // --- LOGIKA ZA SMANJENJE FONTA DUGAČKIH IMENA ---
+            // Standardna veličina u style.css je 0.85rem. Za preko 16 karaktera smanjujemo na 0.72rem.
+            let nameStyle = "";
+            if (displayName.length > 16) {
+                nameStyle = "font-size: 0.72rem; line-height: 1.1;"; 
+            }
+            
             li.innerHTML = `
                 <div class="${rankClass}">${index + 1}</div>
                 <div class="hs-info">
-                    <div class="hs-name">${displayName}${crownIcon}</div>
+                    <div class="hs-name" style="${nameStyle}">${displayName}${crownIcon}</div>
                     <div class="hs-meta">
                         <span>${entry.mode || 'Solo'}</span>
                         ${dateDisplay ? `<span>• ${dateDisplay}</span>` : ''}
