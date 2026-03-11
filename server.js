@@ -8,19 +8,20 @@ const { Server } = require("socket.io");
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path'); 
+const https = require('https'); // Dodato za Self-Ping mehanizam
 
 // Inicijalizacija aplikacije
 const app = express();
 const server = http.createServer(app);
 
-// Socket.io konfiguracija
+// Socket.io konfiguracija (POBOLJŠANA ZA MOBILNE MREŽE)
 const io = new Server(server, {
     cors: {
         origin: "*", 
         methods: ["GET", "POST"]
     },
-    pingInterval: 10000, 
-    pingTimeout: 5000    
+    pingInterval: 25000, // Bilo 10000 -> Sada 25s
+    pingTimeout: 20000   // Bilo 5000 -> Sada 20s (Daje više vremena ako laguje net)
 });
 
 // Middleware
@@ -80,14 +81,24 @@ app.get('/.well-known/assetlinks.json', (req, res) => {
 // ==================================================================
 app.use(express.static(path.join(__dirname, 'www')));
 
-// --- MONGODB KONEKCIJA ---
+// ==================================================================
+// --- MONGODB KONEKCIJA (POBOLJŠANA) ---
+// ==================================================================
 const MONGO_URI = process.env.MONGO_URI;
 
 if (MONGO_URI) {
-    mongoose.connect(MONGO_URI)
-    .then(() => console.log('✅ MongoDB connected!'))
+    mongoose.connect(MONGO_URI, {
+        serverSelectionTimeoutMS: 5000, // Timeout nakon 5 sekundi ako baza ne odgovara
+        socketTimeoutMS: 45000,        // Zatvori idle socket nakon 45s
+    })
+    .then(() => console.log('✅ MongoDB connected & stable!'))
     .catch(err => {
         console.error('❌ MongoDB connection error:', err.message);
+    });
+
+    // Reaguj ako konekcija pukne u toku rada
+    mongoose.connection.on('disconnected', () => {
+        console.log('⚠️ MongoDB diskonektovan! Pokušavam ponovno povezivanje...');
     });
 } else {
     console.log('⚠️ UPOZORENJE: MONGO_URI nije podešen. Baza neće raditi.');
@@ -866,6 +877,22 @@ setInterval(() => {
         console.log(`🧹 Očišćeno ${obrisano} isteklih banova iz memorije.`);
     }
 }, 60 * 60 * 1000); 
+
+// ==================================================================
+// ANTI-SLEEP (SELF-PING) MEHANIZAM
+// ==================================================================
+// Podesi URL tako da odgovara onom na kom je hostovan tvoj projekat
+const SERVER_URL = 'https://yamb-of-the-balkan.onrender.com'; 
+
+setInterval(() => {
+    https.get(SERVER_URL, (res) => {
+        if (res.statusCode === 200) {
+            console.log('☕ Self-ping uspešan: Server je budan.');
+        }
+    }).on('error', (err) => {
+        console.log('❌ Self-ping greška: ' + err.message);
+    });
+}, 10 * 60 * 1000); // Pokreće se svakih 10 minuta
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
