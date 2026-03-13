@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM (SVE STATISTIKE SE ČUVAJU NA MONGODB) + ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA (BEZ FANTOMSKIH KONEKCIJA) + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA (CLOUD SAVE) + ONLINE IGRACI SA STATISTIKOM I STATUSOM + DVORANA SLAVNIH (TURNIRI)
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM (SVE STATISTIKE SE ČUVAJU NA MONGODB) + ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA (BEZ FANTOMSKIH KONEKCIJA) + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA (CLOUD SAVE + POPRAVLJENO RANGIRANJE PO ID) + ONLINE IGRACI SA STATISTIKOM I STATUSOM + DVORANA SLAVNIH (TURNIRI)
 
 require('dotenv').config(); 
 
@@ -33,16 +33,17 @@ app.use(express.json());
 // ==================================================================
 const zabranjeneReci = [
     "idiot", "budala", "kreten", "glupan", "majmun", "debil", "stoka",
-    "kurv", "jeb", "pizd", "kurac", "sranj", "govn", "pick", "pedere", "pederu",
-    "verskauvreda1", "nacionalnauvreda1", "rasnauvreda1", "balij", "ustas", "chetnik", "siptar", "cigan",
+    "kurv", "jeb", "pizd", "kurac", "sranj", "govn", "pick", "pedere", "pederu", "pedercin",
+    "gej", "gejc", "lezb", "drolj", "kuck", "drk", "pusikur", "supak", "cmar",
+    "verskauvreda1", "nacionalnauvreda1", "rasnauvreda1", "balij", "ustas", "chetnik", "siptar", "cigan", "skart",
     "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy", "slut", "whore", 
     "faggot", "nigger", "nigga", "bastard", "retard", "crap", "douche", "motherfucker"
 ];
 
 const charMap = {
     'a': '[aA@4]', 'b': '[bB8]', 'c': '[cCčČćĆ]', 'd': '[dDđĐ]', 'e': '[eE3]',
-    'g': '[gG6]', 'i': '[iI1l!L]', 'l': '[lL1iI]', 'o': '[oO0]', 's': '[sSšŠ5\\$]',
-    't': '[tT7]', 'z': '[zZžŽ]'
+    'g': '[gG6]', 'i': '[iI1l!L]', 'j': '[jJyY]', 'l': '[lL1iI]', 'o': '[oO0]', 
+    's': '[sSšŠ5\\$]', 't': '[tT7]', 'u': '[uUvV]', 'z': '[zZžŽ]'
 };
 
 function napraviPametniRegex(rec) {
@@ -68,6 +69,13 @@ function cenzurisiPoruku(poruka) {
     return filtriranaPoruka;
 }
 
+function sadrziPsovku(tekst) {
+    return zabranjeniRegexi.some(regex => {
+        const match = tekst.match(regex);
+        return match !== null;
+    });
+}
+
 // ==================================================================
 // 1. RUTA ZA ANDROID APP LINKS (ASSETLINKS.JSON)
 // ==================================================================
@@ -88,15 +96,14 @@ const MONGO_URI = process.env.MONGO_URI;
 
 if (MONGO_URI) {
     mongoose.connect(MONGO_URI, {
-        serverSelectionTimeoutMS: 5000, // Timeout nakon 5 sekundi ako baza ne odgovara
-        socketTimeoutMS: 45000,        // Zatvori idle socket nakon 45s
+        serverSelectionTimeoutMS: 5000, 
+        socketTimeoutMS: 45000,        
     })
     .then(() => console.log('✅ MongoDB connected & stable!'))
     .catch(err => {
         console.error('❌ MongoDB connection error:', err.message);
     });
 
-    // Reaguj ako konekcija pukne u toku rada
     mongoose.connection.on('disconnected', () => {
         console.log('⚠️ MongoDB diskonektovan! Pokušavam ponovno povezivanje...');
     });
@@ -114,6 +121,7 @@ const ScoreSchema = new mongoose.Schema({
 const Score = mongoose.model('Score', ScoreSchema);
 
 const LeagueScoreSchema = new mongoose.Schema({
+    playerId: String,
     playerName: String,
     score: Number,
     year: Number,
@@ -215,7 +223,6 @@ function updateOnlineCount() {
         if (!clientSocket.playerName) return;
 
         const ip = activeConnections.get(id) || "unknown_ip";
-        // FIX: Koristimo clientSocket.playerId koji je direktno zakačen na socket
         let uniqueKey = clientSocket.playerId || registeredSockets[id] || ip;
         uniqueKeys.add(uniqueKey);
     });
@@ -237,17 +244,25 @@ io.on('connection', (socket) => {
     socket.on('set_my_id', (playerId) => {
         onlinePlayers[playerId] = socket.id;
         registeredSockets[socket.id] = playerId;
-        socket.playerId = playerId; // Spašavamo i ovde direktno na socket
+        socket.playerId = playerId; 
     });
 
     socket.on('set_player_data', async (data) => {
         let bezbednoIme = "Nepoznat Igrač";
+        
         if (data.name) {
-            bezbednoIme = cenzurisiPoruku(data.name.trim().substring(0, 24));
+            let unesenoIme = data.name.trim().substring(0, 24);
+            
+            if (sadrziPsovku(unesenoIme)) {
+                bezbednoIme = "Igrač_" + Math.floor(1000 + Math.random() * 9000);
+                console.log(`🛡️ BLOKIRANO IME: Pokušaj unosa '${unesenoIme}'. Dodeljeno: ${bezbednoIme}`);
+            } else {
+                bezbednoIme = unesenoIme;
+            }
         }
         
         socket.playerName = bezbednoIme;
-        socket.playerId = data.playerId || data.uid; // FIX: Čuvamo pravi ID uređaja ili Google UID odmah na socket
+        socket.playerId = data.playerId || data.uid; 
         data.name = bezbednoIme; 
         
         if (!data.uid) {
@@ -274,8 +289,8 @@ io.on('connection', (socket) => {
                 if (s.losses > user.losses) user.losses = s.losses;
                 if (s.highscore > user.highscore) user.highscore = s.highscore;
                 if (s.totalScoreSum > user.totalScoreSum) user.totalScoreSum = s.totalScoreSum;
-                if (s.balance > user.balance) user.balance = s.balance;
-                if (s.currentWinStreak > user.currentWinStreak) user.currentWinStreak = s.currentWinStreak;
+                if (typeof s.balance === 'number') user.balance = s.balance; 
+                if (typeof s.currentWinStreak === 'number') user.currentWinStreak = s.currentWinStreak; 
                 
                 if (s.unlockedTrophies && s.unlockedTrophies.length > 0) {
                     const mergedTrophies = new Set([...user.unlockedTrophies, ...s.unlockedTrophies]);
@@ -327,7 +342,6 @@ io.on('connection', (socket) => {
             const isPlaying = !!playerRooms[id];
             const ip = activeConnections.get(id) || "unknown_ip";
             
-            // FIX: Koristimo striktni jedinstveni ID izbegavajući dupliranje za IP
             let uniqueKey = clientSocket.playerId || registeredSockets[id] || ip;
 
             const playerData = {
@@ -413,7 +427,12 @@ io.on('connection', (socket) => {
             let rawName = data.name || data.playerName;
 
             if (rawName && typeof rawName === 'string') {
-                finalName = cenzurisiPoruku(rawName.trim().substring(0, MAX_NAME_LENGTH));
+                let unesenoIme = rawName.trim().substring(0, MAX_NAME_LENGTH);
+                if (sadrziPsovku(unesenoIme)) {
+                    finalName = "Igrač_" + Math.floor(1000 + Math.random() * 9000);
+                } else {
+                    finalName = unesenoIme;
+                }
             }
 
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
@@ -463,16 +482,22 @@ io.on('connection', (socket) => {
             if (!MONGO_URI) return;
             if (typeof data.score !== 'number' || isNaN(data.score)) return;
 
-            let finalName = cenzurisiPoruku((data.playerName || "Nepoznat Igrač").trim().substring(0, 24));
+            let rawName = (data.playerName || "Nepoznat Igrač").trim().substring(0, 24);
+            let finalName = sadrziPsovku(rawName) 
+                ? "Igrač_" + Math.floor(1000 + Math.random() * 9000) 
+                : rawName;
+
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
 
+            let uniqueId = data.playerId || socket.playerId || socket.id;
+
             await LeagueScore.findOneAndUpdate(
-                { playerName: finalName, year: data.year, quarter: data.quarter }, 
-                { $set: { score: data.score, date: Date.now() } }, 
+                { playerId: uniqueId, year: data.year, quarter: data.quarter }, 
+                { $set: { playerName: finalName, score: data.score, date: Date.now() } }, 
                 { upsert: true, new: true } 
             );
             
-            console.log(`🏆 LIGA UPIS: ${finalName} -> ${data.score} PTS (Q${data.quarter}/${data.year})`);
+            console.log(`🏆 LIGA UPIS: ${finalName} (${uniqueId}) -> ${data.score} PTS (Q${data.quarter}/${data.year})`);
         } catch (err) {
             console.error("Greška pri upisu u kvartalnu ligu:", err);
         }
@@ -738,19 +763,6 @@ io.on('connection', (socket) => {
                 io.emit('tourney_state_update', tournamentState);
                 console.log(`↩️ Poništena prijava za turnir: ${playerId}`);
             }
-        }
-    });
-
-    socket.on('tourney_fill_bots', () => {
-        if (tournamentState.status === 'registration') {
-            while (tournamentState.players.length < 8) {
-                tournamentState.players.push({
-                    id: 'bot_' + Math.random().toString(36).substr(2, 9),
-                    name: `Bot ${Math.floor(Math.random() * 1000)}`
-                });
-            }
-            generateTournamentBracket();
-            io.emit('tourney_state_update', tournamentState);
         }
     });
 

@@ -231,6 +231,37 @@ class EffectManager {
             }
         }
 
+        // --- SUPERNOVA EFEKAT ---
+        if (type === 'supernova') {
+            let targetTable = null;
+            const tables = document.querySelectorAll('.player-table');
+            tables.forEach(tbl => { 
+                if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { 
+                    targetTable = tbl; 
+                } 
+            });
+            if (!targetTable && tables.length > 0) targetTable = tables[0];
+
+            if (targetTable) {
+                const rect = targetTable.getBoundingClientRect();
+                const snContainer = document.createElement('div');
+                snContainer.className = 'supernova-container';
+                snContainer.style.position = 'fixed';
+                snContainer.style.top = (rect.top + rect.height / 2) + 'px';
+                snContainer.style.left = (rect.left + rect.width / 2) + 'px';
+                
+                snContainer.innerHTML = `<div class="sn-core"></div><div class="sn-ring sn-ring-1"></div><div class="sn-ring sn-ring-2"></div>`;
+                document.body.appendChild(snContainer);
+                
+                targetTable.classList.add('anim-supernova-table');
+                
+                setTimeout(() => { 
+                    targetTable.classList.remove('anim-supernova-table'); 
+                    if (snContainer.parentNode) snContainer.remove(); 
+                }, 7500);
+            }
+        }
+
         if (type === 'thunder') {
             const flash = document.createElement('div');
             flash.className = 'anim-thunder';
@@ -305,9 +336,10 @@ class EffectManager {
     
     stop() {
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age');
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container').forEach(e => e.remove());
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
+        document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
     }
 }
 
@@ -508,10 +540,11 @@ class ShopManager {
 
                 let priceHtml = '';
                 if (this.type === 'trophy') {
-                    priceHtml = `<div class="status ${isUnlocked ? 'status-unlocked' : 'status-locked'}">${isUnlocked ? _safeT('btn_bought') : `💰 ${item.reward}`}</div>`;
+                    priceHtml = `<div class="status ${isUnlocked ? 'status-unlocked' : 'status-locked'}">${isUnlocked ? _safeT('btn_won') : `💰 ${item.reward}`}</div>`;
                 } else {
                     if (isUnlocked) {
-                        priceHtml = `<div class="price">✔ ${_safeT('btn_bought')}</div>`;
+                        // ISPRAVKA: Uklonjena hardkodovana ✔ jer već postoji u translation fajlu!
+                        priceHtml = `<div class="price">${_safeT('btn_bought')}</div>`;
                     } else {
                         let price = item.price;
                         let displayPrice = `${price} ${_safeT('balance')}`;
@@ -588,7 +621,6 @@ class ShopManager {
 
     async tryBuy(id, name, price) {
         if (this.balance < price) {
-            // Proveri da li postoji stara Modal funkcija unutar Riznica fajlova
             if (typeof window.showNotification === 'function') {
                 window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!");
             } else if (window.modalManager && window.modalManager.overlay) {
@@ -599,12 +631,9 @@ class ShopManager {
             return;
         }
         
-        // Prikaz pravog modala zavisno od stranice na kojoj se nalazimo
         if (typeof window.openConfirmModal === 'function') {
-            // Kockice.html i Efekti.html imaju svoju staru funkciju
             window.openConfirmModal(id, name, price);
         } else if (window.modalManager && window.modalManager.overlay) {
-            // Glavna igra koristi novi ModalManager
             const isConfirmed = await window.modalManager.confirm(`${_safeT('msg_confirm_buy')} ${name}?`);
             if (isConfirmed) {
                 this.processTransaction(id, price);
@@ -630,7 +659,6 @@ class ShopManager {
         if(window.app && window.app.soundMgr) window.app.soundMgr.trophy(); 
         else { const sm = new SoundManager(); sm.trophy(); }
 
-        // Prikaz uspešne kupovine na ispravnom popup-u
         if (typeof window.showNotification === 'function') {
             window.showNotification(_safeT('modal_title_info'), _safeT('msg_purchase_success') || "Kupovina uspešna!");
         } else if (window.modalManager && window.modalManager.overlay) {
@@ -698,11 +726,20 @@ class ShopManager {
 // --- 7. ADMOB CONTROLLER (ULTRA-BRZO KEŠIRANJE) ---
 class AdMobController {
     constructor() {
-        // Dodajemo isTesting flag koji možemo lako promeniti za development
-        this.isTestingMode = false; // <-- STAVI OVO NA TRUE TOKOM TESTIRANJA
+        // 1. STAVI OVO NA TRUE ZA TESTIRANJE, A NA FALSE PRE IZBACIVANJA NA PLAY STORE!
+        this.isTestingMode = true; 
 
-        this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
-        this.interstitialId = 'ca-app-pub-4319963185096437/2913237519'; 
+        // 2. Google Test ID-jevi (zagarantovano rade)
+        const TEST_REWARD_ID = 'ca-app-pub-3940256099942544/5224354917';
+        const TEST_INTERSTITIAL_ID = 'ca-app-pub-3940256099942544/1033173712';
+
+        // 3. Tvoji produkcijski ID-jevi
+        const PROD_REWARD_ID = 'ca-app-pub-4319963185096437/7896891915'; 
+        const PROD_INTERSTITIAL_ID = 'ca-app-pub-4319963185096437/2913237519'; 
+        
+        // 4. Automatsko dodeljivanje
+        this.rewardedId = this.isTestingMode ? TEST_REWARD_ID : PROD_REWARD_ID;
+        this.interstitialId = this.isTestingMode ? TEST_INTERSTITIAL_ID : PROD_INTERSTITIAL_ID;
         
         this.adMobPlugin = null;
         
@@ -811,33 +848,26 @@ class AdMobController {
     }
 
     async preloadAd(type) {
-        if (!this.adMobPlugin || !navigator.onLine) return; // Ne pokušavaj ako nema interneta
+        if (!this.adMobPlugin || !navigator.onLine) return; 
         if (this.ads[type].isLoading || this.ads[type].isReady) return;
         
         this.ads[type].isLoading = true;
 
-        // SIGURNOSNA MERA: Ako pukne, resetuj
-        // FIX: Dodat limit za broj uzastopnih timeout pokušaja
         const timeoutId = setTimeout(() => {
             if (this.ads[type].isLoading) {
                 console.warn(`[AdMob] Timeout učitavanja za ${type}.`);
                 this.ads[type].isLoading = false;
-                
-                // Nećemo odmah direktno pozvati this.preloadAd(type) kako bismo izbegli petlju
-                // Umesto toga, pozivamo handleAdFailed čime osiguravamo eksponencijalno čekanje
                 this.handleAdFailed(type, new Error("Ad loading timeout")); 
             }
         }, 15000);
 
         try {
             if (type === 'rewarded') {
-                // FIX: Korišćenje isTestingMode zastavice
                 await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: this.isTestingMode });
             } else if (type === 'interstitial') {
-                // FIX: Korišćenje isTestingMode zastavice
                 await this.adMobPlugin.prepareInterstitial({ adId: this.interstitialId, isTesting: this.isTestingMode, autoShow: false });
             }
-            clearTimeout(timeoutId); // Obriši timeout ako je API poziv prošao bez crash-a
+            clearTimeout(timeoutId); 
         } catch (e) {
             clearTimeout(timeoutId);
             this.handleAdFailed(type, e);
@@ -933,25 +963,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- GLOBALNI CLICK LISTENER ZA UI ZVUKOVE ---
     document.body.addEventListener('click', function(event) {
-        // 1. Pronalazimo najbliži kliknuti element koji je HTML dugme ili tvoja custom dugmad (div-ovi)
         const target = event.target.closest('button, .mode-btn, .btn-square, .btn-special-square, .hs-tab-btn, .cm-btn, .chat-float-btn, .back-btn, .close-btn');
 
         if (target) {
-            // 2. Pravimo crnu listu (Ignore List) klasa i ID-jeva
-            // Ovde stavljamo elemente koji VEĆ imaju svoj zvuk (roll, score, error) 
-            // da ne bismo dobili dupli zvuk kada korisnik klikne na njih.
             const ignoreClasses = ['dice', 'score-btn', 'daily-btn-main'];
             const ignoreIds = ['btn-bacaj', 'btn-najava'];
 
             const hasIgnoreClass = ignoreClasses.some(cls => target.classList.contains(cls));
             const hasIgnoreId = ignoreIds.includes(target.id);
 
-            // 3. Ako element nije na crnoj listi, puštamo standardni "click" zvuk
             if (!hasIgnoreClass && !hasIgnoreId) {
                 if (window.app && window.app.soundMgr) {
                     window.app.soundMgr.click();
                 } else if (typeof SoundManager !== 'undefined') {
-                    // Fallback u slučaju da app instanca još nije spremna, a klikne se npr. modal
                     const sm = new SoundManager();
                     sm.click();
                 }

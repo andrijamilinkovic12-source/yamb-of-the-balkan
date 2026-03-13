@@ -1953,14 +1953,20 @@ class YambApp {
         } 
     }
 
+    // Ažurirana undoLastMove() funkcija koja sada ispravno koristi Rewarded Video za ispravku poteza
     async undoLastMove() {
         if (!this.lastMoveSnapshot || this.onlineMode) return;
 
         const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
         if (!confirmUndo) return;
 
-        if (this.adMob && this.adMob.showInterstitial) {
-            await this.adMob.showInterstitial();
+        // FIX: Upotreba Rewarded Videa umesto Interstitial reklame, shodno AdMob polisama
+        if (this.adMob) {
+            const success = await this.adMob.showRewardVideo();
+            if (!success) {
+                // Ako reklama nije učitana ili korisnik nije pogledao reklamu do kraja, prekinuti undo operaciju
+                return;
+            }
         }
 
         const snap = this.lastMoveSnapshot;

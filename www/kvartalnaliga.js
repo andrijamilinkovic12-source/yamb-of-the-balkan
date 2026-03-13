@@ -1,243 +1,194 @@
-// kvartalnaliga.js - Upravljanje kvartalnim ligama i prikaz globalne statistike
-
-// Helper funkcija za lakši prevod unutar ovog fajla
-const _t = (key, fallback) => (typeof t !== 'undefined') ? t(key) : fallback;
-
+// kvartalnaliga.js - Menadžer za Kvartalnu Ligu
 class KvartalnaLigaManager {
     constructor() {
-        this.ranks = [
-            { id: 'amater', name: _t('rank_amater', 'AMATER'), max: 5000, color: '#A0522D', icon: '🥉' },
-            { id: 'profi', name: _t('rank_profi', 'PROFI'), max: 15000, color: '#C0C0C0', icon: '🥈' },
-            { id: 'majstor', name: _t('rank_majstor', 'MAJSTOR'), max: 50000, color: '#FFD700', icon: '🥇' },
-            { id: 'legenda', name: _t('rank_legenda', 'LEGENDA'), max: 100000, color: '#9C27B0', icon: '💎' },
-            { id: 'titan', name: _t('rank_titan', 'TITAN'), max: Infinity, color: '#FF3D00', icon: '⚡' }
-        ];
+        this.storageKey = 'yamb_league_data';
         this.init();
-        this.createModalDOM();
     }
 
+    // 1. Inicijalizacija i provera kvartala
     init() {
-        // Logika za 3 kvartala godišnje (Jan-Apr, Maj-Avg, Sep-Dec)
+        let data = this.getScores();
+        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
+
+        if (data.year !== currentYear || data.quarter !== currentQuarter) {
+            // Ako se promenio kvartal, arhiviramo stare poene u baselineScore
+            data.baselineScore += data.quarterlyScore;
+            data.quarterlyScore = 0; // Resetujemo za novi kvartal
+            data.year = currentYear;
+            data.quarter = currentQuarter;
+            this.saveScores(data);
+        }
+    }
+
+    // 2. Dobijanje trenutne godine i kvartala
+    getCurrentQuarterInfo() {
         const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth(); // 0-11
-        const currentQuarter = Math.floor(currentMonth / 4) + 1; // 1, 2, ili 3
-
-        let quarterData = JSON.parse(localStorage.getItem('yamb_quarter_data')) || {};
-        const stats = JSON.parse(localStorage.getItem('yamb_stats')) || { totalScoreSum: 0 };
-
-        // Ako se godina ili kvartal ne poklapaju, resetujemo kvartalnu ligu!
-        if (quarterData.year !== currentYear || quarterData.quarter !== currentQuarter) {
-            quarterData = {
-                year: currentYear,
-                quarter: currentQuarter,
-                baselineScore: stats.totalScoreSum || 0 // Pravimo presek stanja
-            };
-            localStorage.setItem('yamb_quarter_data', JSON.stringify(quarterData));
-        }
-        this.quarterData = quarterData;
+        const year = now.getFullYear();
+        const month = now.getMonth(); 
+        const quarter = Math.floor(month / 3) + 1;
+        return { currentYear: year, currentQuarter: quarter };
     }
 
+    // 3. Čitanje poena iz lokalne memorije
     getScores() {
-        const stats = JSON.parse(localStorage.getItem('yamb_stats')) || { totalScoreSum: 0 };
-        const allTimeScore = stats.totalScoreSum || 0;
-        const baseline = this.quarterData.baselineScore || 0;
-        let quarterlyScore = allTimeScore - baseline;
-        
-        if (quarterlyScore < 0) quarterlyScore = 0; 
-        
-        return { allTimeScore, quarterlyScore };
-    }
-
-    createModalDOM() {
-        const overlay = document.createElement('div');
-        overlay.id = 'league-modal-overlay';
-        overlay.className = 'modal-overlay';
-        overlay.style.zIndex = '999999';
-        overlay.style.display = 'none';
-
-        // Layout podeljen na GORNJI deo (tvoj progres) i DONJI deo (top lista)
-        overlay.innerHTML = `
-            <div class="modal-box" style="width: 90%; max-width: 420px; height: 85vh; max-height: 800px; padding: 0 !important; display: flex; flex-direction: column; overflow: hidden; position: relative;">
-                
-                <div style="background: rgba(0,0,0,0.2); padding: 15px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;">
-                    <span style="color: var(--gold-main); font-weight: 800; letter-spacing: 1px;">🏆 ${_t('menu_league', 'KVARTALNA LIGA').toUpperCase()}</span>
-                    <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="window.kvartalnaLiga.closeModal()">✖</span>
-                </div>
-                
-                <div id="league-slider" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; width: 100%; -webkit-overflow-scrolling: touch; flex-shrink: 0; min-height: 250px;">
-                    </div>
-                
-                <div style="text-align: center; padding: 5px; font-size: 0.7rem; color: var(--text-muted); flex-shrink: 0;">
-                    ${_t('league_swipe', '← Prevuci levo-desno za svoje lige →')}
-                </div>
-
-                <div style="background: rgba(0,0,0,0.4); padding: 10px; border-top: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border); text-align: center; color: var(--gold-main); font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; flex-shrink: 0;">
-                    ${_t('league_top_list', '🌍 TOP LISTA IGRACA - TRENUTNI KVARTAL')}
-                </div>
-
-                <div id="league-global-list" style="flex: 1; overflow-y: auto; width: 100%; -webkit-overflow-scrolling: touch; padding-bottom: 15px;">
-                    <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">${_t('league_loading', 'Učitavanje servera... ⏳')}</div>
-                </div>
-
-            </div>
-        `;
-        document.body.appendChild(overlay);
-    }
-
-    renderSlides() {
-        const slider = document.getElementById('league-slider');
-        slider.innerHTML = '';
-        const { allTimeScore, quarterlyScore } = this.getScores();
-
-        // Generišemo slajd za svaku ligu
-        this.ranks.forEach((rank, index) => {
-            const isUnlocked = quarterlyScore >= (index === 0 ? 0 : this.ranks[index - 1].max);
-            const isCurrent = quarterlyScore >= (index === 0 ? 0 : this.ranks[index - 1].max) && quarterlyScore < rank.max;
-            
-            let progressPts = quarterlyScore;
-            let percent = 0;
-
-            if (isUnlocked) {
-                if (isCurrent) {
-                    percent = Math.min(100, Math.round((quarterlyScore / rank.max) * 100));
-                } else {
-                    percent = 100; // Prešli su ovaj nivo
-                }
+        let raw = localStorage.getItem(this.storageKey);
+        if (raw) {
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                console.error("Greška pri parsiranju lige:", e);
             }
-
-            const slide = document.createElement('div');
-            slide.style.cssText = 'min-width: 100%; scroll-snap-align: center; padding: 15px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: ' + (isUnlocked ? '1' : '0.4') + '; transition: 0.3s;';
-
-            slide.innerHTML = `
-                <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 0 15px ${rank.color}80);">${rank.icon}</div>
-                <h2 style="color: ${rank.color}; margin-bottom: 5px; letter-spacing: 2px; font-size: 1.3rem;">${rank.name}</h2>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px;">
-                    ${rank.max === Infinity ? _t('league_limit', 'Krajnja granica') : _t('league_up_to', 'Do') + ' ' + rank.max.toLocaleString('sr-RS') + ' PTS'}
-                </div>
-                
-                <div style="width: 100%; background: rgba(0,0,0,0.4); height: 10px; border-radius: 5px; border: 1px solid var(--glass-border); overflow: hidden; position: relative;">
-                    <div style="width: ${percent}%; height: 100%; background: ${rank.color}; box-shadow: 0 0 10px ${rank.color};"></div>
-                </div>
-                
-                <div style="margin-top: 10px; font-weight: bold; color: var(--text-main); font-size: 0.9rem;">
-                    ${isUnlocked ? (isCurrent ? progressPts.toLocaleString('sr-RS') + ' / ' + rank.max.toLocaleString('sr-RS') : _t('league_completed', 'ZAVRŠENO ✔')) : _t('league_locked', 'ZAKLJUČANO 🔒')}
-                </div>
-            `;
-            slider.appendChild(slide);
-        });
-
-        // Poslednji slajd: SVA VREMENA
-        const allTimeSlide = document.createElement('div');
-        allTimeSlide.style.cssText = 'min-width: 100%; scroll-snap-align: center; padding: 15px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-left: 1px dashed var(--glass-border);';
-        allTimeSlide.innerHTML = `
-            <div style="font-size: 3.5rem; margin-bottom: 5px; filter: drop-shadow(0 0 10px gold);">🌍</div>
-            <h2 style="color: var(--gold-main); margin-bottom: 5px; letter-spacing: 2px; font-size: 1.3rem;">${_t('league_all_time', 'SVA VREMENA')}</h2>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 15px; text-align: center;">${_t('league_all_time_desc', 'Ukupni poeni od prvog pokretanja.')}</div>
-            
-            <div style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,0.8); background: rgba(0,0,0,0.3); padding: 8px 20px; border-radius: 12px; border: 1px solid var(--gold-main);">
-                ${allTimeScore.toLocaleString('sr-RS')} PTS
-            </div>
-        `;
-        slider.appendChild(allTimeSlide);
+        }
+        
+        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
+        return {
+            year: currentYear,
+            quarter: currentQuarter,
+            baselineScore: 0,
+            quarterlyScore: 0
+        };
     }
 
-    // Povlačenje podataka sa servera
-    fetchLeaderboard() {
-        const list = document.getElementById('league-global-list');
-        if (!list) return;
+    // 4. Čuvanje u lokalnu memoriju
+    saveScores(data) {
+        localStorage.setItem(this.storageKey, JSON.stringify(data));
+    }
 
-        // Reset statusa u slucaju novog otvaranja
-        list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">${_t('league_loading', 'Učitavanje servera... ⏳')}</div>`;
-
-        // Koristimo app socket ako postoji
-        if (window.app && window.app.socket && window.app.socket.connected) {
-            
-            // Šaljemo zahtev serveru sa trenutnom godinom i kvartalom
-            window.app.socket.emit('get_league_highscores', { 
-                year: this.quarterData.year, 
-                quarter: this.quarterData.quarter 
-            });
-
-            // Čekamo odgovor servera (koristimo .once da se ne bi gomilali listeneri)
-            window.app.socket.once('league_highscores_data', (data) => {
-                this.renderLeaderboard(data);
-            });
-
-        } else {
-            list.innerHTML = `<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">${_t('league_no_conn', 'Niste povezani na server.<br><span style="font-size:0.7rem; opacity:0.6;">Lista nije dostupna u offline modu.</span>')}</div>`;
+    // 5. Dodavanje poena nakon partije
+    addPoints(points) {
+        if (!points || points <= 0) return;
+        
+        this.init(); // Provera kvartala pre dodavanja
+        let data = this.getScores();
+        
+        data.quarterlyScore += points;
+        this.saveScores(data);
+        
+        // Slanje novog stanja na server
+        this.syncWithServer();
+        
+        // Osvežavanje glavnog menija ako postoji
+        if (typeof updateMainMenuDashboard === 'function') {
+            updateMainMenuDashboard();
         }
     }
 
-    // Renderovanje Top Liste ispod slajdera
-    renderLeaderboard(data) {
-        const list = document.getElementById('league-global-list');
-        if (!list) return;
-        
-        list.innerHTML = '';
-        
-        if (!data || data.length === 0) {
-            list.innerHTML = `<div style="text-align:center; padding:30px 20px; color:var(--text-muted); font-size:0.8rem; font-style:italic;">${_t('league_no_results', 'Još uvek nema upisanih rezultata za ovaj kvartal.<br>Budi prvi!')}</div>`;
+    // 6. Sinhronizacija sa serverom (POPRAVLJENO: SLANJE playerId)
+    syncWithServer() {
+        if (!window.app || !window.app.socket) return;
+
+        const data = this.getScores();
+        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
+        let pName = localStorage.getItem('yamb_player_name') || "Gost";
+
+        // Hvatanje ID-a (Google UID ili generisani lokalni ID)
+        let pId = localStorage.getItem('yamb_userid');
+        if (!pId) {
+            pId = 'guest_' + Math.random().toString(36).substr(2, 9);
+            localStorage.setItem('yamb_userid', pId);
+        }
+
+        // Emitovanje poena na server sa uključenim ID-em
+        window.app.socket.emit('submit_league_score', {
+            playerId: pId, // OVO SADA SPREČAVA PREPISIVANJE TUĐIH POENA
+            playerName: pName,
+            score: data.quarterlyScore,
+            year: currentYear,
+            quarter: currentQuarter
+        });
+    }
+
+    // 7. Određivanje ranga na osnovu trenutnih poena
+    getRank(pts) {
+        if (pts < 5000) return "AMATER";
+        if (pts < 15000) return "PROFI";
+        if (pts < 50000) return "MAJSTOR";
+        if (pts < 100000) return "LEGENDA";
+        return "TITAN";
+    }
+
+    // 8. Prikaz Modalnog prozora za Ligu
+    openModal() {
+        const data = this.getScores();
+        const allTime = data.baselineScore + data.quarterlyScore;
+        const rank = this.getRank(data.quarterlyScore);
+
+        let modalHtml = `
+        <div id="league-modal-overlay" class="modal-overlay" style="z-index: 999999; display: flex;">
+            <div class="modal-box" style="width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 20px; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--gold-glow); padding-bottom: 10px;">
+                    <h2 style="color: var(--gold-main); font-size: 1.5rem; margin: 0; text-transform: uppercase;" data-lang="menu_league">KVARTALNA LIGA</h2>
+                    <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold;" onclick="document.getElementById('league-modal-overlay').remove()">✖</span>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Vaš rang</div>
+                    <div style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--gold-main);">${rank}</div>
+                    <div style="font-size: 1.2rem; color: var(--gold-main); font-weight: bold; margin-top: 5px;">${data.quarterlyScore} PTS</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;" data-lang="league_all_time_desc">Sva vremena: ${allTime} PTS</div>
+                </div>
+
+                <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
+                    <h3 style="color: var(--gold-main); font-size: 1rem; text-align: center; margin-bottom: 15px;" data-lang="league_top_list">🌍 TOP LISTA - TRENUTNI KVARTAL</h3>
+                    <ul id="league-hs-list" style="list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto;">
+                        <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem;" data-lang="league_loading">Učitavanje servera... ⏳</li>
+                    </ul>
+                </div>
+
+                <button class="btn-menu btn-secondary" onclick="document.getElementById('league-modal-overlay').remove()" data-lang="modal_btn_cancel">ZATVORI</button>
+            </div>
+        </div>`;
+
+        let existing = document.getElementById('league-modal-overlay');
+        if (existing) existing.remove();
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        if (typeof applyTranslations === 'function') applyTranslations();
+
+        this.fetchLeaderboard();
+    }
+
+    // 9. Dohvatanje Top Liste Lige sa servera
+    fetchLeaderboard() {
+        if (!window.app || !window.app.socket) {
+            document.getElementById('league-hs-list').innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem;" data-lang="league_no_conn">Nema konekcije sa serverom.</li>`;
             return;
         }
 
-        data.forEach((entry, index) => {
-            let rankClass = 'rank-circle';
-            if (index === 0) rankClass += ' rank-1';
-            else if (index === 1) rankClass += ' rank-2';
-            else if (index === 2) rankClass += ' rank-3';
+        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
 
-            let crownIcon = (index === 0) ? ' 👑' : '';
+        window.app.socket.emit('get_league_highscores', { year: currentYear, quarter: currentQuarter });
 
-            const li = document.createElement('div');
-            li.style.cssText = "display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.05);";
-            
-            li.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 15px; overflow: hidden;">
-                    <div class="${rankClass}" style="flex-shrink: 0; width: 32px; height: 32px; font-size: 0.8rem;">${index + 1}</div>
-                    <div style="font-weight: 700; color: var(--text-main); font-size: 0.85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        ${entry.playerName}${crownIcon}
+        window.app.socket.once('league_highscores_data', (scores) => {
+            const listEl = document.getElementById('league-hs-list');
+            if (!listEl) return;
+
+            if (!scores || scores.length === 0) {
+                listEl.innerHTML = `<li style="text-align:center; color: var(--text-muted); font-size: 0.85rem;" data-lang="league_no_results">Nema upisanih rezultata za ovaj kvartal.</li>`;
+                return;
+            }
+
+            listEl.innerHTML = '';
+            scores.forEach((s, i) => {
+                let isMe = (s.playerName === (localStorage.getItem('yamb_player_name') || "Gost"));
+                let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
+                let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
+
+                let li = document.createElement('li');
+                li.style.cssText = `display: flex; justify-content: space-between; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; ${bg}`;
+                li.innerHTML = `
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span style="font-weight: bold; width: 25px; color: var(--gold-main);">${medal}</span>
+                        <span style="color: ${isMe ? 'var(--gold-main)' : 'var(--text-main)'}; font-weight: ${isMe ? 'bold' : 'normal'};">${s.playerName}</span>
                     </div>
-                </div>
-                <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid var(--gold-main); color: var(--gold-main); padding: 4px 10px; border-radius: 20px; font-weight: 800; font-size: 0.85rem; white-space: nowrap; flex-shrink: 0;">
-                    ${entry.score.toLocaleString('sr-RS')}
-                </div>
-            `;
-            list.appendChild(li);
+                    <span style="font-weight: bold; color: var(--text-main);">${s.score} PTS</span>
+                `;
+                listEl.appendChild(li);
+            });
         });
-    }
-
-    openModal() {
-        this.init(); 
-        
-        // Osvežavamo titule činova pre renderovanja svaki put
-        this.ranks[0].name = _t('rank_amater', 'AMATER');
-        this.ranks[1].name = _t('rank_profi', 'PROFI');
-        this.ranks[2].name = _t('rank_majstor', 'MAJSTOR');
-        this.ranks[3].name = _t('rank_legenda', 'LEGENDA');
-        this.ranks[4].name = _t('rank_titan', 'TITAN');
-
-        // Kreirajmo/osvežimo modal DOM pre renderovanja kako bi uhvatio prevod
-        const existingOverlay = document.getElementById('league-modal-overlay');
-        if (existingOverlay) {
-            existingOverlay.remove(); 
-        }
-        this.createModalDOM();
-
-        this.renderSlides();
-        document.getElementById('league-modal-overlay').style.display = 'flex';
-        
-        // Automatski traži podatke sa servera cim se prozor otvori
-        this.fetchLeaderboard();
-        
-        if (window.app && window.app.soundMgr) window.app.soundMgr.click();
-    }
-
-    closeModal() {
-        document.getElementById('league-modal-overlay').style.display = 'none';
-        if (window.app && window.app.soundMgr) window.app.soundMgr.click();
     }
 }
 
-// Inicijalizacija
+// Instanciranje globalnog objekta kako bi ga glavni fajlovi (poput game.js i index.html) prepoznali
 window.kvartalnaLiga = new KvartalnaLigaManager();

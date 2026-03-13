@@ -1103,6 +1103,98 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 @keyframes thunderFlash { 0% { filter: brightness(1); } 10% { filter: brightness(3) sepia(1) hue-rotate(180deg); background-color: #fff; } 20% { filter: brightness(1); background-color: transparent; } 30% { filter: brightness(4); } 100% { filter: brightness(1); } }
 .anim-thunder { animation: thunderFlash 0.5s ease-out; position: relative; z-index: 99999; }
 
+/* =========================================
+   SUPERNOVA EFFECT (KOSMOS & MISTIKA)
+   ========================================= */
+
+/* 1. SHOP PREVIEW */
+.prev-supernova { 
+    background: radial-gradient(circle, #0b0b1a 0%, #000 100%); 
+    position: relative; 
+    overflow: hidden; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+.sn-ring-prev { 
+    width: 20px; height: 20px; 
+    border-radius: 50%; 
+    border: 2px solid #00ffff;
+    box-shadow: 0 0 15px #00ffff, inset 0 0 15px #ff00ff; 
+    animation: snExpandPrev 1.5s infinite ease-out; 
+}
+.prev-supernova::after { 
+    content: ""; position: absolute; width: 8px; height: 8px; 
+    background: #fff; border-radius: 50%; box-shadow: 0 0 20px 8px #fff; 
+    animation: snPulsePrev 1s infinite alternate;
+}
+@keyframes snExpandPrev { 
+    0% { transform: scale(0.5); opacity: 1; border-color: #fff; } 
+    100% { transform: scale(4); opacity: 0; border-color: #ff00ff; } 
+}
+@keyframes snPulsePrev { 0% { transform: scale(1); } 100% { transform: scale(1.5); } }
+
+/* 2. IN-GAME ACTIVE EFFECT */
+.supernova-container {
+    z-index: 99996; 
+    pointer-events: none;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}
+
+.sn-core {
+    position: absolute; width: 10px; height: 10px; background: #fff;
+    border-radius: 50%; box-shadow: 0 0 50px 20px #fff; z-index: 3;
+    animation: coreCollapse 7.5s forwards;
+}
+
+.sn-ring {
+    position: absolute; width: 20px; height: 20px; border-radius: 50%;
+    border: 10px solid transparent; 
+    opacity: 0; z-index: 2;
+}
+
+.sn-ring-1 {
+    border-color: #00ffff; box-shadow: 0 0 40px #00ffff, inset 0 0 40px #00ffff;
+    animation: ringBlast 7.5s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+
+.sn-ring-2 {
+    border-color: #ff00ff; box-shadow: 0 0 60px #ff00ff, inset 0 0 60px #ff00ff;
+    animation: ringBlast 7.5s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+    animation-delay: 0.3s; /* Kreće malo kasnije za 3D efekat */
+}
+
+/* Deformacija i bljesak same table */
+.anim-supernova-table {
+    animation: tableBlast 7.5s ease-in-out forwards !important;
+}
+
+@keyframes coreCollapse {
+    0% { transform: scale(0); opacity: 0; }
+    10% { transform: scale(1.5); opacity: 1; box-shadow: 0 0 20px 5px #fff; }
+    30% { transform: scale(0.5); opacity: 1; box-shadow: 0 0 50px 20px #00ffff; } /* Skuplja masu */
+    35% { transform: scale(30); opacity: 0; } /* Eksplozija jezgra */
+    100% { transform: scale(30); opacity: 0; }
+}
+
+@keyframes ringBlast {
+    0%, 30% { transform: scale(0); opacity: 0; border-width: 10px; }
+    35% { opacity: 1; border-width: 40px; } /* Najjači udar */
+    70% { transform: scale(25); opacity: 0; border-width: 2px; } /* Prsten se širi preko ekrana */
+    100% { transform: scale(25); opacity: 0; }
+}
+
+@keyframes tableBlast {
+    0%, 25% { filter: brightness(1) contrast(1); transform: scale(1); }
+    30% { filter: brightness(3) contrast(1.5) hue-rotate(90deg); transform: scale(0.98); } /* Blesak pred eksploziju */
+    35% { filter: brightness(4) contrast(2); transform: scale(1.05) translateY(-10px); } /* Udar */
+    40% { transform: scale(1.02) translateY(5px); } /* Tresi se */
+    45% { transform: scale(1) translateY(-2px); filter: brightness(1.5); }
+    100% { filter: brightness(1) contrast(1); transform: scale(1) translateY(0); }
+}
+
 /* --- MODALS & SCREENS --- */
 .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.3s; }
 .modal-overlay.active, .modal-overlay[style*="display: flex"] { opacity: 1; visibility: visible; }
