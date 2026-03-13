@@ -4,6 +4,7 @@
   "webDir": "www",
   "server": {
     "androidScheme": "https",
+    "url": "https://yamb-of-the-balkan.onrender.com",
     "allowNavigation": [
       "yamb-of-the-balkan.onrender.com"
     ]
