@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "774107011856-2qcvaclru8j99frb8mgq0mq47t4gl0f0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yamb.balkan",
+            "certificate_hash": "91107276de370c8420ae43e72456875f7abe7726"
+          }
+        },
+        {
           "client_id": "774107011856-f5j9sr5c2tfmc8ag38mo777buahflfdm.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
