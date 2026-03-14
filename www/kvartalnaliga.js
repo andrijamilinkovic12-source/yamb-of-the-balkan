@@ -73,7 +73,7 @@ class KvartalnaLigaManager {
         }
     }
 
-    // 6. Sinhronizacija sa serverom (POPRAVLJENO: SLANJE playerId)
+    // 6. Sinhronizacija sa serverom (POPRAVLJENO: KORISTI ISPRAVAN UID)
     syncWithServer() {
         if (!window.app || !window.app.socket) return;
 
@@ -81,11 +81,11 @@ class KvartalnaLigaManager {
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
         let pName = localStorage.getItem('yamb_player_name') || "Gost";
 
-        // Hvatanje ID-a (Google UID ili generisani lokalni ID)
-        let pId = localStorage.getItem('yamb_userid');
+        // FIX: Koristimo ID iz Google Auth-a, ili generisani Player ID iz glavne igre
+        let pId = localStorage.getItem('yamb_uid') || localStorage.getItem('yamb_player_id');
         if (!pId) {
-            pId = 'guest_' + Math.random().toString(36).substr(2, 9);
-            localStorage.setItem('yamb_userid', pId);
+            pId = 'usr_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
+            localStorage.setItem('yamb_player_id', pId);
         }
 
         // Emitovanje poena na server sa uključenim ID-em

@@ -367,17 +367,22 @@ class SoundManager {
 
     playSound(synthCallback) {
         if (!this.enabled) return;
-        
-        if (!this.ctx) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            this.ctx = new AudioContext();
+
+        try {
+            if (!this.ctx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                this.ctx = new AudioContext();
+            }
+            
+            if (this.ctx.state === 'suspended') { 
+                this.ctx.resume().catch(e => console.log("Audio resume failed", e)); 
+            }
+            
+            if (synthCallback) synthCallback.call(this);
+        } catch (err) {
+            console.warn("⚠️ Web Audio API je blokiran. Zvuk se privremeno isključuje kako bi igra nastavila sa radom.", err);
+            this.enabled = false; 
         }
-        
-        if (this.ctx.state === 'suspended') { 
-            this.ctx.resume().catch(e => console.log("Audio resume failed", e)); 
-        }
-        
-        if (synthCallback) synthCallback.call(this);
     }
 
     click() { 
@@ -598,7 +603,9 @@ class ShopManager {
         }
         
         if(window.adMobGlobal) {
-            window.adMobGlobal.updateUI(window.adMobGlobal.ads.rewarded.isReady);
+            // Ažurirano: proveri da li je bilo koja nagradna reklama spremna za UI update
+            const isAnyReady = window.adMobGlobal.ads.rewarded.isReady || window.adMobGlobal.ads.rewardedInt.isReady;
+            window.adMobGlobal.updateUI(isAnyReady);
         }
     }
 
@@ -667,7 +674,8 @@ class ShopManager {
     async watchAdDiscount(id) {
         const adCtrl = this.getAdController();
         if (adCtrl) {
-            const success = await adCtrl.showRewardVideo();
+            // Popust sada poziva tranzitivnu nagradnu (Rewarded Interstitial)
+            const success = await adCtrl.showRewardedInterstitial();
             if (success) {
                 this.discountedItems[id] = true;
                 this.render();
@@ -698,6 +706,7 @@ class ShopManager {
                  return;
              }
 
+             // Besplatni dukati i dalje ostaju klasičan Rewarded Video
              const success = await adCtrl.showRewardVideo();
              if (success) {
                  this.addBalance(500); 
@@ -717,25 +726,19 @@ class ShopManager {
     }
 }
 
-// --- 7. ADMOB CONTROLLER (ULTRA-BRZO KEŠIRANJE + FALLBACK ZASTITA) ---
+// --- 7. ADMOB CONTROLLER (PRODUKCIJA - PRAVE REKLAME + TRANZITIVNA NAGRADNA + UI OPCIJA) ---
 class AdMobController {
     constructor() {
-        this.isTestingMode = true; 
-
-        const TEST_REWARD_ID = 'ca-app-pub-3940256099942544/5224354917';
-        const TEST_INTERSTITIAL_ID = 'ca-app-pub-3940256099942544/1033173712';
-
-        const PROD_REWARD_ID = 'ca-app-pub-4319963185096437/7896891915'; 
-        const PROD_INTERSTITIAL_ID = 'ca-app-pub-4319963185096437/2913237519'; 
-        
-        this.rewardedId = this.isTestingMode ? TEST_REWARD_ID : PROD_REWARD_ID;
-        this.interstitialId = this.isTestingMode ? TEST_INTERSTITIAL_ID : PROD_INTERSTITIAL_ID;
+        this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
+        this.interstitialId = 'ca-app-pub-4319963185096437/2913237519'; 
+        this.rewardedIntId = 'ca-app-pub-4319963185096437/5857775680'; // Tranzitivna nagradna
         
         this.adMobPlugin = null;
         
         this.ads = {
             rewarded: { isReady: false, isLoading: false, retryCount: 0 },
-            interstitial: { isReady: false, isLoading: false, retryCount: 0 }
+            interstitial: { isReady: false, isLoading: false, retryCount: 0 },
+            rewardedInt: { isReady: false, isLoading: false, retryCount: 0 }
         };
         
         this.baseRetryDelay = 1000;   
@@ -755,42 +758,39 @@ class AdMobController {
 
         if (this.adMobPlugin) {
             try {
-                // Pokušaj nativne inicijalizacije
                 if (typeof this.adMobPlugin.initialize === 'function') {
                     await this.adMobPlugin.initialize();
                 }
                 
                 await this.setupListeners();
                 
-                // Ako je setupListeners preživeo i nije ugasio plugin
                 if (this.adMobPlugin) {
                     this.triggerHighPriorityLoad('rewarded');
                     this.triggerHighPriorityLoad('interstitial');
+                    this.triggerHighPriorityLoad('rewardedInt');
 
                     setInterval(() => {
-                        if (!this.ads.rewarded.isReady && !this.ads.rewarded.isLoading && navigator.onLine) {
-                            this.preloadAd('rewarded');
-                        }
-                        if (!this.ads.interstitial.isReady && !this.ads.interstitial.isLoading && navigator.onLine) {
-                            this.preloadAd('interstitial');
-                        }
+                        if (!this.ads.rewarded.isReady && !this.ads.rewarded.isLoading && navigator.onLine) this.preloadAd('rewarded');
+                        if (!this.ads.interstitial.isReady && !this.ads.interstitial.isLoading && navigator.onLine) this.preloadAd('interstitial');
+                        if (!this.ads.rewardedInt.isReady && !this.ads.rewardedInt.isLoading && navigator.onLine) this.preloadAd('rewardedInt');
                     }, 20000);
 
                     document.addEventListener("resume", () => {
                         this.triggerHighPriorityLoad('rewarded');
                         this.triggerHighPriorityLoad('interstitial');
+                        this.triggerHighPriorityLoad('rewardedInt');
                     }, false);
 
                     window.addEventListener("visibilitychange", () => {
                         if (document.visibilityState === 'visible') {
                             this.triggerHighPriorityLoad('rewarded');
                             this.triggerHighPriorityLoad('interstitial');
+                            this.triggerHighPriorityLoad('rewardedInt');
                         }
                     });
                 }
-
             } catch (err) { 
-                console.warn("⚠️ AdMob SDK nije podržan u ovom okruženju. Prelazim u Fallback mode.", err); 
+                console.warn("⚠️ AdMob SDK nije podržan u ovom okruženju.", err); 
                 this.adMobPlugin = null;
                 this.updateUI(false);
             }
@@ -803,44 +803,51 @@ class AdMobController {
         if (!this.adMobPlugin) return;
 
         try {
-            // Bezbednosna provera: Da li Proxy uopšte ima addListener?
-            if (typeof this.adMobPlugin.addListener === 'undefined') {
-                throw new Error("Nativni AdMob plugin nedostaje u Capacitoru.");
-            }
-
+            // Rewarded Video
             await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
-            
-            await this.adMobPlugin.addListener('rewardedVideoAdReward', (reward) => {
-                if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; }
-            });
-
+            await this.adMobPlugin.addListener('rewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
             await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => {
                 if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
                 this.handleAdDismissed('rewarded');
             });
 
+            // Interstitial
             await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
             await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
             await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
+
+            // Rewarded Interstitial (Tranzitivna nagradna)
+            await this.adMobPlugin.addListener('rewardedInterstitialAdLoaded', () => this.handleAdLoaded('rewardedInt'));
+            await this.adMobPlugin.addListener('rewardedInterstitialAdFailedToLoad', (err) => this.handleAdFailed('rewardedInt', err));
+            await this.adMobPlugin.addListener('rewardedInterstitialAdReward', () => { if (this.rewardIntResolve) { this.rewardIntResolve(true); this.rewardIntResolve = null; } });
+            await this.adMobPlugin.addListener('rewardedInterstitialAdDismissed', () => {
+                if (this.rewardIntResolve) { this.rewardIntResolve(false); this.rewardIntResolve = null; }
+                this.handleAdDismissed('rewardedInt');
+            });
         } catch (e) {
-            console.warn("⚠️ Osluškivači za reklame pukli. Gašenje nativnih reklama.", e);
+            console.warn("⚠️ Osluškivači za reklame pukli.", e);
             this.adMobPlugin = null; 
             this.updateUI(false);
         }
     }
 
     handleAdLoaded(type) {
-        this.ads[type].isReady = true;
-        this.ads[type].isLoading = false;
+        this.ads[type].isReady = true; 
+        this.ads[type].isLoading = false; 
         this.ads[type].retryCount = 0; 
-        if (type === 'rewarded') this.updateUI(true);
+        // Ažurirano: Opciona provera koja osvežava dugmad ako je bilo koja nagradna reklama spremna
+        if (type === 'rewarded' || type === 'rewardedInt') {
+            this.updateUI(this.ads.rewarded.isReady || this.ads.rewardedInt.isReady);
+        }
     }
 
     handleAdFailed(type, err) {
-        this.ads[type].isReady = false;
+        this.ads[type].isReady = false; 
         this.ads[type].isLoading = false;
-        if (type === 'rewarded') this.updateUI(false);
+        if (type === 'rewarded' || type === 'rewardedInt') {
+            this.updateUI(this.ads.rewarded.isReady || this.ads.rewardedInt.isReady);
+        }
 
         this.ads[type].retryCount++;
         const nextDelay = Math.min(this.baseRetryDelay * Math.pow(1.2, this.ads[type].retryCount), this.maxRetryDelay);
@@ -849,7 +856,9 @@ class AdMobController {
 
     handleAdDismissed(type) {
         this.ads[type].isReady = false;
-        if (type === 'rewarded') this.updateUI(false);
+        if (type === 'rewarded' || type === 'rewardedInt') {
+            this.updateUI(this.ads.rewarded.isReady || this.ads.rewardedInt.isReady);
+        }
         this.ads[type].retryCount = 0; 
         setTimeout(() => this.preloadAd(type), 500);
     }
@@ -862,7 +871,6 @@ class AdMobController {
 
         const timeoutId = setTimeout(() => {
             if (this.ads[type].isLoading) {
-                console.warn(`[AdMob] Timeout učitavanja za ${type}.`);
                 this.ads[type].isLoading = false;
                 this.handleAdFailed(type, new Error("Ad loading timeout")); 
             }
@@ -870,9 +878,16 @@ class AdMobController {
 
         try {
             if (type === 'rewarded') {
-                await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: this.isTestingMode });
+                await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: false });
             } else if (type === 'interstitial') {
-                await this.adMobPlugin.prepareInterstitial({ adId: this.interstitialId, isTesting: this.isTestingMode, autoShow: false });
+                await this.adMobPlugin.prepareInterstitial({ adId: this.interstitialId, isTesting: false, autoShow: false });
+            } else if (type === 'rewardedInt') {
+                if (typeof this.adMobPlugin.prepareRewardedInterstitial === 'function') {
+                    await this.adMobPlugin.prepareRewardedInterstitial({ adId: this.rewardedIntId, isTesting: false });
+                } else if (typeof this.adMobPlugin.prepareRewardVideoAd === 'function') {
+                    // Fallback za starije SDK verzije
+                    await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedIntId, isTesting: false });
+                }
             }
             clearTimeout(timeoutId); 
         } catch (e) {
@@ -897,16 +912,10 @@ class AdMobController {
             const buttons = document.querySelectorAll(selector);
             buttons.forEach(btn => {
                 if (ready) {
-                    btn.classList.remove('disabled', 'ad-loading');
-                    btn.disabled = false;
-                    btn.style.opacity = '1';
-                    btn.style.filter = 'none';
+                    btn.classList.remove('disabled', 'ad-loading'); btn.disabled = false; btn.style.opacity = '1'; btn.style.filter = 'none';
                     if (btn.dataset.originalText) btn.innerText = btn.dataset.originalText;
                 } else {
-                    btn.classList.add('disabled', 'ad-loading');
-                    btn.disabled = true;
-                    btn.style.opacity = '0.6'; 
-                    btn.style.filter = 'grayscale(100%)';
+                    btn.classList.add('disabled', 'ad-loading'); btn.disabled = true; btn.style.opacity = '0.6'; btn.style.filter = 'grayscale(100%)';
                     if (!btn.dataset.originalText) btn.dataset.originalText = btn.innerText;
                 }
             });
@@ -916,24 +925,16 @@ class AdMobController {
     showRewardVideo() {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) { resolve(false); return; }
-
             if (this.ads.rewarded.isReady) {
                 try {
                     this.rewardResolve = resolve;
                     await this.adMobPlugin.showRewardVideoAd();
                 } catch (e) {
-                    this.rewardResolve = null;
-                    this.handleAdFailed('rewarded', e);
-                    resolve(false);
+                    this.rewardResolve = null; this.handleAdFailed('rewarded', e); resolve(false);
                 }
             } else {
-                if (typeof window.showNotification === 'function') {
-                    window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.");
-                } else if(window.modalManager && window.modalManager.overlay) {
-                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
-                }
-                this.triggerHighPriorityLoad('rewarded');
-                resolve(false);
+                if (typeof window.showNotification === 'function') window.showNotification("INFO", "Reklama se učitava. Pokušajte za par sekundi.");
+                this.triggerHighPriorityLoad('rewarded'); resolve(false);
             }
         });
     }
@@ -941,18 +942,35 @@ class AdMobController {
     showInterstitial() {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) { resolve(false); return; }
-            
             if (this.ads.interstitial.isReady) {
                 try {
-                    await this.adMobPlugin.showInterstitial();
-                    resolve(true);
+                    await this.adMobPlugin.showInterstitial(); resolve(true);
                 } catch (e) {
-                    this.handleAdFailed('interstitial', e);
-                    resolve(false);
+                    this.handleAdFailed('interstitial', e); resolve(false);
                 }
             } else {
-                this.triggerHighPriorityLoad('interstitial');
-                resolve(false);
+                this.triggerHighPriorityLoad('interstitial'); resolve(false);
+            }
+        });
+    }
+
+    showRewardedInterstitial() {
+        return new Promise(async (resolve) => {
+            if (!this.adMobPlugin) { resolve(false); return; }
+            if (this.ads.rewardedInt.isReady) {
+                try {
+                    this.rewardIntResolve = resolve;
+                    if (typeof this.adMobPlugin.showRewardedInterstitial === 'function') {
+                        await this.adMobPlugin.showRewardedInterstitial();
+                    } else {
+                        await this.adMobPlugin.showRewardVideoAd();
+                    }
+                } catch (e) {
+                    this.rewardIntResolve = null; this.handleAdFailed('rewardedInt', e); resolve(false);
+                }
+            } else {
+                if (typeof window.showNotification === 'function') window.showNotification("INFO", "Reklama se učitava. Pokušajte za par sekundi.");
+                this.triggerHighPriorityLoad('rewardedInt'); resolve(false);
             }
         });
     }

@@ -69,6 +69,8 @@ function getFullLocalStats() {
         balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
         currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
         unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
+        unlockedSkins: window.statsManager ? window.statsManager.stats.unlockedSkins : JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
+        unlockedEffects: window.statsManager ? window.statsManager.stats.unlockedEffects : JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
         leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 }
     };
 }
@@ -148,9 +150,27 @@ async function odjaviSe() {
         await Capacitor.Plugins.FirebaseAuthentication.signOut();
         console.log("Korisnik uspešno odjavljen.");
 
+        // 1. Brisanje Firebase podataka
         localStorage.removeItem('yamb_player_photo');
-        localStorage.removeItem('yamb_uid'); // Brišemo UID pri odjavi
+        localStorage.removeItem('yamb_uid');
+
+        // 2. STRIKTNO BRISANJE STATISTIKE - Gost kreće apsolutno od nule!
+        localStorage.removeItem('yamb_stats');
+        localStorage.removeItem('yamb_dukati');
+        localStorage.removeItem('yamb_quarter_data');
+        localStorage.removeItem('yamb_unlocked_skins');
+        localStorage.removeItem('yamb_unlocked_effects');
         
+        // Resetovanje objekata u memoriji
+        if (window.app) {
+            window.app.stats = { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0 };
+        }
+        if (window.statsManager) {
+            window.statsManager.stats = { totalGames: 0, wins: 0, losses: 0, highscore: 0, balance: 0, currentWinStreak: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
+            window.statsManager.saveStats();
+        }
+
+        // 3. Generisanje Gost imena i privremenog ID-a
         let defaultName = "Gost_" + Math.floor(Math.random() * 9000 + 1000);
         localStorage.setItem('yamb_player_name', defaultName);
 
@@ -161,7 +181,7 @@ async function odjaviSe() {
 
         if (window.app) {
             window.app.playerName = defaultName;
-            window.app.playerId = localStorage.getItem('yamb_player_id'); // Vraćamo gost id
+            window.app.playerId = 'guest_' + Date.now(); // Volatilan ID za gosta
             
             if (window.app.socket && window.app.socket.connected) {
                 window.app.socket.emit('set_player_data', { 
@@ -169,6 +189,11 @@ async function odjaviSe() {
                     stats: getFullLocalStats()
                 });
             }
+        }
+        
+        // Osvežavanje glavnog menija da prikaže 0
+        if (typeof updateMainMenuDashboard === 'function') {
+            updateMainMenuDashboard();
         }
         
     } catch (error) {
@@ -247,8 +272,14 @@ setTimeout(() => {
                 window.statsManager.stats.balance = dbStats.balance || 0;
                 window.statsManager.stats.currentWinStreak = dbStats.currentWinStreak || 0;
                 window.statsManager.stats.unlockedTrophies = dbStats.unlockedTrophies || [];
+                window.statsManager.stats.unlockedSkins = dbStats.unlockedSkins || [];
+                window.statsManager.stats.unlockedEffects = dbStats.unlockedEffects || [];
                 window.statsManager.saveStats();
             }
+
+            // Sigurnosno čuvanje za ShopManager
+            localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
+            localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
 
             if (dbStats.balance !== undefined) {
                 localStorage.setItem('yamb_dukati', dbStats.balance);

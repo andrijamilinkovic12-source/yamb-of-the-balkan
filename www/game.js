@@ -197,7 +197,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v8.3 - FIXED GUEST ID AND DUPLICATES");
+        console.log("YambApp v8.4 - OPTIMIZED ADS");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -244,7 +244,6 @@ class YambApp {
         
         this.inviteDetected = false;
 
-        // FIX: Dodela unikatnog sistemskog imena ukoliko korisnik nije sam stavio svoje
         let storedName = localStorage.getItem('yamb_player_name');
         if (!storedName || storedName === "undefined" || storedName === "null" || storedName.toLowerCase() === "gost" || storedName === gt('player_unknown') || storedName === "Nepoznat Igrač") {
             storedName = "Gost_" + Math.floor(Math.random() * 9000 + 1000);
@@ -395,7 +394,6 @@ class YambApp {
                     
                     this.socket.emit('set_my_id', this.playerId);
                     
-                    // FIX: Prosleđujemo playerId direktno u payload-u
                     let emitData = { 
                         name: this.playerName, 
                         stats: this.getFullLocalStats(),
@@ -627,12 +625,7 @@ class YambApp {
 
     async openGlobalChat() {
         this.initSocketConnection();
-
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
-        
-        if (this.adMob && this.adMob.showInterstitial) {
-            await this.adMob.showInterstitial();
-        }
 
         if (!accepted) {
             const isConfirmed = await this.modal.confirm(gt('chat_rules_msg'));
@@ -776,7 +769,6 @@ class YambApp {
         localStorage.setItem('yamb_sound', this.soundEnabled); 
         
         if (this.socket && this.socket.connected) {
-            // FIX: Dodat playerId
             this.socket.emit('set_player_data', { 
                 name: this.playerName, 
                 stats: this.getFullLocalStats(),
@@ -839,7 +831,6 @@ class YambApp {
         localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); 
 
         if (this.socket && this.socket.connected) {
-            // FIX: Prosleđujemo playerId
             let emitData = { 
                 name: this.playerName, 
                 stats: this.getFullLocalStats(),
@@ -1015,7 +1006,6 @@ class YambApp {
         this.socket.off('remote_announce');
         this.socket.off('chat_msg');
         this.socket.off('opponent_left');
-        
         this.socket.off('rematch_requested');
         this.socket.off('rematch_started');
 
@@ -1220,10 +1210,6 @@ class YambApp {
         const chatBtn = document.getElementById('chat-float-btn'); 
         if (this.modeTag === "Solo" || this.modeTag === "Hotseat") { chatBtn.classList.add('hidden'); } else { chatBtn.classList.remove('hidden'); } 
         this.effectMgr.stop(); this.loadEquippedEffect(); 
-        
-        if (this.adMob && this.adMob.loadInterstitialAd) {
-            this.adMob.loadInterstitialAd();
-        }
     }
 
     loadEquippedEffect() {
@@ -1475,29 +1461,35 @@ class YambApp {
         if (!this.najavaAktivna) { 
             this.najavaAktivna = true; 
             
-            if(this.soundMgr && this.soundMgr.announce) {
-                 this.soundMgr.announce(); 
-            } else {
-                 this.soundMgr.click();
-            }
+            try {
+                if(this.soundMgr && this.soundMgr.announce) {
+                     this.soundMgr.announce(); 
+                } else if (this.soundMgr) {
+                     this.soundMgr.click();
+                }
+            } catch(e) {}
 
             btn.innerText = gt('game_announce_cancel'); 
             btn.classList.add('btn-active-toggle'); 
             btn.classList.remove('btn-highlight'); 
             btnBacaj.disabled = true; 
             
-            if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'start' }); 
+            if(this.onlineMode) {
+                try { this.socket.emit('announce', { roomId: this.roomId, type: 'start' }); } catch(e){}
+            }
         } else { 
             this.najavaAktivna = false; 
             
-            this.soundMgr.click(); 
+            try { this.soundMgr.click(); } catch(e) {} 
 
             btn.innerText = gt('game_announce'); 
             btn.classList.remove('btn-active-toggle'); 
             btn.classList.add('btn-highlight'); 
             btnBacaj.disabled = false; 
             
-            if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); 
+            if(this.onlineMode) {
+                try { this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); } catch(e) {}
+            } 
         } 
 
         this.autoSaveGame();
@@ -1573,16 +1565,26 @@ class YambApp {
             if (btnUndo) btnUndo.style.display = 'flex';
         }
 
-        sheet[col][row] = pts; this.soundMgr.score(); 
+        sheet[col][row] = pts; 
+        
+        try { this.soundMgr.score(); } catch(e) {}
 
         if (row === "Yamb" && pts > 0) {
-            this.effectMgr.celebrateYamb();
-            if (this.brojBacanja === 1) { this.hasSvetiIlija = true; this.effectMgr.trigger('thunder'); }
+            try {
+                this.effectMgr.celebrateYamb();
+                if (this.brojBacanja === 1) { this.hasSvetiIlija = true; this.effectMgr.trigger('thunder'); }
+            } catch(e) {}
         }
         
-        this.features.checkMoveEffects(row, pts, true);
+        try {
+            if (this.features && typeof this.features.checkMoveEffects === 'function') {
+                this.features.checkMoveEffects(row, pts, true);
+            }
+        } catch(e) { console.error("Efekti poteza su preskočeni:", e); }
 
-        if (this.onlineMode) { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts }); } 
+        if (this.onlineMode) { 
+            try { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts }); } catch(e) {} 
+        } 
         
         this.updateTableVisuals(); 
         this.switchPlayer(); 
@@ -1595,9 +1597,7 @@ class YambApp {
         if (gameOver) { this.handleGameOver(); return; } 
         
         this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length; 
-        
         this.resetTurnLogic(); 
-        
         this.autoSaveGame(); 
     }
     
@@ -1625,7 +1625,6 @@ class YambApp {
         if(window.adMobGlobal) window.adMobGlobal.prepareReward(); 
 
         const finalResults = this.players.map((name, i) => { return { name: name, score: this.calculateTotalScore(i) }; }); 
-        
         const winnerScore = finalResults.reduce((max, r) => r.score > max ? r.score : max, 0);
 
         if(window.localforage) await localforage.removeItem('yamb_saved_game'); 
@@ -1796,7 +1795,25 @@ class YambApp {
         if(this.topListManager) await this.topListManager.submitScore(name, finalScore, mode);
     }
 
-    async watchAdForDouble() { const success = await this.adMob.showRewardVideo(); if (success) { this.claimReward(true); } }
+    async watchAdForDouble() { 
+        let success = false;
+        
+        if (this.lastGameType === 'daily') {
+            // Ako je završen Dnevni Izazov -> Tranzitivna nagradna (Rewarded Interstitial)
+            if (this.adMob && this.adMob.showRewardedInterstitial) {
+                success = await this.adMob.showRewardedInterstitial();
+            }
+        } else {
+            // Ako je završena obična partija -> Klasični video sa nagradom (Rewarded Video)
+            if (this.adMob && this.adMob.showRewardVideo) {
+                success = await this.adMob.showRewardVideo();
+            }
+        }
+        
+        if (success) { 
+            this.claimReward(true); 
+        } 
+    }
     
     async claimReward(doubled) {
         let finalAmount = this.pendingScore;
@@ -1831,9 +1848,7 @@ class YambApp {
                 this.showMainMenu(); 
             }); 
         } else { 
-            if (this.adMob && this.adMob.showInterstitial) {
-                await this.adMob.showInterstitial();
-            }
+            // Uklonjen Interstitial prilikom izlaska iz menija (kada igrač klikne dugme Preuzmi bez reklame)
             this.showMainMenu(); 
         }
     }
@@ -1897,7 +1912,6 @@ class YambApp {
             this.players = data.players; 
             this.allScores = data.scores; 
             this.currentPlayerIdx = data.current; 
-            
             this.kockiceVals = data.kockiceVals || [0,0,0,0,0,0];
             this.zadrzane = data.zadrzane || [false,false,false,false,false,false];
             this.brojBacanja = data.brojBacanja || 0;
@@ -1953,27 +1967,21 @@ class YambApp {
         } 
     }
 
-    // Ažurirana undoLastMove() funkcija koja sada ispravno koristi Rewarded Video za ispravku poteza
     async undoLastMove() {
         if (!this.lastMoveSnapshot || this.onlineMode) return;
 
         const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
         if (!confirmUndo) return;
 
-        // FIX: Upotreba Rewarded Videa umesto Interstitial reklame, shodno AdMob polisama
-        if (this.adMob) {
-            const success = await this.adMob.showRewardVideo();
-            if (!success) {
-                // Ako reklama nije učitana ili korisnik nije pogledao reklamu do kraja, prekinuti undo operaciju
-                return;
-            }
+        // Poziva se Tranzitivna nagradna (Rewarded Interstitial) za ispravku poteza
+        if (this.adMob && this.adMob.showRewardedInterstitial) {
+            const success = await this.adMob.showRewardedInterstitial();
+            if (!success) return;
         }
 
         const snap = this.lastMoveSnapshot;
-
         this.currentPlayerIdx = snap.pIdx;
         this.allScores[snap.pIdx][snap.col][snap.row] = null;
-
         this.kockiceVals = [...snap.diceVals];
         this.zadrzane = [...snap.held];
         this.brojBacanja = snap.rollCount;
@@ -2023,7 +2031,6 @@ class YambApp {
 
         this.lastMoveSnapshot = null;
         document.getElementById('btn-undo-move').style.display = 'none';
-
         this.autoSaveGame();
     }
 }

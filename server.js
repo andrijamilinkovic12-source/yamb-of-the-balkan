@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM (SVE STATISTIKE SE ČUVAJU NA MONGODB) + ISKLJUČENA SPEED HACK ZAŠTITA DA BI RADIJE UPIS + DODAT FILTER ZA CHAT I SISTEM BANOVANJA + DUEL SISTEM + POPRAVLJEN RESET LISTE + DODAT TURNIR SISTEM (ID BAZIRAN) + POPRAVLJEN BROJAČ IGRAČA (BEZ FANTOMSKIH KONEKCIJA) + ZASTITA OD SLEPOG POKRETANJA + KVARTALNA LIGA (CLOUD SAVE + POPRAVLJENO RANGIRANJE PO ID) + ONLINE IGRACI SA STATISTIKOM I STATUSOM + DVORANA SLAVNIH (TURNIRI)
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a
 
 require('dotenv').config(); 
 
@@ -20,8 +20,8 @@ const io = new Server(server, {
         origin: "*", 
         methods: ["GET", "POST"]
     },
-    pingInterval: 25000, // Bilo 10000 -> Sada 25s
-    pingTimeout: 20000   // Bilo 5000 -> Sada 20s (Daje više vremena ako laguje net)
+    pingInterval: 25000, 
+    pingTimeout: 20000   
 });
 
 // Middleware
@@ -149,6 +149,8 @@ const UserProfileSchema = new mongoose.Schema({
     balance: { type: Number, default: 0 },
     currentWinStreak: { type: Number, default: 0 },
     unlockedTrophies: { type: [String], default: [] },
+    unlockedSkins: { type: [String], default: [] },
+    unlockedEffects: { type: [String], default: [] },
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
@@ -266,6 +268,7 @@ io.on('connection', (socket) => {
         data.name = bezbednoIme; 
         
         if (!data.uid) {
+            // GOST IGRAČ - Samo lokalno pamćenje, preskačemo bazu
             socket.playerStats = data.stats || { wins: 0, losses: 0 };
             updateOnlineCount(); 
             return;
@@ -284,22 +287,48 @@ io.on('connection', (socket) => {
                 user.playerName = data.name;
                 user.lastLogin = Date.now();
                 
-                if (s.games > user.games) user.games = s.games;
-                if (s.wins > user.wins) user.wins = s.wins;
-                if (s.losses > user.losses) user.losses = s.losses;
-                if (s.highscore > user.highscore) user.highscore = s.highscore;
-                if (s.totalScoreSum > user.totalScoreSum) user.totalScoreSum = s.totalScoreSum;
-                if (typeof s.balance === 'number') user.balance = s.balance; 
-                if (typeof s.currentWinStreak === 'number') user.currentWinStreak = s.currentWinStreak; 
+                // Sprečavamo da login pregazi cloud podatke sa lokalnim nulama
+                const isFreshLogin = (s.games === 0);
+
+                if (!isFreshLogin) {
+                    if (s.games > user.games) user.games = s.games;
+                    if (s.wins > user.wins) user.wins = s.wins;
+                    if (s.losses > user.losses) user.losses = s.losses;
+                    if (s.highscore > user.highscore) user.highscore = s.highscore;
+                    if (s.totalScoreSum > user.totalScoreSum) user.totalScoreSum = s.totalScoreSum;
+                    
+                    if (typeof s.balance === 'number' && s.balance > user.balance) {
+                        user.balance = s.balance; 
+                    }
+                    if (typeof s.currentWinStreak === 'number' && s.currentWinStreak > user.currentWinStreak) {
+                        user.currentWinStreak = s.currentWinStreak; 
+                    }
+                }
                 
                 if (s.unlockedTrophies && s.unlockedTrophies.length > 0) {
                     const mergedTrophies = new Set([...user.unlockedTrophies, ...s.unlockedTrophies]);
                     user.unlockedTrophies = Array.from(mergedTrophies);
                 }
 
-                if (s.leagueData && (s.leagueData.year > user.leagueData.year || 
-                   (s.leagueData.year === user.leagueData.year && s.leagueData.quarter >= user.leagueData.quarter))) {
-                    user.leagueData = s.leagueData;
+                if (s.unlockedSkins && s.unlockedSkins.length > 0) {
+                    const mergedSkins = new Set([...user.unlockedSkins, ...s.unlockedSkins]);
+                    user.unlockedSkins = Array.from(mergedSkins);
+                }
+
+                if (s.unlockedEffects && s.unlockedEffects.length > 0) {
+                    const mergedEffects = new Set([...user.unlockedEffects, ...s.unlockedEffects]);
+                    user.unlockedEffects = Array.from(mergedEffects);
+                }
+
+                if (s.leagueData) {
+                    if (s.leagueData.year > user.leagueData.year || 
+                       (s.leagueData.year === user.leagueData.year && s.leagueData.quarter > user.leagueData.quarter)) {
+                        user.leagueData = s.leagueData;
+                    } else if (s.leagueData.year === user.leagueData.year && s.leagueData.quarter === user.leagueData.quarter) {
+                        if (s.leagueData.baselineScore > user.leagueData.baselineScore) {
+                            user.leagueData = s.leagueData;
+                        }
+                    }
                 }
 
                 await user.save();
@@ -309,6 +338,8 @@ io.on('connection', (socket) => {
                     highscore: user.highscore, totalScoreSum: user.totalScoreSum,
                     balance: user.balance, currentWinStreak: user.currentWinStreak,
                     unlockedTrophies: user.unlockedTrophies,
+                    unlockedSkins: user.unlockedSkins,
+                    unlockedEffects: user.unlockedEffects,
                     leagueData: user.leagueData 
                 });
             } else {
@@ -319,6 +350,8 @@ io.on('connection', (socket) => {
                     highscore: s.highscore || 0, totalScoreSum: s.totalScoreSum || 0,
                     balance: s.balance || 0, currentWinStreak: s.currentWinStreak || 0,
                     unlockedTrophies: s.unlockedTrophies || [],
+                    unlockedSkins: s.unlockedSkins || [],
+                    unlockedEffects: s.unlockedEffects || [],
                     leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0 } 
                 });
                 await user.save();
@@ -482,6 +515,14 @@ io.on('connection', (socket) => {
             if (!MONGO_URI) return;
             if (typeof data.score !== 'number' || isNaN(data.score)) return;
 
+            let uniqueId = data.uid || data.playerId || socket.playerId || socket.id;
+            
+            // 🛡️ BLOKADA ZA GOSTE: Ne dozvoljavamo upis u Kvartalnu Ligu za privremene ID-eve
+            if (uniqueId && uniqueId.startsWith('guest_')) {
+                console.log(`⚠️ ZABRANJEN UPIS U LIGU: Gost igrač (${uniqueId}) ne može učestvovati.`);
+                return;
+            }
+
             let rawName = (data.playerName || "Nepoznat Igrač").trim().substring(0, 24);
             let finalName = sadrziPsovku(rawName) 
                 ? "Igrač_" + Math.floor(1000 + Math.random() * 9000) 
@@ -489,11 +530,12 @@ io.on('connection', (socket) => {
 
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
 
-            let uniqueId = data.playerId || socket.playerId || socket.id;
-
             await LeagueScore.findOneAndUpdate(
                 { playerId: uniqueId, year: data.year, quarter: data.quarter }, 
-                { $set: { playerName: finalName, score: data.score, date: Date.now() } }, 
+                { 
+                    $set: { playerName: finalName, date: Date.now() },
+                    $max: { score: data.score }
+                }, 
                 { upsert: true, new: true } 
             );
             
@@ -893,7 +935,6 @@ setInterval(() => {
 // ==================================================================
 // ANTI-SLEEP (SELF-PING) MEHANIZAM
 // ==================================================================
-// Podesi URL tako da odgovara onom na kom je hostovan tvoj projekat
 const SERVER_URL = 'https://yamb-of-the-balkan.onrender.com'; 
 
 setInterval(() => {
@@ -904,7 +945,7 @@ setInterval(() => {
     }).on('error', (err) => {
         console.log('❌ Self-ping greška: ' + err.message);
     });
-}, 10 * 60 * 1000); // Pokreće se svakih 10 minuta
+}, 10 * 60 * 1000); 
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
