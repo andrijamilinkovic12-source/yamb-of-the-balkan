@@ -825,6 +825,12 @@ class AdMobController {
                 if (this.rewardIntResolve) { this.rewardIntResolve(false); this.rewardIntResolve = null; }
                 this.handleAdDismissed('rewardedInt');
             });
+
+            // --- DODATO: Hvatanje grešaka sa "on" prefiksom za novije Capacitor AdMob verzije ---
+            await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
+            await this.adMobPlugin.addListener('onInterstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
+            await this.adMobPlugin.addListener('onRewardedInterstitialAdFailedToLoad', (err) => this.handleAdFailed('rewardedInt', err));
+
         } catch (e) {
             console.warn("⚠️ Osluškivači za reklame pukli.", e);
             this.adMobPlugin = null; 
