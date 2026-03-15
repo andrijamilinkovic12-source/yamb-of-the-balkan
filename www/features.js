@@ -32,8 +32,9 @@ if (typeof window.YambFeatures === 'undefined') {
                     const gameScene = document.getElementById('game-scene');
                     if (gameScene) {
                         gameScene.classList.add('anim-thunder');
-                        if(this.app.soundMgr && this.app.soundMgr.playTone) {
-                            this.app.soundMgr.playTone(100, 'sawtooth', 0.5); 
+                        // ISPRAVKA: Pozivamo error() koji već postoji u SoundManager-u i generiše dubok sawtooth ton (grmljavinu)
+                        if(this.app.soundMgr) {
+                            this.app.soundMgr.error(); 
                         }
                         setTimeout(() => gameScene.classList.remove('anim-thunder'), 600);
                     }

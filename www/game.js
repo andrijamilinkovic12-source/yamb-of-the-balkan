@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE)
+// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1559,7 +1559,9 @@ class YambApp {
                 held: [...this.zadrzane],
                 rollCount: this.brojBacanja,
                 najavljenoPolje: this.najavljenoPolje ? { ...this.najavljenoPolje } : null,
-                najavaAktivna: this.najavaAktivna
+                najavaAktivna: this.najavaAktivna,
+                hasSvetiIlija: this.hasSvetiIlija,
+                consecutiveNajava: this.consecutiveNajava
             };
             const btnUndo = document.getElementById('btn-undo-move');
             if (btnUndo) btnUndo.style.display = 'flex';
@@ -1634,15 +1636,20 @@ class YambApp {
         let detectedMode = "Solo";
         if (this.onlineMode) detectedMode = "Online"; else if (this.players.length > 1) detectedMode = "Hotseat";
 
-        if (detectedMode === 'Solo') {
-            myScoreEntry = finalResults[0];
-            await this.safeSubmitScore(this.playerName, myScoreEntry.score, 'Solo');
-        } 
-        else {
-            const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
-            let saveMode = this.onlineMode ? 'Online' : 'Hotseat';
-            await this.safeSubmitScore(winner.name || gt('player_guest'), winner.score, saveMode);
-            myScoreEntry = finalResults.find(r => r.name === this.playerName);
+        // BEZBEDNO SLANJE REZULTATA
+        try {
+            if (detectedMode === 'Solo') {
+                myScoreEntry = finalResults[0];
+                await this.safeSubmitScore(this.playerName, myScoreEntry.score, 'Solo');
+            } 
+            else {
+                const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
+                let saveMode = this.onlineMode ? 'Online' : 'Hotseat';
+                await this.safeSubmitScore(winner.name || gt('player_guest'), winner.score, saveMode);
+                myScoreEntry = finalResults.find(r => r.name === this.playerName);
+            }
+        } catch (err) {
+            console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
         }
 
         if (window.statsManager && this.stats) {
@@ -1654,21 +1661,29 @@ class YambApp {
         if (myScoreEntry) {
              const myIndex = this.players.findIndex(p => p === myScoreEntry.name);
              if (myIndex !== -1 && this.allScores[myIndex]) {
-                 if (window.trophyManager) {
-                     let detectedModeForTrophies = this.onlineMode ? "Online" : (this.players.length > 1 ? "Hotseat" : "Solo");
-                     const scoreDiff = winnerScore - myScoreEntry.score; 
-                     window.trophyManager.checkEndGameTrophies(
-                         myScoreEntry.score, 
-                         this.allScores[myIndex], 
-                         detectedModeForTrophies,
-                         { 
-                             hasSvetiIlija: this.hasSvetiIlija, 
-                             hasProphet: this.hasProphet,
-                             scoreDiff: scoreDiff 
-                         }
-                     );
+                 // BEZBEDNA PROVERA TROFEJA SA FALLBACK-om
+                 try {
+                     if (window.trophyManager && typeof window.trophyManager.checkEndGameTrophies === 'function') {
+                         let detectedModeForTrophies = this.onlineMode ? "Online" : (this.players.length > 1 ? "Hotseat" : "Solo");
+                         const scoreDiff = winnerScore - myScoreEntry.score; 
+                         window.trophyManager.checkEndGameTrophies(
+                             myScoreEntry.score, 
+                             this.allScores[myIndex], 
+                             detectedModeForTrophies,
+                             { 
+                                 hasSvetiIlija: this.hasSvetiIlija, 
+                                 hasProphet: this.hasProphet,
+                                 scoreDiff: scoreDiff 
+                             }
+                         );
+                     } else if (this.features && typeof this.features.checkAchievements === 'function') {
+                         this.features.checkAchievements(myScoreEntry.score, this.allScores[myIndex]);
+                     }
+                 } catch(err) {
+                     console.warn("Greška pri dodeli trofeja, preskačem:", err);
                  }
              }
+             
              this.pendingScore = myScoreEntry.score; 
              this.lastGameType = 'normal';
              let resultType = 'solo';
@@ -1679,16 +1694,20 @@ class YambApp {
              
              this.updateStats(myScoreEntry.score, resultType);
 
-             if (window.kvartalnaLiga && this.socket && this.socket.connected) {
-                 const qData = window.kvartalnaLiga.quarterData;
-                 const qScores = window.kvartalnaLiga.getScores(); 
-                 
-                 this.socket.emit('submit_league_score', {
-                     playerName: this.playerName,
-                     score: qScores.quarterlyScore,
-                     year: qData.year,
-                     quarter: qData.quarter
-                 });
+             // BEZBEDNO SLANJE U LIGU
+             try {
+                 if (window.kvartalnaLiga && this.socket && this.socket.connected) {
+                     const qData = window.kvartalnaLiga.quarterData || {};
+                     
+                     this.socket.emit('submit_league_score', {
+                         playerName: this.playerName,
+                         score: myScoreEntry ? (myScoreEntry.score || 0) : 0,
+                         year: qData.year || new Date().getFullYear(),
+                         quarter: qData.quarter || 1
+                     });
+                 }
+             } catch(err) {
+                 console.warn("Greška pri upisu u Kvartalnu Ligu:", err);
              }
         }
         
@@ -1791,8 +1810,14 @@ class YambApp {
     }
 
     async safeSubmitScore(name, score, mode) {
-        let finalScore = parseInt(score); if (isNaN(finalScore)) finalScore = 0;
-        if(this.topListManager) await this.topListManager.submitScore(name, finalScore, mode);
+        try {
+            let finalScore = parseInt(score); if (isNaN(finalScore)) finalScore = 0;
+            if(this.topListManager) {
+                await this.topListManager.submitScore(name, finalScore, mode);
+            }
+        } catch(e) {
+            console.warn("Nije moguće poslati rezultat u ovom trenutku:", e);
+        }
     }
 
     async watchAdForDouble() { 
@@ -1861,24 +1886,51 @@ class YambApp {
             const data = this.allScores[idx]; let grandTotal = 0; 
             KOLONE.forEach(col => { 
                 let sum1 = 0; ["1","2","3","4","5","6"].forEach(r => { if(data[col][r]!==null) sum1 += data[col][r]; }); 
-                if(sum1 >= 60) sum1 += 30; document.getElementById(`sum-${idx}-${col}-ZBIR 1`).innerText = sum1; 
+                if(sum1 >= 60) sum1 += 30; 
+                let s1El = document.getElementById(`sum-${idx}-${col}-ZBIR 1`);
+                if(s1El && s1El.innerText != sum1) s1El.innerText = sum1; 
+
                 let sum2 = 0; const vMax = data[col]["Max"]; const vMin = data[col]["Min"]; const v1 = data[col]["1"]; 
-                if (vMax!==null && vMin!==null && v1!==null) { sum2 = (vMax - vMin) * v1; if (sum2 >= 60) sum2 += 40; } document.getElementById(`sum-${idx}-${col}-ZBIR 2`).innerText = sum2; 
-                let sum3 = 0; ["Triling","Kenta","Ful","Poker","Yamb"].forEach(r => { if(data[col][r]!==null) sum3 += data[col][r]; }); document.getElementById(`sum-${idx}-${col}-ZBIR 3`).innerText = sum3; 
+                if (vMax!==null && vMin!==null && v1!==null) { sum2 = (vMax - vMin) * v1; if (sum2 >= 60) sum2 += 40; } 
+                let s2El = document.getElementById(`sum-${idx}-${col}-ZBIR 2`);
+                if(s2El && s2El.innerText != sum2) s2El.innerText = sum2; 
+
+                let sum3 = 0; ["Triling","Kenta","Ful","Poker","Yamb"].forEach(r => { if(data[col][r]!==null) sum3 += data[col][r]; }); 
+                let s3El = document.getElementById(`sum-${idx}-${col}-ZBIR 3`);
+                if(s3El && s3El.innerText != sum3) s3El.innerText = sum3; 
+                
                 grandTotal += sum1 + sum2 + sum3; 
+                
                 REDOVI_PRIKAZ.forEach(row => { 
                     const btn = document.getElementById(`btn-${idx}-${col}-${row}`); if (!btn) return; 
-                    const val = data[col][row]; btn.classList.remove('highlight-najava'); 
-                    if (val !== null) { btn.innerText = val; btn.classList.add('filled'); btn.disabled = true; } else { 
-                        btn.innerText = ""; btn.classList.remove('filled'); 
+                    const val = data[col][row]; 
+                    
+                    if (btn.classList.contains('highlight-najava')) btn.classList.remove('highlight-najava'); 
+                    
+                    if (val !== null) { 
+                        // DOM Optimizacija: Menjamo samo ako se vrednost ZAISTA razlikuje
+                        if (btn.innerText != val) btn.innerText = val; 
+                        if (!btn.classList.contains('filled')) btn.classList.add('filled'); 
+                        if (!btn.disabled) btn.disabled = true; 
+                    } else { 
+                        if (btn.innerText !== "") btn.innerText = ""; 
+                        if (btn.classList.contains('filled')) btn.classList.remove('filled'); 
+                        
                         const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex); 
                         const isLocalTurn = (!this.onlineMode && idx === this.currentPlayerIdx); 
-                        if ((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0) { btn.disabled = false; } else { btn.disabled = true; } 
-                        if (this.najavljenoPolje && this.najavljenoPolje.row === row && this.najavljenoPolje.col === col) { btn.classList.add('highlight-najava'); } 
+                        const shouldBeDisabled = !((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0);
+                        
+                        // Menjamo disabled status samo ako je potrebno
+                        if (btn.disabled !== shouldBeDisabled) btn.disabled = shouldBeDisabled; 
+                        
+                        if (this.najavljenoPolje && this.najavljenoPolje.row === row && this.najavljenoPolje.col === col) { 
+                            btn.classList.add('highlight-najava'); 
+                        } 
                     } 
                 }); 
             }); 
-            document.getElementById(`total-${idx}`).innerText = grandTotal; 
+            let totEl = document.getElementById(`total-${idx}`);
+            if(totEl && totEl.innerText != grandTotal) totEl.innerText = grandTotal; 
         }); 
     }
     
@@ -1887,20 +1939,30 @@ class YambApp {
     
     async autoSaveGame() { 
         if(this.onlineMode) return; 
-        const data = { 
-            players: this.players, 
-            scores: this.allScores, 
-            current: this.currentPlayerIdx, 
-            kockiceVals: this.kockiceVals,
-            zadrzane: this.zadrzane,
-            brojBacanja: this.brojBacanja,
-            najavaAktivna: this.najavaAktivna,
-            najavljenoPolje: this.najavljenoPolje,
-            aiMode: false, 
-            diff: this.aiDifficulty, 
-            date: new Date().toISOString() 
-        }; 
-        if(window.localforage) await localforage.setItem('yamb_saved_game', data); 
+
+        // Debounce logika: Sprečava spamovanje memorije telefona
+        // Brišemo prethodni zahtev za čuvanje ako igrač brzo klika kockice
+        if (this._saveTimeout) clearTimeout(this._saveTimeout);
+
+        // Čuvamo stanje tek 0.8 sekundi nakon što igrač prestane sa akcijama
+        this._saveTimeout = setTimeout(async () => {
+            const data = { 
+                players: this.players, 
+                scores: this.allScores, 
+                current: this.currentPlayerIdx, 
+                kockiceVals: this.kockiceVals,
+                zadrzane: this.zadrzane,
+                brojBacanja: this.brojBacanja,
+                najavaAktivna: this.najavaAktivna,
+                najavljenoPolje: this.najavljenoPolje,
+                aiMode: false, 
+                diff: this.aiDifficulty, 
+                date: new Date().toISOString() 
+            }; 
+            try {
+                if(window.localforage) await localforage.setItem('yamb_saved_game', data); 
+            } catch(e) { console.warn("Greška pri čuvanju:", e); }
+        }, 800);
     }
     
     async loadSavedGame() { 
@@ -1973,10 +2035,12 @@ class YambApp {
         const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
         if (!confirmUndo) return;
 
-        // Poziva se Tranzitivna nagradna (Rewarded Interstitial) za ispravku poteza
-        if (this.adMob && this.adMob.showRewardedInterstitial) {
-            const success = await this.adMob.showRewardedInterstitial();
-            if (!success) return;
+        // Poziva se Tranzitivna nagradna (Rewarded Interstitial) za ispravku poteza SAMO NA TELEFONU
+        if (this.adMob && window.Capacitor && window.Capacitor.isNativePlatform) {
+            if (this.adMob.showRewardedInterstitial) {
+                const success = await this.adMob.showRewardedInterstitial();
+                if (!success) return;
+            }
         }
 
         const snap = this.lastMoveSnapshot;
@@ -1986,7 +2050,11 @@ class YambApp {
         this.zadrzane = [...snap.held];
         this.brojBacanja = snap.rollCount;
         this.najavljenoPolje = snap.najavljenoPolje;
+        
+        // Fix 3: Vraćanje statusa za trofeje
         this.najavaAktivna = snap.najavaAktivna;
+        this.hasSvetiIlija = snap.hasSvetiIlija;
+        this.consecutiveNajava = snap.consecutiveNajava;
 
         this.effectMgr.stop();
         this.loadEquippedEffect();
