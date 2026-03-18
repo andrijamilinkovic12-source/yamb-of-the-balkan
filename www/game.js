@@ -197,7 +197,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v8.4 - OPTIMIZED ADS");
+        console.log("YambApp v8.5 - CLASSIC REWARDS ONLY");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -887,7 +887,6 @@ class YambApp {
     
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
-            if(this.socket) this.socket.disconnect(); 
             this.showMainMenu(); 
         } 
     }
@@ -1106,7 +1105,6 @@ class YambApp {
     }
     
     cancelOnline() { 
-        if(this.socket) this.socket.disconnect(); 
         this.showMainMenu(); 
         window.history.pushState({}, document.title, window.location.pathname); 
     }
@@ -1823,16 +1821,9 @@ class YambApp {
     async watchAdForDouble() { 
         let success = false;
         
-        if (this.lastGameType === 'daily') {
-            // Ako je završen Dnevni Izazov -> Tranzitivna nagradna (Rewarded Interstitial)
-            if (this.adMob && this.adMob.showRewardedInterstitial) {
-                success = await this.adMob.showRewardedInterstitial();
-            }
-        } else {
-            // Ako je završena obična partija -> Klasični video sa nagradom (Rewarded Video)
-            if (this.adMob && this.adMob.showRewardVideo) {
-                success = await this.adMob.showRewardVideo();
-            }
+        // Uklonjena logika za Dnevni izazov -> Sada SVI koriste istu nagradnu reklamu
+        if (this.adMob && this.adMob.showRewardVideo) {
+            success = await this.adMob.showRewardVideo();
         }
         
         if (success) { 

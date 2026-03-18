@@ -398,10 +398,33 @@ io.on('connection', (socket) => {
     });
 
     socket.on('back_to_menu', () => {
-        const roomId = playerRooms[socket.id];
-        if (roomId) {
+        const activeRoomId = playerRooms[socket.id];
+        
+        if (activeRoomId) {
+            console.log(`📢 Igrač ${socket.id} se vratio u meni, napušta sobu ${activeRoomId}`);
+            // Obaveštavamo protivnika da je igrač napustio meč
+            socket.to(activeRoomId).emit('opponent_left');
             delete playerRooms[socket.id];
+            
+            // Čistimo privatne sobe ako je potrebno
+            if (privateRooms[activeRoomId]) {
+                if (privateRooms[activeRoomId].p1 && privateRooms[activeRoomId].p1.id === socket.id) {
+                    delete privateRooms[activeRoomId];
+                } else if (privateRooms[activeRoomId].p2 && privateRooms[activeRoomId].p2.id === socket.id) {
+                    delete privateRooms[activeRoomId].p2;
+                }
+            }
+            // Igrač fizički napušta socket sobu
+            socket.leave(activeRoomId);
         }
+
+        // Ako je igrač odustao dok je tražio protivnika
+        if (waitingPlayer && waitingPlayer.id === socket.id) {
+            waitingPlayer = null;
+        }
+        
+        // Osvežavamo svima online listu (igrač prelazi iz 'playing' u 'idle')
+        updateOnlineCount();
     });
 
     const MAX_SCORE = 3500;       

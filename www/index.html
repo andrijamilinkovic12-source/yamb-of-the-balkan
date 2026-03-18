@@ -72,65 +72,88 @@
 
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
             
-            <div style="flex: 1; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px);">
-                <div style="position: relative;">
-                    <span style="font-size: 1.3rem;">🌍</span>
-                    <div style="position: absolute; top: 0; right: -5px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success); animation: pulse 2s infinite;"></div>
+            <div style="flex: 1; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px); position: relative; overflow: hidden;">
+                <div style="position: absolute; bottom: -15px; left: -10px; font-size: 4.5rem; opacity: 0.05; pointer-events: none;">🌍</div>
+                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <div style="position: relative;">
+                        <span style="font-size: 1.3rem;">🌍</span>
+                        <div style="position: absolute; top: 0; right: -5px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success); animation: pulse 2s infinite;"></div>
+                    </div>
+                    <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
+                    <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Online</span>
                 </div>
-                <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
-                <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Online</span>
             </div>
 
             <div onclick="if(window.kvartalnaLiga) window.kvartalnaLiga.openModal()" style="flex: 1.8; cursor: pointer; background: linear-gradient(135deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.6) 100%); border: 2px solid var(--gold-main); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 15px rgba(224, 201, 149, 0.1); backdrop-filter: blur(8px); position: relative; overflow: hidden; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
-                <div style="position: absolute; top: -10px; right: -10px; font-size: 3.5rem; opacity: 0.08;">🏆</div>
-                <span data-lang="menu_league" style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
-                <span id="league-rank-name" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 1px;">AMATER</span>
-                
-                <div style="width: 90%; height: 6px; background: rgba(0,0,0,0.6); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
-                    <div id="league-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #E0C995, #FFD700); box-shadow: 0 0 5px #FFD700; transition: width 0.5s;"></div>
+                <div style="position: absolute; top: -10px; right: -10px; font-size: 3.5rem; opacity: 0.08; pointer-events: none;">🏆</div>
+                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <span data-lang="menu_league" style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
+                    <span id="league-rank-name" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 1px;">AMATER</span>
+                    
+                    <div style="width: 90%; height: 6px; background: rgba(0,0,0,0.6); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+                        <div id="league-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #E0C995, #FFD700); box-shadow: 0 0 5px #FFD700; transition: width 0.5s;"></div>
+                    </div>
+                    <span id="league-pts-text" style="font-size: 0.6rem; color: var(--text-main); margin-top: 5px; font-weight: 600;">0 / 5000 PTS</span>
                 </div>
-                <span id="league-pts-text" style="font-size: 0.6rem; color: var(--text-main); margin-top: 5px; font-weight: 600;">0 / 5000 PTS</span>
             </div>
 
-            <div style="flex: 1; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px);">
-                <span style="font-size: 1.3rem;">💰</span>
-                <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
-                <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
+            <div style="flex: 1; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px); position: relative; overflow: hidden;">
+                <div style="position: absolute; bottom: -15px; right: -10px; font-size: 4.5rem; opacity: 0.05; pointer-events: none;">💰</div>
+                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <span style="font-size: 1.3rem;">💰</span>
+                    <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
+                    <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
+                </div>
             </div>
 
         </div>
         
         <div class="modes-grid">
+            
             <div class="mode-btn mode-solo" onclick="app.handleModeClick(1)">
-                <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%;">
+                <div style="position: absolute; bottom: -20px; right: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">👤</div>
+                
+                <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
                     <span class="mode-icon">👤</span>
                     <span class="mode-text" data-lang="menu_solo">Solo Igra</span>
                 </div>
-                <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center;">
+                <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
                     <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 1)" data-lang="menu_resume_inline">▶ NASTAVI</button>
                     <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 1)" data-lang="menu_new_game">🆕 NOVA IGRA</button>
                 </div>
             </div>
             
             <div class="mode-btn mode-dual" onclick="app.handleModeClick(2)">
-                <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%;">
+                <div style="position: absolute; bottom: -20px; left: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">👥</div>
+                
+                <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
                     <span class="mode-icon">👥</span>
                     <span class="mode-text" data-lang="menu_dual">Dva Igrača</span>
                 </div>
-                <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center;">
+                <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
                     <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 2)" data-lang="menu_resume_inline">▶ NASTAVI</button>
                     <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 2)" data-lang="menu_new_game">🆕 NOVA IGRA</button>
                 </div>
             </div>
             
             <button class="mode-btn mode-random" onclick="app.setupOnline('random')">
-                <span class="mode-icon">🌐</span>
-                <span class="mode-text" data-lang="menu_online">Random Igrač</span>
+                <div style="position: absolute; bottom: -20px; right: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">🌐</div>
+                
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
+                    <span class="mode-icon">🌐</span>
+                    <span class="mode-text" data-lang="menu_online">Random Igrač</span>
+                </div>
             </button>
+            
             <button class="mode-btn mode-invite" onclick="app.startPrivateHosting()">
-                <span class="mode-icon">🔗</span>
-                <span class="mode-text" data-lang="menu_invite">Prijatelj</span>
+                <div style="position: absolute; bottom: -20px; left: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">🔗</div>
+                
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
+                    <span class="mode-icon">🔗</span>
+                    <span class="mode-text" data-lang="menu_invite">Prijatelj</span>
+                </div>
             </button>
+            
         </div>
         
         <div class="menu-divider" style="margin-top: 5px;"></div>
@@ -516,18 +539,27 @@
     </div>
 
     <script>
-        function updateMainMenuDashboard() {
-            // 1. Dukati
-            const dukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-            const dukatiEl = document.getElementById('menu-dukati-count');
-            if (dukatiEl) dukatiEl.innerText = dukati;
+        // DOM Caching - Pamćenje starih vrednosti da ne osvežavamo HTML bez potrebe
+        let lastDukati = -1;
+        let lastPts = -1;
 
-            // 2. Kvartalni Ciklus
+        function updateMainMenuDashboard() {
+            // 1. Brzo čitanje iz RAM-a (localStorage)
+            const dukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
             let pts = 0;
+            
             if (window.kvartalnaLiga) {
-                // Čitamo samo bodove za TRENUTNI kvartal
                 pts = window.kvartalnaLiga.getScores().quarterlyScore;
             }
+            
+            // 2. DOM OPTIMIZACIJA: Ažuriramo samo ako se nešto ZAISTA promenilo!
+            if (dukati === lastDukati && pts === lastPts) {
+                return; // Prekini funkciju, štedi bateriju i procesor!
+            }
+
+            // 3. Ako ima promena, osvežavamo HTML
+            const dukatiEl = document.getElementById('menu-dukati-count');
+            if (dukatiEl) dukatiEl.innerText = dukati;
             
             let rankKey = "rank_amater";
             let nextLevelPts = 5000;
@@ -547,9 +579,13 @@
             if (rankEl) rankEl.innerText = (typeof t !== 'undefined') ? t(rankKey) : rankKey.toUpperCase();
             if (barEl) barEl.style.width = percent + '%';
             if (ptsTextEl) ptsTextEl.innerText = `${pts} / ${nextLevelPts} PTS`;
+
+            // Pamtimo nove vrednosti za sledeći krug
+            lastDukati = dukati;
+            lastPts = pts;
         }
 
-        // Pokreni funkciju kad se očita ekran, i redovno osvežavaj
+        // Pokreni funkciju kad se očita ekran, i zakači ultra-brzi interval
         window.addEventListener('load', () => {
             updateMainMenuDashboard();
             setInterval(updateMainMenuDashboard, 2000); 
