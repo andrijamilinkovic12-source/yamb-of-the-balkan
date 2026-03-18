@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA
 
 require('dotenv').config(); 
 
@@ -507,6 +507,38 @@ io.on('connection', (socket) => {
         } catch (err) {
             console.error("Greška pri dohvatanju kvartalne lige:", err);
             socket.emit('league_highscores_data', []);
+        }
+    });
+
+    // ==================================================================
+    // NOVA RUTA: DOHVATANJE SVIH VREMENA (ALL-TIME) ZA LIGU
+    // ==================================================================
+    socket.on('get_league_alltime_highscores', async () => {
+        try {
+            if (!MONGO_URI) {
+                socket.emit('league_alltime_data', [
+                    { playerName: "Mock Legenda", score: 250000 },
+                    { playerName: "Mock Majstor", score: 145000 },
+                ]);
+                return;
+            }
+            
+            const allTimeScores = await LeagueScore.aggregate([
+                {
+                    $group: {
+                        _id: "$playerId",
+                        playerName: { $last: "$playerName" },
+                        score: { $sum: "$score" }
+                    }
+                },
+                { $sort: { score: -1 } },
+                { $limit: 50 }
+            ]);
+            
+            socket.emit('league_alltime_data', allTimeScores);
+        } catch (err) {
+            console.error("Greška pri dohvatanju All-Time lige:", err);
+            socket.emit('league_alltime_data', []);
         }
     });
 

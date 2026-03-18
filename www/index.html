@@ -6,7 +6,11 @@
     <title>Yamb of the Balkan - Divine Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=3.8">
+    <link rel="stylesheet" href="style.css?v=3.9">
+    
+    <link rel="stylesheet" href="teme.css?v=1.0">
+    <link rel="stylesheet" href="kockice.css?v=1.0">
+    <link rel="stylesheet" href="efekti.css?v=1.0">
     
     <script src="languages.js?v=4.2"></script>
 
@@ -132,7 +136,7 @@
         <div class="menu-divider" style="margin-top: 5px;"></div>
         
         <div class="special-actions-row" style="max-width: 380px;">
-            <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); window.location.href='riznica.html'" title="Riznica">💎</button>
+            <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()" title="Riznica">💎</button>
             
             <button id="dugmeGooglePrijava" class="btn-special-square" style="flex: 1; width: auto; background: linear-gradient(145deg, #ffffff, #e0e0e0); border-color: #ccc; box-shadow: 0 5px 0 #90a4ae, 0 10px 15px rgba(0,0,0,0.15); gap: 8px; color: #333;">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="28px" height="28px" style="flex-shrink: 0;">
@@ -229,7 +233,7 @@
                     <span style="font-size: 0.65rem; color: var(--text-muted); margin-top:5px; text-transform:uppercase;" data-lang="stat_avg">Prosek</span>
                     <span id="stat-avg" class="stat-val">0</span>
                 </div>
-                <div class="stat-item" onclick="window.location.href='riznica.html'" style="cursor: pointer; position:relative;">
+                <div class="stat-item" onclick="riznicaManager.open()" style="cursor: pointer; position:relative;">
                     <span style="font-size: 1.5rem;">🏆</span>
                     <span style="font-size: 0.65rem; color: var(--text-muted); margin-top:5px; text-transform:uppercase;" data-lang="stat_trophies">Trofeji</span>
                     <span id="stat-trophies" class="stat-val c-gold">0 / 27</span>
@@ -243,6 +247,26 @@
             </div>
             
         </div>
+    </div>
+
+    <div id="riznica-screen" class="screen">
+        <button class="back-btn" onclick="riznicaManager.close()">←</button>
+        
+        <div class="header" style="justify-content: flex-end; padding-top: max(45px, env(safe-area-inset-top)); padding-bottom: 10px; border-bottom: none; background: transparent;">
+            <div class="balance-group">
+                <div class="balance-display"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
+                <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 💰 🎬</button>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" data-lang="tab_trophies">TROFEJI 🏆</button>
+            <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" data-lang="tab_dice">KOCKICE 🎲</button>
+            <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" data-lang="tab_effects">EFEKTI ✨</button>
+            <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" data-lang="tab_themes">TEME 🎨</button>
+        </div>
+
+        <div id="riznica-shop-container" class="content-area"></div>
     </div>
     
     <div id="highscores-screen" class="screen">
@@ -534,6 +558,7 @@
 
     <script src="config.js?v=4.0"></script>
     <script src="managers.js?v=4.0"></script>
+    <script src="riznica.js?v=1.0"></script>
     <script src="trophyManager.js?v=4.0"></script> 
     <script src="features.js?v=3.7"></script>
     <script src="toplista.js?v=3.8"></script> 

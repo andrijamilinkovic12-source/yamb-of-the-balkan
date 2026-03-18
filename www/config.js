@@ -44,7 +44,7 @@ const KOLONE = ["Nadole", "Slobodna", "Sredina", "Nagore", "Ručno", "Najava"];
 const REDOVI_IGRA = ["1", "2", "3", "4", "5", "6", "Max", "Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
 const REDOVI_PRIKAZ = ["1", "2", "3", "4", "5", "6", "ZBIR 1", "Max", "Min", "ZBIR 2", "Triling", "Kenta", "Ful", "Poker", "Yamb", "ZBIR 3"];
 
-// --- 4. PODACI PRODAVNICE (SKINOVI, EFEKTI, TROFEJI) ---
+// --- 4. PODACI PRODAVNICE (SKINOVI, EFEKTI, TROFEJI, TEME) ---
 const SHOP_DATA = {
     SKINS: [
         { id: 'default', name: { sr: 'Standard Bela', en: 'Standard White' }, price: 0, category: { sr: '🎩 KLASIKA & ELEGANCIJA', en: '🎩 CLASSIC & ELEGANCE' } },
@@ -80,6 +80,13 @@ const SHOP_DATA = {
         { id: 'thunder', name: { sr: 'Gromovnik', en: 'Thunderbringer' }, price: 20000, desc: { sr: 'Ekran se trese uz udar groma.', en: 'Screen shakes with thunder strike.' }, duration: '1s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, req: 'sveti_ilija', reqName: { sr: 'Sveti Ilija', en: 'Saint Elijah' }, cssClass: 'prev-thunder', innerHtml: '' },
         { id: 'balkan', name: { sr: 'Svadba', en: 'Wedding' }, price: 25000, desc: { sr: 'Trubači, pare i opštenarodno veselje.', en: 'Trumpets, money and folk celebration.' }, duration: '5s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-balkan', innerHtml: '' },
         { id: 'fireworks', name: { sr: 'Grandiozni Vatromet', en: 'Grand Fireworks' }, price: 30000, desc: { sr: 'Eksplozija boja za pobednike.', en: 'Explosion of colors for winners.' }, duration: '5s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-fireworks', innerHtml: '' }
+    ],
+
+    THEMES: [
+        { id: 'dark', name: { sr: 'Zelena', en: 'Green' }, price: 0, desc: { sr: 'Klasična Yamb tema.', en: 'Classic Yamb theme.' }, icon: '🎲', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'light', name: { sr: 'Svetlo Zlato', en: 'Light Gold' }, price: 0, desc: { sr: 'Svetla tema sa zlatnim detaljima.', en: 'Light theme with gold details.' }, icon: '🎨', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'medium', name: { sr: 'Trula Višnja', en: 'Dark Cherry' }, price: 0, desc: { sr: 'Luksuzna bordo tema.', en: 'Luxurious burgundy theme.' }, icon: '🍒', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'winter', name: { sr: 'Plavi Okean', en: 'Blue Ocean' }, price: 0, desc: { sr: 'Opuštajuća plava tema.', en: 'Relaxing blue theme.' }, icon: '🌊', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } }
     ],
 
     TROPHIES: [

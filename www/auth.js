@@ -71,6 +71,7 @@ function getFullLocalStats() {
         unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
         unlockedSkins: window.statsManager ? window.statsManager.stats.unlockedSkins : JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
         unlockedEffects: window.statsManager ? window.statsManager.stats.unlockedEffects : JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
+        yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
         leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 }
     };
 }
@@ -92,7 +93,7 @@ async function prijaviSe() {
             const user = result.user;
             console.log("Uspešna prijava:", user.displayName);
 
-            localStorage.setItem('yamb_uid', user.uid); // Čuvamo UID
+            localStorage.setItem('yamb_uid', user.uid); 
             
             if (user.displayName) {
                 localStorage.setItem('yamb_player_name', user.displayName);
@@ -105,7 +106,7 @@ async function prijaviSe() {
             alert("Dobrodošli, " + (user.displayName || "Igraču") + "!");
 
             if (window.app) {
-                window.app.playerId = user.uid; // Menjamo id u aplikaciji
+                window.app.playerId = user.uid; 
                 if (user.displayName) window.app.playerName = user.displayName;
                 
                 if (window.app.socket && window.app.socket.connected) {
@@ -154,14 +155,25 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_player_photo');
         localStorage.removeItem('yamb_uid');
 
-        // 2. STRIKTNO BRISANJE STATISTIKE - Gost kreće apsolutno od nule!
+        // 2. STRIKTNO BRISANJE STATISTIKE I INVENTARA - Gost kreće apsolutno od nule!
         localStorage.removeItem('yamb_stats');
         localStorage.removeItem('yamb_dukati');
         localStorage.removeItem('yamb_quarter_data');
         localStorage.removeItem('yamb_unlocked_skins');
         localStorage.removeItem('yamb_unlocked_effects');
+        localStorage.removeItem('yamb_unlocked'); 
         
-        // Resetovanje objekata u memoriji
+        // Resetovanje aktivnih skinova i tema
+        localStorage.setItem('yamb_theme', 'dark');
+        localStorage.removeItem('yamb_active_skin');
+        localStorage.removeItem('yamb_active_effect');
+
+        // Vraćanje UI teme na osnovnu (Zelenu)
+        document.body.className = '';
+        const themeSelect = document.getElementById('setting-theme');
+        if (themeSelect) themeSelect.value = 'dark';
+        
+        // 3. RESETOVANJE OBJEKATA U RADNOJ MEMORIJI!
         if (window.app) {
             window.app.stats = { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0 };
         }
@@ -169,8 +181,12 @@ async function odjaviSe() {
             window.statsManager.stats = { totalGames: 0, wins: 0, losses: 0, highscore: 0, balance: 0, currentWinStreak: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
             window.statsManager.saveStats();
         }
+        // RESET KVARTALNE LIGE U MEMORIJI (Da bi vizuelno pala na nulu odmah)
+        if (window.kvartalnaLiga) {
+            window.kvartalnaLiga.quarterData = { year: 0, quarter: 0, baselineScore: 0 };
+        }
 
-        // 3. Generisanje Gost imena i privremenog ID-a
+        // 4. Generisanje Gost imena i privremenog ID-a
         let defaultName = "Gost_" + Math.floor(Math.random() * 9000 + 1000);
         localStorage.setItem('yamb_player_name', defaultName);
 
@@ -181,7 +197,7 @@ async function odjaviSe() {
 
         if (window.app) {
             window.app.playerName = defaultName;
-            window.app.playerId = 'guest_' + Date.now(); // Volatilan ID za gosta
+            window.app.playerId = 'guest_' + Date.now(); 
             
             if (window.app.socket && window.app.socket.connected) {
                 window.app.socket.emit('set_player_data', { 
@@ -191,7 +207,7 @@ async function odjaviSe() {
             }
         }
         
-        // Osvežavanje glavnog menija da prikaže 0
+        // Forsirano osvežavanje UI panela (Meni kartice za Dukate i Ligu idu na 0)
         if (typeof updateMainMenuDashboard === 'function') {
             updateMainMenuDashboard();
         }
@@ -214,7 +230,7 @@ async function checkLoginStatus() {
         if (result && result.user) {
             console.log("Korisnik je već ulogovan:", result.user.displayName);
             
-            localStorage.setItem('yamb_uid', result.user.uid); // Čuvamo UID ako je detektovan
+            localStorage.setItem('yamb_uid', result.user.uid); 
             osveziAuthUI(result.user);
             
             if (window.app) {
@@ -264,6 +280,24 @@ setTimeout(() => {
             };
             localStorage.setItem('yamb_stats', JSON.stringify(window.app.stats));
             
+            let mergedUnlocked = dbStats.yamb_unlocked || [];
+            if (mergedUnlocked.length === 0) {
+                mergedUnlocked = [
+                    ...(dbStats.unlockedTrophies || []), 
+                    ...(dbStats.unlockedSkins || []), 
+                    ...(dbStats.unlockedEffects || [])
+                ];
+            }
+            
+            const freeDefaults = ['default', 'confetti', 'dark', 'light', 'medium', 'winter'];
+            freeDefaults.forEach(item => {
+                if (!mergedUnlocked.includes(item)) mergedUnlocked.push(item);
+            });
+
+            localStorage.setItem('yamb_unlocked', JSON.stringify(mergedUnlocked));
+            localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
+            localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
+
             if (window.statsManager) {
                 window.statsManager.stats.wins = dbStats.wins || 0;
                 window.statsManager.stats.losses = dbStats.losses || 0;
@@ -276,10 +310,6 @@ setTimeout(() => {
                 window.statsManager.stats.unlockedEffects = dbStats.unlockedEffects || [];
                 window.statsManager.saveStats();
             }
-
-            // Sigurnosno čuvanje za ShopManager
-            localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
-            localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
 
             if (dbStats.balance !== undefined) {
                 localStorage.setItem('yamb_dukati', dbStats.balance);

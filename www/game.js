@@ -1909,7 +1909,7 @@ class YambApp {
                     
                     if (val !== null) { 
                         // DOM Optimizacija: Menjamo samo ako se vrednost ZAISTA razlikuje
-                        if (btn.innerText != val) btn.innerText = val; 
+                        if (btn.innerText !== String(val)) btn.innerText = val; 
                         if (!btn.classList.contains('filled')) btn.classList.add('filled'); 
                         if (!btn.disabled) btn.disabled = true; 
                     } else { 
@@ -2035,11 +2035,11 @@ class YambApp {
         const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
         if (!confirmUndo) return;
 
-        // Poziva se Tranzitivna nagradna (Rewarded Interstitial) za ispravku poteza SAMO NA TELEFONU
+        // Poziva se standardna Interstitial (preko celog ekrana) reklama za ispravku poteza SAMO NA TELEFONU
         if (this.adMob && window.Capacitor && window.Capacitor.isNativePlatform) {
-            if (this.adMob.showRewardedInterstitial) {
-                const success = await this.adMob.showRewardedInterstitial();
-                if (!success) return;
+            if (this.adMob.showInterstitial) {
+                const success = await this.adMob.showInterstitial();
+                if (!success) return; // Ako reklama nije učitana, prekidamo vraćanje poteza
             }
         }
 

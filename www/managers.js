@@ -57,7 +57,7 @@ class StatsManager {
 
         s.unlockedTrophies = t;
 
-        let riznicaList = JSON.parse(localStorage.getItem('yamb_unlocked')) || ['default', 'confetti'];
+        let riznicaList = JSON.parse(localStorage.getItem('yamb_unlocked')) || ['default', 'confetti', 'dark'];
         t.forEach(trophy => {
             if (!riznicaList.includes(trophy)) {
                 riznicaList.push(trophy);
@@ -77,7 +77,7 @@ class StatsManager {
         localStorage.setItem('yamb_dukati', this.stats.balance);
         
         if(this.stats.unlockedTrophies && this.stats.unlockedTrophies.length > 0) {
-            let riznicaList = JSON.parse(localStorage.getItem('yamb_unlocked')) || ['default', 'confetti'];
+            let riznicaList = JSON.parse(localStorage.getItem('yamb_unlocked')) || ['default', 'confetti', 'dark'];
             let updated = false;
             this.stats.unlockedTrophies.forEach(tr => {
                 if(!riznicaList.includes(tr)) {
@@ -113,64 +113,83 @@ class StatsManager {
 // --- 3. MODAL MANAGER (UI) ---
 class ModalManager {
     constructor() {
-        this.overlay = document.getElementById('custom-modal-overlay');
-        this.title = document.getElementById('cm-title');
-        this.msg = document.getElementById('cm-msg');
-        this.input = document.getElementById('cm-input');
-        this.btnCancel = document.getElementById('cm-cancel');
-        this.btnOk = document.getElementById('cm-ok');
+        // Više ne čuvamo reference trajno, već ih dobijamo u letu
     }
+
+    get elements() {
+        return {
+            overlay: document.getElementById('custom-modal-overlay'),
+            title: document.getElementById('cm-title'),
+            msg: document.getElementById('cm-msg'),
+            input: document.getElementById('cm-input'),
+            btnCancel: document.getElementById('cm-cancel'),
+            btnOk: document.getElementById('cm-ok')
+        };
+    }
+
     alert(text, title) {
         const safeTitle = title || _safeT('modal_title_info') || "OBAVEŠTENJE";
         return new Promise(resolve => {
-            if(!this.overlay) { console.warn("Modal overlay missing! Alert:", text); resolve(true); return; } 
+            const els = this.elements;
+            if(!els.overlay) { console.warn("Modal overlay missing! Alert:", text); resolve(true); return; } 
+            
             this.setup(safeTitle, text, false);
-            this.btnOk.onclick = () => { this.close(); resolve(true); };
+            els.btnOk.onclick = () => { this.close(); resolve(true); };
             this.open();
         });
     }
+
     confirm(text) {
         const safeTitle = _safeT('modal_title_confirm') || "POTVRDA";
         return new Promise(resolve => {
-            if(!this.overlay) { console.warn("Modal overlay missing! Confirm:", text); resolve(false); return; }
+            const els = this.elements;
+            if(!els.overlay) { console.warn("Modal overlay missing! Confirm:", text); resolve(false); return; }
+            
             this.setup(safeTitle, text, false);
-            this.btnCancel.classList.remove('hidden');
-            this.btnOk.onclick = () => { this.close(); resolve(true); };
-            this.btnCancel.onclick = () => { this.close(); resolve(false); };
+            els.btnCancel.classList.remove('hidden');
+            
+            els.btnOk.onclick = () => { this.close(); resolve(true); };
+            els.btnCancel.onclick = () => { this.close(); resolve(false); };
             this.open();
         });
     }
+
     prompt(text) {
         const safeTitle = _safeT('modal_title_input') || "UNOS";
         return new Promise(resolve => {
-            if(!this.overlay) { console.warn("Modal overlay missing! Prompt:", text); resolve(null); return; }
+            const els = this.elements;
+            if(!els.overlay) { console.warn("Modal overlay missing! Prompt:", text); resolve(null); return; }
+            
             this.setup(safeTitle, text, true);
-            this.btnOk.onclick = () => { 
-                const val = this.input.value; 
+            
+            els.btnOk.onclick = () => { 
+                const val = els.input.value; 
                 this.close(); 
                 resolve(val); 
             };
             this.open();
         });
     }
+
     setup(title, msg, hasInput) {
-        if(this.title) this.title.innerText = title;
-        if(this.msg) this.msg.innerHTML = msg; 
+        const els = this.elements;
+        if(!els.overlay) return;
+
+        if(els.title) els.title.innerText = title;
+        if(els.msg) els.msg.innerHTML = msg; 
         
-        if(this.btnCancel) this.btnCancel.classList.add('hidden');
-        if(hasInput && this.input) { this.input.classList.remove('hidden'); this.input.value = ""; this.input.focus(); } 
-        else if (this.input) { this.input.classList.add('hidden'); }
-        
-        if(this.btnOk) { const newOk = this.btnOk.cloneNode(true); this.btnOk.parentNode.replaceChild(newOk, this.btnOk); this.btnOk = newOk; }
-        if(this.btnCancel) { const newCancel = this.btnCancel.cloneNode(true); this.btnCancel.parentNode.replaceChild(newCancel, this.btnCancel); this.btnCancel = newCancel; }
+        if(els.btnCancel) els.btnCancel.classList.add('hidden');
+        if(hasInput && els.input) { els.input.classList.remove('hidden'); els.input.value = ""; els.input.focus(); } 
+        else if (els.input) { els.input.classList.add('hidden'); }
         
         if(typeof t !== 'undefined') {
-            if(this.btnOk) this.btnOk.innerText = t('modal_btn_ok') || "U REDU";
-            if(this.btnCancel) this.btnCancel.innerText = t('modal_btn_cancel') || "OTKAŽI";
+            if(els.btnOk) els.btnOk.innerText = t('modal_btn_ok') || "U REDU";
+            if(els.btnCancel) els.btnCancel.innerText = t('modal_btn_cancel') || "OTKAŽI";
         }
     }
-    open() { if(this.overlay) this.overlay.style.display = 'flex'; }
-    close() { if(this.overlay) this.overlay.style.display = 'none'; }
+
+    open() { const els = this.elements; if(els.overlay) els.overlay.style.display = 'flex'; }
+    close() { const els = this.elements; if(els.overlay) els.overlay.style.display = 'none'; }
 }
 
 // --- 4. EFFECT MANAGER (VISUALS) ---
@@ -477,11 +496,31 @@ class ShopManager {
         this.container = document.getElementById(config.containerId);
         this.balanceEl = document.getElementById(config.balanceId);
         
-        this.unlocked = JSON.parse(localStorage.getItem('yamb_unlocked')) || ['default', 'confetti'];
+        // Učitaj sačuvane, ali obavezno dodaj besplatne stvari ako već nisu tu
+        let savedUnlocked = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
+        const freeDefaults = ['default', 'confetti', 'dark', 'light', 'medium', 'winter'];
+        freeDefaults.forEach(item => {
+            if (!savedUnlocked.includes(item)) {
+                savedUnlocked.push(item);
+            }
+        });
+        this.unlocked = savedUnlocked;
+        // Sačuvaj nazad da bi ostale otključane
+        localStorage.setItem('yamb_unlocked', JSON.stringify(this.unlocked));
+        
         this.balance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
         
-        this.activeKey = this.type === 'skin' ? 'yamb_active_skin' : 'yamb_active_effect';
-        this.activeItem = localStorage.getItem(this.activeKey) || (this.type === 'skin' ? 'default' : 'confetti');
+        // Podrška za Teme, Skinove i Efekte
+        if (this.type === 'skin') {
+            this.activeKey = 'yamb_active_skin';
+            this.activeItem = localStorage.getItem(this.activeKey) || 'default';
+        } else if (this.type === 'theme') {
+            this.activeKey = 'yamb_theme';
+            this.activeItem = localStorage.getItem(this.activeKey) || 'dark';
+        } else {
+            this.activeKey = 'yamb_active_effect';
+            this.activeItem = localStorage.getItem(this.activeKey) || 'confetti';
+        }
 
         this.discountedItems = {}; 
         
@@ -603,7 +642,6 @@ class ShopManager {
         }
         
         if(window.adMobGlobal) {
-            // Ažurirano: proveri da li je bilo koja nagradna reklama spremna za UI update
             const isAnyReady = window.adMobGlobal.ads.rewarded.isReady || window.adMobGlobal.ads.rewardedInt.isReady;
             window.adMobGlobal.updateUI(isAnyReady);
         }
@@ -613,10 +651,21 @@ class ShopManager {
         this.activeItem = id;
         localStorage.setItem(this.activeKey, id);
         this.render();
+        
         if(window.app && window.app.soundMgr) window.app.soundMgr.click();
         else if (window.statsManager) { 
             const sm = new SoundManager();
             sm.click();
+        }
+
+        if (this.type === 'theme') {
+            document.body.className = ''; 
+            if (id !== 'dark') {
+                document.body.classList.add(id + '-theme'); 
+            }
+            
+            const themeSelect = document.getElementById('setting-theme');
+            if (themeSelect) themeSelect.value = id;
         }
     }
 
@@ -674,7 +723,6 @@ class ShopManager {
     async watchAdDiscount(id) {
         const adCtrl = this.getAdController();
         if (adCtrl) {
-            // Popust sada poziva tranzitivnu nagradnu (Rewarded Interstitial)
             const success = await adCtrl.showRewardedInterstitial();
             if (success) {
                 this.discountedItems[id] = true;
@@ -706,7 +754,6 @@ class ShopManager {
                  return;
              }
 
-             // Besplatni dukati i dalje ostaju klasičan Rewarded Video
              const success = await adCtrl.showRewardVideo();
              if (success) {
                  this.addBalance(500); 
@@ -731,7 +778,7 @@ class AdMobController {
     constructor() {
         this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
         this.interstitialId = 'ca-app-pub-4319963185096437/2913237519'; 
-        this.rewardedIntId = 'ca-app-pub-4319963185096437/5857775680'; // Tranzitivna nagradna
+        this.rewardedIntId = 'ca-app-pub-4319963185096437/5857775680'; 
         
         this.adMobPlugin = null;
         
@@ -803,7 +850,6 @@ class AdMobController {
         if (!this.adMobPlugin) return;
 
         try {
-            // STARI NAZIVI (Za Capacitor v2 i starije verzije)
             await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
             await this.adMobPlugin.addListener('rewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
@@ -824,7 +870,6 @@ class AdMobController {
                 this.handleAdDismissed('rewardedInt');
             });
 
-            // NOVI NAZIVI (ZA AKTUELNI CAPACITOR ADMOB PLUGIN - sa 'on' prefiksom)
             await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
             await this.adMobPlugin.addListener('onRewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
@@ -856,7 +901,6 @@ class AdMobController {
         this.ads[type].isReady = true; 
         this.ads[type].isLoading = false; 
         this.ads[type].retryCount = 0; 
-        // Ažurirano: Opciona provera koja osvežava dugmad ako je bilo koja nagradna reklama spremna
         if (type === 'rewarded' || type === 'rewardedInt') {
             this.updateUI(this.ads.rewarded.isReady || this.ads.rewardedInt.isReady);
         }
@@ -889,14 +933,16 @@ class AdMobController {
         
         this.ads[type].isLoading = true;
 
+        // Povećano vreme čekanja na 35 sekundi za bolji Fill Rate!
         const timeoutId = setTimeout(() => {
             if (this.ads[type].isLoading) {
                 this.ads[type].isLoading = false;
                 this.handleAdFailed(type, new Error("Ad loading timeout")); 
             }
-        }, 15000);
+        }, 35000); 
 
         try {
+            // isTesting ostaje FALSE jer je igra u produkciji
             if (type === 'rewarded') {
                 await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: false });
             } else if (type === 'interstitial') {
@@ -905,7 +951,6 @@ class AdMobController {
                 if (typeof this.adMobPlugin.prepareRewardedInterstitial === 'function') {
                     await this.adMobPlugin.prepareRewardedInterstitial({ adId: this.rewardedIntId, isTesting: false });
                 } else if (typeof this.adMobPlugin.prepareRewardVideoAd === 'function') {
-                    // Fallback za starije SDK verzije
                     await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedIntId, isTesting: false });
                 }
             }
