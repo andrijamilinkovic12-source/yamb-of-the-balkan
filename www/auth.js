@@ -3,6 +3,23 @@
  * Ovaj fajl koristi nativni Capacitor plugin za prijavu i sinhronizuje statistiku sa MongoDB-om.
  */
 
+// --- POMOĆNA FUNKCIJA ZA BEZBEDAN PREVOD ---
+const _t = (key, fallback) => (typeof t !== 'undefined' ? t(key) : fallback);
+
+// --- POMOĆNA FUNKCIJA ZA CUSTOM ALERTE ---
+async function prikaziObavestenje(tekst) {
+    if (window.modalManager) {
+        if (typeof window.modalManager.alert === 'function') {
+            await window.modalManager.alert(tekst);
+            return;
+        } else if (typeof window.modalManager.confirm === 'function') {
+            await window.modalManager.confirm(tekst);
+            return;
+        }
+    }
+    alert(tekst);
+}
+
 // --- POMOĆNA FUNKCIJA ZA AŽURIRANJE UI-a ---
 function osveziAuthUI(user) {
     const loginBtn = document.getElementById('dugmeGooglePrijava');
@@ -10,8 +27,6 @@ function osveziAuthUI(user) {
     const logoutBtn = document.getElementById('btn-google-logout');
     const nameInput = document.getElementById('setting-name');
     const userPhoto = document.getElementById('auth-user-photo'); 
-
-    const translate = (key, fallback) => (typeof t !== 'undefined') ? t(key) : fallback;
 
     if (user && user.displayName) {
         if (loginBtn) loginBtn.style.display = 'none';
@@ -40,7 +55,7 @@ function osveziAuthUI(user) {
         if (loginBtn) loginBtn.style.display = 'flex';
         
         if (userInfo) {
-            userInfo.innerText = translate('settings_not_logged_in', "Niste prijavljeni");
+            userInfo.innerText = _t('settings_not_logged_in', "Niste prijavljeni");
             userInfo.style.color = 'var(--text-main)';
         }
         
@@ -66,13 +81,17 @@ function getFullLocalStats() {
         losses: (window.app && window.app.stats) ? (window.app.stats.losses || 0) : 0,
         highscore: (window.app && window.app.stats) ? (window.app.stats.highscore || 0) : 0,
         totalScoreSum: (window.app && window.app.stats) ? (window.app.stats.totalScoreSum || 0) : 0,
+        tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0, // <--- DODATO ZA TURNIRE
         balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
         currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
         unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
         unlockedSkins: window.statsManager ? window.statsManager.stats.unlockedSkins : JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
         unlockedEffects: window.statsManager ? window.statsManager.stats.unlockedEffects : JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
         yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
-        leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 }
+        leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 },
+        activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
+        activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
+        activeTheme: localStorage.getItem('yamb_theme') || 'dark'
     };
 }
 
@@ -82,7 +101,7 @@ async function prijaviSe() {
 
     if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
         console.warn("Google Auth nativni plugin nije dostupan u ovom okruženju.");
-        alert("Google prijava je dostupna samo u mobilnoj aplikaciji.");
+        await prikaziObavestenje(_t('auth_only_mobile', "Google prijava je dostupna samo u mobilnoj aplikaciji."));
         return;
     }
 
@@ -103,7 +122,8 @@ async function prijaviSe() {
             }
 
             osveziAuthUI(user);
-            alert("Dobrodošli, " + (user.displayName || "Igraču") + "!");
+            const playerName = user.displayName || _t('player_guest', "Igraču");
+            await prikaziObavestenje(_t('auth_welcome', "Dobrodošli, ") + playerName + "!");
 
             if (window.app) {
                 window.app.playerId = user.uid; 
@@ -125,9 +145,9 @@ async function prijaviSe() {
     } catch (error) {
         console.error("Greška pri prijavi:", error);
         if (error.message && (error.message.includes("10") || error.message.includes("12500"))) {
-            alert("Greška 10/12500: Verovatno SHA-1 ključ u Firebase konzoli nije ispravan.");
+            await prikaziObavestenje(_t('auth_sha1_error', "Greška 10/12500: Verovatno SHA-1 ključ u Firebase konzoli nije ispravan."));
         } else {
-            alert("Prijava trenutno nije uspela. Proveri internet vezu.");
+            await prikaziObavestenje(_t('auth_login_failed', "Prijava trenutno nije uspela. Proveri internet vezu."));
         }
     }
 }
@@ -138,9 +158,9 @@ async function odjaviSe() {
          return; 
     }
 
-    const msgText = (typeof t !== 'undefined') ? t('msg_logout_confirm') : "Da li ste sigurni da želite da se odjavite?";
+    const msgText = _t('msg_logout_confirm', "Da li ste sigurni da želite da se odjavite?");
 
-    if (window.modalManager && window.modalManager.overlay) {
+    if (window.modalManager && typeof window.modalManager.confirm === 'function') {
         const potvrda = await window.modalManager.confirm(msgText);
         if (!potvrda) return;
     } else {
@@ -178,16 +198,16 @@ async function odjaviSe() {
             window.app.stats = { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0 };
         }
         if (window.statsManager) {
-            window.statsManager.stats = { totalGames: 0, wins: 0, losses: 0, highscore: 0, balance: 0, currentWinStreak: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
+            window.statsManager.stats = { totalGames: 0, wins: 0, losses: 0, highscore: 0, tournamentWins: 0, balance: 0, currentWinStreak: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
             window.statsManager.saveStats();
         }
-        // RESET KVARTALNE LIGE U MEMORIJI (Da bi vizuelno pala na nulu odmah)
+        // RESET KVARTALNE LIGE U MEMORIJI
         if (window.kvartalnaLiga) {
             window.kvartalnaLiga.quarterData = { year: 0, quarter: 0, baselineScore: 0 };
         }
 
         // 4. Generisanje Gost imena i privremenog ID-a
-        let defaultName = "Gost_" + Math.floor(Math.random() * 9000 + 1000);
+        let defaultName = _t('player_guest', "Gost") + "_" + Math.floor(Math.random() * 9000 + 1000);
         localStorage.setItem('yamb_player_name', defaultName);
 
         osveziAuthUI(null);
@@ -207,14 +227,13 @@ async function odjaviSe() {
             }
         }
         
-        // Forsirano osvežavanje UI panela (Meni kartice za Dukate i Ligu idu na 0)
         if (typeof updateMainMenuDashboard === 'function') {
             updateMainMenuDashboard();
         }
         
     } catch (error) {
         console.error("Greška pri odjavi:", error);
-        alert("Došlo je do greške pri odjavi.");
+        await prikaziObavestenje(_t('auth_logout_error', "Došlo je do greške pri odjavi."));
     }
 }
 
@@ -298,11 +317,23 @@ setTimeout(() => {
             localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
             localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
 
+            // --- RESTAURACIJA AKTIVNIH STVARI IZ CLOUDA ---
+            if (dbStats.activeSkin) localStorage.setItem('yamb_active_skin', dbStats.activeSkin);
+            if (dbStats.activeEffect) localStorage.setItem('yamb_active_effect', dbStats.activeEffect);
+            if (dbStats.activeTheme) {
+                localStorage.setItem('yamb_theme', dbStats.activeTheme);
+                document.body.className = '';
+                if (dbStats.activeTheme !== 'dark') {
+                    document.body.classList.add(dbStats.activeTheme + '-theme');
+                }
+            }
+
             if (window.statsManager) {
                 window.statsManager.stats.wins = dbStats.wins || 0;
                 window.statsManager.stats.losses = dbStats.losses || 0;
                 window.statsManager.stats.totalGames = dbStats.games || 0;
                 window.statsManager.stats.highscore = dbStats.highscore || 0;
+                window.statsManager.stats.tournamentWins = dbStats.tournamentWins || 0; // <--- DODATO ZA TURNIRE
                 window.statsManager.stats.balance = dbStats.balance || 0;
                 window.statsManager.stats.currentWinStreak = dbStats.currentWinStreak || 0;
                 window.statsManager.stats.unlockedTrophies = dbStats.unlockedTrophies || [];

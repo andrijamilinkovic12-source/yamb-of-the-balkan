@@ -148,10 +148,14 @@ const UserProfileSchema = new mongoose.Schema({
     totalScoreSum: { type: Number, default: 0 },
     balance: { type: Number, default: 0 },
     currentWinStreak: { type: Number, default: 0 },
+    tournamentWins: { type: Number, default: 0 }, // <--- DODATO ZA TURNIRE
     unlockedTrophies: { type: [String], default: [] },
     unlockedSkins: { type: [String], default: [] },
     unlockedEffects: { type: [String], default: [] },
-    yamb_unlocked: { type: [String], default: [] }, // <-- DODATO ZA RIZNICU
+    yamb_unlocked: { type: [String], default: [] }, 
+    activeSkin: { type: String, default: 'default' }, // <--- DODATO ZA AKTIVNU OPREMU
+    activeEffect: { type: String, default: 'confetti' }, // <--- DODATO ZA AKTIVNU OPREMU
+    activeTheme: { type: String, default: 'dark' }, // <--- DODATO ZA AKTIVNU OPREMU
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
@@ -288,6 +292,11 @@ io.on('connection', (socket) => {
                 user.playerName = data.name;
                 user.lastLogin = Date.now();
                 
+                // --- DODATO: Čuvamo aktivnu opremu ---
+                if (s.activeSkin) user.activeSkin = s.activeSkin;
+                if (s.activeEffect) user.activeEffect = s.activeEffect;
+                if (s.activeTheme) user.activeTheme = s.activeTheme;
+                
                 // Sprečavamo da login pregazi cloud podatke sa lokalnim nulama
                 const isFreshLogin = (s.games === 0);
 
@@ -297,6 +306,11 @@ io.on('connection', (socket) => {
                     if (s.losses > user.losses) user.losses = s.losses;
                     if (s.highscore > user.highscore) user.highscore = s.highscore;
                     if (s.totalScoreSum > user.totalScoreSum) user.totalScoreSum = s.totalScoreSum;
+                    
+                    // Osvojeni turniri
+                    if (typeof s.tournamentWins === 'number' && s.tournamentWins > user.tournamentWins) {
+                        user.tournamentWins = s.tournamentWins;
+                    }
                     
                     // FIX SHOP: Dozvoljavamo da se balans smanji (na primer nakon kupovine)
                     if (typeof s.balance === 'number') {
@@ -341,15 +355,19 @@ io.on('connection', (socket) => {
 
                 await user.save();
                 
-                // FIX SHOP: Šaljemo yamb_unlocked nazad klijentu
+                // FIX SHOP & CLOUD SAVE: Šaljemo sve podatke nazad klijentu
                 socket.emit('sync_local_stats', { 
                     wins: user.wins, losses: user.losses, games: user.games,
                     highscore: user.highscore, totalScoreSum: user.totalScoreSum,
                     balance: user.balance, currentWinStreak: user.currentWinStreak,
+                    tournamentWins: user.tournamentWins, // <-- DODATO
+                    activeSkin: user.activeSkin, // <-- DODATO
+                    activeTheme: user.activeTheme, // <-- DODATO
+                    activeEffect: user.activeEffect, // <-- DODATO
                     unlockedTrophies: user.unlockedTrophies,
                     unlockedSkins: user.unlockedSkins,
                     unlockedEffects: user.unlockedEffects,
-                    yamb_unlocked: user.yamb_unlocked, // <-- DODATO
+                    yamb_unlocked: user.yamb_unlocked, 
                     leagueData: user.leagueData 
                 });
             } else {
@@ -359,10 +377,14 @@ io.on('connection', (socket) => {
                     wins: s.wins || 0, losses: s.losses || 0, games: s.games || 0,
                     highscore: s.highscore || 0, totalScoreSum: s.totalScoreSum || 0,
                     balance: s.balance || 0, currentWinStreak: s.currentWinStreak || 0,
+                    tournamentWins: s.tournamentWins || 0, // <-- DODATO
+                    activeSkin: s.activeSkin || 'default', // <-- DODATO
+                    activeTheme: s.activeTheme || 'dark', // <-- DODATO
+                    activeEffect: s.activeEffect || 'confetti', // <-- DODATO
                     unlockedTrophies: s.unlockedTrophies || [],
                     unlockedSkins: s.unlockedSkins || [],
                     unlockedEffects: s.unlockedEffects || [],
-                    yamb_unlocked: s.yamb_unlocked || [], // <-- DODATO
+                    yamb_unlocked: s.yamb_unlocked || [], 
                     leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0 } 
                 });
                 await user.save();

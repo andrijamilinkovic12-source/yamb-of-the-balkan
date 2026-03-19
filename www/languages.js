@@ -338,7 +338,14 @@ const TRANSLATIONS = {
         "tourney_prize_runnerup": "Kao finalisti, vraćen Vam je ulog od 2500 💰. Više sreće sledeći put!",
         "tourney_finalist_title": "FINALISTA 🥈",
         "tourney_tab_fame": "👑 SLAVNI",
-        "tourney_hall_of_fame": "DVORANA SLAVNIH (OSVAJAČI)"
+        "tourney_hall_of_fame": "DVORANA SLAVNIH (OSVAJAČI)",
+
+        // --- AUTH PORUKE ---
+        "auth_only_mobile": "Google prijava je dostupna samo u mobilnoj aplikaciji.",
+        "auth_welcome": "Dobrodošli, ",
+        "auth_sha1_error": "Greška 10/12500: Verovatno SHA-1 ključ u Firebase konzoli nije ispravan.",
+        "auth_login_failed": "Prijava trenutno nije uspela. Proveri internet vezu.",
+        "auth_logout_error": "Došlo je do greške pri odjavi."
     },
     en: {
         // --- MAIN MENU ---
@@ -677,7 +684,14 @@ const TRANSLATIONS = {
         "tourney_prize_runnerup": "As a finalist, your entry fee of 2500 💰 has been refunded. Better luck next time!",
         "tourney_finalist_title": "FINALIST 🥈",
         "tourney_tab_fame": "👑 HALL OF FAME",
-        "tourney_hall_of_fame": "HALL OF FAME (CHAMPIONS)"
+        "tourney_hall_of_fame": "HALL OF FAME (CHAMPIONS)",
+
+        // --- AUTH PORUKE ---
+        "auth_only_mobile": "Google login is only available in the mobile app.",
+        "auth_welcome": "Welcome, ",
+        "auth_sha1_error": "Error 10/12500: SHA-1 key in Firebase console is likely incorrect.",
+        "auth_login_failed": "Login failed. Please check your internet connection.",
+        "auth_logout_error": "An error occurred during logout."
     }
 };
 

@@ -368,7 +368,13 @@ class YambApp {
             totalScoreSum: this.stats.totalScoreSum || 0,
             balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
             currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
-            unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : []
+            unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
+            yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
+            unlockedSkins: JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
+            unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
+            activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
+            activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
+            activeTheme: localStorage.getItem('yamb_theme') || 'dark'
         };
     }
 
@@ -1784,6 +1790,13 @@ class YambApp {
                             
                             if (amIWinner) {
                                 currentDukati += 20000; 
+                                
+                                // --- DODATO: Povećaj broj osvojenih turnira u ličnoj statistici ---
+                                if (window.statsManager) {
+                                    window.statsManager.stats.tournamentWins = (window.statsManager.stats.tournamentWins || 0) + 1;
+                                    window.statsManager.saveStats();
+                                }
+
                                 setTimeout(() => {
                                     this.modal.alert(gt('tourney_prize_winner') || "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 💰!", gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆");
                                     this.effectMgr.trigger('gold_rain'); 

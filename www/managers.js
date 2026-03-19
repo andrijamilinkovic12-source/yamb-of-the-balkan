@@ -25,7 +25,8 @@ class StatsManager {
     constructor() {
         this.stats = this.loadStats() || {
             wins: 0, losses: 0, totalGames: 0, currentWinStreak: 0, currentLossStreak: 0,
-            balance: CONFIG.INITIAL_BALANCE || 1000, unlockedTrophies: [], highscore: 0
+            balance: CONFIG.INITIAL_BALANCE || 1000, unlockedTrophies: [], highscore: 0,
+            tournamentWins: 0 // <--- DODATO OVO ZA PAMĆENJE OSVOJENIH TURNIRA
         };
         
         const legacyBalance = parseInt(localStorage.getItem('yamb_dukati'));
@@ -725,6 +726,16 @@ class ShopManager {
             
             const themeSelect = document.getElementById('setting-theme');
             if (themeSelect) themeSelect.value = id;
+        }
+
+        // --- DODAT KOD: Hitna sinhronizacija nakon promene opreme ---
+        if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {
+            window.app.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid'),
+                name: window.app.playerName,
+                stats: window.app.getFullLocalStats(),
+                playerId: window.app.playerId
+            });
         }
     }
 
