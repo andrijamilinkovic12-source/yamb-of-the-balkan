@@ -762,6 +762,17 @@ class ShopManager {
             window.statsManager.saveStats();
         }
 
+        // --- DODAT KOD: Hitna cloud sinhronizacija nakon kupovine ---
+        if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {
+            window.app.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid'),
+                name: window.app.playerName,
+                stats: window.app.getFullLocalStats(),
+                playerId: window.app.playerId
+            });
+        }
+        // -------------------------------------------------------------
+
         this.updateBalanceDisplay();
         this.render();
         

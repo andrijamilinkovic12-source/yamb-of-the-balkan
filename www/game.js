@@ -153,7 +153,14 @@ class DailyChallengeManager {
         if (this.currentIndex < 6) {
             this.startRolling(this.currentIndex);
         } else {
-            this.finishGame();
+            // --- DODATA ZADRŠKA OD 2.5 SEKUNDE ---
+            this.isActive = false; // Blokiramo dalje kliktanje
+            const stopBtn = document.getElementById('btn-daily-stop');
+            if(stopBtn) stopBtn.disabled = true; // Sivo dugme dok se čeka
+            
+            setTimeout(() => {
+                this.finishGame();
+            }, 2500); // Čekamo 2.5s pa tek onda otvaramo ekran za nagradu
         }
     }
 

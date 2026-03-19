@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX
 
 require('dotenv').config(); 
 
@@ -151,6 +151,7 @@ const UserProfileSchema = new mongoose.Schema({
     unlockedTrophies: { type: [String], default: [] },
     unlockedSkins: { type: [String], default: [] },
     unlockedEffects: { type: [String], default: [] },
+    yamb_unlocked: { type: [String], default: [] }, // <-- DODATO ZA RIZNICU
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
@@ -297,7 +298,8 @@ io.on('connection', (socket) => {
                     if (s.highscore > user.highscore) user.highscore = s.highscore;
                     if (s.totalScoreSum > user.totalScoreSum) user.totalScoreSum = s.totalScoreSum;
                     
-                    if (typeof s.balance === 'number' && s.balance > user.balance) {
+                    // FIX SHOP: Dozvoljavamo da se balans smanji (na primer nakon kupovine)
+                    if (typeof s.balance === 'number') {
                         user.balance = s.balance; 
                     }
                     if (typeof s.currentWinStreak === 'number' && s.currentWinStreak > user.currentWinStreak) {
@@ -319,6 +321,12 @@ io.on('connection', (socket) => {
                     const mergedEffects = new Set([...user.unlockedEffects, ...s.unlockedEffects]);
                     user.unlockedEffects = Array.from(mergedEffects);
                 }
+                
+                // FIX SHOP: Spajanje svih kupljenih stvari za Riznicu
+                if (s.yamb_unlocked && s.yamb_unlocked.length > 0) {
+                    const mergedAll = new Set([...(user.yamb_unlocked || []), ...s.yamb_unlocked]);
+                    user.yamb_unlocked = Array.from(mergedAll);
+                }
 
                 if (s.leagueData) {
                     if (s.leagueData.year > user.leagueData.year || 
@@ -333,6 +341,7 @@ io.on('connection', (socket) => {
 
                 await user.save();
                 
+                // FIX SHOP: Šaljemo yamb_unlocked nazad klijentu
                 socket.emit('sync_local_stats', { 
                     wins: user.wins, losses: user.losses, games: user.games,
                     highscore: user.highscore, totalScoreSum: user.totalScoreSum,
@@ -340,6 +349,7 @@ io.on('connection', (socket) => {
                     unlockedTrophies: user.unlockedTrophies,
                     unlockedSkins: user.unlockedSkins,
                     unlockedEffects: user.unlockedEffects,
+                    yamb_unlocked: user.yamb_unlocked, // <-- DODATO
                     leagueData: user.leagueData 
                 });
             } else {
@@ -352,6 +362,7 @@ io.on('connection', (socket) => {
                     unlockedTrophies: s.unlockedTrophies || [],
                     unlockedSkins: s.unlockedSkins || [],
                     unlockedEffects: s.unlockedEffects || [],
+                    yamb_unlocked: s.yamb_unlocked || [], // <-- DODATO
                     leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0 } 
                 });
                 await user.save();

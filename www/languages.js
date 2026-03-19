@@ -26,6 +26,7 @@ const TRANSLATIONS = {
         "rank_titan": "TITAN",
         
         // --- KVARTALNA LIGA (DODATNI TEKSTOVI) ---
+        "league_your_rank": "Vaš rang",
         "league_all_time": "SVA VREMENA",
         "league_all_time_desc": "Ukupni poeni od prvog pokretanja.",
         "league_swipe": "← Prevuci levo-desno za svoje lige →",
@@ -364,6 +365,7 @@ const TRANSLATIONS = {
         "rank_titan": "TITAN",
 
         // --- QUARTERLY LEAGUE (ADDITIONAL TEXTS) ---
+        "league_your_rank": "Your Rank",
         "league_all_time": "ALL TIME",
         "league_all_time_desc": "Total points since your first game.",
         "league_swipe": "← Swipe left-right for your leagues →",
