@@ -253,6 +253,16 @@ class TournamentManager {
                     window.statsManager.stats.balance = currentBalance;
                     window.statsManager.saveStats();
                 }
+
+                // --- DODATO ZA CLOUD SYNC ---
+                if (this.app && this.app.socket && this.app.socket.connected) {
+                    this.app.socket.emit('set_player_data', {
+                        uid: localStorage.getItem('yamb_uid') || this.app.playerId,
+                        name: this.app.playerName,
+                        stats: this.app.getFullLocalStats(),
+                        playerId: this.app.playerId
+                    });
+                }
                 
                 if (typeof updateMainMenuDashboard === 'function') {
                     updateMainMenuDashboard();
@@ -294,6 +304,16 @@ class TournamentManager {
             if (window.statsManager) {
                 window.statsManager.stats.balance = currentBalance;
                 window.statsManager.saveStats();
+            }
+
+            // --- DODATO ZA CLOUD SYNC ---
+            if (this.app && this.app.socket && this.app.socket.connected) {
+                this.app.socket.emit('set_player_data', {
+                    uid: localStorage.getItem('yamb_uid') || this.app.playerId,
+                    name: this.app.playerName,
+                    stats: this.app.getFullLocalStats(),
+                    playerId: this.app.playerId
+                });
             }
             
             if (typeof updateMainMenuDashboard === 'function') {

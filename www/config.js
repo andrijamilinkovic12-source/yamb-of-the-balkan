@@ -87,7 +87,9 @@ const SHOP_DATA = {
         { id: 'dark', name: { sr: 'Zelena', en: 'Green' }, price: 0, desc: { sr: 'Klasična Yamb tema.', en: 'Classic Yamb theme.' }, icon: '🎲', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
         { id: 'light', name: { sr: 'Svetlo Zlato', en: 'Light Gold' }, price: 0, desc: { sr: 'Svetla tema sa zlatnim detaljima.', en: 'Light theme with gold details.' }, icon: '🎨', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
         { id: 'medium', name: { sr: 'Trula Višnja', en: 'Dark Cherry' }, price: 0, desc: { sr: 'Luksuzna bordo tema.', en: 'Luxurious burgundy theme.' }, icon: '🍒', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
-        { id: 'winter', name: { sr: 'Plavi Okean', en: 'Blue Ocean' }, price: 0, desc: { sr: 'Opuštajuća plava tema.', en: 'Relaxing blue theme.' }, icon: '🌊', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } }
+        { id: 'winter', name: { sr: 'Plavi Okean', en: 'Blue Ocean' }, price: 0, desc: { sr: 'Opuštajuća plava tema.', en: 'Relaxing blue theme.' }, icon: '🌊', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'neon', name: { sr: 'Neon Cyber', en: 'Neon Cyber' }, price: 15000, desc: { sr: 'Futuristička cyberpunk tema.', en: 'Futuristic cyberpunk theme.' }, icon: '⚡', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
+        { id: 'amethyst', name: { sr: 'Kraljevski Ametist', en: 'Royal Amethyst' }, price: 20000, desc: { sr: 'Luksuzna VIP ljubičasta tema.', en: 'Luxurious VIP purple theme.' }, icon: '🔮', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } }
     ],
 
     TROPHIES: [

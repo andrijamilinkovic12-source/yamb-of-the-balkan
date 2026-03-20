@@ -197,6 +197,16 @@ class TrophyManager {
             this.statsMgr.stats.balance += trophy.reward;
             this.statsMgr.saveStats();
             
+            // --- DODATO ZA CLOUD SYNC ---
+            if (window.app && window.app.socket && window.app.socket.connected) {
+                window.app.socket.emit('set_player_data', {
+                    uid: localStorage.getItem('yamb_uid') || window.app.playerId,
+                    name: window.app.playerName,
+                    stats: window.app.getFullLocalStats(),
+                    playerId: window.app.playerId
+                });
+            }
+
             // Ažuriraj prikaz stanja ako smo u game-over ekranu
             const balanceEl = document.getElementById('stat-balance'); 
             if (balanceEl) balanceEl.innerText = this.statsMgr.stats.balance;

@@ -153,14 +153,13 @@ class DailyChallengeManager {
         if (this.currentIndex < 6) {
             this.startRolling(this.currentIndex);
         } else {
-            // --- DODATA ZADRŠKA OD 2.5 SEKUNDE ---
-            this.isActive = false; // Blokiramo dalje kliktanje
+            this.isActive = false; 
             const stopBtn = document.getElementById('btn-daily-stop');
-            if(stopBtn) stopBtn.disabled = true; // Sivo dugme dok se čeka
+            if(stopBtn) stopBtn.disabled = true; 
             
             setTimeout(() => {
                 this.finishGame();
-            }, 2500); // Čekamo 2.5s pa tek onda otvaramo ekran za nagradu
+            }, 2500); 
         }
     }
 
@@ -179,6 +178,16 @@ class DailyChallengeManager {
         if (window.statsManager) {
             window.statsManager.stats.balance = currentDukati;
             window.statsManager.saveStats();
+        }
+
+        // --- DODATO ZA CLOUD SYNC ---
+        if (this.app && this.app.socket && this.app.socket.connected) {
+            this.app.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid') || this.app.playerId,
+                name: this.app.playerName,
+                stats: this.app.getFullLocalStats(),
+                playerId: this.app.playerId
+            });
         }
 
         localStorage.setItem('yamb_last_daily', new Date().toDateString());
@@ -204,7 +213,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v8.5 - CLASSIC REWARDS ONLY");
+        console.log("YambApp v8.6 - WITH CLOUD BALANCE SYNC");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -306,7 +315,7 @@ class YambApp {
             inputGlobalChat.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendGlobalChat(); });
         }
         
-        const savedTheme = localStorage.getItem('yamb_theme');
+        const savedTheme = localStorage.getItem('yamb_theme') || 'dark';
         this.applyTheme(savedTheme);
         
         this.initSocketConnection();
@@ -353,10 +362,12 @@ class YambApp {
     }
     
     applyTheme(theme) {
-        document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme');
+        document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme', 'neon-theme', 'amethyst-theme');
         if (theme === 'light') document.body.classList.add('light-theme'); 
         else if (theme === 'medium') document.body.classList.add('medium-theme');
         else if (theme === 'winter') document.body.classList.add('winter-theme');
+        else if (theme === 'neon') document.body.classList.add('neon-theme');
+        else if (theme === 'amethyst') document.body.classList.add('amethyst-theme');
     }
 
     getFullLocalStats() {
@@ -755,7 +766,25 @@ class YambApp {
         this.navigateTo('settings-screen'); 
         document.getElementById('setting-name').value = this.playerName; 
         document.getElementById('setting-sound').checked = this.soundEnabled; 
-        document.getElementById('setting-theme').value = localStorage.getItem('yamb_theme') || 'dark'; 
+        
+        const themeSelect = document.getElementById('setting-theme');
+        let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
+        try {
+            const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
+            unlockedThemes = [...unlockedThemes, ...boughtThemes];
+        } catch(e) {}
+
+        Array.from(themeSelect.options).forEach(opt => {
+            if (unlockedThemes.includes(opt.value)) {
+                opt.disabled = false;
+                opt.text = opt.text.replace(' 🔒', ''); 
+            } else {
+                opt.disabled = true;
+                if (!opt.text.includes('🔒')) opt.text += ' 🔒'; 
+            }
+        });
+
+        themeSelect.value = localStorage.getItem('yamb_theme') || 'dark'; 
     }
     
     saveSettings() { 
@@ -869,8 +898,24 @@ class YambApp {
 
     toggleTheme() { 
         const current = localStorage.getItem('yamb_theme') || 'dark'; 
-        let next = 'dark'; 
-        if (current === 'dark') next = 'light'; else if (current === 'light') next = 'medium'; else if (current === 'medium') next = 'winter'; else next = 'dark'; 
+        
+        let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
+        
+        try {
+            const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
+            unlockedThemes = [...unlockedThemes, ...boughtThemes];
+        } catch(e) {
+            console.warn("Greška pri učitavanju kupljenih tema.");
+        }
+
+        unlockedThemes = [...new Set(unlockedThemes)];
+
+        let currentIndex = unlockedThemes.indexOf(current);
+        if (currentIndex === -1) currentIndex = 0; 
+        
+        let nextIndex = (currentIndex + 1) % unlockedThemes.length; 
+        let next = unlockedThemes[nextIndex];
+        
         localStorage.setItem('yamb_theme', next); 
         this.applyTheme(next);
     }
@@ -1791,7 +1836,6 @@ class YambApp {
                             if (amIWinner) {
                                 currentDukati += 20000; 
                                 
-                                // --- DODATO: Povećaj broj osvojenih turnira u ličnoj statistici ---
                                 if (window.statsManager) {
                                     window.statsManager.stats.tournamentWins = (window.statsManager.stats.tournamentWins || 0) + 1;
                                     window.statsManager.saveStats();
@@ -1813,6 +1857,17 @@ class YambApp {
                                 window.statsManager.stats.balance = currentDukati;
                                 window.statsManager.saveStats();
                             }
+
+                            // --- DODATO ZA CLOUD SYNC ---
+                            if (this.socket && this.socket.connected) {
+                                this.socket.emit('set_player_data', {
+                                    uid: localStorage.getItem('yamb_uid') || this.playerId,
+                                    name: this.playerName,
+                                    stats: this.getFullLocalStats(),
+                                    playerId: this.playerId
+                                });
+                            }
+
                             if (typeof updateMainMenuDashboard === 'function') {
                                 updateMainMenuDashboard();
                             }
@@ -1841,7 +1896,6 @@ class YambApp {
     async watchAdForDouble() { 
         let success = false;
         
-        // Uklonjena logika za Dnevni izazov -> Sada SVI koriste istu nagradnu reklamu
         if (this.adMob && this.adMob.showRewardVideo) {
             success = await this.adMob.showRewardVideo();
         }
@@ -1866,6 +1920,17 @@ class YambApp {
                     window.statsManager.stats.balance = currentDukati; 
                     window.statsManager.saveStats(); 
                 }
+
+                // --- DODATO ZA CLOUD SYNC ---
+                if (this.socket && this.socket.connected) {
+                    this.socket.emit('set_player_data', {
+                        uid: localStorage.getItem('yamb_uid') || this.playerId,
+                        name: this.playerName,
+                        stats: this.getFullLocalStats(),
+                        playerId: this.playerId
+                    });
+                }
+
                 this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount * 2}`, gt('modal_title_reward')).then(() => { this.effectMgr.stop(); this.showMainMenu(); });
                 return;
             } else {
@@ -1878,13 +1943,22 @@ class YambApp {
         localStorage.setItem('yamb_dukati', currentDukati);
         if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
         
+        // --- DODATO ZA CLOUD SYNC ---
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid') || this.playerId,
+                name: this.playerName,
+                stats: this.getFullLocalStats(),
+                playerId: this.playerId
+            });
+        }
+
         if (doubled) { 
             this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount}`, gt('modal_title_reward')).then(() => { 
                 this.effectMgr.stop(); 
                 this.showMainMenu(); 
             }); 
         } else { 
-            // Uklonjen Interstitial prilikom izlaska iz menija (kada igrač klikne dugme Preuzmi bez reklame)
             this.showMainMenu(); 
         }
     }
@@ -1919,7 +1993,6 @@ class YambApp {
                     if (btn.classList.contains('highlight-najava')) btn.classList.remove('highlight-najava'); 
                     
                     if (val !== null) { 
-                        // DOM Optimizacija: Menjamo samo ako se vrednost ZAISTA razlikuje
                         if (btn.innerText !== String(val)) btn.innerText = val; 
                         if (!btn.classList.contains('filled')) btn.classList.add('filled'); 
                         if (!btn.disabled) btn.disabled = true; 
@@ -1931,7 +2004,6 @@ class YambApp {
                         const isLocalTurn = (!this.onlineMode && idx === this.currentPlayerIdx); 
                         const shouldBeDisabled = !((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0);
                         
-                        // Menjamo disabled status samo ako je potrebno
                         if (btn.disabled !== shouldBeDisabled) btn.disabled = shouldBeDisabled; 
                         
                         if (this.najavljenoPolje && this.najavljenoPolje.row === row && this.najavljenoPolje.col === col) { 
@@ -1951,11 +2023,8 @@ class YambApp {
     async autoSaveGame() { 
         if(this.onlineMode) return; 
 
-        // Debounce logika: Sprečava spamovanje memorije telefona
-        // Brišemo prethodni zahtev za čuvanje ako igrač brzo klika kockice
         if (this._saveTimeout) clearTimeout(this._saveTimeout);
 
-        // Čuvamo stanje tek 0.8 sekundi nakon što igrač prestane sa akcijama
         this._saveTimeout = setTimeout(async () => {
             const data = { 
                 players: this.players, 
@@ -2046,11 +2115,10 @@ class YambApp {
         const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
         if (!confirmUndo) return;
 
-        // Poziva se standardna Interstitial (preko celog ekrana) reklama za ispravku poteza SAMO NA TELEFONU
         if (this.adMob && window.Capacitor && window.Capacitor.isNativePlatform) {
             if (this.adMob.showInterstitial) {
                 const success = await this.adMob.showInterstitial();
-                if (!success) return; // Ako reklama nije učitana, prekidamo vraćanje poteza
+                if (!success) return; 
             }
         }
 
@@ -2062,7 +2130,6 @@ class YambApp {
         this.brojBacanja = snap.rollCount;
         this.najavljenoPolje = snap.najavljenoPolje;
         
-        // Fix 3: Vraćanje statusa za trofeje
         this.najavaAktivna = snap.najavaAktivna;
         this.hasSvetiIlija = snap.hasSvetiIlija;
         this.consecutiveNajava = snap.consecutiveNajava;

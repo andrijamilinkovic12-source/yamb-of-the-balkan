@@ -555,17 +555,25 @@ class ShopManager {
         this.container = document.getElementById(config.containerId);
         this.balanceEl = document.getElementById(config.balanceId);
         
-        // Učitaj sačuvane, ali obavezno dodaj besplatne stvari ako već nisu tu
-        let savedUnlocked = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
-        const freeDefaults = ['default', 'confetti', 'dark', 'light', 'medium', 'winter'];
-        freeDefaults.forEach(item => {
-            if (!savedUnlocked.includes(item)) {
-                savedUnlocked.push(item);
-            }
-        });
+        // NOVO: Odvojeno čuvanje za teme da bi radilo sa game.js
+        this.unlockKey = (this.type === 'theme') ? 'yamb_unlocked_themes' : 'yamb_unlocked';
+        
+        let savedUnlocked = JSON.parse(localStorage.getItem(this.unlockKey)) || [];
+        
+        // Dodaj besplatne stavke da uvek budu otključane u odgovarajućem nizu
+        if (this.type === 'theme') {
+            ['dark', 'light', 'medium', 'winter'].forEach(item => {
+                if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
+            });
+        } else {
+            // Zadržano i stare teme ovde zbog retroaktivne kompatibilnosti sa starim kodom
+            ['default', 'confetti', 'dark', 'light', 'medium', 'winter'].forEach(item => {
+                if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
+            });
+        }
+        
         this.unlocked = savedUnlocked;
-        // Sačuvaj nazad da bi ostale otključane
-        localStorage.setItem('yamb_unlocked', JSON.stringify(this.unlocked));
+        localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
         
         this.balance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
         
@@ -700,7 +708,6 @@ class ShopManager {
             this.container.appendChild(section);
         }
         
-        // Zamenjena referenca - Sada UI zavisi od standardnog Reward videa
         if(window.adMobGlobal) {
             const isAnyReady = window.adMobGlobal.ads.rewarded.isReady;
             window.adMobGlobal.updateUI(isAnyReady);
@@ -719,16 +726,18 @@ class ShopManager {
         }
 
         if (this.type === 'theme') {
-            document.body.className = ''; 
-            if (id !== 'dark') {
-                document.body.classList.add(id + '-theme'); 
+            // NOVO: Sigurno primenjivanje teme koje smo pripremili u game.js
+            if (window.app && typeof window.app.applyTheme === 'function') {
+                window.app.applyTheme(id); 
+            } else {
+                document.body.className = ''; 
+                if (id !== 'dark') document.body.classList.add(id + '-theme'); 
             }
             
             const themeSelect = document.getElementById('setting-theme');
             if (themeSelect) themeSelect.value = id;
         }
 
-        // --- DODAT KOD: Hitna sinhronizacija nakon promene opreme ---
         if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {
             window.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid'),
@@ -766,14 +775,13 @@ class ShopManager {
         this.unlocked.push(id);
         
         localStorage.setItem('yamb_dukati', this.balance);
-        localStorage.setItem('yamb_unlocked', JSON.stringify(this.unlocked));
+        localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
         
         if (window.statsManager) {
             window.statsManager.stats.balance = this.balance;
             window.statsManager.saveStats();
         }
 
-        // --- DODAT KOD: Hitna cloud sinhronizacija nakon kupovine ---
         if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {
             window.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid'),
@@ -782,7 +790,6 @@ class ShopManager {
                 playerId: window.app.playerId
             });
         }
-        // -------------------------------------------------------------
 
         this.updateBalanceDisplay();
         this.render();
@@ -804,7 +811,6 @@ class ShopManager {
     async watchAdDiscount(id) {
         const adCtrl = this.getAdController();
         if (adCtrl) {
-            // ZAMENJENO: Sada za popust traži KLASIČNI Reward Video
             const success = await adCtrl.showRewardVideo();
             if (success) {
                 this.discountedItems[id] = true;
@@ -821,6 +827,16 @@ class ShopManager {
             window.statsManager.saveStats();
         }
         this.updateBalanceDisplay();
+        
+        // --- DODATO ZA CLOUD SYNC ---
+        if (window.app && window.app.socket && window.app.socket.connected) {
+            window.app.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid') || window.app.playerId,
+                name: window.app.playerName,
+                stats: window.app.getFullLocalStats(),
+                playerId: window.app.playerId
+            });
+        }
     }
 
     async watchAdForCoins() {
@@ -860,14 +876,12 @@ class AdMobController {
     constructor() {
         this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
         this.interstitialId = 'ca-app-pub-4319963185096437/2913237519'; 
-        // Uklonjen Rewarded Interstitial ID
         
         this.adMobPlugin = null;
         
         this.ads = {
             rewarded: { isReady: false, isLoading: false, retryCount: 0 },
             interstitial: { isReady: false, isLoading: false, retryCount: 0 }
-            // Uklonjen rewardedInt
         };
         
         this.baseRetryDelay = 1000;   
@@ -928,7 +942,6 @@ class AdMobController {
         if (!this.adMobPlugin) return;
 
         try {
-            // Osluškivači za klasičan Rewarded Video
             await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
             await this.adMobPlugin.addListener('rewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
@@ -937,12 +950,11 @@ class AdMobController {
                 this.handleAdDismissed('rewarded');
             });
 
-            // Osluškivači za klasičan Interstitial (koji želiš da zadržiš za Undo poteza)
             await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
             await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
             await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
 
-            // Fallback osluškivači (za starije verzije SDK-a)
+            // Fallback osluškivači
             await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
             await this.adMobPlugin.addListener('onRewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
