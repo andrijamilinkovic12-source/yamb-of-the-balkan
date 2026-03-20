@@ -159,7 +159,8 @@ const UserProfileSchema = new mongoose.Schema({
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
-        baselineScore: { type: Number, default: 0 }
+        baselineScore: { type: Number, default: 0 },
+        quarterlyScore: { type: Number, default: 0 } // <--- DODATO ZA LIGU
     },
     lastLogin: { type: Date, default: Date.now }
 });
@@ -342,13 +343,19 @@ io.on('connection', (socket) => {
                     user.yamb_unlocked = Array.from(mergedAll);
                 }
 
+                // FIX SHOP & CLOUD SAVE: Čuvanje Kvartalne Lige bez gubljenja quarterlyScore-a
                 if (s.leagueData) {
                     if (s.leagueData.year > user.leagueData.year || 
                        (s.leagueData.year === user.leagueData.year && s.leagueData.quarter > user.leagueData.quarter)) {
+                        // Prešli smo u novi kvartal
                         user.leagueData = s.leagueData;
                     } else if (s.leagueData.year === user.leagueData.year && s.leagueData.quarter === user.leagueData.quarter) {
+                        // Isti kvartal - ažuriramo samo ako su lokalni bodovi veći
                         if (s.leagueData.baselineScore > user.leagueData.baselineScore) {
-                            user.leagueData = s.leagueData;
+                            user.leagueData.baselineScore = s.leagueData.baselineScore;
+                        }
+                        if (s.leagueData.quarterlyScore > (user.leagueData.quarterlyScore || 0)) {
+                            user.leagueData.quarterlyScore = s.leagueData.quarterlyScore;
                         }
                     }
                 }
@@ -385,7 +392,7 @@ io.on('connection', (socket) => {
                     unlockedSkins: s.unlockedSkins || [],
                     unlockedEffects: s.unlockedEffects || [],
                     yamb_unlocked: s.yamb_unlocked || [], 
-                    leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0 } 
+                    leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 } 
                 });
                 await user.save();
             }

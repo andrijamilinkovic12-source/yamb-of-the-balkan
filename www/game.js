@@ -383,7 +383,8 @@ class YambApp {
             yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
             unlockedSkins: JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
             unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
-            unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'), // <--- DODATO ZA TEME
+            unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
+            leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 },
             activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
             activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
             activeTheme: localStorage.getItem('yamb_theme') || 'dark'
