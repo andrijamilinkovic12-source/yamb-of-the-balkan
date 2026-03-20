@@ -180,7 +180,6 @@ class DailyChallengeManager {
             window.statsManager.saveStats();
         }
 
-        // --- DODATO ZA CLOUD SYNC ---
         if (this.app && this.app.socket && this.app.socket.connected) {
             this.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid') || this.app.playerId,
@@ -213,7 +212,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v8.7 - WITH FIX FOR LEAGUE CLOUD SYNC RACE CONDITION");
+        console.log("YambApp v8.8 - RACE CONDITION FIXED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -1678,6 +1677,14 @@ class YambApp {
     async handleGameOver() { 
         console.log("--- GAME OVER ---");
 
+        // --- FIX START ---
+        if (this._saveTimeout) {
+            clearTimeout(this._saveTimeout);
+            this._saveTimeout = null;
+        }
+        this.gameActive = false;
+        // --- FIX END ---
+
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
         if (btnUndo) btnUndo.style.display = 'none';
@@ -1688,23 +1695,32 @@ class YambApp {
         const winnerScore = finalResults.reduce((max, r) => r.score > max ? r.score : max, 0);
 
         if(window.localforage) await localforage.removeItem('yamb_saved_game'); 
-        this.gameActive = false; 
         
-        let myScoreEntry = null;
         let detectedMode = "Solo";
         if (this.onlineMode) detectedMode = "Online"; else if (this.players.length > 1) detectedMode = "Hotseat";
+        
+        // 1. ODMAH NAĐI MOJ SKOR!
+        let myScoreEntry = finalResults.find(r => r.name === this.playerName) || finalResults[0];
 
-        // BEZBEDNO SLANJE REZULTATA
+        // 2. ODMAH UPIŠI U KVARTALNU LIGU (Pre bilo kakvog čekanja servera!)
+        try {
+            if (window.kvartalnaLiga && myScoreEntry && myScoreEntry.score > 0) {
+                window.kvartalnaLiga.addPoints(myScoreEntry.score);
+            }
+        } catch(err) {
+            console.warn("Greška pri upisu u Kvartalnu Ligu:", err);
+        }
+
+        // 3. TEK SADA ŠALJI NA GLOBALNU TOP LISTU
+        // (Čak i ako server ovde uspori ili zablokira, Kvartalna Liga je već sačuvana na uređaju)
         try {
             if (detectedMode === 'Solo') {
-                myScoreEntry = finalResults[0];
                 await this.safeSubmitScore(this.playerName, myScoreEntry.score, 'Solo');
             } 
             else {
                 const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
                 let saveMode = this.onlineMode ? 'Online' : 'Hotseat';
                 await this.safeSubmitScore(winner.name || gt('player_guest'), winner.score, saveMode);
-                myScoreEntry = finalResults.find(r => r.name === this.playerName);
             }
         } catch (err) {
             console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
@@ -1750,16 +1766,7 @@ class YambApp {
                  if (winner.name === myScoreEntry.name) resultType = 'win'; else resultType = 'loss'; 
              }
              
-             // 1. PRVO dodajemo poene u Kvartalnu Ligu da bi se lokalni Storage pravilno osvežio
-             try {
-                 if (window.kvartalnaLiga && myScoreEntry && myScoreEntry.score > 0) {
-                     window.kvartalnaLiga.addPoints(myScoreEntry.score);
-                 }
-             } catch(err) {
-                 console.warn("Greška pri upisu u Kvartalnu Ligu:", err);
-             }
-
-             // 2. TEK ONDA šaljemo Cloud-u celokupnu statistiku (koja sada sadrži ispravan i sabran skor lige)
+             // 2. Šaljemo Cloud-u celokupnu statistiku (koja sada sadrži ispravan i sabran skor lige)
              this.updateStats(myScoreEntry.score, resultType);
         }
         
@@ -2019,9 +2026,17 @@ class YambApp {
     async autoSaveGame() { 
         if(this.onlineMode) return; 
 
+        // --- FIX START ---
+        if(!this.gameActive) return;
+        // --- FIX END ---
+
         if (this._saveTimeout) clearTimeout(this._saveTimeout);
 
         this._saveTimeout = setTimeout(async () => {
+            // --- FIX START ---
+            if(!this.gameActive) return;
+            // --- FIX END ---
+
             const data = { 
                 players: this.players, 
                 scores: this.allScores, 
