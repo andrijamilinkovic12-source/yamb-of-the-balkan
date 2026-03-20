@@ -259,12 +259,8 @@ class YambApp {
         
         this.inviteDetected = false;
 
-        let storedName = localStorage.getItem('yamb_player_name');
-        if (!storedName || storedName === "undefined" || storedName === "null" || storedName.toLowerCase() === "gost" || storedName === gt('player_unknown') || storedName === "Nepoznat Igrač") {
-            storedName = "Gost_" + Math.floor(Math.random() * 9000 + 1000);
-            localStorage.setItem('yamb_player_name', storedName);
-        }
-        this.playerName = storedName;
+        // Ako nema imena, biće prazno dok se ne uloguje. Nema više gosta.
+        this.playerName = localStorage.getItem('yamb_player_name') || "";
         this.playerId = getPlayerId();
         
         const savedSound = localStorage.getItem('yamb_sound');
@@ -337,9 +333,7 @@ class YambApp {
         document.addEventListener("resume", () => { setTimeout(() => { this.checkForInvite(); }, 500); }, false);
         document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') setTimeout(() => { this.checkForInvite(); }, 500); });
         
-        this.splashTimeout = setTimeout(() => { 
-            if (!this.inviteDetected) this.navigateTo('main-menu'); 
-        }, 4500); 
+        // --- Uklonjeno automatsko prebacivanje na glavni meni, sada to radi auth.js ---
 
         setTimeout(() => { this.checkForInvite(); }, 500);
 
