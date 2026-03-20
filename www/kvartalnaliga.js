@@ -39,20 +39,26 @@ class KvartalnaLigaManager {
         return { currentYear: year, currentQuarter: quarter };
     }
 
-    // FIX: Parsiranje rezultata kako bismo osigurali da nikada ne budu 'undefined'
+    // FIX: Parsiranje rezultata kako bismo osigurali da nikada ne budu 'undefined' i da uvek imaju datum
     getScores() {
+        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
         let raw = localStorage.getItem(this.storageKey);
+        
         if (raw) {
             try { 
                 let parsed = JSON.parse(raw); 
                 parsed.quarterlyScore = parseInt(parsed.quarterlyScore) || 0;
                 parsed.baselineScore = parseInt(parsed.baselineScore) || 0;
+                
+                // OSIGURANJE: Ako fali godina ili kvartal u starim podacima, dodeli trenutne
+                if (!parsed.year) parsed.year = currentYear;
+                if (!parsed.quarter) parsed.quarter = currentQuarter;
+                
                 return parsed;
             } 
             catch (e) { console.error("Greška pri parsiranju lige:", e); }
         }
         
-        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
         return { year: currentYear, quarter: currentQuarter, baselineScore: 0, quarterlyScore: 0 };
     }
 

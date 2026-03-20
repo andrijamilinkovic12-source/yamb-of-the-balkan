@@ -203,10 +203,6 @@ async function odjaviSe() {
             window.statsManager.stats = { totalGames: 0, wins: 0, losses: 0, highscore: 0, tournamentWins: 0, balance: 0, currentWinStreak: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
             window.statsManager.saveStats();
         }
-        // RESET KVARTALNE LIGE U MEMORIJI
-        if (window.kvartalnaLiga) {
-            window.kvartalnaLiga.quarterData = { year: 0, quarter: 0, baselineScore: 0 };
-        }
 
         // 4. Generisanje Gost imena i privremenog ID-a
         let defaultName = _t('player_guest', "Gost") + "_" + Math.floor(Math.random() * 9000 + 1000);
@@ -351,10 +347,6 @@ setTimeout(() => {
             
             if (dbStats.leagueData && dbStats.leagueData.year > 0) {
                 localStorage.setItem('yamb_quarter_data', JSON.stringify(dbStats.leagueData));
-                
-                if (window.kvartalnaLiga) {
-                    window.kvartalnaLiga.quarterData = dbStats.leagueData;
-                }
             }
             
             if (typeof updateMainMenuDashboard === 'function') {

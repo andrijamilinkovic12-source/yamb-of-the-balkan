@@ -213,7 +213,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v8.6 - WITH CLOUD BALANCE SYNC");
+        console.log("YambApp v8.7 - WITH FIX FOR LEAGUE CLOUD SYNC RACE CONDITION");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -1750,17 +1750,17 @@ class YambApp {
                  if (winner.name === myScoreEntry.name) resultType = 'win'; else resultType = 'loss'; 
              }
              
-             this.updateStats(myScoreEntry.score, resultType);
-
-             // BEZBEDNO SLANJE U LIGU PREKO MENADŽERA
+             // 1. PRVO dodajemo poene u Kvartalnu Ligu da bi se lokalni Storage pravilno osvežio
              try {
                  if (window.kvartalnaLiga && myScoreEntry && myScoreEntry.score > 0) {
-                     // Sada prosleđujemo rezultat ligi, a ona će ga sabrati, dodati UID i poslati na server!
                      window.kvartalnaLiga.addPoints(myScoreEntry.score);
                  }
              } catch(err) {
                  console.warn("Greška pri upisu u Kvartalnu Ligu:", err);
              }
+
+             // 2. TEK ONDA šaljemo Cloud-u celokupnu statistiku (koja sada sadrži ispravan i sabran skor lige)
+             this.updateStats(myScoreEntry.score, resultType);
         }
         
         this.soundMgr.win(); 
