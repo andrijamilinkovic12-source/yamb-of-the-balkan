@@ -480,3 +480,19 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     align-items: center;
     justify-content: center;
 }
+
+/* --- SPREČAVANJE ISTEZANJA MENIJA NAKON PRIJAVE (DASHBOARD FIX) --- */
+#league-rank-name, 
+#league-pts-text, 
+#menu-dukati-count {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 100% !important;
+    display: block !important;
+}
+
+/* Osiguravamo da se kontejneri dashboarda ne šire */
+#main-menu > div[style*="margin-top: 50px"] > div {
+    overflow: hidden;
+}

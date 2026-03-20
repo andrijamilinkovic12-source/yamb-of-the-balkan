@@ -548,10 +548,14 @@
         function updateMainMenuDashboard() {
             // 1. Brzo čitanje iz RAM-a (localStorage)
             const dukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-            let pts = 0;
             
+            // ----------------------------------------------------
+            // FIX: Osiguravamo da pts UVEK bude broj (0 ako je undefined)
+            // ----------------------------------------------------
+            let pts = 0;
             if (window.kvartalnaLiga) {
-                pts = window.kvartalnaLiga.getScores().quarterlyScore;
+                let scores = window.kvartalnaLiga.getScores();
+                pts = parseInt(scores.quarterlyScore) || 0; 
             }
             
             // 2. DOM OPTIMIZACIJA: Ažuriramo samo ako se nešto ZAISTA promenilo!
@@ -580,7 +584,15 @@
 
             if (rankEl) rankEl.innerText = (typeof t !== 'undefined') ? t(rankKey) : rankKey.toUpperCase();
             if (barEl) barEl.style.width = percent + '%';
-            if (ptsTextEl) ptsTextEl.innerText = `${pts} / ${nextLevelPts} PTS`;
+            
+            // FIX: Lepši ispis za Titan rang (umesto 150000 / 150000 PTS)
+            if (ptsTextEl) {
+                if (rankKey === "rank_titan") {
+                    ptsTextEl.innerText = `${pts} PTS (MAX)`;
+                } else {
+                    ptsTextEl.innerText = `${pts} / ${nextLevelPts} PTS`;
+                }
+            }
 
             // Pamtimo nove vrednosti za sledeći krug
             lastDukati = dukati;

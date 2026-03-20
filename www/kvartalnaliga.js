@@ -1,13 +1,11 @@
 // kvartalnaliga.js - Menadžer za Kvartalnu Ligu (Sa Swipe opcijom, prevodima i rangovima)
 class KvartalnaLigaManager {
     constructor() {
-        this.storageKey = 'yamb_quarter_data'; // <--- USKLAĐENO SA GOOGLE AUTH (auth.js)
+        this.storageKey = 'yamb_quarter_data'; 
         this.currentSlide = 0;
         
-        // Pomoćna funkcija za dinamički prevod pojmova
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         
-        // Definicija svih rangova za lakše mapiranje i slajdove (Sada podržava jezike)
         this.ranks = [
             { id: 'amater', name: `${gt('rank_amater', 'AMATER')} (0 - 4.9k)`, min: 0, max: 4999 },
             { id: 'profi', name: `${gt('rank_profi', 'PROFI')} (5k - 14.9k)`, min: 5000, max: 14999 },
@@ -20,7 +18,6 @@ class KvartalnaLigaManager {
         this.init();
     }
 
-    // 1. Inicijalizacija i provera kvartala
     init() {
         let data = this.getScores();
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
@@ -34,7 +31,6 @@ class KvartalnaLigaManager {
         }
     }
 
-    // 2. Dobijanje trenutne godine i kvartala
     getCurrentQuarterInfo() {
         const now = new Date();
         const year = now.getFullYear();
@@ -43,11 +39,16 @@ class KvartalnaLigaManager {
         return { currentYear: year, currentQuarter: quarter };
     }
 
-    // 3. Čitanje poena iz lokalne memorije
+    // FIX: Parsiranje rezultata kako bismo osigurali da nikada ne budu 'undefined'
     getScores() {
         let raw = localStorage.getItem(this.storageKey);
         if (raw) {
-            try { return JSON.parse(raw); } 
+            try { 
+                let parsed = JSON.parse(raw); 
+                parsed.quarterlyScore = parseInt(parsed.quarterlyScore) || 0;
+                parsed.baselineScore = parseInt(parsed.baselineScore) || 0;
+                return parsed;
+            } 
             catch (e) { console.error("Greška pri parsiranju lige:", e); }
         }
         
@@ -55,12 +56,10 @@ class KvartalnaLigaManager {
         return { year: currentYear, quarter: currentQuarter, baselineScore: 0, quarterlyScore: 0 };
     }
 
-    // 4. Čuvanje u lokalnu memoriju
     saveScores(data) {
         localStorage.setItem(this.storageKey, JSON.stringify(data));
     }
 
-    // 5. Dodavanje poena nakon partije
     addPoints(points) {
         if (!points || points <= 0) return;
         
@@ -77,7 +76,6 @@ class KvartalnaLigaManager {
         }
     }
 
-    // 6. Sinhronizacija sa serverom
     syncWithServer() {
         if (!window.app || !window.app.socket) return;
 
@@ -100,7 +98,6 @@ class KvartalnaLigaManager {
         });
     }
 
-    // 7. Određivanje ranga
     getRank(pts) {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         if (pts < 5000) return gt('rank_amater', "AMATER");
@@ -110,18 +107,18 @@ class KvartalnaLigaManager {
         return gt('rank_titan', "TITAN");
     }
 
-    // 8. Prikaz Modalnog prozora za Ligu sa klizačem
+    // FIX: Dodata provera poena prilikom otvaranja prozora
     openModal() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const data = this.getScores();
-        const allTime = data.baselineScore + data.quarterlyScore;
-        const rank = this.getRank(data.quarterlyScore);
         
-        // Podesi početni slajd na osnovu trenutnog ranga igrača
+        const pts = parseInt(data.quarterlyScore) || 0;
+        const allTime = (parseInt(data.baselineScore) || 0) + pts;
+        const rank = this.getRank(pts);
+        
         this.currentSlide = this.ranks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
 
-        // Generisanje HTML-a za svaki slajd pojedinačno
         let slidesHtml = this.ranks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 10px;">
                 <h3 style="color: var(--gold-main); font-size: 1rem; text-align: center; margin-bottom: 15px;">${r.name}</h3>
@@ -133,7 +130,6 @@ class KvartalnaLigaManager {
             </div>
         `).join('');
 
-        // Generisanje tačkica za navigaciju
         let dotsHtml = this.ranks.map((_, i) => `
             <div id="league-dot-${i}" style="width: 8px; height: 8px; border-radius: 50%; background: ${i === this.currentSlide ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; margin: 0 4px; transition: background 0.3s;"></div>
         `).join('');
@@ -149,7 +145,7 @@ class KvartalnaLigaManager {
                 <div style="text-align: center; margin-bottom: 20px;">
                     <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="league_your_rank">${gt('league_your_rank', 'Vaš rang')}</div>
                     <div style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--gold-main);">${rank}</div>
-                    <div style="font-size: 1.2rem; color: var(--gold-main); font-weight: bold; margin-top: 5px;">${data.quarterlyScore} PTS</div>
+                    <div style="font-size: 1.2rem; color: var(--gold-main); font-weight: bold; margin-top: 5px;">${pts} PTS</div>
                     <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">
                         <span data-lang="league_all_time_desc">${gt('league_all_time_desc', 'Sva vremena')}</span>: ${allTime} PTS
                     </div>
@@ -180,7 +176,6 @@ class KvartalnaLigaManager {
         this.fetchLeaderboard();
     }
 
-    // 9. Swipe (Touch) Osluškivači
     setupTouch() {
         const track = document.getElementById('league-track');
         if (!track) return;
@@ -254,7 +249,6 @@ class KvartalnaLigaManager {
         });
     }
 
-    // 10. Dohvatanje Top Liste i Razvrstavanje po rangovima
     fetchLeaderboard() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
