@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD
 
 require('dotenv').config(); 
 
@@ -302,6 +302,9 @@ io.on('connection', (socket) => {
                 const isFreshLogin = (s.games === 0);
 
                 if (!isFreshLogin) {
+                    // 🛡️ PAMTIMO STARI BROJ PARTIJA SA SERVERA (Pre ažuriranja)
+                    const oldUserGames = user.games;
+
                     if (s.games > user.games) user.games = s.games;
                     if (s.wins > user.wins) user.wins = s.wins;
                     if (s.losses > user.losses) user.losses = s.losses;
@@ -313,10 +316,20 @@ io.on('connection', (socket) => {
                         user.tournamentWins = s.tournamentWins;
                     }
                     
-                    // FIX SHOP: Dozvoljavamo da se balans smanji (na primer nakon kupovine)
+                    // 🛡️ SIGURAN FIX ZA DUKATE (Zaštita od gubitka pri reinstalaciji)
                     if (typeof s.balance === 'number') {
-                        user.balance = s.balance; 
+                        if (s.games >= oldUserGames) {
+                            // Scenario A: Legitimno igranje. Dozvoljavamo i smanjenje (ako je igrač kupio nešto u Riznici)
+                            user.balance = s.balance; 
+                        } else {
+                            // Scenario B: Reinstalacija! (Telefon ima manje partija od servera). 
+                            // Štitimo dukate – ne dozvoljavamo smanjenje, već zadržavamo isključivo veći iznos!
+                            if (s.balance > user.balance) {
+                                user.balance = s.balance;
+                            }
+                        }
                     }
+
                     if (typeof s.currentWinStreak === 'number' && s.currentWinStreak > user.currentWinStreak) {
                         user.currentWinStreak = s.currentWinStreak; 
                     }

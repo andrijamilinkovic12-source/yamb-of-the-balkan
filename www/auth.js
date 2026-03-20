@@ -286,6 +286,14 @@ document.addEventListener('DOMContentLoaded', () => {
 setTimeout(() => {
     if (window.app && window.app.socket) {
         window.app.socket.on('sync_local_stats', (dbStats) => {
+            
+            // 🛑 ŠTIT ZA GOSTE: Blokiramo brisanje podataka!
+            // Ako igrač nema Google UID, ignorišemo prazne podatke sa servera
+            if (!localStorage.getItem('yamb_uid')) {
+                console.log("🛑 Gost detektovan: Ignorišem Cloud Sync da se sačuvaju lokalni dukati.");
+                return; 
+            }
+
             console.log("🔄 Preuzeta cela statistika iz oblaka:", dbStats);
             
             window.app.stats = { 
