@@ -88,6 +88,7 @@ function getFullLocalStats() {
         unlockedSkins: window.statsManager ? window.statsManager.stats.unlockedSkins : JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
         unlockedEffects: window.statsManager ? window.statsManager.stats.unlockedEffects : JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
         yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
+        unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'), // <--- DODATO ZA TEME
         leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 },
         activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
         activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
@@ -181,6 +182,7 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_quarter_data');
         localStorage.removeItem('yamb_unlocked_skins');
         localStorage.removeItem('yamb_unlocked_effects');
+        localStorage.removeItem('yamb_unlocked_themes'); // <--- DODATO ZA TEME
         localStorage.removeItem('yamb_unlocked'); 
         
         // Resetovanje aktivnih skinova i tema
@@ -316,6 +318,7 @@ setTimeout(() => {
             localStorage.setItem('yamb_unlocked', JSON.stringify(mergedUnlocked));
             localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
             localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
+            localStorage.setItem('yamb_unlocked_themes', JSON.stringify(dbStats.unlockedThemes || [])); // <--- DODATO ZA TEME
 
             // --- RESTAURACIJA AKTIVNIH STVARI IZ CLOUDA ---
             if (dbStats.activeSkin) localStorage.setItem('yamb_active_skin', dbStats.activeSkin);

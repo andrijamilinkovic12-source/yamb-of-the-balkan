@@ -1,7 +1,7 @@
 // kvartalnaliga.js - Menadžer za Kvartalnu Ligu (Sa Swipe opcijom, prevodima i rangovima)
 class KvartalnaLigaManager {
     constructor() {
-        this.storageKey = 'yamb_league_data';
+        this.storageKey = 'yamb_quarter_data'; // <--- USKLAĐENO SA GOOGLE AUTH (auth.js)
         this.currentSlide = 0;
         
         // Pomoćna funkcija za dinamički prevod pojmova

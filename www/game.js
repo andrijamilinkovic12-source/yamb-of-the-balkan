@@ -383,6 +383,7 @@ class YambApp {
             yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
             unlockedSkins: JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
             unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
+            unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'), // <--- DODATO ZA TEME
             activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
             activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
             activeTheme: localStorage.getItem('yamb_theme') || 'dark'
@@ -1750,17 +1751,11 @@ class YambApp {
              
              this.updateStats(myScoreEntry.score, resultType);
 
-             // BEZBEDNO SLANJE U LIGU
+             // BEZBEDNO SLANJE U LIGU PREKO MENADŽERA
              try {
-                 if (window.kvartalnaLiga && this.socket && this.socket.connected) {
-                     const qData = window.kvartalnaLiga.quarterData || {};
-                     
-                     this.socket.emit('submit_league_score', {
-                         playerName: this.playerName,
-                         score: myScoreEntry ? (myScoreEntry.score || 0) : 0,
-                         year: qData.year || new Date().getFullYear(),
-                         quarter: qData.quarter || 1
-                     });
+                 if (window.kvartalnaLiga && myScoreEntry && myScoreEntry.score > 0) {
+                     // Sada prosleđujemo rezultat ligi, a ona će ga sabrati, dodati UID i poslati na server!
+                     window.kvartalnaLiga.addPoints(myScoreEntry.score);
                  }
              } catch(err) {
                  console.warn("Greška pri upisu u Kvartalnu Ligu:", err);
