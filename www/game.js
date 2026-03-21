@@ -218,7 +218,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v8.8 - RACE CONDITION FIXED");
+        console.log("YambApp v8.9 - QUOTES ADDED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -479,7 +479,7 @@ class YambApp {
                 });
 
                 this.socket.on('game_started', (data) => {
-                    this.closeGlobalChat(); 
+                    this.closeGlobalChat(true); // ISPRAVLJENO: true znači da se skipuje reklama
                     this.joinPrivateGame(this.playerName, data.room);
                 });
 
@@ -668,11 +668,13 @@ class YambApp {
         }
     }
 
-    async closeGlobalChat() {
+    // ISPRAVLJENO: Dodat skipAd parametar
+    async closeGlobalChat(skipAd = false) {
         const overlay = document.getElementById('global-chat-overlay');
         if (overlay) overlay.style.display = 'none';
 
-        if (this.adMob && this.adMob.showInterstitial) {
+        // Prikazuje reklamu samo ako skipAd nije prosleđen kao true
+        if (!skipAd && this.adMob && this.adMob.showInterstitial) {
             await this.adMob.showInterstitial();
         }
     }
@@ -1281,7 +1283,9 @@ class YambApp {
         const btnUndo = document.getElementById('btn-undo-move');
         if (btnUndo) btnUndo.style.display = 'none';
 
-        this.navigateTo('game-scene'); 
+        // NOVA FUNKCIJA UMSTO DIREKTNOG PRELASKA U IGRU
+        this.showQuoteAndProceed(); 
+        
         this.createScoreTables(); 
         this.resetTurnLogic(); 
         this.gameActive = true; 
@@ -1290,6 +1294,42 @@ class YambApp {
         const chatBtn = document.getElementById('chat-float-btn'); 
         if (this.modeTag === "Solo" || this.modeTag === "Hotseat") { chatBtn.classList.add('hidden'); } else { chatBtn.classList.remove('hidden'); } 
         this.effectMgr.stop(); this.loadEquippedEffect(); 
+    }
+
+    // NOVA FUNKCIJA ZA PRIKAZIVANJE CITATA
+    showQuoteAndProceed() {
+        // Nasumičan citat
+        const lang = localStorage.getItem('yamb_lang') || 'sr';
+        let quoteData = { text: "Sreća prati hrabre.", author: "Aleksandar Veliki" }; 
+        
+        if (typeof quotesDb !== 'undefined' && quotesDb.length > 0) {
+            const randomQuote = quotesDb[Math.floor(Math.random() * quotesDb.length)];
+            quoteData = randomQuote[lang] || randomQuote['sr'];
+        }
+
+        const quoteTextEl = document.getElementById('quote-text');
+        const quoteAuthorEl = document.getElementById('quote-author');
+        
+        if (quoteTextEl) quoteTextEl.innerText = `"${quoteData.text}"`;
+        if (quoteAuthorEl) quoteAuthorEl.innerText = `– ${quoteData.author}`;
+
+        // Resetuj animaciju da krene ispočetka svaki put
+        const container = document.getElementById('quote-anim-container');
+        if (container) {
+            container.style.animation = 'none';
+            void container.offsetWidth; // Pokreće ponovno iscrtavanje CSS-a
+            container.style.animation = 'quoteFadeInOut 4.5s forwards';
+        }
+
+        // Prikazuje ekran sa citatom (sakriva ostalo)
+        this.navigateTo('quote-screen');
+
+        // Posle 4.5 sekundi, prelazi automatski na sto za igru
+        setTimeout(() => {
+            if (document.getElementById('quote-screen').classList.contains('active')) {
+                this.navigateTo('game-scene');
+            }
+        }, 4500);
     }
 
     loadEquippedEffect() {
@@ -2106,7 +2146,9 @@ class YambApp {
             const btnUndo = document.getElementById('btn-undo-move');
             if (btnUndo) btnUndo.style.display = 'none';
 
-            this.navigateTo('game-scene'); 
+            // NOVA FUNKCIJA UMSTO DIREKTNOG PRELASKA U IGRU
+            this.showQuoteAndProceed(); 
+            
             this.createScoreTables(); 
             this.gameActive = true; 
             this.lastGameType = 'normal';

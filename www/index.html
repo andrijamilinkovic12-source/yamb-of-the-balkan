@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="efekti.css?v=1.0">
     
     <script src="languages.js?v=4.2"></script>
+    <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
     <script src="socket.io.min.js?v=3.7"></script>
@@ -206,6 +207,14 @@
             <button class="btn-square" onclick="app.showStats()" title="Statistika">📊</button>
             <button class="btn-square" onclick="app.showSettings()" title="Podešavanja">⚙</button>
             <button class="btn-square" onclick="app.showRules()" title="Pravila">📖</button>
+        </div>
+    </div>
+
+    <div id="quote-screen" class="screen">
+        <div id="quote-anim-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; max-width: 600px; height: 100dvh; margin: 0 auto; opacity: 0;">
+            <div style="font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--gold-glow));">💡</div>
+            <p id="quote-text" style="font-family: 'Georgia', serif; font-size: 1.4rem; font-style: italic; color: var(--text-main); line-height: 1.5; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"></p>
+            <p id="quote-author" style="font-size: 1.1rem; color: var(--gold-main); font-weight: 700; text-transform: uppercase; letter-spacing: 2px;"></p>
         </div>
     </div>
 

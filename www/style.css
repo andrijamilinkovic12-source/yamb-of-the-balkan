@@ -573,3 +573,13 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     width: fit-content;
     border: 1px solid rgba(76, 175, 80, 0.3);
 }
+
+/* =========================================================
+   CITAT ANIMACIJA (NOVO)
+   ========================================================= */
+@keyframes quoteFadeInOut {
+    0% { opacity: 0; transform: scale(0.9); }
+    15% { opacity: 1; transform: scale(1); }
+    85% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.1); }
+}
