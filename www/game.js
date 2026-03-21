@@ -1318,18 +1318,18 @@ class YambApp {
         if (container) {
             container.style.animation = 'none';
             void container.offsetWidth; // Pokreće ponovno iscrtavanje CSS-a
-            container.style.animation = 'quoteFadeInOut 4.5s forwards';
+            container.style.animation = 'quoteFadeInOut 6s forwards'; // <-- Promenjeno na 6s
         }
 
         // Prikazuje ekran sa citatom (sakriva ostalo)
         this.navigateTo('quote-screen');
 
-        // Posle 4.5 sekundi, prelazi automatski na sto za igru
+        // Posle 6 sekundi, prelazi automatski na sto za igru
         setTimeout(() => {
             if (document.getElementById('quote-screen').classList.contains('active')) {
                 this.navigateTo('game-scene');
             }
-        }, 4500);
+        }, 6000); // <-- Promenjeno na 6000 milisekundi
     }
 
     loadEquippedEffect() {
