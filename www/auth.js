@@ -285,8 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // === PRIJEM SAČUVANIH REZULTATA IZ MONGODB BAZE ===
-setTimeout(() => {
+function inicijalizujCloudSync() {
     if (window.app && window.app.socket) {
+        
+        // 1. Skidamo stari osluškivač (ako postoji) i stavljamo novi BEZ kašnjenja
+        window.app.socket.off('sync_local_stats');
         window.app.socket.on('sync_local_stats', (dbStats) => {
             
             // Ako igrač nema Google UID, ignorišemo prazne podatke sa servera
@@ -324,7 +327,7 @@ setTimeout(() => {
             localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
             localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
             
-            // FIX ZA TEME: Server ne čuva teme, pa ih spajamo sa lokalnim i onima sakrivenim u skins
+            // FIX ZA TEME: Spajanje cloud i lokalnih tema
             let lokalneTeme = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
             let cloudTeme = dbStats.unlockedThemes || [];
             let sakriveneTeme = (dbStats.unlockedSkins || []).filter(t => ['neon', 'amethyst'].includes(t));
@@ -333,7 +336,7 @@ setTimeout(() => {
             let spojeneTeme = [...new Set([...lokalneTeme, ...cloudTeme, ...sakriveneTeme, ...opsteTeme])];
             localStorage.setItem('yamb_unlocked_themes', JSON.stringify(spojeneTeme));
 
-            // --- RESTAURACIJA AKTIVNIH STVARI IZ CLOUDA ---
+            // RESTAURACIJA AKTIVNIH STVARI IZ CLOUDA
             if (dbStats.activeSkin) localStorage.setItem('yamb_active_skin', dbStats.activeSkin);
             if (dbStats.activeEffect) localStorage.setItem('yamb_active_effect', dbStats.activeEffect);
             if (dbStats.activeTheme) {
@@ -370,5 +373,24 @@ setTimeout(() => {
                 updateMainMenuDashboard();
             }
         });
+        
+        // 2. FORSIRANA SINHRONIZACIJA
+        // Čim se osluškivač zakači, tražimo od servera sveže podatke
+        const uid = localStorage.getItem('yamb_uid');
+        if (uid && window.app.socket.connected) {
+            window.app.socket.emit('set_player_data', {
+                uid: uid,
+                name: window.app.playerName,
+                stats: getFullLocalStats(),
+                playerId: window.app.playerId
+            });
+        }
+
+    } else {
+        // Ako socket još nije spreman, pokušaj ponovo za milisekundu
+        setTimeout(inicijalizujCloudSync, 100);
     }
-}, 2500);
+}
+
+// Pokrećemo funkciju
+inicijalizujCloudSync();
