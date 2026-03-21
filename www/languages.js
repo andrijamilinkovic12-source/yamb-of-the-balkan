@@ -2,6 +2,12 @@
 
 const TRANSLATIONS = {
     sr: {
+        // --- SPLASH SCREEN ---
+        "splash_quote": "\"Ko misli da je srećan, on je zaista srećan.\"",
+        "splash_author": "– Jovan Dučić",
+        "splash_welcome": "DOBRODOŠLI U YAMB OF THE BALKAN",
+        "splash_login": "PRIJAVI SE",
+
         // --- GLAVNI MENI ---
         "menu_login": "Prijavi se preko Google-a",
         "menu_hs": "🏆 TOP LISTA",
@@ -350,6 +356,12 @@ const TRANSLATIONS = {
         "auth_logout_error": "Došlo je do greške pri odjavi."
     },
     en: {
+        // --- SPLASH SCREEN ---
+        "splash_quote": "\"He who thinks he is happy, is truly happy.\"",
+        "splash_author": "– Jovan Dučić",
+        "splash_welcome": "WELCOME TO YAMB OF THE BALKAN",
+        "splash_login": "SIGN IN",
+
         // --- MAIN MENU ---
         "menu_login": "Sign in with Google",
         "menu_hs": "🏆 HIGH SCORES",

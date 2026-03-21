@@ -48,6 +48,16 @@
     </div>
 
     <div id="splash-screen" class="screen active">
+        
+        <div style="position: absolute; top: max(30px, env(safe-area-inset-top)); right: 20px; display: flex; gap: 15px; z-index: 100; align-items: center;">
+            <div onclick="setLanguage('sr')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://flagcdn.com/w40/rs.png" alt="SRB" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3);">
+            </div>
+            <div onclick="setLanguage('en')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="https://flagcdn.com/w40/gb.png" alt="ENG" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3); position: relative; top: 2px;">
+            </div>
+        </div>
+
         <div class="logo-anim">
             YAMB OF THE <br> <span style="color:var(--gold-main)">BALKAN</span>
         </div>
@@ -55,17 +65,17 @@
         <div id="splash-login-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; animation: fadeIn 1s forwards;">
             
             <div style="text-align: center; padding: 0 20px; max-width: 380px; margin-bottom: 5px;">
-                <p style="font-family: 'Georgia', serif; font-size: 1.15rem; font-style: italic; color: var(--gold-main); line-height: 1.4; text-shadow: 0 4px 10px rgba(0,0,0,0.8); margin-bottom: 8px;">
+                <p data-lang="splash_quote" style="font-family: 'Georgia', serif; font-size: 1.15rem; font-style: italic; color: var(--gold-main); line-height: 1.4; text-shadow: 0 4px 10px rgba(0,0,0,0.8); margin-bottom: 8px;">
                     "Ko misli da je srećan, on je zaista srećan."
                 </p>
-                <p style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
+                <p data-lang="splash_author" style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 2px;">
                     – Jovan Dučić
                 </p>
             </div>
             
             <div style="width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); margin-bottom: 5px;"></div>
 
-            <p style="color: var(--text-main); font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">DOBRODOŠLI U YAMB OF THE BALKAN</p>
+            <p data-lang="splash_welcome" style="color: var(--text-main); font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">DOBRODOŠLI U YAMB OF THE BALKAN</p>
             
             <button id="dugmeGooglePrijava" class="btn-menu" style="background: white; color: #333; font-weight: 800; font-size: 1rem; padding: 15px 30px; border-radius: 30px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 12px; width: auto; transition: transform 0.2s; margin-top: 5px;">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24px" height="24px">
@@ -74,7 +84,7 @@
                     <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
                     <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
                 </svg>
-                PRIJAVI SE
+                <span data-lang="splash_login">PRIJAVI SE</span>
             </button>
         </div>
     </div>
@@ -85,15 +95,6 @@
              onmousedown="this.style.transform='scale(0.9)'" 
              onmouseup="this.style.transform='scale(1)'">
             🌍
-        </div>
-
-        <div style="position: absolute; top: 30px; right: 20px; display: flex; gap: 15px; z-index: 100; align-items: center;">
-            <div onclick="setLanguage('sr')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="https://flagcdn.com/w40/rs.png" alt="SRB" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3);">
-            </div>
-            <div onclick="setLanguage('en')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="https://flagcdn.com/w40/gb.png" alt="ENG" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3); position: relative; top: 2px;">
-            </div>
         </div>
 
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
