@@ -394,8 +394,45 @@ class EffectManager {
     }
     
     spawnConfetti() {
-        if (window.confetti) { window.confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); } 
-        else { this.spawnEmojiRain(['🎉', '🎊', '🎈'], 30); }
+        if (window.confetti) { 
+            // Vrhunske "Premium" boje (Zlato, Neon Pink, Cijan, Matrix Zelena, itd.)
+            const colors = ['#FFD700', '#FF007F', '#00E5FF', '#39FF14', '#FF4500', '#9400D3'];
+            const end = Date.now() + 5000; // Trajanje tačno 5 sekundi
+            
+            // Kontinuirano pucanje iz dva topa (levi i desni ugao)
+            (function frame() {
+                window.confetti({
+                    particleCount: 6,
+                    angle: 60,
+                    spread: 60,
+                    origin: { x: 0, y: 0.9 }, // Levi donji ugao
+                    colors: colors,
+                    zIndex: 99999
+                });
+                window.confetti({
+                    particleCount: 6,
+                    angle: 120,
+                    spread: 60,
+                    origin: { x: 1, y: 0.9 }, // Desni donji ugao
+                    colors: colors,
+                    zIndex: 99999
+                });
+                
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        } else { 
+            // Poboljšan Fallback: Emodžiji koji padaju u bogatim talasima 5 sekundi
+            const end = Date.now() + 5000;
+            const interval = setInterval(() => {
+                if (Date.now() > end) {
+                    clearInterval(interval);
+                    return;
+                }
+                this.spawnEmojiRain(['🎉', '🎊', '🎈', '✨', '🏆', '💫'], 5);
+            }, 250); // Svakih 250ms ispaljuje novi talas
+        }
     }
     
     celebrateYamb() {

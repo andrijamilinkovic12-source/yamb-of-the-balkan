@@ -70,7 +70,7 @@ const SHOP_DATA = {
     ],
     
     EFFECTS: [
-        { id: 'confetti', name: { sr: 'Konfete', en: 'Confetti' }, price: 0, desc: { sr: 'Klasična proslava Yamba.', en: 'Classic Yamb celebration.' }, duration: '3s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-confetti', innerHtml: '' },
+        { id: 'confetti', name: { sr: 'Konfete', en: 'Confetti' }, price: 0, desc: { sr: 'Klasična proslava Yamba.', en: 'Classic Yamb celebration.' }, duration: '5s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-confetti', innerHtml: '' },
         { id: 'gold_rain', name: { sr: 'Zlatna Kiša', en: 'Gold Rain' }, price: 10000, desc: { sr: 'Padaju dukati sa vrha ekrana.', en: 'Coins falling from the top.' }, duration: '4s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-gold_rain', innerHtml: '' },
         { id: 'fireflies', name: { sr: 'Magični Svici', en: 'Magic Fireflies' }, price: 5000, desc: { sr: 'Nežne svetleće kuglice.', en: 'Gentle glowing lights.' }, duration: '4s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-fireflies', innerHtml: '' },
         { id: 'ice_age', name: { sr: 'Ledeno Doba', en: 'Ice Age' }, price: 12000, desc: { sr: 'Tabla se zaledi kada dobijete Yamb.', en: 'Board freezes when you get Yamb.' }, duration: '8s', category: { sr: '💎 ATMOSFERA & STIL', en: '💎 ATMOSPHERE & STYLE' }, cssClass: 'prev-glass', innerHtml: '' },
