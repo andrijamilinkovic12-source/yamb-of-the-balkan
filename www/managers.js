@@ -210,6 +210,7 @@ class EffectManager {
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnEmojiRain(['💰', '🪙', '💎', '👑'], 50);
         if (type === 'fireflies') this.spawnFloatingEmoji(['✨', '🌟', '💫', '🧚'], 40);
+        if (type === 'bubbles') this.spawnBubbles(35); // Ubačeni mehurići!
         
         if (type === 'ice_age') {
             let targetTable = null;
@@ -374,10 +375,45 @@ class EffectManager {
     spawnFloatingEmoji(emojis, count) {
         for (let i = 0; i < count; i++) {
             setTimeout(() => {
-                const el = document.createElement('div'); el.innerText = emojis[Math.floor(Math.random() * emojis.length)]; el.className = 'firefly';
-                el.style.left = Math.random() * 100 + 'vw'; el.style.setProperty('--rnd-x', (Math.random() * 200 - 100) + 'px'); el.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                document.body.appendChild(el); setTimeout(() => el.remove(), 4000);
-            }, Math.random() * 2000);
+                const el = document.createElement('div'); 
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)]; 
+                el.className = 'firefly';
+                el.style.left = Math.random() * 100 + 'vw'; 
+                el.style.setProperty('--rnd-x', (Math.random() * 200 - 100) + 'px'); 
+                
+                // Trajanje od 3s do 5s
+                el.style.animationDuration = (Math.random() * 2 + 3) + 's'; 
+                
+                document.body.appendChild(el); 
+                
+                setTimeout(() => el.remove(), 5500); 
+            }, Math.random() * 2000); 
+        }
+    }
+
+    // --- NOVA FUNKCIJA ZA MEHURIĆE ---
+    spawnBubbles(count) {
+        const emojis = ['🫧', '🫧', '⚪']; // Više šansi za pravi mehur
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                const el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.className = 'magic-bubble';
+                el.style.left = Math.random() * 100 + 'vw';
+                el.style.setProperty('--rnd-x', (Math.random() * 150 - 75) + 'px'); // Krivudanje levo/desno
+                
+                // Trajanje animacije od 3.5s do 5s
+                el.style.animationDuration = (Math.random() * 1.5 + 3.5) + 's';
+                
+                // Nasumična veličina mehurića (od 1rem do 2.5rem)
+                const size = Math.random() * 1.5 + 1; 
+                el.style.fontSize = size + 'rem';
+
+                document.body.appendChild(el);
+                
+                // Brisanje posle 5.5 sekundi (sigurnosno)
+                setTimeout(() => el.remove(), 5500);
+            }, Math.random() * 2000); // Mehurići izlaze postepeno u prve 2 sekunde
         }
     }
     
@@ -450,7 +486,8 @@ class EffectManager {
     stop() {
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age');
         
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot').forEach(e => e.remove());
+        // Dodata klasa .magic-bubble za uklanjanje
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));

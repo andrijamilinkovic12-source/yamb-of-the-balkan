@@ -5,7 +5,6 @@
 /* --- Effect Previews (Shop & Riznica) --- */
 .prev-confetti { background: linear-gradient(45deg, #1a1a1a, #2a2a2a); } .prev-confetti::before { content: "🎉"; filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); animation: bounce 2s infinite; }
 .prev-gold_rain { background: radial-gradient(circle, #2a2a2a, #000); } .prev-gold_rain::before { content: "💰"; font-size: 1.5rem; animation: fall 1.5s infinite linear; text-shadow: 0 0 10px gold; }
-.prev-fireflies { background: radial-gradient(circle at bottom, #0f2027, #203a43, #2c5364); } .prev-fireflies::before { content: "✨"; filter: hue-rotate(90deg) drop-shadow(0 0 8px #ffff00); animation: floatUp 3s infinite ease-in-out; }
 .prev-fireworks { background: linear-gradient(to bottom, #000000, #1a1a2e); } .prev-fireworks::before { content: "🎆"; font-size: 2.2rem; filter: drop-shadow(0 0 10px #ff00ff); animation: explode 1.5s infinite; }
 .glass-overlay { position: absolute; width: 60%; height: 60%; background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transform: rotate(-10deg); }
 
@@ -24,6 +23,77 @@
 
 .prev-glass { background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%) !important; border: 2px solid #ffffff !important; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4) !important; position: relative; }
 .prev-glass::before { content: "❄️"; font-size: 2.5rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.8)); animation: pulseIce 2s infinite alternate; }
+
+/* --- NOVI WATERMARK MAGIČNI SVICI --- */
+.prev-fireflies { background: radial-gradient(circle at bottom, #0f2027, #203a43, #2c5364); } 
+.prev-fireflies::before { 
+    content: "✨"; 
+    color: transparent; /* Providno telo */
+    text-shadow: 0 0 10px rgba(220, 255, 150, 0.9), 0 0 20px rgba(150, 255, 100, 0.6); /* Unutrašnji sjaj */
+    mix-blend-mode: screen; /* Watermark efekat */
+    animation: floatUp 3s infinite ease-in-out; 
+}
+
+/* Aktivni leteći svici u igri */
+.firefly { 
+    position: fixed; 
+    bottom: -50px; 
+    font-size: 2.5rem; /* Povećano da se lepše vidi isijavanje */
+    pointer-events: none; 
+    z-index: 99999; 
+    opacity: 0; 
+    color: transparent; /* Svitac je providan (vodeni žig) */
+    text-shadow: 0 0 10px rgba(220, 255, 150, 1), 0 0 20px rgba(150, 255, 100, 0.8), 0 0 30px rgba(100, 255, 50, 0.5); /* Slojeviti unutrašnji sjaj */
+    mix-blend-mode: screen; /* Stapanje sa tablom i pozadinom */
+    filter: blur(0.5px); /* Blago zamućenje ivica za eteričan izgled */
+    animation: fireflyFloat ease-in-out forwards; 
+}
+
+/* Pulsirajuća i lagana rotaciona animacija za svice */
+@keyframes fireflyFloat { 
+    0% { transform: translateY(0) translateX(0) scale(0.5) rotate(0deg); opacity: 0; filter: blur(2px); } 
+    20% { opacity: 0.85; filter: blur(0.5px); } 
+    50% { 
+        transform: translateY(-50vh) translateX(var(--rnd-x, 20px)) scale(1.3) rotate(15deg); 
+        text-shadow: 0 0 15px rgba(255, 255, 200, 1), 0 0 30px rgba(200, 255, 100, 0.9); /* Jači sjaj na sredini ekrana */
+    } 
+    80% { opacity: 0.85; filter: blur(1px); } 
+    100% { transform: translateY(-110vh) translateX(0) scale(0.5) rotate(-15deg); opacity: 0; filter: blur(3px); } 
+}
+
+/* --- Magični Mehurići (Preview u prodavnici) --- */
+.prev-bubbles { 
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
+    box-shadow: inset 0 0 15px rgba(255,255,255,0.8);
+}
+.prev-bubbles::before {
+    content: "🫧";
+    font-size: 2.5rem;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    animation: floatUp 3s infinite ease-in-out;
+}
+
+/* --- Magični Mehurići (Aktivni u igri) --- */
+.magic-bubble {
+    position: fixed;
+    bottom: -50px;
+    pointer-events: none;
+    z-index: 99999;
+    opacity: 0;
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+    animation: bubbleFloat ease-in-out forwards;
+}
+
+/* Float animacija sa krivudanjem i 'pucanjem' (pop) na kraju */
+@keyframes bubbleFloat {
+    0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
+    10% { opacity: 0.85; }
+    50% { transform: translateY(-40vh) translateX(var(--rnd-x, 30px)) scale(1.2); }
+    80% { opacity: 0.85; transform: translateY(-80vh) translateX(calc(var(--rnd-x, 30px) * -0.5)) scale(1.5); }
+    95% { opacity: 0.9; transform: translateY(-95vh) translateX(0) scale(2.2); } /* Mehur se rasteže pred pucanje */
+    100% { transform: translateY(-100vh) translateX(0) scale(3.5); opacity: 0; } /* Pucanje (pop) */
+}
+
 
 /* --- Base Animations --- */
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
@@ -88,12 +158,9 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 @keyframes iceMeltOut { 0% { opacity: 1; filter: blur(0px); } 100% { opacity: 0; filter: blur(10px); } }
 @keyframes icePulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 0.9; text-shadow: 0 0 20px rgba(255, 255, 255, 0.9); } }
 
-/* --- Miscellaneous Animations (Coins, Fireflies, Trumpets) --- */
+/* --- Miscellaneous Animations (Coins, Trumpets) --- */
 .falling-coin { position: fixed; top: -50px; font-size: 1.5rem; pointer-events: none; z-index: 99999; animation: coinFall linear forwards; }
 @keyframes coinFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
-
-.firefly { position: fixed; bottom: -50px; font-size: 1.5rem; pointer-events: none; z-index: 99999; opacity: 0; animation: fireflyFloat ease-in-out forwards; }
-@keyframes fireflyFloat { 0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; } 20% { opacity: 1; } 50% { transform: translateY(-50vh) translateX(var(--rnd-x, 20px)) scale(1.2); } 80% { opacity: 1; } 100% { transform: translateY(-110vh) translateX(0) scale(0.5); opacity: 0; } }
 
 .trumpet-icon { position: fixed; font-size: 4rem; z-index: 99999; pointer-events: none; filter: drop-shadow(0 0 10px gold); animation: trumpetShake 0.5s infinite ease-in-out; }
 @keyframes trumpetShake { 0%, 100% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(-15deg) scale(1.1); } 75% { transform: rotate(15deg) scale(1.1); } }

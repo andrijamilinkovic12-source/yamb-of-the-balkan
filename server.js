@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV
 
 require('dotenv').config(); 
 
@@ -156,6 +156,7 @@ const UserProfileSchema = new mongoose.Schema({
     activeSkin: { type: String, default: 'default' }, 
     activeEffect: { type: String, default: 'confetti' }, 
     activeTheme: { type: String, default: 'dark' }, 
+    lastDaily: { type: String, default: "" }, // NOVO: Dodato polje za Dnevni izazov
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
@@ -316,15 +317,23 @@ io.on('connection', (socket) => {
                         user.tournamentWins = s.tournamentWins;
                     }
                     
-                    // 🛡️ SIGURAN FIX ZA DUKATE (Zaštita od gubitka pri reinstalaciji)
+                    // 🛡️ SIGURAN FIX ZA DUKATE + ANTI-CHEAT
                     if (typeof s.balance === 'number') {
+                        const razlika = s.balance - user.balance;
+
                         if (s.games >= oldUserGames) {
-                            // Scenario A: Legitimno igranje. Dozvoljavamo i smanjenje (ako je igrač kupio nešto u Riznici)
-                            user.balance = s.balance; 
+                            // ANTI-CHEAT: Plafon je postavljen na 80.000 dukata po jednom sinhronizovanju.
+                            // Ovo pokriva legitimne velike dobitke (npr. turnir + trofeji + x2 reklama),
+                            // ali blokira milionske hakove iz konzole.
+                            if (razlika > 80000) { 
+                                console.log(`🚨 HACK POKUŠAJ (Dukati): Igrač ${user.playerName} (UID: ${user.firebaseUid}) pokušao nerealan skok sa ${user.balance} na ${s.balance}!`);
+                                // Ne menjamo user.balance, ostaje stari iznos!
+                            } else {
+                                user.balance = s.balance; 
+                            }
                         } else {
-                            // Scenario B: Reinstalacija! (Telefon ima manje partija od servera). 
-                            // Štitimo dukate – ne dozvoljavamo smanjenje, već zadržavamo isključivo veći iznos!
-                            if (s.balance > user.balance) {
+                            // Reinstalacija telefona - vraćamo veći iznos, ali uz isti osigurač od 80k
+                            if (s.balance > user.balance && razlika <= 80000) {
                                 user.balance = s.balance;
                             }
                         }
@@ -354,6 +363,11 @@ io.on('connection', (socket) => {
                 if (s.yamb_unlocked && s.yamb_unlocked.length > 0) {
                     const mergedAll = new Set([...(user.yamb_unlocked || []), ...s.yamb_unlocked]);
                     user.yamb_unlocked = Array.from(mergedAll);
+                }
+
+                // NOVO: Ažuriramo Dnevni Izazov
+                if (s.lastDaily) {
+                    user.lastDaily = s.lastDaily;
                 }
 
                 // FIX SHOP & CLOUD SAVE: Čuvanje Kvartalne Lige bez gubljenja quarterlyScore-a
@@ -388,6 +402,7 @@ io.on('connection', (socket) => {
                     unlockedSkins: user.unlockedSkins,
                     unlockedEffects: user.unlockedEffects,
                     yamb_unlocked: user.yamb_unlocked, 
+                    lastDaily: user.lastDaily, // NOVO: Šaljemo lastDaily
                     leagueData: user.leagueData 
                 });
             } else {
@@ -405,6 +420,7 @@ io.on('connection', (socket) => {
                     unlockedSkins: s.unlockedSkins || [],
                     unlockedEffects: s.unlockedEffects || [],
                     yamb_unlocked: s.yamb_unlocked || [], 
+                    lastDaily: s.lastDaily || "", // NOVO: Inicijalizujemo lastDaily
                     leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 } 
                 });
                 await user.save();
@@ -422,6 +438,7 @@ io.on('connection', (socket) => {
                     unlockedSkins: user.unlockedSkins,
                     unlockedEffects: user.unlockedEffects,
                     yamb_unlocked: user.yamb_unlocked, 
+                    lastDaily: user.lastDaily, // NOVO: Šaljemo lastDaily
                     leagueData: user.leagueData 
                 });
             }

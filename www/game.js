@@ -69,7 +69,8 @@ class DailyChallengeManager {
     }
 
     open() {
-        const lastPlayed = localStorage.getItem('yamb_last_daily');
+        const uid = localStorage.getItem('yamb_uid') || 'guest';
+        const lastPlayed = localStorage.getItem('yamb_last_daily_' + uid) || localStorage.getItem('yamb_last_daily');
         const today = new Date().toDateString();
 
         if (lastPlayed === today) {
@@ -77,7 +78,9 @@ class DailyChallengeManager {
             return;
         }
 
-        localStorage.setItem('yamb_last_daily', today);
+        // Čuvamo za specifičnog korisnika
+        localStorage.setItem('yamb_last_daily_' + uid, today);
+        localStorage.setItem('yamb_last_daily', today); // Zbog kompatibilnosti
 
         this.app.navigateTo('daily-challenge-screen');
         this.resetGame();
@@ -189,7 +192,10 @@ class DailyChallengeManager {
             });
         }
 
-        localStorage.setItem('yamb_last_daily', new Date().toDateString());
+        const uid = localStorage.getItem('yamb_uid') || 'guest';
+        localStorage.setItem('yamb_last_daily_' + uid, new Date().toDateString());
+        localStorage.setItem('yamb_last_daily', new Date().toDateString()); // Zbog kompatibilnosti
+        
         this.app.soundMgr.win();
         this.showResultModal(reward);
     }
@@ -364,6 +370,7 @@ class YambApp {
     }
 
     getFullLocalStats() {
+        const uid = localStorage.getItem('yamb_uid') || 'guest';
         return {
             games: this.stats.games || 0,
             wins: this.stats.wins || 0,
@@ -380,7 +387,8 @@ class YambApp {
             leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 },
             activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
             activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
-            activeTheme: localStorage.getItem('yamb_theme') || 'dark'
+            activeTheme: localStorage.getItem('yamb_theme') || 'dark',
+            lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || localStorage.getItem('yamb_last_daily') || ""
         };
     }
 

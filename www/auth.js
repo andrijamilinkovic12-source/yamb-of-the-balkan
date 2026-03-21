@@ -75,6 +75,7 @@ function osveziAuthUI(user) {
 
 // --- POMOĆNA FUNKCIJA ZA PAKOVANJE LOKALNE STATISTIKE ---
 function getFullLocalStats() {
+    const uid = localStorage.getItem('yamb_uid') || 'guest';
     return {
         games: (window.app && window.app.stats) ? (window.app.stats.games || 0) : 0,
         wins: (window.app && window.app.stats) ? (window.app.stats.wins || 0) : 0,
@@ -92,7 +93,8 @@ function getFullLocalStats() {
         leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 },
         activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
         activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
-        activeTheme: localStorage.getItem('yamb_theme') || 'dark'
+        activeTheme: localStorage.getItem('yamb_theme') || 'dark',
+        lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || localStorage.getItem('yamb_last_daily') || ""
     };
 }
 
@@ -187,6 +189,7 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_unlocked_effects');
         localStorage.removeItem('yamb_unlocked_themes'); 
         localStorage.removeItem('yamb_unlocked'); 
+        localStorage.removeItem('yamb_last_daily'); // Sigurnosno brisanje prilikom odjave
         
         // Resetovanje aktivnih skinova i tema
         localStorage.setItem('yamb_theme', 'dark');
@@ -345,6 +348,17 @@ function inicijalizujCloudSync() {
                 if (dbStats.activeTheme !== 'dark') {
                     document.body.classList.add(dbStats.activeTheme + '-theme');
                 }
+            }
+            
+            // Oporavak datuma dnevnog izazova iz Clouda (po UID-u)
+            const currentUid = localStorage.getItem('yamb_uid');
+            if (dbStats.lastDaily) {
+                localStorage.setItem('yamb_last_daily_' + currentUid, dbStats.lastDaily);
+                localStorage.setItem('yamb_last_daily', dbStats.lastDaily); // Zbog kompatibilnosti
+            } else {
+                // Ako nalog nema odigran izazov, brišemo lokalni trag!
+                localStorage.removeItem('yamb_last_daily_' + currentUid);
+                localStorage.removeItem('yamb_last_daily'); 
             }
 
             if (window.statsManager) {
