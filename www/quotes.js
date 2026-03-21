@@ -1,4 +1,5 @@
-{
+const quotesDb = [
+    {
         sr: { text: "Nikad nemoj odustati, jer uvek postoji vreme i mesto kada će se plima promeniti.", author: "Herijet Bičer Stou" },
         en: { text: "Never give up, for that is just the place and time that the tide will turn.", author: "Harriet Beecher Stowe" }
     },
@@ -102,3 +103,4 @@
         sr: { text: "Prvo te ignorišu, onda ti se smeju, onda te biju, i onda pobeđuješ.", author: "Mahatma Gandi" },
         en: { text: "First they ignore you, then they laugh at you, then they fight you, then you win.", author: "Mahatma Gandhi" }
     }
+];
