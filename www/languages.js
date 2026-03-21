@@ -6,6 +6,7 @@ const TRANSLATIONS = {
         "splash_quote": "\"Ko misli da je srećan, on je zaista srećan.\"",
         "splash_author": "– Jovan Dučić",
         "splash_welcome": "DOBRODOŠLI U YAMB OF THE BALKAN",
+        "splash_welcome_short": "DOBRODOŠLI",
         "splash_login": "PRIJAVI SE",
 
         // --- GLAVNI MENI ---
@@ -360,6 +361,7 @@ const TRANSLATIONS = {
         "splash_quote": "\"He who thinks he is happy, is truly happy.\"",
         "splash_author": "– Jovan Dučić",
         "splash_welcome": "WELCOME TO YAMB OF THE BALKAN",
+        "splash_welcome_short": "WELCOME",
         "splash_login": "SIGN IN",
 
         // --- MAIN MENU ---
