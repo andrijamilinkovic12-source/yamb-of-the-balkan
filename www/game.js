@@ -1971,6 +1971,11 @@ class YambApp {
             });
         }
 
+        // --- DODATO ZA SYNC KVARTALNE LIGE POSLE GLEDANJA REKLAME ---
+        if (window.kvartalnaLiga) {
+            window.kvartalnaLiga.syncWithServer();
+        }
+
         if (doubled) { 
             this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount}`, gt('modal_title_reward')).then(() => { 
                 this.effectMgr.stop(); 

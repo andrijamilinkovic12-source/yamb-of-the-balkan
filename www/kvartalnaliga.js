@@ -179,6 +179,10 @@ class KvartalnaLigaManager {
         if (typeof applyTranslations === 'function') applyTranslations();
 
         this.setupTouch();
+        
+        // 🔴 NOVO: Osiguraj da server ima tvoj najnoviji rezultat pre nego što iscrta tabelu
+        this.syncWithServer(); 
+        
         this.fetchLeaderboard();
     }
 
