@@ -559,6 +559,9 @@ class ShopManager {
         this.unlockKey = (this.type === 'theme') ? 'yamb_unlocked_themes' : 'yamb_unlocked';
         
         let savedUnlocked = JSON.parse(localStorage.getItem(this.unlockKey)) || [];
+        let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
+        let cloudSkins = (window.statsManager && window.statsManager.stats.unlockedSkins) ? window.statsManager.stats.unlockedSkins : [];
+        savedUnlocked = [...new Set([...savedUnlocked, ...opstiNiz, ...cloudSkins])];
         
         // Dodaj besplatne stavke da uvek budu otključane u odgovarajućem nizu
         if (this.type === 'theme') {
@@ -777,8 +780,19 @@ class ShopManager {
         localStorage.setItem('yamb_dukati', this.balance);
         localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
         
+        // HACK: Čuvamo kupljeno u opšti niz i u skins da bi Cloud sigurno sačuvao!
+        let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
+        if (!opstiNiz.includes(id)) {
+            opstiNiz.push(id);
+            localStorage.setItem('yamb_unlocked', JSON.stringify(opstiNiz));
+        }
+
         if (window.statsManager) {
             window.statsManager.stats.balance = this.balance;
+            if (!window.statsManager.stats.unlockedSkins) window.statsManager.stats.unlockedSkins = [];
+            if (!window.statsManager.stats.unlockedSkins.includes(id)) {
+                window.statsManager.stats.unlockedSkins.push(id);
+            }
             window.statsManager.saveStats();
         }
 

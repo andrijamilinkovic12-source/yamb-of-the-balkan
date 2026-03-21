@@ -766,8 +766,17 @@ class YambApp {
         let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
         try {
             const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
-            unlockedThemes = [...unlockedThemes, ...boughtThemes];
+            const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
+            let cloudSkins = [];
+            if(window.statsManager && window.statsManager.stats.unlockedSkins) {
+                cloudSkins = window.statsManager.stats.unlockedSkins;
+            }
+            unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
         } catch(e) {}
+
+        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
+        unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
+        unlockedThemes = [...new Set(unlockedThemes)];
 
         Array.from(themeSelect.options).forEach(opt => {
             if (unlockedThemes.includes(opt.value)) {
@@ -898,11 +907,19 @@ class YambApp {
         
         try {
             const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
-            unlockedThemes = [...unlockedThemes, ...boughtThemes];
+            const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
+            let cloudSkins = [];
+            if(window.statsManager && window.statsManager.stats.unlockedSkins) {
+                cloudSkins = window.statsManager.stats.unlockedSkins;
+            }
+            unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
         } catch(e) {
             console.warn("Greška pri učitavanju kupljenih tema.");
         }
 
+        // Očisti array tako da ostanu SAMO validne teme
+        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
+        unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
         unlockedThemes = [...new Set(unlockedThemes)];
 
         let currentIndex = unlockedThemes.indexOf(current);
@@ -913,6 +930,10 @@ class YambApp {
         
         localStorage.setItem('yamb_theme', next); 
         this.applyTheme(next);
+
+        // Sinhronizuj i listu u podešavanjima
+        const themeSelect = document.getElementById('setting-theme');
+        if (themeSelect) themeSelect.value = next;
     }
 
     showMainMenu() { 

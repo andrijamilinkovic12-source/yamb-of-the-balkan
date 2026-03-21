@@ -323,7 +323,15 @@ setTimeout(() => {
             localStorage.setItem('yamb_unlocked', JSON.stringify(mergedUnlocked));
             localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
             localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
-            localStorage.setItem('yamb_unlocked_themes', JSON.stringify(dbStats.unlockedThemes || [])); 
+            
+            // FIX ZA TEME: Server ne čuva teme, pa ih spajamo sa lokalnim i onima sakrivenim u skins
+            let lokalneTeme = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
+            let cloudTeme = dbStats.unlockedThemes || [];
+            let sakriveneTeme = (dbStats.unlockedSkins || []).filter(t => ['neon', 'amethyst'].includes(t));
+            let opsteTeme = (dbStats.yamb_unlocked || []).filter(t => ['neon', 'amethyst'].includes(t));
+            
+            let spojeneTeme = [...new Set([...lokalneTeme, ...cloudTeme, ...sakriveneTeme, ...opsteTeme])];
+            localStorage.setItem('yamb_unlocked_themes', JSON.stringify(spojeneTeme));
 
             // --- RESTAURACIJA AKTIVNIH STVARI IZ CLOUDA ---
             if (dbStats.activeSkin) localStorage.setItem('yamb_active_skin', dbStats.activeSkin);
