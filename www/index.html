@@ -497,13 +497,15 @@
 
     <div id="waiting-screen" class="screen">
         <div style="margin-top: max(40px, env(safe-area-inset-top)); text-align: center; width: 100%;">
-            <h2 style="color:var(--text-main); margin-bottom: 5px; font-weight: 900; letter-spacing: 1px;">ONLINE IGRANJE</h2>
+            <h2 id="waiting-title" style="color:var(--text-main); margin-bottom: 5px; font-weight: 900; letter-spacing: 1px;">ONLINE IGRANJE</h2>
+            <p id="wait-msg" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 10px;">Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.</p>
+            
             <div style="font-size: 0.85rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; border: 1px solid var(--success);">
                 🟢 Online igrača: <span id="waiting-online-count" style="font-size: 1rem;">1</span>
             </div>
         </div>
 
-        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 30px; width: 100%; max-width: 450px; padding: 0 15px;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px; width: 100%; max-width: 450px; padding: 0 15px;">
             
             <div style="flex: 1; background: var(--glass-panel); border: 2px solid var(--gold-main); border-radius: 12px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.15);">
                 <img id="waiting-my-img" src="https://ui-avatars.com/api/?name=Ja&background=333&color=E0C995" style="width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold-main); margin-bottom: 10px; object-fit: cover;">
@@ -517,7 +519,7 @@
                 </div>
             </div>
 
-            <div style="font-size: 1.5rem; font-weight: 900; color: var(--danger); text-shadow: 0 2px 5px rgba(0,0,0,0.5); font-style: italic; opacity: 0.8;">VS</div>
+            <div id="waiting-vs-badge" style="font-size: 1.5rem; font-weight: 900; color: var(--danger); text-shadow: 0 2px 5px rgba(0,0,0,0.5); font-style: italic; opacity: 0.8;">VS</div>
 
             <div id="waiting-opp-box" style="flex: 1; background: var(--glass-panel); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; box-shadow: var(--glass-shadow); position: relative; overflow: hidden; min-height: 200px; justify-content: center; transition: all 0.3s ease;">
                 
@@ -541,19 +543,19 @@
 
         </div>
 
-        <div id="share-area" class="hidden" style="margin-top:20px; text-align:center; width: 100%; max-width: 300px;">
-            <p style="color:var(--gold-main); margin-bottom:10px;" data-lang="invite_text">Pošalji ovaj link prijatelju:</p>
-            <input type="text" id="invite-link" class="modal-input" readonly style="font-size:0.8rem; width:100%; margin-bottom:10px; text-align: center;">
-            <button class="btn-menu btn-primary" onclick="app.shareInvite()" data-lang="invite_btn">🔗 PODELI LINK</button>
+        <div id="share-area" class="hidden" style="margin-top:10px; text-align:center; width: 100%; max-width: 300px;">
+            <p style="color:var(--gold-main); margin-bottom:10px; font-size: 0.85rem; font-weight: bold;" data-lang="invite_text">Pošalji ovaj link prijatelju:</p>
+            <input type="text" id="invite-link" class="modal-input" readonly style="font-size:0.8rem; width:100%; margin-bottom:10px; text-align: center; background: rgba(0,0,0,0.3);">
+            <button class="btn-menu btn-primary" style="padding: 10px; border-radius: 12px; font-size: 0.8rem;" onclick="app.shareInvite()" data-lang="invite_btn">🔗 PODELI LINK</button>
         </div>
 
-        <div id="friends-list-container" class="hidden" style="margin-top: 20px; width: 100%; max-width: 400px; background: var(--glass-panel); border: var(--glass-border); border-radius: 12px; padding: 15px;">
+        <div id="friends-list-container" class="hidden" style="margin-top: 15px; width: 100%; max-width: 500px; background: var(--glass-panel); border: var(--glass-border); border-radius: 12px; padding: 15px 5px;">
             <h3 style="color: var(--gold-main); font-size: 0.9rem; text-align: center; margin-bottom: 10px; font-weight: 800; letter-spacing: 1px;">TVOJI PRIJATELJI</h3>
-            <div id="friends-list" style="display:flex; flex-direction:column; gap:8px; max-height: 200px; overflow-y:auto; padding-right: 5px;">
-                </div>
+            <div id="friends-list" style="display:flex; flex-direction:row; gap:8px; overflow-x:auto; padding-bottom: 10px; min-height: 180px;">
+            </div>
         </div>
         
-        <button class="btn-menu btn-danger" onclick="app.cancelOnline()" style="margin-top: 30px;" data-lang="modal_btn_cancel">ODUSTANI</button>
+        <button class="btn-menu btn-danger" onclick="app.cancelOnline()" style="margin-top: 15px; max-width: 250px; padding: 10px; font-size: 0.8rem;" data-lang="modal_btn_cancel">ODUSTANI</button>
     </div>
     <div id="daily-challenge-screen" class="screen">
         

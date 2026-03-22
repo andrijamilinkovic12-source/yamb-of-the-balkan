@@ -254,7 +254,7 @@ class YambApp {
         this.lastMoveSnapshot = null; 
         this.pendingNewGamePlayers = 1;
         this.lastGlobalMsg = null; 
-        this.friendsListUids = []; // Za pamćenje ID-jeva prijatelja
+        this.friendsListUids = []; 
         
         this.socket = null; 
         this.onlineMode = false; 
@@ -450,6 +450,7 @@ class YambApp {
         if (!list) return;
         
         list.style.display = 'flex';
+        list.style.flexDirection = 'row'; 
         list.style.overflowX = 'auto';
         list.style.gap = '15px';
         list.style.padding = '15px 5px';
@@ -1131,19 +1132,26 @@ class YambApp {
         
         this.navigateTo('waiting-screen'); 
         
-        // Podesi naslove specijalno za prijatelje
-        document.getElementById('waiting-title').innerText = "POZOVI PRIJATELJA";
-        document.getElementById('wait-msg').innerText = "Pošaljite link, odaberite prijatelja iz liste ili dodajte novog!";
+        const titleEl = document.getElementById('waiting-title');
+        if (titleEl) titleEl.innerText = "POZOVI PRIJATELJA";
+        
+        const msgEl = document.getElementById('wait-msg');
+        if (msgEl) msgEl.innerText = "Pošaljite link, odaberite prijatelja iz liste ili dodajte novog!";
         
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
         if (myImg && authImg && authImg.src && authImg.src.includes('http')) myImg.src = authImg.src;
         else if (myImg) myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         
-        document.getElementById('waiting-my-name').innerText = nickname;
+        const myNameEl = document.getElementById('waiting-my-name');
+        if (myNameEl) myNameEl.innerText = nickname;
+        
         const myStats = this.getFullLocalStats();
-        document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
-        document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+        const myPowerEl = document.getElementById('waiting-my-power');
+        if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
+        
+        const myWlEl = document.getElementById('waiting-my-wl');
+        if (myWlEl) myWlEl.innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
 
         // UGAŠENI SVI ELEMENTI ZA RANDOM IGRU!
         const oppBox = document.getElementById('waiting-opp-box');
@@ -1153,7 +1161,9 @@ class YambApp {
 
         const shareArea = document.getElementById('share-area');
         if (shareArea) shareArea.classList.remove('hidden'); 
-        document.getElementById('invite-link').value = shareUrl; 
+        
+        const linkInput = document.getElementById('invite-link');
+        if (linkInput) linkInput.value = shareUrl; 
         
         const friendsContainer = document.getElementById('friends-list-container');
         if (friendsContainer) {
@@ -1228,11 +1238,16 @@ class YambApp {
         } else if (myImg) {
             myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         }
-        document.getElementById('waiting-my-name').innerText = nickname;
+        
+        const myNameEl = document.getElementById('waiting-my-name');
+        if (myNameEl) myNameEl.innerText = nickname;
         
         const myStats = this.getFullLocalStats();
-        document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
-        document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+        const myPowerEl = document.getElementById('waiting-my-power');
+        if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
+        
+        const myWlEl = document.getElementById('waiting-my-wl');
+        if (myWlEl) myWlEl.innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
 
         const oppBox = document.getElementById('waiting-opp-box');
         if (oppBox) {
@@ -1242,8 +1257,10 @@ class YambApp {
             } else {
                 // Ako smo igrač koji prihvata poziv preko linka
                 oppBox.style.display = 'flex'; 
-                document.getElementById('waiting-opp-searching').style.display = 'flex';
-                document.getElementById('waiting-opp-found').style.display = 'none';
+                const searchingUI = document.getElementById('waiting-opp-searching');
+                const foundUI = document.getElementById('waiting-opp-found');
+                if (searchingUI) searchingUI.style.display = 'flex';
+                if (foundUI) foundUI.style.display = 'none';
                 oppBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
                 oppBox.style.boxShadow = 'var(--glass-shadow)';
             }
@@ -1271,18 +1288,26 @@ class YambApp {
         if (!nickname) return; 
         this.navigateTo('waiting-screen'); 
         
-        document.getElementById('waiting-title').innerText = gt('ws_searching') || "TRAŽENJE PROTIVNIKA...";
-        document.getElementById('wait-msg').innerText = gt('ws_wait_msg') || "Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.";
+        const titleEl = document.getElementById('waiting-title');
+        if (titleEl) titleEl.innerText = gt('ws_searching') || "TRAŽENJE PROTIVNIKA...";
+        
+        const msgEl = document.getElementById('wait-msg');
+        if (msgEl) msgEl.innerText = gt('ws_wait_msg') || "Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.";
 
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
         if (myImg && authImg && authImg.src && authImg.src.includes('http')) myImg.src = authImg.src;
         else if (myImg) myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
-        document.getElementById('waiting-my-name').innerText = nickname;
+        
+        const myNameEl = document.getElementById('waiting-my-name');
+        if (myNameEl) myNameEl.innerText = nickname;
         
         const myStats = this.getFullLocalStats();
-        document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
-        document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+        const myPowerEl = document.getElementById('waiting-my-power');
+        if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
+        
+        const myWlEl = document.getElementById('waiting-my-wl');
+        if (myWlEl) myWlEl.innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
 
         // PALIMO "VS" ZNAK I PROTIVNIKA
         const oppBox = document.getElementById('waiting-opp-box');
@@ -1290,15 +1315,19 @@ class YambApp {
         
         if (oppBox) {
             oppBox.style.display = 'flex';
-            document.getElementById('waiting-opp-searching').style.display = 'flex';
-            document.getElementById('waiting-opp-found').style.display = 'none';
+            const searchingUI = document.getElementById('waiting-opp-searching');
+            const foundUI = document.getElementById('waiting-opp-found');
+            if (searchingUI) searchingUI.style.display = 'flex';
+            if (foundUI) foundUI.style.display = 'none';
         }
-        if (vsBadge) vsBadge.style.display = 'flex';
+        if (vsBadge) vsBadge.style.display = 'block';
 
         // SAKRIVAMO PRIJATELJE U OVOM MODU
         const friendsContainer = document.getElementById('friends-list-container');
         if (friendsContainer) friendsContainer.classList.add('hidden');
-        document.getElementById('share-area').classList.add('hidden'); 
+        
+        const shareArea = document.getElementById('share-area');
+        if (shareArea) shareArea.classList.add('hidden'); 
         
         this.initSocketConnection();
         this.setupSocketListeners(nickname); 
@@ -1470,7 +1499,6 @@ class YambApp {
         // --- PRIJATELJI EVENTI ---
         this.socket.on('incoming_friend_req', async (data) => {
             const accepted = await this.modal.confirm(`Igrač ${data.challengerName} želi da vas doda u prijatelje. Prihvatate?`);
-            // PROSLEDJIVANJE challengerUid-a RADI OFFLINE AUTO-DODAVANJA
             this.socket.emit('friend_req_response', { challengerId: data.challengerId, challengerUid: data.challengerUid, accepted: accepted });
         });
 
