@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX)
+// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -338,8 +338,6 @@ class YambApp {
 
         document.addEventListener("resume", () => { setTimeout(() => { this.checkForInvite(); }, 500); }, false);
         document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') setTimeout(() => { this.checkForInvite(); }, 500); });
-        
-        // --- Uklonjeno automatsko prebacivanje na glavni meni, sada to radi auth.js ---
 
         setTimeout(() => { this.checkForInvite(); }, 500);
 
@@ -390,6 +388,34 @@ class YambApp {
             activeTheme: localStorage.getItem('yamb_theme') || 'dark',
             lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || localStorage.getItem('yamb_last_daily') || ""
         };
+    }
+
+    calculatePowerIndex(statsObj, isLocal = false) {
+        if (!statsObj) return 0;
+        let totalCompetitive = (statsObj.wins || 0) + (statsObj.losses || 0);
+        let rate = totalCompetitive > 0 ? ((statsObj.wins || 0) / totalCompetitive) * 100 : 0;
+        let avg = (statsObj.games || 0) > 0 ? (statsObj.totalScoreSum || 0) / statsObj.games : 0;
+        let hs = statsObj.highscore || 0;
+        let maxStreak = statsObj.maxWinStreak || 0;
+        let tourneyWins = statsObj.tournamentWins || 0;
+        
+        let leaguePts = 0;
+        if (isLocal && window.kvartalnaLiga) {
+            leaguePts = parseInt(window.kvartalnaLiga.getScores().quarterlyScore) || 0;
+        } else if (statsObj.leagueData && statsObj.leagueData.quarterlyScore) {
+            leaguePts = statsObj.leagueData.quarterlyScore;
+        }
+
+        let trophyCount = 0;
+        if (statsObj.unlockedTrophies) {
+            const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
+            statsObj.unlockedTrophies.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
+        }
+
+        return Math.round(
+            (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) + 
+            (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
+        );
     }
 
     initSocketConnection() {
@@ -479,7 +505,7 @@ class YambApp {
                 });
 
                 this.socket.on('game_started', (data) => {
-                    this.closeGlobalChat(true); // ISPRAVLJENO: true znači da se skipuje reklama
+                    this.closeGlobalChat(true); 
                     this.joinPrivateGame(this.playerName, data.room);
                 });
 
@@ -515,6 +541,9 @@ class YambApp {
         if (chatEl) {
             chatEl.innerText = this.onlineUsersCount;
         }
+
+        const waitCount = document.getElementById('waiting-online-count');
+        if (waitCount) waitCount.innerText = this.onlineUsersCount;
     }
 
     handleRotationLock() {
@@ -668,12 +697,10 @@ class YambApp {
         }
     }
 
-    // ISPRAVLJENO: Dodat skipAd parametar
     async closeGlobalChat(skipAd = false) {
         const overlay = document.getElementById('global-chat-overlay');
         if (overlay) overlay.style.display = 'none';
 
-        // Prikazuje reklamu samo ako skipAd nije prosleđen kao true
         if (!skipAd && this.adMob && this.adMob.showInterstitial) {
             await this.adMob.showInterstitial();
         }
@@ -855,24 +882,7 @@ class YambApp {
         if(winBar) winBar.style.width = winWidth + "%"; if(lossBar) lossBar.style.width = lossWidth + "%";
 
         // --- KALKULACIJA INDEKSA MOĆI (POWER INDEX) ---
-        // 1. Prikupljanje svih varijabli
-        let leaguePts = 0;
-        if (window.kvartalnaLiga) {
-            leaguePts = parseInt(window.kvartalnaLiga.getScores().quarterlyScore) || 0;
-        }
-        let tourneyWins = (window.statsManager && window.statsManager.stats.tournamentWins) ? window.statsManager.stats.tournamentWins : 0;
-        let maxStreak = this.stats.maxWinStreak || 0;
-        let currentStreak = this.stats.currentWinStreak || 0; // Zadržavamo i trenutni prikaz
-
-        // 2. Formula (Možeš podešavati množioce po želji)
-        let powerIndex = Math.round(
-            (rate * 10) +               // Uspešnost: 50% = 500 PI
-            (leaguePts * 0.02) +        // Liga poeni: 10,000 pts = 200 PI
-            (tourneyWins * 300) +       // Svaki osvojeni turnir daje +300 PI
-            (avg * 0.5) +               // Prosek od 2000 = 1000 PI
-            (this.stats.highscore * 0.2)+// Rekord od 3000 = 600 PI
-            (maxStreak * 30)            // Max niz od 10 pobeda = 300 PI
-        );
+        let powerIndex = this.calculatePowerIndex(this.getFullLocalStats(), true);
         
         // Animacija brojača za "Wow" efekat (od 0 do vrednosti)
         const powerEl = document.getElementById('stat-power-index');
@@ -900,12 +910,12 @@ class YambApp {
         const sm = window.statsManager;
         let trophyList = [];
         if (sm && sm.stats) { trophyList = sm.stats.unlockedTrophies || []; }
-
         const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
         let realTrophyCount = 0;
         trophyList.forEach(item => { if (ALL_TROPHY_IDS.includes(item)) realTrophyCount++; });
         document.getElementById('stat-trophies').innerText = `${realTrophyCount} / ${ALL_TROPHY_IDS.length}`;
         
+        let currentStreak = this.stats.currentWinStreak || 0;
         if (sm) { const stats = sm.getStats(); currentStreak = stats.currentWinStreak > 0 ? stats.currentWinStreak : currentStreak; }
         document.getElementById('stat-streak').innerText = currentStreak;
         this.updateOnlineCounterUI();
@@ -1100,17 +1110,35 @@ class YambApp {
     
     async joinPrivateGame(nickname, roomId) { 
         this.navigateTo('waiting-screen'); 
-        this.initSocketConnection();
         
+        const myImg = document.getElementById('waiting-my-img');
+        const authImg = document.getElementById('auth-user-photo');
+        if (myImg && authImg && authImg.src && authImg.src.includes('http')) {
+            myImg.src = authImg.src;
+        } else if (myImg) {
+            myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
+        }
+        document.getElementById('waiting-my-name').innerText = nickname;
+        
+        const myStats = this.getFullLocalStats();
+        document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
+        document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+
+        document.getElementById('waiting-opp-searching').style.display = 'flex';
+        document.getElementById('waiting-opp-found').style.display = 'none';
+        document.getElementById('waiting-opp-box').style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        document.getElementById('waiting-opp-box').style.boxShadow = 'var(--glass-shadow)';
+
+        this.initSocketConnection();
         this.setupSocketListeners(nickname); 
 
+        const photoUrl = (authImg && authImg.src && authImg.src.includes('http')) ? authImg.src : '';
+
         if (this.socket && this.socket.connected) {
-            this.socket.emit('join_private_game', { nickname, roomId });
+            this.socket.emit('join_private_game', { nickname, roomId, photoUrl });
         } else {
-            console.log("Socket nije spreman, čekam konekciju...");
             this.socket.once('connect', () => {
-                console.log("Socket povezan, šaljem zahtev za ulazak...");
-                this.socket.emit('join_private_game', { nickname, roomId });
+                this.socket.emit('join_private_game', { nickname, roomId, photoUrl });
             });
         }
     }
@@ -1119,12 +1147,36 @@ class YambApp {
         const nickname = this.playerName; 
         if (!nickname) return; 
         this.navigateTo('waiting-screen'); 
-        document.getElementById('share-area').classList.add('hidden'); 
-        this.initSocketConnection();
         
+        // Prikaz mog profila u VS kvadratu
+        const myImg = document.getElementById('waiting-my-img');
+        const authImg = document.getElementById('auth-user-photo');
+        if (myImg && authImg && authImg.src && authImg.src.includes('http')) {
+            myImg.src = authImg.src;
+        } else if (myImg) {
+            myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
+        }
+        document.getElementById('waiting-my-name').innerText = nickname;
+        
+        const myStats = this.getFullLocalStats();
+        document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
+        document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+
+        // Resetovanje protivničkog kvadrata
+        document.getElementById('waiting-opp-searching').style.display = 'flex';
+        document.getElementById('waiting-opp-found').style.display = 'none';
+        document.getElementById('waiting-opp-box').style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        document.getElementById('waiting-opp-box').style.boxShadow = 'var(--glass-shadow)';
+
+        document.getElementById('share-area').classList.add('hidden'); 
+        
+        this.initSocketConnection();
         this.setupSocketListeners(nickname); 
         
-        if(this.socket) this.socket.emit('find_game', nickname); 
+        if(this.socket) {
+            const photoUrl = (authImg && authImg.src && authImg.src.includes('http')) ? authImg.src : '';
+            this.socket.emit('find_game', { nickname: nickname, photoUrl: photoUrl }); 
+        }
     }
     
     setupSocketListeners(nickname) { 
@@ -1154,7 +1206,49 @@ class YambApp {
             this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname]; 
             this.initScores(); 
             this.currentPlayerIdx = 0; 
-            this.startGame(); 
+            
+            // UI Ažuriranje - Nađen protivnik
+            const searchingUI = document.getElementById('waiting-opp-searching');
+            const foundUI = document.getElementById('waiting-opp-found');
+            const oppBox = document.getElementById('waiting-opp-box');
+            
+            if (searchingUI && foundUI && oppBox) {
+                searchingUI.style.display = 'none';
+                foundUI.style.display = 'flex';
+                
+                // Opasni vizuelni efekat!
+                oppBox.style.borderColor = 'var(--danger)';
+                oppBox.style.boxShadow = '0 5px 15px rgba(244, 67, 54, 0.2)';
+                
+                const oppImg = document.getElementById('waiting-opp-img');
+                if (data.oppPhoto && data.oppPhoto.length > 5) {
+                    oppImg.src = data.oppPhoto;
+                } else {
+                    oppImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.opponent)}&background=333&color=E0C995`;
+                }
+                
+                document.getElementById('waiting-opp-name').innerText = data.opponent;
+                
+                let oppPI = 0;
+                let oppW = 0, oppL = 0;
+                if (data.oppStats) {
+                    oppPI = this.calculatePowerIndex(data.oppStats, false);
+                    oppW = data.oppStats.wins || 0;
+                    oppL = data.oppStats.losses || 0;
+                }
+                
+                document.getElementById('waiting-opp-power').innerText = oppPI;
+                document.getElementById('waiting-opp-wl').innerText = `${oppW} / ${oppL}`;
+
+                this.soundMgr.win(); 
+
+                // Zadrži ekran 2.5 sekunde pa pređi na igru
+                setTimeout(() => {
+                    this.startGame(); 
+                }, 2500);
+            } else {
+                this.startGame();
+            }
         }); 
 
         this.socket.on('remote_move', (data) => { 
@@ -1790,13 +1884,11 @@ class YambApp {
     async handleGameOver() { 
         console.log("--- GAME OVER ---");
 
-        // --- FIX START ---
         if (this._saveTimeout) {
             clearTimeout(this._saveTimeout);
             this._saveTimeout = null;
         }
         this.gameActive = false;
-        // --- FIX END ---
 
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
@@ -1812,10 +1904,8 @@ class YambApp {
         let detectedMode = "Solo";
         if (this.onlineMode) detectedMode = "Online"; else if (this.players.length > 1) detectedMode = "Hotseat";
         
-        // 1. ODMAH NAĐI MOJ SKOR!
         let myScoreEntry = finalResults.find(r => r.name === this.playerName) || finalResults[0];
 
-        // 2. ODMAH UPIŠI U KVARTALNU LIGU (Pre bilo kakvog čekanja servera!)
         try {
             if (window.kvartalnaLiga && myScoreEntry && myScoreEntry.score > 0) {
                 window.kvartalnaLiga.addPoints(myScoreEntry.score);
@@ -1824,15 +1914,26 @@ class YambApp {
             console.warn("Greška pri upisu u Kvartalnu Ligu:", err);
         }
 
-        // 3. TEK SADA ŠALJI NA GLOBALNU TOP LISTU
-        // (Čak i ako server ovde uspori ili zablokira, Kvartalna Liga je već sačuvana na uređaju)
         try {
             if (detectedMode === 'Solo') {
                 await this.safeSubmitScore(this.playerName, myScoreEntry.score, 'Solo');
             } 
             else {
                 const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
-                let saveMode = this.onlineMode ? 'Online' : 'Hotseat';
+                
+                let saveMode = 'Hotseat';
+                if (this.onlineMode) {
+                    if (this.roomId && this.roomId.startsWith('tourney_')) {
+                        saveMode = 'Turnir';
+                    } else if (this.roomId && this.roomId.startsWith('yamb-')) {
+                        saveMode = 'Prijatelj';
+                    } else if (this.roomId && this.roomId.startsWith('duel_')) { 
+                        saveMode = 'Duel';
+                    } else {
+                        saveMode = 'Online';
+                    }
+                }
+                
                 await this.safeSubmitScore(winner.name || gt('player_guest'), winner.score, saveMode);
             }
         } catch (err) {
@@ -1848,7 +1949,6 @@ class YambApp {
         if (myScoreEntry) {
              const myIndex = this.players.findIndex(p => p === myScoreEntry.name);
              if (myIndex !== -1 && this.allScores[myIndex]) {
-                 // BEZBEDNA PROVERA TROFEJA SA FALLBACK-om
                  try {
                      if (window.trophyManager && typeof window.trophyManager.checkEndGameTrophies === 'function') {
                          let detectedModeForTrophies = this.onlineMode ? "Online" : (this.players.length > 1 ? "Hotseat" : "Solo");
@@ -1879,7 +1979,6 @@ class YambApp {
                  if (winner.name === myScoreEntry.name) resultType = 'win'; else resultType = 'loss'; 
              }
              
-             // 2. Šaljemo Cloud-u celokupnu statistiku (koja sada sadrži ispravan i sabran skor lige)
              this.updateStats(myScoreEntry.score, resultType);
         }
         
@@ -1974,7 +2073,6 @@ class YambApp {
                                 window.statsManager.saveStats();
                             }
 
-                            // --- DODATO ZA CLOUD SYNC ---
                             if (this.socket && this.socket.connected) {
                                 this.socket.emit('set_player_data', {
                                     uid: localStorage.getItem('yamb_uid') || this.playerId,
@@ -2037,7 +2135,6 @@ class YambApp {
                     window.statsManager.saveStats(); 
                 }
 
-                // --- DODATO ZA CLOUD SYNC ---
                 if (this.socket && this.socket.connected) {
                     this.socket.emit('set_player_data', {
                         uid: localStorage.getItem('yamb_uid') || this.playerId,
@@ -2059,7 +2156,6 @@ class YambApp {
         localStorage.setItem('yamb_dukati', currentDukati);
         if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
         
-        // --- DODATO ZA CLOUD SYNC ---
         if (this.socket && this.socket.connected) {
             this.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid') || this.playerId,
@@ -2069,7 +2165,6 @@ class YambApp {
             });
         }
 
-        // --- DODATO ZA SYNC KVARTALNE LIGE POSLE GLEDANJA REKLAME ---
         if (window.kvartalnaLiga) {
             window.kvartalnaLiga.syncWithServer();
         }
@@ -2144,16 +2239,12 @@ class YambApp {
     async autoSaveGame() { 
         if(this.onlineMode) return; 
 
-        // --- FIX START ---
         if(!this.gameActive) return;
-        // --- FIX END ---
 
         if (this._saveTimeout) clearTimeout(this._saveTimeout);
 
         this._saveTimeout = setTimeout(async () => {
-            // --- FIX START ---
             if(!this.gameActive) return;
-            // --- FIX END ---
 
             const data = { 
                 players: this.players, 
@@ -2196,7 +2287,6 @@ class YambApp {
             const btnUndo = document.getElementById('btn-undo-move');
             if (btnUndo) btnUndo.style.display = 'none';
 
-            // NOVA FUNKCIJA UMSTO DIREKTNOG PRELASKA U IGRU
             this.showQuoteAndProceed(); 
             
             this.createScoreTables(); 

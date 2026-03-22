@@ -443,7 +443,7 @@ io.on('connection', (socket) => {
                 });
             }
             
-            socket.playerStats = { wins: user.wins, losses: user.losses };
+            socket.playerStats = s; // Sada pamti kompletnu statistiku igrača!
             updateOnlineCount(); 
         } catch (err) {
             console.error("Greška pri sinhronizaciji korisnika:", err);
@@ -686,14 +686,17 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('find_game', (nickname) => {
-        if (waitingPlayer && waitingPlayer.id === socket.id) {
-            return; 
-        }
+    socket.on('find_game', (data) => {
+        let nickname = typeof data === 'string' ? data : data.nickname;
+        let photoUrl = typeof data === 'string' ? '' : data.photoUrl;
+
+        if (waitingPlayer && waitingPlayer.id === socket.id) return; 
 
         if (waitingPlayer) {
             const opponentId = waitingPlayer.id;
             const opponentName = waitingPlayer.nickname;
+            const opponentStats = waitingPlayer.stats;
+            const opponentPhoto = waitingPlayer.photoUrl;
             
             const opponentSocket = io.sockets.sockets.get(opponentId);
 
@@ -712,30 +715,35 @@ io.on('connection', (socket) => {
 
                 console.log(`⚔️ RANDOM MATCH: ${nickname} vs ${opponentName} (Room: ${roomId})`);
 
-                io.to(opponentId).emit('game_start', { roomId: roomId, opponent: nickname, myIndex: 0 });
-                socket.emit('game_start', { roomId: roomId, opponent: opponentName, myIndex: 1 });
+                // Šaljemo sve podatke jednom i drugom igraču
+                io.to(opponentId).emit('game_start', { 
+                    roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, myIndex: 0 
+                });
+                socket.emit('game_start', { 
+                    roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, myIndex: 1 
+                });
 
             } else {
-                waitingPlayer = { id: socket.id, nickname: nickname };
+                waitingPlayer = { id: socket.id, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
                 socket.emit('waiting_for_opponent');
             }
         } else {
-            waitingPlayer = { id: socket.id, nickname: nickname };
+            waitingPlayer = { id: socket.id, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
             socket.emit('waiting_for_opponent');
             console.log(`⏳ ${nickname} čeka random protivnika...`);
         }
     });
 
-    socket.on('join_private_game', ({ nickname, roomId }) => {
+    socket.on('join_private_game', (data) => {
+        let nickname = data.nickname || data;
+        let roomId = data.roomId;
+        let photoUrl = data.photoUrl || '';
         console.log(`🏠 Zahtev za Private sobu: ${roomId} od ${nickname}`);
 
-        if (!roomId) {
-            socket.emit('error_msg', "Nevažeći ID sobe.");
-            return;
-        }
+        if (!roomId) { socket.emit('error_msg', "Nevažeći ID sobe."); return; }
 
         if (!privateRooms[roomId]) {
-            privateRooms[roomId] = { p1: { id: socket.id, name: nickname } };
+            privateRooms[roomId] = { p1: { id: socket.id, name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
             socket.join(roomId);
             playerRooms[socket.id] = roomId;
             socket.emit('private_waiting', { roomId });
@@ -747,9 +755,8 @@ io.on('connection', (socket) => {
             
             if (!p1Socket) {
                 console.log("--> Host je nestao. Postajem novi host.");
-                privateRooms[roomId] = { p1: { id: socket.id, name: nickname } };
-                socket.join(roomId);
-                playerRooms[socket.id] = roomId;
+                privateRooms[roomId] = { p1: { id: socket.id, name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
+                socket.join(roomId); playerRooms[socket.id] = roomId;
                 socket.emit('private_waiting', { roomId });
                 return;
             }
@@ -758,17 +765,13 @@ io.on('connection', (socket) => {
 
             privateRooms[roomId].p2 = { id: socket.id, name: nickname };
             socket.join(roomId);
-
-            playerRooms[socket.id] = roomId;
-            playerRooms[p1.id] = roomId;
-
-            gameStartTimes[socket.id] = Date.now();
-            gameStartTimes[p1.id] = Date.now();
+            playerRooms[socket.id] = roomId; playerRooms[p1.id] = roomId;
+            gameStartTimes[socket.id] = Date.now(); gameStartTimes[p1.id] = Date.now();
 
             console.log(`⚔️ PRIVATE MATCH: ${p1.name} vs ${nickname} u sobi ${roomId}`);
 
-            io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, myIndex: 0 });
-            socket.emit('game_start', { roomId: roomId, opponent: p1.name, myIndex: 1 });
+            io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, myIndex: 0 });
+            socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, myIndex: 1 });
 
             delete privateRooms[roomId]; 
         } else {

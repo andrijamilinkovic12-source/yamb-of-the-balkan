@@ -496,17 +496,59 @@
     </div>
 
     <div id="waiting-screen" class="screen">
-        <div class="loader"></div>
-        <h2 style="margin-top: 20px; color:var(--text-main);" data-lang="hs_loading">ČEKAM...</h2>
-        <div id="share-area" class="hidden" style="margin-top:20px; text-align:center;">
+        <div style="margin-top: max(40px, env(safe-area-inset-top)); text-align: center; width: 100%;">
+            <h2 style="color:var(--text-main); margin-bottom: 5px; font-weight: 900; letter-spacing: 1px;">ONLINE IGRANJE</h2>
+            <div style="font-size: 0.85rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 5px 15px; border-radius: 20px; display: inline-block; border: 1px solid var(--success);">
+                🟢 Online igrača: <span id="waiting-online-count" style="font-size: 1rem;">1</span>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 30px; width: 100%; max-width: 450px; padding: 0 15px;">
+            
+            <div style="flex: 1; background: var(--glass-panel); border: 2px solid var(--gold-main); border-radius: 12px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.15);">
+                <img id="waiting-my-img" src="https://ui-avatars.com/api/?name=Ja&background=333&color=E0C995" style="width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--gold-main); margin-bottom: 10px; object-fit: cover;">
+                <span id="waiting-my-name" style="font-weight: 800; color: var(--text-main); font-size: 0.9rem; text-align: center; margin-bottom: 10px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Igrač</span>
+                
+                <div style="background: rgba(0,0,0,0.2); width: 90%; border-radius: 8px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.05);">
+                    <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Moć ⚡</div>
+                    <div id="waiting-my-power" style="font-size: 1.1rem; font-weight: 900; color: #FFD700; margin-bottom: 5px;">0</div>
+                    <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Pob/Por</div>
+                    <div id="waiting-my-wl" style="font-size: 0.85rem; font-weight: bold; color: var(--success);">0 / 0</div>
+                </div>
+            </div>
+
+            <div style="font-size: 1.5rem; font-weight: 900; color: var(--danger); text-shadow: 0 2px 5px rgba(0,0,0,0.5); font-style: italic; opacity: 0.8;">VS</div>
+
+            <div id="waiting-opp-box" style="flex: 1; background: var(--glass-panel); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px 5px; display: flex; flex-direction: column; align-items: center; box-shadow: var(--glass-shadow); position: relative; overflow: hidden; min-height: 200px; justify-content: center; transition: all 0.3s ease;">
+                
+                <div id="waiting-opp-searching" style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="loader" style="width: 35px; height: 35px; border-width: 3px; margin-bottom: 15px;"></div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted); text-align: center; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Tražim<br>protivnika...</span>
+                </div>
+
+                <div id="waiting-opp-found" style="display: none; flex-direction: column; align-items: center; width: 100%; animation: fadeIn 0.5s forwards;">
+                    <img id="waiting-opp-img" src="https://ui-avatars.com/api/?name=?&background=333&color=E0C995" style="width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--danger); margin-bottom: 10px; object-fit: cover;">
+                    <span id="waiting-opp-name" style="font-weight: 800; color: var(--text-main); font-size: 0.9rem; text-align: center; margin-bottom: 10px; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Protivnik</span>
+                    
+                    <div style="background: rgba(0,0,0,0.2); width: 90%; border-radius: 8px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Moć ⚡</div>
+                        <div id="waiting-opp-power" style="font-size: 1.1rem; font-weight: 900; color: var(--danger); margin-bottom: 5px;">0</div>
+                        <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Pob/Por</div>
+                        <div id="waiting-opp-wl" style="font-size: 0.85rem; font-weight: bold; color: var(--danger);">0 / 0</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="share-area" class="hidden" style="margin-top:20px; text-align:center; width: 100%; max-width: 300px;">
             <p style="color:var(--gold-main); margin-bottom:10px;" data-lang="invite_text">Pošalji ovaj link prijatelju:</p>
-            <input type="text" id="invite-link" class="modal-input" readonly style="font-size:0.8rem; width:100%; margin-bottom:10px;">
+            <input type="text" id="invite-link" class="modal-input" readonly style="font-size:0.8rem; width:100%; margin-bottom:10px; text-align: center;">
             <button class="btn-menu btn-primary" onclick="app.shareInvite()" data-lang="invite_btn">🔗 PODELI LINK</button>
         </div>
-        <p id="wait-msg" style="color: var(--text-muted); margin-top:15px;">Tražim server...</p>
+        
         <button class="btn-menu btn-danger" onclick="app.cancelOnline()" style="margin-top: 30px;" data-lang="modal_btn_cancel">ODUSTANI</button>
     </div>
-
     <div id="daily-challenge-screen" class="screen">
         
         <div class="modal-box daily-challenge-card">
