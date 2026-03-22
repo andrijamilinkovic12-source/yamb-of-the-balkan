@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX
 
 require('dotenv').config(); 
 
@@ -141,8 +141,8 @@ const TourneyStats = mongoose.model('TourneyStats', TourneyStatsSchema);
 const UserProfileSchema = new mongoose.Schema({
     firebaseUid: { type: String, unique: true, required: true },
     playerName: String,
-    photoUrl: { type: String, default: '' }, // NOVO: Slika sa Google naloga
-    friends: { type: [String], default: [] }, // NOVO: Prijatelji
+    photoUrl: { type: String, default: '' },
+    friends: { type: [String], default: [] },
     wins: { type: Number, default: 0 },
     losses: { type: Number, default: 0 },
     games: { type: Number, default: 0 },
@@ -169,11 +169,6 @@ const UserProfileSchema = new mongoose.Schema({
     lastLogin: { type: Date, default: Date.now }
 });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
-
-// --- REST API RUTE ---
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'www', 'index.html'));
-});
 
 // --- GLOBALNE PROMENLJIVE ZA IGRU ---
 let waitingPlayer = null; 
@@ -260,7 +255,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('set_player_data', async (data) => {
-        socket.photoUrl = data.photoUrl || ''; // Server pamti sliku igrača
+        socket.photoUrl = data.photoUrl || ''; 
 
         let bezbednoIme = "Nepoznat Igrač";
         
@@ -277,6 +272,12 @@ io.on('connection', (socket) => {
         socket.playerId = data.playerId || data.uid; 
         data.name = bezbednoIme; 
         
+        // NOVO: Osiguravamo da se igrač upiše u listu online igrača čak i ako je propustio 'set_my_id'
+        if (socket.playerId) {
+            onlinePlayers[socket.playerId] = socket.id;
+            registeredSockets[socket.id] = socket.playerId;
+        }
+
         if (!data.uid) {
             // GOST IGRAČ
             socket.playerStats = data.stats || { wins: 0, losses: 0 };
@@ -296,7 +297,7 @@ io.on('connection', (socket) => {
             if (user) {
                 user.playerName = data.name;
                 user.lastLogin = Date.now();
-                user.photoUrl = data.photoUrl || user.photoUrl; // Ažuriranje slike
+                user.photoUrl = data.photoUrl || user.photoUrl; 
                 
                 if (s.activeSkin) user.activeSkin = s.activeSkin;
                 if (s.activeEffect) user.activeEffect = s.activeEffect;
@@ -395,7 +396,7 @@ io.on('connection', (socket) => {
                 user = new UserProfile({
                     firebaseUid: data.uid,
                     playerName: data.name,
-                    photoUrl: data.photoUrl || '', // Slika za novog igrača
+                    photoUrl: data.photoUrl || '',
                     wins: s.wins || 0, losses: s.losses || 0, games: s.games || 0,
                     highscore: s.highscore || 0, totalScoreSum: s.totalScoreSum || 0,
                     balance: s.balance || 0, currentWinStreak: s.currentWinStreak || 0,
@@ -467,7 +468,7 @@ io.on('connection', (socket) => {
                 id: id, 
                 playerId: clientSocket.playerId,
                 name: clientSocket.playerName, 
-                photoUrl: clientSocket.photoUrl, // Šaljemo sliku klijentu
+                photoUrl: clientSocket.photoUrl, 
                 stats: clientSocket.playerStats || { wins: 0, losses: 0 },
                 status: isPlaying ? 'playing' : 'idle'
             };

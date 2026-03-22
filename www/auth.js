@@ -75,7 +75,9 @@ function osveziAuthUI(user) {
 
 // --- POMOĆNA FUNKCIJA ZA PAKOVANJE LOKALNE STATISTIKE ---
 function getFullLocalStats() {
-    const uid = localStorage.getItem('yamb_uid') || 'guest';
+    const uid = localStorage.getItem('yamb_uid');
+    if (!uid) return {}; // STRIKTNO ZABRANJEN GOST
+
     return {
         games: (window.app && window.app.stats) ? (window.app.stats.games || 0) : 0,
         wins: (window.app && window.app.stats) ? (window.app.stats.wins || 0) : 0,
@@ -94,7 +96,7 @@ function getFullLocalStats() {
         activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
         activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
         activeTheme: localStorage.getItem('yamb_theme') || 'dark',
-        lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || localStorage.getItem('yamb_last_daily') || ""
+        lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || ""
     };
 }
 
@@ -215,7 +217,7 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_player_name');
         if (window.app) {
             window.app.playerName = "";
-            window.app.playerId = "";
+            window.app.playerId = null; // Obrisano
             window.app.navigateTo('splash-screen');
         }
         
@@ -243,7 +245,6 @@ async function checkLoginStatus() {
 
     if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
         console.warn("Nema Capacitora - Prijava nije moguća na Webu.");
-        // Prikazujemo dugme posle 4 sekunde (kada završi animacija)
         setTimeout(() => { if (splashLoginContainer) splashLoginContainer.style.display = 'flex'; }, 4000);
         return; 
     }
@@ -270,12 +271,14 @@ async function checkLoginStatus() {
             }, 4000);
 
         } else {
-            // Nije ulogovan - prikaži dugme za prijavu nakon 4 sekunde
+            // Nije ulogovan - OBAVEZNO OSTAJE NA SPLASH EKRANU
             setTimeout(() => { if (splashLoginContainer) splashLoginContainer.style.display = 'flex'; }, 4000);
+            if (window.app) window.app.navigateTo('splash-screen');
         }
     } catch (e) {
-        // Greška pri proveri - traži prijavu
+        // Greška pri proveri - OBAVEZNO OSTAJE NA SPLASH EKRANU
         setTimeout(() => { if (splashLoginContainer) splashLoginContainer.style.display = 'flex'; }, 4000);
+        if (window.app) window.app.navigateTo('splash-screen');
     }
 }
 
@@ -292,7 +295,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function inicijalizujCloudSync() {
     if (window.app && window.app.socket) {
         
-        // 1. Skidamo stari osluškivač (ako postoji) i stavljamo novi BEZ kašnjenja
         window.app.socket.off('sync_local_stats');
         window.app.socket.on('sync_local_stats', (dbStats) => {
             
@@ -331,7 +333,6 @@ function inicijalizujCloudSync() {
             localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
             localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
             
-            // FIX ZA TEME: Spajanje cloud i lokalnih tema
             let lokalneTeme = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
             let cloudTeme = dbStats.unlockedThemes || [];
             let sakriveneTeme = (dbStats.unlockedSkins || []).filter(t => ['neon', 'amethyst'].includes(t));
@@ -340,7 +341,6 @@ function inicijalizujCloudSync() {
             let spojeneTeme = [...new Set([...lokalneTeme, ...cloudTeme, ...sakriveneTeme, ...opsteTeme])];
             localStorage.setItem('yamb_unlocked_themes', JSON.stringify(spojeneTeme));
 
-            // RESTAURACIJA AKTIVNIH STVARI IZ CLOUDA
             if (dbStats.activeSkin) localStorage.setItem('yamb_active_skin', dbStats.activeSkin);
             if (dbStats.activeEffect) localStorage.setItem('yamb_active_effect', dbStats.activeEffect);
             if (dbStats.activeTheme) {
@@ -351,15 +351,11 @@ function inicijalizujCloudSync() {
                 }
             }
             
-            // Oporavak datuma dnevnog izazova iz Clouda (po UID-u)
             const currentUid = localStorage.getItem('yamb_uid');
             if (dbStats.lastDaily) {
                 localStorage.setItem('yamb_last_daily_' + currentUid, dbStats.lastDaily);
-                localStorage.setItem('yamb_last_daily', dbStats.lastDaily); // Zbog kompatibilnosti
             } else {
-                // Ako nalog nema odigran izazov, brišemo lokalni trag!
                 localStorage.removeItem('yamb_last_daily_' + currentUid);
-                localStorage.removeItem('yamb_last_daily'); 
             }
 
             if (window.statsManager) {
@@ -389,8 +385,6 @@ function inicijalizujCloudSync() {
             }
         });
         
-        // 2. FORSIRANA SINHRONIZACIJA
-        // Čim se osluškivač zakači, tražimo od servera sveže podatke
         const uid = localStorage.getItem('yamb_uid');
         if (uid && window.app.socket.connected) {
             window.app.socket.emit('set_player_data', {
@@ -403,10 +397,8 @@ function inicijalizujCloudSync() {
         }
 
     } else {
-        // Ako socket još nije spreman, pokušaj ponovo za milisekundu
         setTimeout(inicijalizujCloudSync, 100);
     }
 }
 
-// Pokrećemo funkciju
 inicijalizujCloudSync();
