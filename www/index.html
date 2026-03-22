@@ -495,22 +495,23 @@
         </div>
     </div>
 
-    <div id="waiting-screen" class="screen" style="justify-content: center; padding: env(safe-area-inset-top) 10px env(safe-area-inset-bottom) 10px; overflow: hidden;">
+    <div id="waiting-screen" class="screen" style="justify-content: flex-start; padding: env(safe-area-inset-top) 10px env(safe-area-inset-bottom) 10px; overflow: hidden; padding-top: max(80px, env(safe-area-inset-top));">
         
         <button class="back-btn" onclick="app.cancelOnline()" style="z-index: 100;">←</button>
 
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 500px; height: 100%; margin: 0 auto; gap: 15px;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-start; width: 100%; max-width: 500px; height: 100%; margin: 0 auto; gap: 20px;">
             
-            <div style="text-align: center; width: 100%; margin-top: 25px; margin-bottom: 10px;">
-                <h2 id="waiting-title" style="color:var(--text-main); margin-bottom: 15px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1.5rem;" data-lang="ws_searching">ONLINE IGRANJE</h2>
-                <p id="wait-msg" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px; padding: 0 10px; line-height: 1.4;" data-lang="ws_wait_msg">Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.</p>
+            <div style="text-align: center; width: 100%; margin-bottom: 25px;">
+                <h2 id="waiting-title" style="color:var(--text-main); margin-bottom: 25px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1.6rem;" data-lang="ws_searching">ONLINE IGRANJE</h2>
                 
-                <div style="font-size: 0.85rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 6px 16px; border-radius: 20px; display: inline-block; border: 1px solid var(--success); box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.1); margin-bottom: 15px;">
-                    <span data-lang="ws_online_players">Online igrača:</span> <span id="waiting-online-count" style="font-size: 1rem;">1</span>
+                <p id="wait-msg" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px; padding: 0 15px; line-height: 1.5;" data-lang="ws_wait_msg">Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.</p>
+                
+                <div style="font-size: 0.9rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 8px 18px; border-radius: 20px; display: inline-block; border: 1px solid var(--success); box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.1); margin-bottom: 15px;">
+                    <span data-lang="ws_online_players">Online igrača:</span> <span id="waiting-online-count" style="font-size: 1.1rem;">1</span>
                 </div>
             </div>
 
-            <div style="display: flex; align-items: stretch; justify-content: center; gap: 15px; width: 100%; padding: 0 5px; min-height: 180px;">
+            <div style="display: flex; align-items: stretch; justify-content: center; gap: 20px; width: 100%; padding: 0 5px; min-height: 180px; position: relative;">
                 
                 <div style="flex: 1; background: var(--glass-panel); border: 2px solid var(--gold-main); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.15); backdrop-filter: blur(10px);">
                     <img id="waiting-my-img" src="https://ui-avatars.com/api/?name=Ja&background=333&color=E0C995" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
@@ -524,7 +525,7 @@
                     </div>
                 </div>
 
-                <div id="waiting-vs-badge" style="align-self: center; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; color: var(--danger); text-shadow: 0 2px 5px rgba(0,0,0,0.5); font-style: italic; opacity: 0.9;">VS</div>
+                <div id="waiting-vs-badge" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; font-weight: 900; color: var(--danger); text-shadow: 0 2px 10px rgba(0,0,0,0.8); font-style: italic; opacity: 1; z-index: 10;">VS</div>
 
                 <div id="waiting-opp-box" style="flex: 1; background: var(--glass-panel); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--glass-shadow); position: relative; overflow: hidden; transition: all 0.3s ease; backdrop-filter: blur(10px);">
                     
@@ -548,12 +549,12 @@
 
             </div>
 
-            <div id="share-area" class="hidden" style="width: 100%; max-width: 320px; padding: 0 10px;">
+            <div id="share-area" class="hidden" style="width: 100%; max-width: 320px; padding: 0 10px; margin-top: 15px;">
                 <input type="text" id="invite-link" class="hidden" readonly>
                 <button class="btn-menu btn-primary" style="padding: 12px; border-radius: 12px; font-size: 0.9rem; width: 100%; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);" onclick="app.shareInvite()" data-lang="invite_btn">🔗 PODELI LINK SA PRIJATELJEM</button>
             </div>
 
-            <div id="friends-list-container" class="hidden" style="width: 100%; max-width: 500px; background: var(--glass-panel); border: var(--glass-border); border-radius: 12px; padding: 10px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); display: flex; flex-direction: column; min-height: 150px;">
+            <div id="friends-list-container" class="hidden" style="width: 100%; max-width: 500px; background: var(--glass-panel); border: var(--glass-border); border-radius: 12px; padding: 10px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); display: flex; flex-direction: column; min-height: 150px; margin-top: 10px;">
                 <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; font-weight: 800; letter-spacing: 1px;" data-lang="ws_friends_title">TVOJI PRIJATELJI</h3>
                 <div id="friends-list" style="display:flex; flex-direction:row; gap:10px; overflow-x:auto; padding: 5px 10px 10px 10px; flex: 1;">
                 </div>
