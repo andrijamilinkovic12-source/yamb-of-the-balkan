@@ -445,15 +445,15 @@
                 <p data-lang="rules_sec1_text">Sabiraju se samo odgovarajući brojevi. Zbir ≥ 60 donosi +30 poena.</p>
 
                 <h4 data-lang="rules_sec2_title">2. SEKCIJA (MIN-MAX)</h4>
-                <p data-lang="rules_sec2_text">Formula: (Max - Min) * Broj jedinica. Bonus ≥ 60 je +40.</p>
+                <p data-lang="rules_sec2_text">Formula: (Max - Min) * Broj jedinica. Ako je rezultat ≥ 60, bonus je +40.</p>
 
                 <h4 data-lang="rules_sec3_title">3. SEKCIJA (KOMBINACIJE)</h4>
                 <ul>
-                    <li data-lang="rules_row_triling_desc"><strong>3 of a Kind:</strong> 3 iste. Zbir + 20.</li>
-                    <li data-lang="rules_row_kenta_desc"><strong>KENTA:</strong> 5 u nizu. 1. bac: 66 | 2. bac: 56 | 3. bac: 46.</li>
+                    <li data-lang="rules_row_triling_desc"><strong>TRILING:</strong> 3 iste. Zbir + 20.</li>
+                    <li data-lang="rules_row_kenta_desc"><strong>KENTA:</strong> 5 u nizu. 1. bacanje: 66 | 2. bacanje: 56 | 3. bacanje: 46.</li>
                     <li data-lang="rules_row_full_desc"><strong>FUL:</strong> 3 iste + 2 iste. Zbir + 30.</li>
-                    <li data-lang="rules_row_poker_desc"><strong>4 of a Kind:</strong> 4 iste. Zbir + 40.</li>
-                    <li data-lang="rules_row_yamb_desc"><strong>YAMB:</strong> 5 istih. Zbir + 50.</li>
+                    <li data-lang="rules_row_poker_desc"><strong>POKER:</strong> 4 iste. Zbir + 40.</li>
+                    <li data-lang="rules_row_yamb_desc": "<strong>YAMB:</strong> 5 istih. Zbir + 50."></li>
                 </ul>
              </div>
              <br><br>
@@ -502,11 +502,11 @@
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 500px; height: 100%; margin: 0 auto; gap: 15px;">
             
             <div style="text-align: center; width: 100%; margin-top: 10px;">
-                <h2 id="waiting-title" style="color:var(--text-main); margin-bottom: 5px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1.5rem;">ONLINE IGRANJE</h2>
-                <p id="wait-msg" style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 8px; padding: 0 10px;">Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.</p>
+                <h2 id="waiting-title" style="color:var(--text-main); margin-bottom: 5px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1.5rem;" data-lang="ws_searching">ONLINE IGRANJE</h2>
+                <p id="wait-msg" style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 8px; padding: 0 10px;" data-lang="ws_wait_msg">Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.</p>
                 
                 <div style="font-size: 0.8rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 4px 12px; border-radius: 20px; display: inline-block; border: 1px solid var(--success); box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.1);">
-                    🟢 Online igrača: <span id="waiting-online-count" style="font-size: 0.9rem;">1</span>
+                    <span data-lang="ws_online_players">Online igrača:</span> <span id="waiting-online-count" style="font-size: 0.9rem;">1</span>
                 </div>
             </div>
 
@@ -517,9 +517,9 @@
                     <span id="waiting-my-name" style="font-weight: 800; color: var(--text-main); font-size: 0.85rem; text-align: center; margin: 5px 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Igrač</span>
                     
                     <div style="background: rgba(0,0,0,0.3); width: 95%; border-radius: 8px; padding: 5px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.08);">
-                        <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;">Moć ⚡</div>
+                        <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;" data-lang="ws_power">Moć ⚡</div>
                         <div id="waiting-my-power" style="font-size: 1rem; font-weight: 900; color: #FFD700; margin-bottom: 2px;">0</div>
-                        <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;">Pob/Por</div>
+                        <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;" data-lang="ws_wl">Pob/Por</div>
                         <div id="waiting-my-wl" style="font-size: 0.8rem; font-weight: bold; color: var(--success);">0 / 0</div>
                     </div>
                 </div>
@@ -530,7 +530,7 @@
                     
                     <div id="waiting-opp-searching" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
                         <div class="loader" style="width: 30px; height: 30px; border-width: 3px; margin-bottom: 10px;"></div>
-                        <span style="font-size: 0.7rem; color: var(--text-muted); text-align: center; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;">Tražim<br>protivnika...</span>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); text-align: center; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;" data-lang="ws_searching_opp">Tražim<br>protivnika...</span>
                     </div>
 
                     <div id="waiting-opp-found" style="display: none; flex-direction: column; align-items: center; justify-content: space-between; width: 100%; height: 100%; animation: fadeIn 0.5s forwards;">
@@ -538,9 +538,9 @@
                         <span id="waiting-opp-name" style="font-weight: 800; color: var(--text-main); font-size: 0.85rem; text-align: center; margin: 5px 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Protivnik</span>
                         
                         <div style="background: rgba(0,0,0,0.3); width: 95%; border-radius: 8px; padding: 5px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.08);">
-                            <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;">Moć ⚡</div>
+                            <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;" data-lang="ws_power">Moć ⚡</div>
                             <div id="waiting-opp-power" style="font-size: 1rem; font-weight: 900; color: var(--danger); margin-bottom: 2px;">0</div>
-                            <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;">Pob/Por</div>
+                            <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;" data-lang="ws_wl">Pob/Por</div>
                             <div id="waiting-opp-wl" style="font-size: 0.8rem; font-weight: bold; color: var(--danger);">0 / 0</div>
                         </div>
                     </div>
@@ -554,7 +554,7 @@
             </div>
 
             <div id="friends-list-container" class="hidden" style="width: 100%; max-width: 500px; background: var(--glass-panel); border: var(--glass-border); border-radius: 12px; padding: 10px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); display: flex; flex-direction: column; min-height: 150px;">
-                <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; font-weight: 800; letter-spacing: 1px;">TVOJI PRIJATELJI</h3>
+                <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; font-weight: 800; letter-spacing: 1px;" data-lang="ws_friends_title">TVOJI PRIJATELJI</h3>
                 <div id="friends-list" style="display:flex; flex-direction:row; gap:10px; overflow-x:auto; padding: 5px 10px 10px 10px; flex: 1;">
                 </div>
             </div>

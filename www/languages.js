@@ -355,7 +355,33 @@ const TRANSLATIONS = {
         "auth_welcome": "Dobrodošli, ",
         "auth_sha1_error": "Greška 10/12500: Verovatno SHA-1 ključ u Firebase konzoli nije ispravan.",
         "auth_login_failed": "Prijava trenutno nije uspela. Proveri internet vezu.",
-        "auth_logout_error": "Došlo je do greške pri odjavi."
+        "auth_logout_error": "Došlo je do greške pri odjavi.",
+        
+        // --- ONLINE I PRIJATELJI ---
+        "ws_searching": "TRAŽENJE PROTIVNIKA...",
+        "ws_wait_msg": "Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.",
+        "ws_title_invite": "POZOVI PRIJATELJA",
+        "ws_msg_invite": "Pošaljite link, odaberite prijatelja iz liste ili dodajte novog!",
+        "ws_online_players": "Online igrača:",
+        "ws_power": "Moć ⚡",
+        "ws_wl": "Pob/Por",
+        "ws_searching_opp": "Tražim<br>protivnika...",
+        "ws_friends_title": "TVOJI PRIJATELJI",
+        "btn_add_friend": "DODAJ<br>PRIJATELJA",
+        "btn_invite_friend": "POZOVI",
+        "btn_offline": "OFFLINE",
+        "alert_invite_sent": "Pozivnica za partiju je poslata prijatelju!",
+        "alert_invite_title": "POZIVNICA",
+        "alert_friend_req": "Igrač {0} želi da vas doda u prijatelje. Prihvatate?",
+        "alert_new_friend": "NOVI PRIJATELJ",
+        "alert_friend_added": "Igrač {0} je sada vaš prijatelj! Možete ga pozvati na partiju iz menija 'Prijatelj'.",
+        "alert_room_invite": "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?",
+        "prompt_search_friend": "Unesi tačno ime igrača (Google ime) za pretragu:",
+        "alert_friend_req_sent": "Zahtev za prijateljstvo poslat igraču {0}.",
+        "alert_sent_title": "POSLATO",
+        "alert_search_not_found": "Nije pronađen nijedan igrač sa tim imenom. Pokušajte ponovo.",
+        "alert_search_title": "PRETRAGA",
+        "alert_search_found": "Pronađen je igrač: {0}. Da li želiš da ga dodaš u prijatelje?"
     },
     en: {
         // --- SPLASH SCREEN ---
@@ -711,7 +737,33 @@ const TRANSLATIONS = {
         "auth_welcome": "Welcome, ",
         "auth_sha1_error": "Error 10/12500: SHA-1 key in Firebase console is likely incorrect.",
         "auth_login_failed": "Login failed. Please check your internet connection.",
-        "auth_logout_error": "An error occurred during logout."
+        "auth_logout_error": "An error occurred during logout.",
+        
+        // --- ONLINE & FRIENDS ---
+        "ws_searching": "SEARCHING FOR OPPONENT...",
+        "ws_wait_msg": "Please wait, connecting you with the first available player.",
+        "ws_title_invite": "INVITE A FRIEND",
+        "ws_msg_invite": "Send the link, choose a friend from the list, or add a new one!",
+        "ws_online_players": "Players online:",
+        "ws_power": "Power ⚡",
+        "ws_wl": "W/L",
+        "ws_searching_opp": "Finding<br>opponent...",
+        "ws_friends_title": "YOUR FRIENDS",
+        "btn_add_friend": "ADD<br>FRIEND",
+        "btn_invite_friend": "INVITE",
+        "btn_offline": "OFFLINE",
+        "alert_invite_sent": "Game invitation sent to your friend!",
+        "alert_invite_title": "INVITATION",
+        "alert_friend_req": "Player {0} wants to add you as a friend. Accept?",
+        "alert_new_friend": "NEW FRIEND",
+        "alert_friend_added": "Player {0} is now your friend! You can invite them from the 'Friend' menu.",
+        "alert_room_invite": "Your friend {0} is inviting you to a private room. Do you want to play?",
+        "prompt_search_friend": "Enter the exact player name (Google name) to search:",
+        "alert_friend_req_sent": "Friend request sent to player {0}.",
+        "alert_sent_title": "SENT",
+        "alert_search_not_found": "No player found with that name. Please try again.",
+        "alert_search_title": "SEARCH",
+        "alert_search_found": "Player found: {0}. Do you want to add them as a friend?"
     }
 };
 
