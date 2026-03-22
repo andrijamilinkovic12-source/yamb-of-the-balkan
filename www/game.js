@@ -445,28 +445,57 @@ class YambApp {
         const list = document.getElementById('friends-list');
         if (!container || !list) return;
         
+        // Dinamički dodajemo CSS za skrol traku ako već ne postoji
+        if (!document.getElementById('friends-scroll-style')) {
+            const style = document.createElement('style');
+            style.id = 'friends-scroll-style';
+            style.innerHTML = `
+                #friends-list::-webkit-scrollbar { height: 6px; }
+                #friends-list::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 3px; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // JS stilizacija za horizontalni skrol
+        list.style.display = 'flex';
+        list.style.overflowX = 'auto';
+        list.style.gap = '15px';
+        list.style.padding = '15px 5px';
+        list.style.scrollSnapType = 'x mandatory';
+        list.style.WebkitOverflowScrolling = 'touch';
+        
         if (!friends || friends.length === 0) {
-            list.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem; text-align:center;">Nemate dodatih prijatelja.</p>`;
+            list.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem; text-align:center; width:100%;">Nemate dodatih prijatelja.</p>`;
             return;
         }
 
         let html = '';
         friends.forEach(f => {
             const pi = this.calculatePowerIndex(f.stats, false);
-            const statusColor = f.isOnline ? 'var(--success)' : 'var(--text-muted)';
-            const statusText = f.isOnline ? 'Online' : 'Offline';
-            const inviteBtn = f.isOnline ? `<button onclick="app.inviteFriendToRoom('${f.socketId}')" style="background:var(--gold-main); color:#000; border:none; padding:8px 12px; border-radius:6px; font-weight:900; cursor:pointer; font-size: 0.75rem;">POZOVI</button>` : '';
+            const w = f.stats ? (f.stats.wins || 0) : 0;
+            const l = f.stats ? (f.stats.losses || 0) : 0;
+            const isOnline = f.isOnline;
+            
+            const statusColor = isOnline ? 'var(--success)' : 'var(--danger)';
+            const btnDisabled = !isOnline ? 'disabled' : '';
+            const btnStyle = isOnline ? 'background:var(--gold-main); color:#000; cursor:pointer;' : 'background:gray; color:#ddd; cursor:not-allowed;';
+            const btnText = isOnline ? 'POZOVI' : 'OFFLINE';
 
+            // Kvadratna kartica osobe
             html += `
-                <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); margin-bottom: 5px;">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" style="width:40px; height:40px; border-radius:50%; border:2px solid ${statusColor}; object-fit:cover;">
-                        <div style="display:flex; flex-direction:column;">
-                            <span style="color:var(--text-main); font-weight:800; font-size:0.9rem;">${f.name}</span>
-                            <span style="color:${statusColor}; font-size:0.7rem; font-weight:bold;">${statusText} | ⚡ ${pi}</span>
-                        </div>
-                    </div>
-                    ${inviteBtn}
+                <div style="flex: 0 0 auto; width: 140px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; scroll-snap-align: start; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                    
+                    <div style="position: absolute; top: 10px; right: 10px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 5px ${statusColor};"></div>
+                    
+                    <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" style="width:55px; height:55px; border-radius:50%; border:2px solid ${statusColor}; object-fit:cover; margin-bottom: 8px;">
+                    
+                    <span style="color:var(--text-main); font-weight:800; font-size:0.9rem; text-align:center; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 4px;">${f.name}</span>
+                    
+                    <span style="color:var(--text-muted); font-size:0.75rem; margin-bottom: 2px;">W/L: ${w} / ${l}</span>
+                    
+                    <span style="color:var(--gold-main); font-weight:bold; font-size:0.8rem; margin-bottom: 12px;">⚡ ${pi}</span>
+                    
+                    <button ${btnDisabled} onclick="app.inviteFriendToRoom('${f.socketId}')" style="${btnStyle} border:none; padding:8px 0; width: 100%; border-radius:6px; font-weight:900; font-size: 0.75rem; transition: transform 0.1s;">${btnText}</button>
                 </div>
             `;
         });
@@ -1117,7 +1146,10 @@ class YambApp {
         this.navigateTo('waiting-screen'); 
         document.getElementById('wait-msg').innerText = gt('hs_loading') || 'Učitavanje...'; 
         
-        // Prikaz mog profila u VS kvadratu (da lepo izgleda i ovde)
+        // Postavljanje naslova da se zna da smo u modu za prijatelje
+        const waitTitle = document.getElementById('waiting-title');
+        if (waitTitle) waitTitle.innerText = "POZOVI PRIJATELJA";
+        
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
         if (myImg && authImg && authImg.src && authImg.src.includes('http')) {
@@ -1150,7 +1182,8 @@ class YambApp {
             }, 500);
         }
         
-        this.joinPrivateGame(nickname, roomId); 
+        // Dodajemo TRUE na kraju da funkcija zna da smo mi HOST i da ne pali Random UI
+        this.joinPrivateGame(nickname, roomId, true); 
     }
 
     async shareInvite() {
@@ -1205,7 +1238,7 @@ class YambApp {
         }
     }
     
-    async joinPrivateGame(nickname, roomId) { 
+    async joinPrivateGame(nickname, roomId, isHost = false) { 
         this.navigateTo('waiting-screen'); 
         
         const myImg = document.getElementById('waiting-my-img');
@@ -1223,15 +1256,21 @@ class YambApp {
 
         const oppBox = document.getElementById('waiting-opp-box');
         if (oppBox) {
-            oppBox.style.display = 'flex'; 
-            document.getElementById('waiting-opp-searching').style.display = 'flex';
-            document.getElementById('waiting-opp-found').style.display = 'none';
-            oppBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            oppBox.style.boxShadow = 'var(--glass-shadow)';
+            if (isHost) {
+                // Ako smo host, OBAVEZNO držimo Random UI sakriven
+                oppBox.style.display = 'none'; 
+            } else {
+                // Ako smo igrač koji prihvata poziv preko linka
+                oppBox.style.display = 'flex'; 
+                document.getElementById('waiting-opp-searching').style.display = 'flex';
+                document.getElementById('waiting-opp-found').style.display = 'none';
+                oppBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                oppBox.style.boxShadow = 'var(--glass-shadow)';
+            }
         }
 
         const friendsContainer = document.getElementById('friends-list-container');
-        if (friendsContainer) friendsContainer.classList.add('hidden'); // Sakrijemo prijatelje ako nismo mi host
+        if (friendsContainer && !isHost) friendsContainer.classList.add('hidden'); // Sakrijemo prijatelje ako nismo mi host
 
         this.initSocketConnection();
         this.setupSocketListeners(nickname); 
