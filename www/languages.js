@@ -114,6 +114,7 @@ const TRANSLATIONS = {
         "stat_trophies": "Trofeji",
         "stat_balance": "Stanje",
         "stat_online": "ONLINE IGRAČA",
+        "stat_power_index": "INDEKS MOĆI ⚡",
 
         // --- TOP LISTA ---
         "hs_local": "LOKALNA",
@@ -469,6 +470,7 @@ const TRANSLATIONS = {
         "stat_trophies": "Trophies",
         "stat_balance": "Balance",
         "stat_online": "PLAYERS ONLINE",
+        "stat_power_index": "POWER INDEX ⚡",
 
         // --- HIGH SCORES ---
         "hs_local": "LOCAL",

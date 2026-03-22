@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING)
+// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -854,7 +854,46 @@ class YambApp {
         const winBar = document.getElementById('stat-bar-win'); const lossBar = document.getElementById('stat-bar-loss');
         if(winBar) winBar.style.width = winWidth + "%"; if(lossBar) lossBar.style.width = lossWidth + "%";
 
-        let currentStreak = 0;
+        // --- KALKULACIJA INDEKSA MOĆI (POWER INDEX) ---
+        // 1. Prikupljanje svih varijabli
+        let leaguePts = 0;
+        if (window.kvartalnaLiga) {
+            leaguePts = parseInt(window.kvartalnaLiga.getScores().quarterlyScore) || 0;
+        }
+        let tourneyWins = (window.statsManager && window.statsManager.stats.tournamentWins) ? window.statsManager.stats.tournamentWins : 0;
+        let maxStreak = this.stats.maxWinStreak || 0;
+        let currentStreak = this.stats.currentWinStreak || 0; // Zadržavamo i trenutni prikaz
+
+        // 2. Formula (Možeš podešavati množioce po želji)
+        let powerIndex = Math.round(
+            (rate * 10) +               // Uspešnost: 50% = 500 PI
+            (leaguePts * 0.02) +        // Liga poeni: 10,000 pts = 200 PI
+            (tourneyWins * 300) +       // Svaki osvojeni turnir daje +300 PI
+            (avg * 0.5) +               // Prosek od 2000 = 1000 PI
+            (this.stats.highscore * 0.2)+// Rekord od 3000 = 600 PI
+            (maxStreak * 30)            // Max niz od 10 pobeda = 300 PI
+        );
+        
+        // Animacija brojača za "Wow" efekat (od 0 do vrednosti)
+        const powerEl = document.getElementById('stat-power-index');
+        if (powerEl) {
+            let startVal = 0;
+            const duration = 1000; 
+            const steps = 30;
+            const increment = powerIndex / steps;
+            let currentStep = 0;
+            const timer = setInterval(() => {
+                currentStep++;
+                startVal += increment;
+                powerEl.innerText = Math.round(startVal);
+                if(currentStep >= steps) {
+                    powerEl.innerText = powerIndex;
+                    clearInterval(timer);
+                }
+            }, Math.floor(duration/steps));
+        }
+        // ----------------------------------------------
+
         const realBalance = localStorage.getItem('yamb_dukati') || 0;
         document.getElementById('stat-balance').innerText = realBalance;
 
@@ -867,7 +906,7 @@ class YambApp {
         trophyList.forEach(item => { if (ALL_TROPHY_IDS.includes(item)) realTrophyCount++; });
         document.getElementById('stat-trophies').innerText = `${realTrophyCount} / ${ALL_TROPHY_IDS.length}`;
         
-        if (sm) { const stats = sm.getStats(); currentStreak = stats.currentWinStreak > 0 ? stats.currentWinStreak : 0; }
+        if (sm) { const stats = sm.getStats(); currentStreak = stats.currentWinStreak > 0 ? stats.currentWinStreak : currentStreak; }
         document.getElementById('stat-streak').innerText = currentStreak;
         this.updateOnlineCounterUI();
     }
@@ -882,8 +921,19 @@ class YambApp {
         this.stats.games++; 
         this.stats.totalScoreSum += score; 
         if (score > this.stats.highscore) this.stats.highscore = score; 
-        if (resultType === 'win') this.stats.wins++; 
-        else if (resultType === 'loss') this.stats.losses++; 
+        
+        // Dodato praćenje trenutnog i maksimalnog niza pobeda
+        if (resultType === 'win') {
+            this.stats.wins++; 
+            this.stats.currentWinStreak = (this.stats.currentWinStreak || 0) + 1;
+            if (this.stats.currentWinStreak > (this.stats.maxWinStreak || 0)) {
+                this.stats.maxWinStreak = this.stats.currentWinStreak;
+            }
+        } else if (resultType === 'loss') {
+            this.stats.losses++; 
+            this.stats.currentWinStreak = 0; // Prekini niz
+        } 
+        
         localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); 
 
         if (this.socket && this.socket.connected) {
