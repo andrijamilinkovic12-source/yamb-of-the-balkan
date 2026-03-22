@@ -21,7 +21,7 @@ class OnlinePlayersManager {
                     <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="window.onlinePlayersManager.closeModal()">✖</span>
                 </div>
                 <div id="online-players-list" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-                    <div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">Učitavanje...</div>
+                    <div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">${gt('online_loading') || 'Učitavanje... ⏳'}</div>
                 </div>
             </div>
         `;
@@ -53,12 +53,12 @@ class OnlinePlayersManager {
 
     requestPlayers() {
         const listContainer = document.getElementById('online-players-list');
-        listContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">Učitavanje...</div>`;
+        listContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">${gt('online_loading') || 'Učitavanje... ⏳'}</div>`;
 
         if (this.app && this.app.socket && this.app.socket.connected) {
             this.app.socket.emit('get_online_players'); 
         } else {
-            listContainer.innerHTML = `<div style="text-align:center; color: var(--danger); font-size: 0.9rem;">Nema konekcije sa serverom.</div>`;
+            listContainer.innerHTML = `<div style="text-align:center; color: var(--danger); font-size: 0.9rem;">${gt('online_no_conn') || 'Nema konekcije sa serverom.'}</div>`;
         }
     }
 
@@ -67,7 +67,7 @@ class OnlinePlayersManager {
         listContainer.innerHTML = '';
 
         if (!players || players.length === 0) {
-            listContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">Trenutno nema drugih igrača.</div>`;
+            listContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">${gt('online_no_players') || 'Trenutno nema drugih igrača.'}</div>`;
             return;
         }
 
@@ -94,7 +94,7 @@ class OnlinePlayersManager {
             const nameSpan = document.createElement('span');
             nameSpan.style.cssText = 'color: var(--text-main); font-weight: 800; font-size: 0.95rem;';
             if (isMe) {
-                nameSpan.innerText = `${displayName} (Ti)`;
+                nameSpan.innerText = `${displayName} ${gt('online_you') || '(Ti)'}`;
                 nameSpan.style.color = 'var(--gold-main)';
                 imgEl.style.borderColor = 'var(--success)';
             } else {
@@ -126,12 +126,12 @@ class OnlinePlayersManager {
             actionDiv.style.cssText = 'display: flex; gap: 8px;';
             
             if (player.status === 'playing') {
-                actionDiv.innerHTML = `<span style="color: #FF9800; font-size: 0.7rem; font-weight: 800; background: rgba(255, 152, 0, 0.1); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255, 152, 0, 0.3);">IGRA</span>`;
+                actionDiv.innerHTML = `<span style="color: #FF9800; font-size: 0.7rem; font-weight: 800; background: rgba(255, 152, 0, 0.1); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255, 152, 0, 0.3);">${gt('online_playing_short') || 'IGRA'}</span>`;
             } else if (!isMe) {
                 // Dugme Izazovi (Mačevi) - UVEK VIDLJIVO
                 const duelBtn = document.createElement('button');
                 duelBtn.innerHTML = '⚔️';
-                duelBtn.title = "Izazovi na duel";
+                duelBtn.title = gt('online_challenge_btn') || "Izazovi na duel";
                 duelBtn.style.cssText = 'background: linear-gradient(135deg, #E53935, #C62828); border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(229, 57, 53, 0.4); transition: transform 0.1s;';
                 duelBtn.onmousedown = () => duelBtn.style.transform = 'scale(0.9)';
                 duelBtn.onmouseup = () => duelBtn.style.transform = 'scale(1)';
@@ -149,7 +149,7 @@ class OnlinePlayersManager {
                 if (!isFriend) {
                     const addBtn = document.createElement('button');
                     addBtn.innerHTML = '➕';
-                    addBtn.title = "Dodaj prijatelja";
+                    addBtn.title = (gt('btn_add_friend') || "Dodaj prijatelja").replace('<br>', ' ');
                     addBtn.style.cssText = 'background: linear-gradient(135deg, #4CAF50, #2E7D32); border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 1rem; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4); transition: transform 0.1s;';
                     addBtn.onmousedown = () => addBtn.style.transform = 'scale(0.9)';
                     addBtn.onmouseup = () => addBtn.style.transform = 'scale(1)';

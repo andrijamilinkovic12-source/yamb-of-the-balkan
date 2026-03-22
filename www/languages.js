@@ -179,6 +179,7 @@ const TRANSLATIONS = {
         "online_you": "(Vi)",
         "online_challenge_btn": "⚔️ IZAZOVI",
         "online_playing": "⚔️ IGRA U TOKU",
+        "online_playing_short": "IGRA",
         
         // KOLONE (SR)
         "col_down": "↓",
@@ -561,6 +562,7 @@ const TRANSLATIONS = {
         "online_you": "(You)",
         "online_challenge_btn": "⚔️ CHALLENGE",
         "online_playing": "⚔️ IN GAME",
+        "online_playing_short": "PLAYING",
 
         // EN KOLONE
         "col_down": "↓",
