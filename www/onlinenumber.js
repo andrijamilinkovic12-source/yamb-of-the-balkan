@@ -128,7 +128,7 @@ class OnlinePlayersManager {
             if (player.status === 'playing') {
                 actionDiv.innerHTML = `<span style="color: #FF9800; font-size: 0.7rem; font-weight: 800; background: rgba(255, 152, 0, 0.1); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255, 152, 0, 0.3);">IGRA</span>`;
             } else if (!isMe) {
-                // Dugme Izazovi (Mačevi)
+                // Dugme Izazovi (Mačevi) - UVEK VIDLJIVO
                 const duelBtn = document.createElement('button');
                 duelBtn.innerHTML = '⚔️';
                 duelBtn.title = "Izazovi na duel";
@@ -137,17 +137,27 @@ class OnlinePlayersManager {
                 duelBtn.onmouseup = () => duelBtn.style.transform = 'scale(1)';
                 duelBtn.onclick = () => { this.closeModal(); this.app.challengePlayer(player.id, displayName); };
                 
-                // Dugme Dodaj Prijatelja (Plus)
-                const addBtn = document.createElement('button');
-                addBtn.innerHTML = '➕';
-                addBtn.title = "Dodaj prijatelja";
-                addBtn.style.cssText = 'background: linear-gradient(135deg, #4CAF50, #2E7D32); border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 1rem; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4); transition: transform 0.1s;';
-                addBtn.onmousedown = () => addBtn.style.transform = 'scale(0.9)';
-                addBtn.onmouseup = () => addBtn.style.transform = 'scale(1)';
-                addBtn.onclick = () => { this.closeModal(); this.app.sendFriendRequest(player.id, displayName); };
-
                 actionDiv.appendChild(duelBtn);
-                actionDiv.appendChild(addBtn);
+
+                // PROVERA DA LI JE IGRAČ VEĆ TVOJ PRIJATELJ
+                let isFriend = false;
+                if (window.app && window.app.friendsListUids && window.app.friendsListUids.includes(player.playerId)) {
+                    isFriend = true;
+                }
+
+                // Prikazujemo + dugme SAMO ako ti NIJE prijatelj
+                if (!isFriend) {
+                    const addBtn = document.createElement('button');
+                    addBtn.innerHTML = '➕';
+                    addBtn.title = "Dodaj prijatelja";
+                    addBtn.style.cssText = 'background: linear-gradient(135deg, #4CAF50, #2E7D32); border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 1rem; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4); transition: transform 0.1s;';
+                    addBtn.onmousedown = () => addBtn.style.transform = 'scale(0.9)';
+                    addBtn.onmouseup = () => addBtn.style.transform = 'scale(1)';
+                    // Prosleđujemo i player.playerId kao treći argument
+                    addBtn.onclick = () => { this.closeModal(); this.app.sendFriendRequest(player.id, displayName, player.playerId); };
+
+                    actionDiv.appendChild(addBtn);
+                }
             }
 
             item.appendChild(actionDiv);

@@ -680,39 +680,76 @@ io.on('connection', (socket) => {
     });
 
     // --- SISTEM PRIJATELJA ---
-    socket.on('send_friend_req', (data) => {
-        const { targetId, challengerName } = data;
-        socket.to(targetId).emit('incoming_friend_req', {
-            challengerId: socket.id,
-            challengerName: challengerName || "Gost"
-        });
+    socket.on('search_player', async (query) => {
+        if (!MONGO_URI) return;
+        try {
+            // Striktno poklapanje imena, ignoriše velika/mala slova
+            const regex = new RegExp('^' + query + '$', 'i'); 
+            const users = await UserProfile.find({ playerName: regex }).limit(5);
+
+            const results = users.map(u => {
+                const isOnline = Object.keys(onlinePlayers).includes(u.firebaseUid);
+                return {
+                    uid: u.firebaseUid,
+                    name: u.playerName,
+                    photoUrl: u.photoUrl,
+                    socketId: isOnline ? onlinePlayers[u.firebaseUid] : null
+                };
+            });
+            socket.emit('search_results', results);
+        } catch(err) {
+            console.error(err);
+        }
+    });
+
+    socket.on('send_friend_req', async (data) => {
+        const { targetId, targetUid, challengerName } = data;
+
+        if (targetId && io.sockets.sockets.get(targetId)) {
+            // Ako je online, iskače popup
+            socket.to(targetId).emit('incoming_friend_req', {
+                challengerId: socket.id,
+                challengerUid: socket.playerId,
+                challengerName: challengerName || "Gost"
+            });
+        } else if (targetUid && MONGO_URI) {
+            // Ako je OFFLINE iz pretrage, dodajemo ga automatski u bazu kako bi UX bio gladak
+            try {
+                const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
+                const friend = await UserProfile.findOne({ firebaseUid: targetUid });
+
+                if (me && friend) {
+                    if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
+                    if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
+                    await me.save();
+                    await friend.save();
+                    
+                    socket.emit('friend_req_accepted', { name: friend.playerName });
+                }
+            } catch(e) { console.error(e); }
+        }
     });
 
     socket.on('friend_req_response', async (data) => {
-        const { challengerId, accepted } = data;
+        const { challengerId, challengerUid, accepted } = data;
         const challengerSocket = io.sockets.sockets.get(challengerId);
 
         if (accepted && MONGO_URI) {
             try {
                 const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
-                if (me && challengerSocket && challengerSocket.playerId) {
-                    const friend = await UserProfile.findOne({ firebaseUid: challengerSocket.playerId });
-                    if (friend) {
-                        if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
-                        if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
-                        await me.save();
-                        await friend.save();
+                const friendQuery = challengerUid ? { firebaseUid: challengerUid } : { firebaseUid: challengerSocket?.playerId };
+                const friend = await UserProfile.findOne(friendQuery);
 
-                        // Obavesti igrača koji je poslao zahtev
-                        io.to(challengerId).emit('friend_req_accepted', { name: socket.playerName });
-                        
-                        // Obavesti i igrača koji je upravo PRIHVATIO zahtev
-                        socket.emit('friend_req_accepted', { name: friend.playerName });
-                    }
+                if (me && friend) {
+                    if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
+                    if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
+                    await me.save();
+                    await friend.save();
+
+                    if (challengerSocket) io.to(challengerId).emit('friend_req_accepted', { name: socket.playerName });
+                    socket.emit('friend_req_accepted', { name: friend.playerName });
                 }
-            } catch(err) { console.error("Greška pri dodavanju prijatelja", err); }
-        } else if (!accepted && challengerSocket) {
-            io.to(challengerId).emit('error_msg', 'Igrač je odbio zahtev za prijateljstvo.');
+            } catch(err) { console.error(err); }
         }
     });
 

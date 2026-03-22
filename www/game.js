@@ -254,6 +254,7 @@ class YambApp {
         this.lastMoveSnapshot = null; 
         this.pendingNewGamePlayers = 1;
         this.lastGlobalMsg = null; 
+        this.friendsListUids = []; // Za pamćenje ID-jeva prijatelja
         
         this.socket = null; 
         this.onlineMode = false; 
@@ -428,77 +429,65 @@ class YambApp {
     }
 
     // --- SISTEM PRIJATELJA ---
-    sendFriendRequest(targetId, targetName) {
-        if (!localStorage.getItem('yamb_uid')) {
-            this.modal.alert("Morate biti prijavljeni preko Google-a da biste dodavali prijatelje.", "PRIJAVA OBAVEZNA");
-            return;
+    async searchAndAddFriend() {
+        const searchName = await this.modal.prompt("Unesi tačno ime igrača (Google ime) za pretragu:", "PRETRAGA");
+        if (searchName && searchName.trim().length > 0) {
+            this.initSocketConnection();
+            this.socket.emit('search_player', searchName.trim());
         }
-        
+    }
+
+    sendFriendRequest(targetId, targetName, targetUid = null) { 
+        if (!localStorage.getItem('yamb_uid')) return;
         this.initSocketConnection(); 
         if (!this.socket || !this.socket.connected) return;
-        this.socket.emit('send_friend_req', { targetId, challengerName: this.playerName });
-        this.modal.alert(`Zahtev za prijateljstvo poslat igraču ${targetName}.`, "PRIJATELJSTVO");
+        this.socket.emit('send_friend_req', { targetId, targetUid, challengerName: this.playerName });
+        this.modal.alert(`Zahtev za prijateljstvo poslat igraču ${targetName}.`, "POSLATO");
     }
 
     renderFriendsList(friends) {
-        const container = document.getElementById('friends-list-container');
         const list = document.getElementById('friends-list');
-        if (!container || !list) return;
+        if (!list) return;
         
-        // Dinamički dodajemo CSS za skrol traku ako već ne postoji
-        if (!document.getElementById('friends-scroll-style')) {
-            const style = document.createElement('style');
-            style.id = 'friends-scroll-style';
-            style.innerHTML = `
-                #friends-list::-webkit-scrollbar { height: 6px; }
-                #friends-list::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 3px; }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // JS stilizacija za horizontalni skrol
         list.style.display = 'flex';
         list.style.overflowX = 'auto';
         list.style.gap = '15px';
         list.style.padding = '15px 5px';
         list.style.scrollSnapType = 'x mandatory';
         list.style.WebkitOverflowScrolling = 'touch';
-        
-        if (!friends || friends.length === 0) {
-            list.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem; text-align:center; width:100%;">Nemate dodatih prijatelja.</p>`;
-            return;
+
+        // STATIČNI KVADRAT SA PLUSOM ZA PRETRAGU IGRAČA
+        let html = `
+            <div style="flex: 0 0 auto; width: 140px; background: rgba(0,0,0,0.5); border: 2px dashed var(--gold-main); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; scroll-snap-align: start; cursor: pointer; transition: transform 0.2s;" onclick="app.searchAndAddFriend()">
+                <div style="font-size: 3.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 10px; font-weight: 300;">+</div>
+                <span style="color:var(--text-main); font-weight:800; font-size:0.85rem; text-align:center;">DODAJ<br>PRIJATELJA</span>
+            </div>
+        `;
+
+        if (friends && friends.length > 0) {
+            friends.forEach(f => {
+                const pi = this.calculatePowerIndex(f.stats, false);
+                const w = f.stats ? (f.stats.wins || 0) : 0;
+                const l = f.stats ? (f.stats.losses || 0) : 0;
+                const isOnline = f.isOnline;
+                
+                const statusColor = isOnline ? 'var(--success)' : 'var(--danger)';
+                const btnDisabled = !isOnline ? 'disabled' : '';
+                const btnStyle = isOnline ? 'background:var(--gold-main); color:#000; cursor:pointer;' : 'background:gray; color:#ddd; cursor:not-allowed;';
+                const btnText = isOnline ? 'POZOVI' : 'OFFLINE';
+
+                html += `
+                    <div style="flex: 0 0 auto; width: 140px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; scroll-snap-align: start; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                        <div style="position: absolute; top: 10px; right: 10px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 5px ${statusColor};"></div>
+                        <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" style="width:55px; height:55px; border-radius:50%; border:2px solid ${statusColor}; object-fit:cover; margin-bottom: 8px;">
+                        <span style="color:var(--text-main); font-weight:800; font-size:0.9rem; text-align:center; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 4px;">${f.name}</span>
+                        <span style="color:var(--text-muted); font-size:0.75rem; margin-bottom: 2px;">W/L: ${w} / ${l}</span>
+                        <span style="color:var(--gold-main); font-weight:bold; font-size:0.8rem; margin-bottom: 12px;">⚡ ${pi}</span>
+                        <button ${btnDisabled} onclick="app.inviteFriendToRoom('${f.socketId}')" style="${btnStyle} border:none; padding:8px 0; width: 100%; border-radius:6px; font-weight:900; font-size: 0.75rem; transition: transform 0.1s;">${btnText}</button>
+                    </div>
+                `;
+            });
         }
-
-        let html = '';
-        friends.forEach(f => {
-            const pi = this.calculatePowerIndex(f.stats, false);
-            const w = f.stats ? (f.stats.wins || 0) : 0;
-            const l = f.stats ? (f.stats.losses || 0) : 0;
-            const isOnline = f.isOnline;
-            
-            const statusColor = isOnline ? 'var(--success)' : 'var(--danger)';
-            const btnDisabled = !isOnline ? 'disabled' : '';
-            const btnStyle = isOnline ? 'background:var(--gold-main); color:#000; cursor:pointer;' : 'background:gray; color:#ddd; cursor:not-allowed;';
-            const btnText = isOnline ? 'POZOVI' : 'OFFLINE';
-
-            // Kvadratna kartica osobe
-            html += `
-                <div style="flex: 0 0 auto; width: 140px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; scroll-snap-align: start; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-                    
-                    <div style="position: absolute; top: 10px; right: 10px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 5px ${statusColor};"></div>
-                    
-                    <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" style="width:55px; height:55px; border-radius:50%; border:2px solid ${statusColor}; object-fit:cover; margin-bottom: 8px;">
-                    
-                    <span style="color:var(--text-main); font-weight:800; font-size:0.9rem; text-align:center; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 4px;">${f.name}</span>
-                    
-                    <span style="color:var(--text-muted); font-size:0.75rem; margin-bottom: 2px;">W/L: ${w} / ${l}</span>
-                    
-                    <span style="color:var(--gold-main); font-weight:bold; font-size:0.8rem; margin-bottom: 12px;">⚡ ${pi}</span>
-                    
-                    <button ${btnDisabled} onclick="app.inviteFriendToRoom('${f.socketId}')" style="${btnStyle} border:none; padding:8px 0; width: 100%; border-radius:6px; font-weight:900; font-size: 0.75rem; transition: transform 0.1s;">${btnText}</button>
-                </div>
-            `;
-        });
         list.innerHTML = html;
     }
 
@@ -1136,53 +1125,44 @@ class YambApp {
         this.currentHostingRoomId = roomId; 
         
         let baseUrl = window.location.origin;
-        if (typeof SERVER_URL !== 'undefined' && SERVER_URL.startsWith('http')) {
-            baseUrl = SERVER_URL;
-        }
+        if (typeof SERVER_URL !== 'undefined' && SERVER_URL.startsWith('http')) baseUrl = SERVER_URL;
         if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
-
         const shareUrl = baseUrl + "/?room=" + roomId; 
         
         this.navigateTo('waiting-screen'); 
-        document.getElementById('wait-msg').innerText = gt('hs_loading') || 'Učitavanje...'; 
         
-        // Postavljanje naslova da se zna da smo u modu za prijatelje
-        const waitTitle = document.getElementById('waiting-title');
-        if (waitTitle) waitTitle.innerText = "POZOVI PRIJATELJA";
+        // Podesi naslove specijalno za prijatelje
+        document.getElementById('waiting-title').innerText = "POZOVI PRIJATELJA";
+        document.getElementById('wait-msg').innerText = "Pošaljite link, odaberite prijatelja iz liste ili dodajte novog!";
         
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
-        if (myImg && authImg && authImg.src && authImg.src.includes('http')) {
-            myImg.src = authImg.src;
-        } else if (myImg) {
-            myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
-        }
-        document.getElementById('waiting-my-name').innerText = nickname;
+        if (myImg && authImg && authImg.src && authImg.src.includes('http')) myImg.src = authImg.src;
+        else if (myImg) myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         
+        document.getElementById('waiting-my-name').innerText = nickname;
         const myStats = this.getFullLocalStats();
         document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
         document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
 
-        // Sakrijemo VS ekran za random meč, prikažemo link i prijatelje
+        // UGAŠENI SVI ELEMENTI ZA RANDOM IGRU!
         const oppBox = document.getElementById('waiting-opp-box');
-        const shareArea = document.getElementById('share-area');
-        const friendsContainer = document.getElementById('friends-list-container');
-        const friendsList = document.getElementById('friends-list');
-        
+        const vsBadge = document.getElementById('waiting-vs-badge');
         if (oppBox) oppBox.style.display = 'none'; 
+        if (vsBadge) vsBadge.style.display = 'none';
+
+        const shareArea = document.getElementById('share-area');
         if (shareArea) shareArea.classList.remove('hidden'); 
         document.getElementById('invite-link').value = shareUrl; 
         
-        if (friendsContainer && friendsList) {
+        const friendsContainer = document.getElementById('friends-list-container');
+        if (friendsContainer) {
             friendsContainer.classList.remove('hidden');
-            friendsList.innerHTML = `<div class="loader" style="width: 25px; height: 25px; margin: 20px auto;"></div>`;
+            document.getElementById('friends-list').innerHTML = `<div class="loader" style="width: 25px; height: 25px; margin: 20px auto;"></div>`;
             this.initSocketConnection();
-            setTimeout(() => {
-                if(this.socket && this.socket.connected) this.socket.emit('get_friends_list');
-            }, 500);
+            setTimeout(() => { if(this.socket && this.socket.connected) this.socket.emit('get_friends_list'); }, 500);
         }
         
-        // Dodajemo TRUE na kraju da funkcija zna da smo mi HOST i da ne pali Random UI
         this.joinPrivateGame(nickname, roomId, true); 
     }
 
@@ -1291,33 +1271,33 @@ class YambApp {
         if (!nickname) return; 
         this.navigateTo('waiting-screen'); 
         
-        // Prikaz mog profila u VS kvadratu
+        document.getElementById('waiting-title').innerText = gt('ws_searching') || "TRAŽENJE PROTIVNIKA...";
+        document.getElementById('wait-msg').innerText = gt('ws_wait_msg') || "Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.";
+
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
-        if (myImg && authImg && authImg.src && authImg.src.includes('http')) {
-            myImg.src = authImg.src;
-        } else if (myImg) {
-            myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
-        }
+        if (myImg && authImg && authImg.src && authImg.src.includes('http')) myImg.src = authImg.src;
+        else if (myImg) myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         document.getElementById('waiting-my-name').innerText = nickname;
         
         const myStats = this.getFullLocalStats();
         document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
         document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
 
-        // Resetovanje protivničkog kvadrata
+        // PALIMO "VS" ZNAK I PROTIVNIKA
         const oppBox = document.getElementById('waiting-opp-box');
+        const vsBadge = document.getElementById('waiting-vs-badge');
+        
         if (oppBox) {
             oppBox.style.display = 'flex';
             document.getElementById('waiting-opp-searching').style.display = 'flex';
             document.getElementById('waiting-opp-found').style.display = 'none';
-            oppBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            oppBox.style.boxShadow = 'var(--glass-shadow)';
         }
+        if (vsBadge) vsBadge.style.display = 'flex';
 
+        // SAKRIVAMO PRIJATELJE U OVOM MODU
         const friendsContainer = document.getElementById('friends-list-container');
         if (friendsContainer) friendsContainer.classList.add('hidden');
-
         document.getElementById('share-area').classList.add('hidden'); 
         
         this.initSocketConnection();
@@ -1346,6 +1326,7 @@ class YambApp {
         this.socket.off('incoming_friend_req');
         this.socket.off('friend_req_accepted');
         this.socket.off('friends_list_data');
+        this.socket.off('search_results');
         this.socket.off('incoming_room_invite');
 
         this.socket.on('room_full', async () => { await this.modal.alert(gt('msg_room_full')); this.cancelOnline(); }); 
@@ -1367,7 +1348,7 @@ class YambApp {
             const oppBox = document.getElementById('waiting-opp-box');
             
             if (searchingUI && foundUI && oppBox) {
-                oppBox.style.display = 'flex'; // Zbog private host moda
+                oppBox.style.display = 'flex'; // Zbog private host moda (u slucaju da se pridruzujemo)
                 searchingUI.style.display = 'none';
                 foundUI.style.display = 'flex';
                 
@@ -1489,7 +1470,8 @@ class YambApp {
         // --- PRIJATELJI EVENTI ---
         this.socket.on('incoming_friend_req', async (data) => {
             const accepted = await this.modal.confirm(`Igrač ${data.challengerName} želi da vas doda u prijatelje. Prihvatate?`);
-            this.socket.emit('friend_req_response', { challengerId: data.challengerId, accepted: accepted });
+            // PROSLEDJIVANJE challengerUid-a RADI OFFLINE AUTO-DODAVANJA
+            this.socket.emit('friend_req_response', { challengerId: data.challengerId, challengerUid: data.challengerUid, accepted: accepted });
         });
 
         this.socket.on('friend_req_accepted', (data) => {
@@ -1500,7 +1482,20 @@ class YambApp {
         });
 
         this.socket.on('friends_list_data', (friends) => {
+            this.friendsListUids = friends.map(f => f.uid);
             this.renderFriendsList(friends);
+        });
+
+        this.socket.on('search_results', async (results) => {
+            if (results.length === 0) {
+                this.modal.alert("Nije pronađen nijedan igrač sa tim imenom. Pokušajte ponovo.", "PRETRAGA");
+            } else {
+                const p = results[0]; 
+                const send = await this.modal.confirm(`Pronađen je igrač: ${p.name}. Da li želiš da ga dodaš u prijatelje?`);
+                if (send) {
+                    this.sendFriendRequest(p.socketId, p.name, p.uid);
+                }
+            }
         });
 
         this.socket.on('incoming_room_invite', async (data) => {
