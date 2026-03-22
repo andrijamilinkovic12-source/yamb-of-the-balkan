@@ -148,6 +148,7 @@ const UserProfileSchema = new mongoose.Schema({
     totalScoreSum: { type: Number, default: 0 },
     balance: { type: Number, default: 0 },
     currentWinStreak: { type: Number, default: 0 },
+    maxWinStreak: { type: Number, default: 0 },
     tournamentWins: { type: Number, default: 0 }, 
     unlockedTrophies: { type: [String], default: [] },
     unlockedSkins: { type: [String], default: [] },
@@ -316,6 +317,10 @@ io.on('connection', (socket) => {
                     if (typeof s.tournamentWins === 'number' && s.tournamentWins > user.tournamentWins) {
                         user.tournamentWins = s.tournamentWins;
                     }
+
+                    if (typeof s.maxWinStreak === 'number' && s.maxWinStreak > (user.maxWinStreak || 0)) {
+                        user.maxWinStreak = s.maxWinStreak;
+                    }
                     
                     // 🛡️ SIGURAN FIX ZA DUKATE + ANTI-CHEAT
                     if (typeof s.balance === 'number') {
@@ -394,6 +399,7 @@ io.on('connection', (socket) => {
                     wins: user.wins, losses: user.losses, games: user.games,
                     highscore: user.highscore, totalScoreSum: user.totalScoreSum,
                     balance: user.balance, currentWinStreak: user.currentWinStreak,
+                    maxWinStreak: user.maxWinStreak,
                     tournamentWins: user.tournamentWins, 
                     activeSkin: user.activeSkin, 
                     activeTheme: user.activeTheme, 
@@ -412,6 +418,7 @@ io.on('connection', (socket) => {
                     wins: s.wins || 0, losses: s.losses || 0, games: s.games || 0,
                     highscore: s.highscore || 0, totalScoreSum: s.totalScoreSum || 0,
                     balance: s.balance || 0, currentWinStreak: s.currentWinStreak || 0,
+                    maxWinStreak: s.maxWinStreak || 0,
                     tournamentWins: s.tournamentWins || 0, 
                     activeSkin: s.activeSkin || 'default', 
                     activeTheme: s.activeTheme || 'dark', 
@@ -430,6 +437,7 @@ io.on('connection', (socket) => {
                     wins: user.wins, losses: user.losses, games: user.games,
                     highscore: user.highscore, totalScoreSum: user.totalScoreSum,
                     balance: user.balance, currentWinStreak: user.currentWinStreak,
+                    maxWinStreak: user.maxWinStreak,
                     tournamentWins: user.tournamentWins, 
                     activeSkin: user.activeSkin, 
                     activeTheme: user.activeTheme, 
@@ -443,7 +451,20 @@ io.on('connection', (socket) => {
                 });
             }
             
-            socket.playerStats = s; // Sada pamti kompletnu statistiku igrača!
+            // OVO JE KLJUČNO ZA VS EKRAN:
+            socket.playerStats = {
+                wins: user.wins,
+                losses: user.losses,
+                games: user.games,
+                highscore: user.highscore,
+                totalScoreSum: user.totalScoreSum,
+                currentWinStreak: user.currentWinStreak,
+                maxWinStreak: user.maxWinStreak,
+                tournamentWins: user.tournamentWins,
+                unlockedTrophies: user.unlockedTrophies,
+                leagueData: user.leagueData
+            };
+            
             updateOnlineCount(); 
         } catch (err) {
             console.error("Greška pri sinhronizaciji korisnika:", err);

@@ -369,20 +369,28 @@ class YambApp {
 
     getFullLocalStats() {
         const uid = localStorage.getItem('yamb_uid') || 'guest';
+        
+        let lsData = JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
+        if (window.kvartalnaLiga) {
+            lsData = window.kvartalnaLiga.getScores();
+        }
+
         return {
             games: this.stats.games || 0,
             wins: this.stats.wins || 0,
             losses: this.stats.losses || 0,
             highscore: this.stats.highscore || 0,
             totalScoreSum: this.stats.totalScoreSum || 0,
+            maxWinStreak: this.stats.maxWinStreak || 0,
             balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
             currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
+            tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0,
             unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
             yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
             unlockedSkins: JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
             unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
             unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
-            leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 },
+            leagueData: lsData,
             activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
             activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
             activeTheme: localStorage.getItem('yamb_theme') || 'dark',
