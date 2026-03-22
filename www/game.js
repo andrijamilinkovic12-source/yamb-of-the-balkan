@@ -473,9 +473,9 @@ class YambApp {
         list.style.WebkitOverflowScrolling = 'touch';
 
         let html = `
-            <div style="flex: 0 0 auto; width: 140px; background: rgba(0,0,0,0.5); border: 2px dashed var(--gold-main); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; scroll-snap-align: start; cursor: pointer; transition: transform 0.2s;" onclick="app.searchAndAddFriend()">
-                <div style="font-size: 3.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 10px; font-weight: 300;">+</div>
-                <span style="color:var(--text-main); font-weight:800; font-size:0.85rem; text-align:center;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
+            <div style="flex: 0 0 auto; width: 120px; height: 100%; max-height: 135px; background: rgba(0,0,0,0.5); border: 2px dashed var(--gold-main); border-radius: 12px; padding: 8px 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; scroll-snap-align: start; cursor: pointer; transition: transform 0.2s;" onclick="app.searchAndAddFriend()">
+                <div style="font-size: 2.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 5px; font-weight: 300;">+</div>
+                <span style="color:var(--text-main); font-weight:800; font-size:0.75rem; text-align:center;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
             </div>
         `;
 
@@ -493,13 +493,12 @@ class YambApp {
                 const btnText = isOnline ? (gt('btn_invite_friend') || 'POZOVI') : (gt('btn_offline') || 'OFFLINE');
 
                 html += `
-                    <div style="flex: 0 0 auto; width: 140px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; scroll-snap-align: start; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-                        <div style="position: absolute; top: 10px; right: 10px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 5px ${statusColor};"></div>
-                        <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" style="width:55px; height:55px; border-radius:50%; border:2px solid ${statusColor}; object-fit:cover; margin-bottom: 8px;">
-                        <span style="color:var(--text-main); font-weight:800; font-size:0.9rem; text-align:center; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 4px;">${f.name}</span>
-                        <span style="color:var(--text-muted); font-size:0.75rem; margin-bottom: 2px;">W/L: ${w} / ${l}</span>
-                        <span style="color:var(--gold-main); font-weight:bold; font-size:0.8rem; margin-bottom: 12px;">⚡ ${pi}</span>
-                        <button ${btnDisabled} onclick="app.inviteFriendToRoom('${f.socketId}')" style="${btnStyle} border:none; padding:8px 0; width: 100%; border-radius:6px; font-weight:900; font-size: 0.75rem; transition: transform 0.1s;">${btnText}</button>
+                    <div style="flex: 0 0 auto; width: 120px; height: 100%; max-height: 135px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 8px 5px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; position: relative; scroll-snap-align: start; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
+                        <div style="position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 5px ${statusColor};"></div>
+                        <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" style="width:38px; height:38px; border-radius:50%; border:2px solid ${statusColor}; object-fit:cover; margin-bottom: 2px;">
+                        <span style="color:var(--text-main); font-weight:800; font-size:0.75rem; text-align:center; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 2px;">${f.name}</span>
+                        <span style="color:var(--text-muted); font-size:0.65rem; margin-bottom: 2px;">W/L: ${w} / ${l}</span>
+                        <button ${btnDisabled} onclick="app.inviteFriendToRoom('${f.socketId}')" style="${btnStyle} border:none; padding:6px 0; width: 95%; border-radius:6px; font-weight:900; font-size: 0.7rem; transition: transform 0.1s; margin-top: auto;">${btnText}</button>
                     </div>
                 `;
             });
