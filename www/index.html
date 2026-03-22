@@ -501,45 +501,45 @@
 
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 500px; height: 100%; margin: 0 auto; gap: 15px;">
             
-            <div style="text-align: center; width: 100%; margin-top: 10px;">
-                <h2 id="waiting-title" style="color:var(--text-main); margin-bottom: 5px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1.5rem;" data-lang="ws_searching">ONLINE IGRANJE</h2>
-                <p id="wait-msg" style="color: var(--text-muted); font-size: 0.8rem; margin-bottom: 8px; padding: 0 10px;" data-lang="ws_wait_msg">Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.</p>
+            <div style="text-align: center; width: 100%; margin-top: 25px; margin-bottom: 10px;">
+                <h2 id="waiting-title" style="color:var(--text-main); margin-bottom: 15px; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1.5rem;" data-lang="ws_searching">ONLINE IGRANJE</h2>
+                <p id="wait-msg" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px; padding: 0 10px; line-height: 1.4;" data-lang="ws_wait_msg">Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.</p>
                 
-                <div style="font-size: 0.8rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 4px 12px; border-radius: 20px; display: inline-block; border: 1px solid var(--success); box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.1);">
-                    <span data-lang="ws_online_players">Online igrača:</span> <span id="waiting-online-count" style="font-size: 0.9rem;">1</span>
+                <div style="font-size: 0.85rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 6px 16px; border-radius: 20px; display: inline-block; border: 1px solid var(--success); box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.1); margin-bottom: 15px;">
+                    <span data-lang="ws_online_players">Online igrača:</span> <span id="waiting-online-count" style="font-size: 1rem;">1</span>
                 </div>
             </div>
 
-            <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; padding: 0 5px; min-height: 180px;">
+            <div style="display: flex; align-items: stretch; justify-content: center; gap: 15px; width: 100%; padding: 0 5px; min-height: 180px;">
                 
-                <div style="flex: 1; background: var(--glass-panel); border: 2px solid var(--gold-main); border-radius: 12px; padding: 10px 5px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.15); backdrop-filter: blur(10px);">
+                <div style="flex: 1; background: var(--glass-panel); border: 2px solid var(--gold-main); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.15); backdrop-filter: blur(10px);">
                     <img id="waiting-my-img" src="https://ui-avatars.com/api/?name=Ja&background=333&color=E0C995" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
-                    <span id="waiting-my-name" style="font-weight: 800; color: var(--text-main); font-size: 0.85rem; text-align: center; margin: 5px 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Igrač</span>
+                    <span id="waiting-my-name" style="font-weight: 800; color: var(--text-main); font-size: 0.85rem; text-align: center; margin: 8px 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Igrač</span>
                     
-                    <div style="background: rgba(0,0,0,0.3); width: 95%; border-radius: 8px; padding: 5px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.08);">
+                    <div style="background: rgba(0,0,0,0.3); width: 100%; border-radius: 8px; padding: 6px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.08);">
                         <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;" data-lang="ws_power">Moć ⚡</div>
-                        <div id="waiting-my-power" style="font-size: 1rem; font-weight: 900; color: #FFD700; margin-bottom: 2px;">0</div>
+                        <div id="waiting-my-power" style="font-size: 1rem; font-weight: 900; color: #FFD700; margin-bottom: 3px;">0</div>
                         <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;" data-lang="ws_wl">Pob/Por</div>
                         <div id="waiting-my-wl" style="font-size: 0.8rem; font-weight: bold; color: var(--success);">0 / 0</div>
                     </div>
                 </div>
 
-                <div id="waiting-vs-badge" style="display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 900; color: var(--danger); text-shadow: 0 2px 5px rgba(0,0,0,0.5); font-style: italic; opacity: 0.9;">VS</div>
+                <div id="waiting-vs-badge" style="align-self: center; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; font-weight: 900; color: var(--danger); text-shadow: 0 2px 5px rgba(0,0,0,0.5); font-style: italic; opacity: 0.9;">VS</div>
 
-                <div id="waiting-opp-box" style="flex: 1; background: var(--glass-panel); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 10px 5px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--glass-shadow); position: relative; overflow: hidden; transition: all 0.3s ease; backdrop-filter: blur(10px);">
+                <div id="waiting-opp-box" style="flex: 1; background: var(--glass-panel); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 15px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: var(--glass-shadow); position: relative; overflow: hidden; transition: all 0.3s ease; backdrop-filter: blur(10px);">
                     
                     <div id="waiting-opp-searching" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-                        <div class="loader" style="width: 30px; height: 30px; border-width: 3px; margin-bottom: 10px;"></div>
+                        <div class="loader" style="width: 30px; height: 30px; border-width: 3px; margin-bottom: 12px;"></div>
                         <span style="font-size: 0.7rem; color: var(--text-muted); text-align: center; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;" data-lang="ws_searching_opp">Tražim<br>protivnika...</span>
                     </div>
 
                     <div id="waiting-opp-found" style="display: none; flex-direction: column; align-items: center; justify-content: space-between; width: 100%; height: 100%; animation: fadeIn 0.5s forwards;">
                         <img id="waiting-opp-img" src="https://ui-avatars.com/api/?name=?&background=333&color=E0C995" style="width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--danger); object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.4);">
-                        <span id="waiting-opp-name" style="font-weight: 800; color: var(--text-main); font-size: 0.85rem; text-align: center; margin: 5px 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Protivnik</span>
+                        <span id="waiting-opp-name" style="font-weight: 800; color: var(--text-main); font-size: 0.85rem; text-align: center; margin: 8px 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Protivnik</span>
                         
-                        <div style="background: rgba(0,0,0,0.3); width: 95%; border-radius: 8px; padding: 5px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.08);">
+                        <div style="background: rgba(0,0,0,0.3); width: 100%; border-radius: 8px; padding: 6px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.08);">
                             <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;" data-lang="ws_power">Moć ⚡</div>
-                            <div id="waiting-opp-power" style="font-size: 1rem; font-weight: 900; color: var(--danger); margin-bottom: 2px;">0</div>
+                            <div id="waiting-opp-power" style="font-size: 1rem; font-weight: 900; color: var(--danger); margin-bottom: 3px;">0</div>
                             <div style="font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase;" data-lang="ws_wl">Pob/Por</div>
                             <div id="waiting-opp-wl" style="font-size: 0.8rem; font-weight: bold; color: var(--danger);">0 / 0</div>
                         </div>
@@ -561,7 +561,7 @@
             
         </div>
     </div>
-    
+
     <div id="daily-challenge-screen" class="screen">
         
         <div class="modal-box daily-challenge-card">
