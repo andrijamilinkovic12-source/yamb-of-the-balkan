@@ -1,4 +1,4 @@
-// onlinenumber.js - Prikaz liste trenutno aktivnih igrača, statistike i statusa (SA PREVODIMA)
+// onlinenumber.js - Prikaz liste trenutno aktivnih igrača sa slikama, PI i prijateljima
 
 class OnlinePlayersManager {
     constructor(app) {
@@ -17,11 +17,11 @@ class OnlinePlayersManager {
         this.overlay.innerHTML = `
             <div class="modal-box" style="width: 90%; max-width: 450px; height: 65vh; max-height: 550px; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column;">
                 <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
-                    <span id="onl-title" style="color: var(--success); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">${gt('online_players_title')}</span>
+                    <span id="onl-title" style="color: var(--success); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">${gt('online_players_title') || 'ONLINE IGRAČI'}</span>
                     <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="window.onlinePlayersManager.closeModal()">✖</span>
                 </div>
                 <div id="online-players-list" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-                    <div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">${gt('online_searching')}</div>
+                    <div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">Učitavanje...</div>
                 </div>
             </div>
         `;
@@ -40,11 +40,8 @@ class OnlinePlayersManager {
 
     openModal() {
         if(this.app.soundMgr) this.app.soundMgr.click();
-        
-        // Osvežavamo naslov u slučaju da je promenjen jezik u međuvremenu
         const titleEl = document.getElementById('onl-title');
-        if(titleEl) titleEl.innerText = gt('online_players_title');
-
+        if(titleEl) titleEl.innerText = gt('online_players_title') || 'ONLINE IGRAČI';
         this.overlay.style.display = 'flex';
         this.requestPlayers();
     }
@@ -56,12 +53,12 @@ class OnlinePlayersManager {
 
     requestPlayers() {
         const listContainer = document.getElementById('online-players-list');
-        listContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">${gt('online_loading')}</div>`;
+        listContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">Učitavanje...</div>`;
 
         if (this.app && this.app.socket && this.app.socket.connected) {
             this.app.socket.emit('get_online_players'); 
         } else {
-            listContainer.innerHTML = `<div style="text-align:center; color: var(--danger); font-size: 0.9rem;">${gt('online_no_conn')}</div>`;
+            listContainer.innerHTML = `<div style="text-align:center; color: var(--danger); font-size: 0.9rem;">Nema konekcije sa serverom.</div>`;
         }
     }
 
@@ -70,67 +67,87 @@ class OnlinePlayersManager {
         listContainer.innerHTML = '';
 
         if (!players || players.length === 0) {
-            listContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">${gt('online_no_players')}</div>`;
+            listContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); font-size: 0.9rem;">Trenutno nema drugih igrača.</div>`;
             return;
         }
 
         players.forEach(player => {
             const isMe = this.app.socket && player.id === this.app.socket.id;
             const item = document.createElement('div');
-            item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px 15px; border-radius: 8px; border: 1px solid var(--glass-border); margin-bottom: 5px;';
+            item.style.cssText = 'display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 10px 15px; border-radius: 12px; border: 1px solid var(--glass-border); margin-bottom: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.2);';
 
-            // --- LEVI DEO (Ime i Statistika) ---
+            // --- LEVI DEO (Slika, Ime i Statistika) ---
             const infoDiv = document.createElement('div');
-            infoDiv.style.cssText = 'display: flex; flex-direction: column; gap: 5px;';
+            infoDiv.style.cssText = 'display: flex; align-items: center; gap: 12px;';
+
+            let displayName = player.name || gt('player_guest') || 'Gost';
+            
+            // SLIKA IGRAČA
+            const avatarUrl = player.photoUrl && player.photoUrl.length > 5 ? player.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
+            const imgEl = document.createElement('img');
+            imgEl.src = avatarUrl;
+            imgEl.style.cssText = 'width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover;';
+            
+            const textDiv = document.createElement('div');
+            textDiv.style.cssText = 'display: flex; flex-direction: column; gap: 4px;';
 
             const nameSpan = document.createElement('span');
-            nameSpan.style.cssText = 'color: var(--text-main); font-weight: 700; font-size: 1rem;';
-            
-            let displayName = player.name || gt('player_guest');
+            nameSpan.style.cssText = 'color: var(--text-main); font-weight: 800; font-size: 0.95rem;';
             if (isMe) {
-                nameSpan.innerText = `${displayName} ${gt('online_you')}`;
+                nameSpan.innerText = `${displayName} (Ti)`;
                 nameSpan.style.color = 'var(--gold-main)';
+                imgEl.style.borderColor = 'var(--success)';
             } else {
                 nameSpan.innerText = displayName;
             }
 
-            // Statistika (W/L je ostavljeno na engleskom kao univerzalno: Wins/Losses, ali se može prevesti ako želiš)
+            // STATISTIKA (W/L i Indeks moći)
             const statsSpan = document.createElement('span');
-            statsSpan.style.cssText = 'font-size: 0.75rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.5px; background: rgba(0,0,0,0.3); padding: 3px 6px; border-radius: 4px; display: inline-block; width: fit-content;';
+            statsSpan.style.cssText = 'font-size: 0.7rem; color: var(--text-muted); font-weight: 700; background: rgba(0,0,0,0.3); padding: 3px 6px; border-radius: 6px; display: inline-block; border: 1px solid rgba(255,255,255,0.05);';
             
             const w = player.stats ? player.stats.wins : 0;
             const l = player.stats ? player.stats.losses : 0;
-            let winRate = 0;
-            if (w + l > 0) {
-                winRate = Math.round((w / (w + l)) * 100);
+            let pi = 0;
+            if (this.app.calculatePowerIndex && player.stats) {
+                pi = this.app.calculatePowerIndex(player.stats, false);
             }
             
-            statsSpan.innerHTML = `🏆 <span style="color:var(--success)">W:${w}</span> <span style="opacity:0.5">|</span> <span style="color:var(--danger)">L:${l}</span> <span style="font-size:0.65rem; opacity:0.8">(${winRate}%)</span>`;
+            statsSpan.innerHTML = `W:<span style="color:var(--success)">${w}</span> <span style="opacity:0.5">|</span> L:<span style="color:var(--danger)">${l}</span> <span style="opacity:0.5">|</span> <span style="color:#FFD700;">⚡ ${pi}</span>`;
 
-            infoDiv.appendChild(nameSpan);
-            infoDiv.appendChild(statsSpan);
+            textDiv.appendChild(nameSpan);
+            textDiv.appendChild(statsSpan);
+            
+            infoDiv.appendChild(imgEl);
+            infoDiv.appendChild(textDiv);
             item.appendChild(infoDiv);
 
-            // --- DESNI DEO (Dugme ili Status) ---
+            // --- DESNI DEO (Dugmad) ---
             const actionDiv = document.createElement('div');
+            actionDiv.style.cssText = 'display: flex; gap: 8px;';
             
             if (player.status === 'playing') {
-                // Preveden status "IGRA U TOKU" / "IN GAME"
-                actionDiv.innerHTML = `<span style="color: #FF9800; font-size: 0.7rem; font-weight: 800; background: rgba(255, 152, 0, 0.1); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255, 152, 0, 0.3); letter-spacing: 0.5px; box-shadow: 0 0 8px rgba(255, 152, 0, 0.2);">${gt('online_playing')}</span>`;
+                actionDiv.innerHTML = `<span style="color: #FF9800; font-size: 0.7rem; font-weight: 800; background: rgba(255, 152, 0, 0.1); padding: 6px 10px; border-radius: 6px; border: 1px solid rgba(255, 152, 0, 0.3);">IGRA</span>`;
             } else if (!isMe) {
-                // Prevedeno dugme "IZAZOVI" / "CHALLENGE"
-                const challengeBtn = document.createElement('button');
-                challengeBtn.innerText = gt('online_challenge_btn');
-                challengeBtn.style.cssText = 'background: linear-gradient(135deg, #FF9800, #F57C00); border: none; padding: 8px 14px; border-radius: 6px; color: #fff; font-weight: 800; cursor: pointer; font-size: 0.8rem; box-shadow: 0 4px 10px rgba(255, 152, 0, 0.4); text-shadow: 0 1px 2px rgba(0,0,0,0.3); transition: transform 0.1s;';
+                // Dugme Izazovi (Mačevi)
+                const duelBtn = document.createElement('button');
+                duelBtn.innerHTML = '⚔️';
+                duelBtn.title = "Izazovi na duel";
+                duelBtn.style.cssText = 'background: linear-gradient(135deg, #E53935, #C62828); border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(229, 57, 53, 0.4); transition: transform 0.1s;';
+                duelBtn.onmousedown = () => duelBtn.style.transform = 'scale(0.9)';
+                duelBtn.onmouseup = () => duelBtn.style.transform = 'scale(1)';
+                duelBtn.onclick = () => { this.closeModal(); this.app.challengePlayer(player.id, displayName); };
                 
-                challengeBtn.onmousedown = () => challengeBtn.style.transform = 'scale(0.95)';
-                challengeBtn.onmouseup = () => challengeBtn.style.transform = 'scale(1)';
-                
-                challengeBtn.onclick = () => {
-                    this.closeModal();
-                    this.app.challengePlayer(player.id, displayName);
-                };
-                actionDiv.appendChild(challengeBtn);
+                // Dugme Dodaj Prijatelja (Plus)
+                const addBtn = document.createElement('button');
+                addBtn.innerHTML = '➕';
+                addBtn.title = "Dodaj prijatelja";
+                addBtn.style.cssText = 'background: linear-gradient(135deg, #4CAF50, #2E7D32); border: none; width: 35px; height: 35px; border-radius: 8px; font-size: 1rem; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4); transition: transform 0.1s;';
+                addBtn.onmousedown = () => addBtn.style.transform = 'scale(0.9)';
+                addBtn.onmouseup = () => addBtn.style.transform = 'scale(1)';
+                addBtn.onclick = () => { this.closeModal(); this.app.sendFriendRequest(player.id, displayName); };
+
+                actionDiv.appendChild(duelBtn);
+                actionDiv.appendChild(addBtn);
             }
 
             item.appendChild(actionDiv);
@@ -139,18 +156,15 @@ class OnlinePlayersManager {
     }
 }
 
-// Inicijalizacija sistema kada se stranica učita
 window.addEventListener('load', () => {
     setTimeout(() => {
         if (window.app) {
             window.onlinePlayersManager = new OnlinePlayersManager(window.app);
-            
             const countEl = document.getElementById('live-online-count');
             if (countEl && countEl.parentElement) {
                 const onlineCard = countEl.parentElement;
                 onlineCard.style.cursor = 'pointer';
                 onlineCard.style.transition = 'transform 0.1s';
-                
                 onlineCard.onmousedown = () => onlineCard.style.transform = 'scale(0.95)';
                 onlineCard.onmouseup = () => onlineCard.style.transform = 'scale(1)';
                 onlineCard.onclick = () => window.onlinePlayersManager.openModal();

@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN)
+// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -218,7 +218,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v8.9 - QUOTES ADDED");
+        console.log("YambApp v9.0 - FRIENDS ADDED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -259,13 +259,13 @@ class YambApp {
         this.myOnlineIndex = 0;
         this.onlineUsersCount = 1; 
         this.isAnimating = false; 
+        this.currentHostingRoomId = null;
 
         this.aiMode = false;
         this.aiDifficulty = "medium";
         
         this.inviteDetected = false;
 
-        // Ako nema imena, biće prazno dok se ne uloguje. Nema više gosta.
         this.playerName = localStorage.getItem('yamb_player_name') || "";
         this.playerId = getPlayerId();
         
@@ -425,6 +425,54 @@ class YambApp {
             (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
         );
     }
+
+    // --- SISTEM PRIJATELJA ---
+    sendFriendRequest(targetId, targetName) {
+        this.initSocketConnection(); 
+        if (!this.socket || !this.socket.connected) return;
+        this.socket.emit('send_friend_req', { targetId, challengerName: this.playerName });
+        this.modal.alert(`Zahtev za prijateljstvo poslat igraču ${targetName}.`, "PRIJATELJSTVO");
+    }
+
+    renderFriendsList(friends) {
+        const container = document.getElementById('friends-list-container');
+        const list = document.getElementById('friends-list');
+        if (!container || !list) return;
+        
+        if (!friends || friends.length === 0) {
+            list.innerHTML = `<p style="color:var(--text-muted); font-size:0.8rem; text-align:center;">Nemate dodatih prijatelja.</p>`;
+            return;
+        }
+
+        let html = '';
+        friends.forEach(f => {
+            const pi = this.calculatePowerIndex(f.stats, false);
+            const statusColor = f.isOnline ? 'var(--success)' : 'var(--text-muted)';
+            const statusText = f.isOnline ? 'Online' : 'Offline';
+            const inviteBtn = f.isOnline ? `<button onclick="app.inviteFriendToRoom('${f.socketId}')" style="background:var(--gold-main); color:#000; border:none; padding:8px 12px; border-radius:6px; font-weight:900; cursor:pointer; font-size: 0.75rem;">POZOVI</button>` : '';
+
+            html += `
+                <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(0,0,0,0.3); padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.05); margin-bottom: 5px;">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" style="width:40px; height:40px; border-radius:50%; border:2px solid ${statusColor}; object-fit:cover;">
+                        <div style="display:flex; flex-direction:column;">
+                            <span style="color:var(--text-main); font-weight:800; font-size:0.9rem;">${f.name}</span>
+                            <span style="color:${statusColor}; font-size:0.7rem; font-weight:bold;">${statusText} | ⚡ ${pi}</span>
+                        </div>
+                    </div>
+                    ${inviteBtn}
+                </div>
+            `;
+        });
+        list.innerHTML = html;
+    }
+
+    inviteFriendToRoom(friendSocketId) {
+        if (!this.currentHostingRoomId) return;
+        this.socket.emit('send_room_invite', { targetSocketId: friendSocketId, roomId: this.currentHostingRoomId, hostName: this.playerName });
+        this.modal.alert("Pozivnica za partiju je poslata prijatelju!", "POZIVNICA");
+    }
+    // --------------------------
 
     initSocketConnection() {
         if (this.socket) {
@@ -1047,6 +1095,7 @@ class YambApp {
         const nickname = this.playerName; 
         if (!nickname) return; 
         const roomId = "yamb-" + Math.random().toString(36).substring(2, 8); 
+        this.currentHostingRoomId = roomId; 
         
         let baseUrl = window.location.origin;
         if (typeof SERVER_URL !== 'undefined' && SERVER_URL.startsWith('http')) {
@@ -1057,9 +1106,40 @@ class YambApp {
         const shareUrl = baseUrl + "/?room=" + roomId; 
         
         this.navigateTo('waiting-screen'); 
-        document.getElementById('wait-msg').innerText = gt('hs_loading'); 
-        document.getElementById('share-area').classList.remove('hidden'); 
+        document.getElementById('wait-msg').innerText = gt('hs_loading') || 'Učitavanje...'; 
+        
+        // Prikaz mog profila u VS kvadratu (da lepo izgleda i ovde)
+        const myImg = document.getElementById('waiting-my-img');
+        const authImg = document.getElementById('auth-user-photo');
+        if (myImg && authImg && authImg.src && authImg.src.includes('http')) {
+            myImg.src = authImg.src;
+        } else if (myImg) {
+            myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
+        }
+        document.getElementById('waiting-my-name').innerText = nickname;
+        
+        const myStats = this.getFullLocalStats();
+        document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
+        document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+
+        // Sakrijemo VS ekran za random meč, prikažemo link i prijatelje
+        const oppBox = document.getElementById('waiting-opp-box');
+        const shareArea = document.getElementById('share-area');
+        const friendsContainer = document.getElementById('friends-list-container');
+        const friendsList = document.getElementById('friends-list');
+        
+        if (oppBox) oppBox.style.display = 'none'; 
+        if (shareArea) shareArea.classList.remove('hidden'); 
         document.getElementById('invite-link').value = shareUrl; 
+        
+        if (friendsContainer && friendsList) {
+            friendsContainer.classList.remove('hidden');
+            friendsList.innerHTML = `<div class="loader" style="width: 25px; height: 25px; margin: 20px auto;"></div>`;
+            this.initSocketConnection();
+            setTimeout(() => {
+                if(this.socket && this.socket.connected) this.socket.emit('get_friends_list');
+            }, 500);
+        }
         
         this.joinPrivateGame(nickname, roomId); 
     }
@@ -1132,10 +1212,17 @@ class YambApp {
         document.getElementById('waiting-my-power').innerText = this.calculatePowerIndex(myStats, true);
         document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
 
-        document.getElementById('waiting-opp-searching').style.display = 'flex';
-        document.getElementById('waiting-opp-found').style.display = 'none';
-        document.getElementById('waiting-opp-box').style.borderColor = 'rgba(255, 255, 255, 0.1)';
-        document.getElementById('waiting-opp-box').style.boxShadow = 'var(--glass-shadow)';
+        const oppBox = document.getElementById('waiting-opp-box');
+        if (oppBox) {
+            oppBox.style.display = 'flex'; 
+            document.getElementById('waiting-opp-searching').style.display = 'flex';
+            document.getElementById('waiting-opp-found').style.display = 'none';
+            oppBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            oppBox.style.boxShadow = 'var(--glass-shadow)';
+        }
+
+        const friendsContainer = document.getElementById('friends-list-container');
+        if (friendsContainer) friendsContainer.classList.add('hidden'); // Sakrijemo prijatelje ako nismo mi host
 
         this.initSocketConnection();
         this.setupSocketListeners(nickname); 
@@ -1171,10 +1258,17 @@ class YambApp {
         document.getElementById('waiting-my-wl').innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
 
         // Resetovanje protivničkog kvadrata
-        document.getElementById('waiting-opp-searching').style.display = 'flex';
-        document.getElementById('waiting-opp-found').style.display = 'none';
-        document.getElementById('waiting-opp-box').style.borderColor = 'rgba(255, 255, 255, 0.1)';
-        document.getElementById('waiting-opp-box').style.boxShadow = 'var(--glass-shadow)';
+        const oppBox = document.getElementById('waiting-opp-box');
+        if (oppBox) {
+            oppBox.style.display = 'flex';
+            document.getElementById('waiting-opp-searching').style.display = 'flex';
+            document.getElementById('waiting-opp-found').style.display = 'none';
+            oppBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            oppBox.style.boxShadow = 'var(--glass-shadow)';
+        }
+
+        const friendsContainer = document.getElementById('friends-list-container');
+        if (friendsContainer) friendsContainer.classList.add('hidden');
 
         document.getElementById('share-area').classList.add('hidden'); 
         
@@ -1201,6 +1295,10 @@ class YambApp {
         this.socket.off('opponent_left');
         this.socket.off('rematch_requested');
         this.socket.off('rematch_started');
+        this.socket.off('incoming_friend_req');
+        this.socket.off('friend_req_accepted');
+        this.socket.off('friends_list_data');
+        this.socket.off('incoming_room_invite');
 
         this.socket.on('room_full', async () => { await this.modal.alert(gt('msg_room_full')); this.cancelOnline(); }); 
         this.socket.on('private_waiting', (data) => { this.roomId = data.roomId; }); 
@@ -1221,6 +1319,7 @@ class YambApp {
             const oppBox = document.getElementById('waiting-opp-box');
             
             if (searchingUI && foundUI && oppBox) {
+                oppBox.style.display = 'flex'; // Zbog private host moda
                 searchingUI.style.display = 'none';
                 foundUI.style.display = 'flex';
                 
@@ -1338,6 +1437,29 @@ class YambApp {
                 this.cancelOnline(); 
             }
         }); 
+
+        // --- PRIJATELJI EVENTI ---
+        this.socket.on('incoming_friend_req', async (data) => {
+            const accepted = await this.modal.confirm(`Igrač ${data.challengerName} želi da vas doda u prijatelje. Prihvatate?`);
+            this.socket.emit('friend_req_response', { challengerId: data.challengerId, accepted: accepted });
+        });
+
+        this.socket.on('friend_req_accepted', (data) => {
+            this.modal.alert(`Igrač ${data.name} je prihvatio zahtev! Možete ga pozvati na partiju iz menija 'Prijatelj'.`, "NOVI PRIJATELJ");
+        });
+
+        this.socket.on('friends_list_data', (friends) => {
+            this.renderFriendsList(friends);
+        });
+
+        this.socket.on('incoming_room_invite', async (data) => {
+            const accepted = await this.modal.confirm(`Vaš prijatelj ${data.hostName} vas poziva u privatnu sobu. Želite li da igrate?`);
+            if (accepted) {
+                this.inviteDetected = true;
+                this.navigateTo('splash-screen');
+                setTimeout(() => { this.joinPrivateGame(this.playerName, data.roomId); }, 800);
+            }
+        });
     }
     
     cancelOnline() { 

@@ -546,6 +546,12 @@
             <input type="text" id="invite-link" class="modal-input" readonly style="font-size:0.8rem; width:100%; margin-bottom:10px; text-align: center;">
             <button class="btn-menu btn-primary" onclick="app.shareInvite()" data-lang="invite_btn">🔗 PODELI LINK</button>
         </div>
+
+        <div id="friends-list-container" class="hidden" style="margin-top: 20px; width: 100%; max-width: 400px; background: var(--glass-panel); border: var(--glass-border); border-radius: 12px; padding: 15px;">
+            <h3 style="color: var(--gold-main); font-size: 0.9rem; text-align: center; margin-bottom: 10px; font-weight: 800; letter-spacing: 1px;">TVOJI PRIJATELJI</h3>
+            <div id="friends-list" style="display:flex; flex-direction:column; gap:8px; max-height: 200px; overflow-y:auto; padding-right: 5px;">
+                </div>
+        </div>
         
         <button class="btn-menu btn-danger" onclick="app.cancelOnline()" style="margin-top: 30px;" data-lang="modal_btn_cancel">ODUSTANI</button>
     </div>
