@@ -583,3 +583,61 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     85% { opacity: 1; transform: scale(1); }
     100% { opacity: 0; transform: scale(1.1); }
 }
+
+/* =========================================================
+   WAITING SCREEN (ONLINE & INVITE) REFACTOR
+   ========================================================= */
+.waiting-screen-bg { justify-content: flex-start; padding: max(55px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom)) 10px; overflow: hidden; background: radial-gradient(circle at top, rgba(33, 33, 33, 0.8), var(--bg-base)); }
+.ws-content { display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; width: 100%; max-width: 500px; height: 100%; margin: 0 auto; gap: 5px; }
+
+/* Header */
+.ws-header { text-align: center; width: 100%; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ws-title { color: var(--text-main); font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: clamp(1.1rem, 4vw, 1.4rem); margin: 0; }
+.ws-desc { color: var(--text-muted); font-size: clamp(0.7rem, 2.5vw, 0.85rem); padding: 0 15px; line-height: 1.2; margin: 0; }
+.ws-online-badge { font-size: clamp(0.7rem, 2.5vw, 0.8rem); color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 4px 12px; border-radius: 20px; border: 1px solid var(--success); box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.1); margin: 2px 0; }
+.ws-online-badge span:last-child { font-size: 0.95rem; }
+
+/* VS Area */
+.ws-vs-area { display: flex; align-items: stretch; justify-content: center; gap: 15px; width: 100%; padding: 0 5px; flex-shrink: 0; position: relative; height: 145px; }
+.ws-player-card { flex: 1; max-width: 170px; background: var(--glass-panel); border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; backdrop-filter: blur(10px); }
+.my-card { border: 2px solid var(--gold-main); box-shadow: 0 5px 15px rgba(255, 215, 0, 0.15); }
+.opp-card { border: 2px solid rgba(255, 255, 255, 0.1); box-shadow: var(--glass-shadow); transition: all 0.3s ease; }
+
+.ws-avatar { width: clamp(40px, 12vw, 48px); height: clamp(40px, 12vw, 48px); border-radius: 50%; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.4); border: 2px solid; }
+.my-avatar { border-color: var(--gold-main); }
+.opp-avatar { border-color: var(--danger); }
+
+.ws-name { font-weight: 800; color: var(--text-main); font-size: clamp(0.7rem, 2.5vw, 0.8rem); text-align: center; margin: 2px 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.ws-stats { background: rgba(0,0,0,0.3); width: 100%; border-radius: 8px; padding: 4px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; }
+.ws-stat-label { font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; line-height: 1; margin-top: 2px;}
+.ws-stat-val { font-weight: 900; margin-bottom: 2px; line-height: 1; }
+.val-power { font-size: 0.9rem; color: #FFD700; }
+.val-wl { font-size: 0.75rem; color: var(--success); }
+.val-power-opp { font-size: 0.9rem; color: var(--danger); }
+.val-wl-opp { font-size: 0.75rem; color: var(--danger); }
+
+.ws-vs-badge { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; font-size: clamp(1.5rem, 6vw, 1.8rem); font-weight: 900; color: var(--danger); text-shadow: 0 2px 10px rgba(0,0,0,0.8); font-style: italic; z-index: 10; }
+
+.ws-searching-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 6px; }
+.ws-loader { width: 22px; height: 22px; border-width: 3px; }
+.ws-searching-text { font-size: 0.65rem; color: var(--text-muted); text-align: center; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; line-height: 1.2; }
+.ws-found-container { display: flex; flex-direction: column; align-items: center; justify-content: space-between; width: 100%; height: 100%; animation: fadeIn 0.5s forwards; }
+
+/* Share Area */
+.ws-share-area { width: 100%; max-width: 320px; padding: 0 10px; flex-shrink: 0; }
+.ws-share-btn { padding: 12px; border-radius: 12px; font-size: 0.8rem; width: 100%; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); margin: 0; }
+
+/* Friends List Area */
+.ws-friends-area { width: 100%; background: var(--glass-panel); border: var(--glass-border); border-radius: 12px; padding: 6px 4px; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); display: flex; flex-direction: column; flex: 1; min-height: 110px; max-height: 140px; overflow: hidden; margin-top: 2px; }
+.ws-friends-title { color: var(--gold-main); font-size: 0.75rem; text-align: center; margin-bottom: 4px; font-weight: 800; letter-spacing: 1px; flex-shrink: 0; }
+.ws-friends-list { display:flex; flex-direction:row; gap:8px; overflow-x:auto; overflow-y: hidden; padding: 2px 4px 5px 4px; flex: 1; align-items: stretch; scroll-snap-type: x mandatory; }
+
+/* Friend Card (Inside Friends List) */
+.friend-card { flex: 0 0 auto; width: 100px; height: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 10px; padding: 6px 4px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; position: relative; scroll-snap-align: start; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+.friend-card.add-new { border: 2px dashed var(--gold-main); justify-content: center; cursor: pointer; transition: transform 0.2s; }
+.friend-card.add-new:active { transform: scale(0.95); }
+.friend-card-img { width:32px; height:32px; border-radius:50%; object-fit:cover; margin-bottom: 2px; }
+.friend-card-name { color:var(--text-main); font-weight:800; font-size:0.65rem; text-align:center; width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom: 1px; }
+.friend-card-wl { color:var(--text-muted); font-size:0.55rem; margin-bottom: 2px; }
+.friend-card-btn { border:none; padding:5px 0; width: 95%; border-radius:6px; font-weight:900; font-size: 0.6rem; transition: transform 0.1s; margin-top: auto; }
