@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM)
+// game.js - MAIN GAME LOGIC (UPDATED RESUME/NEW GAME LOGIC + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -187,6 +187,7 @@ class DailyChallengeManager {
             this.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid') || this.app.playerId,
                 name: this.app.playerName,
+                photoUrl: localStorage.getItem('yamb_player_photo') || '',
                 stats: this.app.getFullLocalStats(),
                 playerId: this.app.playerId
             });
@@ -428,6 +429,11 @@ class YambApp {
 
     // --- SISTEM PRIJATELJA ---
     sendFriendRequest(targetId, targetName) {
+        if (!localStorage.getItem('yamb_uid')) {
+            this.modal.alert("Morate biti prijavljeni preko Google-a da biste dodavali prijatelje.", "PRIJAVA OBAVEZNA");
+            return;
+        }
+        
         this.initSocketConnection(); 
         if (!this.socket || !this.socket.connected) return;
         this.socket.emit('send_friend_req', { targetId, challengerName: this.playerName });
@@ -505,6 +511,7 @@ class YambApp {
                     
                     let emitData = { 
                         name: this.playerName, 
+                        photoUrl: localStorage.getItem('yamb_player_photo') || '',
                         stats: this.getFullLocalStats(),
                         playerId: this.playerId 
                     };
@@ -910,6 +917,7 @@ class YambApp {
         if (this.socket && this.socket.connected) {
             this.socket.emit('set_player_data', { 
                 name: this.playerName, 
+                photoUrl: localStorage.getItem('yamb_player_photo') || '',
                 stats: this.getFullLocalStats(),
                 playerId: this.playerId
             });
@@ -1005,6 +1013,7 @@ class YambApp {
         if (this.socket && this.socket.connected) {
             let emitData = { 
                 name: this.playerName, 
+                photoUrl: localStorage.getItem('yamb_player_photo') || '',
                 stats: this.getFullLocalStats(),
                 playerId: this.playerId
             };
@@ -1445,7 +1454,10 @@ class YambApp {
         });
 
         this.socket.on('friend_req_accepted', (data) => {
-            this.modal.alert(`Igrač ${data.name} je prihvatio zahtev! Možete ga pozvati na partiju iz menija 'Prijatelj'.`, "NOVI PRIJATELJ");
+            this.modal.alert(`Igrač ${data.name} je sada vaš prijatelj! Možete ga pozvati na partiju iz menija 'Prijatelj'.`, "NOVI PRIJATELJ");
+            if (this.currentHostingRoomId) {
+                this.socket.emit('get_friends_list');
+            }
         });
 
         this.socket.on('friends_list_data', (friends) => {
@@ -2207,6 +2219,7 @@ class YambApp {
                                 this.socket.emit('set_player_data', {
                                     uid: localStorage.getItem('yamb_uid') || this.playerId,
                                     name: this.playerName,
+                                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
                                     stats: this.getFullLocalStats(),
                                     playerId: this.playerId
                                 });
@@ -2269,6 +2282,7 @@ class YambApp {
                     this.socket.emit('set_player_data', {
                         uid: localStorage.getItem('yamb_uid') || this.playerId,
                         name: this.playerName,
+                        photoUrl: localStorage.getItem('yamb_player_photo') || '',
                         stats: this.getFullLocalStats(),
                         playerId: this.playerId
                     });
@@ -2290,6 +2304,7 @@ class YambApp {
             this.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid') || this.playerId,
                 name: this.playerName,
+                photoUrl: localStorage.getItem('yamb_player_photo') || '',
                 stats: this.getFullLocalStats(),
                 playerId: this.playerId
             });

@@ -703,7 +703,11 @@ io.on('connection', (socket) => {
                         await me.save();
                         await friend.save();
 
+                        // Obavesti igrača koji je poslao zahtev
                         io.to(challengerId).emit('friend_req_accepted', { name: socket.playerName });
+                        
+                        // Obavesti i igrača koji je upravo PRIHVATIO zahtev
+                        socket.emit('friend_req_accepted', { name: friend.playerName });
                     }
                 }
             } catch(err) { console.error("Greška pri dodavanju prijatelja", err); }

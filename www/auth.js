@@ -136,6 +136,7 @@ async function prijaviSe() {
                     window.app.socket.emit('set_player_data', { 
                         uid: user.uid, 
                         name: window.app.playerName, 
+                        photoUrl: localStorage.getItem('yamb_player_photo') || '',
                         stats: getFullLocalStats()
                     });
                 }
@@ -395,6 +396,7 @@ function inicijalizujCloudSync() {
             window.app.socket.emit('set_player_data', {
                 uid: uid,
                 name: window.app.playerName,
+                photoUrl: localStorage.getItem('yamb_player_photo') || '',
                 stats: getFullLocalStats(),
                 playerId: window.app.playerId
             });
