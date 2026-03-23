@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE
 
 require('dotenv').config(); 
 
@@ -143,6 +143,7 @@ const UserProfileSchema = new mongoose.Schema({
     playerName: String,
     photoUrl: { type: String, default: '' },
     friends: { type: [String], default: [] },
+    friendRequests: { type: [String], default: [] }, // <- DODATO ZA ČEKANJE
     wins: { type: Number, default: 0 },
     losses: { type: Number, default: 0 },
     games: { type: Number, default: 0 },
@@ -692,13 +693,11 @@ io.on('connection', (socket) => {
                 let friendSocketId = onlinePlayers[u.firebaseUid];
                 let isOnline = false;
 
-                // STRIKTNA PROVERA: Da li socket stvarno i dalje diše?
                 if (friendSocketId) {
                     const actualSocket = io.sockets.sockets.get(friendSocketId);
                     if (actualSocket && actualSocket.connected) {
                         isOnline = true;
                     } else {
-                        // Čistimo mrtve duše iz memorije
                         delete onlinePlayers[u.firebaseUid];
                         friendSocketId = null;
                     }
@@ -719,94 +718,109 @@ io.on('connection', (socket) => {
 
     socket.on('send_friend_req', async (data) => {
         const { targetId, targetUid, challengerName } = data;
+        if (!MONGO_URI) return;
 
-        if (targetId && io.sockets.sockets.get(targetId)) {
-            // Ako je online, iskače popup
-            socket.to(targetId).emit('incoming_friend_req', {
-                challengerId: socket.id,
-                challengerUid: socket.playerId,
-                challengerName: challengerName || "Gost"
-            });
-        } else if (targetUid && MONGO_URI) {
-            // Ako je OFFLINE iz pretrage, dodajemo ga automatski u bazu kako bi UX bio gladak
-            try {
-                const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
-                const friend = await UserProfile.findOne({ firebaseUid: targetUid });
-
-                if (me && friend) {
-                    if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
-                    if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
-                    await me.save();
-                    await friend.save();
-                    
-                    socket.emit('friend_req_accepted', { name: friend.playerName });
+        try {
+            const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
+            const targetProfile = await UserProfile.findOne({ firebaseUid: targetUid });
+            
+            if (me && targetProfile) {
+                // Ako nismo prijatelji i već mu nismo poslali zahtev, ubaci na listu čekanja
+                if (!targetProfile.friends.includes(me.firebaseUid) && !targetProfile.friendRequests.includes(me.firebaseUid)) {
+                    targetProfile.friendRequests.push(me.firebaseUid);
+                    await targetProfile.save();
                 }
-            } catch(e) { console.error(e); }
-        }
+                
+                // Ako je target trenutno online, pošalji mu obaveštenje
+                const targetSocketId = onlinePlayers[targetUid];
+                if (targetSocketId) {
+                    io.to(targetSocketId).emit('incoming_friend_req', {
+                        challengerName: me.playerName
+                    });
+                }
+            }
+        } catch(e) { console.error(e); }
     });
 
-    socket.on('friend_req_response', async (data) => {
-        const { challengerId, challengerUid, accepted } = data;
-        const challengerSocket = io.sockets.sockets.get(challengerId);
+    socket.on('resolve_friend_req', async (data) => {
+        const { challengerUid, accepted } = data;
+        if (!MONGO_URI) return;
 
-        if (accepted && MONGO_URI) {
-            try {
-                const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
-                const friendQuery = challengerUid ? { firebaseUid: challengerUid } : { firebaseUid: challengerSocket?.playerId };
-                const friend = await UserProfile.findOne(friendQuery);
+        try {
+            const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
+            const friend = await UserProfile.findOne({ firebaseUid: challengerUid });
 
-                if (me && friend) {
+            if (me && friend) {
+                // Obriši ga iz "zahteva"
+                me.friendRequests = me.friendRequests.filter(uid => uid !== challengerUid);
+                
+                if (accepted) {
+                    // Dodaj obostrano ako je prihvaćeno
                     if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
                     if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
-                    await me.save();
-                    await friend.save();
-
-                    if (challengerSocket) io.to(challengerId).emit('friend_req_accepted', { name: socket.playerName });
-                    socket.emit('friend_req_accepted', { name: friend.playerName });
                 }
-            } catch(err) { console.error(err); }
-        } else if (!accepted) {
-            // SLANJE POVRATNE INFORMACIJE POŠILJAOCU DA JE ZAHTEV ODBIJEN
-            if (challengerSocket) {
-                io.to(challengerId).emit('friend_req_declined', { name: socket.playerName });
+                await me.save();
+                await friend.save();
+
+                const challengerSocketId = onlinePlayers[challengerUid];
+                if (accepted) {
+                    if (challengerSocketId) io.to(challengerSocketId).emit('friend_req_accepted', { name: me.playerName });
+                } else {
+                    if (challengerSocketId) io.to(challengerSocketId).emit('friend_req_declined', { name: me.playerName });
+                }
             }
-        }
+        } catch(err) { console.error(err); }
     });
 
     socket.on('get_friends_list', async () => {
         if (!MONGO_URI) return;
         try {
             const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
-            if (me && me.friends && me.friends.length > 0) {
-                const friends = await UserProfile.find({ firebaseUid: { $in: me.friends } });
-                const friendsData = friends.map(f => {
-                    
-                    let friendSocketId = onlinePlayers[f.firebaseUid];
-                    let isOnline = false;
+            if (me) {
+                let friendsData = [];
+                let requestsData = [];
 
-                    // STRIKTNA PROVERA DA LI JE STVARNO ONLINE
-                    if (friendSocketId) {
-                        const actualSocket = io.sockets.sockets.get(friendSocketId);
-                        if (actualSocket && actualSocket.connected) {
-                            isOnline = true;
-                        } else {
-                            delete onlinePlayers[f.firebaseUid]; // Brišemo đubre
-                            friendSocketId = null;
+                // 1. Dovlačenje Prijatelja
+                if (me.friends && me.friends.length > 0) {
+                    const friends = await UserProfile.find({ firebaseUid: { $in: me.friends } });
+                    friendsData = friends.map(f => {
+                        let friendSocketId = onlinePlayers[f.firebaseUid];
+                        let isOnline = false;
+
+                        if (friendSocketId) {
+                            const actualSocket = io.sockets.sockets.get(friendSocketId);
+                            if (actualSocket && actualSocket.connected) {
+                                isOnline = true;
+                            } else {
+                                delete onlinePlayers[f.firebaseUid];
+                                friendSocketId = null;
+                            }
                         }
-                    }
 
-                    return { 
-                        uid: f.firebaseUid, 
-                        socketId: friendSocketId,
-                        name: f.playerName, 
-                        photoUrl: f.photoUrl, 
-                        isOnline: isOnline,
-                        stats: { wins: f.wins, losses: f.losses, games: f.games, highscore: f.highscore, totalScoreSum: f.totalScoreSum, tournamentWins: f.tournamentWins, currentWinStreak: f.currentWinStreak, maxWinStreak: f.maxWinStreak, unlockedTrophies: f.unlockedTrophies, leagueData: f.leagueData }
-                    };
-                });
-                socket.emit('friends_list_data', friendsData);
+                        return { 
+                            uid: f.firebaseUid, 
+                            socketId: friendSocketId,
+                            name: f.playerName, 
+                            photoUrl: f.photoUrl, 
+                            isOnline: isOnline,
+                            stats: { wins: f.wins, losses: f.losses, games: f.games, highscore: f.highscore, totalScoreSum: f.totalScoreSum, tournamentWins: f.tournamentWins, currentWinStreak: f.currentWinStreak, maxWinStreak: f.maxWinStreak, unlockedTrophies: f.unlockedTrophies, leagueData: f.leagueData }
+                        };
+                    });
+                }
+                
+                // 2. Dovlačenje Zahteva na Čekanju
+                if (me.friendRequests && me.friendRequests.length > 0) {
+                    const requests = await UserProfile.find({ firebaseUid: { $in: me.friendRequests } });
+                    requestsData = requests.map(r => ({
+                        uid: r.firebaseUid,
+                        name: r.playerName,
+                        photoUrl: r.photoUrl
+                    }));
+                }
+
+                socket.emit('friends_list_data', { friends: friendsData, requests: requestsData });
             } else {
-                socket.emit('friends_list_data', []);
+                socket.emit('friends_list_data', { friends: [], requests: [] });
             }
         } catch(err) { console.error(err); }
     });

@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v9.2 - NO GUEST MODE ALLOWED + LIVE ONLINE REFRESH");
+        console.log("YambApp v9.3 - NO GUEST MODE ALLOWED + LIVE ONLINE REFRESH + REQUEST CARDS");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -460,7 +460,7 @@ class YambApp {
         this.modal.alert(msg, gt('alert_sent_title') || "POSLATO");
     }
 
-    renderFriendsList(friends) {
+    renderFriendsList(friends, requests = []) {
         const list = document.getElementById('friends-list');
         if (!list) return;
         
@@ -473,6 +473,24 @@ class YambApp {
             </div>
         `;
 
+        // PRIKAZI PRVO ZAHTEVE NA ČEKANJU (ako ih ima)
+        if (requests && requests.length > 0) {
+            requests.forEach(r => {
+                html += `
+                    <div class="friend-card" style="border: 1px dashed var(--gold-main); background: rgba(224, 201, 149, 0.1);">
+                        <img src="${r.photoUrl && r.photoUrl.length > 5 ? r.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`}" class="friend-card-img" style="border: 2px solid #aaa;">
+                        <span class="friend-card-name">${r.name}</span>
+                        <span style="font-size: 0.7rem; color: #aaa; text-align: center; margin-bottom: 5px; font-weight: bold;">Novi zahtev</span>
+                        <div style="display:flex; gap:10px; width: 100%; justify-content: center;">
+                            <button onclick="app.resolveFriendRequest('${r.uid}', true)" style="background:var(--success); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="Prihvati">✅</button>
+                            <button onclick="app.resolveFriendRequest('${r.uid}', false)" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="Odbij">❌</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // ZATIM PRIKAZI ODOBRENE PRIJATELJE
         if (friends && friends.length > 0) {
             friends.forEach(f => {
                 const pi = this.calculatePowerIndex(f.stats, false);
@@ -499,6 +517,19 @@ class YambApp {
             });
         }
         list.innerHTML = html;
+    }
+
+    resolveFriendRequest(uid, accepted) {
+        if (!this.requireLogin()) return;
+        this.initSocketConnection();
+        if (!this.socket || !this.socket.connected) return;
+        
+        this.socket.emit('resolve_friend_req', { challengerUid: uid, accepted: accepted });
+        
+        // Optimistično osveži listu odma
+        setTimeout(() => {
+            if (this.socket && this.socket.connected) this.socket.emit('get_friends_list');
+        }, 300);
     }
 
     inviteFriendToRoom(friendSocketId) {
@@ -1524,9 +1555,14 @@ class YambApp {
 
         // --- PRIJATELJI EVENTI ---
         this.socket.on('incoming_friend_req', async (data) => {
-            const msg = (gt('alert_friend_req') || "Igrač {0} želi da vas doda u prijatelje. Prihvatate?").replace('{0}', data.challengerName);
-            const accepted = await this.modal.confirm(msg);
-            this.socket.emit('friend_req_response', { challengerId: data.challengerId, challengerUid: data.challengerUid, accepted: accepted });
+            // Ako je već u prijatelj sekciji (waiting-screen) samo osveži tihu listu da mu izroni kartica
+            if (this.currentHostingRoomId) {
+                this.socket.emit('get_friends_list');
+            } else {
+                // Ako je u meniju igrice, pusti mu malo info obaveštenje
+                const msg = (gt('alert_friend_req_pending') || "Novi zahtev za prijateljstvo od igrača {0}! Možete ga videti u sekciji 'Prijatelj'.").replace('{0}', data.challengerName);
+                this.modal.alert(msg, gt('alert_info') || "NOVI ZAHTEV");
+            }
         });
 
         this.socket.on('friend_req_accepted', (data) => {
@@ -1543,9 +1579,13 @@ class YambApp {
             this.modal.alert(msg, gt('alert_info') || "OBAVEŠTENJE");
         });
 
-        this.socket.on('friends_list_data', (friends) => {
+        this.socket.on('friends_list_data', (data) => {
+            // Hvata novi format objekta { friends: [], requests: [] }
+            let friends = Array.isArray(data) ? data : (data.friends || []);
+            let requests = data.requests || [];
+            
             this.friendsListUids = friends.map(f => f.uid);
-            this.renderFriendsList(friends);
+            this.renderFriendsList(friends, requests);
         });
 
         this.socket.on('search_results', async (results) => {
@@ -1553,10 +1593,18 @@ class YambApp {
                 this.modal.alert(gt('alert_search_not_found') || "Nije pronađen nijedan igrač sa tim imenom. Pokušajte ponovo.", gt('alert_search_title') || "PRETRAGA");
             } else {
                 const p = results[0]; 
-                const msg = (gt('alert_search_found') || "Pronađen je igrač: {0}. Da li želiš da ga dodaš u prijatelje?").replace('{0}', p.name);
+                
+                // Sprečavamo da samom sebi pošalje ili nekom koga već ima
+                if (this.friendsListUids.includes(p.uid)) {
+                     this.modal.alert("Ovaj igrač je već u vašoj listi prijatelja.", "INFO");
+                     return;
+                }
+
+                const msg = (gt('alert_search_found') || "Pronađen je igrač: {0}. Da li želiš da mu pošalješ zahtev za prijateljstvo?").replace('{0}', p.name);
                 const send = await this.modal.confirm(msg);
                 if (send) {
                     this.sendFriendRequest(p.socketId, p.name, p.uid);
+                    this.modal.alert(`Zahtev je poslat! Igrač ${p.name} će ga dobiti sledeći put kada bude na mreži.`, "USPEŠNO");
                 }
             }
         });
@@ -1790,7 +1838,7 @@ class YambApp {
             totalDiv.id = `total-${pIdx}`; 
             totalDiv.innerText = "0"; 
             tableDiv.appendChild(totalDiv); 
-            container.appendChild(tableDiv); 
+            container.appendChild(container); 
         }); 
     }
     
