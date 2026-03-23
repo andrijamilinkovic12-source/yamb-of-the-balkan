@@ -1209,7 +1209,10 @@ class YambApp {
         else if (myImg) myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         
         const myNameEl = document.getElementById('waiting-my-name');
-        if (myNameEl) myNameEl.innerText = nickname;
+        if (myNameEl) {
+            myNameEl.innerText = nickname;
+            myNameEl.style.fontSize = nickname.length > 14 ? 'clamp(0.65rem, 2.5vw, 0.85rem)' : '';
+        }
         
         const myStats = this.getFullLocalStats();
         const myPowerEl = document.getElementById('waiting-my-power');
@@ -1317,7 +1320,10 @@ class YambApp {
         }
         
         const myNameEl = document.getElementById('waiting-my-name');
-        if (myNameEl) myNameEl.innerText = nickname;
+        if (myNameEl) {
+            myNameEl.innerText = nickname;
+            myNameEl.style.fontSize = nickname.length > 14 ? 'clamp(0.65rem, 2.5vw, 0.85rem)' : '';
+        }
         
         const myStats = this.getFullLocalStats();
         const myPowerEl = document.getElementById('waiting-my-power');
@@ -1377,7 +1383,10 @@ class YambApp {
         else if (myImg) myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         
         const myNameEl = document.getElementById('waiting-my-name');
-        if (myNameEl) myNameEl.innerText = nickname;
+        if (myNameEl) {
+            myNameEl.innerText = nickname;
+            myNameEl.style.fontSize = nickname.length > 14 ? 'clamp(0.65rem, 2.5vw, 0.85rem)' : '';
+        }
         
         const myStats = this.getFullLocalStats();
         const myPowerEl = document.getElementById('waiting-my-power');
@@ -1614,7 +1623,11 @@ class YambApp {
                     oppImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.opponent)}&background=333&color=E0C995`;
                 }
                 
-                document.getElementById('waiting-opp-name').innerText = data.opponent;
+                const oppNameEl = document.getElementById('waiting-opp-name');
+                if (oppNameEl) {
+                    oppNameEl.innerText = data.opponent;
+                    oppNameEl.style.fontSize = data.opponent.length > 14 ? 'clamp(0.65rem, 2.5vw, 0.85rem)' : '';
+                }
                 
                 let oppPI = 0;
                 let oppW = 0, oppL = 0;
