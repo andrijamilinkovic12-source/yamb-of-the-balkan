@@ -633,13 +633,27 @@ class YambApp {
                 });
 
                 this.socket.on('challenge_declined', (data) => {
-                    let text = data.message || gt('duel_declined');
-                    if (text === 'duel_declined') text = "Igrač je nažalost odbio vaš izazov.";
-                    this.modal.alert(text, gt('modal_title_info') || "INFO");
+                    // Sklanjamo prethodni modal ako je ostao otvoren (npr. "Čekamo odgovor...")
+                    const customModal = document.getElementById('custom-modal-overlay');
+                    if (customModal) customModal.style.display = 'none';
+
+                    setTimeout(() => {
+                        let text = data.message || gt('duel_declined');
+                        if (text === 'duel_declined') text = "Igrač je nažalost odbio vaš izazov.";
+                        this.modal.alert(text, gt('modal_title_info') || "INFO");
+                    }, 50);
                 });
 
                 this.socket.on('game_started', (data) => {
                     this.closeGlobalChat(true); 
+                    
+                    // Forsirano zatvaranje svih modala da ne smetaju pri prelasku u igru
+                    const customModal = document.getElementById('custom-modal-overlay');
+                    if (customModal) customModal.style.display = 'none';
+                    
+                    const onlineModal = document.getElementById('online-players-overlay');
+                    if (onlineModal) onlineModal.style.display = 'none';
+
                     this.joinPrivateGame(this.playerName, data.room);
                 });
 
@@ -915,7 +929,13 @@ class YambApp {
             
             let sentText = gt('duel_sent');
             if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
-            this.modal.alert(sentText.replace('{0}', targetName), gt('duel_title') || "IZAZOV");
+            
+            // Koristimo Toast notifikaciju da ne bismo blokirali ekran modalom koji traži OK klik
+            if (typeof window.showNotification === 'function') {
+                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName));
+            } else {
+                this.modal.alert(sentText.replace('{0}', targetName), gt('duel_title') || "IZAZOV");
+            }
         }
     }
     
