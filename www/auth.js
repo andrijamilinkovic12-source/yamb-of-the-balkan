@@ -265,12 +265,12 @@ async function checkLoginStatus() {
             console.log("Korisnik je već ulogovan:", result.user.displayName);
             
             localStorage.setItem('yamb_uid', result.user.uid); 
-            localStorage.setItem('yamb_player_name', result.user.displayName || "Igrač");
+            localStorage.setItem('yamb_player_name', result.user.displayName || _t('hs_player', "Igrač"));
             osveziAuthUI(result.user);
             
             if (window.app) {
                 window.app.playerId = result.user.uid;
-                window.app.playerName = result.user.displayName || "Igrač";
+                window.app.playerName = result.user.displayName || _t('hs_player', "Igrač");
             }
 
             // Ako je ulogovan, pusti ga u glavni meni čim se završi splash animacija

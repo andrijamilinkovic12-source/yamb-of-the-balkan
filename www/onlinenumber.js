@@ -1,184 +1,332 @@
-// onlinenumber.js - Prikaz liste trenutno aktivnih igrača sa slikama, PI i prijateljima
+// onlinenumber.js - MODUL ZA UPRAVLJANJE MREŽNIM FUNKCIJAMA SA I18N PREVODIMA
+// Sadrži: Online broj igrača, Custom Notifikacije, Prikaz Rankova, Trofeja, Highscore Listenere
 
-class OnlinePlayersManager {
-    constructor(app) {
-        this.app = app;
-        this.createModal();
-        this.lastPlayersData = [];
-        this.setupSocketListeners();
+/**
+ * Prikazuje custom toast notifikaciju iznad svih elemenata.
+ */
+window.showNotification = function(title, message) {
+    const containerId = 'custom-notification-container';
+    let container = document.getElementById(containerId);
+    if (!container) {
+        container = document.createElement('div');
+        container.id = containerId;
+        container.style.position = 'fixed';
+        container.style.top = '20px';
+        container.style.left = '50%';
+        container.style.transform = 'translateX(-50%)';
+        container.style.zIndex = '100000';
+        container.style.display = 'flex';
+        container.style.flexDirection = 'column';
+        container.style.gap = '10px';
+        container.style.pointerEvents = 'none';
+        container.style.width = '90%';
+        container.style.maxWidth = '350px';
+        document.body.appendChild(container);
     }
 
-    createModal() {
-        this.overlay = document.createElement('div');
-        this.overlay.className = 'modal-overlay';
-        this.overlay.id = 'online-players-overlay';
-        this.overlay.style.display = 'none';
-        this.overlay.style.zIndex = '10005';
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.innerHTML = `
+        <div class="toast-title">${title}</div>
+        <div class="toast-msg">${message}</div>
+    `;
+    
+    toast.style.background = 'var(--glass-panel)';
+    toast.style.border = '2px solid var(--gold-main)';
+    toast.style.borderRadius = '12px';
+    toast.style.padding = '12px 15px';
+    toast.style.color = 'var(--text-main)';
+    toast.style.boxShadow = '0 5px 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(224, 201, 149, 0.1)';
+    toast.style.backdropFilter = 'blur(10px)';
+    toast.style.WebkitBackdropFilter = 'blur(10px)';
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-20px)';
+    toast.style.transition = 'all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
+    
+    const titleEl = toast.querySelector('.toast-title');
+    titleEl.style.color = 'var(--gold-main)';
+    titleEl.style.fontWeight = 'bold';
+    titleEl.style.fontSize = '0.9rem';
+    titleEl.style.marginBottom = '5px';
+    titleEl.style.textTransform = 'uppercase';
+    
+    const msgEl = toast.querySelector('.toast-msg');
+    msgEl.style.fontSize = '0.85rem';
+    msgEl.style.lineHeight = '1.3';
 
-        this.overlay.innerHTML = `
-            <div class="modal-box" style="width: 90%; max-width: 450px; height: 65vh; max-height: 550px; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column;">
-                <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
-                    <span id="onl-title" style="color: var(--success); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">${typeof t !== 'undefined' ? t('online_players_title') : 'ONLINE IGRAČI'}</span>
-                    <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="window.onlinePlayersManager.closeModal()">✖</span>
-                </div>
-                <div id="online-players-list" style="flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
-                    <div class="loader" style="width: 30px; height: 30px; margin: 20px auto;"></div>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(this.overlay);
-    }
+    container.appendChild(toast);
 
-    setupSocketListeners() {
-        if (!this.app.socket) return;
-        
-        this.app.socket.on('online_players_list', (players) => {
-            this.lastPlayersData = players;
-            this.renderPlayers(players);
-        });
+    requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+    });
 
-        // KLJUČNI FIX: Hvata novi format objekta { friends: [], requests: [] }
-        this.app.socket.on('friends_list_data', (data) => {
-            let friendsArray = Array.isArray(data) ? data : (data.friends || []);
-            this.app.friendsListUids = friendsArray.map(f => f.uid); 
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-20px)';
+        setTimeout(() => toast.remove(), 300);
+    }, 4000);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- POMOĆNA FUNKCIJA ZA PREVODE ---
+    const t = (key) => window.t ? window.t(key) : key;
+
+    // --- 1. ONLINE BROJAČ ---
+    let socket = null;
+    let isConnected = false;
+
+    const connectToSocket = (uid) => {
+        if (isConnected || socket) return; 
+
+        if (typeof io !== 'undefined') {
+            const serverUrl = (typeof SERVER_URL !== 'undefined') ? SERVER_URL : 'https://yamb-of-the-balkan.onrender.com';
             
-            if (this.overlay.style.display === 'flex' && this.lastPlayersData.length > 0) {
-                this.renderPlayers(this.lastPlayersData);
-            }
-        });
-    }
+            socket = io(serverUrl, {
+                query: { uid: uid },
+                reconnection: true,
+                reconnectionDelay: 2000,
+                reconnectionAttempts: 10
+            });
 
-    openModal() {
-        if (!this.app.requireLogin()) return;
-        this.app.initSocketConnection();
+            socket.on('connect', () => {
+                isConnected = true;
+                socket.emit('request_online_count');
+            });
 
-        if (this.app.socket && this.app.socket.connected) {
-            this.app.socket.emit('get_friends_list');
-            this.app.socket.emit('get_online_players');
+            socket.on('disconnect', () => {
+                isConnected = false;
+            });
+
+            socket.on('online_count', (data) => {
+                const badge = document.getElementById('online-badge');
+                if (badge && data && typeof data.count === 'number') {
+                    badge.classList.remove('hidden');
+                    const textZufix = t('online_players') || " Igrača Online";
+                    document.getElementById('online-count').innerText = data.count + textZufix;
+                }
+            });
+            
+            socket.on('tournament_invite', (data) => {
+                if (window.handleTournamentInvite) {
+                    window.handleTournamentInvite(data);
+                } else {
+                    console.log("Primljena pozivnica za turnir, ali funkcija nije definisana.", data);
+                }
+            });
         }
+    };
 
-        this.overlay.style.display = 'flex';
-        setTimeout(() => this.overlay.classList.add('active'), 10);
-        this.startAutoRefresh();
-    }
-
-    closeModal() {
-        this.overlay.classList.remove('active');
-        setTimeout(() => { this.overlay.style.display = 'none'; }, 300);
-        if (this.refreshInterval) {
-            clearInterval(this.refreshInterval);
-            this.refreshInterval = null;
+    const attemptConnection = () => {
+        const uid = localStorage.getItem('yamb_uid');
+        if (uid) {
+            connectToSocket(uid);
+        } else {
+            setTimeout(attemptConnection, 2000); 
         }
-    }
+    };
 
-    startAutoRefresh() {
-        if (this.refreshInterval) clearInterval(this.refreshInterval);
-        this.refreshInterval = setInterval(() => {
-            if (this.overlay.style.display === 'flex' && this.app.socket && this.app.socket.connected) {
-                this.app.socket.emit('get_friends_list');
-                this.app.socket.emit('get_online_players');
-            } else {
-                clearInterval(this.refreshInterval);
-            }
-        }, 5000);
-    }
+    attemptConnection();
 
-    renderPlayers(players) {
-        const listContainer = document.getElementById('online-players-list');
-        if (!listContainer) return;
+    // --- 2. PRIKAZ DNEVNOG IZAZOVA I NAGRADA NA DASHBOARDU ---
+    const rewardAlertContainer = document.getElementById('reward-alert-container');
+    
+    if (rewardAlertContainer) {
+        rewardAlertContainer.innerHTML = ''; 
+        rewardAlertContainer.style.display = 'block'; 
+        rewardAlertContainer.style.width = '100%';
+        rewardAlertContainer.style.maxWidth = '330px'; 
+        rewardAlertContainer.style.margin = '0 auto 15px auto';
 
-        if (players.length === 0) {
-            listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 20px;">Nema drugih igrača online.</div>`;
-            return;
-        }
+        const lastPlayed = localStorage.getItem('yamb_daily_last_played');
+        const todayStr = new Date().toISOString().split('T')[0];
+        const isPlayedToday = (lastPlayed === todayStr);
 
-        const filteredPlayers = players.filter(p => p.playerId !== this.app.playerId);
-        
-        if (filteredPlayers.length === 0) {
-            listContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: 20px;">Samo ste vi online.</div>`;
-            return;
-        }
+        let htmlContent = '';
 
-        listContainer.innerHTML = '';
-
-        filteredPlayers.forEach(player => {
-            const item = document.createElement('div');
-            item.style.cssText = 'display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);';
-
-            const leftSide = document.createElement('div');
-            leftSide.style.cssText = 'display: flex; align-items: center; gap: 10px; flex: 1; overflow: hidden;';
-
-            const displayName = player.name && player.name.trim() !== '' ? player.name : 'Gost';
-            const avatarUrl = player.photoUrl && player.photoUrl.length > 5 ? player.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
-
-            let statusColor = player.status === 'playing' ? 'var(--danger)' : 'var(--success)';
-            let statusShadow = player.status === 'playing' ? 'rgba(244,67,54,0.5)' : 'rgba(76,175,80,0.5)';
-
-            leftSide.innerHTML = `
-                <div style="position: relative;">
-                    <img src="${avatarUrl}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid ${statusColor}; box-shadow: 0 0 8px ${statusShadow};">
-                    <div style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: ${statusColor}; border-radius: 50%; border: 2px solid #222;"></div>
-                </div>
-                <div style="display: flex; flex-direction: column; overflow: hidden;">
-                    <span style="font-weight: 800; color: var(--text-main); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${displayName}</span>
-                    <span style="font-size: 0.65rem; color: var(--gold-main); font-weight: bold;">Moć ⚡ ${this.app.calculatePowerIndex(player.stats, false)}</span>
+        if (!isPlayedToday) {
+            htmlContent = `
+                <div class="alert-content">
+                    <div class="alert-icon">🎲</div>
+                    <div class="alert-text">
+                        <div class="alert-title">${t('daily_challenge_title')}</div>
+                        <div class="alert-desc">${t('daily_challenge_desc')}</div>
+                    </div>
+                    <div class="alert-reward">
+                        <div class="reward-pill">
+                            <span class="pill-icon">💰</span>
+                            <span>1000</span>
+                            <span>${t('coins_upper')}</span>
+                        </div>
+                    </div>
+                    <button class="alert-btn" onclick="window.stateManager.navigateTo('daily-challenge')">${t('play_now')}</button>
                 </div>
             `;
-
-            const actionDiv = document.createElement('div');
-            actionDiv.style.cssText = 'display: flex; gap: 8px; align-items: center;';
-
-            const isFriend = this.app.friendsListUids && this.app.friendsListUids.includes(player.playerId);
-
-            if (player.status === 'playing') {
-                actionDiv.innerHTML = `<span style="font-size: 0.7rem; color: var(--danger); font-weight: bold; background: rgba(244,67,54,0.1); padding: 4px 8px; border-radius: 8px; border: 1px solid var(--danger);">U IGRI</span>`;
-            } else {
-                const duelBtn = document.createElement('button');
-                duelBtn.innerHTML = '⚔️';
-                duelBtn.title = typeof t !== 'undefined' ? t('btn_duel') : 'Izazovi na duel';
-                duelBtn.style.cssText = 'background: rgba(255, 215, 0, 0.15); border: 1px solid var(--gold-main); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(255, 215, 0, 0.2); transition: transform 0.1s;';
-                duelBtn.onmousedown = () => duelBtn.style.transform = 'scale(0.9)';
-                duelBtn.onmouseup = () => duelBtn.style.transform = 'scale(1)';
-                duelBtn.onclick = () => { this.closeModal(); this.app.challengePlayer(player.id, displayName); };
-                
-                actionDiv.appendChild(duelBtn);
-
-                if (!isFriend && player.playerId) {
-                    const addBtn = document.createElement('button');
-                    addBtn.innerHTML = '➕';
-                    addBtn.title = typeof t !== 'undefined' ? t('btn_add_friend') : 'Dodaj prijatelja';
-                    addBtn.style.cssText = 'background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4); transition: transform 0.1s;';
-                    addBtn.onmousedown = () => addBtn.style.transform = 'scale(0.9)';
-                    addBtn.onmouseup = () => addBtn.style.transform = 'scale(1)';
-                    addBtn.onclick = () => { this.closeModal(); this.app.sendFriendRequest(player.id, displayName, player.playerId); };
-
-                    actionDiv.appendChild(addBtn);
-                }
-            }
-
-            item.appendChild(leftSide);
-            item.appendChild(actionDiv);
-            listContainer.appendChild(item);
-        });
-    }
-}
-
-window.addEventListener('load', () => {
-    setTimeout(() => {
-        if (window.app) {
-            window.onlinePlayersManager = new OnlinePlayersManager(window.app);
-            const countEl = document.getElementById('live-online-count');
-            if (countEl && countEl.parentElement) {
-                const onlineCard = countEl.parentElement;
-                onlineCard.style.cursor = 'pointer';
-                onlineCard.style.transition = 'transform 0.1s';
-                onlineCard.onmousedown = () => onlineCard.style.transform = 'scale(0.95)';
-                onlineCard.onmouseup = () => onlineCard.style.transform = 'scale(1)';
-                
-                const clone = onlineCard.cloneNode(true);
-                onlineCard.parentNode.replaceChild(clone, onlineCard);
-                clone.addEventListener('click', () => window.onlinePlayersManager.openModal());
-            }
+        } else {
+            rewardAlertContainer.style.display = 'none'; 
+            return; 
         }
-    }, 1000);
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'dashboard-alert active-alert';
+        alertDiv.innerHTML = htmlContent;
+        rewardAlertContainer.appendChild(alertDiv);
+    }
+
+    // --- 3. DNEVNA NAGRADA (DAILY REWARD) ---
+    const lastRewardDate = localStorage.getItem('yamb_last_reward_date');
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    if (lastRewardDate !== currentDate) {
+        const reward = 500; 
+        let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+        currentBalance += reward;
+        localStorage.setItem('yamb_dukati', currentBalance);
+        localStorage.setItem('yamb_last_reward_date', currentDate);
+
+        if (window.statsManager) {
+            window.statsManager.stats.balance = currentBalance;
+            window.statsManager.saveStats();
+        }
+
+        const menuDukati = document.getElementById('menu-dukati-count');
+        if (menuDukati) menuDukati.innerText = currentBalance;
+
+        setTimeout(() => {
+            showNotification(t('success_title') || "USPEH", (t('reward_received') || "Dobili ste nagradu: ") + reward);
+            if (window.app && window.app.soundMgr) window.app.soundMgr.win();
+        }, 1500);
+    }
+
+    // --- 4. OSVEŽAVANJE STATISTIKE I RANKA NA DASHBOARDU ---
+    window.addEventListener('updateDashboardStats', (e) => {
+        const stats = e.detail || (window.statsManager ? window.statsManager.stats : null);
+        if (!stats) return;
+
+        const rankNames = {
+            1: t('rank_1') || "Bronza III", 2: t('rank_2') || "Bronza II", 3: t('rank_3') || "Bronza I",
+            4: t('rank_4') || "Srebro II", 5: t('rank_5') || "Srebro I",
+            6: t('rank_6') || "Zlato II", 7: t('rank_7') || "Zlato I",
+            8: t('rank_8') || "Platina II", 9: t('rank_9') || "Platina I",
+            10: t('rank_10') || "Dijamant I", 11: t('rank_11') || "Šampion"
+        };
+
+        const totalGames = stats.totalGames || 0;
+        const wins = stats.wins || 0;
+        const hs = stats.highscore || 0;
+
+        document.getElementById('stat-hs').innerText = hs;
+        document.getElementById('stat-games').innerText = totalGames;
+        document.getElementById('stat-wins').innerText = wins;
+
+        let wlRatio = 0;
+        if (totalGames > 0) wlRatio = Math.round((wins / totalGames) * 100);
+        document.getElementById('stat-wl').innerText = wlRatio + "%";
+
+        let currentRankName = rankNames[1];
+        let currentRankLvl = 1;
+        let points = (totalGames * 10) + (wins * 25) + Math.floor(hs / 10);
+
+        if (totalGames < 5) {
+            currentRankName = "-";
+            document.getElementById('league-rank-name').innerText = currentRankName;
+            document.getElementById('league-pts-text').innerText = points + " PTS";
+            
+            const btn = document.querySelector('.btn-league');
+            if(btn) {
+                btn.onclick = () => {
+                    showNotification(t('info_title') || "INFO", t('play_more_req') || "Potrebno je da odigrate još partija.");
+                };
+            }
+            return;
+        }
+
+        if (points < 500) currentRankLvl = 1;
+        else if (points < 1000) currentRankLvl = 2;
+        else if (points < 2000) currentRankLvl = 3;
+        else if (points < 3500) currentRankLvl = 4;
+        else if (points < 5000) currentRankLvl = 5;
+        else if (points < 7500) currentRankLvl = 6;
+        else if (points < 10000) currentRankLvl = 7;
+        else if (points < 15000) currentRankLvl = 8;
+        else if (points < 20000) currentRankLvl = 9;
+        else if (points < 30000) currentRankLvl = 10;
+        else currentRankLvl = 11;
+
+        currentRankName = rankNames[currentRankLvl];
+        
+        document.getElementById('league-rank-name').innerText = currentRankName;
+        document.getElementById('league-pts-text').innerText = points + " PTS";
+
+        const btn = document.querySelector('.btn-league');
+        if (btn) {
+            btn.onclick = () => {
+                const container = document.getElementById('custom-notification-container');
+                if (container && container.innerHTML !== '') return;
+
+                const div = document.createElement('div');
+                div.className = 'league-progress-toast';
+                div.innerHTML = `
+                    <div class="league-progress-label">${t('league_progress') || "Napredak lige"}</div>
+                    <div class="league-progress-bar-container">
+                        <div class="league-progress-bar" style="width: ${Math.min((points / 30000) * 100, 100)}%;"></div>
+                    </div>
+                    <div class="league-progress-text">
+                        <span>${currentRankName}</span>
+                        <span>${points} PTS</span>
+                    </div>
+                `;
+                
+                div.style.position = 'fixed';
+                div.style.top = '20px';
+                div.style.left = '50%';
+                div.style.transform = 'translateX(-50%)';
+                div.style.zIndex = '100000';
+                div.style.background = 'var(--glass-panel)';
+                div.style.border = '2px solid var(--gold-main)';
+                div.style.padding = '15px';
+                div.style.borderRadius = '15px';
+                div.style.width = '90%';
+                div.style.maxWidth = '350px';
+                div.style.boxShadow = '0 5px 20px rgba(0,0,0,0.8)';
+                div.style.backdropFilter = 'blur(10px)';
+                
+                document.body.appendChild(div);
+                
+                setTimeout(() => {
+                    div.style.opacity = '0';
+                    div.style.transition = 'opacity 0.3s';
+                    setTimeout(() => div.remove(), 300);
+                }, 3000);
+            };
+        }
+    });
+
+    setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('updateDashboardStats'));
+    }, 1500);
+
+    // --- 5. OSLUŠKIVANJE ZA OSVOJEN TROFEJ ---
+    window.addEventListener('trophyUnlocked', (e) => {
+        const trophyId = e.detail;
+        
+        const popup = document.createElement('div');
+        popup.className = 'trophy-popup active';
+        popup.innerHTML = `
+            <div class="tp-icon">🏆</div>
+            <div class="tp-content">
+                <div class="tp-title">${t('new_trophy') || "Novi Trofej!"}</div>
+                <div class="tp-desc">${trophyId}</div> 
+            </div>
+        `;
+        document.body.appendChild(popup);
+
+        if (window.app && window.app.soundMgr) window.app.soundMgr.trophy();
+
+        setTimeout(() => {
+            popup.classList.remove('active');
+            setTimeout(() => popup.remove(), 500);
+        }, 4000);
+    });
 });
