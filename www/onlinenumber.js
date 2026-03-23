@@ -68,6 +68,28 @@ window.showNotification = function(title, message) {
     }, 4000);
 };
 
+// --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
+window.openOnlinePlayersModal = function() {
+    const overlay = document.getElementById('online-players-overlay');
+    if (overlay) overlay.style.display = 'flex';
+
+    const body = document.getElementById('online-players-body');
+    if (body) {
+        const loadingText = window.t ? window.t('online_loading') : 'Učitavam igrače... ⏳';
+        body.innerHTML = `<div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">${loadingText}</div>`;
+    }
+
+    // Provera da li postoji konekcija sa serverom (koristimo app.socket iz game.js)
+    if (window.app && window.app.socket && window.app.socket.connected) {
+        window.app.socket.emit('get_online_players_list');
+    } else {
+        if (body) {
+            const noConnText = window.t ? window.t('online_no_conn') : 'Niste povezani na server.';
+            body.innerHTML = `<div style="text-align: center; color: var(--danger);">${noConnText}</div>`;
+        }
+    }
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // --- POMOĆNA FUNKCIJA ZA PREVODE ---
@@ -128,6 +150,37 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     attemptConnection();
+
+    // --- NOVO: SLUŠAČ ZA LISTU ONLINE IGRAČA SA SERVERA ---
+    setTimeout(() => {
+        if (window.app && window.app.socket) {
+            window.app.socket.on('online_players_list_data', (players) => {
+                const body = document.getElementById('online-players-body');
+                if (!body) return;
+
+                if (!players || players.length === 0) {
+                    body.innerHTML = `<div style="text-align: center; color: var(--text-muted);">${t('online_no_players')}</div>`;
+                    return;
+                }
+
+                let html = '';
+                players.forEach(p => {
+                    const isMe = window.app.socket && p.socketId === window.app.socket.id;
+                    html += `
+                    <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); margin-bottom: 5px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="${p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`}" style="width:35px; height:35px; border-radius:50%; border: 1px solid var(--success); object-fit: cover;">
+                            <span style="color: var(--text-main); font-weight: bold; font-size: 0.9rem;">
+                                ${p.name} ${isMe ? `<span style="font-size:0.7rem; color:var(--text-muted);">${t('online_you')}</span>` : ''}
+                            </span>
+                        </div>
+                        ${!isMe ? `<button class="btn-secondary" style="padding: 5px 10px; font-size: 0.7rem; margin: 0; background: var(--gold-main); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;" onclick="window.app.challengePlayer('${p.socketId}', '${p.name}')">${t('online_challenge_btn')}</button>` : ''}
+                    </div>`;
+                });
+                body.innerHTML = html;
+            });
+        }
+    }, 2000);
 
     // --- 2. PRIKAZ DNEVNOG IZAZOVA I NAGRADA NA DASHBOARDU ---
     const rewardAlertContainer = document.getElementById('reward-alert-container');
