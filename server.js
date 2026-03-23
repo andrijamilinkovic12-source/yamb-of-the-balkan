@@ -513,6 +513,24 @@ io.on('connection', (socket) => {
         }
     });
 
+    // --- NOVI KOD: ZAHTEV ZA LISTU SVIH ONLINE IGRAČA (MODAL) ---
+    socket.on('get_online_players_list', () => {
+        let onlinePlayersList = [];
+        
+        io.sockets.sockets.forEach((clientSocket) => {
+            if (clientSocket.playerName) {
+                onlinePlayersList.push({
+                    socketId: clientSocket.id,
+                    name: clientSocket.playerName,
+                    photoUrl: clientSocket.photoUrl || ''
+                });
+            }
+        });
+
+        socket.emit('online_players_list_data', onlinePlayersList);
+    });
+    // -----------------------------------------------------------
+
     socket.on('get_online_players', () => {
         const playersMap = new Map(); 
         
