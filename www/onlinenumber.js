@@ -18,7 +18,7 @@ class OnlinePlayersManager {
         this.overlay.innerHTML = `
             <div class="modal-box" style="width: 90%; max-width: 450px; height: 65vh; max-height: 550px; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column;">
                 <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
-                    <span id="onl-title" style="color: var(--success); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">${gt('online_players_title') || 'ONLINE IGRAČI'}</span>
+                    <span id="onl-title" style="color: var(--success); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">${typeof t !== 'undefined' ? t('online_players_title') : 'ONLINE IGRAČI'}</span>
                     <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="window.onlinePlayersManager.closeModal()">✖</span>
                 </div>
                 <div id="online-players-list" style="flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px;">
@@ -37,9 +37,10 @@ class OnlinePlayersManager {
             this.renderPlayers(players);
         });
 
-        // KLJUČNI FIX: Kada stigne lista prijatelja sa servera, ažuriramo globalnu listu i odmah osvežavamo prikaz
-        this.app.socket.on('friends_list_data', (friends) => {
-            this.app.friendsListUids = friends.map(f => f.uid); // Ažuriramo listu na nivou cele aplikacije
+        // KLJUČNI FIX: Hvata novi format objekta { friends: [], requests: [] }
+        this.app.socket.on('friends_list_data', (data) => {
+            let friendsArray = Array.isArray(data) ? data : (data.friends || []);
+            this.app.friendsListUids = friendsArray.map(f => f.uid); 
             
             if (this.overlay.style.display === 'flex' && this.lastPlayersData.length > 0) {
                 this.renderPlayers(this.lastPlayersData);
@@ -52,7 +53,6 @@ class OnlinePlayersManager {
         this.app.initSocketConnection();
 
         if (this.app.socket && this.app.socket.connected) {
-            // FIX: Čim se otvori modal, zatraži od servera i listu prijatelja i listu online igrača
             this.app.socket.emit('get_friends_list');
             this.app.socket.emit('get_online_players');
         }
@@ -75,7 +75,6 @@ class OnlinePlayersManager {
         if (this.refreshInterval) clearInterval(this.refreshInterval);
         this.refreshInterval = setInterval(() => {
             if (this.overlay.style.display === 'flex' && this.app.socket && this.app.socket.connected) {
-                // Redovno osvežavamo i prijatelje da bi status bio tačan
                 this.app.socket.emit('get_friends_list');
                 this.app.socket.emit('get_online_players');
             } else {
@@ -93,7 +92,6 @@ class OnlinePlayersManager {
             return;
         }
 
-        // Filtriramo sebe iz liste
         const filteredPlayers = players.filter(p => p.playerId !== this.app.playerId);
         
         if (filteredPlayers.length === 0) {
@@ -113,7 +111,6 @@ class OnlinePlayersManager {
             const displayName = player.name && player.name.trim() !== '' ? player.name : 'Gost';
             const avatarUrl = player.photoUrl && player.photoUrl.length > 5 ? player.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
 
-            // Status indikator
             let statusColor = player.status === 'playing' ? 'var(--danger)' : 'var(--success)';
             let statusShadow = player.status === 'playing' ? 'rgba(244,67,54,0.5)' : 'rgba(76,175,80,0.5)';
 
@@ -131,7 +128,6 @@ class OnlinePlayersManager {
             const actionDiv = document.createElement('div');
             actionDiv.style.cssText = 'display: flex; gap: 8px; align-items: center;';
 
-            // Provera da li je igrač već prijatelj iz globalne liste
             const isFriend = this.app.friendsListUids && this.app.friendsListUids.includes(player.playerId);
 
             if (player.status === 'playing') {
@@ -139,7 +135,7 @@ class OnlinePlayersManager {
             } else {
                 const duelBtn = document.createElement('button');
                 duelBtn.innerHTML = '⚔️';
-                duelBtn.title = gt('btn_duel') || 'Izazovi na duel';
+                duelBtn.title = typeof t !== 'undefined' ? t('btn_duel') : 'Izazovi na duel';
                 duelBtn.style.cssText = 'background: rgba(255, 215, 0, 0.15); border: 1px solid var(--gold-main); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(255, 215, 0, 0.2); transition: transform 0.1s;';
                 duelBtn.onmousedown = () => duelBtn.style.transform = 'scale(0.9)';
                 duelBtn.onmouseup = () => duelBtn.style.transform = 'scale(1)';
@@ -147,11 +143,10 @@ class OnlinePlayersManager {
                 
                 actionDiv.appendChild(duelBtn);
 
-                // Dugme za dodavanje se sada prikazuje ISKLJUČIVO ako igrač nije u prijateljima
                 if (!isFriend && player.playerId) {
                     const addBtn = document.createElement('button');
                     addBtn.innerHTML = '➕';
-                    addBtn.title = gt('btn_add_friend') || 'Dodaj prijatelja';
+                    addBtn.title = typeof t !== 'undefined' ? t('btn_add_friend') : 'Dodaj prijatelja';
                     addBtn.style.cssText = 'background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4); transition: transform 0.1s;';
                     addBtn.onmousedown = () => addBtn.style.transform = 'scale(0.9)';
                     addBtn.onmouseup = () => addBtn.style.transform = 'scale(1)';
@@ -180,7 +175,6 @@ window.addEventListener('load', () => {
                 onlineCard.onmousedown = () => onlineCard.style.transform = 'scale(0.95)';
                 onlineCard.onmouseup = () => onlineCard.style.transform = 'scale(1)';
                 
-                // Sprečavamo dupliranje listenera
                 const clone = onlineCard.cloneNode(true);
                 onlineCard.parentNode.replaceChild(clone, onlineCard);
                 clone.addEventListener('click', () => window.onlinePlayersManager.openModal());

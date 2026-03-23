@@ -237,8 +237,11 @@ class TopListManager {
                 nameStyle = "font-size: 0.72rem; line-height: 1.1;"; 
             }
             
+            // LOGIKA ZA KRUNU: Sakrivamo broj 1 da bi se lepo video watermark krune
+            const rankText = index === 0 ? '' : (index + 1);
+            
             li.innerHTML = `
-                <div class="${rankClass}"><span style="position: relative; z-index: 2;">${index + 1}</span></div>
+                <div class="${rankClass}"><span style="position: relative; z-index: 2;">${rankText}</span></div>
                 <div class="hs-info">
                     <div class="hs-name" style="${nameStyle}">${displayName}</div>
                     <div class="hs-meta">
