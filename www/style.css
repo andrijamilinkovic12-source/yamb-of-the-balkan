@@ -643,29 +643,69 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
 .ws-share-btn { padding: 14px; border-radius: 14px; font-size: 0.85rem; width: 100%; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); margin: 0; }
 
 /* Friends List Area - Proširena da stanu svi podaci */
-.ws-friends-area { width: 100%; background: var(--glass-panel); border: var(--glass-border); border-radius: 16px; padding: 10px 8px; box-shadow: var(--glass-shadow); backdrop-filter: blur(10px); display: flex; flex-direction: column; flex: 1; min-height: 150px; max-height: 200px; overflow: hidden; margin-top: 5px; }
+.ws-friends-area { 
+    width: 100%; 
+    background: var(--glass-panel); 
+    border: var(--glass-border); 
+    border-radius: 16px; 
+    padding: 10px 8px; 
+    box-shadow: var(--glass-shadow); 
+    backdrop-filter: blur(10px); 
+    display: flex; 
+    flex-direction: column; 
+    flex: 1; 
+    min-height: 190px; /* Povećana minimalna visina */
+    max-height: 240px; /* Povećana maksimalna visina */
+    overflow: hidden; 
+    margin-top: 5px; 
+}
 .ws-friends-title { color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; font-weight: 800; letter-spacing: 1px; flex-shrink: 0; }
 .ws-friends-list { display:flex; flex-direction:row; gap:12px; overflow-x:auto; overflow-y: hidden; padding: 4px 6px 8px 6px; flex: 1; align-items: stretch; scroll-snap-type: x mandatory; }
 
 /* Friend Card (Inside Friends List) - Povećana i preglednija */
-.friend-card { flex: 0 0 auto; width: 125px; height: 100%; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; position: relative; scroll-snap-align: start; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.friend-card { 
+    flex: 0 0 auto; 
+    width: 150px; /* Proširena kartica sa 125px na 150px */
+    height: 100%; 
+    background: rgba(0,0,0,0.6); 
+    border: 1px solid rgba(255,255,255,0.08); 
+    border-radius: 12px; 
+    padding: 12px 10px; /* Malo više unutrašnjeg prostora */
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: space-between; 
+    position: relative; 
+    scroll-snap-align: start; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4); 
+}
+
 .friend-card.add-new { border: 2px dashed var(--gold-main); justify-content: center; cursor: pointer; transition: transform 0.2s; }
 .friend-card.add-new:active { transform: scale(0.95); }
-.friend-card-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
+
+.friend-card-img { 
+    width: 55px; /* Povećan avatar */
+    height: 55px; 
+    border-radius: 50%; 
+    object-fit: cover; 
+    margin-bottom: 8px; 
+}
+
 .friend-card-name { 
     color: var(--text-main); 
     font-weight: 800; 
-    font-size: 0.75rem; 
+    font-size: 0.85rem; /* Povećan font imena */
     text-align: center; 
     width: 100%; 
     white-space: normal; 
     overflow: hidden; 
     text-overflow: ellipsis; 
     display: -webkit-box; 
-    -webkit-line-clamp: 2; 
+    -webkit-line-clamp: 2; /* Dozvoljava imenu da ide u 2 reda ako je dugačko */
     -webkit-box-orient: vertical;
-    line-height: 1.1; 
-    margin-bottom: 4px; 
+    line-height: 1.2; 
+    margin-bottom: 6px; 
 }
-.friend-card-wl { color: var(--text-muted); font-size: 0.65rem; margin-bottom: 4px; }
-.friend-card-btn { border: none; padding: 8px 0; width: 100%; border-radius: 8px; font-weight: 900; font-size: 0.7rem; transition: transform 0.1s; margin-top: auto; }
+
+.friend-card-wl { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 6px; }
+.friend-card-btn { border: none; padding: 10px 0; width: 100%; border-radius: 8px; font-weight: 900; font-size: 0.75rem; transition: transform 0.1s; margin-top: auto; }
