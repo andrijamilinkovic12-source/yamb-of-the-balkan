@@ -229,32 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         rewardAlertContainer.appendChild(alertDiv);
     }
 
-    // --- 3. DNEVNA NAGRADA (DAILY REWARD) ---
-    const lastRewardDate = localStorage.getItem('yamb_last_reward_date');
-    const currentDate = new Date().toISOString().split('T')[0];
-
-    if (lastRewardDate !== currentDate) {
-        const reward = 500; 
-        let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-        currentBalance += reward;
-        localStorage.setItem('yamb_dukati', currentBalance);
-        localStorage.setItem('yamb_last_reward_date', currentDate);
-
-        if (window.statsManager) {
-            window.statsManager.stats.balance = currentBalance;
-            window.statsManager.saveStats();
-        }
-
-        const menuDukati = document.getElementById('menu-dukati-count');
-        if (menuDukati) menuDukati.innerText = currentBalance;
-
-        setTimeout(() => {
-            showNotification(t('success_title') || "USPEH", (t('reward_received') || "Dobili ste nagradu: ") + reward);
-            if (window.app && window.app.soundMgr) window.app.soundMgr.win();
-        }, 1500);
-    }
-
-    // --- 4. OSVEŽAVANJE STATISTIKE I RANKA NA DASHBOARDU ---
+    // --- 3. OSVEŽAVANJE STATISTIKE I RANKA NA DASHBOARDU ---
     window.addEventListener('updateDashboardStats', (e) => {
         const stats = e.detail || (window.statsManager ? window.statsManager.stats : null);
         if (!stats) return;
@@ -362,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.dispatchEvent(new CustomEvent('updateDashboardStats'));
     }, 1500);
 
-    // --- 5. OSLUŠKIVANJE ZA OSVOJEN TROFEJ ---
+    // --- 4. OSLUŠKIVANJE ZA OSVOJEN TROFEJ ---
     window.addEventListener('trophyUnlocked', (e) => {
         const trophyId = e.detail;
         

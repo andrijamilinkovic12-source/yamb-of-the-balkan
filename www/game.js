@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v9.4 - NO GUEST MODE ALLOWED + LIVE ONLINE REFRESH + REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER");
+        console.log("YambApp v9.5 - POZOVI PRIJATELJA TOAST + DECLINE SYNC + AUTO CLOSE MODAL");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -255,7 +255,7 @@ class YambApp {
         this.isAnimating = false; 
         this.currentHostingRoomId = null;
 
-        // NOVO: Klijentski tajmer za Anti-Troll zaštitu
+        // Klijentski tajmer za Anti-Troll zaštitu
         this.timeLeft = 60;
         this.turnTimerInterval = null;
 
@@ -538,8 +538,21 @@ class YambApp {
 
     inviteFriendToRoom(friendSocketId) {
         if (!this.currentHostingRoomId) return;
-        this.socket.emit('send_room_invite', { targetSocketId: friendSocketId, roomId: this.currentHostingRoomId, hostName: this.playerName });
-        this.modal.alert(gt('alert_invite_sent') || "Pozivnica za partiju je poslata prijatelju!", gt('alert_invite_title') || "POZIVNICA");
+        
+        // HACK: Pakujemo naš socket.id uz ime kako bi protivnik znao kome da javi ako odbije
+        const payloadHostName = this.playerName + "|||" + this.socket.id;
+        
+        this.socket.emit('send_room_invite', { targetSocketId: friendSocketId, roomId: this.currentHostingRoomId, hostName: payloadHostName });
+        
+        let sentText = gt('alert_invite_sent') || "Pozivnica za partiju je poslata prijatelju!";
+        let titleText = gt('alert_invite_title') || "POZIVNICA";
+        
+        // Koristimo Toast umesto blokirajućeg alert-a (da se ne bi desilo da igra krene dok je prozor otvoren)
+        if (typeof window.showNotification === 'function') {
+            window.showNotification(titleText, sentText);
+        } else {
+            this.modal.alert(sentText, titleText);
+        }
     }
     // --------------------------
 
@@ -1616,6 +1629,11 @@ class YambApp {
         
         this.socket.on('game_start', (data) => { 
             console.log("GAME START:", data);
+            
+            // Forsirano zatvaranje svih modala (ako je neki ostao otvoren sa prethodnog ekrana)
+            const customModal = document.getElementById('custom-modal-overlay');
+            if (customModal) customModal.style.display = 'none';
+
             this.myOnlineIndex = Number(data.myIndex); 
             this.onlineMode = true; 
             this.modeTag = "Online"; 
@@ -1769,14 +1787,12 @@ class YambApp {
             }
         });
 
-        // DODATO: Hvatanje odbijenog zahteva
         this.socket.on('friend_req_declined', (data) => {
             const msg = (gt('alert_friend_declined') || "Igrač {0} je nažalost odbio vaš zahtev za prijateljstvo.").replace('{0}', data.name);
             this.modal.alert(msg, gt('alert_info') || "OBAVEŠTENJE");
         });
 
         this.socket.on('friends_list_data', (data) => {
-            // Hvata novi format objekta { friends: [], requests: [] }
             let friends = Array.isArray(data) ? data : (data.friends || []);
             let requests = data.requests || [];
             
@@ -1790,7 +1806,6 @@ class YambApp {
             } else {
                 const p = results[0]; 
                 
-                // Sprečavamo da samom sebi pošalje ili nekom koga već ima
                 if (this.friendsListUids.includes(p.uid)) {
                      this.modal.alert("Ovaj igrač je već u vašoj listi prijatelja.", "INFO");
                      return;
@@ -1806,12 +1821,31 @@ class YambApp {
         });
 
         this.socket.on('incoming_room_invite', async (data) => {
-            const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', data.hostName);
+            let realHostName = data.hostName;
+            let hostSocketId = null;
+            
+            // Otpakujemo pravo ime i Socket ID onog ko šalje
+            if (data.hostName && data.hostName.includes('|||')) {
+                const parts = data.hostName.split('|||');
+                realHostName = parts[0];
+                hostSocketId = parts[1];
+            }
+
+            const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', realHostName);
             const accepted = await this.modal.confirm(msg);
+            
             if (accepted) {
                 this.inviteDetected = true;
                 this.navigateTo('splash-screen');
                 setTimeout(() => { this.joinPrivateGame(this.playerName, data.roomId); }, 800);
+            } else {
+                // Ako je odbio, šaljemo direktan signal onome ko je poslao
+                if (hostSocketId) {
+                    this.socket.emit('challenge_response', {
+                        challengerId: hostSocketId,
+                        accepted: false
+                    });
+                }
             }
         });
     }
