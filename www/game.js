@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v9.5 - POZOVI PRIJATELJA TOAST + DECLINE SYNC + AUTO CLOSE MODAL");
+        console.log("YambApp v9.6 - RAGE QUIT PUNISHMENT + POZOVI PRIJATELJA TOAST + AUTO CLOSE MODAL");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -1211,6 +1211,10 @@ class YambApp {
     
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
+            // Ako je partija u toku i nije u pitanju solo igra, bežanje se računa kao poraz!
+            if (this.gameActive && this.players.length > 1) {
+                this.updateStats(0, 'loss');
+            }
             this.showMainMenu(); 
         } 
     }
@@ -1529,7 +1533,7 @@ class YambApp {
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
 
-        // NOVO: TIMEOUT EVENT
+        // TIMEOUT EVENT
         this.socket.off('game_timeout');
         this.socket.on('game_timeout', async (data) => {
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
@@ -1753,6 +1757,7 @@ class YambApp {
             });
         });
 
+        // --- SISTEM KAŽNJAVANJA BEŽANJA ---
         this.socket.on('opponent_left', async () => { 
             const btnRematch = document.getElementById('btn-rematch');
             
@@ -1762,7 +1767,20 @@ class YambApp {
                 btnRematch.style.background = 'gray';
                 btnRematch.style.boxShadow = 'none';
             } else {
-                await this.modal.alert(gt('msg_opponent_left'), gt('err_title') || gt('modal_title_info')); 
+                // Protivnik je pobegao, dodeljujemo pobedu i dukate onome ko je ostao!
+                this.soundMgr.win();
+                this.effectMgr.celebrateWin();
+                
+                this.updateStats(0, 'win'); 
+                let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+                currentDukati += 500; 
+                localStorage.setItem('yamb_dukati', currentDukati);
+                if (window.statsManager) {
+                    window.statsManager.stats.balance = currentDukati;
+                    window.statsManager.saveStats();
+                }
+                
+                await this.modal.alert("Protivnik je pobegao iz partije! Tehnička pobeda za vas (+500 💰)!", "POBEDA"); 
                 this.cancelOnline(); 
             }
         }); 

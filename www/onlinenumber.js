@@ -99,14 +99,14 @@ window.openOnlinePlayersModal = function() {
                 const btnText = window.t ? window.t('online_challenge_btn') : 'IZAZOVI';
 
                 html += `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); margin-bottom: 5px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="${p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`}" style="width:35px; height:35px; border-radius:50%; border: 1px solid var(--success); object-fit: cover;">
-                        <span style="color: var(--text-main); font-weight: bold; font-size: 0.9rem;">
-                            ${p.name} ${isMe ? `<span style="font-size:0.7rem; color:var(--text-muted);">${youText}</span>` : ''}
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); margin-bottom: 5px; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+                        <img src="${p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`}" style="width:35px; height:35px; border-radius:50%; border: 1px solid var(--success); object-fit: cover; flex-shrink: 0;">
+                        <span style="color: var(--text-main); font-weight: bold; font-size: 0.9rem; word-break: break-word; line-height: 1.2;">
+                            ${p.name} ${isMe ? `<span style="font-size:0.7rem; color:var(--text-muted); display: block; margin-top: 2px;">${youText}</span>` : ''}
                         </span>
                     </div>
-                    ${!isMe ? `<button class="btn-secondary" style="padding: 5px 10px; font-size: 0.7rem; margin: 0; background: var(--gold-main); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;" onclick="window.app.challengePlayer('${p.socketId}', '${p.name}')">${btnText}</button>` : ''}
+                    ${!isMe ? `<button class="btn-secondary" style="flex-shrink: 0; padding: 6px 12px; font-size: 0.75rem; margin: 0; background: var(--gold-main); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase;" onclick="window.app.challengePlayer('${p.socketId}', '${p.name.replace(/'/g, "\\'")}')">${btnText}</button>` : ''}
                 </div>`;
             });
             body.innerHTML = html;
