@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v9.6 - RAGE QUIT PUNISHMENT + POZOVI PRIJATELJA TOAST + AUTO CLOSE MODAL");
+        console.log("YambApp v9.7 - BALANCE FIX ZA RAGE QUIT I TIMEOUT");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -1545,8 +1545,7 @@ class YambApp {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
-                // Dodeljujemo tehničku pobedu i +500 dukata nagrade
-                this.updateStats(0, 'win'); 
+                // FIX: Dodeljujemo prvo dukate, pa tek onda upisujemo na server
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati += 500; 
                 localStorage.setItem('yamb_dukati', currentDukati);
@@ -1554,6 +1553,8 @@ class YambApp {
                     window.statsManager.stats.balance = currentDukati;
                     window.statsManager.saveStats();
                 }
+                
+                this.updateStats(0, 'win'); 
                 
                 await this.modal.alert("Protivnik nije odigrao potez na vreme. Tehnička pobeda za vas (+500 💰)!", "POBEDA");
             } else {
@@ -1771,7 +1772,7 @@ class YambApp {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
-                this.updateStats(0, 'win'); 
+                // FIX: Dodeljujemo prvo dukate, pa tek onda upisujemo na server
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati += 500; 
                 localStorage.setItem('yamb_dukati', currentDukati);
@@ -1779,6 +1780,8 @@ class YambApp {
                     window.statsManager.stats.balance = currentDukati;
                     window.statsManager.saveStats();
                 }
+                
+                this.updateStats(0, 'win'); 
                 
                 await this.modal.alert("Protivnik je pobegao iz partije! Tehnička pobeda za vas (+500 💰)!", "POBEDA"); 
                 this.cancelOnline(); 
