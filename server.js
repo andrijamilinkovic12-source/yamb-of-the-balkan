@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX
 
 require('dotenv').config(); 
 
@@ -256,6 +256,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('set_player_data', async (data) => {
+        const stariPlayerId = socket.playerId; // Sačuvamo ID starog naloga
+        
         socket.photoUrl = data.photoUrl || ''; 
 
         let bezbednoIme = "Nepoznat Igrač";
@@ -273,6 +275,11 @@ io.on('connection', (socket) => {
         socket.playerId = data.playerId || data.uid; 
         data.name = bezbednoIme; 
         
+        // NOVO: Ako se nalog promenio na istom telefonu, brišemo starog "duha" iz liste online igrača
+        if (stariPlayerId && stariPlayerId !== socket.playerId) {
+            delete onlinePlayers[stariPlayerId];
+        }
+
         // NOVO: Osiguravamo da se igrač upiše u listu online igrača čak i ako je propustio 'set_my_id'
         if (socket.playerId) {
             onlinePlayers[socket.playerId] = socket.id;
@@ -300,9 +307,10 @@ io.on('connection', (socket) => {
                 user.lastLogin = Date.now();
                 user.photoUrl = data.photoUrl || user.photoUrl; 
                 
-                if (s.activeSkin) user.activeSkin = s.activeSkin;
-                if (s.activeEffect) user.activeEffect = s.activeEffect;
-                if (s.activeTheme) user.activeTheme = s.activeTheme;
+                // Ako klijent nema ništa lokalno snimljeno (šalje null), ne prepisujemo bazu
+                if (s.activeSkin !== undefined && s.activeSkin !== null) user.activeSkin = s.activeSkin;
+                if (s.activeEffect !== undefined && s.activeEffect !== null) user.activeEffect = s.activeEffect;
+                if (s.activeTheme !== undefined && s.activeTheme !== null) user.activeTheme = s.activeTheme;
                 
                 const isFreshLogin = (s.games === 0);
 

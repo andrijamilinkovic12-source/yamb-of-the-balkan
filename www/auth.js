@@ -93,9 +93,9 @@ function getFullLocalStats() {
         yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
         unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
         leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0 },
-        activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
-        activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
-        activeTheme: localStorage.getItem('yamb_theme') || 'dark',
+        activeSkin: localStorage.getItem('yamb_active_skin') || null,
+        activeEffect: localStorage.getItem('yamb_active_effect') || null,
+        activeTheme: localStorage.getItem('yamb_theme') || null,
         lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || ""
     };
 }
@@ -134,6 +134,11 @@ async function prijaviSe() {
                 window.app.playerId = user.uid; 
                 if (user.displayName) window.app.playerName = user.displayName;
                 
+                // DODATO: Ponovo pokrećemo vezu sa serverom ako je bila ugašena
+                if (window.app.socket && window.app.socket.disconnected) {
+                    window.app.socket.connect();
+                }
+
                 if (window.app.socket && window.app.socket.connected) {
                     window.app.socket.emit('set_player_data', { 
                         uid: user.uid, 
@@ -207,6 +212,11 @@ async function odjaviSe() {
         // 3. RESETOVANJE OBJEKATA U RADNOJ MEMORIJI
         if (window.app) {
             window.app.stats = { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0 };
+            
+            // DODATO: Fizički raskidamo vezu da bi stari nalog momentalno postao "Offline"
+            if (window.app.socket && window.app.socket.connected) {
+                window.app.socket.disconnect(); 
+            }
         }
         if (window.statsManager) {
             window.statsManager.stats = { totalGames: 0, wins: 0, losses: 0, highscore: 0, tournamentWins: 0, balance: 0, currentWinStreak: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
@@ -345,10 +355,20 @@ function inicijalizujCloudSync() {
             if (dbStats.activeEffect) localStorage.setItem('yamb_active_effect', dbStats.activeEffect);
             if (dbStats.activeTheme) {
                 localStorage.setItem('yamb_theme', dbStats.activeTheme);
-                document.body.className = '';
-                if (dbStats.activeTheme !== 'dark') {
-                    document.body.classList.add(dbStats.activeTheme + '-theme');
+                
+                // Primijeni temu vizuelno odmah po sinhronizaciji
+                if (window.app && typeof window.app.applyTheme === 'function') {
+                    window.app.applyTheme(dbStats.activeTheme);
+                } else {
+                    document.body.className = '';
+                    if (dbStats.activeTheme !== 'dark') {
+                        document.body.classList.add(dbStats.activeTheme + '-theme');
+                    }
                 }
+                
+                // Ažuriraj padajući meni u postavkama ako je otvoren
+                const themeSelect = document.getElementById('setting-theme');
+                if (themeSelect) themeSelect.value = dbStats.activeTheme;
             }
             
             const currentUid = localStorage.getItem('yamb_uid');

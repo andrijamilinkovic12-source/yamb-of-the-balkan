@@ -405,9 +405,9 @@ class YambApp {
             unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
             unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
             leagueData: lsData,
-            activeSkin: localStorage.getItem('yamb_active_skin') || 'default',
-            activeEffect: localStorage.getItem('yamb_active_effect') || 'confetti',
-            activeTheme: localStorage.getItem('yamb_theme') || 'dark',
+            activeSkin: localStorage.getItem('yamb_active_skin') || null,
+            activeEffect: localStorage.getItem('yamb_active_effect') || null,
+            activeTheme: localStorage.getItem('yamb_theme') || null,
             lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || ""
         };
     }
@@ -1725,7 +1725,7 @@ class YambApp {
         this.lastGameType = 'normal';
         document.getElementById('chat-body').innerHTML = ""; 
         const chatBtn = document.getElementById('chat-float-btn'); 
-        if (this.modeTag === "Solo" || this.modeTag === "Hotseat") { chatBtn.classList.add('hidden'); } else { chatBtn.classList.remove('hidden'); } 
+        if (chatBtn) chatBtn.classList.add('hidden'); // Skriveno dok traje citat
         this.effectMgr.stop(); this.loadEquippedEffect(); 
     }
 
@@ -1756,6 +1756,12 @@ class YambApp {
         setTimeout(() => {
             if (document.getElementById('quote-screen').classList.contains('active')) {
                 this.navigateTo('game-scene');
+                
+                // Prikazujemo chat dugme tek kada se prebaci na samu tablu (ako je Online)
+                const chatBtn = document.getElementById('chat-float-btn');
+                if (chatBtn && this.modeTag !== "Solo" && this.modeTag !== "Hotseat") {
+                    chatBtn.classList.remove('hidden');
+                }
             }
         }, 6000); 
     }
@@ -2581,7 +2587,7 @@ class YambApp {
             this.lastGameType = 'normal';
             document.getElementById('chat-body').innerHTML = ""; 
             const chatBtn = document.getElementById('chat-float-btn'); 
-            if (this.modeTag === "Solo" || this.modeTag === "Hotseat") { chatBtn.classList.add('hidden'); } else { chatBtn.classList.remove('hidden'); } 
+            if (chatBtn) chatBtn.classList.add('hidden'); // Skriveno dok traje citat
             this.effectMgr.stop(); this.loadEquippedEffect(); 
             
             this.highlightCurrentPlayer(); 
