@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v9.3 - NO GUEST MODE ALLOWED + LIVE ONLINE REFRESH + REQUEST CARDS");
+        console.log("YambApp v9.4 - NO GUEST MODE ALLOWED + LIVE ONLINE REFRESH + REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -254,6 +254,10 @@ class YambApp {
         this.onlineUsersCount = 1; 
         this.isAnimating = false; 
         this.currentHostingRoomId = null;
+
+        // NOVO: Klijentski tajmer za Anti-Troll zaštitu
+        this.timeLeft = 60;
+        this.turnTimerInterval = null;
 
         this.aiMode = false;
         this.aiDifficulty = "medium";
@@ -569,6 +573,12 @@ class YambApp {
                     if (!this.playerId) return;
 
                     this.socket.emit('set_my_id', this.playerId);
+                    
+                    // NOVO: STATE SYNC - Ako smo usred online partije, tražimo osvežavanje table od protivnika
+                    if (this.gameActive && this.onlineMode) {
+                        console.log("🔄 Rekonekcija detektovana, tražim stanje table od protivnika...");
+                        this.socket.emit('request_state_sync');
+                    }
                     
                     let emitData = { 
                         name: this.playerName, 
@@ -1138,6 +1148,8 @@ class YambApp {
         if(floatBtn) floatBtn.classList.add('hidden'); 
         document.getElementById('chat-window').classList.remove('active'); 
         this.chatOpen = false; 
+        
+        if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
 
         if (this.socket && this.socket.connected) {
             this.socket.emit('back_to_menu');
@@ -1397,6 +1409,39 @@ class YambApp {
         }
     }
     
+    // NOVO: UI Timer za potez
+    startClientTimer() {
+        if (!this.onlineMode) return;
+        if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+        
+        this.timeLeft = 60;
+        this.updateStatusLabel();
+
+        this.turnTimerInterval = setInterval(() => {
+            this.timeLeft--;
+            if (this.timeLeft < 0) this.timeLeft = 0;
+            this.updateStatusLabel();
+            
+            if (this.timeLeft <= 0) {
+                clearInterval(this.turnTimerInterval);
+            }
+        }, 1000);
+    }
+    
+    updateStatusLabel() {
+        const statusLbl = document.getElementById('lbl-status');
+        if (statusLbl) {
+            let baseText = `${gt('status_roll') || "BACANJE"}: ${this.brojBacanja} / 3`;
+            if (this.onlineMode) {
+                const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
+                // Crvena boja ako je manje od 10 sekundi, inače zlatna ili siva zavisno čiji je potez
+                const color = this.timeLeft <= 10 ? '#ff4c4c' : (isMyTurn ? 'var(--gold-main)' : '#aaaaaa');
+                baseText += ` &nbsp;|&nbsp; <span style="color:${color}; font-weight:bold;">⏱️ ${this.timeLeft}s</span>`;
+            }
+            statusLbl.innerHTML = baseText;
+        }
+    }
+
     setupSocketListeners(nickname) { 
         if(!this.socket) return;
         
@@ -1413,10 +1458,108 @@ class YambApp {
         this.socket.off('rematch_started');
         this.socket.off('incoming_friend_req');
         this.socket.off('friend_req_accepted');
-        this.socket.off('friend_req_declined'); // PONIŠTAVANJE ODBIJENOG ZAHTEVA
+        this.socket.off('friend_req_declined'); 
         this.socket.off('friends_list_data');
         this.socket.off('search_results');
         this.socket.off('incoming_room_invite');
+        
+        this.socket.off('request_state_sync');
+        this.socket.off('sync_state_response');
+
+        // NOVO: TIMEOUT EVENT
+        this.socket.off('game_timeout');
+        this.socket.on('game_timeout', async (data) => {
+            if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+            this.gameActive = false;
+            
+            const iAmWinner = (this.socket.id === data.winnerId);
+            
+            if (iAmWinner) {
+                this.soundMgr.win();
+                this.effectMgr.celebrateWin();
+                
+                // Dodeljujemo tehničku pobedu i +500 dukata nagrade
+                this.updateStats(0, 'win'); 
+                let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+                currentDukati += 500; 
+                localStorage.setItem('yamb_dukati', currentDukati);
+                if (window.statsManager) {
+                    window.statsManager.stats.balance = currentDukati;
+                    window.statsManager.saveStats();
+                }
+                
+                await this.modal.alert("Protivnik nije odigrao potez na vreme. Tehnička pobeda za vas (+500 💰)!", "POBEDA");
+            } else {
+                this.soundMgr.loss();
+                this.updateStats(0, 'loss'); 
+                await this.modal.alert("Isteklo vam je vreme za potez! Izgubili ste partiju.", "PORAZ (TIMEOUT)");
+            }
+            
+            this.cancelOnline();
+        });
+
+        this.socket.on('request_state_sync', () => {
+            if (this.gameActive && this.onlineMode) {
+                console.log("📤 Protivnik traži osvežavanje, šaljem mu stanje table...");
+                this.socket.emit('sync_state_response', {
+                    roomId: this.roomId,
+                    allScores: this.allScores,
+                    currentPlayerIdx: this.currentPlayerIdx,
+                    brojBacanja: this.brojBacanja,
+                    kockiceVals: this.kockiceVals,
+                    zadrzane: this.zadrzane,
+                    najavaAktivna: this.najavaAktivna,
+                    najavljenoPolje: this.najavljenoPolje
+                });
+            }
+        });
+
+        this.socket.on('sync_state_response', (data) => {
+            if (this.gameActive && this.onlineMode) {
+                console.log("📥 Stiglo osveženo stanje od protivnika. Primenjujem...");
+                
+                this.allScores = data.allScores;
+                this.currentPlayerIdx = data.currentPlayerIdx;
+                this.brojBacanja = data.brojBacanja;
+                this.kockiceVals = data.kockiceVals;
+                this.zadrzane = data.zadrzane;
+                this.najavaAktivna = data.najavaAktivna;
+                this.najavljenoPolje = data.najavljenoPolje;
+
+                this.updateTableVisuals();
+                this.updateDiceVisuals();
+                this.highlightCurrentPlayer();
+
+                this.updateStatusLabel();
+                this.startClientTimer(); 
+
+                const btnBacaj = document.getElementById('btn-bacaj');
+                const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
+                if (btnBacaj) {
+                    if (isMyTurn && this.brojBacanja < 3) {
+                        btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll') || "BACAJ";
+                    } else if (isMyTurn) {
+                        btnBacaj.disabled = true; btnBacaj.innerText = gt('game_write') || "UPIŠI";
+                    } else {
+                        btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                    }
+                }
+
+                const btnNajava = document.getElementById('btn-najava');
+                if (btnNajava) {
+                    if (this.najavaAktivna) {
+                        btnNajava.innerText = isMyTurn ? (gt('game_announce_cancel') || "OTKAŽI") : (gt('game_opponent_choosing') || "PROTIVNIK BIRA...");
+                        btnNajava.classList.add('btn-active-toggle');
+                    } else if (this.najavljenoPolje) {
+                        btnNajava.innerText = `${gt('game_announce') || "NAJAVA"}: ${this.najavljenoPolje.row}`;
+                        btnNajava.classList.remove('btn-active-toggle');
+                    } else {
+                        btnNajava.innerText = gt('game_announce') || "NAJAVA";
+                        btnNajava.classList.remove('btn-active-toggle');
+                    }
+                }
+            }
+        });
 
         this.socket.on('room_full', async () => { await this.modal.alert(gt('msg_room_full')); this.cancelOnline(); }); 
         this.socket.on('private_waiting', (data) => { this.roomId = data.roomId; }); 
@@ -1495,8 +1638,7 @@ class YambApp {
         this.socket.on('remote_roll', (data) => { 
             if (data.held && Array.isArray(data.held)) { this.zadrzane = data.held; }
             this.brojBacanja = data.bacanje; 
-            const statusLbl = document.getElementById('lbl-status');
-            if(statusLbl) statusLbl.innerText = `${gt('status_roll')}: ${data.bacanje} / 3 ${gt('lbl_opponent_parens')}`; 
+            this.updateStatusLabel();
             this.visualRoll(data.values); 
         }); 
 
@@ -1727,6 +1869,8 @@ class YambApp {
         const chatBtn = document.getElementById('chat-float-btn'); 
         if (chatBtn) chatBtn.classList.add('hidden'); // Skriveno dok traje citat
         this.effectMgr.stop(); this.loadEquippedEffect(); 
+        
+        this.startClientTimer();
     }
 
     showQuoteAndProceed() {
@@ -1855,8 +1999,7 @@ class YambApp {
         this.najavaAktivna = false; 
         this.najavljenoPolje = null; 
         
-        const statusLbl = document.getElementById('lbl-status');
-        if(statusLbl) statusLbl.innerText = `${gt('status_roll')}: 0 / 3`; 
+        this.updateStatusLabel();
         
         const btnBacaj = document.getElementById('btn-bacaj'); 
         const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx == this.myOnlineIndex);
@@ -1982,8 +2125,7 @@ class YambApp {
             this.brojBacanja++; 
             this.isAnimating = false;
 
-            const statusLbl = document.getElementById('lbl-status');
-            if(statusLbl) statusLbl.innerText = `${gt('status_roll')}: ${this.brojBacanja} / 3`; 
+            this.updateStatusLabel();
             this.updateDiceVisuals(); 
 
         } catch(e) { console.error("Greška pri bacanju:", e); this.isAnimating = false; } finally {
@@ -2155,6 +2297,7 @@ class YambApp {
         this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length; 
         this.resetTurnLogic(); 
         this.autoSaveGame(); 
+        this.startClientTimer();
     }
     
     calculateTotalScore(pIdx) {
@@ -2177,6 +2320,10 @@ class YambApp {
         if (this._saveTimeout) {
             clearTimeout(this._saveTimeout);
             this._saveTimeout = null;
+        }
+        if (this.turnTimerInterval) {
+            clearInterval(this.turnTimerInterval);
+            this.turnTimerInterval = null;
         }
         this.gameActive = false;
 
@@ -2593,8 +2740,7 @@ class YambApp {
             this.highlightCurrentPlayer(); 
             this.updateTableVisuals(); 
             
-            const statusLbl = document.getElementById('lbl-status');
-            if(statusLbl) statusLbl.innerText = `${gt('status_roll')}: ${this.brojBacanja} / 3`; 
+            this.updateStatusLabel();
 
             const btnBacaj = document.getElementById('btn-bacaj');
             if(btnBacaj) {
@@ -2686,8 +2832,7 @@ class YambApp {
             }
         }
 
-        const statusLbl = document.getElementById('lbl-status');
-        if (statusLbl) statusLbl.innerText = `${gt('status_roll') || "BACANJE"}: ${this.brojBacanja} / 3`;
+        this.updateStatusLabel();
 
         this.lastMoveSnapshot = null;
         document.getElementById('btn-undo-move').style.display = 'none';
