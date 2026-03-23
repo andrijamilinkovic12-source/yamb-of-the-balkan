@@ -648,19 +648,19 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     background: var(--glass-panel); 
     border: var(--glass-border); 
     border-radius: 16px; 
-    padding: 10px 8px; 
+    padding: 10px 8px 15px 8px; /* Dodat donji padding da se sve malo odigne */
     box-shadow: var(--glass-shadow); 
     backdrop-filter: blur(10px); 
     display: flex; 
     flex-direction: column; 
     flex: 1; 
-    min-height: 190px; /* Povećana minimalna visina */
-    max-height: 240px; /* Povećana maksimalna visina */
+    min-height: 210px; /* Povećana minimalna visina */
+    max-height: 260px; /* Povećana maksimalna visina */
     overflow: hidden; 
     margin-top: 5px; 
 }
 .ws-friends-title { color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; font-weight: 800; letter-spacing: 1px; flex-shrink: 0; }
-.ws-friends-list { display:flex; flex-direction:row; gap:12px; overflow-x:auto; overflow-y: hidden; padding: 4px 6px 8px 6px; flex: 1; align-items: stretch; scroll-snap-type: x mandatory; }
+.ws-friends-list { display:flex; flex-direction:row; gap:12px; overflow-x:auto; overflow-y: hidden; padding: 4px 6px 14px 6px; /* Veći donji padding (14px) odiže kartice od scrollbara */ flex: 1; align-items: stretch; scroll-snap-type: x mandatory; }
 
 /* Friend Card (Inside Friends List) - Povećana i preglednija */
 .friend-card { 
@@ -670,7 +670,7 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     background: rgba(0,0,0,0.6); 
     border: 1px solid rgba(255,255,255,0.08); 
     border-radius: 12px; 
-    padding: 12px 10px; /* Malo više unutrašnjeg prostora */
+    padding: 15px 10px; /* Povećan unutrašnji gornji i donji padding (sa 12px na 15px) */
     display: flex; 
     flex-direction: column; 
     align-items: center; 
@@ -707,5 +707,5 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     margin-bottom: 6px; 
 }
 
-.friend-card-wl { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 6px; }
+.friend-card-wl { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 8px; /* Malo više margine iznad dugmeta */ }
 .friend-card-btn { border: none; padding: 10px 0; width: 100%; border-radius: 8px; font-weight: 900; font-size: 0.75rem; transition: transform 0.1s; margin-top: auto; }
