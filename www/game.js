@@ -1838,7 +1838,7 @@ class YambApp {
             totalDiv.id = `total-${pIdx}`; 
             totalDiv.innerText = "0"; 
             tableDiv.appendChild(totalDiv); 
-            container.appendChild(container); 
+            container.appendChild(tableDiv); 
         }); 
     }
     
