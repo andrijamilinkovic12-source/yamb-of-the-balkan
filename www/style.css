@@ -176,8 +176,19 @@ body {
 .hs-header-row span:nth-child(2), .highscore-item > div:nth-child(2) { text-align: left; justify-self: start; width: 100%; padding-left: 10px; }
 .hs-header-row span:nth-child(3), .highscore-item > div:nth-child(3) { text-align: center; justify-self: center; width: 100%; display: flex; justify-content: center; }
 
-.rank-circle { width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); color: var(--text-muted); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.rank-circle { width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.08); color: var(--text-muted); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: relative; overflow: hidden; }
 .rank-1 { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); font-weight: 900; transform: scale(1.1); }
+.rank-1::before {
+    content: "👑";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 1;
+}
 .rank-2 { background: #E0E0E0; color: #000; box-shadow: 0 0 8px rgba(255,255,255,0.3); }
 .rank-3 { background: #CD7F32; color: #000; box-shadow: 0 0 8px rgba(205,127,50,0.3); }
 .hs-info { display: flex; flex-direction: column; justify-content: center; overflow: hidden; }

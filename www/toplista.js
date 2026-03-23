@@ -218,8 +218,6 @@ class TopListManager {
             else if (index === 1) rankClass += ' rank-2';
             else if (index === 2) rankClass += ' rank-3';
 
-            let crownIcon = (index === 0) ? ' 👑' : '';
-
             let dateDisplay = "";
             if (entry.date) {
                 const d = new Date(entry.date);
@@ -240,9 +238,9 @@ class TopListManager {
             }
             
             li.innerHTML = `
-                <div class="${rankClass}">${index + 1}</div>
+                <div class="${rankClass}"><span style="position: relative; z-index: 2;">${index + 1}</span></div>
                 <div class="hs-info">
-                    <div class="hs-name" style="${nameStyle}">${displayName}${crownIcon}</div>
+                    <div class="hs-name" style="${nameStyle}">${displayName}</div>
                     <div class="hs-meta">
                         <span>${entry.mode || 'Solo'}</span>
                         ${dateDisplay ? `<span>• ${dateDisplay}</span>` : ''}
