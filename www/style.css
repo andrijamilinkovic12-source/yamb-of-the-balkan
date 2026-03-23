@@ -620,7 +620,7 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
 .opp-avatar { border-color: var(--danger); }
 
 /* Imena */
-.ws-name { font-weight: 800; color: var(--text-main); font-size: clamp(0.9rem, 4vw, 1.2rem); text-align: center; margin: 4px 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ws-name { font-weight: 800; color: var(--text-main); font-size: clamp(0.9rem, 4vw, 1.2rem); text-align: center; margin: 4px 0; width: 100%; white-space: normal; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.1; margin-bottom: 4px; }
 
 /* Statistika i Moć - Jasnije i čitljivije */
 .ws-stats { background: rgba(0,0,0,0.4); width: 100%; border-radius: 12px; padding: 8px 0; display: flex; flex-direction: column; align-items: center; border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0; gap: 3px; }
@@ -652,6 +652,20 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
 .friend-card.add-new { border: 2px dashed var(--gold-main); justify-content: center; cursor: pointer; transition: transform 0.2s; }
 .friend-card.add-new:active { transform: scale(0.95); }
 .friend-card-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; }
-.friend-card-name { color: var(--text-main); font-weight: 800; font-size: 0.8rem; text-align: center; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.friend-card-name { 
+    color: var(--text-main); 
+    font-weight: 800; 
+    font-size: 0.75rem; 
+    text-align: center; 
+    width: 100%; 
+    white-space: normal; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+    line-height: 1.1; 
+    margin-bottom: 4px; 
+}
 .friend-card-wl { color: var(--text-muted); font-size: 0.65rem; margin-bottom: 4px; }
 .friend-card-btn { border: none; padding: 8px 0; width: 100%; border-radius: 8px; font-weight: 900; font-size: 0.7rem; transition: transform 0.1s; margin-top: auto; }
