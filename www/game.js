@@ -464,13 +464,12 @@ class YambApp {
         const list = document.getElementById('friends-list');
         if (!list) return;
         
-        // Postavi stil kontejnera
         list.className = 'ws-friends-list';
 
         let html = `
             <div class="friend-card add-new" onclick="app.searchAndAddFriend()">
-                <div style="font-size: 2.2rem; color: var(--gold-main); line-height: 1; margin-bottom: 2px; font-weight: 300;">+</div>
-                <span style="color:var(--text-main); font-weight:800; font-size:0.65rem; text-align:center; line-height: 1.1;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
+                <div style="font-size: 2.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 5px; font-weight: 300;">+</div>
+                <span style="color:var(--text-main); font-weight:800; font-size:0.75rem; text-align:center; line-height: 1.2;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
             </div>
         `;
 
@@ -489,9 +488,10 @@ class YambApp {
 
                 html += `
                     <div class="friend-card">
-                        <div style="position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 5px ${statusColor};"></div>
+                        <div style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 8px ${statusColor};"></div>
                         <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" class="friend-card-img" style="border: 2px solid ${statusColor};">
                         <span class="friend-card-name">${f.name}</span>
+                        <span style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${pi}</span>
                         <span class="friend-card-wl">W/L: ${w} / ${l}</span>
                         <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${f.socketId}')" style="${btnStyle}">${btnText}</button>
                     </div>
