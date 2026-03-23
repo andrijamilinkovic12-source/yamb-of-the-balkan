@@ -1150,6 +1150,10 @@ class YambApp {
         this.chatOpen = false; 
         
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+        
+        // NOVO: Sakrij tajmer kada se vratimo u meni
+        const timerDisplay = document.getElementById('turn-timer-display');
+        if (timerDisplay) timerDisplay.style.display = 'none';
 
         if (this.socket && this.socket.connected) {
             this.socket.emit('back_to_menu');
@@ -1429,16 +1433,33 @@ class YambApp {
     }
     
     updateStatusLabel() {
+        // 1. Ažuriranje donjeg teksta (samo broj bacanja)
         const statusLbl = document.getElementById('lbl-status');
         if (statusLbl) {
-            let baseText = `${gt('status_roll') || "BACANJE"}: ${this.brojBacanja} / 3`;
-            if (this.onlineMode) {
+            statusLbl.innerHTML = `${gt('status_roll') || "BACANJE"}: ${this.brojBacanja} / 3`;
+        }
+
+        // 2. Ažuriranje novog tajmera u gornjem zaglavlju
+        const timerDisplay = document.getElementById('turn-timer-display');
+        if (timerDisplay) {
+            if (this.onlineMode && this.gameActive) {
+                timerDisplay.style.display = 'flex';
                 const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
-                // Crvena boja ako je manje od 10 sekundi, inače zlatna ili siva zavisno čiji je potez
+                
+                // Crvena boja ako je <= 10s, zlatna ako je tvoj red, siva ako je protivnikov
                 const color = this.timeLeft <= 10 ? '#ff4c4c' : (isMyTurn ? 'var(--gold-main)' : '#aaaaaa');
-                baseText += ` &nbsp;|&nbsp; <span style="color:${color}; font-weight:bold;">⏱️ ${this.timeLeft}s</span>`;
+                
+                timerDisplay.innerHTML = `<span style="color:${color};">⏱️ ${this.timeLeft}s</span>`;
+
+                // Animacija treperenja ako ističe vreme
+                if (this.timeLeft <= 10 && isMyTurn) {
+                    timerDisplay.style.animation = 'pulse 1s infinite';
+                } else {
+                    timerDisplay.style.animation = 'none';
+                }
+            } else {
+                timerDisplay.style.display = 'none';
             }
-            statusLbl.innerHTML = baseText;
         }
     }
 
