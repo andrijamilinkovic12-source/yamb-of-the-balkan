@@ -599,7 +599,7 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
 
 /* VS Area - Povećan prostor i flexibilnost */
 .ws-vs-area { display: flex; align-items: stretch; justify-content: center; gap: 20px; width: 100%; padding: 0 10px; flex-shrink: 0; position: relative; min-height: 180px; height: auto; max-height: 250px; }
-.ws-player-card { flex: 1; max-width: 210px; background: var(--glass-panel); border-radius: 16px; padding: 15px 12px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; backdrop-filter: blur(10px); gap: 6px; }
+.ws-player-card { flex: 1 1 0%; width: 100%; max-width: 210px; background: var(--glass-panel); border-radius: 16px; padding: 15px 12px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; backdrop-filter: blur(10px); gap: 6px; }
 .my-card { border: 2px solid var(--gold-main); box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2); }
 .opp-card { border: 2px solid rgba(255, 255, 255, 0.1); box-shadow: var(--glass-shadow); transition: all 0.3s ease; }
 
