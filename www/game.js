@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1382,6 +1382,7 @@ class YambApp {
         this.socket.off('rematch_started');
         this.socket.off('incoming_friend_req');
         this.socket.off('friend_req_accepted');
+        this.socket.off('friend_req_declined'); // PONIŠTAVANJE ODBIJENOG ZAHTEVA
         this.socket.off('friends_list_data');
         this.socket.off('search_results');
         this.socket.off('incoming_room_invite');
@@ -1534,6 +1535,12 @@ class YambApp {
             if (this.currentHostingRoomId) {
                 this.socket.emit('get_friends_list');
             }
+        });
+
+        // DODATO: Hvatanje odbijenog zahteva
+        this.socket.on('friend_req_declined', (data) => {
+            const msg = (gt('alert_friend_declined') || "Igrač {0} je nažalost odbio vaš zahtev za prijateljstvo.").replace('{0}', data.name);
+            this.modal.alert(msg, gt('alert_info') || "OBAVEŠTENJE");
         });
 
         this.socket.on('friends_list_data', (friends) => {

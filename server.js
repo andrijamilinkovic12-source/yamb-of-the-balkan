@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA
 
 require('dotenv').config(); 
 
@@ -689,12 +689,26 @@ io.on('connection', (socket) => {
             const users = await UserProfile.find({ playerName: regex }).limit(5);
 
             const results = users.map(u => {
-                const isOnline = Object.keys(onlinePlayers).includes(u.firebaseUid);
+                let friendSocketId = onlinePlayers[u.firebaseUid];
+                let isOnline = false;
+
+                // STRIKTNA PROVERA: Da li socket stvarno i dalje diše?
+                if (friendSocketId) {
+                    const actualSocket = io.sockets.sockets.get(friendSocketId);
+                    if (actualSocket && actualSocket.connected) {
+                        isOnline = true;
+                    } else {
+                        // Čistimo mrtve duše iz memorije
+                        delete onlinePlayers[u.firebaseUid];
+                        friendSocketId = null;
+                    }
+                }
+
                 return {
                     uid: u.firebaseUid,
                     name: u.playerName,
                     photoUrl: u.photoUrl,
-                    socketId: isOnline ? onlinePlayers[u.firebaseUid] : null
+                    socketId: friendSocketId
                 };
             });
             socket.emit('search_results', results);
@@ -751,6 +765,11 @@ io.on('connection', (socket) => {
                     socket.emit('friend_req_accepted', { name: friend.playerName });
                 }
             } catch(err) { console.error(err); }
+        } else if (!accepted) {
+            // SLANJE POVRATNE INFORMACIJE POŠILJAOCU DA JE ZAHTEV ODBIJEN
+            if (challengerSocket) {
+                io.to(challengerId).emit('friend_req_declined', { name: socket.playerName });
+            }
         }
     });
 
@@ -761,8 +780,20 @@ io.on('connection', (socket) => {
             if (me && me.friends && me.friends.length > 0) {
                 const friends = await UserProfile.find({ firebaseUid: { $in: me.friends } });
                 const friendsData = friends.map(f => {
-                    const isOnline = Object.keys(onlinePlayers).includes(f.firebaseUid);
-                    let friendSocketId = isOnline ? onlinePlayers[f.firebaseUid] : null;
+                    
+                    let friendSocketId = onlinePlayers[f.firebaseUid];
+                    let isOnline = false;
+
+                    // STRIKTNA PROVERA DA LI JE STVARNO ONLINE
+                    if (friendSocketId) {
+                        const actualSocket = io.sockets.sockets.get(friendSocketId);
+                        if (actualSocket && actualSocket.connected) {
+                            isOnline = true;
+                        } else {
+                            delete onlinePlayers[f.firebaseUid]; // Brišemo đubre
+                            friendSocketId = null;
+                        }
+                    }
 
                     return { 
                         uid: f.firebaseUid, 
