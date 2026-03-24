@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE
 
 require('dotenv').config(); 
 
@@ -523,7 +523,8 @@ io.on('connection', (socket) => {
                 onlinePlayersList.push({
                     socketId: clientSocket.id,
                     name: clientSocket.playerName,
-                    photoUrl: clientSocket.photoUrl || ''
+                    photoUrl: clientSocket.photoUrl || '',
+                    uid: clientSocket.playerId || ''
                 });
             }
         });
@@ -595,6 +596,34 @@ io.on('connection', (socket) => {
         }
         
         updateOnlineCount();
+    });
+
+    // --- SPECTATOR (GLEDALAC) LOGIKA ---
+    socket.on('request_spectate', (targetSocketId) => {
+        const roomId = playerRooms[targetSocketId];
+        if (roomId) {
+            socket.join(roomId);
+            socket.isSpectator = true;
+            socket.spectatingRoom = roomId;
+
+            // Javi gledaocu da je uspostavljena veza
+            socket.emit('spectate_started', { roomId: roomId });
+
+            // Zatraži od igrača u sobi da pošalju stanje table svima (uključujući novog gledaoca)
+            io.to(targetSocketId).emit('request_state_sync', { senderSocketId: socket.id });
+            console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId}`);
+        } else {
+            socket.emit('error_msg', 'Igrač koga želite da gledate trenutno nije u partiji.');
+        }
+    });
+
+    socket.on('stop_spectating', () => {
+        if (socket.spectatingRoom) {
+            socket.leave(socket.spectatingRoom);
+            console.log(`👁️ Igrač ${socket.id} je prestao da gleda sobu ${socket.spectatingRoom}`);
+            socket.isSpectator = false;
+            socket.spectatingRoom = null;
+        }
     });
 
     const MAX_SCORE = 3500;       
@@ -1062,7 +1091,7 @@ io.on('connection', (socket) => {
     socket.on('player_move', (data) => relayEvent('remote_move', data));
     socket.on('announce', (data) => relayEvent('remote_announce', data));
     
-    // DOGAĐAJI ZA SINHRONIZACIJU TABLE NAKON REKONEKCIJE
+    // DOGAĐAJI ZA SINHRONIZACIJU TABLE NAKON REKONEKCIJE ILI PREGLEDA GLEDALACA
     socket.on('request_state_sync', () => relayEvent('request_state_sync', { senderSocketId: socket.id }));
     socket.on('sync_state_response', (data) => relayEvent('sync_state_response', data));
     

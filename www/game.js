@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v9.7 - BALANCE FIX ZA RAGE QUIT I TIMEOUT");
+        console.log("YambApp v9.8 - SPECTATOR MODE ADDED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -250,6 +250,7 @@ class YambApp {
         
         this.socket = null; 
         this.onlineMode = false; 
+        this.isSpectator = false; // DODATO ZA SPECTATE
         this.myOnlineIndex = 0;
         this.onlineUsersCount = 1; 
         this.isAnimating = false; 
@@ -556,6 +557,27 @@ class YambApp {
     }
     // --------------------------
 
+    // --- SPECTATE FUNKCIJA ---
+    async spectateGame(targetSocketId) {
+        if (!this.requireLogin()) return;
+
+        // Zatvori modal sa listom online igrača
+        const overlay = document.getElementById('online-players-overlay');
+        if (overlay) overlay.style.display = 'none';
+
+        // Prikaži AdMob Interstitial reklamu pre ulaska
+        if (this.adMob && this.adMob.showInterstitial) {
+            await this.adMob.showInterstitial();
+        }
+
+        this.initSocketConnection();
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('request_spectate', targetSocketId);
+        } else {
+            this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", "GREŠKA");
+        }
+    }
+
     initSocketConnection() {
         if (this.socket) {
             if (this.socket.disconnected) { 
@@ -588,7 +610,7 @@ class YambApp {
                     this.socket.emit('set_my_id', this.playerId);
                     
                     // NOVO: STATE SYNC - Ako smo usred online partije, tražimo osvežavanje table od protivnika
-                    if (this.gameActive && this.onlineMode) {
+                    if (this.gameActive && this.onlineMode && !this.isSpectator) {
                         console.log("🔄 Rekonekcija detektovana, tražim stanje table od protivnika...");
                         this.socket.emit('request_state_sync');
                     }
@@ -953,7 +975,7 @@ class YambApp {
     }
     
     requestRematch() {
-        if (!this.socket || !this.onlineMode) return;
+        if (!this.socket || !this.onlineMode || this.isSpectator) return;
         
         const btnRematch = document.getElementById('btn-rematch');
         if (btnRematch) {
@@ -1176,6 +1198,19 @@ class YambApp {
     }
 
     showMainMenu() { 
+        if (this.isSpectator) {
+            this.isSpectator = false;
+            if (this.socket) this.socket.emit('stop_spectating');
+
+            const btnBacaj = document.getElementById('btn-bacaj');
+            const btnNajava = document.getElementById('btn-najava');
+            if(btnBacaj) btnBacaj.style.display = 'flex';
+            if(btnNajava) btnNajava.style.display = 'flex';
+
+            const specBadge = document.getElementById('spectator-badge');
+            if(specBadge) specBadge.style.display = 'none';
+        }
+
         this.navigateTo('main-menu'); 
         const floatBtn = document.getElementById('chat-float-btn');
         if(floatBtn) floatBtn.classList.add('hidden'); 
@@ -1212,7 +1247,7 @@ class YambApp {
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
             // Ako je partija u toku i nije u pitanju solo igra, bežanje se računa kao poraz!
-            if (this.gameActive && this.players.length > 1) {
+            if (this.gameActive && this.players.length > 1 && !this.isSpectator) {
                 this.updateStats(0, 'loss');
             }
             this.showMainMenu(); 
@@ -1488,9 +1523,9 @@ class YambApp {
         // 2. Ažuriranje novog tajmera u gornjem zaglavlju
         const timerDisplay = document.getElementById('turn-timer-display');
         if (timerDisplay) {
-            if (this.onlineMode && this.gameActive) {
+            if (this.onlineMode && (this.gameActive || this.isSpectator)) {
                 timerDisplay.style.display = 'flex';
-                const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
+                const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
                 
                 // Crvena boja ako je <= 10s, zlatna ako je tvoj red, siva ako je protivnikov
                 const color = this.timeLeft <= 10 ? '#ff4c4c' : (isMyTurn ? 'var(--gold-main)' : '#aaaaaa');
@@ -1532,6 +1567,7 @@ class YambApp {
         
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
+        this.socket.off('spectate_started');
 
         // TIMEOUT EVENT
         this.socket.off('game_timeout');
@@ -1539,6 +1575,12 @@ class YambApp {
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
             this.gameActive = false;
             
+            if (this.isSpectator) {
+                this.modal.alert("Vreme je isteklo, partija je gotova.", "KRAJ (TIMEOUT)");
+                this.cancelOnline();
+                return;
+            }
+
             const iAmWinner = (this.socket.id === data.winnerId);
             
             if (iAmWinner) {
@@ -1566,11 +1608,43 @@ class YambApp {
             this.cancelOnline();
         });
 
+        // 1. Osluškivač za početak posmatranja
+        this.socket.on('spectate_started', (data) => {
+            this.onlineMode = true;
+            this.isSpectator = true;
+            this.gameActive = true;
+            this.roomId = data.roomId;
+            this.modeTag = "Spectator";
+
+            this.navigateTo('game-scene');
+
+            // Sakrij dugmiće za igru
+            const btnBacaj = document.getElementById('btn-bacaj');
+            const btnNajava = document.getElementById('btn-najava');
+            if(btnBacaj) btnBacaj.style.display = 'none';
+            if(btnNajava) btnNajava.style.display = 'none';
+
+            // Napravi ili prikaži bedž za gledaoca
+            let specBadge = document.getElementById('spectator-badge');
+            if (!specBadge) {
+                specBadge = document.createElement('div');
+                specBadge.id = 'spectator-badge';
+                specBadge.innerHTML = '👁️ UŽIVO';
+                specBadge.style = 'position:absolute; top:8px; right:8px; background:var(--danger); color:#fff; padding:6px 12px; border-radius:12px; font-weight:900; z-index:100; font-size:0.75rem; box-shadow:0 2px 10px rgba(0,0,0,0.5); letter-spacing: 1px;';
+                const gameScene = document.getElementById('game-scene');
+                if (gameScene) gameScene.appendChild(specBadge);
+            } else {
+                specBadge.style.display = 'block';
+            }
+        });
+
+        // 2. Request State Sync (Šalje se ako smo mi trenutno u igri, a neko se nakači ili smo pukli)
         this.socket.on('request_state_sync', () => {
-            if (this.gameActive && this.onlineMode) {
-                console.log("📤 Protivnik traži osvežavanje, šaljem mu stanje table...");
+            if (this.gameActive && this.onlineMode && !this.isSpectator) {
+                console.log("📤 Šaljem osveženo stanje table (uključujući igrače)...");
                 this.socket.emit('sync_state_response', {
                     roomId: this.roomId,
+                    players: this.players, // DODATO ZA GLEDAOCE
                     allScores: this.allScores,
                     currentPlayerIdx: this.currentPlayerIdx,
                     brojBacanja: this.brojBacanja,
@@ -1582,10 +1656,17 @@ class YambApp {
             }
         });
 
+        // 3. Sync State Response (Kada dobijemo stanje table od onoga koga gledamo/s kim igramo)
         this.socket.on('sync_state_response', (data) => {
-            if (this.gameActive && this.onlineMode) {
-                console.log("📥 Stiglo osveženo stanje od protivnika. Primenjujem...");
+            if ((this.gameActive || this.isSpectator) && this.onlineMode) {
+                console.log("📥 Stiglo osveženo stanje. Primenjujem...");
                 
+                // Ako smo gledalac, preuzimamo imena igrača i pravimo tabele
+                if (this.isSpectator && data.players) {
+                    this.players = data.players;
+                    this.createScoreTables();
+                }
+
                 this.allScores = data.allScores;
                 this.currentPlayerIdx = data.currentPlayerIdx;
                 this.brojBacanja = data.brojBacanja;
@@ -1597,33 +1678,35 @@ class YambApp {
                 this.updateTableVisuals();
                 this.updateDiceVisuals();
                 this.highlightCurrentPlayer();
-
                 this.updateStatusLabel();
                 this.startClientTimer(); 
 
-                const btnBacaj = document.getElementById('btn-bacaj');
-                const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
-                if (btnBacaj) {
-                    if (isMyTurn && this.brojBacanja < 3) {
-                        btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll') || "BACAJ";
-                    } else if (isMyTurn) {
-                        btnBacaj.disabled = true; btnBacaj.innerText = gt('game_write') || "UPIŠI";
-                    } else {
-                        btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                // Dugmiće podešavamo samo ako NISMO gledalac
+                if (!this.isSpectator) {
+                    const btnBacaj = document.getElementById('btn-bacaj');
+                    const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
+                    if (btnBacaj) {
+                        if (isMyTurn && this.brojBacanja < 3) {
+                            btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll') || "BACAJ";
+                        } else if (isMyTurn) {
+                            btnBacaj.disabled = true; btnBacaj.innerText = gt('game_write') || "UPIŠI";
+                        } else {
+                            btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                        }
                     }
-                }
 
-                const btnNajava = document.getElementById('btn-najava');
-                if (btnNajava) {
-                    if (this.najavaAktivna) {
-                        btnNajava.innerText = isMyTurn ? (gt('game_announce_cancel') || "OTKAŽI") : (gt('game_opponent_choosing') || "PROTIVNIK BIRA...");
-                        btnNajava.classList.add('btn-active-toggle');
-                    } else if (this.najavljenoPolje) {
-                        btnNajava.innerText = `${gt('game_announce') || "NAJAVA"}: ${this.najavljenoPolje.row}`;
-                        btnNajava.classList.remove('btn-active-toggle');
-                    } else {
-                        btnNajava.innerText = gt('game_announce') || "NAJAVA";
-                        btnNajava.classList.remove('btn-active-toggle');
+                    const btnNajava = document.getElementById('btn-najava');
+                    if (btnNajava) {
+                        if (this.najavaAktivna) {
+                            btnNajava.innerText = isMyTurn ? (gt('game_announce_cancel') || "OTKAŽI") : (gt('game_opponent_choosing') || "PROTIVNIK BIRA...");
+                            btnNajava.classList.add('btn-active-toggle');
+                        } else if (this.najavljenoPolje) {
+                            btnNajava.innerText = `${gt('game_announce') || "NAJAVA"}: ${this.najavljenoPolje.row}`;
+                            btnNajava.classList.remove('btn-active-toggle');
+                        } else {
+                            btnNajava.innerText = gt('game_announce') || "NAJAVA";
+                            btnNajava.classList.remove('btn-active-toggle');
+                        }
                     }
                 }
             }
@@ -1693,19 +1776,24 @@ class YambApp {
             }
         }); 
 
+        // 4. Remote Move
         this.socket.on('remote_move', (data) => { 
             try {
-                const opponentIdx = this.myOnlineIndex === 0 ? 1 : 0; 
-                this.currentPlayerIdx = opponentIdx; 
+                // Za gledaoce uzimamo pIdx iz emit-a. Ako ne postoji, fallback logike.
+                const playerIdx = data.pIdx !== undefined ? data.pIdx : (this.myOnlineIndex === 0 ? 1 : 0); 
+                this.currentPlayerIdx = playerIdx; 
 
-                if (this.allScores[opponentIdx] && this.allScores[opponentIdx][data.col]) {
-                    this.allScores[opponentIdx][data.col][data.row] = data.points; 
+                if (this.allScores[playerIdx] && this.allScores[playerIdx][data.col]) {
+                    this.allScores[playerIdx][data.col][data.row] = data.points; 
                     this.updateTableVisuals(); 
                     this.najavaAktivna = false;
-                    const btnNajava = document.getElementById('btn-najava');
-                    if(btnNajava) {
-                        btnNajava.classList.remove('btn-active-toggle');
-                        btnNajava.innerText = gt('game_announce');
+                    
+                    if (!this.isSpectator) {
+                        const btnNajava = document.getElementById('btn-najava');
+                        if(btnNajava) {
+                            btnNajava.classList.remove('btn-active-toggle');
+                            btnNajava.innerText = gt('game_announce') || "NAJAVA";
+                        }
                     }
                     this.switchPlayer(); 
                 } 
@@ -1725,6 +1813,7 @@ class YambApp {
         }); 
 
         this.socket.on('remote_announce', (data) => { 
+            if(this.isSpectator) return;
             const btn = document.getElementById('btn-najava');
             const type = data.type || 'start'; 
             if (type === 'start') {
@@ -1742,6 +1831,7 @@ class YambApp {
         this.socket.on('chat_msg', (data) => { if (data.msg) this.appendChatMessage(gt('chat_opponent'), data.msg, "msg-incoming"); }); 
         
         this.socket.on('rematch_requested', async () => {
+            if(this.isSpectator) return;
             const accepted = await this.modal.confirm(gt('rematch_ask'));
             if (accepted) {
                 this.socket.emit('accept_rematch');
@@ -1751,6 +1841,13 @@ class YambApp {
         });
 
         this.socket.on('rematch_started', () => {
+            if(this.isSpectator) {
+                this.initScores();
+                this.currentPlayerIdx = 0;
+                this.updateTableVisuals();
+                this.updateDiceVisuals();
+                return;
+            }
             this.modal.alert(gt('rematch_accepted'), gt('rematch_title')).then(() => {
                 this.initScores(); 
                 this.currentPlayerIdx = 0; 
@@ -1760,6 +1857,13 @@ class YambApp {
 
         // --- SISTEM KAŽNJAVANJA BEŽANJA ---
         this.socket.on('opponent_left', async () => { 
+            if(this.isSpectator) {
+                this.modal.alert("Jedan od igrača je napustio igru. Gledanje prekinuto.", "INFO").then(() => {
+                    this.showMainMenu();
+                });
+                return;
+            }
+
             const btnRematch = document.getElementById('btn-rematch');
             
             if (btnRematch && btnRematch.style.display !== 'none') {
@@ -1960,7 +2064,7 @@ class YambApp {
     }
     
     startGame() { 
-        if (this.onlineMode && this.socket) {
+        if (this.onlineMode && this.socket && !this.isSpectator) {
             this.socket.emit('game_session_start');
         }
 
@@ -2114,13 +2218,13 @@ class YambApp {
         const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx == this.myOnlineIndex);
         const isLocalGame = !this.onlineMode;
 
-        if(btnBacaj) { 
+        if(btnBacaj && !this.isSpectator) { 
             if (isMyTurnOnline || isLocalGame) { btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll'); } 
             else { btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn'); }
         }
         
         const btnNajava = document.getElementById('btn-najava'); 
-        if(btnNajava) { 
+        if(btnNajava && !this.isSpectator) { 
             btnNajava.disabled = true; 
             btnNajava.innerText = gt('game_announce'); 
             btnNajava.classList.remove('btn-active-toggle'); 
@@ -2140,7 +2244,7 @@ class YambApp {
         } 
         const lblTurn = document.getElementById('lbl-turn');
         if(lblTurn) {
-            const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex);
+            const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
             if(this.onlineMode) {
                 if(isMyTurnOnline) {
                     lblTurn.innerText = gt('turn_yours') || "Vaš potez!";
@@ -2155,6 +2259,7 @@ class YambApp {
     
     toggleHold(i) { 
         if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return; 
+        if (this.isSpectator) return;
         if (this.brojBacanja === 0) return; 
         if (this.isAnimating) return;
 
@@ -2198,6 +2303,7 @@ class YambApp {
     }
     
     async throwDice() { 
+        if (this.isSpectator) return;
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
         if (btnUndo) btnUndo.style.display = 'none';
@@ -2258,6 +2364,7 @@ class YambApp {
     }
 
     clickNajava() { 
+        if (this.isSpectator) return;
         if (this.brojBacanja !== 1) return; 
         
         const btn = document.getElementById('btn-najava'); 
@@ -2313,6 +2420,7 @@ class YambApp {
     }
     
     async writeScore(row, col, pIdx) { 
+        if (this.isSpectator) return false;
         if (pIdx !== this.currentPlayerIdx) return false; 
         
         if (this.brojBacanja === 0) { 
@@ -2390,7 +2498,7 @@ class YambApp {
         } catch(e) { console.error("Efekti poteza su preskočeni:", e); }
 
         if (this.onlineMode) { 
-            try { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts }); } catch(e) {} 
+            try { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts, pIdx: pIdx }); } catch(e) {} 
         } 
         
         this.updateTableVisuals(); 
@@ -2425,6 +2533,16 @@ class YambApp {
 
     async handleGameOver() { 
         console.log("--- GAME OVER ---");
+
+        if (this.isSpectator) {
+            this.gameActive = false;
+            if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+            
+            this.modal.alert("Partija koju ste gledali je završena.", "KRAJ PARTIJE").then(() => {
+                this.showMainMenu();
+            });
+            return;
+        }
 
         if (this._saveTimeout) {
             clearTimeout(this._saveTimeout);
@@ -2765,7 +2883,7 @@ class YambApp {
                         if (btn.innerText !== "") btn.innerText = ""; 
                         if (btn.classList.contains('filled')) btn.classList.remove('filled'); 
                         
-                        const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex); 
+                        const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator; 
                         const isLocalTurn = (!this.onlineMode && idx === this.currentPlayerIdx); 
                         const shouldBeDisabled = !((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0);
                         
