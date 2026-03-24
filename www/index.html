@@ -285,10 +285,11 @@
             </div>
 
             <div class="stat-grid" style="margin: 0 !important;">
-                <div class="stat-item">
+                <div class="stat-item" onclick="if(window.vatreniNiz) window.vatreniNiz.openModal()" style="cursor: pointer; position:relative; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
                     <span style="font-size: 1.5rem;">🔥</span>
                     <span style="font-size: 0.65rem; color: var(--text-muted); margin-top:5px; text-transform:uppercase;" data-lang="stat_streak">Vatreni Niz</span>
                     <span id="stat-streak" class="stat-val" style="color: #FF5722;">0</span>
+                    <span style="position:absolute; top:5px; right:5px; font-size:0.8rem; color:var(--text-muted);">↗</span>
                 </div>
                 <div class="stat-item">
                     <span style="font-size: 1.5rem;">📈</span>
@@ -718,6 +719,7 @@
     <script src="kvartalnaliga.js"></script>
     <script src="auth.js"></script>
     <script src="onlinenumber.js"></script>
+    <script src="vatreniniz.js"></script>
 
 </body>
 </html>

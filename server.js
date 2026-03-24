@@ -765,6 +765,39 @@ io.on('connection', (socket) => {
         }
     });
 
+    // --- TOP LISTA VATRENOG NIZA ---
+    socket.on('get_streak_leaderboard', async () => {
+        try {
+            if (!MONGO_URI) {
+                // Mock podaci ukoliko baza nije povezana
+                socket.emit('streak_leaderboard_data', [
+                    { uid: "mock1", name: "Vatreni_Igrač", photoUrl: "", streak: 12 },
+                    { uid: "mock2", name: "Yamb_Majstor", photoUrl: "", streak: 8 }
+                ]);
+                return;
+            }
+
+            // Tražimo igrače koji imaju niz veći od 0, sortiramo opadajuće i uzimamo top 20
+            const topStreaks = await UserProfile.find({ currentWinStreak: { $gt: 0 } })
+                .sort({ currentWinStreak: -1 })
+                .limit(20)
+                .select('firebaseUid playerName photoUrl currentWinStreak');
+
+            // Mapiramo podatke da odgovaraju onome što vatreniniz.js očekuje
+            const dataToSend = topStreaks.map(p => ({
+                uid: p.firebaseUid,
+                name: p.playerName,
+                photoUrl: p.photoUrl || '',
+                streak: p.currentWinStreak
+            }));
+
+            socket.emit('streak_leaderboard_data', dataToSend);
+        } catch (err) {
+            console.error("Greška pri dohvatanju streak liste:", err);
+            socket.emit('streak_leaderboard_data', []);
+        }
+    });
+
     // --- SISTEM PRIJATELJA ---
     socket.on('search_player', async (query) => {
         if (!MONGO_URI) return;
