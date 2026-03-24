@@ -84,6 +84,7 @@ function getFullLocalStats() {
         losses: (window.app && window.app.stats) ? (window.app.stats.losses || 0) : 0,
         highscore: (window.app && window.app.stats) ? (window.app.stats.highscore || 0) : 0,
         totalScoreSum: (window.app && window.app.stats) ? (window.app.stats.totalScoreSum || 0) : 0,
+        maxWinStreak: (window.app && window.app.stats) ? (window.app.stats.maxWinStreak || 0) : 0, // <-- DODATO OVDJE
         tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0, 
         balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
         currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
@@ -321,7 +322,8 @@ function inicijalizujCloudSync() {
                 wins: dbStats.wins || 0, 
                 losses: dbStats.losses || 0,
                 highscore: dbStats.highscore || 0,
-                totalScoreSum: dbStats.totalScoreSum || 0
+                totalScoreSum: dbStats.totalScoreSum || 0,
+                maxWinStreak: dbStats.maxWinStreak || 0 // <-- DODATO OVDJE
             };
             localStorage.setItem('yamb_stats', JSON.stringify(window.app.stats));
             
@@ -386,6 +388,7 @@ function inicijalizujCloudSync() {
                 window.statsManager.stats.tournamentWins = dbStats.tournamentWins || 0; 
                 window.statsManager.stats.balance = dbStats.balance || 0;
                 window.statsManager.stats.currentWinStreak = dbStats.currentWinStreak || 0;
+                window.statsManager.stats.maxWinStreak = dbStats.maxWinStreak || 0; // <-- DODATO OVDJE
                 window.statsManager.stats.unlockedTrophies = dbStats.unlockedTrophies || [];
                 window.statsManager.stats.unlockedSkins = dbStats.unlockedSkins || [];
                 window.statsManager.stats.unlockedEffects = dbStats.unlockedEffects || [];

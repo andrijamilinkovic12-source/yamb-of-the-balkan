@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX
 
 require('dotenv').config(); 
 
@@ -396,7 +396,8 @@ io.on('connection', (socket) => {
                         }
                     }
 
-                    if (typeof s.currentWinStreak === 'number' && s.currentWinStreak > user.currentWinStreak) {
+                    // --- FIX: DOZVOLJAVAMO RESET TRENUTNOG NIZA NA NULU ---
+                    if (typeof s.currentWinStreak === 'number') {
                         user.currentWinStreak = s.currentWinStreak; 
                     }
                 }
@@ -765,30 +766,26 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- TOP LISTA VATRENOG NIZA ---
+    // --- TOP LISTA VATRENOG NIZA (SADA GLEDA MAX NIZ) ---
     socket.on('get_streak_leaderboard', async () => {
         try {
             if (!MONGO_URI) {
-                // Mock podaci ukoliko baza nije povezana
-                socket.emit('streak_leaderboard_data', [
-                    { uid: "mock1", name: "Vatreni_Igrač", photoUrl: "", streak: 12 },
-                    { uid: "mock2", name: "Yamb_Majstor", photoUrl: "", streak: 8 }
-                ]);
+                socket.emit('streak_leaderboard_data', []);
                 return;
             }
 
-            // Tražimo igrače koji imaju niz veći od 0, sortiramo opadajuće i uzimamo top 20
-            const topStreaks = await UserProfile.find({ currentWinStreak: { $gt: 0 } })
-                .sort({ currentWinStreak: -1 })
+            // Tražimo igrače po maxWinStreak (njihov najveći niz), sortiramo opadajuće i uzimamo top 20
+            const topStreaks = await UserProfile.find({ maxWinStreak: { $gt: 0 } })
+                .sort({ maxWinStreak: -1 })
                 .limit(20)
-                .select('firebaseUid playerName photoUrl currentWinStreak');
+                .select('firebaseUid playerName photoUrl maxWinStreak');
 
-            // Mapiramo podatke da odgovaraju onome što vatreniniz.js očekuje
+            // Mapiramo podatke
             const dataToSend = topStreaks.map(p => ({
                 uid: p.firebaseUid,
                 name: p.playerName,
                 photoUrl: p.photoUrl || '',
-                streak: p.currentWinStreak
+                streak: p.maxWinStreak // Šaljemo rekordni niz!
             }));
 
             socket.emit('streak_leaderboard_data', dataToSend);

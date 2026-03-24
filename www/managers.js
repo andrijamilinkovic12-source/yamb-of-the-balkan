@@ -24,7 +24,7 @@ class StateManager {
 class StatsManager {
     constructor() {
         this.stats = this.loadStats() || {
-            wins: 0, losses: 0, totalGames: 0, currentWinStreak: 0, currentLossStreak: 0,
+            wins: 0, losses: 0, totalGames: 0, currentWinStreak: 0, maxWinStreak: 0, currentLossStreak: 0, // <-- DODAT maxWinStreak
             balance: CONFIG.INITIAL_BALANCE || 1000, unlockedTrophies: [], highscore: 0,
             tournamentWins: 0 // <--- DODATO OVO ZA PAMĆENJE OSVOJENIH TURNIRA
         };

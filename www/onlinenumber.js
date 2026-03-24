@@ -71,12 +71,48 @@ window.showNotification = function(title, message) {
 // --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
 window.openOnlinePlayersModal = function() {
     const overlay = document.getElementById('online-players-overlay');
-    if (overlay) overlay.style.display = 'flex';
+    
+    if (overlay) {
+        overlay.style.display = 'flex';
+        
+        // Dinamičko forsiranje CSS stilova da prozor bude masivan i sličan Top Listi (bez menjanja index.html)
+        const modalBox = overlay.querySelector('.modal-box');
+        if (modalBox) {
+            modalBox.style.width = '95%';
+            modalBox.style.maxWidth = '500px';
+            modalBox.style.height = '80vh';
+            modalBox.style.maxHeight = '800px';
+        }
+        
+        const header = overlay.querySelector('.chat-header');
+        if (header) {
+            header.style.padding = '15px 20px';
+            const titleSpan = header.querySelector('span:first-child');
+            if (titleSpan) {
+                titleSpan.style.fontSize = '1.2rem';
+                titleSpan.style.letterSpacing = '1px';
+            }
+            const closeSpan = header.querySelector('span:last-child');
+            if (closeSpan) {
+                closeSpan.style.fontSize = '1.5rem';
+                closeSpan.style.lineHeight = '1';
+            }
+        }
+    }
 
     const body = document.getElementById('online-players-body');
     if (body) {
+        // Osiguravamo da body kontejner lepo skroluje
+        body.style.flex = '1';
+        body.style.overflowY = 'auto';
+        body.style.WebkitOverflowScrolling = 'touch';
+        body.style.padding = '15px';
+        body.style.display = 'flex';
+        body.style.flexDirection = 'column';
+        body.style.gap = '12px';
+
         const loadingText = window.t ? window.t('online_loading') : 'Učitavam igrače... ⏳';
-        body.innerHTML = `<div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">${loadingText}</div>`;
+        body.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${loadingText}</div>`;
     }
 
     // Provera da li postoji konekcija sa serverom (koristimo app.socket iz game.js)
@@ -88,7 +124,7 @@ window.openOnlinePlayersModal = function() {
             if (!body) return;
 
             if (!players || players.length === 0) {
-                body.innerHTML = `<div style="text-align: center; color: var(--text-muted);">${window.t ? window.t('online_no_players') : 'Trenutno nema igrača.'}</div>`;
+                body.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding-top: 20px;">${window.t ? window.t('online_no_players') : 'Trenutno nema igrača.'}</div>`;
                 return;
             }
 
@@ -98,15 +134,16 @@ window.openOnlinePlayersModal = function() {
                 const youText = window.t ? window.t('online_you') : '(Vi)';
                 const btnText = window.t ? window.t('online_challenge_btn') : 'IZAZOVI';
 
+                // Povećan padding na '12px 15px' za krupnije liste
                 html += `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 10px; border: 1px solid var(--glass-border); margin-bottom: 5px; gap: 10px;">
-                    <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
-                        <img src="${p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`}" style="width:35px; height:35px; border-radius:50%; border: 1px solid var(--success); object-fit: cover; flex-shrink: 0;">
-                        <span style="color: var(--text-main); font-weight: bold; font-size: 0.9rem; word-break: break-word; line-height: 1.2;">
-                            ${p.name} ${isMe ? `<span style="font-size:0.7rem; color:var(--text-muted); display: block; margin-top: 2px;">${youText}</span>` : ''}
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                        <img src="${p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`}" style="width:45px; height:45px; border-radius:50%; border: 2px solid var(--success); object-fit: cover; flex-shrink: 0;">
+                        <span style="color: var(--text-main); font-weight: bold; font-size: 1rem; word-break: break-word; line-height: 1.2;">
+                            ${p.name} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${youText}</span>` : ''}
                         </span>
                     </div>
-                    ${!isMe ? `<button class="btn-secondary" style="flex-shrink: 0; padding: 6px 12px; font-size: 0.75rem; margin: 0; background: var(--gold-main); color: #000; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; text-transform: uppercase;" onclick="window.app.challengePlayer('${p.socketId}', '${p.name.replace(/'/g, "\\'")}')">${btnText}</button>` : ''}
+                    ${!isMe ? `<button class="btn-secondary" style="flex-shrink: 0; padding: 10px 15px; font-size: 0.8rem; margin: 0; background: var(--gold-main); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'" onclick="window.app.challengePlayer('${p.socketId}', '${p.name.replace(/'/g, "\\'")}')">${btnText}</button>` : ''}
                 </div>`;
             });
             body.innerHTML = html;
@@ -118,7 +155,7 @@ window.openOnlinePlayersModal = function() {
     } else {
         if (body) {
             const noConnText = window.t ? window.t('online_no_conn') : 'Niste povezani na server.';
-            body.innerHTML = `<div style="text-align: center; color: var(--danger);">${noConnText}</div>`;
+            body.innerHTML = `<div style="text-align: center; color: var(--danger); font-weight: bold; padding-top: 20px;">${noConnText}</div>`;
         }
     }
 };

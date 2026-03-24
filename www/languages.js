@@ -413,7 +413,14 @@ const TRANSLATIONS = {
         "hs_empty": "Lista je trenutno prazna.",
         "auth_error": "Došlo je do greške prilikom prijave.",
         "auth_anon_error": "Neuspešna anonimna prijava.",
-        "connecting": "Povezivanje sa serverom..."
+        "connecting": "Povezivanje sa serverom...",
+
+        // --- VATRENI NIZ ---
+        "streak_top_title": "🔥 TOP VATRENI NIZ",
+        "streak_loading": "Učitavam listu... ⏳",
+        "streak_searching": "Tražim najvatrenije igrače...",
+        "streak_no_conn": "Niste povezani na server.",
+        "streak_no_data": "Još uvek nema podataka. Odigrajte partiju!"
     },
     en: {
         // --- SPLASH SCREEN ---
@@ -827,7 +834,14 @@ const TRANSLATIONS = {
         "hs_empty": "The list is currently empty.",
         "auth_error": "An error occurred during login.",
         "auth_anon_error": "Anonymous login failed.",
-        "connecting": "Connecting to server..."
+        "connecting": "Connecting to server...",
+
+        // --- VATRENI NIZ ---
+        "streak_top_title": "🔥 TOP WIN STREAK",
+        "streak_loading": "Loading list... ⏳",
+        "streak_searching": "Looking for the hottest players...",
+        "streak_no_conn": "Not connected to the server.",
+        "streak_no_data": "No data yet. Play a game!"
     }
 };
 

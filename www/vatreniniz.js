@@ -8,17 +8,21 @@ class VatreniNizManager {
 
     // 1. Kreiranje HTML strukture modala koja se ubacuje u body
     createModal() {
+        // Dinamičko preuzimanje prevoda uz pomoć funkcije t() iz languages.js
+        const title = typeof t !== 'undefined' ? t('streak_top_title') : '🔥 TOP VATRENI NIZ';
+        const loading = typeof t !== 'undefined' ? t('streak_loading') : 'Učitavam listu... ⏳';
+
         const modalHtml = `
         <div id="streak-overlay" class="modal-overlay" style="display: none; z-index: 100000;">
-            <div class="modal-box" style="width: 90%; max-width: 400px; max-height: 80vh; display: flex; flex-direction: column; padding: 0 !important; overflow: hidden; background: var(--glass-bg); border: 1px solid var(--glass-border);">
+            <div class="modal-box" style="width: 95%; max-width: 500px; height: 80vh; max-height: 800px; display: flex; flex-direction: column; padding: 0 !important; overflow: hidden; background: var(--glass-bg); border: 1px solid var(--glass-border);">
                 
-                <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #FF5722; font-weight: 800;">🔥 TOP VATRENI NIZ</span>
-                    <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold;" onclick="document.getElementById('streak-overlay').style.display='none'">✖</span>
+                <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: #FF5722; font-weight: 800; font-size: 1.2rem; letter-spacing: 1px;">${title}</span>
+                    <span style="cursor: pointer; color: var(--danger); font-size: 1.5rem; font-weight: bold; line-height: 1;" onclick="document.getElementById('streak-overlay').style.display='none'">✖</span>
                 </div>
 
-                <div id="streak-list-body" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
-                    <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">Učitavam listu... ⏳</div>
+                <div id="streak-list-body" style="flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 15px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${loading}</div>
                 </div>
 
             </div>
@@ -44,12 +48,15 @@ class VatreniNizManager {
         if (window.app && window.app.soundMgr) window.app.soundMgr.click();
         
         document.getElementById('streak-overlay').style.display = 'flex';
-        document.getElementById('streak-list-body').innerHTML = '<div class="loader" style="width: 25px; height: 25px; margin: 20px auto;"></div><div style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 10px;">Tražim najvatrenije igrače...</div>';
+        
+        const searching = typeof t !== 'undefined' ? t('streak_searching') : 'Tražim najvatrenije igrače...';
+        document.getElementById('streak-list-body').innerHTML = `<div class="loader" style="width: 30px; height: 30px; margin: 30px auto 15px auto;"></div><div style="text-align: center; font-size: 0.9rem; color: var(--text-muted);">${searching}</div>`;
 
         if (window.app && window.app.socket && window.app.socket.connected) {
             window.app.socket.emit('get_streak_leaderboard');
         } else {
-            document.getElementById('streak-list-body').innerHTML = '<div style="text-align: center; color: var(--danger); font-weight: bold;">Niste povezani na server.</div>';
+            const noConn = typeof t !== 'undefined' ? t('streak_no_conn') : 'Niste povezani na server.';
+            document.getElementById('streak-list-body').innerHTML = `<div style="text-align: center; color: var(--danger); font-weight: bold; padding-top: 20px;">${noConn}</div>`;
         }
     }
 
@@ -59,7 +66,8 @@ class VatreniNizManager {
         body.innerHTML = '';
 
         if (!data || data.length === 0) {
-            body.innerHTML = '<div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">Još uvek nema podataka. Odigrajte partiju!</div>';
+            const noData = typeof t !== 'undefined' ? t('streak_no_data') : 'Još uvek nema podataka. Odigrajte partiju!';
+            body.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${noData}</div>`;
             return;
         }
 
@@ -74,18 +82,19 @@ class VatreniNizManager {
             // Označavamo igrača ako je to njegov nalog
             const isMe = (player.uid === myUid) 
                 ? 'border: 1px solid var(--gold-main); background: rgba(224, 201, 149, 0.15); box-shadow: inset 0 0 10px rgba(224, 201, 149, 0.1);' 
-                : 'background: rgba(0,0,0,0.2); border: 1px solid transparent;';
+                : 'background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);';
 
             const photo = (player.photoUrl && player.photoUrl.length > 5) 
                 ? player.photoUrl 
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=333&color=E0C995`;
 
+            // Povećan padding i fontovi za bolju preglednost
             const card = `
-            <div style="display: flex; align-items: center; padding: 10px; border-radius: 8px; ${isMe}">
-                <div style="font-size: 1.2rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted);">${rankTrophy}</div>
-                <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; margin: 0 10px; border: 1px solid #FF5722; object-fit: cover;">
-                <div style="flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold; color: var(--text-main); font-size: 0.95rem;">${player.name}</div>
-                <div style="font-size: 1.3rem; font-weight: 900; color: #FF5722; text-shadow: 0 0 8px rgba(255, 87, 34, 0.6);">🔥 ${player.streak || 0}</div>
+            <div style="display: flex; align-items: center; padding: 12px 15px; border-radius: 10px; ${isMe}">
+                <div style="font-size: 1.3rem; font-weight: bold; width: 40px; text-align: center; color: var(--text-muted); flex-shrink: 0;">${rankTrophy}</div>
+                <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; margin: 0 12px; border: 2px solid #FF5722; object-fit: cover; flex-shrink: 0;">
+                <div style="flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold; color: var(--text-main); font-size: 1rem;">${player.name}</div>
+                <div style="font-size: 1.4rem; font-weight: 900; color: #FF5722; text-shadow: 0 0 10px rgba(255, 87, 34, 0.6); margin-left: 10px; flex-shrink: 0;">🔥 ${player.streak || 0}</div>
             </div>`;
             
             body.insertAdjacentHTML('beforeend', card);
