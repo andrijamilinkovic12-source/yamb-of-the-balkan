@@ -88,12 +88,12 @@ class VatreniNizManager {
                 ? player.photoUrl 
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=333&color=E0C995`;
 
-            // Povećan padding i fontovi za bolju preglednost
+            // Smanjen font imena na 0.9rem, dodato prelamanje do 2 reda (line-clamp) i min-width: 0 za flex sigurnost
             const card = `
             <div style="display: flex; align-items: center; padding: 12px 15px; border-radius: 10px; ${isMe}">
-                <div style="font-size: 1.3rem; font-weight: bold; width: 40px; text-align: center; color: var(--text-muted); flex-shrink: 0;">${rankTrophy}</div>
+                <div style="font-size: 1.3rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted); flex-shrink: 0;">${rankTrophy}</div>
                 <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; margin: 0 12px; border: 2px solid #FF5722; object-fit: cover; flex-shrink: 0;">
-                <div style="flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: bold; color: var(--text-main); font-size: 1rem;">${player.name}</div>
+                <div style="flex: 1; min-width: 0; overflow: hidden; font-weight: bold; color: var(--text-main); font-size: 0.9rem; word-break: break-word; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${player.name}</div>
                 <div style="font-size: 1.4rem; font-weight: 900; color: #FF5722; text-shadow: 0 0 10px rgba(255, 87, 34, 0.6); margin-left: 10px; flex-shrink: 0;">🔥 ${player.streak || 0}</div>
             </div>`;
             
