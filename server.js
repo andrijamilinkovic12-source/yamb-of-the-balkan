@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING FLAG
 
 require('dotenv').config(); 
 
@@ -515,6 +515,7 @@ io.on('connection', (socket) => {
     });
 
     // --- NOVI KOD: ZAHTEV ZA LISTU SVIH ONLINE IGRAČA (MODAL) ---
+    // DODATA PROVERA DA LI JE IGRAČ U PARTIJI (isPlaying) KAKO BI KLIJENT ZNAO DA ZATAMNI "GLEDANJE"
     socket.on('get_online_players_list', () => {
         let onlinePlayersList = [];
         
@@ -524,7 +525,8 @@ io.on('connection', (socket) => {
                     socketId: clientSocket.id,
                     name: clientSocket.playerName,
                     photoUrl: clientSocket.photoUrl || '',
-                    uid: clientSocket.playerId || ''
+                    uid: clientSocket.playerId || '',
+                    isPlaying: !!playerRooms[clientSocket.id] // Znamo da li je u partiji!
                 });
             }
         });
@@ -629,6 +631,14 @@ io.on('connection', (socket) => {
     const MAX_SCORE = 3500;       
     const MAX_NAME_LENGTH = 24;   
     const MIN_GAME_DURATION = 120000; 
+
+    // Registracija lokalne sobe (Solo/Hotseat) kako bi gledaoci mogli da pristupe
+    socket.on('start_local_game', (roomId) => {
+        socket.join(roomId);
+        playerRooms[socket.id] = roomId;
+        gameStartTimes[socket.id] = Date.now();
+        console.log(`🏠 Igrač ${socket.id} započeo lokalnu partiju u sobi: ${roomId}`);
+    });
 
     socket.on('game_session_start', () => {
         gameStartTimes[socket.id] = Date.now();

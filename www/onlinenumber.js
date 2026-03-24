@@ -75,7 +75,7 @@ window.openOnlinePlayersModal = function() {
     if (overlay) {
         overlay.style.display = 'flex';
         
-        // Dinamičko forsiranje CSS stilova da prozor bude masivan i sličan Top Listi
+        // Dinamičko forsiranje CSS stilova
         const modalBox = overlay.querySelector('.modal-box');
         if (modalBox) {
             modalBox.style.width = '95%';
@@ -102,7 +102,6 @@ window.openOnlinePlayersModal = function() {
 
     const body = document.getElementById('online-players-body');
     if (body) {
-        // Osiguravamo da body kontejner lepo skroluje
         body.style.flex = '1';
         body.style.overflowY = 'auto';
         body.style.WebkitOverflowScrolling = 'touch';
@@ -115,10 +114,8 @@ window.openOnlinePlayersModal = function() {
         body.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${loadingText}</div>`;
     }
 
-    // Provera da li postoji konekcija sa serverom
     if (window.app && window.app.socket && window.app.socket.connected) {
         
-        // 1. Definišemo slušača koji čeka odgovor od servera
         window.app.socket.off('online_players_list_data'); 
         window.app.socket.on('online_players_list_data', (players) => {
             if (!body) return;
@@ -128,7 +125,6 @@ window.openOnlinePlayersModal = function() {
                 return;
             }
 
-            // Provera prijatelja: Pokušavamo da nađemo listu prijatelja iz app objekta ili localStorage-a
             let myFriends = [];
             if (window.app && window.app.friends && Array.isArray(window.app.friends)) {
                 myFriends = window.app.friends;
@@ -141,34 +137,44 @@ window.openOnlinePlayersModal = function() {
                 const isMe = p.socketId === window.app.socket.id;
                 const youText = window.t ? window.t('online_you') : '(Vi)';
 
-                // Generisanje 3 nova moderna akciona dugmeta (Dodaj, Gledaj, Izazovi)
                 let actionButtons = '';
                 if (!isMe) {
                     const safeName = p.name.replace(/'/g, "\\'");
                     const pUid = p.uid || '';
-                    
-                    // Proveravamo da li je ovaj igrač već u našoj listi prijatelja
                     const isAlreadyFriend = myFriends.some(f => f.uid === pUid);
 
-                    // Prikazujemo "➕" SAMO ako NISU već prijatelji
-                    const addFriendBtn = !isAlreadyFriend ? 
-                        `<button onclick="if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest('${p.socketId}', '${safeName}', '${pUid}'); this.style.display='none'; } else { showNotification('INFO', 'Funkcija nije dostupna.') }" title="Dodaj prijatelja" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">➕</button>` 
-                        : '';
+                    // 1. Dugme za DODAVANJE (Zatamnjeno ako su već prijatelji)
+                    let addFriendBtn = '';
+                    if (isAlreadyFriend) {
+                        addFriendBtn = `<button disabled title="Već ste prijatelji" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">➕</button>`;
+                    } else {
+                        // Dodata logika da se dugme "ugasi" čim se klikne da bi se izbegao spam
+                        addFriendBtn = `<button onclick="if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest('${p.socketId}', '${safeName}', '${pUid}'); this.disabled=true; this.style.opacity='0.4'; this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.cursor='not-allowed'; } else { showNotification('INFO', 'Funkcija nije dostupna.') }" title="Dodaj prijatelja" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">➕</button>`;
+                    }
+
+                    // 2. Dugme za GLEDANJE (Zatamnjeno ako igrač ne igra)
+                    let spectateBtn = '';
+                    if (!p.isPlaying) {
+                        spectateBtn = `<button disabled title="Igrač trenutno ne igra" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">👁️</button>`;
+                    } else {
+                        spectateBtn = `<button onclick="if(window.app && window.app.spectateGame) { window.app.spectateGame('${p.socketId}') } else { showNotification('INFO', 'Greška') }" title="Gledaj partiju" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>`;
+                    }
+
+                    // 3. Dugme za DUEL (Uvek aktivno)
+                    const challengeBtn = `<button onclick="window.app.challengePlayer('${p.socketId}', '${safeName}')" title="Izazovi na duel" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
 
                     actionButtons = `
                     <div style="display: flex; gap: 8px; flex-shrink: 0;">
                         ${addFriendBtn}
-                        
-                        <button onclick="if(window.app && window.app.spectateGame) { window.app.spectateGame('${p.socketId}') } else { showNotification('GLEDANJE UŽIVO (SPECTATE)', 'Funkcija posmatranja tuđih partija uživo stiže vrlo brzo!') }" title="Gledaj partiju" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>
-
-                        <button onclick="window.app.challengePlayer('${p.socketId}', '${safeName}')" title="Izazovi na duel" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>
+                        ${spectateBtn}
+                        ${challengeBtn}
                     </div>`;
                 }
 
                 html += `
                 <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
-                        <img src="${p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`}" style="width:45px; height:45px; border-radius:50%; border: 2px solid var(--success); object-fit: cover; flex-shrink: 0;">
+                        <img src="${p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`}" style="width:45px; height:45px; border-radius:50%; border: 2px solid ${p.isPlaying ? '#2196F3' : 'var(--success)'}; object-fit: cover; flex-shrink: 0;">
                         <span style="color: var(--text-main); font-weight: bold; font-size: 0.95rem; word-break: break-word; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                             ${p.name} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${youText}</span>` : ''}
                         </span>
@@ -179,7 +185,6 @@ window.openOnlinePlayersModal = function() {
             body.innerHTML = html;
         });
 
-        // 2. Tražimo od servera listu igrača
         window.app.socket.emit('get_online_players_list');
 
     } else {

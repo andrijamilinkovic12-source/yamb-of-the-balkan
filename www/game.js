@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v9.8 - SPECTATOR MODE ADDED");
+        console.log("YambApp v9.9 - SPECTATOR MODE & LOCAL SYNC ADDED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -251,6 +251,7 @@ class YambApp {
         this.socket = null; 
         this.onlineMode = false; 
         this.isSpectator = false; // DODATO ZA SPECTATE
+        this.roomId = null; // Zadrži sobu ovde
         this.myOnlineIndex = 0;
         this.onlineUsersCount = 1; 
         this.isAnimating = false; 
@@ -1640,7 +1641,8 @@ class YambApp {
 
         // 2. Request State Sync (Šalje se ako smo mi trenutno u igri, a neko se nakači ili smo pukli)
         this.socket.on('request_state_sync', () => {
-            if (this.gameActive && this.onlineMode && !this.isSpectator) {
+            // IZMENA: Više ne proveravamo this.onlineMode, kako bi i lokalne igre mogle da pošalju stanje gledaocu
+            if (this.gameActive && !this.isSpectator) {
                 console.log("📤 Šaljem osveženo stanje table (uključujući igrače)...");
                 this.socket.emit('sync_state_response', {
                     roomId: this.roomId,
@@ -2050,7 +2052,15 @@ class YambApp {
             } 
         } 
         
-        this.initScores(); this.currentPlayerIdx = 0; this.startGame(); 
+        this.initScores(); this.currentPlayerIdx = 0; 
+        
+        // NOVO: Kreiramo sobu i za lokalne partije kako bi nas drugi mogli gledati
+        this.roomId = "local_" + Math.random().toString(36).substring(2, 10);
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('start_local_game', this.roomId);
+        }
+        
+        this.startGame(); 
     }
     
     initScores() { 
@@ -2266,7 +2276,11 @@ class YambApp {
         this.zadrzane[i] = !this.zadrzane[i]; 
         this.updateDiceVisuals(); 
         this.soundMgr.click(); 
-        if(this.onlineMode) { this.socket.emit('dice_hold', { roomId: this.roomId, index: i, status: this.zadrzane[i] }); } 
+        
+        // IZMENA: Šaljemo hold i u lokalnoj sobi
+        if(this.onlineMode || this.roomId) { 
+            this.socket.emit('dice_hold', { roomId: this.roomId, index: i, status: this.zadrzane[i] }); 
+        } 
 
         this.autoSaveGame();
     }
@@ -2323,7 +2337,8 @@ class YambApp {
             let newValues = [...this.kockiceVals]; 
             for(let i=0; i<6; i++) { if (!this.zadrzane[i]) newValues[i] = Math.floor(Math.random()*6)+1; } 
             
-            if (this.onlineMode) { 
+            // IZMENA: Šaljemo roll i u lokalnoj sobi
+            if (this.onlineMode || this.roomId) { 
                 this.socket.emit('dice_roll', { 
                     roomId: this.roomId, 
                     values: newValues, 
@@ -2386,7 +2401,8 @@ class YambApp {
             btn.classList.remove('btn-highlight'); 
             btnBacaj.disabled = true; 
             
-            if(this.onlineMode) {
+            // IZMENA
+            if(this.onlineMode || this.roomId) {
                 try { this.socket.emit('announce', { roomId: this.roomId, type: 'start' }); } catch(e){}
             }
         } else { 
@@ -2399,7 +2415,8 @@ class YambApp {
             btn.classList.add('btn-highlight'); 
             btnBacaj.disabled = false; 
             
-            if(this.onlineMode) {
+            // IZMENA
+            if(this.onlineMode || this.roomId) {
                 try { this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); } catch(e) {}
             } 
         } 
@@ -2443,7 +2460,9 @@ class YambApp {
             btnN.innerText = `${gt('game_announce')}: ${row}`; 
             btnN.disabled = true; btnN.classList.remove('btn-active-toggle'); 
             const btnBacaj = document.getElementById('btn-bacaj'); btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll');
-            if(this.onlineMode) this.socket.emit('announce', { roomId: this.roomId, type: 'selected', row: row }); 
+            
+            // IZMENA
+            if(this.onlineMode || this.roomId) this.socket.emit('announce', { roomId: this.roomId, type: 'selected', row: row }); 
             return true;
         } 
         
@@ -2497,7 +2516,8 @@ class YambApp {
             }
         } catch(e) { console.error("Efekti poteza su preskočeni:", e); }
 
-        if (this.onlineMode) { 
+        // IZMENA
+        if (this.onlineMode || this.roomId) { 
             try { this.socket.emit('player_move', { roomId: this.roomId, row, col, points: pts, pIdx: pIdx }); } catch(e) {} 
         } 
         
@@ -2949,6 +2969,12 @@ class YambApp {
             
             this.aiMode = false; 
             if (this.players.length > 1) this.modeTag = "Hotseat"; else this.modeTag = "Solo";
+
+            // NOVO: Kreiramo sobu i za nastavljene lokalne partije
+            this.roomId = "local_" + Math.random().toString(36).substring(2, 10);
+            if (this.socket && this.socket.connected) {
+                this.socket.emit('start_local_game', this.roomId);
+            }
 
             this.lastMoveSnapshot = null;
             const btnUndo = document.getElementById('btn-undo-move');
