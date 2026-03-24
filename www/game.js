@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v9.9 - SPECTATOR MODE & LOCAL SYNC ADDED");
+        console.log("YambApp v10 - SPECTATOR MODE UI FIXED & LOCAL SYNC ADDED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -250,8 +250,8 @@ class YambApp {
         
         this.socket = null; 
         this.onlineMode = false; 
-        this.isSpectator = false; // DODATO ZA SPECTATE
-        this.roomId = null; // Zadrži sobu ovde
+        this.isSpectator = false; 
+        this.roomId = null; 
         this.myOnlineIndex = 0;
         this.onlineUsersCount = 1; 
         this.isAnimating = false; 
@@ -1208,8 +1208,12 @@ class YambApp {
             if(btnBacaj) btnBacaj.style.display = 'flex';
             if(btnNajava) btnNajava.style.display = 'flex';
 
-            const specBadge = document.getElementById('spectator-badge');
-            if(specBadge) specBadge.style.display = 'none';
+            // Gasi animaciju i bedž
+            const timerDisplay = document.getElementById('turn-timer-display');
+            if (timerDisplay) {
+                timerDisplay.style.display = 'none';
+                timerDisplay.style.animation = 'none';
+            }
         }
 
         this.navigateTo('main-menu'); 
@@ -1220,9 +1224,9 @@ class YambApp {
         
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
         
-        // NOVO: Sakrij tajmer kada se vratimo u meni
+        // Sakrij tajmer kada se vratimo u meni
         const timerDisplay = document.getElementById('turn-timer-display');
-        if (timerDisplay) timerDisplay.style.display = 'none';
+        if (timerDisplay && !this.isSpectator) timerDisplay.style.display = 'none';
 
         if (this.socket && this.socket.connected) {
             this.socket.emit('back_to_menu');
@@ -1497,7 +1501,7 @@ class YambApp {
     
     // NOVO: UI Timer za potez
     startClientTimer() {
-        if (!this.onlineMode) return;
+        if (!this.onlineMode || this.isSpectator) return;
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
         
         this.timeLeft = 60;
@@ -1524,7 +1528,12 @@ class YambApp {
         // 2. Ažuriranje novog tajmera u gornjem zaglavlju
         const timerDisplay = document.getElementById('turn-timer-display');
         if (timerDisplay) {
-            if (this.onlineMode && (this.gameActive || this.isSpectator)) {
+            if (this.isSpectator) {
+                // Za gledaoce prikazujemo animirani "UŽIVO" bedž umesto tajmera
+                timerDisplay.style.display = 'flex';
+                timerDisplay.innerHTML = `<span style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);">👁️ UŽIVO</span>`;
+                timerDisplay.style.animation = 'pulse 2s infinite';
+            } else if (this.onlineMode && this.gameActive) {
                 timerDisplay.style.display = 'flex';
                 const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
                 
@@ -1541,6 +1550,7 @@ class YambApp {
                 }
             } else {
                 timerDisplay.style.display = 'none';
+                timerDisplay.style.animation = 'none';
             }
         }
     }
@@ -1625,18 +1635,7 @@ class YambApp {
             if(btnBacaj) btnBacaj.style.display = 'none';
             if(btnNajava) btnNajava.style.display = 'none';
 
-            // Napravi ili prikaži bedž za gledaoca
-            let specBadge = document.getElementById('spectator-badge');
-            if (!specBadge) {
-                specBadge = document.createElement('div');
-                specBadge.id = 'spectator-badge';
-                specBadge.innerHTML = '👁️ UŽIVO';
-                specBadge.style = 'position:absolute; top:8px; right:8px; background:var(--danger); color:#fff; padding:6px 12px; border-radius:12px; font-weight:900; z-index:100; font-size:0.75rem; box-shadow:0 2px 10px rgba(0,0,0,0.5); letter-spacing: 1px;';
-                const gameScene = document.getElementById('game-scene');
-                if (gameScene) gameScene.appendChild(specBadge);
-            } else {
-                specBadge.style.display = 'block';
-            }
+            this.updateStatusLabel();
         });
 
         // 2. Request State Sync (Šalje se ako smo mi trenutno u igri, a neko se nakači ili smo pukli)

@@ -125,13 +125,6 @@ window.openOnlinePlayersModal = function() {
                 return;
             }
 
-            let myFriends = [];
-            if (window.app && window.app.friends && Array.isArray(window.app.friends)) {
-                myFriends = window.app.friends;
-            } else {
-                try { myFriends = JSON.parse(localStorage.getItem('yamb_friends') || '[]'); } catch(e) {}
-            }
-
             let html = '';
             players.forEach(p => {
                 const isMe = p.socketId === window.app.socket.id;
@@ -141,7 +134,9 @@ window.openOnlinePlayersModal = function() {
                 if (!isMe) {
                     const safeName = p.name.replace(/'/g, "\\'");
                     const pUid = p.uid || '';
-                    const isAlreadyFriend = myFriends.some(f => f.uid === pUid);
+                    
+                    // Znamo sigurno sa servera da li su već prijatelji!
+                    const isAlreadyFriend = p.isFriend;
 
                     // 1. Dugme za DODAVANJE (Zatamnjeno ako su već prijatelji)
                     let addFriendBtn = '';

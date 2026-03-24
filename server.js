@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING FLAG
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS
 
 require('dotenv').config(); 
 
@@ -515,8 +515,20 @@ io.on('connection', (socket) => {
     });
 
     // --- NOVI KOD: ZAHTEV ZA LISTU SVIH ONLINE IGRAČA (MODAL) ---
-    // DODATA PROVERA DA LI JE IGRAČ U PARTIJI (isPlaying) KAKO BI KLIJENT ZNAO DA ZATAMNI "GLEDANJE"
-    socket.on('get_online_players_list', () => {
+    // DODATA SERVER PROVERA PRIJATELJSTVA DA ZATAMNIMO DUGME!
+    socket.on('get_online_players_list', async () => {
+        let myFriends = [];
+        if (MONGO_URI && socket.playerId) {
+            try {
+                const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
+                if (me && me.friends) {
+                    myFriends = me.friends;
+                }
+            } catch (e) {
+                console.error("Greška pri dohvatanju prijatelja na serveru:", e);
+            }
+        }
+
         let onlinePlayersList = [];
         
         io.sockets.sockets.forEach((clientSocket) => {
@@ -526,7 +538,8 @@ io.on('connection', (socket) => {
                     name: clientSocket.playerName,
                     photoUrl: clientSocket.photoUrl || '',
                     uid: clientSocket.playerId || '',
-                    isPlaying: !!playerRooms[clientSocket.id] // Znamo da li je u partiji!
+                    isPlaying: !!playerRooms[clientSocket.id], // Znamo da li je u partiji!
+                    isFriend: myFriends.includes(clientSocket.playerId) // Znamo da li su već prijatelji!
                 });
             }
         });
