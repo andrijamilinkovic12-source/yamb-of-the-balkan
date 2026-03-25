@@ -1,4 +1,4 @@
-// kvartalnaliga.js - Menadžer za Kvartalnu Ligu (Sa Swipe opcijom, prevodima i rangovima)
+// kvartalnaliga.js - Menadžer za Kvartalnu Ligu (Sa Swipe opcijom, prevodima, rangovima i NAGRADAMA)
 class KvartalnaLigaManager {
     constructor() {
         this.storageKey = 'yamb_quarter_data'; 
@@ -23,6 +23,15 @@ class KvartalnaLigaManager {
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
 
         if (data.year !== currentYear || data.quarter !== currentQuarter) {
+            
+            // NOVO: Postavljamo signal (zastavicu) da klijent zatraži proveru nagrade kada se poveže na server.
+            // Zapisujemo za koji je kvartal potrebna provera.
+            localStorage.setItem('yamb_pending_quarter_check', JSON.stringify({
+                year: data.year,
+                quarter: data.quarter
+            }));
+
+            // Prebacivanje poena i kreiranje novog preseka
             data.baselineScore += data.quarterlyScore;
             data.quarterlyScore = 0; 
             data.year = currentYear;
@@ -39,7 +48,6 @@ class KvartalnaLigaManager {
         return { currentYear: year, currentQuarter: quarter };
     }
 
-    // FIX: Parsiranje rezultata kako bismo osigurali da nikada ne budu 'undefined' i da uvek imaju datum
     getScores() {
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
         let raw = localStorage.getItem(this.storageKey);
@@ -50,7 +58,6 @@ class KvartalnaLigaManager {
                 parsed.quarterlyScore = parseInt(parsed.quarterlyScore) || 0;
                 parsed.baselineScore = parseInt(parsed.baselineScore) || 0;
                 
-                // OSIGURANJE: Ako fali godina ili kvartal u starim podacima, dodeli trenutne
                 if (!parsed.year) parsed.year = currentYear;
                 if (!parsed.quarter) parsed.quarter = currentQuarter;
                 
@@ -113,7 +120,6 @@ class KvartalnaLigaManager {
         return gt('rank_titan', "TITAN");
     }
 
-    // FIX: Dodata provera poena prilikom otvaranja prozora
     openModal() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const data = this.getScores();
@@ -179,10 +185,7 @@ class KvartalnaLigaManager {
         if (typeof applyTranslations === 'function') applyTranslations();
 
         this.setupTouch();
-        
-        // 🔴 NOVO: Osiguraj da server ima tvoj najnoviji rezultat pre nego što iscrta tabelu
         this.syncWithServer(); 
-        
         this.fetchLeaderboard();
     }
 

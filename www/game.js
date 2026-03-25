@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v11 - ACCOUNT BOUND SAVED GAMES & TRANSLATIONS FIX");
+        console.log("YambApp v12 - QUARTERLY LEAGUE REWARDS ENABLED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -617,7 +617,22 @@ class YambApp {
 
                     this.socket.emit('set_my_id', this.playerId);
                     
-                    // NOVO: STATE SYNC - Ako smo usred online partije, tražimo osvežavanje table od protivnika
+                    // --- NOVO: Provera Kvartalne Lige Nagrada ---
+                    const pendingReward = localStorage.getItem('yamb_pending_quarter_check');
+                    if (pendingReward) {
+                        try {
+                            const parsedReward = JSON.parse(pendingReward);
+                            this.socket.emit('check_quarter_reward', {
+                                year: parsedReward.year,
+                                quarter: parsedReward.quarter,
+                                playerId: this.playerId
+                            });
+                            // Brišemo pending da ne bismo ponovo pitali za isti kvartal
+                            localStorage.removeItem('yamb_pending_quarter_check'); 
+                        } catch(e) { console.error("Greška pri čitanju pending nagrade:", e); }
+                    }
+                    // ---------------------------------------------
+                    
                     if (this.gameActive && this.onlineMode && !this.isSpectator) {
                         console.log("🔄 Rekonekcija detektovana, tražim stanje table od protivnika...");
                         this.socket.emit('request_state_sync');
@@ -676,7 +691,6 @@ class YambApp {
                 });
 
                 this.socket.on('challenge_declined', (data) => {
-                    // Sklanjamo prethodni modal ako je ostao otvoren (npr. "Čekamo odgovor...")
                     const customModal = document.getElementById('custom-modal-overlay');
                     if (customModal) customModal.style.display = 'none';
 
@@ -690,7 +704,6 @@ class YambApp {
                 this.socket.on('game_started', (data) => {
                     this.closeGlobalChat(true); 
                     
-                    // Forsirano zatvaranje svih modala da ne smetaju pri prelasku u igru
                     const customModal = document.getElementById('custom-modal-overlay');
                     if (customModal) customModal.style.display = 'none';
                     
@@ -973,7 +986,6 @@ class YambApp {
             let sentText = gt('duel_sent');
             if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
             
-            // Koristimo Toast notifikaciju da ne bismo blokirali ekran modalom koji traži OK klik
             if (typeof window.showNotification === 'function') {
                 window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName));
             } else {
@@ -1141,7 +1153,7 @@ class YambApp {
             }
         } else if (resultType === 'loss') {
             this.stats.losses++; 
-            this.stats.currentWinStreak = 0; // Prekini niz
+            this.stats.currentWinStreak = 0; 
         } 
         
         localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); 
@@ -1184,9 +1196,7 @@ class YambApp {
                 cloudSkins = window.statsManager.stats.unlockedSkins;
             }
             unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
-        } catch(e) {
-            console.warn("Greška pri učitavanju kupljenih tema.");
-        }
+        } catch(e) {}
 
         const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
         unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
@@ -1215,14 +1225,12 @@ class YambApp {
             if(btnBacaj) btnBacaj.style.display = 'flex';
             if(btnNajava) btnNajava.style.display = 'flex';
 
-            // Gasi animaciju i bedž
             const timerDisplay = document.getElementById('turn-timer-display');
             if (timerDisplay) {
                 timerDisplay.style.display = 'none';
                 timerDisplay.style.animation = 'none';
             }
 
-            // FIX: Reklama se pušta ovde! Kod će pauzirati dok se reklama ne zatvori.
             if (this.adMob && this.adMob.showInterstitial) {
                 await this.adMob.showInterstitial();
             }
@@ -1236,7 +1244,6 @@ class YambApp {
         
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
         
-        // Sakrij tajmer kada se vratimo u meni
         const timerDisplay = document.getElementById('turn-timer-display');
         if (timerDisplay && !this.isSpectator) timerDisplay.style.display = 'none';
 
@@ -1263,7 +1270,6 @@ class YambApp {
     
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
-            // Ako je partija u toku i nije u pitanju solo igra, bežanje se računa kao poraz!
             if (this.gameActive && this.players.length > 1 && !this.isSpectator) {
                 this.updateStats(0, 'loss');
             }
@@ -1328,14 +1334,13 @@ class YambApp {
             this.initSocketConnection();
             setTimeout(() => { if(this.socket && this.socket.connected) this.socket.emit('get_friends_list'); }, 500);
             
-            // NOVO: Automatsko osvežavanje liste prijatelja na svakih 5 sekundi dok smo na ovom ekranu!
             if (this.friendsInterval) clearInterval(this.friendsInterval);
             this.friendsInterval = setInterval(() => {
                 const ws = document.getElementById('waiting-screen');
                 if (ws && ws.classList.contains('active') && this.currentHostingRoomId) {
                     if (this.socket && this.socket.connected) this.socket.emit('get_friends_list');
                 } else {
-                    clearInterval(this.friendsInterval); // Gasi interval kad izađemo iz ekrana
+                    clearInterval(this.friendsInterval); 
                 }
             }, 5000);
         }
@@ -1361,7 +1366,7 @@ class YambApp {
                 });
                 return; 
             } catch (e) {
-                console.log("Capacitor dijeljenje nije uspjelo, prelazimo na browser metodu:", e);
+                console.log("Capacitor dijeljenje nije uspjelo:", e);
             }
         }
 
@@ -1511,7 +1516,6 @@ class YambApp {
         }
     }
     
-    // NOVO: UI Timer za potez
     startClientTimer() {
         if (!this.onlineMode || this.isSpectator) return;
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
@@ -1531,17 +1535,14 @@ class YambApp {
     }
     
     updateStatusLabel() {
-        // 1. Ažuriranje donjeg teksta (samo broj bacanja)
         const statusLbl = document.getElementById('lbl-status');
         if (statusLbl) {
             statusLbl.innerHTML = `${gt('status_roll') || "BACANJE"}: ${this.brojBacanja} / 3`;
         }
 
-        // 2. Ažuriranje novog tajmera u gornjem zaglavlju
         const timerDisplay = document.getElementById('turn-timer-display');
         if (timerDisplay) {
             if (this.isSpectator) {
-                // Za gledaoce prikazujemo animirani "UŽIVO" bedž umesto tajmera
                 timerDisplay.style.display = 'flex';
                 timerDisplay.innerHTML = `<span style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);">👁️ ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
@@ -1549,12 +1550,10 @@ class YambApp {
                 timerDisplay.style.display = 'flex';
                 const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
                 
-                // Crvena boja ako je <= 10s, zlatna ako je tvoj red, siva ako je protivnikov
                 const color = this.timeLeft <= 10 ? '#ff4c4c' : (isMyTurn ? 'var(--gold-main)' : '#aaaaaa');
                 
                 timerDisplay.innerHTML = `<span style="color:${color};">⏱️ ${this.timeLeft}s</span>`;
 
-                // Animacija treperenja ako ističe vreme
                 if (this.timeLeft <= 10 && isMyTurn) {
                     timerDisplay.style.animation = 'pulse 1s infinite';
                 } else {
@@ -1592,6 +1591,46 @@ class YambApp {
         this.socket.off('sync_state_response');
         this.socket.off('spectate_started');
 
+        // --- NOVO: REAKCIJA NA DODELU KVARTALNE NAGRADE ---
+        this.socket.off('quarter_reward');
+        this.socket.on('quarter_reward', (data) => {
+            const { rank, reward } = data;
+            
+            // 1. Dodavanje dukata
+            let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+            currentDukati += reward;
+            localStorage.setItem('yamb_dukati', currentDukati);
+            
+            if (window.statsManager) {
+                window.statsManager.stats.balance = currentDukati;
+                window.statsManager.saveStats();
+            }
+
+            // 2. Ažuriranje i sinhronizacija sa Cloud-om
+            this.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid'),
+                name: this.playerName,
+                photoUrl: localStorage.getItem('yamb_player_photo') || '',
+                stats: this.getFullLocalStats(),
+                playerId: this.playerId
+            });
+            
+            if (typeof updateMainMenuDashboard === 'function') {
+                updateMainMenuDashboard();
+            }
+            
+            // 3. Vizuelna proslava i obaveštenje
+            this.soundMgr.win();
+            this.effectMgr.trigger('gold_rain');
+            
+            let medalja = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
+            this.modal.alert(
+                `Čestitamo! Osvojili ste ${rank}. mesto ${medalja} u Kvartalnoj ligi i nagradu od ${reward} 💰!`, 
+                "KRAJ KVARTALA 🏆"
+            );
+        });
+        // ------------------------------------------------
+
         // TIMEOUT EVENT
         this.socket.off('game_timeout');
         this.socket.on('game_timeout', async (data) => {
@@ -1610,7 +1649,6 @@ class YambApp {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
-                // FIX: Dodeljujemo prvo dukate, pa tek onda upisujemo na server
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati += 500; 
                 localStorage.setItem('yamb_dukati', currentDukati);
@@ -1631,7 +1669,6 @@ class YambApp {
             this.cancelOnline();
         });
 
-        // 1. Osluškivač za početak posmatranja
         this.socket.on('spectate_started', (data) => {
             this.onlineMode = true;
             this.isSpectator = true;
@@ -1641,7 +1678,6 @@ class YambApp {
 
             this.navigateTo('game-scene');
 
-            // Sakrij dugmiće za igru
             const btnBacaj = document.getElementById('btn-bacaj');
             const btnNajava = document.getElementById('btn-najava');
             if(btnBacaj) btnBacaj.style.display = 'none';
@@ -1650,14 +1686,12 @@ class YambApp {
             this.updateStatusLabel();
         });
 
-        // 2. Request State Sync (Šalje se ako smo mi trenutno u igri, a neko se nakači ili smo pukli)
         this.socket.on('request_state_sync', () => {
-            // IZMENA: Više ne proveravamo this.onlineMode, kako bi i lokalne igre mogle da pošalju stanje gledaocu
             if (this.gameActive && !this.isSpectator) {
                 console.log("📤 Šaljem osveženo stanje table (uključujući igrače)...");
                 this.socket.emit('sync_state_response', {
                     roomId: this.roomId,
-                    players: this.players, // DODATO ZA GLEDAOCE
+                    players: this.players, 
                     allScores: this.allScores,
                     currentPlayerIdx: this.currentPlayerIdx,
                     brojBacanja: this.brojBacanja,
@@ -1669,12 +1703,10 @@ class YambApp {
             }
         });
 
-        // 3. Sync State Response (Kada dobijemo stanje table od onoga koga gledamo/s kim igramo)
         this.socket.on('sync_state_response', (data) => {
             if ((this.gameActive || this.isSpectator) && this.onlineMode) {
                 console.log("📥 Stiglo osveženo stanje. Primenjujem...");
                 
-                // Ako smo gledalac, preuzimamo imena igrača i pravimo tabele
                 if (this.isSpectator && data.players) {
                     this.players = data.players;
                     this.createScoreTables();
@@ -1694,7 +1726,6 @@ class YambApp {
                 this.updateStatusLabel();
                 this.startClientTimer(); 
 
-                // Dugmiće podešavamo samo ako NISMO gledalac
                 if (!this.isSpectator) {
                     const btnBacaj = document.getElementById('btn-bacaj');
                     const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
@@ -1731,7 +1762,6 @@ class YambApp {
         this.socket.on('game_start', (data) => { 
             console.log("GAME START:", data);
             
-            // Forsirano zatvaranje svih modala (ako je neki ostao otvoren sa prethodnog ekrana)
             const customModal = document.getElementById('custom-modal-overlay');
             if (customModal) customModal.style.display = 'none';
 
@@ -1789,10 +1819,8 @@ class YambApp {
             }
         }); 
 
-        // 4. Remote Move
         this.socket.on('remote_move', (data) => { 
             try {
-                // Za gledaoce uzimamo pIdx iz emit-a. Ako ne postoji, fallback logike.
                 const playerIdx = data.pIdx !== undefined ? data.pIdx : (this.myOnlineIndex === 0 ? 1 : 0); 
                 this.currentPlayerIdx = playerIdx; 
 
@@ -1868,7 +1896,6 @@ class YambApp {
             });
         });
 
-        // --- SISTEM KAŽNJAVANJA BEŽANJA ---
         this.socket.on('opponent_left', async () => { 
             if(this.isSpectator) {
                 this.modal.alert(gt('spectator_opp_left'), gt('modal_title_info') || "INFO").then(() => {
@@ -1885,11 +1912,9 @@ class YambApp {
                 btnRematch.style.background = 'gray';
                 btnRematch.style.boxShadow = 'none';
             } else {
-                // Protivnik je pobegao, dodeljujemo pobedu i dukate onome ko je ostao!
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
-                // FIX: Dodeljujemo prvo dukate, pa tek onda upisujemo na server
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati += 500; 
                 localStorage.setItem('yamb_dukati', currentDukati);
@@ -1905,13 +1930,10 @@ class YambApp {
             }
         }); 
 
-        // --- PRIJATELJI EVENTI ---
         this.socket.on('incoming_friend_req', async (data) => {
-            // Ako je već u prijatelj sekciji (waiting-screen) samo osveži tihu listu da mu izroni kartica
             if (this.currentHostingRoomId) {
                 this.socket.emit('get_friends_list');
             } else {
-                // Ako je u meniju igrice, pusti mu malo info obaveštenje
                 const msg = (gt('alert_friend_req_pending') || "Novi zahtev za prijateljstvo od igrača {0}! Možete ga videti u sekciji 'Prijatelj'.").replace('{0}', data.challengerName);
                 this.modal.alert(msg, gt('alert_info') || "NOVI ZAHTEV");
             }
@@ -1963,7 +1985,6 @@ class YambApp {
             let realHostName = data.hostName;
             let hostSocketId = null;
             
-            // Otpakujemo pravo ime i Socket ID onog ko šalje
             if (data.hostName && data.hostName.includes('|||')) {
                 const parts = data.hostName.split('|||');
                 realHostName = parts[0];
@@ -1978,7 +1999,6 @@ class YambApp {
                 this.navigateTo('splash-screen');
                 setTimeout(() => { this.joinPrivateGame(this.playerName, data.roomId); }, 800);
             } else {
-                // Ako je odbio, šaljemo direktan signal onome ko je poslao
                 if (hostSocketId) {
                     this.socket.emit('challenge_response', {
                         challengerId: hostSocketId,
@@ -2005,7 +2025,6 @@ class YambApp {
         }
         
         try {
-            // NOVO: Generišemo ključ za trenutnog korisnika
             const uid = localStorage.getItem('yamb_uid') || 'guest';
             const saveKey = `yamb_saved_game_${uid}_${numPlayers}`;
             
@@ -2021,7 +2040,6 @@ class YambApp {
                     resume.style.display = 'flex';
                 }
 
-                // Sakrij opcije za drugi mod ako su greškom ostale otvorene
                 const otherBtn = numPlayers === 1 ? 2 : 1;
                 const otherContent = document.getElementById(`mode-content-${otherBtn}`);
                 const otherResume = document.getElementById(`mode-resume-${otherBtn}`);
@@ -2051,7 +2069,6 @@ class YambApp {
         if (wantResume) {
             this.loadSavedGame(numPlayers);
         } else {
-            // NOVO: Brišemo slot za trenutnog korisnika
             const uid = localStorage.getItem('yamb_uid') || 'guest';
             if (window.localforage) await localforage.removeItem(`yamb_saved_game_${uid}_${numPlayers}`);
             this.setupGame(numPlayers);
@@ -2117,7 +2134,7 @@ class YambApp {
         this.lastGameType = 'normal';
         document.getElementById('chat-body').innerHTML = ""; 
         const chatBtn = document.getElementById('chat-float-btn'); 
-        if (chatBtn) chatBtn.classList.add('hidden'); // Skriveno dok traje citat
+        if (chatBtn) chatBtn.classList.add('hidden'); 
         this.effectMgr.stop(); this.loadEquippedEffect(); 
         
         this.startClientTimer();
@@ -2151,7 +2168,6 @@ class YambApp {
             if (document.getElementById('quote-screen').classList.contains('active')) {
                 this.navigateTo('game-scene');
                 
-                // Prikazujemo chat dugme tek kada se prebaci na samu tablu (ako je Online)
                 const chatBtn = document.getElementById('chat-float-btn');
                 if (chatBtn && this.modeTag !== "Solo" && this.modeTag !== "Hotseat") {
                     chatBtn.classList.remove('hidden');
@@ -2604,11 +2620,9 @@ class YambApp {
         const finalResults = this.players.map((name, i) => { return { name: name, score: this.calculateTotalScore(i) }; }); 
         const winnerScore = finalResults.reduce((max, r) => r.score > max ? r.score : max, 0);
 
-        // NOVO: Brišemo fajl pod specifičnim ključem naloga
         if(window.localforage) {
             const uid = localStorage.getItem('yamb_uid') || 'guest';
             await localforage.removeItem(`yamb_saved_game_${uid}_${this.players.length}`); 
-            // Čistimo stare (legacy) fajlove za svaki slučaj
             await localforage.removeItem('yamb_saved_game'); 
             await localforage.removeItem('yamb_saved_game_' + this.players.length); 
         }
@@ -2975,7 +2989,6 @@ class YambApp {
                 date: new Date().toISOString() 
             }; 
             try {
-                // NOVO: Generišemo ključ vezan za ulogovanog igrača (UID)
                 const uid = localStorage.getItem('yamb_uid') || 'guest';
                 if(window.localforage) await localforage.setItem(`yamb_saved_game_${uid}_${this.players.length}`, data); 
             } catch(e) { console.warn("Greška pri čuvanju:", e); }
@@ -2983,7 +2996,6 @@ class YambApp {
     }
     
     async loadSavedGame(numPlayers = this.pendingNewGamePlayers) { 
-        // NOVO: Kreiramo ključ po UID-u
         const uid = localStorage.getItem('yamb_uid') || 'guest';
         const saveKey = `yamb_saved_game_${uid}_${numPlayers}`;
 

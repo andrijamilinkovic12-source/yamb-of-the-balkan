@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS
 
 require('dotenv').config(); 
 
@@ -157,6 +157,7 @@ const UserProfileSchema = new mongoose.Schema({
     unlockedSkins: { type: [String], default: [] },
     unlockedEffects: { type: [String], default: [] },
     yamb_unlocked: { type: [String], default: [] }, 
+    claimedLeagueRewards: { type: [String], default: [] }, // NOVO: Pamćenje preuzetih nagrada
     activeSkin: { type: String, default: 'default' }, 
     activeEffect: { type: String, default: 'confetti' }, 
     activeTheme: { type: String, default: 'dark' }, 
@@ -194,7 +195,6 @@ function resetTurnTimer(roomId) {
     roomTimers[roomId] = setTimeout(() => {
         const state = roomState[roomId];
         if (state) {
-            // Pronalazimo ko je na potezu i ko je pobednik (onaj drugi)
             const trollIdx = state.turnIndex;
             const winnerIdx = trollIdx === 0 ? 1 : 0;
             const winnerId = state.players[winnerIdx];
@@ -205,7 +205,7 @@ function resetTurnTimer(roomId) {
             delete roomState[roomId];
             delete roomTimers[roomId];
         }
-    }, 60000); // 60 sekundi za potez
+    }, 60000); 
 }
 
 let tournamentState = {
@@ -282,7 +282,6 @@ io.on('connection', (socket) => {
         registeredSockets[socket.id] = playerId;
         socket.playerId = playerId; 
 
-        // GRACE PERIOD RECOVERY (Vraćanje igrača u partiju)
         if (disconnectTimers[playerId]) {
             clearTimeout(disconnectTimers[playerId]);
             delete disconnectTimers[playerId];
@@ -290,11 +289,9 @@ io.on('connection', (socket) => {
             
             const ghost = ghostSessions[playerId];
             if (ghost) {
-                // Vrati igrača sa novim socketom u njegovu staru sobu
                 socket.join(ghost.roomId);
                 playerRooms[socket.id] = ghost.roomId;
                 
-                // NOVO: Ažuriranje ID-ja u roomState za tajmer
                 if (roomState[ghost.roomId]) {
                     const players = roomState[ghost.roomId].players;
                     const idx = players.indexOf(ghost.oldSocketId);
@@ -303,7 +300,6 @@ io.on('connection', (socket) => {
                     }
                 }
 
-                // Očisti staru referencu i sačuvane podatke
                 delete playerRooms[ghost.oldSocketId];
                 delete ghostSessions[playerId];
             }
@@ -396,7 +392,6 @@ io.on('connection', (socket) => {
                         }
                     }
 
-                    // --- FIX: DOZVOLJAVAMO RESET TRENUTNOG NIZA NA NULU ---
                     if (typeof s.currentWinStreak === 'number') {
                         user.currentWinStreak = s.currentWinStreak; 
                     }
@@ -514,8 +509,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- NOVI KOD: ZAHTEV ZA LISTU SVIH ONLINE IGRAČA (MODAL) ---
-    // DODATA SERVER PROVERA PRIJATELJSTVA DA ZATAMNIMO DUGME!
     socket.on('get_online_players_list', async () => {
         let myFriends = [];
         if (MONGO_URI && socket.playerId) {
@@ -538,15 +531,14 @@ io.on('connection', (socket) => {
                     name: clientSocket.playerName,
                     photoUrl: clientSocket.photoUrl || '',
                     uid: clientSocket.playerId || '',
-                    isPlaying: !!playerRooms[clientSocket.id], // Znamo da li je u partiji!
-                    isFriend: myFriends.includes(clientSocket.playerId) // Znamo da li su već prijatelji!
+                    isPlaying: !!playerRooms[clientSocket.id], 
+                    isFriend: myFriends.includes(clientSocket.playerId) 
                 });
             }
         });
 
         socket.emit('online_players_list_data', onlinePlayersList);
     });
-    // -----------------------------------------------------------
 
     socket.on('get_online_players', () => {
         const playersMap = new Map(); 
@@ -589,7 +581,6 @@ io.on('connection', (socket) => {
             socket.to(activeRoomId).emit('opponent_left');
             delete playerRooms[socket.id];
             
-            // NOVO: Brisanje tajmera
             if (roomTimers[activeRoomId]) {
                 clearTimeout(roomTimers[activeRoomId]);
                 delete roomTimers[activeRoomId];
@@ -613,7 +604,6 @@ io.on('connection', (socket) => {
         updateOnlineCount();
     });
 
-    // --- SPECTATOR (GLEDALAC) LOGIKA ---
     socket.on('request_spectate', (targetSocketId) => {
         const roomId = playerRooms[targetSocketId];
         if (roomId) {
@@ -621,10 +611,8 @@ io.on('connection', (socket) => {
             socket.isSpectator = true;
             socket.spectatingRoom = roomId;
 
-            // Javi gledaocu da je uspostavljena veza
             socket.emit('spectate_started', { roomId: roomId });
 
-            // Zatraži od igrača u sobi da pošalju stanje table svima (uključujući novog gledaoca)
             io.to(targetSocketId).emit('request_state_sync', { senderSocketId: socket.id });
             console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId}`);
         } else {
@@ -645,7 +633,6 @@ io.on('connection', (socket) => {
     const MAX_NAME_LENGTH = 24;   
     const MIN_GAME_DURATION = 120000; 
 
-    // Registracija lokalne sobe (Solo/Hotseat) kako bi gledaoci mogli da pristupe
     socket.on('start_local_game', (roomId) => {
         socket.join(roomId);
         playerRooms[socket.id] = roomId;
@@ -656,6 +643,64 @@ io.on('connection', (socket) => {
     socket.on('game_session_start', () => {
         gameStartTimes[socket.id] = Date.now();
         console.log(`⏱️ Igrač ${socket.id} započeo partiju u ${new Date().toLocaleTimeString()}`);
+    });
+
+    // --- PROVERA I DODELA NAGRADA ZA KVARTALNU LIGU ---
+    socket.on('check_quarter_reward', async (data) => {
+        try {
+            if (!MONGO_URI) return;
+            const { year, quarter, playerId } = data;
+            
+            if (!year || !quarter || !playerId) return;
+
+            // Formiramo unikatan ID za ovaj kvartal, npr. "2026-Q1"
+            const rewardKey = `${year}-Q${quarter}`;
+
+            // Pronalazimo korisnika
+            const user = await UserProfile.findOne({ firebaseUid: playerId });
+            if (!user) return;
+
+            // Sigurnosna provera: Da li je igrač već preuzeo nagradu za ovaj kvartal?
+            if (user.claimedLeagueRewards && user.claimedLeagueRewards.includes(rewardKey)) {
+                console.log(`⚠️ Igrač ${user.playerName} je već preuzeo nagradu za ${rewardKey}.`);
+                return; // Prekidamo, nagrada je već izdata!
+            }
+
+            // Tražimo top 3 igrača za taj specifičan kvartal
+            const topScores = await LeagueScore.find({ year: year, quarter: quarter })
+                                               .sort({ score: -1 })
+                                               .limit(3);
+            
+            // Proveravamo da li se ID našeg igrača nalazi među njima
+            let rank = -1;
+            for (let i = 0; i < topScores.length; i++) {
+                if (topScores[i].playerId === playerId) {
+                    rank = i + 1; // Mesto na tabeli (1, 2, ili 3)
+                    break;
+                }
+            }
+
+            // Ako je igrač ostvario top 3 rang
+            if (rank > 0) {
+                // Određivanje svote dukata na osnovu pozicije
+                let rewardAmount = 0;
+                if (rank === 1) rewardAmount = 10000;
+                else if (rank === 2) rewardAmount = 5000;
+                else if (rank === 3) rewardAmount = 2500;
+
+                // Beležimo u bazu da je nagrada preuzeta da se ne bi dupla!
+                if (!user.claimedLeagueRewards) user.claimedLeagueRewards = [];
+                user.claimedLeagueRewards.push(rewardKey);
+                await user.save();
+
+                // Šaljemo klijentu događaj da pokrene vizuelno slavlje i upiše dukate
+                socket.emit('quarter_reward', { rank: rank, reward: rewardAmount });
+                console.log(`🏆 NAGRADA: Igrač ${user.playerName} je osvojio ${rewardAmount} dukata za ${rank}. mesto u kvartalu ${rewardKey}!`);
+            }
+
+        } catch (err) {
+            console.error("Greška pri proveri kvartalne nagrade:", err);
+        }
     });
 
     socket.on('get_global_highscores', async (period) => {
@@ -818,7 +863,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- TOP LISTA VATRENOG NIZA (SADA GLEDA MAX NIZ) ---
     socket.on('get_streak_leaderboard', async () => {
         try {
             if (!MONGO_URI) {
@@ -826,18 +870,16 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            // Tražimo igrače po maxWinStreak (njihov najveći niz), sortiramo opadajuće i uzimamo top 20
             const topStreaks = await UserProfile.find({ maxWinStreak: { $gt: 0 } })
                 .sort({ maxWinStreak: -1 })
                 .limit(20)
                 .select('firebaseUid playerName photoUrl maxWinStreak');
 
-            // Mapiramo podatke
             const dataToSend = topStreaks.map(p => ({
                 uid: p.firebaseUid,
                 name: p.playerName,
                 photoUrl: p.photoUrl || '',
-                streak: p.maxWinStreak // Šaljemo rekordni niz!
+                streak: p.maxWinStreak 
             }));
 
             socket.emit('streak_leaderboard_data', dataToSend);
@@ -847,11 +889,9 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- SISTEM PRIJATELJA ---
     socket.on('search_player', async (query) => {
         if (!MONGO_URI) return;
         try {
-            // Striktno poklapanje imena, ignoriše velika/mala slova
             const regex = new RegExp('^' + query + '$', 'i'); 
             const users = await UserProfile.find({ playerName: regex }).limit(5);
 
@@ -891,13 +931,11 @@ io.on('connection', (socket) => {
             const targetProfile = await UserProfile.findOne({ firebaseUid: targetUid });
             
             if (me && targetProfile) {
-                // Ako nismo prijatelji i već mu nismo poslali zahtev, ubaci na listu čekanja
                 if (!targetProfile.friends.includes(me.firebaseUid) && !targetProfile.friendRequests.includes(me.firebaseUid)) {
                     targetProfile.friendRequests.push(me.firebaseUid);
                     await targetProfile.save();
                 }
                 
-                // Ako je target trenutno online, pošalji mu obaveštenje
                 const targetSocketId = onlinePlayers[targetUid];
                 if (targetSocketId) {
                     io.to(targetSocketId).emit('incoming_friend_req', {
@@ -917,11 +955,9 @@ io.on('connection', (socket) => {
             const friend = await UserProfile.findOne({ firebaseUid: challengerUid });
 
             if (me && friend) {
-                // Obriši ga iz "zahteva"
                 me.friendRequests = me.friendRequests.filter(uid => uid !== challengerUid);
                 
                 if (accepted) {
-                    // Dodaj obostrano ako je prihvaćeno
                     if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
                     if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
                 }
@@ -946,7 +982,6 @@ io.on('connection', (socket) => {
                 let friendsData = [];
                 let requestsData = [];
 
-                // 1. Dovlačenje Prijatelja
                 if (me.friends && me.friends.length > 0) {
                     const friends = await UserProfile.find({ firebaseUid: { $in: me.friends } });
                     friendsData = friends.map(f => {
@@ -974,7 +1009,6 @@ io.on('connection', (socket) => {
                     });
                 }
                 
-                // 2. Dovlačenje Zahteva na Čekanju
                 if (me.friendRequests && me.friendRequests.length > 0) {
                     const requests = await UserProfile.find({ firebaseUid: { $in: me.friendRequests } });
                     requestsData = requests.map(r => ({
@@ -1032,7 +1066,6 @@ io.on('connection', (socket) => {
                     roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, myIndex: 1 
                 });
 
-                // NOVO: Registrujemo sobu za tajmer i pokrećemo ga
                 roomState[roomId] = { players: [opponentId, socket.id], turnIndex: 0 };
                 resetTurnTimer(roomId);
 
@@ -1086,7 +1119,6 @@ io.on('connection', (socket) => {
             io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, myIndex: 0 });
             socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, myIndex: 1 });
 
-            // NOVO: Registrujemo sobu za tajmer i pokrećemo ga
             roomState[roomId] = { players: [p1.id, socket.id], turnIndex: 0 };
             resetTurnTimer(roomId);
 
@@ -1101,7 +1133,6 @@ io.on('connection', (socket) => {
         if (roomId) {
             socket.to(roomId).emit(eventName, data);
 
-            // NOVO: Ako je igrač završio potez, prebacujemo red na drugog i resetujemo sat!
             if (eventName === 'remote_move' && roomState[roomId]) {
                 roomState[roomId].turnIndex = roomState[roomId].turnIndex === 0 ? 1 : 0;
                 resetTurnTimer(roomId);
@@ -1114,7 +1145,6 @@ io.on('connection', (socket) => {
     socket.on('player_move', (data) => relayEvent('remote_move', data));
     socket.on('announce', (data) => relayEvent('remote_announce', data));
     
-    // DOGAĐAJI ZA SINHRONIZACIJU TABLE NAKON REKONEKCIJE ILI PREGLEDA GLEDALACA
     socket.on('request_state_sync', () => relayEvent('request_state_sync', { senderSocketId: socket.id }));
     socket.on('sync_state_response', (data) => relayEvent('sync_state_response', data));
     
@@ -1200,7 +1230,6 @@ io.on('connection', (socket) => {
             io.to(roomName).emit('game_started', { room: roomName, player1: challengerId, player2: socket.id });
             console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
 
-            // NOVO: Registrujemo sobu za tajmer i pokrećemo ga
             roomState[roomName] = { players: [challengerId, socket.id], turnIndex: 0 };
             resetTurnTimer(roomName);
 
@@ -1231,7 +1260,6 @@ io.on('connection', (socket) => {
                 }
             }
             
-            // NOVO: Reset za revanš
             if (playersArr.length === 2) {
                 roomState[roomId] = { players: playersArr, turnIndex: 0 };
                 resetTurnTimer(roomId);
@@ -1241,10 +1269,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // ==================================================================
-    // TURNIR - SOCKET LOGIKA
-    // ==================================================================
-    
     socket.on('tourney_reset', () => {
         console.log("⚠️ TURNIR JE RESETOVAN OD STRANE KORISNIKA!");
         tournamentState = {
@@ -1366,34 +1390,27 @@ io.on('connection', (socket) => {
         const pid = registeredSockets[socket.id];
         const activeRoomId = playerRooms[socket.id];
 
-        // 1. SCENARIO: Igrač je u partiji i pukao mu je internet
         if (pid && activeRoomId) {
             console.log(`⏳ Pokrećem Grace Period od 30s za igrača: ${pid}`);
             
-            // Čuvamo podatke o sobi pre nego što uništimo vezu
             ghostSessions[pid] = {
                 roomId: activeRoomId,
                 oldSocketId: socket.id
             };
 
-            // Pokrećemo tajmer
             disconnectTimers[pid] = setTimeout(() => {
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
                 
-                // Obaveštavamo protivnika tek sada
                 io.to(activeRoomId).emit('opponent_left');
                 
-                // Brisanje iz soba
                 delete playerRooms[ghostSessions[pid]?.oldSocketId];
                 
-                // NOVO: Brisanje tajmera
                 if (roomTimers[activeRoomId]) {
                     clearTimeout(roomTimers[activeRoomId]);
                     delete roomTimers[activeRoomId];
                 }
                 if (roomState[activeRoomId]) delete roomState[activeRoomId];
 
-                // Čišćenje privateRooms ako je to bio host/gost koji je nestao
                 if (privateRooms[activeRoomId]) {
                     if (privateRooms[activeRoomId].p1 && privateRooms[activeRoomId].p1.id === ghostSessions[pid]?.oldSocketId) {
                         delete privateRooms[activeRoomId];
@@ -1404,16 +1421,13 @@ io.on('connection', (socket) => {
                 
                 delete ghostSessions[pid];
                 delete disconnectTimers[pid];
-            }, 30000); // 30 sekundi čekanja
+            }, 30000); 
 
         } else {
-            // 2. SCENARIO: Igrač nije bio u partiji (običan izlazak)
             if (activeRoomId) {
-                // Ako nekako nema PID, a ima sobu (Gost bez set_my_id), izbacujemo ga odmah
                 socket.to(activeRoomId).emit('opponent_left');
                 delete playerRooms[socket.id];
                 
-                // NOVO: Brisanje tajmera
                 if (roomTimers[activeRoomId]) {
                     clearTimeout(roomTimers[activeRoomId]);
                     delete roomTimers[activeRoomId];
@@ -1422,10 +1436,7 @@ io.on('connection', (socket) => {
             }
         }
 
-        // Standardno brisanje osnovnih referenci
         if (pid) {
-            // Ne brišemo odmah iz onlinePlayers ako je u grace periodu, 
-            // ali pošto socket ne postoji, moramo ga obrisati da UI prijatelja ne baguje
             delete onlinePlayers[pid]; 
         }
         delete registeredSockets[socket.id];
@@ -1434,7 +1445,6 @@ io.on('connection', (socket) => {
             delete gameStartTimes[socket.id];
         }
 
-        // Uklanjanje iz queue-a za čekanje
         if (waitingPlayer && waitingPlayer.id === socket.id) {
             waitingPlayer = null;
         }
