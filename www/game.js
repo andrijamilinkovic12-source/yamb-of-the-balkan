@@ -2005,7 +2005,9 @@ class YambApp {
         
         try {
             const saved = await localforage.getItem('yamb_saved_game');
-            if (saved) {
+            
+            // NOVO: Proveravamo da li postoji save I da li je broj igrača isti kao odabrani mod
+            if (saved && saved.players && saved.players.length === numPlayers) {
                 this.pendingNewGamePlayers = numPlayers;
                 
                 const content = document.getElementById(`mode-content-${numPlayers}`);
@@ -2015,6 +2017,7 @@ class YambApp {
                     resume.style.display = 'flex';
                 }
 
+                // Sakrij opcije za drugi mod ako su greškom ostale otvorene
                 const otherBtn = numPlayers === 1 ? 2 : 1;
                 const otherContent = document.getElementById(`mode-content-${otherBtn}`);
                 const otherResume = document.getElementById(`mode-resume-${otherBtn}`);
@@ -2023,6 +2026,10 @@ class YambApp {
                     otherResume.style.display = 'none';
                 }
             } else {
+                // Ako postoji sačuvana igra, ali je iz DRUGOG moda, brišemo je i krećemo novu
+                if (saved) {
+                    await localforage.removeItem('yamb_saved_game');
+                }
                 this.setupGame(numPlayers);
             }
         } catch (e) {
