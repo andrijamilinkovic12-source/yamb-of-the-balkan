@@ -3,12 +3,11 @@ class KvartalnaLigaManager {
     constructor() {
         this.storageKey = 'yamb_quarter_data'; 
         this.currentSlide = 0;
-        this.hofData = null; // Podaci za Dvoranu Slavnih
+        this.hofData = null; 
         
         this.init();
     }
 
-    // Dinamički getter - osigurava da prevod uvek bude tačan u trenutku otvaranja modala
     get ranks() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         return [
@@ -26,7 +25,6 @@ class KvartalnaLigaManager {
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
 
         if (data.year !== currentYear || data.quarter !== currentQuarter) {
-            
             localStorage.setItem('yamb_pending_quarter_check', JSON.stringify({
                 year: data.year,
                 quarter: data.quarter
@@ -95,7 +93,7 @@ class KvartalnaLigaManager {
         const data = this.getScores();
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
         let pName = localStorage.getItem('yamb_player_name') || "Gost";
-        let pPhoto = localStorage.getItem('yamb_player_photo') || ''; // <-- DODATO: Slanje slike
+        let pPhoto = localStorage.getItem('yamb_player_photo') || ''; 
 
         let pId = localStorage.getItem('yamb_uid') || localStorage.getItem('yamb_player_id');
         if (!pId) {
@@ -106,7 +104,7 @@ class KvartalnaLigaManager {
         window.app.socket.emit('submit_league_score', {
             playerId: pId,
             playerName: pName,
-            photoUrl: pPhoto, // <-- DODATO: Slanje slike
+            photoUrl: pPhoto, 
             score: data.quarterlyScore,
             year: currentYear,
             quarter: currentQuarter
@@ -147,11 +145,12 @@ class KvartalnaLigaManager {
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
 
+        // FIX: Dodato -webkit-overflow-scrolling i translateZ(0) za stabilan scroll
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 10px;">
                 <h3 style="color: var(--gold-main); font-size: 1rem; text-align: center; margin-bottom: 15px;">${r.name}</h3>
                 <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
-                    <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto;">
+                    <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; transform: translateZ(0); will-change: transform;">
                         <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem;" data-lang="league_loading">${gt('league_loading', 'Učitavanje servera... ⏳')}</li>
                     </ul>
                 </div>
@@ -507,20 +506,20 @@ class KvartalnaLigaManager {
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
             let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
 
-            // NOVO: Generisanje slike
             let photo = s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(s.playerName)}&background=333&color=E0C995`;
 
             let li = document.createElement('li');
-            li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; ${bg}`;
+            // FIX: Dodato translateZ(0) i pojednostavljen CSS za stabilnost na svim telefonima
+            li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; transform: translateZ(0); ${bg}`;
             
-            // NOVO: HTML sa slikom, flex kontejnerom i prelamanjem (word-wrap)
+            // FIX: Izbačen komplikovan -webkit-box kod. Ubačen siguran "word-break" unutar jednostavnog diva
             li.innerHTML = `
-                <div style="display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0; padding-right: 10px;">
-                    <span style="font-weight: bold; width: 25px; color: var(--gold-main); flex-shrink: 0; text-align: center;">${medal}</span>
+                <div style="display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0;">
+                    <div style="font-weight: bold; min-width: 25px; color: var(--gold-main); text-align: center;">${medal}</div>
                     <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
-                    <span style="color: ${isMe ? 'var(--gold-main)' : 'var(--text-main)'}; font-weight: ${isMe ? 'bold' : 'normal'}; white-space: normal; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.2;">${s.playerName}</span>
+                    <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.85rem; padding-right: 5px;">${s.playerName}</div>
                 </div>
-                <span style="font-weight: bold; color: var(--text-main); flex-shrink: 0; white-space: nowrap;">${s.score} PTS</span>
+                <div style="font-weight: bold; color: #fff; margin-left: 10px; white-space: nowrap;">${s.score} PTS</div>
             `;
             listEl.appendChild(li);
         });
