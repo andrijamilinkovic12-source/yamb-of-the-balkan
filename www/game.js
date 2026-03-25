@@ -566,14 +566,19 @@ class YambApp {
         const overlay = document.getElementById('online-players-overlay');
         if (overlay) overlay.style.display = 'none';
 
-        // Prikaži AdMob Interstitial reklamu pre ulaska
-        if (this.adMob && this.adMob.showInterstitial) {
-            await this.adMob.showInterstitial();
-        }
-
         this.initSocketConnection();
-        if (this.socket && this.socket.connected) {
+        
+        const doSpectate = () => {
             this.socket.emit('request_spectate', targetSocketId);
+        };
+
+        if (this.socket && this.socket.connected) {
+            doSpectate();
+        } else if (this.socket) {
+            this.socket.once('connect', doSpectate);
+            if (this.socket.disconnected) {
+                this.socket.connect();
+            }
         } else {
             this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", "GREŠKA");
         }
@@ -1198,7 +1203,7 @@ class YambApp {
         if (themeSelect) themeSelect.value = next;
     }
 
-    showMainMenu() { 
+    async showMainMenu() { 
         if (this.isSpectator) {
             this.isSpectator = false;
             if (this.socket) this.socket.emit('stop_spectating');
@@ -1213,6 +1218,11 @@ class YambApp {
             if (timerDisplay) {
                 timerDisplay.style.display = 'none';
                 timerDisplay.style.animation = 'none';
+            }
+
+            // FIX: Reklama se pušta ovde! Kod će pauzirati dok se reklama ne zatvori.
+            if (this.adMob && this.adMob.showInterstitial) {
+                await this.adMob.showInterstitial();
             }
         }
 
