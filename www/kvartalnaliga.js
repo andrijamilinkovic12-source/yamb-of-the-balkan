@@ -145,7 +145,6 @@ class KvartalnaLigaManager {
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
 
-        // Uklonjen translateZ(0) i will-change za stabilan prikaz, uklonjen i data-lang kod ucitavanja
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 10px;">
                 <h3 style="color: var(--gold-main); font-size: 1rem; text-align: center; margin-bottom: 15px;">${r.name}</h3>
@@ -223,7 +222,6 @@ class KvartalnaLigaManager {
         this.setupTouch();
         this.syncWithServer(); 
         
-        // Dajemo serveru 300ms da obradi upis poena pre nego što zatražimo osveženu listu
         setTimeout(() => {
             this.fetchLeaderboard();
         }, 300);
@@ -446,7 +444,7 @@ class KvartalnaLigaManager {
         if (!window.app || !window.app.socket) {
             this.ranks.forEach(r => {
                 const listEl = document.getElementById(`league-list-${r.id}`);
-                if(listEl) listEl.innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem;" data-lang="league_no_conn">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
+                if(listEl) listEl.innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
             });
             return;
         }
@@ -478,7 +476,9 @@ class KvartalnaLigaManager {
     }
 
     populateRanks(scores, isAllTime) {
-        // Sprečava pucanje skripte ako server vrati null ili objekat umesto niza
+        // ŠTAMPAMO U KONZOLU DA VIDIMO ŠTA SERVER ZAPRAVO ŠALJE
+        console.log("🏆 Podaci sa servera (isAllTime: " + isAllTime + "):", scores);
+
         const safeScores = Array.isArray(scores) ? scores : [];
 
         if (isAllTime) {
@@ -490,43 +490,67 @@ class KvartalnaLigaManager {
         
         currentRanks.forEach(rank => {
             if (rank.id === 'alltime') return;
-            const rankScores = safeScores.filter(s => s.score >= rank.min && s.score <= rank.max);
+            // Sigurniji filter: ako s.score ne postoji zbog servera, sprečava pucanje
+            const rankScores = safeScores.filter(s => {
+                const poeni = Number(s.score) || 0;
+                return poeni >= rank.min && poeni <= rank.max;
+            });
             this.renderList(rank.id, rankScores);
         });
     }
 
     renderList(rankId, scores) {
-        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        // POBOLJŠANA gt FUNKCIJA - Sprečava da prevodilac vrati prazno polje i sakrije tekst
+        const gt = (key, fallback) => {
+            if (typeof t === 'function') {
+                const res = t(key);
+                if (res && res.trim() !== '' && res !== key) return res;
+            }
+            return fallback;
+        };
+
         const listEl = document.getElementById(`league-list-${rankId}`);
         if (!listEl) return;
 
-        // Uklonjen problematičan data-lang na praznoj listi
+        console.log(`Prikazujem rank [${rankId}] sa ${scores ? scores.length : 0} rezultata.`);
+
+        // FAZA 1: VIZUELNI TEST - Ako server vrati prazno ili fali kod
         if (!scores || scores.length === 0) {
-            listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj kvartal.<br>Budi prvi!')}</li>`;
+            // Pravimo namerno ogromnu crvenu kutiju koja zaobilazi prevode!
+            // Ako je vidiš, znači da je interfejs savršen, ali u bazi nema igrača.
+            listEl.innerHTML = `
+                <li style="text-align:center; color: white; background: #c0392b; font-size: 1rem; padding: 20px; border-radius: 8px; font-weight: bold;">
+                    DEBUG TEST: LISTA JE PRAZNA!<br>
+                    <span style="font-size:0.8rem; font-weight:normal;">(Server nije poslao nijednog igrača za ovaj rang)</span>
+                </li>
+            `;
             return;
         }
 
-        scores.sort((a,b) => b.score - a.score);
-
+        // FAZA 2: Renderovanje ako podaci zapravo stignu
+        scores.sort((a,b) => (Number(b.score) || 0) - (Number(a.score) || 0));
         listEl.innerHTML = '';
+        
         scores.forEach((s, i) => {
-            let isMe = (s.playerName === (localStorage.getItem('yamb_player_name') || "Gost"));
+            // Sigurnosna provera u slučaju falš podataka sa servera
+            let pName = s.playerName || "Nepoznat Igrač";
+            let pScore = s.score !== undefined ? s.score : "0";
+
+            let isMe = (pName === (localStorage.getItem('yamb_player_name') || "Gost"));
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
             let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
-
-            let photo = s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(s.playerName)}&background=333&color=E0C995`;
+            let photo = s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;
 
             let li = document.createElement('li');
-            // Uklonjen translateZ(0)
             li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; ${bg}`;
             
             li.innerHTML = `
                 <div style="display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0;">
                     <div style="font-weight: bold; min-width: 25px; color: var(--gold-main); text-align: center;">${medal}</div>
                     <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
-                    <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.85rem; padding-right: 5px;">${s.playerName}</div>
+                    <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.85rem; padding-right: 5px;">${pName}</div>
                 </div>
-                <div style="font-weight: bold; color: #fff; margin-left: 10px; white-space: nowrap;">${s.score} PTS</div>
+                <div style="font-weight: bold; color: #fff; margin-left: 10px; white-space: nowrap;">${pScore} PTS</div>
             `;
             listEl.appendChild(li);
         });
