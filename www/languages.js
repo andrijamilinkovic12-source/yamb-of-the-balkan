@@ -420,7 +420,20 @@ const TRANSLATIONS = {
         "streak_loading": "Učitavam listu... ⏳",
         "streak_searching": "Tražim najvatrenije igrače...",
         "streak_no_conn": "Niste povezani na server.",
-        "streak_no_data": "Još uvek nema podataka. Odigrajte partiju!"
+        "streak_no_data": "Još uvek nema podataka. Odigrajte partiju!",
+        
+        // --- TIMEOUT, SPECTATOR I KAZNE ---
+        "timeout_title": "KRAJ (TIMEOUT)",
+        "timeout_spectator": "Vreme je isteklo, partija je gotova.",
+        "timeout_win_msg": "Protivnik nije odigrao potez na vreme. Tehnička pobeda za vas (+500 💰)!",
+        "timeout_loss_title": "PORAZ (TIMEOUT)",
+        "timeout_loss_msg": "Isteklo vam je vreme za potez! Izgubili ste partiju.",
+        "spectator_opp_left": "Jedan od igrača je napustio igru. Gledanje prekinuto.",
+        "opp_fled_win": "Protivnik je pobegao iz partije! Tehnička pobeda za vas (+500 💰)!",
+        "friend_already_added": "Ovaj igrač je već u vašoj listi prijatelja.",
+        "friend_req_success": "Zahtev je poslat! Igrač {0} će ga dobiti sledeći put kada bude na mreži.",
+        "title_success": "USPEŠNO",
+        "live_badge": "UŽIVO"
     },
     en: {
         // --- SPLASH SCREEN ---
@@ -841,7 +854,20 @@ const TRANSLATIONS = {
         "streak_loading": "Loading list... ⏳",
         "streak_searching": "Looking for the hottest players...",
         "streak_no_conn": "Not connected to the server.",
-        "streak_no_data": "No data yet. Play a game!"
+        "streak_no_data": "No data yet. Play a game!",
+        
+        // --- TIMEOUT, SPECTATOR AND PENALTIES ---
+        "timeout_title": "GAME OVER (TIMEOUT)",
+        "timeout_spectator": "Time is up, the game has ended.",
+        "timeout_win_msg": "Opponent didn't make a move in time. Technical victory for you (+500 💰)!",
+        "timeout_loss_title": "DEFEAT (TIMEOUT)",
+        "timeout_loss_msg": "Your time to move has expired! You lost the game.",
+        "spectator_opp_left": "One of the players left the match. Spectating stopped.",
+        "opp_fled_win": "Opponent fled the match! Technical victory for you (+500 💰)!",
+        "friend_already_added": "This player is already in your friends list.",
+        "friend_req_success": "Request sent! Player {0} will receive it next time they are online.",
+        "title_success": "SUCCESS",
+        "live_badge": "LIVE"
     }
 };
 
