@@ -566,8 +566,10 @@ class YambApp {
         const overlay = document.getElementById('online-players-overlay');
         if (overlay) overlay.style.display = 'none';
 
+        // OBAVEZNO OSLUŠKIVANJE PRE ZAHTEVA
         this.initSocketConnection();
-        
+        this.setupSocketListeners(this.playerName);
+
         const doSpectate = () => {
             this.socket.emit('request_spectate', targetSocketId);
         };
@@ -2065,8 +2067,17 @@ class YambApp {
         
         // NOVO: Kreiramo sobu i za lokalne partije kako bi nas drugi mogli gledati
         this.roomId = "local_" + Math.random().toString(36).substring(2, 10);
+
+        // OBAVEZNO AKTIVIRANJE OSLUŠKIVAČA ZA LOKALNU IGRU KAKO BI ODGOVORILI GLEDAOCU
+        this.initSocketConnection();
+        this.setupSocketListeners(p1Name);
+
         if (this.socket && this.socket.connected) {
             this.socket.emit('start_local_game', this.roomId);
+        } else if (this.socket) {
+            this.socket.once('connect', () => {
+                this.socket.emit('start_local_game', this.roomId);
+            });
         }
         
         this.startGame(); 
@@ -2981,8 +2992,17 @@ class YambApp {
 
             // NOVO: Kreiramo sobu i za nastavljene lokalne partije
             this.roomId = "local_" + Math.random().toString(36).substring(2, 10);
+
+            // AKTIVIRAMO OSLUŠKIVAČE
+            this.initSocketConnection();
+            this.setupSocketListeners(this.playerName);
+
             if (this.socket && this.socket.connected) {
                 this.socket.emit('start_local_game', this.roomId);
+            } else if (this.socket) {
+                this.socket.once('connect', () => {
+                    this.socket.emit('start_local_game', this.roomId);
+                });
             }
 
             this.lastMoveSnapshot = null;
