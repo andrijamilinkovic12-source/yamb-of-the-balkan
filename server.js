@@ -123,6 +123,7 @@ const Score = mongoose.model('Score', ScoreSchema);
 const LeagueScoreSchema = new mongoose.Schema({
     playerId: String,
     playerName: String,
+    photoUrl: { type: String, default: '' }, // <-- DODATO
     score: Number,
     year: Number,
     quarter: Number,
@@ -920,6 +921,7 @@ io.on('connection', (socket) => {
                     $group: {
                         _id: "$playerId",
                         playerName: { $last: "$playerName" },
+                        photoUrl: { $last: "$photoUrl" }, // <-- DODATO
                         score: { $sum: "$score" }
                     }
                 },
@@ -956,7 +958,7 @@ io.on('connection', (socket) => {
             await LeagueScore.findOneAndUpdate(
                 { playerId: uniqueId, year: data.year, quarter: data.quarter }, 
                 { 
-                    $set: { playerName: finalName, date: Date.now() },
+                    $set: { playerName: finalName, photoUrl: data.photoUrl || '', date: Date.now() },
                     $max: { score: data.score }
                 }, 
                 { upsert: true, new: true } 

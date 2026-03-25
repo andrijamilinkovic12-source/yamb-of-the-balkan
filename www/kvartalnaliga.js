@@ -95,6 +95,7 @@ class KvartalnaLigaManager {
         const data = this.getScores();
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
         let pName = localStorage.getItem('yamb_player_name') || "Gost";
+        let pPhoto = localStorage.getItem('yamb_player_photo') || ''; // <-- DODATO: Slanje slike
 
         let pId = localStorage.getItem('yamb_uid') || localStorage.getItem('yamb_player_id');
         if (!pId) {
@@ -105,6 +106,7 @@ class KvartalnaLigaManager {
         window.app.socket.emit('submit_league_score', {
             playerId: pId,
             playerName: pName,
+            photoUrl: pPhoto, // <-- DODATO: Slanje slike
             score: data.quarterlyScore,
             year: currentYear,
             quarter: currentQuarter
@@ -140,7 +142,7 @@ class KvartalnaLigaManager {
         const allTime = (parseInt(data.baselineScore) || 0) + pts;
         const rank = this.getRank(pts);
         
-        const currentRanks = this.ranks; // Povlači dinamički prevod
+        const currentRanks = this.ranks; 
 
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
@@ -278,7 +280,7 @@ class KvartalnaLigaManager {
             return;
         }
 
-        window.app.socket.off('hall_of_fame_data'); // Sigurnosno čišćenje osluškivača
+        window.app.socket.off('hall_of_fame_data'); 
         window.app.socket.on('hall_of_fame_data', (data) => {
             this.hofData = data;
             this.renderHofMedals();
@@ -448,7 +450,6 @@ class KvartalnaLigaManager {
 
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
 
-        // FIX: Koristimo bezbedan .off().on() pristup umesto .once() kako bi izbegli propuštanje podataka
         window.app.socket.off('league_highscores_data');
         window.app.socket.on('league_highscores_data', (scores) => {
             this.populateRanks(scores, false);
@@ -462,7 +463,6 @@ class KvartalnaLigaManager {
         window.app.socket.emit('get_league_highscores', { year: currentYear, quarter: currentQuarter });
         window.app.socket.emit('get_league_alltime_highscores'); 
 
-        // Sigurnosno popunjavanje lokalnog All Time-a ako server zataji
         setTimeout(() => {
             const allTimeList = document.getElementById('league-list-alltime');
             if (allTimeList && allTimeList.innerHTML.includes('⏳')) {
@@ -507,14 +507,20 @@ class KvartalnaLigaManager {
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
             let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
 
+            // NOVO: Generisanje slike
+            let photo = s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(s.playerName)}&background=333&color=E0C995`;
+
             let li = document.createElement('li');
-            li.style.cssText = `display: flex; justify-content: space-between; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; ${bg}`;
+            li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; ${bg}`;
+            
+            // NOVO: HTML sa slikom, flex kontejnerom i prelamanjem (word-wrap)
             li.innerHTML = `
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <span style="font-weight: bold; width: 25px; color: var(--gold-main);">${medal}</span>
-                    <span style="color: ${isMe ? 'var(--gold-main)' : 'var(--text-main)'}; font-weight: ${isMe ? 'bold' : 'normal'};">${s.playerName}</span>
+                <div style="display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0; padding-right: 10px;">
+                    <span style="font-weight: bold; width: 25px; color: var(--gold-main); flex-shrink: 0; text-align: center;">${medal}</span>
+                    <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
+                    <span style="color: ${isMe ? 'var(--gold-main)' : 'var(--text-main)'}; font-weight: ${isMe ? 'bold' : 'normal'}; white-space: normal; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.2;">${s.playerName}</span>
                 </div>
-                <span style="font-weight: bold; color: var(--text-main);">${s.score} PTS</span>
+                <span style="font-weight: bold; color: var(--text-main); flex-shrink: 0; white-space: nowrap;">${s.score} PTS</span>
             `;
             listEl.appendChild(li);
         });
