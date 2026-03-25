@@ -145,13 +145,13 @@ class KvartalnaLigaManager {
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
 
-        // Uklonjen translateZ(0) i will-change za stabilan prikaz
+        // Uklonjen translateZ(0) i will-change za stabilan prikaz, uklonjen i data-lang kod ucitavanja
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 10px;">
                 <h3 style="color: var(--gold-main); font-size: 1rem; text-align: center; margin-bottom: 15px;">${r.name}</h3>
                 <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
                     <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;">
-                        <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem;" data-lang="league_loading">${gt('league_loading', 'Učitavanje servera... ⏳')}</li>
+                        <li style="text-align: center; color: #aaa; font-size: 0.85rem;">${gt('league_loading', 'Učitavanje servera... ⏳')}</li>
                     </ul>
                 </div>
             </div>
@@ -222,7 +222,11 @@ class KvartalnaLigaManager {
 
         this.setupTouch();
         this.syncWithServer(); 
-        this.fetchLeaderboard();
+        
+        // Dajemo serveru 300ms da obradi upis poena pre nego što zatražimo osveženu listu
+        setTimeout(() => {
+            this.fetchLeaderboard();
+        }, 300);
     }
 
     toggleMainView(view) {
@@ -474,8 +478,11 @@ class KvartalnaLigaManager {
     }
 
     populateRanks(scores, isAllTime) {
+        // Sprečava pucanje skripte ako server vrati null ili objekat umesto niza
+        const safeScores = Array.isArray(scores) ? scores : [];
+
         if (isAllTime) {
-            this.renderList('alltime', scores);
+            this.renderList('alltime', safeScores);
             return;
         }
         
@@ -483,7 +490,7 @@ class KvartalnaLigaManager {
         
         currentRanks.forEach(rank => {
             if (rank.id === 'alltime') return;
-            const rankScores = scores ? scores.filter(s => s.score >= rank.min && s.score <= rank.max) : [];
+            const rankScores = safeScores.filter(s => s.score >= rank.min && s.score <= rank.max);
             this.renderList(rank.id, rankScores);
         });
     }
@@ -493,8 +500,9 @@ class KvartalnaLigaManager {
         const listEl = document.getElementById(`league-list-${rankId}`);
         if (!listEl) return;
 
+        // Uklonjen problematičan data-lang na praznoj listi
         if (!scores || scores.length === 0) {
-            listEl.innerHTML = `<li style="text-align:center; color: var(--text-muted); font-size: 0.85rem;" data-lang="league_no_results">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj kvartal.<br>Budi prvi!')}</li>`;
+            listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj kvartal.<br>Budi prvi!')}</li>`;
             return;
         }
 

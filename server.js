@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX
 
 require('dotenv').config(); 
 
@@ -123,7 +123,7 @@ const Score = mongoose.model('Score', ScoreSchema);
 const LeagueScoreSchema = new mongoose.Schema({
     playerId: String,
     playerName: String,
-    photoUrl: { type: String, default: '' }, // <-- DODATO
+    photoUrl: { type: String, default: '' },
     score: Number,
     year: Number,
     quarter: Number,
@@ -666,7 +666,8 @@ io.on('connection', (socket) => {
 
             const topScores = await LeagueScore.find({ year: year, quarter: quarter })
                                                .sort({ score: -1 })
-                                               .limit(3);
+                                               .limit(3)
+                                               .lean();
             
             let rank = -1;
             for (let i = 0; i < topScores.length; i++) {
@@ -695,17 +696,18 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- DOHVATANJE POBEDNIKA PROŠLOG KVARTALA (ZA SVE KORISNIKE) ---
+    // --- DOHVATANJE POBEDNIKA PROŠLOG KVARTALA ---
     socket.on('get_previous_quarter_winner', async (data) => {
         try {
             if (!MONGO_URI) return;
             const { year, quarter } = data;
             
             const topScore = await LeagueScore.findOne({ year: year, quarter: quarter })
-                                              .sort({ score: -1 });
+                                              .sort({ score: -1 })
+                                              .lean();
             
             if (topScore) {
-                const user = await UserProfile.findOne({ firebaseUid: topScore.playerId });
+                const user = await UserProfile.findOne({ firebaseUid: topScore.playerId }).lean();
                 const photoUrl = user && user.photoUrl ? user.photoUrl : '';
                 
                 socket.emit('previous_quarter_winner_data', {
@@ -728,7 +730,6 @@ io.on('connection', (socket) => {
         try {
             if (!MONGO_URI) return;
             
-            // 1. Nalazimo sve rezultate, sortirane tako da prvo idu najstariji kvartali pa najveći poeni
             const allScores = await LeagueScore.find().sort({ year: 1, quarter: 1, score: -1 }).lean();
             
             let quartersMap = {};
@@ -752,12 +753,10 @@ io.on('connection', (socket) => {
                 let y = parseInt(yStr);
                 let q = parseInt(qStr);
                 
-                // Ne računamo trenutni kvartal (on je u toku, nema medalja još uvek)
                 if (y === currentYear && q === currentQuarter) continue;
                 
-                let qScores = quartersMap[key]; // Zbog baze, već su sortirani opadajuće po score-u
+                let qScores = quartersMap[key];
                 
-                // Izdvajamo samo top 3 za dodelu medalja
                 for (let i = 0; i < Math.min(3, qScores.length); i++) {
                     let p = qScores[i];
                     if (!medalsCount[p.playerId]) {
@@ -774,7 +773,6 @@ io.on('connection', (socket) => {
                     if (i === 2) medalsCount[p.playerId].bronze++;
                     medalsCount[p.playerId].total++;
                     
-                    // Samo prvo mesto ide u Šampione
                     if (i === 0) {
                         champions.push({
                             cycle: cycleCounter++,
@@ -788,7 +786,6 @@ io.on('connection', (socket) => {
                 }
             }
             
-            // Konverzija objekta u niz i sortiranje (Prvo po zlatu, pa srebru, pa bronzi)
             let medalsList = Object.values(medalsCount);
             medalsList.sort((a, b) => {
                 if (b.gold !== a.gold) return b.gold - a.gold;
@@ -796,7 +793,6 @@ io.on('connection', (socket) => {
                 return b.bronze - a.bronze;
             });
             
-            // Šampione okrećemo tako da se najnoviji ciklus prikazuje prvi na vrhu
             champions.sort((a, b) => b.cycle - a.cycle);
             
             socket.emit('hall_of_fame_data', {
@@ -809,6 +805,7 @@ io.on('connection', (socket) => {
         }
     });
 
+    // --- DODATO .LEAN() ZA ISPRAVNO SLANJE GLOBALNE LISTE ---
     socket.on('get_global_highscores', async (period) => {
         try {
             if (!MONGO_URI) return; 
@@ -826,7 +823,7 @@ io.on('connection', (socket) => {
                 filter.date = { $gte: startOfMonth };
             }
 
-            const scores = await Score.find(filter).sort({ score: -1 }).limit(50);
+            const scores = await Score.find(filter).sort({ score: -1 }).limit(50).lean();
             socket.emit('global_highscores_data', scores);
         } catch (err) {
             console.error("Greška pri dohvatanju skorova:", err);
@@ -883,6 +880,7 @@ io.on('connection', (socket) => {
         }
     });
 
+    // --- DODATO .LEAN() ZA ISPRAVNO SLANJE KVARTALNE LIGE ---
     socket.on('get_league_highscores', async (reqData) => {
         try {
             if (!MONGO_URI) {
@@ -893,11 +891,13 @@ io.on('connection', (socket) => {
                 return;
             }
             
-            const { year, quarter } = reqData;
+            const year = reqData?.year || new Date().getFullYear();
+            const quarter = reqData?.quarter || (Math.floor(new Date().getMonth() / 3) + 1);
             
             const scores = await LeagueScore.find({ year: year, quarter: quarter })
                                             .sort({ score: -1 })
-                                            .limit(50);
+                                            .limit(50)
+                                            .lean();
                                             
             socket.emit('league_highscores_data', scores);
         } catch (err) {
@@ -916,12 +916,13 @@ io.on('connection', (socket) => {
                 return;
             }
             
+            // Aggregation automatski vraća "lean" objekte, tako da ovo ostaje netaknuto
             const allTimeScores = await LeagueScore.aggregate([
                 {
                     $group: {
                         _id: "$playerId",
                         playerName: { $last: "$playerName" },
-                        photoUrl: { $last: "$photoUrl" }, // <-- DODATO
+                        photoUrl: { $last: "$photoUrl" }, 
                         score: { $sum: "$score" }
                     }
                 },
@@ -970,6 +971,7 @@ io.on('connection', (socket) => {
         }
     });
 
+    // --- DODATO .LEAN() ZA ISPRAVNO SLANJE STREAK TABELE ---
     socket.on('get_streak_leaderboard', async () => {
         try {
             if (!MONGO_URI) {
@@ -980,7 +982,8 @@ io.on('connection', (socket) => {
             const topStreaks = await UserProfile.find({ maxWinStreak: { $gt: 0 } })
                 .sort({ maxWinStreak: -1 })
                 .limit(20)
-                .select('firebaseUid playerName photoUrl maxWinStreak');
+                .select('firebaseUid playerName photoUrl maxWinStreak')
+                .lean();
 
             const dataToSend = topStreaks.map(p => ({
                 uid: p.firebaseUid,
@@ -1388,13 +1391,14 @@ io.on('connection', (socket) => {
 
     socket.on('tourney_get_state', () => { socket.emit('tourney_state_update', tournamentState); });
 
+    // --- DODATO .LEAN() ZA ISPRAVNO SLANJE TURNIRSKE STATISTIKE ---
     socket.on('get_tourney_stats', async () => {
         try {
             if (!MONGO_URI) {
                 socket.emit('tourney_stats_data', [{ playerName: "Mock Šampion", wins: 5 }]);
                 return;
             }
-            const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20);
+            const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20).lean();
             socket.emit('tourney_stats_data', stats);
         } catch (err) {
             console.error("Greška pri dohvatanju turnirske statistike:", err);
@@ -1477,7 +1481,7 @@ io.on('connection', (socket) => {
                             { $set: { playerName: winnerObj.name, lastWinDate: Date.now() }, $inc: { wins: 1 } },
                             { upsert: true, new: true }
                         );
-                        const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20);
+                        const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20).lean();
                         io.emit('tourney_stats_data', stats);
                     }
                 } catch (err) {
