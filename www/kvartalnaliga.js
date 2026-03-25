@@ -145,12 +145,12 @@ class KvartalnaLigaManager {
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
 
-        // FIX: Dodato -webkit-overflow-scrolling i translateZ(0) za stabilan scroll
+        // Uklonjen translateZ(0) i will-change za stabilan prikaz
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 10px;">
                 <h3 style="color: var(--gold-main); font-size: 1rem; text-align: center; margin-bottom: 15px;">${r.name}</h3>
                 <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
-                    <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; transform: translateZ(0); will-change: transform;">
+                    <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;">
                         <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem;" data-lang="league_loading">${gt('league_loading', 'Učitavanje servera... ⏳')}</li>
                     </ul>
                 </div>
@@ -509,10 +509,9 @@ class KvartalnaLigaManager {
             let photo = s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(s.playerName)}&background=333&color=E0C995`;
 
             let li = document.createElement('li');
-            // FIX: Dodato translateZ(0) i pojednostavljen CSS za stabilnost na svim telefonima
-            li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; transform: translateZ(0); ${bg}`;
+            // Uklonjen translateZ(0)
+            li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; ${bg}`;
             
-            // FIX: Izbačen komplikovan -webkit-box kod. Ubačen siguran "word-break" unutar jednostavnog diva
             li.innerHTML = `
                 <div style="display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0;">
                     <div style="font-weight: bold; min-width: 25px; color: var(--gold-main); text-align: center;">${medal}</div>
