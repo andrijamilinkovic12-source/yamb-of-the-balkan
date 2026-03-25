@@ -5,9 +5,13 @@ class KvartalnaLigaManager {
         this.currentSlide = 0;
         this.hofData = null; // Podaci za Dvoranu Slavnih
         
+        this.init();
+    }
+
+    // Dinamički getter - osigurava da prevod uvek bude tačan u trenutku otvaranja modala
+    get ranks() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
-        
-        this.ranks = [
+        return [
             { id: 'amater', name: `${gt('rank_amater', 'AMATER')} (0 - 4.9k)`, min: 0, max: 4999 },
             { id: 'profi', name: `${gt('rank_profi', 'PROFI')} (5k - 14.9k)`, min: 5000, max: 14999 },
             { id: 'majstor', name: `${gt('rank_majstor', 'MAJSTOR')} (15k - 49.9k)`, min: 15000, max: 49999 },
@@ -15,8 +19,6 @@ class KvartalnaLigaManager {
             { id: 'titan', name: `${gt('rank_titan', 'TITAN')} (100k+)`, min: 100000, max: Infinity },
             { id: 'alltime', name: gt('league_all_time', 'SVA VREMENA 👑'), min: 0, max: Infinity }
         ];
-        
-        this.init();
     }
 
     init() {
@@ -118,7 +120,6 @@ class KvartalnaLigaManager {
         return gt('rank_titan', "TITAN");
     }
 
-    // Pomoćna funkcija za rimske brojeve (Dvorana Slavnih)
     toRoman(num) {
         const lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1};
         let roman = '';
@@ -139,10 +140,12 @@ class KvartalnaLigaManager {
         const allTime = (parseInt(data.baselineScore) || 0) + pts;
         const rank = this.getRank(pts);
         
-        this.currentSlide = this.ranks.findIndex(r => r.name.startsWith(rank));
+        const currentRanks = this.ranks; // Povlači dinamički prevod
+
+        this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
 
-        let slidesHtml = this.ranks.map((r) => `
+        let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 10px;">
                 <h3 style="color: var(--gold-main); font-size: 1rem; text-align: center; margin-bottom: 15px;">${r.name}</h3>
                 <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
@@ -153,7 +156,7 @@ class KvartalnaLigaManager {
             </div>
         `).join('');
 
-        let dotsHtml = this.ranks.map((_, i) => `
+        let dotsHtml = currentRanks.map((_, i) => `
             <div id="league-dot-${i}" style="width: 8px; height: 8px; border-radius: 50%; background: ${i === this.currentSlide ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; margin: 0 4px; transition: background 0.3s;"></div>
         `).join('');
 
@@ -270,13 +273,13 @@ class KvartalnaLigaManager {
             return;
         }
         
-        // Da ne crpimo server bez potrebe ako već imamo podatke u memoriji
         if (this.hofData) {
             this.renderHofMedals();
             return;
         }
 
-        window.app.socket.once('hall_of_fame_data', (data) => {
+        window.app.socket.off('hall_of_fame_data'); // Sigurnosno čišćenje osluškivača
+        window.app.socket.on('hall_of_fame_data', (data) => {
             this.hofData = data;
             this.renderHofMedals();
         });
@@ -366,7 +369,6 @@ class KvartalnaLigaManager {
         let isScrolling = false; 
 
         track.addEventListener('touchstart', (e) => {
-            // Touch radi samo kad je LIGA aktivna (ne Dvorana Slavnih)
             if(document.getElementById('league-main-content').style.display === 'none') return;
             
             startX = e.touches[0].clientX;
@@ -424,9 +426,10 @@ class KvartalnaLigaManager {
 
     updateSlide() {
         const track = document.getElementById('league-track');
+        const currentRanks = this.ranks;
         if (track) track.style.transform = `translateX(-${this.currentSlide * 100}%)`;
         
-        this.ranks.forEach((_, i) => {
+        currentRanks.forEach((_, i) => {
             const dot = document.getElementById(`league-dot-${i}`);
             if (dot) dot.style.background = i === this.currentSlide ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)';
         });
@@ -445,17 +448,21 @@ class KvartalnaLigaManager {
 
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
 
-        window.app.socket.once('league_highscores_data', (scores) => {
+        // FIX: Koristimo bezbedan .off().on() pristup umesto .once() kako bi izbegli propuštanje podataka
+        window.app.socket.off('league_highscores_data');
+        window.app.socket.on('league_highscores_data', (scores) => {
             this.populateRanks(scores, false);
         });
 
-        window.app.socket.once('league_alltime_data', (scores) => {
+        window.app.socket.off('league_alltime_data');
+        window.app.socket.on('league_alltime_data', (scores) => {
             this.populateRanks(scores, true);
         });
 
         window.app.socket.emit('get_league_highscores', { year: currentYear, quarter: currentQuarter });
         window.app.socket.emit('get_league_alltime_highscores'); 
 
+        // Sigurnosno popunjavanje lokalnog All Time-a ako server zataji
         setTimeout(() => {
             const allTimeList = document.getElementById('league-list-alltime');
             if (allTimeList && allTimeList.innerHTML.includes('⏳')) {
@@ -473,7 +480,9 @@ class KvartalnaLigaManager {
             return;
         }
         
-        this.ranks.forEach(rank => {
+        const currentRanks = this.ranks;
+        
+        currentRanks.forEach(rank => {
             if (rank.id === 'alltime') return;
             const rankScores = scores ? scores.filter(s => s.score >= rank.min && s.score <= rank.max) : [];
             this.renderList(rank.id, rankScores);
@@ -486,7 +495,7 @@ class KvartalnaLigaManager {
         if (!listEl) return;
 
         if (!scores || scores.length === 0) {
-            listEl.innerHTML = `<li style="text-align:center; color: var(--text-muted); font-size: 0.85rem;" data-lang="league_no_results">${gt('league_no_results', 'Nema upisanih rezultata u ovom rangu.')}</li>`;
+            listEl.innerHTML = `<li style="text-align:center; color: var(--text-muted); font-size: 0.85rem;" data-lang="league_no_results">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj kvartal.<br>Budi prvi!')}</li>`;
             return;
         }
 
