@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -2004,9 +2004,9 @@ class YambApp {
         }
         
         try {
-            const saved = await localforage.getItem('yamb_saved_game');
+            // NOVO: Gledamo samo u slot za ovaj konkretan mod!
+            const saved = await localforage.getItem('yamb_saved_game_' + numPlayers);
             
-            // NOVO: Proveravamo da li postoji save I da li je broj igrača isti kao odabrani mod
             if (saved && saved.players && saved.players.length === numPlayers) {
                 this.pendingNewGamePlayers = numPlayers;
                 
@@ -2026,10 +2026,7 @@ class YambApp {
                     otherResume.style.display = 'none';
                 }
             } else {
-                // Ako postoji sačuvana igra, ali je iz DRUGOG moda, brišemo je i krećemo novu
-                if (saved) {
-                    await localforage.removeItem('yamb_saved_game');
-                }
+                // Ako nema specifičnog save-a za OVO dugme, samo pokreni novu igru (drugi modovi ostaju netaknuti)
                 this.setupGame(numPlayers);
             }
         } catch (e) {
@@ -2049,9 +2046,11 @@ class YambApp {
         }
 
         if (wantResume) {
-            this.loadSavedGame();
+            // NOVO: Prosleđujemo numPlayers
+            this.loadSavedGame(numPlayers);
         } else {
-            if (window.localforage) await localforage.removeItem('yamb_saved_game');
+            // NOVO: Brišemo samo specifičan slot
+            if (window.localforage) await localforage.removeItem('yamb_saved_game_' + numPlayers);
             this.setupGame(numPlayers);
         }
     }
@@ -2610,7 +2609,11 @@ class YambApp {
         const finalResults = this.players.map((name, i) => { return { name: name, score: this.calculateTotalScore(i) }; }); 
         const winnerScore = finalResults.reduce((max, r) => r.score > max ? r.score : max, 0);
 
-        if(window.localforage) await localforage.removeItem('yamb_saved_game'); 
+        // NOVO: Brišemo save slot na osnovu broja igrača koji su upravo završili partiju, a brišemo i onaj stari (legacy) za svaki slučaj
+        if(window.localforage) {
+            await localforage.removeItem('yamb_saved_game_' + this.players.length); 
+            await localforage.removeItem('yamb_saved_game'); 
+        }
         
         let detectedMode = "Solo";
         if (this.onlineMode) detectedMode = "Online"; else if (this.players.length > 1) detectedMode = "Hotseat";
@@ -2974,14 +2977,16 @@ class YambApp {
                 date: new Date().toISOString() 
             }; 
             try {
-                if(window.localforage) await localforage.setItem('yamb_saved_game', data); 
+                // NOVO: Čuvamo pod ključem koji sadrži broj igrača (1 za Solo, 2 za Dvoje)
+                if(window.localforage) await localforage.setItem('yamb_saved_game_' + this.players.length, data); 
             } catch(e) { console.warn("Greška pri čuvanju:", e); }
         }, 800);
     }
     
-    async loadSavedGame() { 
+    async loadSavedGame(numPlayers = this.pendingNewGamePlayers) { 
         try { 
-            const data = await localforage.getItem('yamb_saved_game'); 
+            // NOVO: Učitavamo iz specifičnog slota za taj mod
+            const data = await localforage.getItem('yamb_saved_game_' + numPlayers); 
             if (!data) { this.modal.alert(gt('msg_no_saved_game')); return; } 
             KOLONE.forEach(col => { this.players.forEach((_, idx) => { if (data.scores[idx] && !data.scores[idx][col]) { data.scores[idx][col] = {}; REDOVI_IGRA.forEach(r => data.scores[idx][col][r] = null); } }); });
             
@@ -3054,7 +3059,8 @@ class YambApp {
         } catch (e) { 
             console.error(e); 
             this.modal.alert(gt('msg_save_error'), gt('err_title') || "GREŠKA"); 
-            localforage.removeItem('yamb_saved_game'); 
+            // NOVO: Brišemo fajl iz specifičnog slota u slučaju greške
+            if (window.localforage) localforage.removeItem('yamb_saved_game_' + numPlayers); 
         } 
     }
 
