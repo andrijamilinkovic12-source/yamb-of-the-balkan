@@ -999,10 +999,8 @@ class AdMobController {
                     this.triggerHighPriorityLoad('rewarded');
                     this.triggerHighPriorityLoad('interstitial');
 
-                    setInterval(() => {
-                        if (!this.ads.rewarded.isReady && !this.ads.rewarded.isLoading && navigator.onLine) this.preloadAd('rewarded');
-                        if (!this.ads.interstitial.isReady && !this.ads.interstitial.isLoading && navigator.onLine) this.preloadAd('interstitial');
-                    }, 20000);
+                    // UKLONJENO: setInterval koji je agresivno vukao reklame na svakih 20 sekundi
+                    // i pravio problem sa nesrazmernim brojem zahteva u Google AdMob-u.
 
                     document.addEventListener("resume", () => {
                         this.triggerHighPriorityLoad('rewarded');
