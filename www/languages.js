@@ -32,7 +32,7 @@ const TRANSLATIONS = {
         "rank_legenda": "LEGENDA",
         "rank_titan": "TITAN",
         
-        // --- KVARTALNA LIGA (DODATNI TEKSTOVI) ---
+        // --- KVARTALNA LIGA I DVORANA SLAVNIH ---
         "league_your_rank": "Vaš rang",
         "league_all_time": "SVA VREMENA",
         "league_all_time_desc": "Ukupni poeni od prvog pokretanja.",
@@ -45,6 +45,16 @@ const TRANSLATIONS = {
         "league_up_to": "Do",
         "league_completed": "ZAVRŠENO ✔",
         "league_locked": "ZAKLJUČANO 🔒",
+        "hof_tab_league": "LIGA",
+        "hof_tab_main": "DVORANA SLAVNIH 🏛️",
+        "hof_tab_medals": "MEDALJE 🏅",
+        "hof_tab_champs": "ŠAMPIONI 🏆",
+        "hof_loading": "Učitavanje Dvorane Slavnih... ⏳",
+        "hof_no_medals": "Još uvek nema osvajača medalja. Zlatne medalje se dodeljuju tek po završetku kvartala.",
+        "hof_total: ": "Ukupno",
+        "hof_no_champs": "Još uvek nema završenih ciklusa. Kruna čeka prvog Šampiona!",
+        "hof_winner_prefix": "POBEDNIK",
+        "hof_winner_suffix": "CIKLUSA",
 
         // --- PRODAVNICA I RIZNICA ---
         "tab_trophies": "TROFEJI 🏆",
@@ -466,7 +476,7 @@ const TRANSLATIONS = {
         "rank_legenda": "LEGEND",
         "rank_titan": "TITAN",
 
-        // --- QUARTERLY LEAGUE (ADDITIONAL TEXTS) ---
+        // --- QUARTERLY LEAGUE AND HALL OF FAME ---
         "league_your_rank": "Your Rank",
         "league_all_time": "ALL TIME",
         "league_all_time_desc": "Total points since your first game.",
@@ -479,6 +489,16 @@ const TRANSLATIONS = {
         "league_up_to": "Up to",
         "league_completed": "COMPLETED ✔",
         "league_locked": "LOCKED 🔒",
+        "hof_tab_league": "LEAGUE",
+        "hof_tab_main": "HALL OF FAME 🏛️",
+        "hof_tab_medals": "MEDALS 🏅",
+        "hof_tab_champs": "CHAMPIONS 🏆",
+        "hof_loading": "Loading Hall of Fame... ⏳",
+        "hof_no_medals": "No medal winners yet. Gold medals are awarded at the end of the quarter.",
+        "hof_total": "Total",
+        "hof_no_champs": "No completed cycles yet. The crown awaits the first Champion!",
+        "hof_winner_prefix": "WINNER OF CYCLE",
+        "hof_winner_suffix": "",
 
         // --- SHOP & TREASURY ---
         "tab_trophies": "TROPHIES 🏆",

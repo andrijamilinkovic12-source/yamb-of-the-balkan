@@ -1,8 +1,9 @@
-// kvartalnaliga.js - Menadžer za Kvartalnu Ligu (Sa Swipe opcijom, prevodima, rangovima i NAGRADAMA)
+// kvartalnaliga.js - Menadžer za Kvartalnu Ligu i Dvoranu Slavnih
 class KvartalnaLigaManager {
     constructor() {
         this.storageKey = 'yamb_quarter_data'; 
         this.currentSlide = 0;
+        this.hofData = null; // Podaci za Dvoranu Slavnih
         
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         
@@ -24,14 +25,11 @@ class KvartalnaLigaManager {
 
         if (data.year !== currentYear || data.quarter !== currentQuarter) {
             
-            // NOVO: Postavljamo signal (zastavicu) da klijent zatraži proveru nagrade kada se poveže na server.
-            // Zapisujemo za koji je kvartal potrebna provera.
             localStorage.setItem('yamb_pending_quarter_check', JSON.stringify({
                 year: data.year,
                 quarter: data.quarter
             }));
 
-            // Prebacivanje poena i kreiranje novog preseka
             data.baselineScore += data.quarterlyScore;
             data.quarterlyScore = 0; 
             data.year = currentYear;
@@ -120,6 +118,19 @@ class KvartalnaLigaManager {
         return gt('rank_titan', "TITAN");
     }
 
+    // Pomoćna funkcija za rimske brojeve (Dvorana Slavnih)
+    toRoman(num) {
+        const lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1};
+        let roman = '';
+        for (let i in lookup) {
+            while (num >= lookup[i]) {
+                roman += i;
+                num -= lookup[i];
+            }
+        }
+        return roman;
+    }
+
     openModal() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const data = this.getScores();
@@ -149,28 +160,49 @@ class KvartalnaLigaManager {
         let modalHtml = `
         <div id="league-modal-overlay" class="modal-overlay" style="z-index: 999999; display: flex;">
             <div class="modal-box" style="width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 20px; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); overflow-x: hidden;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--gold-glow); padding-bottom: 10px;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--gold-glow); padding-bottom: 10px;">
                     <h2 style="color: var(--gold-main); font-size: 1.5rem; margin: 0; text-transform: uppercase;" data-lang="menu_league">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
                     <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold;" onclick="document.getElementById('league-modal-overlay').remove()">✖</span>
                 </div>
 
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="league_your_rank">${gt('league_your_rank', 'Vaš rang')}</div>
-                    <div style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--gold-main);">${rank}</div>
-                    <div style="font-size: 1.2rem; color: var(--gold-main); font-weight: bold; margin-top: 5px;">${pts} PTS</div>
-                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">
-                        <span data-lang="league_all_time_desc">${gt('league_all_time_desc', 'Sva vremena')}</span>: ${allTime} PTS
+                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;">
+                    <button id="tab-league-main" class="btn-menu btn-primary" style="flex: 1; padding: 8px; font-size: 0.85rem; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('league')">${gt('hof_tab_league', 'LIGA')}</button>
+                    <button id="tab-league-hof" class="btn-menu btn-secondary" style="flex: 1; padding: 8px; font-size: 0.85rem; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('hof')">${gt('hof_tab_main', 'DVORANA SLAVNIH 🏛️')}</button>
+                </div>
+
+                <div id="league-main-content">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="league_your_rank">${gt('league_your_rank', 'Vaš rang')}</div>
+                        <div style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--gold-main);">${rank}</div>
+                        <div style="font-size: 1.2rem; color: var(--gold-main); font-weight: bold; margin-top: 5px;">${pts} PTS</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">
+                            <span data-lang="league_all_time_desc">${gt('league_all_time_desc', 'Sva vremena')}</span>: ${allTime} PTS
+                        </div>
+                    </div>
+
+                    <div id="league-carousel-container" style="overflow: hidden; width: 100%; position: relative;">
+                        <div id="league-track" style="display: flex; transition: transform 0.3s ease-out; transform: translateX(-${this.currentSlide * 100}%);">
+                            ${slidesHtml}
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px;">
+                        ${dotsHtml}
                     </div>
                 </div>
 
-                <div id="league-carousel-container" style="overflow: hidden; width: 100%; position: relative;">
-                    <div id="league-track" style="display: flex; transition: transform 0.3s ease-out; transform: translateX(-${this.currentSlide * 100}%);">
-                        ${slidesHtml}
+                <div id="hof-main-content" style="display: none; width: 100%;">
+                    <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 15px;">
+                        <button id="hof-tab-medals" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')">${gt('hof_tab_medals', 'MEDALJE 🏅')}</button>
+                        <button id="hof-tab-champions" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')">${gt('hof_tab_champs', 'ŠAMPIONI 🏆')}</button>
                     </div>
-                </div>
-                
-                <div style="display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px;">
-                    ${dotsHtml}
+                    
+                    <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); max-height: 320px; overflow-y: auto;">
+                        <ul id="hof-list" style="list-style: none; padding: 0; margin: 0;">
+                            <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">${gt('hof_loading', 'Učitavanje Dvorane Slavnih... ⏳')}</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <button class="btn-menu btn-secondary" onclick="document.getElementById('league-modal-overlay').remove()" data-lang="modal_btn_cancel">${gt('modal_btn_cancel', 'ZATVORI')}</button>
@@ -189,6 +221,141 @@ class KvartalnaLigaManager {
         this.fetchLeaderboard();
     }
 
+    toggleMainView(view) {
+        if(window.app && window.app.soundMgr) window.app.soundMgr.click();
+
+        const lMain = document.getElementById('league-main-content');
+        const hMain = document.getElementById('hof-main-content');
+        const btnL = document.getElementById('tab-league-main');
+        const btnH = document.getElementById('tab-league-hof');
+        
+        if(view === 'league') {
+            lMain.style.display = 'block';
+            hMain.style.display = 'none';
+            btnL.className = 'btn-menu btn-primary';
+            btnH.className = 'btn-menu btn-secondary';
+        } else {
+            lMain.style.display = 'none';
+            hMain.style.display = 'block';
+            btnL.className = 'btn-menu btn-secondary';
+            btnH.className = 'btn-menu btn-primary';
+            this.fetchHallOfFame();
+        }
+    }
+
+    switchHofTab(tab) {
+        if(window.app && window.app.soundMgr) window.app.soundMgr.click();
+
+        const btnM = document.getElementById('hof-tab-medals');
+        const btnC = document.getElementById('hof-tab-champions');
+        
+        if (tab === 'medals') {
+            btnM.style.background = 'var(--gold-main)'; btnM.style.color = '#000';
+            btnM.style.border = 'none';
+            btnC.style.background = 'rgba(255,255,255,0.1)'; btnC.style.color = '#fff';
+            btnC.style.border = '1px solid var(--gold-main)';
+            this.renderHofMedals();
+        } else {
+            btnC.style.background = 'var(--gold-main)'; btnC.style.color = '#000';
+            btnC.style.border = 'none';
+            btnM.style.background = 'rgba(255,255,255,0.1)'; btnM.style.color = '#fff';
+            btnM.style.border = '1px solid var(--gold-main)';
+            this.renderHofChampions();
+        }
+    }
+
+    fetchHallOfFame() {
+        if (!window.app || !window.app.socket) {
+            document.getElementById('hof-list').innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem;">Nema konekcije sa serverom.</li>`;
+            return;
+        }
+        
+        // Da ne crpimo server bez potrebe ako već imamo podatke u memoriji
+        if (this.hofData) {
+            this.renderHofMedals();
+            return;
+        }
+
+        window.app.socket.once('hall_of_fame_data', (data) => {
+            this.hofData = data;
+            this.renderHofMedals();
+        });
+        window.app.socket.emit('get_hall_of_fame');
+    }
+
+    renderHofMedals() {
+        const list = document.getElementById('hof-list');
+        if (!list) return;
+
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        
+        if (!this.hofData || !this.hofData.medals || this.hofData.medals.length === 0) {
+            list.innerHTML = `<li style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">${gt('hof_no_medals', 'Još uvek nema osvajača medalja. Zlatne medalje se dodeljuju tek po završetku kvartala.')}</li>`;
+            return;
+        }
+        
+        let html = '';
+        this.hofData.medals.forEach((m, idx) => {
+            const photo = m.photoUrl && m.photoUrl.length > 5 ? m.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(m.playerName)}&background=333&color=E0C995`;
+            const isFirst = idx === 0;
+            
+            html += `
+            <li style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid ${isFirst ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'};">
+                <div style="font-weight: 900; color: ${isFirst ? 'var(--gold-main)' : '#aaa'}; width: 25px; font-size: 1rem; text-align: center; margin-right: 5px;">${idx+1}.</div>
+                <img src="${photo}" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid ${isFirst ? 'var(--gold-main)' : '#666'}; margin-right: 12px; object-fit: cover;">
+                <div style="flex: 1;">
+                    <div style="color: #fff; font-weight: bold; font-size: 0.95rem;">${m.playerName}</div>
+                    <div style="display: flex; gap: 12px; margin-top: 4px; font-size: 0.85rem; font-weight: bold;">
+                        <span style="color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5);">🥇 ${m.gold}</span>
+                        <span style="color: #C0C0C0;">🥈 ${m.silver}</span>
+                        <span style="color: #CD7F32;">🥉 ${m.bronze}</span>
+                    </div>
+                </div>
+                <div style="text-align: center; min-width: 50px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 6px;">
+                    <div style="color: var(--text-muted); font-size: 0.6rem; text-transform: uppercase; margin-bottom: 2px;">${gt('hof_total', 'Ukupno')}</div>
+                    <div style="color: var(--gold-main); font-weight: 900; font-size: 1.1rem; line-height: 1;">${m.total}</div>
+                </div>
+            </li>
+            `;
+        });
+        list.innerHTML = html;
+    }
+
+    renderHofChampions() {
+        const list = document.getElementById('hof-list');
+        if (!list) return;
+
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        
+        if (!this.hofData || !this.hofData.champions || this.hofData.champions.length === 0) {
+            list.innerHTML = `<li style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">${gt('hof_no_champs', 'Još uvek nema završenih ciklusa. Kruna čeka prvog Šampiona!')}</li>`;
+            return;
+        }
+        
+        let html = '';
+        this.hofData.champions.forEach((c) => {
+            const photo = c.photoUrl && c.photoUrl.length > 5 ? c.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(c.playerName)}&background=333&color=E0C995`;
+            const romanCycle = this.toRoman(c.cycle);
+            
+            const cycleText = `${gt('hof_winner_prefix', 'POBEDNIK')} ${romanCycle} ${gt('hof_winner_suffix', 'CIKLUSA')}`.trim();
+            
+            html += `
+            <li style="display: flex; align-items: center; background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(224, 201, 149, 0.3);">
+                <div style="position: relative; margin-right: 15px;">
+                    <img src="${photo}" style="width: 55px; height: 55px; border-radius: 50%; border: 3px solid var(--gold-main); object-fit: cover; box-shadow: 0 0 10px rgba(224,201,149,0.5);">
+                    <div style="position: absolute; bottom: -8px; right: -5px; font-size: 1.3rem;">👑</div>
+                </div>
+                <div style="flex: 1;">
+                    <div style="color: var(--gold-main); font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">${cycleText}</div>
+                    <div style="color: #fff; font-weight: bold; font-size: 1.15rem; margin-bottom: 4px;">${c.playerName}</div>
+                    <div style="color: var(--text-muted); font-size: 0.8rem;">Q${c.quarter} / ${c.year} &nbsp;•&nbsp; <span style="color: #fff; font-weight: bold;">${c.score} PTS</span></div>
+                </div>
+            </li>
+            `;
+        });
+        list.innerHTML = html;
+    }
+
     setupTouch() {
         const track = document.getElementById('league-track');
         if (!track) return;
@@ -199,6 +366,9 @@ class KvartalnaLigaManager {
         let isScrolling = false; 
 
         track.addEventListener('touchstart', (e) => {
+            // Touch radi samo kad je LIGA aktivna (ne Dvorana Slavnih)
+            if(document.getElementById('league-main-content').style.display === 'none') return;
+            
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             isDragging = true;

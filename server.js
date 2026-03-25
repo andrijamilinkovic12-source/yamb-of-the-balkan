@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME
 
 require('dotenv').config(); 
 
@@ -157,7 +157,7 @@ const UserProfileSchema = new mongoose.Schema({
     unlockedSkins: { type: [String], default: [] },
     unlockedEffects: { type: [String], default: [] },
     yamb_unlocked: { type: [String], default: [] }, 
-    claimedLeagueRewards: { type: [String], default: [] }, // NOVO: Pamćenje preuzetih nagrada
+    claimedLeagueRewards: { type: [String], default: [] },
     activeSkin: { type: String, default: 'default' }, 
     activeEffect: { type: String, default: 'confetti' }, 
     activeTheme: { type: String, default: 'dark' }, 
@@ -653,53 +653,158 @@ io.on('connection', (socket) => {
             
             if (!year || !quarter || !playerId) return;
 
-            // Formiramo unikatan ID za ovaj kvartal, npr. "2026-Q1"
             const rewardKey = `${year}-Q${quarter}`;
 
-            // Pronalazimo korisnika
             const user = await UserProfile.findOne({ firebaseUid: playerId });
             if (!user) return;
 
-            // Sigurnosna provera: Da li je igrač već preuzeo nagradu za ovaj kvartal?
             if (user.claimedLeagueRewards && user.claimedLeagueRewards.includes(rewardKey)) {
                 console.log(`⚠️ Igrač ${user.playerName} je već preuzeo nagradu za ${rewardKey}.`);
-                return; // Prekidamo, nagrada je već izdata!
+                return; 
             }
 
-            // Tražimo top 3 igrača za taj specifičan kvartal
             const topScores = await LeagueScore.find({ year: year, quarter: quarter })
                                                .sort({ score: -1 })
                                                .limit(3);
             
-            // Proveravamo da li se ID našeg igrača nalazi među njima
             let rank = -1;
             for (let i = 0; i < topScores.length; i++) {
                 if (topScores[i].playerId === playerId) {
-                    rank = i + 1; // Mesto na tabeli (1, 2, ili 3)
+                    rank = i + 1; 
                     break;
                 }
             }
 
-            // Ako je igrač ostvario top 3 rang
             if (rank > 0) {
-                // Određivanje svote dukata na osnovu pozicije
                 let rewardAmount = 0;
                 if (rank === 1) rewardAmount = 10000;
                 else if (rank === 2) rewardAmount = 5000;
                 else if (rank === 3) rewardAmount = 2500;
 
-                // Beležimo u bazu da je nagrada preuzeta da se ne bi dupla!
                 if (!user.claimedLeagueRewards) user.claimedLeagueRewards = [];
                 user.claimedLeagueRewards.push(rewardKey);
                 await user.save();
 
-                // Šaljemo klijentu događaj da pokrene vizuelno slavlje i upiše dukate
                 socket.emit('quarter_reward', { rank: rank, reward: rewardAmount });
                 console.log(`🏆 NAGRADA: Igrač ${user.playerName} je osvojio ${rewardAmount} dukata za ${rank}. mesto u kvartalu ${rewardKey}!`);
             }
 
         } catch (err) {
             console.error("Greška pri proveri kvartalne nagrade:", err);
+        }
+    });
+
+    // --- DOHVATANJE POBEDNIKA PROŠLOG KVARTALA (ZA SVE KORISNIKE) ---
+    socket.on('get_previous_quarter_winner', async (data) => {
+        try {
+            if (!MONGO_URI) return;
+            const { year, quarter } = data;
+            
+            const topScore = await LeagueScore.findOne({ year: year, quarter: quarter })
+                                              .sort({ score: -1 });
+            
+            if (topScore) {
+                const user = await UserProfile.findOne({ firebaseUid: topScore.playerId });
+                const photoUrl = user && user.photoUrl ? user.photoUrl : '';
+                
+                socket.emit('previous_quarter_winner_data', {
+                    year: year,
+                    quarter: quarter,
+                    playerName: topScore.playerName,
+                    score: topScore.score,
+                    photoUrl: photoUrl
+                });
+            } else {
+                socket.emit('previous_quarter_winner_data', null);
+            }
+        } catch (err) {
+            console.error("Greška pri dohvatanju pobednika kvartala:", err);
+        }
+    });
+
+    // --- DVORANA SLAVNIH (HALL OF FAME) ---
+    socket.on('get_hall_of_fame', async () => {
+        try {
+            if (!MONGO_URI) return;
+            
+            // 1. Nalazimo sve rezultate, sortirane tako da prvo idu najstariji kvartali pa najveći poeni
+            const allScores = await LeagueScore.find().sort({ year: 1, quarter: 1, score: -1 }).lean();
+            
+            let quartersMap = {};
+            
+            allScores.forEach(s => {
+                let key = `${s.year}-Q${s.quarter}`;
+                if (!quartersMap[key]) quartersMap[key] = [];
+                quartersMap[key].push(s);
+            });
+            
+            let champions = [];
+            let medalsCount = {};
+            let cycleCounter = 1;
+            
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentQuarter = Math.floor(now.getMonth() / 3) + 1;
+            
+            for (let key in quartersMap) {
+                let [yStr, qStr] = key.split('-Q');
+                let y = parseInt(yStr);
+                let q = parseInt(qStr);
+                
+                // Ne računamo trenutni kvartal (on je u toku, nema medalja još uvek)
+                if (y === currentYear && q === currentQuarter) continue;
+                
+                let qScores = quartersMap[key]; // Zbog baze, već su sortirani opadajuće po score-u
+                
+                // Izdvajamo samo top 3 za dodelu medalja
+                for (let i = 0; i < Math.min(3, qScores.length); i++) {
+                    let p = qScores[i];
+                    if (!medalsCount[p.playerId]) {
+                        const user = await UserProfile.findOne({ firebaseUid: p.playerId }).lean();
+                        medalsCount[p.playerId] = {
+                            playerId: p.playerId,
+                            playerName: p.playerName,
+                            photoUrl: user ? user.photoUrl : '',
+                            gold: 0, silver: 0, bronze: 0, total: 0
+                        };
+                    }
+                    if (i === 0) medalsCount[p.playerId].gold++;
+                    if (i === 1) medalsCount[p.playerId].silver++;
+                    if (i === 2) medalsCount[p.playerId].bronze++;
+                    medalsCount[p.playerId].total++;
+                    
+                    // Samo prvo mesto ide u Šampione
+                    if (i === 0) {
+                        champions.push({
+                            cycle: cycleCounter++,
+                            year: y,
+                            quarter: q,
+                            playerName: p.playerName,
+                            photoUrl: medalsCount[p.playerId].photoUrl,
+                            score: p.score
+                        });
+                    }
+                }
+            }
+            
+            // Konverzija objekta u niz i sortiranje (Prvo po zlatu, pa srebru, pa bronzi)
+            let medalsList = Object.values(medalsCount);
+            medalsList.sort((a, b) => {
+                if (b.gold !== a.gold) return b.gold - a.gold;
+                if (b.silver !== a.silver) return b.silver - a.silver;
+                return b.bronze - a.bronze;
+            });
+            
+            // Šampione okrećemo tako da se najnoviji ciklus prikazuje prvi na vrhu
+            champions.sort((a, b) => b.cycle - a.cycle);
+            
+            socket.emit('hall_of_fame_data', {
+                medals: medalsList,
+                champions: champions
+            });
+            
+        } catch (err) {
+            console.error("Greška kod Dvorane Slavnih:", err);
         }
     });
 

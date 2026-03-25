@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -211,7 +211,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v12 - QUARTERLY LEAGUE REWARDS ENABLED");
+        console.log("YambApp v13 - QUARTERLY LEAGUE REWARDS & WINNER MODAL ENABLED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -616,6 +616,24 @@ class YambApp {
                     if (!this.playerId) return;
 
                     this.socket.emit('set_my_id', this.playerId);
+                    
+                    // -- NOVO: PROVERA DA LI TREBA PRIKAZATI ŠAMPIONA PROŠLOG KVARTALA --
+                    const now = new Date();
+                    let currentQuarter = Math.floor(now.getMonth() / 3) + 1;
+                    let prevQuarter = currentQuarter - 1;
+                    let prevYear = now.getFullYear();
+                    
+                    if (prevQuarter === 0) {
+                        prevQuarter = 4;
+                        prevYear -= 1;
+                    }
+
+                    const shownWinnerKey = `yamb_winner_shown_${prevYear}_Q${prevQuarter}`;
+                    // Ako nismo još prikazali pobednika za prošli kvartal, pitaj server
+                    if (!localStorage.getItem(shownWinnerKey)) {
+                        this.socket.emit('get_previous_quarter_winner', { year: prevYear, quarter: prevQuarter });
+                    }
+                    // ---------------------------------------------------------------------
                     
                     // --- NOVO: Provera Kvartalne Lige Nagrada ---
                     const pendingReward = localStorage.getItem('yamb_pending_quarter_check');
@@ -1590,6 +1608,28 @@ class YambApp {
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
         this.socket.off('spectate_started');
+
+        // --- NOVO: REAKCIJA NA PRIKAZ POBEDNIKA PROŠLOG KVARTALA ---
+        this.socket.off('previous_quarter_winner_data');
+        this.socket.on('previous_quarter_winner_data', (data) => {
+            if (!data) {
+                // Ako nema pobednika za prošli kvartal, samo zapiši da ne pita ponovo
+                const now = new Date();
+                let prevQ = Math.floor(now.getMonth() / 3);
+                let prevY = now.getFullYear();
+                if(prevQ === 0) { prevQ = 4; prevY -= 1; }
+                localStorage.setItem(`yamb_winner_shown_${prevY}_Q${prevQ}`, 'true');
+                return;
+            }
+
+            const shownKey = `yamb_winner_shown_${data.year}_Q${data.quarter}`;
+            if (localStorage.getItem(shownKey)) return;
+
+            // Prikazujemo pobednika i zapisujemo u memoriju da se više ne bi ponavljalo
+            this.showQuarterWinnerModal(data);
+            localStorage.setItem(shownKey, 'true');
+        });
+        // -----------------------------------------------------------
 
         // --- NOVO: REAKCIJA NA DODELU KVARTALNE NAGRADE ---
         this.socket.off('quarter_reward');
@@ -3143,6 +3183,39 @@ class YambApp {
         this.lastMoveSnapshot = null;
         document.getElementById('btn-undo-move').style.display = 'none';
         this.autoSaveGame();
+    }
+
+    showQuarterWinnerModal(data) {
+        const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.playerName)}&background=333&color=FFD700`;
+        const photo = data.photoUrl && data.photoUrl.length > 5 ? data.photoUrl : defaultAvatar;
+        
+        // Zvuk slavlja i efekat konfeta
+        if(this.soundMgr) this.soundMgr.win(); 
+        if(this.effectMgr) this.effectMgr.trigger('confetti');
+
+        let modalHtml = `
+        <div id="winner-modal-overlay" class="modal-overlay" style="z-index: 9999999; display: flex;">
+            <div class="modal-box" style="text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); max-width: 400px; width: 90%; border-radius: 15px; box-shadow: 0 0 30px rgba(224, 201, 149, 0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                <h2 style="color: var(--gold-main); font-size: 1.8rem; margin-top: 0; margin-bottom: 5px; text-transform: uppercase;">🏆 ŠAMPION LIGE 🏆</h2>
+                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">Pobednik za Q${data.quarter} / ${data.year}.</p>
+                
+                <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
+                    <img src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">
+                    <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); background: var(--gold-main); color: #000; padding: 2px 10px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MVP</div>
+                </div>
+                
+                <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 5px;">${data.playerName}</h3>
+                <p style="color: var(--gold-main); font-size: 1.2rem; font-weight: bold; margin-bottom: 25px;">${data.score} PTS</p>
+                
+                <p style="color: #ddd; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;">
+                    Čestitamo na osvajanju Kvartalne lige!<br>Nova sezona je počela, srećno svima!
+                </p>
+                
+                <button class="btn-menu btn-primary" onclick="document.getElementById('winner-modal-overlay').remove(); app.effectMgr.stop();" style="width: 100%;">NASTAVI</button>
+            </div>
+        </div>`;
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
     }
 }
 
