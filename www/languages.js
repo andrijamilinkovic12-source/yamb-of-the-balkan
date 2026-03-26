@@ -8,6 +8,9 @@ const TRANSLATIONS = {
         "splash_welcome": "DOBRODOŠLI U YAMB OF THE BALKAN",
         "splash_welcome_short": "DOBRODOŠLI",
         "splash_login": "PRIJAVI SE",
+        "splash_terms_pre": "Nastavkom prihvatate naše<br>",
+        "splash_terms_link": "Uslove Korišćenja",
+        "splash_privacy_link": "Politiku Privatnosti",
 
         // --- GLAVNI MENI ---
         "menu_login": "Prijavi se preko Google-a",
@@ -264,6 +267,8 @@ const TRANSLATIONS = {
         "settings_not_logged_in": "Niste prijavljeni",
         "settings_logout": "Odjavi se",
         "msg_logout_confirm": "Da li ste sigurni da želite da se odjavite?",
+        "settings_terms": "📜 Uslovi Korišćenja",
+        "settings_privacy": "🔒 Politika Privatnosti",
 
         // --- PRAVILA (SR) ---
         "rules_title": "PRAVILA IGRE",
@@ -453,6 +458,9 @@ const TRANSLATIONS = {
         "splash_welcome": "WELCOME TO YAMB OF THE BALKAN",
         "splash_welcome_short": "WELCOME",
         "splash_login": "SIGN IN",
+        "splash_terms_pre": "By continuing, you agree to our<br>",
+        "splash_terms_link": "Terms of Service",
+        "splash_privacy_link": "Privacy Policy",
 
         // --- MAIN MENU ---
         "menu_login": "Sign in with Google",
@@ -709,6 +717,8 @@ const TRANSLATIONS = {
         "settings_not_logged_in": "Not logged in",
         "settings_logout": "Log out",
         "msg_logout_confirm": "Are you sure you want to log out?",
+        "settings_terms": "📜 Terms of Service",
+        "settings_privacy": "🔒 Privacy Policy",
 
         // --- RULES (EN) ---
         "rules_title": "GAME RULES",

@@ -18,6 +18,24 @@
     <script src="localforage.min.js?v=3.7"></script>
     <script src="socket.io.min.js?v=3.7"></script>
     <script src="capacitor.js"></script>
+
+    <style>
+        /* Stil za unutrašnji skrolbar pravnih obaveštenja u modalu */
+        .pravni-tekst-container {
+            text-align: left;
+            font-size: 0.85rem;
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 12px;
+            color: var(--text-main);
+            line-height: 1.6;
+            background: rgba(0,0,0,0.25);
+            border-radius: 12px;
+            border: 1px solid rgba(255,215,0,0.1);
+        }
+        .pravni-tekst-container::-webkit-scrollbar { width: 4px; }
+        .pravni-tekst-container::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
+    </style>
 </head>
 <body>
 
@@ -92,6 +110,13 @@
                 </svg>
                 <span data-lang="splash_login">PRIJAVI SE</span>
             </button>
+            
+            <div style="margin-top: 15px; font-size: 0.65rem; color: var(--text-muted); text-align: center; line-height: 1.5; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">
+                <span data-lang="splash_terms_pre">Nastavkom prihvatate naše<br></span>
+                <span onclick="prikaziPravniTekst('terms')" style="color: var(--gold-main); text-decoration: underline; cursor: pointer; font-weight: bold; margin-right: 5px;" data-lang="splash_terms_link">Uslove Korišćenja</span> i 
+                <span onclick="prikaziPravniTekst('privacy')" style="color: var(--gold-main); text-decoration: underline; cursor: pointer; font-weight: bold;" data-lang="splash_privacy_link">Politiku Privatnosti</span>.
+            </div>
+            
         </div>
     </div>
 
@@ -417,6 +442,15 @@
             </div>
 
             <button class="btn-menu btn-primary" style="margin-top: 15px;" onclick="app.saveSettings()" data-lang="settings_save">Sačuvaj</button>
+            
+            <div style="margin-top: 20px; text-align: center; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+                <span onclick="prikaziPravniTekst('terms')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px;" data-lang="settings_terms">
+                    📜 Uslovi Korišćenja
+                </span>
+                <span onclick="prikaziPravniTekst('privacy')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px;" data-lang="settings_privacy">
+                    🔒 Politika Privatnosti
+                </span>
+            </div>
         </div>
     </div>
     
@@ -648,24 +682,17 @@
         let lastPts = -1;
 
         function updateMainMenuDashboard() {
-            // 1. Brzo čitanje iz RAM-a (localStorage)
             const dukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-            
-            // ----------------------------------------------------
-            // FIX: Osiguravamo da pts UVEK bude broj (0 ako je undefined)
-            // ----------------------------------------------------
             let pts = 0;
             if (window.kvartalnaLiga) {
                 let scores = window.kvartalnaLiga.getScores();
                 pts = parseInt(scores.quarterlyScore) || 0; 
             }
             
-            // 2. DOM OPTIMIZACIJA: Ažuriramo samo ako se nešto ZAISTA promenilo!
             if (dukati === lastDukati && pts === lastPts) {
-                return; // Prekini funkciju, štedi bateriju i procesor!
+                return;
             }
 
-            // 3. Ako ima promena, osvežavamo HTML
             const dukatiEl = document.getElementById('menu-dukati-count');
             if (dukatiEl) dukatiEl.innerText = dukati;
             
@@ -687,7 +714,6 @@
             if (rankEl) rankEl.innerText = (typeof t !== 'undefined') ? t(rankKey) : rankKey.toUpperCase();
             if (barEl) barEl.style.width = percent + '%';
             
-            // FIX: Lepši ispis za Titan rang (umesto 150000 / 150000 PTS)
             if (ptsTextEl) {
                 if (rankKey === "rank_titan") {
                     ptsTextEl.innerText = `${pts} PTS (MAX)`;
@@ -696,12 +722,10 @@
                 }
             }
 
-            // Pamtimo nove vrednosti za sledeći krug
             lastDukati = dukati;
             lastPts = pts;
         }
 
-        // Pokreni funkciju kad se očita ekran, i zakači ultra-brzi interval
         window.addEventListener('load', () => {
             updateMainMenuDashboard();
             setInterval(updateMainMenuDashboard, 2000); 

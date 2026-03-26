@@ -14,6 +14,66 @@ const gt = (key) => {
     return key; 
 };
 
+/**
+ * --- PRIKAZ PRAVNIH TEKSTOVA U CUSTOM MODALU ---
+ * Prikazuje sažetak, ali nudi link ka punom zvaničnom tekstu zbog Google Play polisa.
+ */
+function prikaziPravniTekst(tip) {
+    const lang = localStorage.getItem('yamb_lang') || 'sr';
+    let naslov = "";
+    let tekst = "";
+    let punLink = "";
+
+    if (tip === 'terms') {
+        naslov = lang === 'sr' ? "USLOVI KORIŠĆENJA" : "TERMS OF SERVICE";
+        tekst = lang === 'sr' 
+            ? "Dobrodošli u Yamb of the Balkan. Korišćenjem aplikacije prihvatate fer-plej, zabranu korišćenja softvera za varanje i uvažavanje drugih igrača. Vaš nalog je vezan za Google UID i podaci se čuvaju u cloudu radi sinhronizacije dukata i statistike. Svako kršenje pravila može rezultovati privremenom ili trajnom zabranom pristupa globalnim funkcijama."
+            : "Welcome to Yamb of the Balkan. By using this app, you agree to fair play, no cheating software, and respecting other players. Your account is linked to Google UID, and data is stored in the cloud for syncing ducats and stats. Any violation of rules may result in a temporary or permanent ban from global features.";
+        punLink = "https://yamb-of-the-balkan.firebaseapp.com/terms.html";
+    } else {
+        naslov = lang === 'sr' ? "POLITIKA PRIVATNOSTI" : "PRIVACY POLICY";
+        tekst = lang === 'sr'
+            ? "Vaša privatnost je prioritet. Prikupljamo samo osnovne podatke vašeg Google naloga (ime, e-mail i slika) isključivo radi funkcionisanja rang liste, sistema prijatelja i čuvanja vašeg progresa (dukati i trofeji). Vaši podaci se nikada ne dele sa trećim licima. Možete zatražiti brisanje podataka u bilo kom trenutku putem podrške."
+            : "Your privacy is our priority. We collect only basic Google account info (name, email, and photo) solely for rankings, friends system, and saving your progress (ducats and trophies). Your data is never shared with third parties. You can request data deletion at any time via support.";
+        punLink = "https://yamb-of-the-balkan.firebaseapp.com/privacy.html";
+    }
+
+    const textLinka = lang === 'sr' ? "Pročitaj kompletan zvanični tekst" : "Read full official document";
+
+    const cmMsg = document.getElementById('cm-msg');
+    const cmTitle = document.getElementById('cm-title');
+    const modalOverlay = document.getElementById('custom-modal-overlay');
+    const btnCancel = document.getElementById('cm-cancel');
+    const btnOk = document.getElementById('cm-ok');
+    
+    if (cmMsg && cmTitle && modalOverlay) {
+        cmTitle.innerText = naslov;
+        
+        // Spajamo naš kratak tekst sa linkom ka punom Firebase dokumentu
+        cmMsg.innerHTML = `
+            <div class="pravni-tekst-container" style="text-align:left; font-size:0.85rem; max-height:280px; overflow-y:auto; padding:12px; color:var(--text-main); line-height:1.6; background:rgba(0,0,0,0.25); border-radius:12px; border:1px solid rgba(255,215,0,0.1);">
+                ${tekst}
+                <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(255,215,0,0.3); text-align: center;">
+                    <a href="${punLink}" target="_blank" style="color: var(--gold-main); font-weight: bold; text-decoration: none; font-size: 0.75rem;">
+                        📄 ${textLinka}
+                    </a>
+                </div>
+            </div>`;
+        
+        modalOverlay.style.display = 'flex';
+        modalOverlay.classList.add('active');
+        
+        if (btnCancel) btnCancel.classList.add('hidden');
+        
+        if (btnOk) {
+            btnOk.onclick = function() {
+                modalOverlay.style.display = 'none';
+                modalOverlay.classList.remove('active');
+            };
+        }
+    }
+}
+
 /* --- FILTER VULGARNOSTI (KLIJENT STRANA) --- */
 const zabranjeneReci = [
     "idiot", "budala", "kreten", "glupan", "majmun", "debil", "stoka",
