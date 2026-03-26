@@ -51,9 +51,9 @@ class TournamentManager {
                             const now = Date.now();
                             const regTime = parseInt(localRegTime, 10);
                             
-                            // Validnost prijave je 6 dana (518400000 ms), da se ne bi prenelo besplatno na turnir sledeće nedelje
+                            // Validnost prijave je 6 dana (518400000 ms)
                             if (now - regTime < 518400000) {
-                                // Vraćamo prijavu na server automatski (BEZ ponovnog skidanja dukata)
+                                // Vraćamo prijavu na server automatski
                                 const playerData = {
                                     id: this.app.playerId, 
                                     name: this.app.playerName,
@@ -61,12 +61,12 @@ class TournamentManager {
                                 };
                                 this.app.socket.emit('tourney_register', playerData);
                             } else {
-                                // Prijava je previše stara (novi nedeljni turnir)
+                                // Prijava je previše stara
                                 localStorage.removeItem(storageKey);
                             }
                         }
 
-                        // Ako je turnir završen i imamo konačnog pobednika, čistimo staru prijavu
+                        // Ako je turnir završen, čistimo staru prijavu
                         if (newState.status !== 'registration' && newState.bracket && newState.bracket.f && newState.bracket.f[0] && newState.bracket.f[0].winnerId) {
                             localStorage.removeItem(storageKey);
                         }
@@ -284,7 +284,6 @@ class TournamentManager {
                 currentBalance -= fee;
                 localStorage.setItem('yamb_dukati', currentBalance);
                 
-                // PAMTIMO PRIJAVU LOKALNO ZA AUTO-RESTORE SA UID-om
                 localStorage.setItem('yamb_tourney_reg_' + this.app.playerId, Date.now().toString());
                 
                 if (window.statsManager) {
@@ -333,7 +332,6 @@ class TournamentManager {
                 await window.adMobGlobal.showInterstitial();
             }
 
-            // BRIŠEMO LOKALNU PRIJAVU JER IGRAČ SVOJEVOLJNO ODUSTAJE
             localStorage.removeItem('yamb_tourney_reg_' + this.app.playerId);
 
             const refundAmount = 2500;
@@ -401,13 +399,21 @@ class TournamentManager {
 
         container.innerHTML = `
             <style>
-                .tourney-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: all 0.3s ease; }
+                .tourney-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; cursor: pointer; }
                 .tourney-dot.active { background: var(--gold-main); transform: scale(1.3); box-shadow: 0 0 5px var(--gold-main); }
+                
+                /* Sakrivanje scrollbara u kosturu za čistiji izgled */
+                .bracket-scroll-container::-webkit-scrollbar { display: none; }
+                .bracket-scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
+                
+                /* Sitni scrollbar za unutrašnje kolone mečeva */
+                .bracket-col-inner::-webkit-scrollbar { width: 4px; }
+                .bracket-col-inner::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.5); border-radius: 2px; }
             </style>
             
-            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-width: 400px; padding: 15px 5px; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
+            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-width: 400px; padding: 15px 10px; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
                 
-                <div class="bracket-wrapper" style="display: flex; flex-direction: row; width: 100%; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 0;" onscroll="
+                <div id="bracket-scroller" class="bracket-scroll-container" style="display: flex; flex-direction: row; width: 100%; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 0;" onscroll="
                     let scrollLeft = this.scrollLeft;
                     let width = this.clientWidth;
                     let index = Math.round(scrollLeft / width);
@@ -416,27 +422,33 @@ class TournamentManager {
                     });
                 ">
                     
-                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; padding: 5px; overflow-y: auto;">
-                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0; font-size: 1rem; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 3px; width: 90%; text-align: center; flex-shrink: 0; margin-bottom: 5px;">Četvrtfinale</h4>
-                        ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
+                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; padding: 0 5px; overflow: hidden;">
+                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0 0 10px 0; font-size: 1.1rem; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; width: 95%; text-align: center; flex-shrink: 0; letter-spacing: 1px;">Četvrtfinale</h4>
+                        <div class="bracket-col-inner" style="width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 12px; padding-bottom: 10px;">
+                            ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
+                        </div>
                     </div>
 
-                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; padding: 5px; overflow-y: auto;">
-                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0; font-size: 1rem; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 3px; width: 90%; text-align: center; flex-shrink: 0; margin-bottom: 5px;">Polufinale</h4>
-                        ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
+                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; padding: 0 5px; overflow: hidden;">
+                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0 0 10px 0; font-size: 1.1rem; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; width: 95%; text-align: center; flex-shrink: 0; letter-spacing: 1px;">Polufinale</h4>
+                        <div class="bracket-col-inner" style="width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 20px; padding-bottom: 10px; padding-top: 10px;">
+                            ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
+                        </div>
                     </div>
 
-                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; justify-content: center; gap: 20px; align-items: center; padding: 5px; overflow-y: auto;">
-                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 3px; width: 90%; text-align: center; flex-shrink: 0; margin-bottom: 5px;">Finale 🏆</h4>
-                        ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
+                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; padding: 0 5px; overflow: hidden;">
+                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0 0 10px 0; font-size: 1.2rem; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; width: 95%; text-align: center; flex-shrink: 0; letter-spacing: 2px;">Finale 🏆</h4>
+                        <div class="bracket-col-inner" style="width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding-bottom: 10px;">
+                            ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
+                        </div>
                     </div>
 
                 </div>
 
-                <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px; padding-bottom: 5px; flex-shrink: 0;">
-                    <div class="tourney-dot active"></div>
-                    <div class="tourney-dot"></div>
-                    <div class="tourney-dot"></div>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px; padding-bottom: 5px; flex-shrink: 0;">
+                    <div class="tourney-dot active" onclick="document.getElementById('bracket-scroller').scrollTo({left: 0, behavior: 'smooth'})"></div>
+                    <div class="tourney-dot" onclick="document.getElementById('bracket-scroller').scrollTo({left: document.getElementById('bracket-scroller').clientWidth, behavior: 'smooth'})"></div>
+                    <div class="tourney-dot" onclick="document.getElementById('bracket-scroller').scrollTo({left: document.getElementById('bracket-scroller').clientWidth * 2, behavior: 'smooth'})"></div>
                 </div>
 
             </div>
@@ -446,7 +458,7 @@ class TournamentManager {
     createMatchHTML(match, round, index) {
         if (!match || (!match.p1 && !match.p2)) {
             return `
-                <div class="match-card empty" style="padding: 10px; width: 95%; max-width: 280px; font-size: 0.75rem; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.4); border-radius: 12px; text-align: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+                <div class="match-card empty" style="padding: 12px 10px; width: 100%; max-width: 320px; font-size: 0.8rem; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.4); border-radius: 12px; text-align: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
                     <span style="color: var(--text-muted); font-weight: 600;">${tt('tourney_tbd') || 'Čeka se...'}</span>
                 </div>`;
         }
@@ -456,7 +468,7 @@ class TournamentManager {
         const activeClass = isMyMatch ? 'my-match' : '';
         
         const getPlayerHtml = (p) => {
-            if (!p) return `<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.7rem;">Čeka se...</div>`;
+            if (!p) return `<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.75rem;">Čeka se...</div>`;
             
             let photo = p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`;
             let isWinner = match.winnerId === p.id;
@@ -469,26 +481,26 @@ class TournamentManager {
             
             return `
                 <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: ${opacity}; filter: ${filter};">
-                    <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: ${border}; margin-bottom: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
-                    <span style="font-size: 0.7rem; font-weight: bold; text-align: center; word-break: break-word; line-height: 1.1; max-width: 90px; color: ${nameColor};">${p.name}</span>
+                    <img src="${photo}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: ${border}; margin-bottom: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+                    <span style="font-size: 0.75rem; font-weight: bold; text-align: center; word-break: break-word; line-height: 1.1; max-width: 100px; color: ${nameColor};">${p.name}</span>
                 </div>
             `;
         };
 
         let timeInfo = '';
         if (match.timeAccepted && match.time) {
-            timeInfo = `<div style="text-align:center; font-size: 0.6rem; color: var(--success); margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 3px;">✅ ${this.formatDate(match.time)}</div>`;
+            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: var(--success); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">✅ ${this.formatDate(match.time)}</div>`;
         } else if (match.proposedTime) {
-            timeInfo = `<div style="text-align:center; font-size: 0.6rem; color: #ff9800; margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 3px;">⏳ Dogovor...</div>`;
+            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: #ff9800; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">⏳ Dogovor...</div>`;
         } else if (match.p1 && match.p2) {
-            timeInfo = `<div style="text-align:center; font-size: 0.6rem; color: var(--text-muted); margin-top: 5px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 3px;">Nije zakazano</div>`;
+            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: var(--text-muted); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">Nije zakazano</div>`;
         }
 
         return `
-            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 8px 10px; width: 95%; max-width: 280px; background: rgba(0,0,0,0.4); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.1s; flex-shrink: 0;">
+            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 12px 10px; width: 100%; max-width: 320px; background: rgba(0,0,0,0.4); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.1s; flex-shrink: 0;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     ${getPlayerHtml(match.p1)}
-                    <div style="font-size: 0.75rem; font-weight: 900; color: var(--gold-main); margin: 0 5px; text-shadow: 0 0 5px rgba(255,215,0,0.5);">VS</div>
+                    <div style="font-size: 0.85rem; font-weight: 900; color: var(--gold-main); margin: 0 10px; text-shadow: 0 0 5px rgba(255,215,0,0.5);">VS</div>
                     ${getPlayerHtml(match.p2)}
                 </div>
                 ${timeInfo}
