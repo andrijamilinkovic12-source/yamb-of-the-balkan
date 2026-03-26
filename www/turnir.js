@@ -54,7 +54,7 @@ class TournamentManager {
                 });
 
                 this.app.socket.on('tourney_duel_ready', (data) => {
-                    const myId = this.app.playerId; // KORISTIMO GLAVNI ID IZ APP-A (Koji je sada UID ako si logovan)
+                    const myId = this.app.playerId;
                     if (data.targetId === myId) {
                         let msg = tt('tourney_opponent_ready');
                         if (msg !== 'tourney_opponent_ready') {
@@ -107,25 +107,26 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
+        // Očišćen stil kontejnera - uklonjeno nepotrebno skrolovanje i height:80vh
+        container.style.height = "auto";
+        container.style.overflowY = "visible";
+
         container.innerHTML = `
             <div style="display: flex; flex-direction: column; width: 100%; align-items: center; padding: 0 10px;">
                 
-                <div style="display: flex; justify-content: space-between; width: 100%; gap: 10px; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; width: 100%; max-width: 500px; gap: 10px; margin-bottom: 10px;">
                     <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
                         ${tt('tourney_tab_info') || '📋 INFO'}
                     </button>
                     <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" ${this.state.status === 'registration' ? 'disabled style="opacity:0.5"' : ''} style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
                         ${tt('tourney_tab_bracket') || '🏆 KOSTUR'}
                     </button>
-                </div>
-                
-                <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
-                    <button class="tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('leaderboard')" style="width: 100%; padding: 12px 15px; font-size: 0.85rem; border-radius: 8px; margin: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                    <button class="tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('leaderboard')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
                         ${tt('tourney_tab_fame') || '👑 SLAVNI'}
                     </button>
                 </div>
                 
-                <div id="tourney-tab-content" style="width: 100%; display: flex; justify-content: center;"></div>
+                <div id="tourney-tab-content" style="width: 100%; max-width: 600px; display: flex; justify-content: center; margin-top: 10px;"></div>
 
             </div>
         `;
@@ -143,23 +144,29 @@ class TournamentManager {
 
     getLeaderboardHTML() {
         let leaderboardHtml = `
-            <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 600px;">
-                <div class="tourney-icon-large" style="font-size: 3rem;">👑</div>
+            <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 500px; padding: 20px;">
+                <div class="tourney-icon-large" style="font-size: 3rem; margin-bottom: 5px;">👑</div>
                 <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 10px; text-transform: uppercase;">
-                    ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH (OSVAJAČI)'}
+                    ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH'}
                 </h3>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; flex-direction: column; gap: 10px;">
         `;
         
         if (!this.tourneyLeaderboard || this.tourneyLeaderboard.length === 0) {
-            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:0.9rem;">Još uvek nema osvajača turnira.</div>`;
+            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px 0;">Još uvek nema osvajača turnira.</div>`;
         } else {
             this.tourneyLeaderboard.forEach((player, idx) => {
                 let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx+1}.`));
+                let photo = player.photoUrl && player.photoUrl.length > 5 ? player.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(player.playerName)}&background=333&color=E0C995`;
+                
                 leaderboardHtml += `
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
-                        <span style="color: white; font-weight: bold;">${rankTrophy} ${player.playerName}</span>
-                        <span style="color: var(--gold-main); font-weight: 900;">${player.wins} 🏆</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; gap: 10px;">
+                        <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1;">
+                            <span style="font-size: 1.2rem; min-width: 25px; text-align: center; flex-shrink: 0;">${rankTrophy}</span>
+                            <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid var(--gold-main); flex-shrink: 0;">
+                            <span style="color: white; font-weight: bold; font-size: 0.9rem; white-space: normal; word-break: break-word; line-height: 1.2;">${player.playerName}</span>
+                        </div>
+                        <span style="color: var(--gold-main); font-weight: 900; font-size: 1.1rem; flex-shrink: 0;">${player.wins} 🏆</span>
                     </div>
                 `;
             });
@@ -179,43 +186,25 @@ class TournamentManager {
             buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%;">🚀 ${isRegistered ? (tt('tourney_reg_active_in_progress') || 'Prijavljeni ste (Turnir u toku)') : (tt('tourney_reg_started') || 'Turnir je već počeo')}</button>`;
         } else if (isRegistered) {
             buttonHtml = `
-                <button class="btn-menu btn-secondary" style="width: 100%; font-size: 1rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc;" onclick="app.tournamentManager.unregisterPlayer()">
-                    ❌ ${tt('tourney_unregister') || 'ODJAVI SE'} (Povraćaj 2500 💰)
+                <button class="btn-menu btn-secondary" style="width: 100%; font-size: 0.95rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc;" onclick="app.tournamentManager.unregisterPlayer()">
+                    ❌ ${tt('tourney_unregister') || 'ODJAVI SE'} (Povraćaj)
                 </button>
             `;
         } else {
-            buttonHtml = `<button class="btn-menu btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.registerPlayer()">🎟️ ${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)</button>`;
-        }
-
-        let participantsHtml = '';
-        for (let i = 0; i < 8; i++) {
-            if (this.state.players[i]) {
-                const p = this.state.players[i];
-                participantsHtml += `<div style="padding: 4px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">${i+1}. ${p.id === myId ? `<strong style="color:var(--gold-main);">${p.name} ${tt('tourney_you') || '(Vi)'}</strong>` : p.name}</div>`;
-            } else {
-                participantsHtml += `<div style="padding: 4px 0; color: var(--text-muted); font-style: italic; border-bottom: 1px solid rgba(255,255,255,0.05); opacity: 0.6;">${i+1}. ${tt('tourney_empty_slot') || 'Slobodno mesto'}</div>`;
-            }
+            buttonHtml = `<button class="btn-menu btn-primary" style="width: 100%; font-size: 1rem; padding: 15px; box-shadow: 0 0 15px var(--gold-glow);" onclick="app.tournamentManager.registerPlayer()">🎟️ ${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)</button>`;
         }
 
         container.innerHTML = `
-            <div class="modal-box tourney-wrapper" style="width: 100%;">
-                <div class="tourney-icon-large">🏆</div>
-                <h3 class="tourney-title">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
-                <p class="tourney-desc">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
+            <div class="modal-box tourney-wrapper" style="width: 100%; max-width: 400px; padding: 25px 20px;">
+                <div class="tourney-icon-large" style="font-size: 4rem; margin-bottom: 10px;">🏆</div>
+                <h3 class="tourney-title" style="font-size: 1.3rem; margin-bottom: 5px;">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
+                <p class="tourney-desc" style="font-size: 0.85rem; margin-bottom: 20px;">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
                 
-                <div class="tourney-stats-box">
-                    <span class="tourney-stats-label">${tt('tourney_registered') || 'Prijavljeno igrača'}</span>
-                    <div class="tourney-stats-value" style="color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'};">
-                        ${this.state.players.length} / 8
-                    </div>
-                    
-                    <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-main); text-align: left; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px;">
-                        <span style="display:block; color:var(--text-muted); font-size:0.75rem; margin-bottom:8px; text-transform:uppercase;">${tt('tourney_participants_list') || 'Spisak učesnika:'}</span>
-                        ${participantsHtml}
-                    </div>
+                <div style="font-size: 1.2rem; font-weight: 900; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'}; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                    ${tt('tourney_registered') || 'Prijavljeno'}: ${this.state.players.length} / 8
                 </div>
 
-                <div style="margin-top: 15px;">
+                <div style="width: 100%;">
                     ${buttonHtml}
                 </div>
             </div>
@@ -254,7 +243,6 @@ class TournamentManager {
                     window.statsManager.saveStats();
                 }
 
-                // --- DODATO ZA CLOUD SYNC ---
                 if (this.app && this.app.socket && this.app.socket.connected) {
                     this.app.socket.emit('set_player_data', {
                         uid: localStorage.getItem('yamb_uid') || this.app.playerId,
@@ -306,7 +294,6 @@ class TournamentManager {
                 window.statsManager.saveStats();
             }
 
-            // --- DODATO ZA CLOUD SYNC ---
             if (this.app && this.app.socket && this.app.socket.connected) {
                 this.app.socket.emit('set_player_data', {
                     uid: localStorage.getItem('yamb_uid') || this.app.playerId,
@@ -346,22 +333,22 @@ class TournamentManager {
         const sf = this.state.bracket.sf || [];
         const f = this.state.bracket.f || [];
 
+        // Primenjen pravi FLEXBOX stablo prikaz za kompaktan kostur
         container.innerHTML = `
-            <div class="bracket-wrapper" style="width: 100%;">
-                <div class="bracket-col qf">
-                    <div class="bracket-header">${tt('tourney_qf') || 'ČETVRTFINALE'}</div>
+            <div class="bracket-wrapper" style="width: 100%; display: flex; flex-direction: row; gap: 15px; justify-content: center; align-items: stretch; min-height: 380px; padding: 5px; overflow-x: auto;">
+                
+                <div class="bracket-col qf" style="display: flex; flex-direction: column; justify-content: space-around; gap: 10px;">
                     ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
                 </div>
                 
-                <div class="bracket-col sf">
-                    <div class="bracket-header">${tt('tourney_sf') || 'POLUFINALE'}</div>
+                <div class="bracket-col sf" style="display: flex; flex-direction: column; justify-content: space-around; gap: 20px;">
                     ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
                 </div>
                 
-                <div class="bracket-col f">
-                    <div class="bracket-header final">${tt('tourney_f') || 'FINALE'}</div>
+                <div class="bracket-col f" style="display: flex; flex-direction: column; justify-content: center;">
                     ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
                 </div>
+                
             </div>
         `;
     }
@@ -369,10 +356,10 @@ class TournamentManager {
     createMatchHTML(match, round, index) {
         if (!match || !match.p1 || !match.p2) {
             return `
-                <div class="match-card empty">
-                    <span style="font-size: 0.8rem; color: var(--text-muted);">${tt('tourney_tbd') || 'Čeka se...'}</span>
-                    <hr class="match-divider">
-                    <span style="font-size: 0.8rem; color: var(--text-muted);">${tt('tourney_tbd') || 'Čeka se...'}</span>
+                <div class="match-card empty" style="padding: 8px; width: 110px; font-size: 0.75rem;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">${tt('tourney_tbd') || 'Čeka se...'}</span>
+                    <hr class="match-divider" style="margin: 4px 0;">
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">${tt('tourney_tbd') || 'Čeka se...'}</span>
                 </div>`;
         }
 
@@ -388,16 +375,18 @@ class TournamentManager {
 
         let timeInfo = '';
         if (match.timeAccepted && match.time) {
-            timeInfo = `<div class="match-time-badge">✅ ${this.formatDate(match.time)}</div>`;
+            timeInfo = `<div class="match-time-badge" style="margin-top: 5px; font-size: 0.6rem;">✅ ${this.formatDate(match.time)}</div>`;
         } else if (match.proposedTime) {
-            timeInfo = `<div class="match-time-badge pending">${tt('tourney_negotiating') || 'Dogovor u toku...'}</div>`;
+            timeInfo = `<div class="match-time-badge pending" style="margin-top: 5px; font-size: 0.6rem;">⏳ Dogovor...</div>`;
         }
 
+        // Kompaktna kartica meča
         return `
-            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})">
-                <div class="match-player ${getPlayerClass(match.p1.id)}">${match.p1.name}</div>
-                <hr class="match-divider">
-                <div class="match-player ${getPlayerClass(match.p2.id)}">${match.p2.name}</div>
+            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 8px; width: 115px; font-size: 0.75rem; position: relative;">
+                ${round === 'f' ? '<div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); font-size:1.2rem;">🏆</div>' : ''}
+                <div class="match-player ${getPlayerClass(match.p1.id)}" style="margin-bottom: 2px;">${match.p1.name}</div>
+                <hr class="match-divider" style="margin: 4px 0; border-top: 1px solid rgba(255,255,255,0.2);">
+                <div class="match-player ${getPlayerClass(match.p2.id)}" style="margin-top: 2px;">${match.p2.name}</div>
                 ${timeInfo}
             </div>
         `;
