@@ -145,10 +145,11 @@ class KvartalnaLigaManager {
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
 
+        // DODATO: min-height: 0 na slajd i listu da bi overflow proradio
         let slidesHtml = currentRanks.map((r) => `
-            <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 15px; display: flex; flex-direction: column; height: 100%;">
+            <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 15px; display: flex; flex-direction: column; height: 100%; min-height: 0;">
                 <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;">${r.name}</h3>
-                <div style="flex: 1; overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
+                <div style="flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                     <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0;">
                         <li style="text-align: center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_loading', 'Učitavanje podataka... ⏳')}</li>
                     </ul>
@@ -160,6 +161,7 @@ class KvartalnaLigaManager {
             <div id="league-dot-${i}" style="width: 8px; height: 8px; border-radius: 50%; background: ${i === this.currentSlide ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; margin: 0 4px; transition: background 0.3s;"></div>
         `).join('');
 
+        // DODATO: min-height: 0 na flex roditelje (main content, carousel, track i hof)
         let modalHtml = `
         <div id="league-modal-overlay" class="modal-overlay" style="z-index: 999999; display: flex;">
             <div class="modal-box" style="width: 95%; max-width: 450px; height: 85vh; max-height: 800px; display: flex; flex-direction: column; padding: 0; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); overflow: hidden;">
@@ -174,7 +176,7 @@ class KvartalnaLigaManager {
                     <button id="tab-league-hof" class="btn-menu btn-secondary" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('hof')">${gt('hof_tab_main', 'DVORANA SLAVNIH 🏛️')}</button>
                 </div>
 
-                <div id="league-main-content" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; width: 100%;">
+                <div id="league-main-content" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; width: 100%; min-height: 0;">
                     <div style="padding: 10px 15px; flex-shrink: 0;">
                         <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(224, 201, 149, 0.08); padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(224, 201, 149, 0.2);">
                             <div style="text-align: left;">
@@ -188,8 +190,8 @@ class KvartalnaLigaManager {
                         </div>
                     </div>
 
-                    <div id="league-carousel-container" style="flex: 1; overflow: hidden; width: 100%; position: relative; display: flex; flex-direction: column;">
-                        <div id="league-track" style="display: flex; flex: 1; transition: transform 0.3s ease-out; transform: translateX(-${this.currentSlide * 100}%);">
+                    <div id="league-carousel-container" style="flex: 1; overflow: hidden; width: 100%; position: relative; display: flex; flex-direction: column; min-height: 0;">
+                        <div id="league-track" style="display: flex; flex: 1; min-height: 0; transition: transform 0.3s ease-out; transform: translateX(-${this.currentSlide * 100}%);">
                             ${slidesHtml}
                         </div>
                     </div>
@@ -199,13 +201,13 @@ class KvartalnaLigaManager {
                     </div>
                 </div>
 
-                <div id="hof-main-content" style="display: none; flex-direction: column; flex: 1; overflow: hidden; width: 100%; padding: 10px 15px 15px 15px;">
+                <div id="hof-main-content" style="display: none; flex-direction: column; flex: 1; overflow: hidden; width: 100%; padding: 10px 15px 15px 15px; min-height: 0;">
                     <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0;">
                         <button id="hof-tab-medals" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')">${gt('hof_tab_medals', 'MEDALJE 🏅')}</button>
                         <button id="hof-tab-champions" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')">${gt('hof_tab_champs', 'ŠAMPIONI 🏆')}</button>
                     </div>
                     
-                    <div style="flex: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
+                    <div style="flex: 1; min-height: 0; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                         <ul id="hof-list" style="list-style: none; padding: 0; margin: 0;">
                             <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_loading', 'Učitavanje Dvorane Slavnih... ⏳')}</li>
                         </ul>
@@ -389,7 +391,7 @@ class KvartalnaLigaManager {
             }
 
             if (isScrolling) {
-                return; 
+                return; // Pusti browser da obradi vertikalni skrol
             }
 
             const diffPercent = (diffX / track.parentElement.offsetWidth) * 100;
