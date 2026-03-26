@@ -42,18 +42,14 @@ class TournamentManager {
                         const myId = this.app.playerId;
                         const isRegisteredServer = newState.players && newState.players.some(p => p.id === myId);
                         
-                        // OBAVEZNO VEZUJEMO ZA UID KORISNIKA
                         const storageKey = 'yamb_tourney_reg_' + myId;
                         const localRegTime = localStorage.getItem(storageKey);
 
-                        // Ako imamo sačuvanu prijavu lokalno, a server nas je zaboravio (npr. prekid konekcije)
                         if (newState.status === 'registration' && localRegTime && !isRegisteredServer) {
                             const now = Date.now();
                             const regTime = parseInt(localRegTime, 10);
                             
-                            // Validnost prijave je 6 dana (518400000 ms)
                             if (now - regTime < 518400000) {
-                                // Vraćamo prijavu na server automatski
                                 const playerData = {
                                     id: this.app.playerId, 
                                     name: this.app.playerName,
@@ -61,12 +57,10 @@ class TournamentManager {
                                 };
                                 this.app.socket.emit('tourney_register', playerData);
                             } else {
-                                // Prijava je previše stara
                                 localStorage.removeItem(storageKey);
                             }
                         }
 
-                        // Ako je turnir završen, čistimo staru prijavu
                         if (newState.status !== 'registration' && newState.bracket && newState.bracket.f && newState.bracket.f[0] && newState.bracket.f[0].winnerId) {
                             localStorage.removeItem(storageKey);
                         }
@@ -145,34 +139,35 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        // Očisti fiksne visine i prepusti Flexboxu da popuni prostor (roditelj index.html sada rešava safe zone)
         container.style.flex = "1";
         container.style.width = "100%";
         container.style.overflow = "hidden";
         container.style.display = "flex";
         container.style.flexDirection = "column";
+        container.style.alignItems = "center";
         
-        // Brisanje starih stilova ako su ostali u kešu
+        // Brisanje starih stilova
         container.style.height = "";
         container.style.paddingTop = "";
         container.style.paddingBottom = "";
 
+        // JEDAN GLAVNI PRAVOUGAONIK U STILU KVARTALNE LIGE
         container.innerHTML = `
-            <div style="display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; padding: 0 5px; box-sizing: border-box;">
+            <div class="modal-box" style="width: 95%; max-width: 500px; flex: 1; min-height: 0; max-height: 85vh; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px; margin-bottom: 10px;">
                 
-                <div style="display: flex; justify-content: space-between; width: 100%; max-width: 400px; gap: 10px; margin-bottom: 15px; flex-shrink: 0;">
-                    <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
+                <div style="display: flex; width: 100%; background: rgba(0,0,0,0.6); border-bottom: 2px solid rgba(255,215,0,0.3); flex-shrink: 0;">
+                    <button style="flex: 1; padding: 15px 5px; font-size: 0.8rem; border: none; background: transparent; border-bottom: ${this.activeTab === 'info' ? '3px solid var(--gold-main)' : '3px solid transparent'}; color: ${this.activeTab === 'info' ? 'var(--gold-main)' : 'var(--text-muted)'}; font-weight: 800; transition: all 0.2s; border-radius: 0; outline: none; cursor: pointer;" onclick="app.tournamentManager.switchTab('info')">
                         ${tt('tourney_tab_info') || '📋 INFO'}
                     </button>
-                    <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
+                    <button style="flex: 1; padding: 15px 5px; font-size: 0.8rem; border: none; background: transparent; border-bottom: ${this.activeTab === 'bracket' ? '3px solid var(--gold-main)' : '3px solid transparent'}; color: ${this.activeTab === 'bracket' ? 'var(--gold-main)' : 'var(--text-muted)'}; font-weight: 800; transition: all 0.2s; border-radius: 0; outline: none; cursor: pointer;" onclick="app.tournamentManager.switchTab('bracket')">
                         ${tt('tourney_tab_bracket') || '🏆 KOSTUR'}
                     </button>
-                    <button class="tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('leaderboard')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
+                    <button style="flex: 1; padding: 15px 5px; font-size: 0.8rem; border: none; background: transparent; border-bottom: ${this.activeTab === 'leaderboard' ? '3px solid var(--gold-main)' : '3px solid transparent'}; color: ${this.activeTab === 'leaderboard' ? 'var(--gold-main)' : 'var(--text-muted)'}; font-weight: 800; transition: all 0.2s; border-radius: 0; outline: none; cursor: pointer;" onclick="app.tournamentManager.switchTab('leaderboard')">
                         ${tt('tourney_tab_fame') || '👑 SLAVNI'}
                     </button>
                 </div>
                 
-                <div id="tourney-tab-content" style="width: 100%; flex: 1; display: flex; justify-content: center; overflow: hidden; max-width: 450px;"></div>
+                <div id="tourney-tab-content" style="width: 100%; flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; padding: 20px 10px; box-sizing: border-box;"></div>
 
             </div>
         `;
@@ -190,35 +185,35 @@ class TournamentManager {
 
     getLeaderboardHTML() {
         let leaderboardHtml = `
-            <div class="modal-box tourney-leaderboard" style="width: 100%; height: 100%; max-height: 100%; max-width: 400px; padding: 25px 20px; overflow-y: auto; justify-content: flex-start; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
-                <div class="tourney-icon-large" style="font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold-main); text-align: center;">👑</div>
-                <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 15px; text-transform: uppercase; font-size: 1.4rem; letter-spacing: 2px; flex-shrink: 0;">
+            <div style="width: 100%; max-width: 350px; display: flex; flex-direction: column; align-items: center; padding-bottom: 20px;">
+                <div class="tourney-icon-large" style="font-size: 3.5rem; margin-bottom: 15px; text-shadow: 0 0 15px var(--gold-main); text-align: center;">👑</div>
+                <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 10px; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 2px; width: 100%;">
                     ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH'}
                 </h3>
                 <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
         `;
         
         if (!this.tourneyLeaderboard || this.tourneyLeaderboard.length === 0) {
-            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:1.1rem; padding: 30px 0;">Još uvek nema osvajača turnira.</div>`;
+            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:1rem; padding: 40px 0;">Još uvek nema osvajača turnira.</div>`;
         } else {
             this.tourneyLeaderboard.forEach((player, idx) => {
-                let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="color: var(--text-muted); font-size: 1.2rem; font-weight: bold;">${idx+1}.</span>`));
+                let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="color: var(--text-muted); font-size: 1.1rem; font-weight: bold;">${idx+1}.</span>`));
                 let photo = player.photoUrl && player.photoUrl.length > 5 ? player.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(player.playerName)}&background=333&color=E0C995`;
                 
                 let bg = idx === 0 ? 'background: linear-gradient(90deg, rgba(255,215,0,0.2) 0%, rgba(0,0,0,0.4) 100%); border: 1px solid var(--gold-main);' : 'background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);';
                 let nameColor = idx === 0 ? 'var(--gold-main)' : 'white';
-                let nameSize = idx === 0 ? '1.2rem' : '1.1rem';
+                let nameSize = idx === 0 ? '1.1rem' : '1rem';
                 
                 leaderboardHtml += `
-                    <div style="display: flex; justify-content: space-between; align-items: center; ${bg} padding: 12px 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; ${bg} padding: 10px 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s;">
                         <div style="display: flex; align-items: center; gap: 15px; overflow: hidden; flex: 1;">
-                            <div style="font-size: 1.5rem; min-width: 35px; text-align: center; flex-shrink: 0;">${rankTrophy}</div>
-                            <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid ${idx === 0 ? 'var(--gold-main)' : 'rgba(255,255,255,0.3)'}; flex-shrink: 0; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
-                            <span style="color: ${nameColor}; font-weight: 800; font-size: ${nameSize}; white-space: normal; word-break: break-word; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">${player.playerName}</span>
+                            <div style="font-size: 1.4rem; min-width: 30px; text-align: center; flex-shrink: 0;">${rankTrophy}</div>
+                            <img src="${photo}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid ${idx === 0 ? 'var(--gold-main)' : 'rgba(255,255,255,0.3)'}; flex-shrink: 0; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                            <span style="color: ${nameColor}; font-weight: 800; font-size: ${nameSize}; white-space: normal; word-break: break-word; line-height: 1.2;">${player.playerName}</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.3);">
-                            <span style="color: var(--gold-main); font-weight: 900; font-size: 1.2rem; flex-shrink: 0;">${player.wins}</span>
-                            <span style="font-size: 1.1rem;">🏆</span>
+                        <div style="display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.3);">
+                            <span style="color: var(--gold-main); font-weight: 900; font-size: 1.1rem; flex-shrink: 0;">${player.wins}</span>
+                            <span style="font-size: 1rem;">🏆</span>
                         </div>
                     </div>
                 `;
@@ -248,16 +243,17 @@ class TournamentManager {
         }
 
         container.innerHTML = `
-            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-height: 100%; max-width: 400px; padding: 25px 20px; overflow-y: auto; justify-content: flex-start; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
-                <div class="tourney-icon-large" style="font-size: 4rem; margin-bottom: 10px; text-align: center;">🏆</div>
-                <h3 class="tourney-title" style="font-size: 1.3rem; margin-bottom: 5px; text-align: center; color: var(--gold-main);">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
-                <p class="tourney-desc" style="font-size: 0.85rem; margin-bottom: 20px; text-align: center; color: var(--text-muted);">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; max-width: 350px;">
+                <div class="tourney-icon-large" style="font-size: 4.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold-main); text-align: center;">🏆</div>
+                <h3 style="font-size: 1.4rem; margin-bottom: 5px; text-align: center; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px;">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
+                <p style="font-size: 0.85rem; margin-bottom: 25px; text-align: center; color: var(--text-muted); line-height: 1.4;">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
                 
-                <div style="font-size: 1.2rem; font-weight: 900; text-align: center; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'}; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); width: 100%;">
-                    ${tt('tourney_registered') || 'Prijavljeno igrača'}<br><br>${this.state.players.length} / 8
+                <div style="font-size: 1.1rem; font-weight: 800; text-align: center; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--text-main)'}; margin-bottom: auto; background: rgba(0,0,0,0.4); padding: 15px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+                    <span style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">${tt('tourney_registered') || 'Prijavljeno igrača'}</span><br>
+                    <div style="font-size: 2.2rem; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'}; margin-top: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">${this.state.players.length} <span style="font-size: 1.2rem; color: var(--text-muted);">/ 8</span></div>
                 </div>
 
-                <div style="width: 100%; display: flex; flex-direction: column; flex-grow: 1;">
+                <div style="width: 100%; display: flex; flex-direction: column; margin-top: 25px;">
                     ${buttonHtml}
                 </div>
             </div>
@@ -406,19 +402,17 @@ class TournamentManager {
 
         container.innerHTML = `
             <style>
-                .tourney-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; cursor: pointer; }
+                .tourney-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; cursor: pointer; }
                 .tourney-dot.active { background: var(--gold-main); transform: scale(1.3); box-shadow: 0 0 5px var(--gold-main); }
                 
-                /* Sakrivanje scrollbara u kosturu za čistiji izgled */
                 .bracket-scroll-container::-webkit-scrollbar { display: none; }
                 .bracket-scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
                 
-                /* Sitni scrollbar za unutrašnje kolone mečeva */
                 .bracket-col-inner::-webkit-scrollbar { width: 4px; }
                 .bracket-col-inner::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.5); border-radius: 2px; }
             </style>
             
-            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-height: 100%; max-width: 400px; padding: 15px 10px; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; position: relative;">
                 
                 <div id="bracket-scroller" class="bracket-scroll-container" style="display: flex; flex-direction: row; width: 100%; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 0;" onscroll="
                     let scrollLeft = this.scrollLeft;
@@ -452,7 +446,7 @@ class TournamentManager {
 
                 </div>
 
-                <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px; padding-bottom: 5px; flex-shrink: 0;">
+                <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px; padding-bottom: 5px; flex-shrink: 0;">
                     <div class="tourney-dot active" onclick="document.getElementById('bracket-scroller').scrollTo({left: 0, behavior: 'smooth'})"></div>
                     <div class="tourney-dot" onclick="document.getElementById('bracket-scroller').scrollTo({left: document.getElementById('bracket-scroller').clientWidth, behavior: 'smooth'})"></div>
                     <div class="tourney-dot" onclick="document.getElementById('bracket-scroller').scrollTo({left: document.getElementById('bracket-scroller').clientWidth * 2, behavior: 'smooth'})"></div>
