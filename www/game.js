@@ -51,7 +51,7 @@ function prikaziPravniTekst(tip) {
         
         // Spajamo naš kratak tekst sa linkom ka punom Firebase dokumentu
         cmMsg.innerHTML = `
-            <div class="pravni-tekst-container" style="text-align:left; font-size:0.85rem; max-height:280px; overflow-y:auto; padding:12px; color:var(--text-main); line-height:1.6; background:rgba(0,0,0,0.25); border-radius:12px; border:1px solid rgba(255,215,0,0.1);">
+            <div class="pravni-tekst-container" style="text-align:left; font-size:0.85rem; max-height:55vh; overflow-y:auto; padding:15px; margin-bottom:10px; color:var(--text-main); line-height:1.6; background:rgba(0,0,0,0.25); border-radius:12px; border:1px solid rgba(255,215,0,0.1);">
                 ${tekst}
                 <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed rgba(255,215,0,0.3); text-align: center;">
                     <a href="${punLink}" target="_blank" style="color: var(--gold-main); font-weight: bold; text-decoration: none; font-size: 0.75rem;">

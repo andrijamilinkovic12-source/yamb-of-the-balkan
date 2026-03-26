@@ -381,33 +381,33 @@
 
     <div id="settings-screen" class="screen">
         <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <h2 class="menu-title" data-lang="menu_settings" style="margin-bottom: 10px;">PODEŠAVANJA</h2>
+        <h2 class="menu-title" data-lang="menu_settings" style="margin-bottom: 20px;">PODEŠAVANJA</h2>
         
-        <div class="modal-box" style="text-align: left; padding: 15px 20px; width: 90%; max-width: 400px; gap: 10px !important; max-height: 90vh;">
+        <div class="modal-box" style="text-align: left; padding: 25px 20px; width: 90%; max-width: 400px; gap: 15px !important; max-height: 85vh; overflow-y: auto;">
             
             <div style="display: flex; align-items: flex-end; justify-content: space-between;">
-                <label style="color:var(--text-muted); font-size: 0.8rem;" data-lang="settings_name">Vaše Ime:</label>
-                <label style="display: flex; align-items: center; font-size: 0.85rem; font-weight: bold; color: var(--gold-main); cursor: pointer;">
-                    <input type="checkbox" id="setting-sound" style="margin-right: 6px; transform: scale(1.1);"> <span data-lang="settings_sound">Zvuk</span>
+                <label style="color:var(--text-muted); font-size: 0.85rem;" data-lang="settings_name">Vaše Ime:</label>
+                <label style="display: flex; align-items: center; font-size: 0.9rem; font-weight: bold; color: var(--gold-main); cursor: pointer;">
+                    <input type="checkbox" id="setting-sound" style="margin-right: 8px; transform: scale(1.2);"> <span data-lang="settings_sound">Zvuk</span>
                 </label>
             </div>
-            <input type="text" id="setting-name" class="modal-input" placeholder="Igrač" disabled style="opacity: 0.6; padding: 8px 10px; margin: 0; font-size: 0.9rem;">
+            <input type="text" id="setting-name" class="modal-input" placeholder="Igrač" disabled style="opacity: 0.6; padding: 12px; margin: 0; font-size: 1rem;">
             
             <div style="margin-top: 5px;">
-                <label style="color: var(--text-muted); font-size: 0.8rem;">Jezik / Language:</label>
-                <div style="display:flex; gap:10px; margin-top:5px;">
-                    <button class="btn-menu btn-secondary" style="flex:1; padding:8px; font-weight:bold; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; min-height: auto;" onclick="setLanguage('sr')">
-                        <img src="https://flagcdn.com/24x18/rs.png" alt="RS" style="width: 20px; height: 15px; border-radius: 2px;"> SRB
+                <label style="color: var(--text-muted); font-size: 0.85rem;">Jezik / Language:</label>
+                <div style="display:flex; gap:12px; margin-top:8px;">
+                    <button class="btn-menu btn-secondary" style="flex:1; padding:12px; font-weight:bold; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; min-height: auto;" onclick="setLanguage('sr')">
+                        <img src="https://flagcdn.com/24x18/rs.png" alt="RS" style="width: 22px; height: 16px; border-radius: 2px;"> SRB
                     </button>
-                    <button class="btn-menu btn-secondary" style="flex:1; padding:8px; font-weight:bold; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0; min-height: auto;" onclick="setLanguage('en')">
-                        <img src="https://flagcdn.com/24x18/gb.png" alt="GB" style="width: 20px; height: 15px; border-radius: 2px; position: relative; top: 1px;"> ENG
+                    <button class="btn-menu btn-secondary" style="flex:1; padding:12px; font-weight:bold; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; min-height: auto;" onclick="setLanguage('en')">
+                        <img src="https://flagcdn.com/24x18/gb.png" alt="GB" style="width: 22px; height: 16px; border-radius: 2px; position: relative; top: 1px;"> ENG
                     </button>
                 </div>
             </div>
 
             <div style="margin-top: 5px;">
-                <label style="color: var(--text-muted); font-size: 0.8rem;" data-lang="settings_theme">Tema:</label>
-                <select id="setting-theme" class="modal-input" style="padding: 8px 15px; margin: 5px 0 0 0; font-size: 0.9rem; background-position: right 10px center;">
+                <label style="color: var(--text-muted); font-size: 0.85rem;" data-lang="settings_theme">Tema:</label>
+                <select id="setting-theme" class="modal-input" style="padding: 12px 15px; margin: 8px 0 0 0; font-size: 1rem; background-position: right 10px center;">
                     <option value="dark" data-lang="theme_dark">Zelena</option>
                     <option value="light" data-lang="theme_light">Svetlo Zlato</option>
                     <option value="medium" data-lang="theme_medium">Trula Višnja 🍒</option>
@@ -417,26 +417,28 @@
                 </select>
             </div>
             
-            <div class="setting-group" style="margin-top: 5px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1);">
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--glass-border);">
+            <div class="setting-group" style="margin-top: 5px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 12px 15px; border-radius: 12px; border: 1px solid var(--glass-border);">
                     
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img id="auth-user-photo" src="" alt="Avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Igrač&background=333&color=E0C995';" style="width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--gold-main); display: none; object-fit: cover; box-shadow: 0 0 10px rgba(255,215,0,0.2);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <img id="auth-user-photo" src="" alt="Avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Igrač&background=333&color=E0C995';" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold-main); display: none; object-fit: cover; box-shadow: 0 0 10px rgba(255,215,0,0.2);">
                         <div style="display: flex; flex-direction: column;">
-                            <span style="font-size: 0.55rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Google Nalog</span>
-                            <span id="auth-user-info" style="font-size: 0.85rem; color: var(--text-main); font-weight: bold;" data-lang="settings_not_logged_in">Niste prijavljeni</span>
+                            <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Google Nalog</span>
+                            <span id="auth-user-info" style="font-size: 0.9rem; color: var(--text-main); font-weight: bold;" data-lang="settings_not_logged_in">Niste prijavljeni</span>
                         </div>
                     </div>
 
-                    <button id="btn-google-logout" class="btn-menu btn-secondary" style="display:none; padding: 6px 12px; font-size: 0.75rem; margin: 0; background: rgba(244,67,54,0.2); border-color: var(--danger); color: white; min-height: auto; width: auto;" onclick="odjaviSe()" data-lang="settings_logout">Odjavi se</button>
+                    <button id="btn-google-logout" class="btn-menu btn-secondary" style="display:none; padding: 8px 15px; font-size: 0.8rem; margin: 0; background: rgba(244,67,54,0.2); border-color: var(--danger); color: white; min-height: auto; width: auto;" onclick="odjaviSe()" data-lang="settings_logout">Odjavi</button>
                 </div>
             </div>
 
-            <button class="btn-menu btn-primary" style="margin-top: 5px; padding: 12px; font-size: 1rem;" onclick="app.saveSettings()" data-lang="settings_save">SAČUVAJ</button>
-            
-            <div style="margin-top: 5px; text-align: center; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
-                <span onclick="prikaziPravniTekst('terms')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px;" data-lang="settings_terms">📜 Uslovi</span>
-                <span onclick="prikaziPravniTekst('privacy')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px;" data-lang="settings_privacy">🔒 Privatnost</span>
+            <div style="margin-top: 10px; width: 100%;">
+                <button class="btn-menu btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.3);" onclick="app.saveSettings()" data-lang="settings_save">SAČUVAJ</button>
+                
+                <div style="margin-top: 15px; text-align: center; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <span onclick="prikaziPravniTekst('terms')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px;" data-lang="settings_terms">📜 Uslovi</span>
+                    <span onclick="prikaziPravniTekst('privacy')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px;" data-lang="settings_privacy">🔒 Privatnost</span>
+                </div>
             </div>
         </div>
     </div>
