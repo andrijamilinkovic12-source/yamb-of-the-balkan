@@ -145,16 +145,20 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        // UKLONJENO fiksno 80vh - sada koristi flexbox da precizno stane iznad sistemskih dugmića telefona
-        container.style.height = "auto";
+        // Obezbeđujemo "safe-area" margine za moderne telefone (gornja traka i donji dugmići)
+        container.style.height = "100%"; 
         container.style.flex = "1";
         container.style.overflow = "hidden";
         container.style.display = "flex";
         container.style.flexDirection = "column";
-        container.style.paddingBottom = "max(25px, env(safe-area-inset-bottom))"; // Obezbeđuje razmak od samog dna
+        container.style.boxSizing = "border-box"; // Sprečava da padding probije visinu ekrana
+        
+        // Povećan padding za vrh i dno uz korišćenje sistemskih promenljivih
+        container.style.paddingTop = "max(45px, env(safe-area-inset-top))"; 
+        container.style.paddingBottom = "max(40px, env(safe-area-inset-bottom))"; 
 
         container.innerHTML = `
-            <div style="display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; padding: 0 5px;">
+            <div style="display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; padding: 0 5px; box-sizing: border-box;">
                 
                 <div style="display: flex; justify-content: space-between; width: 100%; max-width: 400px; gap: 10px; margin-bottom: 15px; flex-shrink: 0;">
                     <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
