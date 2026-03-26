@@ -79,8 +79,6 @@ class TournamentManager {
     }
 
     open() {
-        // Više ne forsiramo 'info' tab na silu. Pamtimo šta je korisnik gledao, 
-        // osim ako je prešao u novu fazu pa ga prebacujemo na kostur.
         if (this.state.status !== 'registration' && this.activeTab === 'info') {
             this.activeTab = 'bracket';
         }
@@ -111,14 +109,13 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        // Očišćen stil kontejnera - uklonjeno nepotrebno skrolovanje i height:80vh
         container.style.height = "auto";
         container.style.overflowY = "visible";
 
         container.innerHTML = `
             <div style="display: flex; flex-direction: column; width: 100%; align-items: center; padding: 0 10px;">
                 
-                <div style="display: flex; justify-content: space-between; width: 100%; max-width: 500px; gap: 10px; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; width: 100%; max-width: 400px; gap: 10px; margin-bottom: 10px;">
                     <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
                         ${tt('tourney_tab_info') || '📋 INFO'}
                     </button>
@@ -130,7 +127,7 @@ class TournamentManager {
                     </button>
                 </div>
                 
-                <div id="tourney-tab-content" style="width: 100%; max-width: 600px; display: flex; justify-content: center; margin-top: 10px;"></div>
+                <div id="tourney-tab-content" style="width: 100%; display: flex; justify-content: center; margin-top: 10px;"></div>
 
             </div>
         `;
@@ -147,9 +144,8 @@ class TournamentManager {
     }
 
     getLeaderboardHTML() {
-        // POTPUNO NOVI IZGLED - BOLD, PREGLEDNO, U STILU KVARTALNE LIGE
         let leaderboardHtml = `
-            <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 500px; padding: 25px 20px; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
+            <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 400px; padding: 25px 20px; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
                 <div class="tourney-icon-large" style="font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold-main);">👑</div>
                 <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 15px; text-transform: uppercase; font-size: 1.4rem; letter-spacing: 2px;">
                     ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH'}
@@ -164,7 +160,6 @@ class TournamentManager {
                 let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="color: var(--text-muted); font-size: 1.2rem; font-weight: bold;">${idx+1}.</span>`));
                 let photo = player.photoUrl && player.photoUrl.length > 5 ? player.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(player.playerName)}&background=333&color=E0C995`;
                 
-                // Stilovi koji razdvajaju prvog od ostalih
                 let bg = idx === 0 ? 'background: linear-gradient(90deg, rgba(255,215,0,0.2) 0%, rgba(0,0,0,0.4) 100%); border: 1px solid var(--gold-main);' : 'background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);';
                 let nameColor = idx === 0 ? 'var(--gold-main)' : 'white';
                 let nameSize = idx === 0 ? '1.2rem' : '1.1rem';
@@ -214,7 +209,7 @@ class TournamentManager {
                 <p class="tourney-desc" style="font-size: 0.85rem; margin-bottom: 20px;">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
                 
                 <div style="font-size: 1.2rem; font-weight: 900; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'}; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                    ${tt('tourney_registered') || 'Prijavljeno'}: ${this.state.players.length} / 8
+                    ${tt('tourney_registered') || 'Prijavljeno igrača'} ${this.state.players.length} / 8
                 </div>
 
                 <div style="width: 100%;">
@@ -272,7 +267,8 @@ class TournamentManager {
                 if(this.app.socket) {
                     const playerData = {
                         id: this.app.playerId, 
-                        name: this.app.playerName
+                        name: this.app.playerName,
+                        photoUrl: localStorage.getItem('yamb_player_photo') || ''
                     };
                     this.app.socket.emit('tourney_register', playerData);
                 }
@@ -342,27 +338,39 @@ class TournamentManager {
     }
 
     renderBracket(container) {
-        // Punimo prazne nizove da bi vizuelno iscrtali ceo kostur (čak i pre početka)
         let qf = this.state.bracket.qf || [];
         let sf = this.state.bracket.sf || [];
         let f = this.state.bracket.f || [];
+
+        // POPUNJAVANJE TOKOM PRIJAVE
+        if (this.state.status === 'registration') {
+            qf = Array(4).fill(null).map((_, i) => {
+                const p1 = this.state.players[i*2] || null;
+                const p2 = this.state.players[i*2+1] || null;
+                if (!p1 && !p2) return null;
+                return { p1: p1 || null, p2: p2 || null };
+            });
+        }
 
         if (qf.length === 0) qf = Array(4).fill(null);
         if (sf.length === 0) sf = Array(2).fill(null);
         if (f.length === 0) f = Array(1).fill(null);
 
         container.innerHTML = `
-            <div class="bracket-wrapper" style="width: 100%; display: flex; flex-direction: row; gap: 15px; justify-content: center; align-items: stretch; min-height: 380px; padding: 5px; overflow-x: auto;">
+            <div class="modal-box tourney-wrapper" style="width: 100%; max-width: 400px; padding: 20px;">
                 
-                <div class="bracket-col qf" style="display: flex; flex-direction: column; justify-content: space-around; gap: 10px;">
+                <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px;">Četvrtfinale</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px;">
                     ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
                 </div>
-                
-                <div class="bracket-col sf" style="display: flex; flex-direction: column; justify-content: space-around; gap: 20px;">
+
+                <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px;">Polufinale</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px;">
                     ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
                 </div>
-                
-                <div class="bracket-col f" style="display: flex; flex-direction: column; justify-content: center;">
+
+                <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px;">Finale 🏆</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
                     ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
                 </div>
                 
@@ -371,39 +379,53 @@ class TournamentManager {
     }
 
     createMatchHTML(match, round, index) {
-        // PROMENJEN STIL PRAZNIH MESTA - Da izgleda jasno kao prozor koji se tek popunjava
-        if (!match || !match.p1 || !match.p2) {
+        if (!match || (!match.p1 && !match.p2)) {
             return `
-                <div class="match-card empty" style="padding: 10px; width: 115px; font-size: 0.8rem; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.4); border-radius: 8px; text-align: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
-                    <span style="color: var(--text-muted); font-weight: 600;">${tt('tourney_tbd') || 'Čeka se...'}</span>
-                    <hr class="match-divider" style="margin: 6px 0; border-top: 1px dashed rgba(255,255,255,0.1);">
+                <div class="match-card empty" style="padding: 15px 10px; width: 100%; font-size: 0.8rem; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.4); border-radius: 12px; text-align: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
                     <span style="color: var(--text-muted); font-weight: 600;">${tt('tourney_tbd') || 'Čeka se...'}</span>
                 </div>`;
         }
 
         const myId = this.app.playerId;
-        const isMyMatch = match.p1.id === myId || match.p2.id === myId;
+        const isMyMatch = (match.p1 && match.p1.id === myId) || (match.p2 && match.p2.id === myId);
         const activeClass = isMyMatch ? 'my-match' : '';
         
-        const getPlayerClass = (playerId) => {
-            if (match.winnerId === playerId) return `winner`;
-            if (match.winnerId) return `loser`;
-            return ``;
+        const getPlayerHtml = (p) => {
+            if (!p) return `<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.75rem;">Čeka se...</div>`;
+            
+            let photo = p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`;
+            let isWinner = match.winnerId === p.id;
+            let isLoser = match.winnerId && match.winnerId !== p.id;
+            
+            let opacity = isLoser ? '0.4' : '1';
+            let border = isWinner ? '2px solid var(--success)' : '1px solid rgba(255,215,0,0.4)';
+            let filter = isLoser ? 'grayscale(100%)' : 'none';
+            let nameColor = isWinner ? 'var(--success)' : 'var(--text-main)';
+            
+            return `
+                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: ${opacity}; filter: ${filter};">
+                    <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: ${border}; margin-bottom: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+                    <span style="font-size: 0.75rem; font-weight: bold; text-align: center; word-break: break-word; line-height: 1.2; max-width: 100px; color: ${nameColor};">${p.name}</span>
+                </div>
+            `;
         };
 
         let timeInfo = '';
         if (match.timeAccepted && match.time) {
-            timeInfo = `<div class="match-time-badge" style="margin-top: 5px; font-size: 0.6rem;">✅ ${this.formatDate(match.time)}</div>`;
+            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: var(--success); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">✅ ${this.formatDate(match.time)}</div>`;
         } else if (match.proposedTime) {
-            timeInfo = `<div class="match-time-badge pending" style="margin-top: 5px; font-size: 0.6rem;">⏳ Dogovor...</div>`;
+            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: #ff9800; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">⏳ Dogovor oko termina...</div>`;
+        } else if (match.p1 && match.p2) {
+            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: var(--text-muted); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">Nije zakazano</div>`;
         }
 
         return `
-            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 8px; width: 115px; font-size: 0.75rem; position: relative;">
-                ${round === 'f' ? '<div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); font-size:1.2rem;">🏆</div>' : ''}
-                <div class="match-player ${getPlayerClass(match.p1.id)}" style="margin-bottom: 2px;">${match.p1.name}</div>
-                <hr class="match-divider" style="margin: 4px 0; border-top: 1px solid rgba(255,255,255,0.2);">
-                <div class="match-player ${getPlayerClass(match.p2.id)}" style="margin-top: 2px;">${match.p2.name}</div>
+            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 12px 10px; width: 100%; background: rgba(0,0,0,0.4); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.1s;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    ${getPlayerHtml(match.p1)}
+                    <div style="font-size: 0.85rem; font-weight: 900; color: var(--gold-main); margin: 0 10px; text-shadow: 0 0 5px rgba(255,215,0,0.5);">VS</div>
+                    ${getPlayerHtml(match.p2)}
+                </div>
                 ${timeInfo}
             </div>
         `;
