@@ -37,7 +37,6 @@ class TournamentManager {
                     const oldStatus = this.state.status;
                     this.state = newState;
                     
-                    // --- AUTO-RESTORE PRIJAVE (SPREČAVA GUBITAK DUKATA I PRIJAVE) ---
                     if (this.app && this.app.playerId) {
                         const myId = this.app.playerId;
                         const isRegisteredServer = newState.players && newState.players.some(p => p.id === myId);
@@ -65,7 +64,6 @@ class TournamentManager {
                             localStorage.removeItem(storageKey);
                         }
                     }
-                    // -------------------------------------------------------------
 
                     if (oldStatus === 'registration' && newState.status !== 'registration') {
                         this.activeTab = 'bracket';
@@ -146,12 +144,10 @@ class TournamentManager {
         container.style.flexDirection = "column";
         container.style.alignItems = "center";
         
-        // Brisanje starih stilova
         container.style.height = "";
         container.style.paddingTop = "";
         container.style.paddingBottom = "";
 
-        // JEDAN GLAVNI PRAVOUGAONIK U STILU KVARTALNE LIGE
         container.innerHTML = `
             <div class="modal-box" style="width: 95%; max-width: 500px; flex: 1; min-height: 0; max-height: 85vh; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px; margin-bottom: 10px;">
                 
@@ -167,18 +163,26 @@ class TournamentManager {
                     </button>
                 </div>
                 
-                <div id="tourney-tab-content" style="width: 100%; flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; padding: 20px 10px; box-sizing: border-box;"></div>
+                <div id="tourney-tab-content" style="width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; box-sizing: border-box;"></div>
 
             </div>
         `;
 
         const tabContent = document.getElementById('tourney-tab-content');
         
-        if (this.activeTab === 'info') {
-            this.renderRegistration(tabContent);
-        } else if (this.activeTab === 'bracket') {
+        // Podešavanje Padinga i Overflowa na osnovu taba (Kostur ne sme da skroluje)
+        if (this.activeTab === 'bracket') {
+            tabContent.style.padding = '10px 5px';
+            tabContent.style.overflowY = 'hidden';
+            tabContent.style.overflowX = 'hidden';
             this.renderBracket(tabContent);
+        } else if (this.activeTab === 'info') {
+            tabContent.style.padding = '20px 10px';
+            tabContent.style.overflowY = 'auto';
+            this.renderRegistration(tabContent);
         } else if (this.activeTab === 'leaderboard') {
+            tabContent.style.padding = '20px 10px';
+            tabContent.style.overflowY = 'auto';
             tabContent.innerHTML = this.getLeaderboardHTML();
         }
     }
@@ -401,57 +405,29 @@ class TournamentManager {
         if (f.length === 0) f = Array(1).fill(null);
 
         container.innerHTML = `
-            <style>
-                .tourney-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; cursor: pointer; }
-                .tourney-dot.active { background: var(--gold-main); transform: scale(1.3); box-shadow: 0 0 5px var(--gold-main); }
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column;">
                 
-                .bracket-scroll-container::-webkit-scrollbar { display: none; }
-                .bracket-scroll-container { -ms-overflow-style: none; scrollbar-width: none; }
-                
-                .bracket-col-inner::-webkit-scrollbar { width: 4px; }
-                .bracket-col-inner::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.5); border-radius: 2px; }
-            </style>
-            
-            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; position: relative;">
-                
-                <div id="bracket-scroller" class="bracket-scroll-container" style="display: flex; flex-direction: row; width: 100%; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 0;" onscroll="
-                    let scrollLeft = this.scrollLeft;
-                    let width = this.clientWidth;
-                    let index = Math.round(scrollLeft / width);
-                    document.querySelectorAll('.tourney-dot').forEach((dot, i) => {
-                        dot.classList.toggle('active', i === index);
-                    });
-                ">
+                <div style="display: flex; flex-direction: row; width: 100%; padding-bottom: 8px; border-bottom: 1px solid rgba(255,215,0,0.2); margin-bottom: 5px; flex-shrink: 0;">
+                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">1/4</div>
+                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">1/2</div>
+                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">FINALE</div>
+                </div>
+
+                <div style="display: flex; flex-direction: row; width: 100%; flex: 1; gap: 6px; position: relative;">
                     
-                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; padding: 0 5px; overflow: hidden;">
-                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0 0 10px 0; font-size: 1.1rem; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; width: 95%; text-align: center; flex-shrink: 0; letter-spacing: 1px;">Četvrtfinale</h4>
-                        <div class="bracket-col-inner" style="width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 12px; padding-bottom: 10px;">
-                            ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
-                        </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-around; position: relative;">
+                        ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
                     </div>
 
-                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; padding: 0 5px; overflow: hidden;">
-                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0 0 10px 0; font-size: 1.1rem; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; width: 95%; text-align: center; flex-shrink: 0; letter-spacing: 1px;">Polufinale</h4>
-                        <div class="bracket-col-inner" style="width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 20px; padding-bottom: 10px; padding-top: 10px;">
-                            ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
-                        </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-around; position: relative;">
+                        ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
                     </div>
 
-                    <div class="bracket-col" style="flex: 0 0 100%; width: 100%; height: 100%; scroll-snap-align: center; display: flex; flex-direction: column; align-items: center; padding: 0 5px; overflow: hidden;">
-                        <h4 style="color: var(--gold-main); text-transform: uppercase; margin: 0 0 10px 0; font-size: 1.2rem; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; width: 95%; text-align: center; flex-shrink: 0; letter-spacing: 2px;">Finale 🏆</h4>
-                        <div class="bracket-col-inner" style="width: 100%; flex: 1; overflow-y: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding-bottom: 10px;">
-                            ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
-                        </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-around; position: relative;">
+                        ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
                     </div>
 
                 </div>
-
-                <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 10px; padding-bottom: 5px; flex-shrink: 0;">
-                    <div class="tourney-dot active" onclick="document.getElementById('bracket-scroller').scrollTo({left: 0, behavior: 'smooth'})"></div>
-                    <div class="tourney-dot" onclick="document.getElementById('bracket-scroller').scrollTo({left: document.getElementById('bracket-scroller').clientWidth, behavior: 'smooth'})"></div>
-                    <div class="tourney-dot" onclick="document.getElementById('bracket-scroller').scrollTo({left: document.getElementById('bracket-scroller').clientWidth * 2, behavior: 'smooth'})"></div>
-                </div>
-
             </div>
         `;
     }
@@ -459,52 +435,52 @@ class TournamentManager {
     createMatchHTML(match, round, index) {
         if (!match || (!match.p1 && !match.p2)) {
             return `
-                <div class="match-card empty" style="padding: 12px 10px; width: 100%; max-width: 320px; font-size: 0.8rem; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.4); border-radius: 12px; text-align: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
-                    <span style="color: var(--text-muted); font-weight: 600;">${tt('tourney_tbd') || 'Čeka se...'}</span>
+                <div style="width: 100%; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.3); border-radius: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4px; box-sizing: border-box; min-height: 45px;">
+                    <span style="color: rgba(255,255,255,0.3); font-size: 0.6rem; font-weight: bold;">---</span>
                 </div>`;
         }
 
         const myId = this.app.playerId;
         const isMyMatch = (match.p1 && match.p1.id === myId) || (match.p2 && match.p2.id === myId);
-        const activeClass = isMyMatch ? 'my-match' : '';
         
-        const getPlayerHtml = (p) => {
-            if (!p) return `<div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-muted); font-size:0.75rem;">Čeka se...</div>`;
+        const getPlayerHtml = (p, isTop) => {
+            if (!p) {
+                return `
+                    <div style="display: flex; align-items: center; padding: 3px 4px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''}">
+                        <div style="width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,0.1); margin-right: 4px; flex-shrink: 0;"></div>
+                        <span style="color: rgba(255,255,255,0.3); font-size: 0.6rem;">---</span>
+                    </div>`;
+            }
             
             let photo = p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`;
             let isWinner = match.winnerId === p.id;
             let isLoser = match.winnerId && match.winnerId !== p.id;
             
             let opacity = isLoser ? '0.4' : '1';
-            let border = isWinner ? '2px solid var(--success)' : '1px solid rgba(255,215,0,0.4)';
             let filter = isLoser ? 'grayscale(100%)' : 'none';
             let nameColor = isWinner ? 'var(--success)' : 'var(--text-main)';
+            let fontWeight = isWinner ? '900' : '600';
             
             return `
-                <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: ${opacity}; filter: ${filter};">
-                    <img src="${photo}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: ${border}; margin-bottom: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
-                    <span style="font-size: 0.75rem; font-weight: bold; text-align: center; word-break: break-word; line-height: 1.1; max-width: 100px; color: ${nameColor};">${p.name}</span>
+                <div style="display: flex; align-items: center; padding: 3px 4px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
+                    <img src="${photo}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover; border: 1px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 4px; flex-shrink: 0;">
+                    <span style="font-size: 0.6rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${p.name}</span>
                 </div>
             `;
         };
 
-        let timeInfo = '';
+        let statusDot = '';
         if (match.timeAccepted && match.time) {
-            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: var(--success); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">✅ ${this.formatDate(match.time)}</div>`;
+            statusDot = `<div style="position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 4px var(--success);"></div>`;
         } else if (match.proposedTime) {
-            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: #ff9800; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">⏳ Dogovor...</div>`;
-        } else if (match.p1 && match.p2) {
-            timeInfo = `<div style="text-align:center; font-size: 0.65rem; color: var(--text-muted); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 5px;">Nije zakazano</div>`;
+            statusDot = `<div style="position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: #ff9800; border-radius: 50%; box-shadow: 0 0 4px #ff9800;"></div>`;
         }
 
         return `
-            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 12px 10px; width: 100%; max-width: 320px; background: rgba(0,0,0,0.4); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.1s; flex-shrink: 0;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    ${getPlayerHtml(match.p1)}
-                    <div style="font-size: 0.85rem; font-weight: 900; color: var(--gold-main); margin: 0 10px; text-shadow: 0 0 5px rgba(255,215,0,0.5);">VS</div>
-                    ${getPlayerHtml(match.p2)}
-                </div>
-                ${timeInfo}
+            <div onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 6px; display: flex; flex-direction: column; cursor: pointer; position: relative; box-shadow: ${isMyMatch ? '0 0 8px rgba(255,215,0,0.3)' : 'none'}; transition: transform 0.1s; transform: scale(0.98);">
+                ${statusDot}
+                ${getPlayerHtml(match.p1, true)}
+                ${getPlayerHtml(match.p2, false)}
             </div>
         `;
     }
