@@ -634,12 +634,12 @@
         </div>
     </div>
 
-    <div id="tournament-screen" class="screen">
+    <div id="tournament-screen" class="screen" style="padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom)); justify-content: flex-start;">
         <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <h2 class="menu-title" style="margin-bottom: 20px;">TURNIR ⚔️</h2>
+        <h2 class="menu-title" style="margin-bottom: 15px; flex-shrink: 0;">TURNIR ⚔️</h2>
         
-        <div id="tourney-content" style="width: 100%; max-width: 900px; height: 80vh; overflow-y: auto; display: flex; justify-content: center; align-items: flex-start; padding-bottom: 50px;">
-            </div>
+        <div id="tourney-content" style="width: 100%; max-width: 900px; flex: 1; overflow-y: hidden; display: flex; flex-direction: column; align-items: center;">
+        </div>
     </div>
 
     <script>

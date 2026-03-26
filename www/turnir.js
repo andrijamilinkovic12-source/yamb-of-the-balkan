@@ -145,17 +145,17 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        // Obezbeđujemo "safe-area" margine za moderne telefone (gornja traka i donji dugmići)
-        container.style.height = "100%"; 
+        // Očisti fiksne visine i prepusti Flexboxu da popuni prostor (roditelj index.html sada rešava safe zone)
         container.style.flex = "1";
+        container.style.width = "100%";
         container.style.overflow = "hidden";
         container.style.display = "flex";
         container.style.flexDirection = "column";
-        container.style.boxSizing = "border-box"; // Sprečava da padding probije visinu ekrana
         
-        // Povećan padding za vrh i dno uz korišćenje sistemskih promenljivih
-        container.style.paddingTop = "max(45px, env(safe-area-inset-top))"; 
-        container.style.paddingBottom = "max(40px, env(safe-area-inset-bottom))"; 
+        // Brisanje starih stilova ako su ostali u kešu
+        container.style.height = "";
+        container.style.paddingTop = "";
+        container.style.paddingBottom = "";
 
         container.innerHTML = `
             <div style="display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; padding: 0 5px; box-sizing: border-box;">
