@@ -37,6 +37,42 @@ class TournamentManager {
                     const oldStatus = this.state.status;
                     this.state = newState;
                     
+                    // --- AUTO-RESTORE PRIJAVE (SPREČAVA GUBITAK DUKATA I PRIJAVE) ---
+                    if (this.app && this.app.playerId) {
+                        const myId = this.app.playerId;
+                        const isRegisteredServer = newState.players && newState.players.some(p => p.id === myId);
+                        
+                        // OBAVEZNO VEZUJEMO ZA UID KORISNIKA
+                        const storageKey = 'yamb_tourney_reg_' + myId;
+                        const localRegTime = localStorage.getItem(storageKey);
+
+                        // Ako imamo sačuvanu prijavu lokalno, a server nas je zaboravio (npr. prekid konekcije)
+                        if (newState.status === 'registration' && localRegTime && !isRegisteredServer) {
+                            const now = Date.now();
+                            const regTime = parseInt(localRegTime, 10);
+                            
+                            // Validnost prijave je 6 dana (518400000 ms), da se ne bi prenelo besplatno na turnir sledeće nedelje
+                            if (now - regTime < 518400000) {
+                                // Vraćamo prijavu na server automatski (BEZ ponovnog skidanja dukata)
+                                const playerData = {
+                                    id: this.app.playerId, 
+                                    name: this.app.playerName,
+                                    photoUrl: localStorage.getItem('yamb_player_photo') || ''
+                                };
+                                this.app.socket.emit('tourney_register', playerData);
+                            } else {
+                                // Prijava je previše stara (novi nedeljni turnir)
+                                localStorage.removeItem(storageKey);
+                            }
+                        }
+
+                        // Ako je turnir završen i imamo konačnog pobednika, čistimo staru prijavu
+                        if (newState.status !== 'registration' && newState.bracket && newState.bracket.f && newState.bracket.f[0] && newState.bracket.f[0].winnerId) {
+                            localStorage.removeItem(storageKey);
+                        }
+                    }
+                    // -------------------------------------------------------------
+
                     if (oldStatus === 'registration' && newState.status !== 'registration') {
                         this.activeTab = 'bracket';
                     }
@@ -248,6 +284,9 @@ class TournamentManager {
                 currentBalance -= fee;
                 localStorage.setItem('yamb_dukati', currentBalance);
                 
+                // PAMTIMO PRIJAVU LOKALNO ZA AUTO-RESTORE SA UID-om
+                localStorage.setItem('yamb_tourney_reg_' + this.app.playerId, Date.now().toString());
+                
                 if (window.statsManager) {
                     window.statsManager.stats.balance = currentBalance;
                     window.statsManager.saveStats();
@@ -293,6 +332,9 @@ class TournamentManager {
             if (window.adMobGlobal && window.adMobGlobal.showInterstitial) {
                 await window.adMobGlobal.showInterstitial();
             }
+
+            // BRIŠEMO LOKALNU PRIJAVU JER IGRAČ SVOJEVOLJNO ODUSTAJE
+            localStorage.removeItem('yamb_tourney_reg_' + this.app.playerId);
 
             const refundAmount = 2500;
             let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
