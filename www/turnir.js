@@ -145,15 +145,18 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        container.style.height = "80vh";
+        // UKLONJENO fiksno 80vh - sada koristi flexbox da precizno stane iznad sistemskih dugmića telefona
+        container.style.height = "auto";
+        container.style.flex = "1";
         container.style.overflow = "hidden";
         container.style.display = "flex";
         container.style.flexDirection = "column";
+        container.style.paddingBottom = "max(25px, env(safe-area-inset-bottom))"; // Obezbeđuje razmak od samog dna
 
         container.innerHTML = `
             <div style="display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; padding: 0 5px;">
                 
-                <div style="display: flex; justify-content: space-between; width: 100%; max-width: 400px; gap: 10px; margin-bottom: 10px; flex-shrink: 0;">
+                <div style="display: flex; justify-content: space-between; width: 100%; max-width: 400px; gap: 10px; margin-bottom: 15px; flex-shrink: 0;">
                     <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
                         ${tt('tourney_tab_info') || '📋 INFO'}
                     </button>
@@ -183,7 +186,7 @@ class TournamentManager {
 
     getLeaderboardHTML() {
         let leaderboardHtml = `
-            <div class="modal-box tourney-leaderboard" style="width: 100%; height: 100%; max-width: 400px; padding: 25px 20px; overflow-y: auto; justify-content: flex-start; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
+            <div class="modal-box tourney-leaderboard" style="width: 100%; height: 100%; max-height: 100%; max-width: 400px; padding: 25px 20px; overflow-y: auto; justify-content: flex-start; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
                 <div class="tourney-icon-large" style="font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold-main); text-align: center;">👑</div>
                 <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 15px; text-transform: uppercase; font-size: 1.4rem; letter-spacing: 2px; flex-shrink: 0;">
                     ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH'}
@@ -241,7 +244,7 @@ class TournamentManager {
         }
 
         container.innerHTML = `
-            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-width: 400px; padding: 25px 20px; overflow-y: auto; justify-content: flex-start; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
+            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-height: 100%; max-width: 400px; padding: 25px 20px; overflow-y: auto; justify-content: flex-start; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
                 <div class="tourney-icon-large" style="font-size: 4rem; margin-bottom: 10px; text-align: center;">🏆</div>
                 <h3 class="tourney-title" style="font-size: 1.3rem; margin-bottom: 5px; text-align: center; color: var(--gold-main);">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
                 <p class="tourney-desc" style="font-size: 0.85rem; margin-bottom: 20px; text-align: center; color: var(--text-muted);">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
@@ -411,7 +414,7 @@ class TournamentManager {
                 .bracket-col-inner::-webkit-scrollbar-thumb { background: rgba(255,215,0,0.5); border-radius: 2px; }
             </style>
             
-            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-width: 400px; padding: 15px 10px; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
+            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-height: 100%; max-width: 400px; padding: 15px 10px; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
                 
                 <div id="bracket-scroller" class="bracket-scroll-container" style="display: flex; flex-direction: row; width: 100%; flex: 1; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 0;" onscroll="
                     let scrollLeft = this.scrollLeft;
