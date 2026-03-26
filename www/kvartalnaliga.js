@@ -146,10 +146,10 @@ class KvartalnaLigaManager {
         if (this.currentSlide === -1) this.currentSlide = 0;
 
         let slidesHtml = currentRanks.map((r) => `
-            <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 10px;">
-                <h3 style="color: var(--gold-main); font-size: 1rem; text-align: center; margin-bottom: 15px;">${r.name}</h3>
-                <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;">
-                    <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0; max-height: 250px; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;">
+            <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 15px; display: flex; flex-direction: column; height: 100%;">
+                <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;">${r.name}</h3>
+                <div style="flex: 1; overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
+                    <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0;">
                         <li style="text-align: center; color: #aaa; font-size: 0.85rem; padding: 20px;">Učitavanje podataka... ⏳</li>
                     </ul>
                 </div>
@@ -162,53 +162,56 @@ class KvartalnaLigaManager {
 
         let modalHtml = `
         <div id="league-modal-overlay" class="modal-overlay" style="z-index: 999999; display: flex;">
-            <div class="modal-box" style="width: 95%; max-width: 500px; max-height: 90vh; overflow-y: auto; padding: 20px; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); overflow-x: hidden;">
+            <div class="modal-box" style="width: 95%; max-width: 450px; height: 85vh; max-height: 800px; display: flex; flex-direction: column; padding: 0; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); overflow: hidden;">
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--gold-glow); padding-bottom: 10px;">
-                    <h2 style="color: var(--gold-main); font-size: 1.5rem; margin: 0; text-transform: uppercase;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
-                    <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold;" onclick="document.getElementById('league-modal-overlay').remove()">✖</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,215,0,0.2); background: rgba(0,0,0,0.3); flex-shrink: 0;">
+                    <h2 style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
+                    <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold; line-height: 1;" onclick="document.getElementById('league-modal-overlay').remove()">✖</span>
                 </div>
 
-                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 15px;">
-                    <button id="tab-league-main" class="btn-menu btn-primary" style="flex: 1; padding: 8px; font-size: 0.85rem; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('league')">${gt('hof_tab_league', 'LIGA')}</button>
-                    <button id="tab-league-hof" class="btn-menu btn-secondary" style="flex: 1; padding: 8px; font-size: 0.85rem; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('hof')">${gt('hof_tab_main', 'DVORANA SLAVNIH 🏛️')}</button>
+                <div style="display: flex; justify-content: center; gap: 10px; padding: 15px 15px 5px 15px; flex-shrink: 0;">
+                    <button id="tab-league-main" class="btn-menu btn-primary" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('league')">${gt('hof_tab_league', 'LIGA')}</button>
+                    <button id="tab-league-hof" class="btn-menu btn-secondary" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('hof')">${gt('hof_tab_main', 'DVORANA SLAVNIH 🏛️')}</button>
                 </div>
 
-                <div id="league-main-content">
-                    <div style="text-align: center; margin-bottom: 20px;">
-                        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">${gt('league_your_rank', 'Vaš rang')}</div>
-                        <div style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 0 0 10px var(--gold-main);">${rank}</div>
-                        <div style="font-size: 1.2rem; color: var(--gold-main); font-weight: bold; margin-top: 5px;">${pts} PTS</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">
-                            ${gt('league_all_time_desc', 'Sva vremena')}: ${allTime} PTS
+                <div id="league-main-content" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; width: 100%;">
+                    <div style="padding: 10px 15px; flex-shrink: 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(224, 201, 149, 0.08); padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(224, 201, 149, 0.2);">
+                            <div style="text-align: left;">
+                                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">${gt('league_your_rank', 'Vaš rang')}</div>
+                                <div style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px var(--gold-main);">${rank}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 1.1rem; color: var(--gold-main); font-weight: bold;">${pts} PTS</div>
+                                <div style="font-size: 0.65rem; color: var(--text-muted);">${gt('league_all_time_desc', 'Sva vremena')}: ${allTime}</div>
+                            </div>
                         </div>
                     </div>
 
-                    <div id="league-carousel-container" style="overflow: hidden; width: 100%; position: relative;">
-                        <div id="league-track" style="display: flex; transition: transform 0.3s ease-out; transform: translateX(-${this.currentSlide * 100}%);">
+                    <div id="league-carousel-container" style="flex: 1; overflow: hidden; width: 100%; position: relative; display: flex; flex-direction: column;">
+                        <div id="league-track" style="display: flex; flex: 1; transition: transform 0.3s ease-out; transform: translateX(-${this.currentSlide * 100}%);">
                             ${slidesHtml}
                         </div>
                     </div>
                     
-                    <div style="display: flex; justify-content: center; margin-top: 5px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: center; padding: 10px 0 15px 0; flex-shrink: 0;">
                         ${dotsHtml}
                     </div>
                 </div>
 
-                <div id="hof-main-content" style="display: none; width: 100%;">
-                    <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 15px;">
-                        <button id="hof-tab-medals" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')">${gt('hof_tab_medals', 'MEDALJE 🏅')}</button>
-                        <button id="hof-tab-champions" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')">${gt('hof_tab_champs', 'ŠAMPIONI 🏆')}</button>
+                <div id="hof-main-content" style="display: none; flex-direction: column; flex: 1; overflow: hidden; width: 100%; padding: 10px 15px 15px 15px;">
+                    <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0;">
+                        <button id="hof-tab-medals" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')">${gt('hof_tab_medals', 'MEDALJE 🏅')}</button>
+                        <button id="hof-tab-champions" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')">${gt('hof_tab_champs', 'ŠAMPIONI 🏆')}</button>
                     </div>
                     
-                    <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); max-height: 320px; overflow-y: auto;">
+                    <div style="flex: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                         <ul id="hof-list" style="list-style: none; padding: 0; margin: 0;">
-                            <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem;">Učitavanje Dvorane Slavnih... ⏳</li>
+                            <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">Učitavanje Dvorane Slavnih... ⏳</li>
                         </ul>
                     </div>
                 </div>
 
-                <button class="btn-menu btn-secondary" onclick="document.getElementById('league-modal-overlay').remove()">${gt('modal_btn_cancel', 'ZATVORI')}</button>
             </div>
         </div>`;
 
@@ -234,13 +237,13 @@ class KvartalnaLigaManager {
         const btnH = document.getElementById('tab-league-hof');
         
         if(view === 'league') {
-            lMain.style.display = 'block';
+            lMain.style.display = 'flex'; // Zamenjeno sa 'block' u 'flex' zbog layouta
             hMain.style.display = 'none';
             btnL.className = 'btn-menu btn-primary';
             btnH.className = 'btn-menu btn-secondary';
         } else {
             lMain.style.display = 'none';
-            hMain.style.display = 'block';
+            hMain.style.display = 'flex'; // Zamenjeno sa 'block' u 'flex' zbog layouta
             btnL.className = 'btn-menu btn-secondary';
             btnH.className = 'btn-menu btn-primary';
             this.fetchHallOfFame();
@@ -303,12 +306,12 @@ class KvartalnaLigaManager {
             const isFirst = idx === 0;
             
             html += `
-            <li style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid ${isFirst ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'};">
-                <div style="font-weight: 900; color: ${isFirst ? 'var(--gold-main)' : '#aaa'}; width: 25px; font-size: 1rem; text-align: center; margin-right: 5px;">${idx+1}.</div>
-                <img src="${photo}" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid ${isFirst ? 'var(--gold-main)' : '#666'}; margin-right: 12px; object-fit: cover;">
+            <li style="display: flex; align-items: center; background: rgba(255,255,255,0.05); padding: 8px 10px; margin-bottom: 6px; border-radius: 8px; border-left: 4px solid ${isFirst ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'};">
+                <div style="font-weight: 900; color: ${isFirst ? 'var(--gold-main)' : '#aaa'}; width: 25px; font-size: 0.9rem; text-align: center; margin-right: 5px;">${idx+1}.</div>
+                <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid ${isFirst ? 'var(--gold-main)' : '#666'}; margin-right: 12px; object-fit: cover;">
                 <div style="flex: 1;">
-                    <div style="color: #fff; font-weight: bold; font-size: 0.95rem;">${m.playerName}</div>
-                    <div style="display: flex; gap: 12px; margin-top: 4px; font-size: 0.85rem; font-weight: bold;">
+                    <div style="color: #fff; font-weight: bold; font-size: 0.85rem;">${m.playerName}</div>
+                    <div style="display: flex; gap: 10px; margin-top: 4px; font-size: 0.8rem; font-weight: bold;">
                         <span style="color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5);">🥇 ${m.gold}</span>
                         <span style="color: #C0C0C0;">🥈 ${m.silver}</span>
                         <span style="color: #CD7F32;">🥉 ${m.bronze}</span>
@@ -335,15 +338,15 @@ class KvartalnaLigaManager {
             const romanCycle = this.toRoman(c.cycle);
             
             html += `
-            <li style="display: flex; align-items: center; background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid rgba(224, 201, 149, 0.3);">
+            <li style="display: flex; align-items: center; background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid rgba(224, 201, 149, 0.3);">
                 <div style="position: relative; margin-right: 15px;">
-                    <img src="${photo}" style="width: 55px; height: 55px; border-radius: 50%; border: 3px solid var(--gold-main); object-fit: cover; box-shadow: 0 0 10px rgba(224,201,149,0.5);">
-                    <div style="position: absolute; bottom: -8px; right: -5px; font-size: 1.3rem;">👑</div>
+                    <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; box-shadow: 0 0 10px rgba(224,201,149,0.5);">
+                    <div style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;">👑</div>
                 </div>
                 <div style="flex: 1;">
-                    <div style="color: var(--gold-main); font-size: 0.75rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">POBEDNIK ${romanCycle} CIKLUSA</div>
-                    <div style="color: #fff; font-weight: bold; font-size: 1.15rem; margin-bottom: 4px;">${c.playerName}</div>
-                    <div style="color: var(--text-muted); font-size: 0.8rem;">Q${c.quarter} / ${c.year} &nbsp;•&nbsp; <span style="color: #fff; font-weight: bold;">${c.score} PTS</span></div>
+                    <div style="color: var(--gold-main); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">POBEDNIK ${romanCycle} CIKLUSA</div>
+                    <div style="color: #fff; font-weight: bold; font-size: 1rem; margin-bottom: 2px;">${c.playerName}</div>
+                    <div style="color: var(--text-muted); font-size: 0.75rem;">Q${c.quarter} / ${c.year} &nbsp;•&nbsp; <span style="color: #fff; font-weight: bold;">${c.score} PTS</span></div>
                 </div>
             </li>`;
         });
@@ -454,7 +457,6 @@ class KvartalnaLigaManager {
     populateRanks(scores, isAllTime) {
         let safeScores = Array.isArray(scores) ? [...scores] : [];
 
-        // LOKALNA INJEKCIJA: Uvek prikaži lokalnog igrača na listi čak i ako server kasni!
         const localData = this.getScores();
         const myName = localStorage.getItem('yamb_player_name') || "Gost";
         const myPhoto = localStorage.getItem('yamb_player_photo') || '';
@@ -463,9 +465,9 @@ class KvartalnaLigaManager {
         if (myScore > 0) {
             let found = safeScores.find(s => s.playerName === myName);
             if (found) {
-                if (myScore > found.score) found.score = myScore; // Osveži ako lokalno ima više
+                if (myScore > found.score) found.score = myScore; 
             } else {
-                safeScores.push({ playerName: myName, photoUrl: myPhoto, score: myScore }); // Dodaj tebe ako te server nije poslao
+                safeScores.push({ playerName: myName, photoUrl: myPhoto, score: myScore }); 
             }
         }
 
@@ -488,7 +490,6 @@ class KvartalnaLigaManager {
         const listEl = document.getElementById(`league-list-${rankId}`);
         if (!listEl) return;
 
-        // VRAĆEN NORMALAN DIZAJN SA PRAVIM TEKSTOM (Umesto crvene kutije)
         if (!scores || scores.length === 0) {
             const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
             listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi prvi!')}</li>`;
@@ -507,14 +508,14 @@ class KvartalnaLigaManager {
             let photo = s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;
 
             let li = document.createElement('li');
-            li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.9rem; ${bg}`;
+            li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.85rem; ${bg}`;
             li.innerHTML = `
-                <div style="display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0;">
-                    <div style="font-weight: bold; min-width: 25px; color: var(--gold-main); text-align: center;">${medal}</div>
-                    <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
-                    <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.85rem; padding-right: 5px;">${pName}</div>
+                <div style="display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0;">
+                    <div style="font-weight: bold; min-width: 20px; color: var(--gold-main); text-align: center;">${medal}</div>
+                    <img src="${photo}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
+                    <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.8rem; padding-right: 5px;">${pName}</div>
                 </div>
-                <div style="font-weight: bold; color: #fff; margin-left: 10px; white-space: nowrap;">${pScore} PTS</div>
+                <div style="font-weight: bold; color: #fff; margin-left: 8px; white-space: nowrap;">${pScore} PTS</div>
             `;
             listEl.appendChild(li);
         });
