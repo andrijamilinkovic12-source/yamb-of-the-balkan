@@ -111,10 +111,10 @@
                 <span data-lang="splash_login">PRIJAVI SE</span>
             </button>
             
-            <div style="margin-top: 15px; font-size: 0.65rem; color: var(--text-muted); text-align: center; line-height: 1.5; text-shadow: 0 1px 3px rgba(0,0,0,0.8);">
-                <span data-lang="splash_terms_pre">Nastavkom prihvatate naše<br></span>
-                <span onclick="prikaziPravniTekst('terms')" style="color: var(--gold-main); text-decoration: underline; cursor: pointer; font-weight: bold; margin-right: 5px;" data-lang="splash_terms_link">Uslove Korišćenja</span> i 
-                <span onclick="prikaziPravniTekst('privacy')" style="color: var(--gold-main); text-decoration: underline; cursor: pointer; font-weight: bold;" data-lang="splash_privacy_link">Politiku Privatnosti</span>.
+            <div style="margin-top: 15px; font-size: 0.65rem; color: var(--text-muted); text-align: center; line-height: 1.5; text-shadow: 0 1px 3px rgba(0,0,0,0.8); white-space: nowrap;">
+                <span data-lang="splash_terms_pre">Prihvatam </span>
+                <span onclick="prikaziPravniTekst('terms')" style="color: var(--gold-main); text-decoration: underline; cursor: pointer; font-weight: bold;" data-lang="splash_terms_link">Uslove korišćenja</span> i 
+                <span onclick="prikaziPravniTekst('privacy')" style="color: var(--gold-main); text-decoration: underline; cursor: pointer; font-weight: bold;" data-lang="splash_privacy_link">Politiku privatnosti</span>.
             </div>
             
         </div>
@@ -379,11 +379,11 @@
         </div>
     </div>
 
-    <div id="settings-screen" class="screen">
+    <div id="settings-screen" class="screen" style="padding-bottom: max(20px, env(safe-area-inset-bottom));">
         <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <h2 class="menu-title" data-lang="menu_settings" style="margin-bottom: 20px;">PODEŠAVANJA</h2>
+        <h2 class="menu-title" data-lang="menu_settings" style="margin-bottom: 15px;">PODEŠAVANJA</h2>
         
-        <div class="modal-box" style="text-align: center; padding: 25px 20px; width: 90%; max-width: 400px; gap: 15px !important; max-height: 85vh; overflow-y: auto;">
+        <div class="modal-box" style="text-align: center; padding: 20px; width: 90%; max-width: 400px; gap: 12px !important; max-height: 80vh; overflow-y: auto;">
             
             <div style="width: 100%;">
                 <label style="color:var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 5px;" data-lang="settings_name">Vaše Ime:</label>
@@ -436,12 +436,13 @@
                 </div>
             </div>
 
-            <div style="margin-top: 10px; width: 100%; display: flex; flex-direction: column; align-items: center;">
-                <button class="btn-menu btn-primary" style="width: 60%; padding: 12px; font-size: 1rem; border-radius: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);" onclick="app.saveSettings()" data-lang="settings_save">SAČUVAJ</button>
+            <div style="margin-top: 5px; width: 100%; display: flex; flex-direction: column; align-items: center;">
+                <button class="btn-menu btn-primary" style="width: 60%; padding: 10px; font-size: 0.95rem; border-radius: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);" onclick="app.saveSettings()" data-lang="settings_save">SAČUVAJ</button>
                 
-                <div style="margin-top: 15px; text-align: center; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; width: 100%;">
-                    <span onclick="prikaziPravniTekst('terms')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px;" data-lang="settings_terms">📜 Uslovi</span>
-                    <span onclick="prikaziPravniTekst('privacy')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 5px;" data-lang="settings_privacy">🔒 Privatnost</span>
+                <div style="margin-top: 12px; text-align: center; font-size: 0.65rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; display: flex; justify-content: center; gap: 6px; flex-wrap: nowrap; white-space: nowrap; width: 100%;">
+                    <span onclick="prikaziPravniTekst('terms')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px;" data-lang="settings_terms">📜 Uslovi korišćenja</span>
+                    <span style="color: rgba(255,255,255,0.2);">|</span>
+                    <span onclick="prikaziPravniTekst('privacy')" style="color: var(--text-muted); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 4px;" data-lang="settings_privacy">🔒 Politika privatnosti</span>
                 </div>
             </div>
         </div>
