@@ -150,7 +150,7 @@ class KvartalnaLigaManager {
                 <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;">${r.name}</h3>
                 <div style="flex: 1; overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                     <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0;">
-                        <li style="text-align: center; color: #aaa; font-size: 0.85rem; padding: 20px;">Učitavanje podataka... ⏳</li>
+                        <li style="text-align: center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_loading', 'Učitavanje podataka... ⏳')}</li>
                     </ul>
                 </div>
             </div>
@@ -207,7 +207,7 @@ class KvartalnaLigaManager {
                     
                     <div style="flex: 1; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                         <ul id="hof-list" style="list-style: none; padding: 0; margin: 0;">
-                            <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">Učitavanje Dvorane Slavnih... ⏳</li>
+                            <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_loading', 'Učitavanje Dvorane Slavnih... ⏳')}</li>
                         </ul>
                     </div>
                 </div>
@@ -237,13 +237,13 @@ class KvartalnaLigaManager {
         const btnH = document.getElementById('tab-league-hof');
         
         if(view === 'league') {
-            lMain.style.display = 'flex'; // Zamenjeno sa 'block' u 'flex' zbog layouta
+            lMain.style.display = 'flex';
             hMain.style.display = 'none';
             btnL.className = 'btn-menu btn-primary';
             btnH.className = 'btn-menu btn-secondary';
         } else {
             lMain.style.display = 'none';
-            hMain.style.display = 'flex'; // Zamenjeno sa 'block' u 'flex' zbog layouta
+            hMain.style.display = 'flex';
             btnL.className = 'btn-menu btn-secondary';
             btnH.className = 'btn-menu btn-primary';
             this.fetchHallOfFame();
@@ -272,8 +272,10 @@ class KvartalnaLigaManager {
     }
 
     fetchHallOfFame() {
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+
         if (!window.app || !window.app.socket) {
-            document.getElementById('hof-list').innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">Nema konekcije sa serverom.</li>`;
+            document.getElementById('hof-list').innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
             return;
         }
         
@@ -293,9 +295,9 @@ class KvartalnaLigaManager {
     renderHofMedals() {
         const list = document.getElementById('hof-list');
         if (!list) return;
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         if (!this.hofData || !this.hofData.medals || this.hofData.medals.length === 0) {
-            const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
             list.innerHTML = `<li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_no_medals', 'Još uvek nema osvajača medalja.')}</li>`;
             return;
         }
@@ -325,9 +327,9 @@ class KvartalnaLigaManager {
     renderHofChampions() {
         const list = document.getElementById('hof-list');
         if (!list) return;
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         if (!this.hofData || !this.hofData.champions || this.hofData.champions.length === 0) {
-            const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
             list.innerHTML = `<li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_no_champs', 'Još uvek nema završenih ciklusa.')}</li>`;
             return;
         }
@@ -344,7 +346,7 @@ class KvartalnaLigaManager {
                     <div style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;">👑</div>
                 </div>
                 <div style="flex: 1;">
-                    <div style="color: var(--gold-main); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">POBEDNIK ${romanCycle} CIKLUSA</div>
+                    <div style="color: var(--gold-main); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">${gt('hof_winner_prefix', 'POBEDNIK')} ${romanCycle} ${gt('hof_winner_suffix', 'CIKLUSA')}</div>
                     <div style="color: #fff; font-weight: bold; font-size: 1rem; margin-bottom: 2px;">${c.playerName}</div>
                     <div style="color: var(--text-muted); font-size: 0.75rem;">Q${c.quarter} / ${c.year} &nbsp;•&nbsp; <span style="color: #fff; font-weight: bold;">${c.score} PTS</span></div>
                 </div>
@@ -430,10 +432,12 @@ class KvartalnaLigaManager {
     }
 
     fetchLeaderboard() {
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+
         if (!window.app || !window.app.socket) {
             this.ranks.forEach(r => {
                 const listEl = document.getElementById(`league-list-${r.id}`);
-                if(listEl) listEl.innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">Nema konekcije sa serverom.</li>`;
+                if(listEl) listEl.innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
             });
             return;
         }
@@ -489,9 +493,9 @@ class KvartalnaLigaManager {
     renderList(rankId, scores) {
         const listEl = document.getElementById(`league-list-${rankId}`);
         if (!listEl) return;
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         if (!scores || scores.length === 0) {
-            const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
             listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi prvi!')}</li>`;
             return;
         }
@@ -500,7 +504,7 @@ class KvartalnaLigaManager {
         listEl.innerHTML = '';
         
         scores.forEach((s, i) => {
-            let pName = s.playerName || "Nepoznat Igrač";
+            let pName = s.playerName || gt('league_unknown', "Nepoznat Igrač");
             let pScore = s.score !== undefined ? s.score : "0";
             let isMe = (pName === (localStorage.getItem('yamb_player_name') || "Gost"));
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';

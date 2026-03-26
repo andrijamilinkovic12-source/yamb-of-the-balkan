@@ -1288,7 +1288,8 @@ class YambApp {
     
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
-            if (this.gameActive && this.players.length > 1 && !this.isSpectator) {
+            // DODATO: this.onlineMode -> Kazni porazom samo ako je Online igra (izbegavamo kaznu za lokalni Hotseat mod)
+            if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
                 this.updateStats(0, 'loss');
             }
             this.showMainMenu(); 
