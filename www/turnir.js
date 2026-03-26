@@ -79,7 +79,11 @@ class TournamentManager {
     }
 
     open() {
-        this.activeTab = this.state.status === 'registration' ? 'info' : 'bracket';
+        // Više ne forsiramo 'info' tab na silu. Pamtimo šta je korisnik gledao, 
+        // osim ako je prešao u novu fazu pa ga prebacujemo na kostur.
+        if (this.state.status !== 'registration' && this.activeTab === 'info') {
+            this.activeTab = 'bracket';
+        }
         
         this.app.navigateTo('tournament-screen');
         if(this.app.socket && this.app.socket.connected) {
@@ -118,7 +122,7 @@ class TournamentManager {
                     <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
                         ${tt('tourney_tab_info') || '📋 INFO'}
                     </button>
-                    <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" ${this.state.status === 'registration' ? 'disabled style="opacity:0.5"' : ''} style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
+                    <button class="tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('bracket')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
                         ${tt('tourney_tab_bracket') || '🏆 KOSTUR'}
                     </button>
                     <button class="tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('leaderboard')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
@@ -143,30 +147,39 @@ class TournamentManager {
     }
 
     getLeaderboardHTML() {
+        // POTPUNO NOVI IZGLED - BOLD, PREGLEDNO, U STILU KVARTALNE LIGE
         let leaderboardHtml = `
-            <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 500px; padding: 20px;">
-                <div class="tourney-icon-large" style="font-size: 3rem; margin-bottom: 5px;">👑</div>
-                <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 10px; text-transform: uppercase;">
+            <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 500px; padding: 25px 20px; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
+                <div class="tourney-icon-large" style="font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold-main);">👑</div>
+                <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 15px; text-transform: uppercase; font-size: 1.4rem; letter-spacing: 2px;">
                     ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH'}
                 </h3>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: flex; flex-direction: column; gap: 12px;">
         `;
         
         if (!this.tourneyLeaderboard || this.tourneyLeaderboard.length === 0) {
-            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:0.9rem; padding: 20px 0;">Još uvek nema osvajača turnira.</div>`;
+            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:1.1rem; padding: 30px 0;">Još uvek nema osvajača turnira.</div>`;
         } else {
             this.tourneyLeaderboard.forEach((player, idx) => {
-                let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx+1}.`));
+                let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="color: var(--text-muted); font-size: 1.2rem; font-weight: bold;">${idx+1}.</span>`));
                 let photo = player.photoUrl && player.photoUrl.length > 5 ? player.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(player.playerName)}&background=333&color=E0C995`;
                 
+                // Stilovi koji razdvajaju prvog od ostalih
+                let bg = idx === 0 ? 'background: linear-gradient(90deg, rgba(255,215,0,0.2) 0%, rgba(0,0,0,0.4) 100%); border: 1px solid var(--gold-main);' : 'background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);';
+                let nameColor = idx === 0 ? 'var(--gold-main)' : 'white';
+                let nameSize = idx === 0 ? '1.2rem' : '1.1rem';
+                
                 leaderboardHtml += `
-                    <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px; gap: 10px;">
-                        <div style="display: flex; align-items: center; gap: 10px; overflow: hidden; flex: 1;">
-                            <span style="font-size: 1.2rem; min-width: 25px; text-align: center; flex-shrink: 0;">${rankTrophy}</span>
-                            <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 1px solid var(--gold-main); flex-shrink: 0;">
-                            <span style="color: white; font-weight: bold; font-size: 0.9rem; white-space: normal; word-break: break-word; line-height: 1.2;">${player.playerName}</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; ${bg} padding: 12px 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s;">
+                        <div style="display: flex; align-items: center; gap: 15px; overflow: hidden; flex: 1;">
+                            <div style="font-size: 1.5rem; min-width: 35px; text-align: center; flex-shrink: 0;">${rankTrophy}</div>
+                            <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid ${idx === 0 ? 'var(--gold-main)' : 'rgba(255,255,255,0.3)'}; flex-shrink: 0; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                            <span style="color: ${nameColor}; font-weight: 800; font-size: ${nameSize}; white-space: normal; word-break: break-word; line-height: 1.2; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">${player.playerName}</span>
                         </div>
-                        <span style="color: var(--gold-main); font-weight: 900; font-size: 1.1rem; flex-shrink: 0;">${player.wins} 🏆</span>
+                        <div style="display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.3);">
+                            <span style="color: var(--gold-main); font-weight: 900; font-size: 1.2rem; flex-shrink: 0;">${player.wins}</span>
+                            <span style="font-size: 1.1rem;">🏆</span>
+                        </div>
                     </div>
                 `;
             });
@@ -329,11 +342,15 @@ class TournamentManager {
     }
 
     renderBracket(container) {
-        const qf = this.state.bracket.qf || [];
-        const sf = this.state.bracket.sf || [];
-        const f = this.state.bracket.f || [];
+        // Punimo prazne nizove da bi vizuelno iscrtali ceo kostur (čak i pre početka)
+        let qf = this.state.bracket.qf || [];
+        let sf = this.state.bracket.sf || [];
+        let f = this.state.bracket.f || [];
 
-        // Primenjen pravi FLEXBOX stablo prikaz za kompaktan kostur
+        if (qf.length === 0) qf = Array(4).fill(null);
+        if (sf.length === 0) sf = Array(2).fill(null);
+        if (f.length === 0) f = Array(1).fill(null);
+
         container.innerHTML = `
             <div class="bracket-wrapper" style="width: 100%; display: flex; flex-direction: row; gap: 15px; justify-content: center; align-items: stretch; min-height: 380px; padding: 5px; overflow-x: auto;">
                 
@@ -354,12 +371,13 @@ class TournamentManager {
     }
 
     createMatchHTML(match, round, index) {
+        // PROMENJEN STIL PRAZNIH MESTA - Da izgleda jasno kao prozor koji se tek popunjava
         if (!match || !match.p1 || !match.p2) {
             return `
-                <div class="match-card empty" style="padding: 8px; width: 110px; font-size: 0.75rem;">
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">${tt('tourney_tbd') || 'Čeka se...'}</span>
-                    <hr class="match-divider" style="margin: 4px 0;">
-                    <span style="font-size: 0.75rem; color: var(--text-muted);">${tt('tourney_tbd') || 'Čeka se...'}</span>
+                <div class="match-card empty" style="padding: 10px; width: 115px; font-size: 0.8rem; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.4); border-radius: 8px; text-align: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
+                    <span style="color: var(--text-muted); font-weight: 600;">${tt('tourney_tbd') || 'Čeka se...'}</span>
+                    <hr class="match-divider" style="margin: 6px 0; border-top: 1px dashed rgba(255,255,255,0.1);">
+                    <span style="color: var(--text-muted); font-weight: 600;">${tt('tourney_tbd') || 'Čeka se...'}</span>
                 </div>`;
         }
 
@@ -380,7 +398,6 @@ class TournamentManager {
             timeInfo = `<div class="match-time-badge pending" style="margin-top: 5px; font-size: 0.6rem;">⏳ Dogovor...</div>`;
         }
 
-        // Kompaktna kartica meča
         return `
             <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 8px; width: 115px; font-size: 0.75rem; position: relative;">
                 ${round === 'f' ? '<div style="position:absolute; top:-15px; left:50%; transform:translateX(-50%); font-size:1.2rem;">🏆</div>' : ''}
