@@ -109,13 +109,16 @@ class TournamentManager {
         const container = document.getElementById('tourney-content');
         if (!container) return;
 
-        container.style.height = "auto";
-        container.style.overflowY = "visible";
+        // Fiksiramo visinu glavnog kontejnera kako bi se unutrasnjost skrolovala, a ne ceo ekran.
+        container.style.height = "80vh";
+        container.style.overflow = "hidden";
+        container.style.display = "flex";
+        container.style.flexDirection = "column";
 
         container.innerHTML = `
-            <div style="display: flex; flex-direction: column; width: 100%; align-items: center; padding: 0 10px;">
+            <div style="display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; padding: 0 5px;">
                 
-                <div style="display: flex; justify-content: space-between; width: 100%; max-width: 400px; gap: 10px; margin-bottom: 10px;">
+                <div style="display: flex; justify-content: space-between; width: 100%; max-width: 400px; gap: 10px; margin-bottom: 15px; flex-shrink: 0;">
                     <button class="tab-btn ${this.activeTab === 'info' ? 'active' : ''}" onclick="app.tournamentManager.switchTab('info')" style="flex: 1; padding: 12px 5px; font-size: 0.75rem; border-radius: 8px; margin: 0;">
                         ${tt('tourney_tab_info') || '📋 INFO'}
                     </button>
@@ -127,7 +130,7 @@ class TournamentManager {
                     </button>
                 </div>
                 
-                <div id="tourney-tab-content" style="width: 100%; display: flex; justify-content: center; margin-top: 10px;"></div>
+                <div id="tourney-tab-content" style="width: 100%; flex: 1; display: flex; justify-content: center; overflow: hidden; max-width: ${this.activeTab === 'bracket' ? '850px' : '400px'};"></div>
 
             </div>
         `;
@@ -145,12 +148,12 @@ class TournamentManager {
 
     getLeaderboardHTML() {
         let leaderboardHtml = `
-            <div class="modal-box tourney-leaderboard" style="width: 100%; max-width: 400px; padding: 25px 20px; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
-                <div class="tourney-icon-large" style="font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold-main);">👑</div>
-                <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 15px; text-transform: uppercase; font-size: 1.4rem; letter-spacing: 2px;">
+            <div class="modal-box tourney-leaderboard" style="width: 100%; height: 100%; max-width: 400px; padding: 25px 20px; overflow-y: auto; justify-content: flex-start; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px;">
+                <div class="tourney-icon-large" style="font-size: 3.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold-main); text-align: center;">👑</div>
+                <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 15px; text-transform: uppercase; font-size: 1.4rem; letter-spacing: 2px; flex-shrink: 0;">
                     ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH'}
                 </h3>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
         `;
         
         if (!this.tourneyLeaderboard || this.tourneyLeaderboard.length === 0) {
@@ -191,28 +194,28 @@ class TournamentManager {
 
         let buttonHtml = '';
         if (!isRegistrationOpen) {
-            buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%;">🚀 ${isRegistered ? (tt('tourney_reg_active_in_progress') || 'Prijavljeni ste (Turnir u toku)') : (tt('tourney_reg_started') || 'Turnir je već počeo')}</button>`;
+            buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%; margin-top: auto;">🚀 ${isRegistered ? (tt('tourney_reg_active_in_progress') || 'Prijavljeni ste (Turnir u toku)') : (tt('tourney_reg_started') || 'Turnir je već počeo')}</button>`;
         } else if (isRegistered) {
             buttonHtml = `
-                <button class="btn-menu btn-secondary" style="width: 100%; font-size: 0.95rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc;" onclick="app.tournamentManager.unregisterPlayer()">
+                <button class="btn-menu btn-secondary" style="width: 100%; font-size: 0.95rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc; margin-top: auto;" onclick="app.tournamentManager.unregisterPlayer()">
                     ❌ ${tt('tourney_unregister') || 'ODJAVI SE'} (Povraćaj)
                 </button>
             `;
         } else {
-            buttonHtml = `<button class="btn-menu btn-primary" style="width: 100%; font-size: 1rem; padding: 15px; box-shadow: 0 0 15px var(--gold-glow);" onclick="app.tournamentManager.registerPlayer()">🎟️ ${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)</button>`;
+            buttonHtml = `<button class="btn-menu btn-primary" style="width: 100%; font-size: 1rem; padding: 15px; box-shadow: 0 0 15px var(--gold-glow); margin-top: auto;" onclick="app.tournamentManager.registerPlayer()">🎟️ ${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)</button>`;
         }
 
         container.innerHTML = `
-            <div class="modal-box tourney-wrapper" style="width: 100%; max-width: 400px; padding: 25px 20px;">
-                <div class="tourney-icon-large" style="font-size: 4rem; margin-bottom: 10px;">🏆</div>
-                <h3 class="tourney-title" style="font-size: 1.3rem; margin-bottom: 5px;">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
-                <p class="tourney-desc" style="font-size: 0.85rem; margin-bottom: 20px;">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
+            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-width: 400px; padding: 25px 20px; overflow-y: auto; justify-content: flex-start;">
+                <div class="tourney-icon-large" style="font-size: 4rem; margin-bottom: 10px; text-align: center;">🏆</div>
+                <h3 class="tourney-title" style="font-size: 1.3rem; margin-bottom: 5px; text-align: center;">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
+                <p class="tourney-desc" style="font-size: 0.85rem; margin-bottom: 20px; text-align: center;">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
                 
-                <div style="font-size: 1.2rem; font-weight: 900; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'}; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                    ${tt('tourney_registered') || 'Prijavljeno igrača'} ${this.state.players.length} / 8
+                <div style="font-size: 1.2rem; font-weight: 900; text-align: center; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'}; margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); width: 100%;">
+                    ${tt('tourney_registered') || 'Prijavljeno igrača'}<br><br>${this.state.players.length} / 8
                 </div>
 
-                <div style="width: 100%;">
+                <div style="width: 100%; display: flex; flex-direction: column; flex-grow: 1;">
                     ${buttonHtml}
                 </div>
             </div>
@@ -342,7 +345,6 @@ class TournamentManager {
         let sf = this.state.bracket.sf || [];
         let f = this.state.bracket.f || [];
 
-        // POPUNJAVANJE TOKOM PRIJAVE
         if (this.state.status === 'registration') {
             qf = Array(4).fill(null).map((_, i) => {
                 const p1 = this.state.players[i*2] || null;
@@ -356,24 +358,29 @@ class TournamentManager {
         if (sf.length === 0) sf = Array(2).fill(null);
         if (f.length === 0) f = Array(1).fill(null);
 
+        // Dodato overflow-x: auto i display: block kako bi se kostur skrolovao levo/desno
         container.innerHTML = `
-            <div class="modal-box tourney-wrapper" style="width: 100%; max-width: 400px; padding: 20px;">
+            <div class="modal-box tourney-wrapper" style="width: 100%; height: 100%; max-width: 850px; padding: 20px; overflow-y: auto; overflow-x: auto; display: block;">
                 
-                <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px;">Četvrtfinale</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px;">
-                    ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
+                <div class="bracket-wrapper" style="display: flex; flex-direction: row; gap: 40px; min-width: 720px; height: 100%; margin: 0 auto; align-items: stretch;">
+                    
+                    <div class="bracket-col qf" style="display: flex; flex-direction: column; gap: 15px; width: 220px; justify-content: space-around; flex-shrink: 0;">
+                        <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 5px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px; flex-shrink: 0;">Četvrtfinale</h4>
+                        ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
+                    </div>
+
+                    <div class="bracket-col sf" style="display: flex; flex-direction: column; gap: 30px; width: 220px; justify-content: space-around; flex-shrink: 0;">
+                        <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 5px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px; flex-shrink: 0;">Polufinale</h4>
+                        ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
+                    </div>
+
+                    <div class="bracket-col f" style="display: flex; flex-direction: column; gap: 30px; width: 220px; justify-content: center; flex-shrink: 0;">
+                        <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 5px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px; flex-shrink: 0;">Finale 🏆</h4>
+                        ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
+                    </div>
+
                 </div>
 
-                <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px;">Polufinale</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px;">
-                    ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
-                </div>
-
-                <h4 style="color: var(--gold-main); text-align: center; margin-bottom: 10px; text-transform: uppercase; border-bottom: 1px solid rgba(255,215,0,0.3); padding-bottom: 5px;">Finale 🏆</h4>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
-                </div>
-                
             </div>
         `;
     }
@@ -420,7 +427,7 @@ class TournamentManager {
         }
 
         return `
-            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 12px 10px; width: 100%; background: rgba(0,0,0,0.4); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.1s;">
+            <div class="match-card ${activeClass}" onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="padding: 12px 10px; width: 100%; background: rgba(0,0,0,0.4); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.4); cursor: pointer; transition: transform 0.1s; flex-shrink: 0;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     ${getPlayerHtml(match.p1)}
                     <div style="font-size: 0.85rem; font-weight: 900; color: var(--gold-main); margin: 0 10px; text-shadow: 0 0 5px rgba(255,215,0,0.5);">VS</div>
