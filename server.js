@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX
 
 require('dotenv').config(); 
 
@@ -992,6 +992,64 @@ io.on('connection', (socket) => {
         } catch (err) {
             console.error("Greška pri dohvatanju streak liste:", err);
             socket.emit('streak_leaderboard_data', []);
+        }
+    });
+
+    // ==================================================================
+    // RANG LISTA ZA INDEKS MOĆI (POWER INDEX)
+    // ==================================================================
+    socket.on('get_power_index_leaderboard', async () => {
+        try {
+            if (!MONGO_URI) {
+                socket.emit('power_index_data', []);
+                return;
+            }
+
+            // Dohvatamo sve igrače koji imaju barem jednu odigranu partiju
+            const users = await UserProfile.find({ games: { $gt: 0 } }).lean();
+
+            // Računamo Power Index za svakog igrača (Formula usklađena sa klijentom game.js)
+            const rankedPlayers = users.map(user => {
+                let totalCompetitive = (user.wins || 0) + (user.losses || 0);
+                let rate = totalCompetitive > 0 ? ((user.wins || 0) / totalCompetitive) * 100 : 0;
+                let avg = (user.games || 0) > 0 ? (user.totalScoreSum || 0) / user.games : 0;
+                let hs = user.highscore || 0;
+                let maxStreak = user.maxWinStreak || 0;
+                let tourneyWins = user.tournamentWins || 0;
+                
+                let leaguePts = 0;
+                if (user.leagueData && user.leagueData.quarterlyScore) {
+                    leaguePts = user.leagueData.quarterlyScore;
+                }
+
+                let trophyCount = 0;
+                if (user.unlockedTrophies) {
+                    const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
+                    user.unlockedTrophies.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
+                }
+
+                const power = Math.round(
+                    (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) + 
+                    (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
+                );
+
+                return {
+                    playerName: user.playerName,
+                    photoUrl: user.photoUrl || '',
+                    powerIndex: power
+                };
+            });
+
+            // Sortiramo igrače opadajuće po Indeksu Moći
+            rankedPlayers.sort((a, b) => b.powerIndex - a.powerIndex);
+            
+            // Uzimamo samo najboljih 50
+            const top50 = rankedPlayers.slice(0, 50);
+
+            socket.emit('power_index_data', top50);
+        } catch (err) {
+            console.error("Greška pri dohvatanju Power Index liste:", err);
+            socket.emit('power_index_data', []);
         }
     });
 

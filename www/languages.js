@@ -55,7 +55,7 @@ const TRANSLATIONS = {
         "hof_tab_champs": "ŠAMPIONI 🏆",
         "hof_loading": "Učitavanje Dvorane Slavnih... ⏳",
         "hof_no_medals": "Još uvek nema osvajača medalja. Zlatne medalje se dodeljuju tek po završetku kvartala.",
-        "hof_total: ": "Ukupno",
+        "hof_total": "Ukupno",
         "hof_no_champs": "Još uvek nema završenih ciklusa. Kruna čeka prvog Šampiona!",
         "hof_winner_prefix": "POBEDNIK",
         "hof_winner_suffix": "CIKLUSA",
@@ -450,6 +450,11 @@ const TRANSLATIONS = {
         "auth_error": "Došlo je do greške prilikom prijave.",
         "auth_anon_error": "Neuspešna anonimna prijava.",
         "connecting": "Povezivanje sa serverom...",
+
+        // --- POWER INDEX (INDEKS MOĆI) ---
+        "pi_title": "TOP IGRAČI",
+        "pi_no_conn": "Nema konekcije sa serverom. Zakačite se na mrežu.",
+        "pi_no_data": "Još uvek nema dovoljno podataka na serveru.",
 
         // --- VATRENI NIZ ---
         "streak_top_title": "🔥 TOP VATRENI NIZ",
@@ -923,6 +928,11 @@ const TRANSLATIONS = {
         "auth_anon_error": "Anonymous login failed.",
         "connecting": "Connecting to server...",
 
+        // --- POWER INDEX (INDEKS MOĆI) ---
+        "pi_title": "TOP PLAYERS",
+        "pi_no_conn": "No connection to the server. Please connect to a network.",
+        "pi_no_data": "Not enough data on the server yet.",
+
         // --- VATRENI NIZ ---
         "streak_top_title": "🔥 TOP WIN STREAK",
         "streak_loading": "Loading list... ⏳",
@@ -966,6 +976,7 @@ function applyTranslations() {
         if (key) el.innerHTML = t(key); // Koristimo innerHTML zbog <b> i <strong> tagova
     });
     
+    // Input polja
     const nameInput = document.getElementById('setting-name');
     if (nameInput) {
         nameInput.placeholder = (localStorage.getItem('yamb_lang') === 'en') ? "Player Name" : "Ime Igrača";
@@ -980,6 +991,26 @@ function applyTranslations() {
     if (btnUndo) {
         btnUndo.title = t('undo_title');
     }
+    
+    // NOVO: Ažuriranje 'title' atributa za tooltipove u meniju
+    document.querySelectorAll('.btn-square').forEach(btn => {
+        const onclickAttr = btn.getAttribute('onclick');
+        if (onclickAttr) {
+            if (onclickAttr.includes('dailyManager.open()')) btn.title = t('menu_daily');
+            if (onclickAttr.includes('showHighscoresScreen()')) btn.title = t('menu_hs').replace('🏆 ', '');
+            if (onclickAttr.includes('showStats()')) btn.title = t('menu_stats');
+            if (onclickAttr.includes('showSettings()')) btn.title = t('menu_settings').replace('⚙ ', '');
+            if (onclickAttr.includes('showRules()')) btn.title = t('menu_rules').replace('📖 ', '');
+        }
+    });
+
+    document.querySelectorAll('.btn-special-square').forEach(btn => {
+        const onclickAttr = btn.getAttribute('onclick');
+        if (onclickAttr) {
+            if (onclickAttr.includes('riznicaManager.open()')) btn.title = t('menu_shop').replace('💎 ', '');
+            if (onclickAttr.includes('openTournament()')) btn.title = t('tourney_title').replace(' ⚔️', '');
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {

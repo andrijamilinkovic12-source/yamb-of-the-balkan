@@ -217,21 +217,21 @@
         <div class="menu-divider" style="margin-top: 5px;"></div>
         
         <div class="special-actions-row" style="max-width: 380px;">
-            <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()" title="Riznica">💎</button>
-            <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert('Turniri stižu uskoro!'); }" title="Turnir">⚔️</button>
+            <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()">💎</button>
+            <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert('Turniri stižu uskoro!'); }">⚔️</button>
         </div>
 
         <div class="icon-menu-grid">
-            <button class="btn-square" onclick="app.dailyManager.open()" title="Dnevni izazov" style="padding: 0;">
+            <button class="btn-square" onclick="app.dailyManager.open()" style="padding: 0;">
                 <div style="display:flex; flex-direction:column; align-items:center; width: 34px; height: 36px; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
                     <div id="live-month" style="background: #d32f2f; color: white; font-size: 0.45rem; width: 100%; text-align: center; font-weight: 800; padding: 2px 0;">MAR</div>
                     <div id="live-day" style="background: #fff; color: #222; font-size: 0.9rem; width: 100%; text-align: center; font-weight: 900; flex-grow: 1; display: flex; align-items: center; justify-content: center;">07</div>
                 </div>
             </button>
-            <button class="btn-square" onclick="app.showHighscoresScreen()" title="Top Lista">🏆</button>
-            <button class="btn-square" onclick="app.showStats()" title="Statistika">📊</button>
-            <button class="btn-square" onclick="app.showSettings()" title="Podešavanja">⚙</button>
-            <button class="btn-square" onclick="app.showRules()" title="Pravila">📖</button>
+            <button class="btn-square" onclick="app.showHighscoresScreen()">🏆</button>
+            <button class="btn-square" onclick="app.showStats()">📊</button>
+            <button class="btn-square" onclick="app.showSettings()">⚙</button>
+            <button class="btn-square" onclick="app.showRules()">📖</button>
         </div>
     </div>
 
@@ -251,7 +251,7 @@
                 
                 <div id="turn-timer-display" style="display:none; align-items:center; justify-content:center; padding: 2px 10px; border-radius: 20px; background: rgba(0,0,0,0.5); border: 1px solid var(--gold-main); font-weight: 900; font-size: 0.95rem; box-shadow: 0 0 10px rgba(0,0,0,0.3);"></div>
 
-                <button id="btn-undo-move" class="btn-secondary" style="border-radius:50%; display:none; align-items:center; justify-content:center; padding:0; font-size:1.2rem;" onclick="app.undoLastMove()" title="Ispravi zadnji upis">↩️</button>
+                <button id="btn-undo-move" class="btn-secondary" style="border-radius:50%; display:none; align-items:center; justify-content:center; padding:0; font-size:1.2rem;" onclick="app.undoLastMove()">↩️</button>
                 <button class="btn-secondary" style="border-radius:50%; padding:0;" onclick="app.toggleTheme()">🎨</button>
             </div>
         </div>
@@ -279,11 +279,12 @@
         
         <div class="modal-box" style="gap: 20px !important;">
             
-            <div style="background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); position: relative; overflow: hidden;">
+            <div style="background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); position: relative; overflow: hidden; cursor: pointer; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'" onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()">
                 <div style="position: absolute; top: -10px; right: -10px; font-size: 5rem; opacity: 0.15; pointer-events: none;">⚡</div>
                 <div style="font-size: 0.8rem; color: #fff; text-transform: uppercase; font-weight: 800; letter-spacing: 2px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);" data-lang="stat_power_index">INDEKS MOĆI ⚡</div>
                 <div id="stat-power-index" style="font-size: 3rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); margin-top: 5px;">0</div>
             </div>
+
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%;">
                 <div class="stat-item" style="border-color: var(--gold-main); background: rgba(224, 201, 149, 0.05);">
                     <span style="font-size: 0.7rem; color: var(--gold-main); letter-spacing:1px; font-weight:bold;" data-lang="stat_record">REKORD</span>
@@ -738,6 +739,7 @@
     <script src="auth.js?v=999"></script>
     <script src="onlinenumber.js?v=999"></script>
     <script src="vatreniniz.js?v=999"></script>
+    <script src="powerindex.js?v=1.0"></script>
 
 </body>
 </html>

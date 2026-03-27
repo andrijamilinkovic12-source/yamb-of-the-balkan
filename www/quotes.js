@@ -211,7 +211,7 @@ const quotesDb = [
         en: { text: "It is only with the heart that one can see rightly; what is essential is invisible to the eye.", author: "Antoine de Saint-Exupéry" }
     },
     {
-        sr: { text: "Gravitacija nije odgovorna što se ljudi zaljuljuju", author: "Albert Ajnštajn" },
+        sr: { text: "Gravitacija nije odgovorna što se ljudi zaljubljuju.", author: "Albert Ajnštajn" },
         en: { text: "Gravitation is not responsible for people falling in love.", author: "Albert Einstein" }
     }
 ];
