@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE
 
 require('dotenv').config(); 
 
@@ -90,6 +90,48 @@ app.get('/.well-known/assetlinks.json', (req, res) => {
 app.use(express.static(path.join(__dirname, 'www')));
 
 // ==================================================================
+// --- GLOBALNE PROMENLJIVE ZA TURNIR I FUNKCIJE ZA BAZU ---
+// ==================================================================
+let tournamentState = {
+    status: 'registration',
+    players: [], 
+    bracket: { qf: [null, null, null, null], sf: [null, null], f: [null] }
+};
+
+// Funkcija za učitavanje turnira iz baze na startu
+async function initTournamentFromDb() {
+    if (!process.env.MONGO_URI) return;
+    try {
+        const TournamentStateDb = mongoose.model('TournamentState');
+        let dbState = await TournamentStateDb.findOne();
+        if (dbState) {
+            tournamentState.status = dbState.status;
+            tournamentState.players = dbState.players || [];
+            tournamentState.bracket = dbState.bracket || { qf: [null, null, null, null], sf: [null, null], f: [null] };
+            console.log("🏆 Turnir uspešno učitan iz MongoDB baze.");
+        } else {
+            let newState = new TournamentStateDb(tournamentState);
+            await newState.save();
+            console.log("🏆 Kreiran novi čist turnir u MongoDB bazi.");
+        }
+    } catch (err) {
+        console.error("Greška pri učitavanju turnira iz baze:", err);
+    }
+}
+
+// Funkcija za čuvanje turnira u bazu nakon svake promene
+async function saveTournamentToDb() {
+    if (!process.env.MONGO_URI) return;
+    try {
+        const TournamentStateDb = mongoose.model('TournamentState');
+        await TournamentStateDb.findOneAndUpdate({}, tournamentState, { upsert: true });
+    } catch (err) {
+        console.error("Greška pri čuvanju turnira u bazu:", err);
+    }
+}
+
+
+// ==================================================================
 // --- MONGODB KONEKCIJA (POBOLJŠANA) ---
 // ==================================================================
 const MONGO_URI = process.env.MONGO_URI;
@@ -99,7 +141,10 @@ if (MONGO_URI) {
         serverSelectionTimeoutMS: 5000, 
         socketTimeoutMS: 45000,        
     })
-    .then(() => console.log('✅ MongoDB connected & stable!'))
+    .then(() => {
+        console.log('✅ MongoDB connected & stable!');
+        initTournamentFromDb(); // <-- Učitavanje turnira čim se baza spoji
+    })
     .catch(err => {
         console.error('❌ MongoDB connection error:', err.message);
     });
@@ -138,6 +183,14 @@ const TourneyStatsSchema = new mongoose.Schema({
     lastWinDate: { type: Date, default: Date.now }
 });
 const TourneyStats = mongoose.model('TourneyStats', TourneyStatsSchema);
+
+// --- NOVO: MONGODB ŠEMA ZA AKTIVNI TURNIR ---
+const TournamentStateSchema = new mongoose.Schema({
+    status: { type: String, default: 'registration' },
+    players: { type: Array, default: [] },
+    bracket: { type: Object, default: { qf: [null, null, null, null], sf: [null, null], f: [null] } }
+});
+mongoose.model('TournamentState', TournamentStateSchema);
 
 const UserProfileSchema = new mongoose.Schema({
     firebaseUid: { type: String, unique: true, required: true },
@@ -209,12 +262,6 @@ function resetTurnTimer(roomId) {
     }, 60000); 
 }
 
-let tournamentState = {
-    status: 'registration',
-    players: [], 
-    bracket: { qf: [null, null, null, null], sf: [null, null], f: [null] }
-};
-
 function generateTournamentBracket() {
     tournamentState.status = 'active';
     const shuffled = [...tournamentState.players].sort(() => 0.5 - Math.random());
@@ -225,6 +272,7 @@ function generateTournamentBracket() {
         createMatch(shuffled[0], shuffled[1]), createMatch(shuffled[2], shuffled[3]),
         createMatch(shuffled[4], shuffled[5]), createMatch(shuffled[6], shuffled[7])
     ];
+    saveTournamentToDb(); // <-- SAČUVAJ U BAZU
 }
 
 function advanceTournamentBracket(round, index, winnerObj) {
@@ -246,6 +294,7 @@ function advanceTournamentBracket(round, index, winnerObj) {
     else if (round === 'f') {
         tournamentState.status = 'finished';
     }
+    saveTournamentToDb(); // <-- SAČUVAJ U BAZU
 }
 
 // ==================================================================
@@ -1005,10 +1054,8 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            // Dohvatamo sve igrače koji imaju barem jednu odigranu partiju
             const users = await UserProfile.find({ games: { $gt: 0 } }).lean();
 
-            // Računamo Power Index za svakog igrača (Formula usklađena sa klijentom game.js)
             const rankedPlayers = users.map(user => {
                 let totalCompetitive = (user.wins || 0) + (user.losses || 0);
                 let rate = totalCompetitive > 0 ? ((user.wins || 0) / totalCompetitive) * 100 : 0;
@@ -1040,10 +1087,7 @@ io.on('connection', (socket) => {
                 };
             });
 
-            // Sortiramo igrače opadajuće po Indeksu Moći
             rankedPlayers.sort((a, b) => b.powerIndex - a.powerIndex);
-            
-            // Uzimamo samo najboljih 50
             const top50 = rankedPlayers.slice(0, 50);
 
             socket.emit('power_index_data', top50);
@@ -1432,6 +1476,10 @@ io.on('connection', (socket) => {
         }
     });
 
+    // ==================================================================
+    // --- SOCKET LOGIKA ZA TURNIR (SA DODATIM ČUVANJEM U BAZU) ---
+    // ==================================================================
+    
     socket.on('tourney_reset', () => {
         console.log("⚠️ TURNIR JE RESETOVAN OD STRANE KORISNIKA!");
         tournamentState = {
@@ -1439,6 +1487,7 @@ io.on('connection', (socket) => {
             players: [],
             bracket: { qf: [null, null, null, null], sf: [null, null], f: [null] }
         };
+        saveTournamentToDb(); // <-- SAČUVAJ U BAZU
         io.emit('tourney_state_update', tournamentState);
     });
 
@@ -1462,8 +1511,14 @@ io.on('connection', (socket) => {
         if (tournamentState.status === 'registration' && tournamentState.players.length < 8) {
             const alreadyRegistered = tournamentState.players.find(p => p.id === playerData.id);
             if (!alreadyRegistered) {
-                tournamentState.players.push({ id: playerData.id, name: playerData.name });
-                if (tournamentState.players.length === 8) generateTournamentBracket();
+                // DODAT I photoUrl ZA KOREKTAN PRIKAZ U KOSTURU
+                tournamentState.players.push({ id: playerData.id, name: playerData.name, photoUrl: playerData.photoUrl || '' });
+                
+                if (tournamentState.players.length === 8) {
+                    generateTournamentBracket(); // Ovo takođe snima u bazu
+                } else {
+                    saveTournamentToDb(); // <-- SAČUVAJ U BAZU DOK JOS TRAJU PRIJAVE
+                }
                 io.emit('tourney_state_update', tournamentState);
             }
         }
@@ -1474,6 +1529,7 @@ io.on('connection', (socket) => {
             const index = tournamentState.players.findIndex(p => p.id === playerId);
             if (index !== -1) {
                 tournamentState.players.splice(index, 1);
+                saveTournamentToDb(); // <-- SAČUVAJ U BAZU
                 io.emit('tourney_state_update', tournamentState);
                 console.log(`↩️ Poništena prijava za turnir: ${playerId}`);
             }
@@ -1489,6 +1545,7 @@ io.on('connection', (socket) => {
             match.proposedById = playerId;
             match.timeAccepted = false;
             match.time = null;
+            saveTournamentToDb(); // <-- SAČUVAJ U BAZU
             io.emit('tourney_state_update', tournamentState);
         }
     });
@@ -1500,6 +1557,7 @@ io.on('connection', (socket) => {
         if (match) {
             match.timeAccepted = true;
             match.time = match.proposedTime;
+            saveTournamentToDb(); // <-- SAČUVAJ U BAZU
             io.emit('tourney_state_update', tournamentState);
         }
     });
@@ -1522,7 +1580,7 @@ io.on('connection', (socket) => {
         if (match && match.winnerId === null) {
             match.winnerId = winnerId;
             const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
-            advanceTournamentBracket(round, index, winnerObj);
+            advanceTournamentBracket(round, index, winnerObj); // Ovo sada interno zove saveTournamentToDb()
             io.emit('tourney_state_update', tournamentState);
 
             if (round === 'f') {

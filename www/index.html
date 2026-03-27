@@ -449,58 +449,98 @@
         </div>
     </div>
     
-    <div id="rules-screen" class="screen">
+    <div id="rules-screen" class="screen" style="padding-top: max(40px, env(safe-area-inset-top));">
         <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <div class="rules-content">
-             <h2 style="color:var(--gold-main); text-align:center; margin-bottom: 20px;" data-lang="rules_title">PRAVILA IGRE</h2>
-             
-             <div class="rules-section">
-                <h3 data-lang="rules_goal_title">CILJ IGRE</h3>
-                <p data-lang="rules_goal_text">Cilj je osvojiti što više bodova bacanjem 6 kockica i kombinovanjem dobijenih vrednosti u tabelu. Imate 3 bacanja po potezu.</p>
-             </div>
+        <h2 class="menu-title" style="margin-bottom: 15px; flex-shrink: 0;" data-lang="rules_title">PRAVILA IGRE</h2>
+        
+        <div class="rules-carousel" id="rules-carousel" onscroll="updateRulesPagination()">
+            
+            <div class="rules-page">
+                <div class="rules-card">
+                    <div class="rules-section">
+                        <h3 data-lang="rules_goal_title">CILJ IGRE</h3>
+                        <p data-lang="rules_goal_text">Cilj je osvojiti što više bodova bacanjem 6 kockica i kombinovanjem dobijenih vrednosti u tabelu. Imate 3 bacanja po potezu.</p>
+                    </div>
 
-             <div class="rules-section">
-                <h3 data-lang="rules_cols_title">KOLONE</h3>
-                <ul>
-                    <li data-lang="rules_col_down"><strong>NADOLE (↓):</strong> Popunjava se redom od broja 1 do Yamba. Ne sme se preskakati.</li>
-                    <li data-lang="rules_col_free"><strong>SLOBODNA (S):</strong> Može se popunjavati bilo kojim redosledom.</li>
-                    <li data-lang="rules_col_mid"><strong>SREDINA (⇅):</strong> Popunjava se od sredine ka krajevima (od polja MAX i MIN ka 1 i Yamb-u).</li>
-                    <li data-lang="rules_col_up"><strong>NAGORE (↑):</strong> Popunjava se redom od Yamba do broja 1.</li>
-                    <li data-lang="rules_col_man"><strong>RUČNO (R):</strong> Popunjava se isključivo nakon PRVOG bacanja.</li>
-                    <li data-lang="rules_col_ann"><strong>NAJAVA (📢):</strong> Morate najaviti polje nakon prvog bacanja.</li>
-                </ul>
-             </div>
+                    <div class="rules-section">
+                        <h3 data-lang="rules_cols_title">KOLONE</h3>
+                        <ul>
+                            <li data-lang="rules_col_down"><strong>NADOLE (↓):</strong> Popunjava se redom od broja 1 do Yamba. Ne sme se preskakati.</li>
+                            <li data-lang="rules_col_free"><strong>SLOBODNA (S):</strong> Može se popunjavati bilo kojim redosledom.</li>
+                            <li data-lang="rules_col_mid"><strong>SREDINA (⇅):</strong> Popunjava se od sredine ka krajevima (od polja MAX i MIN ka 1 i Yamb-u).</li>
+                            <li data-lang="rules_col_up"><strong>NAGORE (↑):</strong> Popunjava se redom od Yamba do broja 1.</li>
+                            <li data-lang="rules_col_man"><strong>RUČNO (R):</strong> Popunjava se isključivo nakon PRVOG bacanja.</li>
+                            <li data-lang="rules_col_ann"><strong>NAJAVA (📢):</strong> Morate najaviti polje nakon prvog bacanja.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-             <div class="rules-section">
-                <h3 data-lang="rules_scoring_title">BODOVANJE</h3>
-                
-                <h4 data-lang="rules_sec1_title">1. SEKCIJA (1-6)</h4>
-                <p data-lang="rules_sec1_text">Sabiraju se samo odgovarajući brojevi. Zbir ≥ 60 donosi +30 poena.</p>
+            <div class="rules-page">
+                <div class="rules-card">
+                    <div class="rules-section">
+                        <h3 data-lang="rules_scoring_title">BODOVANJE</h3>
+                        
+                        <h4 data-lang="rules_sec1_title">1. SEKCIJA (1-6)</h4>
+                        <p data-lang="rules_sec1_text">Sabiraju se samo odgovarajući brojevi. Zbir ≥ 60 donosi +30 poena.</p>
 
-                <h4 data-lang="rules_sec2_title">2. SEKCIJA (MIN-MAX)</h4>
-                <p data-lang="rules_sec2_text">Formula: (Max - Min) * Broj jedinica. Ako je rezultat ≥ 60, bonus je +40.</p>
+                        <h4 data-lang="rules_sec2_title">2. SEKCIJA (MIN-MAX)</h4>
+                        <p data-lang="rules_sec2_text">Formula: (Max - Min) * Broj jedinica. Ako je rezultat ≥ 60, bonus je +40.</p>
 
-                <h4 data-lang="rules_sec3_title">3. SEKCIJA (KOMBINACIJE)</h4>
-                <ul>
-                    <li data-lang="rules_row_triling_desc"><strong>TRILING:</strong> 3 iste. Zbir + 20.</li>
-                    <li data-lang="rules_row_kenta_desc"><strong>KENTA:</strong> 5 u nizu. 1. bacanje: 66 | 2. bacanje: 56 | 3. bacanje: 46.</li>
-                    <li data-lang="rules_row_full_desc"><strong>FUL:</strong> 3 iste + 2 iste. Zbir + 30.</li>
-                    <li data-lang="rules_row_poker_desc"><strong>POKER:</strong> 4 iste. Zbir + 40.</li>
-                    <li data-lang="rules_row_yamb_desc"><strong>YAMB:</strong> 5 istih. Zbir + 50.</li>
-                </ul>
-             </div>
-             <br><br>
+                        <h4 data-lang="rules_sec3_title">3. SEKCIJA (KOMBINACIJE)</h4>
+                        <ul>
+                            <li data-lang="rules_row_triling_desc"><strong>TRILING:</strong> 3 iste. Zbir + 20.</li>
+                            <li data-lang="rules_row_kenta_desc"><strong>KENTA:</strong> 5 u nizu. 1. bacanje: 66 | 2. bacanje: 56 | 3. bacanje: 46.</li>
+                            <li data-lang="rules_row_full_desc"><strong>FUL:</strong> 3 iste + 2 iste. Zbir + 30.</li>
+                            <li data-lang="rules_row_poker_desc"><strong>POKER:</strong> 4 iste. Zbir + 40.</li>
+                            <li data-lang="rules_row_yamb_desc"><strong>YAMB:</strong> 5 istih. Zbir + 50.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <div class="rules-pagination">
+            <div class="dot active" id="dot-0"></div>
+            <div class="dot" id="dot-1"></div>
+        </div>
+
+        <script>
+            function updateRulesPagination() {
+                const carousel = document.getElementById('rules-carousel');
+                if(!carousel) return;
+                const scrollLeft = carousel.scrollLeft;
+                const width = carousel.clientWidth;
+                const activeIndex = Math.round(scrollLeft / width);
+                
+                document.getElementById('dot-0').classList.remove('active');
+                document.getElementById('dot-1').classList.remove('active');
+                
+                const activeDot = document.getElementById('dot-' + activeIndex);
+                if(activeDot) activeDot.classList.add('active');
+            }
+        </script>
+
         <style>
-            .rules-content { padding: 20px; text-align: left; overflow-y: auto; height: 80vh; }
-            .rules-section { margin-bottom: 25px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; }
-            .rules-section h3 { color: var(--gold-main); border-bottom: 1px solid var(--gold-glow); padding-bottom: 5px; margin-bottom: 15px; font-size: 1.1rem; }
-            .rules-section h4 { color: var(--text-main); margin: 15px 0 8px 0; font-size: 0.95rem; }
-            .rules-section p { margin: 0 0 10px 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
-            .rules-section ul { list-style: none; padding: 0; }
-            .rules-section li { font-size: 0.85rem; color: var(--text-main); line-height: 1.5; padding-left: 10px; border-left: 2px solid var(--gold-glow); margin-bottom: 10px; }
-            .rules-section strong { color: var(--gold-main); }
-            .bonus-text { font-weight: bold; color: var(--gold-main) !important; background: rgba(255,215,0,0.1); padding: 5px; border-radius: 4px; display: inline-block; }
+            .rules-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; max-width: 500px; flex: 1; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 10px; }
+            .rules-carousel::-webkit-scrollbar { display: none; }
+            .rules-page { flex: 0 0 100%; width: 100%; scroll-snap-align: center; padding: 0 15px; display: flex; flex-direction: column; }
+            .rules-card { background: var(--glass-panel); border: var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: var(--glass-shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); flex: 1; overflow-y: auto; display: flex; flex-direction: column; text-align: left; margin-bottom: 5px; }
+            .rules-card::-webkit-scrollbar { width: 4px; }
+            .rules-card::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
+            
+            .rules-section { margin-bottom: 20px; }
+            .rules-section h3 { color: var(--gold-main); border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 8px; margin-bottom: 12px; font-size: 1.15rem; letter-spacing: 1px; }
+            .rules-section h4 { color: #fff; margin: 15px 0 5px 0; font-size: 0.95rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+            .rules-section p { margin: 0 0 10px 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
+            .rules-section ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+            .rules-section li { font-size: 0.85rem; color: var(--text-main); line-height: 1.5; padding-left: 12px; border-left: 2px solid var(--gold-main); background: rgba(0,0,0,0.1); padding-top: 5px; padding-bottom: 5px; border-radius: 0 8px 8px 0; }
+            .rules-section strong { color: var(--gold-main); font-weight: 800; }
+            
+            .rules-pagination { display: flex; gap: 12px; justify-content: center; margin-bottom: max(20px, env(safe-area-inset-bottom)); margin-top: 10px; }
+            .rules-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
+            .rules-pagination .dot.active { background: var(--gold-main); transform: scale(1.4); box-shadow: 0 0 10px var(--gold-glow); }
         </style>
     </div>
 
