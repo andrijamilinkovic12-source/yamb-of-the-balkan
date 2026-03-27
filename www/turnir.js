@@ -49,10 +49,16 @@ class TournamentManager {
                             const regTime = parseInt(localRegTime, 10);
                             
                             if (now - regTime < 518400000) {
+                                // DODATO: Čitanje Indeksa moći pri auto-prijavi
+                                let myPi = '0';
+                                const piEl = document.getElementById('stat-power-index');
+                                if (piEl && piEl.innerText) myPi = piEl.innerText;
+
                                 const playerData = {
                                     id: this.app.playerId, 
                                     name: this.app.playerName,
-                                    photoUrl: localStorage.getItem('yamb_player_photo') || ''
+                                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
+                                    pi: myPi
                                 };
                                 this.app.socket.emit('tourney_register', playerData);
                             } else {
@@ -311,10 +317,16 @@ class TournamentManager {
                 }
 
                 if(this.app.socket) {
+                    // DODATO: Slanje Indeksa moći pri klasičnoj prijavi
+                    let myPi = '0';
+                    const piEl = document.getElementById('stat-power-index');
+                    if (piEl && piEl.innerText) myPi = piEl.innerText;
+
                     const playerData = {
                         id: this.app.playerId, 
                         name: this.app.playerName,
-                        photoUrl: localStorage.getItem('yamb_player_photo') || ''
+                        photoUrl: localStorage.getItem('yamb_player_photo') || '',
+                        pi: myPi
                     };
                     this.app.socket.emit('tourney_register', playerData);
                 }
@@ -511,12 +523,10 @@ class TournamentManager {
             let nameColor = isWinner ? 'var(--success)' : 'var(--text-main)';
             let fontWeight = isWinner ? '900' : '600';
             
-            // Racunanje Indeksa Moci (Ako je dostupan, ili placeholder dok server ne posalje)
-            let powerIndex = p.powerIndex || p.pi;
-            if (powerIndex === undefined) {
-                powerIndex = (p.stats && this.app && typeof this.app.calculatePowerIndex === 'function') 
-                             ? this.app.calculatePowerIndex(p.stats, false) 
-                             : '?';
+            // Racunanje Indeksa Moci - proverava da li smo ga dobili sa servera preko 'pi' 
+            let powerIndex = p.pi || p.powerIndex;
+            if (powerIndex === undefined || powerIndex === null || powerIndex === '') {
+                powerIndex = '?';
             }
             
             return `

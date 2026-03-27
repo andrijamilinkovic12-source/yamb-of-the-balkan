@@ -1511,8 +1511,13 @@ io.on('connection', (socket) => {
         if (tournamentState.status === 'registration' && tournamentState.players.length < 8) {
             const alreadyRegistered = tournamentState.players.find(p => p.id === playerData.id);
             if (!alreadyRegistered) {
-                // DODAT I photoUrl ZA KOREKTAN PRIKAZ U KOSTURU
-                tournamentState.players.push({ id: playerData.id, name: playerData.name, photoUrl: playerData.photoUrl || '' });
+                // DODATO ZA INDEKS MOĆI (pi) I SLIKU
+                tournamentState.players.push({ 
+                    id: playerData.id, 
+                    name: playerData.name, 
+                    photoUrl: playerData.photoUrl || '',
+                    pi: playerData.pi || '0'
+                });
                 
                 if (tournamentState.players.length === 8) {
                     generateTournamentBracket(); // Ovo takođe snima u bazu
