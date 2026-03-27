@@ -499,11 +499,32 @@
                 </div>
             </div>
 
+            <div class="rules-page">
+                <div class="rules-card">
+                    <div class="rules-section">
+                        <h3 data-lang="rules_tourney_title">TURNIRI 🏆</h3>
+                        
+                        <h4 data-lang="rules_tourney_format_title">SISTEM TAKMIČENJA</h4>
+                        <p data-lang="rules_tourney_format_text">Nedeljni turnir se sastoji od 8 igrača. Igra se na ispadanje (nokaut sistem): četvrtfinale, polufinale i finale. Svaki duel se igra na <strong>jednu dobijenu partiju</strong>.</p>
+
+                        <h4 data-lang="rules_tourney_fee_title">PRIJAVA I KOTIZACIJA</h4>
+                        <p data-lang="rules_tourney_fee_text">Prijava košta 2500 dukata. Povraćaj novca i odjava mogući su samo dok traje faza prikupljanja igrača. Kada se prijavi svih 8 igrača, turnir počinje i odustajanje nije moguće.</p>
+
+                        <h4 data-lang="rules_tourney_schedule_title">ZAKAZIVANJE MEČEVA</h4>
+                        <p data-lang="rules_tourney_schedule_text">Termini nisu fiksni! Protivnici u kosturu sami predlažu i prihvataju termin odigravanja meča kroz aplikaciju. Kada oba igrača potvrde termin, meč se može pokrenuti.</p>
+
+                        <h4 data-lang="rules_tourney_rewards_title">NAGRADE</h4>
+                        <p data-lang="rules_tourney_rewards_text">Pobednik celog turnira dobija ogromno povećanje <strong>Indeksa Moći (PI)</strong> i biće zauvek upisan u Dvoranu Slavnih!</p>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="rules-pagination">
             <div class="dot active" id="dot-0"></div>
             <div class="dot" id="dot-1"></div>
+            <div class="dot" id="dot-2"></div>
         </div>
 
         <script>
@@ -514,9 +535,12 @@
                 const width = carousel.clientWidth;
                 const activeIndex = Math.round(scrollLeft / width);
                 
+                // Gasimo sve tačke
                 document.getElementById('dot-0').classList.remove('active');
                 document.getElementById('dot-1').classList.remove('active');
+                if (document.getElementById('dot-2')) document.getElementById('dot-2').classList.remove('active');
                 
+                // Palimo samo aktivnu
                 const activeDot = document.getElementById('dot-' + activeIndex);
                 if(activeDot) activeDot.classList.add('active');
             }
