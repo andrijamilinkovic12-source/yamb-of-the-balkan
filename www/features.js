@@ -65,6 +65,9 @@ if (typeof window.YambFeatures === 'undefined') {
             const is2Player = this.app.players.length > 1;
             const isVsAi = this.app.aiMode;
 
+            // POMOĆNA FUNKCIJA ZA BEZBEDAN PREVOD
+            const _safeT = (key) => (typeof t !== 'undefined' ? t(key) : key);
+
             // POMOĆNA FUNKCIJA ZA OTKLJUČAVANJE I ISPLATU
             const unlock = (id) => {
                 if (window.statsManager.unlockTrophy(id)) {
@@ -93,8 +96,17 @@ if (typeof window.YambFeatures === 'undefined') {
                      
                      if(this.app.soundMgr) this.app.soundMgr.trophy();
                      
-                     const modal = this.app.modal || new ModalManager();
-                     modal.alert(`Čestitamo! Osvojili ste trofej "${title}" i nagradu od ${rewardAmount} dukata!`, "🏆 NOVI TROFEJ!");
+                     const modal = this.app.modal || window.modalManager;
+                     
+                     // Prevod i popunjavanje poruke o osvojenom trofeju
+                     let msg = _safeT('msg_trophy_won');
+                     if (msg === 'msg_trophy_won') {
+                         msg = `Čestitamo! Osvojili ste trofej "${title}" i nagradu od ${rewardAmount} dukata!`;
+                     } else {
+                         msg = msg.replace('{0}', title).replace('{1}', rewardAmount);
+                     }
+
+                     modal.alert(msg, _safeT('title_trophy_won') || "🏆 NOVI TROFEJ!");
                 }
             };
 

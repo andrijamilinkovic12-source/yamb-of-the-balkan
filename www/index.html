@@ -427,7 +427,7 @@
                     <div style="display: flex; align-items: center; gap: 12px; text-align: left;">
                         <img id="auth-user-photo" src="" alt="Avatar" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Igrač&background=333&color=E0C995';" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold-main); display: none; object-fit: cover; box-shadow: 0 0 10px rgba(255,215,0,0.2);">
                         <div style="display: flex; flex-direction: column;">
-                            <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Google Nalog</span>
+                            <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: bold; text-transform: uppercase; letter-spacing: 1px;" data-lang="settings_google_account">Google Nalog</span>
                             <span id="auth-user-info" style="font-size: 0.9rem; color: var(--text-main); font-weight: bold;" data-lang="settings_not_logged_in">Niste prijavljeni</span>
                         </div>
                     </div>
@@ -664,7 +664,7 @@
 
     <div id="tournament-screen" class="screen" style="padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom)); justify-content: flex-start;">
         <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <h2 class="menu-title" style="margin-bottom: 15px; flex-shrink: 0;">TURNIR ⚔️</h2>
+        <h2 class="menu-title" style="margin-bottom: 15px; flex-shrink: 0;" data-lang="tourney_title">TURNIR ⚔️</h2>
         
         <div id="tourney-content" style="width: 100%; max-width: 900px; flex: 1; overflow-y: hidden; display: flex; flex-direction: column; align-items: center;">
         </div>

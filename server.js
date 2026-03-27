@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS
 
 require('dotenv').config(); 
 
@@ -8,7 +8,7 @@ const { Server } = require("socket.io");
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path'); 
-const https = require('https'); // Dodato za Self-Ping mehanizam
+const https = require('https'); 
 
 // Inicijalizacija aplikacije
 const app = express();
@@ -182,11 +182,11 @@ const chatBans = {};
 const onlinePlayers = {};     
 const registeredSockets = {}; 
 
-// NOVO: GRACE PERIOD PROMENLJIVE
+// GRACE PERIOD PROMENLJIVE
 const disconnectTimers = {}; 
 const ghostSessions = {}; 
 
-// NOVO: ANTI-TROLL TAJMER
+// ANTI-TROLL TAJMER
 const roomTimers = {};
 const roomState = {};
 
@@ -617,7 +617,7 @@ io.on('connection', (socket) => {
             io.to(targetSocketId).emit('request_state_sync', { senderSocketId: socket.id });
             console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId}`);
         } else {
-            socket.emit('error_msg', 'Igrač koga želite da gledate trenutno nije u partiji.');
+            socket.emit('error_msg', 'err_spectate_not_in_game');
         }
     });
 
@@ -805,7 +805,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- DODATO .LEAN() ZA ISPRAVNO SLANJE GLOBALNE LISTE ---
     socket.on('get_global_highscores', async (period) => {
         try {
             if (!MONGO_URI) return; 
@@ -880,7 +879,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- DODATO .LEAN() ZA ISPRAVNO SLANJE KVARTALNE LIGE ---
     socket.on('get_league_highscores', async (reqData) => {
         try {
             if (!MONGO_URI) {
@@ -916,7 +914,6 @@ io.on('connection', (socket) => {
                 return;
             }
             
-            // Aggregation automatski vraća "lean" objekte, tako da ovo ostaje netaknuto
             const allTimeScores = await LeagueScore.aggregate([
                 {
                     $group: {
@@ -971,7 +968,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // --- DODATO .LEAN() ZA ISPRAVNO SLANJE STREAK TABELE ---
     socket.on('get_streak_leaderboard', async () => {
         try {
             if (!MONGO_URI) {
@@ -1196,7 +1192,7 @@ io.on('connection', (socket) => {
         let photoUrl = data.photoUrl || '';
         console.log(`🏠 Zahtev za Private sobu: ${roomId} od ${nickname}`);
 
-        if (!roomId) { socket.emit('error_msg', "Nevažeći ID sobe."); return; }
+        if (!roomId) { socket.emit('error_msg', 'err_invalid_room'); return; }
 
         if (!privateRooms[roomId]) {
             privateRooms[roomId] = { p1: { id: socket.id, name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
@@ -1269,8 +1265,7 @@ io.on('connection', (socket) => {
         const now = Date.now();
 
         if (chatBans[clientIp] && chatBans[clientIp].banUntil > now) {
-            const preostaloMinuta = Math.ceil((chatBans[clientIp].banUntil - now) / 60000);
-            socket.emit('error_msg', `Zabranjeno pisanje! Vaš chat je suspendovan još ${preostaloMinuta} minuta zbog psovanja.`);
+            socket.emit('error_msg', 'err_chat_suspended');
             return; 
         }
 
@@ -1290,7 +1285,7 @@ io.on('connection', (socket) => {
             chatBans[clientIp].banUntil = now + banTrajanjeMs;
 
             console.log(`🔨 MUTE BAN: IP ${clientIp} je mutiran na ${satiBana}h. (Prekršaj br: ${chatBans[clientIp].strikes})`);
-            socket.emit('error_msg', `Chat vam je blokiran na ${satiBana} sat(i) zbog korišćenja zabranjenih reči.`);
+            socket.emit('error_msg', 'err_chat_banned');
             return; 
         }
 
@@ -1313,7 +1308,7 @@ io.on('connection', (socket) => {
                 challengerName: challengerName || "Gost"
             });
         } else {
-            socket.emit('error_msg', 'Igrač više nije na serveru.');
+            socket.emit('error_msg', 'err_player_not_on_server');
         }
     });
 
@@ -1323,7 +1318,7 @@ io.on('connection', (socket) => {
 
         if (accepted) {
             if (!challengerSocket) {
-                socket.emit('error_msg', 'Igrač koji vas je izazvao je napustio server.');
+                socket.emit('error_msg', 'err_challenger_left');
                 return;
             }
 
@@ -1345,7 +1340,7 @@ io.on('connection', (socket) => {
 
         } else {
             if (challengerSocket) {
-                socket.to(challengerId).emit('challenge_declined', { message: "Igrač je nažalost odbio vaš izazov." });
+                socket.to(challengerId).emit('challenge_declined', {});
             }
         }
     });
@@ -1391,7 +1386,6 @@ io.on('connection', (socket) => {
 
     socket.on('tourney_get_state', () => { socket.emit('tourney_state_update', tournamentState); });
 
-    // --- DODATO .LEAN() ZA ISPRAVNO SLANJE TURNIRSKE STATISTIKE ---
     socket.on('get_tourney_stats', async () => {
         try {
             if (!MONGO_URI) {
@@ -1459,7 +1453,7 @@ io.on('connection', (socket) => {
             io.to(onlinePlayers[targetId]).emit('tourney_duel_ready', { matchRoomId, targetId: targetId, opponentName: opponentName });
             socket.emit('tourney_join_allowed', matchRoomId);
         } else {
-            socket.emit('error_msg', `Igrač ${opponentName} trenutno nije u aplikaciji. Dogovorite termin kada je online.`);
+            socket.emit('error_msg', 'err_tourney_opp_offline');
         }
     });
 

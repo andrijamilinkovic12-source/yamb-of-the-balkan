@@ -105,7 +105,7 @@ const SHOP_DATA = {
         { id: 'surgeon', icon: '😷', title: { sr: 'Hirurg', en: 'Surgeon' }, desc: { sr: 'Popuni celu Ručno kolonu bez nule.', en: 'Fill Manual column without zeros.' }, reward: 3000, category: { sr: 'VEŠTINA', en: 'SKILL' } },
         { id: 'prophet', icon: '🔮', title: { sr: 'Prorok', en: 'Prophet' }, desc: { sr: 'Pogodi 3 Najave zaredom.', en: 'Hit 3 Announcements in a row.' }, reward: 1500, category: { sr: 'VEŠTINA', en: 'SKILL' } },
         { id: 'sniper', icon: '🎯', title: { sr: 'Snajper', en: 'Sniper' }, desc: { sr: 'Pogodi Yamb u Najavi.', en: 'Hit Yamb in Announcement.' }, reward: 2500, category: { sr: 'VEŠTINA', en: 'SKILL' } },
-        { id: 'math', icon: '📐', title: { sr: 'Matematičar', en: 'Matematičar' }, desc: { sr: 'Tačno 63 u Zbiru 1.', en: 'Exactly 63 in Sum 1.' }, reward: 1000, category: { sr: 'VEŠTINA', en: 'SKILL' } },
+        { id: 'math', icon: '📐', title: { sr: 'Matematičar', en: 'Mathematician' }, desc: { sr: 'Tačno 63 u Zbiru 1.', en: 'Exactly 63 in Sum 1.' }, reward: 1000, category: { sr: 'VEŠTINA', en: 'SKILL' } },
         { id: 'sveti_ilija', icon: '⚡', title: { sr: 'Sveti Ilija', en: 'Saint Elijah' }, desc: { sr: 'Yamb iz prvog bacanja!', en: 'Yamb on the first roll!' }, reward: 10000, category: { sr: 'SREĆA', en: 'LUCK' } },
         { id: 'hazard', icon: '⚠️', title: { sr: 'Hazarder', en: 'Daredevil' }, desc: { sr: 'Upiši Yamb u kolonu Ručno.', en: 'Write Yamb in Manual column.' }, reward: 3000, category: { sr: 'SREĆA', en: 'LUCK' } },
         { id: 'firecracker', icon: '🧨', title: { sr: 'Petarda', en: 'Firecracker' }, desc: { sr: 'Upiši svih 5 Yambova (bez nule).', en: 'Write all 5 Yambs (no zero).' }, reward: 4000, category: { sr: 'SREĆA', en: 'LUCK' } },

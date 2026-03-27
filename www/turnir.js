@@ -198,7 +198,7 @@ class TournamentManager {
         `;
         
         if (!this.tourneyLeaderboard || this.tourneyLeaderboard.length === 0) {
-            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:1rem; padding: 40px 0;">Još uvek nema osvajača turnira.</div>`;
+            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:1rem; padding: 40px 0;">${tt('tourney_no_champs_yet') || 'Još uvek nema osvajača turnira.'}</div>`;
         } else {
             this.tourneyLeaderboard.forEach((player, idx) => {
                 let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="color: var(--text-muted); font-size: 1.1rem; font-weight: bold;">${idx+1}.</span>`));
@@ -408,9 +408,9 @@ class TournamentManager {
             <div style="width: 100%; height: 100%; display: flex; flex-direction: column;">
                 
                 <div style="display: flex; flex-direction: row; width: 100%; padding-bottom: 8px; border-bottom: 1px solid rgba(255,215,0,0.2); margin-bottom: 5px; flex-shrink: 0;">
-                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">1/4</div>
-                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">1/2</div>
-                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">FINALE</div>
+                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">${tt('tourney_qf') || '1/4'}</div>
+                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">${tt('tourney_sf') || '1/2'}</div>
+                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">${tt('tourney_f') || 'FINALE'}</div>
                 </div>
 
                 <div style="display: flex; flex-direction: row; width: 100%; flex: 1; gap: 6px; position: relative;">

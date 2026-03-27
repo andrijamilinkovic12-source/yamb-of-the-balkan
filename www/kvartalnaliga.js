@@ -89,10 +89,11 @@ class KvartalnaLigaManager {
 
     syncWithServer() {
         if (!window.app || !window.app.socket) return;
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         const data = this.getScores();
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
-        let pName = localStorage.getItem('yamb_player_name') || "Gost";
+        let pName = localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost");
         let pPhoto = localStorage.getItem('yamb_player_photo') || ''; 
 
         let pId = localStorage.getItem('yamb_uid') || localStorage.getItem('yamb_player_id');
@@ -145,7 +146,6 @@ class KvartalnaLigaManager {
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
 
-        // DODATO: min-height: 0 na slajd i listu da bi overflow proradio
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 15px; display: flex; flex-direction: column; height: 100%; min-height: 0;">
                 <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;">${r.name}</h3>
@@ -161,7 +161,6 @@ class KvartalnaLigaManager {
             <div id="league-dot-${i}" style="width: 8px; height: 8px; border-radius: 50%; background: ${i === this.currentSlide ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; margin: 0 4px; transition: background 0.3s;"></div>
         `).join('');
 
-        // DODATO: min-height: 0 na flex roditelje (main content, carousel, track i hof)
         let modalHtml = `
         <div id="league-modal-overlay" class="modal-overlay" style="z-index: 999999; display: flex;">
             <div class="modal-box" style="width: 95%; max-width: 450px; height: 85vh; max-height: 800px; display: flex; flex-direction: column; padding: 0; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); overflow: hidden;">
@@ -185,7 +184,7 @@ class KvartalnaLigaManager {
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 1.1rem; color: var(--gold-main); font-weight: bold;">${pts} PTS</div>
-                                <div style="font-size: 0.65rem; color: var(--text-muted);">${gt('league_all_time_desc', 'Sva vremena')}: ${allTime}</div>
+                                <div style="font-size: 0.65rem; color: var(--text-muted);">${gt('league_all_time', 'SVA VREMENA')}: ${allTime}</div>
                             </div>
                         </div>
                     </div>
@@ -462,9 +461,10 @@ class KvartalnaLigaManager {
 
     populateRanks(scores, isAllTime) {
         let safeScores = Array.isArray(scores) ? [...scores] : [];
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         const localData = this.getScores();
-        const myName = localStorage.getItem('yamb_player_name') || "Gost";
+        const myName = localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost");
         const myPhoto = localStorage.getItem('yamb_player_photo') || '';
         let myScore = isAllTime ? (localData.baselineScore + localData.quarterlyScore) : localData.quarterlyScore;
 
@@ -508,7 +508,7 @@ class KvartalnaLigaManager {
         scores.forEach((s, i) => {
             let pName = s.playerName || gt('league_unknown', "Nepoznat Igrač");
             let pScore = s.score !== undefined ? s.score : "0";
-            let isMe = (pName === (localStorage.getItem('yamb_player_name') || "Gost"));
+            let isMe = (pName === (localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost")));
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
             let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
             let photo = s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;

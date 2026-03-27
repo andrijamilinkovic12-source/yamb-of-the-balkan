@@ -33,13 +33,13 @@ class RiznicaManager {
         // 2. Pribavljanje odgovarajućih podataka iz config.js
         let itemsData = [];
         if (typeof SHOP_DATA !== 'undefined') {
-            if (type === 'trophy') itemsData = SHOP_DATA.TROPHIES || [];
             if (type === 'skin') itemsData = SHOP_DATA.SKINS || [];
-            if (type === 'effect') itemsData = SHOP_DATA.EFFECTS || [];
-            if (type === 'theme') itemsData = SHOP_DATA.THEMES || []; // NOVO: Podaci za teme
+            else if (type === 'effect') itemsData = SHOP_DATA.EFFECTS || [];
+            else if (type === 'theme') itemsData = SHOP_DATA.THEMES || [];
+            else if (type === 'trophy') itemsData = SHOP_DATA.TROPHIES || [];
         }
 
-        // 3. Inicijalizacija ShopManager-a
+        // 3. Inicijalizacija i Renderovanje (Koristi univerzalni ShopManager)
         this.shop = new ShopManager({
             type: type,
             items: itemsData,
@@ -47,7 +47,7 @@ class RiznicaManager {
             balanceId: 'riznica-balance'
         });
 
-        // Mapiramo na window.shop kako bi HTML onclick atributi radili nesmetano
+        // Poveži globalnu referencu da bi HTML onclick='shop.tryBuy()' radili nesmetano
         window.shop = this.shop;
 
         // Priprema reklame u pozadini
@@ -67,7 +67,8 @@ class RiznicaManager {
                     }
                 });
             } else {
-                if(confirm(`Želite li kupiti ${name}?`)) this.shop.processTransaction(id, price);
+                let fallbackMsg = (typeof t === 'function') ? `${t('msg_confirm_buy')} ${name}?` : `Želite li kupiti ${name}?`;
+                if(confirm(fallbackMsg)) this.shop.processTransaction(id, price);
             }
         };
 
@@ -85,7 +86,5 @@ class RiznicaManager {
     }
 }
 
-// Inicijalizacija prilikom učitavanja
-window.addEventListener('DOMContentLoaded', () => {
-    window.riznicaManager = new RiznicaManager();
-});
+// Inicijalizacija
+window.riznicaManager = new RiznicaManager();

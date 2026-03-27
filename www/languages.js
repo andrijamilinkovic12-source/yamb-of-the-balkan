@@ -59,6 +59,11 @@ const TRANSLATIONS = {
         "hof_no_champs": "Još uvek nema završenih ciklusa. Kruna čeka prvog Šampiona!",
         "hof_winner_prefix": "POBEDNIK",
         "hof_winner_suffix": "CIKLUSA",
+        "league_champion_title": "🏆 ŠAMPION LIGE 🏆",
+        "league_winner_q": "Pobednik za Q{0} / {1}.",
+        "league_congrats": "Čestitamo na osvajanju Kvartalne lige!<br>Nova sezona je počela, srećno svima!",
+        "quarter_reward_title": "KRAJ KVARTALA 🏆",
+        "quarter_reward_msg": "Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} 💰!",
 
         // --- PRODAVNICA I RIZNICA ---
         "tab_trophies": "TROFEJI 🏆",
@@ -83,6 +88,7 @@ const TRANSLATIONS = {
         "msg_ad_reward": "Nagrada od 500 dukata je spremna!",
         "msg_reward_title": "NAGRADA",
         "btn_free_coins": "+ 500 💰 🎬",
+        "ad_not_ready": "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.",
         
         // --- KATEGORIJE I TROFEJI ---
         "category_other": "OSTALO",
@@ -108,6 +114,7 @@ const TRANSLATIONS = {
         "modal_title_reward": "NAGRADA PREUZETA",
         "modal_btn_ok": "U REDU",
         "modal_btn_cancel": "OTKAŽI",
+        "btn_continue": "NASTAVI",
         "err_server_conn": "Greška pri konekciji sa serverom.",
         "err_title": "GREŠKA",
         "err_undo_select": "Prvo odaberite polje za ispravku!",
@@ -116,6 +123,15 @@ const TRANSLATIONS = {
         "err_wait_opponent": "Sačekaj protivnika!",
         "warning_title": "UPOZORENJE",
         "err_client_outdated": "Vaša verzija klijenta je zastarela. Molimo osvežite stranicu.",
+        
+        // NOVE PORUKE SA SERVERA
+        "err_spectate_not_in_game": "Igrač koga želite da gledate trenutno nije u partiji.",
+        "err_invalid_room": "Nevažeći ID sobe.",
+        "err_chat_suspended": "Zabranjeno pisanje! Vaš chat je suspendovan zbog psovanja.",
+        "err_chat_banned": "Chat vam je blokiran zbog korišćenja zabranjenih reči.",
+        "err_player_not_on_server": "Igrač više nije na serveru.",
+        "err_challenger_left": "Igrač koji vas je izazvao je napustio server.",
+        "err_tourney_opp_offline": "Protivnik trenutno nije u aplikaciji. Dogovorite termin kada je online.",
 
         // --- STATISTIKA ---
         "stat_record": "REKORD",
@@ -306,6 +322,7 @@ const TRANSLATIONS = {
         "msg_save_error": "Greška pri učitavanju.\nPodaci su zastareli.",
         
         // --- TURNIR ---
+        "tourney_title": "TURNIR ⚔️",
         "tourney_weekly": "NEDELJNI TURNIR",
         "tourney_desc": "Turnir 8 igrača. Prijavi se, zagovori termin sa protivnikom i osvoji glavnu nagradu! Turnir traje maksimalno 7 dana.",
         "tourney_registered": "Prijavljeno igrača:",
@@ -366,6 +383,7 @@ const TRANSLATIONS = {
         "tourney_finalist_title": "FINALISTA 🥈",
         "tourney_tab_fame": "👑 SLAVNI",
         "tourney_hall_of_fame": "DVORANA SLAVNIH (OSVAJAČI)",
+        "tourney_no_champs_yet": "Još uvek nema osvajača turnira.",
 
         // --- AUTH PORUKE ---
         "auth_only_mobile": "Google prijava je dostupna samo u mobilnoj aplikaciji.",
@@ -373,6 +391,8 @@ const TRANSLATIONS = {
         "auth_sha1_error": "Greška 10/12500: Verovatno SHA-1 ključ u Firebase konzoli nije ispravan.",
         "auth_login_failed": "Prijava trenutno nije uspela. Proveri internet vezu.",
         "auth_logout_error": "Došlo je do greške pri odjavi.",
+        "auth_required_title": "PRIJAVA OBAVEZNA",
+        "auth_required": "Morate se prijaviti preko Google-a da biste igrali ovu igru.",
         
         // --- ONLINE I PRIJATELJI ---
         "ws_searching": "TRAŽENJE PROTIVNIKA...",
@@ -449,7 +469,9 @@ const TRANSLATIONS = {
         "friend_already_added": "Ovaj igrač je već u vašoj listi prijatelja.",
         "friend_req_success": "Zahtev je poslat! Igrač {0} će ga dobiti sledeći put kada bude na mreži.",
         "title_success": "USPEŠNO",
-        "live_badge": "UŽIVO"
+        "live_badge": "UŽIVO",
+        "spectate_ended_title": "KRAJ PARTIJE",
+        "spectate_ended_msg": "Partija koju ste gledali je završena."
     },
     en: {
         // --- SPLASH SCREEN ---
@@ -509,6 +531,11 @@ const TRANSLATIONS = {
         "hof_no_champs": "No completed cycles yet. The crown awaits the first Champion!",
         "hof_winner_prefix": "WINNER OF CYCLE",
         "hof_winner_suffix": "",
+        "league_champion_title": "🏆 LEAGUE CHAMPION 🏆",
+        "league_winner_q": "Winner for Q{0} / {1}.",
+        "league_congrats": "Congratulations on winning the Quarterly League!<br>The new season has started, good luck to everyone!",
+        "quarter_reward_title": "QUARTER ENDED 🏆",
+        "quarter_reward_msg": "Congratulations! You won {0}. place {1} in the Quarterly League and a reward of {2} 💰!",
 
         // --- SHOP & TREASURY ---
         "tab_trophies": "TROPHIES 🏆",
@@ -533,6 +560,7 @@ const TRANSLATIONS = {
         "msg_ad_reward": "Reward of 500 coins is ready!",
         "msg_reward_title": "REWARD",
         "btn_free_coins": "+ 500 💰 🎬",
+        "ad_not_ready": "The ad is loading or currently unavailable. Please try again in a few seconds.",
 
         // --- CATEGORIES & TROPHIES ---
         "category_other": "OTHER",
@@ -558,6 +586,7 @@ const TRANSLATIONS = {
         "modal_title_reward": "REWARD CLAIMED",
         "modal_btn_ok": "OK",
         "modal_btn_cancel": "CANCEL",
+        "btn_continue": "CONTINUE",
         "err_server_conn": "Error connecting to the server.",
         "err_title": "ERROR",
         "err_undo_select": "Select a field to correct first!",
@@ -566,6 +595,15 @@ const TRANSLATIONS = {
         "err_wait_opponent": "Wait for the opponent!",
         "warning_title": "WARNING",
         "err_client_outdated": "Your client version is outdated. Please refresh the page.",
+        
+        // NEW SERVER MESSAGES
+        "err_spectate_not_in_game": "The player you want to spectate is not in a game.",
+        "err_invalid_room": "Invalid room ID.",
+        "err_chat_suspended": "Writing forbidden! Your chat is suspended due to profanity.",
+        "err_chat_banned": "Your chat has been blocked for using prohibited words.",
+        "err_player_not_on_server": "The player is no longer on the server.",
+        "err_challenger_left": "The challenging player has left the server.",
+        "err_tourney_opp_offline": "Opponent is currently offline. Schedule a match when they are online.",
 
         // --- STATISTICS ---
         "stat_record": "RECORD",
@@ -756,6 +794,7 @@ const TRANSLATIONS = {
         "msg_save_error": "Error loading game.\nData format is outdated.",
         
         // --- TOURNAMENT ---
+        "tourney_title": "TOURNAMENT ⚔️",
         "tourney_weekly": "WEEKLY TOURNAMENT",
         "tourney_desc": "8 player tournament. Register, schedule a match with your opponent and win the grand prize! The tournament lasts a maximum of 7 days.",
         "tourney_registered": "Players registered:",
@@ -816,6 +855,7 @@ const TRANSLATIONS = {
         "tourney_finalist_title": "FINALIST 🥈",
         "tourney_tab_fame": "👑 HALL OF FAME",
         "tourney_hall_of_fame": "HALL OF FAME (CHAMPIONS)",
+        "tourney_no_champs_yet": "There are no tournament champions yet.",
 
         // --- AUTH PORUKE ---
         "auth_only_mobile": "Google login is only available in the mobile app.",
@@ -823,6 +863,8 @@ const TRANSLATIONS = {
         "auth_sha1_error": "Error 10/12500: SHA-1 key in Firebase console is likely incorrect.",
         "auth_login_failed": "Login failed. Please check your internet connection.",
         "auth_logout_error": "An error occurred during logout.",
+        "auth_required_title": "LOGIN REQUIRED",
+        "auth_required": "You must sign in with Google to play this game.",
         
         // --- ONLINE & FRIENDS ---
         "ws_searching": "SEARCHING FOR OPPONENT...",
@@ -899,7 +941,9 @@ const TRANSLATIONS = {
         "friend_already_added": "This player is already in your friends list.",
         "friend_req_success": "Request sent! Player {0} will receive it next time they are online.",
         "title_success": "SUCCESS",
-        "live_badge": "LIVE"
+        "live_badge": "LIVE",
+        "spectate_ended_title": "MATCH ENDED",
+        "spectate_ended_msg": "The match you were spectating has ended."
     }
 };
 

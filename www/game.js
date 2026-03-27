@@ -419,7 +419,7 @@ class YambApp {
     // --- OBAVEZNA GOOGLE PRIJAVA ZA IGRANJE ---
     requireLogin() {
         if (!localStorage.getItem('yamb_uid')) {
-            this.modal.alert(gt('auth_required') || "Morate se prijaviti preko Google-a da biste igrali ovu igru.", "PRIJAVA OBAVEZNA");
+            this.modal.alert(gt('auth_required') || "Morate se prijaviti preko Google-a da biste igrali ovu igru.", gt('auth_required_title') || "PRIJAVA OBAVEZNA");
             this.navigateTo('splash-screen');
             const splashLogin = document.getElementById('splash-login-container');
             if (splashLogin) splashLogin.style.display = 'flex';
@@ -642,7 +642,7 @@ class YambApp {
                 this.socket.connect();
             }
         } else {
-            this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", "GREŠKA");
+            this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", gt('err_title') || "GREŠKA");
         }
     }
 
@@ -1725,10 +1725,10 @@ class YambApp {
             this.effectMgr.trigger('gold_rain');
             
             let medalja = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
-            this.modal.alert(
-                `Čestitamo! Osvojili ste ${rank}. mesto ${medalja} u Kvartalnoj ligi i nagradu od ${reward} 💰!`, 
-                "KRAJ KVARTALA 🏆"
-            );
+            let msg = (gt('quarter_reward_msg') || "Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} 💰!")
+                        .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
+            
+            this.modal.alert(msg, gt('quarter_reward_title') || "KRAJ KVARTALA 🏆");
         });
         // ------------------------------------------------
 
@@ -2696,7 +2696,7 @@ class YambApp {
             this.gameActive = false;
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
             
-            this.modal.alert("Partija koju ste gledali je završena.", "KRAJ PARTIJE").then(() => {
+            this.modal.alert(gt('spectate_ended_msg') || "Partija koju ste gledali je završena.", gt('spectate_ended_title') || "KRAJ PARTIJE").then(() => {
                 this.showMainMenu();
             });
             return;
@@ -3250,6 +3250,11 @@ class YambApp {
         const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.playerName)}&background=333&color=FFD700`;
         const photo = data.photoUrl && data.photoUrl.length > 5 ? data.photoUrl : defaultAvatar;
         
+        let title = gt('league_champion_title') || "🏆 ŠAMPION LIGE 🏆";
+        let subText = (gt('league_winner_q') || "Pobednik za Q{0} / {1}.").replace('{0}', data.quarter).replace('{1}', data.year);
+        let congratsText = gt('league_congrats') || "Čestitamo na osvajanju Kvartalne lige!<br>Nova sezona je počela, srećno svima!";
+        let btnText = gt('btn_continue') || "NASTAVI";
+        
         // Zvuk slavlja i efekat konfeta
         if(this.soundMgr) this.soundMgr.win(); 
         if(this.effectMgr) this.effectMgr.trigger('confetti');
@@ -3257,8 +3262,8 @@ class YambApp {
         let modalHtml = `
         <div id="winner-modal-overlay" class="modal-overlay" style="z-index: 9999999; display: flex;">
             <div class="modal-box" style="text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); max-width: 400px; width: 90%; border-radius: 15px; box-shadow: 0 0 30px rgba(224, 201, 149, 0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-                <h2 style="color: var(--gold-main); font-size: 1.8rem; margin-top: 0; margin-bottom: 5px; text-transform: uppercase;">🏆 ŠAMPION LIGE 🏆</h2>
-                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">Pobednik za Q${data.quarter} / ${data.year}.</p>
+                <h2 style="color: var(--gold-main); font-size: 1.8rem; margin-top: 0; margin-bottom: 5px; text-transform: uppercase;">${title}</h2>
+                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
                 
                 <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
                     <img src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">
@@ -3269,10 +3274,10 @@ class YambApp {
                 <p style="color: var(--gold-main); font-size: 1.2rem; font-weight: bold; margin-bottom: 25px;">${data.score} PTS</p>
                 
                 <p style="color: #ddd; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;">
-                    Čestitamo na osvajanju Kvartalne lige!<br>Nova sezona je počela, srećno svima!
+                    ${congratsText}
                 </p>
                 
-                <button class="btn-menu btn-primary" onclick="document.getElementById('winner-modal-overlay').remove(); app.effectMgr.stop();" style="width: 100%;">NASTAVI</button>
+                <button class="btn-menu btn-primary" onclick="document.getElementById('winner-modal-overlay').remove(); app.effectMgr.stop();" style="width: 100%;">${btnText}</button>
             </div>
         </div>`;
 

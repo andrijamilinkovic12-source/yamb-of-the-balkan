@@ -210,7 +210,7 @@ class EffectManager {
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnEmojiRain(['💰', '🪙', '💎', '👑'], 50);
         if (type === 'fireflies') this.spawnFloatingEmoji(['✨', '🌟', '💫', '🧚'], 40);
-        if (type === 'bubbles') this.spawnBubbles(35); // Ubačeni mehurići!
+        if (type === 'bubbles') this.spawnBubbles(35); 
         
         if (type === 'ice_age') {
             let targetTable = null;
@@ -291,7 +291,7 @@ class EffectManager {
             document.body.appendChild(sky);
 
             // 2. Odredi čije se ime ispisuje (Igrač koji je trenutno na potezu)
-            let currentName = "IGRAČ";
+            let currentName = _safeT('hs_player') || "IGRAČ";
             if (window.app && window.app.players && window.app.players[window.app.currentPlayerIdx]) {
                 currentName = window.app.players[window.app.currentPlayerIdx];
             } else if (window.app && window.app.playerName) {
@@ -830,9 +830,9 @@ class ShopManager {
             if (typeof window.showNotification === 'function') {
                 window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!");
             } else if (window.modalManager && window.modalManager.overlay) {
-                window.modalManager.alert(_safeT('msg_no_money'), _safeT('modal_title_info'));
+                window.modalManager.alert(_safeT('msg_no_money') || "Nemate dovoljno dukata!", _safeT('modal_title_info'));
             } else {
-                alert("Nemate dovoljno dukata!");
+                alert(_safeT('msg_no_money') || "Nemate dovoljno dukata!");
             }
             return;
         }
@@ -1153,7 +1153,7 @@ class AdMobController {
                     this.rewardResolve = null; this.handleAdFailed('rewarded', e); resolve(false);
                 }
             } else {
-                if (typeof window.showNotification === 'function') window.showNotification("INFO", "Reklama se učitava. Pokušajte za par sekundi.");
+                if (typeof window.showNotification === 'function') window.showNotification(_safeT('info_title') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
                 this.triggerHighPriorityLoad('rewarded'); resolve(false);
             }
         });
