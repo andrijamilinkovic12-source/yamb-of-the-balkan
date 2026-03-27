@@ -26,53 +26,76 @@ class TournamentManager {
         this.setupSocketListeners();
     }
 
-    // --- NOVA FUNKCIJA ZA DIREKTNO RAČUNANJE INDEKSA MOĆI ---
+    // --- NOVA BULLETPROOF FUNKCIJA ZA INDEKS MOĆI ---
     calculateMyPI() {
-        if (window.app && typeof window.app.calculatePowerIndex === 'function') {
-            return window.app.calculatePowerIndex(window.statsManager ? window.statsManager.stats : {}).toString();
+        // Pokušaj 1: Direktno preko app funkcija ako su već učitane i spremne
+        if (this.app && typeof this.app.calculatePowerIndex === 'function' && typeof this.app.getFullLocalStats === 'function') {
+            const stats = this.app.getFullLocalStats();
+            if (stats && Object.keys(stats).length > 0 && stats.games > 0) {
+                return this.app.calculatePowerIndex(stats).toString();
+            }
         }
 
+        // Pokušaj 2: Čupanje direktno iz baze (localStorage) jer je to najsigurniji izvor
+        let wins = parseInt(localStorage.getItem('yamb_wins')) || 0;
+        let losses = parseInt(localStorage.getItem('yamb_losses')) || 0;
+        let games = parseInt(localStorage.getItem('yamb_games')) || 0;
+        let totalScoreSum = parseFloat(localStorage.getItem('yamb_total_score_sum')) || 0;
+        let hs = parseInt(localStorage.getItem('yamb_highscore')) || 0;
+        let maxStreak = parseInt(localStorage.getItem('yamb_max_streak')) || 0;
+        let tourneyWins = parseInt(localStorage.getItem('yamb_tourney_wins')) || 0;
+
+        // Fallback na statsManager u slučaju da su se ključevi drugačije sačuvali
         if (window.statsManager && window.statsManager.stats) {
             let s = window.statsManager.stats;
-            
-            let wins = parseInt(s.wins) || 0;
-            let losses = parseInt(s.losses) || 0;
-            let games = parseInt(s.games || s.totalGames) || 0;
-            
-            let totalCompetitive = wins + losses;
-            let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
-            
-            let avg = games > 0 ? (parseFloat(s.totalScoreSum) || 0) / games : 0;
-            let hs = parseInt(s.highscore) || 0;
-            let maxStreak = parseInt(s.maxWinStreak) || 0;
-            let tourneyWins = parseInt(s.tournamentWins) || 0;
-            
-            let leaguePts = 0;
-            if (s.leagueData && s.leagueData.quarterlyScore) {
-                leaguePts = parseInt(s.leagueData.quarterlyScore) || 0;
-            } else if (window.kvartalnaLiga && typeof window.kvartalnaLiga.getScores === 'function') {
-                let ls = window.kvartalnaLiga.getScores();
-                leaguePts = parseInt(ls.quarterlyScore) || 0;
-            }
-
-            let trophyCount = 0;
-            if (Array.isArray(s.unlockedTrophies)) {
-                const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
-                s.unlockedTrophies.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
-            }
-
-            const power = Math.round(
-                (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) + 
-                (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
-            );
-            return power.toString();
+            wins = wins || parseInt(s.wins) || 0;
+            losses = losses || parseInt(s.losses) || 0;
+            games = games || parseInt(s.games || s.totalGames) || 0;
+            totalScoreSum = totalScoreSum || parseFloat(s.totalScoreSum) || 0;
+            hs = hs || parseInt(s.highscore) || 0;
+            maxStreak = maxStreak || parseInt(s.maxWinStreak) || 0;
+            tourneyWins = tourneyWins || parseInt(s.tournamentWins) || 0;
         }
-        
+
+        let totalCompetitive = wins + losses;
+        let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
+        let avg = games > 0 ? totalScoreSum / games : 0;
+
+        // Kvartalna liga bodovi
+        let leaguePts = 0;
+        if (window.kvartalnaLiga && typeof window.kvartalnaLiga.getScores === 'function') {
+            let ls = window.kvartalnaLiga.getScores();
+            leaguePts = parseInt(ls.quarterlyScore) || 0;
+        }
+
+        // Trofeji
+        let trophyCount = 0;
+        let unlockedStr = localStorage.getItem('yamb_unlockedTrophies');
+        let unlocked = [];
+        if (unlockedStr) {
+            try { unlocked = JSON.parse(unlockedStr); } catch(e){}
+        } else if (window.statsManager && window.statsManager.stats && window.statsManager.stats.unlockedTrophies) {
+            unlocked = window.statsManager.stats.unlockedTrophies;
+        }
+
+        if (Array.isArray(unlocked)) {
+            const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
+            unlocked.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
+        }
+
+        const power = Math.round(
+            (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) + 
+            (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
+        );
+
+        // Pokušaj 3: Uzimamo broj sa UI-a ako je on veći (Znači da je powerindex.js savršeno odradio posao)
+        let uiPower = 0;
         const piEl = document.getElementById('stat-power-index');
-        if (piEl && piEl.innerText && piEl.innerText !== '0') {
-            return piEl.innerText;
+        if (piEl && piEl.innerText) {
+            uiPower = parseInt(piEl.innerText.replace(/\D/g, '')) || 0;
         }
-        return '0';
+
+        return Math.max(power, uiPower).toString();
     }
 
     setupSocketListeners() {
@@ -98,7 +121,6 @@ class TournamentManager {
                             const regTime = parseInt(localRegTime, 10);
                             
                             if (now - regTime < 518400000) {
-                                // Automatska prijava nakon rekonekcije
                                 let myPi = this.calculateMyPI();
 
                                 const playerData = {
@@ -364,7 +386,6 @@ class TournamentManager {
                 }
 
                 if(this.app.socket) {
-                    // Manualna prijava - računamo Indeks Moći
                     let myPi = this.calculateMyPI();
 
                     const playerData = {
