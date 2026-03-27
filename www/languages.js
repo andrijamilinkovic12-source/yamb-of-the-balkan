@@ -308,6 +308,16 @@ const TRANSLATIONS = {
         "rules_row_full_desc": "<strong>FUL:</strong> 3 iste + 2 iste. Zbir + 30.",
         "rules_row_poker_desc": "<strong>POKER:</strong> 4 iste. Zbir + 40.",
         "rules_row_yamb_desc": "<strong>YAMB:</strong> 5 istih. Zbir + 50.",
+        
+        "rules_tourney_title": "TURNIRI 🏆",
+        "rules_tourney_format_title": "SISTEM TAKMIČENJA",
+        "rules_tourney_format_text": "Nedeljni turnir se sastoji od 8 igrača. Igra se na ispadanje (nokaut sistem): četvrtfinale, polufinale i finale. Svaki duel se igra na <strong>jednu dobijenu partiju</strong>.",
+        "rules_tourney_fee_title": "PRIJAVA I KOTIZACIJA",
+        "rules_tourney_fee_text": "Prijava košta 2500 dukata. Povraćaj novca i odjava mogući su samo dok traje faza prikupljanja igrača. Kada se prijavi svih 8 igrača, turnir počinje i odustajanje nije moguće.",
+        "rules_tourney_schedule_title": "ZAKAZIVANJE MEČEVA",
+        "rules_tourney_schedule_text": "Termini nisu fiksni! Protivnici u kosturu sami predlažu i prihvataju termin odigravanja meča kroz aplikaciju. Kada oba igrača potvrde termin, meč se može pokrenuti.",
+        "rules_tourney_rewards_title": "NAGRADE",
+        "rules_tourney_rewards_text": "Pobednik celog turnira dobija ogromno povećanje <strong>Indeksa Moći (PI)</strong> i biće zauvek upisan u Dvoranu Slavnih!",
 
         // --- POZIV ---
         "invite_text": "Pošalji ovaj link prijatelju:",
@@ -786,6 +796,16 @@ const TRANSLATIONS = {
         "rules_row_full_desc": "<strong>FULL HOUSE:</strong> 3 of a kind + 2 of a kind. Sum + 30.",
         "rules_row_poker_desc": "<strong>4 of a Kind:</strong> 4 matching dice. Sum + 40.",
         "rules_row_yamb_desc": "<strong>YAMB:</strong> 5 matching dice. Sum + 50.",
+        
+        "rules_tourney_title": "TOURNAMENTS 🏆",
+        "rules_tourney_format_title": "COMPETITION FORMAT",
+        "rules_tourney_format_text": "The weekly tournament consists of 8 players. It is played as a knockout format: quarterfinals, semifinals, and finals. Each duel is a <strong>single-game elimination</strong>.",
+        "rules_tourney_fee_title": "REGISTRATION & ENTRY FEE",
+        "rules_tourney_fee_text": "Registration costs 2500 ducats. Refunds and unregistering are only possible during the matchmaking phase. Once all 8 players are registered, the tournament begins and withdrawing is no longer possible.",
+        "rules_tourney_schedule_title": "SCHEDULING MATCHES",
+        "rules_tourney_schedule_text": "Schedules are not fixed! Opponents in the bracket propose and accept match times through the app. Once both players confirm the time, the match can be started.",
+        "rules_tourney_rewards_title": "REWARDS",
+        "rules_tourney_rewards_text": "The winner of the tournament gets a massive boost to their <strong>Power Index (PI)</strong> and will be forever immortalized in the Hall of Fame!",
 
         // --- INVITE ---
         "invite_text": "Send this link to a friend:",
