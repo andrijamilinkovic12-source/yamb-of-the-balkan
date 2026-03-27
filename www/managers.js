@@ -203,7 +203,7 @@ class EffectManager {
         this.stop(); 
         if (!type || type === 'none') return;
         
-        if (type === 'neon_pulse') document.body.classList.add('fx-neon_pulse');
+        // Neon pulse prebačen u trigger, pa se ovde više ne dodaje
     }
     
     trigger(type) {
@@ -280,6 +280,24 @@ class EffectManager {
                     targetTable.classList.remove('anim-supernova-table'); 
                     if (snContainer.parentNode) snContainer.remove(); 
                 }, 7500);
+            }
+        }
+
+        // --- NEON PULSE EFEKAT ---
+        if (type === 'neon_pulse') {
+            let targetTable = null;
+            const tables = document.querySelectorAll('.player-table');
+            tables.forEach(tbl => { if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) { targetTable = tbl; } });
+            if (!targetTable && tables.length > 0) targetTable = tables[0];
+
+            if (targetTable) {
+                targetTable.classList.add('anim-neon-pulse');
+                document.body.classList.add('fx-neon_pulse'); // Široki odsjaj celog ekrana
+                
+                setTimeout(() => { 
+                    targetTable.classList.remove('anim-neon-pulse'); 
+                    document.body.classList.remove('fx-neon_pulse'); 
+                }, 5000); // Traje tačno 5 sekundi
             }
         }
 
@@ -474,8 +492,7 @@ class EffectManager {
     celebrateYamb() {
         const active = localStorage.getItem('yamb_active_effect') || 'confetti';
         this.trigger(active); 
-        document.body.classList.add('fx-neon_pulse');
-        setTimeout(() => document.body.classList.remove('fx-neon_pulse'), 2000);
+        // UKLONJENO hardkodovano dodavanje 'fx-neon_pulse'
     }
     
     celebrateWin() {
@@ -492,6 +509,7 @@ class EffectManager {
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
         document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
+        document.querySelectorAll('.anim-neon-pulse').forEach(tbl => tbl.classList.remove('anim-neon-pulse'));
     }
 }
 
