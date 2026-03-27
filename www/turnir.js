@@ -170,7 +170,6 @@ class TournamentManager {
 
         const tabContent = document.getElementById('tourney-tab-content');
         
-        // Podešavanje Padinga i Overflowa na osnovu taba (Kostur ne sme da skroluje vertikalno na isti nacin zbog carousela)
         if (this.activeTab === 'bracket') {
             tabContent.style.padding = '5px 0';
             tabContent.style.overflowY = 'hidden';
@@ -495,9 +494,11 @@ class TournamentManager {
         const getPlayerHtml = (p, isTop) => {
             if (!p) {
                 return `
-                    <div style="display: flex; align-items: center; padding: 6px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''}">
-                        <div style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); margin-right: 8px; flex-shrink: 0;"></div>
-                        <span style="color: rgba(255,255,255,0.3); font-size: 0.8rem;">---</span>
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''}">
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); margin-right: 8px; flex-shrink: 0;"></div>
+                            <span style="color: rgba(255,255,255,0.3); font-size: 0.8rem;">---</span>
+                        </div>
                     </div>`;
             }
             
@@ -510,10 +511,21 @@ class TournamentManager {
             let nameColor = isWinner ? 'var(--success)' : 'var(--text-main)';
             let fontWeight = isWinner ? '900' : '600';
             
+            // Racunanje Indeksa Moci (Ako je dostupan, ili placeholder dok server ne posalje)
+            let powerIndex = p.powerIndex || p.pi;
+            if (powerIndex === undefined) {
+                powerIndex = (p.stats && this.app && typeof this.app.calculatePowerIndex === 'function') 
+                             ? this.app.calculatePowerIndex(p.stats, false) 
+                             : '?';
+            }
+            
             return `
-                <div style="display: flex; align-items: center; padding: 6px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
-                    <img src="${photo}" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 2px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 8px; flex-shrink: 0; box-shadow: 0 0 5px rgba(0,0,0,0.5);">
-                    <span style="font-size: 0.8rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${p.name}</span>
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
+                    <div style="display: flex; align-items: center; overflow: hidden; padding-right: 5px;">
+                        <img src="${photo}" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 2px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 8px; flex-shrink: 0; box-shadow: 0 0 5px rgba(0,0,0,0.5);">
+                        <span style="font-size: 0.8rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${p.name}</span>
+                    </div>
+                    <span style="font-size: 0.65rem; color: var(--gold-main); font-weight: 900; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${powerIndex}</span>
                 </div>
             `;
         };
