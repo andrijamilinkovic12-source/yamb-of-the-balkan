@@ -26,6 +26,55 @@ class TournamentManager {
         this.setupSocketListeners();
     }
 
+    // --- NOVA FUNKCIJA ZA DIREKTNO RAČUNANJE INDEKSA MOĆI ---
+    calculateMyPI() {
+        if (window.app && typeof window.app.calculatePowerIndex === 'function') {
+            return window.app.calculatePowerIndex(window.statsManager ? window.statsManager.stats : {}).toString();
+        }
+
+        if (window.statsManager && window.statsManager.stats) {
+            let s = window.statsManager.stats;
+            
+            let wins = parseInt(s.wins) || 0;
+            let losses = parseInt(s.losses) || 0;
+            let games = parseInt(s.games || s.totalGames) || 0;
+            
+            let totalCompetitive = wins + losses;
+            let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
+            
+            let avg = games > 0 ? (parseFloat(s.totalScoreSum) || 0) / games : 0;
+            let hs = parseInt(s.highscore) || 0;
+            let maxStreak = parseInt(s.maxWinStreak) || 0;
+            let tourneyWins = parseInt(s.tournamentWins) || 0;
+            
+            let leaguePts = 0;
+            if (s.leagueData && s.leagueData.quarterlyScore) {
+                leaguePts = parseInt(s.leagueData.quarterlyScore) || 0;
+            } else if (window.kvartalnaLiga && typeof window.kvartalnaLiga.getScores === 'function') {
+                let ls = window.kvartalnaLiga.getScores();
+                leaguePts = parseInt(ls.quarterlyScore) || 0;
+            }
+
+            let trophyCount = 0;
+            if (Array.isArray(s.unlockedTrophies)) {
+                const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
+                s.unlockedTrophies.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
+            }
+
+            const power = Math.round(
+                (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) + 
+                (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
+            );
+            return power.toString();
+        }
+        
+        const piEl = document.getElementById('stat-power-index');
+        if (piEl && piEl.innerText && piEl.innerText !== '0') {
+            return piEl.innerText;
+        }
+        return '0';
+    }
+
     setupSocketListeners() {
         if(this.app && !this.app.socket) {
             this.app.initSocketConnection();
@@ -49,10 +98,8 @@ class TournamentManager {
                             const regTime = parseInt(localRegTime, 10);
                             
                             if (now - regTime < 518400000) {
-                                // DODATO: Čitanje Indeksa moći pri auto-prijavi
-                                let myPi = '0';
-                                const piEl = document.getElementById('stat-power-index');
-                                if (piEl && piEl.innerText) myPi = piEl.innerText;
+                                // Automatska prijava nakon rekonekcije
+                                let myPi = this.calculateMyPI();
 
                                 const playerData = {
                                     id: this.app.playerId, 
@@ -317,10 +364,8 @@ class TournamentManager {
                 }
 
                 if(this.app.socket) {
-                    // DODATO: Slanje Indeksa moći pri klasičnoj prijavi
-                    let myPi = '0';
-                    const piEl = document.getElementById('stat-power-index');
-                    if (piEl && piEl.innerText) myPi = piEl.innerText;
+                    // Manualna prijava - računamo Indeks Moći
+                    let myPi = this.calculateMyPI();
 
                     const playerData = {
                         id: this.app.playerId, 
@@ -523,7 +568,6 @@ class TournamentManager {
             let nameColor = isWinner ? 'var(--success)' : 'var(--text-main)';
             let fontWeight = isWinner ? '900' : '600';
             
-            // Racunanje Indeksa Moci - proverava da li smo ga dobili sa servera preko 'pi' 
             let powerIndex = p.pi || p.powerIndex;
             if (powerIndex === undefined || powerIndex === null || powerIndex === '') {
                 powerIndex = '?';
