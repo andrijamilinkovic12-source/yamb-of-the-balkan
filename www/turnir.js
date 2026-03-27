@@ -239,7 +239,7 @@ class TournamentManager {
         } else if (isRegistered) {
             buttonHtml = `
                 <button class="btn-menu btn-secondary" style="width: 100%; font-size: 0.95rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc; margin-top: auto;" onclick="app.tournamentManager.unregisterPlayer()">
-                    ❌ ${tt('tourney_unregister') || 'ODJAVI SE'} (Povraćaj)
+                    ❌ ${tt('tourney_unregister') || 'ODJAVI SE'} ${tt('tourney_refund') || '(Povraćaj)'}
                 </button>
             `;
         } else {
