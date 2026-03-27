@@ -449,9 +449,9 @@
         </div>
     </div>
     
-    <div id="rules-screen" class="screen" style="padding-top: max(40px, env(safe-area-inset-top));">
+    <div id="rules-screen" class="screen" style="padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(10px, env(safe-area-inset-bottom));">
         <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <h2 class="menu-title" style="margin-bottom: 15px; flex-shrink: 0;" data-lang="rules_title">PRAVILA IGRE</h2>
+        <h2 class="menu-title" style="margin-top: 10px; margin-bottom: 12px; flex-shrink: 0;" data-lang="rules_title">PRAVILA IGRE</h2>
         
         <div class="rules-carousel" id="rules-carousel" onscroll="updateRulesPagination()">
             
@@ -526,19 +526,23 @@
             .rules-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; max-width: 500px; flex: 1; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 10px; }
             .rules-carousel::-webkit-scrollbar { display: none; }
             .rules-page { flex: 0 0 100%; width: 100%; scroll-snap-align: center; padding: 0 15px; display: flex; flex-direction: column; }
-            .rules-card { background: var(--glass-panel); border: var(--glass-border); border-radius: 20px; padding: 20px; box-shadow: var(--glass-shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); flex: 1; overflow-y: auto; display: flex; flex-direction: column; text-align: left; margin-bottom: 5px; }
+            
+            /* Smanjeni unutrašnji razmaci panela da bi stalo više teksta */
+            .rules-card { background: var(--glass-panel); border: var(--glass-border); border-radius: 20px; padding: 12px 15px; box-shadow: var(--glass-shadow); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); flex: 1; overflow-y: auto; display: flex; flex-direction: column; text-align: left; margin-bottom: 0px; }
             .rules-card::-webkit-scrollbar { width: 4px; }
             .rules-card::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
             
-            .rules-section { margin-bottom: 20px; }
-            .rules-section h3 { color: var(--gold-main); border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 8px; margin-bottom: 12px; font-size: 1.15rem; letter-spacing: 1px; }
-            .rules-section h4 { color: #fff; margin: 15px 0 5px 0; font-size: 0.95rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-            .rules-section p { margin: 0 0 10px 0; font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
-            .rules-section ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-            .rules-section li { font-size: 0.85rem; color: var(--text-main); line-height: 1.5; padding-left: 12px; border-left: 2px solid var(--gold-main); background: rgba(0,0,0,0.1); padding-top: 5px; padding-bottom: 5px; border-radius: 0 8px 8px 0; }
+            /* Kompaktniji izgled celog teksta */
+            .rules-section { margin-bottom: 12px; }
+            .rules-section h3 { color: var(--gold-main); border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 5px; margin-bottom: 8px; font-size: 1.05rem; letter-spacing: 1px; }
+            .rules-section h4 { color: #fff; margin: 10px 0 5px 0; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+            .rules-section p { margin: 0 0 8px 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; }
+            .rules-section ul { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+            .rules-section li { font-size: 0.78rem; color: var(--text-main); line-height: 1.3; padding-left: 10px; border-left: 2px solid var(--gold-main); background: rgba(0,0,0,0.1); padding-top: 4px; padding-bottom: 4px; border-radius: 0 8px 8px 0; }
             .rules-section strong { color: var(--gold-main); font-weight: 800; }
             
-            .rules-pagination { display: flex; gap: 12px; justify-content: center; margin-bottom: max(20px, env(safe-area-inset-bottom)); margin-top: 10px; }
+            /* Tačkice drastično izdignute od sistemskih dugmića (min 35px odozdo + safe area) */
+            .rules-pagination { display: flex; gap: 12px; justify-content: center; margin-bottom: max(35px, env(safe-area-inset-bottom) + 15px); margin-top: 10px; }
             .rules-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
             .rules-pagination .dot.active { background: var(--gold-main); transform: scale(1.4); box-shadow: 0 0 10px var(--gold-glow); }
         </style>
