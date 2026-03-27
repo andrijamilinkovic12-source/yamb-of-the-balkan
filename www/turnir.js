@@ -170,9 +170,9 @@ class TournamentManager {
 
         const tabContent = document.getElementById('tourney-tab-content');
         
-        // Podešavanje Padinga i Overflowa na osnovu taba (Kostur ne sme da skroluje)
+        // Podešavanje Padinga i Overflowa na osnovu taba (Kostur ne sme da skroluje vertikalno na isti nacin zbog carousela)
         if (this.activeTab === 'bracket') {
-            tabContent.style.padding = '10px 5px';
+            tabContent.style.padding = '5px 0';
             tabContent.style.overflowY = 'hidden';
             tabContent.style.overflowX = 'hidden';
             this.renderBracket(tabContent);
@@ -386,6 +386,22 @@ class TournamentManager {
         return d.toLocaleDateString(locale) + ` ${atStr} ` + d.toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
     }
 
+    updateTourneyPagination() {
+        const carousel = document.getElementById('tourney-carousel');
+        if(!carousel) return;
+        const scrollLeft = carousel.scrollLeft;
+        const width = carousel.clientWidth;
+        const activeIndex = Math.round(scrollLeft / width);
+        
+        for (let i = 0; i <= 2; i++) {
+            const dot = document.getElementById('tdot-' + i);
+            if (dot) {
+                if (i === activeIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
+            }
+        }
+    }
+
     renderBracket(container) {
         let qf = this.state.bracket.qf || [];
         let sf = this.state.bracket.sf || [];
@@ -405,38 +421,71 @@ class TournamentManager {
         if (f.length === 0) f = Array(1).fill(null);
 
         container.innerHTML = `
-            <div style="width: 100%; height: 100%; display: flex; flex-direction: column;">
-                
-                <div style="display: flex; flex-direction: row; width: 100%; padding-bottom: 8px; border-bottom: 1px solid rgba(255,215,0,0.2); margin-bottom: 5px; flex-shrink: 0;">
-                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">${tt('tourney_qf') || '1/4'}</div>
-                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">${tt('tourney_sf') || '1/2'}</div>
-                    <div style="flex: 1; text-align: center; font-size: 0.75rem; color: var(--gold-main); font-weight: 900; letter-spacing: 1px;">${tt('tourney_f') || 'FINALE'}</div>
+            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden;">
+                <div class="tourney-carousel" id="tourney-carousel" onscroll="app.tournamentManager.updateTourneyPagination()">
+                    
+                    <div class="tourney-page">
+                        <div class="tourney-card">
+                            <h3 style="color:var(--gold-main); text-align:center; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 8px;">
+                                ${tt('tourney_qf') || '1/4 FINALA'}
+                            </h3>
+                            <div style="display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 10px;">
+                                ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tourney-page">
+                        <div class="tourney-card">
+                            <h3 style="color:var(--gold-main); text-align:center; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 8px;">
+                                ${tt('tourney_sf') || 'POLUFINALE'}
+                            </h3>
+                            <div style="display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 10px;">
+                                ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tourney-page">
+                        <div class="tourney-card">
+                            <h3 style="color:var(--gold-main); text-align:center; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 8px;">
+                                ${tt('tourney_f') || 'FINALE'}
+                            </h3>
+                            <div style="display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 10px;">
+                                ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div style="display: flex; flex-direction: row; width: 100%; flex: 1; gap: 6px; position: relative;">
-                    
-                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-around; position: relative;">
-                        ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
-                    </div>
-
-                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-around; position: relative;">
-                        ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
-                    </div>
-
-                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-around; position: relative;">
-                        ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
-                    </div>
-
+                <div class="tourney-pagination">
+                    <div class="dot active" id="tdot-0"></div>
+                    <div class="dot" id="tdot-1"></div>
+                    <div class="dot" id="tdot-2"></div>
                 </div>
             </div>
+
+            <style>
+                .tourney-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; flex: 1; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 5px; }
+                .tourney-carousel::-webkit-scrollbar { display: none; }
+                .tourney-page { flex: 0 0 100%; width: 100%; scroll-snap-align: center; padding: 0 15px; display: flex; flex-direction: column; }
+                .tourney-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+                .tourney-card::-webkit-scrollbar { width: 4px; }
+                .tourney-card::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
+                
+                .tourney-pagination { display: flex; gap: 12px; justify-content: center; margin-top: 15px; margin-bottom: 15px; flex-shrink: 0; }
+                .tourney-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
+                .tourney-pagination .dot.active { background: var(--gold-main); transform: scale(1.4); box-shadow: 0 0 10px var(--gold-glow); }
+            </style>
         `;
     }
 
     createMatchHTML(match, round, index) {
         if (!match || (!match.p1 && !match.p2)) {
             return `
-                <div style="width: 100%; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.3); border-radius: 6px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4px; box-sizing: border-box; min-height: 45px;">
-                    <span style="color: rgba(255,255,255,0.3); font-size: 0.6rem; font-weight: bold;">---</span>
+                <div style="width: 100%; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.3); border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; min-height: 65px;">
+                    <span style="color: rgba(255,255,255,0.3); font-size: 0.8rem; font-weight: bold;">---</span>
                 </div>`;
         }
 
@@ -446,9 +495,9 @@ class TournamentManager {
         const getPlayerHtml = (p, isTop) => {
             if (!p) {
                 return `
-                    <div style="display: flex; align-items: center; padding: 3px 4px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''}">
-                        <div style="width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,0.1); margin-right: 4px; flex-shrink: 0;"></div>
-                        <span style="color: rgba(255,255,255,0.3); font-size: 0.6rem;">---</span>
+                    <div style="display: flex; align-items: center; padding: 6px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''}">
+                        <div style="width: 26px; height: 26px; border-radius: 50%; background: rgba(255,255,255,0.1); margin-right: 8px; flex-shrink: 0;"></div>
+                        <span style="color: rgba(255,255,255,0.3); font-size: 0.8rem;">---</span>
                     </div>`;
             }
             
@@ -462,22 +511,22 @@ class TournamentManager {
             let fontWeight = isWinner ? '900' : '600';
             
             return `
-                <div style="display: flex; align-items: center; padding: 3px 4px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
-                    <img src="${photo}" style="width: 20px; height: 20px; border-radius: 50%; object-fit: cover; border: 1px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 4px; flex-shrink: 0;">
-                    <span style="font-size: 0.6rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${p.name}</span>
+                <div style="display: flex; align-items: center; padding: 6px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
+                    <img src="${photo}" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 2px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 8px; flex-shrink: 0; box-shadow: 0 0 5px rgba(0,0,0,0.5);">
+                    <span style="font-size: 0.8rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${p.name}</span>
                 </div>
             `;
         };
 
         let statusDot = '';
         if (match.timeAccepted && match.time) {
-            statusDot = `<div style="position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 4px var(--success);"></div>`;
+            statusDot = `<div style="position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success);"></div>`;
         } else if (match.proposedTime) {
-            statusDot = `<div style="position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: #ff9800; border-radius: 50%; box-shadow: 0 0 4px #ff9800;"></div>`;
+            statusDot = `<div style="position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: #ff9800; border-radius: 50%; box-shadow: 0 0 8px #ff9800;"></div>`;
         }
 
         return `
-            <div onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 6px; display: flex; flex-direction: column; cursor: pointer; position: relative; box-shadow: ${isMyMatch ? '0 0 8px rgba(255,215,0,0.3)' : 'none'}; transition: transform 0.1s; transform: scale(0.98);">
+            <div onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; display: flex; flex-direction: column; cursor: pointer; position: relative; box-shadow: ${isMyMatch ? '0 0 10px rgba(255,215,0,0.3)' : 'none'}; transition: transform 0.1s; transform: scale(0.98); min-height: 65px;">
                 ${statusDot}
                 ${getPlayerHtml(match.p1, true)}
                 ${getPlayerHtml(match.p2, false)}
