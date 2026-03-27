@@ -111,6 +111,37 @@ class TournamentManager {
                     
                     if (this.app && this.app.playerId) {
                         const myId = this.app.playerId;
+                        const myPi = this.calculateMyPI(); // ⚡ Izračunaj trenutni PI
+                        
+                        // --- NOVA LOGIKA ZA AUTO-SINHRONIZACIJU PI ---
+                        let needsUpdate = false;
+                        
+                        // Provera u listi za registraciju
+                        let myServerPlayer = newState.players && newState.players.find(p => p.id === myId);
+                        if (myServerPlayer && myServerPlayer.pi !== myPi) {
+                            needsUpdate = true;
+                        }
+
+                        // Provera u kosturu (bracket)
+                        if (newState.status !== 'registration' && newState.bracket) {
+                            ['qf', 'sf', 'f'].forEach(round => {
+                                if (newState.bracket[round]) {
+                                    newState.bracket[round].forEach(match => {
+                                        if (match) {
+                                            if (match.p1 && match.p1.id === myId && match.p1.pi !== myPi) needsUpdate = true;
+                                            if (match.p2 && match.p2.id === myId && match.p2.pi !== myPi) needsUpdate = true;
+                                        }
+                                    });
+                                }
+                            });
+                        }
+
+                        // Ako server ima staru vrednost, ispaljujemo update
+                        if (needsUpdate) {
+                            this.app.socket.emit('tourney_update_pi', { id: myId, pi: myPi });
+                        }
+                        // ---------------------------------------------
+
                         const isRegisteredServer = newState.players && newState.players.some(p => p.id === myId);
                         
                         const storageKey = 'yamb_tourney_reg_' + myId;
@@ -121,8 +152,6 @@ class TournamentManager {
                             const regTime = parseInt(localRegTime, 10);
                             
                             if (now - regTime < 518400000) {
-                                let myPi = this.calculateMyPI();
-
                                 const playerData = {
                                     id: this.app.playerId, 
                                     name: this.app.playerName,

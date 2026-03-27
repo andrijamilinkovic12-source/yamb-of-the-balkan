@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC
 
 require('dotenv').config(); 
 
@@ -1528,6 +1528,46 @@ io.on('connection', (socket) => {
             }
         }
     });
+
+    // --- NOVO: AUTO-SINHRONIZACIJA INDEKSA MOĆI (PI) UŽIVO ---
+    socket.on('tourney_update_pi', (data) => {
+        const { id, pi } = data;
+        let updated = false;
+
+        // 1. Ažuriraj u listi prijavljenih igrača (Faza registracije)
+        const player = tournamentState.players.find(p => p.id === id);
+        if (player && player.pi !== pi) {
+            player.pi = pi;
+            updated = true;
+        }
+
+        // 2. Ažuriraj svuda u kosturu ako je turnir aktivan
+        if (tournamentState.bracket) {
+            ['qf', 'sf', 'f'].forEach(round => {
+                if (tournamentState.bracket[round]) {
+                    tournamentState.bracket[round].forEach(match => {
+                        if (match) {
+                            if (match.p1 && match.p1.id === id && match.p1.pi !== pi) {
+                                match.p1.pi = pi;
+                                updated = true;
+                            }
+                            if (match.p2 && match.p2.id === id && match.p2.pi !== pi) {
+                                match.p2.pi = pi;
+                                updated = true;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // 3. Ako je bilo promena, snimi i obavesti sve
+        if (updated) {
+            saveTournamentToDb(); 
+            io.emit('tourney_state_update', tournamentState); 
+        }
+    });
+    // ---------------------------------------------------------
 
     socket.on('tourney_unregister', (playerId) => {
         if (tournamentState.status === 'registration') {
