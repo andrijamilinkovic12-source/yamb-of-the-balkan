@@ -87,11 +87,21 @@ class PowerIndexLeaderboard {
             let photo = p.photoUrl && p.photoUrl.length > 5 ? p.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.playerName)}&background=333&color=E0C995`;
             
             // Glassmorphism Card UI logika boja
-            let bg = isMe ? 'background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.2) 100%); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);';
-            if (i === 0) bg = 'background: linear-gradient(90deg, rgba(255,215,0,0.15) 0%, rgba(0,0,0,0.2) 100%); border: 1px solid var(--gold-main);';
-            
-            let nameColor = isMe || i === 0 ? 'var(--gold-main)' : 'var(--text-main)';
-            let glow = i === 0 ? 'box-shadow: 0 4px 15px rgba(255,215,0,0.15);' : 'box-shadow: 0 2px 8px rgba(0,0,0,0.2);';
+            let bg = 'background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);'; // Podrazumevani stil
+
+            if (isMe) {
+                // Trenutni igrač (TI) dobija jak zlatni okvir da bi se jasno istakao
+                bg = 'background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.2) 100%); border: 1px solid var(--gold-main);';
+            } else if (i === 0) {
+                // Prvo mesto (kada to nisi ti) dobija suptilniji sjaj i poluprovidan okvir
+                bg = 'background: linear-gradient(90deg, rgba(255,215,0,0.1) 0%, rgba(0,0,0,0.2) 100%); border: 1px solid rgba(255,215,0,0.3);';
+            }
+
+            // Boja imena: tebi tvoja zlatna, prvom mestu malo svetlija zlatna, ostalima standardna
+            let nameColor = isMe ? 'var(--gold-main)' : (i === 0 ? '#FFD700' : 'var(--text-main)');
+
+            // Senka (glow): ti dobijaš specifičnu senku oko svog reda
+            let glow = isMe ? 'box-shadow: 0 0 10px rgba(224, 201, 149, 0.3);' : (i === 0 ? 'box-shadow: 0 4px 15px rgba(255,215,0,0.15);' : 'box-shadow: 0 2px 8px rgba(0,0,0,0.2);');
 
             html += `
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-radius: 12px; ${bg} ${glow} transition: transform 0.2s;">
