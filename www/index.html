@@ -518,6 +518,23 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="rules-page">
+                <div class="rules-card">
+                    <div class="rules-section">
+                        <h3 data-lang="rules_league_title">KVARTALNA LIGA 🏅</h3>
+                        
+                        <h4 data-lang="rules_league_concept_title">KONCEPT LIGE</h4>
+                        <p data-lang="rules_league_concept_text">Kvartalna liga je sezonsko takmičenje koje traje 3 meseca (kvartal). Svaka završena partija (solo ili online) donosi poene koji se sabiraju i određuju Vaš rang.</p>
+
+                        <h4 data-lang="rules_league_ranks_title">RANGOVI</h4>
+                        <p data-lang="rules_league_ranks_text">Napredujete kroz rangove: <strong>Amater, Profi, Majstor, Legenda i Titan</strong>. Prelazak u viši rang zavisi isključivo od ukupnog broja sakupljenih poena u trenutnom kvartalu.</p>
+
+                        <h4 data-lang="rules_league_rewards_title">KRAJ SEZONE I DVORANA SLAVNIH</h4>
+                        <p data-lang="rules_league_rewards_text">Na kraju kvartala, najbolja 3 igrača dobijaju vredne nagrade u dukatima i upisuju se u <strong>Dvoranu Slavnih</strong> (osvajaju medalje). Prvoplasirani postaje Šampion ciklusa. Nakon toga, poeni se prebacuju u 'Sva Vremena', a novi kvartal kreće od nule.</p>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
@@ -525,7 +542,7 @@
             <div class="dot active" id="dot-0"></div>
             <div class="dot" id="dot-1"></div>
             <div class="dot" id="dot-2"></div>
-        </div>
+            <div class="dot" id="dot-3"></div> </div>
 
         <script>
             function updateRulesPagination() {
@@ -539,6 +556,7 @@
                 document.getElementById('dot-0').classList.remove('active');
                 document.getElementById('dot-1').classList.remove('active');
                 if (document.getElementById('dot-2')) document.getElementById('dot-2').classList.remove('active');
+                if (document.getElementById('dot-3')) document.getElementById('dot-3').classList.remove('active'); // NOVO
                 
                 // Palimo samo aktivnu
                 const activeDot = document.getElementById('dot-' + activeIndex);

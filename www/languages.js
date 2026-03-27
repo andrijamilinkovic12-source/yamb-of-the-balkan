@@ -319,6 +319,14 @@ const TRANSLATIONS = {
         "rules_tourney_rewards_title": "NAGRADE",
         "rules_tourney_rewards_text": "Pobednik celog turnira dobija ogromno povećanje <strong>Indeksa Moći (PI)</strong> i biće zauvek upisan u Dvoranu Slavnih!",
 
+        "rules_league_title": "KVARTALNA LIGA 🏅",
+        "rules_league_concept_title": "KONCEPT LIGE",
+        "rules_league_concept_text": "Kvartalna liga je sezonsko takmičenje koje traje 3 meseca (kvartal). Svaka završena partija (solo ili online) donosi poene koji se sabiraju i određuju Vaš rang.",
+        "rules_league_ranks_title": "RANGOVI",
+        "rules_league_ranks_text": "Napredujete kroz rangove: <strong>Amater, Profi, Majstor, Legenda i Titan</strong>. Prelazak u viši rang zavisi isključivo od ukupnog broja sakupljenih poena u trenutnom kvartalu.",
+        "rules_league_rewards_title": "KRAJ SEZONE I DVORANA SLAVNIH",
+        "rules_league_rewards_text": "Na kraju kvartala, najbolja 3 igrača dobijaju vredne nagrade u dukatima i upisuju se u <strong>Dvoranu Slavnih</strong> (osvajaju medalje). Prvoplasirani postaje Šampion ciklusa. Nakon toga, poeni se prebacuju u 'Sva Vremena', a novi kvartal kreće od nule.",
+
         // --- POZIV ---
         "invite_text": "Pošalji ovaj link prijatelju:",
         "invite_btn": "🔗 PODELI LINK",
@@ -806,6 +814,14 @@ const TRANSLATIONS = {
         "rules_tourney_schedule_text": "Schedules are not fixed! Opponents in the bracket propose and accept match times through the app. Once both players confirm the time, the match can be started.",
         "rules_tourney_rewards_title": "REWARDS",
         "rules_tourney_rewards_text": "The winner of the tournament gets a massive boost to their <strong>Power Index (PI)</strong> and will be forever immortalized in the Hall of Fame!",
+
+        "rules_league_title": "QUARTERLY LEAGUE 🏅",
+        "rules_league_concept_title": "LEAGUE CONCEPT",
+        "rules_league_concept_text": "The Quarterly League is a seasonal competition lasting 3 months (a quarter). Every completed game (solo or online) grants points that add up to determine your rank.",
+        "rules_league_ranks_title": "RANKS",
+        "rules_league_ranks_text": "You progress through ranks: <strong>Amateur, Pro, Master, Legend, and Titan</strong>. Promotion to a higher rank depends entirely on the total points collected in the current quarter.",
+        "rules_league_rewards_title": "END OF SEASON & HALL OF FAME",
+        "rules_league_rewards_text": "At the end of the quarter, the top 3 players receive valuable coin rewards and are immortalized in the <strong>Hall of Fame</strong> (winning medals). The 1st place player becomes the Cycle Champion. After that, points are moved to 'All-Time', and the new quarter starts from zero.",
 
         // --- INVITE ---
         "invite_text": "Send this link to a friend:",
