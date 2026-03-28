@@ -78,22 +78,41 @@ class VatreniNizManager {
                     const myUid = localStorage.getItem('yamb_uid');
 
                     data.forEach((player, idx) => {
+                        let isMe = (player.uid === myUid);
+                        
+                        // Rangiranje: Vatra za prvo mesto, medalje za drugo i treće
                         let rankTrophy = idx === 0 ? '🔥' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `${idx + 1}.`));
-                        let isMe = (player.uid === myUid) ? 'background: rgba(255, 87, 34, 0.15); border: 1px solid #FF5722;' : 'background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);';
+                        
+                        // Stilovi kartice zavisno od toga da li si ti u pitanju
+                        let bgStyle = isMe ? 'background: rgba(255, 87, 34, 0.15); border: 1px solid #FF5722; box-shadow: 0 0 10px rgba(255,87,34,0.2);' : 'background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05);';
                         
                         let photo = (player.photoUrl && player.photoUrl.length > 5) 
                             ? player.photoUrl 
                             : `https://ui-avatars.com/api/?name=${encodeURIComponent(player.name)}&background=333&color=E0C995`;
 
-                        // Smanjen font imena na 0.9rem, dodato prelamanje do 2 reda (line-clamp) i min-width: 0 za flex sigurnost
+                        // Boje imena (Prvo mesto i TI dobijate vatrenu boju)
+                        let nameColor = (idx === 0 || isMe) ? '#FF5722' : 'var(--text-main)';
+
+                        // --- DINAMIČKO SMANJIVANJE FONTA PREMA DUŽINI IMENA ---
+                        let displayName = player.name || 'Gost';
+                        let nameStyle = "font-size: 0.9rem; line-height: 1.2;"; // Default
+                        if (displayName.length > 20) {
+                            nameStyle = "font-size: 0.65rem; line-height: 1.1;";
+                        } else if (displayName.length > 14) {
+                            nameStyle = "font-size: 0.75rem; line-height: 1.1;";
+                        }
+
                         const card = `
-                        <div style="display: flex; align-items: center; padding: 12px 15px; border-radius: 10px; ${isMe}">
-                            <div style="font-size: 1.3rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted); flex-shrink: 0;">${rankTrophy}</div>
-                            <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; margin: 0 12px; border: 2px solid #FF5722; object-fit: cover; flex-shrink: 0;">
-                            <div style="flex: 1; min-width: 0; overflow: hidden; font-weight: bold; color: var(--text-main); font-size: 0.9rem; word-break: break-word; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${player.name}</div>
+                        <div style="display: flex; align-items: center; padding: 12px 15px; border-radius: 10px; ${bgStyle} transition: transform 0.2s;">
+                            <div style="font-size: 1.3rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted); flex-shrink: 0; text-shadow: ${idx===0 ? '0 0 10px rgba(255,87,34,0.5)' : 'none'};">${rankTrophy}</div>
+                            
+                            <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; margin: 0 12px; border: 2px solid ${idx===0 || isMe ? '#FF5722' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
+                            
+                            <div style="flex: 1; min-width: 0; overflow: hidden; font-weight: bold; color: ${nameColor}; ${nameStyle} word-break: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${displayName}</div>
+                            
                             <div style="font-weight: 900; color: #FF5722; font-size: 1.6rem; text-align: right; min-width: 60px; display: flex; flex-direction: column; align-items: flex-end;">
                                 <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;">${streakLabel}</div>
-                                <div>${player.streak}</div>
+                                <div style="text-shadow: 0 0 5px rgba(255,87,34,0.5);">${player.streak}</div>
                             </div>
                         </div>`;
                         
