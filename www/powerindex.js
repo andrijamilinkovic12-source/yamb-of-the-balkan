@@ -80,8 +80,8 @@ class PowerIndexLeaderboard {
         this.data.forEach((p, i) => {
             let isMe = p.playerName === myName;
             
-            // Trofeji i redni brojevi
-            let rankTrophy = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="color: var(--text-muted);">${i + 1}.</span>`;
+            // NOVO: Prvo mesto Grom, drugo Srebro, treće Bronza, ostali brojevi
+            let rankTrophy = i === 0 ? '⚡' : i === 1 ? '🥈' : i === 2 ? '🥉' : `<span style="color: var(--text-muted);">${i + 1}.</span>`;
             
             // Profilna slika sa fallback-om
             let photo = p.photoUrl && p.photoUrl.length > 5 ? p.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.playerName)}&background=333&color=E0C995`;
@@ -100,21 +100,34 @@ class PowerIndexLeaderboard {
             // Boja imena: tebi tvoja zlatna, prvom mestu malo svetlija zlatna, ostalima standardna
             let nameColor = isMe ? 'var(--gold-main)' : (i === 0 ? '#FFD700' : 'var(--text-main)');
 
-            // Senka (glow): ti dobijaš specifičnu senku oko svog reda
+            // Senka (glow)
             let glow = isMe ? 'box-shadow: 0 0 10px rgba(224, 201, 149, 0.3);' : (i === 0 ? 'box-shadow: 0 4px 15px rgba(255,215,0,0.15);' : 'box-shadow: 0 2px 8px rgba(0,0,0,0.2);');
 
+            // --- DINAMIČKO SMANJIVANJE FONTA PREMA DUŽINI IMENA ---
+            let displayName = p.playerName;
+            let nameStyle = "font-size: 0.85rem; line-height: 1.2;"; // Default za kraća imena
+            if (displayName.length > 20) {
+                nameStyle = "font-size: 0.65rem; line-height: 1.1;"; // Ekstremno dugačka imena
+            } else if (displayName.length > 14) {
+                nameStyle = "font-size: 0.75rem; line-height: 1.1;"; // Srednje dugačka imena
+            }
+
             html += `
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-radius: 12px; ${bg} ${glow} transition: transform 0.2s;">
-                <div style="display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1;">
-                    <div style="font-size: 1.2rem; min-width: 25px; text-align: center; font-weight: 900;">${rankTrophy}</div>
-                    <img src="${photo}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid ${i === 0 || isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; flex-shrink: 0;">
-                    <span style="color: ${nameColor}; font-weight: 700; font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.playerName}</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; border-radius: 12px; ${bg} ${glow} transition: transform 0.2s;">
+                
+                <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1; padding-right: 5px;">
+                    <div style="font-size: 1.1rem; min-width: 22px; text-align: center; font-weight: 900; text-shadow: 0 0 5px rgba(255,215,0,0.5);">${rankTrophy}</div>
+                    
+                    <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid ${i === 0 || isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; flex-shrink: 0;">
+                    
+                    <span style="color: ${nameColor}; font-weight: 700; ${nameStyle} white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${displayName}</span>
                 </div>
                 
-                <div style="display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.4); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,140,0,0.3); flex-shrink: 0;">
-                    <span style="color: #FFD700; font-weight: 900; font-size: 1.15rem; text-shadow: 0 0 5px rgba(255,140,0,0.5);">${p.powerIndex || 0}</span>
-                    <span style="font-size: 0.9rem;">⚡</span>
+                <div style="display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 15px; border: 1px solid rgba(255,140,0,0.3); flex-shrink: 0;">
+                    <span style="color: #FFD700; font-weight: 900; font-size: 1rem; text-shadow: 0 0 5px rgba(255,140,0,0.5);">${p.powerIndex || 0}</span>
+                    <span style="font-size: 0.8rem;">⚡</span>
                 </div>
+                
             </div>`;
         });
 
