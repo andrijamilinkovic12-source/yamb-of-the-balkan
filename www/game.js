@@ -2441,6 +2441,9 @@ class YambApp {
         this.updateDiceVisuals(); 
         this.soundMgr.click(); 
         
+        // NOVO: Blaga vibracija kada se kockica zadrži ili pusti
+        if (this.vibrationEnabled && navigator.vibrate) navigator.vibrate(15);
+        
         if(this.onlineMode || this.roomId) { 
             this.socket.emit('dice_hold', { roomId: this.roomId, index: i, status: this.zadrzane[i] }); 
         } 
@@ -2495,6 +2498,10 @@ class YambApp {
         if(btnBacaj) btnBacaj.disabled = true; 
         try {
             this.soundMgr.roll(); 
+            
+            // NOVO: Vibracija kada se bace kockice
+            if (this.vibrationEnabled && navigator.vibrate) navigator.vibrate(30);
+
             this.isAnimating = true;
 
             let newValues = [...this.kockiceVals]; 
@@ -2558,6 +2565,9 @@ class YambApp {
                 }
             } catch(e) {}
 
+            // NOVO: Vibracija pri aktiviranju najave
+            if (this.vibrationEnabled && navigator.vibrate) navigator.vibrate(30);
+
             btn.innerText = gt('game_announce_cancel'); 
             btn.classList.add('btn-active-toggle'); 
             btn.classList.remove('btn-highlight'); 
@@ -2570,6 +2580,9 @@ class YambApp {
             this.najavaAktivna = false; 
             
             try { this.soundMgr.click(); } catch(e) {} 
+            
+            // NOVO: Blaga vibracija pri otkazivanju najave
+            if (this.vibrationEnabled && navigator.vibrate) navigator.vibrate(15);
 
             btn.innerText = gt('game_announce'); 
             btn.classList.remove('btn-active-toggle'); 
@@ -2666,6 +2679,11 @@ class YambApp {
             try {
                 this.effectMgr.celebrateYamb();
                 if (this.brojBacanja === 1) { this.hasSvetiIlija = true; this.effectMgr.trigger('thunder'); }
+                
+                // NOVO: Pattern vibracija (3 brza pulsa - 50ms vibrira, 100ms pauza)
+                if (this.vibrationEnabled && navigator.vibrate) {
+                    navigator.vibrate([50, 100, 50, 100, 50]);
+                }
             } catch(e) {}
         }
         
