@@ -387,7 +387,7 @@
         <div class="modal-box" style="text-align: left; padding: 20px; width: 90%; max-width: 400px; gap: 15px !important; max-height: 80vh; overflow-y: auto;">
             
             <div style="width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
-                <span style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Profil i Nalog</span>
+                <span data-lang="settings_profile_acc" style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Profil i Nalog</span>
                 
                 <input type="text" id="setting-name" class="modal-input" placeholder="Igrač" onchange="app.saveSettingAuto('name', this.value)" style="padding: 12px; font-size: 1rem; text-align: center; margin-top: 10px;">
                 
@@ -395,29 +395,29 @@
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img id="auth-user-photo" src="" alt="Avatar" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--gold-main); display: none; object-fit: cover;">
                         <div style="display: flex; flex-direction: column;">
-                            <span id="auth-user-info" style="font-size: 0.85rem; color: var(--text-main); font-weight: bold;">Niste prijavljeni</span>
+                            <span id="auth-user-info" data-lang="settings_not_logged_in" style="font-size: 0.85rem; color: var(--text-main); font-weight: bold;">Niste prijavljeni</span>
                         </div>
                     </div>
-                    <button id="btn-google-logout" class="btn-menu btn-secondary" style="display:none; padding: 6px 12px; font-size: 0.7rem; margin: 0; background: rgba(244,67,54,0.2); border-color: var(--danger); color: white; width: auto; min-height: auto;" onclick="odjaviSe()">Odjavi</button>
+                    <button id="btn-google-logout" class="btn-menu btn-secondary" style="display:none; padding: 6px 12px; font-size: 0.7rem; margin: 0; background: rgba(244,67,54,0.2); border-color: var(--danger); color: white; width: auto; min-height: auto;" onclick="odjaviSe()" data-lang="settings_logout">Odjavi</button>
                 </div>
             </div>
 
             <div style="width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
-                <span style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Zvuk i Haptika</span>
+                <span data-lang="settings_sound_haptics" style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Zvuk i Haptika</span>
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 12px;">
-                    <span style="font-size: 0.95rem; font-weight: bold;">🎵 Zvučni efekti</span>
+                    <span style="font-size: 0.95rem; font-weight: bold;">🎵 <span data-lang="settings_sound">Zvučni efekti</span></span>
                     <input type="checkbox" id="setting-sound" onchange="app.saveSettingAuto('sound', this.checked)" style="transform: scale(1.4); margin-right: 5px;">
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 12px;">
-                    <span style="font-size: 0.95rem; font-weight: bold;">📳 Vibracija</span>
+                    <span style="font-size: 0.95rem; font-weight: bold;">📳 <span data-lang="set_vibration">Vibracija</span></span>
                     <input type="checkbox" id="setting-vibration" onchange="app.saveSettingAuto('vibration', this.checked)" style="transform: scale(1.4); margin-right: 5px;">
                 </div>
             </div>
 
             <div style="width: 100%;">
-                <span style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Prikaz i Jezik</span>
+                <span data-lang="settings_display_lang" style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Prikaz i Jezik</span>
                 
                 <select id="setting-theme" class="modal-input" onchange="app.saveSettingAuto('theme', this.value)" style="padding: 12px 15px; font-size: 0.95rem; text-align: center; text-align-last: center; margin-top: 10px;">
                     <option value="dark" data-lang="theme_dark">Zelena</option>
@@ -435,9 +435,9 @@
             </div>
 
             <div style="margin-top: 10px; text-align: center; font-size: 0.65rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; display: flex; justify-content: center; gap: 8px; width: 100%;">
-                <span onclick="prikaziPravniTekst('terms')" style="color: var(--text-muted); cursor: pointer; font-weight: 600;">📜 Uslovi</span>
+                <span onclick="prikaziPravniTekst('terms')" style="color: var(--text-muted); cursor: pointer; font-weight: 600;" data-lang="settings_terms_short">📜 Uslovi</span>
                 <span style="color: rgba(255,255,255,0.2);">|</span>
-                <span onclick="prikaziPravniTekst('privacy')" style="color: var(--text-muted); cursor: pointer; font-weight: 600;">🔒 Privatnost</span>
+                <span onclick="prikaziPravniTekst('privacy')" style="color: var(--text-muted); cursor: pointer; font-weight: 600;" data-lang="settings_privacy_short">🔒 Privatnost</span>
             </div>
         </div>
     </div>

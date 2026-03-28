@@ -278,6 +278,7 @@ const TRANSLATIONS = {
         "theme_neon": "Neon Cyber ⚡",
         "theme_amethyst": "Kraljevski Ametist 🔮",
         "settings_sound": "Zvučni Efekti",
+        "set_vibration": "Vibracija:",
         "settings_save": "Sačuvaj",
         "settings_google_account": "Google Nalog",
         "settings_not_logged_in": "Niste prijavljeni",
@@ -285,6 +286,13 @@ const TRANSLATIONS = {
         "msg_logout_confirm": "Da li ste sigurni da želite da se odjavite?",
         "settings_terms": "📜 Uslovi Korišćenja",
         "settings_privacy": "🔒 Politika Privatnosti",
+        
+        // NOVO: DODATI PREVODI ZA SEKCIJE
+        "settings_profile_acc": "Profil i Nalog",
+        "settings_sound_haptics": "Zvuk i Haptika",
+        "settings_display_lang": "Prikaz i Jezik",
+        "settings_terms_short": "📜 Uslovi",
+        "settings_privacy_short": "🔒 Privatnost",
 
         // --- PRAVILA (SR) ---
         "rules_title": "PRAVILA IGRE",
@@ -774,6 +782,7 @@ const TRANSLATIONS = {
         "theme_neon": "Neon Cyber ⚡",
         "theme_amethyst": "Royal Amethyst 🔮",
         "settings_sound": "Sound Effects",
+        "set_vibration": "Vibration:",
         "settings_save": "Save",
         "settings_google_account": "Google Account",
         "settings_not_logged_in": "Not logged in",
@@ -781,6 +790,13 @@ const TRANSLATIONS = {
         "msg_logout_confirm": "Are you sure you want to log out?",
         "settings_terms": "📜 Terms of Service",
         "settings_privacy": "🔒 Privacy Policy",
+        
+        // NOVO: DODATI PREVODI ZA SEKCIJE U PODEŠAVANJIMA
+        "settings_profile_acc": "Profile & Account",
+        "settings_sound_haptics": "Sound & Haptics",
+        "settings_display_lang": "Display & Language",
+        "settings_terms_short": "📜 Terms",
+        "settings_privacy_short": "🔒 Privacy",
 
         // --- RULES (EN) ---
         "rules_title": "GAME RULES",
