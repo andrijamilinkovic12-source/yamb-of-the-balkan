@@ -899,7 +899,7 @@ class YambApp {
         const target = document.getElementById(screenId); 
         if (target) target.classList.add('active'); 
         if(screenId === 'main-menu' && !this.inviteDetected) this.checkSavedGame(); 
-        if (screenId === 'highscores-screen') { this.switchHsTab('local'); }
+        if (screenId === 'highscores-screen') { this.switchHsTab('global'); }
     }
 
     switchHsTab(tab) { this.topListManager.switchTab(tab); }
@@ -1267,7 +1267,7 @@ class YambApp {
 
     showHighscoresScreen() { 
         this.navigateTo('highscores-screen'); 
-        this.switchHsTab('local'); 
+        this.switchHsTab('global'); 
     }
 
     updateStats(score, resultType) { 

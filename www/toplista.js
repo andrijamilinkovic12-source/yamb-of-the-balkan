@@ -1,4 +1,4 @@
-// toplista.js - CLEAN & OPTIMIZED (Carousel Layout, Avatars & Dynamic Font Size)
+// toplista.js - CLEAN & OPTIMIZED (Global First, Avatars & Dynamic Font Size)
 
 class TopListManager {
     constructor(appContext) {
@@ -34,12 +34,16 @@ class TopListManager {
     async submitScore(name, score, mode) {
         if (!score || score <= 0) return;
 
-        // Pripremamo objekat za bazu (koristimo 'playerName' da se slaže sa serverom)
+        // OBAVEZNO: Povlačimo sliku iz lokalne memorije (sa Google-a)
+        const photo = localStorage.getItem('yamb_player_photo') || '';
+
+        // Pripremamo objekat za bazu
         const entry = {
             playerName: name || this._t('player_unknown'), 
             score: parseInt(score),
             mode: mode || 'Solo',
             date: new Date().toISOString(),
+            photoUrl: photo, // Sada slika ide i u lokalnu top listu!
             synced: false 
         };
 
@@ -93,10 +97,14 @@ class TopListManager {
         this._loadLocal();
         this._loadGlobal();
 
-        // Ako se eksplicitno traži lokalna, resetujemo scroll na početak (na prvu karticu)
+        // LOGIKA ZA SKROL: Globalna je sada na indeksu 0 (prva), Lokalna je indeks 1
         const carousel = document.getElementById('hs-carousel');
-        if(carousel && tab === 'local') {
-            carousel.scrollLeft = 0;
+        if(carousel) {
+            if (tab === 'global') {
+                carousel.scrollLeft = 0;
+            } else if (tab === 'local') {
+                carousel.scrollLeft = carousel.clientWidth;
+            }
         }
     }
 
@@ -225,7 +233,7 @@ class TopListManager {
             // LOGIKA ZA KRUNU: Sakrivamo broj 1 da bi se lepo video watermark krune
             const rankText = index === 0 ? '' : (index + 1);
 
-            // LOGIKA ZA AVATAR (Ako nema slike sa servera, pravi fallback sliku na osnovu inicijala)
+            // LOGIKA ZA AVATAR (I na globalnoj i na lokalnoj)
             const photoUrl = (entry.photoUrl && entry.photoUrl.length > 5) 
                 ? entry.photoUrl 
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
