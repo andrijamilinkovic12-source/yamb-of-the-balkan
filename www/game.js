@@ -420,6 +420,39 @@ class YambApp {
         this.syncBalance();
     }
     
+    // --- UNIVERZALNA KONTROLA VIBRACIJE (Capacitor + Web) ---
+    vibrate(pattern) {
+        if (!this.vibrationEnabled) return;
+        
+        // 1. Pokušaj preko Capacitor Haptics (OBAVEZNO za iOS i izvorne Android aplikacije)
+        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics) {
+            try {
+                if (Array.isArray(pattern)) {
+                    // Capacitor ne podržava nizove direktno u vibrate, pa šaljemo dužinu prvog impulsa
+                    window.Capacitor.Plugins.Haptics.vibrate({ duration: pattern[0] });
+                } else if (pattern <= 20) {
+                    window.Capacitor.Plugins.Haptics.impact({ style: 'Light' });
+                } else if (pattern <= 40) {
+                    window.Capacitor.Plugins.Haptics.impact({ style: 'Medium' });
+                } else {
+                    window.Capacitor.Plugins.Haptics.vibrate({ duration: pattern });
+                }
+                return; // Prekini dalje izvršavanje ako Capacitor radi
+            } catch (e) {
+                console.warn("Haptics greška:", e);
+            }
+        }
+
+        // 2. Fallback na standardni Web API (Radi na Android pretraživačima, ne radi na iOS)
+        if (typeof navigator !== 'undefined' && navigator.vibrate) {
+            try {
+                navigator.vibrate(pattern);
+            } catch (e) {
+                console.warn("Web vibracija nije podržana:", e);
+            }
+        }
+    }
+
     // --- OBAVEZNA GOOGLE PRIJAVA ZA IGRANJE ---
     requireLogin() {
         if (!localStorage.getItem('yamb_uid')) {
@@ -1157,7 +1190,7 @@ class YambApp {
         else if (type === 'vibration') {
             this.vibrationEnabled = value;
             localStorage.setItem('yamb_vibration', value);
-            if (value && navigator.vibrate) navigator.vibrate(50); // Test vibracija kad se uključi
+            if (value) this.vibrate(50); // Test vibracija kad se uključi
         } 
         else if (type === 'theme') {
             localStorage.setItem('yamb_theme', value);
@@ -2442,7 +2475,7 @@ class YambApp {
         this.soundMgr.click(); 
         
         // NOVO: Blaga vibracija kada se kockica zadrži ili pusti
-        if (this.vibrationEnabled && navigator.vibrate) navigator.vibrate(15);
+        this.vibrate(15);
         
         if(this.onlineMode || this.roomId) { 
             this.socket.emit('dice_hold', { roomId: this.roomId, index: i, status: this.zadrzane[i] }); 
@@ -2500,7 +2533,7 @@ class YambApp {
             this.soundMgr.roll(); 
             
             // NOVO: Vibracija kada se bace kockice
-            if (this.vibrationEnabled && navigator.vibrate) navigator.vibrate(30);
+            this.vibrate(30);
 
             this.isAnimating = true;
 
@@ -2566,7 +2599,7 @@ class YambApp {
             } catch(e) {}
 
             // NOVO: Vibracija pri aktiviranju najave
-            if (this.vibrationEnabled && navigator.vibrate) navigator.vibrate(30);
+            this.vibrate(30);
 
             btn.innerText = gt('game_announce_cancel'); 
             btn.classList.add('btn-active-toggle'); 
@@ -2582,7 +2615,7 @@ class YambApp {
             try { this.soundMgr.click(); } catch(e) {} 
             
             // NOVO: Blaga vibracija pri otkazivanju najave
-            if (this.vibrationEnabled && navigator.vibrate) navigator.vibrate(15);
+            this.vibrate(15);
 
             btn.innerText = gt('game_announce'); 
             btn.classList.remove('btn-active-toggle'); 
@@ -2681,9 +2714,7 @@ class YambApp {
                 if (this.brojBacanja === 1) { this.hasSvetiIlija = true; this.effectMgr.trigger('thunder'); }
                 
                 // NOVO: Pattern vibracija (3 brza pulsa - 50ms vibrira, 100ms pauza)
-                if (this.vibrationEnabled && navigator.vibrate) {
-                    navigator.vibrate([50, 100, 50, 100, 50]);
-                }
+                this.vibrate([50, 100, 50, 100, 50]);
             } catch(e) {}
         }
         
