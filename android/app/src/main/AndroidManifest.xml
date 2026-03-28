@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <attribution
         android:tag="yamb_attribution"
         android:label="@string/attribution_label" />
