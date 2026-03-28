@@ -1,4 +1,4 @@
-// toplista.js - CLEAN & OPTIMIZED (Fixed Layout & Name Display)
+// toplista.js - CLEAN & OPTIMIZED (Carousel Layout, Avatars & Dynamic Font Size)
 
 class TopListManager {
     constructor(appContext) {
@@ -89,29 +89,14 @@ class TopListManager {
     }
 
     switchTab(tab) {
-        const btnLocal = document.getElementById('tab-local');
-        const btnGlobal = document.getElementById('tab-global');
-        const listLocal = document.getElementById('local-hs-list');
-        const listGlobal = document.getElementById('global-hs-list');
-        const filtersDiv = document.getElementById('global-filters');
+        // Obzirom da su obe liste sada u swipe karticama, odmah učitavamo obe
+        this._loadLocal();
+        this._loadGlobal();
 
-        if (!btnLocal || !btnGlobal) return;
-
-        btnLocal.classList.remove('active');
-        btnGlobal.classList.remove('active');
-        if (listLocal) listLocal.classList.add('hidden');
-        if (listGlobal) listGlobal.classList.add('hidden');
-
-        if (tab === 'local') {
-            btnLocal.classList.add('active');
-            if (listLocal) listLocal.classList.remove('hidden');
-            if (filtersDiv) filtersDiv.classList.add('hidden'); 
-            this._loadLocal(); 
-        } else {
-            btnGlobal.classList.add('active');
-            if (listGlobal) listGlobal.classList.remove('hidden');
-            if (filtersDiv) filtersDiv.classList.remove('hidden'); 
-            this._loadGlobal();
+        // Ako se eksplicitno traži lokalna, resetujemo scroll na početak (na prvu karticu)
+        const carousel = document.getElementById('hs-carousel');
+        if(carousel && tab === 'local') {
+            carousel.scrollLeft = 0;
         }
     }
 
@@ -150,7 +135,7 @@ class TopListManager {
             }
             
             const listLocal = document.getElementById('local-hs-list');
-            if (listLocal && !listLocal.classList.contains('hidden')) {
+            if (listLocal) {
                 this.renderList(scores, 'local-hs-list');
             }
         } catch (e) {
@@ -226,30 +211,37 @@ class TopListManager {
                 }
             }
 
-            // Čitamo playerName (novo) ili name (staro)
             const displayName = entry.playerName || entry.name || this._t('player_unknown');
             const scoreFormatted = entry.score.toLocaleString(currentLang);
             
-            // --- LOGIKA ZA SMANJENJE FONTA DUGAČKIH IMENA ---
-            // Standardna veličina u style.css je 0.85rem. Za preko 16 karaktera smanjujemo na 0.72rem.
-            let nameStyle = "";
-            if (displayName.length > 16) {
-                nameStyle = "font-size: 0.72rem; line-height: 1.1;"; 
+            // --- DINAMIČKO SMANJIVANJE FONTA PREMA DUŽINI IMENA ---
+            let nameStyle = "font-size: 0.85rem; line-height: 1.2;"; // Default
+            if (displayName.length > 20) {
+                nameStyle = "font-size: 0.60rem; line-height: 1.1;"; // Ekstremno dugačka imena
+            } else if (displayName.length > 14) {
+                nameStyle = "font-size: 0.70rem; line-height: 1.1;"; // Srednje dugačka imena
             }
             
             // LOGIKA ZA KRUNU: Sakrivamo broj 1 da bi se lepo video watermark krune
             const rankText = index === 0 ? '' : (index + 1);
+
+            // LOGIKA ZA AVATAR (Ako nema slike sa servera, pravi fallback sliku na osnovu inicijala)
+            const photoUrl = (entry.photoUrl && entry.photoUrl.length > 5) 
+                ? entry.photoUrl 
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
             
+            // NAPOMENA: U HTML-u imamo grid postavljen na 4 kolone (Rang, Slika, Info, Skor)
             li.innerHTML = `
                 <div class="${rankClass}"><span style="position: relative; z-index: 2;">${rankText}</span></div>
+                <img src="${photoUrl}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
                 <div class="hs-info">
-                    <div class="hs-name" style="${nameStyle}">${displayName}</div>
-                    <div class="hs-meta">
+                    <div class="hs-name" style="${nameStyle} font-weight: 800; color: var(--text-main); white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; padding-bottom: 2px; margin-bottom: 2px;">${displayName}</div>
+                    <div class="hs-meta" style="font-size: 0.65rem; color: var(--text-muted); display: flex; gap: 5px;">
                         <span>${entry.mode || 'Solo'}</span>
                         ${dateDisplay ? `<span>• ${dateDisplay}</span>` : ''}
                     </div>
                 </div>
-                <div class="hs-score-pill">${scoreFormatted}</div>
+                <div class="hs-score-pill" style="justify-self: center;">${scoreFormatted}</div>
             `;
 
             list.appendChild(li);
