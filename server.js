@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE
 
 require('dotenv').config(); 
 
@@ -216,6 +216,8 @@ const UserProfileSchema = new mongoose.Schema({
     activeEffect: { type: String, default: 'confetti' }, 
     activeTheme: { type: String, default: 'dark' }, 
     lastDaily: { type: String, default: "" }, 
+    soundEnabled: { type: Boolean, default: true },      // NOVO DODATO
+    vibrationEnabled: { type: Boolean, default: true },  // NOVO DODATO
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
@@ -408,6 +410,9 @@ io.on('connection', (socket) => {
                 if (s.activeSkin !== undefined && s.activeSkin !== null) user.activeSkin = s.activeSkin;
                 if (s.activeEffect !== undefined && s.activeEffect !== null) user.activeEffect = s.activeEffect;
                 if (s.activeTheme !== undefined && s.activeTheme !== null) user.activeTheme = s.activeTheme;
+                // --- NOVO: Čuvanje zvuka i vibracije ---
+                if (s.soundEnabled !== undefined) user.soundEnabled = s.soundEnabled;
+                if (s.vibrationEnabled !== undefined) user.vibrationEnabled = s.vibrationEnabled;
                 
                 const isFreshLogin = (s.games === 0);
 
@@ -496,6 +501,8 @@ io.on('connection', (socket) => {
                     unlockedEffects: user.unlockedEffects,
                     yamb_unlocked: user.yamb_unlocked, 
                     lastDaily: user.lastDaily, 
+                    soundEnabled: user.soundEnabled,        // NOVO DODATO
+                    vibrationEnabled: user.vibrationEnabled,// NOVO DODATO
                     leagueData: user.leagueData 
                 });
             } else {
@@ -511,6 +518,8 @@ io.on('connection', (socket) => {
                     activeSkin: s.activeSkin || 'default', 
                     activeTheme: s.activeTheme || 'dark', 
                     activeEffect: s.activeEffect || 'confetti', 
+                    soundEnabled: s.soundEnabled !== undefined ? s.soundEnabled : true,       // NOVO DODATO
+                    vibrationEnabled: s.vibrationEnabled !== undefined ? s.vibrationEnabled : true, // NOVO DODATO
                     unlockedTrophies: s.unlockedTrophies || [],
                     unlockedSkins: s.unlockedSkins || [],
                     unlockedEffects: s.unlockedEffects || [],
@@ -534,6 +543,8 @@ io.on('connection', (socket) => {
                     unlockedEffects: user.unlockedEffects,
                     yamb_unlocked: user.yamb_unlocked, 
                     lastDaily: user.lastDaily, 
+                    soundEnabled: user.soundEnabled,        // NOVO DODATO
+                    vibrationEnabled: user.vibrationEnabled,// NOVO DODATO
                     leagueData: user.leagueData 
                 });
             }

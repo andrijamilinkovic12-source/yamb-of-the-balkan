@@ -271,7 +271,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v13 - QUARTERLY LEAGUE REWARDS & WINNER MODAL ENABLED");
+        console.log("YambApp v14 - SETTINGS REFACTOR & AUTO-SAVE ENABLED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -337,6 +337,10 @@ class YambApp {
         const savedSound = localStorage.getItem('yamb_sound');
         this.soundEnabled = savedSound !== 'false'; 
         if(this.soundMgr) this.soundMgr.enabled = this.soundEnabled;
+
+        // NOVO: Podrška za vibraciju
+        const savedVib = localStorage.getItem('yamb_vibration');
+        this.vibrationEnabled = savedVib !== 'false'; // Podrazumevano uključeno
         
         const savedStats = JSON.parse(localStorage.getItem('yamb_stats'));
         this.stats = savedStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0 };
@@ -474,7 +478,9 @@ class YambApp {
             activeSkin: localStorage.getItem('yamb_active_skin') || null,
             activeEffect: localStorage.getItem('yamb_active_effect') || null,
             activeTheme: localStorage.getItem('yamb_theme') || null,
-            lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || ""
+            lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
+            soundEnabled: this.soundEnabled,
+            vibrationEnabled: this.vibrationEnabled
         };
     }
 
@@ -1089,71 +1095,85 @@ class YambApp {
 
     showSettings() { 
         this.navigateTo('settings-screen'); 
-        document.getElementById('setting-name').value = this.playerName; 
-        document.getElementById('setting-sound').checked = this.soundEnabled; 
+        const nameEl = document.getElementById('setting-name');
+        if (nameEl) nameEl.value = this.playerName; 
+        
+        const soundEl = document.getElementById('setting-sound');
+        if (soundEl) soundEl.checked = this.soundEnabled; 
+        
+        const vibEl = document.getElementById('setting-vibration');
+        if (vibEl) vibEl.checked = this.vibrationEnabled;
         
         const themeSelect = document.getElementById('setting-theme');
-        let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
-        try {
-            const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
-            const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
-            let cloudSkins = [];
-            if(window.statsManager && window.statsManager.stats.unlockedSkins) {
-                cloudSkins = window.statsManager.stats.unlockedSkins;
-            }
-            unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
-        } catch(e) {}
+        if (themeSelect) {
+            let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
+            try {
+                const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
+                const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
+                let cloudSkins = [];
+                if(window.statsManager && window.statsManager.stats.unlockedSkins) {
+                    cloudSkins = window.statsManager.stats.unlockedSkins;
+                }
+                unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
+            } catch(e) {}
 
-        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
-        unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
-        unlockedThemes = [...new Set(unlockedThemes)];
+            const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
+            unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
+            unlockedThemes = [...new Set(unlockedThemes)];
 
-        Array.from(themeSelect.options).forEach(opt => {
-            if (unlockedThemes.includes(opt.value)) {
-                opt.disabled = false;
-                opt.text = opt.text.replace(' 🔒', ''); 
-            } else {
-                opt.disabled = true;
-                if (!opt.text.includes('🔒')) opt.text += ' 🔒'; 
-            }
-        });
+            Array.from(themeSelect.options).forEach(opt => {
+                if (unlockedThemes.includes(opt.value)) {
+                    opt.disabled = false;
+                    opt.text = opt.text.replace(' 🔒', ''); 
+                } else {
+                    opt.disabled = true;
+                    if (!opt.text.includes('🔒')) opt.text += ' 🔒'; 
+                }
+            });
 
-        themeSelect.value = localStorage.getItem('yamb_theme') || 'dark'; 
+            themeSelect.value = localStorage.getItem('yamb_theme') || 'dark'; 
+        }
     }
     
-    saveSettings() { 
-        const newName = document.getElementById('setting-name').value.trim(); 
-        if(newName) {
-            this.playerName = newName;
-            if (this.gameActive && !this.onlineMode && this.players.length > 0) {
-                 if(this.modeTag === 'Solo') {
-                     this.players[0] = newName;
-                     const nameEl = document.querySelector('#ptable-0 .player-name');
-                     if(nameEl) nameEl.innerText = newName;
-                 }
+    saveSettingAuto(type, value) {
+        if (type === 'name') {
+            if (value.trim() === '') return;
+            this.playerName = value.trim();
+            localStorage.setItem('yamb_player_name', this.playerName);
+            
+            // Promeni ime uživo na tabli ako igra teče
+            if (this.gameActive && !this.onlineMode && this.players.length > 0 && this.modeTag === 'Solo') {
+                this.players[0] = this.playerName;
+                const nameEl = document.querySelector('#ptable-0 .player-name');
+                if(nameEl) nameEl.innerText = this.playerName;
             }
+        } 
+        else if (type === 'sound') {
+            this.soundEnabled = value;
+            if (this.soundMgr) this.soundMgr.enabled = value;
+            localStorage.setItem('yamb_sound', value);
+            if (value && this.soundMgr) this.soundMgr.click(); // Test zvuk kad se uključi
+        } 
+        else if (type === 'vibration') {
+            this.vibrationEnabled = value;
+            localStorage.setItem('yamb_vibration', value);
+            if (value && navigator.vibrate) navigator.vibrate(50); // Test vibracija kad se uključi
+        } 
+        else if (type === 'theme') {
+            localStorage.setItem('yamb_theme', value);
+            this.applyTheme(value);
         }
-        
-        this.soundEnabled = document.getElementById('setting-sound').checked; 
-        if(this.soundMgr) this.soundMgr.enabled = this.soundEnabled;
 
-        const selectedTheme = document.getElementById('setting-theme').value; 
-        localStorage.setItem('yamb_theme', selectedTheme); 
-        this.applyTheme(selectedTheme);
-        
-        localStorage.setItem('yamb_player_name', this.playerName); 
-        localStorage.setItem('yamb_sound', this.soundEnabled); 
-        
+        // TRENUTNA SINHRONIZACIJA SA CLOUDOM!
         if (this.socket && this.socket.connected) {
-            this.socket.emit('set_player_data', { 
-                name: this.playerName, 
+            this.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid'),
+                name: this.playerName,
                 photoUrl: localStorage.getItem('yamb_player_photo') || '',
                 stats: this.getFullLocalStats(),
                 playerId: this.playerId
             });
         }
-
-        this.showMainMenu(); 
     }
 
     showStats() { 

@@ -84,7 +84,7 @@ function getFullLocalStats() {
         losses: (window.app && window.app.stats) ? (window.app.stats.losses || 0) : 0,
         highscore: (window.app && window.app.stats) ? (window.app.stats.highscore || 0) : 0,
         totalScoreSum: (window.app && window.app.stats) ? (window.app.stats.totalScoreSum || 0) : 0,
-        maxWinStreak: (window.app && window.app.stats) ? (window.app.stats.maxWinStreak || 0) : 0, // <-- DODATO OVDJE
+        maxWinStreak: (window.app && window.app.stats) ? (window.app.stats.maxWinStreak || 0) : 0,
         tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0, 
         balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
         currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
@@ -97,7 +97,9 @@ function getFullLocalStats() {
         activeSkin: localStorage.getItem('yamb_active_skin') || null,
         activeEffect: localStorage.getItem('yamb_active_effect') || null,
         activeTheme: localStorage.getItem('yamb_theme') || null,
-        lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || ""
+        lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
+        soundEnabled: window.app ? window.app.soundEnabled : true,
+        vibrationEnabled: window.app ? window.app.vibrationEnabled : true
     };
 }
 
@@ -323,7 +325,7 @@ function inicijalizujCloudSync() {
                 losses: dbStats.losses || 0,
                 highscore: dbStats.highscore || 0,
                 totalScoreSum: dbStats.totalScoreSum || 0,
-                maxWinStreak: dbStats.maxWinStreak || 0 // <-- DODATO OVDJE
+                maxWinStreak: dbStats.maxWinStreak || 0
             };
             localStorage.setItem('yamb_stats', JSON.stringify(window.app.stats));
             
@@ -372,6 +374,19 @@ function inicijalizujCloudSync() {
                 const themeSelect = document.getElementById('setting-theme');
                 if (themeSelect) themeSelect.value = dbStats.activeTheme;
             }
+
+            // Povlačenje podešavanja zvuka i vibracije iz Cloud-a
+            if (dbStats.soundEnabled !== undefined) {
+                localStorage.setItem('yamb_sound', dbStats.soundEnabled);
+                if (window.app && window.app.soundMgr) {
+                    window.app.soundMgr.enabled = dbStats.soundEnabled;
+                    window.app.soundEnabled = dbStats.soundEnabled;
+                }
+            }
+            if (dbStats.vibrationEnabled !== undefined) {
+                localStorage.setItem('yamb_vibration', dbStats.vibrationEnabled);
+                if (window.app) window.app.vibrationEnabled = dbStats.vibrationEnabled;
+            }
             
             const currentUid = localStorage.getItem('yamb_uid');
             if (dbStats.lastDaily) {
@@ -388,7 +403,7 @@ function inicijalizujCloudSync() {
                 window.statsManager.stats.tournamentWins = dbStats.tournamentWins || 0; 
                 window.statsManager.stats.balance = dbStats.balance || 0;
                 window.statsManager.stats.currentWinStreak = dbStats.currentWinStreak || 0;
-                window.statsManager.stats.maxWinStreak = dbStats.maxWinStreak || 0; // <-- DODATO OVDJE
+                window.statsManager.stats.maxWinStreak = dbStats.maxWinStreak || 0;
                 window.statsManager.stats.unlockedTrophies = dbStats.unlockedTrophies || [];
                 window.statsManager.stats.unlockedSkins = dbStats.unlockedSkins || [];
                 window.statsManager.stats.unlockedEffects = dbStats.unlockedEffects || [];
