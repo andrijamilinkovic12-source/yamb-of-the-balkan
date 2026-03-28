@@ -99,7 +99,9 @@ function getFullLocalStats() {
         activeTheme: localStorage.getItem('yamb_theme') || null,
         lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
         soundEnabled: window.app ? window.app.soundEnabled : true,
-        vibrationEnabled: window.app ? window.app.vibrationEnabled : true
+        vibrationEnabled: window.app ? window.app.vibrationEnabled : true,
+        // DODATO: Sinhronizacija H2H međusobnih duela
+        h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}')
     };
 }
 
@@ -201,6 +203,7 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_unlocked_themes'); 
         localStorage.removeItem('yamb_unlocked'); 
         localStorage.removeItem('yamb_last_daily'); // Sigurnosno brisanje prilikom odjave
+        localStorage.removeItem('yamb_h2h_stats'); // Brisanje H2H statistike
         
         // Resetovanje aktivnih skinova i tema
         localStorage.setItem('yamb_theme', 'dark');
@@ -386,6 +389,11 @@ function inicijalizujCloudSync() {
             if (dbStats.vibrationEnabled !== undefined) {
                 localStorage.setItem('yamb_vibration', dbStats.vibrationEnabled);
                 if (window.app) window.app.vibrationEnabled = dbStats.vibrationEnabled;
+            }
+
+            // DODATO: Preuzimanje H2H (međusobnih) duela iz Clouda
+            if (dbStats.h2hStats) {
+                localStorage.setItem('yamb_h2h_stats', JSON.stringify(dbStats.h2hStats));
             }
             
             const currentUid = localStorage.getItem('yamb_uid');
