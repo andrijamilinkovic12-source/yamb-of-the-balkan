@@ -467,7 +467,8 @@ class YambApp {
         let rivals = Object.values(h2h);
 
         if (rivals.length === 0) {
-            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">Nema odigranih duela...</div>`;
+            // IZMENJENO: Korišćenje gt() funkcije za prevod
+            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">${gt('stat_h2h_empty')}</div>`;
             return;
         }
 
@@ -480,6 +481,7 @@ class YambApp {
             let winPct = Math.round((r.wins / total) * 100);
             let avatar = r.photo && r.photo.length > 5 ? r.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`;
 
+            // IZMENJENO: U title atributima se koristi gt() za prevod reči Pobede i Porazi
             html += `
             <div class="h2h-card">
                 <img src="${avatar}" class="avatar">
@@ -490,8 +492,8 @@ class YambApp {
                     </div>
                 </div>
                 <div class="score">
-                    <span class="w" title="Pobede">${r.wins} W</span>
-                    <span class="l" title="Porazi">${r.losses} L</span>
+                    <span class="w" title="${gt('stat_wins')}">${r.wins} W</span>
+                    <span class="l" title="${gt('stat_losses')}">${r.losses} L</span>
                 </div>
             </div>`;
         });

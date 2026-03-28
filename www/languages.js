@@ -145,6 +145,9 @@ const TRANSLATIONS = {
         "stat_balance": "Stanje",
         "stat_online": "ONLINE IGRAČA",
         "stat_power_index": "INDEKS MOĆI ⚡",
+        "stat_h2h_title": "MEĐUSOBNI DUELI ⚔️",
+        "stat_h2h_desc": "Prikazuje vaš skor protiv prijatelja i rivala.",
+        "stat_h2h_empty": "Nema odigranih duela...",
 
         // --- TOP LISTA ---
         "hs_local": "LOKALNA",
@@ -649,6 +652,9 @@ const TRANSLATIONS = {
         "stat_balance": "Balance",
         "stat_online": "PLAYERS ONLINE",
         "stat_power_index": "POWER INDEX ⚡",
+        "stat_h2h_title": "HEAD-TO-HEAD ⚔️",
+        "stat_h2h_desc": "Shows your score against friends and rivals.",
+        "stat_h2h_empty": "No duels played yet...",
 
         // --- HIGH SCORES ---
         "hs_local": "LOCAL",
