@@ -9,6 +9,8 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
+
     <attribution
         android:tag="yamb_attribution"
         android:label="@string/attribution_label" />
