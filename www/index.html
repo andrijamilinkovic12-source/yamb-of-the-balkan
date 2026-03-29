@@ -36,29 +36,30 @@
         .pravni-tekst-container::-webkit-scrollbar { width: 4px; }
         .pravni-tekst-container::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
 
-        /* OPTIMIZACIJA STATISTIKE - BEZ SKROLOVANJA */
-        .compact-stat { padding: 6px !important; }
+        /* OPTIMIZACIJA STATISTIKE - BALANSIRANO BEZ SKROLOVANJA */
+        .compact-stat { padding: 10px 5px !important; display: flex; flex-direction: column; justify-content: center; }
         .compact-grid-item {
-            padding: 4px 2px !important;
-            min-height: 55px;
+            padding: 6px 4px !important;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1px !important;
+            gap: 4px !important;
+            height: 100%; /* Da popuni red u gridu */
         }
         .stat-lbl-mini {
-            font-size: 0.55rem !important;
+            font-size: 0.65rem !important;
             color: var(--text-muted);
             text-transform: uppercase;
             text-align: center;
+            font-weight: 700;
         }
         .stat-val-mini {
-            font-size: 0.95rem !important;
+            font-size: 1.15rem !important;
             font-weight: 900;
             line-height: 1.1;
         }
-        #stats-screen .menu-title { margin-bottom: 8px !important; }
+        #stats-screen .menu-title { margin-bottom: 12px !important; }
     </style>
 </head>
 <body>
@@ -304,70 +305,70 @@
         <div class="stats-carousel" id="stats-carousel" onscroll="updateStatsPagination()">
             
             <div class="stats-page">
-                <div class="modal-box" style="gap: 8px !important; padding: 10px !important; width: 100%; max-width: 100%; display: flex; flex-direction: column; overflow: hidden; max-height: 100%;">
+                <div class="hs-card modal-box" style="gap: 12px !important; padding: 15px !important; width: 100%; max-width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; justify-content: space-between;">
                     
-                    <div style="background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); padding: 8px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2); position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;" onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()">
-                        <div style="position: absolute; top: -8px; right: -8px; font-size: 3rem; opacity: 0.15; pointer-events: none;">⚡</div>
-                        <div style="font-size: 0.7rem; color: #fff; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);" data-lang="stat_power_index">INDEKS MOĆI ⚡</div>
-                        <div id="stat-power-index" style="font-size: 1.8rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); line-height: 1;">0</div>
+                    <div style="background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2); position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;" onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()">
+                        <div style="position: absolute; top: -8px; right: -8px; font-size: 3.5rem; opacity: 0.15; pointer-events: none;">⚡</div>
+                        <div style="font-size: 0.75rem; color: #fff; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);" data-lang="stat_power_index">INDEKS MOĆI ⚡</div>
+                        <div id="stat-power-index" style="font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); line-height: 1; margin-top: 2px;">0</div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; flex-shrink: 0;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; flex-shrink: 0;">
                         <div class="stat-item compact-stat" style="border-color: var(--gold-main); background: rgba(224, 201, 149, 0.05);">
-                            <span style="font-size: 0.6rem; color: var(--gold-main); letter-spacing:0.5px; font-weight:bold;" data-lang="stat_record">REKORD</span>
-                            <span id="stat-high" class="stat-val c-gold" style="font-size: 1.1rem !important;">0</span>
+                            <span style="font-size: 0.65rem; color: var(--gold-main); letter-spacing:0.5px; font-weight:bold;" data-lang="stat_record">REKORD</span>
+                            <span id="stat-high" class="stat-val c-gold" style="font-size: 1.3rem !important;">0</span>
                         </div>
                         <div class="stat-item compact-stat">
-                            <span style="font-size: 0.6rem; color: var(--text-muted);" data-lang="stat_total">UKUPNO PARTIJA</span>
-                            <span id="stat-games" class="stat-val" style="font-size: 1.1rem !important;">0</span>
+                            <span style="font-size: 0.65rem; color: var(--text-muted);" data-lang="stat_total">UKUPNO PARTIJA</span>
+                            <span id="stat-games" class="stat-val" style="font-size: 1.3rem !important;">0</span>
                         </div>
                     </div>
 
-                    <div style="width: 100%; background: var(--glass-bg); padding: 8px; border-radius: 12px; border: 1px solid var(--glass-border); flex-shrink: 0;">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:3px; font-size:0.7rem; font-weight:bold;">
+                    <div style="width: 100%; background: var(--glass-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); flex-shrink: 0;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.75rem; font-weight:bold;">
                             <span class="c-win"><span data-lang="stat_wins">POBEDE</span>: <span id="stat-wins">0</span></span>
                             <span class="c-loss"><span data-lang="stat_losses">PORAZI</span>: <span id="stat-losses">0</span></span>
                         </div>
-                        <div style="width: 100%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; overflow: hidden; display: flex;">
+                        <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; overflow: hidden; display: flex;">
                             <div id="stat-bar-win" style="width: 50%; background: var(--success); height: 100%;"></div>
                             <div id="stat-bar-loss" style="width: 50%; background: var(--danger); height: 100%;"></div>
                         </div>
-                        <div style="text-align: center; margin-top: 4px; font-size: 0.65rem; color: var(--text-muted);">
+                        <div style="text-align: center; margin-top: 6px; font-size: 0.7rem; color: var(--text-muted);">
                             <span data-lang="stat_rate">USPEŠNOST</span>: <span id="stat-rate" style="color: var(--text-main); font-weight: bold;">0%</span>
                         </div>
                     </div>
 
-                    <div class="stat-grid" style="margin: 0 !important; flex-shrink: 0; gap: 6px !important; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr);">
+                    <div class="stat-grid" style="margin: 0 !important; flex: 1; gap: 8px !important; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr);">
                         <div class="stat-item compact-grid-item" onclick="if(window.vatreniNiz) window.vatreniNiz.openModal()">
-                            <span style="font-size: 1rem;">🔥</span>
+                            <span style="font-size: 1.2rem;">🔥</span>
                             <span class="stat-lbl-mini" data-lang="stat_streak">Vatreni Niz</span>
                             <span id="stat-streak" class="stat-val-mini" style="color: #FF5722;">0</span>
                         </div>
                         <div class="stat-item compact-grid-item">
-                            <span style="font-size: 1rem;">📈</span>
+                            <span style="font-size: 1.2rem;">📈</span>
                             <span class="stat-lbl-mini" data-lang="stat_avg">Prosek</span>
                             <span id="stat-avg" class="stat-val-mini">0</span>
                         </div>
                         <div class="stat-item compact-grid-item" onclick="riznicaManager.open()">
-                            <span style="font-size: 1rem;">🏆</span>
+                            <span style="font-size: 1.2rem;">🏆</span>
                             <span class="stat-lbl-mini" data-lang="stat_trophies">Trofeji</span>
                             <span id="stat-trophies" class="stat-val-mini c-gold">0 / 27</span>
                         </div>
                         <div class="stat-item compact-grid-item">
-                            <span style="font-size: 1rem;">💰</span>
+                            <span style="font-size: 1.2rem;">💰</span>
                             <span class="stat-lbl-mini" data-lang="stat_balance">Stanje</span>
                             <span id="stat-balance" class="stat-val-mini c-gold">0</span>
                         </div>
                         <div class="stat-item compact-grid-item">
-                            <span style="font-size: 1rem;">🌟</span>
+                            <span style="font-size: 1.2rem;">🌟</span>
                             <span class="stat-lbl-mini" data-lang="stat_alltime">All-Time PTS</span>
                             <span id="stat-alltime" class="stat-val-mini c-gold">0</span>
                         </div>
                         <div class="stat-item compact-grid-item">
-                            <span class="stat-lbl-mini" data-lang="stat_fav_opp" style="margin-bottom:1px;">Rival</span>
-                            <img id="stat-fav-opp-img" src="" style="width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--gold-main); object-fit: cover; display: none;">
-                            <span id="stat-fav-opp-name" style="font-size: 0.65rem; color: var(--text-main); font-weight: bold; line-height: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 90%; text-align: center;">Nema</span>
-                            <span id="stat-fav-opp-games" style="font-size: 0.55rem; color: var(--gold-main); font-weight: bold;">0 mečeva</span>
+                            <span class="stat-lbl-mini" data-lang="stat_fav_opp" style="margin-bottom:2px;">Rival</span>
+                            <img id="stat-fav-opp-img" src="" style="width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--gold-main); object-fit: cover; display: none;">
+                            <span id="stat-fav-opp-name" style="font-size: 0.7rem; color: var(--text-main); font-weight: bold; line-height: 1.1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 90%; text-align: center;">Nema</span>
+                            <span id="stat-fav-opp-games" style="font-size: 0.6rem; color: var(--gold-main); font-weight: bold; margin-top:2px;">0 mečeva</span>
                         </div>
                     </div>
                 </div>
