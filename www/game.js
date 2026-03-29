@@ -176,10 +176,8 @@ class DailyChallengeManager {
         
         this.interval = setInterval(() => {
             const rnd = Math.floor(Math.random() * 6) + 1;
-            if(dieEl) {
-                dieEl.innerText = this.UNICODE[rnd];
-                dieEl.dataset.val = rnd; 
-            }
+            if(dieEl) dieEl.innerText = this.UNICODE[rnd];
+            if(dieEl) dieEl.dataset.val = rnd; 
         }, 50); 
     }
 
@@ -1407,7 +1405,49 @@ class YambApp {
         let currentStreak = this.stats.currentWinStreak || 0;
         if (sm) { const stats = sm.getStats(); currentStreak = stats.currentWinStreak > 0 ? stats.currentWinStreak : currentStreak; }
         document.getElementById('stat-streak').innerText = currentStreak;
+
+        // ==========================================
+        // NOVO: POPUNJAVANJE ALL-TIME PTS I RIVALA
+        // ==========================================
         
+        // 1. All-Time PTS
+        const allTimePts = this.stats.totalScoreSum || 0;
+        const allTimeEl = document.getElementById('stat-alltime');
+        if (allTimeEl) allTimeEl.innerText = allTimePts;
+
+        // 2. Najveći Rival (Rival sa najviše odigranih partija)
+        let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
+        let rivals = Object.values(h2h);
+        
+        const favNameEl = document.getElementById('stat-fav-opp-name');
+        const favGamesEl = document.getElementById('stat-fav-opp-games');
+        const favImgEl = document.getElementById('stat-fav-opp-img');
+
+        if (rivals.length > 0) {
+            // Sortiraj rivale po ukupnom broju partija (wins + losses) opadajuće
+            rivals.sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses));
+            let topRival = rivals[0];
+            let totalGames = topRival.wins + topRival.losses;
+
+            if (favNameEl) favNameEl.innerText = topRival.name;
+            if (favGamesEl) favGamesEl.innerText = `${totalGames} mečeva`;
+            
+            if (favImgEl) {
+                if (topRival.photo && topRival.photo.length > 5) {
+                    favImgEl.src = topRival.photo;
+                } else {
+                    favImgEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(topRival.name)}&background=333&color=E0C995`;
+                }
+                favImgEl.style.display = 'block';
+            }
+        } else {
+            // Ako nema odigranih H2H partija
+            if (favNameEl) favNameEl.innerText = gt('stat_none') || "Nema";
+            if (favGamesEl) favGamesEl.innerText = "0 mečeva";
+            if (favImgEl) favImgEl.style.display = 'none';
+        }
+        // ==========================================
+
         // DODATO: Osveži H2H listu svaki put kada igrač otvori statistiku
         this.renderH2HStats();
         
