@@ -394,7 +394,7 @@
                         Prikazuje vaš skor protiv prijatelja i rivala.
                     </div>
 
-                    <div id="h2h-list-container" style="flex: 1; overflow-y: auto; padding: 0 15px 15px 15px; width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                    <div id="h2h-list-container" style="flex: 1; padding: 0 15px 15px 15px; width: 100%; display: flex; flex-direction: column; gap: 10px;">
                         </div>
                 </div>
             </div>
@@ -430,6 +430,23 @@
             .stats-pagination { display: flex; gap: 12px; justify-content: center; margin-bottom: max(35px, env(safe-area-inset-bottom) + 15px); margin-top: 10px; }
             .stats-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
             .stats-pagination .dot.active { background: var(--gold-main); transform: scale(1.4); box-shadow: 0 0 10px var(--gold-glow); }
+            
+            /* Zlatni skrolbar za H2H listu i glatko skrolovanje na dodir */
+            #h2h-list-container {
+                -webkit-overflow-scrolling: touch;
+                overflow-y: auto;
+            }
+            #h2h-list-container::-webkit-scrollbar {
+                width: 4px;
+            }
+            #h2h-list-container::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 10px;
+            }
+            #h2h-list-container::-webkit-scrollbar-thumb {
+                background: var(--gold-main);
+                border-radius: 10px;
+            }
             
             /* Nova H2H Card Style */
             .h2h-card-new { display: flex; flex-direction: column; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; padding-top: 15px; margin-bottom: 5px; position: relative;}
