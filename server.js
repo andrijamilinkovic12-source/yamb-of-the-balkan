@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + H2H STATS MERGE
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE
 
 require('dotenv').config(); 
 
@@ -485,35 +485,61 @@ io.on('connection', (socket) => {
                     }
                 }
 
-                // DODATO: Pametno spajanje (MERGE) H2H statistike kako se ne bi obrisala pri logovanju
+                // DODATO: Pametno spajanje (MERGE) H2H statistike za SVE detaljne podatke
                 if (s.h2hStats) {
                     let cloudH2H = user.h2hStats || {};
                     let isModified = false;
 
-                    // Prolazimo kroz sve protivnike koje je telefon poslao
                     for (const [oppName, localData] of Object.entries(s.h2hStats)) {
                         if (!cloudH2H[oppName]) {
-                            // Protivnik ne postoji u bazi, dodaj ga
+                            // Protivnik ne postoji u cloudu, dodaj ga kompletnog
                             cloudH2H[oppName] = localData;
                             isModified = true;
                         } else {
-                            // Protivnik postoji, uporedi broj odigranih partija
-                            const localTotal = (localData.wins || 0) + (localData.losses || 0);
-                            const cloudTotal = (cloudH2H[oppName].wins || 0) + (cloudH2H[oppName].losses || 0);
+                            let cloudData = cloudH2H[oppName];
                             
-                            // Zadrži onu statistiku koja ima više odigranih mečeva
+                            // 1. Spajanje osnovnih partija (Zadržavamo gde ima više odigranih mečeva)
+                            const localTotal = (localData.wins || 0) + (localData.losses || 0);
+                            const cloudTotal = (cloudData.wins || 0) + (cloudData.losses || 0);
+                            
                             if (localTotal > cloudTotal) {
-                                cloudH2H[oppName] = localData;
-                                isModified = true;
-                            } else if (localData.photo && localData.photo.length > 5 && localData.photo !== cloudH2H[oppName].photo) {
-                                // Ažuriraj samo sliku ako je na telefonu novija
-                                cloudH2H[oppName].photo = localData.photo; 
+                                cloudData.wins = localData.wins;
+                                cloudData.losses = localData.losses;
                                 isModified = true;
                             }
+
+                            // 2. Pametno ažuriranje novih detaljnih statistika (Uvek zadržavamo NAJVEĆI REKORD)
+                            if ((localData.gamesWithScore || 0) > (cloudData.gamesWithScore || 0)) {
+                                cloudData.gamesWithScore = localData.gamesWithScore;
+                                cloudData.myTotalScore = localData.myTotalScore;
+                                isModified = true;
+                            }
+
+                            if ((localData.myHighScore || 0) > (cloudData.myHighScore || 0)) {
+                                cloudData.myHighScore = localData.myHighScore;
+                                isModified = true;
+                            }
+
+                            if ((localData.maxWinMargin || 0) > (cloudData.maxWinMargin || 0)) {
+                                cloudData.maxWinMargin = localData.maxWinMargin;
+                                isModified = true;
+                            }
+
+                            if ((localData.maxLossMargin || 0) > (cloudData.maxLossMargin || 0)) {
+                                cloudData.maxLossMargin = localData.maxLossMargin;
+                                isModified = true;
+                            }
+
+                            // 3. Ažuriranje slike
+                            if (localData.photo && localData.photo.length > 5 && localData.photo !== cloudData.photo) {
+                                cloudData.photo = localData.photo; 
+                                isModified = true;
+                            }
+                            
+                            cloudH2H[oppName] = cloudData;
                         }
                     }
 
-                    // Ažuriraj bazu samo ako je bilo promena ili ako cloud već ima podatke
                     if (isModified || Object.keys(cloudH2H).length > 0) {
                         user.set('h2hStats', cloudH2H);
                         user.markModified('h2hStats');
