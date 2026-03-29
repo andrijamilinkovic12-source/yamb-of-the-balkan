@@ -46,6 +46,7 @@
             justify-content: center;
             gap: 4px !important;
             height: 100%; /* Da popuni red u gridu */
+            position: relative; /* DODATO ZA STRELICE U UGLU */
         }
         .stat-lbl-mini {
             font-size: 0.65rem !important;
@@ -305,15 +306,20 @@
         <div class="stats-carousel" id="stats-carousel" onscroll="updateStatsPagination()">
             
             <div class="stats-page">
-                <div class="hs-card modal-box" style="gap: 12px !important; padding: 15px !important; width: 100%; max-width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; justify-content: space-between;">
+                <div class="hs-card modal-box" style="gap: 10px !important; padding: 12px !important; width: 100%; max-width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; justify-content: space-between;">
                     
-                    <div style="background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); padding: 12px; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2); position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;" onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()">
-                        <div style="position: absolute; top: -8px; right: -8px; font-size: 3.5rem; opacity: 0.15; pointer-events: none;">⚡</div>
-                        <div style="font-size: 0.75rem; color: #fff; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);" data-lang="stat_power_index">INDEKS MOĆI ⚡</div>
-                        <div id="stat-power-index" style="font-size: 2.2rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); line-height: 1; margin-top: 2px;">0</div>
+                    <div style="background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); padding: 10px 15px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2); position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0;" onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()">
+                        <div style="position: absolute; top: -10px; right: 15%; font-size: 4rem; opacity: 0.15; pointer-events: none;">⚡</div>
+                        <div style="position: absolute; top: 6px; right: 10px; font-size: 0.9rem; color: #fff; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">↗</div>
+                        
+                        <div style="display: flex; flex-direction: column; align-items: flex-start; z-index: 1;">
+                            <div style="font-size: 0.75rem; color: #fff; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);" data-lang="stat_power_index">INDEKS MOĆI</div>
+                            <div style="font-size: 0.55rem; color: rgba(255,255,255,0.9); font-weight: 700; margin-top: 2px; text-transform: uppercase;">Globalni Rang</div>
+                        </div>
+                        <div id="stat-power-index" style="font-size: 2rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); line-height: 1; z-index: 1;">0</div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; flex-shrink: 0;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; flex-shrink: 0;">
                         <div class="stat-item compact-stat" style="border-color: var(--gold-main); background: rgba(224, 201, 149, 0.05);">
                             <span style="font-size: 0.65rem; color: var(--gold-main); letter-spacing:0.5px; font-weight:bold;" data-lang="stat_record">REKORD</span>
                             <span id="stat-high" class="stat-val c-gold" style="font-size: 1.3rem !important;">0</span>
@@ -324,7 +330,7 @@
                         </div>
                     </div>
 
-                    <div style="width: 100%; background: var(--glass-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); flex-shrink: 0;">
+                    <div style="width: 100%; background: var(--glass-bg); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--glass-border); flex-shrink: 0;">
                         <div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.75rem; font-weight:bold;">
                             <span class="c-win"><span data-lang="stat_wins">POBEDE</span>: <span id="stat-wins">0</span></span>
                             <span class="c-loss"><span data-lang="stat_losses">PORAZI</span>: <span id="stat-losses">0</span></span>
@@ -339,21 +345,27 @@
                     </div>
 
                     <div class="stat-grid" style="margin: 0 !important; flex: 1; gap: 8px !important; display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr);">
+                        
                         <div class="stat-item compact-grid-item" onclick="if(window.vatreniNiz) window.vatreniNiz.openModal()">
+                            <div style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
                             <span style="font-size: 1.2rem;">🔥</span>
                             <span class="stat-lbl-mini" data-lang="stat_streak">Vatreni Niz</span>
                             <span id="stat-streak" class="stat-val-mini" style="color: #FF5722;">0</span>
                         </div>
+                        
                         <div class="stat-item compact-grid-item">
                             <span style="font-size: 1.2rem;">📈</span>
                             <span class="stat-lbl-mini" data-lang="stat_avg">Prosek</span>
                             <span id="stat-avg" class="stat-val-mini">0</span>
                         </div>
+                        
                         <div class="stat-item compact-grid-item" onclick="riznicaManager.open()">
+                            <div style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
                             <span style="font-size: 1.2rem;">🏆</span>
                             <span class="stat-lbl-mini" data-lang="stat_trophies">Trofeji</span>
                             <span id="stat-trophies" class="stat-val-mini c-gold">0 / 27</span>
                         </div>
+                        
                         <div class="stat-item compact-grid-item">
                             <span style="font-size: 1.2rem;">💰</span>
                             <span class="stat-lbl-mini" data-lang="stat_balance">Stanje</span>
