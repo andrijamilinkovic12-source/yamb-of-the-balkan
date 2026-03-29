@@ -271,7 +271,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v15 - H2H STATS ENABLED");
+        console.log("YambApp v15 - H2H STATS ENABLED & FIXED RACE CONDITION");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -447,16 +447,8 @@ class YambApp {
 
         localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
 
-        // Pokreni momentalnu sinhronizaciju sa Cloud-om
-        if (this.socket && this.socket.connected) {
-            this.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid'),
-                name: this.playerName,
-                photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: this.getFullLocalStats(),
-                playerId: this.playerId
-            });
-        }
+        // UKLONJENO: Ovo je pravilo race condition jer se odmah nakon ovoga zove updateStats
+        // Emitovanje H2H statistike se sada vrši zajedno sa celokupnom statistikom kroz `updateStats`.
     }
 
     renderH2HStats() {
@@ -467,8 +459,7 @@ class YambApp {
         let rivals = Object.values(h2h);
 
         if (rivals.length === 0) {
-            // IZMENJENO: Korišćenje gt() funkcije za prevod
-            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">${gt('stat_h2h_empty')}</div>`;
+            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">${gt('stat_h2h_empty') || "Još uvek nemate odigranih duela protiv drugih igrača."}</div>`;
             return;
         }
 
@@ -481,7 +472,6 @@ class YambApp {
             let winPct = Math.round((r.wins / total) * 100);
             let avatar = r.photo && r.photo.length > 5 ? r.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`;
 
-            // IZMENJENO: U title atributima se koristi gt() za prevod reči Pobede i Porazi
             html += `
             <div class="h2h-card">
                 <img src="${avatar}" class="avatar">
@@ -2167,13 +2157,13 @@ class YambApp {
                     window.statsManager.saveStats();
                 }
                 
-                this.updateStats(0, 'win'); 
-                
-                // DODATO: Zabeleži pobedu u H2H duelu jer je protivnik pobegao
+                // ZABELEŽI POBEDU U H2H PRE SLANJA NA SERVER
                 const oppName = this.players.find(p => p !== this.playerName);
                 if (oppName) {
                     this.updateH2HStats(oppName, this.currentOpponentPhoto || '', true);
                 }
+
+                this.updateStats(0, 'win'); 
                 
                 await this.modal.alert(gt('opp_fled_win'), gt('go_win') || "POBEDA"); 
                 this.cancelOnline(); 
@@ -2971,9 +2961,7 @@ class YambApp {
                  if (winner.name === myScoreEntry.name) resultType = 'win'; else resultType = 'loss'; 
              }
              
-             this.updateStats(myScoreEntry.score, resultType);
-             
-             // DODATO: Ažuriranje H2H statistike za duele 1 na 1
+             // DODATO: Ažuriranje H2H statistike za duele 1 na 1 (PREMEŠTENO IZNAD updateStats)
              if (this.players.length === 2) {
                  const oppIndex = this.players.findIndex(p => p !== myScoreEntry.name);
                  if (oppIndex !== -1) {
@@ -2982,6 +2970,9 @@ class YambApp {
                      this.updateH2HStats(oppName, oppPhoto, resultType === 'win');
                  }
              }
+
+             // OVO SADA BELEŽI I LOKALNE STATS I NOVU H2H STATISTIKU I ŠALJE SERVERU ODJEDNOM
+             this.updateStats(myScoreEntry.score, resultType);
         }
         
         this.soundMgr.win(); 
