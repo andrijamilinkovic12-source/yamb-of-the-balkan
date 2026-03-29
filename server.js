@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX
 
 require('dotenv').config(); 
 
@@ -470,7 +470,13 @@ io.on('connection', (socket) => {
                     user.yamb_unlocked = Array.from(mergedAll);
                 }
 
-                if (s.lastDaily) user.lastDaily = s.lastDaily;
+                // FIX: SPREČAVANJE KLIJENTA DA VRATI VREME UNAZAD ZA DNEVNI IZAZOV
+                if (s.lastDaily) {
+                    const todayStr = new Date().toDateString();
+                    if (user.lastDaily !== todayStr) {
+                        user.lastDaily = s.lastDaily;
+                    }
+                }
 
                 if (s.leagueData) {
                     if (s.leagueData.year > user.leagueData.year || 
@@ -1558,6 +1564,57 @@ io.on('connection', (socket) => {
             }
 
             console.log(`🔄 Revanš pokrenut u sobi: ${roomId}`);
+        }
+    });
+
+    // ==================================================================
+    // NOVO: SERVER-SIDE PROVERA I DODELA DNEVNE NAGRADE (ANTI-CHEAT)
+    // ==================================================================
+    socket.on('claim_daily_reward', async (data) => {
+        try {
+            if (!MONGO_URI || !socket.playerId) return;
+
+            const user = await UserProfile.findOne({ firebaseUid: socket.playerId });
+            if (!user) return;
+
+            const today = new Date().toDateString();
+
+            // 1. STRIKTNA PROVERA U BAZI (Sprečava brisanje aplikacije / promenu telefona)
+            if (user.lastDaily === today) {
+                socket.emit('error_msg', 'Već ste preuzeli dnevnu nagradu za danas!');
+                return;
+            }
+
+            // 2. SERVER RAČUNA NAGRADU (Sprečava klijenta da pošalje lažan skor)
+            const { diceValues } = data;
+            let totalSum = 0;
+            if (Array.isArray(diceValues)) {
+                for (let val of diceValues) {
+                    let num = parseInt(val);
+                    if (num >= 1 && num <= 6) totalSum += num;
+                }
+            } else {
+                totalSum = 10; // Fallback
+            }
+
+            const reward = totalSum * 10;
+
+            // 3. SIGURAN UPIS U CLOUD
+            user.balance += reward;
+            user.lastDaily = today;
+            await user.save();
+
+            console.log(`🎁 DNEVNI IZAZOV: Igrač ${user.playerName} dobio ${reward} dukata (Server odobrio).`);
+
+            // 4. JAVLJAMO KLIJENTU DA JE BEZBEDNO AŽURIRATI EKRAN
+            socket.emit('daily_reward_success', {
+                reward: reward,
+                newBalance: user.balance,
+                lastDaily: today
+            });
+
+        } catch (err) {
+            console.error("Greška pri dodeli dnevne nagrade:", err);
         }
     });
 

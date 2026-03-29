@@ -222,33 +222,12 @@ class DailyChallengeManager {
         const stopBtn = document.getElementById('btn-daily-stop');
         if(stopBtn) stopBtn.disabled = true;
         
-        const totalSum = this.diceValues.reduce((a,b) => a+b, 0);
-        const reward = totalSum * 10; 
-        
-        let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-        currentDukati += reward;
-        localStorage.setItem('yamb_dukati', currentDukati);
-        
-        if (window.statsManager) {
-            window.statsManager.stats.balance = currentDukati;
-            window.statsManager.saveStats();
-        }
-
+        // NOVO: Prepuštamo serveru da proveri datum i dodeli nagradu!
         if (this.app && this.app.socket && this.app.socket.connected) {
-            this.app.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid'),
-                name: this.app.playerName,
-                photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: this.app.getFullLocalStats(),
-                playerId: this.app.playerId
-            });
+            this.app.socket.emit('claim_daily_reward', { diceValues: this.diceValues });
+        } else {
+            this.app.modal.alert(gt('sys_no_conn') || "Niste povezani na server. Pokušajte ponovo kasnije.", gt('err_title') || "GREŠKA");
         }
-
-        const uid = localStorage.getItem('yamb_uid');
-        localStorage.setItem('yamb_last_daily_' + uid, new Date().toDateString());
-        
-        this.app.soundMgr.win();
-        this.showResultModal(reward);
     }
 
     showResultModal(amount) {
@@ -1925,6 +1904,31 @@ class YambApp {
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
         this.socket.off('spectate_started');
+
+        // --- NOVO: REAKCIJA NA ODOBRENU DNEVNU NAGRADU SA SERVERA ---
+        this.socket.off('daily_reward_success');
+        this.socket.on('daily_reward_success', (data) => {
+            const { reward, newBalance, lastDaily } = data;
+
+            // Ažuriraj lokalne podatke ISKLJUČIVO sa sigurnim vrednostima od servera
+            localStorage.setItem('yamb_dukati', newBalance);
+            const uid = localStorage.getItem('yamb_uid');
+            localStorage.setItem('yamb_last_daily_' + uid, lastDaily);
+
+            if (window.statsManager) {
+                window.statsManager.stats.balance = newBalance;
+                window.statsManager.saveStats();
+            }
+
+            if (typeof updateMainMenuDashboard === 'function') {
+                updateMainMenuDashboard();
+            }
+
+            // Prikaz modalnog prozora za pobedu tek kada server kaže OK
+            this.soundMgr.win();
+            this.dailyManager.showResultModal(reward);
+        });
+        // -----------------------------------------------------------
 
         // --- NOVO: REAKCIJA NA PRIKAZ POBEDNIKA PROŠLOG KVARTALA ---
         this.socket.off('previous_quarter_winner_data');
