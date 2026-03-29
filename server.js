@@ -513,6 +513,14 @@ io.on('connection', (socket) => {
                             if ((localData.gamesWithScore || 0) > (cloudData.gamesWithScore || 0)) {
                                 cloudData.gamesWithScore = localData.gamesWithScore;
                                 cloudData.myTotalScore = localData.myTotalScore;
+                                // DODATO: Ako lokalno imamo više partija, znači da su podaci svežiji, pa prepisujemo i trenutni niz
+                                cloudData.currentWinStreak = localData.currentWinStreak || 0;
+                                isModified = true;
+                            }
+
+                            // DODATO: Provera za Najbolji Vatreni Niz ikada
+                            if ((localData.maxWinStreak || 0) > (cloudData.maxWinStreak || 0)) {
+                                cloudData.maxWinStreak = localData.maxWinStreak;
                                 isModified = true;
                             }
 

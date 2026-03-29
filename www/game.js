@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -440,7 +440,9 @@ class YambApp {
                 gamesWithScore: 0, 
                 myHighScore: 0, 
                 maxWinMargin: 0, 
-                maxLossMargin: 0 
+                maxLossMargin: 0,
+                currentWinStreak: 0, // Trenutni niz
+                maxWinStreak: 0      // Najbolji niz ikada
             };
         } else if (oppPhoto && oppPhoto.length > 5) {
             h2h[oppName].photo = oppPhoto; // Osveži sliku ako se promenila
@@ -448,8 +450,13 @@ class YambApp {
 
         if (isWin) {
             h2h[oppName].wins++;
+            h2h[oppName].currentWinStreak = (h2h[oppName].currentWinStreak || 0) + 1;
+            if (h2h[oppName].currentWinStreak > (h2h[oppName].maxWinStreak || 0)) {
+                h2h[oppName].maxWinStreak = h2h[oppName].currentWinStreak;
+            }
         } else {
             h2h[oppName].losses++;
+            h2h[oppName].currentWinStreak = 0; // Reset na poraz
         }
 
         // Dodajemo novu detaljnu statistiku (samo ako su rezultat validni)
@@ -487,7 +494,7 @@ class YambApp {
         // Sortiraj po ukupnom broju odigranih partija (od najviše ka najmanje)
         rivals.sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses));
 
-        const myName = this.playerName || "Ja";
+        const myName = this.playerName || gt('h2h_me') || "Ja";
         const myPhoto = localStorage.getItem('yamb_player_photo') || `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=333&color=E0C995`;
 
         // Funkcija za dinamičko smanjivanje fonta ako je ime predugačko
@@ -532,19 +539,23 @@ class YambApp {
 
                 <div class="h2h-stats-area">
                     <div class="h2h-stat-row">
-                        <span class="lbl">🏆 Najveća pobeda:</span>
+                        <span class="lbl">${gt('h2h_highest_win') || '🏆 Najveća pobeda:'}</span>
                         <span class="val">${r.myHighScore || 0}</span>
                     </div>
                     <div class="h2h-stat-row">
-                        <span class="lbl">📈 Najveća razlika:</span>
+                        <span class="lbl">${gt('h2h_max_diff') || '📈 Najveća razlika:'}</span>
                         <span class="val c-success">+${r.maxWinMargin || 0}</span>
                     </div>
                     <div class="h2h-stat-row">
-                        <span class="lbl">📉 Najteži poraz:</span>
+                        <span class="lbl">${gt('h2h_worst_loss') || '📉 Najteži poraz:'}</span>
                         <span class="val c-danger">-${r.maxLossMargin || 0}</span>
                     </div>
                     <div class="h2h-stat-row">
-                        <span class="lbl">🎯 Tvoj prosek poena:</span>
+                        <span class="lbl">${gt('h2h_win_streak') || '🔥 Vatreni niz:'}</span>
+                        <span class="val" style="color: #FF5722;">${r.maxWinStreak || 0}</span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">${gt('h2h_avg_pts') || '🎯 Tvoj prosek poena:'}</span>
                         <span class="val">${avg}</span>
                     </div>
                 </div>
@@ -553,7 +564,7 @@ class YambApp {
                     <div class="h2h-bar-bg">
                         <div class="h2h-bar-win" style="width: ${winPct}%"></div>
                     </div>
-                    <div class="h2h-bar-text">${winPct}% POBEDA</div>
+                    <div class="h2h-bar-text">${winPct}% ${gt('h2h_win_pct') || 'POBEDA'}</div>
                 </div>
             </div>`;
         });
@@ -1620,7 +1631,7 @@ class YambApp {
         if (titleEl) titleEl.innerText = gt('ws_title_invite') || "POZOVI PRIJATELJA";
         
         const msgEl = document.getElementById('wait-msg');
-        if (msgEl) msgEl.innerText = gt('ws_msg_invite') || "Pošaljite link, odaberite prijatelja iz liste ili dodajte novog!";
+        if (msgEl) msgEl.innerText = gt('ws_msg_invite') || "Pošaljite link, odaberite prijatelja iz list ili dodajte novog!";
         
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');

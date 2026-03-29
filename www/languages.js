@@ -153,6 +153,13 @@ const TRANSLATIONS = {
         "stat_h2h_title": "MEĐUSOBNI DUELI ⚔️",
         "stat_h2h_desc": "Prikazuje vaš skor protiv prijatelja i rivala.",
         "stat_h2h_empty": "Nema odigranih duela...",
+        "h2h_highest_win": "🏆 Najveća pobeda:",
+        "h2h_max_diff": "📈 Najveća razlika:",
+        "h2h_worst_loss": "📉 Najteži poraz:",
+        "h2h_win_streak": "🔥 Vatreni niz:",
+        "h2h_avg_pts": "🎯 Tvoj prosek poena:",
+        "h2h_win_pct": "POBEDA",
+        "h2h_me": "Ja",
 
         // --- TOP LISTA ---
         "hs_local": "LOKALNA",
@@ -665,6 +672,13 @@ const TRANSLATIONS = {
         "stat_h2h_title": "HEAD-TO-HEAD ⚔️",
         "stat_h2h_desc": "Shows your score against friends and rivals.",
         "stat_h2h_empty": "No duels played yet...",
+        "h2h_highest_win": "🏆 Highest Win:",
+        "h2h_max_diff": "📈 Max Margin:",
+        "h2h_worst_loss": "📉 Worst Loss:",
+        "h2h_win_streak": "🔥 Win Streak:",
+        "h2h_avg_pts": "🎯 Your Avg Pts:",
+        "h2h_win_pct": "WIN RATE",
+        "h2h_me": "Me",
 
         // --- HIGH SCORES ---
         "hs_local": "LOCAL",
