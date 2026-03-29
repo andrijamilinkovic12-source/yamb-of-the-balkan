@@ -386,16 +386,32 @@
             .stats-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
             .stats-pagination .dot.active { background: var(--gold-main); transform: scale(1.4); box-shadow: 0 0 10px var(--gold-glow); }
             
-            /* H2H Card Style */
-            .h2h-card { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; border-radius: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
-            .h2h-card .avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); flex-shrink: 0; }
-            .h2h-card .info { flex: 1; padding: 0 12px; overflow: hidden; }
-            .h2h-card .name { color: var(--text-main); font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px; }
-            .h2h-card .bar-bg { width: 100%; height: 6px; background: var(--danger); border-radius: 3px; overflow: hidden; display: flex; }
-            .h2h-card .bar-win { height: 100%; background: var(--success); transition: width 0.5s; }
-            .h2h-card .score { display: flex; flex-direction: column; align-items: flex-end; font-weight: 900; font-size: 1.1rem; line-height: 1.1; flex-shrink: 0;}
-            .h2h-card .score .w { color: var(--success); }
-            .h2h-card .score .l { color: var(--danger); font-size: 0.85rem; }
+            /* Nova H2H Card Style */
+            .h2h-card-new { display: flex; flex-direction: column; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; padding-top: 15px; margin-bottom: 5px; position: relative;}
+            
+            .h2h-players-area { display: flex; justify-content: space-between; position: relative; padding: 0 10px; margin-bottom: 12px;}
+            .h2h-player { display: flex; flex-direction: column; align-items: center; width: 45%; }
+            .h2h-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 2px 5px rgba(0,0,0,0.5); margin-bottom: 8px; }
+            .h2h-player.opp .h2h-avatar { border-color: var(--danger); }
+            
+            .h2h-name { color: var(--text-main); font-weight: 800; text-align: center; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px; min-height: 2.4em; }
+            .h2h-wl { font-weight: 900; font-size: 1.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+            .w-color { color: var(--success); }
+            .l-color { color: var(--danger); }
+            
+            .h2h-vs-divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+            .h2h-vs-divider .vs-line { position: absolute; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent); z-index: 1; }
+            .h2h-vs-divider .vs-circle { background: #111; color: var(--gold-main); font-size: 0.65rem; font-weight: 900; padding: 5px; border-radius: 50%; border: 1px solid var(--gold-main); z-index: 2; display: flex; align-items: center; justify-content: center; }
+
+            .h2h-stats-area { background: rgba(255,255,255,0.02); padding: 12px 15px; border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 8px; }
+            .h2h-stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+            .h2h-stat-row .lbl { color: var(--text-muted); font-weight: 600; }
+            .h2h-stat-row .val { color: var(--text-main); font-weight: 900; font-size: 0.9rem;}
+
+            .h2h-bar-wrapper { padding: 12px 15px; display: flex; flex-direction: column; gap: 6px; }
+            .h2h-bar-bg { width: 100%; height: 8px; background: var(--danger); border-radius: 4px; overflow: hidden; display: flex; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
+            .h2h-bar-win { height: 100%; background: var(--success); transition: width 0.5s ease-out; }
+            .h2h-bar-text { text-align: center; font-size: 0.7rem; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; }
         </style>
     </div>
 

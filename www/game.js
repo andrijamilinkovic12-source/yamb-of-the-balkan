@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -271,7 +271,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v15 - H2H STATS ENABLED & FIXED RACE CONDITION");
+        console.log("YambApp v16 - H2H SPLIT UI + STATS TRACKING ENABLED");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -317,7 +317,6 @@ class YambApp {
         this.isAnimating = false; 
         this.currentHostingRoomId = null;
         
-        // DODATO: Polje za sliku protivnika za H2H statistiku
         this.currentOpponentPhoto = '';
 
         // Klijentski tajmer za Anti-Troll zaštitu
@@ -423,20 +422,30 @@ class YambApp {
         this.syncBalance();
     }
     
-    // --- FUNKCIJE ZA H2H (MEĐUSOBNE) DUELE ---
+    // --- FUNKCIJE ZA H2H DETALJNU STATISTIKU ---
 
-    updateH2HStats(oppName, oppPhoto, isWin) {
+    updateH2HStats(oppName, oppPhoto, isWin, myScore = 0, oppScore = 0) {
         // Ne beležimo sistemske botove ili goste bez naloga
         if (!oppName || oppName.includes(gt('player_guest')) || oppName === "Sistem") return;
         if (this.isSpectator) return;
 
         let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
         
-        // Kreiraj rivala ako ne postoji
+        // Kreiraj rivala i podrazumevane stat vrednosti ako ne postoji
         if (!h2h[oppName]) {
-            h2h[oppName] = { name: oppName, photo: oppPhoto || '', wins: 0, losses: 0 };
+            h2h[oppName] = { 
+                name: oppName, 
+                photo: oppPhoto || '', 
+                wins: 0, 
+                losses: 0, 
+                myTotalScore: 0, 
+                gamesWithScore: 0, 
+                myHighScore: 0, 
+                maxWinMargin: 0, 
+                maxLossMargin: 0 
+            };
         } else if (oppPhoto && oppPhoto.length > 5) {
-            h2h[oppName].photo = oppPhoto; // Osveži sliku ako se u međuvremenu promenila
+            h2h[oppName].photo = oppPhoto; // Osveži sliku ako se promenila
         }
 
         if (isWin) {
@@ -445,10 +454,24 @@ class YambApp {
             h2h[oppName].losses++;
         }
 
-        localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
+        // Dodajemo novu detaljnu statistiku (samo ako su rezultat validni)
+        if (myScore > 0 || oppScore > 0) {
+            h2h[oppName].myTotalScore = (h2h[oppName].myTotalScore || 0) + myScore;
+            h2h[oppName].gamesWithScore = (h2h[oppName].gamesWithScore || 0) + 1;
 
-        // UKLONJENO: Ovo je pravilo race condition jer se odmah nakon ovoga zove updateStats
-        // Emitovanje H2H statistike se sada vrši zajedno sa celokupnom statistikom kroz `updateStats`.
+            if (myScore > (h2h[oppName].myHighScore || 0)) {
+                h2h[oppName].myHighScore = myScore;
+            }
+
+            let margin = myScore - oppScore;
+            if (isWin && margin > (h2h[oppName].maxWinMargin || 0)) {
+                h2h[oppName].maxWinMargin = margin;
+            } else if (!isWin && (oppScore - myScore) > (h2h[oppName].maxLossMargin || 0)) {
+                h2h[oppName].maxLossMargin = (oppScore - myScore);
+            }
+        }
+
+        localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
     }
 
     renderH2HStats() {
@@ -466,24 +489,73 @@ class YambApp {
         // Sortiraj po ukupnom broju odigranih partija (od najviše ka najmanje)
         rivals.sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses));
 
+        const myName = this.playerName || "Ja";
+        const myPhoto = localStorage.getItem('yamb_player_photo') || `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=333&color=E0C995`;
+
+        // Funkcija za dinamičko smanjivanje fonta ako je ime predugačko
+        const getFontSize = (name) => {
+            if (!name) return '0.9rem';
+            if (name.length > 20) return '0.65rem';
+            if (name.length >= 14) return '0.75rem';
+            return '0.9rem';
+        };
+
+        const myFontSize = getFontSize(myName);
+
         let html = '';
         rivals.forEach(r => {
             const total = r.wins + r.losses;
-            let winPct = Math.round((r.wins / total) * 100);
-            let avatar = r.photo && r.photo.length > 5 ? r.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`;
+            let winPct = total > 0 ? Math.round((r.wins / total) * 100) : 0;
+            let oppAvatar = r.photo && r.photo.length > 5 ? r.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`;
+            let oppFontSize = getFontSize(r.name);
+
+            let avg = r.gamesWithScore > 0 ? Math.round((r.myTotalScore || 0) / r.gamesWithScore) : 0;
 
             html += `
-            <div class="h2h-card">
-                <img src="${avatar}" class="avatar">
-                <div class="info">
-                    <div class="name">${r.name}</div>
-                    <div class="bar-bg">
-                        <div class="bar-win" style="width: ${winPct}%"></div>
+            <div class="h2h-card-new">
+                <div class="h2h-players-area">
+                    <div class="h2h-player me">
+                        <img src="${myPhoto}" class="h2h-avatar">
+                        <div class="h2h-name" style="font-size: ${myFontSize};">${myName}</div>
+                        <div class="h2h-wl w-color">${r.wins} W</div>
+                    </div>
+                    
+                    <div class="h2h-vs-divider">
+                        <div class="vs-circle">VS</div>
+                        <div class="vs-line"></div>
+                    </div>
+
+                    <div class="h2h-player opp">
+                        <img src="${oppAvatar}" class="h2h-avatar">
+                        <div class="h2h-name" style="font-size: ${oppFontSize};">${r.name}</div>
+                        <div class="h2h-wl l-color">${r.losses} L</div>
                     </div>
                 </div>
-                <div class="score">
-                    <span class="w" title="${gt('stat_wins')}">${r.wins} W</span>
-                    <span class="l" title="${gt('stat_losses')}">${r.losses} L</span>
+
+                <div class="h2h-stats-area">
+                    <div class="h2h-stat-row">
+                        <span class="lbl">🏆 Najveća pobeda:</span>
+                        <span class="val">${r.myHighScore || 0}</span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">📈 Najveća razlika:</span>
+                        <span class="val c-success">+${r.maxWinMargin || 0}</span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">📉 Najteži poraz:</span>
+                        <span class="val c-danger">-${r.maxLossMargin || 0}</span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">🎯 Tvoj prosek poena:</span>
+                        <span class="val">${avg}</span>
+                    </div>
+                </div>
+
+                <div class="h2h-bar-wrapper">
+                    <div class="h2h-bar-bg">
+                        <div class="h2h-bar-win" style="width: ${winPct}%"></div>
+                    </div>
+                    <div class="h2h-bar-text">${winPct}% POBEDA</div>
                 </div>
             </div>`;
         });
@@ -1479,10 +1551,9 @@ class YambApp {
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
             if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
-                // DODATO: Osigurano beleženje H2H poraza pri predaji (izlasku u meni)
                 const oppName = this.players.find(p => p !== this.playerName);
                 if (oppName) {
-                    this.updateH2HStats(oppName, this.currentOpponentPhoto || '', false);
+                    this.updateH2HStats(oppName, this.currentOpponentPhoto || '', false, 0, 0);
                 }
                 this.updateStats(0, 'loss');
             }
@@ -1895,7 +1966,7 @@ class YambApp {
                 }
                 
                 // DODATO: Beleženje H2H pobede usled isteka vremena protivniku
-                if (oppName) this.updateH2HStats(oppName, this.currentOpponentPhoto || '', true);
+                if (oppName) this.updateH2HStats(oppName, this.currentOpponentPhoto || '', true, 0, 0);
                 
                 this.updateStats(0, 'win'); 
                 await this.modal.alert(gt('timeout_win_msg'), gt('go_win') || "POBEDA");
@@ -1903,7 +1974,7 @@ class YambApp {
                 this.soundMgr.loss();
                 
                 // DODATO: Beleženje H2H poraza usled sopstvenog isteka vremena
-                if (oppName) this.updateH2HStats(oppName, this.currentOpponentPhoto || '', false);
+                if (oppName) this.updateH2HStats(oppName, this.currentOpponentPhoto || '', false, 0, 0);
                 
                 this.updateStats(0, 'loss'); 
                 await this.modal.alert(gt('timeout_loss_msg'), gt('timeout_loss_title'));
@@ -2172,7 +2243,7 @@ class YambApp {
                 // ZABELEŽI POBEDU U H2H PRE SLANJA NA SERVER
                 const oppName = this.players.find(p => p !== this.playerName);
                 if (oppName) {
-                    this.updateH2HStats(oppName, this.currentOpponentPhoto || '', true);
+                    this.updateH2HStats(oppName, this.currentOpponentPhoto || '', true, 0, 0);
                 }
 
                 this.updateStats(0, 'win'); 
@@ -2973,17 +3044,21 @@ class YambApp {
                  if (winner.name === myScoreEntry.name) resultType = 'win'; else resultType = 'loss'; 
              }
              
-             // DODATO: Ažuriranje H2H statistike za duele 1 na 1 (PREMEŠTENO IZNAD updateStats)
+             // DODATO: Ažuriranje H2H statistike za duele 1 na 1 sa poenima
              if (this.players.length === 2) {
                  const oppIndex = this.players.findIndex(p => p !== myScoreEntry.name);
                  if (oppIndex !== -1) {
                      const oppName = this.players[oppIndex];
                      let oppPhoto = this.onlineMode ? this.currentOpponentPhoto : '';
-                     this.updateH2HStats(oppName, oppPhoto, resultType === 'win');
+                     
+                     // Tražimo rezultat protivnika za razliku
+                     let oppScoreEntry = finalResults.find(r => r.name === oppName);
+                     let oppScore = oppScoreEntry ? oppScoreEntry.score : 0;
+                     
+                     this.updateH2HStats(oppName, oppPhoto, resultType === 'win', myScoreEntry.score, oppScore);
                  }
              }
 
-             // OVO SADA BELEŽI I LOKALNE STATS I NOVU H2H STATISTIKU I ŠALJE SERVERU ODJEDNOM
              this.updateStats(myScoreEntry.score, resultType);
         }
         
