@@ -841,14 +841,9 @@
 
         </div>
 
-        <div id="share-area" class="hidden" style="margin-top: 25px; display: flex; flex-direction: column; align-items: center; width: 100%; padding: 0 15px;">
-            <input type="text" id="invite-link" class="hidden" readonly>
-            <button class="btn-menu btn-primary" onclick="app.shareInvite()" data-lang="invite_btn" style="width: 100%; max-width: 350px; padding: 14px 20px; border-radius: 16px; font-weight: 800; font-size: 0.9rem; box-shadow: 0 5px 15px rgba(224, 201, 149, 0.3);">🔗 PODELI LINK SA PRIJATELJEM</button>
-        </div>
-
-        <div id="friends-list-container" class="hidden" style="width: 100%; max-width: 500px; margin-top: 20px; padding: 0 15px; flex: 1; display: flex; flex-direction: column; min-height: 0;">
+        <div id="friends-list-container" class="hidden" style="width: 100%; max-width: 500px; margin-top: 15px; padding: 0 15px; display: flex; flex-direction: column;">
             <h3 style="color: var(--gold-main); font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 5px; flex-shrink: 0;" data-lang="ws_friends_title">TVOJI PRIJATELJI</h3>
-            <div id="friends-list" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding-bottom: 15px; -webkit-overflow-scrolling: touch;"></div>
+            <div id="friends-list" style="display: flex; flex-direction: row; gap: 12px; overflow-x: auto; overflow-y: hidden; padding-bottom: 15px; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none;"></div>
         </div>
         
         <style>
@@ -945,6 +940,11 @@
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%);
+            }
+
+            /* Sakrivanje skrolbara za prijatelje */
+            #friends-list::-webkit-scrollbar {
+                display: none;
             }
         </style>
     </div>
