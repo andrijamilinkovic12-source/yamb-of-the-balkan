@@ -1478,8 +1478,12 @@ class YambApp {
     
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
-            // DODATO: this.onlineMode -> Kazni porazom samo ako je Online igra (izbegavamo kaznu za lokalni Hotseat mod)
             if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
+                // DODATO: Osigurano beleženje H2H poraza pri predaji (izlasku u meni)
+                const oppName = this.players.find(p => p !== this.playerName);
+                if (oppName) {
+                    this.updateH2HStats(oppName, this.currentOpponentPhoto || '', false);
+                }
                 this.updateStats(0, 'loss');
             }
             this.showMainMenu(); 
@@ -1875,6 +1879,8 @@ class YambApp {
             }
 
             const iAmWinner = (this.socket.id === data.winnerId);
+            // DODATO: Traženje imena protivnika za H2H
+            const oppName = this.players.find(p => p !== this.playerName);
             
             if (iAmWinner) {
                 this.soundMgr.win();
@@ -1888,11 +1894,17 @@ class YambApp {
                     window.statsManager.saveStats();
                 }
                 
-                this.updateStats(0, 'win'); 
+                // DODATO: Beleženje H2H pobede usled isteka vremena protivniku
+                if (oppName) this.updateH2HStats(oppName, this.currentOpponentPhoto || '', true);
                 
+                this.updateStats(0, 'win'); 
                 await this.modal.alert(gt('timeout_win_msg'), gt('go_win') || "POBEDA");
             } else {
                 this.soundMgr.loss();
+                
+                // DODATO: Beleženje H2H poraza usled sopstvenog isteka vremena
+                if (oppName) this.updateH2HStats(oppName, this.currentOpponentPhoto || '', false);
+                
                 this.updateStats(0, 'loss'); 
                 await this.modal.alert(gt('timeout_loss_msg'), gt('timeout_loss_title'));
             }

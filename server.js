@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + H2H STATS
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + H2H STATS MERGE
 
 require('dotenv').config(); 
 
@@ -485,10 +485,39 @@ io.on('connection', (socket) => {
                     }
                 }
 
-                // DODATO: Ažuriranje H2H statistike
+                // DODATO: Pametno spajanje (MERGE) H2H statistike kako se ne bi obrisala pri logovanju
                 if (s.h2hStats) {
-                    user.h2hStats = s.h2hStats;
-                    user.markModified('h2hStats'); // Mongoose zahteva ovo za Object/Mixed tipove
+                    let cloudH2H = user.h2hStats || {};
+                    let isModified = false;
+
+                    // Prolazimo kroz sve protivnike koje je telefon poslao
+                    for (const [oppName, localData] of Object.entries(s.h2hStats)) {
+                        if (!cloudH2H[oppName]) {
+                            // Protivnik ne postoji u bazi, dodaj ga
+                            cloudH2H[oppName] = localData;
+                            isModified = true;
+                        } else {
+                            // Protivnik postoji, uporedi broj odigranih partija
+                            const localTotal = (localData.wins || 0) + (localData.losses || 0);
+                            const cloudTotal = (cloudH2H[oppName].wins || 0) + (cloudH2H[oppName].losses || 0);
+                            
+                            // Zadrži onu statistiku koja ima više odigranih mečeva
+                            if (localTotal > cloudTotal) {
+                                cloudH2H[oppName] = localData;
+                                isModified = true;
+                            } else if (localData.photo && localData.photo.length > 5 && localData.photo !== cloudH2H[oppName].photo) {
+                                // Ažuriraj samo sliku ako je na telefonu novija
+                                cloudH2H[oppName].photo = localData.photo; 
+                                isModified = true;
+                            }
+                        }
+                    }
+
+                    // Ažuriraj bazu samo ako je bilo promena ili ako cloud već ima podatke
+                    if (isModified || Object.keys(cloudH2H).length > 0) {
+                        user.set('h2hStats', cloudH2H);
+                        user.markModified('h2hStats');
+                    }
                 }
 
                 await user.save();
@@ -509,7 +538,7 @@ io.on('connection', (socket) => {
                     lastDaily: user.lastDaily, 
                     soundEnabled: user.soundEnabled,        
                     vibrationEnabled: user.vibrationEnabled,
-                    h2hStats: user.h2hStats, // <--- DODATO
+                    h2hStats: user.h2hStats, 
                     leagueData: user.leagueData 
                 });
             } else {
@@ -527,7 +556,7 @@ io.on('connection', (socket) => {
                     activeEffect: s.activeEffect || 'confetti', 
                     soundEnabled: s.soundEnabled !== undefined ? s.soundEnabled : true,       
                     vibrationEnabled: s.vibrationEnabled !== undefined ? s.vibrationEnabled : true, 
-                    h2hStats: s.h2hStats || {}, // <--- DODATO
+                    h2hStats: s.h2hStats || {}, 
                     unlockedTrophies: s.unlockedTrophies || [],
                     unlockedSkins: s.unlockedSkins || [],
                     unlockedEffects: s.unlockedEffects || [],
@@ -553,7 +582,7 @@ io.on('connection', (socket) => {
                     lastDaily: user.lastDaily, 
                     soundEnabled: user.soundEnabled,        
                     vibrationEnabled: user.vibrationEnabled,
-                    h2hStats: user.h2hStats, // <--- DODATO
+                    h2hStats: user.h2hStats, 
                     leagueData: user.leagueData 
                 });
             }
