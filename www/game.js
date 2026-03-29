@@ -1430,7 +1430,7 @@ class YambApp {
             let totalGames = topRival.wins + topRival.losses;
 
             if (favNameEl) favNameEl.innerText = topRival.name;
-            if (favGamesEl) favGamesEl.innerText = `${totalGames} mečeva`;
+            if (favGamesEl) favGamesEl.innerText = `${totalGames} ${gt('stat_matches')}`;
             
             if (favImgEl) {
                 if (topRival.photo && topRival.photo.length > 5) {
@@ -1443,7 +1443,7 @@ class YambApp {
         } else {
             // Ako nema odigranih H2H partija
             if (favNameEl) favNameEl.innerText = gt('stat_none') || "Nema";
-            if (favGamesEl) favGamesEl.innerText = "0 mečeva";
+            if (favGamesEl) favGamesEl.innerText = `0 ${gt('stat_matches')}`;
             if (favImgEl) favImgEl.style.display = 'none';
         }
         // ==========================================
