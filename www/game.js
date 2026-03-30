@@ -211,9 +211,10 @@ class DailyChallengeManager {
             const stopBtn = document.getElementById('btn-daily-stop');
             if(stopBtn) stopBtn.disabled = true; 
             
+            // UBRZANO: Čekamo samo 800ms umesto 2500ms
             setTimeout(() => {
                 this.finishGame();
-            }, 2500); 
+            }, 800); 
         }
     }
 
@@ -224,9 +225,16 @@ class DailyChallengeManager {
         
         // NOVO: Prepuštamo serveru da proveri datum i dodeli nagradu!
         if (this.app && this.app.socket && this.app.socket.connected) {
+            // DODATO: Sigurnosni tajmer (Anti-Freeze). Ako server ne javi ništa za 5 sekundi, prekini čekanje.
+            this._serverCheckTimeout = setTimeout(() => {
+                this.app.modal.alert("Server ne odgovara. Proverite internet vezu.", "GREŠKA");
+                this.app.navigateTo('main-menu');
+            }, 5000);
+
             this.app.socket.emit('claim_daily_reward', { diceValues: this.diceValues });
         } else {
             this.app.modal.alert(gt('sys_no_conn') || "Niste povezani na server. Pokušajte ponovo kasnije.", gt('err_title') || "GREŠKA");
+            this.app.navigateTo('main-menu');
         }
     }
 
@@ -248,7 +256,7 @@ class DailyChallengeManager {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v16 - H2H SPLIT UI + STATS TRACKING ENABLED");
+        console.log("YambApp v16.1 - H2H SPLIT UI + STATS TRACKING ENABLED + DAILY FIX");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -1908,6 +1916,10 @@ class YambApp {
         // --- NOVO: REAKCIJA NA ODOBRENU DNEVNU NAGRADU SA SERVERA ---
         this.socket.off('daily_reward_success');
         this.socket.on('daily_reward_success', (data) => {
+            if (this.dailyManager && this.dailyManager._serverCheckTimeout) {
+                clearTimeout(this.dailyManager._serverCheckTimeout);
+            }
+
             const { reward, newBalance, lastDaily } = data;
 
             // Ažuriraj lokalne podatke ISKLJUČIVO sa sigurnim vrednostima od servera
