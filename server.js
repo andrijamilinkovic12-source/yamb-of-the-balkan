@@ -1568,14 +1568,21 @@ io.on('connection', (socket) => {
     });
 
     // ==================================================================
-    // NOVO: SERVER-SIDE PROVERA I DODELA DNEVNE NAGRADE (ANTI-CHEAT)
+    // SERVER-SIDE PROVERA I DODELA DNEVNE NAGRADE (ANTI-CHEAT)
     // ==================================================================
     socket.on('claim_daily_reward', async (data) => {
         try {
-            if (!MONGO_URI || !socket.playerId) return;
+            // POPRAVKA: Umesto "silent return", javljamo klijentu grešku
+            if (!MONGO_URI || !socket.playerId) {
+                socket.emit('error_msg', 'Problem sa konekcijom ili niste prijavljeni.');
+                return;
+            }
 
             const user = await UserProfile.findOne({ firebaseUid: socket.playerId });
-            if (!user) return;
+            if (!user) {
+                socket.emit('error_msg', 'Korisnički nalog nije pronađen u bazi.');
+                return;
+            }
 
             const today = new Date().toDateString();
 
@@ -1615,6 +1622,7 @@ io.on('connection', (socket) => {
 
         } catch (err) {
             console.error("Greška pri dodeli dnevne nagrade:", err);
+            socket.emit('error_msg', 'Došlo je do greške na serveru prilikom dodele nagrade.');
         }
     });
 
