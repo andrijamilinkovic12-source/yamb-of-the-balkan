@@ -360,24 +360,29 @@ class EffectManager {
         // --- THUNDERBRINGER EFEKAT ---
         if (type === 'thunder') {
             const flash = document.createElement('div');
-            flash.className = 'anim-thunder'; // Svi stilovi su sada prebačeni u CSS za bolje performanse
+            flash.className = 'anim-thunder'; 
             
-            // Random smer za trešenje ekrana kako bi svaki grom bio jedinstven
             document.body.style.setProperty('--dir', Math.random() > 0.5 ? '1' : '-1');
-            
             document.body.appendChild(flash);
-            document.body.classList.add('fx-thunder-shake'); // Pokrećemo zemljotres
+            document.body.classList.add('fx-thunder-shake'); 
             
-            // Dodajemo kompleksni pattern vibracije za mobilne telefone koji simulira udarce groma
+            // 1. Okinemo moćni proceduralni ZVUK groma
+            if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
+                window.app.soundMgr.thunder();
+            } else {
+                const sm = new SoundManager();
+                if (typeof sm.thunder === 'function') sm.thunder();
+            }
+
+            // 2. Kompleksni pattern VIBRACIJE
             if (window.app && typeof window.app.vibrate === 'function') {
-                // Brzi udarci, tišina, onda jak udar, pa smirivanje
                 window.app.vibrate([50, 50, 50, 600, 400, 150, 300, 100, 200, 100, 100]);
             }
             
             setTimeout(() => {
                 if(flash.parentNode) flash.remove();
                 document.body.classList.remove('fx-thunder-shake');
-            }, 4500); // Ekstenzivno trajanje od 4.5 sekundi
+            }, 4500); 
         }
 
         if (type === 'balkan') {
@@ -645,6 +650,58 @@ class SoundManager {
                 gain.gain.setValueAtTime(0.2, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
                 osc.connect(gain); gain.connect(this.ctx.destination); osc.start(t); osc.stop(t + 1.5);
             });
+        });
+    }
+    
+    // --- DODATO: PROCEDURALNI ZVUK GROMA ---
+    thunder() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+            
+            // 1. Šum (White Noise) za efekat praska i lomljave
+            const bufferSize = this.ctx.sampleRate * 4.5; // 4.5 sekundi
+            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1; 
+            }
+            const noiseSrc = this.ctx.createBufferSource();
+            noiseSrc.buffer = noiseBuffer;
+
+            // Filter koji od "šuštanja" pravi duboki prasak groma
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(150, now);
+            filter.frequency.linearRampToValueAtTime(1000, now + 0.1); // Prasak
+            filter.frequency.exponentialRampToValueAtTime(40, now + 4.5); // Smirivanje i tutnjava
+            
+            // Kontrola glasnoće (Gain) - Udari i odzvanjanje
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(1.5, now + 0.05); // Snažan udar!
+            gain.gain.exponentialRampToValueAtTime(0.4, now + 0.4); // Prvo slabljenje
+            gain.gain.linearRampToValueAtTime(0.01, now + 4.5); // Dugo odzvanjanje u daljini
+
+            noiseSrc.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
+            noiseSrc.start(now);
+            
+            // 2. Sub-Bass Oscilator (Za onaj osećaj da se zemlja trese)
+            const osc = this.ctx.createOscillator();
+            const oscGain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(50, now); // Vrlo niska bas frekvencija
+            osc.frequency.exponentialRampToValueAtTime(10, now + 4.5); // Pada u infrazvuk
+            
+            oscGain.gain.setValueAtTime(0, now);
+            oscGain.gain.linearRampToValueAtTime(1.2, now + 0.1);
+            oscGain.gain.exponentialRampToValueAtTime(0.01, now + 4.5);
+            
+            osc.connect(oscGain);
+            oscGain.connect(this.ctx.destination);
+            osc.start(now);
+            osc.stop(now + 4.5);
         });
     }
     
