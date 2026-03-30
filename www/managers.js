@@ -357,16 +357,29 @@ class EffectManager {
             }, 8000);
         }
 
+        // --- THUNDERBRINGER EFEKAT ---
         if (type === 'thunder') {
             const flash = document.createElement('div');
-            flash.className = 'anim-thunder';
-            flash.style.position = 'fixed'; flash.style.top = '0'; flash.style.left = '0'; flash.style.width = '100%'; flash.style.height = '100%';
-            flash.style.background = '#fff'; flash.style.zIndex = '99999'; flash.style.mixBlendMode = 'overlay'; flash.style.pointerEvents = 'none';
+            flash.className = 'anim-thunder'; // Svi stilovi su sada prebačeni u CSS za bolje performanse
+            
+            // Random smer za trešenje ekrana kako bi svaki grom bio jedinstven
+            document.body.style.setProperty('--dir', Math.random() > 0.5 ? '1' : '-1');
+            
             document.body.appendChild(flash);
-            setTimeout(() => flash.remove(), 600);
-            document.body.classList.add('fx-balkan'); 
-            setTimeout(() => document.body.classList.remove('fx-balkan'), 500);
+            document.body.classList.add('fx-thunder-shake'); // Pokrećemo zemljotres
+            
+            // Dodajemo kompleksni pattern vibracije za mobilne telefone koji simulira udarce groma
+            if (window.app && typeof window.app.vibrate === 'function') {
+                // Brzi udarci, tišina, onda jak udar, pa smirivanje
+                window.app.vibrate([50, 50, 50, 600, 400, 150, 300, 100, 200, 100, 100]);
+            }
+            
+            setTimeout(() => {
+                if(flash.parentNode) flash.remove();
+                document.body.classList.remove('fx-thunder-shake');
+            }, 4500); // Ekstenzivno trajanje od 4.5 sekundi
         }
+
         if (type === 'balkan') {
             document.body.classList.add('fx-balkan');
             const t1 = document.createElement('div'); t1.innerText = '🎺'; t1.className = 'trumpet-icon'; t1.style.left = '10px'; t1.style.bottom = '10px';
@@ -501,10 +514,10 @@ class EffectManager {
     }
     
     stop() {
-        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age');
+        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake');
         
         // Dodata klasa .magic-bubble za uklanjanje
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));

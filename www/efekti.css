@@ -158,8 +158,59 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 @keyframes prism-shine { 0% { transform: rotate(0deg) translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: rotate(45deg) translateY(-20%); opacity: 0; } }
 @keyframes chromatic-aberration { 0% { transform: translate(1px, 0); } 25% { transform: translate(-1px, 1px); } 50% { transform: translate(0, -1px); } 75% { transform: translate(1px, 1px); } 100% { transform: translate(0, 0); } }
 
-.anim-thunder { animation: thunderFlash 0.5s ease-out; position: relative; z-index: 99999; }
-@keyframes thunderFlash { 0% { filter: brightness(1); } 10% { filter: brightness(3) sepia(1) hue-rotate(180deg); background-color: #fff; } 20% { filter: brightness(1); background-color: transparent; } 30% { filter: brightness(4); } 100% { filter: brightness(1); } }
+/* =========================================================
+   GROMOVNIK (THUNDERBRINGER) - REALISTIČAN EFEKAT
+   ========================================================= */
+
+/* 1. Preko celog ekrana simuliramo snažno sevanje munja */
+.anim-thunder { 
+    position: fixed; 
+    top: 0; left: 0; width: 100vw; height: 100vh; 
+    z-index: 99999; pointer-events: none;
+    /* Ledeno-plavi i beli odsjaj za realizam */
+    background: radial-gradient(circle at top center, #ffffff 0%, rgba(224, 247, 250, 0.8) 40%, rgba(0, 200, 255, 0.1) 100%);
+    mix-blend-mode: screen;
+    opacity: 0;
+    animation: epicThunderFlash 4.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+}
+
+/* 2. Tajming sevanja (više brzih udaraca, mrak, pa jedan masivni udar i sporo gašenje) */
+@keyframes epicThunderFlash {
+    0% { opacity: 0; }
+    2% { opacity: 0.9; filter: brightness(3); } /* Prvi brzi udar */
+    4% { opacity: 0; filter: brightness(1); }
+    6% { opacity: 1; filter: brightness(4); } /* Drugi jači brzi udar */
+    8% { opacity: 0; }
+    25% { opacity: 0; } /* Pauza (Brzina svetlosti vs zvuka) */
+    28% { opacity: 1; filter: brightness(5) contrast(1.5); } /* Treći i najmasivniji udar groma */
+    35% { opacity: 0.5; filter: brightness(2); } /* Sporo gašenje neba */
+    45% { opacity: 0.1; }
+    100% { opacity: 0; filter: brightness(1); }
+}
+
+/* 3. Masivni potres ekrana (Rumble efekt) koji simulira fizičku grmljavinu */
+.fx-thunder-shake {
+    animation: thunderRumble 4.5s ease-out forwards;
+}
+
+@keyframes thunderRumble {
+    0%, 100% { transform: translate(0, 0); }
+    /* Prvi slabiji potresi (prate prve bljeskove) */
+    2%, 4%, 6% { transform: translate(calc(var(--dir, 1) * 3px), calc(var(--dir, -1) * 2px)); }
+    3%, 5%, 7% { transform: translate(calc(var(--dir, -1) * 3px), calc(var(--dir, 1) * 2px)); }
+    
+    8%, 25% { transform: translate(0, 0); } /* Tišina */
+    
+    /* Glavni, brutalni potres prilikom glavnog udara */
+    28%, 30%, 32%, 34% { transform: translate(calc(var(--dir, 1) * 8px), calc(var(--dir, -1) * 6px)) rotate(1deg); }
+    29%, 31%, 33%, 35% { transform: translate(calc(var(--dir, -1) * 9px), calc(var(--dir, 1) * 5px)) rotate(-1deg); }
+    
+    /* Smirivanje i "tutnjava" u daljini */
+    36%, 40%, 44%, 48% { transform: translate(calc(var(--dir, 1) * 3px), calc(var(--dir, -1) * 2px)); }
+    38%, 42%, 46%, 50% { transform: translate(calc(var(--dir, -1) * 3px), calc(var(--dir, 1) * 2px)); }
+    55%, 65%, 75% { transform: translate(1px, -1px); }
+    60%, 70%, 80% { transform: translate(-1px, 1px); }
+}
 
 /* --- Black Hole Active Effect --- */
 .black-hole-container { z-index: 99995; pointer-events: none; display: flex; align-items: center; justify-content: center; animation: bhAppear 6s forwards; }
