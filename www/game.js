@@ -997,7 +997,6 @@ class YambApp {
                 });
                 
                 this.socket.on('error_msg', (msgKey) => {
-                    // DODATO: Očisti Anti-Freeze tajmer ako server odbije zahtev
                     if (this.dailyManager && this.dailyManager._serverCheckTimeout) {
                         clearTimeout(this.dailyManager._serverCheckTimeout);
                     }
@@ -1007,7 +1006,33 @@ class YambApp {
                         finalMsg = gt(msgKey);
                     }
                     if (this.modal) {
-                        this.modal.alert(finalMsg, gt('err_title') || gt('modal_title_info') || "INFO");
+                        this.modal.alert(finalMsg, gt('err_title') || gt('modal_title_info') || "INFO").then(() => {
+                            if (finalMsg.includes('Već ste preuzeli') || finalMsg.includes('dnevnu nagradu')) {
+                                const uid = localStorage.getItem('yamb_uid');
+                                localStorage.setItem('yamb_last_daily_' + uid, new Date().toDateString());
+                                this.navigateTo('main-menu');
+                            }
+                        });
+                    }
+                });
+
+                this.socket.on('sync_local_stats', (data) => {
+                    const uid = localStorage.getItem('yamb_uid');
+                    
+                    if (uid && data.lastDaily) {
+                        localStorage.setItem('yamb_last_daily_' + uid, data.lastDaily);
+                    }
+                    
+                    if (data.balance !== undefined) {
+                        localStorage.setItem('yamb_dukati', data.balance);
+                        if (window.statsManager) {
+                            window.statsManager.stats.balance = data.balance;
+                            window.statsManager.saveStats();
+                        }
+                    }
+                    
+                    if (typeof updateMainMenuDashboard === 'function') {
+                        updateMainMenuDashboard();
                     }
                 });
 
