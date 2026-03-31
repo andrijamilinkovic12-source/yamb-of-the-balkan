@@ -159,18 +159,19 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 @keyframes chromatic-aberration { 0% { transform: translate(1px, 0); } 25% { transform: translate(-1px, 1px); } 50% { transform: translate(0, -1px); } 75% { transform: translate(1px, 1px); } 100% { transform: translate(0, 0); } }
 
 /* =========================================================
-   GROMOVNIK (THUNDERBRINGER) - REALISTIČAN EFEKAT (V2)
+   GROMOVNIK (THUNDERBRINGER) - REALISTIČAN EFEKAT (V2) - OPTIMIZOVANO
    ========================================================= */
 
-/* 1. Mračno nebo i blesak preko celog ekrana */
+/* 1. Mračno nebo i blesak preko celog ekrana (OPTIMIZOVANO PROTIV BLICANJA) */
 .anim-thunder { 
     position: fixed; 
     top: 0; left: 0; width: 100vw; height: 100vh; 
     z-index: 99999; pointer-events: none;
-    background: #e0f7fa;
-    mix-blend-mode: hard-light;
+    background: transparent;
     opacity: 0;
+    /* Uklonjen mix-blend-mode i filter koji prave bag u rendering engine-u browsera */
     animation: epicThunderFlash 4.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
+    will-change: opacity, background;
 }
 
 /* 2. FIZIČKA MUNJA NA EKRANU */
@@ -184,18 +185,19 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     /* Iscrtavanje oštre, lomljene munje */
     clip-path: polygon(52% 0, 58% 0, 45% 35%, 55% 35%, 35% 100%, 42% 45%, 32% 45%);
     animation: lightningStrike 4.5s forwards;
+    will-change: opacity, filter;
 }
 
 @keyframes epicThunderFlash {
-    0% { opacity: 0; background: #fff; filter: invert(1); } /* Inverzija boja na delić sekunde za šok efekat */
-    2% { opacity: 1; filter: invert(0); }
-    4% { opacity: 0; }
-    6% { opacity: 0.85; background: #c8f0ff; }
-    10% { opacity: 0; }
-    25% { opacity: 0; } /* Zatišje pred glavni udar */
-    28% { opacity: 1; background: #fff; } /* Glavni udar */
-    35% { opacity: 0.4; } 
-    100% { opacity: 0; }
+    0% { opacity: 1; background: rgba(0, 0, 0, 0.85); } /* Trenutni mrak za šok efekat (zamena za invert) */
+    2% { opacity: 1; background: rgba(255, 255, 255, 0.95); } /* Beli bljesak */
+    4% { opacity: 0; background: transparent; }
+    6% { opacity: 0.85; background: rgba(200, 240, 255, 0.8); }
+    10% { opacity: 0; background: transparent; }
+    25% { opacity: 0; background: transparent; } /* Zatišje pred glavni udar */
+    28% { opacity: 1; background: rgba(255, 255, 255, 0.95); } /* Glavni udar */
+    35% { opacity: 0.4; background: rgba(255, 255, 255, 0.4); } 
+    100% { opacity: 0; background: transparent; }
 }
 
 @keyframes lightningStrike {
