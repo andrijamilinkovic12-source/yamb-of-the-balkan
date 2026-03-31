@@ -199,9 +199,25 @@ class DailyChallengeManager {
              dieEl.classList.add('locked');
         }
 
-        const currentSum = this.diceValues.reduce((a,b)=>a+b, 0);
+        // --- NOVA LOGIKA ZA PRIKAZ REZULTATA ---
+        let tempVal = 0;
+        let d = this.diceValues;
+        let sumPrvaCetiri = d[0] + d[1] + d[2] + d[3];
+
+        if (this.currentIndex <= 3) {
+            // Dok se bacaju prve 4 kockice - samo ih sabiraj
+            tempVal = d.slice(0, this.currentIndex + 1).reduce((a,b)=>a+b, 0);
+        } else if (this.currentIndex === 4) {
+            // Peta kockica - množi sabrano sa njom
+            tempVal = sumPrvaCetiri * d[4];
+        } else if (this.currentIndex === 5) {
+            // Šesta kockica - množi dobijeni rezultat sa njom
+            tempVal = sumPrvaCetiri * d[4] * d[5];
+        }
+
         const sumEl = document.getElementById('dc-current-sum');
-        if(sumEl) sumEl.innerText = currentSum;
+        if(sumEl) sumEl.innerText = tempVal;
+        // ----------------------------------------
 
         this.currentIndex++;
         if (this.currentIndex < 6) {
@@ -244,8 +260,13 @@ class DailyChallengeManager {
         const score = document.getElementById('go-score');
         
         if(title) title.innerText = gt('dc_title');
-        if(msg) msg.innerText = `${gt('dc_sum')}: ${amount/10}`;
+        // NOVA LOGIKA ZA TEKST: prikazujemo čist iznos bez deljenja
+        if(msg) msg.innerText = `${gt('dc_sum')}: ${amount}`;
         if(score) score.innerText = amount;
+        
+        // DODATO: Osiguraj da se dugme za reklamu uvek prikaže za dnevni izazov
+        const btnAd = document.getElementById('btn-ad-double');
+        if (btnAd) btnAd.style.display = 'flex';
         
         this.app.pendingScore = amount;
         this.app.lastGameType = 'daily'; 
@@ -976,6 +997,11 @@ class YambApp {
                 });
                 
                 this.socket.on('error_msg', (msgKey) => {
+                    // DODATO: Očisti Anti-Freeze tajmer ako server odbije zahtev
+                    if (this.dailyManager && this.dailyManager._serverCheckTimeout) {
+                        clearTimeout(this.dailyManager._serverCheckTimeout);
+                    }
+
                     let finalMsg = msgKey;
                     if (typeof t === 'function' && t(msgKey) !== msgKey) {
                         finalMsg = gt(msgKey);
@@ -3276,8 +3302,10 @@ class YambApp {
             
             if (this.lastGameType === 'daily') {
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati += finalAmount;
+                // POPRAVKA: Server je VEĆ dodao osnovni iznos. Sada dodajemo SAMO JOŠ JEDAN deo za reklamu.
+                currentDukati += finalAmount; 
                 localStorage.setItem('yamb_dukati', currentDukati);
+                
                 if (window.statsManager) { 
                     window.statsManager.stats.balance = currentDukati; 
                     window.statsManager.saveStats(); 
@@ -3297,6 +3325,12 @@ class YambApp {
                 return;
             } else {
                 finalAmount *= 2; 
+            }
+        } else {
+            // DODATO: Ako NE želi da duplira dnevni izazov, samo izađi jer je SERVER VEĆ UPISAO.
+            if (this.lastGameType === 'daily') {
+                this.showMainMenu();
+                return;
             }
         }
         

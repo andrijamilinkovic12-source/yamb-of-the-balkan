@@ -1303,7 +1303,7 @@ io.on('connection', (socket) => {
                             name: f.playerName, 
                             photoUrl: f.photoUrl, 
                             isOnline: isOnline,
-                            stats: { wins: f.wins, losses: f.losses, games: f.games, highscore: f.highscore, totalScoreSum: f.totalScoreSum, tournamentWins: f.tournamentWins, currentWinStreak: f.currentWinStreak, maxWinStreak: f.maxWinStreak, unlockedTrophies: f.unlockedTrophies, leagueData: f.leagueData }
+                            stats: { wins: f.wins, losses: f.losses, games: f.highscore, totalScoreSum: f.totalScoreSum, tournamentWins: f.tournamentWins, currentWinStreak: f.currentWinStreak, maxWinStreak: f.maxWinStreak, unlockedTrophies: f.unlockedTrophies, leagueData: f.leagueData }
                         };
                     });
                 }
@@ -1592,19 +1592,20 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            // 2. SERVER RAČUNA NAGRADU (Sprečava klijenta da pošalje lažan skor)
+            // 2. SERVER RAČUNA NAGRADU SA NOVOM LOGIKOM
             const { diceValues } = data;
-            let totalSum = 0;
-            if (Array.isArray(diceValues)) {
-                for (let val of diceValues) {
+            let reward = 100; // Fallback
+            
+            if (Array.isArray(diceValues) && diceValues.length === 6) {
+                // Sigurnosna provera: sve kockice moraju biti od 1 do 6
+                const d = diceValues.map(val => {
                     let num = parseInt(val);
-                    if (num >= 1 && num <= 6) totalSum += num;
-                }
-            } else {
-                totalSum = 10; // Fallback
+                    return (num >= 1 && num <= 6) ? num : 1; 
+                });
+                
+                // Nova formula: (D1 + D2 + D3 + D4) * D5 * D6
+                reward = (d[0] + d[1] + d[2] + d[3]) * d[4] * d[5];
             }
-
-            const reward = totalSum * 10;
 
             // 3. SIGURAN UPIS U CLOUD
             user.balance += reward;
