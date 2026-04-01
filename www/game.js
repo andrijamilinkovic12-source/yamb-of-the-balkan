@@ -110,174 +110,11 @@ function cenzurisiPoruku(poruka) {
     return filtriranaPoruka;
 }
 
-/* --- DAILY CHALLENGE MANAGER --- */
-class DailyChallengeManager {
-    constructor(app) {
-        this.app = app;
-        this.currentIndex = 0;
-        this.interval = null;
-        this.diceValues = [0,0,0,0,0,0];
-        this.isActive = false;
-        this.UNICODE = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
-    }
-
-    open() {
-        if (!this.app.requireLogin()) return; // Zabrana za goste
-
-        const uid = localStorage.getItem('yamb_uid');
-        const lastPlayed = localStorage.getItem('yamb_last_daily_' + uid);
-        const today = new Date().toDateString();
-
-        if (lastPlayed === today) {
-            this.app.modal.alert(gt('dc_done'), gt('info_title') || "INFO");
-            return;
-        }
-
-        localStorage.setItem('yamb_last_daily_' + uid, today);
-
-        this.app.navigateTo('daily-challenge-screen');
-        this.resetGame();
-        this.startRolling(0); 
-    }
-
-    resetGame() {
-        this.currentIndex = 0;
-        this.diceValues = [0,0,0,0,0,0];
-        this.isActive = true;
-        
-        const sumEl = document.getElementById('dc-current-sum');
-        if(sumEl) sumEl.innerText = "0";
-        
-        const stopBtn = document.getElementById('btn-daily-stop');
-        if(stopBtn) {
-            stopBtn.disabled = false;
-            stopBtn.innerText = gt('dc_stop');
-        }
-        
-        for(let i=0; i<6; i++) {
-            const el = document.getElementById(`dc-die-${i}`);
-            if(el) {
-                this.app.features.applySkinToElement(el);
-                el.classList.add('daily-dice');
-                el.innerText = "?";
-                el.classList.remove('active', 'locked'); 
-            }
-        }
-    }
-
-    startRolling(index) {
-        if (index >= 6) {
-            this.finishGame();
-            return;
-        }
-
-        const dieEl = document.getElementById(`dc-die-${index}`);
-        if(dieEl) dieEl.classList.add('active');
-        
-        this.interval = setInterval(() => {
-            const rnd = Math.floor(Math.random() * 6) + 1;
-            if(dieEl) dieEl.innerText = this.UNICODE[rnd];
-            if(dieEl) dieEl.dataset.val = rnd; 
-        }, 50); 
-    }
-
-    stopDice() {
-        if (!this.isActive) return;
-
-        clearInterval(this.interval);
-        this.app.soundMgr.click();
-
-        const dieEl = document.getElementById(`dc-die-${this.currentIndex}`);
-        let finalVal = 1;
-        
-        if(dieEl) {
-             finalVal = parseInt(dieEl.dataset.val) || Math.floor(Math.random()*6)+1;
-             this.diceValues[this.currentIndex] = finalVal;
-             dieEl.innerText = this.UNICODE[finalVal];
-             
-             dieEl.classList.remove('active');
-             dieEl.classList.add('locked');
-        }
-
-        // --- NOVA LOGIKA ZA PRIKAZ REZULTATA ---
-        let tempVal = 0;
-        let d = this.diceValues;
-        let sumPrvaCetiri = d[0] + d[1] + d[2] + d[3];
-
-        if (this.currentIndex <= 3) {
-            // Dok se bacaju prve 4 kockice - samo ih sabiraj
-            tempVal = d.slice(0, this.currentIndex + 1).reduce((a,b)=>a+b, 0);
-        } else if (this.currentIndex === 4) {
-            // Peta kockica - množi sabrano sa njom
-            tempVal = sumPrvaCetiri * d[4];
-        } else if (this.currentIndex === 5) {
-            // Šesta kockica - množi dobijeni rezultat sa njom
-            tempVal = sumPrvaCetiri * d[4] * d[5];
-        }
-
-        const sumEl = document.getElementById('dc-current-sum');
-        if(sumEl) sumEl.innerText = tempVal;
-        // ----------------------------------------
-
-        this.currentIndex++;
-        if (this.currentIndex < 6) {
-            this.startRolling(this.currentIndex);
-        } else {
-            this.isActive = false; 
-            const stopBtn = document.getElementById('btn-daily-stop');
-            if(stopBtn) stopBtn.disabled = true; 
-            
-            // UBRZANO: Čekamo samo 800ms umesto 2500ms
-            setTimeout(() => {
-                this.finishGame();
-            }, 800); 
-        }
-    }
-
-    finishGame() {
-        this.isActive = false;
-        const stopBtn = document.getElementById('btn-daily-stop');
-        if(stopBtn) stopBtn.disabled = true;
-        
-        // NOVO: Prepuštamo serveru da proveri datum i dodeli nagradu!
-        if (this.app && this.app.socket && this.app.socket.connected) {
-            // DODATO: Sigurnosni tajmer (Anti-Freeze). Ako server ne javi ništa za 5 sekundi, prekini čekanje.
-            this._serverCheckTimeout = setTimeout(() => {
-                this.app.modal.alert("Server ne odgovara. Proverite internet vezu.", "GREŠKA");
-                this.app.navigateTo('main-menu');
-            }, 5000);
-
-            this.app.socket.emit('claim_daily_reward', { diceValues: this.diceValues });
-        } else {
-            this.app.modal.alert(gt('sys_no_conn') || "Niste povezani na server. Pokušajte ponovo kasnije.", gt('err_title') || "GREŠKA");
-            this.app.navigateTo('main-menu');
-        }
-    }
-
-    showResultModal(amount) {
-        const title = document.getElementById('go-title');
-        const msg = document.getElementById('go-msg');
-        const score = document.getElementById('go-score');
-        
-        if(title) title.innerText = gt('dc_title');
-        // NOVA LOGIKA ZA TEKST: prikazujemo čist iznos bez deljenja
-        if(msg) msg.innerText = `${gt('dc_sum')}: ${amount}`;
-        if(score) score.innerText = amount;
-        
-        // DODATO: Osiguraj da se dugme za reklamu uvek prikaže za dnevni izazov
-        const btnAd = document.getElementById('btn-ad-double');
-        if (btnAd) btnAd.style.display = 'flex';
-        
-        this.app.pendingScore = amount;
-        this.app.lastGameType = 'daily'; 
-        this.app.navigateTo('game-over-screen');
-    }
-}
 
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v16.1 - H2H SPLIT UI + STATS TRACKING ENABLED + DAILY FIX");
+        console.log("YambApp v16.2 - NEW DAILY CHALLENGE SYSTEM (PLAN B)");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -289,7 +126,9 @@ class YambApp {
         }
         
         this.features = new YambFeatures(this);
-        this.dailyManager = new DailyChallengeManager(this);
+        
+        // ZAMENJENO SA NOVIM STANDALONE SISTEMOM "DnevniIzazov"
+        // this.dailyManager = new DailyChallengeManager(this); 
 
         if (typeof TournamentManager !== 'undefined') {
             this.tournamentManager = new TournamentManager(this);
@@ -997,10 +836,7 @@ class YambApp {
                 });
                 
                 this.socket.on('error_msg', (msgKey) => {
-                    if (this.dailyManager && this.dailyManager._serverCheckTimeout) {
-                        clearTimeout(this.dailyManager._serverCheckTimeout);
-                    }
-
+                    // Više ne koristimo staru Dnevni Izazov logiku na ovaj način
                     let finalMsg = msgKey;
                     if (typeof t === 'function' && t(msgKey) !== msgKey) {
                         finalMsg = gt(msgKey);
@@ -1035,36 +871,6 @@ class YambApp {
                         updateMainMenuDashboard();
                     }
                 });
-
-                // =========================================================
-                // OVDJE UBACUJEMO OSLUŠKIVAČ ZA DNEVNU NAGRADU (Odmah pri paljenju)
-                // =========================================================
-                this.socket.on('daily_reward_success', (data) => {
-                    if (this.dailyManager && this.dailyManager._serverCheckTimeout) {
-                        clearTimeout(this.dailyManager._serverCheckTimeout);
-                    }
-
-                    const { reward, newBalance, lastDaily } = data;
-
-                    // Ažuriraj lokalne podatke ISKLJUČIVO sa sigurnim vrednostima od servera
-                    localStorage.setItem('yamb_dukati', newBalance);
-                    const uid = localStorage.getItem('yamb_uid');
-                    localStorage.setItem('yamb_last_daily_' + uid, lastDaily);
-
-                    if (window.statsManager) {
-                        window.statsManager.stats.balance = newBalance;
-                        window.statsManager.saveStats();
-                    }
-
-                    if (typeof updateMainMenuDashboard === 'function') {
-                        updateMainMenuDashboard();
-                    }
-
-                    // Prikaz modalnog prozora za pobedu tek kada server kaže OK
-                    this.soundMgr.win();
-                    this.dailyManager.showResultModal(reward);
-                });
-                // =========================================================
 
                 this.socket.on('connect_error', (err) => {
                     console.warn("Socket connection error:", err);
@@ -3666,3 +3472,6 @@ class YambApp {
 }
 
 window.app = new YambApp();
+if (typeof DnevniIzazov !== 'undefined') {
+    window.dnevniIzazov = new DnevniIzazov(window.app);
+}

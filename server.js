@@ -1568,66 +1568,6 @@ io.on('connection', (socket) => {
     });
 
     // ==================================================================
-    // SERVER-SIDE PROVERA I DODELA DNEVNE NAGRADE (ANTI-CHEAT)
-    // ==================================================================
-    socket.on('claim_daily_reward', async (data) => {
-        try {
-            // POPRAVKA: Umesto "silent return", javljamo klijentu grešku
-            if (!MONGO_URI || !socket.playerId) {
-                socket.emit('error_msg', 'Problem sa konekcijom ili niste prijavljeni.');
-                return;
-            }
-
-            const user = await UserProfile.findOne({ firebaseUid: socket.playerId });
-            if (!user) {
-                socket.emit('error_msg', 'Korisnički nalog nije pronađen u bazi.');
-                return;
-            }
-
-            const today = new Date().toDateString();
-
-            // 1. STRIKTNA PROVERA U BAZI (Sprečava brisanje aplikacije / promenu telefona)
-            if (user.lastDaily === today) {
-                socket.emit('error_msg', 'Već ste preuzeli dnevnu nagradu za danas!');
-                return;
-            }
-
-            // 2. SERVER RAČUNA NAGRADU SA NOVOM LOGIKOM
-            const { diceValues } = data;
-            let reward = 100; // Fallback
-            
-            if (Array.isArray(diceValues) && diceValues.length === 6) {
-                // Sigurnosna provera: sve kockice moraju biti od 1 do 6
-                const d = diceValues.map(val => {
-                    let num = parseInt(val);
-                    return (num >= 1 && num <= 6) ? num : 1; 
-                });
-                
-                // Nova formula: (D1 + D2 + D3 + D4) * D5 * D6
-                reward = (d[0] + d[1] + d[2] + d[3]) * d[4] * d[5];
-            }
-
-            // 3. SIGURAN UPIS U CLOUD
-            user.balance += reward;
-            user.lastDaily = today;
-            await user.save();
-
-            console.log(`🎁 DNEVNI IZAZOV: Igrač ${user.playerName} dobio ${reward} dukata (Server odobrio).`);
-
-            // 4. JAVLJAMO KLIJENTU DA JE BEZBEDNO AŽURIRATI EKRAN
-            socket.emit('daily_reward_success', {
-                reward: reward,
-                newBalance: user.balance,
-                lastDaily: today
-            });
-
-        } catch (err) {
-            console.error("Greška pri dodeli dnevne nagrade:", err);
-            socket.emit('error_msg', 'Došlo je do greške na serveru prilikom dodele nagrade.');
-        }
-    });
-
-    // ==================================================================
     // --- SOCKET LOGIKA ZA TURNIR (SA DODATIM ČUVANJEM U BAZU) ---
     // ==================================================================
     
