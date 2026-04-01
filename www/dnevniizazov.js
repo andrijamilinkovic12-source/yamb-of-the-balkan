@@ -97,11 +97,10 @@ class DnevniIzazov {
     }
 
     buildUI() {
-        const lang = localStorage.getItem('yamb_lang') || 'sr';
-        const txtTitle = lang === 'sr' ? "DNEVNI IZAZOV" : "DAILY CHALLENGE";
-        const txtSub = lang === 'sr' ? "Zaustavi kockice u pravom trenutku" : "Stop the dice at the right time";
-        const txtSum = lang === 'sr' ? "TRENUTNI ZBIR" : "CURRENT SUM";
-        const txtStop = lang === 'sr' ? "STOP 🛑" : "STOP 🛑";
+        const txtTitle = t('dc_title');
+        const txtSub = t('dc_desc');
+        const txtSum = t('dc_sum');
+        const txtStop = t('dc_stop');
 
         const overlay = document.createElement('div');
         overlay.id = 'glass-daily-overlay';
@@ -142,7 +141,7 @@ class DnevniIzazov {
         const today = new Date().toDateString();
 
         if (lastPlayed === today) {
-            this.app.modal.alert("Već ste odigrali dnevni izazov za danas. Vratite se sutra!", "INFO");
+            this.app.modal.alert(t('dc_done'), t('info_title'));
             return;
         }
 
@@ -263,8 +262,6 @@ class DnevniIzazov {
         const card = document.getElementById('glass-daily-card');
         document.getElementById('glass-btn-action').style.display = 'none';
         
-        const lang = localStorage.getItem('yamb_lang') || 'sr';
-        
         const resDiv = document.createElement('div');
         resDiv.id = 'glass-daily-result';
         resDiv.style.width = '100%';
@@ -276,10 +273,10 @@ class DnevniIzazov {
 
         resDiv.innerHTML = `
             <button class="glass-btn" style="width: 100%; background: linear-gradient(45deg, #FFD700, #FFA000); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.95rem;" onclick="dnevniIzazov.watchAdToDouble()">
-                🎥 ${lang === 'sr' ? "DUPLIRAJ" : "DOUBLE"} 💰 (x2)
+                🎥 ${t('btn_double_short')} 💰 (x2)
             </button>
             <button class="glass-btn" style="width: 100%; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); font-size: 0.95rem;" onclick="dnevniIzazov.claim(false)">
-                ${lang === 'sr' ? "PREUZMI" : "CLAIM"}
+                ${t('btn_claim_short')}
             </button>
         `;
         
@@ -293,7 +290,7 @@ class DnevniIzazov {
                 this.claim(true);
             }
         } else {
-            this.app.modal.alert("Reklame trenutno nisu dostupne.", "INFO");
+            this.app.modal.alert(t('dc_ads_unavailable'), t('info_title'));
             this.claim(false);
         }
     }
@@ -332,9 +329,9 @@ class DnevniIzazov {
 
         if (doubled) {
             if (this.app.effectMgr) this.app.effectMgr.trigger('confetti');
-            this.app.modal.alert(`Nagrada je duplirana! Osvojili ste 💰 ${finalAmount} dukata!`, "ČESTITAMO");
+            this.app.modal.alert(t('dc_reward_doubled').replace('{0}', finalAmount), t('dc_congrats'));
         } else {
-            this.app.modal.alert(`Osvojili ste 💰 ${finalAmount} dukata!`, "USPEŠNO");
+            this.app.modal.alert(t('dc_reward_won').replace('{0}', finalAmount), t('dc_success'));
         }
     }
 }

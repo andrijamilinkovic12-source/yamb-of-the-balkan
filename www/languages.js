@@ -279,9 +279,16 @@ const TRANSLATIONS = {
         // --- DNEVNI IZAZOV ---
         "dc_title": "DNEVNI IZAZOV",
         "dc_desc": "Zaustavi kockice u pravom trenutku!",
-        "dc_stop": "STOP",
-        "dc_sum": "ZBIR",
-        "dc_done": "Već ste odigrali dnevni izazov za danas. Dođite sutra!",
+        "dc_stop": "STOP 🛑",
+        "dc_sum": "TRENUTNI ZBIR",
+        "dc_done": "Već ste odigrali dnevni izazov za danas. Vratite se sutra!",
+        "dc_ads_unavailable": "Reklame trenutno nisu dostupne.",
+        "dc_reward_doubled": "Nagrada je duplirana! Osvojili ste 💰 {0} dukata!",
+        "dc_reward_won": "Osvojili ste 💰 {0} dukata!",
+        "dc_congrats": "ČESTITAMO",
+        "dc_success": "USPEŠNO",
+        "btn_double_short": "DUPLIRAJ",
+        "btn_claim_short": "PREUZMI",
 
         // --- PODEŠAVANJA ---
         "settings_name": "Vaše Ime:",
@@ -798,9 +805,16 @@ const TRANSLATIONS = {
         // --- DAILY CHALLENGE ---
         "dc_title": "DAILY CHALLENGE",
         "dc_desc": "Stop the dice at the right moment!",
-        "dc_stop": "STOP",
-        "dc_sum": "SUM",
-        "dc_done": "You already played daily challenge today. Come back tomorrow!",
+        "dc_stop": "STOP 🛑",
+        "dc_sum": "CURRENT SUM",
+        "dc_done": "You already played the daily challenge today. Come back tomorrow!",
+        "dc_ads_unavailable": "Ads are currently unavailable.",
+        "dc_reward_doubled": "Reward doubled! You won 💰 {0} ducats!",
+        "dc_reward_won": "You won 💰 {0} ducats!",
+        "dc_congrats": "CONGRATULATIONS",
+        "dc_success": "SUCCESS",
+        "btn_double_short": "DOUBLE",
+        "btn_claim_short": "CLAIM",
 
         // --- SETTINGS ---
         "settings_name": "Your Name:",
