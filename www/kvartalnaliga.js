@@ -5,6 +5,7 @@ class KvartalnaLigaManager {
         this.currentSlide = 0;
         this.hofData = null; 
         
+        this.selfHeal(); // <-- Pametna funkcija za čišćenje
         this.init();
     }
 
@@ -18,6 +19,36 @@ class KvartalnaLigaManager {
             { id: 'titan', name: `${gt('rank_titan', 'TITAN')} (100k+)`, min: 100000, max: Infinity },
             { id: 'alltime', name: gt('league_all_time', 'SVA VREMENA 👑'), min: 0, max: Infinity }
         ];
+    }
+
+    selfHeal() {
+        // KORAK 1: Trajno brišemo stari opšti fajl bez UID-a da ne bi nastavio da inficira druge naloge
+        if (localStorage.getItem('yamb_quarter_data')) {
+            console.log("🛠️ Self-Heal: Pronađen i obrisan stari globalni ligaški fajl!");
+            localStorage.removeItem('yamb_quarter_data');
+        }
+
+        // KORAK 2: Čišćenje fantomskih bodova
+        const key = this.getDynamicKey();
+        const raw = localStorage.getItem(key);
+        
+        if (raw) {
+            try {
+                let parsed = JSON.parse(raw);
+                if ((!parsed.year || parsed.year === 0 || !parsed.quarter || parsed.quarter === 0) && parsed.quarterlyScore > 0) {
+                    console.log(`🛠️ Self-Heal: Otkriveni fantomski bodovi (${parsed.quarterlyScore})! Resetujem ligu na 0.`);
+                    parsed.quarterlyScore = 0;
+                    
+                    const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
+                    parsed.year = currentYear;
+                    parsed.quarter = currentQuarter;
+                    
+                    localStorage.setItem(key, JSON.stringify(parsed));
+                }
+            } catch (e) {
+                console.error("Greška pri automatskoj popravci:", e);
+            }
+        }
     }
 
     init() {
@@ -46,18 +77,36 @@ class KvartalnaLigaManager {
         return { currentYear: year, currentQuarter: quarter };
     }
 
+    getDynamicKey() {
+        const uid = localStorage.getItem('yamb_uid') || 'guest';
+        return `${this.storageKey}_${uid}`;
+    }
+
     getScores() {
         const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
-        let raw = localStorage.getItem(this.storageKey);
+        const key = this.getDynamicKey();
         
+        let raw = localStorage.getItem(key);
+
+        // Migracija starog globalnog formata (samo za prvi nalog koji uđe)
+        if (!raw) {
+            const oldRaw = localStorage.getItem(this.storageKey);
+            if (oldRaw) {
+                raw = oldRaw;
+                localStorage.setItem(key, raw);
+                localStorage.removeItem(this.storageKey); // Brišemo stari da ga Nalog 2 ne bi povukao
+            }
+        }
+
         if (raw) {
             try { 
                 let parsed = JSON.parse(raw); 
                 parsed.quarterlyScore = parseInt(parsed.quarterlyScore) || 0;
                 parsed.baselineScore = parseInt(parsed.baselineScore) || 0;
                 
-                if (!parsed.year) parsed.year = currentYear;
-                if (!parsed.quarter) parsed.quarter = currentQuarter;
+                // Forsirano resetovanje ako fajl nema datum
+                if (!parsed.year) parsed.year = 0;
+                if (!parsed.quarter) parsed.quarter = 0;
                 
                 return parsed;
             } 
@@ -68,7 +117,7 @@ class KvartalnaLigaManager {
     }
 
     saveScores(data) {
-        localStorage.setItem(this.storageKey, JSON.stringify(data));
+        localStorage.setItem(this.getDynamicKey(), JSON.stringify(data));
     }
 
     addPoints(points) {
@@ -498,7 +547,7 @@ class KvartalnaLigaManager {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         if (!scores || scores.length === 0) {
-            listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi prvi!')}</li>`;
+            listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi pierwszy!')}</li>`;
             return;
         }
 
