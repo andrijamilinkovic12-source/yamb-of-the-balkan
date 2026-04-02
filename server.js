@@ -320,6 +320,27 @@ function updateOnlineCount() {
     io.emit('users_count', uniqueKeys.size);
 }
 
+// ==================================================================
+// --- POMOĆNA FUNKCIJA ZA BROJANJE GLEDALACA ---
+// ==================================================================
+function updateRoomSpectators(roomId) {
+    if (!roomId) return;
+    const clients = io.sockets.adapter.rooms.get(roomId);
+    if (!clients) {
+        io.to(roomId).emit('room_spectators_count', 0);
+        return;
+    }
+
+    let spectatorCount = 0;
+    for (const clientId of clients) {
+        const clientSocket = io.sockets.sockets.get(clientId);
+        if (clientSocket && clientSocket.isSpectator) {
+            spectatorCount++;
+        }
+    }
+    io.to(roomId).emit('room_spectators_count', spectatorCount);
+}
+
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
     
@@ -766,6 +787,8 @@ io.on('connection', (socket) => {
 
             io.to(targetSocketId).emit('request_state_sync', { senderSocketId: socket.id });
             console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId}`);
+            
+            updateRoomSpectators(roomId);
         } else {
             socket.emit('error_msg', 'err_spectate_not_in_game');
         }
@@ -773,10 +796,13 @@ io.on('connection', (socket) => {
 
     socket.on('stop_spectating', () => {
         if (socket.spectatingRoom) {
-            socket.leave(socket.spectatingRoom);
-            console.log(`👁️ Igrač ${socket.id} je prestao da gleda sobu ${socket.spectatingRoom}`);
+            const roomId = socket.spectatingRoom;
+            socket.leave(roomId);
+            console.log(`👁️ Igrač ${socket.id} je prestao da gleda sobu ${roomId}`);
             socket.isSpectator = false;
             socket.spectatingRoom = null;
+            
+            updateRoomSpectators(roomId);
         }
     });
 
@@ -1754,6 +1780,14 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('⚠️ Klijent izgubio vezu:', socket.id);
         
+        // NOVO: Ako je klijent bio gledalac, javi sobi da smanji brojčanik
+        if (socket.isSpectator && socket.spectatingRoom) {
+            const roomId = socket.spectatingRoom;
+            socket.isSpectator = false;
+            socket.spectatingRoom = null;
+            updateRoomSpectators(roomId);
+        }
+
         activeConnections.delete(socket.id);
         const pid = registeredSockets[socket.id];
         const activeRoomId = playerRooms[socket.id];
