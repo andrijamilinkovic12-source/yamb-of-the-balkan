@@ -274,149 +274,154 @@ body.medium-theme .btn-square:active { box-shadow: 0 0 0 #2b0a16, inset 0 2px 8p
 body.winter-theme .btn-square { border-color: rgba(79, 195, 247, 0.3); color: #4fc3f7; background: linear-gradient(to bottom, #004488, #002244); box-shadow: 0 4px 0 #001122, 0 8px 15px rgba(0, 150, 255, 0.15); }
 body.winter-theme .btn-square:active { box-shadow: 0 0 0 #001122, inset 0 2px 8px rgba(0,0,0,0.5); border-color: #4fc3f7; }
 
-/* --- TEMA 7: VASKRŠNJA (EASTER) --- */
+/* --- TEMA 7: VASKRŠNJA (EASTER) V2 --- */
 body.easter-theme {
-    /* Žuta praznična paleta */
-    --bg-base: #fff9c4; 
-    --bg-gradient-1: #fff176; 
-    --bg-gradient-2: #ffeb3b; 
-    --gold-main: #f57f17; 
-    --gold-glow: rgba(245, 127, 23, 0.4);
-    --text-main: #4e342e; 
-    --text-filled: #1b5e20; 
-    --text-sum: #e65100; 
+    /* Topla, prijatna žuta praznična paleta */
+    --bg-base: #fffde7; 
+    --bg-gradient-1: #fff9c4; 
+    --bg-gradient-2: #fff59d; 
+    --gold-main: #fbc02d; 
+    --gold-glow: rgba(251, 192, 45, 0.4);
+    --text-main: #5d4037; 
+    --text-filled: #e65100; 
+    --text-sum: #d84315; 
     --text-sum-label: #bf360c; 
-    --text-muted: #795548;
-    --glass-bg: rgba(255, 255, 255, 0.5); 
+    --text-muted: #8d6e63;
+    --glass-bg: rgba(255, 255, 255, 0.7); 
     --glass-panel: rgba(255, 253, 231, 0.95); 
-    --glass-border: 1px solid rgba(245, 127, 23, 0.5);
+    --glass-border: 1px solid rgba(251, 192, 45, 0.5);
     --modal-bg: #fffde7; 
     --input-bg: #ffffff; 
     --input-border: #fbc02d;
     --dice-bg: linear-gradient(145deg, #ffffff, #fff9c4); 
-    --dice-border: #f57f17; 
+    --dice-border: #fbc02d; 
     --dice-color: #5d4037; 
-    --dice-active: #d84315;
+    --dice-active: #e65100;
 
-    /* Kolonice u bojama uskršnjih jaja */
-    --col-nadole: #4dd0e1; 
-    --col-nagore: #f06292; 
+    /* Smirenije, pastelne boje kolona (Harmonija umjesto šarenila) */
+    --col-nadole: #81d4fa; 
+    --col-nagore: #ffab91; 
     --col-sredina: #aed581; 
-    --col-rucno: #ba68c8; 
-    --col-najava: #ffb74d; 
-    --col-slobodna: #90a4ae;
+    --col-rucno: #ce93d8; 
+    --col-najava: #ffd54f; 
+    --col-slobodna: #bcaaa4;
 }
 
-/* Vodeni žig sa motivima Uskrsa u pozadini cijelog ekrana */
+/* NOVI POZADINSKI PATTERN (Jaja, zeke, cveće u vidu mozaika) */
 body.easter-theme::before {
-    content: "🥚 🐇 🐣 🌷 🥚 🐇 🌼";
+    content: "";
     position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100vw; 
-    height: 100vh;
-    font-size: 6rem; 
-    opacity: 0.04; 
-    pointer-events: none; 
+    top: 0; left: 0; right: 0; bottom: 0;
     z-index: -1;
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: space-around; 
-    align-items: center;
-    line-height: 2; 
-    overflow: hidden;
+    opacity: 0.25; /* Blaga prozirnost da ne ometa čitanje */
+    background-color: #fff9c4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='15' y='35' font-size='24'%3E🥚%3C/text%3E%3Ctext x='75' y='95' font-size='24'%3E🐇%3C/text%3E%3Ctext x='75' y='35' font-size='20'%3E🌸%3C/text%3E%3Ctext x='15' y='95' font-size='20'%3E🐰%3C/text%3E%3Ctext x='45' y='65' font-size='18'%3E🐣%3C/text%3E%3C/svg%3E");
+    background-size: 100px 100px;
+    pointer-events: none;
 }
 
-/* Glavna tabla sa 3D efektom i sjenkom */
+/* Glavna tabla - vraćena na standardne dimenzije bez širenja */
 body.easter-theme .player-table { 
     transform: perspective(1000px) rotateX(1deg); 
-    border-radius: 20px; 
-    border: 4px solid #fbc02d; 
-    box-shadow: 0 15px 0 #f57f17, 0 25px 40px rgba(0, 0, 0, 0.15) !important; 
+    border-radius: 16px; 
+    border: 2px solid #fbc02d; 
+    box-shadow: 0 10px 0 #f57f17, 0 20px 40px rgba(0, 0, 0, 0.15) !important; 
     background: var(--glass-panel); 
 }
 
-/* Efekat dubine (inset 3D) na svakom polju */
+/* Uklonjene margine koje su lomile grid i pravile skrol */
 body.easter-theme .grid-cell { 
-    border: 1px solid rgba(245, 127, 23, 0.2); 
+    border: 1px solid rgba(245, 127, 23, 0.15); 
     background: #ffffff; 
-    border-radius: 6px; 
-    margin: 1px;
-    box-shadow: inset 4px 4px 8px rgba(0,0,0,0.15), inset -4px -4px 8px rgba(255,255,255,1) !important; 
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05); 
 }
 
-/* Zaglavlja kolona i redova */
+/* Zaglavlja kolona i redova - Čistiji izgled */
 body.easter-theme .col-header, 
 body.easter-theme .row-header { 
-    background: linear-gradient(to bottom, #fff59d, #fff176); 
-    border-bottom: 2px solid #fbc02d; 
+    background: linear-gradient(to bottom, #fffde7, #fff9c4); 
+    border-bottom: 1px solid #fbc02d; 
     color: #d84315; 
-    border-radius: 6px; 
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+    box-shadow: none; 
 }
 
 /* Poseban izgled za polja sa zbirovima */
 body.easter-theme .row-header.sum, 
 body.easter-theme .cell-sum { 
-    background: #fce4ec !important; 
-    border-color: #f06292 !important; 
-    color: #c2185b !important; 
+    background: #fff8e1 !important; 
+    border-color: #fbc02d !important; 
+    color: #e65100 !important; 
 }
 
-/* Stilovi za dugmiće u meniju (3D klik) */
+/* Opšta dugmad u meniju */
 body.easter-theme .btn-menu { 
-    background: linear-gradient(to bottom, #fff59d, #ffee58); 
+    background: linear-gradient(to bottom, #ffffff, #fff59d); 
     color: #d84315; 
-    border: 2px solid #fbc02d; 
-    box-shadow: 0 6px 0 #f57f17, 0 10px 15px rgba(0,0,0,0.1); 
+    border: 1px solid #fbc02d; 
+    box-shadow: 0 5px 0 #f57f17, 0 10px 15px rgba(0,0,0,0.1); 
     border-radius: 50px; 
     transform: translateY(0); 
 }
 
 body.easter-theme .btn-menu:active { 
-    transform: translateY(6px); 
-    box-shadow: 0 0 0 #f57f17, inset 0 3px 8px rgba(0,0,0,0.15); 
+    transform: translateY(5px); 
+    box-shadow: 0 0 0 #f57f17, inset 0 2px 5px rgba(0,0,0,0.1); 
 }
 
-/* Glavno dugme za bacanje (Zeleno kao trava) */
+/* Glavno dugme za bacanje (Prebačeno u zlatno/žutu boju) */
 body.easter-theme .btn-primary, 
 body.easter-theme .btn-throw { 
-    background: linear-gradient(to bottom, #aed581, #7cb342); 
-    color: #ffffff; 
-    border: 2px solid #558b2f; 
-    box-shadow: 0 6px 0 #33691e, 0 12px 20px rgba(0,0,0,0.2); 
+    background: linear-gradient(to bottom, #ffd54f, #ffb300); 
+    color: #4e342e; 
+    border: 1px solid #ff8f00; 
+    box-shadow: 0 5px 0 #ff6f00, 0 12px 20px rgba(0,0,0,0.2); 
     border-radius: 20px; 
 }
 
 body.easter-theme .btn-primary:active, 
 body.easter-theme .btn-throw:active { 
-    transform: translateY(6px); 
-    box-shadow: 0 0 0 #33691e, inset 0 3px 10px rgba(0,0,0,0.3); 
+    transform: translateY(5px); 
+    box-shadow: 0 0 0 #ff6f00, inset 0 3px 8px rgba(0,0,0,0.2); 
+}
+
+/* Pomoćna dugmad u igri (Najava, itd.) */
+body.easter-theme .btn-secondary, 
+body.easter-theme #btn-najava { 
+    background: linear-gradient(to bottom, #ffffff, #fff59d); 
+    color: #d84315; 
+    border: 1px solid rgba(251, 192, 45, 0.5); 
+    box-shadow: 0 5px 0 #f57f17, 0 5px 10px rgba(0,0,0,0.1); 
+}
+
+body.easter-theme .btn-secondary:active, 
+body.easter-theme #btn-najava:active { 
+    transform: translateY(5px); 
+    box-shadow: 0 0 0 #f57f17, inset 0 2px 5px rgba(0,0,0,0.1); 
 }
 
 /* Modali i kartice */
 body.easter-theme .modal-box, 
 body.easter-theme .card { 
     background: #fffde7 !important; 
-    border: 4px solid #fbc02d !important; 
-    border-radius: 20px; 
-    box-shadow: 0 15px 0 #f57f17, 0 25px 50px rgba(0,0,0,0.25) !important; 
+    border: 2px solid #fbc02d !important; 
+    border-radius: 16px; 
+    box-shadow: 0 10px 0 #f57f17, 0 25px 50px rgba(0,0,0,0.2) !important; 
     color: #4e342e; 
 }
 
 /* Sinhronizacija header dugmića (Sound, Vib, Theme) */
 body.easter-theme #btn-theme-toggle, 
 body.easter-theme .game-header .btn-secondary { 
-    background: linear-gradient(to bottom, #fff59d, #ffee58); 
+    background: linear-gradient(to bottom, #ffffff, #fff59d); 
     border-color: #fbc02d; 
     color: #d84315; 
-    box-shadow: 0 5px 0 #f57f17, 0 10px 10px rgba(0,0,0,0.15); 
+    box-shadow: 0 5px 0 #f57f17, 0 10px 10px rgba(0,0,0,0.1); 
 }
 
 /* Kvadratna dugmad (Squircles) */
 body.easter-theme .btn-square, 
 body.easter-theme .btn-special-square { 
-    background: linear-gradient(to bottom, #fffde7, #fff9c4); 
+    background: linear-gradient(to bottom, #ffffff, #fff9c4); 
     border-color: #fbc02d; 
     color: #f57f17; 
     box-shadow: 0 4px 0 #f57f17, 0 8px 15px rgba(0,0,0,0.1); 
@@ -429,38 +434,38 @@ body.easter-theme .btn-special-square:active {
 
 /* --- Vaskršnja popunjena polja (upisani poeni) --- */
 body.easter-theme .score-btn.filled { 
-    color: #1b5e20 !important; 
-    text-shadow: 0 0 5px rgba(27, 94, 32, 0.4); 
-    background: radial-gradient(circle, rgba(245, 127, 23, 0.25) 0%, transparent 70%) !important; 
+    color: #d84315 !important; 
+    text-shadow: 0 0 2px rgba(216, 67, 21, 0.3); 
+    background: radial-gradient(circle, rgba(251, 192, 45, 0.25) 0%, transparent 70%) !important; 
 }
 
 /* --- Vaskršnji Dnevni Izazov --- */
 body.easter-theme .daily-btn-main { 
-    box-shadow: 0 8px 0 #f57f17, 0 15px 25px rgba(245, 127, 23, 0.3) !important; 
+    box-shadow: 0 6px 0 #f57f17, 0 10px 20px rgba(245, 127, 23, 0.2) !important; 
 }
 body.easter-theme .daily-btn-main:active { 
-    box-shadow: 0 0 0 #f57f17, inset 0 5px 10px rgba(0,0,0,0.2) !important; 
+    box-shadow: 0 0 0 #f57f17, inset 0 3px 8px rgba(0,0,0,0.1) !important; 
 }
 body.easter-theme .daily-challenge-card { 
-    border: 4px solid #fbc02d !important; 
+    border: 2px solid #fbc02d !important; 
     background: #fffde7 !important; 
 }
 body.easter-theme .daily-title { 
     color: #d84315; 
-    text-shadow: 0 1px 0 #fff; 
+    text-shadow: none; 
 }
 body.easter-theme .daily-score-box { 
     background: #fff9c4; 
     border: 1px solid #fbc02d; 
 }
 body.easter-theme .daily-value { 
-    color: #1b5e20; 
+    color: #d84315; 
     text-shadow: none; 
 }
 
 /* --- Vaskršnji Glavni Meni --- */
 body.easter-theme .mode-btn { 
-    background: linear-gradient(to bottom, #fffde7, #fff9c4); 
+    background: linear-gradient(to bottom, #ffffff, #fff9c4); 
     box-shadow: 0 6px 0 #fbc02d, 0 10px 20px rgba(0,0,0,0.1); 
     color: #d84315; 
     border-color: #fbc02d;
@@ -469,11 +474,11 @@ body.easter-theme .mode-btn:active {
     box-shadow: 0 0 0 #fbc02d, inset 0 3px 10px rgba(0,0,0,0.1); 
 }
 body.easter-theme .mode-solo { 
-    background: linear-gradient(to bottom, #aed581, #7cb342); 
-    color: #ffffff; 
-    border-color: #558b2f; 
-    box-shadow: 0 6px 0 #33691e, 0 10px 20px rgba(0,0,0,0.2); 
+    background: linear-gradient(to bottom, #ffd54f, #ffb300); 
+    color: #4e342e; 
+    border-color: #ff8f00; 
+    box-shadow: 0 6px 0 #ff6f00, 0 10px 20px rgba(0,0,0,0.2); 
 }
 body.easter-theme .mode-solo:active { 
-    box-shadow: 0 0 0 #33691e, inset 0 3px 10px rgba(0,0,0,0.3); 
+    box-shadow: 0 0 0 #ff6f00, inset 0 3px 10px rgba(0,0,0,0.2); 
 }
