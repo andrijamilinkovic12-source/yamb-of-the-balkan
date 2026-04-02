@@ -121,28 +121,32 @@ const RulesData = {
             `
         },
         {
-            title: "⚙️ Nalog i Server",
+            title: "⚙️ Nalog, Privatnost i Server",
             content: `
                 <h3>🔐 Google Integracija i Cloud Save</h3>
-                <p>Yamb of the Balkan koristi bezbednu Google Sign-In tehnologiju. Vaš napredak nikada neće biti izgubljen!</p>
-                <p>Na našim serverima se automatski čuva kompletna statistika, H2H dueli, inventar iz Riznice, dukati, Liga i Turniri. Čak i ako promenite telefon, prijavom se sve vraća.</p>
+                <p>Yamb of the Balkan koristi bezbednu Google Sign-In tehnologiju kako bi vam pružio najbolje moguće igračko iskustvo, bez muke oko pamćenja novih lozinki.</p>
+                <p>Zahvaljujući povezivanju sa vašim Google nalogom, vaš napredak nikada neće biti izgubljen. Na našim sigurnim serverima automatski se čuva vaša kompletna statistika, H2H kartice međusobnih duela, osvojeni dukati i trofeji, kao i trenutno stanje u Kvartalnoj ligi i na turnirima. Pored toga, trajno se pamti i ceo vaš inventar.</p>
+
+                <h4>🛡️ Koji podaci se prikupljaju i zašto?</h4>
+                <p>Vaša privatnost nam je na prvom mestu. Prilikom prijave, aplikacija traži pristup <strong>samo najosnovnijim podacima</strong> sa vašeg Google profila:</p>
+                <ul>
+                    <li><strong>Ime i Prezime:</strong> Koristimo ga isključivo kako bismo generisali vaše ime u igri i prikazali ga na rang listama.</li>
+                    <li><strong>Email adresa:</strong> Služi kao jedinstveni identifikator vašeg naloga. Ne šaljemo spam poruke.</li>
+                    <li><strong>Profilna slika (Avatar):</strong> Koristi se za vizuelni prikaz vašeg profila tokom multiplayer mečeva.</li>
+                </ul>
 
                 <h3>🖥️ Server Podrška i Bezbednost</h3>
                 <ul>
                     <li><strong>🛡️ Anti-Cheat i Fer Igra:</strong> Server aktivno nadgleda mečeve sprečavajući hakerske pokušaje. Ugrađen je "Anti-Troll" tajmer koji vam dodeljuje pobedu ako protivnik namerno odugovlači potez.</li>
                     <li><strong>🔌 Grace Period:</strong> Ako vam nestane interneta, server aktivira pauzu od 30 sekundi da stignete da se vratite pre nego što dodeli pobedu protivniku!</li>
-                    <li><strong>⚖️ Pametna Moderacija:</strong> Automatsko sankcionisanje vulgarnosti u imenima i chatu.</li>
                 </ul>
 
                 <h3>📺 Reklame (AdMob)</h3>
                 <p>Kako bi igra ostala besplatna, postoje reklame:</p>
                 <ul>
-                    <li><strong>⏳ Kratke reklame (Interstitial):</strong> Povremene reklame pri izlasku iz chata ili spectate moda kako bi se pokrili troškovi servera.</li>
+                    <li><strong>⏳ Kratke reklame (Interstitial):</strong> Prikazuju se povremeno prilikom izlaska iz chata ili spectate moda kako bi se pokrili troškovi servera.</li>
                     <li><strong>🎁 Reklame za nagradu:</strong> Vi birate kada ih gledate, a donose dupliranje dukata na kraju partije i 20% popusta pri kupovini u Riznici!</li>
                 </ul>
-                
-                <h3>⚙️ Podešavanja</h3>
-                <p>U podešavanjima možete menjati ime, isključiti zvukove, isključiti vibraciju tokom igre, promeniti jezik aplikacije i pregledati Politiku privatnosti.</p>
             `
         }
     ],
@@ -266,17 +270,24 @@ const RulesData = {
             `
         },
         {
-            title: "⚙️ Account & Server",
+            title: "⚙️ Account, Privacy & Server",
             content: `
                 <h3>🔐 Google Integration & Cloud Save</h3>
-                <p>Yamb of the Balkan uses secure Google Sign-In. Your progress is never lost!</p>
-                <p>Your stats, H2H duels, Treasury inventory, coins, League, and Tournaments are automatically saved. Everything is restored upon login.</p>
+                <p>Yamb of the Balkan uses secure Google Sign-In technology to provide the best possible gaming experience without the hassle of remembering new passwords.</p>
+                <p>Your stats, H2H duels, Treasury inventory, coins, League, and Tournaments are automatically saved. Even if you change your phone, everything is restored upon login.</p>
+
+                <h4>🛡️ What data is collected and why?</h4>
+                <p>Your privacy is our priority. Upon login, the app requests access to <strong>only the most basic data</strong> from your Google profile:</p>
+                <ul>
+                    <li><strong>First and Last Name:</strong> Used exclusively to generate your in-game name and display it on leaderboards.</li>
+                    <li><strong>Email Address:</strong> Serves as a unique identifier for your account. We do not send spam.</li>
+                    <li><strong>Profile Picture (Avatar):</strong> Used to visually represent your profile during multiplayer matches.</li>
+                </ul>
 
                 <h3>🖥️ Server Support & Security</h3>
                 <ul>
                     <li><strong>🛡️ Anti-Cheat & Anti-Troll:</strong> Server prevents manipulation and automatically awards you the win if your opponent intentionally stalls.</li>
                     <li><strong>🔌 Grace Period:</strong> If you lose connection, the server grants you a 30s pause to return before awarding the win to your opponent!</li>
-                    <li><strong>⚖️ Smart Moderation:</strong> Automatic profanity filtering in names and chat.</li>
                 </ul>
 
                 <h3>📺 Ads (AdMob)</h3>
@@ -285,9 +296,6 @@ const RulesData = {
                     <li><strong>⏳ Interstitial Ads:</strong> Short ads upon leaving chat or spectate mode to cover server costs.</li>
                     <li><strong>🎁 Rewarded Ads:</strong> You choose when to watch them for double coins at the end of a match and 20% discounts in the Treasury!</li>
                 </ul>
-                
-                <h3>⚙️ Settings</h3>
-                <p>Manage sounds, vibration, themes, language, and read privacy documents.</p>
             `
         }
     ]
