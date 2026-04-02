@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT
 
 require('dotenv').config(); 
 
@@ -238,6 +238,10 @@ let gameStartTimes = {};
 const chatBans = {}; 
 const onlinePlayers = {};     
 const registeredSockets = {}; 
+
+// NOVE PROMENLJIVE ZA ČUVANJE CHATA
+const globalChatHistory = [];
+const MAX_CHAT_HISTORY = 50;
 
 // GRACE PERIOD PROMENLJIVE
 const disconnectTimers = {}; 
@@ -1486,6 +1490,12 @@ io.on('connection', (socket) => {
     
     socket.on('chat_msg', (data) => relayEvent('chat_msg', data));
 
+    // DODATO: Zahtev za dobijanje istorije globalnog chata
+    socket.on('request_global_chat_history', () => {
+        socket.emit('global_chat_history', globalChatHistory);
+    });
+
+    // IZMENJENO: Pamćenje globalnog chata
     socket.on('global_chat_msg', (data) => {
         if (!data || !data.msg) return;
         
@@ -1519,11 +1529,20 @@ io.on('connection', (socket) => {
             return; 
         }
 
-        io.emit('global_chat_msg', {
+        const chatObj = {
             sender: safeSender,
             senderId: socket.id, 
             msg: safeMsg
-        });
+        };
+
+        // Dodajemo u istoriju
+        globalChatHistory.push(chatObj);
+        // Brišemo staro ako predje 50
+        if (globalChatHistory.length > MAX_CHAT_HISTORY) {
+            globalChatHistory.shift();
+        }
+
+        io.emit('global_chat_msg', chatObj);
         
         console.log(`🌍 GLOBAL CHAT | ${safeSender}: ${safeMsg}`);
     });

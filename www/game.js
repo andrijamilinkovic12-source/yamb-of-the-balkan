@@ -249,6 +249,43 @@ class YambApp {
         if(btnVib) btnVib.innerText = this.vibrationEnabled ? '📳' : '📴';
     }
 
+    // --- DODAJ OVU FUNKCIJU ---
+    toggleTheme() {
+        // 1. Prikupi sve otključane teme (osnovne + kupljene + cloud)
+        let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
+        try {
+            const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
+            const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
+            let cloudSkins = [];
+            if(window.statsManager && window.statsManager.stats.unlockedSkins) {
+                cloudSkins = window.statsManager.stats.unlockedSkins;
+            }
+            unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
+        } catch(e) {}
+
+        // Filtriraj samo validne teme i ukloni duplikate
+        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
+        unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
+        unlockedThemes = [...new Set(unlockedThemes)];
+
+        // 2. Pronađi trenutnu temu i odredi sledeću
+        const currentTheme = localStorage.getItem('yamb_theme') || 'dark';
+        let currentIndex = unlockedThemes.indexOf(currentTheme);
+        
+        if (currentIndex === -1) currentIndex = 0; 
+        
+        const nextIndex = (currentIndex + 1) % unlockedThemes.length;
+        const nextTheme = unlockedThemes[nextIndex];
+
+        // 3. Primeni novu temu i sačuvaj je (ova funkcija već radi sve što treba)
+        this.saveSettingAuto('theme', nextTheme);
+        
+        // Zvuk klika
+        if (this.soundEnabled && this.soundMgr) {
+            this.soundMgr.click();
+        }
+    }
+
     updateHeaderAvatar() {
         const avatarEl = document.getElementById('gh-current-avatar');
         if (!avatarEl) return;
@@ -814,6 +851,21 @@ class YambApp {
                     this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
                 });
 
+                this.socket.off('global_chat_history');
+                this.socket.on('global_chat_history', (history) => {
+                    const body = document.getElementById('global-chat-body');
+                    if (!body) return;
+                    
+                    // 1. Očistimo trenutni chat ekran
+                    body.innerHTML = `<div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;" data-lang="global_chat_welcome">${gt('global_chat_welcome') || "Dobrodošli u Globalni Chat! Budite pristojni."}</div>`;
+                    
+                    // 2. Iscrtavamo poruke iz istorije jednu po jednu (i prosleđujemo "true" da ugasimo zvuk za stare poruke)
+                    history.forEach(data => {
+                        const isMe = (this.socket && data.senderId === this.socket.id);
+                        this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, true);
+                    });
+                });
+
                 this.socket.on('incoming_challenge', async (data) => {
                     const { challengerId, challengerName } = data;
                     let text = gt('duel_incoming');
@@ -1054,17 +1106,30 @@ class YambApp {
         this.initSocketConnection();
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
 
-        if (!accepted) {
-            const isConfirmed = await this.modal.confirm(gt('chat_rules_msg'));
-            
-            if (isConfirmed) {
-                localStorage.setItem('yamb_chat_rules_accepted', 'true');
-                const overlay = document.getElementById('global-chat-overlay');
-                if (overlay) overlay.style.display = 'flex';
-            }
-        } else {
+        const pokreniChat = () => {
             const overlay = document.getElementById('global-chat-overlay');
             if (overlay) overlay.style.display = 'flex';
+            
+            // Čim se otvori prozor, tražimo istoriju od servera
+            if (this.socket && this.socket.connected) {
+                this.socket.emit('request_global_chat_history');
+            } else {
+                setTimeout(() => {
+                    if (this.socket && this.socket.connected) {
+                        this.socket.emit('request_global_chat_history');
+                    }
+                }, 500);
+            }
+        };
+
+        if (!accepted) {
+            const isConfirmed = await this.modal.confirm(gt('chat_rules_msg'));
+            if (isConfirmed) {
+                localStorage.setItem('yamb_chat_rules_accepted', 'true');
+                pokreniChat();
+            }
+        } else {
+            pokreniChat();
         }
     }
 
@@ -1077,7 +1142,7 @@ class YambApp {
         }
     }
 
-    appendGlobalChatMessage(sender, text, type, senderId = null) { 
+    appendGlobalChatMessage(sender, text, type, senderId = null, skipSound = false) { 
         const body = document.getElementById('global-chat-body'); 
         if(!body) return;
         
@@ -1107,7 +1172,7 @@ class YambApp {
         body.appendChild(msgDiv); 
         body.scrollTop = body.scrollHeight; 
         
-        if (type === "msg-incoming" && this.soundMgr) {
+        if (type === "msg-incoming" && this.soundMgr && !skipSound) {
             this.soundMgr.chat(); 
         }
     }
