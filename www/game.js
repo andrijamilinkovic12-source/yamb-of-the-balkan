@@ -29,13 +29,13 @@ function prikaziPravniTekst(tip) {
         tekst = lang === 'sr' 
             ? "Dobrodošli u Yamb of the Balkan. Korišćenjem aplikacije prihvatate fer-plej, zabranu korišćenja softvera za varanje i uvažavanje drugih igrača. Vaš nalog je vezan za Google UID i podaci se čuvaju u cloudu radi sinhronizacije dukata i statistike. Svako kršenje pravila može rezultovati privremenom ili trajnom zabranom pristupa globalnim funkcijama."
             : "Welcome to Yamb of the Balkan. By using this app, you agree to fair play, no cheating software, and respecting other players. Your account is linked to Google UID, and data is stored in the cloud for syncing ducats and stats. Any violation of rules may result in a temporary or permanent ban from global features.";
-        punLink = "https://yamb-of-the-balkan.firebaseapp.com/terms.html";
+        punLink = "https://www.yambofthebalkan.com/terms.html"; // <-- NOVI LINK ZA USLOVE
     } else {
         naslov = lang === 'sr' ? "POLITIKA PRIVATNOSTI" : "PRIVACY POLICY";
         tekst = lang === 'sr'
             ? "Vaša privatnost je prioritet. Prikupljamo samo osnovne podatke vašeg Google naloga (ime, e-mail i slika) isključivo radi funkcionisanja rang liste, sistema prijatelja i čuvanja vašeg progresa (dukati i trofeji). Vaši podaci se nikada ne dele sa trećim licima. Možete zatražiti brisanje podataka u bilo kom trenutku putem podrške."
             : "Your privacy is our priority. We collect only basic Google account info (name, email, and photo) solely for rankings, friends system, and saving your progress (ducats and trophies). Your data is never shared with third parties. You can request data deletion at any time via support.";
-        punLink = "https://yamb-of-the-balkan.firebaseapp.com/privacy.html";
+        punLink = "https://www.yambofthebalkan.com/privacy.html"; // <-- NOVI LINK ZA PRIVATNOST
     }
 
     const textLinka = lang === 'sr' ? "Pročitaj kompletan zvanični tekst" : "Read full official document";
@@ -49,7 +49,7 @@ function prikaziPravniTekst(tip) {
     if (cmMsg && cmTitle && modalOverlay) {
         cmTitle.innerText = naslov;
         
-        // Spajamo naš kratak tekst sa linkom ka punom Firebase dokumentu
+        // Spajamo naš kratak tekst sa linkom ka punom zvaničnom dokumentu
         cmMsg.innerHTML = `
             <div class="pravni-tekst-container" style="text-align:left; font-size:0.85rem; max-height:55vh; overflow-y:auto; padding:15px; margin-bottom:10px; color:var(--text-main); line-height:1.6; background:rgba(0,0,0,0.25); border-radius:12px; border:1px solid rgba(255,215,0,0.1);">
                 ${tekst}
