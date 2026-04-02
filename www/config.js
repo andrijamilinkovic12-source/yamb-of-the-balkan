@@ -90,7 +90,8 @@ const SHOP_DATA = {
         { id: 'medium', name: { sr: 'Trula Višnja', en: 'Dark Cherry' }, price: 0, desc: { sr: 'Luksuzna bordo tema.', en: 'Luxurious burgundy theme.' }, icon: '🍒', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
         { id: 'winter', name: { sr: 'Plavi Okean', en: 'Blue Ocean' }, price: 0, desc: { sr: 'Opuštajuća plava tema.', en: 'Relaxing blue theme.' }, icon: '🌊', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
         { id: 'neon', name: { sr: 'Neon Cyber', en: 'Neon Cyber' }, price: 15000, desc: { sr: 'Futuristička cyberpunk tema.', en: 'Futuristic cyberpunk theme.' }, icon: '⚡', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
-        { id: 'amethyst', name: { sr: 'Kraljevski Ametist', en: 'Royal Amethyst' }, price: 20000, desc: { sr: 'Luksuzna VIP ljubičasta tema.', en: 'Luxurious VIP purple theme.' }, icon: '🔮', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } }
+        { id: 'amethyst', name: { sr: 'Kraljevski Ametist', en: 'Royal Amethyst' }, price: 20000, desc: { sr: 'Luksuzna VIP ljubičasta tema.', en: 'Luxurious VIP purple theme.' }, icon: '🔮', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
+        { id: 'easter', name: { sr: 'Vaskršnja', en: 'Joyful Easter' }, price: 10000, desc: { sr: 'Praznična žuta tema sa zekama i 3D dubinom polja.', en: 'Festive yellow theme with bunnies and 3D field depth.' }, icon: '🐇', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } }
     ],
 
     TROPHIES: [

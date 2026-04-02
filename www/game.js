@@ -264,7 +264,7 @@ class YambApp {
         } catch(e) {}
 
         // Filtriraj samo validne teme i ukloni duplikate
-        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
+        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter'];
         unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
         unlockedThemes = [...new Set(unlockedThemes)];
 
@@ -529,12 +529,13 @@ class YambApp {
     }
     
     applyTheme(theme) {
-        document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme', 'neon-theme', 'amethyst-theme');
+        document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme', 'neon-theme', 'amethyst-theme', 'easter-theme');
         if (theme === 'light') document.body.classList.add('light-theme'); 
         else if (theme === 'medium') document.body.classList.add('medium-theme');
         else if (theme === 'winter') document.body.classList.add('winter-theme');
         else if (theme === 'neon') document.body.classList.add('neon-theme');
         else if (theme === 'amethyst') document.body.classList.add('amethyst-theme');
+        else if (theme === 'easter') document.body.classList.add('easter-theme');
     }
 
     getFullLocalStats() {
@@ -1260,7 +1261,7 @@ class YambApp {
                 unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
             } catch(e) {}
 
-            const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
+            const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter'];
             unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
             unlockedThemes = [...new Set(unlockedThemes)];
 
