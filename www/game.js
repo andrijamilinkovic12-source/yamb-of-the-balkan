@@ -1217,7 +1217,7 @@ class YambApp {
     }
     
     requestRematch() {
-        if (!this.socket || !this.onlineMode || this.isSpectator) return;
+        if (!this.socket || this.isSpectator || !this.onlineMode) return;
         
         const btnRematch = document.getElementById('btn-rematch');
         if (btnRematch) {
@@ -1519,7 +1519,12 @@ class YambApp {
         });
     }
     
-    showRules() { this.navigateTo('rules-screen'); }
+    // --- IZMENJENO: POZIVA SE NOVI MODAL ---
+    showRules() { 
+        if (typeof window.showGameRules === 'function') {
+            window.showGameRules(); 
+        } 
+    }
     
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
