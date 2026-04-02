@@ -114,7 +114,7 @@ function cenzurisiPoruku(poruka) {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v16.2 - NEW DAILY CHALLENGE SYSTEM (PLAN B)");
+        console.log("YambApp v17.0 - NEW HEADER UI & DROPDOWN");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -127,9 +127,6 @@ class YambApp {
         
         this.features = new YambFeatures(this);
         
-        // ZAMENJENO SA NOVIM STANDALONE SISTEMOM "DnevniIzazov"
-        // this.dailyManager = new DailyChallengeManager(this); 
-
         if (typeof TournamentManager !== 'undefined') {
             this.tournamentManager = new TournamentManager(this);
         }
@@ -265,6 +262,87 @@ class YambApp {
 
         this.uiInit();
         this.syncBalance();
+    }
+
+    // --- NOVO: HEADER LOGIKA (MENI, ZVUK, VIB, OKO, AVATAR) ---
+
+    toggleGameMenu() {
+        const menu = document.getElementById('game-dropdown-menu');
+        if(menu) {
+            menu.classList.toggle('active');
+            this.soundMgr.click();
+        }
+    }
+
+    toggleQuickSound() {
+        this.soundEnabled = !this.soundEnabled;
+        if (this.soundMgr) this.soundMgr.enabled = this.soundEnabled;
+        localStorage.setItem('yamb_sound', this.soundEnabled);
+        
+        const btn = document.getElementById('btn-gh-sound');
+        if(btn) btn.innerText = this.soundEnabled ? '🔊' : '🔇';
+        
+        if(this.soundEnabled) this.soundMgr.click();
+        
+        const mainSetting = document.getElementById('setting-sound');
+        if (mainSetting) mainSetting.checked = this.soundEnabled;
+    }
+
+    toggleQuickVib() {
+        this.vibrationEnabled = !this.vibrationEnabled;
+        localStorage.setItem('yamb_vibration', this.vibrationEnabled);
+        
+        const btn = document.getElementById('btn-gh-vib');
+        if(btn) btn.innerText = this.vibrationEnabled ? '📳' : '📴';
+        
+        if(this.vibrationEnabled) this.vibrate(30);
+
+        const mainSetting = document.getElementById('setting-vibration');
+        if (mainSetting) mainSetting.checked = this.vibrationEnabled;
+    }
+
+    updateQuickMenuIcons() {
+        const btnSound = document.getElementById('btn-gh-sound');
+        if(btnSound) btnSound.innerText = this.soundEnabled ? '🔊' : '🔇';
+        
+        const btnVib = document.getElementById('btn-gh-vib');
+        if(btnVib) btnVib.innerText = this.vibrationEnabled ? '📳' : '📴';
+    }
+
+    updateHeaderAvatar() {
+        const avatarEl = document.getElementById('gh-current-avatar');
+        if (!avatarEl) return;
+        
+        const currPlayerName = this.players[this.currentPlayerIdx];
+        if (!currPlayerName) return;
+
+        let src = `https://ui-avatars.com/api/?name=${encodeURIComponent(currPlayerName)}&background=333&color=E0C995`;
+        
+        if (currPlayerName === this.playerName) {
+            const myPhoto = localStorage.getItem('yamb_player_photo');
+            if (myPhoto && myPhoto.length > 5) src = myPhoto;
+        } else if (this.onlineMode && this.currentOpponentPhoto && this.currentOpponentPhoto.length > 5) {
+            src = this.currentOpponentPhoto;
+        }
+        
+        avatarEl.src = src;
+        avatarEl.style.display = 'block';
+    }
+
+    updateSpectatorIcon(count) {
+        const eye = document.getElementById('gh-spectator-icon');
+        if(!eye) return;
+        if (count > 0) {
+            eye.classList.remove('gh-btn-inactive');
+            eye.classList.add('gh-btn-active');
+            eye.style.filter = 'drop-shadow(0 0 8px var(--gold-glow))';
+            eye.title = `${count} gledalaca`;
+        } else {
+            eye.classList.add('gh-btn-inactive');
+            eye.classList.remove('gh-btn-active');
+            eye.style.filter = '';
+            eye.title = 'Nema gledalaca';
+        }
     }
     
     // --- FUNKCIJE ZA H2H DETALJNU STATISTIKU ---
@@ -836,7 +914,6 @@ class YambApp {
                 });
                 
                 this.socket.on('error_msg', (msgKey) => {
-                    // Više ne koristimo staru Dnevni Izazov logiku na ovaj način
                     let finalMsg = msgKey;
                     if (typeof t === 'function' && t(msgKey) !== msgKey) {
                         finalMsg = gt(msgKey);
@@ -1388,38 +1465,6 @@ class YambApp {
         }
     }
 
-    toggleTheme() { 
-        const current = localStorage.getItem('yamb_theme') || 'dark'; 
-        
-        let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
-        
-        try {
-            const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
-            const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
-            let cloudSkins = [];
-            if(window.statsManager && window.statsManager.stats.unlockedSkins) {
-                cloudSkins = window.statsManager.stats.unlockedSkins;
-            }
-            unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
-        } catch(e) {}
-
-        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst'];
-        unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
-        unlockedThemes = [...new Set(unlockedThemes)];
-
-        let currentIndex = unlockedThemes.indexOf(current);
-        if (currentIndex === -1) currentIndex = 0; 
-        
-        let nextIndex = (currentIndex + 1) % unlockedThemes.length; 
-        let next = unlockedThemes[nextIndex];
-        
-        localStorage.setItem('yamb_theme', next); 
-        this.applyTheme(next);
-
-        const themeSelect = document.getElementById('setting-theme');
-        if (themeSelect) themeSelect.value = next;
-    }
-
     async showMainMenu() { 
         if (this.isSpectator) {
             this.isSpectator = false;
@@ -1440,6 +1485,9 @@ class YambApp {
                 await this.adMob.showInterstitial();
             }
         }
+
+        const menu = document.getElementById('game-dropdown-menu');
+        if(menu) menu.classList.remove('active');
 
         this.navigateTo('main-menu'); 
         const floatBtn = document.getElementById('chat-float-btn');
@@ -1799,6 +1847,11 @@ class YambApp {
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
         this.socket.off('spectate_started');
+
+        this.socket.off('room_spectators_count');
+        this.socket.on('room_spectators_count', (count) => {
+            this.updateSpectatorIcon(count);
+        });
 
         // --- NOVO: REAKCIJA NA PRIKAZ POBEDNIKA PROŠLOG KVARTALA ---
         this.socket.off('previous_quarter_winner_data');
@@ -2370,9 +2423,15 @@ class YambApp {
             this.socket.emit('game_session_start');
         }
 
+        this.updateQuickMenuIcons();
+        this.updateSpectatorIcon(0);
+
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
-        if (btnUndo) btnUndo.style.display = 'none';
+        if (btnUndo) {
+            btnUndo.classList.add('gh-btn-inactive');
+            btnUndo.classList.remove('gh-btn-active');
+        }
 
         this.showQuoteAndProceed(); 
         
@@ -2556,6 +2615,7 @@ class YambApp {
                 lblTurn.innerText = this.players[this.currentPlayerIdx] + " " + gt('game_turn_msg'); 
             }
         }
+        this.updateHeaderAvatar();
     }
     
     toggleHold(i) { 
@@ -2613,7 +2673,10 @@ class YambApp {
         if (this.isSpectator) return;
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
-        if (btnUndo) btnUndo.style.display = 'none';
+        if (btnUndo) {
+            btnUndo.classList.add('gh-btn-inactive');
+            btnUndo.classList.remove('gh-btn-active');
+        }
 
         const btnBacaj = document.getElementById('btn-bacaj'); 
         const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex); 
@@ -2795,7 +2858,10 @@ class YambApp {
                 consecutiveNajava: this.consecutiveNajava
             };
             const btnUndo = document.getElementById('btn-undo-move');
-            if (btnUndo) btnUndo.style.display = 'flex';
+            if (btnUndo) {
+                btnUndo.classList.remove('gh-btn-inactive');
+                btnUndo.classList.add('gh-btn-active');
+            }
         }
 
         sheet[col][row] = pts; 
@@ -2877,7 +2943,10 @@ class YambApp {
 
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
-        if (btnUndo) btnUndo.style.display = 'none';
+        if (btnUndo) {
+            btnUndo.classList.add('gh-btn-inactive');
+            btnUndo.classList.remove('gh-btn-active');
+        }
         
         if(window.adMobGlobal) window.adMobGlobal.prepareReward(); 
 
@@ -3318,7 +3387,10 @@ class YambApp {
 
             this.lastMoveSnapshot = null;
             const btnUndo = document.getElementById('btn-undo-move');
-            if (btnUndo) btnUndo.style.display = 'none';
+            if (btnUndo) {
+                btnUndo.classList.add('gh-btn-inactive');
+                btnUndo.classList.remove('gh-btn-active');
+            }
 
             this.showQuoteAndProceed(); 
             
@@ -3428,7 +3500,11 @@ class YambApp {
         this.updateStatusLabel();
 
         this.lastMoveSnapshot = null;
-        document.getElementById('btn-undo-move').style.display = 'none';
+        const btnUndo = document.getElementById('btn-undo-move');
+        if (btnUndo) {
+            btnUndo.classList.add('gh-btn-inactive');
+            btnUndo.classList.remove('gh-btn-active');
+        }
         this.autoSaveGame();
     }
 

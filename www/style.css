@@ -95,6 +95,25 @@ body {
 .menu-divider { margin: 2px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); flex-shrink: 0;}
 
 /* --- GAME SCENE & BOARD --- */
+/* =========================================
+   GAME HEADER CONTROLS (UNDO, SPECTATOR, MENU)
+   ========================================= */
+.gh-btn-active { 
+    filter: none !important; 
+    opacity: 1 !important; 
+    cursor: pointer !important; 
+}
+.gh-btn-inactive { 
+    filter: grayscale(100%) !important; 
+    opacity: 0.4 !important; 
+    cursor: not-allowed !important; 
+}
+#game-dropdown-menu.active { 
+    transform: translateY(0) !important; 
+    opacity: 1 !important; 
+    visibility: visible !important; 
+}
+
 #game-scene { justify-content: flex-start; padding: 0; background: transparent; overflow: hidden; display: flex; flex-direction: column; width: 100%; height: 100%; }
 .game-header { width: 100%; padding-top: var(--safe-top); padding-bottom: 5px; padding-left: 15px; padding-right: 15px; min-height: calc(50px + var(--safe-top)); display: flex; justify-content: space-between; align-items: flex-end; border-bottom: var(--glass-border); background: var(--glass-panel); z-index: 20; flex-shrink: 0; backdrop-filter: blur(12px); }
 .game-content { display: flex; width: 100%; flex: 1; overflow: hidden; position: relative; padding-bottom: 0; }
