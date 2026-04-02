@@ -391,12 +391,23 @@ function inicijalizujCloudSync() {
                 localStorage.setItem('yamb_h2h_stats', JSON.stringify(dbStats.h2hStats));
             }
             
+            // === ISPRAVLJENI KOD ZA DNEVNI IZAZOV ===
             const currentUid = localStorage.getItem('yamb_uid');
+            const danasnjiDatum = new Date().toDateString();
+            const lokalniZapis = localStorage.getItem('yamb_last_daily_' + currentUid);
+
             if (dbStats.lastDaily) {
-                localStorage.setItem('yamb_last_daily_' + currentUid, dbStats.lastDaily);
+                // Ako se server i klijent razlikuju, a lokalno nije danas, preuzmi sa clouda
+                if (lokalniZapis !== danasnjiDatum) {
+                    localStorage.setItem('yamb_last_daily_' + currentUid, dbStats.lastDaily);
+                }
             } else {
-                localStorage.removeItem('yamb_last_daily_' + currentUid);
+                // STRIKTNA ZABRANA: Ne briši ako je korisnik LOKALNO već odigrao danas!
+                if (lokalniZapis !== danasnjiDatum) {
+                    localStorage.removeItem('yamb_last_daily_' + currentUid);
+                }
             }
+            // =========================================
 
             if (window.statsManager) {
                 window.statsManager.stats.wins = dbStats.wins || 0;

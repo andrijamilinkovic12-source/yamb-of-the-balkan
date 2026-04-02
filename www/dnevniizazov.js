@@ -314,8 +314,13 @@ class DnevniIzazov {
             updateMainMenuDashboard();
         }
 
-        // 4. TIHA Sinhronizacija sa Cloud-om (Plan B - zaobilazimo poseban daily endpoint)
-        if (this.app.socket && this.app.socket.connected) {
+        // 4. TIHA Sinhronizacija sa Cloud-om (Plan B)
+        if (this.app.socket) {
+            // Ako je socket uspavan zbog pozadinskog rada, probudi ga pre slanja
+            if (this.app.socket.disconnected) {
+                this.app.socket.connect();
+            }
+
             this.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid') || this.app.playerId,
                 name: this.app.playerName,

@@ -470,13 +470,24 @@ io.on('connection', (socket) => {
                     user.yamb_unlocked = Array.from(mergedAll);
                 }
 
+                // ==============================================================
                 // FIX: SPREČAVANJE KLIJENTA DA VRATI VREME UNAZAD ZA DNEVNI IZAZOV
-                if (s.lastDaily) {
-                    const todayStr = new Date().toDateString();
-                    if (user.lastDaily !== todayStr) {
+                // ==============================================================
+                const todayStr = new Date().toDateString();
+                
+                if (user.lastDaily === todayStr) {
+                    // SERVERSKA ZAŠTITA: Baza kaže da je odigrao. Klijent ne sme to da obriše!
+                    if (s.lastDaily !== todayStr) {
+                        console.warn(`[UPOZORENJE] Klijent ${user.playerName} pokušava da pregazi lastDaily! Blokirano.`);
+                        s.lastDaily = todayStr; // Forsiramo stanje iz baze u povratnom paketu
+                    }
+                } else {
+                    // Dozvoljavamo upis ako klijent donosi noviju potvrdu (ili staru koju baza nema)
+                    if (s.lastDaily) {
                         user.lastDaily = s.lastDaily;
                     }
                 }
+                // ==============================================================
 
                 if (s.leagueData) {
                     if (s.leagueData.year > user.leagueData.year || 
