@@ -108,7 +108,7 @@ class RulesUI {
         this.overlay.id = 'rules-overlay-ui';
         this.overlay.className = 'modal-overlay';
         
-        // CSS specifičan za slider generisan inline kako ne bi morao da menjaš style.css mnogo
+        // CSS specifičan za slider
         this.overlay.innerHTML = `
             <div class="rules-card modal-box" style="padding: 0; width: 90%; max-width: 450px; height: 75vh; overflow: hidden; display: flex; flex-direction: column; position: relative;">
                 
@@ -120,7 +120,7 @@ class RulesUI {
                 </div>
 
                 <div style="flex: 1; overflow: hidden; position: relative; width: 100%;">
-                    <div id="rules-slider-track" style="display: flex; height: 100%; transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); width: ${RulesData[this.currentLang].length * 100}%;">
+                    <div id="rules-slider-track" style="display: flex; height: 100%; transition: transform 0.4s ease; width: 100%;">
                         ${this.generateSlides()}
                     </div>
                 </div>
@@ -141,7 +141,7 @@ class RulesUI {
     generateSlides() {
         const data = RulesData[this.currentLang];
         return data.map((slide, index) => `
-            <div class="rules-slide" style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;">
+            <div class="rules-slide" style="flex: 0 0 100%; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;">
                 <h4 style="color: var(--gold-main); font-size: 1.2rem; margin-bottom: 15px; text-align: center;">${slide.title}</h4>
                 <div class="pravni-tekst-container" style="flex: 1; overflow-y: auto; padding-right: 10px; max-height: none; border: none; background: transparent;">
                     ${slide.content}
@@ -168,30 +168,51 @@ class RulesUI {
             });
         });
 
-        // Swipe funkcionalnost za telefone
         let touchStartX = 0;
         let touchEndX = 0;
+        let isDragging = false;
 
+        // 1. Touch Events (Telefoni)
         this.sliderTrack.addEventListener('touchstart', (e) => {
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
 
         this.sliderTrack.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
-            this.handleSwipe();
+            this.handleSwipe(touchStartX, touchEndX);
         }, { passive: true });
+
+        // 2. Mouse Events (PC simulacija)
+        this.sliderTrack.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            touchStartX = e.screenX;
+        });
+
+        this.sliderTrack.addEventListener('mouseup', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            touchEndX = e.screenX;
+            this.handleSwipe(touchStartX, touchEndX);
+        });
+
+        this.sliderTrack.addEventListener('mouseleave', (e) => {
+            if (!isDragging) return;
+            isDragging = false;
+            touchEndX = e.screenX;
+            this.handleSwipe(touchStartX, touchEndX);
+        });
     }
 
-    handleSwipe() {
-        const threshold = 50; // Minimum px za swipe
-        if (touchEndX < touchStartX - threshold) {
-            // Swipe Left (Next)
+    handleSwipe(startX, endX) {
+        const threshold = 50; // Minimum px za registraciju swajpa
+        if (endX < startX - threshold) {
+            // Swipe Left (Sledeći)
             if (this.currentSlide < RulesData[this.currentLang].length - 1) {
                 this.goToSlide(this.currentSlide + 1);
             }
         }
-        if (touchEndX > touchStartX + threshold) {
-            // Swipe Right (Prev)
+        if (endX > startX + threshold) {
+            // Swipe Right (Prethodni)
             if (this.currentSlide > 0) {
                 this.goToSlide(this.currentSlide - 1);
             }
@@ -200,10 +221,9 @@ class RulesUI {
 
     goToSlide(index) {
         this.currentSlide = index;
-        const totalSlides = RulesData[this.currentLang].length;
         
-        // Pomeri traku
-        const offset = -(index * (100 / totalSlides));
+        // Pomeri traku za X * 100%
+        const offset = -(index * 100);
         this.sliderTrack.style.transform = `translateX(${offset}%)`;
 
         // Ažuriraj tačkice
@@ -219,18 +239,16 @@ class RulesUI {
     }
 
     open() {
-        // Proveri jezik pre otvaranja u slučaju da je korisnik promenio u settings
+        // Proveri jezik pre otvaranja
         const currentStoredLang = localStorage.getItem('language') || 'sr';
         if (this.currentLang !== currentStoredLang) {
             this.currentLang = currentStoredLang;
-            this.init(); // Ponovo izgradi ako se jezik promenio
+            this.init(); 
         }
         
-        // Resetuj na prvi slajd
         this.goToSlide(0);
         
         this.overlay.style.display = 'flex';
-        // Mali delay za CSS transition efekat
         setTimeout(() => {
             this.overlay.classList.add('active');
         }, 10);
@@ -252,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
     GameRules.init();
 });
 
-// Otključavamo globalnu funkciju da bi mogao da je zoveš sa dugmeta u meniju
+// Otključavamo globalnu funkciju
 window.showGameRules = function() {
     GameRules.open();
 };
