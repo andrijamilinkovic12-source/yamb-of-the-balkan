@@ -2107,10 +2107,25 @@ class YambApp {
             const customModal = document.getElementById('custom-modal-overlay');
             if (customModal) customModal.style.display = 'none';
 
-            this.myOnlineIndex = Number(data.myIndex); 
+            // 1. BEZBEDNO PREUZIMANJE INDEKSA DIREKTNO SA SERVERA
+            // Koristimo this.myOnlineIndex umesto this.playerId (jer playerId čuva Google UID string!)
+            if (data.myIndex !== undefined) {
+                this.myOnlineIndex = Number(data.myIndex);
+            } else if (data.uids) {
+                // Fallback preko Google UID-a (ako server u budućnosti bude slao niz UID-ova)
+                const savedUid = localStorage.getItem('yamb_uid');
+                this.myOnlineIndex = data.uids.indexOf(savedUid);
+            } else {
+                // Sigurnosni fallback
+                this.myOnlineIndex = 0; 
+            }
+
+            console.log(`[SYNC] Moj igrački indeks je striktno: ${this.myOnlineIndex}`);
+
             this.onlineMode = true; 
             this.modeTag = "Online"; 
             this.roomId = data.roomId; 
+            // Pazi: this.players[0] je uvek host, this.players[1] je gost
             this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname]; 
             this.initScores(); 
             this.currentPlayerIdx = 0; 

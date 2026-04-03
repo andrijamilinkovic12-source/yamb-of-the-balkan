@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA
 
 require('dotenv').config(); 
 
@@ -1507,11 +1507,30 @@ io.on('connection', (socket) => {
         }
     });
 
+    // ==================================================================
+    // NOVO: STRIKTNA ANTI-LAG ZAŠTITA UNUTAR RELAY-A
+    // ==================================================================
     const relayEvent = (eventName, data) => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
+            const state = roomState[roomId];
+            
+            // --- ANTI-LAG I ANTI-CHEAT ZAŠTITA ---
+            // Ako je događaj vezan za potez (bacanje, najava, upis), strogo proveravamo čiji je red!
+            if (state && ['remote_move', 'remote_roll', 'remote_hold', 'remote_announce'].includes(eventName)) {
+                const playerIndex = state.players.indexOf(socket.id);
+                
+                // Ako igrač nije u sobi, ili NIJE njegov red - BLOKIRAJ akciju
+                if (playerIndex === -1 || state.turnIndex !== playerIndex) {
+                    console.warn(`🚨 BLOKIRAN LAG/POTEZ (${eventName}) - Igrač: ${socket.id}, Na potezu je: ${state.turnIndex}`);
+                    return; // Prekidamo izvršavanje, server ignoriše ovaj zahtev!
+                }
+            }
+            // -------------------------------------
+
             socket.to(roomId).emit(eventName, data);
 
+            // Menjamo red samo i isključivo kada se upiše rezultat (remote_move)
             if (eventName === 'remote_move' && roomState[roomId]) {
                 roomState[roomId].turnIndex = roomState[roomId].turnIndex === 0 ? 1 : 0;
                 resetTurnTimer(roomId);
