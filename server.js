@@ -144,6 +144,7 @@ if (MONGO_URI) {
     .then(() => {
         console.log('✅ MongoDB connected & stable!');
         initTournamentFromDb(); // <-- Učitavanje turnira čim se baza spoji
+        initChatFromDb();       // <-- Učitavanje global chata čim se baza spoji
     })
     .catch(err => {
         console.error('❌ MongoDB connection error:', err.message);
@@ -193,6 +194,12 @@ const TournamentStateSchema = new mongoose.Schema({
 });
 mongoose.model('TournamentState', TournamentStateSchema);
 
+// --- NOVO: MONGODB ŠEMA ZA GLOBALNI CHAT ---
+const GlobalChatSchema = new mongoose.Schema({
+    messages: { type: Array, default: [] }
+});
+mongoose.model('GlobalChat', GlobalChatSchema);
+
 const UserProfileSchema = new mongoose.Schema({
     firebaseUid: { type: String, unique: true, required: true },
     playerName: String,
@@ -240,8 +247,37 @@ const onlinePlayers = {};
 const registeredSockets = {}; 
 
 // NOVE PROMENLJIVE ZA ČUVANJE CHATA
-const globalChatHistory = [];
+let globalChatHistory = [];
 const MAX_CHAT_HISTORY = 50;
+
+// Funkcije za manipulaciju chatom
+async function initChatFromDb() {
+    if (!process.env.MONGO_URI) return;
+    try {
+        const GlobalChatDb = mongoose.model('GlobalChat');
+        let dbChat = await GlobalChatDb.findOne();
+        if (dbChat) {
+            globalChatHistory = dbChat.messages || [];
+            console.log("💬 Globalni chat uspešno učitan iz baze.");
+        } else {
+            let newChat = new GlobalChatDb({ messages: [] });
+            await newChat.save();
+            console.log("💬 Kreiran novi čist globalni chat u bazi.");
+        }
+    } catch (err) {
+        console.error("Greška pri učitavanju chata iz baze:", err);
+    }
+}
+
+async function saveChatToDb() {
+    if (!process.env.MONGO_URI) return;
+    try {
+        const GlobalChatDb = mongoose.model('GlobalChat');
+        await GlobalChatDb.findOneAndUpdate({}, { messages: globalChatHistory }, { upsert: true });
+    } catch (err) {
+        console.error("Greška pri čuvanju chata u bazu:", err);
+    }
+}
 
 // GRACE PERIOD PROMENLJIVE
 const disconnectTimers = {}; 
@@ -1495,7 +1531,7 @@ io.on('connection', (socket) => {
         socket.emit('global_chat_history', globalChatHistory);
     });
 
-    // IZMENJENO: Pamćenje globalnog chata
+    // IZMENJENO: Pamćenje globalnog chata i čuvanje u bazu
     socket.on('global_chat_msg', (data) => {
         if (!data || !data.msg) return;
         
@@ -1541,6 +1577,9 @@ io.on('connection', (socket) => {
         if (globalChatHistory.length > MAX_CHAT_HISTORY) {
             globalChatHistory.shift();
         }
+
+        // NOVO: Snimi u bazu nakon promene!
+        saveChatToDb();
 
         io.emit('global_chat_msg', chatObj);
         
