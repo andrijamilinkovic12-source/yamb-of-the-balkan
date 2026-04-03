@@ -274,211 +274,222 @@ body.medium-theme .btn-square:active { box-shadow: 0 0 0 #2b0a16, inset 0 2px 8p
 body.winter-theme .btn-square { border-color: rgba(79, 195, 247, 0.3); color: #4fc3f7; background: linear-gradient(to bottom, #004488, #002244); box-shadow: 0 4px 0 #001122, 0 8px 15px rgba(0, 150, 255, 0.15); }
 body.winter-theme .btn-square:active { box-shadow: 0 0 0 #001122, inset 0 2px 8px rgba(0,0,0,0.5); border-color: #4fc3f7; }
 
-/* --- TEMA 7: VASKRŠNJA (EASTER) V2 --- */
+/* --- TEMA 7: VASKRŠNJA (EASTER) V3 - MODERN PASTEL GLASS --- */
 body.easter-theme {
-    /* Topla, prijatna žuta praznična paleta */
-    --bg-base: #fffde7; 
-    --bg-gradient-1: #fff9c4; 
-    --bg-gradient-2: #fff59d; 
-    --gold-main: #fbc02d; 
-    --gold-glow: rgba(251, 192, 45, 0.4);
-    --text-main: #5d4037; 
-    --text-filled: #e65100; 
-    --text-sum: #d84315; 
-    --text-sum-label: #bf360c; 
-    --text-muted: #8d6e63;
-    --glass-bg: rgba(255, 255, 255, 0.7); 
-    --glass-panel: rgba(255, 253, 231, 0.95); 
-    --glass-border: 1px solid rgba(251, 192, 45, 0.5);
-    --modal-bg: #fffde7; 
-    --input-bg: #ffffff; 
-    --input-border: #fbc02d;
-    --dice-bg: linear-gradient(145deg, #ffffff, #fff9c4); 
-    --dice-border: #fbc02d; 
-    --dice-color: #5d4037; 
-    --dice-active: #e65100;
+    /* Moderna prolećna paleta - Nežni pasteli */
+    --bg-base: #f8f9fa; 
+    --bg-gradient-1: #fdfbfb; 
+    --bg-gradient-2: #ebedee; 
+    --gold-main: #ff8fa3; 
+    --gold-glow: rgba(255, 143, 163, 0.5);
+    --text-main: #4a4e69; 
+    --text-filled: #b5179e; 
+    --text-sum: #c9184a; 
+    --text-sum-label: #a01a58; 
+    --text-muted: #8d99ae;
+    
+    /* Moderni Glassmorphism */
+    --glass-bg: rgba(255, 255, 255, 0.6); 
+    --glass-panel: rgba(255, 255, 255, 0.75); 
+    --glass-border: 1px solid rgba(255, 255, 255, 0.9);
+    --modal-bg: #ffffff; 
+    --input-bg: rgba(255, 255, 255, 0.8); 
+    --input-border: #ffb8d1;
+    --dice-bg: linear-gradient(145deg, #ffffff, #fce4ec); 
+    --dice-border: #ffb8d1; 
+    --dice-color: #4a4e69; 
+    --dice-active: #c9184a;
 
-    /* Smirenije, pastelne boje kolona (Harmonija umjesto šarenila) */
-    --col-nadole: #81d4fa; 
-    --col-nagore: #ffab91; 
-    --col-sredina: #aed581; 
-    --col-rucno: #ce93d8; 
-    --col-najava: #ffd54f; 
-    --col-slobodna: #bcaaa4;
+    /* Prelepe boje kolona (Jaja) */
+    --col-nadole: #82c0cc; /* Bejbi plava */
+    --col-nagore: #ffb5a7; /* Breskva */
+    --col-sredina: #fcf6bd; /* Svetla žuta */
+    --col-rucno: #d0d1ff; /* Lavanda */
+    --col-najava: #b5e48c; /* Menta zelena */
+    --col-slobodna: #e0aaff; /* Ljubičasta */
 }
 
-/* NOVI POZADINSKI PATTERN (Jaja, zeke, cveće u vidu mozaika) */
+/* NOVI POZADINSKI PATTERN (Mesh Gradient + Diskretni Emodžiji) */
 body.easter-theme::before {
     content: "";
     position: fixed; 
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: -1;
-    opacity: 0.25; /* Blaga prozirnost da ne ometa čitanje */
-    background-color: #fff9c4;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='15' y='35' font-size='24'%3E🥚%3C/text%3E%3Ctext x='75' y='95' font-size='24'%3E🐇%3C/text%3E%3Ctext x='75' y='35' font-size='20'%3E🌸%3C/text%3E%3Ctext x='15' y='95' font-size='20'%3E🐰%3C/text%3E%3Ctext x='45' y='65' font-size='18'%3E🐣%3C/text%3E%3C/svg%3E");
-    background-size: 100px 100px;
+    background-color: #f8f9fa;
+    background-image: 
+        radial-gradient(circle at 15% 10%, rgba(224, 195, 252, 0.6) 0%, transparent 50%),
+        radial-gradient(circle at 85% 15%, rgba(142, 197, 252, 0.6) 0%, transparent 50%),
+        radial-gradient(circle at 90% 85%, rgba(255, 177, 153, 0.6) 0%, transparent 50%),
+        radial-gradient(circle at 10% 90%, rgba(252, 246, 189, 0.6) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='15' y='35' font-size='24' opacity='0.3'%3E🥚%3C/text%3E%3Ctext x='75' y='95' font-size='24' opacity='0.3'%3E🐇%3C/text%3E%3Ctext x='75' y='35' font-size='20' opacity='0.3'%3E🌸%3C/text%3E%3Ctext x='15' y='95' font-size='20' opacity='0.3'%3E🐰%3C/text%3E%3Ctext x='45' y='65' font-size='18' opacity='0.3'%3E🐣%3C/text%3E%3C/svg%3E");
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100px 100px;
     pointer-events: none;
 }
 
-/* Glavna tabla - vraćena na standardne dimenzije bez širenja */
+/* Glavna tabla - Stakleni efekat (Glassmorphism) */
 body.easter-theme .player-table { 
     transform: perspective(1000px) rotateX(1deg); 
     border-radius: 16px; 
-    border: 2px solid #fbc02d; 
-    box-shadow: 0 10px 0 #f57f17, 0 20px 40px rgba(0, 0, 0, 0.15) !important; 
+    border: 2px solid rgba(255, 255, 255, 0.9); 
+    box-shadow: 0 10px 0 rgba(209, 196, 233, 0.8), 0 20px 40px rgba(0, 0, 0, 0.1) !important; 
     background: var(--glass-panel); 
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
-/* Uklonjene margine koje su lomile grid i pravile skrol */
 body.easter-theme .grid-cell { 
-    border: 1px solid rgba(245, 127, 23, 0.15); 
-    background: #ffffff; 
-    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.6); 
+    background: rgba(255, 255, 255, 0.4); 
+    box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.8); 
 }
 
-/* Zaglavlja kolona i redova - Čistiji izgled */
+/* Zaglavlja kolona i redova - Čist elegantan izgled */
 body.easter-theme .col-header, 
 body.easter-theme .row-header { 
-    background: linear-gradient(to bottom, #fffde7, #fff9c4); 
-    border-bottom: 1px solid #fbc02d; 
-    color: #d84315; 
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(248, 249, 250, 0.85)); 
+    border-bottom: 1px solid rgba(255, 143, 163, 0.3); 
+    color: #b5179e; 
     box-shadow: none; 
+    text-shadow: 0 1px 1px #fff;
 }
 
 /* Poseban izgled za polja sa zbirovima */
 body.easter-theme .row-header.sum, 
 body.easter-theme .cell-sum { 
-    background: #fff8e1 !important; 
-    border-color: #fbc02d !important; 
-    color: #e65100 !important; 
+    background: rgba(255, 236, 210, 0.6) !important; 
+    border-color: rgba(255, 177, 153, 0.5) !important; 
+    color: #c9184a !important; 
 }
 
-/* Opšta dugmad u meniju */
+/* Opšta dugmad u meniju - Nežni pasteli */
 body.easter-theme .btn-menu { 
-    background: linear-gradient(to bottom, #ffffff, #fff59d); 
-    color: #d84315; 
-    border: 1px solid #fbc02d; 
-    box-shadow: 0 5px 0 #f57f17, 0 10px 15px rgba(0,0,0,0.1); 
+    background: linear-gradient(to bottom, #ffffff, #fdf3f6); 
+    color: #c9184a; 
+    border: 1px solid rgba(255, 143, 163, 0.5); 
+    box-shadow: 0 6px 0 #ffb8d1, 0 10px 15px rgba(201, 24, 74, 0.1); 
     border-radius: 50px; 
     transform: translateY(0); 
 }
 
 body.easter-theme .btn-menu:active { 
-    transform: translateY(5px); 
-    box-shadow: 0 0 0 #f57f17, inset 0 2px 5px rgba(0,0,0,0.1); 
+    transform: translateY(6px); 
+    box-shadow: 0 0 0 #ffb8d1, inset 0 2px 5px rgba(201, 24, 74, 0.15); 
 }
 
-/* Glavno dugme za bacanje (Prebačeno u zlatno/žutu boju) */
+/* Glavno dugme za bacanje (Moderno "Candy" roze/breskva) */
 body.easter-theme .btn-primary, 
 body.easter-theme .btn-throw { 
-    background: linear-gradient(to bottom, #ffd54f, #ffb300); 
-    color: #4e342e; 
-    border: 1px solid #ff8f00; 
-    box-shadow: 0 5px 0 #ff6f00, 0 12px 20px rgba(0,0,0,0.2); 
+    background: linear-gradient(to bottom, #ff9a9e, #fecfef); 
+    color: #880e4f; 
+    border: 1px solid #ffb8d1; 
+    box-shadow: 0 6px 0 #c9184a, 0 12px 20px rgba(201, 24, 74, 0.25); 
     border-radius: 20px; 
 }
 
 body.easter-theme .btn-primary:active, 
 body.easter-theme .btn-throw:active { 
-    transform: translateY(5px); 
-    box-shadow: 0 0 0 #ff6f00, inset 0 3px 8px rgba(0,0,0,0.2); 
+    transform: translateY(6px); 
+    box-shadow: 0 0 0 #c9184a, inset 0 3px 8px rgba(201, 24, 74, 0.2); 
 }
 
-/* Pomoćna dugmad u igri (Najava, itd.) */
+/* Pomoćna dugmad u igri */
 body.easter-theme .btn-secondary, 
 body.easter-theme #btn-najava { 
-    background: linear-gradient(to bottom, #ffffff, #fff59d); 
-    color: #d84315; 
-    border: 1px solid rgba(251, 192, 45, 0.5); 
-    box-shadow: 0 5px 0 #f57f17, 0 5px 10px rgba(0,0,0,0.1); 
+    background: linear-gradient(to bottom, #ffffff, #f4f6f9); 
+    color: #4a4e69; 
+    border: 1px solid rgba(141, 153, 174, 0.4); 
+    box-shadow: 0 5px 0 #8d99ae, 0 5px 10px rgba(0,0,0,0.05); 
 }
 
 body.easter-theme .btn-secondary:active, 
 body.easter-theme #btn-najava:active { 
     transform: translateY(5px); 
-    box-shadow: 0 0 0 #f57f17, inset 0 2px 5px rgba(0,0,0,0.1); 
+    box-shadow: 0 0 0 #8d99ae, inset 0 2px 5px rgba(0,0,0,0.1); 
 }
 
-/* Modali i kartice */
+/* Modali i kartice sa jakim staklenim efektom */
 body.easter-theme .modal-box, 
 body.easter-theme .card { 
-    background: #fffde7 !important; 
-    border: 2px solid #fbc02d !important; 
+    background: rgba(255, 255, 255, 0.85) !important; 
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.9) !important; 
     border-radius: 16px; 
-    box-shadow: 0 10px 0 #f57f17, 0 25px 50px rgba(0,0,0,0.2) !important; 
-    color: #4e342e; 
+    box-shadow: 0 10px 0 rgba(209, 196, 233, 0.8), 0 25px 50px rgba(0,0,0,0.15) !important; 
+    color: #4a4e69; 
 }
 
 /* Sinhronizacija header dugmića (Sound, Vib, Theme) */
 body.easter-theme #btn-theme-toggle, 
 body.easter-theme .game-header .btn-secondary { 
-    background: linear-gradient(to bottom, #ffffff, #fff59d); 
-    border-color: #fbc02d; 
-    color: #d84315; 
-    box-shadow: 0 5px 0 #f57f17, 0 10px 10px rgba(0,0,0,0.1); 
+    background: linear-gradient(to bottom, #ffffff, #fdf3f6); 
+    border-color: rgba(255, 143, 163, 0.6); 
+    color: #c9184a; 
+    box-shadow: 0 5px 0 #ffb8d1, 0 10px 10px rgba(201, 24, 74, 0.1); 
 }
 
 /* Kvadratna dugmad (Squircles) */
 body.easter-theme .btn-square, 
 body.easter-theme .btn-special-square { 
-    background: linear-gradient(to bottom, #ffffff, #fff9c4); 
-    border-color: #fbc02d; 
-    color: #f57f17; 
-    box-shadow: 0 4px 0 #f57f17, 0 8px 15px rgba(0,0,0,0.1); 
+    background: linear-gradient(to bottom, #ffffff, #fdfbfb); 
+    border-color: rgba(255, 143, 163, 0.5); 
+    color: #c9184a; 
+    box-shadow: 0 5px 0 #ffb8d1, 0 8px 15px rgba(201, 24, 74, 0.1); 
 }
 
 body.easter-theme .btn-square:active, 
 body.easter-theme .btn-special-square:active { 
-    box-shadow: 0 0 0 #f57f17, inset 0 2px 8px rgba(0,0,0,0.1); 
+    box-shadow: 0 0 0 #ffb8d1, inset 0 2px 8px rgba(201, 24, 74, 0.15); 
 }
 
 /* --- Vaskršnja popunjena polja (upisani poeni) --- */
 body.easter-theme .score-btn.filled { 
-    color: #d84315 !important; 
-    text-shadow: 0 0 2px rgba(216, 67, 21, 0.3); 
-    background: radial-gradient(circle, rgba(251, 192, 45, 0.25) 0%, transparent 70%) !important; 
+    color: #b5179e !important; 
+    text-shadow: 0 0 2px rgba(181, 23, 158, 0.2); 
+    background: radial-gradient(circle, rgba(255, 143, 163, 0.25) 0%, transparent 70%) !important; 
+    font-weight: 900;
 }
 
 /* --- Vaskršnji Dnevni Izazov --- */
 body.easter-theme .daily-btn-main { 
-    box-shadow: 0 6px 0 #f57f17, 0 10px 20px rgba(245, 127, 23, 0.2) !important; 
+    box-shadow: 0 6px 0 #c9184a, 0 10px 20px rgba(201, 24, 74, 0.2) !important; 
 }
 body.easter-theme .daily-btn-main:active { 
-    box-shadow: 0 0 0 #f57f17, inset 0 3px 8px rgba(0,0,0,0.1) !important; 
+    box-shadow: 0 0 0 #c9184a, inset 0 3px 8px rgba(201, 24, 74, 0.2) !important; 
 }
 body.easter-theme .daily-challenge-card { 
-    border: 2px solid #fbc02d !important; 
-    background: #fffde7 !important; 
+    border: 2px solid rgba(255, 255, 255, 0.9) !important; 
+    background: rgba(255, 255, 255, 0.8) !important; 
+    backdrop-filter: blur(12px);
 }
 body.easter-theme .daily-title { 
-    color: #d84315; 
-    text-shadow: none; 
+    color: #c9184a; 
+    text-shadow: 0 1px 1px #fff; 
 }
 body.easter-theme .daily-score-box { 
-    background: #fff9c4; 
-    border: 1px solid #fbc02d; 
+    background: rgba(253, 243, 246, 0.8); 
+    border: 1px solid #ffb8d1; 
 }
 body.easter-theme .daily-value { 
-    color: #d84315; 
+    color: #b5179e; 
     text-shadow: none; 
 }
 
 /* --- Vaskršnji Glavni Meni --- */
 body.easter-theme .mode-btn { 
-    background: linear-gradient(to bottom, #ffffff, #fff9c4); 
-    box-shadow: 0 6px 0 #fbc02d, 0 10px 20px rgba(0,0,0,0.1); 
-    color: #d84315; 
-    border-color: #fbc02d;
+    background: linear-gradient(to bottom, #ffffff, #fdf3f6); 
+    box-shadow: 0 6px 0 #ffb8d1, 0 10px 20px rgba(201, 24, 74, 0.1); 
+    color: #c9184a; 
+    border-color: rgba(255, 143, 163, 0.4);
 }
 body.easter-theme .mode-btn:active { 
-    box-shadow: 0 0 0 #fbc02d, inset 0 3px 10px rgba(0,0,0,0.1); 
+    box-shadow: 0 0 0 #ffb8d1, inset 0 3px 10px rgba(201, 24, 74, 0.15); 
 }
 body.easter-theme .mode-solo { 
-    background: linear-gradient(to bottom, #ffd54f, #ffb300); 
-    color: #4e342e; 
-    border-color: #ff8f00; 
-    box-shadow: 0 6px 0 #ff6f00, 0 10px 20px rgba(0,0,0,0.2); 
+    background: linear-gradient(to bottom, #ff9a9e, #fecfef); 
+    color: #880e4f; 
+    border-color: #ffb8d1; 
+    box-shadow: 0 6px 0 #c9184a, 0 10px 20px rgba(201, 24, 74, 0.2); 
 }
 body.easter-theme .mode-solo:active { 
-    box-shadow: 0 0 0 #ff6f00, inset 0 3px 10px rgba(0,0,0,0.2); 
+    box-shadow: 0 0 0 #c9184a, inset 0 3px 10px rgba(201, 24, 74, 0.2); 
 }
