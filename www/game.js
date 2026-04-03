@@ -324,17 +324,24 @@ class YambApp {
     
     // --- FUNKCIJE ZA H2H DETALJNU STATISTIKU ---
 
-    updateH2HStats(oppName, oppPhoto, isWin, myScore = 0, oppScore = 0) {
+    updateH2HStats(oppName, oppPhoto, isWin, myScore = 0, oppScore = 0, oppUid = null) {
         // Ne beležimo sistemske botove ili goste bez naloga
         if (!oppName || oppName.includes(gt('player_guest')) || oppName === "Sistem") return;
         if (this.isSpectator) return;
 
+        // 1. SANITIZACIJA: Menjamo potencijalno opasne karaktere u donju crtu
+        const safeOppName = oppName.replace(/\./g, '_').replace(/\$/g, '_');
+
+        // 2. ODABIR KLJUČA: Prioritet je UID (ako postoji), inače koristimo bezbedno ime
+        const h2hKey = oppUid ? oppUid : safeOppName;
+
         let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
         
-        // Kreiraj rivala i podrazumevane stat vrednosti ako ne postoji
-        if (!h2h[oppName]) {
-            h2h[oppName] = { 
-                name: oppName, 
+        // Kreiraj rivala ako ne postoji pod novim sigurnim ključem
+        if (!h2h[h2hKey]) {
+            h2h[h2hKey] = { 
+                name: oppName,       // Originalno ime se čuva zbog prikaza na ekranu!
+                uid: oppUid || '',   // Pamtimo UID za buduću upotrebu
                 photo: oppPhoto || '', 
                 wins: 0, 
                 losses: 0, 
@@ -346,38 +353,42 @@ class YambApp {
                 currentWinStreak: 0, // Trenutni niz
                 maxWinStreak: 0      // Najbolji niz ikada
             };
-        } else if (oppPhoto && oppPhoto.length > 5) {
-            h2h[oppName].photo = oppPhoto; // Osveži sliku ako se promenila
+        } else {
+            // Ažuriraj sliku ili UID ako su u međuvremenu stigli novi podaci
+            if (oppPhoto && oppPhoto.length > 5) h2h[h2hKey].photo = oppPhoto;
+            if (oppUid && !h2h[h2hKey].uid) h2h[h2hKey].uid = oppUid;
         }
 
+        // --- Beleženje pobeda i poraza ---
         if (isWin) {
-            h2h[oppName].wins++;
-            h2h[oppName].currentWinStreak = (h2h[oppName].currentWinStreak || 0) + 1;
-            if (h2h[oppName].currentWinStreak > (h2h[oppName].maxWinStreak || 0)) {
-                h2h[oppName].maxWinStreak = h2h[oppName].currentWinStreak;
+            h2h[h2hKey].wins++;
+            h2h[h2hKey].currentWinStreak = (h2h[h2hKey].currentWinStreak || 0) + 1;
+            if (h2h[h2hKey].currentWinStreak > (h2h[h2hKey].maxWinStreak || 0)) {
+                h2h[h2hKey].maxWinStreak = h2h[h2hKey].currentWinStreak;
             }
         } else {
-            h2h[oppName].losses++;
-            h2h[oppName].currentWinStreak = 0; // Reset na poraz
+            h2h[h2hKey].losses++;
+            h2h[h2hKey].currentWinStreak = 0; // Reset na poraz
         }
 
-        // Dodajemo novu detaljnu statistiku (samo ako su rezultat validni)
+        // --- Dodavanje detaljne statistike (samo ako su rezultati validni) ---
         if (myScore > 0 || oppScore > 0) {
-            h2h[oppName].myTotalScore = (h2h[oppName].myTotalScore || 0) + myScore;
-            h2h[oppName].gamesWithScore = (h2h[oppName].gamesWithScore || 0) + 1;
+            h2h[h2hKey].myTotalScore = (h2h[h2hKey].myTotalScore || 0) + myScore;
+            h2h[h2hKey].gamesWithScore = (h2h[h2hKey].gamesWithScore || 0) + 1;
 
-            if (myScore > (h2h[oppName].myHighScore || 0)) {
-                h2h[oppName].myHighScore = myScore;
+            if (myScore > (h2h[h2hKey].myHighScore || 0)) {
+                h2h[h2hKey].myHighScore = myScore;
             }
 
             let margin = myScore - oppScore;
-            if (isWin && margin > (h2h[oppName].maxWinMargin || 0)) {
-                h2h[oppName].maxWinMargin = margin;
-            } else if (!isWin && (oppScore - myScore) > (h2h[oppName].maxLossMargin || 0)) {
-                h2h[oppName].maxLossMargin = (oppScore - myScore);
+            if (isWin && margin > (h2h[h2hKey].maxWinMargin || 0)) {
+                h2h[h2hKey].maxWinMargin = margin;
+            } else if (!isWin && (oppScore - myScore) > (h2h[h2hKey].maxLossMargin || 0)) {
+                h2h[h2hKey].maxLossMargin = (oppScore - myScore);
             }
         }
 
+        // Sačuvaj nazad u localStorage (nakon čega će se okinuti Cloud sync)
         localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
     }
 
