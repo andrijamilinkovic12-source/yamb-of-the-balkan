@@ -297,13 +297,13 @@ function resetTurnTimer(roomId) {
             const winnerIdx = trollIdx === 0 ? 1 : 0;
             const winnerId = state.players[winnerIdx];
             
-            console.log(`⏱️ TIMEOUT: Isteklo 60s u sobi ${roomId}. Pobednik je ${winnerId}`);
+            console.log(`⏱️ TIMEOUT: Isteklo 90s u sobi ${roomId}. Pobednik je ${winnerId}`);
             io.to(roomId).emit('game_timeout', { winnerId: winnerId });
             
             delete roomState[roomId];
             delete roomTimers[roomId];
         }
-    }, 60000); 
+    }, 90000); // PROMENJENO NA 90s
 }
 
 function generateTournamentBracket() {
@@ -414,6 +414,9 @@ io.on('connection', (socket) => {
                         players[idx] = socket.id;
                     }
                 }
+
+                // NOVO: JAVI SOVI DA SE IGRAČ VRATIO
+                io.to(ghost.roomId).emit('opponent_connection_restored');
 
                 delete playerRooms[ghost.oldSocketId];
                 delete ghostSessions[playerId];
@@ -1857,6 +1860,9 @@ io.on('connection', (socket) => {
                 roomId: activeRoomId,
                 oldSocketId: socket.id
             };
+
+            // NOVO: JAVI DRUGOM IGRAČU DA JE PROTIVNIK OFFLINE
+            io.to(activeRoomId).emit('opponent_connection_lost');
 
             disconnectTimers[pid] = setTimeout(() => {
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);

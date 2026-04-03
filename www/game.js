@@ -102,7 +102,7 @@ class YambApp {
         this.currentOpponentPhoto = '';
 
         // Klijentski tajmer za Anti-Troll zaštitu
-        this.timeLeft = 60;
+        this.timeLeft = 90; // POVEĆANO NA 90s
         this.turnTimerInterval = null;
 
         this.aiMode = false;
@@ -1788,7 +1788,7 @@ class YambApp {
         if (!this.onlineMode || this.isSpectator) return;
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
         
-        this.timeLeft = 60;
+        this.timeLeft = 90; // POVEĆANO NA 90s
         this.updateStatusLabel();
 
         this.turnTimerInterval = setInterval(() => {
@@ -1858,6 +1858,42 @@ class YambApp {
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
         this.socket.off('spectate_started');
+
+        // --- NOVO: GRACE PERIOD LISTENERS (DETEKCIJA PREKIDA KOD PROTIVNIKA) ---
+        this.socket.off('opponent_connection_lost');
+        this.socket.on('opponent_connection_lost', () => {
+            if (this.isSpectator) return;
+            
+            // Zaustavi vizuelni tajmer kod igrača da ne misli da njemu curi vreme
+            if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+            
+            const timerDisplay = document.getElementById('turn-timer-display');
+            if (timerDisplay) {
+                timerDisplay.style.display = 'flex';
+                timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">⚠️ Protivnik ima problema sa mrežom...</span>`;
+                timerDisplay.style.animation = 'pulse 1s infinite';
+            }
+            
+            // Preventivno onemogući dugme da ne pošalje asinhroni potez serveru dok on čeka
+            const btnBacaj = document.getElementById('btn-bacaj');
+            if (btnBacaj) btnBacaj.disabled = true;
+        });
+
+        this.socket.off('opponent_connection_restored');
+        this.socket.on('opponent_connection_restored', () => {
+            if (this.isSpectator) return;
+            
+            if (typeof window.showNotification === 'function') {
+                window.showNotification("INFO", "Protivnik se vratio u igru!");
+            }
+            
+            // Kada se vrati, tražimo kompletno osvežavanje stanja od servera
+            // Ovo će izazvati `sync_state_response` koji će resetovati tajmer i dugmad pravilno
+            if (this.socket) {
+                this.socket.emit('request_state_sync');
+            }
+        });
+        // ----------------------------------------------------------------------
 
         this.socket.off('room_spectators_count');
         this.socket.on('room_spectators_count', (count) => {
