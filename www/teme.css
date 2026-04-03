@@ -274,224 +274,256 @@ body.medium-theme .btn-square:active { box-shadow: 0 0 0 #2b0a16, inset 0 2px 8p
 body.winter-theme .btn-square { border-color: rgba(79, 195, 247, 0.3); color: #4fc3f7; background: linear-gradient(to bottom, #004488, #002244); box-shadow: 0 4px 0 #001122, 0 8px 15px rgba(0, 150, 255, 0.15); }
 body.winter-theme .btn-square:active { box-shadow: 0 0 0 #001122, inset 0 2px 8px rgba(0,0,0,0.5); border-color: #4fc3f7; }
 
-/* --- TEMA 7: VASKRŠNJA (EASTER) V4 - PERFECT VISIBILITY --- */
+/* --- TEMA 7: VASKRŠNJA (EASTER) V4 - SKEUOMORPHISM (PUN REALIZAM) --- */
 body.easter-theme {
-    /* Moderna prolećna paleta - Nežni pasteli */
-    --bg-base: #f8f9fa; 
-    --bg-gradient-1: #fdfbfb; 
-    --bg-gradient-2: #ebedee; 
-    --gold-main: #ff8fa3; 
-    --gold-glow: rgba(255, 143, 163, 0.5);
-    --text-main: #4a4e69; 
-    --text-filled: #b5179e; 
-    --text-sum: #c9184a; 
-    --text-sum-label: #a01a58; 
-    --text-muted: #8d99ae;
+    /* Realistične boje materijala - Ofarbano drvo, papir, sjajna plastika */
+    --bg-base: #e6dace; 
+    --bg-gradient-1: #f2e9e1; 
+    --bg-gradient-2: #d4c5b5; 
+    --gold-main: #d96c81; 
+    --gold-glow: rgba(217, 108, 129, 0.4);
+    --text-main: #3d3531; /* Boja pravog mastila */
+    --text-filled: #851c59; /* Tamno, suvo mastilo */
+    --text-sum: #a82046; 
+    --text-sum-label: #78213e; 
+    --text-muted: #7a6e67;
     
-    /* Moderni Glassmorphism */
-    --glass-bg: rgba(255, 255, 255, 0.6); 
-    --glass-panel: rgba(255, 255, 255, 0.75); 
-    --glass-border: 1px solid rgba(255, 255, 255, 0.9);
-    --modal-bg: #ffffff; 
-    --input-bg: rgba(255, 255, 255, 0.8); 
-    --input-border: #ffb8d1;
-    --dice-bg: linear-gradient(145deg, #ffffff, #fce4ec); 
-    --dice-border: #ffb8d1; 
-    --dice-color: #4a4e69; 
-    --dice-active: #c9184a;
+    /* Fizički materijali umesto stakla */
+    --glass-bg: #f9f6f0; /* Fizički papir/karton */
+    --glass-panel: #f7f3eb; /* Tekstura bloka */
+    --glass-border: 1px solid #d4c5b5;
+    --modal-bg: #fcfbf8; 
+    --input-bg: #ffffff; 
+    --input-border: #bcaaa0;
+    
+    /* Realistične plastične/keramičke kockice */
+    --dice-bg: radial-gradient(circle at 30% 30%, #ffffff 0%, #fae6ea 50%, #e6b3c0 100%); 
+    --dice-border: #b86b7d; 
+    --dice-color: #3d3531; 
+    --dice-active: #a82046;
 
-    /* Prelepe boje kolona (Jaja) */
-    --col-nadole: #82c0cc; /* Bejbi plava */
-    --col-nagore: #ffb5a7; /* Breskva */
-    --col-sredina: #fcf6bd; /* Svetla žuta */
-    --col-rucno: #d0d1ff; /* Lavanda */
-    --col-najava: #b5e48c; /* Menta zelena */
-    --col-slobodna: #e0aaff; /* Ljubičasta */
+    /* Tradicionalne boje uskršnjih jaja (Fizičke pastelne nijanse tinte) */
+    --col-nadole: #6fa8b5; 
+    --col-nagore: #d9887b; 
+    --col-sredina: #d6c67a; 
+    --col-rucno: #9c88b5; 
+    --col-najava: #8ba86c; 
+    --col-slobodna: #b886b5;
 }
 
-/* POZADINSKI PATTERN (Mesh Gradient + Diskretni Emodžiji) */
+/* POZADINA - Piknik stolnjak sa realističnom dubinom */
 body.easter-theme::before {
     content: "";
     position: fixed; 
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: -1;
-    background-color: #f8f9fa;
+    background-color: #f2e9e1;
     background-image: 
-        radial-gradient(circle at 15% 10%, rgba(224, 195, 252, 0.6) 0%, transparent 50%),
-        radial-gradient(circle at 85% 15%, rgba(142, 197, 252, 0.6) 0%, transparent 50%),
-        radial-gradient(circle at 90% 85%, rgba(255, 177, 153, 0.6) 0%, transparent 50%),
-        radial-gradient(circle at 10% 90%, rgba(252, 246, 189, 0.6) 0%, transparent 50%),
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='15' y='35' font-size='24' opacity='0.3'%3E🥚%3C/text%3E%3Ctext x='75' y='95' font-size='24' opacity='0.3'%3E🐇%3C/text%3E%3Ctext x='75' y='35' font-size='20' opacity='0.3'%3E🌸%3C/text%3E%3Ctext x='15' y='95' font-size='20' opacity='0.3'%3E🐰%3C/text%3E%3Ctext x='45' y='65' font-size='18' opacity='0.3'%3E🐣%3C/text%3E%3C/svg%3E");
-    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100px 100px;
+        linear-gradient(45deg, rgba(217, 108, 129, 0.05) 25%, transparent 25%, transparent 75%, rgba(217, 108, 129, 0.05) 75%, rgba(217, 108, 129, 0.05)), 
+        linear-gradient(45deg, rgba(217, 108, 129, 0.05) 25%, transparent 25%, transparent 75%, rgba(217, 108, 129, 0.05) 75%, rgba(217, 108, 129, 0.05));
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.1); /* Vinjeta za 3D dubinu sobe */
     pointer-events: none;
 }
 
-/* Glavna tabla - Malo prozirnija kako bi bela polja došla do izražaja */
+/* Glavna tabla - Izgled debelog notesa/kartona sa fizičkim ivicama */
 body.easter-theme .player-table { 
     transform: perspective(1000px) rotateX(1deg); 
-    border-radius: 16px; 
-    border: 2px solid #ffb8d1; /* Pojačana ivica same tabele */
-    box-shadow: 0 10px 0 rgba(209, 196, 233, 0.8), 0 20px 40px rgba(0, 0, 0, 0.1) !important; 
-    background: rgba(255, 255, 255, 0.5); /* Smanjena prozirnost podloge */
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    border-radius: 12px; 
+    border: 1px solid #ffffff; /* Gornji sjaj table */
+    box-shadow: 
+        0 8px 0 #d4c5b5, /* Fizička debljina kartona */
+        0 15px 30px rgba(0, 0, 0, 0.25), /* Fizička bačena senka */
+        inset 0 0 0 1px #e8dcd0,
+        inset 0 0 10px rgba(0,0,0,0.05) !important; 
+    background: #fdfaf5; /* Boja finog papira */
+    backdrop-filter: none; /* Ukidamo staklo */
+    -webkit-backdrop-filter: none;
 }
 
-/* GRID FIX - Savršena preglednost (Tamnije ivice, bela pozadina) */
+/* Polja (Grid) - Udubljenja u papiru (Emboss efekat) */
 body.easter-theme .grid-cell { 
-    border: 1px solid rgba(255, 143, 163, 0.4); /* Nežno roze jasne ivice, više se ne stapaju! */
-    background: rgba(255, 255, 255, 0.9); /* Skoro potpuno bele ćelije za savršen kontrast */
-    box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.04); /* Jako blaga dubina */
+    border: 1px solid #e0d4c8; 
+    background: #f7f3eb; 
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.08), inset -1px -1px 2px #ffffff; 
 }
 
-/* Zaglavlja kolona i redova */
+/* Zaglavlja - Izdignute papirne trake */
 body.easter-theme .col-header, 
 body.easter-theme .row-header { 
-    background: rgba(255, 240, 245, 0.9); /* Nežna roze podloga za zaglavlja */
-    border-bottom: 1px solid rgba(255, 143, 163, 0.5); 
-    border-right: 1px solid rgba(255, 143, 163, 0.4);
-    color: #b5179e; 
-    box-shadow: none; 
-    text-shadow: 0 1px 1px #fff;
+    background: linear-gradient(to bottom, #ffffff, #f2e9e1); 
+    border-bottom: 1px solid #d4c5b5; 
+    border-right: 1px solid #d4c5b5;
+    color: #851c59; 
+    box-shadow: inset 1px 1px 0 #ffffff; /* Oštar rub gore levo */
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8); /* Urezan tekst */
 }
 
-/* Poseban izgled za polja sa zbirovima */
+/* Poseban izgled za polja sa zbirovima - Zlatkasto-žuti markerovani papir */
 body.easter-theme .row-header.sum, 
 body.easter-theme .cell-sum { 
-    background: rgba(255, 236, 210, 0.75) !important; 
-    border-color: rgba(255, 143, 163, 0.5) !important; 
-    color: #c9184a !important; 
+    background: linear-gradient(to bottom, #fdf4d7, #f5e4b0) !important; 
+    border-color: #d1b975 !important; 
+    color: #78213e !important; 
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1), inset -1px -1px 2px rgba(255,255,255,0.8) !important;
 }
 
-/* Opšta dugmad u meniju */
+/* Opšta dugmad - Realistične sjajne plastične pilule */
 body.easter-theme .btn-menu { 
-    background: linear-gradient(to bottom, #ffffff, #fdf3f6); 
-    color: #c9184a; 
-    border: 1px solid rgba(255, 143, 163, 0.5); 
-    box-shadow: 0 6px 0 #ffb8d1, 0 10px 15px rgba(201, 24, 74, 0.1); 
+    background: linear-gradient(to bottom, #ffffff 0%, #f4e8ea 40%, #e6d3d7 100%); 
+    color: #a82046; 
+    border: 1px solid #c9b1b6; 
+    box-shadow: 
+        inset 0 2px 3px rgba(255,255,255,0.9), /* Gornji oštar sjaj plastike */
+        inset 0 -2px 4px rgba(0,0,0,0.1), /* Donja interna senka */
+        0 6px 0 #bca8ab, /* 3D debljina baze */
+        0 10px 15px rgba(0, 0, 0, 0.15); /* Senka na podlozi */
     border-radius: 50px; 
     transform: translateY(0); 
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8);
 }
 
 body.easter-theme .btn-menu:active { 
     transform: translateY(6px); 
-    box-shadow: 0 0 0 #ffb8d1, inset 0 2px 5px rgba(201, 24, 74, 0.15); 
+    box-shadow: 
+        inset 0 2px 8px rgba(0,0,0,0.15),
+        0 0 0 #bca8ab, 
+        0 2px 3px rgba(0,0,0,0.1); 
 }
 
-/* Glavno dugme za bacanje (Moderno "Candy" roze/breskva) */
+/* Glavno dugme za bacanje - Sjajno uskršnje jaje */
 body.easter-theme .btn-primary, 
 body.easter-theme .btn-throw { 
-    background: linear-gradient(to bottom, #ff9a9e, #fecfef); 
-    color: #880e4f; 
-    border: 1px solid #ffb8d1; 
-    box-shadow: 0 6px 0 #c9184a, 0 12px 20px rgba(201, 24, 74, 0.25); 
+    background: linear-gradient(to bottom, #ffb3c6 0%, #ff7ea5 40%, #d93863 100%); 
+    color: #ffffff; 
+    border: 1px solid #a82046; 
+    box-shadow: 
+        inset 0 3px 5px rgba(255,255,255,0.6), /* Oštar highlight */
+        inset 0 -3px 5px rgba(0,0,0,0.2), 
+        0 8px 0 #851c59, /* Tamno crvena 3D debljina */
+        0 14px 20px rgba(133, 28, 89, 0.3); 
     border-radius: 20px; 
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.3); 
 }
 
 body.easter-theme .btn-primary:active, 
 body.easter-theme .btn-throw:active { 
-    transform: translateY(6px); 
-    box-shadow: 0 0 0 #c9184a, inset 0 3px 8px rgba(201, 24, 74, 0.2); 
+    transform: translateY(8px); 
+    box-shadow: 
+        inset 0 4px 10px rgba(0,0,0,0.3), 
+        0 0 0 #851c59, 
+        0 3px 5px rgba(133, 28, 89, 0.2); 
 }
 
-/* Pomoćna dugmad u igri */
+/* Pomoćna dugmad u igri - Fizička svetla plastika */
 body.easter-theme .btn-secondary, 
 body.easter-theme #btn-najava { 
-    background: linear-gradient(to bottom, #ffffff, #f4f6f9); 
-    color: #4a4e69; 
-    border: 1px solid rgba(141, 153, 174, 0.4); 
-    box-shadow: 0 5px 0 #8d99ae, 0 5px 10px rgba(0,0,0,0.05); 
+    background: linear-gradient(to bottom, #ffffff 0%, #e8eaf0 100%); 
+    color: #555b6e; 
+    border: 1px solid #c0c5d1; 
+    box-shadow: 
+        inset 0 2px 2px #ffffff,
+        0 5px 0 #9fa5b5, 
+        0 8px 10px rgba(0,0,0,0.1); 
+    text-shadow: 0 1px 0 #fff;
 }
 
 body.easter-theme .btn-secondary:active, 
 body.easter-theme #btn-najava:active { 
     transform: translateY(5px); 
-    box-shadow: 0 0 0 #8d99ae, inset 0 2px 5px rgba(0,0,0,0.1); 
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.15), 0 0 0 #9fa5b5, 0 2px 3px rgba(0,0,0,0.1); 
 }
 
-/* Modali i kartice sa jakim staklenim efektom */
+/* Modali i kartice - Debeli fizički papir */
 body.easter-theme .modal-box, 
 body.easter-theme .card { 
-    background: rgba(255, 255, 255, 0.85) !important; 
-    backdrop-filter: blur(20px);
-    border: 2px solid rgba(255, 184, 209, 0.9) !important; 
-    border-radius: 16px; 
-    box-shadow: 0 10px 0 rgba(209, 196, 233, 0.8), 0 25px 50px rgba(0,0,0,0.15) !important; 
-    color: #4a4e69; 
+    background: #fdfaf5 !important; 
+    backdrop-filter: none;
+    border: 1px solid #ffffff !important; 
+    border-radius: 12px; 
+    box-shadow: 
+        0 0 0 1px #d4c5b5, 
+        0 10px 0 #c2b4a3, 
+        0 25px 50px rgba(0,0,0,0.3) !important; 
+    color: #3d3531; 
 }
 
-/* Sinhronizacija header dugmića (Sound, Vib, Theme) */
+/* Sinhronizacija header okruglih dugmića */
 body.easter-theme #btn-theme-toggle, 
 body.easter-theme .game-header .btn-secondary { 
-    background: linear-gradient(to bottom, #ffffff, #fdf3f6); 
-    border-color: rgba(255, 143, 163, 0.6); 
-    color: #c9184a; 
-    box-shadow: 0 5px 0 #ffb8d1, 0 10px 10px rgba(201, 24, 74, 0.1); 
+    background: linear-gradient(to bottom, #ffffff, #f4e8ea); 
+    border-color: #d96c81; 
+    color: #a82046; 
+    box-shadow: inset 0 2px 2px #fff, 0 5px 0 #bca8ab, 0 8px 10px rgba(0,0,0,0.1); 
 }
 
 /* Kvadratna dugmad (Squircles) */
 body.easter-theme .btn-square, 
 body.easter-theme .btn-special-square { 
-    background: linear-gradient(to bottom, #ffffff, #fdfbfb); 
-    border-color: rgba(255, 143, 163, 0.5); 
-    color: #c9184a; 
-    box-shadow: 0 5px 0 #ffb8d1, 0 8px 15px rgba(201, 24, 74, 0.1); 
+    background: linear-gradient(to bottom, #ffffff, #f4e8ea); 
+    border-color: #d96c81; 
+    color: #a82046; 
+    box-shadow: inset 0 2px 2px #fff, 0 5px 0 #bca8ab, 0 8px 10px rgba(0,0,0,0.1); 
 }
 
 body.easter-theme .btn-square:active, 
 body.easter-theme .btn-special-square:active { 
-    box-shadow: 0 0 0 #ffb8d1, inset 0 2px 8px rgba(201, 24, 74, 0.15); 
+    box-shadow: inset 0 3px 6px rgba(0,0,0,0.15), 0 0 0 #bca8ab, 0 2px 3px rgba(0,0,0,0.1); 
 }
 
-/* --- Vaskršnja popunjena polja (upisani poeni) --- */
+/* Vaskršnja popunjena polja - Realistično utisnuto mastilo */
 body.easter-theme .score-btn.filled { 
-    color: #b5179e !important; 
-    text-shadow: 0 0 2px rgba(181, 23, 158, 0.2); 
-    background: radial-gradient(circle, rgba(255, 143, 163, 0.25) 0%, transparent 70%) !important; 
+    color: #a82046 !important; 
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8); 
+    background: rgba(217, 108, 129, 0.15) !important; 
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1) !important; 
     font-weight: 900;
 }
 
-/* --- Vaskršnji Dnevni Izazov --- */
+/* Dnevni Izazov Kartica */
 body.easter-theme .daily-btn-main { 
-    box-shadow: 0 6px 0 #c9184a, 0 10px 20px rgba(201, 24, 74, 0.2) !important; 
+    box-shadow: inset 0 2px 3px #fff, 0 8px 0 #851c59, 0 12px 20px rgba(133, 28, 89, 0.3) !important; 
 }
 body.easter-theme .daily-btn-main:active { 
-    box-shadow: 0 0 0 #c9184a, inset 0 3px 8px rgba(201, 24, 74, 0.2) !important; 
+    box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 0 0 #851c59, 0 2px 5px rgba(0,0,0,0.2) !important; 
 }
 body.easter-theme .daily-challenge-card { 
-    border: 2px solid rgba(255, 184, 209, 0.9) !important; 
-    background: rgba(255, 255, 255, 0.8) !important; 
-    backdrop-filter: blur(12px);
+    border: 1px solid #ffffff !important; 
+    background: #fdfaf5 !important; 
+    box-shadow: 0 0 0 1px #d4c5b5, 0 8px 0 #c2b4a3, 0 15px 30px rgba(0,0,0,0.2);
 }
 body.easter-theme .daily-title { 
-    color: #c9184a; 
-    text-shadow: 0 1px 1px #fff; 
+    color: #a82046; 
+    text-shadow: 0 1px 0 #fff; 
 }
 body.easter-theme .daily-score-box { 
-    background: rgba(253, 243, 246, 0.8); 
-    border: 1px solid #ffb8d1; 
+    background: #f2e9e1; 
+    border: 1px solid #d4c5b5; 
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
 }
 body.easter-theme .daily-value { 
-    color: #b5179e; 
-    text-shadow: none; 
+    color: #851c59; 
+    text-shadow: 0 1px 0 rgba(255,255,255,0.8); 
 }
 
-/* --- Vaskršnji Glavni Meni --- */
+/* Glavni Meni Dugmad (Modovi) */
 body.easter-theme .mode-btn { 
-    background: linear-gradient(to bottom, #ffffff, #fdf3f6); 
-    box-shadow: 0 6px 0 #ffb8d1, 0 10px 20px rgba(201, 24, 74, 0.1); 
-    color: #c9184a; 
-    border-color: rgba(255, 143, 163, 0.4);
+    background: linear-gradient(to bottom, #ffffff, #f4e8ea); 
+    box-shadow: inset 0 2px 3px #fff, 0 6px 0 #bca8ab, 0 10px 15px rgba(0,0,0,0.1); 
+    color: #a82046; 
+    border: 1px solid #d96c81;
 }
 body.easter-theme .mode-btn:active { 
-    box-shadow: 0 0 0 #ffb8d1, inset 0 3px 10px rgba(201, 24, 74, 0.15); 
+    box-shadow: inset 0 3px 8px rgba(0,0,0,0.15), 0 0 0 #bca8ab, 0 2px 5px rgba(0,0,0,0.1); 
 }
 body.easter-theme .mode-solo { 
-    background: linear-gradient(to bottom, #ff9a9e, #fecfef); 
-    color: #880e4f; 
-    border-color: #ffb8d1; 
-    box-shadow: 0 6px 0 #c9184a, 0 10px 20px rgba(201, 24, 74, 0.2); 
+    background: linear-gradient(to bottom, #ffb3c6, #ff7ea5); 
+    color: #ffffff; 
+    border: 1px solid #a82046; 
+    box-shadow: inset 0 2px 3px rgba(255,255,255,0.6), 0 6px 0 #851c59, 0 10px 15px rgba(133, 28, 89, 0.2); 
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.3);
 }
 body.easter-theme .mode-solo:active { 
-    box-shadow: 0 0 0 #c9184a, inset 0 3px 10px rgba(201, 24, 74, 0.2); 
+    box-shadow: inset 0 4px 10px rgba(0,0,0,0.3), 0 0 0 #851c59, 0 2px 5px rgba(0,0,0,0.2); 
 }
