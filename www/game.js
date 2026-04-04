@@ -2780,7 +2780,12 @@ class YambApp {
             } 
             
             this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); 
-            for(let k=0; k<6; k++) { this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); await sleep(50); } 
+            
+            // IZMENJENO NA 8 ITERACIJA ZBOG 3D ANIMACIJE (Sluša instrukciju iz CSS modifikacije)
+            for(let k=0; k<8; k++) { 
+                this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
+                await sleep(50); 
+            } 
             
             this.diceBtns.forEach(b => b.classList.remove('rolling')); 
             this.kockiceVals = newValues; 
