@@ -145,31 +145,31 @@ body {
 
 .dice { flex-shrink: 0; background: var(--dice-bg); border: 1px solid var(--dice-border); border-radius: 15%; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; color: var(--dice-color); cursor: pointer; transition: transform 0.2s, filter 0.2s, box-shadow 0.2s; box-shadow: 0 4px 8px rgba(0,0,0,0.3); line-height: 0; }
 
-/* --- NOVA 3D ANIMACIJA KOCKICA --- */
+/* --- ELEGANTNA "SHAKE & POP" ANIMACIJA KOCKICA --- */
 .dice.rolling { 
-    animation: tumbleRoll 0.4s ease-in-out infinite; 
+    animation: casinoRoll 0.3s infinite ease-in-out; 
     color: var(--gold-main); 
     text-shadow: 0 0 15px var(--gold-glow); 
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)) blur(0.5px);
 }
+
+/* Dinamičan odskok (scale) i blago tresenje (rotate) u 2D prostoru */
+@keyframes casinoRoll { 
+    0% { transform: scale(1) rotate(0deg) translateY(0); filter: blur(0); } 
+    25% { transform: scale(1.15) rotate(-15deg) translateY(-8px); filter: blur(0.5px); } 
+    50% { transform: scale(1.25) rotate(20deg) translateY(-12px); filter: blur(1px); } 
+    75% { transform: scale(1.15) rotate(-15deg) translateY(-4px); filter: blur(0.5px); } 
+    100% { transform: scale(1) rotate(0deg) translateY(0); filter: blur(0); } 
+}
+
+/* Suptilno razbijanje sinhronizacije da ne bude previše haotično */
+.dice:nth-child(1).rolling { animation-duration: 0.28s; }
+.dice:nth-child(2).rolling { animation-duration: 0.32s; animation-direction: reverse; }
+.dice:nth-child(3).rolling { animation-duration: 0.26s; }
+.dice:nth-child(4).rolling { animation-duration: 0.35s; animation-direction: alternate; }
+.dice:nth-child(5).rolling { animation-duration: 0.29s; animation-direction: reverse; }
+.dice:nth-child(6).rolling { animation-duration: 0.31s; }
+
 .dice.held { transform: translateY(-8%); border: 2px solid #ff4444 !important; filter: brightness(0.6) sepia(0.2); box-shadow: 0 0 15px rgba(255, 68, 68, 0.6) !important; position: relative; color: #ffcccc; }
-
-/* 3D Okretanje i Odskok */
-@keyframes tumbleRoll { 
-    0% { transform: translateY(0) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1); } 
-    25% { transform: translateY(-15px) rotateX(90deg) rotateY(45deg) rotateZ(45deg) scale(1.15); } 
-    50% { transform: translateY(-20px) rotateX(180deg) rotateY(90deg) rotateZ(90deg) scale(1.2); } 
-    75% { transform: translateY(-8px) rotateX(270deg) rotateY(135deg) rotateZ(135deg) scale(1.05); } 
-    100% { transform: translateY(0) rotateX(360deg) rotateY(180deg) rotateZ(180deg) scale(1); } 
-}
-
-/* Razbijanje sinhronizacije (Pseudo-randomizacija) */
-.dice:nth-child(1).rolling { animation-duration: 0.38s; animation-direction: normal; }
-.dice:nth-child(2).rolling { animation-duration: 0.42s; animation-direction: reverse; }
-.dice:nth-child(3).rolling { animation-duration: 0.35s; animation-direction: normal; }
-.dice:nth-child(4).rolling { animation-duration: 0.45s; animation-direction: alternate; }
-.dice:nth-child(5).rolling { animation-duration: 0.40s; animation-direction: reverse; }
-.dice:nth-child(6).rolling { animation-duration: 0.46s; animation-direction: normal; }
 
 .status-label { color: var(--gold-main); font-weight: 600; white-space: nowrap; text-align: right;}
 .game-btn { border-radius: 20px; border: none; font-weight: bold; text-transform: uppercase; white-space: nowrap; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center;}
@@ -772,4 +772,5 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
 .pravni-tekst-container::-webkit-scrollbar-thumb { 
     background: var(--gold-main); 
     border-radius: 10px; 
+}
 }

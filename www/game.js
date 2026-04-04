@@ -2730,7 +2730,7 @@ class YambApp {
         this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); 
         this.soundMgr.roll(); 
         
-        for(let k=0; k<8; k++) { 
+        for(let k=0; k<6; k++) { 
             this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
             await sleep(40); 
         } 
@@ -2781,8 +2781,8 @@ class YambApp {
             
             this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); 
             
-            // IZMENJENO NA 8 ITERACIJA ZBOG 3D ANIMACIJE (Sluša instrukciju iz CSS modifikacije)
-            for(let k=0; k<8; k++) { 
+            // IZMENJENO NA 6 ITERACIJA ZBOG 2D KAZINO SHAKE ANIMACIJE
+            for(let k=0; k<6; k++) { 
                 this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
                 await sleep(50); 
             } 
