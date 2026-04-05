@@ -584,8 +584,8 @@ const TRANSLATIONS = {
         "hof_no_medals": "No medal winners yet. Gold medals are awarded at the end of the quarter.",
         "hof_total": "Total",
         "hof_no_champs": "No completed cycles yet. The crown awaits the first Champion!",
-        "hof_winner_prefix": "WINNER OF CYCLE",
-        "hof_winner_suffix": "",
+        "hof_winner_prefix": "CYCLE",
+        "hof_winner_suffix": "CHAMPION",
         "league_champion_title": "🏆 LEAGUE CHAMPION 🏆",
         "league_winner_q": "Winner for Q{0} / {1}.",
         "league_congrats": "Congratulations on winning the Quarterly League!<br>The new season has started, good luck to everyone!",
@@ -1061,7 +1061,10 @@ const TRANSLATIONS = {
 
 function t(key) {
     const lang = localStorage.getItem('yamb_lang') || 'sr';
-    return TRANSLATIONS[lang][key] || key;
+    if (TRANSLATIONS[lang] && TRANSLATIONS[lang].hasOwnProperty(key)) {
+        return TRANSLATIONS[lang][key];
+    }
+    return key;
 }
 
 function setLanguage(lang) {
