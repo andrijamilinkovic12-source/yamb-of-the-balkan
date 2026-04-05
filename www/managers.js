@@ -24,9 +24,9 @@ class StateManager {
 class StatsManager {
     constructor() {
         this.stats = this.loadStats() || {
-            wins: 0, losses: 0, totalGames: 0, currentWinStreak: 0, maxWinStreak: 0, currentLossStreak: 0, // <-- DODAT maxWinStreak
+            wins: 0, losses: 0, totalGames: 0, currentWinStreak: 0, maxWinStreak: 0, currentLossStreak: 0, 
             balance: CONFIG.INITIAL_BALANCE || 1000, unlockedTrophies: [], highscore: 0,
-            tournamentWins: 0 // <--- DODATO OVO ZA PAMĆENJE OSVOJENIH TURNIRA
+            tournamentWins: 0 
         };
         
         const legacyBalance = parseInt(localStorage.getItem('yamb_dukati'));
@@ -113,9 +113,7 @@ class StatsManager {
 
 // --- 3. MODAL MANAGER (UI) ---
 class ModalManager {
-    constructor() {
-        // Više ne čuvamo reference trajno, već ih dobijamo u letu
-    }
+    constructor() {}
 
     get elements() {
         return {
@@ -202,8 +200,6 @@ class EffectManager {
     applyPermanent(type) {
         this.stop(); 
         if (!type || type === 'none') return;
-        
-        // Neon pulse prebačen u trigger, pa se ovde više ne dodaje
     }
     
     trigger(type) {
@@ -292,23 +288,21 @@ class EffectManager {
 
             if (targetTable) {
                 targetTable.classList.add('anim-neon-pulse');
-                document.body.classList.add('fx-neon_pulse'); // Široki odsjaj celog ekrana
+                document.body.classList.add('fx-neon_pulse'); 
                 
                 setTimeout(() => { 
                     targetTable.classList.remove('anim-neon-pulse'); 
                     document.body.classList.remove('fx-neon_pulse'); 
-                }, 5000); // Traje tačno 5 sekundi
+                }, 5000); 
             }
         }
 
         // --- DRONE SHOW (DRONOVI SA IMENOM V.2) ---
         if (type === 'drones') {
-            // 1. Zatamni nebo i upali reflektore
             const sky = document.createElement('div');
             sky.className = 'drone-night-sky';
             document.body.appendChild(sky);
 
-            // 2. Pametno izdvajanje SAMO PRVOG IMENA
             let fullName = _safeT('hs_player') || "IGRAČ";
             if (window.app && window.app.players && window.app.players[window.app.currentPlayerIdx]) {
                 fullName = window.app.players[window.app.currentPlayerIdx];
@@ -316,23 +310,19 @@ class EffectManager {
                 fullName = window.app.playerName;
             }
             
-            // Logika: Uzmi prvu reč (pre prvog razmaka) i ograniči na max 12 karaktera
             let firstName = fullName.trim().split(/\s+/)[0]; 
             firstName = firstName.substring(0, 12); 
 
-            // 3. Ime od Dronova
             const textEl = document.createElement('div');
             textEl.className = 'drone-text';
             textEl.innerText = firstName;
             document.body.appendChild(textEl);
 
-            // 4. Ispaljivanje dronova
             const colors = ['#00d4ff', '#ffffff', '#00ffcc', '#aa00ff'];
             for (let i = 0; i < 60; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'drone-dot';
                 
-                // Formacijske rute letenja
                 dot.style.setProperty('--sx', (20 + Math.random() * 60) + 'vw');
                 dot.style.setProperty('--dx', (10 + Math.random() * 80) + 'vw');
                 dot.style.setProperty('--dx2', (Math.random() * 80 + 10) + 'vw');
@@ -347,7 +337,6 @@ class EffectManager {
                 setTimeout(() => { if(dot.parentNode) dot.remove(); }, 8000);
             }
 
-            // Pusti moćni Hero zvuk
             if(window.app && window.app.soundMgr && window.app.soundMgr.epicDroneShow) {
                 window.app.soundMgr.epicDroneShow();
             } else if (typeof SoundManager !== 'undefined') {
@@ -370,7 +359,6 @@ class EffectManager {
             document.body.appendChild(flash);
             document.body.classList.add('fx-thunder-shake'); 
             
-            // 1. Okinemo moćni proceduralni ZVUK groma
             if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
                 window.app.soundMgr.thunder();
             } else {
@@ -378,7 +366,6 @@ class EffectManager {
                 if (typeof sm.thunder === 'function') sm.thunder();
             }
 
-            // 2. Kompleksni pattern VIBRACIJE
             if (window.app && typeof window.app.vibrate === 'function') {
                 window.app.vibrate([50, 50, 50, 600, 400, 150, 300, 100, 200, 100, 100]);
             }
@@ -393,12 +380,10 @@ class EffectManager {
         if (type === 'balkan') {
             document.body.classList.add('fx-balkan');
             
-            // 1. Kafanski stolnjak (Checkered overlay)
             const bg = document.createElement('div');
             bg.className = 'kafana-overlay';
             document.body.appendChild(bg);
 
-            // 2. Četiri velike trube (2 lijevo, 2 desno, različite visine)
             const tr1 = document.createElement('div'); tr1.innerText = '🎺'; tr1.className = 'trumpet-icon-v2 trumpet-left'; tr1.style.top = '15vh';
             const tr2 = document.createElement('div'); tr2.innerText = '🎺'; tr2.className = 'trumpet-icon-v2 trumpet-left'; tr2.style.top = '55vh'; tr2.style.animationDelay = '0.2s';
             const tr3 = document.createElement('div'); tr3.innerText = '🎺'; tr3.className = 'trumpet-icon-v2 trumpet-right'; tr3.style.top = '25vh';
@@ -406,10 +391,8 @@ class EffectManager {
             
             document.body.appendChild(tr1); document.body.appendChild(tr2); document.body.appendChild(tr3); document.body.appendChild(tr4);
 
-            // 3. Opštenarodno veselje (Pare, piće, prase, note) - Dupliran broj!
             this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖', '💖', '🎵', '🍻'], 80);
 
-            // 4. Muzika!
             if (window.app && window.app.soundMgr && window.app.soundMgr.balkanTrumpet) {
                 window.app.soundMgr.balkanTrumpet();
             } else if (typeof SoundManager !== 'undefined') {
@@ -417,7 +400,6 @@ class EffectManager {
                 if(sm.balkanTrumpet) sm.balkanTrumpet();
             }
 
-            // 5. Čišćenje poslije 7 sekundi
             setTimeout(() => { 
                 document.body.classList.remove('fx-balkan');
                 if(bg.parentNode) bg.remove(); 
@@ -430,9 +412,7 @@ class EffectManager {
         
         // --- GRANDIOZNI VATROMET V.2 ---
         if (type === 'fireworks') {
-             // Ispaljuje nasumične vatromete tokom 7 sekundi (ukupno ~12 komada)
              for(let i=0; i<12; i++) { 
-                 // Prvi vatromet puca odmah, ostali se raspoređuju do 6. sekunde
                  setTimeout(() => this.spawnRealFirework(), i * 500 + Math.random() * 400); 
              }
         }
@@ -440,9 +420,8 @@ class EffectManager {
 
     spawnRealFirework() {
         const startX = window.innerWidth * 0.1 + Math.random() * window.innerWidth * 0.8;
-        const endY = window.innerHeight * 0.1 + Math.random() * window.innerHeight * 0.4; // Visina pucanja
+        const endY = window.innerHeight * 0.1 + Math.random() * window.innerHeight * 0.4;
         
-        // Zvuk zvižduka rakete pri poletanju
         if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkLaunch) {
             window.app.soundMgr.fireworkLaunch();
         } else if (typeof SoundManager !== 'undefined') {
@@ -455,7 +434,6 @@ class EffectManager {
         rocket.style.left = startX + 'px';
         document.body.appendChild(rocket);
 
-        // Putovanje rakete nagore (traje 800ms do 1.2s)
         const duration = 800 + Math.random() * 400;
         rocket.animate([
             { transform: `translateY(100vh)`, opacity: 1 },
@@ -467,25 +445,22 @@ class EffectManager {
     }
 
     explodeRealFirework(x, y) {
-        // Zvuk jake eksplozije
         if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkExplode) {
             window.app.soundMgr.fireworkExplode();
         }
 
-        // Blic na ekranu
         const flash = document.createElement('div');
         flash.className = 'fw-flash';
         document.body.appendChild(flash);
         setTimeout(() => { if(flash.parentNode) flash.remove(); }, 250);
 
-        // Fizička haptika za potres
         if (window.app && typeof window.app.vibrate === 'function') {
             window.app.vibrate([40, 50, 20]);
         }
 
         const colors = ['#FF0044', '#00FF44', '#0044FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#FFD700'];
         const mainColor = colors[Math.floor(Math.random() * colors.length)];
-        const particleCount = 45 + Math.random() * 30; // Između 45 i 75 čestica po eksploziji
+        const particleCount = 45 + Math.random() * 30; 
 
         for (let i = 0; i < particleCount; i++) {
             const p = document.createElement('div');
@@ -525,7 +500,6 @@ class EffectManager {
                 el.style.left = Math.random() * 100 + 'vw'; 
                 el.style.setProperty('--rnd-x', (Math.random() * 200 - 100) + 'px'); 
                 
-                // Trajanje od 3s do 5s
                 el.style.animationDuration = (Math.random() * 2 + 3) + 's'; 
                 
                 document.body.appendChild(el); 
@@ -535,29 +509,25 @@ class EffectManager {
         }
     }
 
-    // --- NOVA FUNKCIJA ZA MEHURIĆE ---
     spawnBubbles(count) {
-        const emojis = ['🫧', '🫧', '⚪']; // Više šansi za pravi mehur
+        const emojis = ['🫧', '🫧', '⚪']; 
         for (let i = 0; i < count; i++) {
             setTimeout(() => {
                 const el = document.createElement('div');
                 el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
                 el.className = 'magic-bubble';
                 el.style.left = Math.random() * 100 + 'vw';
-                el.style.setProperty('--rnd-x', (Math.random() * 150 - 75) + 'px'); // Krivudanje levo/desno
+                el.style.setProperty('--rnd-x', (Math.random() * 150 - 75) + 'px'); 
                 
-                // Trajanje animacije od 3.5s do 5s
                 el.style.animationDuration = (Math.random() * 1.5 + 3.5) + 's';
                 
-                // Nasumična veličina mehurića (od 1rem do 2.5rem)
                 const size = Math.random() * 1.5 + 1; 
                 el.style.fontSize = size + 'rem';
 
                 document.body.appendChild(el);
                 
-                // Brisanje posle 5.5 sekundi (sigurnosno)
                 setTimeout(() => el.remove(), 5500);
-            }, Math.random() * 2000); // Mehurići izlaze postepeno u prve 2 sekunde
+            }, Math.random() * 2000); 
         }
     }
     
@@ -575,17 +545,15 @@ class EffectManager {
     
     spawnConfetti() {
         if (window.confetti) { 
-            // Vrhunske "Premium" boje (Zlato, Neon Pink, Cijan, Matrix Zelena, itd.)
             const colors = ['#FFD700', '#FF007F', '#00E5FF', '#39FF14', '#FF4500', '#9400D3'];
-            const end = Date.now() + 5000; // Trajanje tačno 5 sekundi
+            const end = Date.now() + 5000; 
             
-            // Kontinuirano pucanje iz dva topa (levi i desni ugao)
             (function frame() {
                 window.confetti({
                     particleCount: 6,
                     angle: 60,
                     spread: 60,
-                    origin: { x: 0, y: 0.9 }, // Levi donji ugao
+                    origin: { x: 0, y: 0.9 },
                     colors: colors,
                     zIndex: 99999
                 });
@@ -593,7 +561,7 @@ class EffectManager {
                     particleCount: 6,
                     angle: 120,
                     spread: 60,
-                    origin: { x: 1, y: 0.9 }, // Desni donji ugao
+                    origin: { x: 1, y: 0.9 }, 
                     colors: colors,
                     zIndex: 99999
                 });
@@ -603,7 +571,6 @@ class EffectManager {
                 }
             }());
         } else { 
-            // Poboljšan Fallback: Emodžiji koji padaju u bogatim talasima 5 sekundi
             const end = Date.now() + 5000;
             const interval = setInterval(() => {
                 if (Date.now() > end) {
@@ -611,14 +578,13 @@ class EffectManager {
                     return;
                 }
                 this.spawnEmojiRain(['🎉', '🎊', '🎈', '✨', '🏆', '💫'], 5);
-            }, 250); // Svakih 250ms ispaljuje novi talas
+            }, 250); 
         }
     }
     
     celebrateYamb() {
         const active = localStorage.getItem('yamb_active_effect') || 'confetti';
         this.trigger(active); 
-        // UKLONJENO hardkodovano dodavanje 'fx-neon_pulse'
     }
     
     celebrateWin() {
@@ -629,7 +595,6 @@ class EffectManager {
     stop() {
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake');
         
-        // Dodata nova klasa za brisanje novog vatrometa
         document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
@@ -766,8 +731,7 @@ class SoundManager {
         this.playSound(() => {
             const now = this.ctx.currentTime;
             
-            // 1. Šum (White Noise) za efekat praska i lomljave
-            const bufferSize = this.ctx.sampleRate * 4.5; // 4.5 sekundi
+            const bufferSize = this.ctx.sampleRate * 4.5; 
             const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
             for (let i = 0; i < bufferSize; i++) {
@@ -776,31 +740,28 @@ class SoundManager {
             const noiseSrc = this.ctx.createBufferSource();
             noiseSrc.buffer = noiseBuffer;
 
-            // Filter koji od "šuštanja" pravi duboki prasak groma
             const filter = this.ctx.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(150, now);
-            filter.frequency.linearRampToValueAtTime(1000, now + 0.1); // Prasak
-            filter.frequency.exponentialRampToValueAtTime(40, now + 4.5); // Smirivanje i tutnjava
+            filter.frequency.linearRampToValueAtTime(1000, now + 0.1); 
+            filter.frequency.exponentialRampToValueAtTime(40, now + 4.5); 
             
-            // Kontrola glasnoće (Gain) - Udari i odzvanjanje
             const gain = this.ctx.createGain();
             gain.gain.setValueAtTime(0, now);
-            gain.gain.linearRampToValueAtTime(1.5, now + 0.05); // Snažan udar!
-            gain.gain.exponentialRampToValueAtTime(0.4, now + 0.4); // Prvo slabljenje
-            gain.gain.linearRampToValueAtTime(0.01, now + 4.5); // Dugo odzvanjanje u daljini
+            gain.gain.linearRampToValueAtTime(1.5, now + 0.05); 
+            gain.gain.exponentialRampToValueAtTime(0.4, now + 0.4); 
+            gain.gain.linearRampToValueAtTime(0.01, now + 4.5); 
 
             noiseSrc.connect(filter);
             filter.connect(gain);
             gain.connect(this.ctx.destination);
             noiseSrc.start(now);
             
-            // 2. Sub-Bass Oscilator (Za onaj osećaj da se zemlja trese)
             const osc = this.ctx.createOscillator();
             const oscGain = this.ctx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(50, now); // Vrlo niska bas frekvencija
-            osc.frequency.exponentialRampToValueAtTime(10, now + 4.5); // Pada u infrazvuk
+            osc.frequency.setValueAtTime(50, now); 
+            osc.frequency.exponentialRampToValueAtTime(10, now + 4.5); 
             
             oscGain.gain.setValueAtTime(0, now);
             oscGain.gain.linearRampToValueAtTime(1.2, now + 0.1);
@@ -818,18 +779,16 @@ class SoundManager {
         this.playSound(() => {
             const now = this.ctx.currentTime;
             
-            // Glavni zvižduk koji ide iz niske u visoku frekvenciju
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'sine';
             osc.frequency.setValueAtTime(300, now);
-            osc.frequency.exponentialRampToValueAtTime(1500, now + 1.0); // Zvuk se podiže dok raketa leti
+            osc.frequency.exponentialRampToValueAtTime(1500, now + 1.0); 
             
             gain.gain.setValueAtTime(0, now);
             gain.gain.linearRampToValueAtTime(0.08, now + 0.1);
-            gain.gain.linearRampToValueAtTime(0, now + 1.0); // Nestaje pred eksploziju
+            gain.gain.linearRampToValueAtTime(0, now + 1.0); 
             
-            // Šuštanje baruta
             const bufferSize = this.ctx.sampleRate * 1.0;
             const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
@@ -862,7 +821,6 @@ class SoundManager {
         this.playSound(() => {
             const now = this.ctx.currentTime;
             
-            // Generisanje šuma za prasak eksplozije
             const bufferSize = this.ctx.sampleRate * 2.0;
             const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
             const output = noiseBuffer.getChannelData(0);
@@ -871,17 +829,15 @@ class SoundManager {
             const noiseSrc = this.ctx.createBufferSource();
             noiseSrc.buffer = noiseBuffer;
 
-            // Lowpass filter daje mu dubinu (da ne zvuči kao pucanje kese)
             const filter = this.ctx.createBiquadFilter();
             filter.type = 'lowpass';
             filter.frequency.setValueAtTime(1000, now);
-            filter.frequency.exponentialRampToValueAtTime(100, now + 1.5); // Zvuk se širi u dubinu
+            filter.frequency.exponentialRampToValueAtTime(100, now + 1.5); 
 
-            // Gain (Glasnoća) za snažan udar i odzvanjanje
             const gain = this.ctx.createGain();
             gain.gain.setValueAtTime(0, now);
-            gain.gain.linearRampToValueAtTime(0.8, now + 0.05); // Brutalan udar
-            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.5); // Odzvanjanje se stišava
+            gain.gain.linearRampToValueAtTime(0.8, now + 0.05); 
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.5); 
 
             noiseSrc.connect(filter);
             filter.connect(gain);
@@ -895,14 +851,12 @@ class SoundManager {
         this.playSound(() => {
             const now = this.ctx.currentTime;
             
-            // 1. DUBOKO BRUJANJE DRONOVA (Low Synth Drone)
             const humOsc = this.ctx.createOscillator();
             const humGain = this.ctx.createGain();
             humOsc.type = 'sawtooth';
-            humOsc.frequency.setValueAtTime(40, now); // Vrlo niska frekvencija
-            humOsc.frequency.linearRampToValueAtTime(60, now + 2); // Motori se zaleću
+            humOsc.frequency.setValueAtTime(40, now); 
+            humOsc.frequency.linearRampToValueAtTime(60, now + 2); 
             
-            // Lowpass filter da ne zvuči grubo već mehanički
             const humFilter = this.ctx.createBiquadFilter();
             humFilter.type = 'lowpass';
             humFilter.frequency.setValueAtTime(200, now);
@@ -918,24 +872,22 @@ class SoundManager {
             humOsc.start(now);
             humOsc.stop(now + 8);
 
-            // 2. HEROJSKI AKORD (Moćni sintisajzer, C Major akord)
-            // Diže se polako kao iz vode i udara oštro na 1.5 sekundi kad se ime razbistri
-            const chordFreqs = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+            const chordFreqs = [261.63, 329.63, 392.00, 523.25]; 
             chordFreqs.forEach((freq) => {
                 const osc = this.ctx.createOscillator();
                 const gain = this.ctx.createGain();
                 const filter = this.ctx.createBiquadFilter();
                 
-                osc.type = 'square'; // Daje masivni sci-fi / cyberpunk prizvuk
+                osc.type = 'square'; 
                 osc.frequency.value = freq;
                 
                 filter.type = 'lowpass';
                 filter.frequency.setValueAtTime(100, now);
-                filter.frequency.exponentialRampToValueAtTime(3000, now + 1.5); // Filter se brzo otvara (Crescendo udar!)
-                filter.frequency.exponentialRampToValueAtTime(500, now + 6); // Zatim lagano bledi
+                filter.frequency.exponentialRampToValueAtTime(3000, now + 1.5); 
+                filter.frequency.exponentialRampToValueAtTime(500, now + 6); 
 
                 gain.gain.setValueAtTime(0, now);
-                gain.gain.linearRampToValueAtTime(0.15, now + 1.5); // Vrhunac glasnoće kada se pojavi tekst
+                gain.gain.linearRampToValueAtTime(0.15, now + 1.5); 
                 gain.gain.exponentialRampToValueAtTime(0.01, now + 7);
 
                 osc.connect(filter);
@@ -947,49 +899,52 @@ class SoundManager {
         });
     }
 
-    // --- BALKANSKA TRUBA (V.2) ---
+    // --- BALKANSKA TRUBA (V.2) - UŽIČKO KOLO ---
     balkanTrumpet() {
         this.playSound(() => {
             const now = this.ctx.currentTime;
             
-            // Veseli brzi ritam (Užičko / Čoček stil)
+            // PREPOZNATLJIVO UŽIČKO KOLO! (Glavni brzi rif)
             const melody = [
-                { f: 659.25, d: 0.15 }, // E5
-                { f: 659.25, d: 0.15 }, // E5
-                { f: 659.25, d: 0.30 }, // E5 Dugačka
-                { f: 698.46, d: 0.15 }, // F5
-                { f: 659.25, d: 0.15 }, // E5
-                { f: 587.33, d: 0.30 }, // D5
-                { f: 659.25, d: 0.15 }, // E5
-                { f: 523.25, d: 0.15 }, // C5
-                { f: 587.33, d: 0.15 }, // D5
-                { f: 659.25, d: 0.30 }, // E5
-                { f: 880.00, d: 0.40 }  // A5 Visoki triler na kraju fraze!
+                // Prvi takt
+                { f: 587.33, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 },
+                { f: 587.33, d: 0.12 }, { f: 659.25, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 },
+                { f: 493.88, d: 0.12 }, { f: 440.00, d: 0.30 }, // Pauza na A
+                
+                // Drugi takt
+                { f: 587.33, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 },
+                { f: 587.33, d: 0.12 }, { f: 659.25, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 },
+                { f: 493.88, d: 0.12 }, { f: 440.00, d: 0.30 }, // Pauza na A
+                
+                // Prelaz nadole
+                { f: 440.00, d: 0.12 }, { f: 493.88, d: 0.12 }, { f: 554.37, d: 0.12 }, { f: 587.33, d: 0.12 },
+                { f: 659.25, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 }, { f: 493.88, d: 0.12 },
+                { f: 440.00, d: 0.40 } // Završni udarac
             ];
 
             let t = now;
             
-            // Ponavljamo melodiju 3 puta da traje tačno oko 6.5 - 7 sekundi
-            for (let k = 0; k < 3; k++) {
+            // Ponavljamo melodiju 2 puta (da bi efekat trajao taman oko 7 sekundi)
+            for (let k = 0; k < 2; k++) {
                 melody.forEach(note => {
                     const osc = this.ctx.createOscillator();
                     const filter = this.ctx.createBiquadFilter();
                     const gain = this.ctx.createGain();
 
-                    // 'Sawtooth' oscilator daje onaj drzak, limeni zvuk trube
-                    osc.type = 'sawtooth'; 
+                    // 'Square' oscilator najbolje simulira prodoran zvuk trube/harmonike
+                    osc.type = 'square'; 
                     osc.frequency.value = note.f;
 
-                    // Wah-wah efekat (Filter se otvara naglo, pa zatvara)
+                    // Lowpass filter da ton bude oštar ali da ne probija bubne opne
                     filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(600, t);
-                    filter.frequency.linearRampToValueAtTime(4000, t + note.d * 0.2); // Truba se "dere"
-                    filter.frequency.exponentialRampToValueAtTime(800, t + note.d);
+                    filter.frequency.setValueAtTime(800, t);
+                    filter.frequency.linearRampToValueAtTime(3500, t + note.d * 0.3);
+                    filter.frequency.exponentialRampToValueAtTime(1000, t + note.d);
 
-                    // Glasnoća nota
+                    // Glasnoća nota (kratki odsečni udarci tipični za kolo)
                     gain.gain.setValueAtTime(0, t);
-                    gain.gain.linearRampToValueAtTime(0.25, t + 0.02); // Oštar i brz napad note
-                    gain.gain.exponentialRampToValueAtTime(0.01, t + note.d - 0.02);
+                    gain.gain.linearRampToValueAtTime(0.20, t + 0.02); // Brz ulazak
+                    gain.gain.exponentialRampToValueAtTime(0.01, t + note.d - 0.02); // Brzo stišavanje
 
                     osc.connect(filter);
                     filter.connect(gain);
@@ -998,8 +953,12 @@ class SoundManager {
                     osc.start(t);
                     osc.stop(t + note.d);
 
-                    t += note.d + 0.02; // Staccato pauza između nota za pravi kafanski osećaj
+                    // Razmak između nota za pravi stakato skok
+                    t += note.d + 0.03; 
                 });
+                
+                // Kratka pauza između dva kruga melodije
+                t += 0.2;
             }
         });
     }
@@ -1024,13 +983,11 @@ class ShopManager {
         let cloudSkins = (window.statsManager && window.statsManager.stats.unlockedSkins) ? window.statsManager.stats.unlockedSkins : [];
         savedUnlocked = [...new Set([...savedUnlocked, ...opstiNiz, ...cloudSkins])];
         
-        // Dodaj besplatne stavke da uvek budu otključane u odgovarajućem nizu
         if (this.type === 'theme') {
             ['dark', 'light', 'medium', 'winter'].forEach(item => {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
         } else {
-            // Zadržano i stare teme ovde zbog retroaktivne kompatibilnosti sa starim kodom
             ['default', 'confetti', 'dark', 'light', 'medium', 'winter'].forEach(item => {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
@@ -1041,7 +998,6 @@ class ShopManager {
         
         this.balance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
         
-        // Podrška za Teme, Skinove i Efekte
         if (this.type === 'skin') {
             this.activeKey = 'yamb_active_skin';
             this.activeItem = localStorage.getItem(this.activeKey) || 'default';
@@ -1190,7 +1146,6 @@ class ShopManager {
         }
 
         if (this.type === 'theme') {
-            // NOVO: Sigurno primenjivanje teme koje smo pripremili u game.js
             if (window.app && typeof window.app.applyTheme === 'function') {
                 window.app.applyTheme(id); 
             } else {
@@ -1241,7 +1196,6 @@ class ShopManager {
         localStorage.setItem('yamb_dukati', this.balance);
         localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
         
-        // HACK: Čuvamo kupljeno u opšti niz i u skins da bi Cloud sigurno sačuvao!
         let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
         if (!opstiNiz.includes(id)) {
             opstiNiz.push(id);
@@ -1303,7 +1257,6 @@ class ShopManager {
         }
         this.updateBalanceDisplay();
         
-        // --- DODATO ZA CLOUD SYNC ---
         if (window.app && window.app.socket && window.app.socket.connected) {
             window.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid') || window.app.playerId,
@@ -1386,9 +1339,6 @@ class AdMobController {
                     this.triggerHighPriorityLoad('rewarded');
                     this.triggerHighPriorityLoad('interstitial');
 
-                    // UKLONJENO: setInterval koji je agresivno vukao reklame na svakih 20 sekundi
-                    // i pravio problem sa nesrazmernim brojem zahteva u Google AdMob-u.
-
                     document.addEventListener("resume", () => {
                         this.triggerHighPriorityLoad('rewarded');
                         this.triggerHighPriorityLoad('interstitial');
@@ -1427,7 +1377,6 @@ class AdMobController {
             await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
             await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
 
-            // Fallback osluškivači
             await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
             await this.adMobPlugin.addListener('onRewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
