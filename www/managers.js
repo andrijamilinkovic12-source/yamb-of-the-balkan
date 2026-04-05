@@ -393,8 +393,82 @@ class EffectManager {
             this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖'], 40);
             setTimeout(() => { document.body.classList.remove('fx-balkan'); if(t1.parentNode) t1.remove(); if(t2.parentNode) t2.remove(); }, 4000);
         }
+        
+        // --- GRANDIOZNI VATROMET V.2 ---
         if (type === 'fireworks') {
-             for(let i=0; i<8; i++) { setTimeout(() => this.spawnExplosion(), i * 400); }
+             // Ispaljuje nasumične vatromete tokom 7 sekundi (ukupno ~12 komada)
+             for(let i=0; i<12; i++) { 
+                 // Prvi vatromet puca odmah, ostali se raspoređuju do 6. sekunde
+                 setTimeout(() => this.spawnRealFirework(), i * 500 + Math.random() * 400); 
+             }
+        }
+    }
+
+    spawnRealFirework() {
+        const startX = window.innerWidth * 0.1 + Math.random() * window.innerWidth * 0.8;
+        const endY = window.innerHeight * 0.1 + Math.random() * window.innerHeight * 0.4; // Visina pucanja
+        
+        // Zvuk zvižduka rakete pri poletanju
+        if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkLaunch) {
+            window.app.soundMgr.fireworkLaunch();
+        } else if (typeof SoundManager !== 'undefined') {
+            const sm = new SoundManager();
+            if(sm.fireworkLaunch) sm.fireworkLaunch();
+        }
+
+        const rocket = document.createElement('div');
+        rocket.className = 'fw-rocket';
+        rocket.style.left = startX + 'px';
+        document.body.appendChild(rocket);
+
+        // Putovanje rakete nagore (traje 800ms do 1.2s)
+        const duration = 800 + Math.random() * 400;
+        rocket.animate([
+            { transform: `translateY(100vh)`, opacity: 1 },
+            { transform: `translateY(${endY}px)`, opacity: 0 }
+        ], { duration: duration, easing: 'ease-out' }).onfinish = () => {
+            rocket.remove();
+            this.explodeRealFirework(startX, endY);
+        };
+    }
+
+    explodeRealFirework(x, y) {
+        // Zvuk jake eksplozije
+        if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkExplode) {
+            window.app.soundMgr.fireworkExplode();
+        }
+
+        // Blic na ekranu
+        const flash = document.createElement('div');
+        flash.className = 'fw-flash';
+        document.body.appendChild(flash);
+        setTimeout(() => { if(flash.parentNode) flash.remove(); }, 250);
+
+        // Fizička haptika za potres
+        if (window.app && typeof window.app.vibrate === 'function') {
+            window.app.vibrate([40, 50, 20]);
+        }
+
+        const colors = ['#FF0044', '#00FF44', '#0044FF', '#FFFF00', '#FF00FF', '#00FFFF', '#FFFFFF', '#FFD700'];
+        const mainColor = colors[Math.floor(Math.random() * colors.length)];
+        const particleCount = 45 + Math.random() * 30; // Između 45 i 75 čestica po eksploziji
+
+        for (let i = 0; i < particleCount; i++) {
+            const p = document.createElement('div');
+            p.className = 'fw-particle';
+            p.style.backgroundColor = mainColor;
+            p.style.boxShadow = `0 0 8px ${mainColor}, 0 0 15px ${mainColor}`;
+            p.style.left = x + 'px';
+            p.style.top = y + 'px';
+
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 180 + 50; 
+            
+            p.style.setProperty('--dx', Math.cos(angle) * velocity + 'px');
+            p.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
+
+            document.body.appendChild(p);
+            setTimeout(() => { if(p.parentNode) p.remove(); }, 1600);
         }
     }
     
@@ -521,8 +595,8 @@ class EffectManager {
     stop() {
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake');
         
-        // Dodata klasa .magic-bubble za uklanjanje
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder').forEach(e => e.remove());
+        // Dodata nova klasa za brisanje novog vatrometa
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
@@ -653,7 +727,7 @@ class SoundManager {
         });
     }
     
-    // --- DODATO: PROCEDURALNI ZVUK GROMA ---
+    // --- PROCEDURALNI ZVUK GROMA ---
     thunder() {
         this.playSound(() => {
             const now = this.ctx.currentTime;
@@ -702,6 +776,83 @@ class SoundManager {
             oscGain.connect(this.ctx.destination);
             osc.start(now);
             osc.stop(now + 4.5);
+        });
+    }
+
+    // --- ZVUK ZVIŽDUKA RAKETE PRI POLETANJU ---
+    fireworkLaunch() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+            
+            // Glavni zvižduk koji ide iz niske u visoku frekvenciju
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(300, now);
+            osc.frequency.exponentialRampToValueAtTime(1500, now + 1.0); // Zvuk se podiže dok raketa leti
+            
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.08, now + 0.1);
+            gain.gain.linearRampToValueAtTime(0, now + 1.0); // Nestaje pred eksploziju
+            
+            // Šuštanje baruta
+            const bufferSize = this.ctx.sampleRate * 1.0;
+            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+            
+            const noiseSrc = this.ctx.createBufferSource();
+            noiseSrc.buffer = noiseBuffer;
+            const noiseFilter = this.ctx.createBiquadFilter();
+            noiseFilter.type = 'highpass';
+            noiseFilter.frequency.value = 1000;
+            
+            const noiseGain = this.ctx.createGain();
+            noiseGain.gain.setValueAtTime(0.03, now);
+            noiseGain.gain.linearRampToValueAtTime(0, now + 1.0);
+            
+            noiseSrc.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(this.ctx.destination);
+            noiseSrc.start(now);
+
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(now);
+            osc.stop(now + 1.0);
+        });
+    }
+
+    // --- ZVUK JAKE EKSPLOZIJE ---
+    fireworkExplode() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+            
+            // Generisanje šuma za prasak eksplozije
+            const bufferSize = this.ctx.sampleRate * 2.0;
+            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+            
+            const noiseSrc = this.ctx.createBufferSource();
+            noiseSrc.buffer = noiseBuffer;
+
+            // Lowpass filter daje mu dubinu (da ne zvuči kao pucanje kese)
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(1000, now);
+            filter.frequency.exponentialRampToValueAtTime(100, now + 1.5); // Zvuk se širi u dubinu
+
+            // Gain (Glasnoća) za snažan udar i odzvanjanje
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.8, now + 0.05); // Brutalan udar
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.5); // Odzvanjanje se stišava
+
+            noiseSrc.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.ctx.destination);
+            noiseSrc.start(now);
         });
     }
     
