@@ -25,7 +25,7 @@ class StatsManager {
     constructor() {
         this.stats = this.loadStats() || {
             wins: 0, losses: 0, totalGames: 0, currentWinStreak: 0, maxWinStreak: 0, currentLossStreak: 0, 
-            balance: CONFIG.INITIAL_BALANCE || 1000, unlockedTrophies: [], highscore: 0,
+            balance: 1000, unlockedTrophies: [], highscore: 0,
             tournamentWins: 0 
         };
         
@@ -400,6 +400,7 @@ class EffectManager {
                 if(sm.balkanTrumpet) sm.balkanTrumpet();
             }
 
+            // OBRISANO POSLE TAČNO 8.5 SEKUNDI (Zajedno sa završetkom zvuka)
             setTimeout(() => { 
                 document.body.classList.remove('fx-balkan');
                 if(bg.parentNode) bg.remove(); 
@@ -407,7 +408,7 @@ class EffectManager {
                 if(tr2.parentNode) tr2.remove(); 
                 if(tr3.parentNode) tr3.remove(); 
                 if(tr4.parentNode) tr4.remove(); 
-            }, 7000);
+            }, 8500); 
         }
         
         // --- GRANDIOZNI VATROMET V.2 ---
@@ -899,32 +900,29 @@ class SoundManager {
         });
     }
 
-    // --- BALKANSKA TRUBA (V.2) - UŽIČKO KOLO ---
+    // --- BALKANSKA TRUBA (V.3) - GLAVNI REFREN UŽIČKOG KOLA ---
     balkanTrumpet() {
         this.playSound(() => {
             const now = this.ctx.currentTime;
             
-            // PREPOZNATLJIVO UŽIČKO KOLO! (Glavni brzi rif)
+            // PRAVI REFREN UŽIČKOG KOLA (Visoki, najluđi deo!)
             const melody = [
-                // Prvi takt
-                { f: 587.33, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 },
-                { f: 587.33, d: 0.12 }, { f: 659.25, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 },
-                { f: 493.88, d: 0.12 }, { f: 440.00, d: 0.30 }, // Pauza na A
+                // Prva fraza
+                { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
+                { f: 880.0, d: 0.12 }, { f: 987.8, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
+                { f: 740.0, d: 0.12 }, { f: 830.6, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
+                { f: 740.0, d: 0.12 }, { f: 659.3, d: 0.25 }, // pauza na E
                 
-                // Drugi takt
-                { f: 587.33, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 },
-                { f: 587.33, d: 0.12 }, { f: 659.25, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 },
-                { f: 493.88, d: 0.12 }, { f: 440.00, d: 0.30 }, // Pauza na A
-                
-                // Prelaz nadole
-                { f: 440.00, d: 0.12 }, { f: 493.88, d: 0.12 }, { f: 554.37, d: 0.12 }, { f: 587.33, d: 0.12 },
-                { f: 659.25, d: 0.12 }, { f: 587.33, d: 0.12 }, { f: 554.37, d: 0.12 }, { f: 493.88, d: 0.12 },
-                { f: 440.00, d: 0.40 } // Završni udarac
+                // Druga fraza
+                { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
+                { f: 880.0, d: 0.12 }, { f: 987.8, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
+                { f: 740.0, d: 0.12 }, { f: 659.3, d: 0.12 }, { f: 740.0, d: 0.12 }, { f: 830.6, d: 0.12 },
+                { f: 880.0, d: 0.35 }  // Završni A
             ];
 
             let t = now;
             
-            // Ponavljamo melodiju 2 puta (da bi efekat trajao taman oko 7 sekundi)
+            // Ponavljamo melodiju tačno 2 puta, što traje ukupno oko 8.3 sekunde
             for (let k = 0; k < 2; k++) {
                 melody.forEach(note => {
                     const osc = this.ctx.createOscillator();
@@ -954,10 +952,10 @@ class SoundManager {
                     osc.stop(t + note.d);
 
                     // Razmak između nota za pravi stakato skok
-                    t += note.d + 0.03; 
+                    t += note.d + 0.02; 
                 });
                 
-                // Kratka pauza između dva kruga melodije
+                // Pauza pre ponavljanja
                 t += 0.2;
             }
         });
