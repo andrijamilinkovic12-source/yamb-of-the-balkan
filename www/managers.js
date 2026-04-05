@@ -301,56 +301,60 @@ class EffectManager {
             }
         }
 
-        // --- DRONE SHOW (DRONOVI SA IMENOM) ---
+        // --- DRONE SHOW (DRONOVI SA IMENOM V.2) ---
         if (type === 'drones') {
-            // 1. Zatamni nebo
+            // 1. Zatamni nebo i upali reflektore
             const sky = document.createElement('div');
             sky.className = 'drone-night-sky';
             document.body.appendChild(sky);
 
-            // 2. Odredi čije se ime ispisuje (Igrač koji je trenutno na potezu)
-            let currentName = _safeT('hs_player') || "IGRAČ";
+            // 2. Pametno izdvajanje SAMO PRVOG IMENA
+            let fullName = _safeT('hs_player') || "IGRAČ";
             if (window.app && window.app.players && window.app.players[window.app.currentPlayerIdx]) {
-                currentName = window.app.players[window.app.currentPlayerIdx];
+                fullName = window.app.players[window.app.currentPlayerIdx];
             } else if (window.app && window.app.playerName) {
-                currentName = window.app.playerName;
+                fullName = window.app.playerName;
             }
-            // Skrati ime ako je predugačko, da ne iskoči sa ekrana
-            currentName = currentName.substring(0, 12); 
+            
+            // Logika: Uzmi prvu reč (pre prvog razmaka) i ograniči na max 12 karaktera
+            let firstName = fullName.trim().split(/\s+/)[0]; 
+            firstName = firstName.substring(0, 12); 
 
             // 3. Ime od Dronova
             const textEl = document.createElement('div');
             textEl.className = 'drone-text';
-            textEl.innerText = currentName;
+            textEl.innerText = firstName;
             document.body.appendChild(textEl);
 
-            // 4. Ispaljivanje malih dronova
-            const colors = ['#00d4ff', '#ffffff', '#00ffcc'];
-            for (let i = 0; i < 50; i++) {
+            // 4. Ispaljivanje dronova
+            const colors = ['#00d4ff', '#ffffff', '#00ffcc', '#aa00ff'];
+            for (let i = 0; i < 60; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'drone-dot';
                 
-                // Random rute letenja za svaki dron
-                dot.style.setProperty('--sx', (Math.random() * 100) + 'vw');
-                dot.style.setProperty('--dx', (Math.random() * 100) + 'vw');
+                // Formacijske rute letenja
+                dot.style.setProperty('--sx', (20 + Math.random() * 60) + 'vw');
+                dot.style.setProperty('--dx', (10 + Math.random() * 80) + 'vw');
                 dot.style.setProperty('--dx2', (Math.random() * 80 + 10) + 'vw');
-                dot.style.setProperty('--dy2', (Math.random() * 60 + 10) + 'vh');
+                dot.style.setProperty('--dy2', (Math.random() * 40 + 20) + 'vh');
                 dot.style.setProperty('--dx3', (Math.random() * 100) + 'vw');
                 
                 const color = colors[Math.floor(Math.random() * colors.length)];
-                dot.style.background = color;
-                dot.style.boxShadow = `0 0 10px ${color}, 0 0 15px #fff`;
+                dot.style.color = color;
+                dot.style.background = '#fff';
 
                 document.body.appendChild(dot);
                 setTimeout(() => { if(dot.parentNode) dot.remove(); }, 8000);
             }
 
-            // Pusti zvuk za pobedu / grandioznost
-            if(window.app && window.app.soundMgr && window.app.soundMgr.win) {
-                window.app.soundMgr.win();
+            // Pusti moćni Hero zvuk
+            if(window.app && window.app.soundMgr && window.app.soundMgr.epicDroneShow) {
+                window.app.soundMgr.epicDroneShow();
+            } else if (typeof SoundManager !== 'undefined') {
+                const sm = new SoundManager();
+                if(sm.epicDroneShow) sm.epicDroneShow();
             }
 
-            // Obriši elemente nakon 8 sekundi
             setTimeout(() => {
                 if(sky.parentNode) sky.remove();
                 if(textEl.parentNode) textEl.remove();
@@ -853,6 +857,63 @@ class SoundManager {
             filter.connect(gain);
             gain.connect(this.ctx.destination);
             noiseSrc.start(now);
+        });
+    }
+
+    // --- EPSKI HEROJSKI ZVUK (ZA DRONOVE V.2) ---
+    epicDroneShow() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+            
+            // 1. DUBOKO BRUJANJE DRONOVA (Low Synth Drone)
+            const humOsc = this.ctx.createOscillator();
+            const humGain = this.ctx.createGain();
+            humOsc.type = 'sawtooth';
+            humOsc.frequency.setValueAtTime(40, now); // Vrlo niska frekvencija
+            humOsc.frequency.linearRampToValueAtTime(60, now + 2); // Motori se zaleću
+            
+            // Lowpass filter da ne zvuči grubo već mehanički
+            const humFilter = this.ctx.createBiquadFilter();
+            humFilter.type = 'lowpass';
+            humFilter.frequency.setValueAtTime(200, now);
+            humFilter.frequency.linearRampToValueAtTime(800, now + 3);
+            
+            humGain.gain.setValueAtTime(0, now);
+            humGain.gain.linearRampToValueAtTime(0.5, now + 2);
+            humGain.gain.linearRampToValueAtTime(0, now + 7.5);
+            
+            humOsc.connect(humFilter);
+            humFilter.connect(humGain);
+            humGain.connect(this.ctx.destination);
+            humOsc.start(now);
+            humOsc.stop(now + 8);
+
+            // 2. HEROJSKI AKORD (Moćni sintisajzer, C Major akord)
+            // Diže se polako kao iz vode i udara oštro na 1.5 sekundi kad se ime razbistri
+            const chordFreqs = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5
+            chordFreqs.forEach((freq) => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                const filter = this.ctx.createBiquadFilter();
+                
+                osc.type = 'square'; // Daje masivni sci-fi / cyberpunk prizvuk
+                osc.frequency.value = freq;
+                
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(100, now);
+                filter.frequency.exponentialRampToValueAtTime(3000, now + 1.5); // Filter se brzo otvara (Crescendo udar!)
+                filter.frequency.exponentialRampToValueAtTime(500, now + 6); // Zatim lagano bledi
+
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.15, now + 1.5); // Vrhunac glasnoće kada se pojavi tekst
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 7);
+
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 8);
+            });
         });
     }
     
