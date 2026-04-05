@@ -15,7 +15,43 @@
 .prev-thunder { background: #1a1a2e; } .prev-thunder::before { content: "⚡"; color: #ffeb3b; text-shadow: 0 0 15px #ffeb3b; animation: flash 1s infinite; }
 .prev-neon { background: #000; border: 1px solid #333; }
 .neon-line { position: absolute; width: 100%; height: 2px; background: #0f0; box-shadow: 0 0 10px #0f0, 0 0 20px #0f0; top: 50%; animation: scan 2s infinite ease-in-out; }
-.prev-balkan { background: linear-gradient(to right, #c31432, #240b36); } .prev-balkan::before { content: "🎺"; font-size: 2rem; animation: shake 0.5s infinite; }
+
+/* =========================================================
+   SVADBA / BALKAN V.2 (KAFANA & TRUBE)
+   ========================================================= */
+.prev-balkan { background: linear-gradient(to right, #c31432, #240b36); } 
+.prev-balkan::before { content: "🎺"; font-size: 2.5rem; animation: shakeBalkan 0.4s infinite alternate; }
+@keyframes shakeBalkan { 0% { transform: rotate(-15deg) scale(1); } 100% { transform: rotate(15deg) scale(1.1); } }
+
+/* Kafanski karirani stolnjak - poluprovidan preko celog ekrana */
+.kafana-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-image: conic-gradient(rgba(200, 0, 0, 0.15) 90deg, transparent 90deg 180deg, rgba(200, 0, 0, 0.15) 180deg 270deg, transparent 270deg);
+    background-size: 60px 60px;
+    z-index: 99900; pointer-events: none;
+    animation: kafanaFade 7s forwards;
+}
+@keyframes kafanaFade { 0% { opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; } }
+
+/* Velike trube koje đuskaju */
+.trumpet-icon-v2 {
+    position: fixed; font-size: 6rem; z-index: 99999; pointer-events: none;
+    filter: drop-shadow(0 0 15px gold) drop-shadow(0 0 30px rgba(255,215,0,0.5));
+    animation: trumpetDance 0.4s infinite alternate ease-in-out;
+}
+.trumpet-left { left: 2vw; transform-origin: bottom left; }
+.trumpet-right { right: 2vw; transform-origin: bottom right; transform: scaleX(-1); }
+
+@keyframes trumpetDance {
+    0% { transform: rotate(-10deg) scale(1) translateY(0); }
+    100% { transform: rotate(25deg) scale(1.1) translateY(-20px); }
+}
+.trumpet-right { animation: trumpetDanceRight 0.4s infinite alternate ease-in-out; }
+@keyframes trumpetDanceRight {
+    0% { transform: scaleX(-1) rotate(-10deg) scale(1) translateY(0); }
+    100% { transform: scaleX(-1) rotate(25deg) scale(1.1) translateY(-20px); }
+}
+/* ========================================================= */
 
 .prev-supernova { background: radial-gradient(circle, #0b0b1a 0%, #000 100%); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .sn-ring-prev { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #00ffff; box-shadow: 0 0 15px #00ffff, inset 0 0 15px #ff00ff; animation: snExpandPrev 1.5s infinite ease-out; }
@@ -28,9 +64,9 @@
 .prev-fireflies { background: radial-gradient(circle at bottom, #0f2027, #203a43, #2c5364); } 
 .prev-fireflies::before { 
     content: "✨"; 
-    color: transparent; /* Providno telo */
-    text-shadow: 0 0 10px rgba(220, 255, 150, 0.9), 0 0 20px rgba(150, 255, 100, 0.6); /* Unutrašnji sjaj */
-    mix-blend-mode: screen; /* Watermark efekat */
+    color: transparent; 
+    text-shadow: 0 0 10px rgba(220, 255, 150, 0.9), 0 0 20px rgba(150, 255, 100, 0.6); 
+    mix-blend-mode: screen; 
     animation: floatUp 3s infinite ease-in-out; 
 }
 
@@ -43,21 +79,18 @@
     z-index: 99999; 
     opacity: 0; 
     color: transparent; 
-    /* Pojednostavljen statični sjaj bez blur filtera koji gubi performanse */
     text-shadow: 0 0 15px rgba(220, 255, 150, 0.9), 0 0 25px rgba(150, 255, 100, 0.6); 
     mix-blend-mode: screen; 
-    /* Uključujemo GPU hardversku akceleraciju */
     will-change: transform, opacity; 
     animation: fireflyFloat ease-in-out forwards; 
 }
 
-/* HARDVERSKI UBRZANA ANIMACIJA (koristi samo transform i opacity) */
 @keyframes fireflyFloat { 
     0% { transform: translateY(0) translateX(0) scale(0.5) rotate(0deg); opacity: 0; } 
     20% { opacity: 0.85; } 
     50% { 
         transform: translateY(-50vh) translateX(var(--rnd-x, 20px)) scale(1.3) rotate(15deg); 
-        opacity: 1; /* Efekat pulsa sada radimo blagim dizanjem opacity i scale-a */
+        opacity: 1; 
     } 
     80% { opacity: 0.85; } 
     100% { transform: translateY(-110vh) translateX(0) scale(0.5) rotate(-15deg); opacity: 0; } 
@@ -86,16 +119,14 @@
     animation: bubbleFloat ease-in-out forwards;
 }
 
-/* Float animacija sa krivudanjem i 'pucanjem' (pop) na kraju */
 @keyframes bubbleFloat {
     0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
     10% { opacity: 0.85; }
     50% { transform: translateY(-40vh) translateX(var(--rnd-x, 30px)) scale(1.2); }
     80% { opacity: 0.85; transform: translateY(-80vh) translateX(calc(var(--rnd-x, 30px) * -0.5)) scale(1.5); }
-    95% { opacity: 0.9; transform: translateY(-95vh) translateX(0) scale(2.2); } /* Mehur se rasteže pred pucanje */
-    100% { transform: translateY(-100vh) translateX(0) scale(3.5); opacity: 0; } /* Pucanje (pop) */
+    95% { opacity: 0.9; transform: translateY(-95vh) translateX(0) scale(2.2); } 
+    100% { transform: translateY(-100vh) translateX(0) scale(3.5); opacity: 0; } 
 }
-
 
 /* --- Base Animations --- */
 @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
@@ -130,7 +161,7 @@
     background: rgba(255, 255, 255, 0.95);
     z-index: 99998;
     pointer-events: none;
-    mix-blend-mode: overlay; /* Stvara oštar kontrast svetlosti */
+    mix-blend-mode: overlay; 
     animation: fwFlashAnim 0.2s ease-out forwards;
     will-change: opacity;
 }
@@ -149,7 +180,6 @@
     pointer-events: none;
     z-index: 99999;
     will-change: transform, opacity;
-    /* Kubična Bezijerova kriva daje osećaj nagle eksplozije pa usporavanja i padanja (gravitacije) */
     animation: fwExplodeAnim 1.5s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 
@@ -171,7 +201,7 @@ body.fx-neon_pulse::after {
 
 .anim-neon-pulse { 
     animation: neon-panic 0.5s infinite alternate !important; 
-    background-color: rgba(0, 0, 0, 0.85) !important; /* Daje ultra jak kontrast na svetlim temama */
+    background-color: rgba(0, 0, 0, 0.85) !important; 
 }
 
 .anim-neon-pulse .grid-cell { 
@@ -206,20 +236,16 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 /* =========================================================
    GROMOVNIK (THUNDERBRINGER) - REALISTIČAN EFEKAT (V2) - OPTIMIZOVANO
    ========================================================= */
-
-/* 1. Mračno nebo i blesak preko celog ekrana (OPTIMIZOVANO PROTIV BLICANJA) */
 .anim-thunder { 
     position: fixed; 
     top: 0; left: 0; width: 100vw; height: 100vh; 
     z-index: 99999; pointer-events: none;
     background: transparent;
     opacity: 0;
-    /* Uklonjen mix-blend-mode i filter koji prave bag u rendering engine-u browsera */
     animation: epicThunderFlash 4.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; 
     will-change: opacity, background;
 }
 
-/* 2. FIZIČKA MUNJA NA EKRANU */
 .anim-thunder::after {
     content: "";
     position: absolute;
@@ -227,20 +253,19 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     width: 80vw; height: 100vh;
     background: linear-gradient(to bottom, #ffffff 0%, rgba(0, 255, 255, 0.8) 50%, transparent 100%);
     transform: translateX(-50%);
-    /* Iscrtavanje oštre, lomljene munje */
     clip-path: polygon(52% 0, 58% 0, 45% 35%, 55% 35%, 35% 100%, 42% 45%, 32% 45%);
     animation: lightningStrike 4.5s forwards;
     will-change: opacity, filter;
 }
 
 @keyframes epicThunderFlash {
-    0% { opacity: 1; background: rgba(0, 0, 0, 0.85); } /* Trenutni mrak za šok efekat (zamena za invert) */
-    2% { opacity: 1; background: rgba(255, 255, 255, 0.95); } /* Beli bljesak */
+    0% { opacity: 1; background: rgba(0, 0, 0, 0.85); } 
+    2% { opacity: 1; background: rgba(255, 255, 255, 0.95); } 
     4% { opacity: 0; background: transparent; }
     6% { opacity: 0.85; background: rgba(200, 240, 255, 0.8); }
     10% { opacity: 0; background: transparent; }
-    25% { opacity: 0; background: transparent; } /* Zatišje pred glavni udar */
-    28% { opacity: 1; background: rgba(255, 255, 255, 0.95); } /* Glavni udar */
+    25% { opacity: 0; background: transparent; } 
+    28% { opacity: 1; background: rgba(255, 255, 255, 0.95); } 
     35% { opacity: 0.4; background: rgba(255, 255, 255, 0.4); } 
     100% { opacity: 0; background: transparent; }
 }
@@ -253,24 +278,20 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     }
 }
 
-/* 3. Masivni, brutalni potres ekrana */
 .fx-thunder-shake {
     animation: thunderRumble 4.5s ease-out forwards;
 }
 
 @keyframes thunderRumble {
     0%, 100% { transform: translate(0, 0) scale(1); }
-    /* Prvi sitni udari */
     2%, 6% { transform: translate(calc(var(--dir, 1) * -4px), 3px) scale(1.02); }
     4%, 8% { transform: translate(calc(var(--dir, 1) * 4px), -3px) scale(1.02); }
     
-    9%, 25% { transform: translate(0, 0) scale(1); } /* Tišina */
+    9%, 25% { transform: translate(0, 0) scale(1); } 
     
-    /* GLAVNI UDAR (Ekstremno trešenje i blagi zum) */
     28%, 32% { transform: translate(calc(var(--dir, 1) * 12px), -10px) rotate(2deg) scale(1.05); }
     30%, 34% { transform: translate(calc(var(--dir, 1) * -12px), 10px) rotate(-2deg) scale(1.05); }
     
-    /* Odzvanjanje u daljini */
     36%, 40%, 44% { transform: translate(4px, -2px) scale(1.01); }
     38%, 42%, 46% { transform: translate(-4px, 2px) scale(1.01); }
     50%, 60%, 70% { transform: translate(1px, -1px); }
@@ -300,7 +321,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 @keyframes tableBlast { 0%, 25% { filter: brightness(1) contrast(1); transform: scale(1); } 30% { filter: brightness(3) contrast(1.5) hue-rotate(90deg); transform: scale(0.98); } 35% { filter: brightness(4) contrast(2); transform: scale(1.05) translateY(-10px); } 40% { transform: scale(1.02) translateY(5px); } 45% { transform: scale(1) translateY(-2px); filter: brightness(1.5); } 100% { filter: brightness(1) contrast(1); transform: scale(1) translateY(0); } }
 
 /* --- Ice Age Table Effect --- */
-.player-table { position: relative !important; } /* Need this here for overlay */
+.player-table { position: relative !important; } 
 .ice-overlay-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; display: flex; align-items: center; justify-content: center; border-radius: 12px; overflow: hidden; opacity: 0; animation: iceFreezeIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 .ice-glass { position: absolute; width: 100%; height: 100%; background: radial-gradient(circle at center, rgba(173, 216, 230, 0.2) 0%, rgba(135, 206, 250, 0.5) 80%, rgba(255, 255, 255, 0.7) 100%); backdrop-filter: blur(4px) contrast(120%) brightness(110%); -webkit-backdrop-filter: blur(4px) contrast(120%) brightness(110%); background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, transparent 1px, transparent 10px), repeating-linear-gradient(-45deg, rgba(255,255,255,0.1) 0px, transparent 1px, transparent 12px); box-shadow: inset 0 0 30px 10px rgba(255, 255, 255, 0.5); }
 .ice-frost-border { position: absolute; top: 0; left: 0; width: 100%; height: 100%; box-shadow: inset 0 0 15px 5px rgba(200, 245, 255, 0.9), inset 0 0 50px rgba(0, 191, 255, 0.3); border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 12px; }
@@ -322,13 +343,10 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 /* =========================================================
    DRONE SHOW V.2 (3D HOLOGRAM + REFLEKTORI)
    ========================================================= */
-
-/* Ikona za prodavnicu */
 .prev-drones { background: linear-gradient(135deg, #000428, #004e92); box-shadow: inset 0 0 20px #00d4ff; } 
 .prev-drones::before { content: "🛸"; font-size: 2.5rem; animation: hoverDrone 2s infinite ease-in-out; filter: drop-shadow(0 0 10px #00d4ff); }
 @keyframes hoverDrone { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-/* Zatamnjenje i epski reflektori */
 .drone-night-sky {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: radial-gradient(circle at bottom, #001220 0%, #000000 100%);
@@ -337,7 +355,6 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     overflow: hidden;
 }
 
-/* Svetlosni snopovi reflektora koji šaraju po nebu */
 .drone-night-sky::before, .drone-night-sky::after {
     content: ""; position: absolute; bottom: -10vh; width: 15vw; height: 120vh;
     background: linear-gradient(to top, rgba(0, 212, 255, 0.15) 0%, transparent 100%);
@@ -351,15 +368,13 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 
 @keyframes skyFadeInOut { 0%, 100% { opacity: 0; } 10%, 90% { opacity: 1; } }
 
-/* 3D Hologram Tekst */
 .drone-text {
     position: fixed; top: 40%; left: 50%;
     transform: translate(-50%, -50%);
-    font-size: clamp(3rem, 12vw, 5.5rem); /* Povećan font za kraće ime */
+    font-size: clamp(3rem, 12vw, 5.5rem); 
     font-weight: 900; color: transparent; text-transform: uppercase; text-align: center;
     z-index: 99910; pointer-events: none; white-space: nowrap;
     
-    /* 3D efekat nakrivljenosti unazad (Star Wars stil / Hologram) */
     transform-style: preserve-3d;
     perspective: 1000px;
     
@@ -372,12 +387,11 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 
 @keyframes droneFormTextV2 {
     0% { opacity: 0; transform: translate(-50%, -30%) rotateX(45deg) scale(1.5); filter: blur(20px); letter-spacing: 30px; }
-    15% { opacity: 1; filter: blur(5px); letter-spacing: 15px; } /* Ubrzavamo pojavljivanje zbog zvuka */
+    15% { opacity: 1; filter: blur(5px); letter-spacing: 15px; } 
     30%, 80% { opacity: 1; transform: translate(-50%, -50%) rotateX(15deg) scale(1); filter: drop-shadow(0 0 15px #00d4ff) drop-shadow(0 0 30px #0088ff); letter-spacing: 5px; }
     90%, 100% { opacity: 0; transform: translate(-50%, -70%) rotateX(0deg) scale(0.8); filter: blur(15px); letter-spacing: -10px; }
 }
 
-/* Više malih dronova koji lete organizovanije oko teksta */
 .drone-dot {
     position: fixed; width: 5px; height: 5px; border-radius: 50%;
     z-index: 99905; pointer-events: none;

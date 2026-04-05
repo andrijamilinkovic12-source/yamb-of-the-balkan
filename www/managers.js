@@ -389,13 +389,43 @@ class EffectManager {
             }, 4500); 
         }
 
+        // --- SVADBA V.2 EFEKAT ---
         if (type === 'balkan') {
             document.body.classList.add('fx-balkan');
-            const t1 = document.createElement('div'); t1.innerText = '🎺'; t1.className = 'trumpet-icon'; t1.style.left = '10px'; t1.style.bottom = '10px';
-            const t2 = document.createElement('div'); t2.innerText = '🎺'; t2.className = 'trumpet-icon'; t2.style.right = '10px'; t2.bottom = '10px'; t2.style.transform = 'scaleX(-1)';
-            document.body.appendChild(t1); document.body.appendChild(t2);
-            this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖'], 40);
-            setTimeout(() => { document.body.classList.remove('fx-balkan'); if(t1.parentNode) t1.remove(); if(t2.parentNode) t2.remove(); }, 4000);
+            
+            // 1. Kafanski stolnjak (Checkered overlay)
+            const bg = document.createElement('div');
+            bg.className = 'kafana-overlay';
+            document.body.appendChild(bg);
+
+            // 2. Četiri velike trube (2 lijevo, 2 desno, različite visine)
+            const tr1 = document.createElement('div'); tr1.innerText = '🎺'; tr1.className = 'trumpet-icon-v2 trumpet-left'; tr1.style.top = '15vh';
+            const tr2 = document.createElement('div'); tr2.innerText = '🎺'; tr2.className = 'trumpet-icon-v2 trumpet-left'; tr2.style.top = '55vh'; tr2.style.animationDelay = '0.2s';
+            const tr3 = document.createElement('div'); tr3.innerText = '🎺'; tr3.className = 'trumpet-icon-v2 trumpet-right'; tr3.style.top = '25vh';
+            const tr4 = document.createElement('div'); tr4.innerText = '🎺'; tr4.className = 'trumpet-icon-v2 trumpet-right'; tr4.style.top = '65vh'; tr4.style.animationDelay = '0.3s';
+            
+            document.body.appendChild(tr1); document.body.appendChild(tr2); document.body.appendChild(tr3); document.body.appendChild(tr4);
+
+            // 3. Opštenarodno veselje (Pare, piće, prase, note) - Dupliran broj!
+            this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖', '💖', '🎵', '🍻'], 80);
+
+            // 4. Muzika!
+            if (window.app && window.app.soundMgr && window.app.soundMgr.balkanTrumpet) {
+                window.app.soundMgr.balkanTrumpet();
+            } else if (typeof SoundManager !== 'undefined') {
+                const sm = new SoundManager();
+                if(sm.balkanTrumpet) sm.balkanTrumpet();
+            }
+
+            // 5. Čišćenje poslije 7 sekundi
+            setTimeout(() => { 
+                document.body.classList.remove('fx-balkan');
+                if(bg.parentNode) bg.remove(); 
+                if(tr1.parentNode) tr1.remove(); 
+                if(tr2.parentNode) tr2.remove(); 
+                if(tr3.parentNode) tr3.remove(); 
+                if(tr4.parentNode) tr4.remove(); 
+            }, 7000);
         }
         
         // --- GRANDIOZNI VATROMET V.2 ---
@@ -600,7 +630,7 @@ class EffectManager {
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake');
         
         // Dodata nova klasa za brisanje novog vatrometa
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
@@ -914,6 +944,63 @@ class SoundManager {
                 osc.start(now);
                 osc.stop(now + 8);
             });
+        });
+    }
+
+    // --- BALKANSKA TRUBA (V.2) ---
+    balkanTrumpet() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+            
+            // Veseli brzi ritam (Užičko / Čoček stil)
+            const melody = [
+                { f: 659.25, d: 0.15 }, // E5
+                { f: 659.25, d: 0.15 }, // E5
+                { f: 659.25, d: 0.30 }, // E5 Dugačka
+                { f: 698.46, d: 0.15 }, // F5
+                { f: 659.25, d: 0.15 }, // E5
+                { f: 587.33, d: 0.30 }, // D5
+                { f: 659.25, d: 0.15 }, // E5
+                { f: 523.25, d: 0.15 }, // C5
+                { f: 587.33, d: 0.15 }, // D5
+                { f: 659.25, d: 0.30 }, // E5
+                { f: 880.00, d: 0.40 }  // A5 Visoki triler na kraju fraze!
+            ];
+
+            let t = now;
+            
+            // Ponavljamo melodiju 3 puta da traje tačno oko 6.5 - 7 sekundi
+            for (let k = 0; k < 3; k++) {
+                melody.forEach(note => {
+                    const osc = this.ctx.createOscillator();
+                    const filter = this.ctx.createBiquadFilter();
+                    const gain = this.ctx.createGain();
+
+                    // 'Sawtooth' oscilator daje onaj drzak, limeni zvuk trube
+                    osc.type = 'sawtooth'; 
+                    osc.frequency.value = note.f;
+
+                    // Wah-wah efekat (Filter se otvara naglo, pa zatvara)
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(600, t);
+                    filter.frequency.linearRampToValueAtTime(4000, t + note.d * 0.2); // Truba se "dere"
+                    filter.frequency.exponentialRampToValueAtTime(800, t + note.d);
+
+                    // Glasnoća nota
+                    gain.gain.setValueAtTime(0, t);
+                    gain.gain.linearRampToValueAtTime(0.25, t + 0.02); // Oštar i brz napad note
+                    gain.gain.exponentialRampToValueAtTime(0.01, t + note.d - 0.02);
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(this.ctx.destination);
+
+                    osc.start(t);
+                    osc.stop(t + note.d);
+
+                    t += note.d + 0.02; // Staccato pauza između nota za pravi kafanski osećaj
+                });
+            }
         });
     }
     
