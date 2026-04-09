@@ -597,6 +597,8 @@ io.on('connection', (socket) => {
                     }
                 }
 
+                // FIX: Dozvoljavamo pad poena (zbog kazni/rage-quita)
+                // Ali SPREČAVAMO da se obrišu ako se igrač tek prijavio na novom uređaju (gde mu je sve na 0)
                 if (s.leagueData) {
                     if (s.leagueData.year > user.leagueData.year || 
                        (s.leagueData.year === user.leagueData.year && s.leagueData.quarter > user.leagueData.quarter)) {
@@ -605,8 +607,13 @@ io.on('connection', (socket) => {
                         if (s.leagueData.baselineScore > user.leagueData.baselineScore) {
                             user.leagueData.baselineScore = s.leagueData.baselineScore;
                         }
-                        if (s.leagueData.quarterlyScore > (user.leagueData.quarterlyScore || 0)) {
+
+                        if (!isFreshLogin) {
                             user.leagueData.quarterlyScore = s.leagueData.quarterlyScore;
+                        } else {
+                            if (s.leagueData.quarterlyScore > (user.leagueData.quarterlyScore || 0)) {
+                                user.leagueData.quarterlyScore = s.leagueData.quarterlyScore;
+                            }
                         }
                     }
                 }
@@ -1207,8 +1214,12 @@ io.on('connection', (socket) => {
             await LeagueScore.findOneAndUpdate(
                 { playerId: uniqueId, year: data.year, quarter: data.quarter }, 
                 { 
-                    $set: { playerName: finalName, photoUrl: data.photoUrl || '', date: Date.now() },
-                    $max: { score: data.score }
+                    $set: { 
+                        playerName: finalName, 
+                        photoUrl: data.photoUrl || '', 
+                        date: Date.now(),
+                        score: data.score // FIX: Dozvoljavamo smanjenje poena
+                    }
                 }, 
                 { upsert: true, new: true } 
             );

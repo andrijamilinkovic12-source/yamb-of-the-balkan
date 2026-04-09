@@ -121,14 +121,20 @@ class KvartalnaLigaManager {
     }
 
     addPoints(points) {
-        if (!points || points <= 0) return;
+        // Uklonili smo proveru points <= 0 kako bismo dozvolili oduzimanje poena
+        if (!points && points !== 0) return; 
         
         this.init(); 
         let data = this.getScores();
         
         data.quarterlyScore += points;
-        this.saveScores(data);
         
+        // Sprečavamo odlazak lige u minus
+        if (data.quarterlyScore < 0) {
+            data.quarterlyScore = 0;
+        }
+
+        this.saveScores(data);
         this.syncWithServer();
         
         if (typeof updateMainMenuDashboard === 'function') {
@@ -547,7 +553,7 @@ class KvartalnaLigaManager {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         if (!scores || scores.length === 0) {
-            listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi pierwszy!')}</li>`;
+            listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi prvi!')}</li>`;
             return;
         }
 

@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -127,7 +127,7 @@ class YambApp {
         this.vibrationEnabled = savedVib !== 'false'; // Podrazumevano uključeno
         
         const savedStats = JSON.parse(localStorage.getItem('yamb_stats'));
-        this.stats = savedStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0 };
+        this.stats = savedStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
         
         this.diceBtns = []; 
         this.consecutiveNajava = 0; 
@@ -249,7 +249,6 @@ class YambApp {
         if(btnVib) btnVib.innerText = this.vibrationEnabled ? '📳' : '📴';
     }
 
-    // --- DODAJ OVU FUNKCIJU ---
     toggleTheme() {
         // 1. Prikupi sve otključane teme (osnovne + kupljene + cloud)
         let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
@@ -1386,13 +1385,16 @@ class YambApp {
         return penalty;
     }
 
-    updateStats(score, resultType) { 
+    // CENTRALIZOVANO AŽURIRANJE STATISTIKE (FIX ZA DUPLI UPIS H2H)
+    updateStats(score, resultType, oppScore = 0) { 
         this.stats = this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
         this.stats.games++; 
         this.stats.totalScoreSum += score; 
         if (score > this.stats.highscore) this.stats.highscore = score; 
         
-        if (resultType === 'win') {
+        let isWin = (resultType === 'win');
+
+        if (isWin) {
             this.stats.wins++; 
             this.stats.currentWinStreak = (this.stats.currentWinStreak || 0) + 1;
             if (this.stats.currentWinStreak > (this.stats.maxWinStreak || 0)) {
@@ -1402,6 +1404,14 @@ class YambApp {
             this.stats.losses++; 
             this.stats.currentWinStreak = 0; 
         } 
+
+        // DODATO: Centralizovani upis u H2H bazu
+        if (this.onlineMode && this.players.length === 2 && !this.isSpectator) {
+            const oppName = this.players.find(p => p !== this.playerName);
+            if (oppName) {
+                this.updateH2HStats(oppName, this.currentOpponentPhoto || '', isWin, score, oppScore);
+            }
+        }
         
         localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); 
 
@@ -1601,15 +1611,26 @@ class YambApp {
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
             if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
-                const oppName = this.players.find(p => p !== this.playerName);
-                if (oppName) {
-                    this.updateH2HStats(oppName, this.currentOpponentPhoto || '', false, 0, 0);
-                }
-                
                 // --- KAZNA ZA RAGE QUIT ---
                 this.applyAbandonPenalty();
                 
-                this.updateStats(0, 'loss');
+                // NOVO: Oduzimanje proseka iz Kvartalne Lige pri namernom izlasku
+                const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
+                
+                if (window.kvartalnaLiga) {
+                    window.kvartalnaLiga.addPoints(-myAvg);
+                }
+
+                // NOVO: Oduzimanje Dukata
+                let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+                currentDukati -= myAvg; 
+                localStorage.setItem('yamb_dukati', currentDukati);
+                if (window.statsManager) {
+                    window.statsManager.stats.balance = currentDukati;
+                    window.statsManager.saveStats();
+                }
+                
+                this.updateStats(0, 'loss'); // H2H se sada rešava unutar updateStats
             }
             this.showMainMenu(); 
         } 
@@ -2052,37 +2073,53 @@ class YambApp {
             }
 
             const iAmWinner = (this.socket.id === data.winnerId);
-            const oppName = this.players.find(p => p !== this.playerName);
+            
+            // NOVO: Računanje proseka igrača (Ako nema odigranih partija, stavljamo bazu od 500)
+            const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
             
             if (iAmWinner) {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
+                // NOVO: Dodela proseka dukata umesto fiksnih 500
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati += 500; 
+                currentDukati += myAvg; 
                 localStorage.setItem('yamb_dukati', currentDukati);
                 if (window.statsManager) {
                     window.statsManager.stats.balance = currentDukati;
                     window.statsManager.saveStats();
                 }
                 
-                if (oppName) this.updateH2HStats(oppName, this.currentOpponentPhoto || '', true, 0, 0);
-                
                 this.updateStats(0, 'win'); 
                 
-                // Koristi poruku sa servera ako postoji, inače fallback
+                if (window.kvartalnaLiga) {
+                    window.kvartalnaLiga.addPoints(myAvg);
+                }
+                
                 const msg = data.message || gt('timeout_win_msg') || "Protivniku je isteklo vreme!";
-                await this.modal.alert(msg, gt('go_win') || "TEHNIČKA POBEDA");
+                await this.modal.alert(`${msg}<br><br><span style="color:var(--success); font-weight:bold;">+${myAvg} poena u Ligi<br>+${myAvg} 💰 Dukata</span>`, gt('go_win') || "TEHNIČKA POBEDA");
             } else {
                 this.soundMgr.loss();
                 
-                if (oppName) this.updateH2HStats(oppName, this.currentOpponentPhoto || '', false, 0, 0);
-                
-                // --- KAZNA ZA ISTEK VREMENA ---
                 let penalty = this.applyAbandonPenalty();
                 let msgDodatak = penalty > 0 ? `<br><br><span style="color:var(--danger); font-weight:bold;">Kazna zbog odugovlačenja: -${penalty} Power Index poena.</span>` : '';
                 
+                // NOVO: Oduzimanje dukata gubitniku
+                let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+                currentDukati -= myAvg; 
+                localStorage.setItem('yamb_dukati', currentDukati);
+                if (window.statsManager) {
+                    window.statsManager.stats.balance = currentDukati;
+                    window.statsManager.saveStats();
+                }
+
                 this.updateStats(0, 'loss'); 
+                
+                if (window.kvartalnaLiga) {
+                    window.kvartalnaLiga.addPoints(-myAvg);
+                    msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">-${myAvg} poena u Ligi<br>-${myAvg} 💰 Dukata</span>`;
+                }
+
                 const msg = (data.message || gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak;
                 await this.modal.alert(msg, gt('timeout_loss_title') || "PORAZ");
             }
@@ -2190,7 +2227,6 @@ class YambApp {
             if (customModal) customModal.style.display = 'none';
 
             // 1. BEZBEDNO PREUZIMANJE INDEKSA DIREKTNO SA SERVERA
-            // Koristimo this.myOnlineIndex umesto this.playerId (jer playerId čuva Google UID string!)
             if (data.myIndex !== undefined) {
                 this.myOnlineIndex = Number(data.myIndex);
             } else if (data.uids) {
@@ -2198,7 +2234,6 @@ class YambApp {
                 const savedUid = localStorage.getItem('yamb_uid');
                 this.myOnlineIndex = data.uids.indexOf(savedUid);
             } else {
-                // Sigurnosni fallback
                 this.myOnlineIndex = 0; 
             }
 
@@ -2207,7 +2242,6 @@ class YambApp {
             this.onlineMode = true; 
             this.modeTag = "Online"; 
             this.roomId = data.roomId; 
-            // Pazi: this.players[0] je uvek host, this.players[1] je gost
             this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname]; 
             this.initScores(); 
             this.currentPlayerIdx = 0; 
@@ -2354,23 +2388,26 @@ class YambApp {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
+                // NOVO: Računanje proseka igrača (Baza 500 za nove)
+                const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
+
+                // NOVO: Dodela proseka dukata umesto fiksnih 500
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati += 500; 
+                currentDukati += myAvg; 
                 localStorage.setItem('yamb_dukati', currentDukati);
                 if (window.statsManager) {
                     window.statsManager.stats.balance = currentDukati;
                     window.statsManager.saveStats();
                 }
-                
-                // ZABELEŽI POBEDU U H2H PRE SLANJA NA SERVER
-                const oppName = this.players.find(p => p !== this.playerName);
-                if (oppName) {
-                    this.updateH2HStats(oppName, this.currentOpponentPhoto || '', true, 0, 0);
-                }
 
                 this.updateStats(0, 'win'); 
                 
-                await this.modal.alert(gt('opp_fled_win'), gt('go_win') || "POBEDA"); 
+                if (window.kvartalnaLiga) {
+                    window.kvartalnaLiga.addPoints(myAvg);
+                }
+                
+                let fledMsg = gt('opp_fled_win') || "Protivnik je napustio partiju. Pobeđujete!";
+                await this.modal.alert(`${fledMsg}<br><br><span style="color:var(--success); font-weight:bold;">+${myAvg} poena u Ligi<br>+${myAvg} 💰 Dukata</span>`, gt('go_win') || "POBEDA"); 
                 this.cancelOnline(); 
             }
         }); 
@@ -3182,22 +3219,17 @@ class YambApp {
                  if (winner.name === myScoreEntry.name) resultType = 'win'; else resultType = 'loss'; 
              }
              
-             // DODATO: Ažuriranje H2H statistike za duele 1 na 1 sa poenima
+             let finalOppScore = 0;
              if (this.players.length === 2) {
                  const oppIndex = this.players.findIndex(p => p !== myScoreEntry.name);
                  if (oppIndex !== -1) {
                      const oppName = this.players[oppIndex];
-                     let oppPhoto = this.onlineMode ? this.currentOpponentPhoto : '';
-                     
-                     // Tražimo rezultat protivnika za razliku
                      let oppScoreEntry = finalResults.find(r => r.name === oppName);
-                     let oppScore = oppScoreEntry ? oppScoreEntry.score : 0;
-                     
-                     this.updateH2HStats(oppName, oppPhoto, resultType === 'win', myScoreEntry.score, oppScore);
+                     finalOppScore = oppScoreEntry ? oppScoreEntry.score : 0;
                  }
              }
 
-             this.updateStats(myScoreEntry.score, resultType);
+             this.updateStats(myScoreEntry.score, resultType, finalOppScore);
         }
         
         this.soundMgr.win(); 
@@ -3372,7 +3404,6 @@ class YambApp {
                 finalAmount *= 2; 
             }
         } else {
-            // DODATO: Ako NE želi da duplira dnevni izazov, samo izađi jer je SERVER VEĆ UPISAO.
             if (this.lastGameType === 'daily') {
                 this.showMainMenu();
                 return;
