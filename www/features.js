@@ -26,7 +26,8 @@ if (typeof window.YambFeatures === 'undefined') {
             if (!isHuman) return;
 
             // 1. THUNDER (Sveti Ilija) - Zadržavamo jer radi specifičnu animaciju scene (drmanje ekrana)
-            if (this.app.hasSvetiIlija) {
+            // ISPRAVKA: Proveravamo isključivo trenutni potez, a ne globalnu zastavicu za trofej
+            if (row === "Yamb" && pts > 0 && this.app.brojBacanja === 1) {
                 const activeEffect = localStorage.getItem('yamb_active_effect');
                 if (activeEffect === 'thunder') {
                     const gameScene = document.getElementById('game-scene');
