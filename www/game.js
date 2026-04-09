@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -1611,26 +1611,23 @@ class YambApp {
     async quitToMenu() { 
         if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
             if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
-                // --- KAZNA ZA RAGE QUIT ---
                 this.applyAbandonPenalty();
                 
-                // NOVO: Oduzimanje proseka iz Kvartalne Lige pri namernom izlasku
                 const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
                 
-                if (window.kvartalnaLiga) {
-                    window.kvartalnaLiga.addPoints(-myAvg);
-                }
-
-                // NOVO: Oduzimanje Dukata
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati -= myAvg; 
+                currentDukati = Math.max(0, currentDukati - myAvg); // Sprečavanje minusa
                 localStorage.setItem('yamb_dukati', currentDukati);
                 if (window.statsManager) {
                     window.statsManager.stats.balance = currentDukati;
                     window.statsManager.saveStats();
                 }
+
+                if (window.kvartalnaLiga) {
+                    window.kvartalnaLiga.addPoints(-myAvg);
+                }
                 
-                this.updateStats(0, 'loss'); // H2H se sada rešava unutar updateStats
+                this.updateStats(0, 'loss'); 
             }
             this.showMainMenu(); 
         } 
@@ -2073,15 +2070,12 @@ class YambApp {
             }
 
             const iAmWinner = (this.socket.id === data.winnerId);
-            
-            // NOVO: Računanje proseka igrača (Ako nema odigranih partija, stavljamo bazu od 500)
             const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
             
             if (iAmWinner) {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
-                // NOVO: Dodela proseka dukata umesto fiksnih 500
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati += myAvg; 
                 localStorage.setItem('yamb_dukati', currentDukati);
@@ -2089,13 +2083,14 @@ class YambApp {
                     window.statsManager.stats.balance = currentDukati;
                     window.statsManager.saveStats();
                 }
-                
-                this.updateStats(0, 'win'); 
-                
+
                 if (window.kvartalnaLiga) {
                     window.kvartalnaLiga.addPoints(myAvg);
                 }
                 
+                this.updateStats(myAvg, 'win'); 
+                this.safeSubmitScore(this.playerName, myAvg, 'Online');
+
                 const msg = data.message || gt('timeout_win_msg') || "Protivniku je isteklo vreme!";
                 await this.modal.alert(`${msg}<br><br><span style="color:var(--success); font-weight:bold;">+${myAvg} poena u Ligi<br>+${myAvg} 💰 Dukata</span>`, gt('go_win') || "TEHNIČKA POBEDA");
             } else {
@@ -2104,21 +2099,20 @@ class YambApp {
                 let penalty = this.applyAbandonPenalty();
                 let msgDodatak = penalty > 0 ? `<br><br><span style="color:var(--danger); font-weight:bold;">Kazna zbog odugovlačenja: -${penalty} Power Index poena.</span>` : '';
                 
-                // NOVO: Oduzimanje dukata gubitniku
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati -= myAvg; 
+                currentDukati = Math.max(0, currentDukati - myAvg); 
                 localStorage.setItem('yamb_dukati', currentDukati);
                 if (window.statsManager) {
                     window.statsManager.stats.balance = currentDukati;
                     window.statsManager.saveStats();
                 }
 
-                this.updateStats(0, 'loss'); 
-                
                 if (window.kvartalnaLiga) {
                     window.kvartalnaLiga.addPoints(-myAvg);
                     msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">-${myAvg} poena u Ligi<br>-${myAvg} 💰 Dukata</span>`;
                 }
+
+                this.updateStats(0, 'loss'); 
 
                 const msg = (data.message || gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak;
                 await this.modal.alert(msg, gt('timeout_loss_title') || "PORAZ");
@@ -2388,10 +2382,8 @@ class YambApp {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
-                // NOVO: Računanje proseka igrača (Baza 500 za nove)
                 const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
 
-                // NOVO: Dodela proseka dukata umesto fiksnih 500
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati += myAvg; 
                 localStorage.setItem('yamb_dukati', currentDukati);
@@ -2400,11 +2392,12 @@ class YambApp {
                     window.statsManager.saveStats();
                 }
 
-                this.updateStats(0, 'win'); 
-                
                 if (window.kvartalnaLiga) {
                     window.kvartalnaLiga.addPoints(myAvg);
                 }
+
+                this.updateStats(myAvg, 'win'); 
+                this.safeSubmitScore(this.playerName, myAvg, 'Online'); 
                 
                 let fledMsg = gt('opp_fled_win') || "Protivnik je napustio partiju. Pobeđujete!";
                 await this.modal.alert(`${fledMsg}<br><br><span style="color:var(--success); font-weight:bold;">+${myAvg} poena u Ligi<br>+${myAvg} 💰 Dukata</span>`, gt('go_win') || "POBEDA"); 
