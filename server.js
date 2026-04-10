@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT
 
 require('dotenv').config(); 
 
@@ -159,10 +159,11 @@ if (MONGO_URI) {
 
 // --- MODELI PODATAKA ---
 const ScoreSchema = new mongoose.Schema({
+    playerId: String, // <--- DODATO: Interni Google UID
     playerName: String,
     score: Number,
     mode: String, 
-    photoUrl: { type: String, default: '' }, // DODATO ZA AVATARE NA GLOBALNOJ LISTI
+    photoUrl: { type: String, default: '' }, 
     date: { type: Date, default: Date.now }
 });
 const Score = mongoose.model('Score', ScoreSchema);
@@ -224,8 +225,8 @@ const UserProfileSchema = new mongoose.Schema({
     lastDaily: { type: String, default: "" }, 
     soundEnabled: { type: Boolean, default: true },      
     vibrationEnabled: { type: Boolean, default: true },  
-    penaltyPoints: { type: Number, default: 0 },         // <--- NOVO: KAZNENI POENI ZA RAGE QUIT
-    h2hStats: { type: Object, default: {} },             // DODATO ZA H2H STATISTIKU
+    penaltyPoints: { type: Number, default: 0 },         
+    h2hStats: { type: Object, default: {} },             
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
@@ -1197,11 +1198,17 @@ io.on('connection', (socket) => {
         }
     });
 
+    // ==================================================================
+    // POPRAVLJENO: Obezbeđen submit_score sa internom UID validacijom
+    // ==================================================================
     socket.on('submit_score', async (data) => {
         try {
             if (!MONGO_URI) return;
 
             if (typeof data.score !== 'number' || isNaN(data.score)) return; 
+
+            // SECURITY FIX: Samo prijavljeni igrači mogu na Top Listu (gosti ne mogu)
+            if (!socket.playerId || socket.playerId.startsWith('guest_')) return;
 
             if (data.score < 0 || data.score > MAX_SCORE) {
                 console.log(`🚨 HACK POKUŠAJ (Value): ${socket.id} šalje nemoguć skor: ${data.score}`);
@@ -1215,30 +1222,21 @@ io.on('connection', (socket) => {
                 console.log(`⚠️ UPOZORENJE (Speed): Trajanje: ${duration}ms. Ipak upisujem skor: ${data.score}`);
             }
 
-            let finalName = "Nepoznat Igrač";
-            let rawName = data.name || data.playerName;
-
-            if (rawName && typeof rawName === 'string') {
-                let unesenoIme = rawName.trim().substring(0, MAX_NAME_LENGTH);
-                if (sadrziPsovku(unesenoIme)) {
-                    finalName = "Igrač_" + Math.floor(1000 + Math.random() * 9000);
-                } else {
-                    finalName = unesenoIme;
-                }
-            }
-
-            if (finalName.length === 0) finalName = "Nepoznat Igrač";
+            // SECURITY FIX: Koristimo ime i sliku koju server već zna iz prijave!
+            let finalName = socket.playerName || "Nepoznat Igrač";
+            let finalPhoto = socket.photoUrl || '';
             
             const newScore = new Score({
+                playerId: socket.playerId, // Interni Google UID
                 playerName: finalName,
                 score: data.score,
                 mode: data.mode || 'Solo',
-                photoUrl: data.photoUrl || '', 
+                photoUrl: finalPhoto, 
                 date: data.date || Date.now()
             });
             
             await newScore.save();
-            console.log(`✅ USPEŠAN UPIS: ${finalName} -> ${data.score}`);
+            console.log(`✅ USPEŠAN UPIS: ${finalName} (UID: ${socket.playerId}) -> ${data.score} (${newScore.mode})`);
             
             delete gameStartTimes[socket.id];
 

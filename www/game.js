@@ -3169,37 +3169,28 @@ class YambApp {
         }
 
         try {
-            if (detectedMode === 'Solo') {
-                await this.safeSubmitScore(this.playerName, myScoreEntry.score, 'Solo');
-            } 
-            else {
-                const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
-                
-                let saveMode = 'Hotseat';
-                if (this.onlineMode) {
-                    if (this.roomId && this.roomId.startsWith('tourney_')) {
-                        saveMode = 'Turnir';
-                    } else if (this.roomId && this.roomId.startsWith('yamb-')) {
-                        saveMode = 'Prijatelj';
-                    } else if (this.roomId && this.roomId.startsWith('duel_')) { 
-                        saveMode = 'Duel';
-                    } else {
-                        saveMode = 'Online';
-                    }
-                }
-                
-                // ODREĐIVANJE PRAVE SLIKE POBEDNIKA
-                let winnerPhoto = undefined;
-                if (winner.name === this.playerName) {
-                    winnerPhoto = localStorage.getItem('yamb_player_photo') || ''; // Ja sam pobedio
-                } else if (this.onlineMode) {
-                    winnerPhoto = this.currentOpponentPhoto || ''; // Protivnik je pobedio
+            let saveMode = detectedMode; // Početna vrednost (Solo ili Hotseat)
+            
+            if (this.onlineMode) {
+                if (this.roomId && this.roomId.startsWith('tourney_')) {
+                    saveMode = 'Turnir';
+                } else if (this.roomId && this.roomId.startsWith('yamb-')) {
+                    saveMode = 'Prijatelj';
+                } else if (this.roomId && this.roomId.startsWith('duel_')) { 
+                    saveMode = 'Duel';
                 } else {
-                    winnerPhoto = ''; // Lokalni Hotseat gost, nema sliku
+                    saveMode = 'Online';
                 }
-                
-                await this.safeSubmitScore(winner.name || gt('player_guest'), winner.score, saveMode, winnerPhoto);
             }
+
+            // ISPRAVKA: Svaki klijent šalje ISKLJUČIVO SVOJ skor!
+            // Sprečavamo da uređaj gubitnika pošalje pobednikov skor i upiše ga na svoj Google UID.
+            // Protivnikov uređaj će samostalno poslati svoj rezultat.
+            if (myScoreEntry && myScoreEntry.score > 0) {
+                const myPhoto = localStorage.getItem('yamb_player_photo') || '';
+                await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto);
+            }
+
         } catch (err) {
             console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
         }
