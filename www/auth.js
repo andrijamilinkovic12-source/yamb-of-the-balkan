@@ -85,6 +85,7 @@ function getFullLocalStats() {
         highscore: (window.app && window.app.stats) ? (window.app.stats.highscore || 0) : 0,
         totalScoreSum: (window.app && window.app.stats) ? (window.app.stats.totalScoreSum || 0) : 0,
         maxWinStreak: (window.app && window.app.stats) ? (window.app.stats.maxWinStreak || 0) : 0,
+        penaltyPoints: (window.app && window.app.stats) ? (window.app.stats.penaltyPoints || 0) : 0, // DODATO: Slanje kaznenih poena na server
         tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0, 
         balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
         currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
@@ -101,7 +102,7 @@ function getFullLocalStats() {
         lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
         soundEnabled: window.app ? window.app.soundEnabled : true,
         vibrationEnabled: window.app ? window.app.vibrationEnabled : true,
-        h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}')
+        h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}') // DODATO: Slanje H2H
     };
 }
 
@@ -222,7 +223,7 @@ async function odjaviSe() {
         
         // 3. RESETOVANJE OBJEKATA U RADNOJ MEMORIJI
         if (window.app) {
-            window.app.stats = { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0 };
+            window.app.stats = { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
             
             if (window.app.socket && window.app.socket.connected) {
                 window.app.socket.disconnect(); 
@@ -321,13 +322,15 @@ function inicijalizujCloudSync() {
 
             console.log("🔄 Preuzeta cela statistika iz oblaka:", dbStats);
             
+            // DODATO: Učitavanje penaltyPoints u aplikaciju
             window.app.stats = { 
                 games: dbStats.games || 0,
                 wins: dbStats.wins || 0, 
                 losses: dbStats.losses || 0,
                 highscore: dbStats.highscore || 0,
                 totalScoreSum: dbStats.totalScoreSum || 0,
-                maxWinStreak: dbStats.maxWinStreak || 0
+                maxWinStreak: dbStats.maxWinStreak || 0,
+                penaltyPoints: dbStats.penaltyPoints || 0
             };
             localStorage.setItem('yamb_stats', JSON.stringify(window.app.stats));
             
@@ -387,6 +390,7 @@ function inicijalizujCloudSync() {
                 if (window.app) window.app.vibrationEnabled = dbStats.vibrationEnabled;
             }
 
+            // Učitavanje H2H statistike
             if (dbStats.h2hStats) {
                 localStorage.setItem('yamb_h2h_stats', JSON.stringify(dbStats.h2hStats));
             }

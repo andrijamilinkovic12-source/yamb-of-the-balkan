@@ -635,6 +635,8 @@ io.on('connection', (socket) => {
                             if (localTotal > cloudTotal) {
                                 cloudData.wins = localData.wins;
                                 cloudData.losses = localData.losses;
+                                // DODATO: Obavezno prepiši vatreni niz, čak i ako je nula (tehnički poraz)!
+                                cloudData.currentWinStreak = localData.currentWinStreak || 0; 
                                 isModified = true;
                             }
 
