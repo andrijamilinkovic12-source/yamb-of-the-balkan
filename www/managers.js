@@ -363,9 +363,6 @@ class EffectManager {
 
             if(window.app && window.app.soundMgr && window.app.soundMgr.epicDroneShow) {
                 window.app.soundMgr.epicDroneShow();
-            } else if (typeof SoundManager !== 'undefined') {
-                const sm = new SoundManager();
-                if(sm.epicDroneShow) sm.epicDroneShow();
             }
 
             setTimeout(() => {
@@ -385,9 +382,6 @@ class EffectManager {
             
             if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
                 window.app.soundMgr.thunder();
-            } else {
-                const sm = new SoundManager();
-                if (typeof sm.thunder === 'function') sm.thunder();
             }
 
             if (window.app && typeof window.app.vibrate === 'function') {
@@ -419,9 +413,6 @@ class EffectManager {
 
             if (window.app && window.app.soundMgr && window.app.soundMgr.balkanTrumpet) {
                 window.app.soundMgr.balkanTrumpet();
-            } else if (typeof SoundManager !== 'undefined') {
-                const sm = new SoundManager();
-                if(sm.balkanTrumpet) sm.balkanTrumpet();
             }
 
             // OBRISANO POSLE TAČNO 8.5 SEKUNDI (Zajedno sa završetkom zvuka)
@@ -449,9 +440,6 @@ class EffectManager {
         
         if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkLaunch) {
             window.app.soundMgr.fireworkLaunch();
-        } else if (typeof SoundManager !== 'undefined') {
-            const sm = new SoundManager();
-            if(sm.fireworkLaunch) sm.fireworkLaunch();
         }
 
         const rocket = document.createElement('div');
@@ -1162,10 +1150,6 @@ class ShopManager {
         this.render();
         
         if(window.app && window.app.soundMgr) window.app.soundMgr.click();
-        else if (window.statsManager) { 
-            const sm = new SoundManager();
-            sm.click();
-        }
 
         if (this.type === 'theme') {
             if (window.app && typeof window.app.applyTheme === 'function') {
@@ -1246,7 +1230,6 @@ class ShopManager {
         this.render();
         
         if(window.app && window.app.soundMgr) window.app.soundMgr.trophy(); 
-        else { const sm = new SoundManager(); sm.trophy(); }
 
         if (typeof window.showNotification === 'function') {
             window.showNotification(_safeT('modal_title_info'), _safeT('msg_purchase_success') || "Kupovina uspešna!");
@@ -1307,7 +1290,6 @@ class ShopManager {
                  this.addBalance(500); 
                  
                  if(window.app && window.app.soundMgr) window.app.soundMgr.win(); 
-                 else { const sm = new SoundManager(); sm.win(); }
 
                  this.updateBalanceDisplay();
                  
@@ -1554,12 +1536,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const hasIgnoreClass = ignoreClasses.some(cls => target.classList.contains(cls));
             const hasIgnoreId = ignoreIds.includes(target.id);
 
+            // FIX: Potpuno uklonjen 'new SoundManager()' fallback koji je izazivao krahiranje AudioContext-a!
             if (!hasIgnoreClass && !hasIgnoreId) {
                 if (window.app && window.app.soundMgr) {
                     window.app.soundMgr.click();
-                } else if (typeof SoundManager !== 'undefined') {
-                    const sm = new SoundManager();
-                    sm.click();
                 }
             }
         }

@@ -230,7 +230,8 @@ async function odjaviSe() {
             }
         }
         if (window.statsManager) {
-            window.statsManager.stats = { totalGames: 0, wins: 0, losses: 0, highscore: 0, tournamentWins: 0, balance: 0, currentWinStreak: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
+            // FIX: Dodato games: 0 i penaltyPoints: 0 da sprečimo NaN krahiranje
+            window.statsManager.stats = { games: 0, totalGames: 0, wins: 0, losses: 0, highscore: 0, tournamentWins: 0, balance: 0, currentWinStreak: 0, penaltyPoints: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
             window.statsManager.saveStats();
         }
 
@@ -414,9 +415,13 @@ function inicijalizujCloudSync() {
             // =========================================
 
             if (window.statsManager) {
+                // FIX: Dodate linije za potpunu sinhronizaciju objekata (games i penaltyPoints)
+                window.statsManager.stats.games = dbStats.games || 0; 
+                window.statsManager.stats.totalGames = dbStats.games || 0;
+                window.statsManager.stats.penaltyPoints = dbStats.penaltyPoints || 0;
+                
                 window.statsManager.stats.wins = dbStats.wins || 0;
                 window.statsManager.stats.losses = dbStats.losses || 0;
-                window.statsManager.stats.totalGames = dbStats.games || 0;
                 window.statsManager.stats.highscore = dbStats.highscore || 0;
                 window.statsManager.stats.tournamentWins = dbStats.tournamentWins || 0; 
                 window.statsManager.stats.balance = dbStats.balance || 0;
