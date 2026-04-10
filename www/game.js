@@ -3171,7 +3171,17 @@ class YambApp {
                     }
                 }
                 
-                await this.safeSubmitScore(winner.name || gt('player_guest'), winner.score, saveMode);
+                // ODREĐIVANJE PRAVE SLIKE POBEDNIKA
+                let winnerPhoto = undefined;
+                if (winner.name === this.playerName) {
+                    winnerPhoto = localStorage.getItem('yamb_player_photo') || ''; // Ja sam pobedio
+                } else if (this.onlineMode) {
+                    winnerPhoto = this.currentOpponentPhoto || ''; // Protivnik je pobedio
+                } else {
+                    winnerPhoto = ''; // Lokalni Hotseat gost, nema sliku
+                }
+                
+                await this.safeSubmitScore(winner.name || gt('player_guest'), winner.score, saveMode, winnerPhoto);
             }
         } catch (err) {
             console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
@@ -3344,11 +3354,11 @@ class YambApp {
         this.navigateTo('game-over-screen');
     }
 
-    async safeSubmitScore(name, score, mode) {
+    async safeSubmitScore(name, score, mode, photoUrl = undefined) {
         try {
             let finalScore = parseInt(score); if (isNaN(finalScore)) finalScore = 0;
             if(this.topListManager) {
-                await this.topListManager.submitScore(name, finalScore, mode);
+                await this.topListManager.submitScore(name, finalScore, mode, photoUrl);
             }
         } catch(e) {
             console.warn("Nije moguće poslati rezultat u ovom trenutku:", e);

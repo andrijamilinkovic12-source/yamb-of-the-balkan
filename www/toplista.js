@@ -31,11 +31,18 @@ class TopListManager {
     /**
      * Upisuje skor (Prvo lokalno, pa pokušava na server)
      */
-    async submitScore(name, score, mode) {
+    async submitScore(name, score, mode, providedPhoto = undefined) {
         if (!score || score <= 0) return;
 
-        // OBAVEZNO: Povlačimo sliku iz lokalne memorije (sa Google-a)
-        const photo = localStorage.getItem('yamb_player_photo') || '';
+        // OBAVEZNO: Rešavanje tuđih avatara!
+        // Ako je slika eksplicitno prosleđena iz igre, koristi nju. 
+        // U suprotnom, povuci našu lokalnu sliku.
+        let photo = '';
+        if (providedPhoto !== undefined) {
+            photo = providedPhoto; 
+        } else {
+            photo = localStorage.getItem('yamb_player_photo') || '';
+        }
 
         // Pripremamo objekat za bazu
         const entry = {
