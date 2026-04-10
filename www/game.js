@@ -126,8 +126,8 @@ class YambApp {
         const savedVib = localStorage.getItem('yamb_vibration');
         this.vibrationEnabled = savedVib !== 'false'; // Podrazumevano uključeno
         
-        const savedStats = JSON.parse(localStorage.getItem('yamb_stats'));
-        this.stats = savedStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
+        let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
+        this.stats = freshStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
         
         this.diceBtns = []; 
         this.consecutiveNajava = 0; 
@@ -1035,13 +1035,18 @@ class YambApp {
         if(!elmnt) return; 
         var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0; 
         var header = document.getElementById("chat-header"); 
-        if (header) { header.onmousedown = dragMouseDown; header.ontouchstart = dragMouseDown; } 
+        if (header) { 
+            header.addEventListener('mousedown', dragMouseDown); 
+            header.addEventListener('touchstart', dragMouseDown, {passive: false}); 
+        } 
         function dragMouseDown(e) { 
             if(e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
             if(e.type === 'touchstart') { pos3 = e.touches[0].clientX; pos4 = e.touches[0].clientY; } 
             else { e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; } 
-            document.onmouseup = closeDragElement; document.onmousemove = elementDrag; 
-            document.ontouchend = closeDragElement; document.ontouchmove = elementDrag; 
+            document.addEventListener('mouseup', closeDragElement); 
+            document.addEventListener('mousemove', elementDrag); 
+            document.addEventListener('touchend', closeDragElement); 
+            document.addEventListener('touchmove', elementDrag, {passive: false}); 
         } 
         function elementDrag(e) { 
             let clientX, clientY; 
@@ -1050,7 +1055,12 @@ class YambApp {
             pos1 = pos3 - clientX; pos2 = pos4 - clientY; pos3 = clientX; pos4 = clientY; 
             elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px"; 
         } 
-        function closeDragElement() { document.onmouseup = null; document.onmousemove = null; document.ontouchend = null; document.ontouchmove = null; } 
+        function closeDragElement() { 
+            document.removeEventListener('mouseup', closeDragElement); 
+            document.removeEventListener('mousemove', elementDrag); 
+            document.removeEventListener('touchend', closeDragElement); 
+            document.removeEventListener('touchmove', elementDrag); 
+        } 
     }
 
     makeButtonDraggable() {
@@ -1342,6 +1352,7 @@ class YambApp {
         let totalBoxes = 0;
 
         const mySheet = this.allScores[this.myOnlineIndex];
+        if (!mySheet || Object.keys(mySheet).length === 0) return 0;
         
         // Iteriramo kroz sve kolone i redove u tabeli
         Object.keys(mySheet).forEach(col => {
@@ -1385,12 +1396,18 @@ class YambApp {
         return penalty;
     }
 
-    // CENTRALIZOVANO AŽURIRANJE STATISTIKE (FIX ZA DUPLI UPIS H2H)
-    updateStats(score, resultType, oppScore = 0) { 
-        this.stats = this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
-        this.stats.games++; 
-        this.stats.totalScoreSum += score; 
-        if (score > this.stats.highscore) this.stats.highscore = score; 
+    // CENTRALIZOVANO AŽURIRANJE STATISTIKE (FIX ZA TEHNIČKE POBEDE I H2H)
+    updateStats(score, resultType, oppScore = 0, isTechnical = false) { 
+        // Učitaj najsvežije stanje (u slučaju da ga je u međuvremenu StatsManager izmenio)
+        let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
+        this.stats = freshStats || this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, currentWinStreak: 0, maxWinStreak: 0 };
+        
+        // SSS (Samo Stvarni Skor): Ako nije tehnička partija, računamo poene i odigrane partije!
+        if (!isTechnical) {
+            this.stats.games++; 
+            this.stats.totalScoreSum += score; 
+            if (score > this.stats.highscore) this.stats.highscore = score; 
+        }
         
         let isWin = (resultType === 'win');
 
@@ -1405,15 +1422,24 @@ class YambApp {
             this.stats.currentWinStreak = 0; 
         } 
 
-        // DODATO: Centralizovani upis u H2H bazu
+        // Upis u H2H bazu
         if (this.onlineMode && this.players.length === 2 && !this.isSpectator) {
             const oppName = this.players.find(p => p !== this.playerName);
             if (oppName) {
-                this.updateH2HStats(oppName, this.currentOpponentPhoto || '', isWin, score, oppScore);
+                // Ako je tehnička pobeda, ne upisujemo lažne poene u H2H, već samo W/L rezultat
+                let passMyScore = isTechnical ? 0 : score;
+                let passOppScore = isTechnical ? 0 : oppScore;
+                this.updateH2HStats(oppName, this.currentOpponentPhoto || '', isWin, passMyScore, passOppScore);
             }
         }
         
+        // Zapiši u localStorage
         localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); 
+
+        // Sinhronizuj objekat u memoriji unutar StatsManagera kako bi celoj aplikaciji podaci bili isti!
+        if (window.statsManager) {
+            window.statsManager.stats = this.stats;
+        }
 
         if (this.socket && this.socket.connected) {
             let emitData = { 
@@ -1627,7 +1653,7 @@ class YambApp {
                     window.kvartalnaLiga.addPoints(-myAvg);
                 }
                 
-                this.updateStats(0, 'loss'); 
+                this.updateStats(0, 'loss', 0, true); 
             }
             this.showMainMenu(); 
         } 
@@ -2092,7 +2118,7 @@ class YambApp {
                     window.kvartalnaLiga.addPoints(myAvg);
                 }
                 
-                this.updateStats(myAvg, 'win'); 
+                this.updateStats(myAvg, 'win', 0, true); 
                 // UKLONJENO: safeSubmitScore - Tehnička pobeda ne ide na globalnu highscore listu!
 
                 const msg = data.message || gt('timeout_win_msg') || "Protivniku je isteklo vreme!";
@@ -2128,7 +2154,7 @@ class YambApp {
                     msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">${ptsLostStr}</span>`;
                 }
 
-                this.updateStats(0, 'loss'); 
+                this.updateStats(0, 'loss', 0, true); 
 
                 const msg = (data.message || gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak;
                 await this.modal.alert(msg, gt('timeout_loss_title') || "PORAZ");
@@ -2416,7 +2442,7 @@ class YambApp {
                     window.kvartalnaLiga.addPoints(myAvg);
                 }
 
-                this.updateStats(myAvg, 'win'); 
+                this.updateStats(myAvg, 'win', 0, true); 
                 // UKLONJENO: safeSubmitScore - Ne zagađujemo top listu tehničkim pobedama!
                 
                 let fledMsg = gt('opp_fled_win') || "Protivnik je napustio partiju. Pobeđujete!";

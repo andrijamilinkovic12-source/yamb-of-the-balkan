@@ -20,15 +20,19 @@ class StateManager {
     navigateTo(pageId) { console.log(`Navigating to: ${pageId}`); }
 }
 
-// --- 2. STATS MANAGER ---
+// --- 2. STATS MANAGER (FIXED & UNIFIED) ---
 class StatsManager {
     constructor() {
         this.stats = this.loadStats() || {
-            wins: 0, losses: 0, totalGames: 0, currentWinStreak: 0, maxWinStreak: 0, currentLossStreak: 0, 
-            balance: 1000, unlockedTrophies: [], highscore: 0,
+            games: 0, totalGames: 0, wins: 0, losses: 0, currentWinStreak: 0, maxWinStreak: 0, currentLossStreak: 0, 
+            balance: 1000, unlockedTrophies: [], highscore: 0, totalScoreSum: 0, penaltyPoints: 0,
             tournamentWins: 0 
         };
         
+        // Osiguraj da imamo i games i totalGames zbog kompatibilnosti
+        if (this.stats.totalGames && !this.stats.games) this.stats.games = this.stats.totalGames;
+        this.stats.totalGames = this.stats.games;
+
         const legacyBalance = parseInt(localStorage.getItem('yamb_dukati'));
         if (!isNaN(legacyBalance) && legacyBalance > this.stats.balance) {
             this.stats.balance = legacyBalance;
@@ -40,8 +44,23 @@ class StatsManager {
     
     loadStats() { 
         try { 
-            let s = JSON.parse(localStorage.getItem('diceGameStats')); 
-            if(s && !s.highscore && s.highScore) s.highscore = s.highScore;
+            // 1. Pokušavamo da učitamo glavni yamb_stats
+            let s = JSON.parse(localStorage.getItem('yamb_stats')); 
+            
+            // 2. Ako ne postoji, radimo MIGARCIJU sa starog diceGameStats (da igrači ne izgube podatke)
+            if (!s) {
+                let staroS = JSON.parse(localStorage.getItem('diceGameStats'));
+                if (staroS) {
+                    s = staroS;
+                    s.games = staroS.totalGames || 0;
+                    localStorage.setItem('yamb_stats', JSON.stringify(s));
+                }
+            }
+
+            if (s) {
+                if (s.highScore && !s.highscore) s.highscore = s.highScore;
+                if (s.totalGames && !s.games) s.games = s.totalGames;
+            }
             return s;
         } catch(e) { return null; } 
     }
@@ -51,9 +70,9 @@ class StatsManager {
         const s = this.stats;
         const t = s.unlockedTrophies || [];
 
-        if (s.totalGames > 0 && !t.includes('first_play')) { t.push('first_play'); changed = true; }
-        if (s.totalGames >= 10 && !t.includes('apprentice')) { t.push('apprentice'); changed = true; }
-        if (s.totalGames >= 50 && !t.includes('veteran')) { t.push('veteran'); changed = true; }
+        if (s.games > 0 && !t.includes('first_play')) { t.push('first_play'); changed = true; }
+        if (s.games >= 10 && !t.includes('apprentice')) { t.push('apprentice'); changed = true; }
+        if (s.games >= 50 && !t.includes('veteran')) { t.push('veteran'); changed = true; }
         if (s.highscore >= 1000 && !t.includes('score_1000')) { t.push('score_1000'); changed = true; }
 
         s.unlockedTrophies = t;
@@ -74,7 +93,11 @@ class StatsManager {
     }
     
     saveStats() { 
-        localStorage.setItem('diceGameStats', JSON.stringify(this.stats)); 
+        // Sinhronizacija totalGames i games pre čuvanja (zbog kompatibilnosti unazad)
+        this.stats.totalGames = this.stats.games;
+
+        // ČUVAMO SVE U JEDINSTVENI KLJUČ: yamb_stats
+        localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); 
         localStorage.setItem('yamb_dukati', this.stats.balance);
         
         if(this.stats.unlockedTrophies && this.stats.unlockedTrophies.length > 0) {
@@ -92,7 +115,8 @@ class StatsManager {
     
     update(gameState) {
         this.previousBalance = this.stats.balance;
-        this.stats.totalGames++;
+        this.stats.games++;
+        this.stats.totalGames = this.stats.games;
         if (gameState.won) { this.stats.wins++; this.stats.currentWinStreak++; this.stats.currentLossStreak = 0; } 
         else { this.stats.losses++; this.stats.currentLossStreak++; this.stats.currentWinStreak = 0; }
         this.stats.balance = gameState.balance;

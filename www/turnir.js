@@ -26,7 +26,7 @@ class TournamentManager {
         this.setupSocketListeners();
     }
 
-    // --- NOVA BULLETPROOF FUNKCIJA ZA INDEKS MOĆI ---
+    // --- NOVA BULLETPROOF FUNKCIJA ZA INDEKS MOĆI (AŽURIRANA ZA CENTRALNU BAZU) ---
     calculateMyPI() {
         // Pokušaj 1: Direktno preko app funkcija ako su već učitane i spremne
         if (this.app && typeof this.app.calculatePowerIndex === 'function' && typeof this.app.getFullLocalStats === 'function') {
@@ -36,25 +36,26 @@ class TournamentManager {
             }
         }
 
-        // Pokušaj 2: Čupanje direktno iz baze (localStorage) jer je to najsigurniji izvor
-        let wins = parseInt(localStorage.getItem('yamb_wins')) || 0;
-        let losses = parseInt(localStorage.getItem('yamb_losses')) || 0;
-        let games = parseInt(localStorage.getItem('yamb_games')) || 0;
-        let totalScoreSum = parseFloat(localStorage.getItem('yamb_total_score_sum')) || 0;
-        let hs = parseInt(localStorage.getItem('yamb_highscore')) || 0;
-        let maxStreak = parseInt(localStorage.getItem('yamb_max_streak')) || 0;
-        let tourneyWins = parseInt(localStorage.getItem('yamb_tourney_wins')) || 0;
+        // Pokušaj 2: Čupanje direktno iz baze (localStorage) - SADA IZ CENTRALNOG yamb_stats JSON-a
+        let s = JSON.parse(localStorage.getItem('yamb_stats') || '{}');
+        let wins = parseInt(s.wins) || 0;
+        let losses = parseInt(s.losses) || 0;
+        let games = parseInt(s.games || s.totalGames) || 0;
+        let totalScoreSum = parseFloat(s.totalScoreSum) || 0;
+        let hs = parseInt(s.highscore) || 0;
+        let maxStreak = parseInt(s.maxWinStreak) || 0;
+        let tourneyWins = parseInt(s.tournamentWins) || 0;
 
-        // Fallback na statsManager u slučaju da su se ključevi drugačije sačuvali
+        // Fallback na statsManager u slučaju da su se ključevi drugačije sačuvali u memoriji
         if (window.statsManager && window.statsManager.stats) {
-            let s = window.statsManager.stats;
-            wins = wins || parseInt(s.wins) || 0;
-            losses = losses || parseInt(s.losses) || 0;
-            games = games || parseInt(s.games || s.totalGames) || 0;
-            totalScoreSum = totalScoreSum || parseFloat(s.totalScoreSum) || 0;
-            hs = hs || parseInt(s.highscore) || 0;
-            maxStreak = maxStreak || parseInt(s.maxWinStreak) || 0;
-            tourneyWins = tourneyWins || parseInt(s.tournamentWins) || 0;
+            let sm = window.statsManager.stats;
+            wins = wins || parseInt(sm.wins) || 0;
+            losses = losses || parseInt(sm.losses) || 0;
+            games = games || parseInt(sm.games || sm.totalGames) || 0;
+            totalScoreSum = totalScoreSum || parseFloat(sm.totalScoreSum) || 0;
+            hs = hs || parseInt(sm.highscore) || 0;
+            maxStreak = maxStreak || parseInt(sm.maxWinStreak) || 0;
+            tourneyWins = tourneyWins || parseInt(sm.tournamentWins) || 0;
         }
 
         let totalCompetitive = wins + losses;
@@ -68,14 +69,13 @@ class TournamentManager {
             leaguePts = parseInt(ls.quarterlyScore) || 0;
         }
 
-        // Trofeji
+        // Trofeji (takođe čitamo iz glavnog objekta umesto odvojenog stringa)
         let trophyCount = 0;
-        let unlockedStr = localStorage.getItem('yamb_unlockedTrophies');
-        let unlocked = [];
-        if (unlockedStr) {
-            try { unlocked = JSON.parse(unlockedStr); } catch(e){}
-        } else if (window.statsManager && window.statsManager.stats && window.statsManager.stats.unlockedTrophies) {
-            unlocked = window.statsManager.stats.unlockedTrophies;
+        let unlocked = s.unlockedTrophies || [];
+        if (!unlocked || unlocked.length === 0) {
+            if (window.statsManager && window.statsManager.stats && window.statsManager.stats.unlockedTrophies) {
+                unlocked = window.statsManager.stats.unlockedTrophies;
+            }
         }
 
         if (Array.isArray(unlocked)) {
@@ -88,7 +88,7 @@ class TournamentManager {
             (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
         );
 
-        // Pokušaj 3: Uzimamo broj sa UI-a ako je on veći (Znači da je powerindex.js savršeno odradio posao)
+        // Pokušaj 3: Uzimamo broj sa UI-a ako je on veći (Znači da je app skripta savršeno odradila posao na ekranu)
         let uiPower = 0;
         const piEl = document.getElementById('stat-power-index');
         if (piEl && piEl.innerText) {
