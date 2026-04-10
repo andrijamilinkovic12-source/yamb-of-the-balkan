@@ -4,7 +4,7 @@ class TopListManager {
     constructor(appContext) {
         this.app = appContext;
         this.storageKey = 'yamb_ultimate_scores';
-        this.maxEntries = 50;
+        this.maxEntries = 100; // Ograničenje je sada 100
         
         // Default filter za globalnu listu
         this.currentGlobalFilter = 'weekly'; 

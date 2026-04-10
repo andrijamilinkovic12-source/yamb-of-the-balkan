@@ -1190,7 +1190,8 @@ io.on('connection', (socket) => {
                 filter.date = { $gte: startOfMonth };
             }
 
-            const scores = await Score.find(filter).sort({ score: -1 }).limit(50).lean();
+            // OVDJE JE LIMIT PROMENJEN SA 50 NA 100
+            const scores = await Score.find(filter).sort({ score: -1 }).limit(100).lean();
             socket.emit('global_highscores_data', scores);
         } catch (err) {
             console.error("Greška pri dohvatanju skorova:", err);
