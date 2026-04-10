@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT
 
 require('dotenv').config(); 
 
@@ -283,6 +283,24 @@ const disconnectTimers = {};
 const ghostSessions = {}; 
 
 // ==================================================================
+// --- SERVERSKA KAZNA ZA RAGE QUIT / GUBITAK KONEKCIJE ---
+// ==================================================================
+async function applyServerSidePenalty(playerId, penaltyAmount = 50) {
+    if (!process.env.MONGO_URI || !playerId) return;
+    try {
+        const UserProfile = mongoose.model('UserProfile');
+        // Direktno u bazi povećavamo kaznene poene igraču
+        await UserProfile.findOneAndUpdate(
+            { firebaseUid: playerId },
+            { $inc: { penaltyPoints: penaltyAmount } }
+        );
+        console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena igraču ${playerId} zbog napuštanja/isteka vremena.`);
+    } catch (err) {
+        console.error("Greška pri upisu server kazne:", err);
+    }
+}
+
+// ==================================================================
 // --- SERVER-SIDE TURN TIMER LOGIC (AUTORITATIVNI TAJMER) ---
 // ==================================================================
 const TURN_TIME_LIMIT = 90000; // 90 sekundi
@@ -321,6 +339,13 @@ function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
     const winnerSocketId = state.players.find(id => id !== inactivePlayerSocketId);
     
     if (winnerSocketId) {
+        // --- NOVO: SERVER KAŽNJAVA NEAKTIVNOG IGRAČA ---
+        const inactiveUid = registeredSockets[inactivePlayerSocketId];
+        if (inactiveUid) {
+            applyServerSidePenalty(inactiveUid, 50); // Maksimalna kazna za odugovlačenje
+        }
+        // -----------------------------------------------
+        
         console.log(`⏱️ TIMEOUT: Isteklo vreme u sobi ${roomId}. Pobednik je ${winnerSocketId} (Tehnička pobeda)`);
         
         io.to(roomId).emit('game_over_timeout', {
@@ -1903,6 +1928,10 @@ io.on('connection', (socket) => {
             disconnectTimers[pid] = setTimeout(() => {
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
                 
+                // --- NOVO: SERVER KAŽNJAVA IGRAČA KOJI JE POBEGAO/UBIO APLIKACIJU ---
+                applyServerSidePenalty(pid, 50); // Nasilan prekid se kažnjava fiksno sa 50 PI poena
+                // ---------------------------------------------------------------------
+
                 io.to(activeRoomId).emit('opponent_left');
                 
                 delete playerRooms[ghostSessions[pid]?.oldSocketId];
