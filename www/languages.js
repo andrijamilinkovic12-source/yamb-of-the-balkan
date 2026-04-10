@@ -64,6 +64,8 @@ const TRANSLATIONS = {
         "league_congrats": "Čestitamo na osvajanju Kvartalne lige!<br>Nova sezona je počela, srećno svima!",
         "quarter_reward_title": "KRAJ KVARTALA 🏆",
         "quarter_reward_msg": "Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} 💰!",
+        "league_pts_won": "+{0} poena u Ligi<br>+{0} 💰 Dukata",
+        "league_pts_lost": "-{0} poena u Ligi<br>-{0} 💰 Dukata",
 
         // --- PRODAVNICA I RIZNICA ---
         "tab_trophies": "TROFEJI 🏆",
@@ -193,6 +195,8 @@ const TRANSLATIONS = {
         "status_choose_field": "Izaberite kolonu i red za upis.",
         "status_roll_first": "Prvo baci kockice!",
         "status_undo_click": "Ispravka: Klikni na upisano polje da ga obrišeš.",
+        "fallback_quote_text": "Sreća prati hrabre.",
+        "fallback_quote_author": "Aleksandar Veliki",
         
         // --- CHAT & DUELI ---
         "chat_you": "Ti",
@@ -214,6 +218,7 @@ const TRANSLATIONS = {
         "sys_no_conn": "Niste povezani na server.",
         "err_opp_left": "Protivnik je u međuvremenu napustio igru.",
         "msg_waiting_response": "Čekam odgovor...",
+        "tooltip_challenge": "Izazovi na duel ⚔️",
         
         // --- ONLINE IGRAČI MODAL ---
         "online_players_title": "🟢 ONLINE IGRAČI",
@@ -364,6 +369,7 @@ const TRANSLATIONS = {
         "invite_share_msg": "Igrajmo Yamb! Upadaj ovde:",
         "alert_copied": "Link kopiran!",
         "alert_copied_title": "KOPIRANO",
+        "share_dialog_title": "Podeli link sa prijateljem",
 
         // --- RESUME ---
         "msg_game_resumed": "Igra nastavljena!",
@@ -469,6 +475,9 @@ const TRANSLATIONS = {
         "alert_search_not_found": "Nije pronađen nijedan igrač sa tim imenom. Pokušajte ponovo.",
         "alert_search_title": "PRETRAGA",
         "alert_search_found": "Pronađen je igrač: {0}. Da li želiš da ga dodaš u prijatelje?",
+        "friend_req_new": "Novi zahtev",
+        "btn_accept": "Prihvati",
+        "btn_decline": "Odbij",
         
         // --- NOVI PREVODI ZA DASHBOARD, RANKOVE I GREŠKE ---
         "online_players": " Igrača Online",
@@ -526,7 +535,12 @@ const TRANSLATIONS = {
         "title_success": "USPEŠNO",
         "live_badge": "UŽIVO",
         "spectate_ended_title": "KRAJ PARTIJE",
-        "spectate_ended_msg": "Partija koju ste gledali je završena."
+        "spectate_ended_msg": "Partija koju ste gledali je završena.",
+        "spectator_count": "{0} gledalaca",
+        "spectator_empty": "Nema gledalaca",
+        "opp_network_issue": "⚠️ Protivnik ima problema sa mrežom...",
+        "opp_reconnected": "Protivnik se vratio u igru!",
+        "penalty_msg": "Kazna zbog odugovlačenja: -{0} Power Index poena."
     },
     en: {
         // --- SPLASH SCREEN ---
@@ -591,6 +605,8 @@ const TRANSLATIONS = {
         "league_congrats": "Congratulations on winning the Quarterly League!<br>The new season has started, good luck to everyone!",
         "quarter_reward_title": "QUARTER ENDED 🏆",
         "quarter_reward_msg": "Congratulations! You won {0}. place {1} in the Quarterly League and a reward of {2} 💰!",
+        "league_pts_won": "+{0} League points<br>+{0} 💰 Ducats",
+        "league_pts_lost": "-{0} League points<br>-{0} 💰 Ducats",
 
         // --- SHOP & TREASURY ---
         "tab_trophies": "TROPHIES 🏆",
@@ -720,6 +736,8 @@ const TRANSLATIONS = {
         "status_choose_field": "Select a column and row to write.",
         "status_roll_first": "Roll the dice first!",
         "status_undo_click": "Undo: Click on a filled field to clear it.",
+        "fallback_quote_text": "Fortune favors the bold.",
+        "fallback_quote_author": "Alexander the Great",
         
         // --- CHAT & DUELS ---
         "chat_you": "You",
@@ -741,6 +759,7 @@ const TRANSLATIONS = {
         "sys_no_conn": "You are not connected to the server.",
         "err_opp_left": "Opponent has left the game in the meantime.",
         "msg_waiting_response": "Waiting for response...",
+        "tooltip_challenge": "Challenge to duel ⚔️",
         
         // --- ONLINE PLAYERS MODAL ---
         "online_players_title": "🟢 PLAYERS ONLINE",
@@ -891,6 +910,7 @@ const TRANSLATIONS = {
         "invite_share_msg": "Let's play Yamb! Join here:",
         "alert_copied": "Link copied to clipboard!",
         "alert_copied_title": "COPIED",
+        "share_dialog_title": "Share link with a friend",
 
         // --- RESUME ---
         "msg_game_resumed": "Game resumed!",
@@ -996,6 +1016,9 @@ const TRANSLATIONS = {
         "alert_search_not_found": "No player found with that name. Please try again.",
         "alert_search_title": "SEARCH",
         "alert_search_found": "Player found: {0}. Do you want to add them as a friend?",
+        "friend_req_new": "New request",
+        "btn_accept": "Accept",
+        "btn_decline": "Decline",
         
         // --- NEW TRANSLATIONS FOR DASHBOARD, RANKS AND ERRORS ---
         "online_players": " Players Online",
@@ -1053,7 +1076,12 @@ const TRANSLATIONS = {
         "title_success": "SUCCESS",
         "live_badge": "LIVE",
         "spectate_ended_title": "MATCH ENDED",
-        "spectate_ended_msg": "The match you were spectating has ended."
+        "spectate_ended_msg": "The match you were spectating has ended.",
+        "spectator_count": "{0} spectators",
+        "spectator_empty": "No spectators",
+        "opp_network_issue": "⚠️ Opponent is experiencing network issues...",
+        "opp_reconnected": "Opponent reconnected!",
+        "penalty_msg": "Delay penalty: -{0} Power Index points."
     }
 };
 

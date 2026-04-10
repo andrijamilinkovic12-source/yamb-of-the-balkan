@@ -312,12 +312,12 @@ class YambApp {
             eye.classList.remove('gh-btn-inactive');
             eye.classList.add('gh-btn-active');
             eye.style.filter = 'drop-shadow(0 0 8px var(--gold-glow))';
-            eye.title = `${count} gledalaca`;
+            eye.title = (gt('spectator_count') || '{0} gledalaca').replace('{0}', count);
         } else {
             eye.classList.add('gh-btn-inactive');
             eye.classList.remove('gh-btn-active');
             eye.style.filter = '';
-            eye.title = 'Nema gledalaca';
+            eye.title = gt('spectator_empty') || 'Nema gledalaca';
         }
     }
     
@@ -656,10 +656,10 @@ class YambApp {
                     <div class="friend-card" style="border: 1px dashed var(--gold-main); background: rgba(224, 201, 149, 0.1);">
                         <img src="${r.photoUrl && r.photoUrl.length > 5 ? r.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`}" class="friend-card-img" style="border: 2px solid #aaa;">
                         <span class="friend-card-name">${r.name}</span>
-                        <span style="font-size: 0.7rem; color: #aaa; text-align: center; margin-bottom: 5px; font-weight: bold;">Novi zahtev</span>
+                        <span style="font-size: 0.7rem; color: #aaa; text-align: center; margin-bottom: 5px; font-weight: bold;">${gt('friend_req_new') || 'Novi zahtev'}</span>
                         <div style="display:flex; gap:10px; width: 100%; justify-content: center;">
-                            <button onclick="app.resolveFriendRequest('${r.uid}', true)" style="background:var(--success); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="Prihvati">✅</button>
-                            <button onclick="app.resolveFriendRequest('${r.uid}', false)" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="Odbij">❌</button>
+                            <button onclick="app.resolveFriendRequest('${r.uid}', true)" style="background:var(--success); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="${gt('btn_accept') || 'Prihvati'}">✅</button>
+                            <button onclick="app.resolveFriendRequest('${r.uid}', false)" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="${gt('btn_decline') || 'Odbij'}">❌</button>
                         </div>
                     </div>
                 `;
@@ -1180,7 +1180,7 @@ class YambApp {
         
         let nameHtml = `<strong>${sender}:</strong>`;
         if (senderId && senderId !== (this.socket ? this.socket.id : null) && sender !== gt('sys_name') && type === "msg-incoming") {
-            nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="window.app.challengePlayer('${senderId}', '${sender}')" title="Izazovi na duel ⚔️">${sender}:</strong>`;
+            nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="window.app.challengePlayer('${senderId}', '${sender}')" title="${gt('tooltip_challenge') || 'Izazovi na duel ⚔️'}">${sender}:</strong>`;
         }
         
         msgDiv.innerHTML = `${nameHtml} ${text}`; 
@@ -1718,7 +1718,7 @@ class YambApp {
                     title: shareTitle,
                     text: shareText,
                     url: url,
-                    dialogTitle: 'Podeli link sa prijateljem'
+                    dialogTitle: gt('share_dialog_title') || 'Podeli link sa prijateljem'
                 });
                 return; 
             } catch (e) {
@@ -1965,7 +1965,7 @@ class YambApp {
             const timerDisplay = document.getElementById('turn-timer-display');
             if (timerDisplay) {
                 timerDisplay.style.display = 'flex';
-                timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">⚠️ Protivnik ima problema sa mrežom...</span>`;
+                timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">${gt('opp_network_issue') || '⚠️ Protivnik ima problema sa mrežom...'}</span>`;
                 timerDisplay.style.animation = 'pulse 1s infinite';
             }
             
@@ -1979,7 +1979,7 @@ class YambApp {
             if (this.isSpectator) return;
             
             if (typeof window.showNotification === 'function') {
-                window.showNotification("INFO", "Protivnik se vratio u igru!");
+                window.showNotification(gt('info_title') || "INFO", gt('opp_reconnected') || "Protivnik se vratio u igru!");
             }
             
             // Kada se vrati, tražimo kompletno osvežavanje stanja od servera
@@ -2092,12 +2092,14 @@ class YambApp {
                 this.safeSubmitScore(this.playerName, myAvg, 'Online');
 
                 const msg = data.message || gt('timeout_win_msg') || "Protivniku je isteklo vreme!";
-                await this.modal.alert(`${msg}<br><br><span style="color:var(--success); font-weight:bold;">+${myAvg} poena u Ligi<br>+${myAvg} 💰 Dukata</span>`, gt('go_win') || "TEHNIČKA POBEDA");
+                let ptsWonStr = (gt('league_pts_won') || "+{0} poena u Ligi<br>+{0} 💰 Dukata").replace(/\{0\}/g, myAvg);
+                await this.modal.alert(`${msg}<br><br><span style="color:var(--success); font-weight:bold;">${ptsWonStr}</span>`, gt('go_win') || "TEHNIČKA POBEDA");
             } else {
                 this.soundMgr.loss();
                 
                 let penalty = this.applyAbandonPenalty();
-                let msgDodatak = penalty > 0 ? `<br><br><span style="color:var(--danger); font-weight:bold;">Kazna zbog odugovlačenja: -${penalty} Power Index poena.</span>` : '';
+                let penStr = (gt('penalty_msg') || "Kazna zbog odugovlačenja: -{0} Power Index poena.").replace('{0}', penalty);
+                let msgDodatak = penalty > 0 ? `<br><br><span style="color:var(--danger); font-weight:bold;">${penStr}</span>` : '';
                 
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati = Math.max(0, currentDukati - myAvg); 
@@ -2109,7 +2111,8 @@ class YambApp {
 
                 if (window.kvartalnaLiga) {
                     window.kvartalnaLiga.addPoints(-myAvg);
-                    msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">-${myAvg} poena u Ligi<br>-${myAvg} 💰 Dukata</span>`;
+                    let ptsLostStr = (gt('league_pts_lost') || "-{0} poena u Ligi<br>-{0} 💰 Dukata").replace(/\{0\}/g, myAvg);
+                    msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">${ptsLostStr}</span>`;
                 }
 
                 this.updateStats(0, 'loss'); 
@@ -2400,7 +2403,8 @@ class YambApp {
                 this.safeSubmitScore(this.playerName, myAvg, 'Online'); 
                 
                 let fledMsg = gt('opp_fled_win') || "Protivnik je napustio partiju. Pobeđujete!";
-                await this.modal.alert(`${fledMsg}<br><br><span style="color:var(--success); font-weight:bold;">+${myAvg} poena u Ligi<br>+${myAvg} 💰 Dukata</span>`, gt('go_win') || "POBEDA"); 
+                let wonStr = (gt('league_pts_won') || "+{0} poena u Ligi<br>+{0} 💰 Dukata").replace(/\{0\}/g, myAvg);
+                await this.modal.alert(`${fledMsg}<br><br><span style="color:var(--success); font-weight:bold;">${wonStr}</span>`, gt('go_win') || "POBEDA"); 
                 this.cancelOnline(); 
             }
         }); 
@@ -2623,7 +2627,7 @@ class YambApp {
 
     showQuoteAndProceed() {
         const lang = localStorage.getItem('yamb_lang') || 'sr';
-        let quoteData = { text: "Sreća prati hrabre.", author: "Aleksandar Veliki" }; 
+        let quoteData = { text: gt('fallback_quote_text') || "Sreća prati hrabre.", author: gt('fallback_quote_author') || "Aleksandar Veliki" }; 
         
         if (typeof quotesDb !== 'undefined' && quotesDb.length > 0) {
             const randomQuote = quotesDb[Math.floor(Math.random() * quotesDb.length)];
