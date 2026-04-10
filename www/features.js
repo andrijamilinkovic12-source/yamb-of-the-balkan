@@ -25,25 +25,8 @@ if (typeof window.YambFeatures === 'undefined') {
         checkMoveEffects(row, pts, isHuman) {
             if (!isHuman) return;
 
-            // 1. THUNDER (Sveti Ilija) - Zadržavamo jer radi specifičnu animaciju scene (drmanje ekrana)
-            // ISPRAVKA: Proveravamo isključivo trenutni potez, a ne globalnu zastavicu za trofej
-            if (row === "Yamb" && pts > 0 && this.app.brojBacanja === 1) {
-                const activeEffect = localStorage.getItem('yamb_active_effect');
-                if (activeEffect === 'thunder') {
-                    const gameScene = document.getElementById('game-scene');
-                    if (gameScene) {
-                        gameScene.classList.add('anim-thunder');
-                        // ISPRAVKA: Pozivamo error() koji već postoji u SoundManager-u i generiše dubok sawtooth ton (grmljavinu)
-                        if(this.app.soundMgr) {
-                            this.app.soundMgr.error(); 
-                        }
-                        setTimeout(() => gameScene.classList.remove('anim-thunder'), 600);
-                    }
-                }
-            }
-
-            // --- NAPOMENA: UKLONJEN EKSPLICITNI POZIV ZA ICE AGE ---
-            // Razlog: game.js već poziva celebrateYamb() koji automatski aktivira 'ice_age' 
+            // --- NAPOMENA: UKLONJEN EKSPLICITNI POZIV ZA THUNDER I ICE AGE ---
+            // Razlog: game.js već poziva celebrateYamb() i specifične efekte 
             // kroz novi kod u managers.js. Ovde bi to bio duplikat.
 
             // 2. KONFETE (Za skor >= 60, kao dodatna nagrada za dobre poteze)

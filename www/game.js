@@ -1375,22 +1375,10 @@ class YambApp {
         }
 
         if (penalty > 0) {
-            this.stats = this.stats || {};
-            // Čuvamo trajno kaznene poene
-            this.stats.penaltyPoints = (this.stats.penaltyPoints || 0) + penalty;
-            localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
-
-            // Sinhronizacija sa Cloud-om kako bi server znao novi Power Index
-            if (this.socket && this.socket.connected) {
-                this.socket.emit('set_player_data', {
-                    uid: localStorage.getItem('yamb_uid'),
-                    name: this.playerName,
-                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                    stats: this.getFullLocalStats(),
-                    playerId: this.playerId
-                });
-            }
-            console.log(`⚠️ KAZNA PRIMENJENA: Oduzeto ${penalty} PI poena. Progres igre: ${Math.round(progress)}%`);
+            // FIX: Klijent samo ispisuje log, a SERVER je taj koji će bezbedno
+            // dodati kaznu u bazu kada primi 'back_to_menu' komandu.
+            // Time sprečavamo duplo kažnjavanje i hakovanje klijenta.
+            console.log(`⚠️ OČEKIVANA KAZNA: Server će dodeliti ${penalty} kaznenih poena zbog napuštanja. Progres: ${Math.round(progress)}%`);
         }
 
         return penalty;
@@ -1429,7 +1417,8 @@ class YambApp {
                 // Ako je tehnička pobeda, ne upisujemo lažne poene u H2H, već samo W/L rezultat
                 let passMyScore = isTechnical ? 0 : score;
                 let passOppScore = isTechnical ? 0 : oppScore;
-                this.updateH2HStats(oppName, this.currentOpponentPhoto || '', isWin, passMyScore, passOppScore);
+                // FIX: Dodat 6. parametar (this.currentOpponentUid)
+                this.updateH2HStats(oppName, this.currentOpponentPhoto || '', isWin, passMyScore, passOppScore, this.currentOpponentUid);
             }
         }
         
@@ -1898,6 +1887,7 @@ class YambApp {
         }
     }
     
+    // --- NOVO ZA KORAK 4: ISPRAVLJEN KLIJENTSKI TAJMER ---
     startClientTimer() {
         if (!this.onlineMode || this.isSpectator) return;
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
@@ -1907,13 +1897,14 @@ class YambApp {
 
         this.turnTimerInterval = setInterval(() => {
             this.timeLeft--;
-            if (this.timeLeft < 0) this.timeLeft = 0;
+            // UKLONJENO: if (this.timeLeft < 0) this.timeLeft = 0; // Ostavljamo da ide do -3
             this.updateStatusLabel();
             
-            if (this.timeLeft <= 0) {
+            // Cekamo do -3 sekunde da bi ispoštovali serverov Grace Period
+            if (this.timeLeft <= -3) {
                 clearInterval(this.turnTimerInterval);
                 
-                // NOVO: SAFETY NET - Ako je protivnikov red, traži tehničku pobedu od servera
+                // SAFETY NET - Ako je protivnikov red, traži tehničku pobedu od servera
                 const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
                 if (!isMyTurn && this.socket && this.roomId) {
                     console.log("🛡️ SAFETY NET: Tajmer na nuli! Tražim tehničku pobedu od servera...");
@@ -1923,6 +1914,7 @@ class YambApp {
         }, 1000);
     }
     
+    // --- NOVO ZA KORAK 4: ISPRAVLJEN VIZUELNI PRIKAZ TAJMERA ---
     updateStatusLabel() {
         const statusLbl = document.getElementById('lbl-status');
         if (statusLbl) {
@@ -1941,13 +1933,19 @@ class YambApp {
                 
                 const color = this.timeLeft <= 10 ? '#ff4c4c' : (isMyTurn ? 'var(--gold-main)' : '#aaaaaa');
                 
-                timerDisplay.innerHTML = `<span style="color:${color};">⏱️ ${this.timeLeft}s</span>`;
-
-                if (this.timeLeft <= 10 && isMyTurn) {
-                    timerDisplay.style.animation = 'pulse 1s infinite';
+                // NOVI DEO KODA: Prikaz za Grace Period (vreme <= 0)
+                if (this.timeLeft <= 0) {
+                    timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">⏳ ${gt('timeout_grace') || 'Ističe...'}</span>`;
+                    timerDisplay.style.animation = 'pulse 0.5s infinite';
                 } else {
-                    timerDisplay.style.animation = 'none';
+                    timerDisplay.innerHTML = `<span style="color:${color};">⏱️ ${this.timeLeft}s</span>`;
+                    if (this.timeLeft <= 10 && isMyTurn) {
+                        timerDisplay.style.animation = 'pulse 1s infinite';
+                    } else {
+                        timerDisplay.style.animation = 'none';
+                    }
                 }
+                
             } else {
                 timerDisplay.style.display = 'none';
                 timerDisplay.style.animation = 'none';
@@ -2256,8 +2254,9 @@ class YambApp {
         this.socket.on('game_start', (data) => { 
             console.log("GAME START:", data);
             
-            // DODATO: Pamtimo sliku protivnika za H2H statistiku
+            // DODATO: Pamtimo sliku i UID protivnika za H2H statistiku
             this.currentOpponentPhoto = data.oppPhoto || '';
+            this.currentOpponentUid = data.oppUid || null; // <--- NOVO: Čuvamo UID
             
             const customModal = document.getElementById('custom-modal-overlay');
             if (customModal) customModal.style.display = 'none';
