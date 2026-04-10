@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -2057,7 +2057,7 @@ class YambApp {
         });
         // ------------------------------------------------
 
-        // --- NOVO: TIMEOUT EVENT (USKLAĐEN SA SERVEROM I KAZNAMA) ---
+        // --- POPRAVLJENO: TIMEOUT EVENT (USKLAĐEN SA SERVEROM I KAZNAMA) ---
         this.socket.off('game_over_timeout');
         this.socket.on('game_over_timeout', async (data) => {
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
@@ -2070,7 +2070,11 @@ class YambApp {
             }
 
             const iAmWinner = (this.socket.id === data.winnerId);
-            const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
+            
+            // SECURITY FIX: Limitiramo maksimalan iznos na 2000 kako bismo sprečili hakovanje memorije
+            let myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
+            if (isNaN(myAvg) || myAvg < 0) myAvg = 500;
+            if (myAvg > 2000) myAvg = 2000; 
             
             if (iAmWinner) {
                 this.soundMgr.win();
@@ -2089,7 +2093,7 @@ class YambApp {
                 }
                 
                 this.updateStats(myAvg, 'win'); 
-                this.safeSubmitScore(this.playerName, myAvg, 'Online');
+                // UKLONJENO: safeSubmitScore - Tehnička pobeda ne ide na globalnu highscore listu!
 
                 const msg = data.message || gt('timeout_win_msg') || "Protivniku je isteklo vreme!";
                 let ptsWonStr = (gt('league_pts_won') || "+{0} poena u Ligi<br>+{0} 💰 Dukata").replace(/\{0\}/g, myAvg);
@@ -2097,7 +2101,16 @@ class YambApp {
             } else {
                 this.soundMgr.loss();
                 
-                let penalty = this.applyAbandonPenalty();
+                // Koristimo kaznu koju je server izračunao i dodelio u bazi
+                let penalty = data.penalty !== undefined ? data.penalty : 50; 
+                
+                // Samo ažuriramo lokalni UI da se poklopi sa serverom
+                if (penalty > 0) {
+                    this.stats = this.stats || {};
+                    this.stats.penaltyPoints = (this.stats.penaltyPoints || 0) + penalty;
+                    localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
+                }
+
                 let penStr = (gt('penalty_msg') || "Kazna zbog odugovlačenja: -{0} Power Index poena.").replace('{0}', penalty);
                 let msgDodatak = penalty > 0 ? `<br><br><span style="color:var(--danger); font-weight:bold;">${penStr}</span>` : '';
                 
@@ -2366,9 +2379,10 @@ class YambApp {
             });
         });
 
+        this.socket.off('opponent_left');
         this.socket.on('opponent_left', async () => { 
             if(this.isSpectator) {
-                this.modal.alert(gt('spectator_opp_left'), gt('modal_title_info') || "INFO").then(() => {
+                this.modal.alert(gt('spectator_opp_left') || "Igrač je napustio sobu.", gt('modal_title_info') || "INFO").then(() => {
                     this.showMainMenu();
                 });
                 return;
@@ -2378,14 +2392,17 @@ class YambApp {
             
             if (btnRematch && btnRematch.style.display !== 'none') {
                 btnRematch.disabled = true;
-                btnRematch.innerHTML = `<span>❌ ${gt('msg_opponent_left')}</span>`;
+                btnRematch.innerHTML = `<span>❌ ${gt('msg_opponent_left') || "Protivnik otišao"}</span>`;
                 btnRematch.style.background = 'gray';
                 btnRematch.style.boxShadow = 'none';
             } else {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
                 
-                const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
+                // SECURITY FIX: Limitiramo maksimalan iznos na 2000
+                let myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
+                if (isNaN(myAvg) || myAvg < 0) myAvg = 500;
+                if (myAvg > 2000) myAvg = 2000;
 
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati += myAvg; 
@@ -2400,7 +2417,7 @@ class YambApp {
                 }
 
                 this.updateStats(myAvg, 'win'); 
-                this.safeSubmitScore(this.playerName, myAvg, 'Online'); 
+                // UKLONJENO: safeSubmitScore - Ne zagađujemo top listu tehničkim pobedama!
                 
                 let fledMsg = gt('opp_fled_win') || "Protivnik je napustio partiju. Pobeđujete!";
                 let wonStr = (gt('league_pts_won') || "+{0} poena u Ligi<br>+{0} 💰 Dukata").replace(/\{0\}/g, myAvg);

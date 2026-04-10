@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA) + AUTORITATIVNI STATE SYNC (SECURITY FIX)
 
 require('dotenv').config(); 
 
@@ -300,8 +300,40 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50) {
     }
 }
 
+// --- POMOĆNA FUNKCIJA: DINAMIČKA KAZNA NA OSNOVU PROGRESA IGRE ---
+function getDynamicPenalty(roomId) {
+    const state = roomState[roomId];
+    if (!state) return 50; // Fallback
+
+    // Svaki igrač ima 78 polja (6 kolona x 13 redova), ukupno 156 poteza u partiji
+    const moves = state.moveCount || 0;
+    const progress = (moves / 156) * 100;
+    
+    // Do 80% igre kazna je 20, pred kraj igre kazna je 50
+    return progress < 80 ? 20 : 50;
+}
+
 // ==================================================================
-// --- SERVER-SIDE TURN TIMER LOGIC (AUTORITATIVNI TAJMER) ---
+// --- POMOĆNA FUNKCIJA ZA PRAZNU MATRICU (SECURITY FIX) ---
+// ==================================================================
+const KOLONE = ["Nadole", "Slobodna", "Sredina", "Nagore", "Ručno", "Najava"];
+const REDOVI_IGRA = ["1", "2", "3", "4", "5", "6", "Max", "Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
+
+function createEmptyScores() {
+    let scores = [];
+    for (let i = 0; i < 2; i++) {
+        let sheet = {};
+        KOLONE.forEach(c => { 
+            sheet[c] = {}; 
+            REDOVI_IGRA.forEach(r => sheet[c][r] = null); 
+        });
+        scores.push(sheet);
+    }
+    return scores;
+}
+
+// ==================================================================
+// --- SERVER-SIDE TURN TIMER I STATE LOGIC (AUTORITATIVNI TAJMER) ---
 // ==================================================================
 const TURN_TIME_LIMIT = 90000; // 90 sekundi
 const GRACE_PERIOD = 3000;     // 3 sekunde lufta za ping/lag
@@ -318,6 +350,9 @@ function startTurnTimer(roomId) {
 
     // Pronađi socket ID igrača koji je trenutno na potezu
     const currentPlayerSocketId = state.players[state.turnIndex];
+
+    // ---> DODATO: Beležimo tačno vreme početka poteza
+    state.turnStartTime = Date.now(); 
 
     roomTimers[roomId] = setTimeout(() => {
         handleTechnicalTimeout(roomId, currentPlayerSocketId);
@@ -339,10 +374,12 @@ function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
     const winnerSocketId = state.players.find(id => id !== inactivePlayerSocketId);
     
     if (winnerSocketId) {
-        // --- NOVO: SERVER KAŽNJAVA NEAKTIVNOG IGRAČA ---
+        // --- POPRAVLJENO: DINAMIČKA SERVER KAZNA ---
         const inactiveUid = registeredSockets[inactivePlayerSocketId];
+        const penaltyAmount = getDynamicPenalty(roomId); // Server sada računa progres
+        
         if (inactiveUid) {
-            applyServerSidePenalty(inactiveUid, 50); // Maksimalna kazna za odugovlačenje
+            applyServerSidePenalty(inactiveUid, penaltyAmount); 
         }
         // -----------------------------------------------
         
@@ -351,6 +388,7 @@ function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
         io.to(roomId).emit('game_over_timeout', {
             winnerId: winnerSocketId,
             loserId: inactivePlayerSocketId,
+            penalty: penaltyAmount, // Šaljemo tačan iznos klijentu
             message: 'Protivniku je isteklo vreme! Tehnička pobeda.'
         });
     }
@@ -447,7 +485,7 @@ io.on('connection', (socket) => {
     updateOnlineCount();
 
     // ==================================================================
-    // NOVO: SAFETY NET KLIJENTSKA PROVERA TAJMERA
+    // POPRAVLJENO: SAFETY NET KLIJENTSKA PROVERA TAJMERA SA GRACE PERIODOM
     // ==================================================================
     socket.on('check_timeout', (data) => {
         const roomId = data.roomId;
@@ -458,8 +496,18 @@ io.on('connection', (socket) => {
             
             // Ako igrač koji prijavljuje timeout NIJE onaj koji je na potezu
             if (socket.id !== currentTurnPlayer) {
-                console.log(`🛡️ SAFETY NET: Klijent ${socket.id} prijavio istek vremena. Odmah prekidam!`);
-                handleTechnicalTimeout(roomId, currentTurnPlayer);
+                // ---> DODATO: Proveravamo koliko je zaista vremena prošlo
+                const elapsed = Date.now() - (state.turnStartTime || 0);
+                
+                // TOTAL_TIMEOUT je 93000 (90s potez + 3s Grace Period)
+                if (elapsed >= TOTAL_TIMEOUT) {
+                    console.log(`🛡️ SAFETY NET: Vreme zaista isteklo (${elapsed}ms). Prekidam!`);
+                    handleTechnicalTimeout(roomId, currentTurnPlayer);
+                } else {
+                    console.log(`⏳ SAFETY NET: Klijent žuri. Još uvek teče Grace Period. Preostalo: ${TOTAL_TIMEOUT - elapsed}ms`);
+                    // Server ignoriše klijenta, jer će originalni setTimeout(handleTechnicalTimeout) 
+                    // okinuti samostalno kada prođe tačno 93 sekunde.
+                }
             }
         }
     });
@@ -867,6 +915,17 @@ io.on('connection', (socket) => {
         
         if (activeRoomId) {
             console.log(`📢 Igrač ${socket.id} se vratio u meni, napušta sobu ${activeRoomId}`);
+            
+            // --- DODATO: Kazna za namerno napuštanje menija ---
+            if (roomState[activeRoomId]) {
+                const pid = registeredSockets[socket.id];
+                if (pid) {
+                    const penaltyAmount = getDynamicPenalty(activeRoomId);
+                    applyServerSidePenalty(pid, penaltyAmount);
+                }
+            }
+            // ---------------------------------------------------
+
             socket.to(activeRoomId).emit('opponent_left');
             delete playerRooms[socket.id];
             
@@ -890,18 +949,34 @@ io.on('connection', (socket) => {
         updateOnlineCount();
     });
 
+    // ==================================================================
+    // POPRAVLJENO: SPECTATOR TRAŽI STANJE DIREKTNO OD SERVERA
+    // ==================================================================
     socket.on('request_spectate', (targetSocketId) => {
         const roomId = playerRooms[targetSocketId];
-        if (roomId) {
+        if (roomId && roomState[roomId]) {
             socket.join(roomId);
             socket.isSpectator = true;
             socket.spectatingRoom = roomId;
 
             socket.emit('spectate_started', { roomId: roomId });
 
-            io.to(targetSocketId).emit('request_state_sync', { senderSocketId: socket.id });
-            console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId}`);
+            const state = roomState[roomId];
             
+            // Server odmah šalje svoju kopiju tabele umesto da prebacuje odgovornost na igrača
+            socket.emit('sync_state_response', {
+                roomId: roomId,
+                players: state.players, 
+                allScores: state.allScores || createEmptyScores(),
+                currentPlayerIdx: state.turnIndex,
+                brojBacanja: state.brojBacanja || 0,
+                kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
+                zadrzane: state.zadrzane || [false,false,false,false,false,false],
+                najavaAktivna: state.najavaAktivna || false,
+                najavljenoPolje: state.najavljenoPolje || null
+            });
+            
+            console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Server Sync)`);
             updateRoomSpectators(roomId);
         } else {
             socket.emit('error_msg', 'err_spectate_not_in_game');
@@ -1515,8 +1590,19 @@ io.on('connection', (socket) => {
                     roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, myIndex: 1 
                 });
 
-                roomState[roomId] = { players: [opponentId, socket.id], turnIndex: 0 };
-                startTurnTimer(roomId); // POKRETANJE TAJMERA
+                // NOVO: INICIJALIZACIJA PUNOG SERVER STATE-a
+                roomState[roomId] = { 
+                    players: [opponentId, socket.id], 
+                    turnIndex: 0,
+                    moveCount: 0,
+                    allScores: createEmptyScores(),
+                    kockiceVals: [0,0,0,0,0,0],
+                    zadrzane: [false,false,false,false,false,false],
+                    brojBacanja: 0,
+                    najavaAktivna: false,
+                    najavljenoPolje: null
+                };
+                startTurnTimer(roomId); 
 
             } else {
                 waitingPlayer = { id: socket.id, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
@@ -1568,8 +1654,19 @@ io.on('connection', (socket) => {
             io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, myIndex: 0 });
             socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, myIndex: 1 });
 
-            roomState[roomId] = { players: [p1.id, socket.id], turnIndex: 0 };
-            startTurnTimer(roomId); // POKRETANJE TAJMERA
+            // NOVO: INICIJALIZACIJA PUNOG SERVER STATE-a
+            roomState[roomId] = { 
+                players: [p1.id, socket.id], 
+                turnIndex: 0,
+                moveCount: 0,
+                allScores: createEmptyScores(),
+                kockiceVals: [0,0,0,0,0,0],
+                zadrzane: [false,false,false,false,false,false],
+                brojBacanja: 0,
+                najavaAktivna: false,
+                najavljenoPolje: null
+            };
+            startTurnTimer(roomId); 
 
             delete privateRooms[roomId]; 
         } else {
@@ -1577,6 +1674,9 @@ io.on('connection', (socket) => {
         }
     });
 
+    // ==================================================================
+    // POPRAVLJENO: SERVER RELAY SADA PRATI I PISUJE KOMPLETAN STATE!
+    // ==================================================================
     const relayEvent = (eventName, data) => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
@@ -1589,12 +1689,43 @@ io.on('connection', (socket) => {
                     console.warn(`🚨 BLOKIRAN LAG/POTEZ (${eventName}) - Igrač: ${socket.id}, Na potezu je: ${state.turnIndex}`);
                     return; 
                 }
+
+                // --- SERVERSKO PRAĆENJE STANJA (STATE TRACKING) ---
+                if (eventName === 'remote_move') {
+                    if (!state.allScores) state.allScores = createEmptyScores();
+                    if (state.allScores[data.pIdx] && state.allScores[data.pIdx][data.col]) {
+                        state.allScores[data.pIdx][data.col][data.row] = data.points;
+                    }
+                    state.brojBacanja = 0;
+                    state.zadrzane = [false,false,false,false,false,false];
+                    state.najavaAktivna = false;
+                    state.najavljenoPolje = null;
+                }
+                else if (eventName === 'remote_roll') {
+                    state.kockiceVals = data.values;
+                    state.brojBacanja = data.bacanje;
+                    if (data.held) state.zadrzane = data.held;
+                }
+                else if (eventName === 'remote_hold') {
+                    if (!state.zadrzane) state.zadrzane = [false,false,false,false,false,false];
+                    state.zadrzane[data.index] = data.status;
+                }
+                else if (eventName === 'remote_announce') {
+                    if (data.type === 'start') state.najavaAktivna = true;
+                    else if (data.type === 'cancel') state.najavaAktivna = false;
+                    else if (data.type === 'selected') {
+                        state.najavaAktivna = false;
+                        state.najavljenoPolje = { row: data.row, col: 'Najava' };
+                    }
+                }
+                // ----------------------------------------------------
             }
 
             socket.to(roomId).emit(eventName, data);
 
             // Menjamo red samo i isključivo kada se upiše rezultat (remote_move)
             if (eventName === 'remote_move' && roomState[roomId]) {
+                roomState[roomId].moveCount = (roomState[roomId].moveCount || 0) + 1; 
                 roomState[roomId].turnIndex = roomState[roomId].turnIndex === 0 ? 1 : 0;
                 startTurnTimer(roomId); // RESTARTUJ TAJMER I DODELI DRUGOM
             }
@@ -1606,9 +1737,30 @@ io.on('connection', (socket) => {
     socket.on('player_move', (data) => relayEvent('remote_move', data));
     socket.on('announce', (data) => relayEvent('remote_announce', data));
     
-    socket.on('request_state_sync', () => relayEvent('request_state_sync', { senderSocketId: socket.id }));
-    socket.on('sync_state_response', (data) => relayEvent('sync_state_response', data));
-    
+    // ==================================================================
+    // POPRAVLJENO: SERVER SAMOSTALNO ODGOVARA NA REQUEST STATE (SIGURNOST)
+    // ==================================================================
+    socket.on('request_state_sync', () => {
+        const roomId = playerRooms[socket.id];
+        if (roomId && roomState[roomId]) {
+            const state = roomState[roomId];
+            console.log(`🛡️ SERVER SYNC: Šaljem bezbedno autoritativno stanje sobe ${roomId} igraču ${socket.id}`);
+            
+            socket.emit('sync_state_response', {
+                roomId: roomId,
+                players: state.players, 
+                allScores: state.allScores || createEmptyScores(),
+                currentPlayerIdx: state.turnIndex,
+                brojBacanja: state.brojBacanja || 0,
+                kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
+                zadrzane: state.zadrzane || [false,false,false,false,false,false],
+                najavaAktivna: state.najavaAktivna || false,
+                najavljenoPolje: state.najavljenoPolje || null
+            });
+        }
+    });
+    // Više ne osluškujemo 'sync_state_response' sa klijenta, tako sprečavamo hakovanje!
+
     socket.on('chat_msg', (data) => relayEvent('chat_msg', data));
 
     socket.on('request_global_chat_history', () => {
@@ -1699,8 +1851,19 @@ io.on('connection', (socket) => {
             io.to(roomName).emit('game_started', { room: roomName, player1: challengerId, player2: socket.id });
             console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
 
-            roomState[roomName] = { players: [challengerId, socket.id], turnIndex: 0 };
-            startTurnTimer(roomName); // POKRETANJE TAJMERA
+            // NOVO: INICIJALIZACIJA PUNOG SERVER STATE-a
+            roomState[roomName] = { 
+                players: [challengerId, socket.id], 
+                turnIndex: 0,
+                moveCount: 0,
+                allScores: createEmptyScores(),
+                kockiceVals: [0,0,0,0,0,0],
+                zadrzane: [false,false,false,false,false,false],
+                brojBacanja: 0,
+                najavaAktivna: false,
+                najavljenoPolje: null
+            };
+            startTurnTimer(roomName); 
 
         } else {
             if (challengerSocket) {
@@ -1730,8 +1893,19 @@ io.on('connection', (socket) => {
             }
             
             if (playersArr.length === 2) {
-                roomState[roomId] = { players: playersArr, turnIndex: 0 };
-                startTurnTimer(roomId); // POKRETANJE TAJMERA
+                // NOVO: INICIJALIZACIJA PUNOG SERVER STATE-a ZA REVANŠ
+                roomState[roomId] = { 
+                    players: playersArr, 
+                    turnIndex: 0,
+                    moveCount: 0,
+                    allScores: createEmptyScores(),
+                    kockiceVals: [0,0,0,0,0,0],
+                    zadrzane: [false,false,false,false,false,false],
+                    brojBacanja: 0,
+                    najavaAktivna: false,
+                    najavljenoPolje: null
+                };
+                startTurnTimer(roomId); 
             }
 
             console.log(`🔄 Revanš pokrenut u sobi: ${roomId}`);
@@ -1928,15 +2102,14 @@ io.on('connection', (socket) => {
             disconnectTimers[pid] = setTimeout(() => {
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
                 
-                // --- NOVO: SERVER KAŽNJAVA IGRAČA KOJI JE POBEGAO/UBIO APLIKACIJU ---
-                applyServerSidePenalty(pid, 50); // Nasilan prekid se kažnjava fiksno sa 50 PI poena
-                // ---------------------------------------------------------------------
+                const penaltyAmount = getDynamicPenalty(activeRoomId);
+                applyServerSidePenalty(pid, penaltyAmount); 
 
                 io.to(activeRoomId).emit('opponent_left');
                 
                 delete playerRooms[ghostSessions[pid]?.oldSocketId];
                 
-                stopTurnTimer(activeRoomId); // GAŠENJE TAJMERA
+                stopTurnTimer(activeRoomId); 
                 if (roomState[activeRoomId]) delete roomState[activeRoomId];
 
                 if (privateRooms[activeRoomId]) {
@@ -1956,7 +2129,7 @@ io.on('connection', (socket) => {
                 socket.to(activeRoomId).emit('opponent_left');
                 delete playerRooms[socket.id];
                 
-                stopTurnTimer(activeRoomId); // GAŠENJE TAJMERA
+                stopTurnTimer(activeRoomId); 
                 if (roomState[activeRoomId]) delete roomState[activeRoomId];
             }
         }
