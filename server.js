@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA) + AUTORITATIVNI STATE SYNC (SECURITY FIX)
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX
 
 require('dotenv').config(); 
 
@@ -950,33 +950,40 @@ io.on('connection', (socket) => {
     });
 
     // ==================================================================
-    // POPRAVLJENO: SPECTATOR TRAŽI STANJE DIREKTNO OD SERVERA
+    // POPRAVLJENO: SPECTATOR TRAŽI STANJE DIREKTNO OD SERVERA (ILI IGRAČA)
     // ==================================================================
     socket.on('request_spectate', (targetSocketId) => {
         const roomId = playerRooms[targetSocketId];
-        if (roomId && roomState[roomId]) {
+        if (roomId) {
             socket.join(roomId);
             socket.isSpectator = true;
             socket.spectatingRoom = roomId;
 
             socket.emit('spectate_started', { roomId: roomId });
 
-            const state = roomState[roomId];
+            if (roomState[roomId]) {
+                const state = roomState[roomId];
+                
+                // MULTIPLAYER: Server odmah šalje svoju autoritativnu kopiju tabele
+                socket.emit('sync_state_response', {
+                    roomId: roomId,
+                    players: state.players, 
+                    allScores: state.allScores || createEmptyScores(),
+                    currentPlayerIdx: state.turnIndex,
+                    brojBacanja: state.brojBacanja || 0,
+                    kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
+                    zadrzane: state.zadrzane || [false,false,false,false,false,false],
+                    najavaAktivna: state.najavaAktivna || false,
+                    najavljenoPolje: state.najavljenoPolje || null
+                });
+                
+                console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Server Sync)`);
+            } else {
+                // SOLO/LOKALNI MEČ FALLBACK: Server ne pamti stanje pa traži od igrača
+                io.to(targetSocketId).emit('request_state_sync', { senderSocketId: socket.id });
+                console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Client Sync Fallback)`);
+            }
             
-            // Server odmah šalje svoju kopiju tabele umesto da prebacuje odgovornost na igrača
-            socket.emit('sync_state_response', {
-                roomId: roomId,
-                players: state.players, 
-                allScores: state.allScores || createEmptyScores(),
-                currentPlayerIdx: state.turnIndex,
-                brojBacanja: state.brojBacanja || 0,
-                kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
-                zadrzane: state.zadrzane || [false,false,false,false,false,false],
-                najavaAktivna: state.najavaAktivna || false,
-                najavljenoPolje: state.najavljenoPolje || null
-            });
-            
-            console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Server Sync)`);
             updateRoomSpectators(roomId);
         } else {
             socket.emit('error_msg', 'err_spectate_not_in_game');
@@ -1738,28 +1745,45 @@ io.on('connection', (socket) => {
     socket.on('announce', (data) => relayEvent('remote_announce', data));
     
     // ==================================================================
-    // POPRAVLJENO: SERVER SAMOSTALNO ODGOVARA NA REQUEST STATE (SIGURNOST)
+    // POPRAVLJENO: SERVER ZA MULTIPLAYER ŠALJE SVOJE STANJE, ZA SOLO PITA
     // ==================================================================
     socket.on('request_state_sync', () => {
         const roomId = playerRooms[socket.id];
-        if (roomId && roomState[roomId]) {
-            const state = roomState[roomId];
-            console.log(`🛡️ SERVER SYNC: Šaljem bezbedno autoritativno stanje sobe ${roomId} igraču ${socket.id}`);
-            
-            socket.emit('sync_state_response', {
-                roomId: roomId,
-                players: state.players, 
-                allScores: state.allScores || createEmptyScores(),
-                currentPlayerIdx: state.turnIndex,
-                brojBacanja: state.brojBacanja || 0,
-                kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
-                zadrzane: state.zadrzane || [false,false,false,false,false,false],
-                najavaAktivna: state.najavaAktivna || false,
-                najavljenoPolje: state.najavljenoPolje || null
-            });
+        if (roomId) {
+            if (roomState[roomId]) {
+                const state = roomState[roomId];
+                console.log(`🛡️ SERVER SYNC: Šaljem bezbedno autoritativno stanje sobe ${roomId} igraču ${socket.id}`);
+                
+                socket.emit('sync_state_response', {
+                    roomId: roomId,
+                    players: state.players, 
+                    allScores: state.allScores || createEmptyScores(),
+                    currentPlayerIdx: state.turnIndex,
+                    brojBacanja: state.brojBacanja || 0,
+                    kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
+                    zadrzane: state.zadrzane || [false,false,false,false,false,false],
+                    najavaAktivna: state.najavaAktivna || false,
+                    najavljenoPolje: state.najavljenoPolje || null
+                });
+            } else {
+                // FALLBACK: Soba postoji ali Server ne pamti stanje (jer je Solo/Local meč).
+                // Prosleđujemo zahtev pravom igraču u sobi da on pošalje stanje gledaocu.
+                socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
+            }
         }
     });
-    // Više ne osluškujemo 'sync_state_response' sa klijenta, tako sprečavamo hakovanje!
+
+    // ==================================================================
+    // DODATO: OSLUŠKIVAČ ZA FALLBACK (Kada Solo igrač pošalje svoje stanje)
+    // ==================================================================
+    socket.on('sync_state_response', (data) => {
+        const roomId = playerRooms[socket.id];
+        // VAŽNO: Relay radimo SAMO ako server ne prati stanje (tada je Solo/Lokalna igra).
+        // Ako je Multiplayer igra, server potpuno ignoriše ovaj zahtev klijenta zbog sigurnosti!
+        if (roomId && !roomState[roomId]) {
+            socket.to(roomId).emit('sync_state_response', data);
+        }
+    });
 
     socket.on('chat_msg', (data) => relayEvent('chat_msg', data));
 
