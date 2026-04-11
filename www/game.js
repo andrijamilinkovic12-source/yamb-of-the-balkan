@@ -264,7 +264,7 @@ class YambApp {
         } catch(e) {}
 
         // Filtriraj samo validne teme i ukloni duplikate
-        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter'];
+        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert_glass'];
         unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
         unlockedThemes = [...new Set(unlockedThemes)];
 
@@ -1271,7 +1271,7 @@ class YambApp {
                 unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
             } catch(e) {}
 
-            const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter'];
+            const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert_glass'];
             unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
             unlockedThemes = [...new Set(unlockedThemes)];
 

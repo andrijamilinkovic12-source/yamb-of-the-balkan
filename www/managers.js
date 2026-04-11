@@ -1081,14 +1081,19 @@ class ShopManager {
                     if (isUnlocked) {
                         priceHtml = `<div class="price">${_safeT('btn_bought')}</div>`;
                     } else {
-                        let price = item.price;
-                        let displayPrice = `${price} ${_safeT('balance')}`;
-                        
-                        if (this.discountedItems[item.id]) {
-                            const discounted = Math.floor(price * 0.8);
-                            displayPrice = `<span class="old-price">${price}</span> ${discounted} ${_safeT('balance')}`;
+                        // NOVO: Provera da li se otključava reklamama
+                        if (item.adUnlock) {
+                            priceHtml = `<div class="price" style="color: var(--text-muted); font-size: 0.75rem;">Gledaj 📺 za otključavanje</div>`;
+                        } else {
+                            let price = item.price;
+                            let displayPrice = `${price} ${_safeT('balance')}`;
+                            
+                            if (this.discountedItems[item.id]) {
+                                const discounted = Math.floor(price * 0.8);
+                                displayPrice = `<span class="old-price">${price}</span> ${discounted} ${_safeT('balance')}`;
+                            }
+                            priceHtml = `<div class="price">${displayPrice}</div>`;
                         }
-                        priceHtml = `<div class="price">${displayPrice}</div>`;
                     }
                 }
 
@@ -1102,19 +1107,25 @@ class ShopManager {
                         const reqMet = !item.req || this.unlocked.includes(item.req);
                         
                         if (reqMet) {
-                            let currentPrice = this.discountedItems[item.id] ? Math.floor(item.price * 0.8) : item.price;
-                            const safeName = itemName.replace(/'/g, "\\'"); 
-                            
-                            let discountBtn = '';
-                            if(!this.discountedItems[item.id]) {
-                                discountBtn = `<button class="btn-action btn-discount btn-ad-state-aware" onclick="shop.watchAdDiscount('${item.id}')">📺 -20%</button>`;
-                            }
+                            // NOVO: Logika za dugme koje otključava reklamama
+                            if (item.adUnlock) {
+                                let adProgress = parseInt(localStorage.getItem(`yamb_adprogress_${item.id}`)) || 0;
+                                btnHtml = `<button class="btn-action btn-ad-state-aware" style="background: linear-gradient(45deg, #FF9800, #F57C00); color: white; border: none; border-radius: 8px; padding: 5px 10px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0px rgba(0,0,0,0.3);" onclick="shop.watchAdForUnlock('${item.id}', ${item.adUnlock})">📺 ${adProgress} / ${item.adUnlock}</button>`;
+                            } else {
+                                let currentPrice = this.discountedItems[item.id] ? Math.floor(item.price * 0.8) : item.price;
+                                const safeName = itemName.replace(/'/g, "\\'"); 
+                                
+                                let discountBtn = '';
+                                if(!this.discountedItems[item.id]) {
+                                    discountBtn = `<button class="btn-action btn-discount btn-ad-state-aware" onclick="shop.watchAdDiscount('${item.id}')">📺 -20%</button>`;
+                                }
 
-                            btnHtml = `
-                                <div class="btn-group">
-                                    <button class="btn-action btn-buy" onclick="shop.tryBuy('${item.id}', '${safeName}', ${currentPrice})">${_safeT('btn_buy')}</button>
-                                    ${discountBtn}
-                                </div>`;
+                                btnHtml = `
+                                    <div class="btn-group">
+                                        <button class="btn-action btn-buy" onclick="shop.tryBuy('${item.id}', '${safeName}', ${currentPrice})">${_safeT('btn_buy')}</button>
+                                        ${discountBtn}
+                                    </div>`;
+                            }
                         } else {
                             btnHtml = `<div class="req-text">${_safeT('shop_unlock')} ${resolveText(item.reqName)}</div>`;
                         }
@@ -1253,6 +1264,53 @@ class ShopManager {
         }
     }
     
+    // NOVO: Funkcija za otključavanje predmeta/teme gledanjem serije reklama
+    async watchAdForUnlock(id, target) {
+        const adCtrl = this.getAdController();
+        if (adCtrl) {
+            if (!adCtrl.ads.rewarded.isReady) {
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
+                } else if (window.modalManager && window.modalManager.overlay) {
+                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
+                }
+                adCtrl.prepareReward();
+                return;
+            }
+            const success = await adCtrl.showRewardVideo();
+            if (success) {
+                let progress = parseInt(localStorage.getItem(`yamb_adprogress_${id}`)) || 0;
+                progress++;
+                
+                if (progress >= target) {
+                    // Otključano
+                    this.unlocked.push(id);
+                    localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
+                    localStorage.removeItem(`yamb_adprogress_${id}`);
+
+                    let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
+                    if (!opstiNiz.includes(id)) {
+                        opstiNiz.push(id);
+                        localStorage.setItem('yamb_unlocked', JSON.stringify(opstiNiz));
+                    }
+
+                    if(window.app && window.app.soundMgr) window.app.soundMgr.trophy();
+                    
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification("USPEŠNO!", "Tema je uspešno otključana!");
+                    } else if (window.modalManager && window.modalManager.overlay) {
+                        window.modalManager.alert("Tema je uspešno otključana!", "USPEŠNO!");
+                    }
+                } else {
+                    // Samo napredak
+                    localStorage.setItem(`yamb_adprogress_${id}`, progress);
+                    if(window.app && window.app.soundMgr) window.app.soundMgr.win();
+                }
+                this.render();
+            }
+        }
+    }
+
     addBalance(amount) {
         this.balance += amount;
         localStorage.setItem('yamb_dukati', this.balance);
