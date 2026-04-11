@@ -423,6 +423,11 @@ function inicijalizujCloudSync() {
                 window.statsManager.stats.wins = dbStats.wins || 0;
                 window.statsManager.stats.losses = dbStats.losses || 0;
                 window.statsManager.stats.highscore = dbStats.highscore || 0;
+                
+                // --- DODATO ZA ALL-TIME PTS FIX ---
+                window.statsManager.stats.totalScoreSum = dbStats.totalScoreSum || 0;
+                // ----------------------------------
+                
                 window.statsManager.stats.tournamentWins = dbStats.tournamentWins || 0; 
                 window.statsManager.stats.balance = dbStats.balance || 0;
                 window.statsManager.stats.currentWinStreak = dbStats.currentWinStreak || 0;
