@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT
 
 require('dotenv').config(); 
 
@@ -284,18 +284,29 @@ const disconnectTimers = {};
 const ghostSessions = {}; 
 
 // ==================================================================
-// --- SERVERSKA KAZNA ZA RAGE QUIT / GUBITAK KONEKCIJE ---
+// --- SERVERSKA KAZNA ZA RAGE QUIT / GUBITAK KONEKCIJE (SA H2H) ---
 // ==================================================================
-async function applyServerSidePenalty(playerId, penaltyAmount = 50) {
+async function applyServerSidePenalty(playerId, penaltyAmount = 50, opponentName = null) {
     if (!process.env.MONGO_URI || !playerId) return;
     try {
         const UserProfile = mongoose.model('UserProfile');
-        // Direktno u bazi povećavamo kaznene poene igraču
+
+        let updateInc = { penaltyPoints: penaltyAmount, losses: 1 };
+        let updateSet = { currentWinStreak: 0 };
+
+        if (opponentName) {
+            updateInc[`h2hStats.${opponentName}.losses`] = 1;
+            updateSet[`h2hStats.${opponentName}.currentWinStreak`] = 0;
+        }
+
         await UserProfile.findOneAndUpdate(
             { firebaseUid: playerId },
-            { $inc: { penaltyPoints: penaltyAmount } }
+            { 
+                $inc: updateInc, 
+                $set: updateSet 
+            }
         );
-        console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena igraču ${playerId} zbog napuštanja/isteka vremena.`);
+        console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ${opponentName || 'nepoznatog'}.`);
     } catch (err) {
         console.error("Greška pri upisu server kazne:", err);
     }
@@ -375,21 +386,22 @@ function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
     const winnerSocketId = state.players.find(id => id !== inactivePlayerSocketId);
     
     if (winnerSocketId) {
-        // --- POPRAVLJENO: DINAMIČKA SERVER KAZNA ---
         const inactiveUid = registeredSockets[inactivePlayerSocketId];
-        const penaltyAmount = getDynamicPenalty(roomId); // Server sada računa progres
+        const penaltyAmount = getDynamicPenalty(roomId); 
         
+        const winnerSocket = io.sockets.sockets.get(winnerSocketId);
+        const winnerName = winnerSocket ? winnerSocket.playerName : null;
+
         if (inactiveUid) {
-            applyServerSidePenalty(inactiveUid, penaltyAmount); 
+            applyServerSidePenalty(inactiveUid, penaltyAmount, winnerName); 
         }
-        // -----------------------------------------------
         
         console.log(`⏱️ TIMEOUT: Isteklo vreme u sobi ${roomId}. Pobednik je ${winnerSocketId} (Tehnička pobeda)`);
         
         io.to(roomId).emit('game_over_timeout', {
             winnerId: winnerSocketId,
             loserId: inactivePlayerSocketId,
-            penalty: penaltyAmount, // Šaljemo tačan iznos klijentu
+            penalty: penaltyAmount, 
             message: 'Protivniku je isteklo vreme! Tehnička pobeda.'
         });
     }
@@ -599,9 +611,8 @@ io.on('connection', (socket) => {
                 if (s.soundEnabled !== undefined) user.soundEnabled = s.soundEnabled;
                 if (s.vibrationEnabled !== undefined) user.vibrationEnabled = s.vibrationEnabled;
 
-                // --- NOVO: CUVANJE KAZNENIH POENA ---
                 if (s.penaltyPoints !== undefined && s.penaltyPoints > (user.penaltyPoints || 0)) {
-                    user.penaltyPoints = s.penaltyPoints; // Povećavamo samo ako su kazneni poeni veći
+                    user.penaltyPoints = s.penaltyPoints; 
                 }
                 
                 const isFreshLogin = (s.games === 0);
@@ -671,8 +682,6 @@ io.on('connection', (socket) => {
                     }
                 }
 
-                // FIX: Dozvoljavamo pad poena (zbog kazni/rage-quita)
-                // Ali SPREČAVAMO da se obrišu ako se igrač tek prijavio na novom uređaju (gde mu je sve na 0)
                 if (s.leagueData) {
                     if (s.leagueData.year > user.leagueData.year || 
                        (s.leagueData.year === user.leagueData.year && s.leagueData.quarter > user.leagueData.quarter)) {
@@ -709,7 +718,6 @@ io.on('connection', (socket) => {
                             if (localTotal > cloudTotal) {
                                 cloudData.wins = localData.wins;
                                 cloudData.losses = localData.losses;
-                                // DODATO: Obavezno prepiši vatreni niz, čak i ako je nula (tehnički poraz)!
                                 cloudData.currentWinStreak = localData.currentWinStreak || 0; 
                                 isModified = true;
                             }
@@ -774,7 +782,7 @@ io.on('connection', (socket) => {
                     lastDaily: user.lastDaily, 
                     soundEnabled: user.soundEnabled,        
                     vibrationEnabled: user.vibrationEnabled,
-                    penaltyPoints: user.penaltyPoints || 0, // <--- KAZNENI POENI
+                    penaltyPoints: user.penaltyPoints || 0, 
                     h2hStats: user.h2hStats, 
                     leagueData: user.leagueData 
                 });
@@ -793,7 +801,7 @@ io.on('connection', (socket) => {
                     activeEffect: s.activeEffect || 'confetti', 
                     soundEnabled: s.soundEnabled !== undefined ? s.soundEnabled : true,       
                     vibrationEnabled: s.vibrationEnabled !== undefined ? s.vibrationEnabled : true, 
-                    penaltyPoints: s.penaltyPoints || 0, // <--- KAZNENI POENI
+                    penaltyPoints: s.penaltyPoints || 0,
                     h2hStats: s.h2hStats || {}, 
                     unlockedTrophies: s.unlockedTrophies || [],
                     unlockedSkins: s.unlockedSkins || [],
@@ -820,7 +828,7 @@ io.on('connection', (socket) => {
                     lastDaily: user.lastDaily, 
                     soundEnabled: user.soundEnabled,        
                     vibrationEnabled: user.vibrationEnabled,
-                    penaltyPoints: user.penaltyPoints || 0, // <--- KAZNENI POENI
+                    penaltyPoints: user.penaltyPoints || 0, 
                     h2hStats: user.h2hStats, 
                     leagueData: user.leagueData 
                 });
@@ -917,15 +925,19 @@ io.on('connection', (socket) => {
         if (activeRoomId) {
             console.log(`📢 Igrač ${socket.id} se vratio u meni, napušta sobu ${activeRoomId}`);
             
-            // --- DODATO: Kazna za namerno napuštanje menija ---
             if (roomState[activeRoomId]) {
                 const pid = registeredSockets[socket.id];
                 if (pid) {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
-                    applyServerSidePenalty(pid, penaltyAmount);
+
+                    let oppName = null;
+                    const oppSocketId = roomState[activeRoomId].players.find(id => id !== socket.id);
+                    const oppSocket = io.sockets.sockets.get(oppSocketId);
+                    if (oppSocket) oppName = oppSocket.playerName;
+
+                    applyServerSidePenalty(pid, penaltyAmount, oppName);
                 }
             }
-            // ---------------------------------------------------
 
             socket.to(activeRoomId).emit('opponent_left');
             delete playerRooms[socket.id];
@@ -950,9 +962,6 @@ io.on('connection', (socket) => {
         updateOnlineCount();
     });
 
-    // ==================================================================
-    // POPRAVLJENO: SPECTATOR TRAŽI STANJE DIREKTNO OD SERVERA (ILI IGRAČA)
-    // ==================================================================
     socket.on('request_spectate', (targetSocketId) => {
         const roomId = playerRooms[targetSocketId];
         if (roomId) {
@@ -965,7 +974,6 @@ io.on('connection', (socket) => {
             if (roomState[roomId]) {
                 const state = roomState[roomId];
                 
-                // MULTIPLAYER: Server odmah šalje svoju autoritativnu kopiju tabele
                 socket.emit('sync_state_response', {
                     roomId: roomId,
                     players: state.players, 
@@ -980,7 +988,6 @@ io.on('connection', (socket) => {
                 
                 console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Server Sync)`);
             } else {
-                // SOLO/LOKALNI MEČ FALLBACK: Server ne pamti stanje pa traži od igrača
                 io.to(targetSocketId).emit('request_state_sync', { senderSocketId: socket.id });
                 console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Client Sync Fallback)`);
             }
@@ -1190,7 +1197,6 @@ io.on('connection', (socket) => {
                 filter.date = { $gte: startOfMonth };
             }
 
-            // OVDJE JE LIMIT PROMENJEN SA 50 NA 100
             const scores = await Score.find(filter).sort({ score: -1 }).limit(100).lean();
             socket.emit('global_highscores_data', scores);
         } catch (err) {
@@ -1199,16 +1205,12 @@ io.on('connection', (socket) => {
         }
     });
 
-    // ==================================================================
-    // POPRAVLJENO: Obezbeđen submit_score sa internom UID validacijom
-    // ==================================================================
     socket.on('submit_score', async (data) => {
         try {
             if (!MONGO_URI) return;
 
             if (typeof data.score !== 'number' || isNaN(data.score)) return; 
 
-            // SECURITY FIX: Samo prijavljeni igrači mogu na Top Listu (gosti ne mogu)
             if (!socket.playerId || socket.playerId.startsWith('guest_')) return;
 
             if (data.score < 0 || data.score > MAX_SCORE) {
@@ -1223,12 +1225,11 @@ io.on('connection', (socket) => {
                 console.log(`⚠️ UPOZORENJE (Speed): Trajanje: ${duration}ms. Ipak upisujem skor: ${data.score}`);
             }
 
-            // SECURITY FIX: Koristimo ime i sliku koju server već zna iz prijave!
             let finalName = socket.playerName || "Nepoznat Igrač";
             let finalPhoto = socket.photoUrl || '';
             
             const newScore = new Score({
-                playerId: socket.playerId, // Interni Google UID
+                playerId: socket.playerId,
                 playerName: finalName,
                 score: data.score,
                 mode: data.mode || 'Solo',
@@ -1326,7 +1327,7 @@ io.on('connection', (socket) => {
                         playerName: finalName, 
                         photoUrl: data.photoUrl || '', 
                         date: Date.now(),
-                        score: data.score // FIX: Dozvoljavamo smanjenje poena
+                        score: data.score 
                     }
                 }, 
                 { upsert: true, new: true } 
@@ -1392,15 +1393,13 @@ io.on('connection', (socket) => {
                     user.unlockedTrophies.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
                 }
 
-                // --- NOVO: RACUNANJE BAZNOG POWER INDEXA ---
                 const basePI = Math.round(
                     (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) + 
                     (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
                 );
 
-                // --- NOVO: PRIMENA KAZNENIH POENA ---
                 const penalty = user.penaltyPoints || 0;
-                const power = Math.max(0, basePI - penalty); // Sprečava odlazak u minus
+                const power = Math.max(0, basePI - penalty); 
 
                 return {
                     playerName: user.playerName,
@@ -1596,7 +1595,6 @@ io.on('connection', (socket) => {
                     roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, myIndex: 1 
                 });
 
-                // NOVO: INICIJALIZACIJA PUNOG SERVER STATE-a
                 roomState[roomId] = { 
                     players: [opponentId, socket.id], 
                     turnIndex: 0,
@@ -1660,7 +1658,6 @@ io.on('connection', (socket) => {
             io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, myIndex: 0 });
             socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, myIndex: 1 });
 
-            // NOVO: INICIJALIZACIJA PUNOG SERVER STATE-a
             roomState[roomId] = { 
                 players: [p1.id, socket.id], 
                 turnIndex: 0,
@@ -1680,9 +1677,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    // ==================================================================
-    // POPRAVLJENO: SERVER RELAY SADA PRATI I PISUJE KOMPLETAN STATE!
-    // ==================================================================
     const relayEvent = (eventName, data) => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
@@ -1696,7 +1690,6 @@ io.on('connection', (socket) => {
                     return; 
                 }
 
-                // --- SERVERSKO PRAĆENJE STANJA (STATE TRACKING) ---
                 if (eventName === 'remote_move') {
                     if (!state.allScores) state.allScores = createEmptyScores();
                     if (state.allScores[data.pIdx] && state.allScores[data.pIdx][data.col]) {
@@ -1724,16 +1717,14 @@ io.on('connection', (socket) => {
                         state.najavljenoPolje = { row: data.row, col: 'Najava' };
                     }
                 }
-                // ----------------------------------------------------
             }
 
             socket.to(roomId).emit(eventName, data);
 
-            // Menjamo red samo i isključivo kada se upiše rezultat (remote_move)
             if (eventName === 'remote_move' && roomState[roomId]) {
                 roomState[roomId].moveCount = (roomState[roomId].moveCount || 0) + 1; 
                 roomState[roomId].turnIndex = roomState[roomId].turnIndex === 0 ? 1 : 0;
-                startTurnTimer(roomId); // RESTARTUJ TAJMER I DODELI DRUGOM
+                startTurnTimer(roomId); 
             }
         }
     };
@@ -1743,9 +1734,6 @@ io.on('connection', (socket) => {
     socket.on('player_move', (data) => relayEvent('remote_move', data));
     socket.on('announce', (data) => relayEvent('remote_announce', data));
     
-    // ==================================================================
-    // POPRAVLJENO: SERVER ZA MULTIPLAYER ŠALJE SVOJE STANJE, ZA SOLO PITA
-    // ==================================================================
     socket.on('request_state_sync', () => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
@@ -1765,20 +1753,13 @@ io.on('connection', (socket) => {
                     najavljenoPolje: state.najavljenoPolje || null
                 });
             } else {
-                // FALLBACK: Soba postoji ali Server ne pamti stanje (jer je Solo/Local meč).
-                // Prosleđujemo zahtev pravom igraču u sobi da on pošalje stanje gledaocu.
                 socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
             }
         }
     });
 
-    // ==================================================================
-    // DODATO: OSLUŠKIVAČ ZA FALLBACK (Kada Solo igrač pošalje svoje stanje)
-    // ==================================================================
     socket.on('sync_state_response', (data) => {
         const roomId = playerRooms[socket.id];
-        // VAŽNO: Relay radimo SAMO ako server ne prati stanje (tada je Solo/Lokalna igra).
-        // Ako je Multiplayer igra, server potpuno ignoriše ovaj zahtev klijenta zbog sigurnosti!
         if (roomId && !roomState[roomId]) {
             socket.to(roomId).emit('sync_state_response', data);
         }
@@ -1874,7 +1855,6 @@ io.on('connection', (socket) => {
             io.to(roomName).emit('game_started', { room: roomName, player1: challengerId, player2: socket.id });
             console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
 
-            // NOVO: INICIJALIZACIJA PUNOG SERVER STATE-a
             roomState[roomName] = { 
                 players: [challengerId, socket.id], 
                 turnIndex: 0,
@@ -1916,7 +1896,6 @@ io.on('connection', (socket) => {
             }
             
             if (playersArr.length === 2) {
-                // NOVO: INICIJALIZACIJA PUNOG SERVER STATE-a ZA REVANŠ
                 roomState[roomId] = { 
                     players: playersArr, 
                     turnIndex: 0,
@@ -2096,7 +2075,7 @@ io.on('connection', (socket) => {
     });
     
     // ==================================================================
-    // 6. DISKONEKCIJA (SA GRACE PERIOD TOLERANCIJOM OD 30 SEKUNDI)
+    // 6. DISKONEKCIJA (SA GRACE PERIOD TOLERANCIJOM OD 30 SEKUNDI I H2H KAZNOM)
     // ==================================================================
     socket.on('disconnect', () => {
         console.log('⚠️ Klijent izgubio vezu:', socket.id);
@@ -2126,7 +2105,15 @@ io.on('connection', (socket) => {
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
                 
                 const penaltyAmount = getDynamicPenalty(activeRoomId);
-                applyServerSidePenalty(pid, penaltyAmount); 
+
+                let oppName = null;
+                if (roomState[activeRoomId]) {
+                    const oppSocketId = roomState[activeRoomId].players.find(id => id !== ghostSessions[pid]?.oldSocketId);
+                    const oppSocket = io.sockets.sockets.get(oppSocketId);
+                    if (oppSocket) oppName = oppSocket.playerName;
+                }
+
+                applyServerSidePenalty(pid, penaltyAmount, oppName); 
 
                 io.to(activeRoomId).emit('opponent_left');
                 
