@@ -3699,5 +3699,3 @@ window.app = new YambApp();
 if (typeof DnevniIzazov !== 'undefined') {
     window.dnevniIzazov = new DnevniIzazov(window.app);
 }
-}
-Moj problem je ovaj Sada igrac vidi temu otkljuca je sve on to sacuva kad je primenim u igri pritisnem dugme paleta on mi prebaci na light pa meadium pa kad stigne na desert glass trebuje da prebaci na desert na on predje na dark green, zasto?
