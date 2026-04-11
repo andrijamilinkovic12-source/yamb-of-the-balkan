@@ -92,7 +92,7 @@ const SHOP_DATA = {
         { id: 'neon', name: { sr: 'Neon Cyber', en: 'Neon Cyber' }, price: 15000, desc: { sr: 'Futuristička cyberpunk tema.', en: 'Futuristic cyberpunk theme.' }, icon: '⚡', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
         { id: 'amethyst', name: { sr: 'Kraljevski Ametist', en: 'Royal Amethyst' }, price: 20000, desc: { sr: 'Luksuzna VIP ljubičasta tema.', en: 'Luxurious VIP purple theme.' }, icon: '🔮', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
         { id: 'easter', name: { sr: 'Vaskršnja', en: 'Joyful Easter' }, price: 10000, desc: { sr: 'Praznična žuta tema sa zekama i 3D dubinom polja.', en: 'Festive yellow theme with bunnies and 3D field depth.' }, icon: '🐇', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
-        { id: 'desert_glass', name: { sr: 'Pustinjsko Staklo', en: 'Desert Glass' }, price: 0, adUnlock: 3, desc: { sr: 'Luksuzni bež neumorfizam i staklo.', en: 'Luxury beige neumorphism & glass.' }, icon: '🏜️', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } }
+        { id: 'desert', name: { sr: 'Pustinjsko Staklo', en: 'Desert Glass' }, price: 0, adUnlock: 3, desc: { sr: 'Luksuzni bež neumorfizam i staklo.', en: 'Luxury beige neumorphism & glass.' }, icon: '🏜️', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } }
     ],
 
     TROPHIES: [
