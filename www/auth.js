@@ -85,7 +85,7 @@ function getFullLocalStats() {
         highscore: (window.app && window.app.stats) ? (window.app.stats.highscore || 0) : 0,
         totalScoreSum: (window.app && window.app.stats) ? (window.app.stats.totalScoreSum || 0) : 0,
         maxWinStreak: (window.app && window.app.stats) ? (window.app.stats.maxWinStreak || 0) : 0,
-        penaltyPoints: (window.app && window.app.stats) ? (window.app.stats.penaltyPoints || 0) : 0, // DODATO: Slanje kaznenih poena na server
+        penaltyPoints: (window.app && window.app.stats) ? (window.app.stats.penaltyPoints || 0) : 0, 
         tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0, 
         balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
         currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
@@ -94,7 +94,6 @@ function getFullLocalStats() {
         unlockedEffects: window.statsManager ? window.statsManager.stats.unlockedEffects : JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
         yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
         unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
-        // ISPRAVKA 1: Dinamički ključ za ligu na osnovu UID-a
         leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data_' + uid)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 },
         activeSkin: localStorage.getItem('yamb_active_skin') || null,
         activeEffect: localStorage.getItem('yamb_active_effect') || null,
@@ -102,7 +101,7 @@ function getFullLocalStats() {
         lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
         soundEnabled: window.app ? window.app.soundEnabled : true,
         vibrationEnabled: window.app ? window.app.vibrationEnabled : true,
-        h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}') // DODATO: Slanje H2H
+        h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}')
     };
 }
 
@@ -189,7 +188,6 @@ async function odjaviSe() {
         await Capacitor.Plugins.FirebaseAuthentication.signOut();
         console.log("Korisnik uspešno odjavljen.");
 
-        // ISPRAVKA 2: Moramo sačuvati UID pre brisanja da bismo znali čiju ligu brišemo
         const targetUid = localStorage.getItem('yamb_uid');
 
         // 1. Brisanje Firebase podataka
@@ -200,7 +198,6 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_stats');
         localStorage.removeItem('yamb_dukati');
         
-        // Brišemo novu dinamičku ligu za ovog korisnika, ali i staru za svaki slučaj
         if (targetUid) localStorage.removeItem('yamb_quarter_data_' + targetUid);
         localStorage.removeItem('yamb_quarter_data');
 
@@ -230,7 +227,6 @@ async function odjaviSe() {
             }
         }
         if (window.statsManager) {
-            // FIX: Dodato games: 0 i penaltyPoints: 0 da sprečimo NaN krahiranje
             window.statsManager.stats = { games: 0, totalGames: 0, wins: 0, losses: 0, highscore: 0, tournamentWins: 0, balance: 0, currentWinStreak: 0, penaltyPoints: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
             window.statsManager.saveStats();
         }
@@ -323,7 +319,6 @@ function inicijalizujCloudSync() {
 
             console.log("🔄 Preuzeta cela statistika iz oblaka:", dbStats);
             
-            // DODATO: Učitavanje penaltyPoints u aplikaciju
             window.app.stats = { 
                 games: dbStats.games || 0,
                 wins: dbStats.wins || 0, 
@@ -391,43 +386,32 @@ function inicijalizujCloudSync() {
                 if (window.app) window.app.vibrationEnabled = dbStats.vibrationEnabled;
             }
 
-            // Učitavanje H2H statistike
             if (dbStats.h2hStats) {
                 localStorage.setItem('yamb_h2h_stats', JSON.stringify(dbStats.h2hStats));
             }
             
-            // === ISPRAVLJENI KOD ZA DNEVNI IZAZOV ===
             const currentUid = localStorage.getItem('yamb_uid');
             const danasnjiDatum = new Date().toDateString();
             const lokalniZapis = localStorage.getItem('yamb_last_daily_' + currentUid);
 
             if (dbStats.lastDaily) {
-                // Ako se server i klijent razlikuju, a lokalno nije danas, preuzmi sa clouda
                 if (lokalniZapis !== danasnjiDatum) {
                     localStorage.setItem('yamb_last_daily_' + currentUid, dbStats.lastDaily);
                 }
             } else {
-                // STRIKTNA ZABRANA: Ne briši ako je korisnik LOKALNO već odigrao danas!
                 if (lokalniZapis !== danasnjiDatum) {
                     localStorage.removeItem('yamb_last_daily_' + currentUid);
                 }
             }
-            // =========================================
 
             if (window.statsManager) {
-                // FIX: Dodate linije za potpunu sinhronizaciju objekata (games i penaltyPoints)
                 window.statsManager.stats.games = dbStats.games || 0; 
                 window.statsManager.stats.totalGames = dbStats.games || 0;
                 window.statsManager.stats.penaltyPoints = dbStats.penaltyPoints || 0;
-                
                 window.statsManager.stats.wins = dbStats.wins || 0;
                 window.statsManager.stats.losses = dbStats.losses || 0;
                 window.statsManager.stats.highscore = dbStats.highscore || 0;
-                
-                // --- DODATO ZA ALL-TIME PTS FIX ---
                 window.statsManager.stats.totalScoreSum = dbStats.totalScoreSum || 0;
-                // ----------------------------------
-                
                 window.statsManager.stats.tournamentWins = dbStats.tournamentWins || 0; 
                 window.statsManager.stats.balance = dbStats.balance || 0;
                 window.statsManager.stats.currentWinStreak = dbStats.currentWinStreak || 0;
@@ -442,7 +426,6 @@ function inicijalizujCloudSync() {
                 localStorage.setItem('yamb_dukati', dbStats.balance);
             }
             
-            // ISPRAVKA 3: Čuvanje Cloud podataka u dinamički ključ za prijavljenog korisnika
             if (dbStats.leagueData && dbStats.leagueData.year > 0) {
                 localStorage.setItem('yamb_quarter_data_' + currentUid, JSON.stringify(dbStats.leagueData));
             }

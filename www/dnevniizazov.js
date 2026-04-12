@@ -145,6 +145,32 @@ class DnevniIzazov {
             return;
         }
 
+        // --- ANTI-CHEAT: Zapisujemo odmah na klijentu čim se izazov otvori ---
+        localStorage.setItem('yamb_last_daily_' + uid, today);
+        
+        // --- ANTI-CHEAT: Šaljemo odmah na server pre nego što igra i krene ---
+        if (this.app.socket) {
+            if (this.app.socket.disconnected) {
+                this.app.socket.connect();
+            }
+            
+            // Osiguravamo ispravno dohvatanje statistike 
+            let currentStats = {};
+            if (typeof getFullLocalStats === 'function') {
+                currentStats = getFullLocalStats();
+            } else if (typeof this.app.getFullLocalStats === 'function') {
+                currentStats = this.app.getFullLocalStats();
+            }
+
+            this.app.socket.emit('set_player_data', {
+                uid: uid || this.app.playerId,
+                name: this.app.playerName,
+                stats: currentStats,
+                playerId: this.app.playerId
+            });
+        }
+        // ----------------------------------------------------------------------
+
         const overlay = document.getElementById('glass-daily-overlay');
         if(overlay) overlay.classList.add('active');
 
@@ -246,11 +272,8 @@ class DnevniIzazov {
 
     finishGame() {
         this.isActive = false;
-        
-        // Zapisujemo da je odigrao danas
-        const uid = localStorage.getItem('yamb_uid');
-        const today = new Date().toDateString();
-        localStorage.setItem('yamb_last_daily_' + uid, today);
+
+        // Više nema potrebe za upisom datuma ovde, jer smo to uradili na samom početku (open metoda)
 
         if (this.app.soundMgr) this.app.soundMgr.win();
         if (this.app.effectMgr) this.app.effectMgr.trigger('gold_rain');
@@ -314,17 +337,23 @@ class DnevniIzazov {
             updateMainMenuDashboard();
         }
 
-        // 4. TIHA Sinhronizacija sa Cloud-om (Plan B)
+        // 4. TIHA Sinhronizacija sa Cloud-om
         if (this.app.socket) {
-            // Ako je socket uspavan zbog pozadinskog rada, probudi ga pre slanja
             if (this.app.socket.disconnected) {
                 this.app.socket.connect();
+            }
+
+            let currentStats = {};
+            if (typeof getFullLocalStats === 'function') {
+                currentStats = getFullLocalStats();
+            } else if (typeof this.app.getFullLocalStats === 'function') {
+                currentStats = this.app.getFullLocalStats();
             }
 
             this.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid') || this.app.playerId,
                 name: this.app.playerName,
-                stats: this.app.getFullLocalStats(),
+                stats: currentStats,
                 playerId: this.app.playerId
             });
         }
