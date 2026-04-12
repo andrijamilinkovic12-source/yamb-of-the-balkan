@@ -286,7 +286,7 @@ const ghostSessions = {};
 // ==================================================================
 // --- SERVERSKA KAZNA ZA RAGE QUIT / GUBITAK KONEKCIJE (SA H2H) ---
 // ==================================================================
-async function applyServerSidePenalty(playerId, penaltyAmount = 50, opponentName = null) {
+async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = null) {
     if (!process.env.MONGO_URI || !playerId) return;
     try {
         const UserProfile = mongoose.model('UserProfile');
@@ -294,9 +294,10 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, opponentName
         let updateInc = { penaltyPoints: penaltyAmount, losses: 1 };
         let updateSet = { currentWinStreak: 0 };
 
-        if (opponentName) {
-            updateInc[`h2hStats.${opponentName}.losses`] = 1;
-            updateSet[`h2hStats.${opponentName}.currentWinStreak`] = 0;
+        // FIX: Koristimo siguran h2hKey (UID ili sanitizovano ime)
+        if (h2hKey) {
+            updateInc[`h2hStats.${h2hKey}.losses`] = 1;
+            updateSet[`h2hStats.${h2hKey}.currentWinStreak`] = 0;
         }
 
         await UserProfile.findOneAndUpdate(
@@ -306,7 +307,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, opponentName
                 $set: updateSet 
             }
         );
-        console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ${opponentName || 'nepoznatog'}.`);
+        console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ključa ${h2hKey || 'nepoznatog'}.`);
     } catch (err) {
         console.error("Greška pri upisu server kazne:", err);
     }
@@ -390,10 +391,16 @@ function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
         const penaltyAmount = getDynamicPenalty(roomId); 
         
         const winnerSocket = io.sockets.sockets.get(winnerSocketId);
-        const winnerName = winnerSocket ? winnerSocket.playerName : null;
+        
+        // FIX: Kreiranje istog H2H ključa kao na klijentu
+        let h2hKey = null;
+        if (winnerSocket) {
+            let safeOppName = winnerSocket.playerName ? winnerSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
+            h2hKey = winnerSocket.playerId ? winnerSocket.playerId : safeOppName;
+        }
 
         if (inactiveUid) {
-            applyServerSidePenalty(inactiveUid, penaltyAmount, winnerName); 
+            applyServerSidePenalty(inactiveUid, penaltyAmount, h2hKey); 
         }
         
         console.log(`⏱️ TIMEOUT: Isteklo vreme u sobi ${roomId}. Pobednik je ${winnerSocketId} (Tehnička pobeda)`);
@@ -930,12 +937,16 @@ io.on('connection', (socket) => {
                 if (pid) {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
 
-                    let oppName = null;
+                    // FIX: Kreiranje istog H2H ključa kao na klijentu
+                    let h2hKey = null;
                     const oppSocketId = roomState[activeRoomId].players.find(id => id !== socket.id);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
-                    if (oppSocket) oppName = oppSocket.playerName;
+                    if (oppSocket) {
+                        let safeOppName = oppSocket.playerName ? oppSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
+                        h2hKey = oppSocket.playerId ? oppSocket.playerId : safeOppName;
+                    }
 
-                    applyServerSidePenalty(pid, penaltyAmount, oppName);
+                    applyServerSidePenalty(pid, penaltyAmount, h2hKey);
                 }
             }
 
@@ -2106,14 +2117,18 @@ io.on('connection', (socket) => {
                 
                 const penaltyAmount = getDynamicPenalty(activeRoomId);
 
-                let oppName = null;
+                // FIX: Kreiranje istog H2H ključa kao na klijentu
+                let h2hKey = null;
                 if (roomState[activeRoomId]) {
                     const oppSocketId = roomState[activeRoomId].players.find(id => id !== ghostSessions[pid]?.oldSocketId);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
-                    if (oppSocket) oppName = oppSocket.playerName;
+                    if (oppSocket) {
+                        let safeOppName = oppSocket.playerName ? oppSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
+                        h2hKey = oppSocket.playerId ? oppSocket.playerId : safeOppName;
+                    }
                 }
 
-                applyServerSidePenalty(pid, penaltyAmount, oppName); 
+                applyServerSidePenalty(pid, penaltyAmount, h2hKey); 
 
                 io.to(activeRoomId).emit('opponent_left');
                 

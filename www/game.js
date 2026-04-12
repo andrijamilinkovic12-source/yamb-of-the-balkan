@@ -938,6 +938,66 @@ class YambApp {
                             window.statsManager.saveStats();
                         }
                     }
+
+                    // --- FIX: SINHRONIZACIJA KAZNI I RESETOVANIH NIZOVA SA SERVERA ---
+                    let localStats = JSON.parse(localStorage.getItem('yamb_stats')) || this.stats || {};
+                    let statsUpdated = false;
+
+                    // Ako server kaže da je trenutni niz manji (npr. server-side kazna ga je resetovala na 0)
+                    if (data.currentWinStreak !== undefined && data.currentWinStreak < (localStats.currentWinStreak || 0)) {
+                        localStats.currentWinStreak = data.currentWinStreak;
+                        statsUpdated = true;
+                    }
+
+                    // Preuzimanje server-side kaznenih poena
+                    if (data.penaltyPoints !== undefined && data.penaltyPoints > (localStats.penaltyPoints || 0)) {
+                        localStats.penaltyPoints = data.penaltyPoints;
+                        statsUpdated = true;
+                    }
+
+                    // Sinhronizacija max niza
+                    if (data.maxWinStreak !== undefined && data.maxWinStreak > (localStats.maxWinStreak || 0)) {
+                        localStats.maxWinStreak = data.maxWinStreak;
+                        statsUpdated = true;
+                    }
+
+                    if (statsUpdated) {
+                        this.stats = localStats;
+                        localStorage.setItem('yamb_stats', JSON.stringify(localStats));
+                        if (window.statsManager) {
+                            window.statsManager.stats = localStats;
+                            window.statsManager.saveStats();
+                        }
+                    }
+
+                    // --- FIX: SINHRONIZACIJA H2H STATISTIKE (RAGE QUIT KAZNE) ---
+                    if (data.h2hStats) {
+                        let localH2H = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
+                        let h2hUpdated = false;
+
+                        for (const [oppKey, cloudData] of Object.entries(data.h2hStats)) {
+                            if (localH2H[oppKey]) {
+                                // Ako je server upisao poraz i resetovao niz, klijent to mora da prihvati
+                                if (cloudData.currentWinStreak === 0 && (localH2H[oppKey].currentWinStreak || 0) > 0) {
+                                    localH2H[oppKey].currentWinStreak = 0;
+                                    
+                                    // Ažuriraj poraze ako ih je server dodao
+                                    if (cloudData.losses > localH2H[oppKey].losses) {
+                                        localH2H[oppKey].losses = cloudData.losses;
+                                    }
+                                    h2hUpdated = true;
+                                }
+                            } else {
+                                // Ako klijent nema ovog rivala, a server ima (npr. logovanje na novom uređaju)
+                                localH2H[oppKey] = cloudData;
+                                h2hUpdated = true;
+                            }
+                        }
+
+                        if (h2hUpdated) {
+                            localStorage.setItem('yamb_h2h_stats', JSON.stringify(localH2H));
+                        }
+                    }
                     
                     if (typeof updateMainMenuDashboard === 'function') {
                         updateMainMenuDashboard();
