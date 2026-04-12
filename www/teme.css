@@ -544,13 +544,11 @@ body.desert-theme .player-table {
 
 /* Grid ćelije - Udubljeni Neumorfizam */
 body.desert-theme .grid-cell {
-    border: none;
+    border: 1px solid rgba(255, 255, 255, 0.4);
     background: transparent;
     box-shadow: 
         inset 3px 3px 6px rgba(200, 200, 180, 0.5), 
         inset -3px -3px 6px rgba(255, 255, 255, 0.8);
-    border-radius: 8px;
-    margin: 1px;
 }
 
 /* Headeri redova i kolona - Izdignuti Neumorfizam */
@@ -561,9 +559,10 @@ body.desert-theme .row-header {
     box-shadow: 
         3px 3px 6px rgba(200, 200, 180, 0.5), 
         -3px -3px 6px rgba(255, 255, 255, 0.9);
-    border-radius: 8px;
-    border: none;
-    margin: 1px;
+    border-bottom: 1px solid rgba(200, 200, 180, 0.5);
+    border-right: none;
+    border-left: none;
+    border-top: none;
     font-weight: 800;
 }
 
@@ -645,7 +644,7 @@ body.desert-theme .card {
 
 /* Dnevni Izazov Kartice */
 body.desert-theme .daily-challenge-card {
-    border: none !important;
+    border: 2px solid rgba(255,255,255,0.6) !important;
     box-shadow: 8px 8px 16px rgba(200,200,180,0.6), -8px -8px 16px rgba(255,255,255,0.9) !important;
     background: #F5F5DC !important;
 }
