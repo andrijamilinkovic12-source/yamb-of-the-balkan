@@ -1000,7 +1000,8 @@ class ShopManager {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
         } else {
-            ['default', 'confetti', 'dark', 'light', 'medium', 'winter'].forEach(item => {
+            // FIX: Izbegnuto je guranje tema u niz za skinove i efekte
+            ['default', 'confetti'].forEach(item => {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
         }
@@ -1073,7 +1074,8 @@ class ShopManager {
                     visualHtml = `<div class="icon">${item.icon}</div>`;
                 }
 
-                const itemName = resolveText(item.title) || resolveText(item.name);
+                // FIX: Dodato '|| \'\'' osiguranje kako .replace ne bi oborio kod ukoliko je naslov prazan
+                const itemName = resolveText(item.title) || resolveText(item.name) || '';
                 const itemDesc = resolveText(item.desc);
 
                 let priceHtml = '';

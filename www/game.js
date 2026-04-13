@@ -117,6 +117,13 @@ class YambApp {
         // ZABRANA ZA GOSTE NA NIVOU CELOG UI-A PRI POKRETANJU
         if (!this.playerId) {
             this.navigateTo('splash-screen');
+        } else {
+            // FIX: Vraćamo timeout koji sklanja Splash Screen i šalje igrača u glavni meni!
+            this.splashTimeout = setTimeout(() => {
+                if (!this.inviteDetected) {
+                    this.navigateTo('main-menu');
+                }
+            }, 1500);
         }
 
         const savedSound = localStorage.getItem('yamb_sound');
@@ -127,7 +134,14 @@ class YambApp {
         const savedVib = localStorage.getItem('yamb_vibration');
         this.vibrationEnabled = savedVib !== 'false'; // Podrazumevano uključeno
         
-        let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
+        // FIX: Dodat try-catch blok oko parsiranja statistike kako bismo izbegli pucanje
+        let freshStats = null;
+        try {
+            freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
+        } catch (e) {
+            console.warn("Upozorenje: Nije moguće pročitati yamb_stats:", e);
+        }
+        
         this.stats = freshStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, adProgress: {} };
         
         this.diceBtns = []; 
