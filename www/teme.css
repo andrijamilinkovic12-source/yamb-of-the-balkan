@@ -493,13 +493,13 @@ body.desert-theme {
     --bg-base: #F5F5DC;
     --bg-gradient-1: #FAFAD2;
     --bg-gradient-2: #E8E8D0;
-    --gold-main: #B89947; /* Prigušena pustinjska zlatna */
-    --gold-glow: rgba(184, 153, 71, 0.4);
-    --text-main: #706B57; /* Topla siva/braon za bolji kontrast */
-    --text-filled: #4A4635;
-    --text-sum: #9E7B4A;
-    --text-sum-label: #8A6532;
-    --text-muted: #A3A092;
+    --gold-main: #9E7B4A; /* Malo tamnija zlatna za bolji kontrast */
+    --gold-glow: rgba(158, 123, 74, 0.4);
+    --text-main: #4A4635; /* Zatamnjeno - Topla siva/braon za bolji kontrast */
+    --text-filled: #2D2A1F; /* Zatamnjeno */
+    --text-sum: #8A6532; /* Zatamnjeno */
+    --text-sum-label: #6A4B22; /* Zatamnjeno */
+    --text-muted: #6B6858; /* Zatamnjeno da svetlo sivi tekst bude čitljiv */
 
     /* Neumorfno staklo (Glassmorphism + Neumorphism) */
     --glass-bg: rgba(245, 245, 220, 0.4);
@@ -512,16 +512,16 @@ body.desert-theme {
     /* Kockice prilagođene bež temi */
     --dice-bg: #F5F5DC;
     --dice-border: transparent;
-    --dice-color: #5C5846;
-    --dice-active: #B89947;
+    --dice-color: #3D392B; /* Zatamnjeno */
+    --dice-active: #9E7B4A; /* Zatamnjeno */
 
-    /* Boje kolona - usklađene, pastelne pustinjske boje */
-    --col-nadole: #8FB8DE;
-    --col-nagore: #D98880;
-    --col-sredina: #DEB887;
-    --col-rucno: #C39BD3;
-    --col-najava: #7DCEA0;
-    --col-slobodna: #A6ACAF;
+    /* Boje kolona - usklađene, pastelne pustinjske boje - ZATAMNJENE ZA KONTRAST */
+    --col-nadole: #5D98C8;
+    --col-nagore: #C5685F;
+    --col-sredina: #C29B62;
+    --col-rucno: #A66EB8;
+    --col-najava: #5AAB7E;
+    --col-slobodna: #607D8B; /* Znatno tamnija siva za čitljivost u sivoj koloni */
 }
 
 /* Osnovna pozadina */
