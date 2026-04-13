@@ -1563,9 +1563,12 @@ class AdMobController {
     loadInterstitialAd() { this.preloadAd('interstitial'); }
     prepareReward() { this.triggerHighPriorityLoad('rewarded'); }
 
+    // ISPRAVKA: Provera dužine dugmadi kako kod ne bi blokirao ako dugmad još uvek nisu renderovana u DOM-u
     updateUI(ready) {
         this.uiSelectors.forEach(selector => {
             const buttons = document.querySelectorAll(selector);
+            if (!buttons.length) return; // Ne radi ništa ako dugmad trenutno nisu u DOM-u
+            
             buttons.forEach(btn => {
                 if (ready) {
                     btn.classList.remove('disabled', 'ad-loading'); btn.disabled = false; btn.style.opacity = '1'; btn.style.filter = 'none';

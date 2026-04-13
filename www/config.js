@@ -124,12 +124,13 @@ const CONFIG = {
     // ---------------------------------------------------------
     // DEFINICIJE KOLONA I REDOVA (Logika Igre)
     // ---------------------------------------------------------
-    COLUMNS: ['nadole', 'slobodna', 'nagore', 'najava', 'rucno', 'sredina'],
+    // FIX: Vraćeno na ćirilicu da odgovara game.js i starom sistemu
+    COLUMNS: ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'],
     
     ROWS: {
         BROJEVI: ['1', '2', '3', '4', '5', '6'],
-        MAXMIN: ['max', 'min'],
-        FIGURE: ['kenta', 'triling', 'ful', 'kare', 'yamb']
+        MAXMIN: ['Max', 'Min'],
+        FIGURE: ['Triling', 'Kenta', 'Ful', 'Poker', 'Yamb']
     },
 
     // ---------------------------------------------------------
@@ -189,6 +190,14 @@ const CONFIG = {
         loginStreak: 0,
         dailyChallengeComplete: false
     }
+};
+
+// FIX: Definicija konstanti koje koristi game.js PRE nego što se objekt zamrzne
+const KOLONE = CONFIG.COLUMNS;
+const REDOVI_IGRA = [...CONFIG.ROWS.BROJEVI, ...CONFIG.ROWS.MAXMIN, ...CONFIG.ROWS.FIGURE];
+const REDOVI_PRIKAZ = [...CONFIG.ROWS.BROJEVI, "ZBIR 1", ...CONFIG.ROWS.MAXMIN, "ZBIR 2", ...CONFIG.ROWS.FIGURE, "ZBIR 3"];
+const UNICODE_DICE = {
+    0: "", 1: "⚀", 2: "⚁", 3: "⚂", 4: "⚃", 5: "⚄", 6: "⚅"
 };
 
 // Sprečavanje modifikacije osnovnog konfiguracionog objekta
