@@ -990,9 +990,21 @@ class ShopManager {
         // NOVO: Odvojeno čuvanje za teme da bi radilo sa game.js
         this.unlockKey = (this.type === 'theme') ? 'yamb_unlocked_themes' : 'yamb_unlocked';
         
-        let savedUnlocked = JSON.parse(localStorage.getItem(this.unlockKey)) || [];
-        let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
-        let cloudSkins = (window.statsManager && window.statsManager.stats.unlockedSkins) ? window.statsManager.stats.unlockedSkins : [];
+        let savedUnlocked = [];
+        try { savedUnlocked = JSON.parse(localStorage.getItem(this.unlockKey)); } catch(e) {}
+        if (!Array.isArray(savedUnlocked)) savedUnlocked = [];
+
+        let opstiNiz = [];
+        try { opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')); } catch(e) {}
+        if (!Array.isArray(opstiNiz)) opstiNiz = [];
+
+        let cloudSkins = [];
+        if (window.statsManager && window.statsManager.stats && window.statsManager.stats.unlockedSkins) {
+            if (Array.isArray(window.statsManager.stats.unlockedSkins)) {
+                cloudSkins = window.statsManager.stats.unlockedSkins;
+            }
+        }
+        
         savedUnlocked = [...new Set([...savedUnlocked, ...opstiNiz, ...cloudSkins])];
         
         if (this.type === 'theme') {

@@ -570,10 +570,22 @@ class YambApp {
         const uid = localStorage.getItem('yamb_uid');
         if (!uid) return {}; // Zabrana za goste
         
-        let lsData = JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
-        if (window.kvartalnaLiga) {
-            lsData = window.kvartalnaLiga.getScores();
-        }
+        let lsData = { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
+        try { lsData = JSON.parse(localStorage.getItem('yamb_quarter_data')) || lsData; } catch(e) {}
+        if (window.kvartalnaLiga) { lsData = window.kvartalnaLiga.getScores(); }
+
+        let yambUnlocked = [], unlockedSkins = [], unlockedEffects = [], unlockedThemes = [], h2hStats = {};
+        try { yambUnlocked = JSON.parse(localStorage.getItem('yamb_unlocked')) || []; } catch(e) {}
+        try { unlockedSkins = JSON.parse(localStorage.getItem('yamb_unlocked_skins')) || []; } catch(e) {}
+        try { unlockedEffects = JSON.parse(localStorage.getItem('yamb_unlocked_effects')) || []; } catch(e) {}
+        try { unlockedThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes')) || []; } catch(e) {}
+        try { h2hStats = JSON.parse(localStorage.getItem('yamb_h2h_stats')) || {}; } catch(e) {}
+
+        // Osiguranje da su varijable uvek nizovi, inače sprečavaju pucanje
+        if (!Array.isArray(yambUnlocked)) yambUnlocked = [];
+        if (!Array.isArray(unlockedSkins)) unlockedSkins = [];
+        if (!Array.isArray(unlockedEffects)) unlockedEffects = [];
+        if (!Array.isArray(unlockedThemes)) unlockedThemes = [];
 
         return {
             games: this.stats.games || 0,
@@ -586,10 +598,10 @@ class YambApp {
             currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
             tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0,
             unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
-            yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
-            unlockedSkins: JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
-            unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
-            unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
+            yamb_unlocked: yambUnlocked,
+            unlockedSkins: unlockedSkins,
+            unlockedEffects: unlockedEffects,
+            unlockedThemes: unlockedThemes,
             adProgress: this.stats.adProgress || {},
             leagueData: lsData,
             activeSkin: localStorage.getItem('yamb_active_skin') || null,
@@ -599,7 +611,7 @@ class YambApp {
             soundEnabled: this.soundEnabled,
             vibrationEnabled: this.vibrationEnabled,
             penaltyPoints: this.stats.penaltyPoints || 0, 
-            h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}')
+            h2hStats: h2hStats
         };
     }
 
