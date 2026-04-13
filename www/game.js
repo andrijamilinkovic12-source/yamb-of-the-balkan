@@ -128,7 +128,7 @@ class YambApp {
         this.vibrationEnabled = savedVib !== 'false'; // Podrazumevano uključeno
         
         let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
-        this.stats = freshStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
+        this.stats = freshStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, adProgress: {} };
         
         this.diceBtns = []; 
         this.consecutiveNajava = 0; 
@@ -576,6 +576,7 @@ class YambApp {
             unlockedSkins: JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
             unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
             unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
+            adProgress: this.stats.adProgress || {},
             leagueData: lsData,
             activeSkin: localStorage.getItem('yamb_active_skin') || null,
             activeEffect: localStorage.getItem('yamb_active_effect') || null,
@@ -958,6 +959,12 @@ class YambApp {
                     // Sinhronizacija max niza
                     if (data.maxWinStreak !== undefined && data.maxWinStreak > (localStats.maxWinStreak || 0)) {
                         localStats.maxWinStreak = data.maxWinStreak;
+                        statsUpdated = true;
+                    }
+
+                    // NOVO: Sinhronizacija progresa reklama
+                    if (data.adProgress) {
+                        localStats.adProgress = { ...localStats.adProgress, ...data.adProgress };
                         statsUpdated = true;
                     }
 
@@ -1424,7 +1431,7 @@ class YambApp {
 
     updateStats(score, resultType, oppScore = 0, isTechnical = false) { 
         let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
-        this.stats = freshStats || this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, currentWinStreak: 0, maxWinStreak: 0 };
+        this.stats = freshStats || this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, currentWinStreak: 0, maxWinStreak: 0, adProgress: {} };
         
         if (!isTechnical) {
             this.stats.games++; 

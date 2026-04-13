@@ -26,7 +26,8 @@ class StatsManager {
         this.stats = this.loadStats() || {
             games: 0, totalGames: 0, wins: 0, losses: 0, currentWinStreak: 0, maxWinStreak: 0, currentLossStreak: 0, 
             balance: 1000, unlockedTrophies: [], highscore: 0, totalScoreSum: 0, penaltyPoints: 0,
-            tournamentWins: 0 
+            tournamentWins: 0,
+            adProgress: {} // NOVO: Dodato za praćenje reklama
         };
         
         // Osiguraj da imamo i games i totalGames zbog kompatibilnosti
@@ -60,6 +61,7 @@ class StatsManager {
             if (s) {
                 if (s.highScore && !s.highscore) s.highscore = s.highScore;
                 if (s.totalGames && !s.games) s.games = s.totalGames;
+                if (!s.adProgress) s.adProgress = {}; // NOVO: Osigurava da postoji objekat
             }
             return s;
         } catch(e) { return null; } 
@@ -1081,8 +1083,8 @@ class ShopManager {
                     if (isUnlocked) {
                         priceHtml = `<div class="price">${_safeT('btn_bought')}</div>`;
                     } else {
-                        // NOVO: Provera da li se otključava reklamama
-                        if (item.adUnlock) {
+                        // NOVO: Provera da li se otključava reklamama preko config ključa adsRequired
+                        if (item.adsRequired) {
                             priceHtml = `<div class="price" style="color: var(--text-muted); font-size: 0.75rem;">Gledaj 📺 za otključavanje</div>`;
                         } else {
                             let price = item.price;
@@ -1108,9 +1110,14 @@ class ShopManager {
                         
                         if (reqMet) {
                             // NOVO: Logika za dugme koje otključava reklamama
-                            if (item.adUnlock) {
-                                let adProgress = parseInt(localStorage.getItem(`yamb_adprogress_${item.id}`)) || 0;
-                                btnHtml = `<button class="btn-action btn-ad-state-aware" style="background: linear-gradient(45deg, #FF9800, #F57C00); color: white; border: none; border-radius: 8px; padding: 5px 10px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0px rgba(0,0,0,0.3);" onclick="shop.watchAdForUnlock('${item.id}', ${item.adUnlock})">📺 ${adProgress} / ${item.adUnlock}</button>`;
+                            if (item.adsRequired) {
+                                let adProgress = 0;
+                                if (window.statsManager && window.statsManager.stats && window.statsManager.stats.adProgress) {
+                                    adProgress = window.statsManager.stats.adProgress[item.id] || 0;
+                                } else {
+                                    adProgress = parseInt(localStorage.getItem(`yamb_adprogress_${item.id}`)) || 0;
+                                }
+                                btnHtml = `<button class="btn-action btn-ad-state-aware" style="background: linear-gradient(45deg, #FF9800, #F57C00); color: white; border: none; border-radius: 8px; padding: 5px 10px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0px rgba(0,0,0,0.3);" onclick="shop.watchAdForUnlock('${item.id}', ${item.adsRequired})">📺 ${adProgress} / ${item.adsRequired}</button>`;
                             } else {
                                 let currentPrice = this.discountedItems[item.id] ? Math.floor(item.price * 0.8) : item.price;
                                 const safeName = itemName.replace(/'/g, "\\'"); 
@@ -1264,7 +1271,7 @@ class ShopManager {
         }
     }
     
-    // NOVO: Funkcija za otključavanje predmeta/teme gledanjem serije reklama
+    // NOVO: Ažurirana funkcija za otključavanje predmeta/teme gledanjem serije reklama
     async watchAdForUnlock(id, target) {
         const adCtrl = this.getAdController();
         if (adCtrl) {
@@ -1279,14 +1286,32 @@ class ShopManager {
             }
             const success = await adCtrl.showRewardVideo();
             if (success) {
-                let progress = parseInt(localStorage.getItem(`yamb_adprogress_${id}`)) || 0;
-                progress++;
+                let stats = window.statsManager ? window.statsManager.stats : null;
+                let progress = 0;
+                
+                // Praćenje progresa unutar stats objekta (da bi se čuvalo zajedno sa ostalim podacima)
+                if (stats && stats.adProgress) {
+                    stats.adProgress[id] = (stats.adProgress[id] || 0) + 1;
+                    progress = stats.adProgress[id];
+                    window.statsManager.saveStats();
+                } else {
+                    // Fallback sistem
+                    progress = parseInt(localStorage.getItem(`yamb_adprogress_${id}`)) || 0;
+                    progress++;
+                    localStorage.setItem(`yamb_adprogress_${id}`, progress);
+                }
                 
                 if (progress >= target) {
                     // Otključano
                     this.unlocked.push(id);
                     localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
+                    
+                    // Čišćenje progresa
                     localStorage.removeItem(`yamb_adprogress_${id}`);
+                    if (stats && stats.adProgress) {
+                        delete stats.adProgress[id];
+                        window.statsManager.saveStats();
+                    }
 
                     let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
                     if (!opstiNiz.includes(id)) {
@@ -1297,13 +1322,12 @@ class ShopManager {
                     if(window.app && window.app.soundMgr) window.app.soundMgr.trophy();
                     
                     if (typeof window.showNotification === 'function') {
-                        window.showNotification("USPEŠNO!", "Tema je uspešno otključana!");
+                        window.showNotification("USPEŠNO!", "Skin je uspešno otključan!");
                     } else if (window.modalManager && window.modalManager.overlay) {
-                        window.modalManager.alert("Tema je uspešno otključana!", "USPEŠNO!");
+                        window.modalManager.alert("Skin je uspešno otključan!", "USPEŠNO!");
                     }
                 } else {
                     // Samo napredak
-                    localStorage.setItem(`yamb_adprogress_${id}`, progress);
                     if(window.app && window.app.soundMgr) window.app.soundMgr.win();
                 }
                 this.render();
