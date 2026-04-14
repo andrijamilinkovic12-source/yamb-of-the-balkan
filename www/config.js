@@ -90,9 +90,9 @@ const SERVER_URL = serverUrl;
 const KOLONE = CONFIG.COLUMNS;
 const REDOVI_IGRA = [...CONFIG.ROWS.BROJEVI, ...CONFIG.ROWS.MAXMIN, ...CONFIG.ROWS.FIGURE];
 const REDOVI_PRIKAZ = [...CONFIG.ROWS.BROJEVI, "ZBIR 1", ...CONFIG.ROWS.MAXMIN, "ZBIR 2", ...CONFIG.ROWS.FIGURE, "ZBIR 3"];
-const UNICODE_DICE = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"]; // FIX: Vraćeno u niz kako ga JS očekuje pri iteraciji
+const UNICODE_DICE = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"]; 
 
-// --- PODACI PRODAVNICE (SHOP_DATA - CRITICAL FIX ZA MANAGERS.JS) ---
+// --- PODACI PRODAVNICE (SHOP_DATA - CRITICAL FIX) ---
 const SHOP_DATA = {
     SKINS: [
         { id: 'default', price: 0, premium: false, name: { sr: 'Osnovni', en: 'Default' }, type: 'dice', category: { sr: '🎩 KLASIKA & ELEGANCIJA', en: '🎩 CLASSIC & ELEGANCE' } },
@@ -151,19 +151,19 @@ const SHOP_DATA = {
         { id: 'balkan', name: { sr: 'Balkanska Svadba', en: 'Balkan Wedding' }, price: 25000, category: { sr: '🎺 SPECIJALNI', en: '🎺 SPECIAL' } },
         { id: 'drones', name: { sr: 'Dronovi', en: 'Drone Show' }, price: 30000, category: { sr: '🚀 FUTURIZAM', en: '🚀 FUTURISM' } },
         { id: 'fireworks', name: { sr: 'Vatromet', en: 'Fireworks' }, price: 22000, category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' } }
+    ],
+    TROPHIES: [
+        { id: 'first_play', icon: '🎲', title: { sr: 'Prvo Bacanje', en: 'First Roll' }, desc: { sr: 'Završi prvu partiju.', en: 'Finish your first game.' }, reward: 500, category: { sr: 'POČETAK', en: 'START' } },
+        { id: 'apprentice', icon: '🔨', title: { sr: 'Šegrt', en: 'Apprentice' }, desc: { sr: 'Odigraj 10 partija.', en: 'Play 10 games.' }, reward: 1000, category: { sr: 'NAPREDAK', en: 'PROGRESS' } },
+        { id: 'kafana', icon: '🍻', title: { sr: 'Kafanski Sto', en: 'Pub Table' }, desc: { sr: 'Odigraj partiju u "2 Igrača" modu.', en: 'Play a "2 Player" game.' }, reward: 500, category: { sr: 'DRUŠTVO', en: 'SOCIETY' } },
+        { id: 'score_1000', icon: '🔥', title: { sr: 'Zagrevanje', en: 'Warming Up' }, desc: { sr: 'Osvoji preko 1000 poena u partiji.', en: 'Score over 1000 points in a game.' }, reward: 1500, category: { sr: 'REZULTATI', en: 'SCORES' } },
+        { id: 'grandmaster', icon: '👑', title: { sr: 'Velemajstor', en: 'Grandmaster' }, desc: { sr: 'Osvoji preko 2500 poena u partiji.', en: 'Score over 2500 points in a game.' }, reward: 5000, category: { sr: 'REZULTATI', en: 'SCORES' } },
+        { id: 'math', icon: '📐', title: { sr: 'Matematičar', en: 'Mathematician' }, desc: { sr: 'Tačno 63 u Zbiru 1.', en: 'Exactly 63 in Sum 1.' }, reward: 1000, category: { sr: 'VEŠTINA', en: 'SKILL' } },
+        { id: 'achilles', icon: '🛡️', title: { sr: 'Ahilova Peta', en: 'Achilles Heel' }, desc: { sr: 'Ceo list pun, samo Yamb nula.', en: 'Full sheet, only Yamb is zero.' }, reward: 5000, category: { sr: 'TRAGEDIJA', en: 'TRAGEDY' } },
+        { id: 'veteran', icon: '🎖️', title: { sr: 'Veteran', en: 'Veteran' }, desc: { sr: 'Odigraj 50 partija.', en: 'Play 50 games.' }, reward: 2000, category: { sr: 'NAPREDAK', en: 'PROGRESS' } }
     ]
 };
 
-// --- TROFEJI (Vraćeno radi stabilnosti i sprečavanja grešaka) ---
-const TROPHIES = [
-    { id: 'first_play', icon: '🎲', title: { sr: 'Prvo Bacanje', en: 'First Roll' }, desc: { sr: 'Završi prvu partiju.', en: 'Finish your first game.' }, reward: 500, category: { sr: 'POČETAK', en: 'START' } },
-    { id: 'apprentice', icon: '🔨', title: { sr: 'Šegrt', en: 'Apprentice' }, desc: { sr: 'Odigraj 10 partija.', en: 'Play 10 games.' }, reward: 1000, category: { sr: 'NAPREDAK', en: 'PROGRESS' } },
-    { id: 'kafana', icon: '🍻', title: { sr: 'Kafanski Sto', en: 'Pub Table' }, desc: { sr: 'Odigraj partiju u "2 Igrača" modu.', en: 'Play a "2 Player" game.' }, reward: 500, category: { sr: 'DRUŠTVO', en: 'SOCIETY' } },
-    { id: 'score_1000', icon: '🔥', title: { sr: 'Zagrevanje', en: 'Warming Up' }, desc: { sr: 'Osvoji preko 1000 poena u partiji.', en: 'Score over 1000 points in a game.' }, reward: 1500, category: { sr: 'REZULTATI', en: 'SCORES' } },
-    { id: 'grandmaster', icon: '👑', title: { sr: 'Velemajstor', en: 'Grandmaster' }, desc: { sr: 'Osvoji preko 2500 poena u partiji.', en: 'Score over 2500 points in a game.' }, reward: 5000, category: { sr: 'REZULTATI', en: 'SCORES' } },
-    { id: 'math', icon: '📐', title: { sr: 'Matematičar', en: 'Mathematician' }, desc: { sr: 'Tačno 63 u Zbiru 1.', en: 'Exactly 63 in Sum 1.' }, reward: 1000, category: { sr: 'VEŠTINA', en: 'SKILL' } },
-    { id: 'achilles', icon: '🛡️', title: { sr: 'Ahilova Peta', en: 'Achilles Heel' }, desc: { sr: 'Ceo list pun, samo Yamb nula.', en: 'Full sheet, only Yamb is zero.' }, reward: 5000, category: { sr: 'TRAGEDIJA', en: 'TRAGEDY' } },
-    { id: 'veteran', icon: '🎖️', title: { sr: 'Veteran', en: 'Veteran' }, desc: { sr: 'Odigraj 50 partija.', en: 'Play 50 games.' }, reward: 2000, category: { sr: 'NAPREDAK', en: 'PROGRESS' } }
-];
+const TROPHIES = SHOP_DATA.TROPHIES; // Zadržano za kompatibilnost ukoliko još neki fajl direktno zove konstantu
 
 Object.freeze(CONFIG);
