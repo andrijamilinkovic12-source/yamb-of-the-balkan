@@ -510,7 +510,7 @@ class YambApp {
             }
         }
 
-        // 2. Fallback na standardni Web API (Radi na Android pretraživačima, ne radi na iOS)
+        // 2. Fallback na standard Web API (Radi na Android pretraživačima, ne radi na iOS)
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
             try {
                 navigator.vibrate(pattern);
@@ -1669,6 +1669,12 @@ class YambApp {
                 
                 this.updateStats(0, 'loss', 0, true); 
             }
+
+            // Prikaz intersticijalne reklame pri ranijem napuštanju igre
+            if (!this.isSpectator && this.adMob && this.adMob.showInterstitial) {
+                await this.adMob.showInterstitial();
+            }
+
             this.showMainMenu(); 
         } 
     }
