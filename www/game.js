@@ -102,6 +102,7 @@ class YambApp {
         this.currentOpponentPhoto = '';
         this.currentOpponentUid = null;
 
+        // Klijentski tajmer za Anti-Troll zaštitu
         this.timeLeft = 90; 
         this.turnTimerInterval = null;
 
@@ -113,6 +114,7 @@ class YambApp {
         this.playerName = localStorage.getItem('yamb_player_name') || "";
         this.playerId = getPlayerId();
         
+        // ZABRANA ZA GOSTE NA NIVOU CELOG UI-A PRI POKRETANJU
         if (!this.playerId) {
             this.navigateTo('splash-screen');
         }
@@ -121,8 +123,9 @@ class YambApp {
         this.soundEnabled = savedSound !== 'false'; 
         if(this.soundMgr) this.soundMgr.enabled = this.soundEnabled;
 
+        // NOVO: Podrška za vibraciju
         const savedVib = localStorage.getItem('yamb_vibration');
-        this.vibrationEnabled = savedVib !== 'false'; 
+        this.vibrationEnabled = savedVib !== 'false'; // Podrazumevano uključeno
         
         let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
         this.stats = freshStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
@@ -179,7 +182,7 @@ class YambApp {
                     const roomId = url.searchParams.get('room');
                     if (roomId) {
                         this.inviteDetected = true;
-                        if (!this.requireLogin()) return;
+                        if (!this.requireLogin()) return; // Gosti ne mogu prihvatiti poziv
 
                         if (this.splashTimeout) { clearTimeout(this.splashTimeout); this.splashTimeout = null; }
                         this.navigateTo('splash-screen');
@@ -201,6 +204,8 @@ class YambApp {
         this.uiInit();
         this.syncBalance();
     }
+
+    // --- NOVO: HEADER LOGIKA (MENI, ZVUK, VIB, OKO, AVATAR) ---
 
     toggleGameMenu() {
         const menu = document.getElementById('game-dropdown-menu');
@@ -246,6 +251,7 @@ class YambApp {
     }
 
     toggleTheme() {
+        // 1. Prikupi sve otključane teme (osnovne + kupljene + cloud)
         let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
         try {
             const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
@@ -257,10 +263,12 @@ class YambApp {
             unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
         } catch(e) {}
 
+        // Filtriraj samo validne teme i ukloni duplikate
         const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert'];
         unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
         unlockedThemes = [...new Set(unlockedThemes)];
 
+        // 2. Pronađi trenutnu temu i odredi sledeću
         const currentTheme = localStorage.getItem('yamb_theme') || 'dark';
         let currentIndex = unlockedThemes.indexOf(currentTheme);
         
@@ -269,8 +277,10 @@ class YambApp {
         const nextIndex = (currentIndex + 1) % unlockedThemes.length;
         const nextTheme = unlockedThemes[nextIndex];
 
+        // 3. Primeni novu temu i sačuvaj je (ova funkcija već radi sve što treba)
         this.saveSettingAuto('theme', nextTheme);
         
+        // Zvuk klika
         if (this.soundEnabled && this.soundMgr) {
             this.soundMgr.click();
         }
@@ -312,19 +322,26 @@ class YambApp {
         }
     }
     
+    // --- FUNKCIJE ZA H2H DETALJNU STATISTIKU ---
+
     updateH2HStats(oppName, oppPhoto, resultType, myScore = 0, oppScore = 0, oppUid = null) {
+        // Ne beležimo sistemske botove ili goste bez naloga
         if (!oppName || oppName.includes(gt('player_guest')) || oppName === "Sistem") return;
         if (this.isSpectator) return;
 
+        // 1. SANITIZACIJA: Menjamo potencijalno opasne karaktere u donju crtu
         const safeOppName = oppName.replace(/\./g, '_').replace(/\$/g, '_');
+
+        // 2. ODABIR KLJUČA: Prioritet je UID (ako postoji), inače koristimo bezbedno ime
         const h2hKey = oppUid ? oppUid : safeOppName;
 
         let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
         
+        // Kreiraj rivala ako ne postoji pod novim sigurnim ključem
         if (!h2h[h2hKey]) {
             h2h[h2hKey] = { 
-                name: oppName,       
-                uid: oppUid || '',   
+                name: oppName,       // Originalno ime se čuva zbog prikaza na ekranu!
+                uid: oppUid || '',   // Pamtimo UID za buduću upotrebu
                 photo: oppPhoto || '', 
                 wins: 0, 
                 losses: 0, 
@@ -333,14 +350,16 @@ class YambApp {
                 myHighScore: 0, 
                 maxWinMargin: 0, 
                 maxLossMargin: 0,
-                currentWinStreak: 0, 
-                maxWinStreak: 0      
+                currentWinStreak: 0, // Trenutni niz
+                maxWinStreak: 0      // Najbolji niz ikada
             };
         } else {
+            // Ažuriraj sliku ili UID ako su u međuvremenu stigli novi podaci
             if (oppPhoto && oppPhoto.length > 5) h2h[h2hKey].photo = oppPhoto;
             if (oppUid && !h2h[h2hKey].uid) h2h[h2hKey].uid = oppUid;
         }
 
+        // --- Beleženje pobeda i poraza ---
         if (resultType === 'win') {
             h2h[h2hKey].wins++;
             h2h[h2hKey].currentWinStreak = (h2h[h2hKey].currentWinStreak || 0) + 1;
@@ -349,11 +368,12 @@ class YambApp {
             }
         } else if (resultType === 'loss') {
             h2h[h2hKey].losses++;
-            h2h[h2hKey].currentWinStreak = 0; 
+            h2h[h2hKey].currentWinStreak = 0; // Reset na poraz
         } else if (resultType === 'draw') {
-            h2h[h2hKey].currentWinStreak = 0; 
+            h2h[h2hKey].currentWinStreak = 0; // Nerešeno prekida H2H niz, ali ne piše poraz
         }
 
+        // --- Dodavanje detaljne statistike (samo ako su rezultati validni) ---
         if (myScore > 0 || oppScore > 0) {
             h2h[h2hKey].myTotalScore = (h2h[h2hKey].myTotalScore || 0) + myScore;
             h2h[h2hKey].gamesWithScore = (h2h[h2hKey].gamesWithScore || 0) + 1;
@@ -370,6 +390,7 @@ class YambApp {
             }
         }
 
+        // Sačuvaj nazad u localStorage (nakon čega će se okinuti Cloud sync)
         localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
     }
 
@@ -385,11 +406,13 @@ class YambApp {
             return;
         }
 
+        // Sortiraj po ukupnom broju odigranih partija (od najviše ka najmanje)
         rivals.sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses));
 
         const myName = this.playerName || gt('h2h_me') || "Ja";
         const myPhoto = localStorage.getItem('yamb_player_photo') || `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=333&color=E0C995`;
 
+        // Funkcija za dinamičko smanjivanje fonta ako je ime predugačko
         const getFontSize = (name) => {
             if (!name) return '0.9rem';
             if (name.length > 20) return '0.65rem';
@@ -464,12 +487,15 @@ class YambApp {
         container.innerHTML = html;
     }
 
+    // --- UNIVERZALNA KONTROLA VIBRACIJE (Capacitor + Web) ---
     vibrate(pattern) {
         if (!this.vibrationEnabled) return;
         
+        // 1. Pokušaj preko Capacitor Haptics (OBAVEZNO za iOS i izvorne Android aplikacije)
         if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics) {
             try {
                 if (Array.isArray(pattern)) {
+                    // Capacitor ne podržava nizove direktno u vibrate, pa šaljemo dužinu prvog impulsa
                     window.Capacitor.Plugins.Haptics.vibrate({ duration: pattern[0] });
                 } else if (pattern <= 20) {
                     window.Capacitor.Plugins.Haptics.impact({ style: 'Light' });
@@ -478,12 +504,13 @@ class YambApp {
                 } else {
                     window.Capacitor.Plugins.Haptics.vibrate({ duration: pattern });
                 }
-                return; 
+                return; // Prekini dalje izvršavanje ako Capacitor radi
             } catch (e) {
                 console.warn("Haptics greška:", e);
             }
         }
 
+        // 2. Fallback na standardni Web API (Radi na Android pretraživačima, ne radi na iOS)
         if (typeof navigator !== 'undefined' && navigator.vibrate) {
             try {
                 navigator.vibrate(pattern);
@@ -493,6 +520,7 @@ class YambApp {
         }
     }
 
+    // --- OBAVEZNA GOOGLE PRIJAVA ZA IGRANJE ---
     requireLogin() {
         if (!localStorage.getItem('yamb_uid')) {
             this.modal.alert(gt('auth_required') || "Morate se prijaviti preko Google-a da biste igrali ovu igru.", gt('auth_required_title') || "PRIJAVA OBAVEZNA");
@@ -526,7 +554,7 @@ class YambApp {
 
     getFullLocalStats() {
         const uid = localStorage.getItem('yamb_uid');
-        if (!uid) return {}; 
+        if (!uid) return {}; // Zabrana za goste
         
         let lsData = JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
         if (window.kvartalnaLiga) {
@@ -591,6 +619,7 @@ class YambApp {
         return Math.max(0, basePI - penalty); 
     }
 
+    // --- SISTEM PRIJATELJA ---
     async searchAndAddFriend() {
         if (!this.requireLogin()) return;
         const searchName = await this.modal.prompt(gt('prompt_search_friend') || "Unesi tačno ime igrača (Google ime) za pretragu:", gt('alert_search_title') || "PRETRAGA");
@@ -695,7 +724,9 @@ class YambApp {
             this.modal.alert(sentText, titleText);
         }
     }
+    // --------------------------
 
+    // --- SPECTATE FUNKCIJA ---
     async spectateGame(targetSocketId) {
         if (!this.requireLogin()) return;
 
@@ -908,19 +939,23 @@ class YambApp {
                         }
                     }
 
+                    // --- FIX: SINHRONIZACIJA KAZNI I RESETOVANIH NIZOVA SA SERVERA ---
                     let localStats = JSON.parse(localStorage.getItem('yamb_stats')) || this.stats || {};
                     let statsUpdated = false;
 
+                    // Ako server kaže da je trenutni niz manji (npr. server-side kazna ga je resetovala na 0)
                     if (data.currentWinStreak !== undefined && data.currentWinStreak < (localStats.currentWinStreak || 0)) {
                         localStats.currentWinStreak = data.currentWinStreak;
                         statsUpdated = true;
                     }
 
+                    // Preuzimanje server-side kaznenih poena
                     if (data.penaltyPoints !== undefined && data.penaltyPoints > (localStats.penaltyPoints || 0)) {
                         localStats.penaltyPoints = data.penaltyPoints;
                         statsUpdated = true;
                     }
 
+                    // Sinhronizacija max niza
                     if (data.maxWinStreak !== undefined && data.maxWinStreak > (localStats.maxWinStreak || 0)) {
                         localStats.maxWinStreak = data.maxWinStreak;
                         statsUpdated = true;
@@ -935,21 +970,25 @@ class YambApp {
                         }
                     }
 
+                    // --- FIX: SINHRONIZACIJA H2H STATISTIKE (RAGE QUIT KAZNE) ---
                     if (data.h2hStats) {
                         let localH2H = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
                         let h2hUpdated = false;
 
                         for (const [oppKey, cloudData] of Object.entries(data.h2hStats)) {
                             if (localH2H[oppKey]) {
+                                // Ako je server upisao poraz i resetovao niz, klijent to mora da prihvati
                                 if (cloudData.currentWinStreak === 0 && (localH2H[oppKey].currentWinStreak || 0) > 0) {
                                     localH2H[oppKey].currentWinStreak = 0;
                                     
+                                    // Ažuriraj poraze ako ih je server dodao
                                     if (cloudData.losses > localH2H[oppKey].losses) {
                                         localH2H[oppKey].losses = cloudData.losses;
                                     }
                                     h2hUpdated = true;
                                 }
                             } else {
+                                // Ako klijent nema ovog rivala, a server ima (npr. logovanje na novom uređaju)
                                 localH2H[oppKey] = cloudData;
                                 h2hUpdated = true;
                             }
@@ -1007,7 +1046,7 @@ class YambApp {
             console.log("Invite detected: " + roomId);
             this.inviteDetected = true;
 
-            if (!this.requireLogin()) return; 
+            if (!this.requireLogin()) return; // ZABRANA ZA GOSTE
 
             if (this.splashTimeout) { clearTimeout(this.splashTimeout); this.splashTimeout = null; }
             this.navigateTo('splash-screen'); 
@@ -1393,6 +1432,8 @@ class YambApp {
             if (score > this.stats.highscore) this.stats.highscore = score; 
         }
 
+        // KOMPETITIVNA STATISTIKA (Pobede, porazi i nizovi)
+        // SPREČAVAMO DA LOKALNE/HOTSEAT IGRE KVARE ONLINE STATISTIKU I VATRENI NIZ!
         if (this.onlineMode && !this.isSpectator) {
             if (resultType === 'win') {
                 this.stats.wins++; 
@@ -1404,14 +1445,16 @@ class YambApp {
                 this.stats.losses++; 
                 this.stats.currentWinStreak = 0; 
             } else if (resultType === 'draw') {
-                this.stats.currentWinStreak = 0; 
+                this.stats.currentWinStreak = 0; // Nerešeno prekida niz, ali NE dodaje poraz u ukupan W/L
             }
 
+            // Upis u H2H bazu
             if (this.players.length === 2) {
                 const oppName = this.players.find(p => p !== this.playerName);
                 if (oppName) {
                     let passMyScore = isTechnical ? 0 : score;
                     let passOppScore = isTechnical ? 0 : oppScore;
+                    // Šaljemo resultType umesto "isWin" da bi H2H znao šta da radi
                     this.updateH2HStats(oppName, this.currentOpponentPhoto || '', resultType, passMyScore, passOppScore, this.currentOpponentUid);
                 }
             }
@@ -3201,6 +3244,7 @@ class YambApp {
                  const isDraw = (finalResults.every(r => r.score === finalResults[0].score));
                  const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
                  
+                 // FIX: Rešavanje nerešenog rezultata kako se ne bi upisivao lažni poraz
                  if (isDraw) {
                      resultType = 'draw';
                  } else if (winner.name === myScoreEntry.name) {

@@ -20,16 +20,16 @@ class StateManager {
     navigateTo(pageId) { console.log(`Navigating to: ${pageId}`); }
 }
 
-// --- 2. STATS MANAGER ---
+// --- 2. STATS MANAGER (FIXED & UNIFIED) ---
 class StatsManager {
     constructor() {
         this.stats = this.loadStats() || {
             games: 0, totalGames: 0, wins: 0, losses: 0, currentWinStreak: 0, maxWinStreak: 0, currentLossStreak: 0, 
             balance: 1000, unlockedTrophies: [], highscore: 0, totalScoreSum: 0, penaltyPoints: 0,
-            tournamentWins: 0,
-            adProgress: {} 
+            tournamentWins: 0 
         };
         
+        // Osiguraj da imamo i games i totalGames zbog kompatibilnosti
         if (this.stats.totalGames && !this.stats.games) this.stats.games = this.stats.totalGames;
         this.stats.totalGames = this.stats.games;
 
@@ -44,8 +44,10 @@ class StatsManager {
     
     loadStats() { 
         try { 
+            // 1. Pokušavamo da učitamo glavni yamb_stats
             let s = JSON.parse(localStorage.getItem('yamb_stats')); 
             
+            // 2. Ako ne postoji, radimo MIGARCIJU sa starog diceGameStats (da igrači ne izgube podatke)
             if (!s) {
                 let staroS = JSON.parse(localStorage.getItem('diceGameStats'));
                 if (staroS) {
@@ -58,7 +60,6 @@ class StatsManager {
             if (s) {
                 if (s.highScore && !s.highscore) s.highscore = s.highScore;
                 if (s.totalGames && !s.games) s.games = s.totalGames;
-                if (!s.adProgress) s.adProgress = {}; 
             }
             return s;
         } catch(e) { return null; } 
@@ -92,7 +93,10 @@ class StatsManager {
     }
     
     saveStats() { 
+        // Sinhronizacija totalGames i games pre čuvanja (zbog kompatibilnosti unazad)
         this.stats.totalGames = this.stats.games;
+
+        // ČUVAMO SVE U JEDINSTVENI KLJUČ: yamb_stats
         localStorage.setItem('yamb_stats', JSON.stringify(this.stats)); 
         localStorage.setItem('yamb_dukati', this.stats.balance);
         
@@ -268,6 +272,7 @@ class EffectManager {
             }
         }
 
+        // --- SUPERNOVA EFEKAT ---
         if (type === 'supernova') {
             let targetTable = null;
             const tables = document.querySelectorAll('.player-table');
@@ -298,6 +303,7 @@ class EffectManager {
             }
         }
 
+        // --- NEON PULSE EFEKAT ---
         if (type === 'neon_pulse') {
             let targetTable = null;
             const tables = document.querySelectorAll('.player-table');
@@ -315,6 +321,7 @@ class EffectManager {
             }
         }
 
+        // --- DRONE SHOW (DRONOVI SA IMENOM V.2) ---
         if (type === 'drones') {
             const sky = document.createElement('div');
             sky.className = 'drone-night-sky';
@@ -364,6 +371,7 @@ class EffectManager {
             }, 8000);
         }
 
+        // --- THUNDERBRINGER EFEKAT ---
         if (type === 'thunder') {
             const flash = document.createElement('div');
             flash.className = 'anim-thunder'; 
@@ -386,6 +394,7 @@ class EffectManager {
             }, 4500); 
         }
 
+        // --- SVADBA V.2 EFEKAT ---
         if (type === 'balkan') {
             document.body.classList.add('fx-balkan');
             
@@ -406,6 +415,7 @@ class EffectManager {
                 window.app.soundMgr.balkanTrumpet();
             }
 
+            // OBRISANO POSLE TAČNO 8.5 SEKUNDI (Zajedno sa završetkom zvuka)
             setTimeout(() => { 
                 document.body.classList.remove('fx-balkan');
                 if(bg.parentNode) bg.remove(); 
@@ -416,6 +426,7 @@ class EffectManager {
             }, 8500); 
         }
         
+        // --- GRANDIOZNI VATROMET V.2 ---
         if (type === 'fireworks') {
              for(let i=0; i<12; i++) { 
                  setTimeout(() => this.spawnRealFirework(), i * 500 + Math.random() * 400); 
@@ -728,6 +739,7 @@ class SoundManager {
         });
     }
     
+    // --- PROCEDURALNI ZVUK GROMA ---
     thunder() {
         this.playSound(() => {
             const now = this.ctx.currentTime;
@@ -775,6 +787,7 @@ class SoundManager {
         });
     }
 
+    // --- ZVUK ZVIŽDUKA RAKETE PRI POLETANJU ---
     fireworkLaunch() {
         this.playSound(() => {
             const now = this.ctx.currentTime;
@@ -816,6 +829,7 @@ class SoundManager {
         });
     }
 
+    // --- ZVUK JAKE EKSPLOZIJE ---
     fireworkExplode() {
         this.playSound(() => {
             const now = this.ctx.currentTime;
@@ -845,6 +859,7 @@ class SoundManager {
         });
     }
 
+    // --- EPSKI HEROJSKI ZVUK (ZA DRONOVE V.2) ---
     epicDroneShow() {
         this.playSound(() => {
             const now = this.ctx.currentTime;
@@ -897,41 +912,49 @@ class SoundManager {
         });
     }
 
+    // --- BALKANSKA TRUBA (V.3) - GLAVNI REFREN UŽIČKOG KOLA ---
     balkanTrumpet() {
         this.playSound(() => {
             const now = this.ctx.currentTime;
             
+            // PRAVI REFREN UŽIČKOG KOLA (Visoki, najluđi deo!)
             const melody = [
+                // Prva fraza
                 { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
                 { f: 880.0, d: 0.12 }, { f: 987.8, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
                 { f: 740.0, d: 0.12 }, { f: 830.6, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
-                { f: 740.0, d: 0.12 }, { f: 659.3, d: 0.25 },
+                { f: 740.0, d: 0.12 }, { f: 659.3, d: 0.25 }, // pauza na E
                 
+                // Druga fraza
                 { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
                 { f: 880.0, d: 0.12 }, { f: 987.8, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
                 { f: 740.0, d: 0.12 }, { f: 659.3, d: 0.12 }, { f: 740.0, d: 0.12 }, { f: 830.6, d: 0.12 },
-                { f: 880.0, d: 0.35 }  
+                { f: 880.0, d: 0.35 }  // Završni A
             ];
 
             let t = now;
             
+            // Ponavljamo melodiju tačno 2 puta, što traje ukupno oko 8.3 sekunde
             for (let k = 0; k < 2; k++) {
                 melody.forEach(note => {
                     const osc = this.ctx.createOscillator();
                     const filter = this.ctx.createBiquadFilter();
                     const gain = this.ctx.createGain();
 
+                    // 'Square' oscilator najbolje simulira prodoran zvuk trube/harmonike
                     osc.type = 'square'; 
                     osc.frequency.value = note.f;
 
+                    // Lowpass filter da ton bude oštar ali da ne probija bubne opne
                     filter.type = 'lowpass';
                     filter.frequency.setValueAtTime(800, t);
                     filter.frequency.linearRampToValueAtTime(3500, t + note.d * 0.3);
                     filter.frequency.exponentialRampToValueAtTime(1000, t + note.d);
 
+                    // Glasnoća nota (kratki odsečni udarci tipični za kolo)
                     gain.gain.setValueAtTime(0, t);
-                    gain.gain.linearRampToValueAtTime(0.20, t + 0.02); 
-                    gain.gain.exponentialRampToValueAtTime(0.01, t + note.d - 0.02); 
+                    gain.gain.linearRampToValueAtTime(0.20, t + 0.02); // Brz ulazak
+                    gain.gain.exponentialRampToValueAtTime(0.01, t + note.d - 0.02); // Brzo stišavanje
 
                     osc.connect(filter);
                     filter.connect(gain);
@@ -940,9 +963,11 @@ class SoundManager {
                     osc.start(t);
                     osc.stop(t + note.d);
 
+                    // Razmak između nota za pravi stakato skok
                     t += note.d + 0.02; 
                 });
                 
+                // Pauza pre ponavljanja
                 t += 0.2;
             }
         });
@@ -960,23 +985,12 @@ class ShopManager {
         this.container = document.getElementById(config.containerId);
         this.balanceEl = document.getElementById(config.balanceId);
         
+        // NOVO: Odvojeno čuvanje za teme da bi radilo sa game.js
         this.unlockKey = (this.type === 'theme') ? 'yamb_unlocked_themes' : 'yamb_unlocked';
         
-        let savedUnlocked = [];
-        try { savedUnlocked = JSON.parse(localStorage.getItem(this.unlockKey)); } catch(e) {}
-        if (!Array.isArray(savedUnlocked)) savedUnlocked = [];
-
-        let opstiNiz = [];
-        try { opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')); } catch(e) {}
-        if (!Array.isArray(opstiNiz)) opstiNiz = [];
-
-        let cloudSkins = [];
-        if (window.statsManager && window.statsManager.stats && window.statsManager.stats.unlockedSkins) {
-            if (Array.isArray(window.statsManager.stats.unlockedSkins)) {
-                cloudSkins = window.statsManager.stats.unlockedSkins;
-            }
-        }
-        
+        let savedUnlocked = JSON.parse(localStorage.getItem(this.unlockKey)) || [];
+        let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
+        let cloudSkins = (window.statsManager && window.statsManager.stats.unlockedSkins) ? window.statsManager.stats.unlockedSkins : [];
         savedUnlocked = [...new Set([...savedUnlocked, ...opstiNiz, ...cloudSkins])];
         
         if (this.type === 'theme') {
@@ -984,7 +998,7 @@ class ShopManager {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
         } else {
-            ['default', 'confetti'].forEach(item => {
+            ['default', 'confetti', 'dark', 'light', 'medium', 'winter'].forEach(item => {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
         }
@@ -1057,7 +1071,7 @@ class ShopManager {
                     visualHtml = `<div class="icon">${item.icon}</div>`;
                 }
 
-                const itemName = resolveText(item.title) || resolveText(item.name) || '';
+                const itemName = resolveText(item.title) || resolveText(item.name);
                 const itemDesc = resolveText(item.desc);
 
                 let priceHtml = '';
@@ -1067,7 +1081,8 @@ class ShopManager {
                     if (isUnlocked) {
                         priceHtml = `<div class="price">${_safeT('btn_bought')}</div>`;
                     } else {
-                        if (item.adsRequired) {
+                        // NOVO: Provera da li se otključava reklamama
+                        if (item.adUnlock) {
                             priceHtml = `<div class="price" style="color: var(--text-muted); font-size: 0.75rem;">Gledaj 📺 za otključavanje</div>`;
                         } else {
                             let price = item.price;
@@ -1092,14 +1107,10 @@ class ShopManager {
                         const reqMet = !item.req || this.unlocked.includes(item.req);
                         
                         if (reqMet) {
-                            if (item.adsRequired) {
-                                let adProgress = 0;
-                                if (window.statsManager && window.statsManager.stats && window.statsManager.stats.adProgress) {
-                                    adProgress = window.statsManager.stats.adProgress[item.id] || 0;
-                                } else {
-                                    adProgress = parseInt(localStorage.getItem(`yamb_adprogress_${item.id}`)) || 0;
-                                }
-                                btnHtml = `<button class="btn-action btn-ad-state-aware" style="background: linear-gradient(45deg, #FF9800, #F57C00); color: white; border: none; border-radius: 8px; padding: 5px 10px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0px rgba(0,0,0,0.3);" onclick="shop.watchAdForUnlock('${item.id}', ${item.adsRequired})">📺 ${adProgress} / ${item.adsRequired}</button>`;
+                            // NOVO: Logika za dugme koje otključava reklamama
+                            if (item.adUnlock) {
+                                let adProgress = parseInt(localStorage.getItem(`yamb_adprogress_${item.id}`)) || 0;
+                                btnHtml = `<button class="btn-action btn-ad-state-aware" style="background: linear-gradient(45deg, #FF9800, #F57C00); color: white; border: none; border-radius: 8px; padding: 5px 10px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0px rgba(0,0,0,0.3);" onclick="shop.watchAdForUnlock('${item.id}', ${item.adUnlock})">📺 ${adProgress} / ${item.adUnlock}</button>`;
                             } else {
                                 let currentPrice = this.discountedItems[item.id] ? Math.floor(item.price * 0.8) : item.price;
                                 const safeName = itemName.replace(/'/g, "\\'"); 
@@ -1253,6 +1264,7 @@ class ShopManager {
         }
     }
     
+    // NOVO: Funkcija za otključavanje predmeta/teme gledanjem serije reklama
     async watchAdForUnlock(id, target) {
         const adCtrl = this.getAdController();
         if (adCtrl) {
@@ -1267,28 +1279,14 @@ class ShopManager {
             }
             const success = await adCtrl.showRewardVideo();
             if (success) {
-                let stats = window.statsManager ? window.statsManager.stats : null;
-                let progress = 0;
-                
-                if (stats && stats.adProgress) {
-                    stats.adProgress[id] = (stats.adProgress[id] || 0) + 1;
-                    progress = stats.adProgress[id];
-                    window.statsManager.saveStats();
-                } else {
-                    progress = parseInt(localStorage.getItem(`yamb_adprogress_${id}`)) || 0;
-                    progress++;
-                    localStorage.setItem(`yamb_adprogress_${id}`, progress);
-                }
+                let progress = parseInt(localStorage.getItem(`yamb_adprogress_${id}`)) || 0;
+                progress++;
                 
                 if (progress >= target) {
+                    // Otključano
                     this.unlocked.push(id);
                     localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
-                    
                     localStorage.removeItem(`yamb_adprogress_${id}`);
-                    if (stats && stats.adProgress) {
-                        delete stats.adProgress[id];
-                        window.statsManager.saveStats();
-                    }
 
                     let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
                     if (!opstiNiz.includes(id)) {
@@ -1299,11 +1297,13 @@ class ShopManager {
                     if(window.app && window.app.soundMgr) window.app.soundMgr.trophy();
                     
                     if (typeof window.showNotification === 'function') {
-                        window.showNotification("USPEŠNO!", "Skin je uspešno otključan!");
+                        window.showNotification("USPEŠNO!", "Tema je uspešno otključana!");
                     } else if (window.modalManager && window.modalManager.overlay) {
-                        window.modalManager.alert("Skin je uspešno otključan!", "USPEŠNO!");
+                        window.modalManager.alert("Tema je uspešno otključana!", "USPEŠNO!");
                     }
                 } else {
+                    // Samo napredak
+                    localStorage.setItem(`yamb_adprogress_${id}`, progress);
                     if(window.app && window.app.soundMgr) window.app.soundMgr.win();
                 }
                 this.render();
@@ -1361,7 +1361,7 @@ class ShopManager {
     }
 }
 
-// --- 7. ADMOB CONTROLLER ---
+// --- 7. ADMOB CONTROLLER (SAMO KLASIČAN REWARD I INTERSTITIAL) ---
 class AdMobController {
     constructor() {
         this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
@@ -1528,8 +1528,6 @@ class AdMobController {
     updateUI(ready) {
         this.uiSelectors.forEach(selector => {
             const buttons = document.querySelectorAll(selector);
-            if (!buttons.length) return; 
-            
             buttons.forEach(btn => {
                 if (ready) {
                     btn.classList.remove('disabled', 'ad-loading'); btn.disabled = false; btn.style.opacity = '1'; btn.style.filter = 'none';
@@ -1585,6 +1583,7 @@ window.effectManager = new EffectManager();
 document.addEventListener('DOMContentLoaded', () => {
     window.adMobGlobal.initialize();
 
+    // --- GLOBALNI CLICK LISTENER ZA UI ZVUKOVE ---
     document.body.addEventListener('click', function(event) {
         const target = event.target.closest('button, .mode-btn, .btn-square, .btn-special-square, .hs-tab-btn, .cm-btn, .chat-float-btn, .back-btn, .close-btn');
 
@@ -1595,6 +1594,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const hasIgnoreClass = ignoreClasses.some(cls => target.classList.contains(cls));
             const hasIgnoreId = ignoreIds.includes(target.id);
 
+            // FIX: Potpuno uklonjen 'new SoundManager()' fallback koji je izazivao krahiranje AudioContext-a!
             if (!hasIgnoreClass && !hasIgnoreId) {
                 if (window.app && window.app.soundMgr) {
                     window.app.soundMgr.click();
