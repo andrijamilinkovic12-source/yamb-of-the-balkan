@@ -61,11 +61,16 @@ const SHOP_DATA = {
         { id: 'silver_titanium', name: { sr: 'Crni Titanijum', en: 'Dark Titanium' }, price: 7500, category: { sr: '🥈 SREBRNA KOLEKCIJA', en: '🥈 SILVER COLLECTION' } },
         { id: 'silver_chrome', name: { sr: 'Hrom Ogledalo', en: 'Chrome Mirror' }, price: 8000, category: { sr: '🥈 SREBRNA KOLEKCIJA', en: '🥈 SILVER COLLECTION' } },
         
-        // --- MATERIJALI I TEKSTURE (Korigovane cene zbog novih kolekcija) ---
+        // --- 🥇 ZLATNA KOLEKCIJA ---
+        { id: 'gold_classic', name: { sr: 'Čisto Zlato', en: 'Pure Gold' }, price: 10000, category: { sr: '🥇 ZLATNA KOLEKCIJA', en: '🥇 GOLD COLLECTION' } },
+        { id: 'gold_rose', name: { sr: 'Roze Zlato', en: 'Rose Gold' }, price: 12000, category: { sr: '🥇 ZLATNA KOLEKCIJA', en: '🥇 GOLD COLLECTION' } },
+        { id: 'gold_ancient', name: { sr: 'Zlato Inka', en: 'Inca Gold' }, price: 14000, category: { sr: '🥇 ZLATNA KOLEKCIJA', en: '🥇 GOLD COLLECTION' } },
+        { id: 'gold_midas', name: { sr: 'Midasov Dodir', en: 'Midas Touch' }, price: 16000, category: { sr: '🥇 ZLATNA KOLEKCIJA', en: '🥇 GOLD COLLECTION' } },
+
+        // --- MATERIJALI I TEKSTURE (Stari Gold uklonjen, ostali korigovani) ---
         { id: 'wood', name: { sr: 'Hrast', en: 'Oak' }, price: 9000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
         { id: 'marble', name: { sr: 'Carrara Mermer', en: 'Carrara Marble' }, price: 10000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
         { id: 'carbon', name: { sr: 'Karbon', en: 'Carbon' }, price: 12000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
-        { id: 'gold', name: { sr: 'Carsko Zlato', en: 'Imperial Gold' }, price: 15000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
         
         { id: 'neon_blue', name: { sr: 'Cyber Blue', en: 'Cyber Blue' }, price: 18000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
         { id: 'neon_pink', name: { sr: 'Synthwave', en: 'Synthwave' }, price: 18000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
@@ -89,9 +94,9 @@ const SHOP_DATA = {
         { id: 'fireflies', name: { sr: 'Magični Svici', en: 'Magic Fireflies' }, price: 5000, desc: { sr: 'Nežne svetleće kuglice.', en: 'Gentle glowing lights.' }, duration: '5s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-fireflies', innerHtml: '' },
         { id: 'bubbles', name: { sr: 'Magični Mehurići', en: 'Magic Bubbles' }, price: 8000, desc: { sr: 'Svetlucavi mehurići koji lete i pucaju.', en: 'Shimmering bubbles floating and popping.' }, duration: '5s', category: { sr: '🎉 STANDARDNE PROSLAVE', en: '🎉 STANDARD CELEBRATIONS' }, cssClass: 'prev-bubbles', innerHtml: '' },
         { id: 'ice_age', name: { sr: 'Ledeno Doba', en: 'Ice Age' }, price: 12000, desc: { sr: 'Tabla se zaledi kada dobijete Yamb.', en: 'Board freezes when you get Yamb.' }, duration: '8s', category: { sr: '💎 ATMOSFERA & STIL', en: '💎 ATMOSPHERE & STYLE' }, cssClass: 'prev-glass', innerHtml: '' },
-        { id: 'black_hole', name: { sr: 'Crna Rupa', en: 'Black Hole' }, price: 15000, desc: { sr: 'Guta tablu unutar vatrene crne rupe.', en: 'Sucks the board into a fiery black hole.' }, duration: '6s', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' }, cssClass: 'prev-black-hole', innerHtml: '<div class=\"bh-ring-prev\"></div>' },
-        { id: 'supernova', name: { sr: 'Supernova', en: 'Supernova' }, price: 18000, desc: { sr: 'Kosmička eksplozija zvezde pri osvajanju Yamba.', en: 'Cosmic star explosion on Yamb.' }, duration: '7.5s', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' }, cssClass: 'prev-supernova', innerHtml: '<div class=\"sn-ring-prev\"></div>' },
-        { id: 'neon_pulse', name: { sr: 'Neon Puls', en: 'Neon Pulse' }, price: 15000, desc: { sr: 'Svetleće cyberpunk linije preko cele table pri osvajanju Yamba.', en: 'Glowing cyberpunk lines across the board on Yamb.' }, duration: '5s', category: { sr: '💎 ATMOSFERA & STIL', en: '💎 ATMOSPHERE & STYLE' }, cssClass: 'prev-neon', innerHtml: '<div class=\"neon-line\"></div>' },
+        { id: 'black_hole', name: { sr: 'Crna Rupa', en: 'Black Hole' }, price: 15000, desc: { sr: 'Guta tablu unutar vatrene crne rupe.', en: 'Sucks the board into a fiery black hole.' }, duration: '6s', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' }, cssClass: 'prev-black-hole', innerHtml: '<div class="bh-ring-prev"></div>' },
+        { id: 'supernova', name: { sr: 'Supernova', en: 'Supernova' }, price: 18000, desc: { sr: 'Kosmička eksplozija zvezde pri osvajanju Yamba.', en: 'Cosmic star explosion on Yamb.' }, duration: '7.5s', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' }, cssClass: 'prev-supernova', innerHtml: '<div class="sn-ring-prev"></div>' },
+        { id: 'neon_pulse', name: { sr: 'Neon Puls', en: 'Neon Pulse' }, price: 15000, desc: { sr: 'Svetleće cyberpunk linije preko cele table pri osvajanju Yamba.', en: 'Glowing cyberpunk lines across the board on Yamb.' }, duration: '5s', category: { sr: '💎 ATMOSFERA & STIL', en: '💎 ATMOSPHERE & STYLE' }, cssClass: 'prev-neon', innerHtml: '<div class="neon-line"></div>' },
         { id: 'thunder', name: { sr: 'Gromovnik', en: 'Thunderbringer' }, price: 20000, desc: { sr: 'Masivni udar groma uz produženi potres ekrana.', en: 'Massive thunder strike with extended screen shake.' }, duration: '4.5s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, req: 'sveti_ilija', reqName: { sr: 'Sveti Ilija', en: 'Saint Elijah' }, cssClass: 'prev-thunder', innerHtml: '' },
         { id: 'balkan', name: { sr: 'Svadba', en: 'Wedding' }, price: 25000, desc: { sr: 'Kafanski stolnjak, 4 trube, kiša para i proceduralno Užičko kolo (V.2).', en: 'Kafana tablecloth, 4 trumpets, money rain and fast folk music (V.2).' }, duration: '8.5s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-balkan', innerHtml: '' },
         { id: 'fireworks', name: { sr: 'Grandiozni Vatromet', en: 'Grand Fireworks' }, price: 30000, desc: { sr: 'Eksplozija boja za pobednike (V.2 sa zvukom i blicem).', en: 'Explosion of colors for winners (V.2).' }, duration: '7s', category: { sr: '⚡ SPEKTAKL & ZABAVA', en: '⚡ SPECTACLE & FUN' }, cssClass: 'prev-fireworks', innerHtml: '' },
@@ -112,7 +117,7 @@ const SHOP_DATA = {
     TROPHIES: [
         { id: 'first_play', icon: '🐣', title: { sr: 'Prvo Bacanje', en: 'First Roll' }, desc: { sr: 'Završi prvu partiju.', en: 'Finish your first game.' }, reward: 500, category: { sr: 'POČETAK', en: 'START' } },
         { id: 'apprentice', icon: '🔨', title: { sr: 'Šegrt', en: 'Apprentice' }, desc: { sr: 'Odigraj 10 partija.', en: 'Play 10 games.' }, reward: 1000, category: { sr: 'NAPREDAK', en: 'PROGRESS' } },
-        { id: 'kafana', icon: '🍻', title: { sr: 'Kafanski Sto', en: 'Pub Table' }, desc: { sr: 'Odigraj partiju u \"2 Igrača\" modu.', en: 'Play a \"2 Player\" game.' }, reward: 500, category: { sr: 'DRUŠTVO', en: 'SOCIAL' } },
+        { id: 'kafana', icon: '🍻', title: { sr: 'Kafanski Sto', en: 'Pub Table' }, desc: { sr: 'Odigraj partiju u "2 Igrača" modu.', en: 'Play a "2 Player" game.' }, reward: 500, category: { sr: 'DRUŠTVO', en: 'SOCIAL' } },
         { id: 'score_1000', icon: '👑', title: { sr: 'Vojvoda', en: 'Duke' }, desc: { sr: 'Ostvari rezultat preko 1000.', en: 'Score over 1000.' }, reward: 2500, category: { sr: 'REZULTATI', en: 'RESULTS' } },
         { id: 'grandmaster', icon: '🎩', title: { sr: 'Velemajstor', en: 'Grandmaster' }, desc: { sr: 'Ostvari rezultat preko 1250.', en: 'Score over 1250.' }, reward: 5000, category: { sr: 'REZULTATI', en: 'RESULTS' } },
         { id: 'legend', icon: '🌟', title: { sr: 'Legenda', en: 'Legend' }, desc: { sr: 'Ostvari rezultat preko 2000.', en: 'Score over 2000.' }, reward: 7500, category: { sr: 'REZULTATI', en: 'RESULTS' } },
