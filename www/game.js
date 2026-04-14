@@ -726,6 +726,61 @@ class YambApp {
     }
     // --------------------------
 
+    loadHallOfFame() {
+        const listEl = document.getElementById('ws-hof-list');
+        if (listEl) {
+            listEl.innerHTML = `<div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>`;
+        }
+        
+        this.initSocketConnection();
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('get_weekly_top3');
+        } else {
+            setTimeout(() => {
+                if (this.socket && this.socket.connected) {
+                    this.socket.emit('get_weekly_top3');
+                }
+            }, 500);
+        }
+    }
+
+    renderHallOfFame(data) {
+        const listEl = document.getElementById('ws-hof-list');
+        if (!listEl) return;
+
+        if (!data || data.length === 0) {
+            listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">Još uvek nema rezultata za ovu nedelju.</div>`;
+            return;
+        }
+
+        let html = '';
+        const medals = ['🥇', '🥈', '🥉'];
+        const colors = ['#FFD700', '#C0C0C0', '#CD7F32'];
+
+        data.sort((a, b) => b.score - a.score).slice(0, 3).forEach((p, index) => {
+            const medal = medals[index] || '';
+            const color = colors[index] || '#fff';
+            const avatar = p.photoUrl && p.photoUrl.length > 5 
+                ? p.photoUrl 
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`;
+
+            html += `
+                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.2rem; font-weight: 900; width: 25px; text-align: center;">${medal}</span>
+                        <img src="${avatar}" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid ${color}; object-fit: cover;">
+                        <span style="color: var(--text-main); font-weight: 800; font-size: 0.85rem; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span style="color: ${color}; font-weight: 900; font-size: 0.95rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${p.score}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        listEl.innerHTML = html;
+    }
+
     // --- SPECTATE FUNKCIJA ---
     async spectateGame(targetSocketId) {
         if (!this.requireLogin()) return;
@@ -1746,6 +1801,9 @@ class YambApp {
                 }
             }, 5000);
         }
+
+        const hofContainer = document.getElementById('ws-hall-of-fame');
+        if (hofContainer) hofContainer.classList.add('hidden');
         
         this.joinPrivateGame(nickname, roomId, true); 
     }
@@ -1846,6 +1904,9 @@ class YambApp {
         const friendsContainer = document.getElementById('friends-list-container');
         if (friendsContainer && !isHost) friendsContainer.classList.add('hidden');
 
+        const hofContainer = document.getElementById('ws-hall-of-fame');
+        if (hofContainer) hofContainer.classList.add('hidden');
+
         this.initSocketConnection();
         this.setupSocketListeners(nickname); 
 
@@ -1908,6 +1969,12 @@ class YambApp {
         
         const shareArea = document.getElementById('share-area');
         if (shareArea) shareArea.classList.add('hidden'); 
+
+        const hofContainer = document.getElementById('ws-hall-of-fame');
+        if (hofContainer) {
+            hofContainer.classList.remove('hidden');
+            this.loadHallOfFame();
+        }
         
         this.initSocketConnection();
         this.setupSocketListeners(nickname); 
@@ -2002,6 +2069,16 @@ class YambApp {
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
         this.socket.off('spectate_started');
+
+        this.socket.off('global_highscores_data');
+        this.socket.on('global_highscores_data', (data) => {
+            if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list');
+        });
+
+        this.socket.off('weekly_top3_data');
+        this.socket.on('weekly_top3_data', (data) => {
+            this.renderHallOfFame(data);
+        });
 
         this.socket.off('opponent_connection_lost');
         this.socket.on('opponent_connection_lost', () => {
@@ -2205,7 +2282,24 @@ class YambApp {
                 console.log("📥 Stiglo osveženo stanje. Primenjujem...");
                 
                 if (this.isSpectator && data.players) {
-                    this.players = data.players;
+                    // --- FIX: Čišćenje i dekodiranje imena igrača za gledaoce ---
+                    this.players = data.players.map(p => {
+                        // 1. Ako server pošalje objekat (sprečava ispis "[object Object]")
+                        if (typeof p === 'object' && p !== null) {
+                            return p.name ? decodeURIComponent(p.name) : "Igrač";
+                        }
+                        
+                        // 2. Ako je string enkodiran (sprečava hijeroglife tipa %20, %C4%87)
+                        try {
+                            let decoded = decodeURIComponent(p);
+                            // U slučaju duplog enkodiranja
+                            if (decoded.includes('%')) decoded = decodeURIComponent(decoded);
+                            return decoded;
+                        } catch(e) {
+                            return p; // Ako dekodiranje ne uspe, vrati original
+                        }
+                    });
+                    // -------------------------------------------------------------
                     this.createScoreTables();
                 }
 
