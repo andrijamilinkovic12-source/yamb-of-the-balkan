@@ -51,22 +51,32 @@ const SHOP_DATA = {
         { id: 'classic_red', name: { sr: 'Kazino Crvena', en: 'Casino Red' }, price: 1500, category: { sr: '🎩 KLASIKA & ELEGANCIJA', en: '🎩 CLASSIC & ELEGANCE' } },
         { id: 'classic_blue', name: { sr: 'Deep Blue', en: 'Deep Blue' }, price: 1500, category: { sr: '🎩 KLASIKA & ELEGANCIJA', en: '🎩 CLASSIC & ELEGANCE' } },
         { id: 'classic_black', name: { sr: 'Crna Noć', en: 'Black Night' }, price: 2000, category: { sr: '🎩 KLASIKA & ELEGANCIJA', en: '🎩 CLASSIC & ELEGANCE' } },
-        { id: 'wood', name: { sr: 'Hrast', en: 'Oak' }, price: 3000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
-        { id: 'marble', name: { sr: 'Carrara Mermer', en: 'Carrara Marble' }, price: 3500, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
-        { id: 'carbon', name: { sr: 'Karbon', en: 'Carbon' }, price: 4000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
-        { id: 'gold', name: { sr: 'Carsko Zlato', en: 'Imperial Gold' }, price: 5000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
-        { id: 'neon_blue', name: { sr: 'Cyber Blue', en: 'Cyber Blue' }, price: 6000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
-        { id: 'neon_pink', name: { sr: 'Synthwave', en: 'Synthwave' }, price: 6000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
-        { id: 'neon_green', name: { sr: 'Matrix', en: 'Matrix' }, price: 6000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
-        { id: 'stealth', name: { sr: 'Stealth Mode', en: 'Stealth Mode' }, price: 8000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
-        { id: 'glass_clear', name: { sr: 'Čisti Kristal', en: 'Pure Crystal' }, price: 10000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
-        { id: 'glass_ruby', name: { sr: 'Krvavi Rubin', en: 'Blood Ruby' }, price: 12000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
-        { id: 'glass_emerald', name: { sr: 'Smaragd', en: 'Emerald' }, price: 12000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
-        { id: 'glass_sapphire', name: { sr: 'Safir', en: 'Sapphire' }, price: 12000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
-        { id: 'magma', name: { sr: 'Magma Core', en: 'Magma Core' }, price: 15000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
-        { id: 'galaxy', name: { sr: 'Galaksija', en: 'Galaxy' }, price: 18000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
-        { id: 'retro', name: { sr: 'Retro 8-Bit', en: 'Retro 8-Bit' }, price: 20000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
-        { id: 'hologram', name: { sr: 'Hologram', en: 'Hologram' }, price: 25000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } }
+        
+        // --- NOVA BRONZANA KOLEKCIJA ---
+        { id: 'bronze_antique', name: { sr: 'Antička Bronza', en: 'Antique Bronze' }, price: 2500, category: { sr: '🥉 BRONZANA KOLEKCIJA', en: '🥉 BRONZE COLLECTION' } },
+        { id: 'bronze_patina', name: { sr: 'Oksidirani Bakar', en: 'Oxidized Copper' }, price: 3000, category: { sr: '🥉 BRONZANA KOLEKCIJA', en: '🥉 BRONZE COLLECTION' } },
+        { id: 'bronze_steampunk', name: { sr: 'Steampunk Zupčanik', en: 'Steampunk Gear' }, price: 3500, category: { sr: '🥉 BRONZANA KOLEKCIJA', en: '🥉 BRONZE COLLECTION' } },
+        { id: 'bronze_spartan', name: { sr: 'Spartanski Štit', en: 'Spartan Shield' }, price: 4000, category: { sr: '🥉 BRONZANA KOLEKCIJA', en: '🥉 BRONZE COLLECTION' } },
+        { id: 'bronze_rose', name: { sr: 'Ružičasta Bronza', en: 'Rose Bronze' }, price: 4500, category: { sr: '🥉 BRONZANA KOLEKCIJA', en: '🥉 BRONZE COLLECTION' } },
+        { id: 'bronze_forge', name: { sr: 'Kovana Vatra', en: 'Forged Fire' }, price: 5000, category: { sr: '🥉 BRONZANA KOLEKCIJA', en: '🥉 BRONZE COLLECTION' } },
+        
+        // --- MATERIJALI I OSTALO ---
+        { id: 'wood', name: { sr: 'Hrast', en: 'Oak' }, price: 6000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
+        { id: 'marble', name: { sr: 'Carrara Mermer', en: 'Carrara Marble' }, price: 7000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
+        { id: 'carbon', name: { sr: 'Karbon', en: 'Carbon' }, price: 8000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
+        { id: 'gold', name: { sr: 'Carsko Zlato', en: 'Imperial Gold' }, price: 10000, category: { sr: '🪵 MATERIJALI & TEKSTURE', en: '🪵 MATERIALS & TEXTURES' } },
+        { id: 'neon_blue', name: { sr: 'Cyber Blue', en: 'Cyber Blue' }, price: 12000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
+        { id: 'neon_pink', name: { sr: 'Synthwave', en: 'Synthwave' }, price: 12000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
+        { id: 'neon_green', name: { sr: 'Matrix', en: 'Matrix' }, price: 12000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
+        { id: 'stealth', name: { sr: 'Stealth Mode', en: 'Stealth Mode' }, price: 15000, category: { sr: '👾 NEON & FUTURIZAM', en: '👾 NEON & FUTURISM' } },
+        { id: 'glass_clear', name: { sr: 'Čisti Kristal', en: 'Pure Crystal' }, price: 18000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
+        { id: 'glass_ruby', name: { sr: 'Krvavi Rubin', en: 'Blood Ruby' }, price: 20000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
+        { id: 'glass_emerald', name: { sr: 'Smaragd', en: 'Emerald' }, price: 20000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
+        { id: 'glass_sapphire', name: { sr: 'Safir', en: 'Sapphire' }, price: 20000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
+        { id: 'magma', name: { sr: 'Magma Core', en: 'Magma Core' }, price: 25000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
+        { id: 'galaxy', name: { sr: 'Galaksija', en: 'Galaxy' }, price: 30000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
+        { id: 'retro', name: { sr: 'Retro 8-Bit', en: 'Retro 8-Bit' }, price: 35000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
+        { id: 'hologram', name: { sr: 'Hologram', en: 'Hologram' }, price: 50000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } }
     ],
     
     EFFECTS: [
