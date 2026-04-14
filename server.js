@@ -987,7 +987,12 @@ io.on('connection', (socket) => {
                 
                 socket.emit('sync_state_response', {
                     roomId: roomId,
-                    players: state.players, 
+                    // --- FIX: Mapiramo Socket ID u pravo ime igrača ---
+                    players: state.players.map(id => {
+                        const pSocket = io.sockets.sockets.get(id);
+                        return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
+                    }),
+                    // --------------------------------------------------
                     allScores: state.allScores || createEmptyScores(),
                     currentPlayerIdx: state.turnIndex,
                     brojBacanja: state.brojBacanja || 0,
@@ -1190,6 +1195,38 @@ io.on('connection', (socket) => {
             console.error("Greška kod Dvorane Slavnih:", err);
         }
     });
+
+    // ==================================================================
+    // NOVO: TOP 3 ZA OVU NEDELJU (RANDOM ONLINE EKRAN)
+    // ==================================================================
+    socket.on('get_weekly_top3', async () => {
+        try {
+            if (!MONGO_URI) return;
+            
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const dayOfWeek = now.getDay() || 7; // Ponedeljak kao prvi dan (1) do nedelje (7)
+            const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
+
+            // Tražimo top 3 rezultata iz ove nedelje
+            const topScores = await Score.find({ date: { $gte: startOfWeek } })
+                                         .sort({ score: -1 })
+                                         .limit(3)
+                                         .lean();
+
+            // Formatiramo podatke onako kako game.js očekuje
+            const formattedTop3 = topScores.map(s => ({
+                name: s.playerName,
+                score: s.score,
+                photoUrl: s.photoUrl || ''
+            }));
+
+            socket.emit('weekly_top3_data', formattedTop3);
+        } catch (err) {
+            console.error("Greška pri dohvatanju Weekly Top 3:", err);
+        }
+    });
+    // ==================================================================
 
     socket.on('get_global_highscores', async (period) => {
         try {
@@ -1754,7 +1791,12 @@ io.on('connection', (socket) => {
                 
                 socket.emit('sync_state_response', {
                     roomId: roomId,
-                    players: state.players, 
+                    // --- FIX: Mapiramo Socket ID u pravo ime igrača ---
+                    players: state.players.map(id => {
+                        const pSocket = io.sockets.sockets.get(id);
+                        return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
+                    }),
+                    // --------------------------------------------------
                     allScores: state.allScores || createEmptyScores(),
                     currentPlayerIdx: state.turnIndex,
                     brojBacanja: state.brojBacanja || 0,
