@@ -405,15 +405,60 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     90%, 100% { opacity: 0; transform: translate(-50%, -70%) rotateX(0deg) scale(0.8); filter: blur(15px); letter-spacing: -10px; }
 }
 
+/* =========================================================
+   PRAVI DRON - QUADCOPTER EFEKAT
+   ========================================================= */
+
 .drone-dot {
-    position: fixed; width: 5px; height: 5px; border-radius: 50%;
-    z-index: 99905; pointer-events: none;
-    box-shadow: 0 0 8px currentColor, 0 0 15px currentColor;
+    position: fixed; 
+    width: 10px; 
+    height: 10px; 
+    background: #111; /* Tamno telo drona */
+    border-radius: 2px;
+    z-index: 99905; 
+    pointer-events: none;
+    
+    /* Box-shadow magija: 4 rotora raspoređena oko tela */
+    box-shadow: 
+        /* Fizički rotori (siva) */
+        -10px -10px 0 -3px #888,  
+         10px -10px 0 -3px #888,
+        -10px  10px 0 -3px #888,
+         10px  10px 0 -3px #888,
+        /* Svetlosni potisak ispod motora (neon plava iz tvoje teme) */
+        -10px -10px 6px 1px rgba(0, 212, 255, 0.8),
+         10px -10px 6px 1px rgba(0, 212, 255, 0.8),
+        -10px  10px 6px 1px rgba(0, 212, 255, 0.8),
+         10px  10px 6px 1px rgba(0, 212, 255, 0.8);
+         
     animation: droneFlyRandomV2 8s forwards ease-in-out;
 }
+
+/* Trepereća navigaciona lampica (Stroboskop) na sredini tela */
+.drone-dot::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 3px;
+    height: 3px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 2px #fff, 0 0 15px 4px #00d4ff;
+    animation: strobeLight 0.6s infinite alternate;
+}
+
+/* Animacija za LED blic */
+@keyframes strobeLight {
+    0%, 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
+    50%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Ažurirana putanja leta: dodato blago naginjanje (rotate) kako bi let delovao organski */
 @keyframes droneFlyRandomV2 {
-    0% { transform: translate(var(--sx), 110vh) scale(0); opacity: 0; }
-    10% { opacity: 1; transform: translate(var(--dx), 70vh) scale(1.5); }
-    30%, 80% { transform: translate(var(--dx2), var(--dy2)) scale(1); opacity: 0.9; }
-    90%, 100% { transform: translate(var(--dx3), -20vh) scale(0.5); opacity: 0; }
+    0% { transform: translate(var(--sx), 110vh) scale(0) rotate(-15deg); opacity: 0; }
+    10% { opacity: 1; transform: translate(var(--dx), 70vh) scale(1.5) rotate(15deg); }
+    30%, 80% { transform: translate(var(--dx2), var(--dy2)) scale(1) rotate(-5deg); opacity: 0.9; }
+    90%, 100% { transform: translate(var(--dx3), -20vh) scale(0.5) rotate(10deg); opacity: 0; }
 }
