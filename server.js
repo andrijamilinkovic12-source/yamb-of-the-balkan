@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX
 
 require('dotenv').config(); 
 
@@ -1203,16 +1203,17 @@ io.on('connection', (socket) => {
                         ]
                     } 
                 },
-                { $sort: { score: -1 } },
+                // Osiguravamo da je tip zapisa tačan pre sortiranja
+                { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
+                { $sort: { numScore: -1 } },
                 {
                     $group: {
                         _id: { $ifNull: ["$playerId", "$uid"] },
-                        playerName: { $first: "$playerName" },
-                        score: { $first: "$score" },
-                        photoUrl: { $first: "$photoUrl" }
+                        bestEntry: { $first: "$$ROOT" } // Uzimamo celokupan ispravan dokument!
                     }
                 },
-                { $sort: { score: -1 } },
+                { $replaceRoot: { newRoot: "$bestEntry" } }, // Vraćamo strukturu dokumenta
+                { $sort: { numScore: -1 } },
                 { $limit: 3 }
             ]);
 
@@ -1256,28 +1257,25 @@ io.on('connection', (socket) => {
                 matchFilter.date = { $gte: startOfMonth };
             }
 
-            // KORISTIMO AGREGACIJU DA GRUPIŠEMO SKOROVE PO IGRAČU
+            // KORISTIMO AGREGACIJU SA NAJSTRIKTNIJOM KONVERZIJOM DA NE PROPUSTI MAX SCORE
             const scores = await Score.aggregate([
                 { $match: matchFilter },
-                { $sort: { score: -1 } }, 
+                { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
+                { $sort: { numScore: -1 } }, 
                 {
                     $group: {
                         _id: { $ifNull: ["$playerId", "$uid"] }, 
-                        playerId: { $first: { $ifNull: ["$playerId", "$uid"] } },
-                        playerName: { $first: "$playerName" },
-                        score: { $first: "$score" }, 
-                        photoUrl: { $first: "$photoUrl" },
-                        date: { $first: "$date" },
-                        mode: { $first: "$mode" }
+                        bestEntry: { $first: "$$ROOT" } // 100% garancija da uzima dokument sa NAJVEĆIM brojem
                     }
                 },
-                { $sort: { score: -1 } }, 
+                { $replaceRoot: { newRoot: "$bestEntry" } },
+                { $sort: { numScore: -1 } }, 
                 { $limit: 100 }
             ]);
             
             const formattedScores = scores.map(s => ({
                 ...s,
-                uid: s.playerId 
+                uid: s.playerId || s.uid 
             }));
 
             socket.emit('global_highscores_data', formattedScores);
@@ -1293,7 +1291,11 @@ io.on('connection', (socket) => {
 
             if (typeof data.score !== 'number' || isNaN(data.score)) return; 
 
-            if (!socket.playerId || socket.playerId.startsWith('guest_') || socket.playerId.length < 20) return;
+            // NOVO: RACE CONDITION FIX ZA OFFLINE SYNC
+            // Dozvoljavamo povlačenje UID-a iz data objekta ukoliko se socket tek povezao i kasni
+            const finalUid = socket.playerId || data.uid || data.playerId;
+
+            if (!finalUid || finalUid.startsWith('guest_') || finalUid.length < 20) return;
 
             if (data.score < 0 || data.score > MAX_SCORE) {
                 console.log(`🚨 HACK POKUŠAJ (Value): ${socket.id} šalje nemoguć skor: ${data.score}`);
@@ -1307,11 +1309,11 @@ io.on('connection', (socket) => {
                 console.log(`⚠️ UPOZORENJE (Speed): Trajanje: ${duration}ms. Ipak upisujem skor: ${data.score}`);
             }
 
-            let finalName = socket.playerName || "Nepoznat Igrač";
-            let finalPhoto = socket.photoUrl || '';
+            let finalName = socket.playerName || data.playerName || "Nepoznat Igrač";
+            let finalPhoto = socket.photoUrl || data.photoUrl || '';
             
             const newScore = new Score({
-                playerId: socket.playerId,
+                playerId: finalUid, // Koristimo uvek utvrđeni, validni UID
                 playerName: finalName,
                 score: data.score,
                 mode: data.mode || 'Solo',
@@ -1320,7 +1322,7 @@ io.on('connection', (socket) => {
             });
             
             await newScore.save();
-            console.log(`✅ USPEŠAN UPIS: ${finalName} (UID: ${socket.playerId}) -> ${data.score} (${newScore.mode})`);
+            console.log(`✅ USPEŠAN UPIS: ${finalName} (UID: ${finalUid}) -> ${data.score} (${newScore.mode})`);
             
             delete gameStartTimes[socket.id];
 
