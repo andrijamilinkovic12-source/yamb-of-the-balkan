@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI
 
 require('dotenv').config(); 
 
@@ -159,7 +159,7 @@ if (MONGO_URI) {
 
 // --- MODELI PODATAKA ---
 const ScoreSchema = new mongoose.Schema({
-    playerId: String, // <--- DODATO: Interni Google UID
+    playerId: String, 
     playerName: String,
     score: Number,
     mode: String, 
@@ -294,7 +294,6 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
         let updateInc = { penaltyPoints: penaltyAmount, losses: 1 };
         let updateSet = { currentWinStreak: 0 };
 
-        // FIX: Koristimo siguran h2hKey (UID ili sanitizovano ime)
         if (h2hKey) {
             updateInc[`h2hStats.${h2hKey}.losses`] = 1;
             updateSet[`h2hStats.${h2hKey}.currentWinStreak`] = 0;
@@ -316,13 +315,11 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
 // --- POMOĆNA FUNKCIJA: DINAMIČKA KAZNA NA OSNOVU PROGRESA IGRE ---
 function getDynamicPenalty(roomId) {
     const state = roomState[roomId];
-    if (!state) return 50; // Fallback
+    if (!state) return 50; 
 
-    // Svaki igrač ima 78 polja (6 kolona x 13 redova), ukupno 156 poteza u partiji
     const moves = state.moveCount || 0;
     const progress = (moves / 156) * 100;
     
-    // Do 80% igre kazna je 20, pred kraj igre kazna je 50
     return progress < 80 ? 20 : 50;
 }
 
@@ -348,8 +345,8 @@ function createEmptyScores() {
 // ==================================================================
 // --- SERVER-SIDE TURN TIMER I STATE LOGIC (AUTORITATIVNI TAJMER) ---
 // ==================================================================
-const TURN_TIME_LIMIT = 90000; // 90 sekundi
-const GRACE_PERIOD = 3000;     // 3 sekunde lufta za ping/lag
+const TURN_TIME_LIMIT = 90000; 
+const GRACE_PERIOD = 3000;     
 const TOTAL_TIMEOUT = TURN_TIME_LIMIT + GRACE_PERIOD;
 
 const roomTimers = {};
@@ -359,12 +356,10 @@ function startTurnTimer(roomId) {
     const state = roomState[roomId];
     if (!state) return;
 
-    stopTurnTimer(roomId); // Uvek očisti stari tajmer
+    stopTurnTimer(roomId); 
 
-    // Pronađi socket ID igrača koji je trenutno na potezu
     const currentPlayerSocketId = state.players[state.turnIndex];
 
-    // ---> DODATO: Beležimo tačno vreme početka poteza
     state.turnStartTime = Date.now(); 
 
     roomTimers[roomId] = setTimeout(() => {
@@ -383,7 +378,6 @@ function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
     const state = roomState[roomId];
     if (!state) return;
 
-    // Pronađi ko je pobednik (igrač koji NIJE neaktivan)
     const winnerSocketId = state.players.find(id => id !== inactivePlayerSocketId);
     
     if (winnerSocketId) {
@@ -392,7 +386,6 @@ function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
         
         const winnerSocket = io.sockets.sockets.get(winnerSocketId);
         
-        // FIX: Kreiranje istog H2H ključa kao na klijentu
         let h2hKey = null;
         if (winnerSocket) {
             let safeOppName = winnerSocket.playerName ? winnerSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
@@ -428,7 +421,7 @@ function generateTournamentBracket() {
         createMatch(shuffled[0], shuffled[1]), createMatch(shuffled[2], shuffled[3]),
         createMatch(shuffled[4], shuffled[5]), createMatch(shuffled[6], shuffled[7])
     ];
-    saveTournamentToDb(); // <-- SAČUVAJ U BAZU
+    saveTournamentToDb(); 
 }
 
 function advanceTournamentBracket(round, index, winnerObj) {
@@ -450,7 +443,7 @@ function advanceTournamentBracket(round, index, winnerObj) {
     else if (round === 'f') {
         tournamentState.status = 'finished';
     }
-    saveTournamentToDb(); // <-- SAČUVAJ U BAZU
+    saveTournamentToDb(); 
 }
 
 // ==================================================================
@@ -514,19 +507,14 @@ io.on('connection', (socket) => {
         if (state && roomTimers[roomId]) {
             const currentTurnPlayer = state.players[state.turnIndex];
             
-            // Ako igrač koji prijavljuje timeout NIJE onaj koji je na potezu
             if (socket.id !== currentTurnPlayer) {
-                // ---> DODATO: Proveravamo koliko je zaista vremena prošlo
                 const elapsed = Date.now() - (state.turnStartTime || 0);
                 
-                // TOTAL_TIMEOUT je 93000 (90s potez + 3s Grace Period)
                 if (elapsed >= TOTAL_TIMEOUT) {
                     console.log(`🛡️ SAFETY NET: Vreme zaista isteklo (${elapsed}ms). Prekidam!`);
                     handleTechnicalTimeout(roomId, currentTurnPlayer);
                 } else {
                     console.log(`⏳ SAFETY NET: Klijent žuri. Još uvek teče Grace Period. Preostalo: ${TOTAL_TIMEOUT - elapsed}ms`);
-                    // Server ignoriše klijenta, jer će originalni setTimeout(handleTechnicalTimeout) 
-                    // okinuti samostalno kada prođe tačno 93 sekunde.
                 }
             }
         }
@@ -937,7 +925,6 @@ io.on('connection', (socket) => {
                 if (pid) {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
 
-                    // FIX: Kreiranje istog H2H ključa kao na klijentu
                     let h2hKey = null;
                     const oppSocketId = roomState[activeRoomId].players.find(id => id !== socket.id);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
@@ -987,12 +974,10 @@ io.on('connection', (socket) => {
                 
                 socket.emit('sync_state_response', {
                     roomId: roomId,
-                    // --- FIX: Mapiramo Socket ID u pravo ime igrača ---
                     players: state.players.map(id => {
                         const pSocket = io.sockets.sockets.get(id);
                         return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
                     }),
-                    // --------------------------------------------------
                     allScores: state.allScores || createEmptyScores(),
                     currentPlayerIdx: state.turnIndex,
                     brojBacanja: state.brojBacanja || 0,
@@ -1197,7 +1182,7 @@ io.on('connection', (socket) => {
     });
 
     // ==================================================================
-    // NOVO: TOP 3 ZA OVU NEDELJU (RANDOM ONLINE EKRAN)
+    // TOP 3 ZA OVU NEDELJU (AGGREGATE FIX)
     // ==================================================================
     socket.on('get_weekly_top3', async () => {
         try {
@@ -1205,16 +1190,32 @@ io.on('connection', (socket) => {
             
             const now = new Date();
             now.setHours(0, 0, 0, 0);
-            const dayOfWeek = now.getDay() || 7; // Ponedeljak kao prvi dan (1) do nedelje (7)
+            const dayOfWeek = now.getDay() || 7; 
             const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
 
-            // Tražimo top 3 rezultata iz ove nedelje
-            const topScores = await Score.find({ date: { $gte: startOfWeek } })
-                                         .sort({ score: -1 })
-                                         .limit(3)
-                                         .lean();
+            const topScores = await Score.aggregate([
+                { 
+                    $match: { 
+                        date: { $gte: startOfWeek },
+                        $or: [
+                            { playerId: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } },
+                            { uid: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } }
+                        ]
+                    } 
+                },
+                { $sort: { score: -1 } },
+                {
+                    $group: {
+                        _id: { $ifNull: ["$playerId", "$uid"] },
+                        playerName: { $first: "$playerName" },
+                        score: { $first: "$score" },
+                        photoUrl: { $first: "$photoUrl" }
+                    }
+                },
+                { $sort: { score: -1 } },
+                { $limit: 3 }
+            ]);
 
-            // Formatiramo podatke onako kako game.js očekuje
             const formattedTop3 = topScores.map(s => ({
                 name: s.playerName,
                 score: s.score,
@@ -1228,18 +1229,19 @@ io.on('connection', (socket) => {
     });
     // ==================================================================
 
+    // ==================================================================
+    // GLOBALNA TOP LISTA (AGGREGATE FIX)
+    // ==================================================================
     socket.on('get_global_highscores', async (period) => {
         try {
             if (!MONGO_URI) return; 
 
-            // 1. NOVO: SERVERSKI FILTER (odbacujemo goste i kratke ID-eve direktno iz baze)
-            let filter = {
-                playerId: { 
-                    $exists: true, 
-                    $type: 'string', 
-                    $not: /guest/i,
-                    $regex: /.{20,}/ // Mora biti duže od 20 karaktera (Google UID format)
-                }
+            // Uključujemo i "playerId" i stari "uid" ako je ostao u bazi
+            let matchFilter = {
+                $or: [
+                    { playerId: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } },
+                    { uid: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } }
+                ]
             };
             
             const now = new Date();
@@ -1248,18 +1250,34 @@ io.on('connection', (socket) => {
             if (period === 'weekly') {
                 const dayOfWeek = now.getDay() || 7; 
                 const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
-                filter.date = { $gte: startOfWeek };
+                matchFilter.date = { $gte: startOfWeek };
             } else if (period === 'monthly') {
                 const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-                filter.date = { $gte: startOfMonth };
+                matchFilter.date = { $gte: startOfMonth };
             }
 
-            const scores = await Score.find(filter).sort({ score: -1 }).limit(100).lean();
+            // KORISTIMO AGREGACIJU DA GRUPIŠEMO SKOROVE PO IGRAČU
+            const scores = await Score.aggregate([
+                { $match: matchFilter },
+                { $sort: { score: -1 } }, 
+                {
+                    $group: {
+                        _id: { $ifNull: ["$playerId", "$uid"] }, 
+                        playerId: { $first: { $ifNull: ["$playerId", "$uid"] } },
+                        playerName: { $first: "$playerName" },
+                        score: { $first: "$score" }, 
+                        photoUrl: { $first: "$photoUrl" },
+                        date: { $first: "$date" },
+                        mode: { $first: "$mode" }
+                    }
+                },
+                { $sort: { score: -1 } }, 
+                { $limit: 100 }
+            ]);
             
-            // 2. NOVO: PRESLIKAVAMO playerId U uid ZA KLIJENTA
             const formattedScores = scores.map(s => ({
                 ...s,
-                uid: s.playerId // OVO JE KLJUČNO! Toplista.js sada traži polje 'uid'
+                uid: s.playerId 
             }));
 
             socket.emit('global_highscores_data', formattedScores);
@@ -1275,7 +1293,6 @@ io.on('connection', (socket) => {
 
             if (typeof data.score !== 'number' || isNaN(data.score)) return; 
 
-            // OBAVEZNA PROVERA DA NIJE GOST I DA JE DUŽINA ID-a ADEKVATNA (sprečava lažne upise)
             if (!socket.playerId || socket.playerId.startsWith('guest_') || socket.playerId.length < 20) return;
 
             if (data.score < 0 || data.score > MAX_SCORE) {
@@ -1808,12 +1825,10 @@ io.on('connection', (socket) => {
                 
                 socket.emit('sync_state_response', {
                     roomId: roomId,
-                    // --- FIX: Mapiramo Socket ID u pravo ime igrača ---
                     players: state.players.map(id => {
                         const pSocket = io.sockets.sockets.get(id);
                         return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
                     }),
-                    // --------------------------------------------------
                     allScores: state.allScores || createEmptyScores(),
                     currentPlayerIdx: state.turnIndex,
                     brojBacanja: state.brojBacanja || 0,
@@ -2176,7 +2191,6 @@ io.on('connection', (socket) => {
                 
                 const penaltyAmount = getDynamicPenalty(activeRoomId);
 
-                // FIX: Kreiranje istog H2H ključa kao na klijentu
                 let h2hKey = null;
                 if (roomState[activeRoomId]) {
                     const oppSocketId = roomState[activeRoomId].players.find(id => id !== ghostSessions[pid]?.oldSocketId);
