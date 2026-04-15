@@ -1232,7 +1232,16 @@ io.on('connection', (socket) => {
         try {
             if (!MONGO_URI) return; 
 
-            let filter = {};
+            // 1. NOVO: SERVERSKI FILTER (odbacujemo goste i kratke ID-eve direktno iz baze)
+            let filter = {
+                playerId: { 
+                    $exists: true, 
+                    $type: 'string', 
+                    $not: /guest/i,
+                    $regex: /.{20,}/ // Mora biti duže od 20 karaktera (Google UID format)
+                }
+            };
+            
             const now = new Date();
             now.setHours(0, 0, 0, 0);
             
@@ -1246,7 +1255,14 @@ io.on('connection', (socket) => {
             }
 
             const scores = await Score.find(filter).sort({ score: -1 }).limit(100).lean();
-            socket.emit('global_highscores_data', scores);
+            
+            // 2. NOVO: PRESLIKAVAMO playerId U uid ZA KLIJENTA
+            const formattedScores = scores.map(s => ({
+                ...s,
+                uid: s.playerId // OVO JE KLJUČNO! Toplista.js sada traži polje 'uid'
+            }));
+
+            socket.emit('global_highscores_data', formattedScores);
         } catch (err) {
             console.error("Greška pri dohvatanju skorova:", err);
             socket.emit('global_highscores_data', []); 
@@ -1259,7 +1275,8 @@ io.on('connection', (socket) => {
 
             if (typeof data.score !== 'number' || isNaN(data.score)) return; 
 
-            if (!socket.playerId || socket.playerId.startsWith('guest_')) return;
+            // OBAVEZNA PROVERA DA NIJE GOST I DA JE DUŽINA ID-a ADEKVATNA (sprečava lažne upise)
+            if (!socket.playerId || socket.playerId.startsWith('guest_') || socket.playerId.length < 20) return;
 
             if (data.score < 0 || data.score > MAX_SCORE) {
                 console.log(`🚨 HACK POKUŠAJ (Value): ${socket.id} šalje nemoguć skor: ${data.score}`);

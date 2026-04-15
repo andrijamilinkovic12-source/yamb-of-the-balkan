@@ -35,8 +35,6 @@ class TopListManager {
         if (!score || score <= 0) return;
 
         // OBAVEZNO: Rešavanje tuđih avatara!
-        // Ako je slika eksplicitno prosleđena iz igre, koristi nju. 
-        // U suprotnom, povuci našu lokalnu sliku.
         let photo = '';
         if (providedPhoto !== undefined) {
             photo = providedPhoto; 
@@ -44,8 +42,12 @@ class TopListManager {
             photo = localStorage.getItem('yamb_player_photo') || '';
         }
 
+        // NOVO: Uzimamo aktivni Google UID 
+        const currentUid = localStorage.getItem('yamb_uid');
+
         // Pripremamo objekat za bazu
         const entry = {
+            uid: currentUid, // <-- DODATO OVO POLJE
             playerName: name || this._t('player_unknown'), 
             score: parseInt(score),
             mode: mode || 'Solo',
@@ -200,7 +202,18 @@ class TopListManager {
 
         list.innerHTML = "";
 
-        if (!data || !Array.isArray(data) || data.length === 0) {
+        // --- NOVO: STRIKTNO FILTRIRANJE GOSTIJU I STARIH REZULTATA ---
+        let validData = [];
+        if (data && Array.isArray(data)) {
+            validData = data.filter(entry => {
+                // Firebase Google UID je uvek dugačak (oko 28 karaktera).
+                // Odbacujemo sve koji nemaju UID, koji su kraći od 20 karaktera ili sadrže reč 'guest'
+                return entry.uid && typeof entry.uid === 'string' && entry.uid.length > 20 && !entry.uid.toLowerCase().includes('guest');
+            });
+        }
+
+        // Ako nakon filtriranja nema rezultata
+        if (validData.length === 0) {
             list.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-style:italic;">
                 ${this._t('msg_no_results')}
             </div>`;
@@ -209,7 +222,8 @@ class TopListManager {
 
         const currentLang = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
 
-        data.forEach((entry, index) => {
+        // Rendamo samo validne Google igrače (koristimo validData umesto data)
+        validData.forEach((entry, index) => {
             const li = document.createElement('li');
             li.className = 'highscore-item'; 
 
@@ -240,7 +254,7 @@ class TopListManager {
             // LOGIKA ZA KRUNU: Sakrivamo broj 1 da bi se lepo video watermark krune
             const rankText = index === 0 ? '' : (index + 1);
 
-            // LOGIKA ZA AVATAR (I na globalnoj i na lokalnoj)
+            // LOGIKA ZA AVATAR
             const photoUrl = (entry.photoUrl && entry.photoUrl.length > 5) 
                 ? entry.photoUrl 
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
