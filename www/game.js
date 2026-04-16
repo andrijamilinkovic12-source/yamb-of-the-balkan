@@ -468,8 +468,8 @@ class YambApp {
                         <span class="val c-danger">-${r.maxLossMargin || 0}</span>
                     </div>
                     <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_win_streak') || '🔥 Vatreni niz:'}</span>
-                        <span class="val" style="color: #FF5722;">${r.maxWinStreak || 0}</span>
+                        <span class="lbl">${gt('h2h_win_streak') || '🔥 Trenutni niz:'}</span>
+                        <span class="val" style="color: #FF5722;">${r.currentWinStreak || 0} <span style="font-size:0.65rem; color:#aaa; margin-left: 4px;">(Max: ${r.maxWinStreak || 0})</span></span>
                     </div>
                     <div class="h2h-stat-row">
                         <span class="lbl">${gt('h2h_avg_pts') || '🎯 Tvoj prosek poena:'}</span>
