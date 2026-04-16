@@ -845,9 +845,20 @@ class YambApp {
                         prevYear -= 1;
                     }
 
+                    // FIX: Prikazujemo samo u prva 3 dana prvog meseca u kvartalu (Januar, April, Jul, Oktobar)
+                    const isFirstMonthOfQuarter = (now.getMonth() % 3 === 0);
+                    const isWithinFirstThreeDays = (now.getDate() <= 3);
+
                     const shownWinnerKey = `yamb_winner_shown_${prevYear}_Q${prevQuarter}`;
-                    if (!localStorage.getItem(shownWinnerKey)) {
-                        this.socket.emit('get_previous_quarter_winner', { year: prevYear, quarter: prevQuarter });
+                    
+                    if (isFirstMonthOfQuarter && isWithinFirstThreeDays) {
+                        if (!localStorage.getItem(shownWinnerKey)) {
+                            this.socket.emit('get_previous_quarter_winner', { year: prevYear, quarter: prevQuarter });
+                        }
+                    } else {
+                        // Prošla su 3 dana, upisujemo u lokalnu memoriju da je "prikazano" 
+                        // kako ne bismo slali nepotrebne zahteve serveru do kraja kvartala
+                        localStorage.setItem(shownWinnerKey, 'true');
                     }
                     
                     const pendingReward = localStorage.getItem('yamb_pending_quarter_check');
@@ -2141,6 +2152,11 @@ class YambApp {
 
             const shownKey = `yamb_winner_shown_${data.year}_Q${data.quarter}`;
             if (localStorage.getItem(shownKey)) return;
+
+            const mainMenu = document.getElementById('main-menu');
+            if (this.gameActive || (mainMenu && !mainMenu.classList.contains('active'))) {
+                return; 
+            }
 
             this.showQuarterWinnerModal(data);
             localStorage.setItem(shownKey, 'true');

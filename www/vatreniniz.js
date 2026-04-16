@@ -65,9 +65,10 @@ class VatreniNizManager {
                     const body = document.getElementById('streak-body');
                     if (!body) return;
 
-                    // Dinamički preuzimamo prevod za no_data i stat_streak
+                    // Dinamički preuzimamo prevod za tekstove
                     const noData = typeof t !== 'undefined' ? t('streak_no_data') : 'Još uvek nema podataka. Odigrajte partiju!';
-                    const streakLabel = typeof t !== 'undefined' ? t('stat_streak') : 'Vatreni Niz';
+                    const tCurrent = typeof t !== 'undefined' ? t('streak_current') : 'Trenutni';
+                    const tBroken = typeof t !== 'undefined' ? t('streak_broken') : 'Prekinut niz';
 
                     if (!data || data.length === 0) {
                         body.innerHTML = `<div style="text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-top: 20px; font-style: italic;">${noData}</div>`;
@@ -102,6 +103,10 @@ class VatreniNizManager {
                             nameStyle = "font-size: 0.75rem; line-height: 1.1;";
                         }
 
+                        // --- LOGIKA ZA MAX I TRENUTNI NIZ ---
+                        let currentStreakColor = (player.currentWinStreak || 0) > 0 ? 'var(--success, #4CAF50)' : '#888';
+                        let currentStreakText = (player.currentWinStreak || 0) > 0 ? `${tCurrent}: ${player.currentWinStreak}` : tBroken;
+
                         const card = `
                         <div style="display: flex; align-items: center; padding: 12px 15px; border-radius: 10px; ${bgStyle} transition: transform 0.2s;">
                             <div style="font-size: 1.3rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted); flex-shrink: 0; text-shadow: ${idx===0 ? '0 0 10px rgba(255,87,34,0.5)' : 'none'};">${rankTrophy}</div>
@@ -110,9 +115,13 @@ class VatreniNizManager {
                             
                             <div style="flex: 1; min-width: 0; overflow: hidden; font-weight: bold; color: ${nameColor}; ${nameStyle} word-break: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${displayName}</div>
                             
-                            <div style="font-weight: 900; color: #FF5722; font-size: 1.6rem; text-align: right; min-width: 60px; display: flex; flex-direction: column; align-items: flex-end;">
-                                <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px;">${streakLabel}</div>
-                                <div style="text-shadow: 0 0 5px rgba(255,87,34,0.5);">${player.streak}</div>
+                            <div style="text-align: right; line-height: 1.2; min-width: 80px; display: flex; flex-direction: column; align-items: flex-end;">
+                                <div style="color: #FF5722; font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 5px rgba(255, 87, 34, 0.4);">
+                                    🔥 ${player.maxWinStreak || 0}
+                                </div>
+                                <div style="font-size: 0.65rem; font-weight: bold; margin-top: 4px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">
+                                    <span style="color: ${currentStreakColor};">${currentStreakText}</span>
+                                </div>
                             </div>
                         </div>`;
                         

@@ -1213,16 +1213,15 @@ io.on('connection', (socket) => {
                         ]
                     } 
                 },
-                // Osiguravamo da je tip zapisa tačan pre sortiranja
                 { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
                 { $sort: { numScore: -1 } },
                 {
                     $group: {
                         _id: { $ifNull: ["$playerId", "$uid"] },
-                        bestEntry: { $first: "$$ROOT" } // Uzimamo celokupan ispravan dokument!
+                        bestEntry: { $first: "$$ROOT" } 
                     }
                 },
-                { $replaceRoot: { newRoot: "$bestEntry" } }, // Vraćamo strukturu dokumenta
+                { $replaceRoot: { newRoot: "$bestEntry" } }, 
                 { $sort: { numScore: -1 } },
                 { $limit: 3 }
             ]);
@@ -1247,7 +1246,6 @@ io.on('connection', (socket) => {
         try {
             if (!MONGO_URI) return; 
 
-            // Uključujemo i "playerId" i stari "uid" ako je ostao u bazi
             let matchFilter = {
                 $or: [
                     { playerId: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } },
@@ -1267,7 +1265,6 @@ io.on('connection', (socket) => {
                 matchFilter.date = { $gte: startOfMonth };
             }
 
-            // KORISTIMO AGREGACIJU SA NAJSTRIKTNIJOM KONVERZIJOM DA NE PROPUSTI MAX SCORE
             const scores = await Score.aggregate([
                 { $match: matchFilter },
                 { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
@@ -1275,7 +1272,7 @@ io.on('connection', (socket) => {
                 {
                     $group: {
                         _id: { $ifNull: ["$playerId", "$uid"] }, 
-                        bestEntry: { $first: "$$ROOT" } // 100% garancija da uzima dokument sa NAJVEĆIM brojem
+                        bestEntry: { $first: "$$ROOT" } 
                     }
                 },
                 { $replaceRoot: { newRoot: "$bestEntry" } },
@@ -1301,8 +1298,6 @@ io.on('connection', (socket) => {
 
             if (typeof data.score !== 'number' || isNaN(data.score)) return; 
 
-            // NOVO: RACE CONDITION FIX ZA OFFLINE SYNC
-            // Dozvoljavamo povlačenje UID-a iz data objekta ukoliko se socket tek povezao i kasni
             const finalUid = socket.playerId || data.uid || data.playerId;
 
             if (!finalUid || finalUid.startsWith('guest_') || finalUid.length < 20) return;
@@ -1323,7 +1318,7 @@ io.on('connection', (socket) => {
             let finalPhoto = socket.photoUrl || data.photoUrl || '';
             
             const newScore = new Score({
-                playerId: finalUid, // Koristimo uvek utvrđeni, validni UID
+                playerId: finalUid, 
                 playerName: finalName,
                 score: data.score,
                 mode: data.mode || 'Solo',
@@ -1414,13 +1409,12 @@ io.on('connection', (socket) => {
 
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
 
-            // LEADERBOARD SAFEGUARD
             const currentDoc = await LeagueScore.findOne({ playerId: uniqueId, year: data.year, quarter: data.quarter });
             if (currentDoc) {
                 const diff = currentDoc.score - data.score;
                 if (diff > 4000) {
                     console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran overwrite tabele sa ${currentDoc.score} na ${data.score}`);
-                    return; // Prekidamo upis u bazu
+                    return; 
                 }
             }
 
@@ -1442,6 +1436,9 @@ io.on('connection', (socket) => {
         }
     });
 
+    // ==================================================================
+    // TOP LISTA VATRENOG NIZA (MAX FIX + TRENUTNI NIZ)
+    // ==================================================================
     socket.on('get_streak_leaderboard', async () => {
         try {
             if (!MONGO_URI) {
@@ -1449,18 +1446,33 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const topStreaks = await UserProfile.find({ maxWinStreak: { $gt: 0 } })
-                .sort({ maxWinStreak: -1 })
-                .limit(20)
-                .select('firebaseUid playerName photoUrl maxWinStreak')
-                .lean();
+            // Prvo dohvatamo sve koji imaju bilo kakav niz
+            const users = await UserProfile.find({
+                $or: [
+                    { maxWinStreak: { $gt: 0 } },
+                    { currentWinStreak: { $gt: 0 } }
+                ]
+            }).select('firebaseUid playerName photoUrl maxWinStreak currentWinStreak').lean();
 
-            const dataToSend = topStreaks.map(p => ({
-                uid: p.firebaseUid,
-                name: p.playerName,
-                photoUrl: p.photoUrl || '',
-                streak: p.maxWinStreak 
-            }));
+            // Sortiramo ih po najvećem ikada ostvarenom nizu (max od maxWinStreak i currentWinStreak)
+            const sortedStreaks = users
+                .sort((a, b) => {
+                    let maxA = Math.max((a.maxWinStreak || 0), (a.currentWinStreak || 0));
+                    let maxB = Math.max((b.maxWinStreak || 0), (b.currentWinStreak || 0));
+                    return maxB - maxA;
+                })
+                .slice(0, 50); // Uzimamo TOP 50
+
+            const dataToSend = sortedStreaks.map(p => {
+                let maxStreak = Math.max((p.maxWinStreak || 0), (p.currentWinStreak || 0));
+                return {
+                    uid: p.firebaseUid,
+                    name: p.playerName,
+                    photoUrl: p.photoUrl || '',
+                    maxWinStreak: maxStreak,
+                    currentWinStreak: p.currentWinStreak || 0
+                };
+            });
 
             socket.emit('streak_leaderboard_data', dataToSend);
         } catch (err) {
@@ -1468,6 +1480,7 @@ io.on('connection', (socket) => {
             socket.emit('streak_leaderboard_data', []);
         }
     });
+    // ==================================================================
 
     socket.on('get_power_index_leaderboard', async () => {
         try {
