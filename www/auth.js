@@ -426,8 +426,30 @@ function inicijalizujCloudSync() {
                 localStorage.setItem('yamb_dukati', dbStats.balance);
             }
             
-            if (dbStats.leagueData && dbStats.leagueData.year > 0) {
-                localStorage.setItem('yamb_quarter_data_' + currentUid, JSON.stringify(dbStats.leagueData));
+            // --- FIX: POVRATAK LIGAŠKOG SKORA SA CLOUDA NA KLIJENTA ---
+            if (dbStats.leagueData) {
+                let localLeagueKey = 'yamb_quarter_data_' + currentUid;
+                let currentLocalLeague = JSON.parse(localStorage.getItem(localLeagueKey)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
+                
+                let leagueUpdated = false;
+                
+                if (dbStats.leagueData.year > currentLocalLeague.year || 
+                   (dbStats.leagueData.year === currentLocalLeague.year && dbStats.leagueData.quarter > currentLocalLeague.quarter)) {
+                    currentLocalLeague = dbStats.leagueData;
+                    leagueUpdated = true;
+                } else if (dbStats.leagueData.year === currentLocalLeague.year && dbStats.leagueData.quarter === currentLocalLeague.quarter) {
+                    if (dbStats.leagueData.quarterlyScore > currentLocalLeague.quarterlyScore) {
+                        currentLocalLeague.quarterlyScore = dbStats.leagueData.quarterlyScore;
+                        leagueUpdated = true;
+                    }
+                }
+
+                if (leagueUpdated) {
+                    localStorage.setItem(localLeagueKey, JSON.stringify(currentLocalLeague));
+                    if (window.kvartalnaLiga) {
+                        window.kvartalnaLiga.init(); 
+                    }
+                }
             }
             
             if (typeof updateMainMenuDashboard === 'function') {

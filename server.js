@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX
 
 require('dotenv').config(); 
 
@@ -686,11 +686,17 @@ io.on('connection', (socket) => {
                             user.leagueData.baselineScore = s.leagueData.baselineScore;
                         }
 
-                        if (!isFreshLogin) {
-                            user.leagueData.quarterlyScore = s.leagueData.quarterlyScore;
+                        // LEAGUE SAFEGUARD: Sprečavamo drastične padove zbog obrisanog LocalStorage-a
+                        const cloudScore = user.leagueData.quarterlyScore || 0;
+                        const localScore = s.leagueData.quarterlyScore || 0;
+                        const dropDiff = cloudScore - localScore;
+
+                        if (dropDiff > 4000) {
+                            console.log(`🚨 LEAGUE SAFEGUARD: Odbijen pad sa ${cloudScore} na ${localScore} za igrača ${user.playerName}. Zadržavam Cloud verziju!`);
+                            // Namerno NE preuzimamo localScore
                         } else {
-                            if (s.leagueData.quarterlyScore > (user.leagueData.quarterlyScore || 0)) {
-                                user.leagueData.quarterlyScore = s.leagueData.quarterlyScore;
+                            if (!isFreshLogin || localScore > cloudScore) {
+                                user.leagueData.quarterlyScore = localScore;
                             }
                         }
                     }
@@ -701,6 +707,10 @@ io.on('connection', (socket) => {
                     let isModified = false;
 
                     for (const [oppName, localData] of Object.entries(s.h2hStats)) {
+                        
+                        // 🛡️ SERVER H2H FILTER: Blokiramo undefined i null stringove
+                        if (!oppName || String(oppName) === 'undefined' || String(oppName) === 'null' || oppName === 'Nepoznat') continue;
+                        
                         if (!cloudH2H[oppName]) {
                             cloudH2H[oppName] = localData;
                             isModified = true;
@@ -1403,6 +1413,16 @@ io.on('connection', (socket) => {
                 : rawName;
 
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
+
+            // LEADERBOARD SAFEGUARD
+            const currentDoc = await LeagueScore.findOne({ playerId: uniqueId, year: data.year, quarter: data.quarter });
+            if (currentDoc) {
+                const diff = currentDoc.score - data.score;
+                if (diff > 4000) {
+                    console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran overwrite tabele sa ${currentDoc.score} na ${data.score}`);
+                    return; // Prekidamo upis u bazu
+                }
+            }
 
             await LeagueScore.findOneAndUpdate(
                 { playerId: uniqueId, year: data.year, quarter: data.quarter }, 

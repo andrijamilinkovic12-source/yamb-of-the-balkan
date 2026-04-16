@@ -325,7 +325,7 @@ class YambApp {
     // --- FUNKCIJE ZA H2H DETALJNU STATISTIKU ---
 
     updateH2HStats(oppName, oppPhoto, resultType, myScore = 0, oppScore = 0, oppUid = null) {
-        if (!oppName || oppName.includes(gt('player_guest')) || oppName === "Sistem") return;
+        if (!oppName || String(oppName) === 'undefined' || String(oppName) === 'null' || oppName.includes(gt('player_guest')) || oppName === "Sistem") return;
         if (this.isSpectator) return;
 
         const safeOppName = oppName.replace(/\./g, '_').replace(/\$/g, '_');
@@ -390,6 +390,19 @@ class YambApp {
         if (!container) return;
 
         let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
+        let needsCleanup = false;
+        
+        // 🧹 AUTO-CLEANUP: Brišemo sve "undefined" i oštećene protivnike iz memorije
+        for (const key in h2h) {
+            if (!h2h[key].name || String(h2h[key].name) === 'undefined' || String(h2h[key].name) === 'null' || h2h[key].name.trim() === '') {
+                delete h2h[key];
+                needsCleanup = true;
+            }
+        }
+        if (needsCleanup) {
+            localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
+        }
+
         let rivals = Object.values(h2h);
 
         if (rivals.length === 0) {
@@ -1031,6 +1044,32 @@ class YambApp {
                             localStorage.setItem('yamb_h2h_stats', JSON.stringify(localH2H));
                         }
                     }
+
+                    // --- FIX: POVRATAK LIGAŠKOG SKORA SA CLOUDA NA KLIJENTA ---
+                    if (data.leagueData) {
+                        let localLeagueKey = 'yamb_quarter_data_' + uid;
+                        let currentLocalLeague = JSON.parse(localStorage.getItem(localLeagueKey)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
+                        
+                        let leagueUpdated = false;
+                        
+                        if (data.leagueData.year > currentLocalLeague.year || 
+                           (data.leagueData.year === currentLocalLeague.year && data.leagueData.quarter > currentLocalLeague.quarter)) {
+                            currentLocalLeague = data.leagueData;
+                            leagueUpdated = true;
+                        } else if (data.leagueData.year === currentLocalLeague.year && data.leagueData.quarter === currentLocalLeague.quarter) {
+                            if (data.leagueData.quarterlyScore > currentLocalLeague.quarterlyScore) {
+                                currentLocalLeague.quarterlyScore = data.leagueData.quarterlyScore;
+                                leagueUpdated = true;
+                            }
+                        }
+
+                        if (leagueUpdated) {
+                            localStorage.setItem(localLeagueKey, JSON.stringify(currentLocalLeague));
+                            if (window.kvartalnaLiga) {
+                                window.kvartalnaLiga.init(); 
+                            }
+                        }
+                    }
                     
                     if (typeof updateMainMenuDashboard === 'function') {
                         updateMainMenuDashboard();
@@ -1579,7 +1618,8 @@ class YambApp {
         if (allTimeEl) allTimeEl.innerText = allTimePts;
 
         let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
-        let rivals = Object.values(h2h);
+        // Filtriramo samo ispravne rivale
+        let rivals = Object.values(h2h).filter(r => r.name && String(r.name) !== 'undefined' && String(r.name) !== 'null');
         
         const favNameEl = document.getElementById('stat-fav-opp-name');
         const favGamesEl = document.getElementById('stat-fav-opp-games');
