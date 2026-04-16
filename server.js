@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX
 
 require('dotenv').config(); 
 
@@ -1962,9 +1962,16 @@ io.on('connection', (socket) => {
         }
     });
 
+    // FIX 1: OČISTI SOBU NA KRAJU I UGASNI STATE
     socket.on('game_over', () => {
         const roomId = playerRooms[socket.id];
-        if (roomId) console.log(`🏁 Igra završena u sobi: ${roomId}`);
+        if (roomId) {
+            console.log(`🏁 Igra završena u sobi: ${roomId}`);
+            // FIX: Brišemo igrača iz sobe i gasimo state sobe kako ne bi dobio rage quit kaznu pri izlasku!
+            delete playerRooms[socket.id];
+            stopTurnTimer(roomId);
+            if (roomState[roomId]) delete roomState[roomId];
+        }
     });
 
     socket.on('request_rematch', () => { relayEvent('rematch_requested', {}); });
@@ -2188,22 +2195,26 @@ io.on('connection', (socket) => {
 
             io.to(activeRoomId).emit('opponent_connection_lost');
 
+            // FIX 2: PROVERA DA LI JE IGRA ONLINE PRE NEGO ŠTO KAZNIMO IGRAČA
             disconnectTimers[pid] = setTimeout(() => {
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
                 
-                const penaltyAmount = getDynamicPenalty(activeRoomId);
-
-                let h2hKey = null;
+                // FIX: Provera da li je igra uopšte ONLINE (ima state) pre nego što lupimo kaznu
                 if (roomState[activeRoomId]) {
+                    const penaltyAmount = getDynamicPenalty(activeRoomId);
+
+                    let h2hKey = null;
                     const oppSocketId = roomState[activeRoomId].players.find(id => id !== ghostSessions[pid]?.oldSocketId);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
                     if (oppSocket) {
                         let safeOppName = oppSocket.playerName ? oppSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
                         h2hKey = oppSocket.playerId ? oppSocket.playerId : safeOppName;
                     }
-                }
 
-                applyServerSidePenalty(pid, penaltyAmount, h2hKey); 
+                    applyServerSidePenalty(pid, penaltyAmount, h2hKey); 
+                } else {
+                    console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
+                }
 
                 io.to(activeRoomId).emit('opponent_left');
                 
