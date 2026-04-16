@@ -386,8 +386,16 @@ function inicijalizujCloudSync() {
                 if (window.app) window.app.vibrationEnabled = dbStats.vibrationEnabled;
             }
 
+            // --- FIX: H2H STATS SAFEGUARD (ČIŠĆENJE UNDEFINED KARTICA) ---
             if (dbStats.h2hStats) {
-                localStorage.setItem('yamb_h2h_stats', JSON.stringify(dbStats.h2hStats));
+                let cleanH2H = {};
+                for (const key in dbStats.h2hStats) {
+                    let oppName = dbStats.h2hStats[key].name;
+                    if (oppName && String(oppName) !== 'undefined' && String(oppName) !== 'null' && oppName !== 'Nepoznat') {
+                        cleanH2H[key] = dbStats.h2hStats[key];
+                    }
+                }
+                localStorage.setItem('yamb_h2h_stats', JSON.stringify(cleanH2H));
             }
             
             const currentUid = localStorage.getItem('yamb_uid');
