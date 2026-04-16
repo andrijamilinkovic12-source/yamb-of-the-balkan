@@ -522,6 +522,8 @@ const TRANSLATIONS = {
         "streak_searching": "Tražim najvatrenije igrače...",
         "streak_no_conn": "Niste povezani na server.",
         "streak_no_data": "Još uvek nema podataka. Odigrajte partiju!",
+        "streak_current": "Trenutni",
+        "streak_broken": "Prekinut niz",
         
         // --- TIMEOUT, SPECTATOR I KAZNE ---
         "timeout_title": "KRAJ (TIMEOUT)",
@@ -1064,6 +1066,8 @@ const TRANSLATIONS = {
         "streak_searching": "Looking for the hottest players...",
         "streak_no_conn": "Not connected to the server.",
         "streak_no_data": "No data yet. Play a game!",
+        "streak_current": "Current",
+        "streak_broken": "Streak broken",
         
         // --- TIMEOUT, SPECTATOR AND PENALTIES ---
         "timeout_title": "GAME OVER (TIMEOUT)",
