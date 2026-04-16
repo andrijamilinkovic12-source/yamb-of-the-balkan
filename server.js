@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX + BUSY PLAYER FIX
 
 require('dotenv').config(); 
 
@@ -1673,7 +1673,20 @@ io.on('connection', (socket) => {
 
     socket.on('send_room_invite', (data) => {
         const { targetSocketId, roomId, hostName } = data;
-        socket.to(targetSocketId).emit('incoming_room_invite', { roomId, hostName });
+        const targetSocket = io.sockets.sockets.get(targetSocketId);
+        
+        if (targetSocket) {
+            // FIX: Zabrana poziva u privatnu sobu ako je igrač već u online partiji
+            const targetRoom = playerRooms[targetSocketId];
+            if (targetRoom && !targetRoom.startsWith('local_')) {
+                socket.emit('error_msg', 'err_player_busy');
+                return;
+            }
+
+            socket.to(targetSocketId).emit('incoming_room_invite', { roomId, hostName });
+        } else {
+            socket.emit('error_msg', 'err_player_not_on_server');
+        }
     });
 
     socket.on('find_game', (data) => {
@@ -1943,6 +1956,13 @@ io.on('connection', (socket) => {
         const targetSocket = io.sockets.sockets.get(targetId);
         
         if (targetSocket) {
+            // FIX: Zabrana izazova ako je igrač u sred online partije
+            const targetRoom = playerRooms[targetId];
+            if (targetRoom && !targetRoom.startsWith('local_')) {
+                socket.emit('error_msg', 'err_player_busy');
+                return;
+            }
+
             socket.to(targetId).emit('incoming_challenge', {
                 challengerId: socket.id,
                 challengerName: challengerName || "Gost"
@@ -2166,6 +2186,13 @@ io.on('connection', (socket) => {
         const { matchRoomId, targetId, opponentName } = data;
         
         if (onlinePlayers[targetId]) {
+            // FIX: Zabrana i za turnire
+            const targetRoom = playerRooms[onlinePlayers[targetId]];
+            if (targetRoom && !targetRoom.startsWith('local_')) {
+                socket.emit('error_msg', 'err_player_busy');
+                return;
+            }
+
             io.to(onlinePlayers[targetId]).emit('tourney_duel_ready', { matchRoomId, targetId: targetId, opponentName: opponentName });
             socket.emit('tourney_join_allowed', matchRoomId);
         } else {
