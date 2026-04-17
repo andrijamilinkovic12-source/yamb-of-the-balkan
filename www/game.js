@@ -250,6 +250,16 @@ class YambApp {
         if(btnVib) btnVib.innerText = this.vibrationEnabled ? '📳' : '📴';
     }
 
+    // Generiše HTML za tačkice umesto Unicode fonta
+    getDiceDotsHTML(val) {
+        if (!val || val < 1 || val > 6) return '';
+        let dots = '';
+        for (let i = 0; i < val; i++) {
+            dots += '<div class="dice-dot"></div>';
+        }
+        return `<div class="dice-dots-wrapper val-${val}">${dots}</div>`;
+    }
+
     toggleTheme() {
         // 1. Prikupi sve otključane teme (osnovne + kupljene + cloud)
         let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
@@ -2934,7 +2944,7 @@ class YambApp {
             btnNajava.classList.remove('btn-active-toggle'); 
         }
         
-        this.diceBtns.forEach(b => { b.innerText = ""; this.features.applySkinToElement(b); }); 
+        this.diceBtns.forEach(b => { b.innerHTML = ""; this.features.applySkinToElement(b); }); 
         this.highlightCurrentPlayer(); 
         this.updateTableVisuals(); 
     }
@@ -2984,10 +2994,10 @@ class YambApp {
     updateDiceVisuals() { 
         this.diceBtns.forEach((b, i) => { 
             if (this.brojBacanja > 0) { 
-                b.innerText = UNICODE_DICE[this.kockiceVals[i]]; 
+                b.innerHTML = this.getDiceDotsHTML(this.kockiceVals[i]); 
                 this.features.applySkinToElement(b, this.zadrzane[i]);
             } else { 
-                b.innerText = ""; 
+                b.innerHTML = ""; 
                 this.features.applySkinToElement(b);
             } 
         }); 
@@ -3001,7 +3011,7 @@ class YambApp {
         this.soundMgr.roll(); 
         
         for(let k=0; k<8; k++) { 
-            this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); 
+            this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerHTML = this.getDiceDotsHTML(Math.floor(Math.random()*6)+1); }); 
             await sleep(40); 
         } 
         
@@ -3049,7 +3059,7 @@ class YambApp {
             } 
             
             this.diceBtns.forEach((b, i) => { if(!this.zadrzane[i]) b.classList.add('rolling'); }); 
-            for(let k=0; k<6; k++) { this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerText = UNICODE_DICE[Math.floor(Math.random()*6)+1]; }); await sleep(50); } 
+            for(let k=0; k<6; k++) { this.diceBtns.forEach((b, i) => { if (!this.zadrzane[i]) b.innerHTML = this.getDiceDotsHTML(Math.floor(Math.random()*6)+1); }); await sleep(50); } 
             
             this.diceBtns.forEach(b => b.classList.remove('rolling')); 
             this.kockiceVals = newValues; 

@@ -105,3 +105,22 @@
 .dice.skin-galaxy { background: radial-gradient(circle at 30% 30%, #a18cd1 0%, #302b63 50%, #0f0c29 100%) !important; color: #fff !important; border: 1px solid #a18cd1 !important; box-shadow: 0 0 5px rgba(161, 140, 209, 0.5) !important; }
 .dice.skin-retro { background-color: #9bbc0f !important; background-image: linear-gradient(transparent 50%, rgba(0,0,0,0.1) 50%), linear-gradient(90deg, transparent 50%, rgba(0,0,0,0.1) 50%) !important; background-size: 4px 4px !important; color: #0f380f !important; border: 2px solid #0f380f !important; font-family: 'Courier New', monospace !important; font-weight: 900 !important; border-radius: 4px !important; }
 .dice.skin-hologram { background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2)) !important; border: 1px solid rgba(255,255,255,0.8) !important; color: white !important; box-shadow: inset 0 0 10px rgba(255,255,255,0.3) !important; text-shadow: 1px 0 #00ffff, -1px 0 #ff00ff !important; }
+
+/* =========================================================
+   SJAJ I SENKE ZA CSS TAČKICE (ZAMENA ZA TEXT-SHADOW)
+   ========================================================= */
+
+/* Neon skinovi - vraćanje svetlosnog efekta tačkicama */
+.skin-neon_blue .dice-dot, .preview-neon_blue .dice-dot { box-shadow: 0 0 6px #00E5FF, inset 0 2px 4px rgba(0,0,0,0.3) !important; }
+.skin-neon_pink .dice-dot, .preview-neon_pink .dice-dot { box-shadow: 0 0 6px #FF4081, inset 0 2px 4px rgba(0,0,0,0.3) !important; }
+.skin-neon_green .dice-dot, .preview-neon_green .dice-dot { box-shadow: 0 0 6px #00E676, inset 0 2px 4px rgba(0,0,0,0.3) !important; }
+
+/* Magma i Hologram efekti */
+.skin-magma .dice-dot, .preview-magma .dice-dot { box-shadow: 0 0 3px #000, inset 0 2px 4px rgba(0,0,0,0.5) !important; }
+.skin-hologram .dice-dot, .preview-hologram .dice-dot { box-shadow: 2px 0 #00ffff, -1px 0 #ff00ff, inset 0 2px 4px rgba(0,0,0,0.3) !important; }
+
+/* Zlatni i Spartanski - dodavanje dubine crnim senkama */
+.skin-gold_ancient .dice-dot, .preview-gold_ancient .dice-dot,
+.skin-bronze_spartan .dice-dot, .preview-bronze_spartan .dice-dot {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 2px 4px rgba(0,0,0,0.5) !important;
+}

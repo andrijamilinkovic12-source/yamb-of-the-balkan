@@ -148,6 +148,56 @@ body {
 .dice.held { transform: translateY(-8%); border: 2px solid #ff4444 !important; filter: brightness(0.6) sepia(0.2); box-shadow: 0 0 15px rgba(255, 68, 68, 0.6) !important; position: relative; color: #ffcccc; }
 @keyframes roll { 0% { transform: rotate(0deg); } 25% { transform: rotate(90deg); } 50% { transform: rotate(180deg); } 75% { transform: rotate(270deg); } 100% { transform: rotate(360deg); } }
 
+/* =========================================================
+   CSS TAČKICE ZA KOCKICE (ZAMENA ZA UNICODE)
+   ========================================================= */
+.dice-dots-wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 100%;
+    height: 100%;
+    padding: 18%; /* Ovo kontroliše koliko su tačkice udaljene od ivice */
+    box-sizing: border-box;
+}
+
+.dice-dot {
+    background-color: currentColor; /* Automatski vuče boju iz tvog skina! */
+    border-radius: 50%;
+    width: 85%;
+    height: 85%;
+    margin: auto;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); /* Blagi 3D efekat za tačkicu */
+}
+
+/* Raspored tačkica u mreži 3x3 na osnovu broja */
+.val-1 .dice-dot:nth-child(1) { grid-column: 2; grid-row: 2; }
+
+.val-2 .dice-dot:nth-child(1) { grid-column: 3; grid-row: 1; }
+.val-2 .dice-dot:nth-child(2) { grid-column: 1; grid-row: 3; }
+
+.val-3 .dice-dot:nth-child(1) { grid-column: 3; grid-row: 1; }
+.val-3 .dice-dot:nth-child(2) { grid-column: 2; grid-row: 2; }
+.val-3 .dice-dot:nth-child(3) { grid-column: 1; grid-row: 3; }
+
+.val-4 .dice-dot:nth-child(1) { grid-column: 1; grid-row: 1; }
+.val-4 .dice-dot:nth-child(2) { grid-column: 3; grid-row: 1; }
+.val-4 .dice-dot:nth-child(3) { grid-column: 1; grid-row: 3; }
+.val-4 .dice-dot:nth-child(4) { grid-column: 3; grid-row: 3; }
+
+.val-5 .dice-dot:nth-child(1) { grid-column: 1; grid-row: 1; }
+.val-5 .dice-dot:nth-child(2) { grid-column: 3; grid-row: 1; }
+.val-5 .dice-dot:nth-child(3) { grid-column: 2; grid-row: 2; }
+.val-5 .dice-dot:nth-child(4) { grid-column: 1; grid-row: 3; }
+.val-5 .dice-dot:nth-child(5) { grid-column: 3; grid-row: 3; }
+
+.val-6 .dice-dot:nth-child(1) { grid-column: 1; grid-row: 1; }
+.val-6 .dice-dot:nth-child(2) { grid-column: 1; grid-row: 2; }
+.val-6 .dice-dot:nth-child(3) { grid-column: 1; grid-row: 3; }
+.val-6 .dice-dot:nth-child(4) { grid-column: 3; grid-row: 1; }
+.val-6 .dice-dot:nth-child(5) { grid-column: 3; grid-row: 2; }
+.val-6 .dice-dot:nth-child(6) { grid-column: 3; grid-row: 3; }
+
 .status-label { color: var(--gold-main); font-weight: 600; white-space: nowrap; text-align: right;}
 .game-btn { border-radius: 20px; border: none; font-weight: bold; text-transform: uppercase; white-space: nowrap; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center;}
 .btn-throw { background: var(--gold-main); color: #000; box-shadow: 0 0 10px var(--gold-glow); transition: transform 0.1s; }
