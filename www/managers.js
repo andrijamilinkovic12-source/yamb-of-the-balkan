@@ -415,7 +415,6 @@ class EffectManager {
                 window.app.soundMgr.balkanTrumpet();
             }
 
-            // OBRISANO POSLE TAČNO 8.5 SEKUNDI (Zajedno sa završetkom zvuka)
             setTimeout(() => { 
                 document.body.classList.remove('fx-balkan');
                 if(bg.parentNode) bg.remove(); 
@@ -431,6 +430,46 @@ class EffectManager {
              for(let i=0; i<12; i++) { 
                  setTimeout(() => this.spawnRealFirework(), i * 500 + Math.random() * 400); 
              }
+        }
+        
+        // --- 🌌 SVEMIRSKA PRAŠINA ---
+        if (type === 'cosmic_dust') {
+            document.body.classList.add('fx-cosmic_dust');
+            
+            const container = document.createElement('div');
+            container.className = 'cosmic-container';
+            container.innerHTML = '<div class="stardust-layer layer-1"></div><div class="stardust-layer layer-2"></div><div class="stardust-layer layer-3"></div>';
+            document.body.appendChild(container);
+            
+            setTimeout(() => {
+                document.body.classList.remove('fx-cosmic_dust');
+                if(container.parentNode) container.remove();
+            }, 6000); 
+        }
+
+        // --- ⚡ ZMAJEVA VATRA ---
+        if (type === 'dragon_fire') {
+            document.body.classList.add('fx-dragon_fire');
+            
+            const container = document.createElement('div');
+            container.className = 'dragon-container';
+            container.innerHTML = '<div class="dragon-flames"></div><div class="dragon-embers"></div>';
+            document.body.appendChild(container);
+
+            // Koristimo zvuk groma da stvorimo bas-tutnjavu vatre
+            if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
+                window.app.soundMgr.thunder(); 
+            }
+
+            // Moćna vibracija za vatru
+            if (window.app && typeof window.app.vibrate === 'function') {
+                window.app.vibrate([100, 150, 200, 300, 400, 200, 100]); 
+            }
+
+            setTimeout(() => {
+                document.body.classList.remove('fx-dragon_fire');
+                if(container.parentNode) container.remove();
+            }, 5500); 
         }
     }
 
@@ -606,9 +645,11 @@ class EffectManager {
     }
     
     stop() {
-        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake');
+        // Dodato brisanje klasa za nove efekte
+        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-dragon_fire');
         
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle').forEach(e => e.remove());
+        // Dodato brisanje elemenata za nove efekte
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));

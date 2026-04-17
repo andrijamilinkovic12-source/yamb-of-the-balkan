@@ -462,3 +462,161 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     30%, 80% { transform: translate(var(--dx2), var(--dy2)) scale(1) rotate(-5deg); opacity: 0.9; }
     90%, 100% { transform: translate(var(--dx3), -20vh) scale(0.5) rotate(10deg); opacity: 0; }
 }
+
+/* =========================================================
+   Svemirksa Prašina (COSMIC DUST) - PREMIUM EFEKAT
+   ========================================================= */
+
+/* --- Preview u Prodavnici --- */
+.prev-cosmic-dust { 
+    background: radial-gradient(circle at bottom, #1b003a, #000000); 
+    position: relative; 
+    overflow: hidden; 
+}
+.prev-cosmic-dust::before { 
+    content: "✨"; 
+    font-size: 2.5rem;
+    color: transparent; 
+    text-shadow: 0 0 15px rgba(200, 150, 255, 0.9), 0 0 25px rgba(0, 212, 255, 0.8); 
+    animation: cosmicPrevFloat 3s infinite alternate ease-in-out; 
+}
+
+@keyframes cosmicPrevFloat {
+    0% { transform: translateY(5px) scale(0.9); opacity: 0.7; }
+    100% { transform: translateY(-5px) scale(1.1); opacity: 1; filter: hue-rotate(45deg); }
+}
+
+/* --- Aktivni Efekat u Igri --- */
+/* Pozadinska maglina (Nebula) */
+body.fx-cosmic_dust::after {
+    content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: 
+        radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(0, 212, 255, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 105, 180, 0.15) 0%, transparent 60%);
+    z-index: 99980; pointer-events: none; mix-blend-mode: screen;
+    animation: nebulaFade 6s forwards ease-in-out;
+}
+
+/* Generator zvezdane prašine preko box-shadow */
+.stardust-layer {
+    position: fixed; top: 0; left: 0; width: 3px; height: 3px; background: transparent;
+    border-radius: 50%; z-index: 99985; pointer-events: none;
+    animation: stardustDrift 6s forwards linear;
+}
+
+/* Layer 1: Sitne, brže zvezde */
+.stardust-layer.layer-1 {
+    box-shadow: 
+        10vw 110vh #fff, 25vw 120vh #e0b0ff, 40vw 105vh #00d4ff, 
+        55vw 115vh #fff, 70vw 100vh #e0b0ff, 85vw 125vh #fff,
+        15vw 130vh #00d4ff, 50vw 140vh #fff, 80vw 110vh #e0b0ff, 95vw 120vh #fff;
+    animation-duration: 4.5s;
+}
+
+/* Layer 2: Srednje, sporije zvezde (sa jačim sjajem) */
+.stardust-layer.layer-2 {
+    width: 4px; height: 4px;
+    box-shadow: 
+        5vw 115vh rgba(255,255,255,0.9), 35vw 105vh rgba(224,176,255,0.9), 
+        65vw 125vh rgba(0,212,255,0.9), 90vw 110vh rgba(255,255,255,0.9);
+    filter: drop-shadow(0 0 8px #fff);
+    animation-duration: 5.5s;
+    animation-delay: 0.2s;
+}
+
+/* Layer 3: Magične krupne svetlice */
+.stardust-layer.layer-3 {
+    width: 6px; height: 6px;
+    box-shadow: 20vw 120vh #fff, 60vw 110vh #e0b0ff, 88vw 130vh #00d4ff;
+    filter: drop-shadow(0 0 15px #e0b0ff);
+    animation: stardustDrift 6s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes nebulaFade {
+    0% { opacity: 0; transform: scale(1.1); filter: brightness(0.5); }
+    30%, 70% { opacity: 1; transform: scale(1); filter: brightness(1.2); }
+    100% { opacity: 0; transform: scale(1.05); filter: brightness(0.5); }
+}
+
+@keyframes stardustDrift {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translateY(-130vh) scale(1.5) rotate(15deg); opacity: 0; }
+}
+
+
+/* =========================================================
+   Zmajeva Vatra (DRAGON FIRE) - PREMIUM EFEKAT
+   ========================================================= */
+
+/* --- Preview u Prodavnici --- */
+.prev-dragon-fire { 
+    background: linear-gradient(to top, #4a0000 0%, #8a0303 40%, #ff5722 100%); 
+    position: relative; 
+    overflow: hidden; 
+}
+.prev-dragon-fire::before { 
+    content: "🔥"; 
+    font-size: 3rem; 
+    position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+    filter: drop-shadow(0 -10px 15px #ffeb3b); 
+    animation: dragonFlamePrev 0.6s infinite alternate ease-in-out; 
+}
+
+@keyframes dragonFlamePrev {
+    0% { transform: translateX(-50%) scaleY(0.9) scaleX(1); opacity: 0.8; filter: drop-shadow(0 -5px 10px #ff5722); }
+    100% { transform: translateX(-50%) scaleY(1.2) scaleX(1.1); opacity: 1; filter: drop-shadow(0 -15px 20px #ffeb3b); }
+}
+
+/* --- Aktivni Efekat u Igri --- */
+
+/* Baza vatre koja se diže odozdo */
+.dragon-flames {
+    position: fixed; bottom: -20vh; left: 0; width: 100vw; height: 60vh;
+    background: linear-gradient(to top, #ff0000 0%, #ff5722 40%, #ffeb3b 70%, transparent 100%);
+    filter: blur(25px) contrast(1.5);
+    z-index: 99980; pointer-events: none; mix-blend-mode: hard-light;
+    transform-origin: bottom center;
+    animation: engulfFlames 5.5s forwards ease-in-out;
+}
+
+/* Puno sitnih užarenih komadića žara (embers) koristeći box-shadow */
+.dragon-embers {
+    position: fixed; top: 0; left: 0; width: 5px; height: 5px; background: #ffeb3b;
+    border-radius: 50%; z-index: 99985; pointer-events: none;
+    filter: drop-shadow(0 0 10px #ff5722) drop-shadow(0 0 20px #ff0000);
+    box-shadow: 
+        10vw 110vh #fff, 20vw 105vh #ffeb3b, 30vw 120vh #ff5722, 
+        40vw 115vh #ffeb3b, 50vw 100vh #fff, 60vw 125vh #ff5722,
+        70vw 110vh #ffeb3b, 80vw 105vh #fff, 90vw 130vh #ff5722,
+        15vw 118vh #ffeb3b, 45vw 108vh #ffeb3b, 75vw 122vh #ff5722;
+    animation: embersExplode 5.5s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+}
+
+/* Blago podrhtavanje ekrana od siline "vatre" */
+body.fx-dragon_fire .game-scene {
+    animation: dragonHeatShake 5.5s forwards ease-in-out;
+}
+
+@keyframes engulfFlames {
+    0% { opacity: 0; transform: scaleY(0.5); filter: blur(20px) brightness(0.5); }
+    10% { opacity: 1; filter: blur(25px) brightness(1.5); }
+    30%, 70% { opacity: 0.9; transform: scaleY(1.3); filter: blur(30px) brightness(1.8) hue-rotate(-10deg); }
+    90% { opacity: 0.5; transform: scaleY(0.8); }
+    100% { opacity: 0; transform: scaleY(0); filter: blur(10px) brightness(0.5); }
+}
+
+@keyframes embersExplode {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    5% { opacity: 1; }
+    60% { transform: translateY(-100vh) scale(1.5) rotate(25deg); opacity: 1; }
+    100% { transform: translateY(-150vh) scale(0.5) rotate(45deg); opacity: 0; }
+}
+
+@keyframes dragonHeatShake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-2px, 1px); }
+    20%, 40%, 60%, 80% { transform: translate(2px, -1px); }
+}
