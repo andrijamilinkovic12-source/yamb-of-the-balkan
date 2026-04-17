@@ -1468,29 +1468,49 @@ class AdMobController {
         if (!this.adMobPlugin) return;
 
         try {
+            // --- 1. REWARDED (NAGRADNE) REKLAME ---
+            const rewardHandler = () => { 
+                if (this.rewardResolve) { 
+                    this.rewardResolve(true); 
+                    this.rewardResolve = null; 
+                } 
+            };
+
+            const rewardDismissHandler = () => {
+                // Ako nagrada nije dodeljena, resolve će vratiti false
+                if (this.rewardResolve) { 
+                    this.rewardResolve(false); 
+                    this.rewardResolve = null; 
+                }
+                this.handleAdDismissed('rewarded');
+            };
+
+            // FIX: Pokrivamo APSOLUTNO SVE varijacije naziva događaja koje Capacitor AdMob može da pošalje
+            await this.adMobPlugin.addListener('rewardedVideoRewardItem', rewardHandler);
+            await this.adMobPlugin.addListener('onRewardedVideoRewardItem', rewardHandler);
+            await this.adMobPlugin.addListener('rewardedVideoAdRewardItem', rewardHandler);
+            await this.adMobPlugin.addListener('rewardedVideoAdReward', rewardHandler);
+            await this.adMobPlugin.addListener('onRewardedVideoAdReward', rewardHandler);
+
+            await this.adMobPlugin.addListener('rewardedVideoAdDismissed', rewardDismissHandler);
+            await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', rewardDismissHandler);
             await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
-            await this.adMobPlugin.addListener('rewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
-            await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => {
-                if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
-                this.handleAdDismissed('rewarded');
-            });
 
+            // --- 2. INTERSTITIAL REKLAME ---
+            const interstitialDismissHandler = () => {
+                // FIX: Dodeljujemo token TEK KADA igrač zatvori Interstitial
+                if (this.interstitialResolve) {
+                    this.interstitialResolve(true); 
+                    this.interstitialResolve = null;
+                }
+                this.handleAdDismissed('interstitial');
+            };
+
+            await this.adMobPlugin.addListener('interstitialAdDismissed', interstitialDismissHandler);
+            await this.adMobPlugin.addListener('onInterstitialAdDismissed', interstitialDismissHandler);
             await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
             await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
-            await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
-
-            await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
-            await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
-            await this.adMobPlugin.addListener('onRewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
-            await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', () => {
-                if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
-                this.handleAdDismissed('rewarded');
-            });
-
-            await this.adMobPlugin.addListener('onInterstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
-            await this.adMobPlugin.addListener('onInterstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
-            await this.adMobPlugin.addListener('onInterstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
 
         } catch (e) {
             console.warn("⚠️ Osluškivači za reklame pukli.", e);
@@ -1603,12 +1623,18 @@ class AdMobController {
             if (!this.adMobPlugin) { resolve(false); return; }
             if (this.ads.interstitial.isReady) {
                 try {
-                    await this.adMobPlugin.showInterstitial(); resolve(true);
+                    // FIX: Čuvamo resolve funkciju (isto kao kod Rewarded) da sačeka kraj reklame
+                    this.interstitialResolve = resolve; 
+                    await this.adMobPlugin.showInterstitial(); 
+                    // resolve(true) uklonjen odavde - sada se poziva u interstitialDismissHandler-u!
                 } catch (e) {
-                    this.handleAdFailed('interstitial', e); resolve(false);
+                    this.interstitialResolve = null;
+                    this.handleAdFailed('interstitial', e); 
+                    resolve(false);
                 }
             } else {
-                this.triggerHighPriorityLoad('interstitial'); resolve(false);
+                this.triggerHighPriorityLoad('interstitial'); 
+                resolve(false);
             }
         });
     }
