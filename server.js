@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX + BUSY PLAYER FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX + BUSY PLAYER FIX + ONLINE UNDO TOKENS
 
 require('dotenv').config(); 
 
@@ -211,6 +211,7 @@ const UserProfileSchema = new mongoose.Schema({
     highscore: { type: Number, default: 0 },
     totalScoreSum: { type: Number, default: 0 },
     balance: { type: Number, default: 0 },
+    undoTokens: { type: Number, default: 0 }, // DODATO: Čuvanje tokena
     currentWinStreak: { type: Number, default: 0 },
     maxWinStreak: { type: Number, default: 0 },
     tournamentWins: { type: Number, default: 0 }, 
@@ -642,6 +643,11 @@ io.on('connection', (socket) => {
                             }
                         }
                     }
+                    
+                    // DODATO: Ažuriranje tokena postojećem korisniku
+                    if (typeof s.undoTokens === 'number') {
+                        user.undoTokens = s.undoTokens;
+                    }
 
                     if (typeof s.currentWinStreak === 'number') {
                         user.currentWinStreak = s.currentWinStreak; 
@@ -774,7 +780,7 @@ io.on('connection', (socket) => {
                 socket.emit('sync_local_stats', { 
                     wins: user.wins, losses: user.losses, games: user.games,
                     highscore: user.highscore, totalScoreSum: user.totalScoreSum,
-                    balance: user.balance, currentWinStreak: user.currentWinStreak,
+                    balance: user.balance, undoTokens: user.undoTokens, currentWinStreak: user.currentWinStreak,
                     maxWinStreak: user.maxWinStreak, 
                     tournamentWins: user.tournamentWins, 
                     activeSkin: user.activeSkin, 
@@ -798,7 +804,7 @@ io.on('connection', (socket) => {
                     photoUrl: data.photoUrl || '',
                     wins: s.wins || 0, losses: s.losses || 0, games: s.games || 0,
                     highscore: s.highscore || 0, totalScoreSum: s.totalScoreSum || 0,
-                    balance: s.balance || 0, currentWinStreak: s.currentWinStreak || 0,
+                    balance: s.balance || 0, undoTokens: s.undoTokens || 0, currentWinStreak: s.currentWinStreak || 0,
                     maxWinStreak: s.maxWinStreak || 0, 
                     tournamentWins: s.tournamentWins || 0, 
                     activeSkin: s.activeSkin || 'default', 
@@ -820,7 +826,7 @@ io.on('connection', (socket) => {
                 socket.emit('sync_local_stats', { 
                     wins: user.wins, losses: user.losses, games: user.games,
                     highscore: user.highscore, totalScoreSum: user.totalScoreSum,
-                    balance: user.balance, currentWinStreak: user.currentWinStreak,
+                    balance: user.balance, undoTokens: user.undoTokens, currentWinStreak: user.currentWinStreak,
                     maxWinStreak: user.maxWinStreak, 
                     tournamentWins: user.tournamentWins, 
                     activeSkin: user.activeSkin, 
@@ -1893,7 +1899,27 @@ io.on('connection', (socket) => {
 
     socket.on('sync_state_response', (data) => {
         const roomId = playerRooms[socket.id];
-        if (roomId && !roomState[roomId]) {
+        if (roomId) {
+            // FIX ZA UNDO TOKENE: Ako server ima autoritativno stanje, ažuriraj ga (Rollback)
+            if (roomState[roomId]) {
+                roomState[roomId].allScores = data.allScores || roomState[roomId].allScores;
+                roomState[roomId].turnIndex = data.currentPlayerIdx !== undefined ? data.currentPlayerIdx : roomState[roomId].turnIndex;
+                roomState[roomId].brojBacanja = data.brojBacanja || 0;
+                roomState[roomId].kockiceVals = data.kockiceVals || [0,0,0,0,0,0];
+                roomState[roomId].zadrzane = data.zadrzane || [false,false,false,false,false,false];
+                roomState[roomId].najavaAktivna = data.najavaAktivna || false;
+                roomState[roomId].najavljenoPolje = data.najavljenoPolje || null;
+                
+                // DODATO: Oduzmi potez za statistiku ako je vraćen unazad
+                if (data.brojBacanja === 0) {
+                    roomState[roomId].moveCount = Math.max(0, (roomState[roomId].moveCount || 0) - 1);
+                }
+
+                // Pošto je potez vraćen unazad, resetujemo i autoritativni tajmer
+                startTurnTimer(roomId);
+            }
+            
+            // Prosledi protivniku kako bi mu se tabla vizuelno vratila unazad
             socket.to(roomId).emit('sync_state_response', data);
         }
     });

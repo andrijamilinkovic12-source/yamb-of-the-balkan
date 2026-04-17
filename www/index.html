@@ -72,6 +72,30 @@
         <div class="rotate-sub" data-lang="rotate_sub">Ova igra je optimizovana za uspravni prikaz<br>na telefonima.</div>
     </div>
 
+    <div id="undo-menu-overlay" class="modal-overlay" style="display: none; z-index: 100000;">
+        <div class="modal-box" style="width: 90%; max-width: 350px; text-align: center; padding: 25px; gap: 15px !important;">
+            <h2 data-lang="undo_title" style="color: var(--gold-main); margin-bottom: 10px; text-transform: uppercase;">Ispravi zadnji upis</h2>
+            <p data-lang="undo_menu_desc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">Nabavi tokene za vraćanje poteza</p>
+            
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 15px; border-radius: 12px; margin-bottom: 10px;">
+                <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Vaši tokeni</span>
+                <div style="font-size: 2.5rem; font-weight: 900; color: var(--success); text-shadow: 0 0 10px rgba(76, 175, 80, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    🪙 <span id="undo-token-count">0</span>
+                </div>
+            </div>
+
+            <button class="btn-menu" style="background: linear-gradient(45deg, #2196F3, #1976D2); color: white; border: none; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px;" onclick="app.buyUndoTokens(1)">
+                <span>📺 <span data-lang="undo_btn_ad_1">Gledaj reklamu (+1)</span></span>
+            </button>
+
+            <button class="btn-menu" style="background: linear-gradient(45deg, #4CAF50, #388E3C); color: white; border: none; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;" onclick="app.buyUndoTokens(3)">
+                <span>🎁 <span data-lang="undo_btn_ad_3">Gledaj nagradni video (+3)</span></span>
+            </button>
+
+            <button class="btn-menu btn-secondary" onclick="app.closeUndoMenu()" data-lang="undo_close">Zatvori</button>
+        </div>
+    </div>
+
     <div id="custom-modal-overlay" class="modal-overlay" style="z-index: 999999;">
         <div class="custom-modal">
             <div id="cm-title" class="cm-title" data-lang="modal_title_info">OBAVEŠTENJE</div>
@@ -152,6 +176,13 @@
              onmouseup="this.style.transform='scale(1)'">
             💬
         </div>
+
+        <button class="btn-square" 
+                style="position: absolute; top: 30px; right: 20px; z-index: 100; width: 45px; height: 45px; font-size: 1.4rem; padding: 0;" 
+                onclick="app.openUndoMenu()" 
+                title="Vrati pogrešan upis">
+            ↩️
+        </button>
 
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
             

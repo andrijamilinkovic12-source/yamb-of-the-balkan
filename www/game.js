@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD + ONLINE UNDO TOKENS)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -54,7 +54,7 @@ function cenzurisiPoruku(poruka) {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v17.0 - NEW HEADER UI & DROPDOWN");
+        console.log("YambApp v17.2 - ONLINE UNDO TOKENS (TRANSLATED)");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -2479,6 +2479,14 @@ class YambApp {
         }); 
 
         this.socket.on('remote_roll', (data) => { 
+            // Čim protivnik baci kockicu, više ne možemo da vratimo naš potez!
+            this.lastMoveSnapshot = null; 
+            const btnUndo = document.getElementById('btn-undo-move');
+            if (btnUndo) {
+                btnUndo.classList.add('gh-btn-inactive');
+                btnUndo.classList.remove('gh-btn-active');
+            }
+
             if (data.held && Array.isArray(data.held)) { this.zadrzane = data.held; }
             this.brojBacanja = data.bacanje; 
             this.updateStatusLabel();
@@ -3194,24 +3202,23 @@ class YambApp {
         
         if (col === 'Najava') { if (pts > 0) { this.consecutiveNajava++; if (this.consecutiveNajava >= 3) this.hasProphet = true; } else { this.consecutiveNajava = 0; } }
         
-        if (!this.onlineMode) {
-            this.lastMoveSnapshot = {
-                pIdx: pIdx,
-                row: row,
-                col: col,
-                diceVals: [...this.kockiceVals],
-                held: [...this.zadrzane],
-                rollCount: this.brojBacanja,
-                najavljenoPolje: this.najavljenoPolje ? { ...this.najavljenoPolje } : null,
-                najavaAktivna: this.najavaAktivna,
-                hasSvetiIlija: this.hasSvetiIlija,
-                consecutiveNajava: this.consecutiveNajava
-            };
-            const btnUndo = document.getElementById('btn-undo-move');
-            if (btnUndo) {
-                btnUndo.classList.remove('gh-btn-inactive');
-                btnUndo.classList.add('gh-btn-active');
-            }
+        // Uklonjen uslov !this.onlineMode kako bi radilo i za online tokene
+        this.lastMoveSnapshot = {
+            pIdx: pIdx,
+            row: row,
+            col: col,
+            diceVals: [...this.kockiceVals],
+            held: [...this.zadrzane],
+            rollCount: this.brojBacanja,
+            najavljenoPolje: this.najavljenoPolje ? { ...this.najavljenoPolje } : null,
+            najavaAktivna: this.najavaAktivna,
+            hasSvetiIlija: this.hasSvetiIlija,
+            consecutiveNajava: this.consecutiveNajava
+        };
+        const btnUndo = document.getElementById('btn-undo-move');
+        if (btnUndo) {
+            btnUndo.classList.remove('gh-btn-inactive');
+            btnUndo.classList.add('gh-btn-active');
         }
 
         sheet[col][row] = pts; 
@@ -3790,18 +3797,49 @@ class YambApp {
     }
 
     async undoLastMove() {
-        if (!this.lastMoveSnapshot || this.onlineMode) return;
+        if (!this.lastMoveSnapshot) return;
 
-        const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
-        if (!confirmUndo) return;
+        if (this.onlineMode) {
+            // ONLINE MOD: Koristi tokene umesto gledanja reklame
+            let tokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
+            if (tokens < 1) {
+                await this.modal.alert(gt('undo_no_tokens'), gt('undo_no_tokens_title'));
+                return;
+            }
+            
+            let confirmMsg = gt('undo_use_confirm').replace('{0}', tokens);
+            const confirmUndo = await this.modal.confirm(confirmMsg);
+            if (!confirmUndo) return;
 
-        if (this.adMob && window.Capacitor && window.Capacitor.isNativePlatform) {
-            if (this.adMob.showInterstitial) {
-                const success = await this.adMob.showInterstitial();
-                if (!success) return; 
+            // Skini token
+            tokens -= 1;
+            localStorage.setItem('yamb_undo_tokens', tokens);
+            
+            // DODATO: Odmah sinhronizuj oduzimanje tokena sa bazom
+            if (this.socket && this.socket.connected) {
+                this.socket.emit('set_player_data', {
+                    uid: localStorage.getItem('yamb_uid'),
+                    name: this.playerName,
+                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
+                    stats: this.getFullLocalStats(),
+                    playerId: this.playerId
+                });
+            }
+
+        } else {
+            // OFFLINE MOD: Solo i Dva Igrača (stara logika sa reklamom)
+            const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
+            if (!confirmUndo) return;
+
+            if (this.adMob && window.Capacitor && window.Capacitor.isNativePlatform) {
+                if (this.adMob.showInterstitial) {
+                    const success = await this.adMob.showInterstitial();
+                    if (!success) return; 
+                }
             }
         }
 
+        // RESTORE LOKALNOG STANJA (Zajedničko)
         const snap = this.lastMoveSnapshot;
         this.currentPlayerIdx = snap.pIdx;
         this.allScores[snap.pIdx][snap.col][snap.row] = null;
@@ -3861,6 +3899,21 @@ class YambApp {
             btnUndo.classList.remove('gh-btn-active');
         }
         this.autoSaveGame();
+
+        // ONLINE MOD: Forsiraj protivnika da preuzme tvoje resetovano stanje (Rollback)
+        if (this.onlineMode && this.socket) {
+            this.socket.emit('sync_state_response', {
+                roomId: this.roomId,
+                players: this.players,
+                allScores: this.allScores,
+                currentPlayerIdx: this.currentPlayerIdx,
+                brojBacanja: this.brojBacanja,
+                kockiceVals: this.kockiceVals,
+                zadrzane: this.zadrzane,
+                najavaAktivna: this.najavaAktivna,
+                najavljenoPolje: this.najavljenoPolje
+            });
+        }
     }
 
     showQuarterWinnerModal(data) {
@@ -3898,6 +3951,60 @@ class YambApp {
         </div>`;
 
         document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    // --- UNDO MENU & TOKENS ---
+    openUndoMenu() {
+        const overlay = document.getElementById('undo-menu-overlay');
+        const tokenCount = document.getElementById('undo-token-count');
+        if (tokenCount) {
+            tokenCount.innerText = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
+        }
+        if (overlay) overlay.style.display = 'flex';
+    }
+
+    closeUndoMenu() {
+        const overlay = document.getElementById('undo-menu-overlay');
+        if (overlay) overlay.style.display = 'none';
+    }
+
+    async buyUndoTokens(type) {
+        if (type === 1) {
+            if (this.adMob && this.adMob.showInterstitial) {
+                const success = await this.adMob.showInterstitial();
+                if (success) this.addUndoTokens(1);
+            }
+        } else if (type === 3) {
+            if (this.adMob && this.adMob.showRewardVideo) {
+                const success = await this.adMob.showRewardVideo();
+                if (success) this.addUndoTokens(3);
+            }
+        }
+    }
+
+    addUndoTokens(amount) {
+        let tokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
+        tokens += amount;
+        localStorage.setItem('yamb_undo_tokens', tokens);
+        
+        const tokenCount = document.getElementById('undo-token-count');
+        if (tokenCount) tokenCount.innerText = tokens;
+
+        this.soundMgr.win();
+        
+        let successMsg = gt('undo_earned_msg').replace('{0}', amount);
+        this.modal.alert(successMsg, gt('undo_earned_title'));
+
+        // DODATO: Odmah sinhronizuj sa bazom
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid'),
+                name: this.playerName,
+                photoUrl: localStorage.getItem('yamb_player_photo') || '',
+                stats: this.getFullLocalStats(),
+                playerId: this.playerId
+            });
+        }
     }
 }
 

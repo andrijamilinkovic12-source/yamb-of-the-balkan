@@ -88,6 +88,7 @@ function getFullLocalStats() {
         penaltyPoints: (window.app && window.app.stats) ? (window.app.stats.penaltyPoints || 0) : 0, 
         tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0, 
         balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
+        undoTokens: parseInt(localStorage.getItem('yamb_undo_tokens')) || 0, // DODATO: Pakovanje tokena za server
         currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
         unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
         unlockedSkins: window.statsManager ? window.statsManager.stats.unlockedSkins : JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
@@ -197,6 +198,7 @@ async function odjaviSe() {
         // 2. STRIKTNO BRISANJE STATISTIKE I INVENTARA - Sve kreće od nule!
         localStorage.removeItem('yamb_stats');
         localStorage.removeItem('yamb_dukati');
+        localStorage.removeItem('yamb_undo_tokens'); // DODATO: Brisanje tokena pri odjavi
         
         if (targetUid) localStorage.removeItem('yamb_quarter_data_' + targetUid);
         localStorage.removeItem('yamb_quarter_data');
@@ -432,6 +434,13 @@ function inicijalizujCloudSync() {
 
             if (dbStats.balance !== undefined) {
                 localStorage.setItem('yamb_dukati', dbStats.balance);
+            }
+
+            // DODATO: Preuzimanje tokena iz baze
+            if (dbStats.undoTokens !== undefined) {
+                localStorage.setItem('yamb_undo_tokens', dbStats.undoTokens);
+                const tokenCount = document.getElementById('undo-token-count');
+                if (tokenCount) tokenCount.innerText = dbStats.undoTokens; // Osveži UI ako je otvoren
             }
             
             // --- FIX: POVRATAK LIGAŠKOG SKORA SA CLOUDA NA KLIJENTA ---

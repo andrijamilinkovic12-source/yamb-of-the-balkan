@@ -266,9 +266,18 @@ const TRANSLATIONS = {
         "msg_you_left": "Napustili ste partiju.",
         "msg_game_finished": "Završili ste partiju.",
         
-        // Dodato za ispravku upisa
+        // Dodato za ispravku upisa i tokene
         "undo_confirm": "Želite li da ispravite zadnji upis gledanjem reklame?",
         "undo_title": "Ispravi zadnji upis",
+        "undo_no_tokens": "Nemate dovoljno tokena za vraćanje poteza! Nabavite ih u glavnom meniju (ikona u gornjem desnom uglu).",
+        "undo_no_tokens_title": "NEMA TOKENA",
+        "undo_use_confirm": "Želite li da iskoristite 1 token za ispravku poteza? (Preostalo: {0})",
+        "undo_earned_msg": "Uspešno ste dobili {0} token(a) za vraćanje poteza!",
+        "undo_earned_title": "USPEŠNO",
+        "undo_menu_desc": "Nabavi tokene za vraćanje poteza",
+        "undo_btn_ad_1": "Gledaj reklamu (+1)",
+        "undo_btn_ad_3": "Gledaj nagradni video (+3)",
+        "undo_close": "Zatvori",
         
         "alert_roll_first": "Prvo baci kockice!",
         "alert_filled": "Polje je već popunjeno!",
@@ -811,9 +820,18 @@ const TRANSLATIONS = {
         "msg_you_left": "You left the game.",
         "msg_game_finished": "You finished the game.",
 
-        // Dodato za ispravku upisa
+        // Dodato za ispravku upisa i tokene
         "undo_confirm": "Do you want to correct the last move by watching an ad?",
         "undo_title": "Undo last move",
+        "undo_no_tokens": "You don't have enough tokens to undo your move! Get them in the main menu (top right icon).",
+        "undo_no_tokens_title": "NO TOKENS",
+        "undo_use_confirm": "Do you want to use 1 token to undo your move? (Remaining: {0})",
+        "undo_earned_msg": "You have successfully received {0} undo token(s)!",
+        "undo_earned_title": "SUCCESS",
+        "undo_menu_desc": "Get tokens to undo your moves",
+        "undo_btn_ad_1": "Watch Ad (+1)",
+        "undo_btn_ad_3": "Watch Reward Video (+3)",
+        "undo_close": "Close",
 
         "alert_roll_first": "Roll the dice first!",
         "alert_filled": "Field is already filled!",
