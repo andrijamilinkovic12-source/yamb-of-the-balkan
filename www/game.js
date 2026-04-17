@@ -3969,15 +3969,26 @@ class YambApp {
     }
 
     async buyUndoTokens(type) {
-        if (type === 1) {
+        // Osiguravamo da je 'type' broj, u slučaju da iz HTML-a stiže kao string
+        const parsedType = parseInt(type, 10);
+        
+        console.log("Pokrenuta kupovina tokena, tip:", parsedType);
+
+        if (parsedType === 1) {
             if (this.adMob && this.adMob.showInterstitial) {
                 const success = await this.adMob.showInterstitial();
-                if (success) this.addUndoTokens(1);
+                console.log("Rezultat Interstitial reklame:", success);
+                if (success) {
+                    this.addUndoTokens(1);
+                }
             }
-        } else if (type === 3) {
+        } else if (parsedType === 3) {
             if (this.adMob && this.adMob.showRewardVideo) {
                 const success = await this.adMob.showRewardVideo();
-                if (success) this.addUndoTokens(3);
+                console.log("Rezultat Reward reklame:", success);
+                if (success) {
+                    this.addUndoTokens(3);
+                }
             }
         }
     }
