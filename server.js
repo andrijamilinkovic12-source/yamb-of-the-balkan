@@ -855,7 +855,8 @@ io.on('connection', (socket) => {
                 maxWinStreak: user.maxWinStreak,
                 tournamentWins: user.tournamentWins,
                 unlockedTrophies: user.unlockedTrophies,
-                leagueData: user.leagueData
+                leagueData: user.leagueData,
+                penaltyPoints: user.penaltyPoints || 0
             };
 
             updateOnlineCount(); 
@@ -1656,7 +1657,19 @@ io.on('connection', (socket) => {
                             name: f.playerName, 
                             photoUrl: f.photoUrl, 
                             isOnline: isOnline,
-                            stats: { wins: f.wins, losses: f.losses, games: f.highscore, totalScoreSum: f.totalScoreSum, tournamentWins: f.tournamentWins, currentWinStreak: f.currentWinStreak, maxWinStreak: f.maxWinStreak, unlockedTrophies: f.unlockedTrophies, leagueData: f.leagueData }
+                            stats: { 
+                                wins: f.wins, 
+                                losses: f.losses, 
+                                games: f.games,
+                                highscore: f.highscore,
+                                totalScoreSum: f.totalScoreSum, 
+                                tournamentWins: f.tournamentWins, 
+                                currentWinStreak: f.currentWinStreak, 
+                                maxWinStreak: f.maxWinStreak, 
+                                unlockedTrophies: f.unlockedTrophies, 
+                                leagueData: f.leagueData,
+                                penaltyPoints: f.penaltyPoints || 0
+                            }
                         };
                     });
                 }
