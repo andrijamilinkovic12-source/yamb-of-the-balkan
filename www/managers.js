@@ -1468,28 +1468,45 @@ class AdMobController {
         if (!this.adMobPlugin) return;
 
         try {
+            // --- UNIVERZALNI HANDLERI ZA NAGRADNE REKLAME ---
+            const onRewardEarned = (rewardItem) => {
+                console.log("✅ Nagrada uspesno dobijena sa AdMob-a!", rewardItem);
+                if (this.rewardResolve) { 
+                    this.rewardResolve(true); 
+                    this.rewardResolve = null; 
+                }
+            };
+
+            const onRewardDismissed = () => {
+                console.log("🚪 Reklama zatvorena.");
+                if (this.rewardResolve) { 
+                    this.rewardResolve(false); // Ako nije dobio nagradu pre zatvaranja, vraća false
+                    this.rewardResolve = null; 
+                }
+                this.handleAdDismissed('rewarded');
+            };
+
+            // 1. Dodeljivanje nagrade (pokrivene OBAVEZNE varijacije Capacitor AdMob-a)
+            await this.adMobPlugin.addListener('rewardedVideoAdReward', onRewardEarned);
+            await this.adMobPlugin.addListener('onRewardedVideoAdReward', onRewardEarned);
+            await this.adMobPlugin.addListener('onRewardedVideoAdRewardItem', onRewardEarned);
+
+            // 2. Zatvaranje reklame
+            await this.adMobPlugin.addListener('rewardedVideoAdDismissed', onRewardDismissed);
+            await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', onRewardDismissed);
+
+            // 3. Učitavanje i greške (Reward)
             await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
-            await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
-            await this.adMobPlugin.addListener('rewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
-            await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => {
-                if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
-                this.handleAdDismissed('rewarded');
-            });
-
-            await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
-            await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
-            await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
-
             await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
+            await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
             await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
-            await this.adMobPlugin.addListener('onRewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
-            await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', () => {
-                if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
-                this.handleAdDismissed('rewarded');
-            });
 
+            // --- INTERSTITIAL REKLAME ---
+            await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
             await this.adMobPlugin.addListener('onInterstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
+            await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
             await this.adMobPlugin.addListener('onInterstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
+            await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
             await this.adMobPlugin.addListener('onInterstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
 
         } catch (e) {
