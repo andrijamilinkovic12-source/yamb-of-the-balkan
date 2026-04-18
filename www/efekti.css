@@ -413,49 +413,39 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     position: fixed; 
     width: 10px; 
     height: 10px; 
-    background: #111; /* Tamno telo drona */
+    background: #111;
     border-radius: 2px;
     z-index: 99905; 
     pointer-events: none;
-    
-    /* Box-shadow magija: 4 rotora raspoređena oko tela */
     box-shadow: 
-        /* Fizički rotori (siva) */
         -10px -10px 0 -3px #888,  
          10px -10px 0 -3px #888,
         -10px  10px 0 -3px #888,
          10px  10px 0 -3px #888,
-        /* Svetlosni potisak ispod motora (neon plava iz tvoje teme) */
         -10px -10px 6px 1px rgba(0, 212, 255, 0.8),
          10px -10px 6px 1px rgba(0, 212, 255, 0.8),
         -10px  10px 6px 1px rgba(0, 212, 255, 0.8),
          10px  10px 6px 1px rgba(0, 212, 255, 0.8);
-         
     animation: droneFlyRandomV2 8s forwards ease-in-out;
 }
 
-/* Trepereća navigaciona lampica (Stroboskop) na sredini tela */
 .drone-dot::after {
     content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 3px;
-    height: 3px;
+    width: 3px; height: 3px;
     background: #fff;
     border-radius: 50%;
     box-shadow: 0 0 8px 2px #fff, 0 0 15px 4px #00d4ff;
     animation: strobeLight 0.6s infinite alternate;
 }
 
-/* Animacija za LED blic */
 @keyframes strobeLight {
     0%, 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.5); }
     50%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* Ažurirana putanja leta: dodato blago naginjanje (rotate) kako bi let delovao organski */
 @keyframes droneFlyRandomV2 {
     0% { transform: translate(var(--sx), 110vh) scale(0) rotate(-15deg); opacity: 0; }
     10% { opacity: 1; transform: translate(var(--dx), 70vh) scale(1.5) rotate(15deg); }
@@ -464,128 +454,184 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 }
 
 /* =========================================================
-   Svemirska Prašina (COSMIC DUST) - PREMIUM V2.0
+   Svemirska Prašina (COSMIC DUST) - ULTIMATE V3.0
    ========================================================= */
 
 /* --- Preview u Prodavnici --- */
 .prev-cosmic-dust { 
-    background: radial-gradient(circle at bottom, #2b0055, #0a001a, #000000); 
+    background: radial-gradient(circle at center, #2e0063 0%, #0a001a 60%, #000 100%); 
     position: relative; 
     overflow: hidden; 
-    box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.5);
+    box-shadow: inset 0 0 30px rgba(0, 212, 255, 0.4), inset 0 0 15px rgba(224, 176, 255, 0.6);
 }
 .prev-cosmic-dust::before { 
-    content: "🌌"; /* Promenjena ikonica za bogatiji osećaj */
-    font-size: 2.8rem;
+    content: "🌌"; 
+    font-size: 3rem;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
     color: transparent; 
-    text-shadow: 0 0 15px rgba(224, 176, 255, 0.9), 0 0 30px rgba(0, 212, 255, 1); 
-    animation: cosmicPrevFloatV2 3s infinite alternate ease-in-out; 
+    text-shadow: 0 0 20px rgba(224, 176, 255, 1), 0 0 40px rgba(0, 212, 255, 1), 0 0 60px rgba(255, 255, 255, 0.8); 
+    animation: cosmicPrevFloatV3 4s infinite alternate ease-in-out; 
+    z-index: 2;
+}
+.prev-cosmic-dust::after {
+    content: ""; position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+                radial-gradient(circle at 70% 80%, rgba(0, 212, 255, 0.8) 1.5px, transparent 1.5px);
+    background-size: 40px 40px;
+    animation: panStars 10s linear infinite;
+    opacity: 0.5; z-index: 1;
 }
 
-@keyframes cosmicPrevFloatV2 {
-    0% { transform: translateY(5px) scale(0.9); opacity: 0.8; filter: hue-rotate(0deg); }
-    100% { transform: translateY(-5px) scale(1.15); opacity: 1; filter: hue-rotate(60deg) brightness(1.5); }
+@keyframes panStars { 0% { background-position: 0 0; } 100% { background-position: -40px -40px; } }
+@keyframes cosmicPrevFloatV3 {
+    0% { transform: translate(-50%, calc(-50% + 5px)) scale(0.9); opacity: 0.85; filter: hue-rotate(-15deg); }
+    100% { transform: translate(-50%, calc(-50% - 5px)) scale(1.2); opacity: 1; filter: hue-rotate(45deg) brightness(1.8); }
 }
 
 /* --- Aktivni Efekat u Igri (Trajanje: 6s) --- */
 
-/* Bogata višeslojna pozadinska maglina (Nebula) */
-body.fx-cosmic_dust::after {
+/* Deep Space pozadina (Crnilo i dubina) */
+body.fx-cosmic_dust::before {
     content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #050608 100%);
+    z-index: 99979; pointer-events: none;
+    animation: deepSpaceFade 6s forwards ease-in-out;
+}
+
+/* Hiper-bogata Maglina (Nebula / Aurora Core) */
+body.fx-cosmic_dust::after {
+    content: ""; position: fixed; top: -20vh; left: -20vw; width: 140vw; height: 140vh;
     background: 
-        radial-gradient(circle at 15% 20%, rgba(138, 43, 226, 0.45) 0%, transparent 40%),
-        radial-gradient(circle at 85% 80%, rgba(0, 212, 255, 0.4) 0%, transparent 45%),
-        radial-gradient(circle at 50% 50%, rgba(255, 20, 147, 0.25) 0%, transparent 55%),
-        radial-gradient(circle at 75% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 30%);
-    z-index: 99980; pointer-events: none; mix-blend-mode: screen;
-    animation: premiumNebulaPulse 6s forwards ease-in-out;
+        radial-gradient(circle at 20% 40%, rgba(138, 43, 226, 0.6) 0%, transparent 45%),
+        radial-gradient(circle at 80% 60%, rgba(0, 212, 255, 0.5) 0%, transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(255, 20, 147, 0.35) 0%, transparent 60%),
+        radial-gradient(circle at 60% 20%, rgba(100, 255, 200, 0.25) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, transparent 30%);
+    z-index: 99980; pointer-events: none; mix-blend-mode: screen; filter: blur(25px);
+    animation: ultimateNebulaSwirl 6s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Osnovna klasa za zvezdanu prašinu */
+/* Baza za sve čestice */
 .stardust-layer {
-    position: fixed; top: 0; left: 0; width: 3px; height: 3px; background: transparent;
-    border-radius: 50%; z-index: 99985; pointer-events: none;
-    will-change: transform, opacity;
+    position: fixed; top: 0; left: 0; border-radius: 50%; 
+    z-index: 99985; pointer-events: none; will-change: transform, opacity;
 }
 
-/* Layer 1: Sitna, masovna prašina (preko 30 čestica, imitacija Mlečnog puta) */
+/* Layer 1: Ogromna količina "Zvezdane prašine" (Micro dust - Mlečni put) */
 .stardust-layer.layer-1 {
+    width: 2px; height: 2px; background: transparent;
     box-shadow: 
-        5vw 105vh #fff, 12vw 115vh #e0b0ff, 18vw 102vh #00d4ff, 25vw 110vh #fff, 
-        32vw 120vh #ff99cc, 38vw 108vh #fff, 45vw 118vh #00d4ff, 52vw 105vh #e0b0ff, 
-        60vw 125vh #fff, 68vw 112vh #ff99cc, 75vw 108vh #fff, 82vw 118vh #00d4ff, 
-        88vw 105vh #e0b0ff, 95vw 115vh #fff, 10vw 125vh #fff, 20vw 130vh #00d4ff, 
-        40vw 128vh #e0b0ff, 50vw 135vh #fff, 70vw 122vh #ff99cc, 80vw 132vh #fff, 
-        90vw 128vh #00d4ff;
-    animation: premiumDrift 6s forwards linear;
+        5vw 10vh #fff, 12vw 15vh #e0b0ff, 18vw 25vh #00d4ff, 25vw 5vh #fff, 32vw 35vh #ff99cc, 38vw 45vh #fff, 
+        45vw 18vh #00d4ff, 52vw 55vh #e0b0ff, 60vw 25vh #fff, 68vw 65vh #ff99cc, 75vw 12vh #fff, 82vw 75vh #00d4ff, 
+        88vw 85vh #e0b0ff, 95vw 15vh #fff, 10vw 95vh #fff, 20vw 80vh #00d4ff, 40vw 92vh #e0b0ff, 50vw 10vh #fff, 
+        70vw 88vh #ff99cc, 80vw 22vh #fff, 90vw 38vh #00d4ff, 5vw 110vh #fff, 15vw 120vh #e0b0ff, 25vw 130vh #00d4ff,
+        35vw 105vh #fff, 45vw 115vh #ff99cc, 55vw 125vh #fff, 65vw 135vh #00d4ff, 75vw 110vh #e0b0ff, 85vw 120vh #fff,
+        95vw 130vh #ff99cc, 10vw 140vh #fff, 20vw 105vh #00d4ff, 30vw 145vh #e0b0ff, 40vw 110vh #fff, 50vw 150vh #ff99cc,
+        60vw 105vh #fff, 70vw 140vh #00d4ff, 80vw 115vh #e0b0ff, 90vw 145vh #fff, 12vw 50vh #fff, 28vw 60vh #00d4ff,
+        42vw 70vh #fff, 58vw 40vh #e0b0ff, 72vw 50vh #fff, 88vw 60vh #00d4ff;
+    animation: ultimateDrift 6s forwards linear;
 }
 
-/* Layer 2: Srednje zvezde koje jače sijaju i putuju brže */
+/* Layer 2: Srednje zvezde, blago pulsiraju */
 .stardust-layer.layer-2 {
-    width: 5px; height: 5px;
+    width: 4px; height: 4px;
     box-shadow: 
-        8vw 110vh rgba(255,255,255,1), 22vw 120vh rgba(224,176,255,0.9), 
-        35vw 105vh rgba(0,212,255,1), 48vw 115vh rgba(255,255,255,0.8), 
-        62vw 125vh rgba(255,153,204,1), 78vw 108vh rgba(255,255,255,0.9), 
-        92vw 118vh rgba(0,212,255,1), 15vw 128vh rgba(224,176,255,0.8), 
-        45vw 135vh rgba(255,255,255,1), 85vw 122vh rgba(255,153,204,0.9);
-    filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 12px #00d4ff);
-    animation: premiumDrift 5s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        8vw 15vh #fff, 22vw 30vh #e0b0ff, 35vw 10vh #00d4ff, 48vw 45vh #fff, 62vw 25vh #ff99cc, 78vw 55vh #fff, 
+        92vw 35vh #00d4ff, 15vw 65vh #e0b0ff, 45vw 75vh #fff, 85vw 12vh #ff99cc, 12vw 115vh #fff, 28vw 130vh #e0b0ff,
+        42vw 110vh #00d4ff, 58vw 145vh #fff, 72vw 125vh #ff99cc, 88vw 155vh #fff, 18vw 135vh #00d4ff, 38vw 165vh #e0b0ff,
+        68vw 105vh #fff, 98vw 140vh #ff99cc;
+    filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 10px #00d4ff);
+    animation: ultimateDriftTwinkle 6s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
     animation-delay: 0.1s;
 }
 
-/* Layer 3: Krupne magične zvezde u prvom planu sa intenzivnim sjajem */
+/* Layer 3: Krupne Premium zvezde u prvom planu, masivan sjaj */
 .stardust-layer.layer-3 {
-    width: 8px; height: 8px;
+    width: 7px; height: 7px;
     box-shadow: 
-        15vw 120vh #fff, 55vw 110vh #e0b0ff, 85vw 125vh #00d4ff, 
-        30vw 115vh #ff99cc, 70vw 105vh #fff;
-    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 30px #e0b0ff);
-    animation: premiumDriftTwinkle 6s forwards ease-out;
+        15vw 120vh #fff, 55vw 140vh #e0b0ff, 85vw 110vh #00d4ff, 
+        30vw 135vh #ff99cc, 70vw 150vh #fff, 40vw 115vh #00d4ff, 
+        10vw 155vh #fff, 90vw 125vh #e0b0ff;
+    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 35px #e0b0ff) drop-shadow(0 0 50px rgba(0, 212, 255, 0.5));
+    animation: premiumDriftZoom 6s forwards ease-out;
 }
 
-/* NOVO: Komete / Zvezde padalice koje proleću dijagonalno */
+/* Layer 4 (NOVO): Supernove - par ogromnih bljeskova koji daju epski utisak */
+.stardust-layer.layer-4 {
+    width: 12px; height: 12px;
+    box-shadow: 25vw 140vh #fff, 75vw 130vh #fff;
+    filter: drop-shadow(0 0 30px #fff) drop-shadow(0 0 60px #00d4ff) drop-shadow(0 0 100px #e0b0ff);
+    animation: supernovaBlink 6s forwards ease-in-out;
+}
+
+/* Layer Comets V3: Hiper-realistične komete sa gradient repom */
 .stardust-layer.layer-comets {
-    width: 3px; height: 80px; /* Izdužen oblik za kometu */
-    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(0,212,255,0.8) 40%, transparent 100%);
+    width: 3px; height: 150px; border-radius: 50% 50% 0 0;
+    background: linear-gradient(to bottom, #ffffff 0%, rgba(0,212,255,0.8) 15%, rgba(138,43,226,0.4) 40%, transparent 100%);
     box-shadow: 
-        30vw 110vh transparent, /* Baza */
-        60vw 130vh transparent; /* Druga kometa */
-    filter: drop-shadow(0 0 10px #fff);
-    animation: cometStrike 6s forwards ease-in;
+        40vw 120vh transparent, 
+        80vw 150vh transparent,
+        15vw 180vh transparent; /* Tri komete */
+    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 30px #00d4ff);
+    animation: cometStrikeV3 6s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
 }
 
-/* --- Premium Animacije (Dizajnirane za savršen tajming od 6s) --- */
+/* --- Ultimate Animacije (6s tajming) --- */
 
-@keyframes premiumNebulaPulse {
-    0% { opacity: 0; transform: scale(1.1) rotate(-2deg); filter: brightness(0.5) contrast(1.2); }
-    15% { opacity: 0.8; filter: brightness(1.2) contrast(1.5); }
-    40% { opacity: 1; transform: scale(1) rotate(0deg); filter: brightness(1.5) contrast(1.3) hue-rotate(15deg); }
-    75% { opacity: 0.9; transform: scale(1.05) rotate(1deg); filter: brightness(1.3) contrast(1.4); }
-    100% { opacity: 0; transform: scale(1.1) rotate(2deg); filter: brightness(0.5) contrast(1.2); }
+@keyframes deepSpaceFade {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
-@keyframes premiumDrift {
+@keyframes ultimateNebulaSwirl {
+    0% { opacity: 0; transform: scale(1.2) rotate(-5deg); filter: blur(30px) brightness(0.3) contrast(1); }
+    15% { opacity: 0.9; filter: blur(20px) brightness(1.3) contrast(1.6); }
+    40% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(15px) brightness(1.8) contrast(1.8) hue-rotate(25deg); }
+    75% { opacity: 0.9; transform: scale(1.1) rotate(3deg); filter: blur(20px) brightness(1.4) contrast(1.5); }
+    100% { opacity: 0; transform: scale(1.3) rotate(5deg); filter: blur(30px) brightness(0.3); }
+}
+
+@keyframes ultimateDrift {
     0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 0; }
     10% { opacity: 1; }
     85% { opacity: 1; }
-    100% { transform: translateY(-130vh) scale(1.3) rotate(15deg); opacity: 0; }
+    100% { transform: translateY(-120vh) scale(1.3) rotate(10deg); opacity: 0; }
 }
 
-@keyframes premiumDriftTwinkle {
+@keyframes ultimateDriftTwinkle {
     0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    10% { opacity: 1; transform: translateY(-10vh) scale(1.2); }
-    30% { opacity: 0.6; transform: translateY(-40vh) scale(0.8); }
-    50% { opacity: 1; transform: translateY(-70vh) scale(1.5); }
-    75% { opacity: 0.5; transform: translateY(-100vh) scale(0.9); }
-    100% { transform: translateY(-140vh) scale(1.2); opacity: 0; }
+    10% { opacity: 1; transform: translateY(-15vh) scale(1.2); }
+    30% { opacity: 0.4; transform: translateY(-45vh) scale(0.7); }
+    50% { opacity: 1; transform: translateY(-75vh) scale(1.5); }
+    75% { opacity: 0.4; transform: translateY(-105vh) scale(0.8); }
+    100% { transform: translateY(-135vh) scale(1.2); opacity: 0; }
 }
 
-@keyframes cometStrike {
-    0%, 20% { transform: translate(0, 0) rotate(35deg); opacity: 0; }
-    25% { opacity: 1; }
-    40% { transform: translate(50vw, -120vh) rotate(35deg); opacity: 0; } /* Prva kometa proleće */
-    41%, 100% { opacity: 0; }
+@keyframes premiumDriftZoom {
+    0% { transform: translateY(0) scale(0.2); opacity: 0; }
+    20% { opacity: 1; transform: translateY(-20vh) scale(1.5); }
+    50% { opacity: 0.8; transform: translateY(-60vh) scale(2); }
+    80% { opacity: 1; transform: translateY(-100vh) scale(1.2); }
+    100% { transform: translateY(-140vh) scale(3); opacity: 0; }
+}
+
+@keyframes supernovaBlink {
+    0%, 20% { opacity: 0; transform: translateY(0) scale(0); }
+    40% { opacity: 1; transform: translateY(-40vh) scale(3); filter: drop-shadow(0 0 50px #fff) drop-shadow(0 0 150px #00d4ff); }
+    60% { opacity: 0.5; transform: translateY(-70vh) scale(1); }
+    80% { opacity: 1; transform: translateY(-100vh) scale(2); filter: drop-shadow(0 0 50px #fff) drop-shadow(0 0 100px #e0b0ff); }
+    100% { opacity: 0; transform: translateY(-130vh) scale(0); }
+}
+
+@keyframes cometStrikeV3 {
+    0%, 15% { transform: translate(0, 0) rotate(35deg) scale(0); opacity: 0; }
+    20% { opacity: 1; transform: translate(10vw, -20vh) rotate(35deg) scale(1); }
+    35% { transform: translate(60vw, -140vh) rotate(35deg) scale(0.5); opacity: 0; }
+    36%, 100% { opacity: 0; }
 }
 
 /* =========================================================
