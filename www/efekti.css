@@ -23,7 +23,6 @@
 .prev-balkan::before { content: "🎺"; font-size: 2.5rem; animation: shakeBalkan 0.4s infinite alternate; }
 @keyframes shakeBalkan { 0% { transform: rotate(-15deg) scale(1); } 100% { transform: rotate(15deg) scale(1.1); } }
 
-/* Kafanski karirani stolnjak - poluprovidan preko celog ekrana */
 .kafana-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background-image: conic-gradient(rgba(200, 0, 0, 0.15) 90deg, transparent 90deg 180deg, rgba(200, 0, 0, 0.15) 180deg 270deg, transparent 270deg);
@@ -33,10 +32,8 @@
 }
 @keyframes kafanaFade { 0% { opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; } }
 
-/* Velike trube koje đuskaju - PRILAGOĐENO ZA TELEFONE (S25) */
 .trumpet-icon-v2 {
     position: fixed;
-    /* Responzivna veličina: min 3.5rem, max 5rem, skalira sa ekranom */
     font-size: clamp(3.5rem, 12vw, 5rem); 
     z-index: 99999; 
     pointer-events: none;
@@ -44,12 +41,12 @@
 }
 
 .trumpet-left { 
-    left: 6vw; /* Odmaknuto od ivice ekrana */
+    left: 6vw; 
     transform-origin: center center; 
     animation: trumpetDanceLeft 0.4s infinite alternate ease-in-out; 
 }
 .trumpet-right { 
-    right: 6vw; /* Odmaknuto od ivice ekrana */
+    right: 6vw; 
     transform-origin: center center; 
     animation: trumpetDanceRight 0.4s infinite alternate ease-in-out; 
 }
@@ -60,10 +57,10 @@
 }
 
 @keyframes trumpetDanceRight {
-    /* Kod desne trube scaleX(-1) MORA biti prvi parametar da ne bi gurao trubu van ekrana! */
     0% { transform: scaleX(-1) rotate(-10deg) scale(1) translateY(0); }
     100% { transform: scaleX(-1) rotate(20deg) scale(1.15) translateY(-15px); }
 }
+
 /* ========================================================= */
 
 .prev-supernova { background: radial-gradient(circle, #0b0b1a 0%, #000 100%); position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
@@ -73,7 +70,6 @@
 .prev-glass { background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%) !important; border: 2px solid #ffffff !important; box-shadow: 0 0 15px rgba(0, 255, 255, 0.4) !important; position: relative; }
 .prev-glass::before { content: "❄️"; font-size: 2.5rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.8)); animation: pulseIce 2s infinite alternate; }
 
-/* --- NOVI WATERMARK MAGIČNI SVICI --- */
 .prev-fireflies { background: radial-gradient(circle at bottom, #0f2027, #203a43, #2c5364); } 
 .prev-fireflies::before { 
     content: "✨"; 
@@ -83,7 +79,6 @@
     animation: floatUp 3s infinite ease-in-out; 
 }
 
-/* Aktivni leteći svici u igri - OPTIMIZOVANO */
 .firefly { 
     position: fixed; 
     bottom: -50px; 
@@ -109,7 +104,6 @@
     100% { transform: translateY(-110vh) translateX(0) scale(0.5) rotate(-15deg); opacity: 0; } 
 }
 
-/* --- Magični Mehurići (Preview u prodavnici) --- */
 .prev-bubbles { 
     background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); 
     box-shadow: inset 0 0 15px rgba(255,255,255,0.8);
@@ -121,7 +115,6 @@
     animation: floatUp 3s infinite ease-in-out;
 }
 
-/* --- Magični Mehurići (Aktivni u igri) --- */
 .magic-bubble {
     position: fixed;
     bottom: -50px;
@@ -492,15 +485,15 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 
 /* --- Aktivni Efekat u Igri (Trajanje: 6s) --- */
 
-/* Deep Space pozadina (Crnilo i dubina) */
+/* ISPRAVLJENO: Deep Space pozadina - sada je providna ljubičasta senka umesto potpunog crnila */
 body.fx-cosmic_dust::before {
     content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: radial-gradient(ellipse at bottom, #1b2735 0%, #050608 100%);
-    z-index: 99979; pointer-events: none;
-    animation: deepSpaceFade 6s forwards ease-in-out;
+    background: rgba(20, 10, 40, 0.3); /* Jako suptilna boja dubine, ne gasi ekran */
+    z-index: 99979; pointer-events: none; mix-blend-mode: multiply;
+    animation: deepSpaceFadeSoft 6s forwards ease-in-out;
 }
 
-/* Hiper-bogata Maglina (Nebula / Aurora Core) */
+/* ISPRAVLJENO: Hiper-bogata Maglina - smanjen prejak kontrast i "crnilo" koje je jelo boje */
 body.fx-cosmic_dust::after {
     content: ""; position: fixed; top: -20vh; left: -20vw; width: 140vw; height: 140vh;
     background: 
@@ -580,19 +573,19 @@ body.fx-cosmic_dust::after {
 
 /* --- Ultimate Animacije (6s tajming) --- */
 
-@keyframes deepSpaceFade {
+@keyframes deepSpaceFadeSoft {
     0% { opacity: 0; }
-    10% { opacity: 1; }
+    15% { opacity: 1; }
     85% { opacity: 1; }
     100% { opacity: 0; }
 }
 
 @keyframes ultimateNebulaSwirl {
-    0% { opacity: 0; transform: scale(1.2) rotate(-5deg); filter: blur(30px) brightness(0.3) contrast(1); }
-    15% { opacity: 0.9; filter: blur(20px) brightness(1.3) contrast(1.6); }
-    40% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(15px) brightness(1.8) contrast(1.8) hue-rotate(25deg); }
-    75% { opacity: 0.9; transform: scale(1.1) rotate(3deg); filter: blur(20px) brightness(1.4) contrast(1.5); }
-    100% { opacity: 0; transform: scale(1.3) rotate(5deg); filter: blur(30px) brightness(0.3); }
+    0% { opacity: 0; transform: scale(1.2) rotate(-5deg); filter: blur(30px) brightness(0.8); }
+    15% { opacity: 0.9; filter: blur(20px) brightness(1.2) contrast(1.2); }
+    40% { opacity: 1; transform: scale(1) rotate(0deg); filter: blur(15px) brightness(1.5) contrast(1.4) hue-rotate(25deg); }
+    75% { opacity: 0.9; transform: scale(1.1) rotate(3deg); filter: blur(20px) brightness(1.2) contrast(1.2); }
+    100% { opacity: 0; transform: scale(1.3) rotate(5deg); filter: blur(30px) brightness(0.8); }
 }
 
 @keyframes ultimateDrift {
