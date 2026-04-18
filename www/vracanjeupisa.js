@@ -59,13 +59,16 @@ class UndoManager {
         let successMsg = (gt('undo_earned_msg') || "Dobili ste {0} tokena!").replace('{0}', amount);
         this.app.modal.alert(successMsg, gt('undo_earned_title') || "TOKENI DODATI");
 
-        // Sinhronizacija sa Cloud-om odmah po dobijanju
+        // Sinhronizacija sa Cloud-om odmah po dobijanju (ISPRAVLJENO)
         if (this.app.socket && this.app.socket.connected) {
+            let currentStats = this.app.getFullLocalStats() || {};
+            currentStats.undoTokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
+
             this.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid'),
                 name: this.app.playerName,
                 photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: this.app.getFullLocalStats(),
+                stats: currentStats,
                 playerId: this.app.playerId
             });
         }
@@ -91,13 +94,16 @@ class UndoManager {
             tokens -= 1;
             localStorage.setItem('yamb_undo_tokens', tokens);
             
-            // Cloud Sync tokena
+            // Cloud Sync tokena (ISPRAVLJENO)
             if (this.app.socket && this.app.socket.connected) {
+                let currentStats = this.app.getFullLocalStats() || {};
+                currentStats.undoTokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
+
                 this.app.socket.emit('set_player_data', {
                     uid: localStorage.getItem('yamb_uid'),
                     name: this.app.playerName,
                     photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                    stats: this.app.getFullLocalStats(),
+                    stats: currentStats,
                     playerId: this.app.playerId
                 });
             }
