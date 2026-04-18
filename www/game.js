@@ -71,6 +71,9 @@ class YambApp {
             this.tournamentManager = new TournamentManager(this);
         }
 
+        // --- DODATO: Inicijalizacija Undo menadžera ---
+        this.initUndoManager();
+
         this.players = []; 
         this.allScores = []; 
         this.currentPlayerIdx = 0;
@@ -203,6 +206,15 @@ class YambApp {
 
         this.uiInit();
         this.syncBalance();
+    }
+
+    initUndoManager() {
+        if (typeof UndoManager !== 'undefined') {
+            this.undoManager = new UndoManager(this);
+            console.log("✅ UndoManager uspešno povezan.");
+        } else {
+            console.warn("⚠️ UndoManager skripta nije učitana!");
+        }
     }
 
     // --- NOVO: HEADER LOGIKA (MENI, ZVUK, VIB, OKO, AVATAR) ---
@@ -3796,124 +3808,26 @@ class YambApp {
         } 
     }
 
+    // --- UNDO MENU & TOKENS (Delegati za vracanjeupisa.js) ---
+    
+    openUndoMenu() {
+        if (this.undoManager) this.undoManager.openMenu();
+    }
+
+    closeUndoMenu() {
+        if (this.undoManager) this.undoManager.closeMenu();
+    }
+
+    async buyUndoTokens(type) {
+        if (this.undoManager) await this.undoManager.buyTokens(type);
+    }
+
+    addUndoTokens(amount) {
+        if (this.undoManager) this.undoManager.addTokens(amount);
+    }
+
     async undoLastMove() {
-        if (!this.lastMoveSnapshot) return;
-
-        if (this.onlineMode) {
-            // ONLINE MOD: Koristi tokene umesto gledanja reklame
-            let tokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
-            if (tokens < 1) {
-                await this.modal.alert(gt('undo_no_tokens'), gt('undo_no_tokens_title'));
-                return;
-            }
-            
-            let confirmMsg = gt('undo_use_confirm').replace('{0}', tokens);
-            const confirmUndo = await this.modal.confirm(confirmMsg);
-            if (!confirmUndo) return;
-
-            // Skini token
-            tokens -= 1;
-            localStorage.setItem('yamb_undo_tokens', tokens);
-            
-            // DODATO: Odmah sinhronizuj oduzimanje tokena sa bazom
-            if (this.socket && this.socket.connected) {
-                this.socket.emit('set_player_data', {
-                    uid: localStorage.getItem('yamb_uid'),
-                    name: this.playerName,
-                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                    stats: this.getFullLocalStats(),
-                    playerId: this.playerId
-                });
-            }
-
-        } else {
-            // OFFLINE MOD: Solo i Dva Igrača (stara logika sa reklamom)
-            const confirmUndo = await this.modal.confirm(gt('undo_confirm') || "Želite li da ispravite zadnji upis gledanjem reklame?");
-            if (!confirmUndo) return;
-
-            if (this.adMob && window.Capacitor && window.Capacitor.isNativePlatform) {
-                if (this.adMob.showInterstitial) {
-                    const success = await this.adMob.showInterstitial();
-                    if (!success) return; 
-                }
-            }
-        }
-
-        // RESTORE LOKALNOG STANJA (Zajedničko)
-        const snap = this.lastMoveSnapshot;
-        this.currentPlayerIdx = snap.pIdx;
-        this.allScores[snap.pIdx][snap.col][snap.row] = null;
-        this.kockiceVals = [...snap.diceVals];
-        this.zadrzane = [...snap.held];
-        this.brojBacanja = snap.rollCount;
-        this.najavljenoPolje = snap.najavljenoPolje;
-        
-        this.najavaAktivna = snap.najavaAktivna;
-        this.hasSvetiIlija = snap.hasSvetiIlija;
-        this.consecutiveNajava = snap.consecutiveNajava;
-
-        this.effectMgr.stop();
-        this.loadEquippedEffect();
-        this.highlightCurrentPlayer();
-        this.updateTableVisuals();
-        this.updateDiceVisuals();
-
-        const btnBacaj = document.getElementById('btn-bacaj');
-        if (btnBacaj) {
-            if (this.brojBacanja < 3) {
-                btnBacaj.disabled = false;
-                btnBacaj.innerText = gt('game_roll') || "BACAJ";
-            } else {
-                btnBacaj.disabled = true;
-                btnBacaj.innerText = gt('game_write') || "UPIŠI";
-            }
-        }
-
-        const btnN = document.getElementById('btn-najava');
-        if (btnN) {
-            if (this.najavaAktivna) {
-                btnN.disabled = false;
-                btnN.innerText = gt('game_announce_cancel') || "OTKAŽI";
-                btnN.classList.add('btn-active-toggle');
-                btnN.classList.remove('btn-highlight');
-            } else if (this.najavljenoPolje) {
-                btnN.disabled = true;
-                btnN.innerText = `${gt('game_announce') || "NAJAVA"}: ${this.najavljenoPolje.row}`;
-                btnN.classList.remove('btn-active-toggle');
-                btnN.classList.remove('btn-highlight');
-            } else if (this.brojBacanja === 1) {
-                btnN.disabled = false;
-                btnN.classList.add('btn-highlight');
-            } else {
-                btnN.disabled = true;
-                btnN.classList.remove('btn-highlight');
-            }
-        }
-
-        this.updateStatusLabel();
-
-        this.lastMoveSnapshot = null;
-        const btnUndo = document.getElementById('btn-undo-move');
-        if (btnUndo) {
-            btnUndo.classList.add('gh-btn-inactive');
-            btnUndo.classList.remove('gh-btn-active');
-        }
-        this.autoSaveGame();
-
-        // ONLINE MOD: Forsiraj protivnika da preuzme tvoje resetovano stanje (Rollback)
-        if (this.onlineMode && this.socket) {
-            this.socket.emit('sync_state_response', {
-                roomId: this.roomId,
-                players: this.players,
-                allScores: this.allScores,
-                currentPlayerIdx: this.currentPlayerIdx,
-                brojBacanja: this.brojBacanja,
-                kockiceVals: this.kockiceVals,
-                zadrzane: this.zadrzane,
-                najavaAktivna: this.najavaAktivna,
-                najavljenoPolje: this.najavljenoPolje
-            });
-        }
+        if (this.undoManager) await this.undoManager.executeUndo();
     }
 
     showQuarterWinnerModal(data) {
@@ -3951,71 +3865,6 @@ class YambApp {
         </div>`;
 
         document.body.insertAdjacentHTML('beforeend', modalHtml);
-    }
-
-    // --- UNDO MENU & TOKENS ---
-    openUndoMenu() {
-        const overlay = document.getElementById('undo-menu-overlay');
-        const tokenCount = document.getElementById('undo-token-count');
-        if (tokenCount) {
-            tokenCount.innerText = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
-        }
-        if (overlay) overlay.style.display = 'flex';
-    }
-
-    closeUndoMenu() {
-        const overlay = document.getElementById('undo-menu-overlay');
-        if (overlay) overlay.style.display = 'none';
-    }
-
-    async buyUndoTokens(type) {
-        // Osiguravamo da je 'type' broj, u slučaju da iz HTML-a stiže kao string
-        const parsedType = parseInt(type, 10);
-        
-        console.log("Pokrenuta kupovina tokena, tip:", parsedType);
-
-        if (parsedType === 1) {
-            if (this.adMob && this.adMob.showInterstitial) {
-                const success = await this.adMob.showInterstitial();
-                console.log("Rezultat Interstitial reklame:", success);
-                if (success) {
-                    this.addUndoTokens(1);
-                }
-            }
-        } else if (parsedType === 3) {
-            if (this.adMob && this.adMob.showRewardVideo) {
-                const success = await this.adMob.showRewardVideo();
-                console.log("Rezultat Reward reklame:", success);
-                if (success) {
-                    this.addUndoTokens(3);
-                }
-            }
-        }
-    }
-
-    addUndoTokens(amount) {
-        let tokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
-        tokens += amount;
-        localStorage.setItem('yamb_undo_tokens', tokens);
-        
-        const tokenCount = document.getElementById('undo-token-count');
-        if (tokenCount) tokenCount.innerText = tokens;
-
-        this.soundMgr.win();
-        
-        let successMsg = gt('undo_earned_msg').replace('{0}', amount);
-        this.modal.alert(successMsg, gt('undo_earned_title'));
-
-        // DODATO: Odmah sinhronizuj sa bazom
-        if (this.socket && this.socket.connected) {
-            this.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid'),
-                name: this.playerName,
-                photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: this.getFullLocalStats(),
-                playerId: this.playerId
-            });
-        }
     }
 }
 
