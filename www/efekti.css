@@ -604,134 +604,137 @@ body.fx-cosmic_dust::after {
 }
 
 /* =========================================================
-   Zmajeva Vatra (DRAGON FIRE) - PREMIUM V.5.0 (NEBULA INFERNO)
+   Zmajeva Vatra (DRAGON FIRE) - PREMIUM V.6.0 (ELEGANCE & WARMTH)
    ========================================================= */
 
-/* --- Preview u Prodavnici (V5) --- */
+/* --- Preview u Prodavnici (V6) --- */
 .prev-dragon-fire { 
-    background: radial-gradient(circle at bottom, #2a0000 0%, #0a0000 100%); 
+    background: linear-gradient(to top, #4a0000 0%, #a02000 50%, #ff5722 100%); 
     position: relative; 
     overflow: hidden; 
-    box-shadow: inset 0 0 40px rgba(255, 69, 0, 0.15);
+    box-shadow: inset 0 0 20px rgba(255, 100, 0, 0.8);
 }
 .prev-dragon-fire::before { 
     content: "🔥"; 
     font-size: 3.5rem; 
-    position: absolute; top: 50%; left: 50%; 
-    transform: translate(-50%, -50%);
-    color: transparent;
-    text-shadow: 0 0 20px rgba(255, 87, 34, 0.8), 0 0 40px rgba(255, 0, 0, 0.6); 
-    animation: dragonBreathPrevV5 4s infinite alternate ease-in-out; 
-}
-.prev-dragon-fire::after {
-    content: ""; position: absolute; bottom: -20px; left: -20px; right: -20px; height: 60%;
-    background: radial-gradient(ellipse at bottom, rgba(255, 69, 0, 0.4) 0%, transparent 70%);
-    filter: blur(10px); mix-blend-mode: screen; animation: pulseGlowV5 3s infinite alternate;
+    position: absolute; bottom: -10px; left: 50%; 
+    transform: translateX(-50%);
+    filter: drop-shadow(0 0 15px rgba(255, 235, 59, 0.8)) drop-shadow(0 -5px 25px rgba(255, 50, 0, 0.8)); 
+    animation: dragonFlamePrevV6 2s infinite alternate ease-in-out; 
 }
 
-@keyframes dragonBreathPrevV5 {
-    0% { transform: translate(-50%, calc(-50% + 5px)) scale(0.95); opacity: 0.8; }
-    100% { transform: translate(-50%, calc(-50% - 5px)) scale(1.05); opacity: 1; filter: brightness(1.2); }
-}
-@keyframes pulseGlowV5 { 0% { opacity: 0.5; transform: scaleY(0.8); } 100% { opacity: 1; transform: scaleY(1.1); } }
-
-/* --- Aktivni Efekat u Igri (V5 - Maglina i suptilno topljenje) --- */
-
-/* 1. Osnovni odsjaj preko celog ekrana */
-body.fx-dragon_fire::before {
-    content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: radial-gradient(ellipse at bottom, rgba(200, 30, 0, 0.15) 0%, transparent 80%);
-    z-index: 99979; pointer-events: none; mix-blend-mode: screen; 
-    animation: fireNebulaFadeV5 7.5s forwards ease-in-out;
+@keyframes dragonFlamePrevV6 {
+    0% { transform: translateX(-50%) translateY(5px) scaleX(1.05) scaleY(0.95); opacity: 0.85; }
+    100% { transform: translateX(-50%) translateY(-2px) scaleX(0.95) scaleY(1.05); opacity: 1; filter: drop-shadow(0 0 25px #ffeb3b) brightness(1.2); }
 }
 
-/* 2. Maglina vatre (Nebula efekat) - Statičan blur, animirana transformacija */
-body.fx-dragon_fire::after {
-    content: ""; position: fixed; top: -20vh; left: -20vw; width: 140vw; height: 140vh;
-    background: 
-        radial-gradient(circle at 30% 70%, rgba(255, 50, 0, 0.25) 0%, transparent 45%),
-        radial-gradient(circle at 70% 80%, rgba(255, 120, 0, 0.2) 0%, transparent 50%),
-        radial-gradient(circle at 50% 90%, rgba(255, 200, 0, 0.15) 0%, transparent 60%);
-    z-index: 99980; pointer-events: none; mix-blend-mode: screen; 
-    filter: blur(35px); /* Ekstremni blur za efekat duboke magline */
-    animation: fireNebulaSwirlV5 7.5s forwards ease-in-out;
+/* --- Aktivni Efekat u Igri --- */
+
+/* Topli, providni talas koji nežno guta ekran odozdo */
+.dragon-flames {
+    position: fixed; bottom: 0; left: 0; width: 100vw; height: 130vh;
+    background: linear-gradient(to top, 
+        rgba(255, 100, 0, 0.85) 0%, 
+        rgba(255, 50, 0, 0.6) 20%, 
+        rgba(200, 0, 0, 0.3) 50%, 
+        transparent 80%);
+    z-index: 99980; pointer-events: none; mix-blend-mode: screen;
+    transform-origin: bottom center;
+    animation: warmElegantWaveV6 7.5s forwards cubic-bezier(0.3, 0, 0.2, 1);
     will-change: transform, opacity;
 }
 
-/* 3. Dubinske varnice (Kao Bokeh efekat) */
+/* Magične, meke varnice koje lagano lebde uz toplotu */
 .dragon-embers {
-    position: fixed; bottom: -10vh; left: 0; width: 8px; height: 8px; background: transparent;
-    border-radius: 50%; z-index: 99985; pointer-events: none; mix-blend-mode: color-dodge;
+    position: fixed; bottom: -10vh; left: 0; width: 6px; height: 6px; background: #fff;
+    border-radius: 50%; z-index: 99985; pointer-events: none;
     box-shadow: 
-        15vw 10vh 15px 4px rgba(255, 100, 0, 0.6), 35vw -5vh 20px 6px rgba(255, 50, 0, 0.5), 
-        65vw 15vh 10px 3px rgba(255, 200, 0, 0.7), 85vw -10vh 25px 8px rgba(255, 0, 0, 0.4),
-        25vw 25vh 12px 5px rgba(255, 150, 0, 0.6), 50vw -15vh 18px 4px rgba(255, 80, 0, 0.5),
-        75vw 5vh 22px 7px rgba(255, 220, 0, 0.4), 90vw 20vh 14px 4px rgba(200, 0, 0, 0.6);
-    animation: bokehEmbersRiseV5 7.5s forwards ease-in-out;
+        10vw 0 8px 2px rgba(255, 235, 59, 0.8), 25vw 5vh 12px 3px rgba(255, 100, 0, 0.8), 
+        35vw -10vh 6px 1px rgba(255, 255, 255, 0.6), 50vw 15vh 10px 2px rgba(255, 200, 0, 0.7), 
+        65vw -5vh 15px 4px rgba(255, 50, 0, 0.6), 75vw 25vh 20px 5px rgba(255, 0, 0, 0.5),
+        85vw 10vh 8px 2px rgba(255, 235, 59, 0.8), 95vw -15vh 10px 2px rgba(255, 255, 255, 0.5), 
+        20vw 8vh 12px 3px rgba(255, 150, 0, 0.7), 40vw -12vh 8px 1px rgba(255, 235, 59, 0.6), 
+        60vw 18vh 18px 4px rgba(255, 50, 0, 0.7), 80vw -8vh 6px 1px rgba(255, 255, 255, 0.8);
+    animation: gentleEmbersRiseV6 7.5s forwards ease-in-out;
     will-change: transform, opacity;
 }
 
-/* --- EFEKAT SUBLIMIRANOG TOPLJENJA (Kao toplo staklo/vosak sa providnošću) --- */
+/* --- SOFISTICIRANO TOPLJENJE KOCKICA --- */
 body.fx-dragon_fire .grid-cell {
-    animation: etherealMeltV5 7.5s cubic-bezier(0.3, 0.05, 0.2, 1) forwards !important;
+    animation: elegantMeltV6 7.5s ease-in-out forwards !important;
     position: relative;
     will-change: transform, border-radius, background-color, opacity, box-shadow;
 }
 
-/* Suptilna, spora toplotna distorzija */
+/* Suptilna vazdušna distorzija od toplote (mirage) */
 body.fx-dragon_fire .game-scene {
-    animation: heatMirageV5 7.5s forwards ease-in-out;
+    animation: gentleHeatMirageV6 7.5s forwards ease-in-out;
     will-change: transform;
 }
 
-/* --- ANIMACIJE V5 --- */
+/* --- ANIMACIJE V6 --- */
 
-@keyframes fireNebulaFadeV5 {
-    0% { opacity: 0; }
-    20% { opacity: 1; }
-    75% { opacity: 1; }
-    100% { opacity: 0; }
+/* Talas dolazi lagano, prelepo sija, stoji, i meko isparava */
+@keyframes warmElegantWaveV6 {
+    0% { transform: translateY(100%) scaleY(0.5); opacity: 0; filter: blur(10px); }
+    15% { transform: translateY(15%) scaleY(1); opacity: 0.8; filter: blur(0px); }
+    40% { transform: translateY(-5%) scaleY(1.05); opacity: 1; filter: brightness(1.2); }
+    70% { transform: translateY(-15%) scaleY(1); opacity: 0.8; }
+    100% { transform: translateY(-30%) scaleY(0.8); opacity: 0; filter: blur(5px); }
 }
 
-@keyframes fireNebulaSwirlV5 {
-    0% { opacity: 0; transform: scale(1.1) translateY(10vh) rotate(-2deg); }
-    30% { opacity: 1; transform: scale(1) translateY(0) rotate(0deg); }
-    70% { opacity: 0.9; transform: scale(1.05) translateY(-5vh) rotate(2deg); }
-    100% { opacity: 0; transform: scale(1.1) translateY(-10vh) rotate(3deg); }
-}
-
-@keyframes bokehEmbersRiseV5 {
+@keyframes gentleEmbersRiseV6 {
     0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    20% { opacity: 0.8; transform: translateY(-20vh) scale(1.2); }
-    70% { opacity: 0.8; transform: translateY(-70vh) scale(1.5); }
-    100% { transform: translateY(-110vh) scale(2); opacity: 0; }
+    20% { opacity: 1; transform: translateY(-20vh) scale(1.2); }
+    60% { transform: translateY(-70vh) scale(1.5) rotate(45deg); opacity: 0.9; }
+    100% { transform: translateY(-120vh) scale(0.8) rotate(90deg); opacity: 0; }
 }
 
-/* Faza 1: Odsjaj -> Faza 2: Omekšavanje ivica i providnost -> Faza 3: Curenje i nestanak */
-@keyframes etherealMeltV5 {
-    0% { transform: translateY(0) scale(1); border-radius: 4px; box-shadow: none; background-color: inherit; }
-    15% { box-shadow: inset 0 0 15px rgba(255, 69, 0, 0.4), 0 0 10px rgba(255, 0, 0, 0.2); color: #ffeb3b; background-color: rgba(200, 0, 0, 0.1); }
+/* PRELEPO I SPORO TOPLJENJE */
+@keyframes elegantMeltV6 {
+    0% { transform: scale(1) translateY(0); border-radius: 4px; box-shadow: none; background-color: transparent; opacity: 1; }
+    
+    /* 1. Usijavanje (Sijaju toplo iznutra) */
+    15% { 
+        transform: scale(1) translateY(0); 
+        box-shadow: inset 0 0 15px rgba(255, 150, 0, 0.4), 0 0 10px rgba(255, 100, 0, 0.2); 
+        color: #ffeb3b; 
+        background-color: rgba(255, 87, 34, 0.1); 
+    }
+    
+    /* 2. Omekšavanje (Donje ivice se lagano zaobljuju, boja bledi) */
     35% { 
-        transform: translateY(3px) scale(0.98); 
-        border-radius: 6px 6px 15px 15px; 
-        box-shadow: inset 0 -10px 20px rgba(255, 150, 0, 0.3), 0 10px 15px rgba(255, 0, 0, 0.3); 
-        color: transparent; background-color: rgba(255, 69, 0, 0.4); 
-        backdrop-filter: blur(2px); /* Daje staklasti, providni efekat */
+        transform: scale(0.98) translateY(4px); 
+        border-radius: 6px 6px 16px 16px; 
+        box-shadow: inset 0 -10px 20px rgba(255, 100, 0, 0.5), 0 8px 15px rgba(255, 50, 0, 0.2); 
+        color: rgba(255, 235, 59, 0); 
+        background-color: rgba(255, 87, 34, 0.3); 
+        opacity: 0.95; 
     }
+    
+    /* 3. Viskozno curenje (Elegantno klizi na dole kao toplo staklo) */
     60% { 
-        transform: translateY(15px) scale(0.9) scaleY(1.1); 
-        border-radius: 10px 10px 45% 45%; 
-        box-shadow: inset 0 -15px 25px rgba(255, 200, 0, 0.4), 0 15px 10px rgba(0, 0, 0, 0.4); 
-        background-color: rgba(255, 30, 0, 0.6); opacity: 0.8;
+        transform: scale(0.9) translateY(18px) scaleY(1.05); 
+        border-radius: 8px 8px 30px 30px; 
+        box-shadow: inset 0 -15px 25px rgba(255, 50, 0, 0.6), 0 12px 10px rgba(0, 0, 0, 0.1); 
+        background-color: rgba(255, 50, 0, 0.4); 
+        opacity: 0.7; 
     }
-    85% { transform: translateY(35px) scale(0.6) scaleY(1.2); opacity: 0; border-radius: 50%; }
-    95% { transform: translateY(0) scale(1); opacity: 0; border-radius: 4px; }
-    100% { transform: translateY(0) scale(1); opacity: 1; border-radius: 4px; box-shadow: none; background-color: transparent; color: inherit; backdrop-filter: none; }
+    
+    /* 4. Meko isparavanje u kapljicu */
+    85% { 
+        transform: scale(0.75) translateY(30px) scaleY(1.1); 
+        border-radius: 10px 10px 50px 50px; 
+        box-shadow: inset 0 -5px 10px rgba(255, 0, 0, 0.2); 
+        background-color: rgba(200, 0, 0, 0.1); 
+        opacity: 0; 
+    }
+    
+    100% { transform: scale(1) translateY(0); opacity: 1; border-radius: 4px; box-shadow: none; background-color: transparent; color: inherit; }
 }
 
-@keyframes heatMirageV5 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(-1px, 1px) scale(1.002) skewX(0.5deg); }
-    50% { transform: translate(1px, -1px) scale(1.005) skewX(-0.5deg); }
-    75% { transform: translate(-1px, 1px) scale(1.002) skewX(0.5deg); }
+@keyframes gentleHeatMirageV6 {
+    0%, 100% { transform: translate(0, 0); }
+    25%, 75% { transform: translate(-1px, 1px) scale(1.002); }
+    50% { transform: translate(1px, -1px) scale(1.003); }
 }
