@@ -604,129 +604,102 @@ body.fx-cosmic_dust::after {
 }
 
 /* =========================================================
-   Zmajeva Vatra (DRAGON FIRE) - PREMIUM EFEKAT V.2.0 (INFERNO)
+   Zmajeva Vatra (DRAGON FIRE) - PREMIUM EFEKAT V.3.0 (CINEMATIC)
    ========================================================= */
 
-/* --- Preview u Prodavnici (V2) --- */
+/* --- Preview u Prodavnici (V3) --- */
 .prev-dragon-fire { 
-    background: radial-gradient(circle at bottom, #ff5722 0%, #8a0303 50%, #2a0000 100%); 
+    background: radial-gradient(circle at center, #5a0000 0%, #1a0000 100%); 
     position: relative; 
     overflow: hidden; 
-    box-shadow: inset 0 0 20px rgba(255, 69, 0, 0.8), 0 0 10px rgba(255, 0, 0, 0.5);
+    box-shadow: inset 0 0 15px rgba(255, 69, 0, 0.4);
 }
 .prev-dragon-fire::before { 
     content: "🔥"; 
     font-size: 3.5rem; 
-    position: absolute; bottom: -15px; left: 50%; 
-    transform: translateX(-50%);
-    filter: drop-shadow(0 -10px 20px #ffeb3b) drop-shadow(0 -20px 30px #ff0000); 
-    animation: dragonFlamePrevV2 0.8s infinite alternate cubic-bezier(0.4, 0, 0.2, 1); 
+    position: absolute; top: 50%; left: 50%; 
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 0 10px #ff5722); 
+    animation: dragonPulseV3 2.5s infinite alternate ease-in-out; 
 }
 
-@keyframes dragonFlamePrevV2 {
-    0% { transform: translateX(-50%) scaleY(0.9) scaleX(1.05); opacity: 0.8; filter: drop-shadow(0 -5px 15px #ff5722); }
-    100% { transform: translateX(-50%) scaleY(1.3) scaleX(0.95); opacity: 1; filter: drop-shadow(0 -20px 25px #ffeb3b) brightness(1.5); }
+@keyframes dragonPulseV3 {
+    0% { transform: translate(-50%, -50%) scale(0.95); filter: drop-shadow(0 0 5px #ff0000); }
+    100% { transform: translate(-50%, -50%) scale(1.1); filter: drop-shadow(0 0 25px #ffeb3b); }
 }
 
-/* --- Aktivni Efekat u Igri (V2 - Ekran gori) --- */
+/* --- Aktivni Efekat u Igri (V3 - Glatko, bez seckanja) --- */
 
-/* Baza vatre koja guta ceo ekran */
+/* Baza vatre: Suptilniji cinematic glow, bez ogromnih prelaza koji guše uređaj */
 .dragon-flames {
-    position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh;
-    background: radial-gradient(ellipse at bottom, rgba(255, 235, 59, 0.8) 0%, rgba(255, 87, 34, 0.9) 30%, rgba(255, 0, 0, 0.7) 60%, rgba(40, 0, 0, 0.8) 100%);
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: radial-gradient(ellipse at bottom, rgba(255, 87, 34, 0.25) 0%, rgba(150, 0, 0, 0.15) 50%, transparent 100%);
     z-index: 99980; pointer-events: none; mix-blend-mode: screen;
-    animation: engulfScreenInferno 6.5s forwards cubic-bezier(0.2, 0.8, 0.3, 1);
-    overflow: hidden;
+    animation: cinematicFireFadeV3 6.5s forwards ease-in-out;
+    will-change: opacity, transform;
 }
 
-/* Dodavanje dubine: Talasi vatre koji se preklapaju (Gooey efekat preko blura) */
-.dragon-flames::before, .dragon-flames::after {
-    content: ""; position: absolute; bottom: -20vh; width: 150vw; height: 120vh;
-    background: radial-gradient(circle at 50% 100%, #ffffff 0%, #ffeb3b 20%, #ff5722 50%, transparent 80%);
-    filter: blur(50px) contrast(1.5);
-    mix-blend-mode: overlay;
-}
-.dragon-flames::before {
-    left: -25vw;
-    animation: fireWaveLeft 6.5s forwards ease-in-out;
-}
-.dragon-flames::after {
-    right: -25vw;
-    animation: fireWaveRight 6.5s forwards ease-in-out;
-    animation-delay: 0.2s;
-}
-
-/* Puno sitnih i krupnih komadića žara koji nasumično lete gore */
+/* Varnice (Embers): Optimizovano - isključivo translate i opacity */
 .dragon-embers {
-    position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: #fff;
+    position: fixed; bottom: -10vh; left: 0; width: 4px; height: 4px; background: #fff;
     border-radius: 50%; z-index: 99985; pointer-events: none;
-    filter: drop-shadow(0 0 15px #ffeb3b) drop-shadow(0 0 25px #ff5722);
     box-shadow: 
-        10vw 110vh 2px #fff, 25vw 105vh 4px #ffeb3b, 35vw 120vh 1px #ff5722, 
-        50vw 115vh 3px #ffeb3b, 65vw 100vh 2px #fff, 75vw 125vh 5px #ff5722,
-        85vw 110vh 2px #ffeb3b, 95vw 105vh 4px #fff, 15vw 130vh 1px #ff5722,
-        45vw 118vh 3px #ffeb3b, 55vw 108vh 2px #ffeb3b, 80vw 122vh 4px #ff5722,
-        20vw 140vh 5px #fff, 40vw 135vh 2px #ff5722, 60vw 150vh 3px #ffeb3b,
-        90vw 145vh 4px #fff;
-    animation: infernoEmbersExplode 6.5s forwards cubic-bezier(0.1, 0.7, 0.2, 1);
+        10vw 0 2px #fff, 25vw 5vh 4px #ffeb3b, 35vw -10vh 1px #ff5722, 
+        50vw 15vh 3px #ffeb3b, 65vw -5vh 2px #fff, 75vw 25vh 5px #ff5722,
+        85vw 10vh 2px #ffeb3b, 95vw -15vh 4px #fff, 15vw 30vh 1px #ff5722,
+        45vw 8vh 3px #ffeb3b, 55vw -8vh 2px #ffeb3b, 80vw 22vh 4px #ff5722,
+        20vw 10vh 2px #ff5722, 40vw -5vh 3px #fff, 60vw 15vh 2px #ffeb3b, 
+        90vw -10vh 4px #ff5722;
+    animation: embersRiseV3 6.5s forwards ease-out;
+    will-change: transform, opacity;
 }
 
-/* --- EFEKAT TOPLJENJA KOCKICA (GRID CELLS) --- */
+/* --- EFEKAT SAGOREVANJA KOCKICA (GRID CELLS) --- */
+/* Nema topljenja i blura! Prelazak iz normalnog stanja -> Usijanje -> Pepeo -> Reset */
 body.fx-dragon_fire .grid-cell {
-    animation: meltCellsV2 6.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+    animation: burnToAshV3 6.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
     position: relative;
-    will-change: transform, border-radius, background, filter;
+    will-change: transform, opacity, box-shadow;
 }
 
-/* Toplotna distorzija stola - podrhtavanje i krivljenje usled "visoke temperature" */
+/* Toplotna distorzija stola: Samo minimalni scale i translate (tzv. Mirage efekat) */
 body.fx-dragon_fire .game-scene {
-    animation: dragonHeatWaveShakeV2 6.5s forwards ease-in-out;
+    animation: heatRefractionV3 6.5s forwards ease-in-out;
+    will-change: transform;
 }
 
-/* --- ANIMACIJE --- */
+/* --- ANIMACIJE V3 --- */
 
-@keyframes engulfScreenInferno {
-    0% { opacity: 0; transform: scaleY(0.2) translateY(50vh); filter: brightness(0.5); }
-    15% { opacity: 1; transform: scaleY(1.2) translateY(0); filter: brightness(1.8) saturate(1.5); }
-    30%, 65% { opacity: 0.95; transform: scaleY(1.1) translateY(-5vh); filter: brightness(2) saturate(2) hue-rotate(-5deg); }
-    85% { opacity: 0.6; transform: scaleY(1) translateY(10vh); filter: brightness(1); }
-    100% { opacity: 0; transform: scaleY(0.5) translateY(30vh); filter: brightness(0.5); }
+@keyframes cinematicFireFadeV3 {
+    0% { opacity: 0; transform: scaleY(0.9) translateY(5vh); }
+    15% { opacity: 1; transform: scaleY(1.1) translateY(0); }
+    50% { opacity: 0.8; transform: scaleY(1.15) translateY(-2vh); }
+    85% { opacity: 0.5; }
+    100% { opacity: 0; transform: scaleY(1) translateY(10vh); }
 }
 
-@keyframes fireWaveLeft {
-    0% { transform: translateX(0) scaleY(0.5); opacity: 0; }
-    30% { transform: translateX(10vw) scaleY(1.5) rotate(5deg); opacity: 1; }
-    70% { transform: translateX(-5vw) scaleY(1.8) rotate(-5deg); opacity: 0.8; }
-    100% { transform: translateX(-15vw) scaleY(0.5); opacity: 0; }
-}
-
-@keyframes fireWaveRight {
-    0% { transform: translateX(0) scaleY(0.5); opacity: 0; }
-    30% { transform: translateX(-10vw) scaleY(1.6) rotate(-5deg); opacity: 1; }
-    70% { transform: translateX(10vw) scaleY(1.4) rotate(5deg); opacity: 0.8; }
-    100% { transform: translateX(20vw) scaleY(0.5); opacity: 0; }
-}
-
-@keyframes infernoEmbersExplode {
+@keyframes embersRiseV3 {
     0% { transform: translateY(0) scale(1); opacity: 0; }
-    10% { opacity: 1; transform: translateY(-20vh) scale(1.2); }
-    50% { transform: translateY(-80vh) scale(1.8) rotate(45deg); opacity: 1; }
-    100% { transform: translateY(-160vh) scale(0.5) rotate(90deg); opacity: 0; }
+    10% { opacity: 1; }
+    60% { opacity: 0.8; transform: translateY(-70vh) scale(0.8); }
+    100% { transform: translateY(-130vh) scale(0.3); opacity: 0; }
 }
 
-/* Transformacija topljenja: kockice se usijaju, deformišu na dole, zamute i nestanu, pa se vrate */
-@keyframes meltCellsV2 {
-    0% { transform: translateY(0) scale(1); border-radius: 4px; box-shadow: none; border-color: inherit; color: inherit; filter: blur(0); }
-    15% { background: rgba(255, 69, 0, 0.4); border-color: #ff5722; color: #ffeb3b; box-shadow: inset 0 0 15px #ff0000, 0 0 10px #ff5722; text-shadow: 0 0 10px #fff; }
-    35% { transform: translateY(5px) scaleY(1.1) scaleX(0.95); border-radius: 12px 12px 45% 45%; background: rgba(255, 87, 34, 0.8); border-color: #ff0000; box-shadow: inset 0 -10px 20px #ff0000; color: #fff; filter: blur(0.5px); }
-    55% { transform: translateY(20px) scaleY(1.3) scaleX(0.9); border-radius: 20px 20px 70% 70%; background: rgba(255, 140, 0, 0.9); border-color: transparent; box-shadow: 0 15px 20px rgba(255,0,0,0.8); opacity: 0.8; filter: blur(2px); color: transparent; }
-    75% { transform: translateY(40px) scaleY(1.5) scaleX(0.8); border-radius: 50%; opacity: 0; filter: blur(5px); }
-    95% { opacity: 0; transform: translateY(0) scale(1); border-radius: 4px; } /* Reset state dok je još nevidljivo */
-    100% { transform: translateY(0) scale(1); border-radius: 4px; opacity: 1; background: transparent; filter: blur(0); color: inherit; border-color: inherit; box-shadow: none; }
+/* Faza 1: Zagrevanje -> Faza 2: Usijanje -> Faza 3: Pepeo (nestaje) */
+@keyframes burnToAshV3 {
+    0% { transform: scale(1) translateY(0); opacity: 1; box-shadow: none; border-color: inherit; }
+    15% { transform: scale(1.02); box-shadow: 0 0 10px #ff5722, inset 0 0 8px #ff0000; border-color: #ff5722; color: #ffeb3b; background: rgba(150, 0, 0, 0.3); }
+    35% { transform: scale(0.95) translateY(-2px); box-shadow: 0 0 20px #ffeb3b, inset 0 0 15px #ff5722; border-color: #ffeb3b; color: #fff; background: rgba(255, 87, 34, 0.7); }
+    50% { transform: scale(0.85) translateY(-5px); box-shadow: 0 5px 10px rgba(0,0,0,0.8); border-color: #222; color: transparent; background: #111; opacity: 0.9; }
+    70% { transform: scale(0.3) translateY(-20px); opacity: 0; }
+    95% { transform: scale(0.3) translateY(0); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; box-shadow: none; border-color: inherit; color: inherit; background: transparent; }
 }
 
-@keyframes dragonHeatWaveShakeV2 {
-    0%, 100% { transform: translate(0, 0) skewX(0deg); }
-    15%, 35%, 55%, 75% { transform: translate(-3px, 2px) skewX(1deg) scale(1.01); filter: blur(0.5px); }
-    25%, 45%, 65%, 85% { transform: translate(3px, -2px) skewX(-1deg) scale(1.02); filter: blur(0px); }
+@keyframes heatRefractionV3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    20% { transform: translate(-1px, 2px) scale(1.005); }
+    40% { transform: translate(2px, -1px) scale(1.01); }
+    60% { transform: translate(-2px, -1px) scale(1.005); }
+    80% { transform: translate(1px, 2px) scale(1.01); }
 }
