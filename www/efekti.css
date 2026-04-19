@@ -604,137 +604,135 @@ body.fx-cosmic_dust::after {
 }
 
 /* =========================================================
-   Zmajeva Vatra (DRAGON FIRE) - PREMIUM V.6.0 (ELEGANCE & WARMTH)
+   Zmajeva Vatra (DRAGON FIRE) - PREMIUM EFEKAT V.5.0 (MOLTEN INFERNO)
    ========================================================= */
 
-/* --- Preview u Prodavnici (V6) --- */
+/* --- Preview u Prodavnici (V5) --- */
 .prev-dragon-fire { 
-    background: linear-gradient(to top, #4a0000 0%, #a02000 50%, #ff5722 100%); 
+    background: radial-gradient(circle at bottom, #ff5722 0%, #d50000 50%, #2b0000 100%); 
     position: relative; 
     overflow: hidden; 
-    box-shadow: inset 0 0 20px rgba(255, 100, 0, 0.8);
+    box-shadow: inset 0 0 25px rgba(255, 69, 0, 1);
 }
 .prev-dragon-fire::before { 
     content: "🔥"; 
-    font-size: 3.5rem; 
-    position: absolute; bottom: -10px; left: 50%; 
+    font-size: 3.8rem; 
+    position: absolute; bottom: -5px; left: 50%; 
     transform: translateX(-50%);
-    filter: drop-shadow(0 0 15px rgba(255, 235, 59, 0.8)) drop-shadow(0 -5px 25px rgba(255, 50, 0, 0.8)); 
-    animation: dragonFlamePrevV6 2s infinite alternate ease-in-out; 
+    filter: drop-shadow(0 0 15px #ffeb3b) drop-shadow(0 -10px 30px #ff0000); 
+    animation: dragonFlamePrevV5 1s infinite alternate ease-in-out; 
 }
 
-@keyframes dragonFlamePrevV6 {
-    0% { transform: translateX(-50%) translateY(5px) scaleX(1.05) scaleY(0.95); opacity: 0.85; }
-    100% { transform: translateX(-50%) translateY(-2px) scaleX(0.95) scaleY(1.05); opacity: 1; filter: drop-shadow(0 0 25px #ffeb3b) brightness(1.2); }
+@keyframes dragonFlamePrevV5 {
+    0% { transform: translateX(-50%) translateY(5px) scaleX(1.1) scaleY(0.9); filter: drop-shadow(0 0 15px #ff5722); }
+    100% { transform: translateX(-50%) translateY(-5px) scaleX(0.9) scaleY(1.2); filter: drop-shadow(0 -20px 40px #ffeb3b) brightness(1.4); }
 }
 
-/* --- Aktivni Efekat u Igri --- */
+/* --- Aktivni Efekat u Igri (V5) --- */
 
-/* Topli, providni talas koji nežno guta ekran odozdo */
+/* GLAVNI ZID VATRE - Neproziran, fiksiran za dno, guta sve */
 .dragon-flames {
-    position: fixed; bottom: 0; left: 0; width: 100vw; height: 130vh;
-    background: linear-gradient(to top, 
-        rgba(255, 100, 0, 0.85) 0%, 
-        rgba(255, 50, 0, 0.6) 20%, 
-        rgba(200, 0, 0, 0.3) 50%, 
-        transparent 80%);
-    z-index: 99980; pointer-events: none; mix-blend-mode: screen;
+    position: fixed; bottom: 0; left: 0; width: 100vw; height: 120vh;
+    /* Gusti prelazi, bez providnosti u donjem delu */
+    background: linear-gradient(to top, #1a0000 0%, #8b0000 15%, #d50000 35%, #ff5722 60%, #ffeb3b 85%, transparent 100%);
+    z-index: 99980; pointer-events: none;
     transform-origin: bottom center;
-    animation: warmElegantWaveV6 7.5s forwards cubic-bezier(0.3, 0, 0.2, 1);
-    will-change: transform, opacity;
+    /* NEMA mix-blend-mode: screen, tako da vatra potpuno sakriva pozadinu */
+    animation: infernoWallV5 7s forwards cubic-bezier(0.3, 0.1, 0.2, 1);
+    will-change: transform, opacity, filter;
 }
 
-/* Magične, meke varnice koje lagano lebde uz toplotu */
+/* Dodatni sloj za vrelinu i vibraciju plamena */
+.dragon-flames::after {
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(ellipse at center, rgba(255,235,59,0.3) 0%, transparent 60%);
+    mix-blend-mode: overlay;
+    animation: pulseHeatV5 0.5s infinite alternate;
+}
+
+/* Krupne varnice i užareni ugalj */
 .dragon-embers {
     position: fixed; bottom: -10vh; left: 0; width: 6px; height: 6px; background: #fff;
     border-radius: 50%; z-index: 99985; pointer-events: none;
     box-shadow: 
-        10vw 0 8px 2px rgba(255, 235, 59, 0.8), 25vw 5vh 12px 3px rgba(255, 100, 0, 0.8), 
-        35vw -10vh 6px 1px rgba(255, 255, 255, 0.6), 50vw 15vh 10px 2px rgba(255, 200, 0, 0.7), 
-        65vw -5vh 15px 4px rgba(255, 50, 0, 0.6), 75vw 25vh 20px 5px rgba(255, 0, 0, 0.5),
-        85vw 10vh 8px 2px rgba(255, 235, 59, 0.8), 95vw -15vh 10px 2px rgba(255, 255, 255, 0.5), 
-        20vw 8vh 12px 3px rgba(255, 150, 0, 0.7), 40vw -12vh 8px 1px rgba(255, 235, 59, 0.6), 
-        60vw 18vh 18px 4px rgba(255, 50, 0, 0.7), 80vw -8vh 6px 1px rgba(255, 255, 255, 0.8);
-    animation: gentleEmbersRiseV6 7.5s forwards ease-in-out;
+        10vw 0 8px #ffeb3b, 25vw 5vh 12px #ff5722, 35vw -10vh 5px #fff, 
+        50vw 15vh 10px #ffeb3b, 65vw -5vh 8px #ff5722, 75vw 25vh 15px #ff0000,
+        85vw 10vh 8px #ffeb3b, 95vw -15vh 6px #fff, 20vw 8vh 10px #ff5722,
+        40vw -12vh 6px #ffeb3b, 60vw 18vh 12px #ff0000, 80vw -8vh 5px #fff;
+    animation: embersRiseV5 7s forwards ease-out;
     will-change: transform, opacity;
 }
 
-/* --- SOFISTICIRANO TOPLJENJE KOCKICA --- */
+/* --- EFEKAT TOTALNOG TOPLJENJA (KOCKICE) --- */
 body.fx-dragon_fire .grid-cell {
-    animation: elegantMeltV6 7.5s ease-in-out forwards !important;
+    animation: meltIntoSlagV5 7s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
     position: relative;
     will-change: transform, border-radius, background-color, opacity, box-shadow;
 }
 
-/* Suptilna vazdušna distorzija od toplote (mirage) */
+/* Distorzija čitavog ekrana od vreline */
 body.fx-dragon_fire .game-scene {
-    animation: gentleHeatMirageV6 7.5s forwards ease-in-out;
-    will-change: transform;
+    animation: tableHeatwaveV5 7s forwards ease-in-out;
+    will-change: transform, filter;
 }
 
-/* --- ANIMACIJE V6 --- */
+/* --- V5 ANIMACIJE --- */
 
-/* Talas dolazi lagano, prelepo sija, stoji, i meko isparava */
-@keyframes warmElegantWaveV6 {
-    0% { transform: translateY(100%) scaleY(0.5); opacity: 0; filter: blur(10px); }
-    15% { transform: translateY(15%) scaleY(1); opacity: 0.8; filter: blur(0px); }
-    40% { transform: translateY(-5%) scaleY(1.05); opacity: 1; filter: brightness(1.2); }
-    70% { transform: translateY(-15%) scaleY(1); opacity: 0.8; }
-    100% { transform: translateY(-30%) scaleY(0.8); opacity: 0; filter: blur(5px); }
+/* Vatra izvire iz zemlje, zadržava se na vrhu, onda se slegne nazad u dim */
+@keyframes infernoWallV5 {
+    0% { transform: translateY(100%); opacity: 0; filter: brightness(0.5); }
+    15% { transform: translateY(20%); opacity: 1; filter: brightness(1.2); }
+    35% { transform: translateY(-5%); opacity: 1; filter: brightness(1.6) saturate(1.3); } /* Vrhunac vatre */
+    55% { transform: translateY(0%); opacity: 1; filter: brightness(1.5) saturate(1.2); } /* Zadržava se i prži */
+    75% { transform: translateY(30%); opacity: 0.9; filter: brightness(0.7) grayscale(0.6); } /* Počinje da se gasi i crni */
+    100% { transform: translateY(100%); opacity: 0; filter: brightness(0); } /* Povlači se u potpunosti */
 }
 
-@keyframes gentleEmbersRiseV6 {
+@keyframes pulseHeatV5 {
+    0% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+@keyframes embersRiseV5 {
     0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    20% { opacity: 1; transform: translateY(-20vh) scale(1.2); }
-    60% { transform: translateY(-70vh) scale(1.5) rotate(45deg); opacity: 0.9; }
-    100% { transform: translateY(-120vh) scale(0.8) rotate(90deg); opacity: 0; }
+    20% { opacity: 1; transform: translateY(-40vh) scale(1.5); }
+    60% { transform: translateY(-100vh) scale(2) rotate(45deg); opacity: 0.9; }
+    100% { transform: translateY(-150vh) scale(0.2) rotate(90deg); opacity: 0; }
 }
 
-/* PRELEPO I SPORO TOPLJENJE */
-@keyframes elegantMeltV6 {
-    0% { transform: scale(1) translateY(0); border-radius: 4px; box-shadow: none; background-color: transparent; opacity: 1; }
-    
-    /* 1. Usijavanje (Sijaju toplo iznutra) */
-    15% { 
-        transform: scale(1) translateY(0); 
-        box-shadow: inset 0 0 15px rgba(255, 150, 0, 0.4), 0 0 10px rgba(255, 100, 0, 0.2); 
-        color: #ffeb3b; 
-        background-color: rgba(255, 87, 34, 0.1); 
+/* Brutalno topljenje: Usijanje -> Deformacija -> Curenje -> Kapanje u prazno */
+@keyframes meltIntoSlagV5 {
+    0% { transform: scale(1) translateY(0) skewX(0); border-radius: 4px; box-shadow: none; background-color: inherit; }
+    15% { transform: scale(1.05) translateY(-2px); box-shadow: 0 0 25px #ff0000, inset 0 0 15px #ff5722; color: #ffeb3b; }
+    30% { 
+        /* Usijano, tečno stanje */
+        transform: scaleY(1.3) scaleX(0.85) translateY(15px) skewX(3deg); 
+        border-radius: 10px 10px 45% 45%; 
+        background-color: #ff5722; 
+        box-shadow: 0 20px 25px rgba(213, 0, 0, 0.9), inset 0 -15px 20px #ffeb3b;
+        color: transparent; 
     }
-    
-    /* 2. Omekšavanje (Donje ivice se lagano zaobljuju, boja bledi) */
-    35% { 
-        transform: scale(0.98) translateY(4px); 
-        border-radius: 6px 6px 16px 16px; 
-        box-shadow: inset 0 -10px 20px rgba(255, 100, 0, 0.5), 0 8px 15px rgba(255, 50, 0, 0.2); 
-        color: rgba(255, 235, 59, 0); 
-        background-color: rgba(255, 87, 34, 0.3); 
-        opacity: 0.95; 
+    45% { 
+        /* Gubi strukturu, izdužuje se kao kapljica */
+        transform: scaleY(1.8) scaleX(0.6) translateY(45px) skewX(-3deg); 
+        border-radius: 50% 50% 100% 100%; 
+        background-color: #d50000; 
+        box-shadow: 0 30px 15px rgba(0, 0, 0, 0.8);
+        opacity: 0.9; 
     }
-    
-    /* 3. Viskozno curenje (Elegantno klizi na dole kao toplo staklo) */
     60% { 
-        transform: scale(0.9) translateY(18px) scaleY(1.05); 
-        border-radius: 8px 8px 30px 30px; 
-        box-shadow: inset 0 -15px 25px rgba(255, 50, 0, 0.6), 0 12px 10px rgba(0, 0, 0, 0.1); 
-        background-color: rgba(255, 50, 0, 0.4); 
-        opacity: 0.7; 
-    }
-    
-    /* 4. Meko isparavanje u kapljicu */
-    85% { 
-        transform: scale(0.75) translateY(30px) scaleY(1.1); 
-        border-radius: 10px 10px 50px 50px; 
-        box-shadow: inset 0 -5px 10px rgba(255, 0, 0, 0.2); 
-        background-color: rgba(200, 0, 0, 0.1); 
+        /* Pada i raspada se */
+        transform: scaleY(2.2) scaleX(0.3) translateY(100px); 
         opacity: 0; 
     }
-    
-    100% { transform: scale(1) translateY(0); opacity: 1; border-radius: 4px; box-shadow: none; background-color: transparent; color: inherit; }
+    90% { transform: translateY(120px); opacity: 0; border-radius: 4px; }
+    100% { transform: scale(1) translateY(0); opacity: 1; box-shadow: none; background-color: transparent; color: inherit; }
 }
 
-@keyframes gentleHeatMirageV6 {
-    0%, 100% { transform: translate(0, 0); }
-    25%, 75% { transform: translate(-1px, 1px) scale(1.002); }
-    50% { transform: translate(1px, -1px) scale(1.003); }
+/* Jako podrhtavanje cele table usled "vreline" */
+@keyframes tableHeatwaveV5 {
+    0%, 100% { transform: translate(0, 0) scale(1); filter: blur(0); }
+    15%, 35%, 55% { transform: translate(-4px, 3px) scale(1.02) skewX(1deg); filter: blur(1px) contrast(1.2); }
+    25%, 45% { transform: translate(4px, -3px) scale(1.03) skewX(-1deg); filter: blur(1px) contrast(1.3); }
+    65% { transform: translate(0, 0) scale(1); filter: blur(0); }
 }
