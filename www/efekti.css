@@ -604,111 +604,75 @@ body.fx-cosmic_dust::after {
 }
 
 /* =========================================================
-   Zmajeva Vatra (DRAGON FIRE) - PREMIUM EFEKAT V.4.0 (INFERNO)
+   Zmajeva Vatra (DRAGON FIRE) - PREMIUM EFEKAT
    ========================================================= */
 
-/* --- Preview u Prodavnici (V4) --- */
+/* --- Preview u Prodavnici --- */
 .prev-dragon-fire { 
-    background: linear-gradient(to top, #6a0000 0%, #d50000 40%, #ff5722 100%); 
+    background: linear-gradient(to top, #4a0000 0%, #8a0303 40%, #ff5722 100%); 
     position: relative; 
     overflow: hidden; 
-    box-shadow: inset 0 0 20px rgba(255, 69, 0, 0.9);
 }
 .prev-dragon-fire::before { 
     content: "🔥"; 
-    font-size: 3.5rem; 
-    position: absolute; bottom: -10px; left: 50%; 
-    transform: translateX(-50%);
-    filter: drop-shadow(0 0 15px #ffeb3b) drop-shadow(0 -5px 25px #ff0000); 
-    animation: dragonFlamePrevV4 1.2s infinite alternate ease-in-out; 
+    font-size: 3rem; 
+    position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+    filter: drop-shadow(0 -10px 15px #ffeb3b); 
+    animation: dragonFlamePrev 0.6s infinite alternate ease-in-out; 
 }
 
-@keyframes dragonFlamePrevV4 {
-    0% { transform: translateX(-50%) translateY(8px) scaleX(1.1) scaleY(0.9); filter: drop-shadow(0 0 10px #ff5722); }
-    100% { transform: translateX(-50%) translateY(-2px) scaleX(0.9) scaleY(1.15); filter: drop-shadow(0 -15px 30px #ffeb3b) brightness(1.3); }
+@keyframes dragonFlamePrev {
+    0% { transform: translateX(-50%) scaleY(0.9) scaleX(1); opacity: 0.8; filter: drop-shadow(0 -5px 10px #ff5722); }
+    100% { transform: translateX(-50%) scaleY(1.2) scaleX(1.1); opacity: 1; filter: drop-shadow(0 -15px 20px #ffeb3b); }
 }
 
-/* --- Aktivni Efekat u Igri (V4 - Epski talas odozdo i topljenje) --- */
+/* --- Aktivni Efekat u Igri --- */
 
-/* Masivni inferno talas koji dolazi odozdo i guta ekran */
+/* Baza vatre koja se diže odozdo */
 .dragon-flames {
-    position: fixed; bottom: 0; left: 0; width: 100vw; height: 130vh;
-    background: linear-gradient(to top, #ffeb3b 0%, #ff5722 15%, #d50000 35%, #5a0000 60%, transparent 85%);
-    z-index: 99980; pointer-events: none; mix-blend-mode: screen;
+    position: fixed; bottom: -20vh; left: 0; width: 100vw; height: 60vh;
+    background: linear-gradient(to top, #ff0000 0%, #ff5722 40%, #ffeb3b 70%, transparent 100%);
+    filter: blur(25px) contrast(1.5);
+    z-index: 99980; pointer-events: none; mix-blend-mode: hard-light;
     transform-origin: bottom center;
-    animation: infernoWaveV4 6.5s forwards cubic-bezier(0.2, 0.8, 0.3, 1);
-    will-change: transform, opacity;
+    animation: engulfFlames 5.5s forwards ease-in-out;
 }
 
-/* Krupne i sitne varnice koje divljaju iz vatre */
+/* Puno sitnih užarenih komadića žara (embers) koristeći box-shadow */
 .dragon-embers {
-    position: fixed; bottom: -10vh; left: 0; width: 5px; height: 5px; background: #fff;
+    position: fixed; top: 0; left: 0; width: 5px; height: 5px; background: #ffeb3b;
     border-radius: 50%; z-index: 99985; pointer-events: none;
+    filter: drop-shadow(0 0 10px #ff5722) drop-shadow(0 0 20px #ff0000);
     box-shadow: 
-        10vw 0 5px #ffeb3b, 25vw 5vh 8px #ff5722, 35vw -10vh 3px #fff, 
-        50vw 15vh 6px #ffeb3b, 65vw -5vh 4px #ff5722, 75vw 25vh 10px #ff0000,
-        85vw 10vh 4px #ffeb3b, 95vw -15vh 6px #fff, 20vw 8vh 5px #ff5722,
-        40vw -12vh 3px #ffeb3b, 60vw 18vh 8px #ff0000, 80vw -8vh 4px #fff;
-    animation: embersRiseV4 6.5s forwards ease-out;
-    will-change: transform, opacity;
+        10vw 110vh #fff, 20vw 105vh #ffeb3b, 30vw 120vh #ff5722, 
+        40vw 115vh #ffeb3b, 50vw 100vh #fff, 60vw 125vh #ff5722,
+        70vw 110vh #ffeb3b, 80vw 105vh #fff, 90vw 130vh #ff5722,
+        15vw 118vh #ffeb3b, 45vw 108vh #ffeb3b, 75vw 122vh #ff5722;
+    animation: embersExplode 5.5s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
 }
 
-/* --- EFEKAT TOPLJENJA KOCKICA KAO VOSAK --- */
-body.fx-dragon_fire .grid-cell {
-    animation: meltLikeWaxV4 6.5s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
-    position: relative;
-    will-change: transform, border-radius, background-color, opacity;
-}
-
-/* Toplotna distorzija stola (vibracija pre nego što vatra udari) */
+/* Blago podrhtavanje ekrana od siline "vatre" */
 body.fx-dragon_fire .game-scene {
-    animation: heatRefractionV4 6.5s forwards ease-in-out;
-    will-change: transform;
+    animation: dragonHeatShake 5.5s forwards ease-in-out;
 }
 
-/* --- ANIMACIJE V4 --- */
-
-/* Vatra silovito udara odozdo, zadržava se, pa nestaje */
-@keyframes infernoWaveV4 {
-    0% { transform: translateY(100%) scaleY(0.3); opacity: 0; filter: brightness(0.5); }
-    15% { transform: translateY(10%) scaleY(1); opacity: 1; filter: brightness(1.5); }
-    40% { transform: translateY(-15%) scaleY(1.1); opacity: 0.9; filter: brightness(1.8) saturate(1.5); }
-    70% { transform: translateY(-30%) scaleY(1); opacity: 0.7; filter: brightness(1); }
-    100% { transform: translateY(-50%) scaleY(0.8); opacity: 0; filter: brightness(0.5); }
+@keyframes engulfFlames {
+    0% { opacity: 0; transform: scaleY(0.5); filter: blur(20px) brightness(0.5); }
+    10% { opacity: 1; filter: blur(25px) brightness(1.5); }
+    30%, 70% { opacity: 0.9; transform: scaleY(1.3); filter: blur(30px) brightness(1.8) hue-rotate(-10deg); }
+    90% { opacity: 0.5; transform: scaleY(0.8); }
+    100% { opacity: 0; transform: scaleY(0); filter: blur(10px) brightness(0.5); }
 }
 
-@keyframes embersRiseV4 {
-    0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    15% { opacity: 1; transform: translateY(-30vh) scale(1.5); }
-    60% { transform: translateY(-90vh) scale(1.8) rotate(45deg); opacity: 0.8; }
-    100% { transform: translateY(-150vh) scale(0.5) rotate(90deg); opacity: 0; }
+@keyframes embersExplode {
+    0% { transform: translateY(0) scale(1); opacity: 0; }
+    5% { opacity: 1; }
+    60% { transform: translateY(-100vh) scale(1.5) rotate(25deg); opacity: 1; }
+    100% { transform: translateY(-150vh) scale(0.5) rotate(45deg); opacity: 0; }
 }
 
-/* Faza 1: Zagrevanje -> Faza 2: Topljenje (izdužuju se i cure na dole) -> Faza 3: Nestanak */
-@keyframes meltLikeWaxV4 {
-    0% { transform: scale(1) translateY(0); border-radius: 4px; box-shadow: none; background-color: inherit; }
-    10% { transform: scale(1.03) translateY(0); box-shadow: inset 0 0 25px #ff0000, 0 0 15px #ff5722; color: #ffeb3b; }
-    25% { 
-        transform: scaleY(1.15) scaleX(0.9) translateY(12px); 
-        border-radius: 10px 10px 45% 45%; /* Pretvara se u kapljicu */
-        background-color: rgba(255, 69, 0, 0.95); 
-        box-shadow: 0 15px 20px rgba(255, 0, 0, 0.8), inset 0 -10px 15px #ffeb3b;
-        color: transparent; 
-    }
-    45% { 
-        transform: scaleY(1.4) scaleX(0.7) translateY(40px); 
-        border-radius: 50% 50% 100% 100%; 
-        background-color: rgba(200, 0, 0, 0.85); 
-        box-shadow: 0 25px 15px rgba(0, 0, 0, 0.6);
-        opacity: 0.9; 
-    }
-    65% { transform: scale(0.2) translateY(80px); border-radius: 50%; opacity: 0; }
-    95% { transform: scale(1) translateY(0); opacity: 0; border-radius: 4px; }
-    100% { transform: scale(1) translateY(0); opacity: 1; box-shadow: none; background-color: transparent; color: inherit; border-radius: 4px; }
-}
-
-@keyframes heatRefractionV4 {
+@keyframes dragonHeatShake {
     0%, 100% { transform: translate(0, 0); }
-    15%, 35%, 55%, 75% { transform: translate(-3px, 2px) scale(1.01) skewX(1deg); }
-    25%, 45%, 65%, 85% { transform: translate(3px, -2px) scale(1.02) skewX(-1deg); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-2px, 1px); }
+    20%, 40%, 60%, 80% { transform: translate(2px, -1px); }
 }
