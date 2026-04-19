@@ -447,7 +447,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 }
 
 /* =========================================================
-   Svemirska Prašina (COSMIC DUST) - ULTIMATE V3.0
+   Svemirska Prašina (COSMIC DUST) - ULTIMATE V3.0 (GLATKA VERZIJA, BEZ BLICEVA)
    ========================================================= */
 
 /* --- Preview u Prodavnici (UKLONJENE CRNE IVICE) --- */
@@ -485,15 +485,13 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 
 /* --- Aktivni Efekat u Igri (Trajanje: 6s) --- */
 
-/* ISPRAVLJENO: Uklonjeno svako zatamnjenje. Sada samo dodajemo blagu svetlost (mix-blend-mode: screen) */
 body.fx-cosmic_dust::before {
     content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: radial-gradient(ellipse at bottom, rgba(138, 43, 226, 0.15) 0%, transparent 100%);
-    z-index: 99979; pointer-events: none; mix-blend-mode: screen; /* SAMO DODAJEMO SVETLO, NEMA CRNILA */
+    z-index: 99979; pointer-events: none; mix-blend-mode: screen; 
     animation: deepSpaceFadeSoft 6s forwards ease-in-out;
 }
 
-/* ISPRAVLJENO: Hiper-bogata Maglina - smanjen prejak kontrast i "crnilo" koje je jelo boje */
 body.fx-cosmic_dust::after {
     content: ""; position: fixed; top: -20vh; left: -20vw; width: 140vw; height: 140vh;
     background: 
@@ -527,7 +525,7 @@ body.fx-cosmic_dust::after {
     animation: ultimateDrift 6s forwards linear;
 }
 
-/* Layer 2: Srednje zvezde, blago pulsiraju */
+/* Layer 2: Srednje zvezde, sada klize potpuno glatko bez agresivnog treperenja */
 .stardust-layer.layer-2 {
     width: 4px; height: 4px;
     box-shadow: 
@@ -536,34 +534,25 @@ body.fx-cosmic_dust::after {
         42vw 110vh #00d4ff, 58vw 145vh #fff, 72vw 125vh #ff99cc, 88vw 155vh #fff, 18vw 135vh #00d4ff, 38vw 165vh #e0b0ff,
         68vw 105vh #fff, 98vw 140vh #ff99cc;
     filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 10px #00d4ff);
-    animation: ultimateDriftTwinkle 6s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    animation: smoothTwinkleDrift 6s forwards ease-in-out;
     animation-delay: 0.1s;
 }
 
-/* Layer 3: Krupne Premium zvezde u prvom planu, masivan sjaj - OPTIMIZOVANO */
+/* Layer 3: Krupne Premium zvezde u prvom planu, lagano zumiraju ka napred */
 .stardust-layer.layer-3 {
     width: 7px; height: 7px;
     box-shadow: 
         15vw 120vh #fff, 55vw 140vh #e0b0ff, 85vw 110vh #00d4ff, 
         30vw 135vh #ff99cc, 70vw 150vh #fff, 40vw 115vh #00d4ff, 
         10vw 155vh #fff, 90vw 125vh #e0b0ff;
-    /* Smanjen blur kako ne bi pucala grafika, sjaj je i dalje magičan */
     filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 20px #e0b0ff);
     animation: premiumDriftZoom 6s forwards ease-out;
     will-change: transform, opacity;
 }
 
-/* Layer 4 (NOVO): Supernove - par ogromnih bljeskova - OPTIMIZOVANO */
-.stardust-layer.layer-4 {
-    width: 12px; height: 12px;
-    box-shadow: 25vw 140vh #fff, 75vw 130vh #fff;
-    /* OVO JE PRAVILO CRNE BLICEVE: Smanjeno na bezbedne vrednosti za telefone */
-    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 30px #00d4ff);
-    animation: supernovaBlink 6s forwards ease-in-out;
-    will-change: transform, opacity;
-}
+/* LAYER 4 (Supernove) je potpuno OBRISAN kako bi se sprečili nagli blicevi! */
 
-/* Layer Comets V3: Hiper-realistične komete sa gradient repom - OPTIMIZOVANO */
+/* Layer Comets V3: Hiper-realistične komete sa gradient repom */
 .stardust-layer.layer-comets {
     width: 3px; height: 150px; border-radius: 50% 50% 0 0;
     background: linear-gradient(to bottom, #ffffff 0%, rgba(0,212,255,0.8) 15%, rgba(138,43,226,0.4) 40%, transparent 100%);
@@ -576,7 +565,7 @@ body.fx-cosmic_dust::after {
     will-change: transform, opacity;
 }
 
-/* --- Ultimate Animacije (6s tajming) --- */
+/* --- Glatke Animacije (Bez Blicanja) --- */
 
 @keyframes deepSpaceFadeSoft {
     0% { opacity: 0; }
@@ -600,30 +589,21 @@ body.fx-cosmic_dust::after {
     100% { transform: translateY(-120vh) scale(1.3) rotate(10deg); opacity: 0; }
 }
 
-@keyframes ultimateDriftTwinkle {
+/* Nova, potpuno glatka animacija bez naglih padova providnosti */
+@keyframes smoothTwinkleDrift {
     0% { transform: translateY(0) scale(0.5); opacity: 0; }
-    10% { opacity: 1; transform: translateY(-15vh) scale(1.2); }
-    30% { opacity: 0.4; transform: translateY(-45vh) scale(0.7); }
-    50% { opacity: 1; transform: translateY(-75vh) scale(1.5); }
-    75% { opacity: 0.4; transform: translateY(-105vh) scale(0.8); }
+    20% { opacity: 0.85; transform: translateY(-30vh) scale(1.2); }
+    50% { opacity: 1; transform: translateY(-75vh) scale(1.4); }
+    80% { opacity: 0.85; transform: translateY(-105vh) scale(1); }
     100% { transform: translateY(-135vh) scale(1.2); opacity: 0; }
 }
 
 @keyframes premiumDriftZoom {
     0% { transform: translateY(0) scale(0.2); opacity: 0; }
     20% { opacity: 1; transform: translateY(-20vh) scale(1.5); }
-    50% { opacity: 0.8; transform: translateY(-60vh) scale(2); }
+    50% { opacity: 0.9; transform: translateY(-60vh) scale(2); }
     80% { opacity: 1; transform: translateY(-100vh) scale(1.2); }
     100% { transform: translateY(-140vh) scale(3); opacity: 0; }
-}
-
-/* --- Ažurirana animacija za Supernovu bez grafičkih grešaka --- */
-@keyframes supernovaBlink {
-    0%, 20% { opacity: 0; transform: translateY(0) scale(0); }
-    40% { opacity: 1; transform: translateY(-40vh) scale(3); filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #00d4ff); }
-    60% { opacity: 0.5; transform: translateY(-70vh) scale(1); }
-    80% { opacity: 1; transform: translateY(-100vh) scale(2); filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #e0b0ff); }
-    100% { opacity: 0; transform: translateY(-130vh) scale(0); }
 }
 
 @keyframes cometStrikeV3 {
