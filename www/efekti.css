@@ -540,35 +540,40 @@ body.fx-cosmic_dust::after {
     animation-delay: 0.1s;
 }
 
-/* Layer 3: Krupne Premium zvezde u prvom planu, masivan sjaj */
+/* Layer 3: Krupne Premium zvezde u prvom planu, masivan sjaj - OPTIMIZOVANO */
 .stardust-layer.layer-3 {
     width: 7px; height: 7px;
     box-shadow: 
         15vw 120vh #fff, 55vw 140vh #e0b0ff, 85vw 110vh #00d4ff, 
         30vw 135vh #ff99cc, 70vw 150vh #fff, 40vw 115vh #00d4ff, 
         10vw 155vh #fff, 90vw 125vh #e0b0ff;
-    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 35px #e0b0ff) drop-shadow(0 0 50px rgba(0, 212, 255, 0.5));
+    /* Smanjen blur kako ne bi pucala grafika, sjaj je i dalje magičan */
+    filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 20px #e0b0ff);
     animation: premiumDriftZoom 6s forwards ease-out;
+    will-change: transform, opacity;
 }
 
-/* Layer 4 (NOVO): Supernove - par ogromnih bljeskova koji daju epski utisak */
+/* Layer 4 (NOVO): Supernove - par ogromnih bljeskova - OPTIMIZOVANO */
 .stardust-layer.layer-4 {
     width: 12px; height: 12px;
     box-shadow: 25vw 140vh #fff, 75vw 130vh #fff;
-    filter: drop-shadow(0 0 30px #fff) drop-shadow(0 0 60px #00d4ff) drop-shadow(0 0 100px #e0b0ff);
+    /* OVO JE PRAVILO CRNE BLICEVE: Smanjeno na bezbedne vrednosti za telefone */
+    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 30px #00d4ff);
     animation: supernovaBlink 6s forwards ease-in-out;
+    will-change: transform, opacity;
 }
 
-/* Layer Comets V3: Hiper-realistične komete sa gradient repom */
+/* Layer Comets V3: Hiper-realistične komete sa gradient repom - OPTIMIZOVANO */
 .stardust-layer.layer-comets {
     width: 3px; height: 150px; border-radius: 50% 50% 0 0;
     background: linear-gradient(to bottom, #ffffff 0%, rgba(0,212,255,0.8) 15%, rgba(138,43,226,0.4) 40%, transparent 100%);
     box-shadow: 
         40vw 120vh transparent, 
         80vw 150vh transparent,
-        15vw 180vh transparent; /* Tri komete */
-    filter: drop-shadow(0 0 15px #fff) drop-shadow(0 0 30px #00d4ff);
+        15vw 180vh transparent;
+    filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 15px #00d4ff);
     animation: cometStrikeV3 6s forwards cubic-bezier(0.1, 0.8, 0.3, 1);
+    will-change: transform, opacity;
 }
 
 /* --- Ultimate Animacije (6s tajming) --- */
@@ -612,11 +617,12 @@ body.fx-cosmic_dust::after {
     100% { transform: translateY(-140vh) scale(3); opacity: 0; }
 }
 
+/* --- Ažurirana animacija za Supernovu bez grafičkih grešaka --- */
 @keyframes supernovaBlink {
     0%, 20% { opacity: 0; transform: translateY(0) scale(0); }
-    40% { opacity: 1; transform: translateY(-40vh) scale(3); filter: drop-shadow(0 0 50px #fff) drop-shadow(0 0 150px #00d4ff); }
+    40% { opacity: 1; transform: translateY(-40vh) scale(3); filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #00d4ff); }
     60% { opacity: 0.5; transform: translateY(-70vh) scale(1); }
-    80% { opacity: 1; transform: translateY(-100vh) scale(2); filter: drop-shadow(0 0 50px #fff) drop-shadow(0 0 100px #e0b0ff); }
+    80% { opacity: 1; transform: translateY(-100vh) scale(2); filter: drop-shadow(0 0 20px #fff) drop-shadow(0 0 40px #e0b0ff); }
     100% { opacity: 0; transform: translateY(-130vh) scale(0); }
 }
 
