@@ -662,7 +662,19 @@ class EffectManager {
 class SoundManager {
     constructor() {
         this.enabled = localStorage.getItem('yamb_sound') !== 'false';
+        this.musicEnabled = localStorage.getItem('yamb_music') !== 'false'; // Nova promenljiva
         this.ctx = null; 
+
+        // --- INICIJALIZACIJA MUZIKE ---
+        this.bgMusic = new Audio('Before_the_Numbers_Settle.mp3');
+        this.bgMusic.volume = 0.4; // Podesi glasnoću po želji (0.0 do 1.0)
+        
+        // Logika za ponavljanje tačno 2 sekunde pre kraja
+        this.bgMusic.addEventListener('timeupdate', () => {
+            if (this.bgMusic.duration > 0 && this.bgMusic.currentTime >= this.bgMusic.duration - 2) {
+                this.bgMusic.currentTime = 0;
+            }
+        });
 
         const unlockAudio = () => {
             if (!this.ctx) {
@@ -678,6 +690,26 @@ class SoundManager {
 
         document.addEventListener('touchstart', unlockAudio, { once: true });
         document.addEventListener('click', unlockAudio, { once: true });
+    }
+
+    // --- FUNKCIJE ZA KONTROLU MUZIKE ---
+    playMusic() {
+        if (!this.musicEnabled) return;
+        this.bgMusic.play().catch(e => console.log("Greška pri puštanju muzike:", e));
+    }
+
+    stopMusic() {
+        this.bgMusic.pause();
+        this.bgMusic.currentTime = 0;
+    }
+
+    setMusicEnabled(enabled) {
+        this.musicEnabled = enabled;
+        if (!enabled) {
+            this.stopMusic();
+        } else if (window.app && window.app.gameActive) {
+            this.playMusic(); // Ako je igra već u toku, pusti odmah
+        }
     }
 
     playSound(synthCallback) {

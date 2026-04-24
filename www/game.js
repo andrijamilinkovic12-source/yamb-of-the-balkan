@@ -1420,6 +1420,10 @@ class YambApp {
         
         const soundEl = document.getElementById('setting-sound');
         if (soundEl) soundEl.checked = this.soundEnabled; 
+
+        // DODATO UČITAVANJE MUZIKE
+        const musicEl = document.getElementById('setting-music');
+        if (musicEl) musicEl.checked = this.soundMgr ? this.soundMgr.musicEnabled : (localStorage.getItem('yamb_music') !== 'false');
         
         const vibEl = document.getElementById('setting-vibration');
         if (vibEl) vibEl.checked = this.vibrationEnabled;
@@ -1473,6 +1477,11 @@ class YambApp {
             localStorage.setItem('yamb_sound', value);
             if (value && this.soundMgr) this.soundMgr.click(); 
         } 
+        // DODATA LOGIKA ZA MUZIKU
+        else if (type === 'music') {
+            if (this.soundMgr) this.soundMgr.setMusicEnabled(value);
+            localStorage.setItem('yamb_music', value);
+        }
         else if (type === 'vibration') {
             this.vibrationEnabled = value;
             localStorage.setItem('yamb_vibration', value);
@@ -1713,6 +1722,9 @@ class YambApp {
 
         const menu = document.getElementById('game-dropdown-menu');
         if(menu) menu.classList.remove('active');
+
+        // ---> DODATO OVDJE: Zaustavljanje muzike kada se pređe u glavni meni <---
+        if(this.soundMgr) this.soundMgr.stopMusic();
 
         this.navigateTo('main-menu'); 
         const floatBtn = document.getElementById('chat-float-btn');
@@ -2461,9 +2473,13 @@ class YambApp {
                 this.soundMgr.win(); 
 
                 setTimeout(() => {
+                    // ---> DODATO: Puštanje muzike na početku partije <---
+                    if(this.soundMgr) this.soundMgr.playMusic();
                     this.startGame(); 
                 }, 2500);
             } else {
+                // ---> DODATO: Puštanje muzike na početku partije <---
+                if(this.soundMgr) this.soundMgr.playMusic();
                 this.startGame();
             }
         }); 
@@ -2779,6 +2795,9 @@ class YambApp {
             });
         }
         
+        // ---> DODATO: Puštanje muzike kada partija krene <---
+        if(this.soundMgr) this.soundMgr.playMusic();
+
         this.startGame(); 
     }
     
@@ -2819,6 +2838,9 @@ class YambApp {
         this.effectMgr.stop(); this.loadEquippedEffect(); 
         
         this.startClientTimer();
+
+        // ---> DODATO: Puštanje muzike na startu za sve modove (fallback) <---
+        if(this.soundMgr) this.soundMgr.playMusic();
     }
 
     showQuoteAndProceed() {
@@ -3294,6 +3316,9 @@ class YambApp {
         }
 
         console.log("--- GAME OVER ---");
+
+        // ---> DODATO OVDJE: Zaustavljanje muzike na kraju partije <---
+        if(this.soundMgr) this.soundMgr.stopMusic();
 
         if (this.isSpectator) {
             this.gameActive = false;
