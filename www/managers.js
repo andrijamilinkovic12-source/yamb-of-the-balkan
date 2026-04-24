@@ -272,7 +272,6 @@ class EffectManager {
             }
         }
 
-        // --- SUPERNOVA EFEKAT ---
         if (type === 'supernova') {
             let targetTable = null;
             const tables = document.querySelectorAll('.player-table');
@@ -303,7 +302,6 @@ class EffectManager {
             }
         }
 
-        // --- NEON PULSE EFEKAT ---
         if (type === 'neon_pulse') {
             let targetTable = null;
             const tables = document.querySelectorAll('.player-table');
@@ -321,7 +319,6 @@ class EffectManager {
             }
         }
 
-        // --- DRONE SHOW (DRONOVI SA IMENOM V.2) ---
         if (type === 'drones') {
             const sky = document.createElement('div');
             sky.className = 'drone-night-sky';
@@ -371,7 +368,6 @@ class EffectManager {
             }, 8000);
         }
 
-        // --- THUNDERBRINGER EFEKAT ---
         if (type === 'thunder') {
             const flash = document.createElement('div');
             flash.className = 'anim-thunder'; 
@@ -394,7 +390,6 @@ class EffectManager {
             }, 4500); 
         }
 
-        // --- SVADBA V.2 EFEKAT ---
         if (type === 'balkan') {
             document.body.classList.add('fx-balkan');
             
@@ -425,14 +420,12 @@ class EffectManager {
             }, 8500); 
         }
         
-        // --- GRANDIOZNI VATROMET V.2 ---
         if (type === 'fireworks') {
              for(let i=0; i<12; i++) { 
                  setTimeout(() => this.spawnRealFirework(), i * 500 + Math.random() * 400); 
              }
         }
         
-        // --- 🌌 SVEMIRSKA PRAŠINA ---
         if (type === 'cosmic_dust') {
             document.body.classList.add('fx-cosmic_dust');
             
@@ -447,7 +440,6 @@ class EffectManager {
             }, 6000); 
         }
 
-        // --- ⚡ ZMAJEVA VATRA ---
         if (type === 'dragon_fire') {
             document.body.classList.add('fx-dragon_fire');
             
@@ -456,12 +448,10 @@ class EffectManager {
             container.innerHTML = '<div class="dragon-flames"></div><div class="dragon-embers"></div>';
             document.body.appendChild(container);
 
-            // Koristimo zvuk groma da stvorimo bas-tutnjavu vatre
             if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
                 window.app.soundMgr.thunder(); 
             }
 
-            // Moćna vibracija za vatru
             if (window.app && typeof window.app.vibrate === 'function') {
                 window.app.vibrate([100, 150, 200, 300, 400, 200, 100]); 
             }
@@ -645,10 +635,8 @@ class EffectManager {
     }
     
     stop() {
-        // Dodato brisanje klasa za nove efekte
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-dragon_fire');
         
-        // Dodato brisanje elemenata za nove efekte
         document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
@@ -662,14 +650,17 @@ class EffectManager {
 class SoundManager {
     constructor() {
         this.enabled = localStorage.getItem('yamb_sound') !== 'false';
-        this.musicEnabled = localStorage.getItem('yamb_music') !== 'false'; // Nova promenljiva
+        this.musicEnabled = localStorage.getItem('yamb_music') !== 'false'; 
+        
+        // NOVO: Učitavanje sačuvane glasnoće muzike (podrazumevano 0.4)
+        this.musicVolume = parseFloat(localStorage.getItem('yamb_music_volume') ?? 0.4);
+        
         this.ctx = null; 
 
         // --- INICIJALIZACIJA MUZIKE ---
         this.bgMusic = new Audio('Before_the_Numbers_Settle.mp3');
-        this.bgMusic.volume = 0.4; // Podesi glasnoću po želji (0.0 do 1.0)
+        this.bgMusic.volume = this.musicVolume; 
         
-        // Logika za ponavljanje tačno 2 sekunde pre kraja
         this.bgMusic.addEventListener('timeupdate', () => {
             if (this.bgMusic.duration > 0 && this.bgMusic.currentTime >= this.bgMusic.duration - 2) {
                 this.bgMusic.currentTime = 0;
@@ -692,9 +683,9 @@ class SoundManager {
         document.addEventListener('click', unlockAudio, { once: true });
     }
 
-    // --- FUNKCIJE ZA KONTROLU MUZIKE ---
+    // --- FUNKCIJE ZA KONTROLU MUZIKE I GLASNOĆE ---
     playMusic() {
-        if (!this.musicEnabled) return;
+        if (!this.musicEnabled || this.musicVolume === 0) return;
         this.bgMusic.play().catch(e => console.log("Greška pri puštanju muzike:", e));
     }
 
@@ -706,9 +697,21 @@ class SoundManager {
     setMusicEnabled(enabled) {
         this.musicEnabled = enabled;
         if (!enabled) {
-            this.stopMusic();
-        } else if (window.app && window.app.gameActive) {
-            this.playMusic(); // Ako je igra već u toku, pusti odmah
+            this.bgMusic.pause();
+        } else if (window.app && window.app.gameActive && this.musicVolume > 0) {
+            this.playMusic(); 
+        }
+    }
+
+    setMusicVolume(vol) {
+        this.musicVolume = parseFloat(vol);
+        this.bgMusic.volume = this.musicVolume;
+        localStorage.setItem('yamb_music_volume', this.musicVolume);
+        
+        if (this.musicVolume === 0) {
+            this.bgMusic.pause();
+        } else if (this.musicEnabled && this.bgMusic.paused && window.app && window.app.gameActive) {
+            this.playMusic();
         }
     }
 

@@ -217,7 +217,7 @@ class YambApp {
         }
     }
 
-    // --- NOVO: HEADER LOGIKA (MENI, ZVUK, VIB, OKO, AVATAR) ---
+    // --- NOVO: HEADER LOGIKA (MENI, ZVUK, VIB, OKO, AVATAR, MUZIKA) ---
 
     toggleGameMenu() {
         const menu = document.getElementById('game-dropdown-menu');
@@ -254,12 +254,60 @@ class YambApp {
         if (mainSetting) mainSetting.checked = this.vibrationEnabled;
     }
 
+    toggleQuickMusic() {
+        if (!this.soundMgr) return;
+        
+        const isEnabled = !this.soundMgr.musicEnabled;
+        this.soundMgr.setMusicEnabled(isEnabled);
+        localStorage.setItem('yamb_music', isEnabled);
+        
+        const btn = document.getElementById('btn-gh-music');
+        if (btn) btn.innerText = isEnabled ? '🎧' : '🔇';
+        
+        const mainSetting = document.getElementById('setting-music');
+        if (mainSetting) mainSetting.checked = isEnabled;
+    }
+
+    changeMusicVolume(val) {
+        if (!this.soundMgr) return;
+        
+        this.soundMgr.setMusicVolume(val);
+        
+        const btn = document.getElementById('btn-gh-music');
+        const mainSetting = document.getElementById('setting-music');
+        
+        // Ako korisnik svuče slajder na 0, tretiraj kao 'Muted'
+        if (parseFloat(val) === 0) {
+            if (btn) btn.innerText = '🔇';
+            this.soundMgr.setMusicEnabled(false);
+            localStorage.setItem('yamb_music', 'false');
+            if (mainSetting) mainSetting.checked = false;
+        } else {
+            // Ako korisnik pojača sa 0, automatski upali muziku
+            if (btn) btn.innerText = '🎧';
+            if (!this.soundMgr.musicEnabled) {
+                this.soundMgr.setMusicEnabled(true);
+                localStorage.setItem('yamb_music', 'true');
+                if (mainSetting) mainSetting.checked = true;
+            }
+        }
+    }
+
     updateQuickMenuIcons() {
         const btnSound = document.getElementById('btn-gh-sound');
         if(btnSound) btnSound.innerText = this.soundEnabled ? '🔊' : '🔇';
         
         const btnVib = document.getElementById('btn-gh-vib');
         if(btnVib) btnVib.innerText = this.vibrationEnabled ? '📳' : '📴';
+
+        // --- DODATO ZA MUZIKU ---
+        const btnMusic = document.getElementById('btn-gh-music');
+        if(btnMusic) btnMusic.innerText = (this.soundMgr && this.soundMgr.musicEnabled) ? '🎧' : '🔇';
+        
+        const sliderMusic = document.getElementById('music-volume-slider');
+        if(sliderMusic && this.soundMgr) {
+            sliderMusic.value = this.soundMgr.musicVolume;
+        }
     }
 
     // Generiše HTML za tačkice umesto Unicode fonta
