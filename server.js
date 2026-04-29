@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX + BUSY PLAYER FIX + ONLINE UNDO TOKENS
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX + BUSY PLAYER FIX + ONLINE UNDO TOKENS + INVENTORY DESYNC EXPLOIT FIX
 
 require('dotenv').config(); 
 
@@ -611,11 +611,11 @@ io.on('connection', (socket) => {
                     user.penaltyPoints = s.penaltyPoints; 
                 }
                 
+                // 🛡️ NOVO: Popravljena logika (INVENTORY DESYNC FIX)
                 const isFreshLogin = (s.games === 0);
+                const oldUserGames = user.games || 0;
 
                 if (!isFreshLogin) {
-                    const oldUserGames = user.games;
-
                     if (s.games > user.games) user.games = s.games;
                     if (s.wins > user.wins) user.wins = s.wins;
                     if (s.losses > user.losses) user.losses = s.losses;
@@ -629,22 +629,6 @@ io.on('connection', (socket) => {
                         user.maxWinStreak = s.maxWinStreak;
                     }
 
-                    if (typeof s.balance === 'number') {
-                        const razlika = s.balance - user.balance;
-                        if (s.games >= oldUserGames) {
-                            if (razlika > 80000) { 
-                                console.log(`🚨 HACK POKUŠAJ: Igrač ${user.playerName} sumnjiv skok dukata!`);
-                            } else {
-                                user.balance = s.balance; 
-                            }
-                        } else {
-                            if (s.balance > user.balance && razlika <= 80000) {
-                                user.balance = s.balance;
-                            }
-                        }
-                    }
-                    
-                    // DODATO: Ažuriranje tokena postojećem korisniku
                     if (typeof s.undoTokens === 'number') {
                         user.undoTokens = s.undoTokens;
                     }
@@ -654,21 +638,43 @@ io.on('connection', (socket) => {
                     }
                 }
                 
-                if (s.unlockedTrophies && s.unlockedTrophies.length > 0) {
-                    const mergedTrophies = new Set([...user.unlockedTrophies, ...s.unlockedTrophies]);
-                    user.unlockedTrophies = Array.from(mergedTrophies);
+                // 🛡️ SECURITY FIX: Da li je klijentova verzija statistike sinhronizovana
+                const isClientSynced = (s.games >= oldUserGames);
+
+                // ⚖️ FIX BALANSA: Izmešteno iz isFreshLogin
+                if (typeof s.balance === 'number') {
+                    const razlika = s.balance - user.balance;
+                    if (isClientSynced) {
+                        if (razlika > 80000) { 
+                            console.log(`🚨 HACK POKUŠAJ: Igrač ${user.playerName} sumnjiv skok dukata!`);
+                        } else {
+                            user.balance = s.balance; 
+                        }
+                    } else {
+                        if (s.balance > user.balance && razlika <= 80000) {
+                            user.balance = s.balance;
+                        }
+                    }
                 }
-                if (s.unlockedSkins && s.unlockedSkins.length > 0) {
-                    const mergedSkins = new Set([...user.unlockedSkins, ...s.unlockedSkins]);
-                    user.unlockedSkins = Array.from(mergedSkins);
-                }
-                if (s.unlockedEffects && s.unlockedEffects.length > 0) {
-                    const mergedEffects = new Set([...user.unlockedEffects, ...s.unlockedEffects]);
-                    user.unlockedEffects = Array.from(mergedEffects);
-                }
-                if (s.yamb_unlocked && s.yamb_unlocked.length > 0) {
-                    const mergedAll = new Set([...(user.yamb_unlocked || []), ...s.yamb_unlocked]);
-                    user.yamb_unlocked = Array.from(mergedAll);
+                
+                // 🛡️ SECURITY FIX INVENTARA: Dodajemo u bazu SAMO ako je klijent sinhronizovan
+                if (isClientSynced) {
+                    if (s.unlockedTrophies && s.unlockedTrophies.length > 0) {
+                        const mergedTrophies = new Set([...user.unlockedTrophies, ...s.unlockedTrophies]);
+                        user.unlockedTrophies = Array.from(mergedTrophies);
+                    }
+                    if (s.unlockedSkins && s.unlockedSkins.length > 0) {
+                        const mergedSkins = new Set([...user.unlockedSkins, ...s.unlockedSkins]);
+                        user.unlockedSkins = Array.from(mergedSkins);
+                    }
+                    if (s.unlockedEffects && s.unlockedEffects.length > 0) {
+                        const mergedEffects = new Set([...user.unlockedEffects, ...s.unlockedEffects]);
+                        user.unlockedEffects = Array.from(mergedEffects);
+                    }
+                    if (s.yamb_unlocked && s.yamb_unlocked.length > 0) {
+                        const mergedAll = new Set([...(user.yamb_unlocked || []), ...s.yamb_unlocked]);
+                        user.yamb_unlocked = Array.from(mergedAll);
+                    }
                 }
 
                 const todayStr = new Date().toDateString();
