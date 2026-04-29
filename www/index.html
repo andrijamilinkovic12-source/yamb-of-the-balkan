@@ -46,8 +46,8 @@
             align-items: center;
             justify-content: center;
             gap: 4px !important;
-            height: 100%; /* Da popuni red u gridu */
-            position: relative; /* DODATO ZA STRELICE U UGLU */
+            height: 100%; 
+            position: relative; 
         }
         .stat-lbl-mini {
             font-size: 0.65rem !important;
@@ -201,120 +201,110 @@
             <i data-lucide="message-circle" style="width: 32px; height: 32px;"></i>
         </div>
 
-        <button class="btn-square" 
-                style="position: absolute; top: 30px; right: 20px; z-index: 100; width: 45px; height: 45px; padding: 0;" 
+        <button class="bento-card" 
+                style="position: absolute; top: 30px; right: 20px; z-index: 100; width: 45px; height: 45px; padding: 0; border-radius: 14px;" 
                 onclick="app.openUndoMenu()" 
                 title="Vrati pogrešan upis">
             <i data-lucide="rotate-ccw"></i>
         </button>
 
-        <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
+        <div style="display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 380px; margin: 70px auto 10px auto; padding: 0 15px; z-index: 10;">
             
-            <div onclick="openOnlinePlayersModal()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <i data-lucide="globe" style="position: absolute; bottom: -15px; left: -10px; width: 80px; height: 80px; opacity: 0.05; pointer-events: none;"></i>
-                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+            <div style="display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 12px; width: 100%;">
+                
+                <div class="bento-card" onclick="openOnlinePlayersModal()" style="padding: 12px 5px;">
+                    <i data-lucide="globe" style="position: absolute; bottom: -15px; left: -10px; width: 60px; height: 60px; opacity: 0.05; pointer-events: none;"></i>
                     <div style="position: relative;">
-                        <i data-lucide="globe" style="width: 24px; height: 24px;"></i>
+                        <i data-lucide="globe" style="width: 20px; height: 20px;"></i>
                         <div style="position: absolute; top: 0; right: -5px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success); animation: pulse 2s infinite;"></div>
                     </div>
-                    <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
-                    <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Online</span>
+                    <span id="live-online-count" style="font-size: 1.1rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
+                    <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Online</span>
                 </div>
-            </div>
 
-            <div onclick="if(window.kvartalnaLiga) window.kvartalnaLiga.openModal()" style="flex: 1.8; cursor: pointer; background: linear-gradient(135deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.6) 100%); border: 2px solid var(--gold-main); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 15px rgba(224, 201, 149, 0.1); backdrop-filter: blur(8px); position: relative; overflow: hidden; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
-                <i data-lucide="trophy" style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; opacity: 0.08; pointer-events: none;"></i>
-                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                    <span data-lang="menu_league" style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
-                    <span id="league-rank-name" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 1px;">AMATER</span>
-                    
+                <div class="bento-card bento-league" onclick="if(window.kvartalnaLiga) window.kvartalnaLiga.openModal()" style="padding: 12px 10px;">
+                    <i data-lucide="trophy" style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; opacity: 0.08; pointer-events: none;"></i>
+                    <span data-lang="menu_league" style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
+                    <span id="league-rank-name" style="font-size: 1.1rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8);">AMATER</span>
                     <div style="width: 90%; height: 6px; background: rgba(0,0,0,0.6); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
                         <div id="league-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #E0C995, #FFD700); box-shadow: 0 0 5px #FFD700; transition: width 0.5s;"></div>
                     </div>
-                    <span id="league-pts-text" style="font-size: 0.6rem; color: var(--text-main); margin-top: 5px; font-weight: 600;">0 / 5000 PTS</span>
+                    <span id="league-pts-text" style="font-size: 0.55rem; color: var(--text-main); margin-top: 5px; font-weight: 600;">0 / 5000 PTS</span>
+                </div>
+
+                <div class="bento-card" style="padding: 12px 5px;">
+                    <i data-lucide="coins" style="position: absolute; bottom: -15px; right: -10px; width: 60px; height: 60px; opacity: 0.05; pointer-events: none;"></i>
+                    <i data-lucide="coins" style="width: 20px; height: 20px;"></i>
+                    <span id="menu-dukati-count" style="font-size: 1.1rem; font-weight: 900; color: var(--gold-main); margin-top: 3px;">0</span>
+                    <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Dukati</span>
                 </div>
             </div>
 
-            <div style="flex: 1; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px); position: relative; overflow: hidden;">
-                <i data-lucide="coins" style="position: absolute; bottom: -15px; right: -10px; width: 80px; height: 80px; opacity: 0.05; pointer-events: none;"></i>
-                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                    <i data-lucide="coins" style="width: 24px; height: 24px;"></i>
-                    <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
-                    <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
-                </div>
-            </div>
-
-        </div>
-        
-        <div class="modes-grid">
-            
-            <div class="mode-btn mode-solo" onclick="app.handleModeClick(1)">
-                <i data-lucide="user" style="position: absolute; bottom: -20px; right: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; aspect-ratio: 1;">
                 
-                <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
-                    <i data-lucide="user" class="mode-icon"></i>
-                    <span class="mode-text" data-lang="menu_solo">Solo Igra</span>
+                <div class="bento-card" onclick="app.handleModeClick(1)">
+                    <i data-lucide="user" style="position: absolute; bottom: -20px; right: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
+                    <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%;">
+                        <i data-lucide="user" class="mode-icon"></i>
+                        <span class="mode-text" data-lang="menu_solo">Solo Igra</span>
+                    </div>
+                    <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; justify-content: center; padding: 0 10px;">
+                        <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 1)" data-lang="menu_resume_inline">▶ NASTAVI</button>
+                        <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 1)" data-lang="menu_new_game">🆕 NOVA IGRA</button>
+                    </div>
                 </div>
-                <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
-                    <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 1)" data-lang="menu_resume_inline">▶ NASTAVI</button>
-                    <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 1)" data-lang="menu_new_game">🆕 NOVA IGRA</button>
-                </div>
-            </div>
-            
-            <div class="mode-btn mode-dual" onclick="app.handleModeClick(2)">
-                <i data-lucide="users" style="position: absolute; bottom: -20px; left: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
                 
-                <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
-                    <i data-lucide="users" class="mode-icon"></i>
-                    <span class="mode-text" data-lang="menu_dual">Dva Igrača</span>
+                <div class="bento-card" onclick="app.handleModeClick(2)">
+                    <i data-lucide="users" style="position: absolute; bottom: -20px; left: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
+                    <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%;">
+                        <i data-lucide="users" class="mode-icon"></i>
+                        <span class="mode-text" data-lang="menu_dual">Dva Igrača</span>
+                    </div>
+                    <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; justify-content: center; padding: 0 10px;">
+                        <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 2)" data-lang="menu_resume_inline">▶ NASTAVI</button>
+                        <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 2)" data-lang="menu_new_game">🆕 NOVA IGRA</button>
+                    </div>
                 </div>
-                <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
-                    <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 2)" data-lang="menu_resume_inline">▶ NASTAVI</button>
-                    <button class="mini-btn btn-new-inline" onclick="event.stopPropagation(); app.confirmResumeInline(false, 2)" data-lang="menu_new_game">🆕 NOVA IGRA</button>
-                </div>
-            </div>
-            
-            <button class="mode-btn mode-random" onclick="app.setupOnline('random')">
-                <i data-lucide="globe" style="position: absolute; bottom: -20px; right: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
                 
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
+                <button class="bento-card" onclick="app.setupOnline('random')">
+                    <i data-lucide="globe" style="position: absolute; bottom: -20px; right: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
                     <i data-lucide="globe" class="mode-icon"></i>
-                    <span class="mode-text" data-lang="menu_online">Random Igrač</span>
-                </div>
-            </button>
-            
-            <button class="mode-btn mode-invite" onclick="app.startPrivateHosting()">
-                <i data-lucide="link" style="position: absolute; bottom: -20px; left: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
+                    <span class="mode-text" data-lang="menu_online" style="margin-top: 12px;">Random Igrač</span>
+                </button>
                 
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
+                <button class="bento-card" onclick="app.startPrivateHosting()">
+                    <i data-lucide="link" style="position: absolute; bottom: -20px; left: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
                     <i data-lucide="link" class="mode-icon"></i>
-                    <span class="mode-text" data-lang="menu_invite">Prijatelj</span>
-                </div>
-            </button>
+                    <span class="mode-text" data-lang="menu_invite" style="margin-top: 12px;">Prijatelj</span>
+                </button>
+            </div>
             
-        </div>
-        
-        <div class="menu-divider" style="margin-top: 5px;"></div>
-        
-        <div class="special-actions-row" style="max-width: 380px;">
-            <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()"><i data-lucide="gem"></i></button>
-            <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert('Turniri stižu uskoro!'); }"><i data-lucide="swords"></i></button>
-        </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%;">
+                <button class="bento-card btn-bento-action" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()">
+                    <i data-lucide="gem" style="color: var(--success);"></i>
+                    <span>RIZNICA</span>
+                </button>
+                <button class="bento-card btn-bento-action" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert('Turniri stižu uskoro!'); }">
+                    <i data-lucide="swords" style="color: var(--danger);"></i>
+                    <span>TURNIR</span>
+                </button>
+            </div>
 
-        <div class="icon-menu-grid">
-            <button class="btn-square" onclick="if(window.dnevniIzazov) { dnevniIzazov.open(); } else { app.dailyManager.open(); }" style="padding: 0;">
-                <div style="display:flex; flex-direction:column; align-items:center; width: 34px; height: 36px; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
-                    <div id="live-month" style="background: #d32f2f; color: white; font-size: 0.45rem; width: 100%; text-align: center; font-weight: 800; padding: 2px 0;">MAR</div>
-                    <div id="live-day" style="background: #fff; color: #222; font-size: 0.9rem; width: 100%; text-align: center; font-weight: 900; flex-grow: 1; display: flex; align-items: center; justify-content: center;">07</div>
-                </div>
-            </button>
-            <button class="btn-square" onclick="app.showHighscoresScreen()"><i data-lucide="trophy"></i></button>
-            <button class="btn-square" onclick="app.showStats()"><i data-lucide="bar-chart-2"></i></button>
-            <button class="btn-square" onclick="app.showSettings()"><i data-lucide="settings"></i></button>
-            <button class="btn-square" onclick="app.showRules()"><i data-lucide="book-open"></i></button>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 100%;">
+                <button class="bento-card bento-mini" onclick="if(window.dnevniIzazov) { dnevniIzazov.open(); } else { app.dailyManager.open(); }" style="padding: 0;">
+                    <div style="display:flex; flex-direction:column; align-items:center; width: 100%; height: 100%;">
+                        <div id="live-month" style="background: rgba(211, 47, 47, 0.85); color: white; font-size: 0.5rem; width: 100%; text-align: center; font-weight: 800; padding: 4px 0;">MAR</div>
+                        <div id="live-day" style="background: rgba(255,255,255,0.9); color: #222; font-size: 1.1rem; width: 100%; text-align: center; font-weight: 900; flex-grow: 1; display: flex; align-items: center; justify-content: center;">07</div>
+                    </div>
+                </button>
+                <button class="bento-card bento-mini" onclick="app.showHighscoresScreen()"><i data-lucide="trophy"></i></button>
+                <button class="bento-card bento-mini" onclick="app.showStats()"><i data-lucide="bar-chart-2"></i></button>
+                <button class="bento-card bento-mini" onclick="app.showSettings()"><i data-lucide="settings"></i></button>
+                <button class="bento-card bento-mini" onclick="app.showRules()"><i data-lucide="book-open"></i></button>
+            </div>
+
         </div>
     </div>
-
     <div id="quote-screen" class="screen">
         <div id="quote-anim-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; max-width: 600px; height: 100dvh; margin: 0 auto; opacity: 0;">
             <div style="margin-bottom: 20px;"><i data-lucide="lightbulb" style="width: 48px; height: 48px; filter: drop-shadow(0 0 10px var(--gold-glow));"></i></div>
