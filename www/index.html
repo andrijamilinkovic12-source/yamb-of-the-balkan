@@ -18,6 +18,8 @@
     <script src="socket.io.min.js?v=3.7"></script>
     <script src="capacitor.js"></script>
 
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         /* Stil za unutrašnji skrolbar pravnih obaveštenja u modalu */
         .pravni-tekst-container {
@@ -60,14 +62,32 @@
             line-height: 1.1;
         }
         #stats-screen .menu-title { margin-bottom: 12px !important; }
+
+        /* Stil za Lucide ikonice sa gradijentom */
+        .lucide {
+            stroke: url(#gold-gradient);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            transition: all 0.3s ease;
+        }
     </style>
 </head>
 <body>
 
+    <svg style="width:0; height:0; position:absolute;" aria-hidden="true" focusable="false">
+      <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FFD700" />
+        <stop offset="50%" stop-color="#E0C995" />
+        <stop offset="100%" stop-color="#FFA000" />
+      </linearGradient>
+    </svg>
+
     <canvas id="confetti-canvas"></canvas>
 
     <div id="rotate-lock-overlay">
-        <div class="rotate-icon">↻</div>
+        <div class="rotate-icon"><i data-lucide="rotate-cw" style="width: 60px; height: 60px;"></i></div>
         <div class="rotate-msg" data-lang="rotate_msg">MOLIMO OKRENITE UREĐAJ</div>
         <div class="rotate-sub" data-lang="rotate_sub">Ova igra je optimizovana za uspravni prikaz<br>na telefonima.</div>
     </div>
@@ -80,16 +100,16 @@
             <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 15px; border-radius: 12px; margin-bottom: 10px;">
                 <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Vaši tokeni</span>
                 <div style="font-size: 2.5rem; font-weight: 900; color: var(--success); text-shadow: 0 0 10px rgba(76, 175, 80, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px;">
-                    🪙 <span id="undo-token-count">0</span>
+                    <i data-lucide="coins" style="width: 40px; height: 40px;"></i> <span id="undo-token-count">0</span>
                 </div>
             </div>
 
             <button class="btn-menu" style="background: linear-gradient(45deg, #2196F3, #1976D2); color: white; border: none; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px;" onclick="app.buyUndoTokens(1)">
-                <span>📺 <span data-lang="undo_btn_ad_1">Gledaj reklamu (+1)</span></span>
+                <span><i data-lucide="tv" style="width: 18px; height: 18px; stroke: #fff;"></i> <span data-lang="undo_btn_ad_1">Gledaj reklamu (+1)</span></span>
             </button>
 
             <button class="btn-menu" style="background: linear-gradient(45deg, #4CAF50, #388E3C); color: white; border: none; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;" onclick="app.buyUndoTokens(3)">
-                <span>🎁 <span data-lang="undo_btn_ad_3">Gledaj nagradni video (+3)</span></span>
+                <span><i data-lucide="gift" style="width: 18px; height: 18px; stroke: #fff;"></i> <span data-lang="undo_btn_ad_3">Gledaj nagradni video (+3)</span></span>
             </button>
 
             <button class="btn-menu btn-secondary" onclick="app.closeUndoMenu()" data-lang="undo_close">Zatvori</button>
@@ -108,11 +128,15 @@
         </div>
     </div>
 
-    <div id="chat-float-btn" class="chat-float-btn hidden" onclick="app.toggleChat()">💬<div id="chat-badge" class="chat-notification"></div></div>
+    <div id="chat-float-btn" class="chat-float-btn hidden" onclick="app.toggleChat()">
+        <i data-lucide="message-circle" style="stroke: #000; width: 24px; height: 24px;"></i>
+        <div id="chat-badge" class="chat-notification"></div>
+    </div>
+    
     <div id="chat-window" class="chat-window">
-        <div id="chat-header" class="chat-header"><span>CHAT</span><span style="cursor:pointer;" onclick="app.toggleChat()">▼</span></div>
+        <div id="chat-header" class="chat-header"><span>CHAT</span><span style="cursor:pointer;" onclick="app.toggleChat()"><i data-lucide="chevron-down" style="width:18px; height:18px;"></i></span></div>
         <div id="chat-body" class="chat-body"></div>
-        <div class="chat-footer"><input type="text" id="chat-input-field" class="chat-input" placeholder="..."><button id="btn-chat-send" class="btn-chat-send">➤</button></div>
+        <div class="chat-footer"><input type="text" id="chat-input-field" class="chat-input" placeholder="..."><button id="btn-chat-send" class="btn-chat-send"><i data-lucide="send" style="stroke:#000; width:18px; height:18px;"></i></button></div>
     </div>
 
     <div id="splash-screen" class="screen active">
@@ -171,26 +195,26 @@
 
     <div id="main-menu" class="screen">
         <div onclick="app.openGlobalChat()" 
-             style="position: absolute; top: 30px; left: 20px; z-index: 100; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); font-size: 2rem;" 
+             style="position: absolute; top: 30px; left: 20px; z-index: 100; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" 
              onmousedown="this.style.transform='scale(0.9)'" 
              onmouseup="this.style.transform='scale(1)'">
-            💬
+            <i data-lucide="message-circle" style="width: 32px; height: 32px;"></i>
         </div>
 
         <button class="btn-square" 
-                style="position: absolute; top: 30px; right: 20px; z-index: 100; width: 45px; height: 45px; font-size: 1.4rem; padding: 0;" 
+                style="position: absolute; top: 30px; right: 20px; z-index: 100; width: 45px; height: 45px; padding: 0;" 
                 onclick="app.openUndoMenu()" 
                 title="Vrati pogrešan upis">
-            ↩️
+            <i data-lucide="rotate-ccw"></i>
         </button>
 
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
             
             <div onclick="openOnlinePlayersModal()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <div style="position: absolute; bottom: -15px; left: -10px; font-size: 4.5rem; opacity: 0.05; pointer-events: none;">🌍</div>
+                <i data-lucide="globe" style="position: absolute; bottom: -15px; left: -10px; width: 80px; height: 80px; opacity: 0.05; pointer-events: none;"></i>
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div style="position: relative;">
-                        <span style="font-size: 1.3rem;">🌍</span>
+                        <i data-lucide="globe" style="width: 24px; height: 24px;"></i>
                         <div style="position: absolute; top: 0; right: -5px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success); animation: pulse 2s infinite;"></div>
                     </div>
                     <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
@@ -199,7 +223,7 @@
             </div>
 
             <div onclick="if(window.kvartalnaLiga) window.kvartalnaLiga.openModal()" style="flex: 1.8; cursor: pointer; background: linear-gradient(135deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.6) 100%); border: 2px solid var(--gold-main); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 15px rgba(224, 201, 149, 0.1); backdrop-filter: blur(8px); position: relative; overflow: hidden; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
-                <div style="position: absolute; top: -10px; right: -10px; font-size: 3.5rem; opacity: 0.08; pointer-events: none;">🏆</div>
+                <i data-lucide="trophy" style="position: absolute; top: -10px; right: -10px; width: 60px; height: 60px; opacity: 0.08; pointer-events: none;"></i>
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <span data-lang="menu_league" style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
                     <span id="league-rank-name" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 1px;">AMATER</span>
@@ -212,9 +236,9 @@
             </div>
 
             <div style="flex: 1; background: var(--glass-panel); border: var(--glass-border); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: var(--glass-shadow); backdrop-filter: blur(8px); position: relative; overflow: hidden;">
-                <div style="position: absolute; bottom: -15px; right: -10px; font-size: 4.5rem; opacity: 0.05; pointer-events: none;">💰</div>
+                <i data-lucide="coins" style="position: absolute; bottom: -15px; right: -10px; width: 80px; height: 80px; opacity: 0.05; pointer-events: none;"></i>
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                    <span style="font-size: 1.3rem;">💰</span>
+                    <i data-lucide="coins" style="width: 24px; height: 24px;"></i>
                     <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
                     <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
                 </div>
@@ -225,10 +249,10 @@
         <div class="modes-grid">
             
             <div class="mode-btn mode-solo" onclick="app.handleModeClick(1)">
-                <div style="position: absolute; bottom: -20px; right: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">👤</div>
+                <i data-lucide="user" style="position: absolute; bottom: -20px; right: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
                 
                 <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
-                    <span class="mode-icon">👤</span>
+                    <i data-lucide="user" class="mode-icon"></i>
                     <span class="mode-text" data-lang="menu_solo">Solo Igra</span>
                 </div>
                 <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
@@ -238,10 +262,10 @@
             </div>
             
             <div class="mode-btn mode-dual" onclick="app.handleModeClick(2)">
-                <div style="position: absolute; bottom: -20px; left: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">👥</div>
+                <i data-lucide="users" style="position: absolute; bottom: -20px; left: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
                 
                 <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
-                    <span class="mode-icon">👥</span>
+                    <i data-lucide="users" class="mode-icon"></i>
                     <span class="mode-text" data-lang="menu_dual">Dva Igrača</span>
                 </div>
                 <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
@@ -251,19 +275,19 @@
             </div>
             
             <button class="mode-btn mode-random" onclick="app.setupOnline('random')">
-                <div style="position: absolute; bottom: -20px; right: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">🌐</div>
+                <i data-lucide="globe" style="position: absolute; bottom: -20px; right: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
                 
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
-                    <span class="mode-icon">🌐</span>
+                    <i data-lucide="globe" class="mode-icon"></i>
                     <span class="mode-text" data-lang="menu_online">Random Igrač</span>
                 </div>
             </button>
             
             <button class="mode-btn mode-invite" onclick="app.startPrivateHosting()">
-                <div style="position: absolute; bottom: -20px; left: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">🔗</div>
+                <i data-lucide="link" style="position: absolute; bottom: -20px; left: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
                 
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
-                    <span class="mode-icon">🔗</span>
+                    <i data-lucide="link" class="mode-icon"></i>
                     <span class="mode-text" data-lang="menu_invite">Prijatelj</span>
                 </div>
             </button>
@@ -273,8 +297,8 @@
         <div class="menu-divider" style="margin-top: 5px;"></div>
         
         <div class="special-actions-row" style="max-width: 380px;">
-            <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()">💎</button>
-            <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert('Turniri stižu uskoro!'); }">⚔️</button>
+            <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()"><i data-lucide="gem"></i></button>
+            <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert('Turniri stižu uskoro!'); }"><i data-lucide="swords"></i></button>
         </div>
 
         <div class="icon-menu-grid">
@@ -284,16 +308,16 @@
                     <div id="live-day" style="background: #fff; color: #222; font-size: 0.9rem; width: 100%; text-align: center; font-weight: 900; flex-grow: 1; display: flex; align-items: center; justify-content: center;">07</div>
                 </div>
             </button>
-            <button class="btn-square" onclick="app.showHighscoresScreen()">🏆</button>
-            <button class="btn-square" onclick="app.showStats()">📊</button>
-            <button class="btn-square" onclick="app.showSettings()">⚙</button>
-            <button class="btn-square" onclick="app.showRules()">📖</button>
+            <button class="btn-square" onclick="app.showHighscoresScreen()"><i data-lucide="trophy"></i></button>
+            <button class="btn-square" onclick="app.showStats()"><i data-lucide="bar-chart-2"></i></button>
+            <button class="btn-square" onclick="app.showSettings()"><i data-lucide="settings"></i></button>
+            <button class="btn-square" onclick="app.showRules()"><i data-lucide="book-open"></i></button>
         </div>
     </div>
 
     <div id="quote-screen" class="screen">
         <div id="quote-anim-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; max-width: 600px; height: 100dvh; margin: 0 auto; opacity: 0;">
-            <div style="font-size: 3rem; margin-bottom: 20px; filter: drop-shadow(0 0 10px var(--gold-glow));">💡</div>
+            <div style="margin-bottom: 20px;"><i data-lucide="lightbulb" style="width: 48px; height: 48px; filter: drop-shadow(0 0 10px var(--gold-glow));"></i></div>
             <p id="quote-text" style="font-family: 'Georgia', serif; font-size: 1.4rem; font-style: italic; color: var(--text-main); line-height: 1.5; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"></p>
             <p id="quote-author" style="font-size: 1.1rem; color: var(--gold-main); font-weight: 700; text-transform: uppercase; letter-spacing: 2px;"></p>
         </div>
@@ -301,7 +325,7 @@
 
     <div id="game-scene" class="screen">
         <div class="game-header">
-            <button class="btn-secondary" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;" onclick="app.quitToMenu()" title="Izađi iz igre">🚪</button>
+            <button class="btn-secondary" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;" onclick="app.quitToMenu()" title="Izađi iz igre"><i data-lucide="door-open" style="width: 18px; height: 18px;"></i></button>
             
             <div style="display:flex; gap:12px; align-items:center; justify-content: flex-end; flex: 1;">
                 
@@ -309,23 +333,23 @@
 
                 <img id="gh-current-avatar" src="" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; display: none; box-shadow: 0 0 5px rgba(255,215,0,0.5);">
 
-                <span id="gh-spectator-icon" class="gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci">👁️</span>
+                <span id="gh-spectator-icon" class="gh-btn-inactive" style="transition: 0.3s;" title="Gledaoci"><i data-lucide="eye" style="width: 20px; height: 20px;"></i></span>
 
-                <button id="btn-undo-move" class="btn-secondary gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; font-size:1.1rem; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza">↩️</button>
+                <button id="btn-undo-move" class="btn-secondary gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza"><i data-lucide="rotate-ccw" style="width: 18px; height: 18px;"></i></button>
                 
-                <button id="btn-game-menu-toggle" class="btn-secondary" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-weight: bold; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; padding-bottom: 4px;" onclick="app.toggleGameMenu()">⋮</button>
+                <button id="btn-game-menu-toggle" class="btn-secondary" style="border-radius:50%; padding:0; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;" onclick="app.toggleGameMenu()"><i data-lucide="more-vertical" style="width: 20px; height: 20px;"></i></button>
             </div>
         </div>
 
         <div id="game-dropdown-menu" style="position: absolute; top: calc(var(--safe-top) + 60px); right: 15px; background: var(--glass-panel); border: 1px solid rgba(255,215,0,0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; transform: translateY(-20px); opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
             <div style="display: flex; gap: 10px; justify-content: space-between;">
-                <button class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleTheme(); app.toggleGameMenu();" title="Promeni Temu">🎨</button>
-                <button id="btn-gh-sound" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickSound()" title="Zvuk">🔊</button>
-                <button id="btn-gh-vib" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickVib()" title="Vibracija">📳</button>
+                <button class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; display:flex; justify-content:center; align-items:center;" onclick="app.toggleTheme(); app.toggleGameMenu();" title="Promeni Temu"><i data-lucide="palette" style="width: 20px; height: 20px;"></i></button>
+                <button id="btn-gh-sound" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickSound()" title="Zvuk"><i data-lucide="volume-2" style="width: 20px; height: 20px;"></i></button>
+                <button id="btn-gh-vib" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickVib()" title="Vibracija"><i data-lucide="smartphone" style="width: 20px; height: 20px;"></i></button>
             </div>
             
             <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
-                <button id="btn-gh-music" class="btn-secondary" style="border-radius:50%; padding:0; width:30px; height:30px; font-size: 1rem; border: none; background: transparent; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickMusic()" title="Muzika">🎧</button>
+                <button id="btn-gh-music" class="btn-secondary" style="border-radius:50%; padding:0; width:30px; height:30px; border: none; background: transparent; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickMusic()" title="Muzika"><i data-lucide="headphones" style="width: 18px; height: 18px;"></i></button>
                 <input type="range" id="music-volume-slider" min="0" max="1" step="0.05" value="0.4" oninput="app.changeMusicVolume(this.value)" style="flex: 1; accent-color: var(--gold-main); height: 4px; outline: none;">
             </div>
         </div>
@@ -349,7 +373,7 @@
     </div>
 
     <div id="stats-screen" class="screen" style="justify-content: flex-start; padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom));">
-        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <button class="back-btn" onclick="app.showMainMenu()"><i data-lucide="chevron-left"></i></button>
         <h2 class="menu-title" style="margin-top: 10px; margin-bottom: 15px; flex-shrink: 0; text-transform: uppercase;" data-lang="menu_stats">STATISTIKA</h2>
         
         <div class="stats-carousel" id="stats-carousel" onscroll="updateStatsPagination()">
@@ -358,7 +382,7 @@
                 <div class="hs-card modal-box" style="gap: 8px !important; padding: 10px !important; width: 100%; max-width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; justify-content: space-between;">
 
                     <div style="background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%); padding: 8px 15px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2); position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0; width: 100%;" onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()">
-                        <div style="position: absolute; top: -10px; right: 20%; font-size: 3.5rem; opacity: 0.15; pointer-events: none;">⚡</div>
+                        <i data-lucide="zap" style="position: absolute; top: -10px; right: 20%; width: 60px; height: 60px; stroke: #fff; opacity: 0.15; pointer-events: none;"></i>
                         <div style="position: absolute; top: 4px; right: 8px; font-size: 0.8rem; color: #fff; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">↗</div>
 
                         <div style="display: flex; flex-direction: column; align-items: flex-start; z-index: 1;">
@@ -397,31 +421,31 @@
                         
                         <div class="stat-item compact-grid-item" onclick="if(window.vatreniNiz) window.vatreniNiz.openModal()">
                             <div style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
-                            <span style="font-size: 1.1rem;">🔥</span>
+                            <i data-lucide="flame" style="width: 22px; height: 22px; stroke: #FF5722;"></i>
                             <span class="stat-lbl-mini" data-lang="stat_streak">Vatreni Niz</span>
                             <span id="stat-streak" class="stat-val-mini" style="color: #FF5722;">0</span>
                         </div>
                         
                         <div class="stat-item compact-grid-item">
-                            <span style="font-size: 1.1rem;">📈</span>
+                            <i data-lucide="trending-up" style="width: 22px; height: 22px;"></i>
                             <span class="stat-lbl-mini" data-lang="stat_avg">Prosek</span>
                             <span id="stat-avg" class="stat-val-mini">0</span>
                         </div>
                         
                         <div class="stat-item compact-grid-item" onclick="riznicaManager.open()">
                             <div style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
-                            <span style="font-size: 1.1rem;">🏆</span>
+                            <i data-lucide="trophy" style="width: 22px; height: 22px;"></i>
                             <span class="stat-lbl-mini" data-lang="stat_trophies">Trofeji</span>
                             <span id="stat-trophies" class="stat-val-mini c-gold">0 / 27</span>
                         </div>
                         
                         <div class="stat-item compact-grid-item">
-                            <span style="font-size: 1.1rem;">💰</span>
+                            <i data-lucide="coins" style="width: 22px; height: 22px;"></i>
                             <span class="stat-lbl-mini" data-lang="stat_balance">Stanje</span>
                             <span id="stat-balance" class="stat-val-mini c-gold">0</span>
                         </div>
                         <div class="stat-item compact-grid-item">
-                            <span style="font-size: 1.1rem;">🌟</span>
+                            <i data-lucide="star" style="width: 22px; height: 22px;"></i>
                             <span class="stat-lbl-mini" data-lang="stat_alltime">All-Time PTS</span>
                             <span id="stat-alltime" class="stat-val-mini c-gold">0</span>
                         </div>
@@ -437,7 +461,9 @@
 
             <div class="stats-page">
                 <div class="hs-card modal-box" style="padding: 15px 0 0 0 !important; width: 100%; max-width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden; gap: 0 !important;">
-                    <h3 style="color: var(--success); text-align: center; margin-bottom: 10px; letter-spacing: 1px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" data-lang="stat_h2h_title">MEĐUSOBNI DUELI ⚔️</h3>
+                    <h3 style="color: var(--success); text-align: center; margin-bottom: 10px; letter-spacing: 1px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span data-lang="stat_h2h_title">MEĐUSOBNI DUELI</span> <i data-lucide="swords" style="stroke: var(--success); width: 20px; height: 20px;"></i>
+                    </h3>
                     
                     <div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; padding: 0 10px;" data-lang="stat_h2h_desc">
                         Prikazuje vaš skor protiv prijatelja i rivala.
@@ -480,31 +506,16 @@
             .stats-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
             .stats-pagination .dot.active { background: var(--gold-main); transform: scale(1.4); box-shadow: 0 0 10px var(--gold-glow); }
             
-            /* Zlatni skrolbar za H2H listu i glatko skrolovanje na dodir */
-            #h2h-list-container {
-                -webkit-overflow-scrolling: touch;
-                overflow-y: auto;
-            }
-            #h2h-list-container::-webkit-scrollbar {
-                width: 4px;
-            }
-            #h2h-list-container::-webkit-scrollbar-track {
-                background: rgba(255, 255, 255, 0.05);
-                border-radius: 10px;
-            }
-            #h2h-list-container::-webkit-scrollbar-thumb {
-                background: var(--gold-main);
-                border-radius: 10px;
-            }
+            #h2h-list-container { -webkit-overflow-scrolling: touch; overflow-y: auto; }
+            #h2h-list-container::-webkit-scrollbar { width: 4px; }
+            #h2h-list-container::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+            #h2h-list-container::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
             
-            /* Nova H2H Card Style */
             .h2h-card-new { display: flex; flex-direction: column; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; padding-top: 15px; margin-bottom: 5px; position: relative; flex-shrink: 0; }
-            
             .h2h-players-area { display: flex; justify-content: space-between; position: relative; padding: 0 10px; margin-bottom: 12px;}
             .h2h-player { display: flex; flex-direction: column; align-items: center; width: 45%; }
             .h2h-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 2px 5px rgba(0,0,0,0.5); margin-bottom: 8px; }
             .h2h-player.opp .h2h-avatar { border-color: var(--danger); }
-            
             .h2h-name { color: var(--text-main); font-weight: 800; text-align: center; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px; min-height: 2.4em; }
             .h2h-wl { font-weight: 900; font-size: 1.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
             .w-color { color: var(--success); }
@@ -513,12 +524,10 @@
             .h2h-vs-divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
             .h2h-vs-divider .vs-line { position: absolute; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent); z-index: 1; }
             .h2h-vs-divider .vs-circle { background: #111; color: var(--gold-main); font-size: 0.65rem; font-weight: 900; padding: 5px; border-radius: 50%; border: 1px solid var(--gold-main); z-index: 2; display: flex; align-items: center; justify-content: center; }
-
             .h2h-stats-area { background: rgba(255,255,255,0.02); padding: 12px 15px; border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 8px; }
             .h2h-stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
             .h2h-stat-row .lbl { color: var(--text-muted); font-weight: 600; }
             .h2h-stat-row .val { color: var(--text-main); font-weight: 900; font-size: 0.9rem;}
-
             .h2h-bar-wrapper { padding: 12px 15px; display: flex; flex-direction: column; gap: 6px; }
             .h2h-bar-bg { width: 100%; height: 8px; background: var(--danger); border-radius: 4px; overflow: hidden; display: flex; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
             .h2h-bar-win { height: 100%; background: var(--success); transition: width 0.5s ease-out; }
@@ -527,34 +536,36 @@
     </div>
 
     <div id="riznica-screen" class="screen">
-        <button class="back-btn" onclick="riznicaManager.close()">←</button>
+        <button class="back-btn" onclick="riznicaManager.close()"><i data-lucide="chevron-left"></i></button>
         
         <div class="header" style="justify-content: flex-end; padding-top: max(45px, env(safe-area-inset-top)); padding-bottom: 10px; border-bottom: none; background: transparent;">
             <div class="balance-group">
                 <div class="balance-display"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
-                <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 💰 🎬</button>
+                <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 <i data-lucide="coins" style="width: 14px; height: 14px; stroke: #fff;"></i> <i data-lucide="play" style="width: 14px; height: 14px; stroke: #fff;"></i></button>
             </div>
         </div>
 
         <div class="nav-tabs">
-            <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" data-lang="tab_trophies">TROFEJI 🏆</button>
-            <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" data-lang="tab_dice">KOCKICE 🎲</button>
-            <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" data-lang="tab_effects">EFEKTI ✨</button>
-            <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" data-lang="tab_themes">TEME 🎨</button>
+            <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" data-lang="tab_trophies">TROFEJI <i data-lucide="trophy" style="display:inline; width:14px; vertical-align:middle;"></i></button>
+            <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" data-lang="tab_dice">KOCKICE <i data-lucide="box" style="display:inline; width:14px; vertical-align:middle;"></i></button>
+            <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" data-lang="tab_effects">EFEKTI <i data-lucide="sparkles" style="display:inline; width:14px; vertical-align:middle;"></i></button>
+            <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" data-lang="tab_themes">TEME <i data-lucide="palette" style="display:inline; width:14px; vertical-align:middle;"></i></button>
         </div>
 
         <div id="riznica-shop-container" class="content-area"></div>
     </div>
     
     <div id="highscores-screen" class="screen" style="justify-content: flex-start; padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom));">
-        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <button class="back-btn" onclick="app.showMainMenu()"><i data-lucide="chevron-left"></i></button>
         <h2 class="menu-title" style="margin-top: 10px; margin-bottom: 15px; flex-shrink: 0; text-transform: uppercase;" data-lang="menu_hs">TOP LISTA</h2>
         
         <div class="hs-carousel" id="hs-carousel" onscroll="updateHsPagination()">
             
             <div class="hs-page">
                 <div class="hs-card modal-box" style="padding: 15px 0 0 0 !important; width: 100%; max-width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden;">
-                    <h3 style="color: var(--success); text-align: center; margin-bottom: 10px; letter-spacing: 1px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" data-lang="hs_global">GLOBALNA 🌍</h3>
+                    <h3 style="color: var(--success); text-align: center; margin-bottom: 10px; letter-spacing: 1px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span data-lang="hs_global">GLOBALNA</span> <i data-lucide="globe" style="stroke: var(--success); width: 20px; height: 20px;"></i>
+                    </h3>
                     
                     <div id="global-filters" class="hs-filters" style="margin-bottom: 10px; padding: 0 10px;">
                         <button class="filter-btn active" onclick="app.topListManager.filterGlobal('weekly')" data-lang="hs_weekly">NEDELJA</button>
@@ -602,7 +613,6 @@
         </script>
 
         <style>
-            /* CSS za Karusel Top Liste */
             .hs-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; max-width: 500px; flex: 1; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 10px; }
             .hs-carousel::-webkit-scrollbar { display: none; }
             .hs-page { flex: 0 0 100%; width: 100%; scroll-snap-align: center; padding: 0 15px; display: flex; flex-direction: column; }
@@ -612,7 +622,6 @@
             .hs-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
             .hs-pagination .dot.active { background: var(--gold-main); transform: scale(1.4); box-shadow: 0 0 10px var(--gold-glow); }
 
-            /* Re-definisanje Grida za list item (Dodat Avatar) */
             .highscore-item { display: grid; grid-template-columns: 40px 42px 1fr 90px; gap: 10px; align-items: center; padding: 12px 15px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: transparent; }
             .highscore-item:nth-child(even) { background: rgba(255, 255, 255, 0.02); }
             .hs-info { display: flex; flex-direction: column; justify-content: center; overflow: hidden; text-align: left; }
@@ -620,7 +629,7 @@
     </div>
 
     <div id="settings-screen" class="screen" style="justify-content: flex-start; padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom));">
-        <button class="back-btn" onclick="app.showMainMenu()">←</button>
+        <button class="back-btn" onclick="app.showMainMenu()"><i data-lucide="chevron-left"></i></button>
         <h2 class="menu-title" style="margin-top: 10px; margin-bottom: 12px; flex-shrink: 0; text-transform: uppercase;" data-lang="menu_settings">PODEŠAVANJA</h2>
         
         <div class="modal-box" style="text-align: left; padding: 18px; width: 90%; max-width: 400px; gap: 13px !important; max-height: 85vh; overflow-y: auto;">
@@ -645,17 +654,17 @@
                 <span data-lang="settings_sound_haptics" style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Zvuk i Haptika</span>
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 12px;">
-                    <span style="font-size: 0.9rem; font-weight: bold;">🎵 <span data-lang="settings_sound">Zvučni efekti</span></span>
+                    <span style="font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px;"><i data-lucide="music" style="width: 18px; height: 18px;"></i> <span data-lang="settings_sound">Zvučni efekti</span></span>
                     <input type="checkbox" id="setting-sound" onchange="app.saveSettingAuto('sound', this.checked)" style="transform: scale(1.3); margin-right: 5px;">
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 12px;">
-                    <span style="font-size: 0.9rem; font-weight: bold;">🎧 <span data-lang="settings_music">Muzika</span></span>
+                    <span style="font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px;"><i data-lucide="headphones" style="width: 18px; height: 18px;"></i> <span data-lang="settings_music">Muzika</span></span>
                     <input type="checkbox" id="setting-music" onchange="app.saveSettingAuto('music', this.checked)" style="transform: scale(1.3); margin-right: 5px;">
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 12px;">
-                    <span style="font-size: 0.9rem; font-weight: bold;">📳 <span data-lang="set_vibration">Vibracija</span></span>
+                    <span style="font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; gap: 8px;"><i data-lucide="smartphone" style="width: 18px; height: 18px;"></i> <span data-lang="set_vibration">Vibracija</span></span>
                     <input type="checkbox" id="setting-vibration" onchange="app.saveSettingAuto('vibration', this.checked)" style="transform: scale(1.3); margin-right: 5px;">
                 </div>
             </div>
@@ -696,17 +705,17 @@
             <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
                 <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="go_msg_solo">Osvojeni Poeni</div>
                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
-                    <span style="font-size: 2rem;">💰</span>
+                    <i data-lucide="coins" style="width: 32px; height: 32px;"></i>
                     <span id="go-score" style="font-size: 2.2rem; font-weight: 800; color: var(--gold-main);">0</span>
                 </div>
             </div>
             
             <button id="btn-rematch" class="btn-menu" style="background: linear-gradient(45deg, #4CAF50, #2E7D32); color: white; border: none; font-weight: 800; margin-bottom: 10px; box-shadow: 0 0 20px rgba(76, 175, 80, 0.4); display: none; align-items: center; justify-content: center; gap: 10px;" onclick="app.requestRematch()">
-                <span data-lang="go_rematch">🔄 REVANŠ</span>
+                <i data-lucide="rotate-cw" style="stroke: #fff;"></i> <span data-lang="go_rematch">REVANŠ</span>
             </button>
 
             <button id="btn-ad-double" class="btn-menu btn-ad-double" style="background: linear-gradient(45deg, #FFD700, #FFA000); color: #000; border: none; font-weight: 800; margin-bottom: 10px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="app.watchAdForDouble()">
-                <span data-lang="go_double">🎥 DUPLIRAJ 💰 (x2)</span>
+                <i data-lucide="video" style="stroke: #000;"></i> <span data-lang="go_double">DUPLIRAJ 💰 (x2)</span>
             </button>
             <button class="btn-menu btn-secondary" onclick="app.claimReward(false)" data-lang="go_claim">Preuzmi i Izađi</button>
         </div>
@@ -714,7 +723,7 @@
 
     <div id="waiting-screen" class="screen" style="justify-content: flex-start; padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom));">
         
-        <button class="back-btn" onclick="app.cancelOnline()">←</button>
+        <button class="back-btn" onclick="app.cancelOnline()"><i data-lucide="chevron-left"></i></button>
         <h2 id="waiting-title" class="menu-title" style="margin-top: 10px; margin-bottom: 15px; flex-shrink: 0; text-transform: uppercase;" data-lang="ws_searching">TRAŽENJE PROTIVNIKA...</h2>
 
         <div style="text-align: center; margin-bottom: 15px; width: 100%; max-width: 500px; padding: 0 15px;">
@@ -730,7 +739,7 @@
                 <img id="waiting-my-img" src="https://ui-avatars.com/api/?name=Ja&background=333&color=E0C995" class="ws-glass-avatar" style="border-color: var(--gold-main);">
                 <span id="waiting-my-name" class="ws-glass-name">Igrač</span>
                 <div class="ws-glass-stats">
-                    <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-my-power" class="val" style="color: var(--gold-main);">0</span></div>
+                    <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć <i data-lucide="zap" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i></span><span id="waiting-my-power" class="val" style="color: var(--gold-main);">0</span></div>
                     <div class="ws-g-stat"><span class="lbl" data-lang="ws_wl">Pob/Por</span><span id="waiting-my-wl" class="val">0 / 0</span></div>
                 </div>
             </div>
@@ -748,7 +757,7 @@
                     <img id="waiting-opp-img" src="https://ui-avatars.com/api/?name=?&background=333&color=E0C995" class="ws-glass-avatar" style="border-color: var(--danger);">
                     <span id="waiting-opp-name" class="ws-glass-name">Protivnik</span>
                     <div class="ws-glass-stats">
-                        <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-opp-power" class="val" style="color: var(--gold-main);">0</span></div>
+                        <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć <i data-lucide="zap" style="width:12px; height:12px; display:inline; vertical-align:middle;"></i></span><span id="waiting-opp-power" class="val" style="color: var(--gold-main);">0</span></div>
                         <div class="ws-g-stat"><span class="lbl" data-lang="ws_wl">Pob/Por</span><span id="waiting-opp-wl" class="val">0 / 0</span></div>
                     </div>
                 </div>
@@ -763,7 +772,7 @@
 
         <div id="ws-hall-of-fame" class="hidden" style="width: 100%; max-width: 500px; margin-top: 15px; padding: 0 15px; display: flex; flex-direction: column; animation: fadeIn 0.5s forwards;">
             <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; letter-spacing: 1px; margin-bottom: 10px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 5px; flex-shrink: 0; text-transform: uppercase;">
-                🏆 Top 3 Ove Nedelje
+                <i data-lucide="trophy" style="width: 16px; height: 16px; display: inline-block; vertical-align: middle;"></i> Top 3 Ove Nedelje
             </h3>
             <div id="ws-hof-list" style="display: flex; flex-direction: column; gap: 6px;">
                 <div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>
@@ -878,12 +887,12 @@
             
             <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <span style="color: var(--gold-main); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">💬 GLOBAL CHAT</span>
+                    <span style="color: var(--gold-main); font-weight: 800; font-size: 1.1rem; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;"><i data-lucide="message-circle"></i> GLOBAL CHAT</span>
                     <span style="font-size: 0.75rem; color: var(--success); font-weight: bold; background: rgba(76, 175, 80, 0.1); padding: 3px 6px; border-radius: 6px; border: 1px solid var(--success);" title="Trenutno igrača na serveru">
                         🟢 <span id="global-chat-online-count">1</span>
                     </span>
                 </div>
-                <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="app.closeGlobalChat()">✖</span>
+                <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="app.closeGlobalChat()"><i data-lucide="x" style="stroke: var(--danger);"></i></span>
             </div>
 
             <div id="global-chat-body" class="chat-body" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; width: 100%;">
@@ -894,7 +903,7 @@
 
             <div class="chat-footer" style="padding: 15px; border-top: 1px solid var(--glass-border); display: flex; gap: 10px; background: rgba(0,0,0,0.1); width: 100%;">
                 <input type="text" id="global-chat-input" class="modal-input" style="margin: 0; flex: 1; font-size: 0.9rem;" placeholder="Napiši poruku..." autocomplete="off">
-                <button id="btn-global-send" class="btn-chat-send" style="width: 45px; height: 45px; flex-shrink: 0; font-size: 1.2rem;">➤</button>
+                <button id="btn-global-send" class="btn-chat-send" style="width: 45px; height: 45px; flex-shrink: 0; font-size: 1.2rem;"><i data-lucide="send" style="stroke: #000;"></i></button>
             </div>
 
         </div>
@@ -905,7 +914,7 @@
             
             <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
                 <span style="color: var(--success); font-weight: 800;" data-lang="online_players_title">🟢 ONLINE IGRAČI</span>
-                <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold;" onclick="document.getElementById('online-players-overlay').style.display='none'">✖</span>
+                <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold;" onclick="document.getElementById('online-players-overlay').style.display='none'"><i data-lucide="x" style="stroke: var(--danger);"></i></span>
             </div>
 
             <div id="online-players-body" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px;">
@@ -916,8 +925,10 @@
     </div>
 
     <div id="tournament-screen" class="screen" style="justify-content: flex-start; padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom));">
-        <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <h2 class="menu-title" style="margin-top: 10px; margin-bottom: 15px; flex-shrink: 0; text-transform: uppercase;" data-lang="tourney_title">TURNIR ⚔️</h2>
+        <button class="back-btn" onclick="app.showMainMenu()"><i data-lucide="chevron-left"></i></button>
+        <h2 class="menu-title" style="margin-top: 10px; margin-bottom: 15px; flex-shrink: 0; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 10px;" data-lang="tourney_title">
+            TURNIR <i data-lucide="swords"></i>
+        </h2>
         
         <div id="tourney-content" style="width: 100%; max-width: 900px; flex: 1; overflow-y: hidden; display: flex; flex-direction: column; align-items: center;">
         </div>
@@ -976,6 +987,9 @@
         window.addEventListener('load', () => {
             updateMainMenuDashboard();
             setInterval(updateMainMenuDashboard, 2000); 
+            
+            // Inicijalizacija Lucide ikonica nakon što se učita DOM
+            lucide.createIcons();
         });
     </script>
 

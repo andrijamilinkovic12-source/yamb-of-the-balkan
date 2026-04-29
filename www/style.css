@@ -859,3 +859,34 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     background: var(--gold-main); 
     border-radius: 10px; 
 }
+
+/* =========================================================
+   LUCIDE SVG IKONICE - STILIZACIJA
+   ========================================================= */
+.lucide {
+    width: 1em;
+    height: 1em;
+    stroke: url(#gold-gradient);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    transition: all 0.3s ease;
+}
+
+.mode-icon.lucide {
+    width: 2.5rem;
+    height: 2.5rem;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+}
+
+.btn-square .lucide, .btn-special-square .lucide {
+    width: 1.6rem;
+    height: 1.6rem;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+}
+
+.btn-special-square .lucide {
+    width: 2.2rem;
+    height: 2.2rem;
+}
