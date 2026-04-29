@@ -94,150 +94,6 @@ body {
 .btn-resume { border-color: var(--success); color: var(--success); background: rgba(76, 175, 80, 0.1); box-shadow: 0 0 15px rgba(76, 175, 80, 0.2); font-weight: 700; }
 .menu-divider { margin: 2px 0; width: 50%; height: 1px; background: linear-gradient(90deg, transparent, var(--glass-border), transparent); flex-shrink: 0;}
 
-/* =========================================================
-   BENTO BOX & SPATIAL UI (GLAVNI MENI)
-   ========================================================= */
-
-/* Osnovna Bento Kartica */
-.bento-card {
-    background: rgba(20, 20, 20, 0.45); /* Dublje staklo */
-    border: 1px solid rgba(255, 255, 255, 0.08); /* Spatial ivica (svetla) */
-    border-radius: 20px; /* Uniformna zaobljenost za ceo interfejs */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.15); /* Svetlost odozgo (inset shadow) pravi Spatial efekat */
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), background 0.2s;
-    color: var(--text-main);
-    text-decoration: none;
-    outline: none;
-}
-
-.bento-card:active {
-    transform: scale(0.94); /* Taktilno ulegnuće na klik */
-    background: rgba(40, 40, 40, 0.6);
-}
-
-/* Specijalna Kartica za Ligu sa zlatnim sjajem */
-.bento-league {
-    background: linear-gradient(135deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0.6) 100%);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.3), inset 0 1px 5px rgba(224, 201, 149, 0.2);
-}
-
-/* Dugmad u 3. redu (Riznica, Turnir) - horizontalni layout */
-.btn-bento-action {
-    flex-direction: row;
-    gap: 12px;
-    padding: 16px 10px;
-    font-weight: 800;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-}
-
-.btn-bento-action .lucide {
-    width: 24px;
-    height: 24px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-}
-
-/* Mini Meni (Donji red ikonica) */
-.bento-mini {
-    height: 55px;
-    border-radius: 16px; /* Blago smanjen radius da se uklopi u mali kvadrat */
-    padding: 0;
-}
-
-.bento-mini .lucide {
-    width: 22px;
-    height: 22px;
-}
-
-/* Sređivanje ikonice iznad teksta u velikim modovima (1. i 2. red) */
-.bento-card .mode-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0px;
-}
-.bento-card .mode-text {
-    font-size: 0.8rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
-    line-height: 1.2;
-}
-
-/* =========================================================
-   MINI DUGMAD (NASTAVI / NOVA IGRA) - PREMIUM STIL
-   ========================================================= */
-.mini-btn { 
-    width: 100%; 
-    padding: 12px 5px; 
-    border-radius: 14px; 
-    border: none; 
-    font-weight: 900; 
-    font-size: 0.75rem; 
-    cursor: pointer; 
-    text-transform: uppercase; 
-    letter-spacing: 1px; 
-    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); 
-    font-family: 'Montserrat', sans-serif; 
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-
-.mini-btn:active { 
-    transform: scale(0.92) translateY(2px); 
-}
-
-/* NASTAVI - Primarna akcija sa 3D volumenom i sjajem */
-.btn-resume-inline { 
-    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), var(--success); 
-    color: #fff; 
-    border: 1px solid rgba(255,255,255,0.3);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4), 0 0 15px rgba(76, 175, 80, 0.4);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
-}
-
-/* NOVA IGRA - Sekundarna (Danger) akcija sa staklenim (glass) efektom */
-.btn-new-inline { 
-    background: rgba(244, 67, 54, 0.08); 
-    border: 1px solid var(--danger); 
-    color: var(--danger); 
-    box-shadow: inset 0 0 10px rgba(244, 67, 54, 0.1), 0 4px 10px rgba(0,0,0,0.2);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-}
-
-/* Suptilna animacija sjaja (Shine effect) koja prolazi preko dugmeta */
-.mini-btn::after {
-    content: '';
-    position: absolute;
-    top: 0; 
-    left: -100%;
-    width: 50%; 
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
-    transform: skewX(-20deg);
-    transition: left 0.5s ease-in-out;
-}
-
-/* Sjaj se aktivira kada se pređe mišem preko celog kontejnera moda */
-.bento-card:hover .mini-btn::after {
-    left: 150%;
-}
-
-
 /* --- GAME SCENE & BOARD --- */
 /* =========================================
    GAME HEADER CONTROLS (UNDO, SPECTATOR, MENU)
@@ -529,6 +385,94 @@ body {
     .action-btn-group { flex-direction: row; width: auto; gap: 15px; }
     .btn-throw { padding: 12px 40px; font-size: 1.2rem; }
 }
+
+/* =========================================================
+   MODES 2x2 GRID (CENTRALNI KVADRAT ZA IGRU)
+   ========================================================= */
+.modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 330px; aspect-ratio: 1; margin: 5px auto 15px auto; }
+.mode-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; border-radius: 20px; cursor: pointer; outline: none; min-height: 120px; padding: 10px; background: var(--glass-bg); border: 2px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); transform: translateY(0); transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1); position: relative; overflow: hidden; }
+.mode-icon { font-size: 2.5rem; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3)); }
+.mode-text { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; text-align: center; line-height: 1.2; }
+
+/* =========================================================
+   MINI DUGMAD (NASTAVI / NOVA IGRA) - PREMIUM STIL
+   ========================================================= */
+.mini-btn { 
+    width: 100%; 
+    padding: 12px 5px; 
+    border-radius: 14px; 
+    border: none; 
+    font-weight: 900; 
+    font-size: 0.75rem; 
+    cursor: pointer; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    font-family: 'Montserrat', sans-serif; 
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.mini-btn:active { 
+    transform: scale(0.92) translateY(2px); 
+}
+
+/* NASTAVI - Primarna akcija sa 3D volumenom i sjajem */
+.btn-resume-inline { 
+    background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.15) 100%), var(--success); 
+    color: #fff; 
+    border: 1px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4), 0 0 15px rgba(76, 175, 80, 0.4);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+/* NOVA IGRA - Sekundarna (Danger) akcija sa staklenim (glass) efektom */
+.btn-new-inline { 
+    background: rgba(244, 67, 54, 0.08); 
+    border: 1px solid var(--danger); 
+    color: var(--danger); 
+    box-shadow: inset 0 0 10px rgba(244, 67, 54, 0.1), 0 4px 10px rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Suptilna animacija sjaja (Shine effect) koja prolazi preko dugmeta */
+.mini-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; 
+    left: -100%;
+    width: 50%; 
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease-in-out;
+}
+
+/* Sjaj se aktivira kada se pređe mišem preko celog kontejnera moda */
+.mode-btn:hover .mini-btn::after {
+    left: 150%;
+}
+
+/* =========================================================
+   SPECIAL ACTIONS ROW (RIZNICA & TURNIR)
+   ========================================================= */
+.special-actions-row { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 5px auto 10px auto; width: 100%; max-width: 330px; }
+.btn-special-square { width: 75px; height: 75px; border-radius: 18px; font-size: 2.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; outline: none; background: var(--glass-bg); border: 2px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px); box-shadow: 0 5px 0 rgba(0,0,0,0.5), 0 10px 15px rgba(0,0,0,0.3); transform: translateY(0); transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.btn-special-square:active { transform: translateY(5px); box-shadow: 0 0 0 rgba(0,0,0,0.5), inset 0 3px 8px rgba(0,0,0,0.5); }
+@media (max-width: 360px) { .btn-special-square { width: 65px; height: 65px; font-size: 1.8rem; } }
+
+/* =========================================================
+   MODERN ICON GRID MENU (SQUIRCLES)
+   ========================================================= */
+.icon-menu-grid { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px; margin-bottom: 10px; flex-wrap: wrap; width: 100%; max-width: 350px; }
+.btn-square { width: 55px; height: 55px; border-radius: 14px; font-size: 1.6rem; display: flex; align-items: center; justify-content: center; cursor: pointer; outline: none; background: var(--glass-bg); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-main); backdrop-filter: blur(8px); box-shadow: 0 4px 0 rgba(0,0,0,0.5), 0 8px 15px rgba(0,0,0,0.3); transform: translateY(0); transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1); }
+.btn-square:active { transform: translateY(4px); box-shadow: 0 0 0 rgba(0,0,0,0.5), inset 0 2px 8px rgba(0,0,0,0.5); }
+@media (max-width: 599px) and (orientation: portrait) { .btn-square { width: 48px; height: 48px; font-size: 1.4rem; border-radius: 12px; } .icon-menu-grid { gap: 12px; } .modes-grid { gap: 10px; } .mode-icon { font-size: 2rem; } .mode-text { font-size: 0.7rem; } }
 
 /* =========================================================
    TOURNAMENT BRACKET STYLES
@@ -914,35 +858,4 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
 .pravni-tekst-container::-webkit-scrollbar-thumb { 
     background: var(--gold-main); 
     border-radius: 10px; 
-}
-
-/* =========================================================
-   LUCIDE SVG IKONICE - STILIZACIJA
-   ========================================================= */
-.lucide {
-    width: 1em;
-    height: 1em;
-    stroke: url(#gold-gradient);
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
-    transition: all 0.3s ease;
-}
-
-.mode-icon.lucide {
-    width: 2.5rem;
-    height: 2.5rem;
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
-}
-
-.btn-square .lucide, .btn-special-square .lucide {
-    width: 1.6rem;
-    height: 1.6rem;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
-}
-
-.btn-special-square .lucide {
-    width: 2.2rem;
-    height: 2.2rem;
 }
