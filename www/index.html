@@ -196,22 +196,22 @@
     <div id="main-menu" class="screen">
         
         <div onclick="app.openGlobalChat()" 
-             style="position: absolute; top: max(20px, env(safe-area-inset-top)); left: 15px; z-index: 100; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" 
+             style="position: absolute; top: max(15px, env(safe-area-inset-top)); left: 15px; z-index: 100; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" 
              onmousedown="this.style.transform='scale(0.9)'" 
              onmouseup="this.style.transform='scale(1)'">
             <i data-lucide="message-circle" style="width: 32px; height: 32px;"></i>
         </div>
 
         <button class="bento-card" 
-                style="position: absolute; top: max(20px, env(safe-area-inset-top)); right: 15px; z-index: 100; width: 42px; height: 42px; padding: 0; border-radius: 12px;" 
+                style="position: absolute; top: max(15px, env(safe-area-inset-top)); right: 15px; z-index: 100; width: 42px; height: 42px; padding: 0; border-radius: 12px;" 
                 onclick="app.openUndoMenu()" 
                 title="Vrati pogrešan upis">
             <i data-lucide="rotate-ccw" style="width: 20px; height: 20px;"></i>
         </button>
 
-        <div style="display: flex; flex-direction: column; width: 100%; max-width: 380px; height: 100%; flex: 1; padding: max(75px, env(safe-area-inset-top) + 60px) 15px max(15px, env(safe-area-inset-bottom)) 15px; margin: 0 auto; z-index: 10;">
+        <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; width: 100%; max-width: 380px; height: 100%; padding: max(65px, env(safe-area-inset-top) + 45px) 15px max(20px, env(safe-area-inset-bottom) + 5px) 15px; margin: 0 auto; z-index: 10; box-sizing: border-box;">
             
-            <div style="display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 10px; width: 100%; flex-shrink: 0;">
+            <div style="display: grid; grid-template-columns: 1fr 1.6fr 1fr; gap: 10px; width: 100%; flex-shrink: 0; margin-bottom: 0;">
                 <div class="bento-card" onclick="openOnlinePlayersModal()" style="padding: 10px 5px;">
                     <i data-lucide="globe" style="position: absolute; bottom: -15px; left: -10px; width: 60px; height: 60px; opacity: 0.05; pointer-events: none;"></i>
                     <div style="position: relative;">
@@ -240,7 +240,7 @@
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; aspect-ratio: 1; max-height: 380px; margin: auto 0;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; aspect-ratio: 1; max-height: 360px; margin: auto 0;">
                 
                 <div class="bento-card" onclick="app.handleModeClick(1)">
                     <i data-lucide="user" style="position: absolute; bottom: -20px; right: -15px; width: 100px; height: 100px; opacity: 0.04; pointer-events: none;"></i>
@@ -279,7 +279,7 @@
                 </button>
             </div>
             
-            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; flex-shrink: 0;">
+            <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; flex-shrink: 0; margin-top: 0;">
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%;">
                     <button class="bento-card btn-bento-action" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()">
@@ -304,8 +304,8 @@
                     <button class="bento-card bento-mini" onclick="app.showSettings()"><i data-lucide="settings"></i></button>
                     <button class="bento-card bento-mini" onclick="app.showRules()"><i data-lucide="book-open"></i></button>
                 </div>
-                
             </div>
+            
         </div>
     </div>
     <div id="quote-screen" class="screen">
