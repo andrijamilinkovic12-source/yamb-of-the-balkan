@@ -641,18 +641,32 @@ io.on('connection', (socket) => {
                 // 🛡️ SECURITY FIX: Da li je klijentova verzija statistike sinhronizovana
                 const isClientSynced = (s.games >= oldUserGames);
 
-                // ⚖️ FIX BALANSA: Izmešteno iz isFreshLogin
+                // 🛡️ SHOP EXPLOIT FIX (ANTI-RESTORE BACKUP)
+                let isUsingOldBackup = false;
+                const checkMissing = (clientArr, serverArr) => {
+                    if (!serverArr || serverArr.length === 0) return false;
+                    const clientSet = new Set(clientArr || []);
+                    return serverArr.some(item => !clientSet.has(item));
+                };
+
+                if (checkMissing(s.unlockedSkins, user.unlockedSkins) ||
+                    checkMissing(s.unlockedEffects, user.unlockedEffects) ||
+                    checkMissing(s.yamb_unlocked, user.yamb_unlocked)) {
+                    isUsingOldBackup = true;
+                }
+
+                // ⚖️ FIX BALANSA: Ultimativna zaštita dukata
                 if (typeof s.balance === 'number') {
                     const razlika = s.balance - user.balance;
-                    if (isClientSynced) {
+                    
+                    if (isUsingOldBackup && s.balance > user.balance) {
+                        console.log(`🚨 HACK POKUŠAJ (Inventory Desync): Igrač ${user.playerName} odbijen skok dukata sa ${user.balance} na ${s.balance}!`);
+                        // Zadržavamo manji iznos (onaj nakon kupovine)
+                    } else if (isClientSynced) {
                         if (razlika > 80000) { 
-                            console.log(`🚨 HACK POKUŠAJ: Igrač ${user.playerName} sumnjiv skok dukata!`);
+                            console.log(`🚨 HACK POKUŠAJ (Speed/Mod): Igrač ${user.playerName} sumnjiv skok dukata!`);
                         } else {
-                            user.balance = s.balance; 
-                        }
-                    } else {
-                        if (s.balance > user.balance && razlika <= 80000) {
-                            user.balance = s.balance;
+                            user.balance = s.balance; // Sve je legalno, upiši novac
                         }
                     }
                 }
