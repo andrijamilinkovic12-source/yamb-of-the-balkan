@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD + ONLINE UNDO TOKENS)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD + ONLINE UNDO TOKENS + NAJAVA CANCEL FIX)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -54,7 +54,7 @@ function cenzurisiPoruku(poruka) {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v17.2 - ONLINE UNDO TOKENS (TRANSLATED)");
+        console.log("YambApp v17.3 - NAJAVA CANCEL FIX");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -3185,6 +3185,31 @@ class YambApp {
         
         const btn = document.getElementById('btn-najava'); 
         const btnBacaj = document.getElementById('btn-bacaj'); 
+
+        // --- NOVO: LOGIKA ZA OTKAZIVANJE NAJAVE ---
+        if (this.najavljenoPolje) {
+            const oldRow = this.najavljenoPolje.row;
+            const oldCol = this.najavljenoPolje.col;
+            const btnField = document.getElementById(`btn-${this.currentPlayerIdx}-${oldCol}-${oldRow}`);
+            if (btnField) btnField.classList.remove('highlight-najava');
+
+            this.najavljenoPolje = null;
+            this.najavaAktivna = false;
+
+            btn.innerText = gt('game_announce');
+            btn.classList.add('btn-highlight');
+            btn.classList.remove('btn-active-toggle');
+
+            if(this.onlineMode || this.roomId) {
+                try { this.socket.emit('announce', { roomId: this.roomId, type: 'cancel' }); } catch(e) {}
+            }
+            
+            try { this.soundMgr.click(); } catch(e) {}
+            this.vibrate(15);
+            this.autoSaveGame();
+            return;
+        }
+        // ------------------------------------------
         
         if (!this.najavaAktivna) { 
             this.najavaAktivna = true; 
@@ -3261,7 +3286,7 @@ class YambApp {
             document.getElementById(`btn-${pIdx}-${col}-${row}`).classList.add('highlight-najava'); 
             const btnN = document.getElementById('btn-najava'); 
             btnN.innerText = `${gt('game_announce')}: ${row}`; 
-            btnN.disabled = true; btnN.classList.remove('btn-active-toggle'); 
+            btnN.disabled = false; btnN.classList.remove('btn-active-toggle'); // FIX: false
             const btnBacaj = document.getElementById('btn-bacaj'); btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll');
             
             if(this.onlineMode || this.roomId) this.socket.emit('announce', { roomId: this.roomId, type: 'selected', row: row }); 
