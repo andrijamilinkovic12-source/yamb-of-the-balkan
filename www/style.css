@@ -531,10 +531,10 @@ body {
 /* =========================================================
    MODERN ICON GRID MENU (3D SQUIRCLES)
    ========================================================= */
-.icon-menu-grid { display: flex; justify-content: center; align-items: center; gap: 18px; margin-top: 15px; margin-bottom: 10px; flex-wrap: wrap; width: 100%; max-width: 380px; }
+.icon-menu-grid { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 10px; margin-bottom: 10px; flex-wrap: wrap; width: 100%; max-width: 350px; }
 
 .btn-square { 
-    width: 65px; height: 65px; border-radius: 20px; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; cursor: pointer; outline: none; 
+    width: 55px; height: 55px; border-radius: 14px; font-size: 1.6rem; display: flex; align-items: center; justify-content: center; cursor: pointer; outline: none; 
     
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.01) 100%);
     border: 1px solid rgba(255, 255, 255, 0.15);
@@ -545,18 +545,18 @@ body {
         0 10px 22px rgba(0,0,0,0.35), 
         inset 3px 3px 6px rgba(255,255,255,0.25), 
         inset -3px -3px 10px rgba(0,0,0,0.25); 
-    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); 
+    transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1); 
 }
 .btn-square:hover { transform: translateY(-4px); box-shadow: 0 15px 30px rgba(0,0,0,0.4), inset 3px 3px 8px rgba(255,255,255,0.35); }
 .btn-square:active { transform: translateY(4px) scale(0.92); box-shadow: 0 2px 5px rgba(0,0,0,0.5), inset 4px 4px 12px rgba(0,0,0,0.6); }
 
-/* Prilagođavanje za telefone */
+/* Prilagođavanje za telefone - ZADRŽANE ORIGINALNE MARGINE I RAZMACI */
 @media (max-width: 599px) and (orientation: portrait) { 
-    .btn-square { width: 55px; height: 55px; font-size: 1.5rem; border-radius: 16px; } 
+    .btn-square { width: 48px; height: 48px; font-size: 1.4rem; border-radius: 12px; } 
     .icon-menu-grid { gap: 12px; } 
-    .modes-grid { gap: 15px; } 
-    .mode-icon { font-size: 2.8rem; } 
-    .mode-text { font-size: 0.75rem; } 
+    .modes-grid { gap: 10px; } 
+    .mode-icon { font-size: 2rem; } 
+    .mode-text { font-size: 0.7rem; } 
 }
 
 /* =========================================================
