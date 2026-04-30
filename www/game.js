@@ -334,7 +334,7 @@ class YambApp {
         } catch(e) {}
 
         // Filtriraj samo validne teme i ukloni duplikate
-        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert'];
+        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
         unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
         unlockedThemes = [...new Set(unlockedThemes)];
 
@@ -610,7 +610,7 @@ class YambApp {
     }
     
     applyTheme(theme) {
-        document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme', 'neon-theme', 'amethyst-theme', 'easter-theme', 'desert-theme');
+        document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme', 'neon-theme', 'amethyst-theme', 'easter-theme', 'desert-theme', 'moon-theme');
         if (theme === 'light') document.body.classList.add('light-theme'); 
         else if (theme === 'medium') document.body.classList.add('medium-theme');
         else if (theme === 'winter') document.body.classList.add('winter-theme');
@@ -618,6 +618,7 @@ class YambApp {
         else if (theme === 'amethyst') document.body.classList.add('amethyst-theme');
         else if (theme === 'easter') document.body.classList.add('easter-theme');
         else if (theme === 'desert') document.body.classList.add('desert-theme');
+        else if (theme === 'moon') document.body.classList.add('moon-theme');
     }
 
     getFullLocalStats() {
@@ -1489,7 +1490,7 @@ class YambApp {
                 unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
             } catch(e) {}
 
-            const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert'];
+            const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
             unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
             unlockedThemes = [...new Set(unlockedThemes)];
 
