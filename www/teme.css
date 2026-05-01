@@ -731,16 +731,38 @@ body.moon-theme {
     --col-slobodna: #94a3b8;
 }
 
-/* Zvezdana pozadina i prašina */
+/* --- Zvezdana prašina i reljefni mesečevi krateri (V2.0) --- */
 body.moon-theme::before {
     content: "";
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: -1;
     background-color: var(--bg-base);
+    
     background-image:
-        radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 40%),
-        radial-gradient(circle at 85% 30%, rgba(129, 140, 248, 0.03) 0%, transparent 50%);
+        /* 1. Opšta mesečeva svetlost i ambijent (maglina) */
+        radial-gradient(ellipse at 30% -10%, rgba(129, 140, 248, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 100% 100%, rgba(226, 232, 240, 0.05) 0%, transparent 50%),
+        
+        /* 2. Veliki krater (Dole desno) */
+        radial-gradient(circle at 80% 85%, #000000 0%, rgba(0, 0, 0, 0.6) 15%, transparent 22%),
+        radial-gradient(circle at 79% 84%, transparent 18%, rgba(226, 232, 240, 0.08) 21%, transparent 24%),
+        
+        /* 3. Srednji krater (Gore levo) */
+        radial-gradient(circle at 15% 25%, #000000 0%, rgba(0, 0, 0, 0.7) 10%, transparent 15%),
+        radial-gradient(circle at 14% 24%, transparent 12%, rgba(226, 232, 240, 0.06) 14%, transparent 16%),
+        
+        /* 4. Manji, duboki krater (Sredina desno) */
+        radial-gradient(circle at 88% 40%, #000000 0%, rgba(0, 0, 0, 0.8) 6%, transparent 10%),
+        radial-gradient(circle at 87.5% 39.5%, transparent 7%, rgba(226, 232, 240, 0.05) 9%, transparent 11%),
+
+        /* 5. Serija mini kratera (Dole levo) */
+        radial-gradient(circle at 25% 75%, #000000 0%, rgba(0, 0, 0, 0.6) 4%, transparent 7%),
+        radial-gradient(circle at 24.5% 74.5%, transparent 5%, rgba(226, 232, 240, 0.05) 6.5%, transparent 8%),
+        radial-gradient(circle at 32% 80%, #000000 0%, rgba(0, 0, 0, 0.7) 3%, transparent 5%),
+        radial-gradient(circle at 31.5% 79.5%, transparent 3.5%, rgba(226, 232, 240, 0.04) 4.5%, transparent 6%);
+
+    background-attachment: fixed;
     pointer-events: none;
 }
 
