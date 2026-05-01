@@ -697,7 +697,7 @@ body.desert-theme .daily-score-box {
     border: none;
 }
 
-/* --- TEMA 9: MESEČEV SJAJ (MOONLIGHT / GALACTIC) V4.0 --- */
+/* --- TEMA 9: MESEČEV SJAJ (MOONLIGHT / GALACTIC) V5.0 --- */
 body.moon-theme {
     --bg-base: #050608; 
     --bg-gradient-1: #0d1018;
@@ -722,7 +722,7 @@ body.moon-theme {
     --dice-color: #cbd5e1;
     --dice-active: #ffffff;
 
-    /* Kosmičke pastelne boje kolona (Malo zasićenije za 4.0) */
+    /* Kosmičke pastelne boje kolona */
     --col-nadole: #0ea5e9;
     --col-nagore: #d946ef;
     --col-sredina: #cbd5e1;
@@ -731,7 +731,7 @@ body.moon-theme {
     --col-slobodna: #94a3b8;
 }
 
-/* --- V4.0 HIPER-REALISTIČNI KRATERI I RUPIČASTA STRUKTURA --- */
+/* --- V5.0: SAMO KRATERI I RUPIČASTA STRUKTURA (BEZ PRAŠINE) --- */
 body.moon-theme::before {
     content: "";
     position: fixed;
@@ -740,9 +740,6 @@ body.moon-theme::before {
     background-color: var(--bg-base);
     
     background-image:
-        /* 0. Mesečeva prašina (Oštriji Regolit šum) */
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"),
-
         /* --- MIKRO-KRATERI (Rupičasta tekstura tla) --- */
         radial-gradient(circle at 12% 45%, rgba(0,0,0,0.9) 0%, transparent 2.5%),
         radial-gradient(circle at 12.5% 45.5%, rgba(248,250,252,0.15) 0%, transparent 3%),
@@ -760,12 +757,12 @@ body.moon-theme::before {
         radial-gradient(ellipse at 10% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
         radial-gradient(ellipse at 90% 90%, rgba(248, 250, 252, 0.06) 0%, transparent 60%),
 
-        /* --- KRATER 1 (Veliki, Dole Desno - Produhovljen za 4.0) --- */
-        radial-gradient(circle at 82% 82%, rgba(0, 0, 0, 1) 0%, transparent 9%), /* Duboka senka */
-        radial-gradient(circle at 86% 86%, rgba(248, 250, 252, 0.2) 0%, transparent 12%), /* Odsjaj dna */
-        radial-gradient(circle at 81% 81%, transparent 11%, rgba(248, 250, 252, 0.4) 12.5%, transparent 15%), /* Oštra osvetljena ivica */
-        radial-gradient(circle at 85% 85%, transparent 12%, rgba(0, 0, 0, 0.95) 14%, transparent 18%), /* Senka ivice */
-        radial-gradient(circle at 84% 84%, #020304 0%, #050608 13.5%, transparent 14%), /* Dno */
+        /* --- KRATER 1 (Veliki, Dole Desno) --- */
+        radial-gradient(circle at 82% 82%, rgba(0, 0, 0, 1) 0%, transparent 9%),
+        radial-gradient(circle at 86% 86%, rgba(248, 250, 252, 0.2) 0%, transparent 12%),
+        radial-gradient(circle at 81% 81%, transparent 11%, rgba(248, 250, 252, 0.4) 12.5%, transparent 15%),
+        radial-gradient(circle at 85% 85%, transparent 12%, rgba(0, 0, 0, 0.95) 14%, transparent 18%),
+        radial-gradient(circle at 84% 84%, #020304 0%, #050608 13.5%, transparent 14%),
 
         /* --- KRATER 2 (Srednji, Gore Levo) --- */
         radial-gradient(circle at 15% 18%, rgba(0, 0, 0, 1) 0%, transparent 5%),
@@ -793,57 +790,54 @@ body.moon-theme::before {
     pointer-events: none;
 }
 
-/* Tabla - Komad masivne mesečeve stene */
+/* Tabla - Vraćena na standardne dimenzije (uklonjeni margin/radius problemi) */
 body.moon-theme .player-table {
-    border-radius: 24px; /* Zaobljenije za organski oblik stene */
+    border-radius: 16px; /* Standardno zaobljenje */
     border: 1px solid rgba(248, 250, 252, 0.1);
     background: var(--glass-panel);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-shadow:
         0 25px 50px rgba(0,0,0,1),
-        inset 0 0 30px rgba(0,0,0,0.95), /* Tamno udubljenje unutar same table */
-        inset 2px 2px 4px rgba(248,250,252,0.15), /* Srebrni odsjaj gornje ivice */
+        inset 0 0 30px rgba(0,0,0,0.95), 
+        inset 2px 2px 4px rgba(248,250,252,0.15), 
         inset -2px -2px 10px rgba(0, 0, 0, 0.8) !important;
-    transform: perspective(1000px) rotateX(1.5deg);
+    transform: perspective(1000px) rotateX(1deg); /* Standardni ugao */
 }
 
-/* --- POLJA KAO PRAVI KRATERI --- */
+/* --- POLJA (Zadržan 3D krater efekat unutar ćelija) --- */
 body.moon-theme .grid-cell {
-    border: 1px solid rgba(0, 0, 0, 0.8); /* Oštra tamna ivica rupe */
-    background: rgba(4, 5, 8, 0.7); /* Mrak unutar kratera */
-    border-radius: 10px; /* Ključno: Polja više nisu savršeni kvadrati, već podsećaju na okrugla udubljenja */
-    margin: 1px; /* Mali razmak da svaki krater diše */
+    border: 1px solid rgba(0, 0, 0, 0.8); 
+    background: rgba(4, 5, 8, 0.7); 
+    /* Uklonjen border-radius i margin kako se tabla ne bi širila */
     box-shadow:
-        inset 5px 5px 12px rgba(0, 0, 0, 1), /* Duboka senka gornjeg dela kratera */
-        inset -2px -2px 6px rgba(248, 250, 252, 0.08), /* Srebrni lunarni odsjaj na dnu udubljenja */
-        0 1px 1px rgba(248, 250, 252, 0.05); /* Spoljni odsjaj mesečine na ivici iznad */
+        inset 5px 5px 12px rgba(0, 0, 0, 1), 
+        inset -2px -2px 6px rgba(248, 250, 252, 0.08), 
+        0 1px 1px rgba(248, 250, 252, 0.05); 
 }
 
-/* Zaglavlja - Oštri kameni preseci */
+/* Zaglavlja */
 body.moon-theme .col-header,
 body.moon-theme .row-header {
     background: linear-gradient(145deg, rgba(20, 25, 35, 0.9), rgba(8, 10, 15, 0.95));
     color: var(--gold-main);
     border-bottom: 1px solid rgba(248, 250, 252, 0.1);
-    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.8), inset 1px 1px 0 rgba(248, 250, 252, 0.05);
     text-shadow: 0 0 10px rgba(248, 250, 252, 0.6);
 }
 
-/* Polja za zbir - Energetski kosmički procepi */
+/* Polja za zbir */
 body.moon-theme .row-header.sum,
 body.moon-theme .cell-sum {
     background: rgba(99, 102, 241, 0.1) !important;
     color: #a5b4fc !important;
     border: 1px solid rgba(99, 102, 241, 0.3) !important;
-    border-radius: 10px;
     box-shadow: 
         inset 4px 4px 10px rgba(0,0,0,0.9),
         0 0 8px rgba(99, 102, 241, 0.2) !important;
 }
 
-/* Popunjeni upisi - Fluoroscentna baza kratera */
+/* Popunjeni upisi */
 body.moon-theme .score-btn.filled {
     color: #ffffff !important;
     text-shadow: 0 0 12px #ffffff, 0 0 24px #818cf8;
@@ -867,7 +861,7 @@ body.moon-theme #btn-theme-toggle {
     transform: translateY(0) !important;
 }
 
-/* Aktivno stanje - Upadanje u prašinu */
+/* Aktivno stanje dugmića */
 body.moon-theme .btn-menu:active,
 body.moon-theme .mode-btn:active,
 body.moon-theme .btn-square:active,
@@ -878,7 +872,7 @@ body.moon-theme #btn-theme-toggle:active {
     border-color: rgba(248, 250, 252, 0.05) !important;
 }
 
-/* Istaknuta Dugmad (Bacaj / Igraj) - Svetleći skafander efekat */
+/* Istaknuta Dugmad (Bacaj / Igraj) */
 body.moon-theme .btn-primary,
 body.moon-theme .btn-throw {
     background: linear-gradient(145deg, #e2e8f0, #94a3b8) !important;
