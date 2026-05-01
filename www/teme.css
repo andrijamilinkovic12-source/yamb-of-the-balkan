@@ -697,41 +697,41 @@ body.desert-theme .daily-score-box {
     border: none;
 }
 
-/* --- TEMA 9: MESEČEV SJAJ (MOONLIGHT / GALACTIC) V3.0 --- */
+/* --- TEMA 9: MESEČEV SJAJ (MOONLIGHT / GALACTIC) V4.0 --- */
 body.moon-theme {
-    --bg-base: #07080a; 
-    --bg-gradient-1: #10141e;
-    --bg-gradient-2: #030406;
-    --gold-main: #e2e8f0; /* Mesečeva srebrna */
-    --gold-glow: rgba(226, 232, 240, 0.4);
+    --bg-base: #050608; 
+    --bg-gradient-1: #0d1018;
+    --bg-gradient-2: #020304;
+    --gold-main: #f8fafc; /* Oštra Mesečeva srebrna */
+    --gold-glow: rgba(248, 250, 252, 0.5);
     --text-main: #cbd5e1;
     --text-filled: #ffffff;
-    --text-sum: #818cf8; /* Bledo kosmičko plava */
+    --text-sum: #a5b4fc; /* Svetlija kosmičko plava za jači kontrast */
     --text-sum-label: #94a3b8;
     --text-muted: #64748b;
 
-    --glass-bg: rgba(25, 30, 45, 0.4);
-    --glass-panel: rgba(12, 15, 20, 0.9);
-    --glass-border: 1px solid rgba(226, 232, 240, 0.15);
-    --modal-bg: linear-gradient(135deg, #12151f, #07080a);
-    --input-bg: rgba(0, 0, 0, 0.6);
-    --input-border: rgba(226, 232, 240, 0.3);
+    --glass-bg: rgba(15, 18, 25, 0.6);
+    --glass-panel: rgba(8, 10, 15, 0.92);
+    --glass-border: 1px solid rgba(248, 250, 252, 0.1);
+    --modal-bg: linear-gradient(145deg, #10141e, #050608);
+    --input-bg: rgba(0, 0, 0, 0.8);
+    --input-border: rgba(248, 250, 252, 0.2);
 
-    --dice-bg: linear-gradient(145deg, #232936, #10141e);
-    --dice-border: #e2e8f0;
+    --dice-bg: linear-gradient(145deg, #1e2430, #0a0d14);
+    --dice-border: #f8fafc;
     --dice-color: #cbd5e1;
     --dice-active: #ffffff;
 
-    /* Kosmičke pastelne boje kolona */
-    --col-nadole: #38bdf8;
-    --col-nagore: #c084fc;
+    /* Kosmičke pastelne boje kolona (Malo zasićenije za 4.0) */
+    --col-nadole: #0ea5e9;
+    --col-nagore: #d946ef;
     --col-sredina: #cbd5e1;
-    --col-rucno: #a78bfa;
-    --col-najava: #818cf8;
+    --col-rucno: #8b5cf6;
+    --col-najava: #6366f1;
     --col-slobodna: #94a3b8;
 }
 
-/* --- V3.0 REALISTIČNI KRATERI I MESEČEVA PRAŠINA --- */
+/* --- V4.0 HIPER-REALISTIČNI KRATERI I RUPIČASTA STRUKTURA --- */
 body.moon-theme::before {
     content: "";
     position: fixed;
@@ -740,158 +740,181 @@ body.moon-theme::before {
     background-color: var(--bg-base);
     
     background-image:
-        /* 0. Mesečeva prašina (Hiper-realistični SVG šum - Regolit) */
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E"),
+        /* 0. Mesečeva prašina (Oštriji Regolit šum) */
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E"),
+
+        /* --- MIKRO-KRATERI (Rupičasta tekstura tla) --- */
+        radial-gradient(circle at 12% 45%, rgba(0,0,0,0.9) 0%, transparent 2.5%),
+        radial-gradient(circle at 12.5% 45.5%, rgba(248,250,252,0.15) 0%, transparent 3%),
+        
+        radial-gradient(circle at 78% 25%, rgba(0,0,0,0.95) 0%, transparent 1.8%),
+        radial-gradient(circle at 78.5% 25.5%, rgba(248,250,252,0.2) 0%, transparent 2.5%),
+        
+        radial-gradient(circle at 45% 85%, rgba(0,0,0,0.85) 0%, transparent 3%),
+        radial-gradient(circle at 45.8% 85.8%, rgba(248,250,252,0.12) 0%, transparent 4%),
+        
+        radial-gradient(circle at 92% 65%, rgba(0,0,0,0.9) 0%, transparent 2%),
+        radial-gradient(circle at 92.5% 65.5%, rgba(248,250,252,0.15) 0%, transparent 2.8%),
 
         /* 1. Opšte osvetljenje (Kosmička izmaglica) */
-        radial-gradient(ellipse at 15% 15%, rgba(129, 140, 248, 0.15) 0%, transparent 60%),
-        radial-gradient(ellipse at 85% 85%, rgba(226, 232, 240, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 10% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
+        radial-gradient(ellipse at 90% 90%, rgba(248, 250, 252, 0.06) 0%, transparent 60%),
 
-        /* --- KRATER 1 (Veliki, Dole Desno) --- */
-        radial-gradient(circle at 82% 82%, rgba(0, 0, 0, 0.95) 0%, transparent 10%), /* Duboka senka (Gore-Levo unutra) */
-        radial-gradient(circle at 88% 88%, rgba(226, 232, 240, 0.15) 0%, transparent 12%), /* Odsjaj dna (Dole-Desno unutra) */
-        radial-gradient(circle at 83% 83%, transparent 13%, rgba(226, 232, 240, 0.3) 14.5%, transparent 16.5%), /* Osvetljen obod (Gore-Levo spolja) */
-        radial-gradient(circle at 87% 87%, transparent 13%, rgba(0, 0, 0, 0.9) 14.5%, transparent 18%), /* Senka oboda (Dole-Desno spolja) */
-        radial-gradient(circle at 85% 85%, #030406 0%, #07080a 13.5%, transparent 14%), /* Osnova / dno kratera */
+        /* --- KRATER 1 (Veliki, Dole Desno - Produhovljen za 4.0) --- */
+        radial-gradient(circle at 82% 82%, rgba(0, 0, 0, 1) 0%, transparent 9%), /* Duboka senka */
+        radial-gradient(circle at 86% 86%, rgba(248, 250, 252, 0.2) 0%, transparent 12%), /* Odsjaj dna */
+        radial-gradient(circle at 81% 81%, transparent 11%, rgba(248, 250, 252, 0.4) 12.5%, transparent 15%), /* Oštra osvetljena ivica */
+        radial-gradient(circle at 85% 85%, transparent 12%, rgba(0, 0, 0, 0.95) 14%, transparent 18%), /* Senka ivice */
+        radial-gradient(circle at 84% 84%, #020304 0%, #050608 13.5%, transparent 14%), /* Dno */
 
         /* --- KRATER 2 (Srednji, Gore Levo) --- */
-        radial-gradient(circle at 13% 18%, rgba(0, 0, 0, 0.95) 0%, transparent 6%),
-        radial-gradient(circle at 17% 22%, rgba(226, 232, 240, 0.2) 0%, transparent 7%),
-        radial-gradient(circle at 14% 19%, transparent 7.5%, rgba(226, 232, 240, 0.3) 8.5%, transparent 10.5%),
-        radial-gradient(circle at 16% 21%, transparent 7.5%, rgba(0, 0, 0, 0.9) 8.5%, transparent 11%),
-        radial-gradient(circle at 15% 20%, #030406 0%, #07080a 8%, transparent 8.2%),
+        radial-gradient(circle at 15% 18%, rgba(0, 0, 0, 1) 0%, transparent 5%),
+        radial-gradient(circle at 18% 21%, rgba(248, 250, 252, 0.25) 0%, transparent 7%),
+        radial-gradient(circle at 14% 17%, transparent 6.5%, rgba(248, 250, 252, 0.35) 7.5%, transparent 9%),
+        radial-gradient(circle at 17% 20%, transparent 7%, rgba(0, 0, 0, 0.95) 8.5%, transparent 11%),
+        radial-gradient(circle at 16% 19%, #020304 0%, #050608 8%, transparent 8.2%),
 
-        /* --- KRATER 3 (Mali, Sredina Desno) --- */
-        radial-gradient(circle at 88.5% 44.5%, rgba(0, 0, 0, 0.95) 0%, transparent 3.5%),
-        radial-gradient(circle at 89.5% 45.5%, rgba(226, 232, 240, 0.25) 0%, transparent 4.5%),
-        radial-gradient(circle at 88.7% 44.7%, transparent 4.5%, rgba(226, 232, 240, 0.35) 5.2%, transparent 6.5%),
-        radial-gradient(circle at 89.3% 45.3%, transparent 4.5%, rgba(0, 0, 0, 0.9) 5.2%, transparent 7%),
-        radial-gradient(circle at 89% 45%, #020305 0%, #07080a 5%, transparent 5.1%),
+        /* --- KRATER 3 (Mali udubljen, Sredina Desno) --- */
+        radial-gradient(circle at 88% 44%, rgba(0, 0, 0, 1) 0%, transparent 3%),
+        radial-gradient(circle at 89.5% 45.5%, rgba(248, 250, 252, 0.3) 0%, transparent 4.5%),
+        radial-gradient(circle at 87.5% 43.5%, transparent 4%, rgba(248, 250, 252, 0.4) 4.8%, transparent 6%),
+        radial-gradient(circle at 89% 45%, transparent 4.2%, rgba(0, 0, 0, 0.9) 5.5%, transparent 7%),
+        radial-gradient(circle at 88.5% 44.5%, #000 0%, #050608 5%, transparent 5.1%),
 
-        /* --- KRATER 4 (Mali, Dole Levo) --- */
-        radial-gradient(circle at 24.4% 74.4%, rgba(0, 0, 0, 0.95) 0%, transparent 2.5%),
-        radial-gradient(circle at 25.6% 75.6%, rgba(226, 232, 240, 0.25) 0%, transparent 3.5%),
-        radial-gradient(circle at 24.7% 74.7%, transparent 3.5%, rgba(226, 232, 240, 0.35) 4.2%, transparent 5.5%),
-        radial-gradient(circle at 25.3% 75.3%, transparent 3.5%, rgba(0, 0, 0, 0.9) 4.2%, transparent 6%),
-        radial-gradient(circle at 25% 75%, #020305 0%, #07080a 4%, transparent 4.1%),
-
-        /* --- KRATER 5 (Mini, Dole Levo) --- */
-        radial-gradient(circle at 31.5% 81.5%, rgba(0, 0, 0, 0.95) 0%, transparent 2%),
-        radial-gradient(circle at 32.5% 82.5%, rgba(226, 232, 240, 0.25) 0%, transparent 3%),
-        radial-gradient(circle at 31.7% 81.7%, transparent 3%, rgba(226, 232, 240, 0.4) 3.7%, transparent 5%),
-        radial-gradient(circle at 32.3% 82.3%, transparent 3%, rgba(0, 0, 0, 0.9) 3.7%, transparent 6%),
-        radial-gradient(circle at 32% 82%, #020305 0%, #07080a 3.5%, transparent 3.6%);
+        /* --- KRATER 4 (Klaster udubljenja, Dole Levo) --- */
+        radial-gradient(circle at 25% 75%, rgba(0, 0, 0, 1) 0%, transparent 3%),
+        radial-gradient(circle at 26.5% 76.5%, rgba(248, 250, 252, 0.25) 0%, transparent 4%),
+        radial-gradient(circle at 24.5% 74.5%, transparent 3.5%, rgba(248, 250, 252, 0.35) 4.2%, transparent 5.5%),
+        radial-gradient(circle at 26% 76%, transparent 4%, rgba(0, 0, 0, 0.95) 5%, transparent 7%),
+        radial-gradient(circle at 25.5% 75.5%, #000 0%, #050608 4.5%, transparent 4.6%);
 
     background-attachment: fixed;
     background-size: cover;
     pointer-events: none;
 }
 
-/* Tabla - Mesečeva površina */
+/* Tabla - Komad masivne mesečeve stene */
 body.moon-theme .player-table {
-    border-radius: 20px;
-    border: 2px solid rgba(226, 232, 240, 0.2);
+    border-radius: 24px; /* Zaobljenije za organski oblik stene */
+    border: 1px solid rgba(248, 250, 252, 0.1);
     background: var(--glass-panel);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     box-shadow:
-        0 15px 40px rgba(0,0,0,0.9),
-        inset 0 0 20px rgba(0,0,0,0.8), /* Masivni unutrašnji krater na ivicama table */
-        inset 0 1px 0 rgba(226,232,240,0.1) !important;
-    transform: perspective(1000px) rotateX(1deg);
+        0 25px 50px rgba(0,0,0,1),
+        inset 0 0 30px rgba(0,0,0,0.95), /* Tamno udubljenje unutar same table */
+        inset 2px 2px 4px rgba(248,250,252,0.15), /* Srebrni odsjaj gornje ivice */
+        inset -2px -2px 10px rgba(0, 0, 0, 0.8) !important;
+    transform: perspective(1000px) rotateX(1.5deg);
 }
 
-/* Polja (Grid) - Izgled malih kratera uz pomoć inset senki */
+/* --- POLJA KAO PRAVI KRATERI --- */
 body.moon-theme .grid-cell {
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.8); /* Oštra tamna ivica rupe */
+    background: rgba(4, 5, 8, 0.7); /* Mrak unutar kratera */
+    border-radius: 10px; /* Ključno: Polja više nisu savršeni kvadrati, već podsećaju na okrugla udubljenja */
+    margin: 1px; /* Mali razmak da svaki krater diše */
     box-shadow:
-        inset 4px 4px 8px rgba(0, 0, 0, 0.9), /* Dubina kratera */
-        inset -2px -2px 5px rgba(255, 255, 255, 0.03); /* Mesečev odsjaj na ivici */
+        inset 5px 5px 12px rgba(0, 0, 0, 1), /* Duboka senka gornjeg dela kratera */
+        inset -2px -2px 6px rgba(248, 250, 252, 0.08), /* Srebrni lunarni odsjaj na dnu udubljenja */
+        0 1px 1px rgba(248, 250, 252, 0.05); /* Spoljni odsjaj mesečine na ivici iznad */
 }
 
-/* Zaglavlja */
+/* Zaglavlja - Oštri kameni preseci */
 body.moon-theme .col-header,
 body.moon-theme .row-header {
-    background: linear-gradient(to bottom, rgba(30, 35, 45, 0.8), rgba(12, 15, 20, 0.9));
+    background: linear-gradient(145deg, rgba(20, 25, 35, 0.9), rgba(8, 10, 15, 0.95));
     color: var(--gold-main);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.15);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.7);
-    text-shadow: 0 0 8px rgba(226, 232, 240, 0.5);
+    border-bottom: 1px solid rgba(248, 250, 252, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.8), inset 1px 1px 0 rgba(248, 250, 252, 0.05);
+    text-shadow: 0 0 10px rgba(248, 250, 252, 0.6);
 }
 
-/* Polja za zbir */
+/* Polja za zbir - Energetski kosmički procepi */
 body.moon-theme .row-header.sum,
 body.moon-theme .cell-sum {
-    background: rgba(129, 140, 248, 0.08) !important;
-    color: #818cf8 !important;
-    border-top: 1px solid rgba(129, 140, 248, 0.2) !important;
-    border-bottom: 1px solid rgba(129, 140, 248, 0.2) !important;
-    box-shadow: inset 3px 3px 8px rgba(0,0,0,0.8) !important;
+    background: rgba(99, 102, 241, 0.1) !important;
+    color: #a5b4fc !important;
+    border: 1px solid rgba(99, 102, 241, 0.3) !important;
+    border-radius: 10px;
+    box-shadow: 
+        inset 4px 4px 10px rgba(0,0,0,0.9),
+        0 0 8px rgba(99, 102, 241, 0.2) !important;
 }
 
-/* Popunjeni upisi */
+/* Popunjeni upisi - Fluoroscentna baza kratera */
 body.moon-theme .score-btn.filled {
     color: #ffffff !important;
-    text-shadow: 0 0 10px #ffffff, 0 0 20px #818cf8;
+    text-shadow: 0 0 12px #ffffff, 0 0 24px #818cf8;
     font-weight: 900;
-    background: radial-gradient(circle, rgba(129, 140, 248, 0.15) 0%, transparent 70%) !important;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 75%) !important;
 }
 
-/* Sva Dugmad - Tamni kamen sa srebrnim ivicama */
+/* Sva Dugmad - Tamni lunarni kamen */
 body.moon-theme .btn-menu,
 body.moon-theme .mode-btn,
 body.moon-theme .btn-square,
-body.moon-theme .btn-special-square {
-    background: linear-gradient(145deg, #1a202c, #0f172a) !important;
+body.moon-theme .btn-special-square,
+body.moon-theme #btn-theme-toggle {
+    background: linear-gradient(145deg, #161c26, #080a0f) !important;
     color: var(--gold-main) !important;
-    border: 1px solid rgba(226, 232, 240, 0.2) !important;
+    border: 1px solid rgba(248, 250, 252, 0.15) !important;
     border-radius: 20px;
     box-shadow:
-        5px 5px 12px rgba(0,0,0,0.9),
-        inset 1px 1px 0 rgba(255,255,255,0.05) !important;
+        6px 6px 14px rgba(0,0,0,1),
+        inset 1px 1px 0 rgba(248, 250, 252, 0.1) !important;
     transform: translateY(0) !important;
 }
 
+/* Aktivno stanje - Upadanje u prašinu */
 body.moon-theme .btn-menu:active,
 body.moon-theme .mode-btn:active,
 body.moon-theme .btn-square:active,
-body.moon-theme .btn-special-square:active {
-    transform: translateY(3px) !important;
-    box-shadow: inset 4px 4px 10px rgba(0,0,0,0.9) !important; /* Efekat upadanja u krater */
+body.moon-theme .btn-special-square:active,
+body.moon-theme #btn-theme-toggle:active {
+    transform: translateY(4px) !important;
+    box-shadow: inset 5px 5px 12px rgba(0,0,0,0.95) !important; 
+    border-color: rgba(248, 250, 252, 0.05) !important;
 }
 
-/* Istaknuta Dugmad (Bacaj / Igraj) */
+/* Istaknuta Dugmad (Bacaj / Igraj) - Svetleći skafander efekat */
 body.moon-theme .btn-primary,
 body.moon-theme .btn-throw {
-    background: linear-gradient(145deg, #cbd5e1, #94a3b8) !important;
-    color: #0f172a !important;
+    background: linear-gradient(145deg, #e2e8f0, #94a3b8) !important;
+    color: #050608 !important;
     font-weight: 900 !important;
     border: 1px solid #ffffff !important;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.6), inset 0 2px 5px rgba(255,255,255,0.6) !important;
+    box-shadow: 
+        0 8px 20px rgba(0,0,0,0.8), 
+        inset 0 2px 6px rgba(255,255,255,0.8) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
 }
 
 body.moon-theme .btn-primary:active,
 body.moon-theme .btn-throw:active {
-    transform: translateY(4px) !important;
-    box-shadow: inset 0 4px 8px rgba(0,0,0,0.6) !important;
+    transform: translateY(5px) !important;
+    box-shadow: inset 0 6px 12px rgba(0,0,0,0.7) !important;
 }
 
 /* Modali / Kartice */
 body.moon-theme .modal-box,
 body.moon-theme .card {
-    background: linear-gradient(135deg, #12151f, #07080a) !important;
-    border: 1px solid rgba(226, 232, 240, 0.2) !important;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,0,0,0.7) !important;
+    background: linear-gradient(145deg, #0f121a, #040507) !important;
+    border: 1px solid rgba(248, 250, 252, 0.1) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 30px 60px rgba(0,0,0,1), inset 0 0 30px rgba(0,0,0,0.8) !important;
 }
 
 /* Dnevni Izazov Kartice */
 body.moon-theme .daily-challenge-card {
-    background: linear-gradient(135deg, #12151f, #07080a) !important;
-    border: 2px solid rgba(226, 232, 240, 0.2) !important;
+    background: linear-gradient(145deg, #0f121a, #040507) !important;
+    border: 1px solid rgba(248, 250, 252, 0.15) !important;
+    box-shadow: 0 15px 30px rgba(0,0,0,1) !important;
 }
 body.moon-theme .daily-score-box {
-    background: rgba(0,0,0,0.6) !important;
-    box-shadow: inset 4px 4px 10px rgba(0,0,0,0.9) !important;
-    border: 1px solid rgba(226, 232, 240, 0.1) !important;
+    background: rgba(0,0,0,0.8) !important;
+    border-radius: 12px;
+    box-shadow: inset 5px 5px 12px rgba(0,0,0,0.95) !important;
+    border: 1px solid rgba(248, 250, 252, 0.05) !important;
 }
