@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD + ONLINE UNDO TOKENS + NAJAVA CANCEL FIX)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD + ONLINE UNDO TOKENS + NAJAVA CANCEL FIX + GRACE PERIOD)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -54,7 +54,7 @@ function cenzurisiPoruku(poruka) {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v17.3 - NAJAVA CANCEL FIX");
+        console.log("YambApp v17.4 - GRACE PERIOD & NAJAVA CANCEL FIX");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -2551,6 +2551,24 @@ class YambApp {
                         }
                     }
                     this.switchPlayer(); 
+
+                    // --- DODATAK: GRACE PERIOD ZA PROTIVNIKA (BLOKADA BACANJA) ---
+                    if (!this.isSpectator && this.currentPlayerIdx === this.myOnlineIndex) {
+                        const btnBacaj = document.getElementById('btn-bacaj');
+                        if (btnBacaj) {
+                            btnBacaj.disabled = true;
+                            btnBacaj.innerText = "SAČEKAJ..."; // ⏳ Grace period
+                            
+                            setTimeout(() => {
+                                // Provera da li je i dalje moj potez (da se u međuvremenu nije desio Undo)
+                                if (this.gameActive && this.currentPlayerIdx === this.myOnlineIndex && this.brojBacanja < 3) {
+                                    btnBacaj.disabled = false;
+                                    btnBacaj.innerText = gt('game_roll') || "BACAJ";
+                                }
+                            }, 2500); // 2.5 sekundi hlađenja
+                        }
+                    }
+                    // -------------------------------------------------------------
                 } 
             } catch(e) { console.error("CRITICAL ERROR in remote_move:", e); }
         }); 

@@ -1933,22 +1933,27 @@ io.on('connection', (socket) => {
     socket.on('sync_state_response', (data) => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
-            // FIX ZA UNDO TOKENE: Ako server ima autoritativno stanje, ažuriraj ga (Rollback)
+            // FIX ZA UNDO TOKENE & GRACE PERIOD: 
+            // Dozvoljavamo serveru da prihvati rollback stanje ako ga pošalje klijent
             if (roomState[roomId]) {
-                roomState[roomId].allScores = data.allScores || roomState[roomId].allScores;
-                roomState[roomId].turnIndex = data.currentPlayerIdx !== undefined ? data.currentPlayerIdx : roomState[roomId].turnIndex;
-                roomState[roomId].brojBacanja = data.brojBacanja || 0;
-                roomState[roomId].kockiceVals = data.kockiceVals || [0,0,0,0,0,0];
-                roomState[roomId].zadrzane = data.zadrzane || [false,false,false,false,false,false];
-                roomState[roomId].najavaAktivna = data.najavaAktivna || false;
-                roomState[roomId].najavljenoPolje = data.najavljenoPolje || null;
+                const state = roomState[roomId];
+                
+                // Prepisujemo sve iz klijentovog rollback-a
+                state.allScores = data.allScores || state.allScores;
+                state.turnIndex = data.currentPlayerIdx !== undefined ? data.currentPlayerIdx : state.turnIndex;
+                state.brojBacanja = data.brojBacanja || 0;
+                state.kockiceVals = data.kockiceVals || [0,0,0,0,0,0];
+                state.zadrzane = data.zadrzane || [false,false,false,false,false,false];
+                state.najavaAktivna = data.najavaAktivna || false;
+                state.najavljenoPolje = data.najavljenoPolje || null;
                 
                 // DODATO: Oduzmi potez za statistiku ako je vraćen unazad
                 if (data.brojBacanja === 0) {
-                    roomState[roomId].moveCount = Math.max(0, (roomState[roomId].moveCount || 0) - 1);
+                    state.moveCount = Math.max(0, (state.moveCount || 0) - 1);
                 }
 
-                // Pošto je potez vraćen unazad, resetujemo i autoritativni tajmer
+                // POSEBAN FIX: Pošto je potez vraćen unazad (Undo se desio tokom Grace Perioda), 
+                // resetujemo i serverski autoritativni tajmer da se vrati na onog ko je vratio potez!
                 startTurnTimer(roomId);
             }
             
