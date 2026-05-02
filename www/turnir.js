@@ -98,6 +98,75 @@ class TournamentManager {
         return Math.max(power, uiPower).toString();
     }
 
+    // --- NOVA FUNKCIJA: LOGIKA ZA PAMETNI BEDŽ TURNIRA ---
+    updateTourneyBadge() {
+        const badge = document.getElementById('tourney-status-badge');
+        if (!badge) return;
+
+        if (!this.app || !this.app.playerId) {
+            badge.style.display = 'none';
+            return;
+        }
+
+        const myId = this.app.playerId;
+        const status = this.state.status;
+
+        // 1. Faza prijave: Prikazujemo narandžasto (ako već nismo prijavljeni)
+        if (status === 'registration') {
+            const isRegistered = this.state.players.some(p => p.id === myId);
+            if (!isRegistered) {
+                badge.style.display = 'block';
+                badge.style.background = '#ff9800'; // Narandžasta
+                badge.style.boxShadow = '0 0 5px #ff9800';
+                badge.classList.remove('tourney-badge-pulse');
+            } else {
+                // Ako je prijavljen, sakrijemo dok ne počne
+                badge.style.display = 'none';
+            }
+            return;
+        }
+
+        // 2. Faza aktivnog turnira: Proveravamo da li igrač ima neku akciju
+        if (status === 'active' && this.state.bracket) {
+            let isMyTurnToAct = false;
+            let stillInTournament = false;
+
+            // Prolazimo kroz ceo kostur da vidimo stanje igrača
+            ['qf', 'sf', 'f'].forEach(round => {
+                if (this.state.bracket[round]) {
+                    this.state.bracket[round].forEach(match => {
+                        if (match && ((match.p1 && match.p1.id === myId) || (match.p2 && match.p2.id === myId))) {
+                            stillInTournament = true;
+                            // Ako meč nema pobednika, znači da je i dalje aktuelan
+                            if (!match.winnerId) {
+                                isMyTurnToAct = true;
+                            }
+                        }
+                    });
+                }
+            });
+
+            if (isMyTurnToAct) {
+                badge.style.display = 'block';
+                badge.style.background = 'var(--success)';
+                badge.classList.add('tourney-badge-pulse'); // Zeleno i pulsira (Tvoj red!)
+            } else if (stillInTournament) {
+                badge.style.display = 'block';
+                badge.style.background = '#aaaaaa'; // Siva: U turniru si, ali čekaš tuđe rezultate
+                badge.style.boxShadow = 'none';
+                badge.classList.remove('tourney-badge-pulse');
+            } else {
+                // Ispao iz turnira
+                badge.style.display = 'none';
+            }
+            return;
+        }
+
+        // 3. Turnir završen ili nepoznat status
+        badge.style.display = 'none';
+        badge.classList.remove('tourney-badge-pulse');
+    }
+
     setupSocketListeners() {
         if(this.app && !this.app.socket) {
             this.app.initSocketConnection();
@@ -108,6 +177,9 @@ class TournamentManager {
                 this.app.socket.on('tourney_state_update', (newState) => {
                     const oldStatus = this.state.status;
                     this.state = newState;
+
+                    // --- POZIV NOVE FUNKCIJE ZA BEDŽ ---
+                    this.updateTourneyBadge();
                     
                     if (this.app && this.app.playerId) {
                         const myId = this.app.playerId;
