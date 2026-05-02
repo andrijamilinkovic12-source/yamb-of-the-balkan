@@ -476,7 +476,7 @@ class YambApp {
         let rivals = Object.values(h2h);
 
         if (rivals.length === 0) {
-            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">${gt('stat_h2h_empty') || "Još uvek nemate odigranih duela protiv drugih igrača."}</div>`;
+            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">${gt('stat_h2h_empty') || "Nema odigranih duela..."}</div>`;
             return;
         }
 
@@ -509,7 +509,7 @@ class YambApp {
                     <div class="h2h-player me">
                         <img src="${myPhoto}" class="h2h-avatar">
                         <div class="h2h-name" style="font-size: ${myFontSize};">${myName}</div>
-                        <div class="h2h-wl w-color">${r.wins} W</div>
+                        <div class="h2h-wl w-color">${r.wins} ${gt('h2h_wins_short') || 'W'}</div>
                     </div>
                     
                     <div class="h2h-vs-divider">
@@ -520,7 +520,7 @@ class YambApp {
                     <div class="h2h-player opp">
                         <img src="${oppAvatar}" class="h2h-avatar">
                         <div class="h2h-name" style="font-size: ${oppFontSize};">${r.name}</div>
-                        <div class="h2h-wl l-color">${r.losses} L</div>
+                        <div class="h2h-wl l-color">${r.losses} ${gt('h2h_losses_short') || 'L'}</div>
                     </div>
                 </div>
 
@@ -538,8 +538,8 @@ class YambApp {
                         <span class="val c-danger">-${r.maxLossMargin || 0}</span>
                     </div>
                     <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_win_streak') || '🔥 Trenutni niz:'}</span>
-                        <span class="val" style="color: #FF5722;">${r.currentWinStreak || 0} <span style="font-size:0.65rem; color:#aaa; margin-left: 4px;">(Max: ${r.maxWinStreak || 0})</span></span>
+                        <span class="lbl">${gt('h2h_win_streak') || '🔥 Vatreni niz:'}</span>
+                        <span class="val" style="color: #FF5722;">${r.currentWinStreak || 0} <span style="font-size:0.65rem; color:#aaa; margin-left: 4px;">(${gt('h2h_max_short') || 'Max'}: ${r.maxWinStreak || 0})</span></span>
                     </div>
                     <div class="h2h-stat-row">
                         <span class="lbl">${gt('h2h_avg_pts') || '🎯 Tvoj prosek poena:'}</span>
@@ -3982,6 +3982,110 @@ class YambApp {
         </div>`;
 
         document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+    
+    renderH2HStats() {
+        const container = document.getElementById('h2h-list-container');
+        if (!container) return;
+
+        let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
+        let needsCleanup = false;
+        
+        // 🧹 AUTO-CLEANUP: Brišemo sve "undefined" i oštećene protivnike iz memorije
+        for (const key in h2h) {
+            if (!h2h[key].name || String(h2h[key].name) === 'undefined' || String(h2h[key].name) === 'null' || h2h[key].name.trim() === '') {
+                delete h2h[key];
+                needsCleanup = true;
+            }
+        }
+        if (needsCleanup) {
+            localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
+        }
+
+        let rivals = Object.values(h2h);
+
+        if (rivals.length === 0) {
+            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">${gt('stat_h2h_empty') || "Nema odigranih duela..."}</div>`;
+            return;
+        }
+
+        rivals.sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses));
+
+        const myName = this.playerName || gt('h2h_me') || "Ja";
+        const myPhoto = localStorage.getItem('yamb_player_photo') || `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=333&color=E0C995`;
+
+        const getFontSize = (name) => {
+            if (!name) return '0.9rem';
+            if (name.length > 20) return '0.65rem';
+            if (name.length >= 14) return '0.75rem';
+            return '0.9rem';
+        };
+
+        const myFontSize = getFontSize(myName);
+
+        let html = '';
+        rivals.forEach(r => {
+            const total = r.wins + r.losses;
+            let winPct = total > 0 ? Math.round((r.wins / total) * 100) : 0;
+            let oppAvatar = r.photo && r.photo.length > 5 ? r.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`;
+            let oppFontSize = getFontSize(r.name);
+
+            let avg = r.gamesWithScore > 0 ? Math.round((r.myTotalScore || 0) / r.gamesWithScore) : 0;
+
+            html += `
+            <div class="h2h-card-new">
+                <div class="h2h-players-area">
+                    <div class="h2h-player me">
+                        <img src="${myPhoto}" class="h2h-avatar">
+                        <div class="h2h-name" style="font-size: ${myFontSize};">${myName}</div>
+                        <div class="h2h-wl w-color">${r.wins} ${gt('h2h_wins_short') || 'W'}</div>
+                    </div>
+                    
+                    <div class="h2h-vs-divider">
+                        <div class="vs-circle">VS</div>
+                        <div class="vs-line"></div>
+                    </div>
+
+                    <div class="h2h-player opp">
+                        <img src="${oppAvatar}" class="h2h-avatar">
+                        <div class="h2h-name" style="font-size: ${oppFontSize};">${r.name}</div>
+                        <div class="h2h-wl l-color">${r.losses} ${gt('h2h_losses_short') || 'L'}</div>
+                    </div>
+                </div>
+
+                <div class="h2h-stats-area">
+                    <div class="h2h-stat-row">
+                        <span class="lbl">${gt('h2h_highest_score') || '🏆 Najviše poena:'}</span>
+                        <span class="val">${r.myHighScore || 0}</span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">${gt('h2h_max_diff') || '📈 Najveća razlika:'}</span>
+                        <span class="val c-success">+${r.maxWinMargin || 0}</span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">${gt('h2h_worst_loss') || '📉 Najteži poraz:'}</span>
+                        <span class="val c-danger">-${r.maxLossMargin || 0}</span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">${gt('h2h_win_streak') || '🔥 Vatreni niz:'}</span>
+                        <span class="val" style="color: #FF5722;">${r.currentWinStreak || 0} <span style="font-size:0.65rem; color:#aaa; margin-left: 4px;">(${gt('h2h_max_short') || 'Max'}: ${r.maxWinStreak || 0})</span></span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">${gt('h2h_avg_pts') || '🎯 Tvoj prosek poena:'}</span>
+                        <span class="val">${avg}</span>
+                    </div>
+                </div>
+
+                <div class="h2h-bar-wrapper">
+                    <div class="h2h-bar-bg">
+                        <div class="h2h-bar-win" style="width: ${winPct}%"></div>
+                    </div>
+                    <div class="h2h-bar-text">${winPct}% ${gt('h2h_win_pct') || 'POBEDA'}</div>
+                </div>
+            </div>`;
+        });
+
+        container.innerHTML = html;
     }
 }
 
