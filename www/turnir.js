@@ -174,6 +174,11 @@ class TournamentManager {
 
         setTimeout(() => {
             if(this.app && this.app.socket) {
+                
+                // >>> DODATA LINIJA KODA <<<
+                // Odmah po uspostavljanju konekcije tražimo stanje da bismo ažurirali bedž
+                this.app.socket.emit('tourney_get_state');
+
                 this.app.socket.on('tourney_state_update', (newState) => {
                     const oldStatus = this.state.status;
                     this.state = newState;

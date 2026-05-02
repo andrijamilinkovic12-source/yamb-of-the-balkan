@@ -526,7 +526,7 @@ class YambApp {
 
                 <div class="h2h-stats-area">
                     <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_highest_win') || '🏆 Najveća pobeda:'}</span>
+                        <span class="lbl">${gt('h2h_highest_score') || '🏆 Najviše poena:'}</span>
                         <span class="val">${r.myHighScore || 0}</span>
                     </div>
                     <div class="h2h-stat-row">
