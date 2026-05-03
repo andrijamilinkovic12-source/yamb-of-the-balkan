@@ -3961,7 +3961,7 @@ class YambApp {
 
         let modalHtml = `
         <div id="winner-modal-overlay" class="modal-overlay" style="z-index: 9999999; display: flex;">
-            <div class="modal-box" style="text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); max-width: 400px; width: 90%; border-radius: 15px; box-shadow: 0 0 30px rgba(224, 201, 149, 0.4); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <div class="modal-box" style="text-align: center; padding: 30px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); max-width: 400px; width: 90%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                 <h2 style="color: var(--gold-main); font-size: 1.8rem; margin-top: 0; margin-bottom: 5px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
                 

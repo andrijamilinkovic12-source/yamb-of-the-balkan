@@ -2,6 +2,13 @@
    CORE STYLES (LAYOUT & STRUCTURE)
    ========================================= */
 
+/* --- GLOBALNE VARIJABLE (VisionOS Base) --- */
+:root {
+    --glass-panel: rgba(255, 255, 255, 0.03);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.15);
+    --glass-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.2);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; }
 
 body { 
@@ -882,7 +889,7 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     flex: 0 0 auto; 
     width: 150px; 
     height: 100%; 
-    background: rgba(0,0,0,0.6); 
+    background: rgba(255, 255, 255, 0.03); 
     border: 1px solid rgba(0, 0, 0, 0.15); 
     border-top: 1px solid rgba(255, 255, 255, 0.15); 
     border-left: 1px solid rgba(255, 255, 255, 0.08); 
