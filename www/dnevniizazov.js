@@ -58,13 +58,13 @@ class DnevniIzazov {
             }
             
             .glass-die {
-                background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255,255,255,0.1);
+                background: transparent; border: none;
                 border-radius: 16px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-                font-size: 2.5rem; color: #fff; box-shadow: inset 0 4px 10px rgba(0,0,0,0.5);
-                transition: transform 0.2s, box-shadow 0.2s;
+                font-size: 2.5rem; color: #fff; box-shadow: none;
+                transition: transform 0.2s, filter 0.2s;
             }
             .glass-die.rolling { color: var(--gold-main); text-shadow: 0 0 15px var(--gold-glow); animation: shake 0.2s infinite; }
-            .glass-die.locked { border-color: var(--gold-main); box-shadow: 0 0 15px rgba(255,215,0,0.3), inset 0 4px 10px rgba(0,0,0,0.5); transform: scale(1.05); }
+            .glass-die.locked { transform: scale(1.05); filter: drop-shadow(0 0 10px rgba(255,215,0,0.5)); }
 
             /* Score Box */
             .glass-score-box {
