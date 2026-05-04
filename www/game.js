@@ -1029,6 +1029,9 @@ class YambApp {
                 this.socket.on('game_started', (data) => {
                     this.closeGlobalChat(true); 
                     
+                    // NOVO: Zapamti da je korisnik u online meču
+                    localStorage.setItem('yamb_active_online_room', data.roomId);
+                    
                     const customModal = document.getElementById('custom-modal-overlay');
                     if (customModal) customModal.style.display = 'none';
                     
@@ -2393,7 +2396,7 @@ class YambApp {
             if ((this.gameActive || this.isSpectator) && this.onlineMode) {
                 console.log("📥 Stiglo osveženo stanje. Primenjujem...");
                 
-                if (this.isSpectator && data.players) {
+                if (data.players) { 
                     this.players = data.players.map(p => {
                         if (typeof p === 'object' && p !== null) {
                             return p.name ? decodeURIComponent(p.name) : "Igrač";
@@ -2406,6 +2409,11 @@ class YambApp {
                             return p; 
                         }
                     });
+
+                    // Pronađi na kom si indeksu da bi kontrole radile
+                    this.myOnlineIndex = this.players.indexOf(this.playerName);
+                    if (this.myOnlineIndex === -1) this.myOnlineIndex = 0; // Fallback
+
                     this.createScoreTables();
                 }
 
@@ -2458,6 +2466,9 @@ class YambApp {
         
         this.socket.on('game_start', (data) => { 
             console.log("GAME START:", data);
+            
+            // NOVO: Zapamti da je korisnik u online meču
+            localStorage.setItem('yamb_active_online_room', data.roomId);
             
             this.currentOpponentPhoto = data.oppPhoto || '';
             this.currentOpponentUid = data.oppUid || null; 
@@ -2638,6 +2649,7 @@ class YambApp {
 
         this.socket.off('opponent_left');
         this.socket.on('opponent_left', async () => { 
+            localStorage.removeItem('yamb_active_online_room'); 
             if(this.isSpectator) {
                 this.modal.alert(gt('spectator_opp_left') || "Igrač je napustio sobu.", gt('modal_title_info') || "INFO").then(() => {
                     this.showMainMenu();
@@ -2768,6 +2780,7 @@ class YambApp {
     }
     
     cancelOnline() { 
+        localStorage.removeItem('yamb_active_online_room'); 
         this.showMainMenu(); 
         window.history.pushState({}, document.title, window.location.pathname); 
     }
@@ -3401,6 +3414,7 @@ class YambApp {
     }
 
     async handleGameOver() { 
+        localStorage.removeItem('yamb_active_online_room'); // Obrisano jer je igra gotova
         // ---> DODATO: Blokada duplog Game Over-a (Fiks 1) <---
         if (!this.gameActive && !this.isSpectator) {
             console.log("⚠️ Blokirano duplo pokretanje Game Over-a!");
@@ -3810,6 +3824,54 @@ class YambApp {
     }
     
     async checkSavedGame() { 
+        // NOVO: Provera za prekinut online duel
+        const activeOnlineRoom = localStorage.getItem('yamb_active_online_room');
+        
+        if (activeOnlineRoom) {
+            // Brišemo odmah da ne iskače ponovo ako odbije
+            localStorage.removeItem('yamb_active_online_room'); 
+            
+            const zeliNastavak = await this.modal.confirm("Imate prekinut online duel! Da li želite da se vratite u igru?");
+            if (zeliNastavak) {
+                this.resumeOnlineGame(activeOnlineRoom);
+                return;
+            } else {
+                // Ako odustane, šaljemo serveru da smo izašli kako bi protivnik odmah dobio pobedu
+                if (this.socket && this.socket.connected) {
+                    this.socket.emit('back_to_menu'); 
+                }
+            }
+        }
+    }
+
+    resumeOnlineGame(roomId) {
+        this.onlineMode = true;
+        this.gameActive = true;
+        this.roomId = roomId;
+        this.modeTag = "Online";
+        this.isSpectator = false;
+        
+        // Privremena imena dok ne stignu prava sa servera
+        this.players = [this.playerName, "Protivnik"]; 
+        this.initScores();
+        
+        this.navigateTo('game-scene');
+        
+        const lblTurn = document.getElementById('lbl-turn');
+        if (lblTurn) lblTurn.innerText = "Vraćanje u igru...";
+        
+        this.initSocketConnection();
+        
+        // Čim se socket poveže (i server odradi 'set_my_id' i vrati nas u sobu), tražimo state
+        const doSync = () => {
+            this.socket.emit('request_state_sync');
+        };
+        
+        if (this.socket && this.socket.connected) {
+            doSync();
+        } else {
+            this.socket.once('connect', doSync);
+        }
     }
     
     async autoSaveGame() { 
