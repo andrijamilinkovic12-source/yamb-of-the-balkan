@@ -272,6 +272,7 @@ const TRANSLATIONS = {
         // Dodato za ispravku upisa i tokene
         "undo_confirm": "Želite li da ispravite zadnji upis gledanjem reklame?",
         "undo_title": "Ispravi zadnji upis",
+        "undo_info_text": "Polja su sitna i greške se dešavaju! Ovi tokeni ti omogućavaju da poništiš slučajan pogrešan upis. Zbog toga u online duelima postoji zadrška od 2.5 sekunde pre protivnikovog bacanja – kako bi imao dovoljno vremena da reaguješ i ispraviš potez.",
         "undo_no_tokens": "Nemate dovoljno tokena za vraćanje poteza! Nabavite ih u glavnom meniju (ikona u gornjem desnom uglu).",
         "undo_no_tokens_title": "NEMA TOKENA",
         "undo_use_confirm": "Želite li da iskoristite 1 token za ispravku poteza? (Preostalo: {0})",
@@ -831,6 +832,7 @@ const TRANSLATIONS = {
         // Dodato za ispravku upisa i tokene
         "undo_confirm": "Do you want to correct the last move by watching an ad?",
         "undo_title": "Undo last move",
+        "undo_info_text": "The fields are small and mistakes happen! These tokens allow you to undo an accidental wrong entry. Because of this, there is a 2.5-second delay before the opponent's roll in online duels – so you have enough time to react and correct your move.",
         "undo_no_tokens": "You don't have enough tokens to undo your move! Get them in the main menu (top right icon).",
         "undo_no_tokens_title": "NO TOKENS",
         "undo_use_confirm": "Do you want to use 1 token to undo your move? (Remaining: {0})",
