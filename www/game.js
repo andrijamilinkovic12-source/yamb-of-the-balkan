@@ -2318,9 +2318,7 @@ class YambApp {
                 
                 this.updateStats(myAvg, 'win', 0, true); 
 
-                const msg = data.message || gt('timeout_win_msg') || "Protivniku je isteklo vreme!";
-                let ptsWonStr = (gt('league_pts_won') || "+{0} poena u Ligi<br>+{0} 💰 Dukata").replace(/\{0\}/g, myAvg);
-                await this.modal.alert(`${msg}<br><br><span style="color:var(--success); font-weight:bold;">${ptsWonStr}</span>`, gt('go_win') || "TEHNIČKA POBEDA");
+                // UKLONJEN MODAL ZA POBEDNIKA, IGRA TIHO DODELJUJE NAGRADE
             } else {
                 this.soundMgr.loss();
                 
@@ -2699,9 +2697,7 @@ class YambApp {
 
             this.updateStats(myAvg, 'win', 0, true); 
             
-            let fledMsg = gt('opp_fled_win') || "Protivnik je napustio partiju. Pobeđujete!";
-            let wonStr = (gt('league_pts_won') || "+{0} poena u Ligi<br>+{0} 💰 Dukata").replace(/\{0\}/g, myAvg);
-            await this.modal.alert(`${fledMsg}<br><br><span style="color:var(--success); font-weight:bold;">${wonStr}</span>`, gt('go_win') || "POBEDA"); 
+            // UKLONJEN MODAL ZA POBEDNIKA PO ZAHTEVU, PARTIJA SE TIHO ZAVRŠAVA
             this.cancelOnline(); 
         }); 
 
@@ -2783,19 +2779,36 @@ class YambApp {
             }
         });
 
+        // DODATO: Osluškivač odgovora servera o stanju prekinute partije
+        this.socket.off('room_status_result');
+        this.socket.on('room_status_result', async (data) => {
+            if (data.active) {
+                const zeliNastavak = await this.modal.confirm("Imate prekinut online duel! Da li želite da se vratite u igru?");
+                if (zeliNastavak) {
+                    this.resumeOnlineGame(data.roomId);
+                } else {
+                    localStorage.removeItem('yamb_active_online_room');
+                    if (this.socket && this.socket.connected) {
+                        this.socket.emit('back_to_menu');
+                    }
+                }
+            } else {
+                // Soba više ne postoji (istekao grace period), obavesti ga direktno
+                localStorage.removeItem('yamb_active_online_room');
+                this.modal.alert("Kraj partije zato što ste napustili igru i niste se vratili na vreme.", "KRAJ PARTIJE");
+            }
+        });
+
         // DODATO: Zaštita u slučaju da je igrač prekasno ušao (istekao Grace Period)
         this.socket.off('force_cancel_online');
         this.socket.on('force_cancel_online', () => {
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
-            
-            // Ispravljeno pozivanje modala na klijentu
+            localStorage.removeItem('yamb_active_online_room');
             if (this.modal) {
-                this.modal.alert("Isteklo je vreme za povratak u partiju ili je protivnik već napustio meč.", "KRAJ PARTIJE");
+                this.modal.alert("Kraj partije zato što ste napustili igru i niste se vratili na vreme.", "KRAJ PARTIJE");
             } else {
-                alert("Isteklo je vreme za povratak u partiju.");
+                alert("Kraj partije zato što ste napustili igru i niste se vratili na vreme.");
             }
-
-            // Vraćamo igrača u glavni meni i brišemo keš sobe
             this.cancelOnline(); 
         });
     }
@@ -3845,21 +3858,20 @@ class YambApp {
     }
     
     async checkSavedGame() { 
-        // NOVO: Provera za prekinut online duel
+        // Provera za prekinut online duel
         const activeOnlineRoom = localStorage.getItem('yamb_active_online_room');
         
         if (activeOnlineRoom) {
-            const zeliNastavak = await this.modal.confirm("Imate prekinut online duel! Da li želite da se vratite u igru?");
-            if (zeliNastavak) {
-                // NE BRIŠEMO KLJUČ OVDE! Čuvamo ga za slučaj ponovnog zatvaranja u grace periodu
-                this.resumeOnlineGame(activeOnlineRoom);
-                return;
+            this.initSocketConnection();
+
+            const checkRoom = () => {
+                this.socket.emit('check_room_status', { roomId: activeOnlineRoom });
+            };
+
+            if (this.socket && this.socket.connected) {
+                checkRoom();
             } else {
-                // Ako odustane, brišemo ključ i šaljemo serveru da smo izašli kako bi protivnik odmah dobio pobedu
-                localStorage.removeItem('yamb_active_online_room'); 
-                if (this.socket && this.socket.connected) {
-                    this.socket.emit('back_to_menu'); 
-                }
+                this.socket.once('connect', checkRoom);
             }
         }
     }

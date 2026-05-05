@@ -521,6 +521,12 @@ io.on('connection', (socket) => {
         }
     });
 
+    // DODATO: Provera da li je soba još uvek živa kada se klijent vrati u igru
+    socket.on('check_room_status', (data) => {
+        const isActive = roomState[data.roomId] ? true : false;
+        socket.emit('room_status_result', { active: isActive, roomId: data.roomId });
+    });
+
     socket.on('set_my_id', (playerId) => {
         const stariSocketId = onlinePlayers[playerId];
         
