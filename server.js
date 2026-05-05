@@ -1927,6 +1927,10 @@ io.on('connection', (socket) => {
             } else {
                 socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
             }
+        } else {
+            // ---> FIX: Ako je Grace Period istekao i soba obrisana pre povratka <---
+            socket.emit('error_msg', 'Isteklo je vreme za povratak u partiju ili je soba zatvorena.');
+            socket.emit('opponent_left');
         }
     });
 

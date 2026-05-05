@@ -3855,6 +3855,11 @@ class YambApp {
         this.players = [this.playerName, "Protivnik"]; 
         this.initScores();
         
+        // ---> FIX: Iscrtavanje table unapred kako ne bi bila prazna <---
+        this.createScoreTables();
+        this.updateTableVisuals();
+        this.highlightCurrentPlayer();
+        
         this.navigateTo('game-scene');
         
         const lblTurn = document.getElementById('lbl-turn');
