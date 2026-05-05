@@ -2782,6 +2782,24 @@ class YambApp {
                 }
             }
         });
+
+        // DODATO: Zaštita u slučaju da je igrač prekasno ušao (istekao Grace Period)
+        this.socket.off('force_cancel_online');
+        this.socket.on('force_cancel_online', () => {
+            console.log("Server je odbio rekonekciju: Soba je zatvorena.");
+            
+            // Prikazujemo obaveštenje igraču
+            if (window.showNotification) {
+                window.showNotification("KRAJ", "Isteklo je vreme za povratak u partiju ili je protivnik već napustio meč.");
+            } else if (window.modalManager) {
+                window.modalManager.alert("Isteklo je vreme za povratak u partiju ili je protivnik već napustio meč.", "KRAJ");
+            } else {
+                alert("Isteklo je vreme za povratak u partiju.");
+            }
+
+            // Vraćamo igrača u meni bez dodele lažnih poena
+            this.cancelOnline(); 
+        });
     }
     
     cancelOnline() { 
@@ -3870,10 +3888,13 @@ class YambApp {
         if (lblTurn) lblTurn.innerText = "Vraćanje u igru...";
         
         this.initSocketConnection();
+
+        // 1. DODATO: Palimo "uši" klijenta da bi mogao da čuje odgovor servera!
+        this.setupSocketListeners(this.playerName || "Igrač");
         
-        // Čim se socket poveže (i server odradi 'set_my_id' i vrati nas u sobu), tražimo state
+        // 2. DODATO: Šaljemo serveru koji je roomId za slučaj da postoji mikro-delay
         const doSync = () => {
-            this.socket.emit('request_state_sync');
+            this.socket.emit('request_state_sync', { roomId: this.roomId });
         };
         
         if (this.socket && this.socket.connected) {

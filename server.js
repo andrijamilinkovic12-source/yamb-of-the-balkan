@@ -1935,36 +1935,39 @@ io.on('connection', (socket) => {
     socket.on('player_move', (data) => relayEvent('remote_move', data));
     socket.on('announce', (data) => relayEvent('remote_announce', data));
     
-    socket.on('request_state_sync', () => {
-        const roomId = playerRooms[socket.id];
-        if (roomId) {
-            if (roomState[roomId]) {
-                const state = roomState[roomId];
-                console.log(`🛡️ SERVER SYNC: Šaljem bezbedno autoritativno stanje sobe ${roomId} igraču ${socket.id}`);
-                
-                const playerNamesToSync = state.playerNames || state.players.map(id => {
-                    const pSocket = io.sockets.sockets.get(id);
-                    return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
-                });
+    // --- OVO JE ISPRAVLJENO U KORAKU 2 (Bezbedan State Sync + Prevencija lažne pobede) ---
+    socket.on('request_state_sync', (data) => {
+        // Ako socket još nije ubačen u sobu (mikro-delay kod rekonekcije), probaj iz payload-a
+        const roomId = playerRooms[socket.id] || (data && data.roomId);
 
-                socket.emit('sync_state_response', {
-                    roomId: roomId,
-                    myIndex: state.players.indexOf(socket.id), 
-                    players: playerNamesToSync, 
-                    allScores: state.allScores || createEmptyScores(),
-                    currentPlayerIdx: state.turnIndex,
-                    brojBacanja: state.brojBacanja || 0,
-                    kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
-                    zadrzane: state.zadrzane || [false,false,false,false,false,false],
-                    najavaAktivna: state.najavaAktivna || false,
-                    najavljenoPolje: state.najavljenoPolje || null
-                });
-            } else {
-                socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
-            }
+        if (roomId && roomState[roomId]) {
+            const state = roomState[roomId];
+            console.log(`🛡️ SERVER SYNC: Šaljem bezbedno autoritativno stanje sobe ${roomId} igraču ${socket.id}`);
+            
+            const playerNamesToSync = state.playerNames || state.players.map(id => {
+                const pSocket = io.sockets.sockets.get(id);
+                return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
+            });
+
+            socket.emit('sync_state_response', {
+                roomId: roomId,
+                myIndex: state.players.indexOf(socket.id), 
+                players: playerNamesToSync, 
+                allScores: state.allScores || createEmptyScores(),
+                currentPlayerIdx: state.turnIndex,
+                brojBacanja: state.brojBacanja || 0,
+                kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
+                zadrzane: state.zadrzane || [false,false,false,false,false,false],
+                najavaAktivna: state.najavaAktivna || false,
+                najavljenoPolje: state.najavljenoPolje || null
+            });
+        } else if (roomId) {
+             // Pitaj protivnika za state ako je na serveru izgubljen
+             socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
         } else {
+            // Ako soba više ne postoji (istekao grace period)
             socket.emit('error_msg', 'Isteklo je vreme za povratak u partiju ili je soba zatvorena.');
-            socket.emit('opponent_left');
+            socket.emit('force_cancel_online'); // Koristimo novu komandu da ga samo izbacimo napolje!
         }
     });
 
