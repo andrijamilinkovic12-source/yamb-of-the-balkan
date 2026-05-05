@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX + BUSY PLAYER FIX + ONLINE UNDO TOKENS + INVENTORY DESYNC EXPLOIT FIX
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ISKLJUČENA SPEED HACK ZAŠTITA + FILTER + BANOVANJE + TURNIR + ZAŠTITA OD NULA (FRESH INSTALL) + KVARTALNA LIGA MAX FIX + ODVAJANJE GOSTIJU OD UID-a + ALL TIME LIGA + SHOP FIX + DUKATI SAFEGUARD + DNEVNI IZAZOV SERVER-SIDE + SISTEM PRIJATELJA I SLIKA + ONLINE STATUS FIX + SINHRONIZOVANO ODBIJANJE PRIJATELJSTVA + FRIEND REQUEST QUEUE + THEME OVERWRITE FIX + GRACE PERIOD STABILITY + STATE SYNC + ANTI TROLL TIMER + VATRENI NIZ MAX FIX + SPECTATOR MODE + ISPLAYING & ISFRIEND FLAGS + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + HALL OF FAME + LEAN DATA FIX + MULTILANGUAGE ERROR KEYS + POWER INDEX (WITH PENALTY SYSTEM) + TOURNAMENT CLOUD SAVE + LIVE PI SYNC + SOUND & VIBRATION CLOUD SAVE + ADVANCED H2H STATS MERGE + GLOBAL AVATAR FIX + PERSISTENT GLOBAL CHAT + ANTI-LAG BLOKADA DUPLIH POTEZA + AUTORITATIVNI TAJMER + SERVERSKA KAZNA ZA RAGE QUIT (DINAMIČKA SA H2H) + AUTORITATIVNI STATE SYNC (SECURITY FIX) + SPECTATOR SOLO FIX + SECURE HIGHSCORE SUBMIT + AGGREGATE FIX ZA DUPLIKATE NA TOP LISTI + OFFLINE SYNC RACE CONDITION FIX + RAGE QUIT LOGIC FIX + LEAGUE SAFEGUARD FIX + H2H UNDEFINED FIX + BUSY PLAYER FIX + ONLINE UNDO TOKENS + INVENTORY DESYNC EXPLOIT FIX + GRACE PERIOD SYNC FIX
 
 require('dotenv').config(); 
 
@@ -1766,6 +1766,7 @@ io.on('connection', (socket) => {
 
                 roomState[roomId] = { 
                     players: [opponentId, socket.id], 
+                    playerNames: [opponentName, nickname], // <-- DODATO
                     turnIndex: 0,
                     moveCount: 0,
                     allScores: createEmptyScores(),
@@ -1829,6 +1830,7 @@ io.on('connection', (socket) => {
 
             roomState[roomId] = { 
                 players: [p1.id, socket.id], 
+                playerNames: [p1.name, nickname], // <-- DODATO
                 turnIndex: 0,
                 moveCount: 0,
                 allScores: createEmptyScores(),
@@ -1910,12 +1912,16 @@ io.on('connection', (socket) => {
                 const state = roomState[roomId];
                 console.log(`🛡️ SERVER SYNC: Šaljem bezbedno autoritativno stanje sobe ${roomId} igraču ${socket.id}`);
                 
+                // Koristimo sačuvana imena kako se UI ne bi obrisao ili zamenio sa "Igrač"
+                const playerNamesToSync = state.playerNames || state.players.map(id => {
+                    const pSocket = io.sockets.sockets.get(id);
+                    return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
+                });
+
                 socket.emit('sync_state_response', {
                     roomId: roomId,
-                    players: state.players.map(id => {
-                        const pSocket = io.sockets.sockets.get(id);
-                        return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
-                    }),
+                    myIndex: state.players.indexOf(socket.id), // <-- FIX: Obavezno šaljemo myIndex klijentu!
+                    players: playerNamesToSync, // <-- FIX: Šaljemo prava imena umesto fallback-a
                     allScores: state.allScores || createEmptyScores(),
                     currentPlayerIdx: state.turnIndex,
                     brojBacanja: state.brojBacanja || 0,
@@ -2065,6 +2071,7 @@ io.on('connection', (socket) => {
 
             roomState[roomName] = { 
                 players: [challengerId, socket.id], 
+                playerNames: [challengerSocket.playerName || "Igrač 1", socket.playerName || "Igrač 2"], // <-- DODATO
                 turnIndex: 0,
                 moveCount: 0,
                 allScores: createEmptyScores(),
@@ -2111,8 +2118,12 @@ io.on('connection', (socket) => {
             }
             
             if (playersArr.length === 2) {
+                const p1 = io.sockets.sockets.get(playersArr[0]);
+                const p2 = io.sockets.sockets.get(playersArr[1]);
+                
                 roomState[roomId] = { 
                     players: playersArr, 
+                    playerNames: [p1 ? p1.playerName : "Igrač 1", p2 ? p2.playerName : "Igrač 2"], // <-- DODATO
                     turnIndex: 0,
                     moveCount: 0,
                     allScores: createEmptyScores(),

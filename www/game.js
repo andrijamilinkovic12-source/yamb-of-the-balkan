@@ -2410,9 +2410,14 @@ class YambApp {
                         }
                     });
 
-                    // Pronađi na kom si indeksu da bi kontrole radile
-                    this.myOnlineIndex = this.players.indexOf(this.playerName);
-                    if (this.myOnlineIndex === -1) this.myOnlineIndex = 0; // Fallback
+                    // FIX: Oslanjamo se striktno na autoritativni serverski indeks igrača
+                    if (data.myIndex !== undefined) {
+                        this.myOnlineIndex = data.myIndex;
+                    } else {
+                        // Fallback ako server iz nekog razloga ne pošalje indeks
+                        this.myOnlineIndex = this.players.indexOf(this.playerName);
+                        if (this.myOnlineIndex === -1) this.myOnlineIndex = 0; 
+                    }
 
                     this.createScoreTables();
                 }
@@ -3828,15 +3833,14 @@ class YambApp {
         const activeOnlineRoom = localStorage.getItem('yamb_active_online_room');
         
         if (activeOnlineRoom) {
-            // Brišemo odmah da ne iskače ponovo ako odbije
-            localStorage.removeItem('yamb_active_online_room'); 
-            
             const zeliNastavak = await this.modal.confirm("Imate prekinut online duel! Da li želite da se vratite u igru?");
             if (zeliNastavak) {
+                // NE BRIŠEMO KLJUČ OVDE! Čuvamo ga za slučaj ponovnog zatvaranja u grace periodu
                 this.resumeOnlineGame(activeOnlineRoom);
                 return;
             } else {
-                // Ako odustane, šaljemo serveru da smo izašli kako bi protivnik odmah dobio pobedu
+                // Ako odustane, brišemo ključ i šaljemo serveru da smo izašli kako bi protivnik odmah dobio pobedu
+                localStorage.removeItem('yamb_active_online_room'); 
                 if (this.socket && this.socket.connected) {
                     this.socket.emit('back_to_menu'); 
                 }
