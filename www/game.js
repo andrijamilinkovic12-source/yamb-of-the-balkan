@@ -2788,16 +2788,14 @@ class YambApp {
         this.socket.on('force_cancel_online', () => {
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
             
-            // Prikazujemo obaveštenje igraču
-            if (window.showNotification) {
-                window.showNotification("KRAJ", "Isteklo je vreme za povratak u partiju ili je protivnik već napustio meč.");
-            } else if (window.modalManager) {
-                window.modalManager.alert("Isteklo je vreme za povratak u partiju ili je protivnik već napustio meč.", "KRAJ");
+            // Ispravljeno pozivanje modala na klijentu
+            if (this.modal) {
+                this.modal.alert("Isteklo je vreme za povratak u partiju ili je protivnik već napustio meč.", "KRAJ PARTIJE");
             } else {
                 alert("Isteklo je vreme za povratak u partiju.");
             }
 
-            // Vraćamo igrača u meni bez dodele lažnih poena
+            // Vraćamo igrača u glavni meni i brišemo keš sobe
             this.cancelOnline(); 
         });
     }

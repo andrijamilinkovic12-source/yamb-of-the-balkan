@@ -1962,12 +1962,17 @@ io.on('connection', (socket) => {
                 najavljenoPolje: state.najavljenoPolje || null
             });
         } else if (roomId) {
-             // Pitaj protivnika za state ako je na serveru izgubljen
-             socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
+             // Pitaj protivnika za state ako je na serveru izgubljen, ALI SAMO AKO JE PROTIVNIK TU
+             const clients = io.sockets.adapter.rooms.get(roomId);
+             if (clients && clients.size > 0 && Array.from(clients).some(c => c !== socket.id)) {
+                 socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
+             } else {
+                 // Protivnik nije tu, partija je zvanično mrtva!
+                 socket.emit('force_cancel_online');
+             }
         } else {
             // Ako soba više ne postoji (istekao grace period)
-            socket.emit('error_msg', 'Isteklo je vreme za povratak u partiju ili je soba zatvorena.');
-            socket.emit('force_cancel_online'); // Koristimo novu komandu da ga samo izbacimo napolje!
+            socket.emit('force_cancel_online'); // Izbacujemo ga nazad u meni
         }
     });
 
