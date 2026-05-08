@@ -171,6 +171,13 @@ class YambApp {
         const inputGlobalChat = document.getElementById('global-chat-input');
         if(inputGlobalChat) {
             inputGlobalChat.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendGlobalChat(); });
+            // DODATO: EventListener za dinamički brojač karaktera
+            inputGlobalChat.addEventListener('input', (e) => {
+                const charCountEl = document.getElementById('global-chat-char-count');
+                if (charCountEl) {
+                    charCountEl.innerText = `${e.target.value.length}/550`;
+                }
+            });
         }
         
         const savedTheme = localStorage.getItem('yamb_theme') || 'dark';
@@ -1412,6 +1419,10 @@ class YambApp {
         if (!text) return; 
         
         input.value = ""; 
+        
+        // DODATO: Resetuj brojač karaktera na nulu
+        const charCountEl = document.getElementById('global-chat-char-count');
+        if (charCountEl) charCountEl.innerText = "0/550";
         
         if (this.socket && this.socket.connected) { 
             this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
