@@ -1,4 +1,4 @@
-// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ORPHAN SOCKET SYNC FIX + GRACE PERIOD STABILITY
+// server.js - FIX: KOMPLETAN CLOUD SAVE SISTEM + ORPHAN SOCKET SYNC FIX + GRACE PERIOD STABILITY + STATE DESYNC FIX
 
 require('dotenv').config(); 
 
@@ -1894,6 +1894,26 @@ io.on('connection', (socket) => {
                 
                 if (playerIndex === -1 || state.turnIndex !== playerIndex) {
                     console.warn(`🚨 BLOKIRAN LAG/POTEZ (${eventName}) - Igrač: ${socket.id}, Na potezu je: ${state.turnIndex}`);
+                    
+                    // ---> FIX: SERVER POPRAVLJA DESINHRONIZACIJU <---
+                    const playerNamesToSync = state.playerNames || state.players.map(id => {
+                        const pSocket = io.sockets.sockets.get(id);
+                        return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
+                    });
+
+                    socket.emit('sync_state_response', {
+                        roomId: roomId,
+                        myIndex: playerIndex !== -1 ? playerIndex : 0, 
+                        players: playerNamesToSync, 
+                        allScores: state.allScores || createEmptyScores(),
+                        currentPlayerIdx: state.turnIndex,
+                        brojBacanja: state.brojBacanja || 0,
+                        kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
+                        zadrzane: state.zadrzane || [false,false,false,false,false,false],
+                        najavaAktivna: state.najavaAktivna || false,
+                        najavljenoPolje: state.najavljenoPolje || null
+                    });
+                    
                     return; 
                 }
 
@@ -2027,7 +2047,7 @@ io.on('connection', (socket) => {
         }
 
         const safeSender = (data.sender || 'Nepoznat').toString().substring(0, 20);
-        const originalMsg = data.msg.toString().substring(0, 200); 
+        const originalMsg = data.msg.toString().substring(0, 550); 
 
         const safeMsg = cenzurisiPoruku(originalMsg);
 

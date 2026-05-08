@@ -1,4 +1,4 @@
-// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD + ONLINE UNDO TOKENS + NAJAVA CANCEL FIX + GRACE PERIOD)
+// game.js - MAIN GAME LOGIC (STRICT AUTHENTICATION + NO GUEST MODE + TOURNAMENT + ANTI-SPAM CHAT + LIVE CALENDAR + FULL CLOUD SAVE + ERROR HANDLING + POWER INDEX + VS MATCHMAKING SCREEN + FRIENDS SYSTEM + AVATAR SYNC + AUTO REFRESH ONLINE STATUS + REJECT FRIEND SYNC + FRIEND REQUEST CARDS + STATE SYNC + ANTI TROLL TIMER + RAGE QUIT PUNISHMENT + SPECTATOR MODE + LOCAL ROOM SYNC + MULTI-SAVE MODE PER ACCOUNT + QUARTERLY REWARDS + PREVIOUS QUARTER WINNER + H2H STATS SPLIT UI + H2H WIN STREAK FIX + CORRECT TIMEOUT REWARDS + EXPLOIT FIX FOR ECONOMY/LEADERBOARD + ONLINE UNDO TOKENS + NAJAVA CANCEL FIX + GRACE PERIOD + ANTI-DESYNC DEADLOCK FIX)
 
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -54,7 +54,7 @@ function cenzurisiPoruku(poruka) {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v17.4 - GRACE PERIOD & NAJAVA CANCEL FIX");
+        console.log("YambApp v17.5 - GRACE PERIOD, NAJAVA CANCEL & ANTI-DESYNC FIX");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -2106,10 +2106,20 @@ class YambApp {
             this.timeLeft--;
             this.updateStatusLabel();
             
+            const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
+            
+            // ---> FIX: ANTI-DESYNC POLLING (Popravlja Deadlock pri gubitku paketa) <---
+            if (!isMyTurn && this.socket && this.roomId) {
+                // Ako čekamo protivnika, tiho pitamo server za pravo stanje svakih 10 sekundi
+                if (this.timeLeft % 10 === 0) {
+                    console.log("🔄 ANTI-DESYNC: Tiha provera stanja sa serverom da sprečimo zaglavljivanje...");
+                    this.socket.emit('request_state_sync');
+                }
+            }
+
             if (this.timeLeft <= -3) {
                 clearInterval(this.turnTimerInterval);
                 
-                const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
                 if (!isMyTurn && this.socket && this.roomId) {
                     console.log("🛡️ SAFETY NET: Tajmer na nuli! Tražim tehničku pobedu od servera...");
                     this.socket.emit('check_timeout', { roomId: this.roomId });
@@ -2452,12 +2462,15 @@ class YambApp {
                         if (this.najavaAktivna) {
                             btnNajava.innerText = isMyTurn ? (gt('game_announce_cancel') || "OTKAŽI") : (gt('game_opponent_choosing') || "PROTIVNIK BIRA...");
                             btnNajava.classList.add('btn-active-toggle');
+                            btnNajava.disabled = !isMyTurn; // <-- EKSPLICITNO OTKLJUČAVANJE/ZAKLJUČAVANJE
                         } else if (this.najavljenoPolje) {
                             btnNajava.innerText = `${gt('game_announce') || "NAJAVA"}: ${this.najavljenoPolje.row}`;
                             btnNajava.classList.remove('btn-active-toggle');
+                            btnNajava.disabled = true; // <-- Nema najave ponovo na isto polje
                         } else {
                             btnNajava.innerText = gt('game_announce') || "NAJAVA";
                             btnNajava.classList.remove('btn-active-toggle');
+                            btnNajava.disabled = !(isMyTurn && this.brojBacanja === 1); // <-- Samo ako je moj red i prvo bacanje
                         }
                     }
                 }
@@ -4189,6 +4202,7 @@ class YambApp {
 
         container.innerHTML = html;
     }
+
 }
 
 window.app = new YambApp();
