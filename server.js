@@ -2172,27 +2172,8 @@ io.on('connection', (socket) => {
 
                 await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
                 await user.save();
-                
-                socket.emit('sync_local_stats', { 
-                    wins: user.wins, losses: user.losses, games: user.games,
-                    highscore: user.highscore, totalScoreSum: user.totalScoreSum,
-                    balance: user.balance, undoTokens: user.undoTokens, currentWinStreak: user.currentWinStreak,
-                    maxWinStreak: user.maxWinStreak, 
-                    tournamentWins: user.tournamentWins, 
-                    activeSkin: user.activeSkin, 
-                    activeTheme: user.activeTheme, 
-                    activeEffect: user.activeEffect, 
-                    unlockedTrophies: user.unlockedTrophies,
-                    unlockedSkins: user.unlockedSkins,
-                    unlockedEffects: user.unlockedEffects,
-                    yamb_unlocked: user.yamb_unlocked, 
-                    lastDaily: user.lastDaily, 
-                    soundEnabled: user.soundEnabled,        
-                    vibrationEnabled: user.vibrationEnabled,
-                    penaltyPoints: user.penaltyPoints || 0, 
-                    h2hStats: user.h2hStats, 
-                    leagueData: user.leagueData 
-                });
+
+                emitProfileSync(socket, user);
             } else {
                 const initialEconomy = buildInitialEconomyState(s);
                 const initialGames = Math.max(0, toSafeInt(s.games, 0));
@@ -2229,27 +2210,8 @@ io.on('connection', (socket) => {
                 normalizeActiveSelections(user);
                 await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
                 await user.save();
-                
-                socket.emit('sync_local_stats', { 
-                    wins: user.wins, losses: user.losses, games: user.games,
-                    highscore: user.highscore, totalScoreSum: user.totalScoreSum,
-                    balance: user.balance, undoTokens: user.undoTokens, currentWinStreak: user.currentWinStreak,
-                    maxWinStreak: user.maxWinStreak, 
-                    tournamentWins: user.tournamentWins, 
-                    activeSkin: user.activeSkin, 
-                    activeTheme: user.activeTheme, 
-                    activeEffect: user.activeEffect, 
-                    unlockedTrophies: user.unlockedTrophies,
-                    unlockedSkins: user.unlockedSkins,
-                    unlockedEffects: user.unlockedEffects,
-                    yamb_unlocked: user.yamb_unlocked, 
-                    lastDaily: user.lastDaily, 
-                    soundEnabled: user.soundEnabled,        
-                    vibrationEnabled: user.vibrationEnabled,
-                    penaltyPoints: user.penaltyPoints || 0, 
-                    h2hStats: user.h2hStats, 
-                    leagueData: user.leagueData 
-                });
+
+                emitProfileSync(socket, user);
             }
             
             socket.playerStats = {

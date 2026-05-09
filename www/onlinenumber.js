@@ -322,14 +322,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalGames = stats.totalGames || 0;
         const wins = stats.wins || 0;
         const hs = stats.highscore || 0;
+        const setText = (ids, value) => {
+            const idList = Array.isArray(ids) ? ids : [ids];
+            const el = idList.map(id => document.getElementById(id)).find(Boolean);
+            if (el) el.innerText = value;
+        };
 
-        document.getElementById('stat-hs').innerText = hs;
-        document.getElementById('stat-games').innerText = totalGames;
-        document.getElementById('stat-wins').innerText = wins;
+        setText(['stat-hs', 'stat-high'], hs);
+        setText('stat-games', totalGames);
+        setText('stat-wins', wins);
 
         let wlRatio = 0;
         if (totalGames > 0) wlRatio = Math.round((wins / totalGames) * 100);
-        document.getElementById('stat-wl').innerText = wlRatio + "%";
+        setText(['stat-wl', 'stat-rate'], wlRatio + "%");
 
         let currentRankName = rankNames[1];
         let currentRankLvl = 1;
@@ -337,8 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (totalGames < 5) {
             currentRankName = "-";
-            document.getElementById('league-rank-name').innerText = currentRankName;
-            document.getElementById('league-pts-text').innerText = points + " PTS";
+            setText('league-rank-name', currentRankName);
+            setText('league-pts-text', points + " PTS");
             
             const btn = document.querySelector('.btn-league');
             if(btn) {
@@ -363,8 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentRankName = rankNames[currentRankLvl];
         
-        document.getElementById('league-rank-name').innerText = currentRankName;
-        document.getElementById('league-pts-text').innerText = points + " PTS";
+        setText('league-rank-name', currentRankName);
+        setText('league-pts-text', points + " PTS");
 
         const btn = document.querySelector('.btn-league');
         if (btn) {

@@ -180,6 +180,10 @@ function osveziAuthUI(user) {
 
 // --- POMOĆNA FUNKCIJA ZA PAKOVANJE LOKALNE STATISTIKE ---
 function getFullLocalStats() {
+    if (window.app && typeof window.app.getFullLocalStats === 'function') {
+        return window.app.getFullLocalStats();
+    }
+
     const uid = localStorage.getItem('yamb_uid');
     if (!uid) return {}; // STRIKTNO ZABRANJEN GOST
     migrateLegacyLocalProgressToUid(uid);
@@ -207,6 +211,8 @@ function getFullLocalStats() {
         activeEffect: localStorage.getItem('yamb_active_effect') || null,
         activeTheme: localStorage.getItem('yamb_theme') || null,
         lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
+        dailyRewardClaimed: localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "",
+        dailyRewardAmount: parseInt(localStorage.getItem('yamb_daily_reward_amount_' + uid)) || 0,
         soundEnabled: window.app ? window.app.soundEnabled : true,
         vibrationEnabled: window.app ? window.app.vibrationEnabled : true,
         h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}')
@@ -422,176 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // === PRIJEM SAČUVANIH REZULTATA IZ MONGODB BAZE ===
 function inicijalizujCloudSync() {
     if (window.app && window.app.socket) {
-        
-        window.app.socket.off('sync_local_stats');
-        window.app.socket.on('sync_local_stats', (dbStats) => {
-            
-            if (!localStorage.getItem('yamb_uid')) {
-                console.log("🛑 Prijavljivanje obavezno: Ignorišem Cloud Sync jer korisnik nije ulogovan.");
-                return; 
-            }
-
-            console.log("🔄 Preuzeta cela statistika iz oblaka:", dbStats);
-            
-            window.app.stats = { 
-                games: dbStats.games || 0,
-                wins: dbStats.wins || 0, 
-                losses: dbStats.losses || 0,
-                highscore: dbStats.highscore || 0,
-                totalScoreSum: dbStats.totalScoreSum || 0,
-                maxWinStreak: dbStats.maxWinStreak || 0,
-                penaltyPoints: dbStats.penaltyPoints || 0
-            };
-            localStorage.setItem('yamb_stats', JSON.stringify(window.app.stats));
-            
-            let mergedUnlocked = dbStats.yamb_unlocked || [];
-            if (mergedUnlocked.length === 0) {
-                mergedUnlocked = [
-                    ...(dbStats.unlockedTrophies || []), 
-                    ...(dbStats.unlockedSkins || []), 
-                    ...(dbStats.unlockedEffects || [])
-                ];
-            }
-            
-            const freeDefaults = ['default', 'confetti', 'dark', 'light', 'medium', 'winter'];
-            freeDefaults.forEach(item => {
-                if (!mergedUnlocked.includes(item)) mergedUnlocked.push(item);
-            });
-
-            localStorage.setItem('yamb_unlocked', JSON.stringify(mergedUnlocked));
-            localStorage.setItem('yamb_unlocked_skins', JSON.stringify(dbStats.unlockedSkins || []));
-            localStorage.setItem('yamb_unlocked_effects', JSON.stringify(dbStats.unlockedEffects || []));
-            
-            let lokalneTeme = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
-            let cloudTeme = dbStats.unlockedThemes || [];
-            let sakriveneTeme = (dbStats.unlockedSkins || []).filter(t => ['neon', 'amethyst'].includes(t));
-            let opsteTeme = (dbStats.yamb_unlocked || []).filter(t => ['neon', 'amethyst'].includes(t));
-            
-            let spojeneTeme = [...new Set([...lokalneTeme, ...cloudTeme, ...sakriveneTeme, ...opsteTeme])];
-            localStorage.setItem('yamb_unlocked_themes', JSON.stringify(spojeneTeme));
-
-            if (dbStats.activeSkin) localStorage.setItem('yamb_active_skin', dbStats.activeSkin);
-            if (dbStats.activeEffect) localStorage.setItem('yamb_active_effect', dbStats.activeEffect);
-            if (dbStats.activeTheme) {
-                localStorage.setItem('yamb_theme', dbStats.activeTheme);
-                
-                if (window.app && typeof window.app.applyTheme === 'function') {
-                    window.app.applyTheme(dbStats.activeTheme);
-                } else {
-                    document.body.className = '';
-                    if (dbStats.activeTheme !== 'dark') {
-                        document.body.classList.add(dbStats.activeTheme + '-theme');
-                    }
-                }
-                
-                const themeSelect = document.getElementById('setting-theme');
-                if (themeSelect) themeSelect.value = dbStats.activeTheme;
-            }
-
-            if (dbStats.soundEnabled !== undefined) {
-                localStorage.setItem('yamb_sound', dbStats.soundEnabled);
-                if (window.app && window.app.soundMgr) {
-                    window.app.soundMgr.enabled = dbStats.soundEnabled;
-                    window.app.soundEnabled = dbStats.soundEnabled;
-                }
-            }
-            if (dbStats.vibrationEnabled !== undefined) {
-                localStorage.setItem('yamb_vibration', dbStats.vibrationEnabled);
-                if (window.app) window.app.vibrationEnabled = dbStats.vibrationEnabled;
-            }
-
-            // --- FIX: H2H STATS SAFEGUARD (ČIŠĆENJE UNDEFINED KARTICA) ---
-            if (dbStats.h2hStats) {
-                let cleanH2H = {};
-                for (const key in dbStats.h2hStats) {
-                    let oppName = dbStats.h2hStats[key].name;
-                    if (oppName && String(oppName) !== 'undefined' && String(oppName) !== 'null' && oppName !== 'Nepoznat') {
-                        cleanH2H[key] = dbStats.h2hStats[key];
-                    }
-                }
-                localStorage.setItem('yamb_h2h_stats', JSON.stringify(cleanH2H));
-            }
-            
-            const currentUid = localStorage.getItem('yamb_uid');
-            const danasnjiDatum = new Date().toDateString();
-            const lokalniZapis = localStorage.getItem('yamb_last_daily_' + currentUid);
-
-            if (dbStats.lastDaily) {
-                if (lokalniZapis !== danasnjiDatum) {
-                    localStorage.setItem('yamb_last_daily_' + currentUid, dbStats.lastDaily);
-                }
-            } else {
-                if (lokalniZapis !== danasnjiDatum) {
-                    localStorage.removeItem('yamb_last_daily_' + currentUid);
-                }
-            }
-
-            if (window.statsManager) {
-                window.statsManager.stats.games = dbStats.games || 0; 
-                window.statsManager.stats.totalGames = dbStats.games || 0;
-                window.statsManager.stats.penaltyPoints = dbStats.penaltyPoints || 0;
-                window.statsManager.stats.wins = dbStats.wins || 0;
-                window.statsManager.stats.losses = dbStats.losses || 0;
-                window.statsManager.stats.highscore = dbStats.highscore || 0;
-                window.statsManager.stats.totalScoreSum = dbStats.totalScoreSum || 0;
-                window.statsManager.stats.tournamentWins = dbStats.tournamentWins || 0; 
-                window.statsManager.stats.balance = dbStats.balance || 0;
-                window.statsManager.stats.currentWinStreak = dbStats.currentWinStreak || 0;
-                window.statsManager.stats.maxWinStreak = dbStats.maxWinStreak || 0;
-                window.statsManager.stats.unlockedTrophies = dbStats.unlockedTrophies || [];
-                window.statsManager.stats.unlockedSkins = dbStats.unlockedSkins || [];
-                window.statsManager.stats.unlockedEffects = dbStats.unlockedEffects || [];
-                window.statsManager.saveStats();
-            }
-
-            if (dbStats.balance !== undefined) {
-                localStorage.setItem('yamb_dukati', dbStats.balance);
-            }
-
-            // DODATO: Preuzimanje tokena iz baze
-            if (dbStats.undoTokens !== undefined) {
-                localStorage.setItem('yamb_undo_tokens', dbStats.undoTokens);
-                const tokenCount = document.getElementById('undo-token-count');
-                if (tokenCount) tokenCount.innerText = dbStats.undoTokens; // Osveži UI ako je otvoren
-            }
-            
-            // --- FIX: POVRATAK LIGAŠKOG SKORA SA CLOUDA NA KLIJENTA ---
-            if (dbStats.leagueData) {
-                let localLeagueKey = 'yamb_quarter_data_' + currentUid;
-                let currentLocalLeague = JSON.parse(localStorage.getItem(localLeagueKey)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
-                
-                let leagueUpdated = false;
-                
-                if (dbStats.leagueData.year > currentLocalLeague.year || 
-                   (dbStats.leagueData.year === currentLocalLeague.year && dbStats.leagueData.quarter > currentLocalLeague.quarter)) {
-                    currentLocalLeague = dbStats.leagueData;
-                    leagueUpdated = true;
-                } else if (dbStats.leagueData.year === currentLocalLeague.year && dbStats.leagueData.quarter === currentLocalLeague.quarter) {
-                    if (dbStats.leagueData.quarterlyScore > currentLocalLeague.quarterlyScore) {
-                        currentLocalLeague.quarterlyScore = dbStats.leagueData.quarterlyScore;
-                        leagueUpdated = true;
-                    }
-                }
-
-                if (leagueUpdated) {
-                    localStorage.setItem(localLeagueKey, JSON.stringify(currentLocalLeague));
-                    if (window.kvartalnaLiga) {
-                        window.kvartalnaLiga.init(); 
-                    }
-                }
-
-                if (dbStats.leagueData.year === currentLocalLeague.year &&
-                    dbStats.leagueData.quarter === currentLocalLeague.quarter &&
-                    (dbStats.leagueData.quarterlyScore || 0) >= (currentLocalLeague.quarterlyScore || 0)) {
-                    localStorage.removeItem('yamb_legacy_migration_pending_' + currentUid);
-                }
-            }
-            
-            if (typeof updateMainMenuDashboard === 'function') {
-                updateMainMenuDashboard();
-            }
-        });
-        
         const uid = localStorage.getItem('yamb_uid');
         if (uid && window.app.socket.connected) {
             (async () => {

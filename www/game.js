@@ -650,6 +650,7 @@ class YambApp {
             totalScoreSum: this.stats.totalScoreSum || 0,
             maxWinStreak: this.stats.maxWinStreak || 0,
             balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
+            undoTokens: parseInt(localStorage.getItem('yamb_undo_tokens')) || 0,
             currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
             tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0,
             unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
@@ -670,6 +671,221 @@ class YambApp {
             penaltyPoints: this.stats.penaltyPoints || 0, 
             h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}')
         };
+    }
+
+    readLocalJson(key, fallback) {
+        try {
+            const raw = localStorage.getItem(key);
+            return raw ? JSON.parse(raw) : fallback;
+        } catch (err) {
+            console.warn(`Neispravan lokalni JSON zapis: ${key}`, err);
+            return fallback;
+        }
+    }
+
+    mergeCloudLeagueData(uid, leagueData) {
+        if (!uid || !leagueData) return;
+
+        const localLeagueKey = 'yamb_quarter_data_' + uid;
+        let currentLocalLeague = this.readLocalJson(localLeagueKey, { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 });
+        let leagueUpdated = false;
+
+        if (leagueData.year > currentLocalLeague.year ||
+           (leagueData.year === currentLocalLeague.year && leagueData.quarter > currentLocalLeague.quarter)) {
+            currentLocalLeague = leagueData;
+            leagueUpdated = true;
+        } else if (leagueData.year === currentLocalLeague.year && leagueData.quarter === currentLocalLeague.quarter) {
+            if ((leagueData.quarterlyScore || 0) > (currentLocalLeague.quarterlyScore || 0)) {
+                currentLocalLeague.quarterlyScore = leagueData.quarterlyScore;
+                if ((leagueData.baselineScore || 0) > (currentLocalLeague.baselineScore || 0)) {
+                    currentLocalLeague.baselineScore = leagueData.baselineScore;
+                }
+                leagueUpdated = true;
+            }
+        }
+
+        if (leagueUpdated) {
+            localStorage.setItem(localLeagueKey, JSON.stringify(currentLocalLeague));
+            if (window.kvartalnaLiga) {
+                window.kvartalnaLiga.init();
+            }
+        }
+
+        if (leagueData.year === currentLocalLeague.year &&
+            leagueData.quarter === currentLocalLeague.quarter &&
+            (leagueData.quarterlyScore || 0) >= (currentLocalLeague.quarterlyScore || 0)) {
+            localStorage.removeItem('yamb_legacy_migration_pending_' + uid);
+        }
+    }
+
+    mergeCloudH2HStats(h2hStats) {
+        if (!h2hStats || typeof h2hStats !== 'object') return;
+
+        const localH2H = this.readLocalJson('yamb_h2h_stats', {});
+        let h2hUpdated = false;
+
+        for (const [oppKey, cloudData] of Object.entries(h2hStats)) {
+            if (!cloudData || typeof cloudData !== 'object') continue;
+            const oppName = cloudData.name;
+            if (!oppName || String(oppName) === 'undefined' || String(oppName) === 'null' || oppName === 'Nepoznat') continue;
+
+            const localData = localH2H[oppKey] || {};
+            const merged = {
+                ...localData,
+                ...cloudData,
+                wins: Math.max(localData.wins || 0, cloudData.wins || 0),
+                losses: Math.max(localData.losses || 0, cloudData.losses || 0),
+                myTotalScore: Math.max(localData.myTotalScore || 0, cloudData.myTotalScore || 0),
+                gamesWithScore: Math.max(localData.gamesWithScore || 0, cloudData.gamesWithScore || 0),
+                myHighScore: Math.max(localData.myHighScore || 0, cloudData.myHighScore || 0),
+                maxWinMargin: Math.max(localData.maxWinMargin || 0, cloudData.maxWinMargin || 0),
+                maxLossMargin: Math.max(localData.maxLossMargin || 0, cloudData.maxLossMargin || 0),
+                maxWinStreak: Math.max(localData.maxWinStreak || 0, cloudData.maxWinStreak || 0),
+                currentWinStreak: cloudData.currentWinStreak === 0
+                    ? 0
+                    : Math.max(localData.currentWinStreak || 0, cloudData.currentWinStreak || 0)
+            };
+
+            if (JSON.stringify(localData) !== JSON.stringify(merged)) {
+                localH2H[oppKey] = merged;
+                h2hUpdated = true;
+            }
+        }
+
+        if (h2hUpdated) {
+            localStorage.setItem('yamb_h2h_stats', JSON.stringify(localH2H));
+        }
+    }
+
+    applyCloudProfileSync(data = {}) {
+        const uid = localStorage.getItem('yamb_uid');
+
+        if (!uid) {
+            console.log("🛑 Prijavljivanje obavezno: Ignorišem Cloud Sync jer korisnik nije ulogovan.");
+            return false;
+        }
+
+        const toNumber = (value, fallback = 0) => {
+            const num = Number(value);
+            return Number.isFinite(num) ? Math.floor(num) : fallback;
+        };
+
+        const localStats = this.readLocalJson('yamb_stats', {}) || {};
+        const nextStats = { ...localStats };
+        const numericFields = [
+            'games',
+            'wins',
+            'losses',
+            'highscore',
+            'totalScoreSum',
+            'currentWinStreak',
+            'maxWinStreak',
+            'tournamentWins',
+            'penaltyPoints'
+        ];
+
+        numericFields.forEach(field => {
+            if (data[field] !== undefined) {
+                nextStats[field] = Math.max(0, toNumber(data[field], nextStats[field] || 0));
+            }
+        });
+
+        if (data.games !== undefined) {
+            nextStats.totalGames = nextStats.games || 0;
+        }
+
+        if (data.balance !== undefined) {
+            const balance = Math.max(0, toNumber(data.balance, nextStats.balance || 0));
+            nextStats.balance = balance;
+            localStorage.setItem('yamb_dukati', balance);
+        }
+
+        if (data.undoTokens !== undefined) {
+            const undoTokens = Math.max(0, toNumber(data.undoTokens, 0));
+            localStorage.setItem('yamb_undo_tokens', undoTokens);
+            const tokenCount = document.getElementById('undo-token-count');
+            if (tokenCount) tokenCount.innerText = undoTokens;
+        }
+
+        if (Array.isArray(data.unlockedTrophies)) nextStats.unlockedTrophies = data.unlockedTrophies;
+        if (Array.isArray(data.unlockedSkins)) nextStats.unlockedSkins = data.unlockedSkins;
+        if (Array.isArray(data.unlockedEffects)) nextStats.unlockedEffects = data.unlockedEffects;
+
+        this.stats = { ...this.stats, ...nextStats };
+        localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
+
+        if (window.statsManager) {
+            window.statsManager.stats = { ...window.statsManager.stats, ...this.stats };
+            window.statsManager.saveStats();
+        }
+
+        const serverGeneralUnlocks = Array.isArray(data.yamb_unlocked) ? data.yamb_unlocked : [];
+        const mergedUnlocked = [
+            ...new Set([
+                ...serverGeneralUnlocks,
+                ...(Array.isArray(data.unlockedTrophies) ? data.unlockedTrophies : []),
+                ...(Array.isArray(data.unlockedSkins) ? data.unlockedSkins : []),
+                ...(Array.isArray(data.unlockedEffects) ? data.unlockedEffects : [])
+            ])
+        ];
+
+        const freeDefaults = ['default', 'confetti', 'dark', 'light', 'medium', 'winter'];
+        freeDefaults.forEach(item => {
+            if (!mergedUnlocked.includes(item)) mergedUnlocked.push(item);
+        });
+
+        localStorage.setItem('yamb_unlocked', JSON.stringify(mergedUnlocked));
+        if (Array.isArray(data.unlockedSkins)) localStorage.setItem('yamb_unlocked_skins', JSON.stringify(data.unlockedSkins));
+        if (Array.isArray(data.unlockedEffects)) localStorage.setItem('yamb_unlocked_effects', JSON.stringify(data.unlockedEffects));
+
+        const localThemes = this.readLocalJson('yamb_unlocked_themes', []);
+        const cloudThemes = Array.isArray(data.unlockedThemes) ? data.unlockedThemes : [];
+        const hiddenThemes = (Array.isArray(data.unlockedSkins) ? data.unlockedSkins : []).filter(theme => ['neon', 'amethyst'].includes(theme));
+        const generalThemes = serverGeneralUnlocks.filter(theme => ['neon', 'amethyst'].includes(theme));
+        const mergedThemes = [...new Set([...localThemes, ...cloudThemes, ...hiddenThemes, ...generalThemes])];
+        localStorage.setItem('yamb_unlocked_themes', JSON.stringify(mergedThemes));
+
+        if (data.activeSkin) localStorage.setItem('yamb_active_skin', data.activeSkin);
+        if (data.activeEffect) localStorage.setItem('yamb_active_effect', data.activeEffect);
+        if (data.activeTheme) {
+            localStorage.setItem('yamb_theme', data.activeTheme);
+            this.applyTheme(data.activeTheme);
+            const themeSelect = document.getElementById('setting-theme');
+            if (themeSelect) themeSelect.value = data.activeTheme;
+        }
+
+        if (data.soundEnabled !== undefined) {
+            localStorage.setItem('yamb_sound', data.soundEnabled);
+            if (this.soundMgr) this.soundMgr.enabled = data.soundEnabled;
+            this.soundEnabled = data.soundEnabled;
+        }
+
+        if (data.vibrationEnabled !== undefined) {
+            localStorage.setItem('yamb_vibration', data.vibrationEnabled);
+            this.vibrationEnabled = data.vibrationEnabled;
+        }
+
+        const today = new Date().toDateString();
+        const localDailyKey = 'yamb_last_daily_' + uid;
+        const localDaily = localStorage.getItem(localDailyKey);
+        if (data.lastDaily) {
+            if (localDaily !== today) localStorage.setItem(localDailyKey, data.lastDaily);
+        } else if (data.lastDaily !== undefined && localDaily !== today) {
+            localStorage.removeItem(localDailyKey);
+        }
+
+        if (data.lastDailyRewardClaimed) {
+            localStorage.setItem('yamb_daily_reward_claimed_' + uid, data.lastDailyRewardClaimed);
+        }
+
+        this.mergeCloudH2HStats(data.h2hStats);
+        this.mergeCloudLeagueData(uid, data.leagueData);
+
+        if (typeof updateMainMenuDashboard === 'function') {
+            updateMainMenuDashboard();
+        }
+
+        return true;
     }
 
     calculatePowerIndex(statsObj, isLocal = false) {
@@ -1052,123 +1268,7 @@ class YambApp {
                 });
 
                 this.socket.on('sync_local_stats', (data) => {
-                    const uid = localStorage.getItem('yamb_uid');
-                    
-                    if (uid && data.lastDaily) {
-                        localStorage.setItem('yamb_last_daily_' + uid, data.lastDaily);
-                    }
-                    
-                    if (data.balance !== undefined) {
-                        localStorage.setItem('yamb_dukati', data.balance);
-                        if (window.statsManager) {
-                            window.statsManager.stats.balance = data.balance;
-                            window.statsManager.saveStats();
-                        }
-                    }
-
-                    // --- FIX: SINHRONIZACIJA KAZNI I RESETOVANIH NIZOVA SA SERVERA ---
-                    let localStats = JSON.parse(localStorage.getItem('yamb_stats')) || this.stats || {};
-                    let statsUpdated = false;
-
-                    if (Array.isArray(data.unlockedTrophies)) {
-                        const currentTrophies = Array.isArray(localStats.unlockedTrophies) ? localStats.unlockedTrophies : [];
-                        const serverTrophies = data.unlockedTrophies;
-                        if (JSON.stringify(currentTrophies) !== JSON.stringify(serverTrophies)) {
-                            localStats.unlockedTrophies = serverTrophies;
-                            statsUpdated = true;
-                        }
-                    }
-
-                    if (data.tournamentWins !== undefined && data.tournamentWins !== (localStats.tournamentWins || 0)) {
-                        localStats.tournamentWins = data.tournamentWins;
-                        statsUpdated = true;
-                    }
-
-                    if (data.currentWinStreak !== undefined && data.currentWinStreak < (localStats.currentWinStreak || 0)) {
-                        localStats.currentWinStreak = data.currentWinStreak;
-                        statsUpdated = true;
-                    }
-
-                    if (data.penaltyPoints !== undefined && data.penaltyPoints > (localStats.penaltyPoints || 0)) {
-                        localStats.penaltyPoints = data.penaltyPoints;
-                        statsUpdated = true;
-                    }
-
-                    if (data.maxWinStreak !== undefined && data.maxWinStreak > (localStats.maxWinStreak || 0)) {
-                        localStats.maxWinStreak = data.maxWinStreak;
-                        statsUpdated = true;
-                    }
-
-                    if (statsUpdated) {
-                        this.stats = localStats;
-                        localStorage.setItem('yamb_stats', JSON.stringify(localStats));
-                        if (window.statsManager) {
-                            window.statsManager.stats = localStats;
-                            window.statsManager.saveStats();
-                        }
-                    }
-
-                    // --- FIX: SINHRONIZACIJA H2H STATISTIKE (RAGE QUIT KAZNE) ---
-                    if (data.h2hStats) {
-                        let localH2H = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
-                        let h2hUpdated = false;
-
-                        for (const [oppKey, cloudData] of Object.entries(data.h2hStats)) {
-                            if (localH2H[oppKey]) {
-                                if (cloudData.currentWinStreak === 0 && (localH2H[oppKey].currentWinStreak || 0) > 0) {
-                                    localH2H[oppKey].currentWinStreak = 0;
-                                    
-                                    if (cloudData.losses > localH2H[oppKey].losses) {
-                                        localH2H[oppKey].losses = cloudData.losses;
-                                    }
-                                    h2hUpdated = true;
-                                }
-                            } else {
-                                localH2H[oppKey] = cloudData;
-                                h2hUpdated = true;
-                            }
-                        }
-
-                        if (h2hUpdated) {
-                            localStorage.setItem('yamb_h2h_stats', JSON.stringify(localH2H));
-                        }
-                    }
-
-                    // --- FIX: POVRATAK LIGAŠKOG SKORA SA CLOUDA NA KLIJENTA ---
-                    if (data.leagueData) {
-                        let localLeagueKey = 'yamb_quarter_data_' + uid;
-                        let currentLocalLeague = JSON.parse(localStorage.getItem(localLeagueKey)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
-                        
-                        let leagueUpdated = false;
-                        
-                        if (data.leagueData.year > currentLocalLeague.year || 
-                           (data.leagueData.year === currentLocalLeague.year && data.leagueData.quarter > currentLocalLeague.quarter)) {
-                            currentLocalLeague = data.leagueData;
-                            leagueUpdated = true;
-                        } else if (data.leagueData.year === currentLocalLeague.year && data.leagueData.quarter === currentLocalLeague.quarter) {
-                            if (data.leagueData.quarterlyScore > currentLocalLeague.quarterlyScore) {
-                                currentLocalLeague.quarterlyScore = data.leagueData.quarterlyScore;
-                                leagueUpdated = true;
-                            }
-                        }
-
-                        if (leagueUpdated) {
-                            localStorage.setItem(localLeagueKey, JSON.stringify(currentLocalLeague));
-                            if (window.kvartalnaLiga) {
-                                window.kvartalnaLiga.init();
-                            }
-                        }
-
-                        if (data.leagueData.year === currentLocalLeague.year &&
-                            data.leagueData.quarter === currentLocalLeague.quarter &&
-                            (data.leagueData.quarterlyScore || 0) >= (currentLocalLeague.quarterlyScore || 0)) {
-                            localStorage.removeItem('yamb_legacy_migration_pending_' + uid);
-                        }
-                    }
-                    
-                    if (typeof updateMainMenuDashboard === 'function') {
-                        updateMainMenuDashboard();
-                    }
+                    this.applyCloudProfileSync(data);
                 });
 
                 this.socket.on('tourney_prize_awarded', (data = {}) => {
