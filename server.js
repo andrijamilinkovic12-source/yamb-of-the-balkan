@@ -284,6 +284,8 @@ const UserProfileSchema = new mongoose.Schema({
         baselineScore: { type: Number, default: 0 },
         quarterlyScore: { type: Number, default: 0 } 
     },
+    legacyMigrationApplied: { type: Boolean, default: false },
+    legacyMigratedAt: { type: Date, default: null },
     lastLogin: { type: Date, default: Date.now }
 });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
@@ -294,8 +296,16 @@ let privateRooms = {};
 let playerRooms = {};     
 let gameStartTimes = {}; 
 const chatBans = {}; 
-const onlinePlayers = {};     
-const registeredSockets = {}; 
+const onlinePlayers = {};
+const registeredSockets = {};
+
+const MAX_SCORE = 3500;
+const MAX_NAME_LENGTH = 24;
+const MIN_GAME_DURATION = 120000;
+const MAX_GAME_DURATION = 6 * 60 * 60 * 1000;
+const MAX_LEAGUE_SCORE = 1000000;
+const MAX_LEAGUE_SCORE_DELTA = MAX_SCORE + 500;
+const MIN_LEAGUE_SESSION_DURATION = 30000;
 
 // NOVE PROMENLJIVE ZA ČUVANJE CHATA
 let globalChatHistory = [];
@@ -599,6 +609,90 @@ async function verifyFirebaseSocketToken(socket, token) {
         console.warn('⚠️ Firebase token odbijen:', err.message);
         return { ok: false, reason: 'invalid_firebase_token' };
     }
+}
+
+function getServerQuarterInfo() {
+    const now = new Date();
+    return {
+        year: now.getFullYear(),
+        quarter: Math.floor(now.getMonth() / 3) + 1
+    };
+}
+
+function normalizeLeagueMigrationData(rawLeagueData) {
+    if (!rawLeagueData || typeof rawLeagueData !== 'object') return null;
+
+    const year = Number(rawLeagueData.year);
+    const quarter = Number(rawLeagueData.quarter);
+    const baselineScore = Number(rawLeagueData.baselineScore) || 0;
+    const quarterlyScore = Number(rawLeagueData.quarterlyScore) || 0;
+
+    if (!Number.isInteger(year) || !Number.isInteger(quarter)) return null;
+    if (quarter < 1 || quarter > 4) return null;
+    if (!Number.isFinite(quarterlyScore) || quarterlyScore <= 0 || quarterlyScore > MAX_LEAGUE_SCORE) return null;
+
+    return {
+        year,
+        quarter,
+        baselineScore: Math.max(0, Math.floor(baselineScore)),
+        quarterlyScore: Math.max(0, Math.floor(quarterlyScore))
+    };
+}
+
+async function maybeApplyLegacyLeagueMigration(user, submittedStats, playerName, photoUrl) {
+    if (!user || !submittedStats || !submittedStats.legacyMigration || user.legacyMigrationApplied) return;
+
+    const migratedLeague = normalizeLeagueMigrationData(submittedStats.leagueData);
+    if (!migratedLeague) return;
+
+    const currentPeriod = getServerQuarterInfo();
+    const isCurrentPeriod = migratedLeague.year === currentPeriod.year && migratedLeague.quarter === currentPeriod.quarter;
+    if (!isCurrentPeriod) {
+        user.legacyMigrationApplied = true;
+        user.legacyMigratedAt = Date.now();
+        return;
+    }
+
+    const gamesPlayed = Math.max(Number(submittedStats.games) || 0, Number(user.games) || 0);
+    const migrationCeiling = Math.min(MAX_LEAGUE_SCORE, Math.max(MAX_LEAGUE_SCORE_DELTA, gamesPlayed * MAX_LEAGUE_SCORE_DELTA));
+
+    if (migratedLeague.quarterlyScore > migrationCeiling) {
+        console.log(`🚨 LEGACY MIGRATION: Odbijen liga skor ${migratedLeague.quarterlyScore} za ${user.firebaseUid}, games=${gamesPlayed}`);
+        user.legacyMigrationApplied = true;
+        user.legacyMigratedAt = Date.now();
+        return;
+    }
+
+    const currentLeague = user.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
+    const samePeriod = currentLeague.year === migratedLeague.year && currentLeague.quarter === migratedLeague.quarter;
+    if (!samePeriod || migratedLeague.quarterlyScore > (currentLeague.quarterlyScore || 0)) {
+        user.leagueData = migratedLeague;
+    }
+
+    const existingLeagueScore = await LeagueScore.findOne({
+        playerId: user.firebaseUid,
+        year: migratedLeague.year,
+        quarter: migratedLeague.quarter
+    });
+
+    if (!existingLeagueScore || migratedLeague.quarterlyScore > (Number(existingLeagueScore.score) || 0)) {
+        await LeagueScore.findOneAndUpdate(
+            { playerId: user.firebaseUid, year: migratedLeague.year, quarter: migratedLeague.quarter },
+            {
+                $set: {
+                    playerName,
+                    photoUrl,
+                    score: migratedLeague.quarterlyScore,
+                    date: Date.now()
+                }
+            },
+            { upsert: true, new: true }
+        );
+    }
+
+    user.legacyMigrationApplied = true;
+    user.legacyMigratedAt = Date.now();
+    console.log(`✅ LEGACY MIGRATION: Prebačeno ${migratedLeague.quarterlyScore} liga poena za ${user.firebaseUid}`);
 }
 
 // ==================================================================
@@ -931,6 +1025,7 @@ io.on('connection', (socket) => {
                     }
                 }
 
+                await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
                 await user.save();
                 
                 socket.emit('sync_local_stats', { 
@@ -974,9 +1069,10 @@ io.on('connection', (socket) => {
                     unlockedSkins: s.unlockedSkins || [],
                     unlockedEffects: s.unlockedEffects || [],
                     yamb_unlocked: s.yamb_unlocked || [], 
-                    lastDaily: s.lastDaily || "", 
-                    leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 } 
+                    lastDaily: s.lastDaily || "",
+                    leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 }
                 });
+                await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
                 await user.save();
                 
                 socket.emit('sync_local_stats', { 
@@ -1183,14 +1279,6 @@ io.on('connection', (socket) => {
             updateRoomSpectators(roomId);
         }
     });
-
-    const MAX_SCORE = 3500;
-    const MAX_NAME_LENGTH = 24;
-    const MIN_GAME_DURATION = 120000;
-    const MAX_GAME_DURATION = 6 * 60 * 60 * 1000;
-    const MAX_LEAGUE_SCORE = 1000000;
-    const MAX_LEAGUE_SCORE_DELTA = MAX_SCORE + 500;
-    const MIN_LEAGUE_SESSION_DURATION = 30000;
 
     socket.on('start_local_game', (roomId) => {
         socket.join(roomId);

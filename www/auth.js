@@ -36,6 +36,95 @@ async function getYambFirebaseIdToken(forceRefresh = false) {
 
 window.getYambFirebaseIdToken = getYambFirebaseIdToken;
 
+function safeParseLocalJson(key) {
+    try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+        console.warn(`Neispravan lokalni zapis: ${key}`, error);
+        return null;
+    }
+}
+
+function getAuthQuarterInfo() {
+    const now = new Date();
+    return {
+        year: now.getFullYear(),
+        quarter: Math.floor(now.getMonth() / 3) + 1
+    };
+}
+
+function normalizeLocalLeagueData(data) {
+    if (!data || typeof data !== 'object') return null;
+
+    const normalized = {
+        year: parseInt(data.year) || 0,
+        quarter: parseInt(data.quarter) || 0,
+        baselineScore: parseInt(data.baselineScore) || 0,
+        quarterlyScore: parseInt(data.quarterlyScore) || 0
+    };
+
+    if (normalized.quarter < 1 || normalized.quarter > 4) return null;
+    if (normalized.quarterlyScore < 0) normalized.quarterlyScore = 0;
+    if (normalized.baselineScore < 0) normalized.baselineScore = 0;
+    return normalized;
+}
+
+function pickBetterLeagueData(current, candidate) {
+    if (!candidate) return current;
+    if (!current) return candidate;
+
+    const now = getAuthQuarterInfo();
+    const candidateIsCurrent = candidate.year === now.year && candidate.quarter === now.quarter;
+    const currentIsCurrent = current.year === now.year && current.quarter === now.quarter;
+
+    if (candidateIsCurrent && !currentIsCurrent) return candidate;
+    if (!candidateIsCurrent && currentIsCurrent) return current;
+
+    if (candidate.year > current.year) return candidate;
+    if (candidate.year === current.year && candidate.quarter > current.quarter) return candidate;
+
+    if (candidate.year === current.year && candidate.quarter === current.quarter) {
+        return candidate.quarterlyScore > current.quarterlyScore ? candidate : current;
+    }
+
+    return current;
+}
+
+function migrateLegacyLocalProgressToUid(uid) {
+    if (!uid) return false;
+
+    const targetKey = 'yamb_quarter_data_' + uid;
+    const legacyKeys = [
+        targetKey,
+        'yamb_quarter_data_guest',
+        'yamb_quarter_data_legacy',
+        'yamb_quarter_data'
+    ];
+
+    let bestLeagueData = null;
+    legacyKeys.forEach(key => {
+        bestLeagueData = pickBetterLeagueData(bestLeagueData, normalizeLocalLeagueData(safeParseLocalJson(key)));
+    });
+
+    if (!bestLeagueData || bestLeagueData.quarterlyScore <= 0) return false;
+
+    const currentTarget = normalizeLocalLeagueData(safeParseLocalJson(targetKey));
+    const mergedLeagueData = pickBetterLeagueData(currentTarget, bestLeagueData);
+    const improvedTarget = !currentTarget || mergedLeagueData.quarterlyScore > currentTarget.quarterlyScore ||
+        mergedLeagueData.year !== currentTarget.year || mergedLeagueData.quarter !== currentTarget.quarter;
+
+    if (improvedTarget) {
+        localStorage.setItem(targetKey, JSON.stringify(mergedLeagueData));
+        localStorage.setItem('yamb_legacy_migration_pending_' + uid, 'true');
+        console.log(`Legacy migracija: prebačeno ${mergedLeagueData.quarterlyScore} liga poena na prijavljen nalog.`);
+    }
+
+    return improvedTarget;
+}
+
+window.migrateLegacyLocalProgressToUid = migrateLegacyLocalProgressToUid;
+
 // --- POMOĆNA FUNKCIJA ZA AŽURIRANJE UI-a ---
 function osveziAuthUI(user) {
     const loginBtn = document.getElementById('dugmeGooglePrijava');
@@ -93,6 +182,7 @@ function osveziAuthUI(user) {
 function getFullLocalStats() {
     const uid = localStorage.getItem('yamb_uid');
     if (!uid) return {}; // STRIKTNO ZABRANJEN GOST
+    migrateLegacyLocalProgressToUid(uid);
 
     return {
         games: (window.app && window.app.stats) ? (window.app.stats.games || 0) : 0,
@@ -112,6 +202,7 @@ function getFullLocalStats() {
         yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
         unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
         leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data_' + uid)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 },
+        legacyMigration: localStorage.getItem('yamb_legacy_migration_pending_' + uid) === 'true',
         activeSkin: localStorage.getItem('yamb_active_skin') || null,
         activeEffect: localStorage.getItem('yamb_active_effect') || null,
         activeTheme: localStorage.getItem('yamb_theme') || null,
@@ -139,7 +230,8 @@ async function prijaviSe() {
             const user = result.user;
             console.log("Uspešna prijava:", user.displayName);
 
-            localStorage.setItem('yamb_uid', user.uid); 
+            localStorage.setItem('yamb_uid', user.uid);
+            migrateLegacyLocalProgressToUid(user.uid);
             
             if (user.displayName) {
                 localStorage.setItem('yamb_player_name', user.displayName);
@@ -293,7 +385,8 @@ async function checkLoginStatus() {
         if (result && result.user) {
             console.log("Korisnik je već ulogovan:", result.user.displayName);
             
-            localStorage.setItem('yamb_uid', result.user.uid); 
+            localStorage.setItem('yamb_uid', result.user.uid);
+            migrateLegacyLocalProgressToUid(result.user.uid);
             localStorage.setItem('yamb_player_name', result.user.displayName || _t('hs_player', "Igrač"));
             osveziAuthUI(result.user);
             
@@ -485,6 +578,12 @@ function inicijalizujCloudSync() {
                     if (window.kvartalnaLiga) {
                         window.kvartalnaLiga.init(); 
                     }
+                }
+
+                if (dbStats.leagueData.year === currentLocalLeague.year &&
+                    dbStats.leagueData.quarter === currentLocalLeague.quarter &&
+                    (dbStats.leagueData.quarterlyScore || 0) >= (currentLocalLeague.quarterlyScore || 0)) {
+                    localStorage.removeItem('yamb_legacy_migration_pending_' + currentUid);
                 }
             }
             

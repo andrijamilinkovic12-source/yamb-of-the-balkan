@@ -618,9 +618,13 @@ class YambApp {
 
     getFullLocalStats() {
         const uid = localStorage.getItem('yamb_uid');
-        if (!uid) return {}; 
-        
-        let lsData = JSON.parse(localStorage.getItem('yamb_quarter_data')) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
+        if (!uid) return {};
+
+        if (typeof window.migrateLegacyLocalProgressToUid === 'function') {
+            window.migrateLegacyLocalProgressToUid(uid);
+        }
+
+        let lsData = JSON.parse(localStorage.getItem('yamb_quarter_data_' + uid)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
         if (window.kvartalnaLiga) {
             lsData = window.kvartalnaLiga.getScores();
         }
@@ -641,6 +645,7 @@ class YambApp {
             unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
             unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
             leagueData: lsData,
+            legacyMigration: localStorage.getItem('yamb_legacy_migration_pending_' + uid) === 'true',
             activeSkin: localStorage.getItem('yamb_active_skin') || null,
             activeEffect: localStorage.getItem('yamb_active_effect') || null,
             activeTheme: localStorage.getItem('yamb_theme') || null,
@@ -1120,8 +1125,14 @@ class YambApp {
                         if (leagueUpdated) {
                             localStorage.setItem(localLeagueKey, JSON.stringify(currentLocalLeague));
                             if (window.kvartalnaLiga) {
-                                window.kvartalnaLiga.init(); 
+                                window.kvartalnaLiga.init();
                             }
+                        }
+
+                        if (data.leagueData.year === currentLocalLeague.year &&
+                            data.leagueData.quarter === currentLocalLeague.quarter &&
+                            (data.leagueData.quarterlyScore || 0) >= (currentLocalLeague.quarterlyScore || 0)) {
+                            localStorage.removeItem('yamb_legacy_migration_pending_' + uid);
                         }
                     }
                     

@@ -24,7 +24,13 @@ class KvartalnaLigaManager {
     selfHeal() {
         // KORAK 1: Trajno brišemo stari opšti fajl bez UID-a da ne bi nastavio da inficira druge naloge
         if (localStorage.getItem('yamb_quarter_data')) {
-            console.log("🛠️ Self-Heal: Pronađen i obrisan stari globalni ligaški fajl!");
+            if (!localStorage.getItem('yamb_quarter_data_legacy')) {
+                localStorage.setItem('yamb_quarter_data_legacy', localStorage.getItem('yamb_quarter_data'));
+            }
+            if (!localStorage.getItem('yamb_uid') && !localStorage.getItem('yamb_quarter_data_guest')) {
+                localStorage.setItem('yamb_quarter_data_guest', localStorage.getItem('yamb_quarter_data'));
+            }
+            console.log("🛠️ Self-Heal: Pronađen i arhiviran stari globalni ligaški fajl!");
             localStorage.removeItem('yamb_quarter_data');
         }
 
