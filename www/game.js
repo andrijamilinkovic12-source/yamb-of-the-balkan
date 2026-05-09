@@ -54,7 +54,7 @@ function cenzurisiPoruku(poruka) {
 /* --- GLAVNA APLIKACIJA (YAMB APP) --- */
 class YambApp {
     constructor() {
-        console.log("YambApp v17.5 - GRACE PERIOD, NAJAVA CANCEL & ANTI-DESYNC FIX");
+        console.log("YambApp v17.6 - GLOBAL CHAT MANAGER INTEGRATION");
 
         this.soundMgr = new SoundManager(); 
         this.modal = new ModalManager(); 
@@ -74,6 +74,12 @@ class YambApp {
         // --- DODATO: Inicijalizacija Undo menadžera ---
         this.initUndoManager();
 
+        // --- DODATO: Inicijalizacija Globalnog Chata ---
+        if (typeof GlobalChatManager !== 'undefined') {
+            this.globalChat = new GlobalChatManager(this);
+            console.log("✅ GlobalChatManager uspešno povezan.");
+        }
+
         this.players = []; 
         this.allScores = []; 
         this.currentPlayerIdx = 0;
@@ -90,7 +96,6 @@ class YambApp {
         this.lastGameType = 'normal';
         this.lastMoveSnapshot = null; 
         this.pendingNewGamePlayers = 1;
-        this.lastGlobalMsg = null; 
         this.friendsListUids = []; 
         
         this.socket = null; 
@@ -161,23 +166,6 @@ class YambApp {
         const chatInput = document.getElementById('chat-input-field');
         if(chatInput) {
             chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendChat(); });
-        }
-
-        const btnGlobalSend = document.getElementById('btn-global-send');
-        if(btnGlobalSend) {
-            btnGlobalSend.addEventListener('click', () => this.sendGlobalChat());
-            btnGlobalSend.addEventListener('touchend', (e) => { e.preventDefault(); this.sendGlobalChat(); });
-        }
-        const inputGlobalChat = document.getElementById('global-chat-input');
-        if(inputGlobalChat) {
-            inputGlobalChat.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.sendGlobalChat(); });
-            // DODATO: EventListener za dinamički brojač karaktera
-            inputGlobalChat.addEventListener('input', (e) => {
-                const charCountEl = document.getElementById('global-chat-char-count');
-                if (charCountEl) {
-                    charCountEl.innerText = `${e.target.value.length}/550`;
-                }
-            });
         }
         
         const savedTheme = localStorage.getItem('yamb_theme') || 'dark';
@@ -882,6 +870,15 @@ class YambApp {
         }
     }
 
+    // --- PROXY ZA GLOBAL CHAT ---
+    async openGlobalChat() {
+        if (this.globalChat) await this.globalChat.open();
+    }
+
+    async closeGlobalChat(skipAd = false) {
+        if (this.globalChat) await this.globalChat.close(skipAd);
+    }
+
     initSocketConnection() {
         if (this.socket) {
             if (this.socket.disconnected) { 
@@ -991,24 +988,9 @@ class YambApp {
                     this.updateOnlineCounterUI();
                 });
 
-                this.socket.off('global_chat_msg');
-                this.socket.on('global_chat_msg', (data) => {
-                    const isMe = (this.socket && data.senderId === this.socket.id);
-                    this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
-                });
-
-                this.socket.off('global_chat_history');
-                this.socket.on('global_chat_history', (history) => {
-                    const body = document.getElementById('global-chat-body');
-                    if (!body) return;
-                    
-                    body.innerHTML = `<div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;" data-lang="global_chat_welcome">${gt('global_chat_welcome') || "Dobrodošli u Globalni Chat! Budite pristojni."}</div>`;
-                    
-                    history.forEach(data => {
-                        const isMe = (this.socket && data.senderId === this.socket.id);
-                        this.appendGlobalChatMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, true);
-                    });
-                });
+                if (this.globalChat) {
+                    this.globalChat.bindSocket(this.socket);
+                }
 
                 this.socket.on('incoming_challenge', async (data) => {
                     const { challengerId, challengerName } = data;
@@ -1335,107 +1317,6 @@ class YambApp {
         if (this.onlineMode && this.socket) { 
             this.socket.emit('chat_msg', { roomId: this.roomId, msg: text }); 
         } 
-    }
-
-    async openGlobalChat() {
-        if (!this.requireLogin()) return;
-
-        this.initSocketConnection();
-        const accepted = localStorage.getItem('yamb_chat_rules_accepted');
-
-        const pokreniChat = () => {
-            const overlay = document.getElementById('global-chat-overlay');
-            if (overlay) overlay.style.display = 'flex';
-            
-            if (this.socket && this.socket.connected) {
-                this.socket.emit('request_global_chat_history');
-            } else {
-                setTimeout(() => {
-                    if (this.socket && this.socket.connected) {
-                        this.socket.emit('request_global_chat_history');
-                    }
-                }, 500);
-            }
-        };
-
-        if (!accepted) {
-            const isConfirmed = await this.modal.confirm(gt('chat_rules_msg'));
-            if (isConfirmed) {
-                localStorage.setItem('yamb_chat_rules_accepted', 'true');
-                pokreniChat();
-            }
-        } else {
-            pokreniChat();
-        }
-    }
-
-    async closeGlobalChat(skipAd = false) {
-        const overlay = document.getElementById('global-chat-overlay');
-        if (overlay) overlay.style.display = 'none';
-
-        if (!skipAd && this.adMob && this.adMob.showInterstitial) {
-            await this.adMob.showInterstitial();
-        }
-    }
-
-    appendGlobalChatMessage(sender, text, type, senderId = null, skipSound = false) { 
-        const body = document.getElementById('global-chat-body'); 
-        if(!body) return;
-        
-        const sada = Date.now();
-        if (this.lastGlobalMsg && 
-            this.lastGlobalMsg.text === text && 
-            this.lastGlobalMsg.sender === sender && 
-            (sada - this.lastGlobalMsg.time < 1000)) {
-            return; 
-        }
-        this.lastGlobalMsg = { text, sender, time: sada };
-
-        const infoMsg = body.querySelector('div[style*="text-align: center"]');
-        if (infoMsg && body.children.length === 1) {
-            infoMsg.style.display = 'none';
-        }
-
-        const msgDiv = document.createElement('div'); 
-        msgDiv.className = `msg-bubble ${type}`; 
-        
-        let nameHtml = `<strong>${sender}:</strong>`;
-        if (senderId && senderId !== (this.socket ? this.socket.id : null) && sender !== gt('sys_name') && type === "msg-incoming") {
-            nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="window.app.challengePlayer('${senderId}', '${sender}')" title="${gt('tooltip_challenge') || 'Izazovi na duel ⚔️'}">${sender}:</strong>`;
-        }
-        
-        msgDiv.innerHTML = `${nameHtml} ${text}`; 
-        body.appendChild(msgDiv); 
-        body.scrollTop = body.scrollHeight; 
-        
-        if (type === "msg-incoming" && this.soundMgr && !skipSound) {
-            this.soundMgr.chat(); 
-        }
-    }
-    
-    sendGlobalChat() { 
-        const input = document.getElementById('global-chat-input'); 
-        let text = input.value.trim(); 
-        if (!text) return; 
-        
-        input.value = ""; 
-        
-        // DODATO: Resetuj brojač karaktera na nulu
-        const charCountEl = document.getElementById('global-chat-char-count');
-        if (charCountEl) charCountEl.innerText = "0/550";
-        
-        if (this.socket && this.socket.connected) { 
-            this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
-        } else {
-            this.initSocketConnection();
-            setTimeout(() => {
-                if (this.socket && this.socket.connected) {
-                    this.socket.emit('global_chat_msg', { sender: this.playerName, msg: text }); 
-                } else {
-                    this.appendGlobalChatMessage(gt('sys_name') || "Sistem", gt('sys_no_conn') || "Niste povezani na server.", "msg-incoming");
-                }
-            }, 800);
-        }
     }
 
     async challengePlayer(targetId, targetName) {
