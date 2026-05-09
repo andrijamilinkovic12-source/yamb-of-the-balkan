@@ -143,8 +143,10 @@ class YambApp {
         this.hasSvetiIlija = false;
         this.hasProphet = false;
 
-        this.adMob = window.adMobGlobal; 
-        this.pendingScore = 0; 
+        this.adMob = window.adMobGlobal;
+        this.pendingScore = 0;
+        this.rewardClaimed = false;
+        this.rewardClaimInProgress = false;
 
         const dayEl = document.getElementById('live-day');
         const monthEl = document.getElementById('live-month');
@@ -1672,7 +1674,7 @@ class YambApp {
         return penalty;
     }
 
-    updateStats(score, resultType, oppScore = 0, isTechnical = false) { 
+    updateStats(score, resultType, oppScore = 0, isTechnical = false, options = {}) {
         let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
         this.stats = freshStats || this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, currentWinStreak: 0, maxWinStreak: 0 };
         
@@ -1712,7 +1714,7 @@ class YambApp {
             window.statsManager.stats = this.stats;
         }
 
-        if (this.socket && this.socket.connected) {
+        if (!options.deferServerSync && this.socket && this.socket.connected) {
             this.emitPlayerData();
         }
     }
@@ -3607,7 +3609,9 @@ class YambApp {
                  }
              }
              
-             this.pendingScore = myScoreEntry.score; 
+             this.pendingScore = myScoreEntry.score;
+             this.rewardClaimed = false;
+             this.rewardClaimInProgress = false;
              this.lastGameType = 'normal';
              let resultType = 'solo';
              if (this.players.length > 1) { 
@@ -3634,7 +3638,7 @@ class YambApp {
                  }
              }
 
-             this.updateStats(myScoreEntry.score, resultType, finalOppScore);
+             this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, { deferServerSync: true });
         }
         
         this.soundMgr.win(); 
@@ -3733,6 +3737,14 @@ class YambApp {
     }
     
     async claimReward(doubled) {
+        if (this.rewardClaimed || this.rewardClaimInProgress) return;
+        this.rewardClaimInProgress = true;
+        const finishRewardClaim = () => {
+            this.rewardClaimed = true;
+            this.rewardClaimInProgress = false;
+            this.pendingScore = 0;
+        };
+
         let finalAmount = this.pendingScore;
         
         if (doubled) { 
@@ -3757,13 +3769,15 @@ class YambApp {
                     this.emitPlayerData();
                 }
 
+                finishRewardClaim();
                 this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount * 2}`, gt('modal_title_reward')).then(() => { this.effectMgr.stop(); this.showMainMenu(); });
                 return;
             } else {
-                finalAmount *= 2; 
+                finalAmount *= 2;
             }
         } else {
             if (this.lastGameType === 'daily') {
+                finishRewardClaim();
                 this.showMainMenu();
                 return;
             }
@@ -3782,8 +3796,9 @@ class YambApp {
             window.kvartalnaLiga.syncWithServer();
         }
 
-        if (doubled) { 
-            this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount}`, gt('modal_title_reward')).then(() => { 
+        finishRewardClaim();
+        if (doubled) {
+            this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount}`, gt('modal_title_reward')).then(() => {
                 this.effectMgr.stop(); 
                 this.showMainMenu(); 
             }); 
