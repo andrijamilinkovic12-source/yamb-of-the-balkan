@@ -311,14 +311,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const stats = e.detail || (window.statsManager ? window.statsManager.stats : null);
         if (!stats) return;
 
-        const rankNames = {
-            1: t('rank_1') || "Bronza III", 2: t('rank_2') || "Bronza II", 3: t('rank_3') || "Bronza I",
-            4: t('rank_4') || "Srebro II", 5: t('rank_5') || "Srebro I",
-            6: t('rank_6') || "Zlato II", 7: t('rank_7') || "Zlato I",
-            8: t('rank_8') || "Platina II", 9: t('rank_9') || "Platina I",
-            10: t('rank_10') || "Dijamant I", 11: t('rank_11') || "Šampion"
-        };
-
         const totalGames = stats.totalGames || 0;
         const wins = stats.wins || 0;
         const hs = stats.highscore || 0;
@@ -335,84 +327,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let wlRatio = 0;
         if (totalGames > 0) wlRatio = Math.round((wins / totalGames) * 100);
         setText(['stat-wl', 'stat-rate'], wlRatio + "%");
-
-        let currentRankName = rankNames[1];
-        let currentRankLvl = 1;
-        let points = (totalGames * 10) + (wins * 25) + Math.floor(hs / 10);
-
-        if (totalGames < 5) {
-            currentRankName = "-";
-            setText('league-rank-name', currentRankName);
-            setText('league-pts-text', points + " PTS");
-            
-            const btn = document.querySelector('.btn-league');
-            if(btn) {
-                btn.onclick = () => {
-                    showNotification(t('info_title') || "INFO", t('play_more_req') || "Potrebno je da odigrate još partija.");
-                };
-            }
-            return;
-        }
-
-        if (points < 500) currentRankLvl = 1;
-        else if (points < 1000) currentRankLvl = 2;
-        else if (points < 2000) currentRankLvl = 3;
-        else if (points < 3500) currentRankLvl = 4;
-        else if (points < 5000) currentRankLvl = 5;
-        else if (points < 7500) currentRankLvl = 6;
-        else if (points < 10000) currentRankLvl = 7;
-        else if (points < 15000) currentRankLvl = 8;
-        else if (points < 20000) currentRankLvl = 9;
-        else if (points < 30000) currentRankLvl = 10;
-        else currentRankLvl = 11;
-
-        currentRankName = rankNames[currentRankLvl];
-        
-        setText('league-rank-name', currentRankName);
-        setText('league-pts-text', points + " PTS");
-
-        const btn = document.querySelector('.btn-league');
-        if (btn) {
-            btn.onclick = () => {
-                const container = document.getElementById('custom-notification-container');
-                if (container && container.innerHTML !== '') return;
-
-                const div = document.createElement('div');
-                div.className = 'league-progress-toast';
-                div.innerHTML = `
-                    <div class="league-progress-label">${t('league_progress') || "Napredak lige"}</div>
-                    <div class="league-progress-bar-container">
-                        <div class="league-progress-bar" style="width: ${Math.min((points / 30000) * 100, 100)}%;"></div>
-                    </div>
-                    <div class="league-progress-text">
-                        <span>${currentRankName}</span>
-                        <span>${points} PTS</span>
-                    </div>
-                `;
-                
-                div.style.position = 'fixed';
-                div.style.top = '20px';
-                div.style.left = '50%';
-                div.style.transform = 'translateX(-50%)';
-                div.style.zIndex = '100000';
-                div.style.background = 'var(--glass-panel)';
-                div.style.border = '2px solid var(--gold-main)';
-                div.style.padding = '15px';
-                div.style.borderRadius = '15px';
-                div.style.width = '90%';
-                div.style.maxWidth = '350px';
-                div.style.boxShadow = '0 5px 20px rgba(0,0,0,0.8)';
-                div.style.backdropFilter = 'blur(10px)';
-                
-                document.body.appendChild(div);
-                
-                setTimeout(() => {
-                    div.style.opacity = '0';
-                    div.style.transition = 'opacity 0.3s';
-                    setTimeout(() => div.remove(), 300);
-                }, 3000);
-            };
-        }
     });
 
     setTimeout(() => {
