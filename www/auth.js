@@ -219,6 +219,104 @@ function getFullLocalStats() {
     };
 }
 
+function refreshLeagueDashboardForCurrentUser() {
+    if (window.kvartalnaLiga) {
+        window.kvartalnaLiga.selfHeal();
+        window.kvartalnaLiga.init();
+    }
+
+    if (typeof updateMainMenuDashboard === 'function') {
+        updateMainMenuDashboard();
+    }
+}
+
+function waitForCloudProfileSync(socket, timeoutMs = 4000) {
+    return new Promise(resolve => {
+        if (!socket || !socket.connected) {
+            resolve(null);
+            return;
+        }
+
+        let settled = false;
+        const finish = (payload) => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            socket.off('sync_local_stats', onSync);
+            resolve(payload || null);
+        };
+        const onSync = (payload) => finish(payload);
+        const timer = setTimeout(() => finish(null), timeoutMs);
+
+        socket.once('sync_local_stats', onSync);
+    });
+}
+
+async function syncLoggedInProfileToCloud(user, options = {}) {
+    const uid = user?.uid || localStorage.getItem('yamb_uid');
+    if (!uid || !window.app || !window.app.socket) return false;
+
+    const displayName = user?.displayName || localStorage.getItem('yamb_player_name') || _t('hs_player', "Igrač");
+    window.app.playerId = uid;
+    window.app.playerName = displayName;
+    localStorage.setItem('yamb_uid', uid);
+    localStorage.setItem('yamb_player_name', displayName);
+
+    refreshLeagueDashboardForCurrentUser();
+
+    const socket = window.app.socket;
+    if (socket.disconnected) {
+        socket.connect();
+    }
+
+    if (!socket.connected) {
+        return new Promise(resolve => {
+            let settled = false;
+            const finish = (value) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                socket.off('connect', onConnect);
+                resolve(value);
+            };
+            const onConnect = async () => {
+                const synced = await syncLoggedInProfileToCloud(user, options);
+                finish(synced);
+            };
+            const timer = setTimeout(() => finish(false), options.timeoutMs || 5000);
+
+            socket.once('connect', onConnect);
+        });
+    }
+
+    if (typeof window.app.authenticateSocketIdentity === 'function') {
+        const authResult = await window.app.authenticateSocketIdentity(!!options.forceRefresh);
+        if (!authResult || !authResult.ok) {
+            console.warn(`Cloud sync čeka verifikaciju identiteta: ${authResult?.reason || 'unknown_error'}`);
+        }
+    }
+
+    const syncWait = options.waitForSync ? waitForCloudProfileSync(socket, options.timeoutMs || 4000) : null;
+
+    socket.emit('set_player_data', {
+        uid,
+        name: window.app.playerName,
+        photoUrl: localStorage.getItem('yamb_player_photo') || '',
+        stats: getFullLocalStats(),
+        playerId: window.app.playerId
+    });
+
+    if (!syncWait) return true;
+
+    const cloudStats = await syncWait;
+    if (cloudStats && window.app && typeof window.app.applyCloudProfileSync === 'function') {
+        window.app.applyCloudProfileSync(cloudStats);
+    }
+    refreshLeagueDashboardForCurrentUser();
+
+    return !!cloudStats;
+}
+
 // --- FUNKCIJA ZA PRIJAVU ---
 async function prijaviSe() {
     console.log("Iniciram proces prijave...");
@@ -251,29 +349,17 @@ async function prijaviSe() {
             await prikaziObavestenje(_t('auth_welcome', "Dobrodošli, ") + playerName + "!");
 
             if (window.app) {
-                window.app.playerId = user.uid; 
+                window.app.playerId = user.uid;
                 if (user.displayName) window.app.playerName = user.displayName;
-                
-                if (window.app.socket && window.app.socket.disconnected) {
-                    window.app.socket.connect();
-                }
 
-                if (window.app.socket && window.app.socket.connected) {
-                    if (typeof window.app.authenticateSocketIdentity === 'function') {
-                        await window.app.authenticateSocketIdentity(true);
-                    }
-                    window.app.socket.emit('set_player_data', { 
-                        uid: user.uid, 
-                        name: window.app.playerName, 
-                        photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                        stats: getFullLocalStats()
-                    });
-                }
+                await syncLoggedInProfileToCloud(user, {
+                    forceRefresh: true,
+                    waitForSync: true,
+                    timeoutMs: 5000
+                });
             }
 
-            if (typeof updateMainMenuDashboard === 'function') {
-                updateMainMenuDashboard();
-            }
+            refreshLeagueDashboardForCurrentUser();
             
             if (window.app) window.app.navigateTo('main-menu');
         }
@@ -306,8 +392,6 @@ async function odjaviSe() {
         await Capacitor.Plugins.FirebaseAuthentication.signOut();
         console.log("Korisnik uspešno odjavljen.");
 
-        const targetUid = localStorage.getItem('yamb_uid');
-
         // 1. Brisanje Firebase podataka
         localStorage.removeItem('yamb_player_photo');
         localStorage.removeItem('yamb_uid');
@@ -317,7 +401,7 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_dukati');
         localStorage.removeItem('yamb_undo_tokens'); // DODATO: Brisanje tokena pri odjavi
         
-        if (targetUid) localStorage.removeItem('yamb_quarter_data_' + targetUid);
+        // UID liga ostaje kao lokalni cache za isti nalog; drugi nalozi imaju drugi UID ključ.
         localStorage.removeItem('yamb_quarter_data');
 
         localStorage.removeItem('yamb_unlocked_skins');
@@ -366,9 +450,7 @@ async function odjaviSe() {
         const nameInput = document.getElementById('setting-name');
         if (nameInput) nameInput.value = "";
         
-        if (typeof updateMainMenuDashboard === 'function') {
-            updateMainMenuDashboard();
-        }
+        refreshLeagueDashboardForCurrentUser();
         
     } catch (error) {
         console.error("Greška pri odjavi:", error);
@@ -401,7 +483,14 @@ async function checkLoginStatus() {
                 window.app.playerName = result.user.displayName || _t('hs_player', "Igrač");
             }
 
-            setTimeout(() => { 
+            const initialCloudSync = syncLoggedInProfileToCloud(result.user, {
+                waitForSync: true,
+                timeoutMs: 3500
+            });
+
+            setTimeout(async () => {
+                await initialCloudSync;
+                refreshLeagueDashboardForCurrentUser();
                 if (window.app && !window.app.inviteDetected) {
                     window.app.navigateTo('main-menu'); 
                 }
@@ -430,19 +519,10 @@ function inicijalizujCloudSync() {
     if (window.app && window.app.socket) {
         const uid = localStorage.getItem('yamb_uid');
         if (uid && window.app.socket.connected) {
-            (async () => {
-                if (typeof window.app.authenticateSocketIdentity === 'function') {
-                    await window.app.authenticateSocketIdentity();
-                }
-
-                window.app.socket.emit('set_player_data', {
-                    uid: uid,
-                    name: window.app.playerName,
-                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                    stats: getFullLocalStats(),
-                    playerId: window.app.playerId
-                });
-            })();
+            syncLoggedInProfileToCloud({
+                uid,
+                displayName: localStorage.getItem('yamb_player_name') || window.app.playerName
+            });
         }
 
     } else {
