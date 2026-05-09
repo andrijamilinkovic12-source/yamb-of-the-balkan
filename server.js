@@ -288,6 +288,8 @@ const UserProfileSchema = new mongoose.Schema({
     legacyMigratedAt: { type: Date, default: null },
     economyMigrationApplied: { type: Boolean, default: false },
     economyMigratedAt: { type: Date, default: null },
+    statsMigrationApplied: { type: Boolean, default: false },
+    statsMigratedAt: { type: Date, default: null },
     lastLogin: { type: Date, default: Date.now }
 });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
@@ -315,6 +317,13 @@ const MAX_AD_REWARD_PER_SYNC = 1500;
 const MAX_REWARD_PER_GAME = 8000;
 const MAX_TOURNEY_REWARD = 50000;
 const MAX_IMPORTED_UNDO_TOKENS_BASE = 20;
+const MAX_PROFILE_GAMES = 250000;
+const MAX_PROFILE_GAME_DELTA_PER_SYNC = 50;
+const MAX_PROFILE_LEGACY_GAME_IMPORT = 5000;
+const MAX_PROFILE_COMPETITIVE_BUFFER = 250;
+const MAX_PROFILE_TOURNEY_DELTA_PER_SYNC = 3;
+const MAX_PROFILE_LEGACY_TOURNEY_IMPORT = 100;
+const MAX_PENALTY_POINTS = 100000;
 
 const TROPHY_REWARDS = Object.freeze({
     first_play: 500,
@@ -344,6 +353,28 @@ const TROPHY_REWARDS = Object.freeze({
     spite: 1000,
     veteran: 3000
 });
+
+const ALL_TROPHY_IDS = new Set(Object.keys(TROPHY_REWARDS));
+const SPECIAL_TROPHY_IDS = new Set([
+    'kafana',
+    'surgeon',
+    'prophet',
+    'sniper',
+    'math',
+    'sveti_ilija',
+    'hazard',
+    'firecracker',
+    'concrete',
+    'perfectionist',
+    'miner',
+    'immortal',
+    'potato',
+    'minimal',
+    'achilles',
+    'close_call',
+    'night_owl',
+    'spite'
+]);
 
 const SHOP_ITEM_PRICES = Object.freeze({
     default: 0,
@@ -903,6 +934,194 @@ function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, accep
     return Array.from(serverSet);
 }
 
+function clampSafeInt(value, min, max, fallback = 0) {
+    return Math.max(min, Math.min(max, toSafeInt(value, fallback)));
+}
+
+function normalizeProfileStats(stats) {
+    const games = clampSafeInt(stats?.games, 0, MAX_PROFILE_GAMES);
+    const penaltyPoints = clampSafeInt(stats?.penaltyPoints, 0, MAX_PENALTY_POINTS);
+    const competitiveLimit = games + Math.min(penaltyPoints, MAX_PROFILE_COMPETITIVE_BUFFER);
+
+    let wins = clampSafeInt(stats?.wins, 0, competitiveLimit);
+    let losses = clampSafeInt(stats?.losses, 0, competitiveLimit);
+
+    if (wins + losses > competitiveLimit) {
+        losses = Math.max(0, competitiveLimit - wins);
+    }
+
+    const highscore = clampSafeInt(stats?.highscore, 0, MAX_SCORE);
+    const totalScoreSum = clampSafeInt(stats?.totalScoreSum, 0, games * MAX_SCORE);
+    const tournamentWins = clampSafeInt(stats?.tournamentWins, 0, games);
+    const maxWinStreak = clampSafeInt(stats?.maxWinStreak, 0, wins);
+    const currentWinStreak = clampSafeInt(stats?.currentWinStreak, 0, maxWinStreak);
+
+    return {
+        games,
+        wins,
+        losses,
+        highscore,
+        totalScoreSum,
+        tournamentWins,
+        maxWinStreak,
+        currentWinStreak,
+        penaltyPoints
+    };
+}
+
+function hasProfileStatsPayload(stats, normalizedStats = normalizeProfileStats(stats)) {
+    return normalizedStats.games > 0 ||
+        normalizedStats.wins > 0 ||
+        normalizedStats.losses > 0 ||
+        normalizedStats.highscore > 0 ||
+        normalizedStats.totalScoreSum > 0 ||
+        normalizedStats.tournamentWins > 0 ||
+        sanitizeIdArray(stats?.unlockedTrophies).length > 0;
+}
+
+function isProgressTrophyEarned(trophyId, stats) {
+    switch (trophyId) {
+        case 'first_play': return stats.games >= 1;
+        case 'apprentice': return stats.games >= 10;
+        case 'veteran': return stats.games >= 50;
+        case 'score_1000': return stats.highscore >= 1000;
+        case 'grandmaster': return stats.highscore >= 1250;
+        case 'legend': return stats.highscore >= 2000;
+        case 'mythic': return stats.highscore >= 2500;
+        case 'godlike': return stats.highscore >= 3000;
+        default: return false;
+    }
+}
+
+function filterAllowedTrophies(stats, clientTrophies, serverTrophies = [], allowLegacySpecial = false) {
+    const accepted = new Set(
+        sanitizeIdArray(serverTrophies).filter(id => ALL_TROPHY_IDS.has(id))
+    );
+
+    sanitizeIdArray(clientTrophies).forEach(id => {
+        if (!ALL_TROPHY_IDS.has(id)) return;
+        if (accepted.has(id) || isProgressTrophyEarned(id, stats)) {
+            accepted.add(id);
+            return;
+        }
+        if (allowLegacySpecial && stats.games > 0 && SPECIAL_TROPHY_IDS.has(id)) {
+            accepted.add(id);
+        }
+    });
+
+    return Array.from(accepted);
+}
+
+function buildInitialProfileState(stats) {
+    const normalized = normalizeProfileStats(stats);
+    const hasPayload = hasProfileStatsPayload(stats, normalized);
+    const unlockedTrophies = filterAllowedTrophies(normalized, stats?.unlockedTrophies, [], hasPayload);
+
+    return {
+        stats: normalized,
+        unlockedTrophies,
+        hasPayload
+    };
+}
+
+function applyProfileStatsGuard(user, stats) {
+    const incoming = normalizeProfileStats(stats);
+    const hasPayload = hasProfileStatsPayload(stats, incoming);
+    const allowLegacyImport = !user.statsMigrationApplied && hasPayload;
+
+    const oldStats = {
+        games: Math.max(0, toSafeInt(user.games)),
+        wins: Math.max(0, toSafeInt(user.wins)),
+        losses: Math.max(0, toSafeInt(user.losses)),
+        highscore: Math.max(0, toSafeInt(user.highscore)),
+        totalScoreSum: Math.max(0, toSafeInt(user.totalScoreSum)),
+        tournamentWins: Math.max(0, toSafeInt(user.tournamentWins)),
+        maxWinStreak: Math.max(0, toSafeInt(user.maxWinStreak)),
+        currentWinStreak: Math.max(0, toSafeInt(user.currentWinStreak)),
+        penaltyPoints: Math.max(0, toSafeInt(user.penaltyPoints))
+    };
+
+    const maxGameDelta = allowLegacyImport ? MAX_PROFILE_LEGACY_GAME_IMPORT : MAX_PROFILE_GAME_DELTA_PER_SYNC;
+    const requestedGameDelta = Math.max(0, incoming.games - oldStats.games);
+    const acceptedGameDelta = Math.min(requestedGameDelta, maxGameDelta);
+
+    if (requestedGameDelta > maxGameDelta) {
+        console.log(`🚨 STATS GUARD: Ograničen skok partija sa ${oldStats.games} na ${incoming.games}. Prihvatam +${acceptedGameDelta}.`);
+    }
+
+    user.games = oldStats.games + acceptedGameDelta;
+
+    const oldCompetitiveTotal = oldStats.wins + oldStats.losses;
+    const requestedWinsDelta = Math.max(0, incoming.wins - oldStats.wins);
+    const requestedLossesDelta = Math.max(0, incoming.losses - oldStats.losses);
+    const legacyCompetitiveRoom = allowLegacyImport
+        ? Math.max(0, user.games + Math.min(incoming.penaltyPoints, MAX_PROFILE_COMPETITIVE_BUFFER) - oldCompetitiveTotal)
+        : 0;
+    let remainingCompetitiveDelta = acceptedGameDelta + legacyCompetitiveRoom + 1;
+
+    const acceptedWinsDelta = Math.min(requestedWinsDelta, remainingCompetitiveDelta);
+    user.wins = oldStats.wins + acceptedWinsDelta;
+    remainingCompetitiveDelta -= acceptedWinsDelta;
+
+    const acceptedLossesDelta = Math.min(requestedLossesDelta, remainingCompetitiveDelta);
+    user.losses = oldStats.losses + acceptedLossesDelta;
+
+    if (requestedWinsDelta + requestedLossesDelta > acceptedWinsDelta + acceptedLossesDelta) {
+        console.log(`🚨 STATS GUARD: Ograničen skok W/L statistike za ${user.playerName || user.firebaseUid}.`);
+    }
+
+    user.highscore = Math.max(oldStats.highscore, Math.min(incoming.highscore, MAX_SCORE));
+
+    const maxTotalScoreSum = Math.min(
+        user.games * MAX_SCORE,
+        oldStats.totalScoreSum + (acceptedGameDelta * MAX_SCORE) + (allowLegacyImport ? MAX_SCORE : 0)
+    );
+    if (incoming.totalScoreSum > maxTotalScoreSum) {
+        console.log(`🚨 STATS GUARD: Ograničen totalScoreSum sa ${incoming.totalScoreSum} na ${maxTotalScoreSum}.`);
+    }
+    user.totalScoreSum = Math.max(oldStats.totalScoreSum, Math.min(incoming.totalScoreSum, maxTotalScoreSum));
+
+    const requestedTournamentDelta = Math.max(0, incoming.tournamentWins - oldStats.tournamentWins);
+    const maxTournamentDelta = allowLegacyImport ? MAX_PROFILE_LEGACY_TOURNEY_IMPORT : MAX_PROFILE_TOURNEY_DELTA_PER_SYNC;
+    const acceptedTournamentDelta = Math.min(requestedTournamentDelta, maxTournamentDelta, Math.max(acceptedGameDelta, allowLegacyImport ? user.games : 0));
+    if (requestedTournamentDelta > acceptedTournamentDelta) {
+        console.log(`🚨 STATS GUARD: Ograničen skok turnirskih pobeda sa ${oldStats.tournamentWins} na ${incoming.tournamentWins}.`);
+    }
+    user.tournamentWins = oldStats.tournamentWins + acceptedTournamentDelta;
+
+    user.penaltyPoints = Math.max(oldStats.penaltyPoints, Math.min(incoming.penaltyPoints, MAX_PENALTY_POINTS));
+    user.maxWinStreak = Math.max(oldStats.maxWinStreak, Math.min(incoming.maxWinStreak, user.wins));
+    user.currentWinStreak = Math.min(incoming.currentWinStreak, user.maxWinStreak);
+
+    const acceptedStats = {
+        games: user.games,
+        wins: user.wins,
+        losses: user.losses,
+        highscore: user.highscore,
+        totalScoreSum: user.totalScoreSum,
+        tournamentWins: user.tournamentWins,
+        maxWinStreak: user.maxWinStreak,
+        currentWinStreak: user.currentWinStreak,
+        penaltyPoints: user.penaltyPoints
+    };
+    const acceptedTrophies = filterAllowedTrophies(acceptedStats, stats?.unlockedTrophies, user.unlockedTrophies, allowLegacyImport);
+
+    if (allowLegacyImport) {
+        user.statsMigrationApplied = true;
+        user.statsMigratedAt = Date.now();
+    }
+
+    return {
+        oldStats,
+        incomingStats: incoming,
+        acceptedStats,
+        acceptedTrophies,
+        acceptedGameDelta,
+        acceptedTournamentDelta,
+        allowLegacyImport
+    };
+}
+
 function pickAllowedInventoryItem(requested, allowedItems, fallback, defaultId) {
     const allowedSet = new Set([...sanitizeIdArray(allowedItems), ...FREE_UNLOCK_IDS]);
     const requestedId = sanitizeIdArray([requested], 1)[0];
@@ -923,8 +1142,8 @@ function normalizeActiveSelections(user, fallbackActive = {}) {
     user.activeTheme = pickAllowedInventoryItem(user.activeTheme, themeItems, fallbackActive.activeTheme, 'dark');
 }
 
-function buildInitialEconomyState(stats) {
-    const requestedTrophies = sanitizeIdArray(stats?.unlockedTrophies);
+function buildInitialEconomyState(stats, acceptedTrophies = null) {
+    const requestedTrophies = acceptedTrophies ? sanitizeIdArray(acceptedTrophies) : sanitizeIdArray(stats?.unlockedTrophies);
     const requestedUnlocks = getRequestedUnlockSet(stats);
     const requestedPaidUnlockCost = getPaidUnlockCost(requestedUnlocks, new Set(requestedTrophies), requestedTrophies);
     const economyCeiling = estimateEconomyCeiling(stats);
@@ -1107,35 +1326,19 @@ io.on('connection', (socket) => {
                 }
                 
                 // 🛡️ NOVO: Popravljena logika (INVENTORY DESYNC FIX)
-                const isFreshLogin = (s.games === 0);
-                const oldUserGames = user.games || 0;
-                const oldTournamentWins = user.tournamentWins || 0;
+                const isFreshLogin = (toSafeInt(s.games, 0) === 0);
+                const statsGuard = applyProfileStatsGuard(user, s);
+                const oldUserGames = statsGuard.oldStats.games;
+                const oldTournamentWins = statsGuard.oldStats.tournamentWins;
                 const oldBalance = Math.max(0, toSafeInt(user.balance));
                 const oldUndoTokens = Math.max(0, toSafeInt(user.undoTokens));
-                const requestedTrophies = sanitizeIdArray(s.unlockedTrophies);
+                const requestedTrophies = statsGuard.acceptedTrophies;
                 const newTrophyRewards = getNewTrophyRewards(requestedTrophies, user.unlockedTrophies);
                 const existingUnlocksBefore = getExistingUnlockSet(user);
                 const requestedUnlocks = getRequestedUnlockSet(s);
                 const requestedPaidUnlockCost = getPaidUnlockCost(requestedUnlocks, existingUnlocksBefore, requestedTrophies);
 
-                if (!isFreshLogin) {
-                    if (s.games > user.games) user.games = s.games;
-                    if (s.wins > user.wins) user.wins = s.wins;
-                    if (s.losses > user.losses) user.losses = s.losses;
-                    if (s.highscore > user.highscore) user.highscore = s.highscore;
-                    if (s.totalScoreSum > user.totalScoreSum) user.totalScoreSum = s.totalScoreSum;
-                    
-                    if (typeof s.tournamentWins === 'number' && s.tournamentWins > user.tournamentWins) {
-                        user.tournamentWins = s.tournamentWins;
-                    }
-                    if (typeof s.maxWinStreak === 'number' && s.maxWinStreak > (user.maxWinStreak || 0)) {
-                        user.maxWinStreak = s.maxWinStreak;
-                    }
-
-                    if (typeof s.currentWinStreak === 'number') {
-                        user.currentWinStreak = s.currentWinStreak;
-                    }
-                }
+                const statsForEconomy = { ...s, ...statsGuard.acceptedStats, unlockedTrophies: requestedTrophies };
                 
                 // 🛡️ SECURITY FIX: Da li je klijentova verzija statistike sinhronizovana
                 const isClientSynced = (s.games >= oldUserGames);
