@@ -7,8 +7,53 @@ const http = require('http');
 const { Server } = require("socket.io");
 const mongoose = require('mongoose');
 const cors = require('cors');
-const path = require('path'); 
-const https = require('https'); 
+const path = require('path');
+const https = require('https');
+
+let firebaseAuth = null;
+
+function parseFirebaseServiceAccount() {
+    let raw = process.env.FIREBASE_SERVICE_ACCOUNT || process.env.FIREBASE_ADMIN_CREDENTIALS || '';
+
+    if (!raw && process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
+        raw = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString('utf8');
+    }
+
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    if (parsed.private_key) {
+        parsed.private_key = parsed.private_key.replace(/\\n/g, '\n');
+    }
+    return parsed;
+}
+
+try {
+    const admin = require('firebase-admin');
+    const serviceAccount = parseFirebaseServiceAccount();
+    const hasDefaultCredentials = Boolean(
+        process.env.GOOGLE_APPLICATION_CREDENTIALS ||
+        process.env.FIREBASE_CONFIG ||
+        process.env.GOOGLE_CLOUD_PROJECT ||
+        process.env.GCLOUD_PROJECT
+    );
+    const appOptions = serviceAccount
+        ? { credential: admin.credential.cert(serviceAccount) }
+        : undefined;
+
+    if (serviceAccount || hasDefaultCredentials) {
+        if (!admin.apps.length) {
+            admin.initializeApp(appOptions);
+        }
+
+        firebaseAuth = admin.auth();
+        console.log('✅ Firebase Admin Auth spreman.');
+    } else {
+        console.warn('⚠️ Firebase Admin Auth nije aktivan: nedostaju service account credentials.');
+    }
+} catch (err) {
+    console.warn('⚠️ Firebase Admin Auth nije aktivan:', err.message);
+}
 
 // Inicijalizacija aplikacije
 const app = express();
@@ -450,11 +495,11 @@ function advanceTournamentBracket(round, index, winnerObj) {
 // ==================================================================
 // LOGIKA ZA PRAVILNO BROJANJE ONLINE IGRAČA
 // ==================================================================
-const activeConnections = new Map(); 
+const activeConnections = new Map();
 
 function updateOnlineCount() {
     const uniqueKeys = new Set();
-    
+
     io.sockets.sockets.forEach((clientSocket, id) => {
         if (!clientSocket.playerName) return;
 
@@ -464,6 +509,91 @@ function updateOnlineCount() {
     });
 
     io.emit('users_count', uniqueKeys.size);
+}
+
+function bindVerifiedPlayerSocket(socket, playerId) {
+    if (typeof playerId !== 'string' || playerId.length < 20) return false;
+
+    const stariSocketId = onlinePlayers[playerId];
+
+    if (stariSocketId && stariSocketId !== socket.id) {
+        const aktivnaSoba = playerRooms[stariSocketId];
+
+        if (aktivnaSoba) {
+            console.log(`♻️ ORPHAN DETEKTOVAN: Prebacujem sobu ${aktivnaSoba} sa starog ${stariSocketId} na novi ${socket.id}`);
+
+            socket.join(aktivnaSoba);
+            playerRooms[socket.id] = aktivnaSoba;
+            delete playerRooms[stariSocketId];
+
+            if (roomState[aktivnaSoba]) {
+                const players = roomState[aktivnaSoba].players;
+                const idx = players.indexOf(stariSocketId);
+                if (idx !== -1) {
+                    players[idx] = socket.id;
+                }
+            }
+            io.to(aktivnaSoba).emit('opponent_connection_restored');
+        }
+
+        const oldSocket = io.sockets.sockets.get(stariSocketId);
+        if (oldSocket) {
+            oldSocket.disconnect(true);
+        }
+    }
+
+    if (disconnectTimers[playerId]) {
+        clearTimeout(disconnectTimers[playerId]);
+        delete disconnectTimers[playerId];
+
+        const ghost = ghostSessions[playerId];
+        if (ghost) {
+            if (ghost.oldSocketId !== socket.id && playerRooms[socket.id] !== ghost.roomId) {
+                socket.join(ghost.roomId);
+                playerRooms[socket.id] = ghost.roomId;
+
+                if (roomState[ghost.roomId]) {
+                    const players = roomState[ghost.roomId].players;
+                    const idx = players.indexOf(ghost.oldSocketId);
+                    if (idx !== -1) {
+                        players[idx] = socket.id;
+                    }
+                }
+                io.to(ghost.roomId).emit('opponent_connection_restored');
+                delete playerRooms[ghost.oldSocketId];
+            }
+            delete ghostSessions[playerId];
+        }
+    }
+
+    socket.verifiedUid = playerId;
+    socket.playerId = playerId;
+    onlinePlayers[playerId] = socket.id;
+    registeredSockets[socket.id] = playerId;
+    return true;
+}
+
+async function verifyFirebaseSocketToken(socket, token) {
+    if (!firebaseAuth) {
+        return { ok: false, reason: 'firebase_admin_unavailable', permanent: false };
+    }
+
+    if (typeof token !== 'string' || token.length < 100) {
+        return { ok: false, reason: 'missing_firebase_token', permanent: false };
+    }
+
+    try {
+        const decoded = await firebaseAuth.verifyIdToken(token);
+        if (!decoded || typeof decoded.uid !== 'string') {
+            return { ok: false, reason: 'invalid_firebase_token' };
+        }
+
+        bindVerifiedPlayerSocket(socket, decoded.uid);
+        return { ok: true, uid: decoded.uid };
+    } catch (err) {
+        console.warn('⚠️ Firebase token odbijen:', err.message);
+        return { ok: false, reason: 'invalid_firebase_token' };
+    }
 }
 
 // ==================================================================
@@ -489,7 +619,7 @@ function updateRoomSpectators(roomId) {
 
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
-    
+
     let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
     if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
 
@@ -527,75 +657,35 @@ io.on('connection', (socket) => {
         socket.emit('room_status_result', { active: isActive, roomId: data.roomId });
     });
 
-    socket.on('set_my_id', (playerId) => {
-        const stariSocketId = onlinePlayers[playerId];
-        
-        // ORPHAN SOCKET FIX: Ako stari socket još uvek postoji i u sobi je (nasilni prekid konekcije)
-        if (stariSocketId && stariSocketId !== socket.id) {
-            const aktivnaSoba = playerRooms[stariSocketId];
-            
-            if (aktivnaSoba) {
-                console.log(`♻️ ORPHAN DETEKTOVAN: Prebacujem sobu ${aktivnaSoba} sa starog ${stariSocketId} na novi ${socket.id}`);
-                
-                socket.join(aktivnaSoba);
-                playerRooms[socket.id] = aktivnaSoba;
-                delete playerRooms[stariSocketId];
-                
-                if (roomState[aktivnaSoba]) {
-                    const players = roomState[aktivnaSoba].players;
-                    const idx = players.indexOf(stariSocketId);
-                    if (idx !== -1) {
-                        players[idx] = socket.id;
-                    }
-                }
-                io.to(aktivnaSoba).emit('opponent_connection_restored');
-            }
-            
-            const oldSocket = io.sockets.sockets.get(stariSocketId);
-            if (oldSocket) {
-                oldSocket.disconnect(true);
-            }
+    socket.on('auth_firebase_token', async (data, ack) => {
+        const token = typeof data === 'string' ? data : data?.token;
+        const result = await verifyFirebaseSocketToken(socket, token);
+        if (typeof ack === 'function') ack(result);
+        if (!result.ok) socket.emit('auth_required', result);
+    });
+
+    socket.on('set_my_id', (playerId, ack) => {
+        if (socket.verifiedUid && playerId === socket.verifiedUid) {
+            bindVerifiedPlayerSocket(socket, socket.verifiedUid);
+            if (typeof ack === 'function') ack({ ok: true, uid: socket.verifiedUid });
+            return;
         }
 
-        // Normalan Grace Period tok
-        if (disconnectTimers[playerId]) {
-            clearTimeout(disconnectTimers[playerId]);
-            delete disconnectTimers[playerId];
-            
-            const ghost = ghostSessions[playerId];
-            if (ghost) {
-                // Joinujemo samo ako Orphan logika već nije to odradila
-                if (ghost.oldSocketId !== socket.id && playerRooms[socket.id] !== ghost.roomId) {
-                    socket.join(ghost.roomId);
-                    playerRooms[socket.id] = ghost.roomId;
-
-                    if (roomState[ghost.roomId]) {
-                        const players = roomState[ghost.roomId].players;
-                        const idx = players.indexOf(ghost.oldSocketId);
-                        if (idx !== -1) {
-                            players[idx] = socket.id;
-                        }
-                    }
-                    io.to(ghost.roomId).emit('opponent_connection_restored');
-                    delete playerRooms[ghost.oldSocketId];
-                }
-                delete ghostSessions[playerId];
-            }
-        }
-
-        onlinePlayers[playerId] = socket.id;
-        registeredSockets[socket.id] = playerId;
-        socket.playerId = playerId; 
+        const result = { ok: false, reason: 'firebase_token_required' };
+        if (typeof ack === 'function') ack(result);
+        socket.emit('auth_required', result);
     });
 
     socket.on('set_player_data', async (data) => {
-        const stariPlayerId = socket.playerId; 
-        
-        socket.photoUrl = data.photoUrl || ''; 
+        data = data || {};
+        const verifiedUid = socket.verifiedUid;
+        const stariPlayerId = socket.playerId;
+
+        socket.photoUrl = typeof data.photoUrl === 'string' ? data.photoUrl.substring(0, 500) : '';
 
         let bezbednoIme = "Nepoznat Igrač";
         
-        if (data.name) {
+        if (typeof data.name === 'string') {
             let unesenoIme = data.name.trim().substring(0, 24);
             if (sadrziPsovku(unesenoIme)) {
                 bezbednoIme = "Igrač_" + Math.floor(1000 + Math.random() * 9000);
@@ -605,9 +695,11 @@ io.on('connection', (socket) => {
         }
         
         socket.playerName = bezbednoIme;
-        socket.playerId = data.playerId || data.uid; 
-        data.name = bezbednoIme; 
-        
+        if (verifiedUid) {
+            socket.playerId = verifiedUid;
+        }
+        data.name = bezbednoIme;
+
         if (stariPlayerId && stariPlayerId !== socket.playerId) {
             delete onlinePlayers[stariPlayerId];
         }
@@ -617,9 +709,12 @@ io.on('connection', (socket) => {
             registeredSockets[socket.id] = socket.playerId;
         }
 
-        if (!data.uid) {
+        if (!verifiedUid) {
             socket.playerStats = data.stats || { wins: 0, losses: 0 };
-            updateOnlineCount(); 
+            updateOnlineCount();
+            if (data.uid || data.playerId) {
+                socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+            }
             return;
         }
 
@@ -629,13 +724,13 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            let user = await UserProfile.findOne({ firebaseUid: data.uid });
+            let user = await UserProfile.findOne({ firebaseUid: verifiedUid });
             const s = data.stats || {}; 
 
             if (user) {
                 user.playerName = data.name;
                 user.lastLogin = Date.now();
-                user.photoUrl = data.photoUrl || user.photoUrl; 
+                user.photoUrl = socket.photoUrl || user.photoUrl;
                 
                 if (s.activeSkin !== undefined && s.activeSkin !== null) user.activeSkin = s.activeSkin;
                 if (s.activeEffect !== undefined && s.activeEffect !== null) user.activeEffect = s.activeEffect;
@@ -855,9 +950,9 @@ io.on('connection', (socket) => {
                 });
             } else {
                 user = new UserProfile({
-                    firebaseUid: data.uid,
+                    firebaseUid: verifiedUid,
                     playerName: data.name,
-                    photoUrl: data.photoUrl || '',
+                    photoUrl: socket.photoUrl || '',
                     wins: s.wins || 0, losses: s.losses || 0, games: s.games || 0,
                     highscore: s.highscore || 0, totalScoreSum: s.totalScoreSum || 0,
                     balance: s.balance || 0, undoTokens: s.undoTokens || 0, currentWinStreak: s.currentWinStreak || 0,
@@ -1107,8 +1202,9 @@ io.on('connection', (socket) => {
     socket.on('check_quarter_reward', async (data) => {
         try {
             if (!MONGO_URI) return;
-            const { year, quarter, playerId } = data;
-            
+            const { year, quarter } = data || {};
+            const playerId = socket.verifiedUid;
+
             if (!year || !quarter || !playerId) return;
 
             const rewardKey = `${year}-Q${quarter}`;
@@ -1373,7 +1469,7 @@ io.on('connection', (socket) => {
             const submittedScore = Number(data?.score);
             if (!Number.isInteger(submittedScore)) return replyScoreSubmit(false, 'invalid_score_type');
 
-            const finalUid = socket.playerId || data?.uid || data?.playerId;
+            const finalUid = socket.verifiedUid || socket.playerId;
 
             if (typeof finalUid !== 'string' || finalUid.length === 0 || finalUid.startsWith('guest_') || finalUid.length < 20) {
                 return replyScoreSubmit(false, 'invalid_player');
@@ -1497,7 +1593,7 @@ io.on('connection', (socket) => {
             const submittedScore = Number(data?.score);
             const submittedYear = Number(data?.year);
             const submittedQuarter = Number(data?.quarter);
-            const uniqueId = socket.playerId || registeredSockets[socket.id];
+            const uniqueId = socket.verifiedUid || socket.playerId || registeredSockets[socket.id];
 
             if (typeof uniqueId !== 'string' || uniqueId.length === 0 || uniqueId.startsWith('guest_') || uniqueId.startsWith('usr_') || uniqueId.length < 20) {
                 return replyLeagueSubmit(false, 'invalid_player');

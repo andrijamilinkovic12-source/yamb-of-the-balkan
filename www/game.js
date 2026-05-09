@@ -903,12 +903,12 @@ class YambApp {
                     autoConnect: true
                 });
                 
-                this.socket.on('connect', () => {
+                this.socket.on('connect', async () => {
                     console.log("✅ Socket povezan! ID:", this.socket.id);
                     
                     if (!this.playerId) return;
 
-                    this.socket.emit('set_my_id', this.playerId);
+                    await this.authenticateSocketIdentity();
                     
                     const now = new Date();
                     let currentQuarter = Math.floor(now.getMonth() / 3) + 1;
@@ -954,30 +954,10 @@ class YambApp {
                         this.socket.emit('request_state_sync');
                     }
                     
-                    let emitData = { 
-                        name: this.playerName, 
-                        photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                        stats: this.getFullLocalStats(),
-                        playerId: this.playerId 
-                    };
-
-                    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseAuthentication) {
-                        window.Capacitor.Plugins.FirebaseAuthentication.getCurrentUser().then(res => {
-                            if (res.user && res.user.uid) {
-                                emitData.uid = res.user.uid;
-                                this.socket.emit('set_player_data', emitData);
-                            } else {
-                                this.socket.emit('set_player_data', emitData);
-                            }
-                        }).catch(() => {
-                            this.socket.emit('set_player_data', emitData);
-                        });
-                    } else {
-                         this.socket.emit('set_player_data', emitData);
-                    }
+                    const authResult = await this.emitPlayerData();
 
                     if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
-                    if (this.topListManager) this.topListManager.syncOfflineScores();
+                    if (authResult && authResult.ok && this.topListManager) this.topListManager.syncOfflineScores();
                     
                     const params = new URLSearchParams(window.location.search);
                     if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
@@ -1155,6 +1135,60 @@ class YambApp {
                 });
             }
         } catch (e) { console.error("Greška pri inicijalizaciji socketa:", e); }
+    }
+
+    async authenticateSocketIdentity(forceRefresh = false) {
+        if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
+        if (!localStorage.getItem('yamb_uid')) return { ok: false, reason: 'not_logged_in' };
+        if (this.socketVerifiedUid === localStorage.getItem('yamb_uid') && !forceRefresh) {
+            return { ok: true, uid: this.socketVerifiedUid };
+        }
+
+        const tokenProvider = window.getYambFirebaseIdToken;
+        if (typeof tokenProvider !== 'function') return { ok: false, reason: 'token_provider_missing' };
+
+        const token = await tokenProvider(forceRefresh);
+        if (!token) return { ok: false, reason: 'missing_firebase_token' };
+
+        return new Promise((resolve) => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'auth_timeout' });
+            }, 8000);
+
+            this.socket.emit('auth_firebase_token', { token }, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                if (result && result.ok) {
+                    this.socketVerifiedUid = result.uid;
+                    this.playerId = result.uid;
+                    localStorage.setItem('yamb_uid', result.uid);
+                } else {
+                    console.warn(`Server nije verifikovao Firebase identitet: ${result?.reason || 'unknown_error'}`);
+                }
+                resolve(result || { ok: false, reason: 'empty_auth_response' });
+            });
+        });
+    }
+
+    async emitPlayerData(forceRefreshAuth = false) {
+        if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
+
+        const authResult = await this.authenticateSocketIdentity(forceRefreshAuth);
+        const uid = authResult && authResult.ok ? authResult.uid : localStorage.getItem('yamb_uid');
+
+        this.socket.emit('set_player_data', {
+            uid: uid,
+            name: this.playerName,
+            photoUrl: localStorage.getItem('yamb_player_photo') || '',
+            stats: this.getFullLocalStats(),
+            playerId: this.playerId
+        });
+
+        return authResult;
     }
 
     updateOnlineCounterUI() {
@@ -1437,13 +1471,7 @@ class YambApp {
         }
 
         if (this.socket && this.socket.connected) {
-            this.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid'),
-                name: this.playerName,
-                photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: this.getFullLocalStats(),
-                playerId: this.playerId
-            });
+            this.emitPlayerData();
         }
     }
 
@@ -1521,27 +1549,7 @@ class YambApp {
         }
 
         if (this.socket && this.socket.connected) {
-            let emitData = { 
-                name: this.playerName, 
-                photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: this.getFullLocalStats(),
-                playerId: this.playerId
-            };
-
-            if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.FirebaseAuthentication) {
-                window.Capacitor.Plugins.FirebaseAuthentication.getCurrentUser().then(res => {
-                    if (res.user && res.user.uid) {
-                        emitData.uid = res.user.uid;
-                        this.socket.emit('set_player_data', emitData);
-                    } else {
-                        this.socket.emit('set_player_data', emitData);
-                    }
-                }).catch(() => {
-                    this.socket.emit('set_player_data', emitData);
-                });
-            } else {
-                 this.socket.emit('set_player_data', emitData);
-            }
+            this.emitPlayerData();
         }
     }
 
@@ -2163,13 +2171,7 @@ class YambApp {
                 window.statsManager.saveStats();
             }
 
-            this.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid'),
-                name: this.playerName,
-                photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: this.getFullLocalStats(),
-                playerId: this.playerId
-            });
+            this.emitPlayerData();
             
             if (typeof updateMainMenuDashboard === 'function') {
                 updateMainMenuDashboard();
@@ -3594,13 +3596,7 @@ class YambApp {
                             }
 
                             if (this.socket && this.socket.connected) {
-                                this.socket.emit('set_player_data', {
-                                    uid: localStorage.getItem('yamb_uid'),
-                                    name: this.playerName,
-                                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                                    stats: this.getFullLocalStats(),
-                                    playerId: this.playerId
-                                });
+                                this.emitPlayerData();
                             }
 
                             if (typeof updateMainMenuDashboard === 'function') {
@@ -3658,13 +3654,7 @@ class YambApp {
                 }
 
                 if (this.socket && this.socket.connected) {
-                    this.socket.emit('set_player_data', {
-                        uid: localStorage.getItem('yamb_uid'),
-                        name: this.playerName,
-                        photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                        stats: this.getFullLocalStats(),
-                        playerId: this.playerId
-                    });
+                    this.emitPlayerData();
                 }
 
                 this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount * 2}`, gt('modal_title_reward')).then(() => { this.effectMgr.stop(); this.showMainMenu(); });
@@ -3685,13 +3675,7 @@ class YambApp {
         if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
         
         if (this.socket && this.socket.connected) {
-            this.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid'),
-                name: this.playerName,
-                photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: this.getFullLocalStats(),
-                playerId: this.playerId
-            });
+            this.emitPlayerData();
         }
 
         if (window.kvartalnaLiga) {

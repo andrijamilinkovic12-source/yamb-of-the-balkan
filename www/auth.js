@@ -20,6 +20,22 @@ async function prikaziObavestenje(tekst) {
     alert(tekst);
 }
 
+async function getYambFirebaseIdToken(forceRefresh = false) {
+    if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
+        return null;
+    }
+
+    try {
+        const result = await Capacitor.Plugins.FirebaseAuthentication.getIdToken({ forceRefresh });
+        return result && result.token ? result.token : null;
+    } catch (error) {
+        console.warn("Firebase ID token nije dostupan:", error);
+        return null;
+    }
+}
+
+window.getYambFirebaseIdToken = getYambFirebaseIdToken;
+
 // --- POMOĆNA FUNKCIJA ZA AŽURIRANJE UI-a ---
 function osveziAuthUI(user) {
     const loginBtn = document.getElementById('dugmeGooglePrijava');
@@ -145,6 +161,9 @@ async function prijaviSe() {
                 }
 
                 if (window.app.socket && window.app.socket.connected) {
+                    if (typeof window.app.authenticateSocketIdentity === 'function') {
+                        await window.app.authenticateSocketIdentity(true);
+                    }
                     window.app.socket.emit('set_player_data', { 
                         uid: user.uid, 
                         name: window.app.playerName, 
@@ -476,13 +495,19 @@ function inicijalizujCloudSync() {
         
         const uid = localStorage.getItem('yamb_uid');
         if (uid && window.app.socket.connected) {
-            window.app.socket.emit('set_player_data', {
-                uid: uid,
-                name: window.app.playerName,
-                photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                stats: getFullLocalStats(),
-                playerId: window.app.playerId
-            });
+            (async () => {
+                if (typeof window.app.authenticateSocketIdentity === 'function') {
+                    await window.app.authenticateSocketIdentity();
+                }
+
+                window.app.socket.emit('set_player_data', {
+                    uid: uid,
+                    name: window.app.playerName,
+                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
+                    stats: getFullLocalStats(),
+                    playerId: window.app.playerId
+                });
+            })();
         }
 
     } else {
