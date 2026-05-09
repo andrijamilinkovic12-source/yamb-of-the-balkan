@@ -2831,7 +2831,7 @@ class YambApp {
     }
     
     startGame() { 
-        if (this.onlineMode && this.socket && !this.isSpectator) {
+        if (this.socket && this.socket.connected && !this.isSpectator && this.playerId) {
             this.socket.emit('game_session_start');
         }
 

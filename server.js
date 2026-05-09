@@ -1084,9 +1084,10 @@ io.on('connection', (socket) => {
         }
     });
 
-    const MAX_SCORE = 3500;       
-    const MAX_NAME_LENGTH = 24;   
-    const MIN_GAME_DURATION = 120000; 
+    const MAX_SCORE = 3500;
+    const MAX_NAME_LENGTH = 24;
+    const MIN_GAME_DURATION = 120000;
+    const MAX_GAME_DURATION = 6 * 60 * 60 * 1000;
 
     socket.on('start_local_game', (roomId) => {
         socket.join(roomId);
@@ -1355,47 +1356,72 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('submit_score', async (data) => {
+    socket.on('submit_score', async (data, ack) => {
+        const replyScoreSubmit = (ok, reason = null, permanent = !ok) => {
+            const result = { ok, reason, permanent };
+            if (typeof ack === 'function') ack(result);
+            if (!ok) socket.emit('score_submit_rejected', result);
+            return result;
+        };
+
         try {
-            if (!MONGO_URI) return;
+            if (!MONGO_URI) return replyScoreSubmit(false, 'db_unavailable', false);
 
-            if (typeof data.score !== 'number' || isNaN(data.score)) return; 
+            const submittedScore = Number(data?.score);
+            if (!Number.isInteger(submittedScore)) return replyScoreSubmit(false, 'invalid_score_type');
 
-            const finalUid = socket.playerId || data.uid || data.playerId;
+            const finalUid = socket.playerId || data?.uid || data?.playerId;
 
-            if (!finalUid || finalUid.startsWith('guest_') || finalUid.length < 20) return;
+            if (!finalUid || finalUid.startsWith('guest_') || finalUid.length < 20) {
+                return replyScoreSubmit(false, 'invalid_player');
+            }
 
-            if (data.score < 0 || data.score > MAX_SCORE) {
-                console.log(`🚨 HACK POKUŠAJ (Value): ${socket.id} šalje nemoguć skor: ${data.score}`);
-                return; 
+            if (submittedScore <= 0 || submittedScore > MAX_SCORE) {
+                console.log(`🚨 HACK POKUSAJ (Value): ${socket.id} salje nemoguc skor: ${submittedScore}`);
+                return replyScoreSubmit(false, 'score_out_of_range');
             }
 
             const startTime = gameStartTimes[socket.id];
-            
-            if (data.score > 50 && (!startTime || (Date.now() - startTime < MIN_GAME_DURATION))) {
-                const duration = startTime ? (Date.now() - startTime) : "N/A";
-                console.log(`⚠️ UPOZORENJE (Speed): Trajanje: ${duration}ms. Ipak upisujem skor: ${data.score}`);
+
+            if (!startTime) {
+                console.log(`🚨 HACK POKUSAJ (No Session): ${socket.id} pokusava upis skora ${submittedScore} bez aktivne server sesije.`);
+                return replyScoreSubmit(false, 'missing_game_session');
             }
 
-            let finalName = socket.playerName || data.playerName || "Nepoznat Igrač";
-            let finalPhoto = socket.photoUrl || data.photoUrl || '';
-            
+            const duration = Date.now() - startTime;
+            if (duration < MIN_GAME_DURATION) {
+                console.log(`🚨 HACK POKUSAJ (Speed): Trajanje ${duration}ms. Blokiram skor: ${submittedScore}`);
+                return replyScoreSubmit(false, 'game_too_short');
+            }
+
+            if (duration > MAX_GAME_DURATION) {
+                console.log(`🚨 HACK POKUSAJ (Stale Session): Trajanje ${duration}ms. Blokiram skor: ${submittedScore}`);
+                return replyScoreSubmit(false, 'stale_game_session');
+            }
+
+            let finalName = (socket.playerName || data?.playerName || "Nepoznat Igrač").toString().trim().substring(0, MAX_NAME_LENGTH);
+            if (!finalName) finalName = "Nepoznat Igrač";
+            let finalPhoto = (socket.photoUrl || data?.photoUrl || '').toString().substring(0, 500);
+            let finalMode = (data?.mode || 'Solo').toString().trim().substring(0, 24) || 'Solo';
+
             const newScore = new Score({
-                playerId: finalUid, 
+                playerId: finalUid,
                 playerName: finalName,
-                score: data.score,
-                mode: data.mode || 'Solo',
-                photoUrl: finalPhoto, 
-                date: data.date || Date.now()
+                score: submittedScore,
+                mode: finalMode,
+                photoUrl: finalPhoto,
+                date: Date.now()
             });
-            
+
             await newScore.save();
-            console.log(`✅ USPEŠAN UPIS: ${finalName} (UID: ${finalUid}) -> ${data.score} (${newScore.mode})`);
-            
+            console.log(`✅ USPESAN UPIS: ${finalName} (UID: ${finalUid}) -> ${submittedScore} (${newScore.mode})`);
+
             delete gameStartTimes[socket.id];
+            return replyScoreSubmit(true);
 
         } catch (err) {
             console.error("❌ Greška pri upisu u MongoDB:", err);
+            return replyScoreSubmit(false, 'server_error', false);
         }
     });
 

@@ -63,6 +63,20 @@ class TopListManager {
         this.syncOfflineScores();
     }
 
+    _submitScoreToServer(entry) {
+        return new Promise(resolve => {
+            let settled = false;
+            const finish = (result) => {
+                if (settled) return;
+                settled = true;
+                resolve(result || { ok: false, reason: 'no_response', permanent: false });
+            };
+
+            setTimeout(() => finish({ ok: false, reason: 'score_submit_timeout', permanent: false }), 8000);
+            this.app.socket.emit('submit_score', entry, finish);
+        });
+    }
+
     /**
      * Šalje sve neposlate (unsynced) rezultate na server
      */
@@ -81,11 +95,17 @@ class TopListManager {
             let needsUpdate = false;
 
             for (let i = 0; i < scores.length; i++) {
-                if (!scores[i].synced) {
+                if (!scores[i].synced && !scores[i].syncRejected) {
                     console.log(`📡 Sinhronizacija skora: ${scores[i].score}`);
-                    this.app.socket.emit('submit_score', scores[i]);
-                    scores[i].synced = true;
-                    needsUpdate = true;
+                    const result = await this._submitScoreToServer(scores[i]);
+                    if (result && result.ok) {
+                        scores[i].synced = true;
+                        needsUpdate = true;
+                    } else if (result && result.permanent) {
+                        scores[i].syncRejected = result.reason || 'server_rejected';
+                        needsUpdate = true;
+                        console.warn(`Server je odbio skor ${scores[i].score}: ${scores[i].syncRejected}`);
+                    }
                 }
             }
 
