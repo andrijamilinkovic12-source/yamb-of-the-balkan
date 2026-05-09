@@ -838,7 +838,7 @@ function buildProfileSyncPayload(user) {
         vibrationEnabled: user.vibrationEnabled,
         penaltyPoints: Math.max(0, toSafeInt(user.penaltyPoints)),
         h2hStats: user.h2hStats || {},
-        leagueData: user.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 }
+        leagueData: normalizeUserLeagueDataForCurrentPeriod(user)
     };
 }
 
@@ -1106,8 +1106,13 @@ function getServerQuarterInfo() {
 }
 
 function normalizeLeagueMigrationData(rawLeagueData) {
+    return normalizeLeagueData(rawLeagueData, { allowZero: false });
+}
+
+function normalizeLeagueData(rawLeagueData, options = {}) {
     if (!rawLeagueData || typeof rawLeagueData !== 'object') return null;
 
+    const allowZero = options.allowZero !== false;
     const year = Number(rawLeagueData.year);
     const quarter = Number(rawLeagueData.quarter);
     const baselineScore = Number(rawLeagueData.baselineScore) || 0;
@@ -1115,14 +1120,93 @@ function normalizeLeagueMigrationData(rawLeagueData) {
 
     if (!Number.isInteger(year) || !Number.isInteger(quarter)) return null;
     if (quarter < 1 || quarter > 4) return null;
-    if (!Number.isFinite(quarterlyScore) || quarterlyScore <= 0 || quarterlyScore > MAX_LEAGUE_SCORE) return null;
+    if (!Number.isFinite(quarterlyScore) || quarterlyScore < 0 || (!allowZero && quarterlyScore === 0) || quarterlyScore > MAX_LEAGUE_SCORE) return null;
 
     return {
         year,
         quarter,
-        baselineScore: Math.max(0, Math.floor(baselineScore)),
+        baselineScore: Math.max(0, Math.min(MAX_LEAGUE_SCORE, Math.floor(baselineScore))),
         quarterlyScore: Math.max(0, Math.floor(quarterlyScore))
     };
+}
+
+function getDefaultCurrentLeagueData() {
+    const currentPeriod = getServerQuarterInfo();
+    return {
+        year: currentPeriod.year,
+        quarter: currentPeriod.quarter,
+        baselineScore: 0,
+        quarterlyScore: 0
+    };
+}
+
+function compareLeaguePeriod(a, b) {
+    if (!a || !b) return 0;
+    if (a.year !== b.year) return a.year - b.year;
+    return a.quarter - b.quarter;
+}
+
+function isCurrentLeaguePeriod(leagueData) {
+    const currentPeriod = getServerQuarterInfo();
+    return Boolean(
+        leagueData &&
+        leagueData.year === currentPeriod.year &&
+        leagueData.quarter === currentPeriod.quarter
+    );
+}
+
+function coerceLeagueDataToCurrentPeriod(rawLeagueData) {
+    const currentLeague = getDefaultCurrentLeagueData();
+    const normalized = normalizeLeagueData(rawLeagueData);
+    if (!normalized) return currentLeague;
+
+    if (isCurrentLeaguePeriod(normalized)) {
+        return normalized;
+    }
+
+    const isPastPeriod = compareLeaguePeriod(normalized, currentLeague) < 0;
+    const rolledBaseline = normalized.baselineScore + (isPastPeriod ? normalized.quarterlyScore : 0);
+    return {
+        ...currentLeague,
+        baselineScore: Math.max(0, Math.min(MAX_LEAGUE_SCORE, Math.floor(rolledBaseline))),
+        quarterlyScore: 0
+    };
+}
+
+function mergeLeagueDataValues(currentRaw, incomingRaw) {
+    const current = coerceLeagueDataToCurrentPeriod(currentRaw);
+    const incoming = normalizeLeagueData(incomingRaw);
+    const next = { ...current };
+
+    if (!incoming) return next;
+
+    if (isCurrentLeaguePeriod(incoming)) {
+        next.baselineScore = Math.max(next.baselineScore, incoming.baselineScore);
+        next.quarterlyScore = Math.max(next.quarterlyScore, incoming.quarterlyScore);
+    } else {
+        const incomingIsPastPeriod = compareLeaguePeriod(incoming, next) < 0;
+        const incomingBaseline = incoming.baselineScore + (incomingIsPastPeriod ? incoming.quarterlyScore : 0);
+        next.baselineScore = Math.max(next.baselineScore, incomingBaseline);
+    }
+
+    next.baselineScore = Math.max(0, Math.min(MAX_LEAGUE_SCORE, Math.floor(next.baselineScore)));
+    next.quarterlyScore = Math.max(0, Math.min(MAX_LEAGUE_SCORE, Math.floor(next.quarterlyScore)));
+    return next;
+}
+
+function buildInitialLeagueData(rawLeagueData) {
+    return mergeLeagueDataValues(getDefaultCurrentLeagueData(), rawLeagueData);
+}
+
+function normalizeUserLeagueDataForCurrentPeriod(user) {
+    return coerceLeagueDataToCurrentPeriod(user?.leagueData);
+}
+
+function mergeLeagueDataIntoUser(user, incomingRaw) {
+    if (!user) return null;
+    const mergedLeague = mergeLeagueDataValues(user.leagueData, incomingRaw);
+    user.leagueData = mergedLeague;
+    return mergedLeague;
 }
 
 async function maybeApplyLegacyLeagueMigration(user, submittedStats, playerName, photoUrl) {
@@ -1149,11 +1233,7 @@ async function maybeApplyLegacyLeagueMigration(user, submittedStats, playerName,
         return;
     }
 
-    const currentLeague = user.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
-    const samePeriod = currentLeague.year === migratedLeague.year && currentLeague.quarter === migratedLeague.quarter;
-    if (!samePeriod || migratedLeague.quarterlyScore > (currentLeague.quarterlyScore || 0)) {
-        user.leagueData = migratedLeague;
-    }
+    const mergedLeague = mergeLeagueDataIntoUser(user, migratedLeague);
 
     const existingLeagueScore = await LeagueScore.findOne({
         playerId: user.firebaseUid,
@@ -1161,16 +1241,17 @@ async function maybeApplyLegacyLeagueMigration(user, submittedStats, playerName,
         quarter: migratedLeague.quarter
     });
 
-    if (!existingLeagueScore || migratedLeague.quarterlyScore > (Number(existingLeagueScore.score) || 0)) {
+    const scoreForLeaderboard = Math.max(migratedLeague.quarterlyScore, mergedLeague?.quarterlyScore || 0);
+    if (!existingLeagueScore || scoreForLeaderboard > (Number(existingLeagueScore.score) || 0)) {
         await LeagueScore.findOneAndUpdate(
             { playerId: user.firebaseUid, year: migratedLeague.year, quarter: migratedLeague.quarter },
             {
                 $set: {
                     playerName,
                     photoUrl,
-                    score: migratedLeague.quarterlyScore,
                     date: Date.now()
-                }
+                },
+                $max: { score: scoreForLeaderboard }
             },
             { upsert: true, new: true }
         );
@@ -2078,30 +2159,7 @@ io.on('connection', (socket) => {
                     }
                 }
 
-                if (s.leagueData) {
-                    if (s.leagueData.year > user.leagueData.year || 
-                       (s.leagueData.year === user.leagueData.year && s.leagueData.quarter > user.leagueData.quarter)) {
-                        user.leagueData = s.leagueData;
-                    } else if (s.leagueData.year === user.leagueData.year && s.leagueData.quarter === user.leagueData.quarter) {
-                        if (s.leagueData.baselineScore > user.leagueData.baselineScore) {
-                            user.leagueData.baselineScore = s.leagueData.baselineScore;
-                        }
-
-                        // LEAGUE SAFEGUARD: Sprečavamo drastične padove zbog obrisanog LocalStorage-a
-                        const cloudScore = user.leagueData.quarterlyScore || 0;
-                        const localScore = s.leagueData.quarterlyScore || 0;
-                        const dropDiff = cloudScore - localScore;
-
-                        if (dropDiff > 4000) {
-                            console.log(`🚨 LEAGUE SAFEGUARD: Odbijen pad sa ${cloudScore} na ${localScore} za igrača ${user.playerName}. Zadržavam Cloud verziju!`);
-                            // Namerno NE preuzimamo localScore
-                        } else {
-                            if (!isFreshLogin || localScore > cloudScore) {
-                                user.leagueData.quarterlyScore = localScore;
-                            }
-                        }
-                    }
-                }
+                mergeLeagueDataIntoUser(user, s.leagueData);
 
                 if (s.h2hStats) {
                     let cloudH2H = user.h2hStats || {};
@@ -2203,7 +2261,7 @@ io.on('connection', (socket) => {
                     unlockedEffects: initialEconomy.unlockedEffects,
                     yamb_unlocked: initialEconomy.yamb_unlocked,
                     lastDaily: s.lastDaily || "",
-                    leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 },
+                    leagueData: buildInitialLeagueData(s.leagueData),
                     economyMigrationApplied: true,
                     economyMigratedAt: Date.now()
                 });
@@ -2849,8 +2907,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('submit_league_score', async (data, ack) => {
-        const replyLeagueSubmit = (ok, reason = null, permanent = !ok) => {
-            const result = { ok, reason, permanent };
+        const replyLeagueSubmit = (ok, reason = null, permanent = !ok, extra = {}) => {
+            const result = { ok, reason, permanent, ...extra };
             if (typeof ack === 'function') ack(result);
             if (!ok) socket.emit('league_score_rejected', result);
             return result;
@@ -2876,10 +2934,8 @@ io.on('connection', (socket) => {
                 return replyLeagueSubmit(false, 'invalid_period');
             }
 
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const currentQuarter = Math.floor(now.getMonth() / 3) + 1;
-            if (submittedYear !== currentYear || submittedQuarter !== currentQuarter) {
+            const currentPeriod = getServerQuarterInfo();
+            if (submittedYear !== currentPeriod.year || submittedQuarter !== currentPeriod.quarter) {
                 return replyLeagueSubmit(false, 'stale_period');
             }
 
@@ -2890,17 +2946,20 @@ io.on('connection', (socket) => {
 
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
 
-            const currentDoc = await LeagueScore.findOne({ playerId: uniqueId, year: submittedYear, quarter: submittedQuarter });
+            const [currentDoc, profileUser] = await Promise.all([
+                LeagueScore.findOne({ playerId: uniqueId, year: submittedYear, quarter: submittedQuarter }),
+                UserProfile.findOne({ firebaseUid: uniqueId })
+            ]);
             const currentScore = currentDoc ? Number(currentDoc.score) || 0 : 0;
-            const delta = submittedScore - currentScore;
-
-            if (currentDoc && currentScore - submittedScore > MAX_LEAGUE_SCORE_DELTA) {
-                console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran pad lige sa ${currentScore} na ${submittedScore}`);
-                return replyLeagueSubmit(false, 'league_drop_too_large');
-            }
+            const profileLeague = profileUser ? normalizeUserLeagueDataForCurrentPeriod(profileUser) : null;
+            const profileScore = profileLeague && isCurrentLeaguePeriod(profileLeague)
+                ? Number(profileLeague.quarterlyScore) || 0
+                : 0;
+            const trustedScore = Math.max(currentScore, profileScore);
+            const delta = submittedScore - trustedScore;
 
             if (delta > MAX_LEAGUE_SCORE_DELTA) {
-                console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran skok lige sa ${currentScore} na ${submittedScore}`);
+                console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran skok lige sa ${trustedScore} na ${submittedScore}`);
                 return replyLeagueSubmit(false, 'league_jump_too_large');
             }
 
@@ -2912,20 +2971,46 @@ io.on('connection', (socket) => {
                 }
             }
 
-            await LeagueScore.findOneAndUpdate(
+            const acceptedScore = Math.max(trustedScore, submittedScore);
+            const photoUrl = (socket.photoUrl || data?.photoUrl || '').toString().substring(0, 500);
+            const savedLeagueScore = await LeagueScore.findOneAndUpdate(
                 { playerId: uniqueId, year: submittedYear, quarter: submittedQuarter },
                 {
                     $set: {
                         playerName: finalName,
-                        photoUrl: (socket.photoUrl || data?.photoUrl || '').toString().substring(0, 500),
-                        date: Date.now(),
-                        score: submittedScore
-                    }
+                        photoUrl,
+                        date: Date.now()
+                    },
+                    $max: { score: acceptedScore }
                 },
                 { upsert: true, new: true }
             );
+            const savedScore = Math.max(Number(savedLeagueScore?.score) || 0, acceptedScore);
+            let syncedLeagueData = {
+                year: submittedYear,
+                quarter: submittedQuarter,
+                baselineScore: profileLeague?.baselineScore || 0,
+                quarterlyScore: savedScore
+            };
 
-            return replyLeagueSubmit(true);
+            if (profileUser) {
+                syncedLeagueData = mergeLeagueDataIntoUser(profileUser, syncedLeagueData);
+                profileUser.playerName = finalName;
+                profileUser.photoUrl = photoUrl;
+                await profileUser.save();
+                emitProfileSync(socket, profileUser, {
+                    leagueSubmit: {
+                        score: savedScore,
+                        keptExisting: submittedScore < savedScore
+                    }
+                });
+            }
+
+            return replyLeagueSubmit(true, null, false, {
+                score: savedScore,
+                leagueData: syncedLeagueData,
+                keptExisting: submittedScore < savedScore
+            });
         } catch (err) {
             console.error("Greška pri upisu u kvartalnu ligu:", err);
             return replyLeagueSubmit(false, 'server_error', false);

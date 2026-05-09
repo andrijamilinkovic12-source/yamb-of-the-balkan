@@ -168,7 +168,19 @@ class KvartalnaLigaManager {
             year: currentYear,
             quarter: currentQuarter
         }, (result) => {
-            if (result && result.ok) return;
+            if (result && result.ok) {
+                if (result.leagueData) {
+                    if (window.app && typeof window.app.applyCloudProfileSync === 'function') {
+                        window.app.applyCloudProfileSync({ leagueData: result.leagueData });
+                    } else {
+                        this.saveScores(result.leagueData);
+                        if (typeof updateMainMenuDashboard === 'function') {
+                            updateMainMenuDashboard();
+                        }
+                    }
+                }
+                return;
+            }
             console.warn(`Server je odbio upis u Kvartalnu Ligu: ${result?.reason || 'unknown_error'}`);
         });
     }
