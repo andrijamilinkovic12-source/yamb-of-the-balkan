@@ -41,6 +41,8 @@ class TournamentManager {
         this.tourneyLeaderboard = [];
 
         this.activeTab = 'info';
+        this.pendingRegistration = false;
+        this.pendingUnregister = false;
 
         if (this.app) {
             this.app.openTournament = () => this.open();
@@ -65,6 +67,12 @@ class TournamentManager {
         const name = String(player?.name || player?.playerName || 'Igrac');
         const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=333&color=E0C995`;
         return this.escapeAttr(this.sec().safeUrl(player?.photoUrl, fallback));
+    }
+
+    serverMessage(key, fallback) {
+        if (!key) return fallback || tt('err_server_conn');
+        const translated = tt(key);
+        return translated && translated !== key ? translated : (fallback || key || tt('err_server_conn'));
     }
 
     // --- NOVA BULLETPROOF FUNKCIJA ZA INDEKS MOĆI (AŽURIRANA ZA CENTRALNU BAZU) ---
@@ -266,20 +274,7 @@ class TournamentManager {
                         const localRegTime = localStorage.getItem(storageKey);
 
                         if (newState.status === 'registration' && localRegTime && !isRegisteredServer) {
-                            const now = Date.now();
-                            const regTime = parseInt(localRegTime, 10);
-
-                            if (now - regTime < 518400000) {
-                                const playerData = {
-                                    id: this.app.playerId,
-                                    name: this.app.playerName,
-                                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                                    pi: myPi
-                                };
-                                this.app.socket.emit('tourney_register', playerData);
-                            } else {
-                                localStorage.removeItem(storageKey);
-                            }
+                            localStorage.removeItem(storageKey);
                         }
 
                         if (newState.status !== 'registration' && newState.bracket && newState.bracket.f && newState.bracket.f[0] && newState.bracket.f[0].winnerId) {
@@ -289,6 +284,51 @@ class TournamentManager {
 
                     if (oldStatus === 'registration' && newState.status !== 'registration') {
                         this.activeTab = 'bracket';
+                    }
+
+                    if(document.getElementById('tournament-screen').classList.contains('active')) {
+                        this.render();
+                    }
+                });
+
+                this.app.socket.on('tourney_register_result', (result = {}) => {
+                    this.pendingRegistration = false;
+
+                    if (result.ok) {
+                        if (this.app && this.app.playerId) {
+                            localStorage.setItem('yamb_tourney_reg_' + this.app.playerId, Date.now().toString());
+                        }
+                    } else if (this.app && this.app.modal) {
+                        this.app.modal.alert(
+                            this.serverMessage(result.reason, tt('err_server_conn') || 'Greška pri konekciji sa serverom.'),
+                            tt('warning_title') || 'UPOZORENJE'
+                        );
+                    }
+
+                    if(document.getElementById('tournament-screen').classList.contains('active')) {
+                        this.render();
+                    }
+                });
+
+                this.app.socket.on('tourney_unregister_result', (result = {}) => {
+                    this.pendingUnregister = false;
+
+                    if (result.ok) {
+                        if (this.app && this.app.playerId) {
+                            localStorage.removeItem('yamb_tourney_reg_' + this.app.playerId);
+                        }
+
+                        if (!result.alreadyUnregistered && this.app && this.app.modal) {
+                            this.app.modal.alert(
+                                tt('tourney_unregistered_success') || "Uspešno ste se odjavili. Vraćeno Vam je 2500 💰.",
+                                tt('modal_title_info') || "INFO"
+                            );
+                        }
+                    } else if (this.app && this.app.modal) {
+                        this.app.modal.alert(
+                            this.serverMessage(result.reason, tt('err_server_conn') || 'Greška pri konekciji sa serverom.'),
+                            tt('warning_title') || 'UPOZORENJE'
+                        );
                     }
 
                     if(document.getElementById('tournament-screen').classList.contains('active')) {
@@ -461,13 +501,19 @@ class TournamentManager {
         if (!isRegistrationOpen) {
             buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%; margin-top: auto;">🚀 ${isRegistered ? (tt('tourney_reg_active_in_progress') || 'Prijavljeni ste (Turnir u toku)') : (tt('tourney_reg_started') || 'Turnir je već počeo')}</button>`;
         } else if (isRegistered) {
+            const disabledAttr = this.pendingUnregister ? 'disabled' : '';
+            const buttonOpacity = this.pendingUnregister ? 'opacity: 0.7;' : '';
+            const label = this.pendingUnregister ? '...' : `${tt('tourney_unregister') || 'ODJAVI SE'} ${tt('tourney_refund') || '(Povraćaj)'}`;
             buttonHtml = `
-                <button class="btn-menu btn-secondary" style="width: 100%; font-size: 0.95rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc; margin-top: auto;" onclick="app.tournamentManager.unregisterPlayer()">
-                    ❌ ${tt('tourney_unregister') || 'ODJAVI SE'} ${tt('tourney_refund') || '(Povraćaj)'}
+                <button class="btn-menu btn-secondary" ${disabledAttr} style="width: 100%; font-size: 0.95rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc; margin-top: auto; ${buttonOpacity}" onclick="app.tournamentManager.unregisterPlayer()">
+                    ❌ ${label}
                 </button>
             `;
         } else {
-            buttonHtml = `<button class="btn-menu btn-primary" style="width: 100%; font-size: 1rem; padding: 15px; box-shadow: 0 0 15px var(--gold-glow); margin-top: auto;" onclick="app.tournamentManager.registerPlayer()">🎟️ ${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)</button>`;
+            const disabledAttr = this.pendingRegistration ? 'disabled' : '';
+            const buttonOpacity = this.pendingRegistration ? 'opacity: 0.7;' : '';
+            const label = this.pendingRegistration ? '...' : `${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)`;
+            buttonHtml = `<button class="btn-menu btn-primary" ${disabledAttr} style="width: 100%; font-size: 1rem; padding: 15px; box-shadow: 0 0 15px var(--gold-glow); margin-top: auto; ${buttonOpacity}" onclick="app.tournamentManager.registerPlayer()">🎟️ ${label}</button>`;
         }
 
         container.innerHTML = `
@@ -490,6 +536,7 @@ class TournamentManager {
 
     registerPlayer() {
         this.app.soundMgr.click();
+        if (this.pendingRegistration) return;
 
         if (this.state.status !== 'registration' || this.state.players.length >= 8) {
             this.app.modal.alert(tt('msg_room_full') || "Turnir je popunjen ili je već počeo!");
@@ -512,46 +559,29 @@ class TournamentManager {
 
         this.app.modal.confirm(confirmMsg).then(potvrda => {
             if (potvrda) {
-                currentBalance -= fee;
-                localStorage.setItem('yamb_dukati', currentBalance);
-
-                localStorage.setItem('yamb_tourney_reg_' + this.app.playerId, Date.now().toString());
-
-                if (window.statsManager) {
-                    window.statsManager.stats.balance = currentBalance;
-                    window.statsManager.saveStats();
+                if (!this.app.socket || !this.app.socket.connected) {
+                    this.app.modal.alert(tt('sys_no_conn') || "Niste povezani na server.", tt('err_title') || "GREŠKA");
+                    return;
                 }
 
-                if (this.app && this.app.socket && this.app.socket.connected) {
-                    this.app.socket.emit('set_player_data', {
-                        uid: localStorage.getItem('yamb_uid') || this.app.playerId,
-                        name: this.app.playerName,
-                        stats: this.app.getFullLocalStats(),
-                        playerId: this.app.playerId
-                    });
-                }
+                this.pendingRegistration = true;
+                this.render();
 
-                if (typeof updateMainMenuDashboard === 'function') {
-                    updateMainMenuDashboard();
-                }
-
-                if(this.app.socket) {
-                    let myPi = this.calculateMyPI();
-
-                    const playerData = {
-                        id: this.app.playerId,
-                        name: this.app.playerName,
-                        photoUrl: localStorage.getItem('yamb_player_photo') || '',
-                        pi: myPi
-                    };
-                    this.app.socket.emit('tourney_register', playerData);
-                }
+                let myPi = this.calculateMyPI();
+                const playerData = {
+                    id: this.app.playerId,
+                    name: this.app.playerName,
+                    photoUrl: localStorage.getItem('yamb_player_photo') || '',
+                    pi: myPi
+                };
+                this.app.socket.emit('tourney_register', playerData);
             }
         });
     }
 
     async unregisterPlayer() {
         this.app.soundMgr.click();
+        if (this.pendingUnregister) return;
 
         if (this.state.status !== 'registration') {
             this.app.modal.alert(tt('tourney_cannot_unregister') || "Turnir je već počeo, odjava više nije moguća!");
@@ -562,45 +592,18 @@ class TournamentManager {
         const potvrda = await this.app.modal.confirm(confirmMsg);
 
         if (potvrda) {
+            if (!this.app.socket || !this.app.socket.connected) {
+                this.app.modal.alert(tt('sys_no_conn') || "Niste povezani na server.", tt('err_title') || "GREŠKA");
+                return;
+            }
+
             if (window.adMobGlobal && window.adMobGlobal.showInterstitial) {
                 await window.adMobGlobal.showInterstitial();
             }
 
-            localStorage.removeItem('yamb_tourney_reg_' + this.app.playerId);
-
-            const refundAmount = 2500;
-            let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-            currentBalance += refundAmount;
-
-            localStorage.setItem('yamb_dukati', currentBalance);
-
-            if (window.statsManager) {
-                window.statsManager.stats.balance = currentBalance;
-                window.statsManager.saveStats();
-            }
-
-            if (this.app && this.app.socket && this.app.socket.connected) {
-                this.app.socket.emit('set_player_data', {
-                    uid: localStorage.getItem('yamb_uid') || this.app.playerId,
-                    name: this.app.playerName,
-                    stats: this.app.getFullLocalStats(),
-                    playerId: this.app.playerId
-                });
-            }
-
-            if (typeof updateMainMenuDashboard === 'function') {
-                updateMainMenuDashboard();
-            }
-
-            if (this.app.socket) {
-                const playerId = this.app.playerId;
-                this.app.socket.emit('tourney_unregister', playerId);
-            }
-
-            this.app.modal.alert(
-                tt('tourney_unregistered_success') || "Uspešno ste se odjavili. Vraćeno Vam je 2500 💰.",
-                tt('modal_title_info') || "INFO"
-            );
+            this.pendingUnregister = true;
+            this.render();
+            this.app.socket.emit('tourney_unregister');
         }
     }
 

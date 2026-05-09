@@ -316,6 +316,9 @@ const MAX_DAILY_REWARD = 2000;
 const MAX_AD_REWARD_PER_SYNC = 1500;
 const MAX_REWARD_PER_GAME = 8000;
 const MAX_TOURNEY_REWARD = 50000;
+const TOURNEY_ENTRY_FEE = 2500;
+const TOURNEY_WINNER_REWARD = 20000;
+const TOURNEY_RUNNER_UP_REWARD = 2500;
 const MAX_IMPORTED_UNDO_TOKENS_BASE = 20;
 const MAX_PROFILE_GAMES = 250000;
 const MAX_PROFILE_GAME_DELTA_PER_SYNC = 50;
@@ -752,6 +755,185 @@ function normalizeTournamentTime(value) {
     if (parsedTime < now - (60 * 60 * 1000) || parsedTime > maxFuture) return null;
 
     return raw;
+}
+
+function buildProfileSyncPayload(user) {
+    return {
+        wins: Math.max(0, toSafeInt(user.wins)),
+        losses: Math.max(0, toSafeInt(user.losses)),
+        games: Math.max(0, toSafeInt(user.games)),
+        highscore: Math.max(0, toSafeInt(user.highscore)),
+        totalScoreSum: Math.max(0, toSafeInt(user.totalScoreSum)),
+        balance: Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance))),
+        undoTokens: Math.max(0, Math.min(MAX_UNDO_TOKENS, toSafeInt(user.undoTokens))),
+        currentWinStreak: Math.max(0, toSafeInt(user.currentWinStreak)),
+        maxWinStreak: Math.max(0, toSafeInt(user.maxWinStreak)),
+        tournamentWins: Math.max(0, toSafeInt(user.tournamentWins)),
+        activeSkin: user.activeSkin,
+        activeTheme: user.activeTheme,
+        activeEffect: user.activeEffect,
+        unlockedTrophies: Array.isArray(user.unlockedTrophies) ? user.unlockedTrophies : [],
+        unlockedSkins: Array.isArray(user.unlockedSkins) ? user.unlockedSkins : [],
+        unlockedEffects: Array.isArray(user.unlockedEffects) ? user.unlockedEffects : [],
+        yamb_unlocked: Array.isArray(user.yamb_unlocked) ? user.yamb_unlocked : [],
+        lastDaily: user.lastDaily,
+        soundEnabled: user.soundEnabled,
+        vibrationEnabled: user.vibrationEnabled,
+        penaltyPoints: Math.max(0, toSafeInt(user.penaltyPoints)),
+        h2hStats: user.h2hStats || {},
+        leagueData: user.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 }
+    };
+}
+
+function emitProfileSync(socket, user, extra = {}) {
+    if (!socket || !user) return;
+    socket.emit('sync_local_stats', { ...buildProfileSyncPayload(user), ...extra });
+}
+
+function emitProfileSyncToUid(uid, user, extra = {}) {
+    const socketId = uid ? onlinePlayers[uid] : null;
+    if (!socketId || !user) return;
+    io.to(socketId).emit('sync_local_stats', { ...buildProfileSyncPayload(user), ...extra });
+}
+
+function emitTournamentPrizeToUid(uid, payload) {
+    const socketId = uid ? onlinePlayers[uid] : null;
+    if (!socketId) return;
+    io.to(socketId).emit('tourney_prize_awarded', payload);
+}
+
+async function debitTournamentEntryFee(uid) {
+    if (!MONGO_URI) return { ok: true, user: null };
+
+    const existingUser = await UserProfile.findOne({ firebaseUid: uid }).select('balance').lean();
+    if (!existingUser) return { ok: false, reason: 'auth_required' };
+    if (toSafeInt(existingUser.balance) < TOURNEY_ENTRY_FEE) {
+        return { ok: false, reason: 'tourney_not_enough_money' };
+    }
+
+    const user = await UserProfile.findOneAndUpdate(
+        { firebaseUid: uid, balance: { $gte: TOURNEY_ENTRY_FEE } },
+        { $inc: { balance: -TOURNEY_ENTRY_FEE } },
+        { new: true }
+    );
+
+    if (!user) return { ok: false, reason: 'tourney_not_enough_money' };
+    return { ok: true, user };
+}
+
+async function refundTournamentEntryFee(uid) {
+    if (!MONGO_URI) return null;
+
+    const user = await UserProfile.findOne({ firebaseUid: uid });
+    if (!user) return null;
+
+    user.balance = Math.min(
+        MAX_BALANCE,
+        Math.max(0, toSafeInt(user.balance)) + TOURNEY_ENTRY_FEE
+    );
+    await user.save();
+    return user;
+}
+
+async function applyTournamentPrize(uid, amount, role, incrementTournamentWins = false) {
+    if (!uid) return { ok: false };
+
+    if (!MONGO_URI) {
+        emitTournamentPrizeToUid(uid, { role, reward: amount });
+        return { ok: true, user: null };
+    }
+
+    const user = await UserProfile.findOne({ firebaseUid: uid });
+    if (!user) return { ok: false };
+
+    user.balance = Math.min(
+        MAX_BALANCE,
+        Math.max(0, toSafeInt(user.balance)) + amount
+    );
+
+    if (incrementTournamentWins) {
+        user.tournamentWins = Math.max(0, toSafeInt(user.tournamentWins)) + 1;
+    }
+
+    await user.save();
+
+    emitProfileSyncToUid(uid, user);
+    emitTournamentPrizeToUid(uid, {
+        role,
+        reward: amount,
+        balance: user.balance,
+        tournamentWins: user.tournamentWins
+    });
+
+    return { ok: true, user };
+}
+
+async function awardTournamentFinalPrizes(match, winnerObj) {
+    if (!match || !winnerObj || !winnerObj.id) return;
+
+    const runnerUpObj = getTournamentOpponent(match, winnerObj.id);
+    if (!match.prizeAwards || typeof match.prizeAwards !== 'object') {
+        match.prizeAwards = {};
+    }
+
+    if (!match.prizeAwards[winnerObj.id]) {
+        const prizeResult = await applyTournamentPrize(winnerObj.id, TOURNEY_WINNER_REWARD, 'winner', true);
+        if (!prizeResult.ok) throw new Error('winner_prize_not_applied');
+        match.prizeAwards[winnerObj.id] = true;
+        saveTournamentToDb();
+    }
+
+    if (runnerUpObj && runnerUpObj.id && !match.prizeAwards[runnerUpObj.id]) {
+        const prizeResult = await applyTournamentPrize(runnerUpObj.id, TOURNEY_RUNNER_UP_REWARD, 'runnerup', false);
+        if (!prizeResult.ok) throw new Error('runnerup_prize_not_applied');
+        match.prizeAwards[runnerUpObj.id] = true;
+        saveTournamentToDb();
+    }
+
+    match.prizesAwarded = Boolean(
+        match.prizeAwards[winnerObj.id] &&
+        (!runnerUpObj || !runnerUpObj.id || match.prizeAwards[runnerUpObj.id])
+    );
+}
+
+async function settleTournamentFinalPrizes(match, winnerObj) {
+    if (!match || !winnerObj || match.prizesAwarded || match.prizeAwardInProgress) return;
+
+    match.prizeAwardInProgress = true;
+    try {
+        await awardTournamentFinalPrizes(match, winnerObj);
+    } finally {
+        delete match.prizeAwardInProgress;
+        saveTournamentToDb();
+    }
+}
+
+async function recordTournamentChampion(match, winnerObj) {
+    if (!match || !winnerObj || match.statsRecorded || match.statsRecordInProgress) return;
+
+    if (!MONGO_URI) {
+        match.statsRecorded = true;
+        saveTournamentToDb();
+        return;
+    }
+
+    match.statsRecordInProgress = true;
+
+    try {
+        await TourneyStats.findOneAndUpdate(
+            { playerId: winnerObj.id },
+            { $set: { playerName: winnerObj.name, lastWinDate: Date.now() }, $inc: { wins: 1 } },
+            { upsert: true, new: true }
+        );
+
+        match.statsRecorded = true;
+
+        const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20).lean();
+        io.emit('tourney_stats_data', stats);
+    } finally {
+        delete match.statsRecordInProgress;
+        saveTournamentToDb();
+    }
 }
 
 // ==================================================================
@@ -3114,27 +3296,73 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_register', (playerData = {}) => {
+    socket.on('tourney_register', async (playerData = {}) => {
         const uid = requireTournamentAuth(socket);
-        if (!uid) return;
+        if (!uid) {
+            socket.emit('tourney_register_result', { ok: false, reason: 'auth_required' });
+            return;
+        }
 
-        if (tournamentState.status === 'registration' && tournamentState.players.length < 8) {
-            const alreadyRegistered = tournamentState.players.find(p => p.id === uid);
-            if (!alreadyRegistered) {
-                tournamentState.players.push({
-                    id: uid,
-                    name: sanitizeTournamentName(socket.playerName || playerData.name),
-                    photoUrl: sanitizeTournamentPhotoUrl(socket.photoUrl || playerData.photoUrl),
-                    pi: sanitizeTournamentPi(playerData.pi)
-                });
+        if (tournamentState.status !== 'registration' || tournamentState.players.length >= 8) {
+            socket.emit('tourney_register_result', { ok: false, reason: 'msg_room_full' });
+            return;
+        }
 
-                if (tournamentState.players.length === 8) {
-                    generateTournamentBracket();
-                } else {
-                    saveTournamentToDb();
-                }
-                io.emit('tourney_state_update', tournamentState);
+        if (tournamentState.players.find(p => p.id === uid)) {
+            socket.emit('tourney_register_result', { ok: true, alreadyRegistered: true });
+            return;
+        }
+
+        let debitResult = null;
+
+        try {
+            debitResult = await debitTournamentEntryFee(uid);
+            if (!debitResult.ok) {
+                socket.emit('tourney_register_result', { ok: false, reason: debitResult.reason || 'err_server_conn' });
+                return;
             }
+
+            const registeredAfterDebit = tournamentState.players.find(p => p.id === uid);
+            if (registeredAfterDebit) {
+                const refundedUser = await refundTournamentEntryFee(uid);
+                emitProfileSync(socket, refundedUser);
+                socket.emit('tourney_register_result', { ok: true, alreadyRegistered: true });
+                return;
+            }
+
+            if (tournamentState.status !== 'registration' || tournamentState.players.length >= 8) {
+                const refundedUser = await refundTournamentEntryFee(uid);
+                emitProfileSync(socket, refundedUser);
+                socket.emit('tourney_register_result', { ok: false, reason: 'msg_room_full' });
+                return;
+            }
+
+            tournamentState.players.push({
+                id: uid,
+                name: sanitizeTournamentName(socket.playerName || playerData.name),
+                photoUrl: sanitizeTournamentPhotoUrl(socket.photoUrl || playerData.photoUrl),
+                pi: sanitizeTournamentPi(playerData.pi)
+            });
+
+            if (tournamentState.players.length === 8) {
+                generateTournamentBracket();
+            } else {
+                saveTournamentToDb();
+            }
+
+            emitProfileSync(socket, debitResult.user);
+            socket.emit('tourney_register_result', {
+                ok: true,
+                balance: debitResult.user ? debitResult.user.balance : undefined
+            });
+            io.emit('tourney_state_update', tournamentState);
+        } catch (err) {
+            console.error("Greška pri turnirskoj prijavi:", err);
+            if (debitResult && debitResult.user) {
+                const refundedUser = await refundTournamentEntryFee(uid);
+                emitProfileSync(socket, refundedUser);
+            }
+            socket.emit('tourney_register_result', { ok: false, reason: 'err_server_conn' });
         }
     });
 
@@ -3176,18 +3404,40 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_unregister', () => {
+    socket.on('tourney_unregister', async () => {
         const uid = requireTournamentAuth(socket);
-        if (!uid) return;
+        if (!uid) {
+            socket.emit('tourney_unregister_result', { ok: false, reason: 'auth_required' });
+            return;
+        }
 
-        if (tournamentState.status === 'registration') {
-            const index = tournamentState.players.findIndex(p => p.id === uid);
-            if (index !== -1) {
-                tournamentState.players.splice(index, 1);
-                saveTournamentToDb();
-                io.emit('tourney_state_update', tournamentState);
-                console.log(`↩️ Poništena prijava za turnir: ${uid}`);
-            }
+        if (tournamentState.status !== 'registration') {
+            socket.emit('tourney_unregister_result', { ok: false, reason: 'tourney_cannot_unregister' });
+            return;
+        }
+
+        const index = tournamentState.players.findIndex(p => p.id === uid);
+        if (index === -1) {
+            socket.emit('tourney_unregister_result', { ok: true, alreadyUnregistered: true });
+            return;
+        }
+
+        try {
+            const refundedUser = await refundTournamentEntryFee(uid);
+
+            tournamentState.players.splice(index, 1);
+            saveTournamentToDb();
+            io.emit('tourney_state_update', tournamentState);
+
+            emitProfileSync(socket, refundedUser);
+            socket.emit('tourney_unregister_result', {
+                ok: true,
+                balance: refundedUser ? refundedUser.balance : undefined
+            });
+            console.log(`↩️ Poništena prijava za turnir: ${uid}`);
+        } catch (err) {
+            console.error("Greška pri turnirskoj odjavi:", err);
+            socket.emit('tourney_unregister_result', { ok: false, reason: 'err_server_conn' });
         }
     });
 
@@ -3271,31 +3521,36 @@ io.on('connection', (socket) => {
         const matchInfo = getTournamentMatch(data.round, data.index);
         if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');
 
-        const { match } = matchInfo;
+        const { match, index } = matchInfo;
+        const round = data.round;
         const winnerId = String(data.winnerId || '');
         if (!isTournamentParticipant(match, uid) || winnerId !== uid) return rejectTournamentAction(socket, 'err_invalid_room');
 
-        if (match && match.winnerId === null) {
+        if (match && (match.winnerId === null || match.winnerId === undefined)) {
             match.winnerId = winnerId;
             const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
-            advanceTournamentBracket(round, index, winnerObj); 
+            advanceTournamentBracket(round, index, winnerObj);
             io.emit('tourney_state_update', tournamentState);
 
             if (round === 'f') {
                 try {
-                    if (MONGO_URI) {
-                        await TourneyStats.findOneAndUpdate(
-                            { playerId: winnerObj.id },
-                            { $set: { playerName: winnerObj.name, lastWinDate: Date.now() }, $inc: { wins: 1 } },
-                            { upsert: true, new: true }
-                        );
-                        const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20).lean();
-                        io.emit('tourney_stats_data', stats);
+                    await settleTournamentFinalPrizes(match, winnerObj);
+                    if (match.prizesAwarded) {
+                        await recordTournamentChampion(match, winnerObj);
                     }
                 } catch (err) {
                     console.error("Greška pri upisu pobednika turnira u bazu:", err);
                 }
             }
+        } else if (round === 'f' && match.winnerId === winnerId && !match.prizesAwarded) {
+            const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
+            try {
+                await settleTournamentFinalPrizes(match, winnerObj);
+            } catch (err) {
+                console.error("Greška pri ponovnom upisu finala turnira:", err);
+            }
+        } else if (match && match.winnerId !== winnerId) {
+            return rejectTournamentAction(socket, 'err_invalid_room');
         }
     });
     

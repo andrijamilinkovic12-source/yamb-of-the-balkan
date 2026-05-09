@@ -1068,6 +1068,11 @@ class YambApp {
                     let localStats = JSON.parse(localStorage.getItem('yamb_stats')) || this.stats || {};
                     let statsUpdated = false;
 
+                    if (data.tournamentWins !== undefined && data.tournamentWins !== (localStats.tournamentWins || 0)) {
+                        localStats.tournamentWins = data.tournamentWins;
+                        statsUpdated = true;
+                    }
+
                     if (data.currentWinStreak !== undefined && data.currentWinStreak < (localStats.currentWinStreak || 0)) {
                         localStats.currentWinStreak = data.currentWinStreak;
                         statsUpdated = true;
@@ -1150,6 +1155,28 @@ class YambApp {
                         }
                     }
                     
+                    if (typeof updateMainMenuDashboard === 'function') {
+                        updateMainMenuDashboard();
+                    }
+                });
+
+                this.socket.on('tourney_prize_awarded', (data = {}) => {
+                    if (!data.role) return;
+
+                    if (data.role === 'winner') {
+                        if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
+                        if (this.effectMgr) this.effectMgr.trigger('gold_rain');
+                        this.modal.alert(
+                            gt('tourney_prize_winner') || "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 💰!",
+                            gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆"
+                        );
+                    } else if (data.role === 'runnerup') {
+                        this.modal.alert(
+                            gt('tourney_prize_runnerup') || "Kao finalisti, vraćen Vam je ulog od 2500 💰. Više sreće sledeći put!",
+                            gt('tourney_finalist_title') || "FINALISTA 🥈"
+                        );
+                    }
+
                     if (typeof updateMainMenuDashboard === 'function') {
                         updateMainMenuDashboard();
                     }
@@ -3590,45 +3617,8 @@ class YambApp {
                             this.socket.emit('tourney_submit_winner', { 
                                 round: round, 
                                 index: index, 
-                                winnerId: this.playerId 
+                                winnerId: this.playerId
                             });
-                        }
-
-                        if (round === 'f') {
-                            let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                            
-                            if (amIWinner) {
-                                currentDukati += 20000; 
-                                
-                                if (window.statsManager) {
-                                    window.statsManager.stats.tournamentWins = (window.statsManager.stats.tournamentWins || 0) + 1;
-                                    window.statsManager.saveStats();
-                                }
-
-                                setTimeout(() => {
-                                    this.modal.alert(gt('tourney_prize_winner') || "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 💰!", gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆");
-                                    this.effectMgr.trigger('gold_rain'); 
-                                }, 1500); 
-                            } else {
-                                currentDukati += 2500; 
-                                setTimeout(() => {
-                                    this.modal.alert(gt('tourney_prize_runnerup') || "Kao finalisti, vraćen Vam je ulog od 2500 💰. Više sreće sledeći put!", gt('tourney_finalist_title') || "FINALISTA 🥈");
-                                }, 1500);
-                            }
-                            
-                            localStorage.setItem('yamb_dukati', currentDukati);
-                            if (window.statsManager) {
-                                window.statsManager.stats.balance = currentDukati;
-                                window.statsManager.saveStats();
-                            }
-
-                            if (this.socket && this.socket.connected) {
-                                this.emitPlayerData();
-                            }
-
-                            if (typeof updateMainMenuDashboard === 'function') {
-                                updateMainMenuDashboard();
-                            }
                         }
                     }
                 }
