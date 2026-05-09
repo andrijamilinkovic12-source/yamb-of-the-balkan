@@ -270,11 +270,12 @@ const UserProfileSchema = new mongoose.Schema({
     unlockedEffects: { type: [String], default: [] },
     yamb_unlocked: { type: [String], default: [] }, 
     claimedLeagueRewards: { type: [String], default: [] },
-    activeSkin: { type: String, default: 'default' }, 
-    activeEffect: { type: String, default: 'confetti' }, 
-    activeTheme: { type: String, default: 'dark' }, 
-    lastDaily: { type: String, default: "" }, 
-    soundEnabled: { type: Boolean, default: true },      
+    activeSkin: { type: String, default: 'default' },
+    activeEffect: { type: String, default: 'confetti' },
+    activeTheme: { type: String, default: 'dark' },
+    lastDaily: { type: String, default: "" },
+    lastDailyRewardClaimed: { type: String, default: "" },
+    soundEnabled: { type: Boolean, default: true },
     vibrationEnabled: { type: Boolean, default: true },  
     penaltyPoints: { type: Number, default: 0 },         
     h2hStats: { type: Object, default: {} },             
@@ -479,14 +480,27 @@ async function saveChatToDb() {
 }
 
 // GRACE PERIOD PROMENLJIVE
-const disconnectTimers = {}; 
-const ghostSessions = {}; 
+const disconnectTimers = {};
+const ghostSessions = {};
 
 // ==================================================================
 // --- SERVERSKA KAZNA ZA RAGE QUIT / GUBITAK KONEKCIJE (SA H2H) ---
 // ==================================================================
-async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = null) {
-    if (!process.env.MONGO_URI || !playerId) return;
+function calculateTechnicalCoinAmount(user) {
+    const games = Math.max(0, toSafeInt(user?.games, 0));
+    const totalScoreSum = Math.max(0, toSafeInt(user?.totalScoreSum, 0));
+    const average = games > 0 ? Math.round(totalScoreSum / games) : 500;
+    return Math.max(0, Math.min(2000, Number.isFinite(average) ? average : 500));
+}
+
+async function getTechnicalCoinAmount(playerId) {
+    if (!process.env.MONGO_URI || !playerId) return 500;
+    const user = await UserProfile.findOne({ firebaseUid: playerId }).select('games totalScoreSum').lean();
+    return calculateTechnicalCoinAmount(user);
+}
+
+async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = null, coinPenalty = 0) {
+    if (!process.env.MONGO_URI || !playerId) return null;
     try {
         const UserProfile = mongoose.model('UserProfile');
 
@@ -498,27 +512,64 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
             updateSet[`h2hStats.${h2hKey}.currentWinStreak`] = 0;
         }
 
-        await UserProfile.findOneAndUpdate(
+        const user = await UserProfile.findOneAndUpdate(
             { firebaseUid: playerId },
-            { 
-                $inc: updateInc, 
-                $set: updateSet 
-            }
+            {
+                $inc: updateInc,
+                $set: updateSet
+            },
+            { new: true }
         );
+
+        if (user && coinPenalty > 0) {
+            user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
+            await user.save();
+        }
+
+        emitProfileSyncToUid(playerId, user);
         console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ključa ${h2hKey || 'nepoznatog'}.`);
+        return user;
     } catch (err) {
         console.error("Greška pri upisu server kazne:", err);
+        return null;
     }
+}
+
+async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount = 50, h2hKey = null) {
+    const winnerReward = await getTechnicalCoinAmount(winnerId);
+    const loserCoinPenalty = await getTechnicalCoinAmount(loserId);
+
+    if (!process.env.MONGO_URI) {
+        return { winnerReward, loserCoinPenalty, serverApplied: false };
+    }
+
+    if (winnerId) {
+        const winner = await UserProfile.findOne({ firebaseUid: winnerId });
+        if (winner) {
+            winner.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(winner.balance, 0)) + winnerReward);
+            winner.wins = Math.max(0, toSafeInt(winner.wins, 0)) + 1;
+            winner.currentWinStreak = Math.max(0, toSafeInt(winner.currentWinStreak, 0)) + 1;
+            winner.maxWinStreak = Math.max(
+                Math.max(0, toSafeInt(winner.maxWinStreak, 0)),
+                winner.currentWinStreak
+            );
+            await winner.save();
+            emitProfileSyncToUid(winnerId, winner);
+        }
+    }
+
+    await applyServerSidePenalty(loserId, penaltyAmount, h2hKey, loserCoinPenalty);
+    return { winnerReward, loserCoinPenalty, serverApplied: true };
 }
 
 // --- POMOĆNA FUNKCIJA: DINAMIČKA KAZNA NA OSNOVU PROGRESA IGRE ---
 function getDynamicPenalty(roomId) {
     const state = roomState[roomId];
-    if (!state) return 50; 
+    if (!state) return 50;
 
     const moves = state.moveCount || 0;
     const progress = (moves / 156) * 100;
-    
+
     return progress < 80 ? 20 : 50;
 }
 
@@ -573,34 +624,36 @@ function stopTurnTimer(roomId) {
     }
 }
 
-function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
+async function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
     const state = roomState[roomId];
     if (!state) return;
 
     const winnerSocketId = state.players.find(id => id !== inactivePlayerSocketId);
-    
+
     if (winnerSocketId) {
         const inactiveUid = registeredSockets[inactivePlayerSocketId];
-        const penaltyAmount = getDynamicPenalty(roomId); 
-        
+        const winnerUid = registeredSockets[winnerSocketId];
+        const penaltyAmount = getDynamicPenalty(roomId);
+
         const winnerSocket = io.sockets.sockets.get(winnerSocketId);
-        
+
         let h2hKey = null;
         if (winnerSocket) {
             let safeOppName = winnerSocket.playerName ? winnerSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
             h2hKey = winnerSocket.playerId ? winnerSocket.playerId : safeOppName;
         }
 
-        if (inactiveUid) {
-            applyServerSidePenalty(inactiveUid, penaltyAmount, h2hKey); 
-        }
-        
+        const technicalResult = await applyServerSideTechnicalResult(winnerUid, inactiveUid, penaltyAmount, h2hKey);
+
         console.log(`⏱️ TIMEOUT: Isteklo vreme u sobi ${roomId}. Pobednik je ${winnerSocketId} (Tehnička pobeda)`);
-        
+
         io.to(roomId).emit('game_over_timeout', {
             winnerId: winnerSocketId,
             loserId: inactivePlayerSocketId,
-            penalty: penaltyAmount, 
+            winnerReward: technicalResult.winnerReward,
+            coinPenalty: technicalResult.loserCoinPenalty,
+            serverApplied: technicalResult.serverApplied,
+            penalty: penaltyAmount,
             message: 'Protivniku je isteklo vreme! Tehnička pobeda.'
         });
     }
@@ -777,6 +830,7 @@ function buildProfileSyncPayload(user) {
         unlockedEffects: Array.isArray(user.unlockedEffects) ? user.unlockedEffects : [],
         yamb_unlocked: Array.isArray(user.yamb_unlocked) ? user.yamb_unlocked : [],
         lastDaily: user.lastDaily,
+        lastDailyRewardClaimed: user.lastDailyRewardClaimed,
         soundEnabled: user.soundEnabled,
         vibrationEnabled: user.vibrationEnabled,
         penaltyPoints: Math.max(0, toSafeInt(user.penaltyPoints)),
@@ -1206,7 +1260,12 @@ function calculateAllowedBalanceIncrease(user, stats, oldUserGames, oldTournamen
     const gameDelta = Math.max(0, newGames - oldUserGames);
     const tournamentDelta = Math.max(0, toSafeInt(stats?.tournamentWins) - oldTournamentWins);
     const todayStr = new Date().toDateString();
-    const dailyAllowance = user.lastDaily !== todayStr && stats?.lastDaily === todayStr ? MAX_DAILY_REWARD : 0;
+    const requestedDailyReward = Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(stats?.dailyRewardAmount, 0)));
+    const dailyStartedToday = user.lastDaily === todayStr || stats?.lastDaily === todayStr;
+    const dailyClaimRequested = stats?.dailyRewardClaimed === todayStr && requestedDailyReward > 0;
+    const dailyAllowance = dailyStartedToday && dailyClaimRequested && user.lastDailyRewardClaimed !== todayStr
+        ? requestedDailyReward
+        : 0;
 
     return MAX_AD_REWARD_PER_SYNC +
         (gameDelta * MAX_REWARD_PER_GAME) +
@@ -1616,9 +1675,15 @@ io.on('connection', (socket) => {
                 if (s.vibrationEnabled !== undefined) user.vibrationEnabled = s.vibrationEnabled;
 
                 if (s.penaltyPoints !== undefined && s.penaltyPoints > (user.penaltyPoints || 0)) {
-                    user.penaltyPoints = s.penaltyPoints; 
+                    user.penaltyPoints = s.penaltyPoints;
                 }
-                
+
+                const todayStr = new Date().toDateString();
+                const requestedDailyReward = Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(s.dailyRewardAmount, 0)));
+                const shouldMarkDailyRewardClaimed = s.dailyRewardClaimed === todayStr &&
+                    requestedDailyReward > 0 &&
+                    user.lastDailyRewardClaimed !== todayStr;
+
                 // 🛡️ NOVO: Popravljena logika (INVENTORY DESYNC FIX)
                 const isFreshLogin = (toSafeInt(s.games, 0) === 0);
                 const statsGuard = applyProfileStatsGuard(user, s);
@@ -1668,6 +1733,9 @@ io.on('connection', (socket) => {
                         acceptedBalance = requestedBalance;
                     } else if (requestedBalanceDelta <= allowedBalanceIncrease) {
                         acceptedBalance = requestedBalance;
+                        if (shouldMarkDailyRewardClaimed) {
+                            user.lastDailyRewardClaimed = todayStr;
+                        }
                     } else {
                         console.log(`🚨 ECONOMY GUARD: Odbijen skok dukata sa ${oldBalance} na ${requestedBalance}. Dozvoljeno +${allowedBalanceIncrease}, traženo +${requestedBalanceDelta}.`);
                     }
@@ -1722,8 +1790,6 @@ io.on('connection', (socket) => {
                     user.economyMigratedAt = Date.now();
                 }
 
-                const todayStr = new Date().toDateString();
-                
                 if (user.lastDaily === todayStr) {
                     if (s.lastDaily !== todayStr) {
                         s.lastDaily = todayStr;
@@ -1994,30 +2060,34 @@ io.on('connection', (socket) => {
         socket.emit('online_players_list', Array.from(playersMap.values()));
     });
 
-    socket.on('back_to_menu', () => {
+    socket.on('back_to_menu', async () => {
         const activeRoomId = playerRooms[socket.id];
-        
+
         if (activeRoomId) {
             console.log(`📢 Igrač ${socket.id} se vratio u meni, napušta sobu ${activeRoomId}`);
-            
+            let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
+
             if (roomState[activeRoomId]) {
                 const pid = registeredSockets[socket.id];
                 if (pid) {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
-
                     let h2hKey = null;
                     const oppSocketId = roomState[activeRoomId].players.find(id => id !== socket.id);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
+                    const winnerUid = registeredSockets[oppSocketId];
                     if (oppSocket) {
                         let safeOppName = oppSocket.playerName ? oppSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
                         h2hKey = oppSocket.playerId ? oppSocket.playerId : safeOppName;
                     }
 
-                    applyServerSidePenalty(pid, penaltyAmount, h2hKey);
+                    technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey);
                 }
             }
 
-            socket.to(activeRoomId).emit('opponent_left');
+            socket.to(activeRoomId).emit('opponent_left', {
+                reward: technicalResult.winnerReward,
+                coinPenalty: technicalResult.loserCoinPenalty
+            });
             delete playerRooms[socket.id];
             
             stopTurnTimer(activeRoomId);
@@ -2144,6 +2214,7 @@ io.on('connection', (socket) => {
                 user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + rewardAmount);
                 await user.save();
 
+                emitProfileSync(socket, user);
                 socket.emit('quarter_reward', { rank: rank, reward: rewardAmount });
             }
 
@@ -3581,26 +3652,31 @@ io.on('connection', (socket) => {
 
             io.to(activeRoomId).emit('opponent_connection_lost');
 
-            disconnectTimers[pid] = setTimeout(() => {
+            disconnectTimers[pid] = setTimeout(async () => {
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
-                
+                let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
+
                 if (roomState[activeRoomId]) {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
 
                     let h2hKey = null;
                     const oppSocketId = roomState[activeRoomId].players.find(id => id !== ghostSessions[pid]?.oldSocketId);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
+                    const winnerUid = registeredSockets[oppSocketId];
                     if (oppSocket) {
                         let safeOppName = oppSocket.playerName ? oppSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
                         h2hKey = oppSocket.playerId ? oppSocket.playerId : safeOppName;
                     }
 
-                    applyServerSidePenalty(pid, penaltyAmount, h2hKey); 
+                    technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey);
                 } else {
                     console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
                 }
 
-                io.to(activeRoomId).emit('opponent_left');
+                io.to(activeRoomId).emit('opponent_left', {
+                    reward: technicalResult.winnerReward,
+                    coinPenalty: technicalResult.loserCoinPenalty
+                });
                 
                 delete playerRooms[ghostSessions[pid]?.oldSocketId];
                 

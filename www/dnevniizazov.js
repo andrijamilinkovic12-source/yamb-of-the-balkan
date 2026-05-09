@@ -161,6 +161,7 @@ class DnevniIzazov {
             } else if (typeof this.app.getFullLocalStats === 'function') {
                 currentStats = this.app.getFullLocalStats();
             }
+            currentStats.lastDaily = today;
 
             this.app.socket.emit('set_player_data', {
                 uid: uid || this.app.playerId,
@@ -320,11 +321,15 @@ class DnevniIzazov {
 
     claim(doubled) {
         let finalAmount = doubled ? this.calculatedReward * 2 : this.calculatedReward;
+        const uid = localStorage.getItem('yamb_uid') || this.app.playerId;
+        const today = new Date().toDateString();
         
         // 1. Lokalni upis balansa
         let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
         currentDukati += finalAmount;
         localStorage.setItem('yamb_dukati', currentDukati);
+        localStorage.setItem('yamb_daily_reward_claimed_' + uid, today);
+        localStorage.setItem('yamb_daily_reward_amount_' + uid, String(finalAmount));
         
         // 2. Upis u Stats Manager
         if (window.statsManager) { 
@@ -349,9 +354,12 @@ class DnevniIzazov {
             } else if (typeof this.app.getFullLocalStats === 'function') {
                 currentStats = this.app.getFullLocalStats();
             }
+            currentStats.lastDaily = today;
+            currentStats.dailyRewardClaimed = today;
+            currentStats.dailyRewardAmount = finalAmount;
 
             this.app.socket.emit('set_player_data', {
-                uid: localStorage.getItem('yamb_uid') || this.app.playerId,
+                uid: uid,
                 name: this.app.playerName,
                 stats: currentStats,
                 playerId: this.app.playerId

@@ -663,6 +663,8 @@ class YambApp {
             activeEffect: localStorage.getItem('yamb_active_effect') || null,
             activeTheme: localStorage.getItem('yamb_theme') || null,
             lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
+            dailyRewardClaimed: localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "",
+            dailyRewardAmount: parseInt(localStorage.getItem('yamb_daily_reward_amount_' + uid)) || 0,
             soundEnabled: this.soundEnabled,
             vibrationEnabled: this.vibrationEnabled,
             penaltyPoints: this.stats.penaltyPoints || 0, 
@@ -2214,18 +2216,7 @@ class YambApp {
         this.socket.off('quarter_reward');
         this.socket.on('quarter_reward', (data) => {
             const { rank, reward } = data;
-            
-            let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-            currentDukati += reward;
-            localStorage.setItem('yamb_dukati', currentDukati);
-            
-            if (window.statsManager) {
-                window.statsManager.stats.balance = currentDukati;
-                window.statsManager.saveStats();
-            }
 
-            this.emitPlayerData();
-            
             if (typeof updateMainMenuDashboard === 'function') {
                 updateMainMenuDashboard();
             }
@@ -2252,28 +2243,22 @@ class YambApp {
             }
 
             const iAmWinner = (this.socket.id === data.winnerId);
-            
+
             let myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
             if (isNaN(myAvg) || myAvg < 0) myAvg = 500;
-            if (myAvg > 2000) myAvg = 2000; 
-            
+            if (myAvg > 2000) myAvg = 2000;
+            const winnerReward = Number.isFinite(Number(data.winnerReward)) ? Math.max(0, Math.floor(Number(data.winnerReward))) : myAvg;
+            const coinPenalty = Number.isFinite(Number(data.coinPenalty)) ? Math.max(0, Math.floor(Number(data.coinPenalty))) : myAvg;
+
             if (iAmWinner) {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
-                
-                let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati += myAvg; 
-                localStorage.setItem('yamb_dukati', currentDukati);
-                if (window.statsManager) {
-                    window.statsManager.stats.balance = currentDukati;
-                    window.statsManager.saveStats();
-                }
 
                 if (window.kvartalnaLiga) {
-                    window.kvartalnaLiga.addPoints(myAvg);
+                    window.kvartalnaLiga.addPoints(winnerReward);
                 }
-                
-                this.updateStats(myAvg, 'win', 0, true); 
+
+                this.updateStats(winnerReward, 'win', 0, true);
 
                 // UKLONJEN MODAL ZA POBEDNIKA, IGRA TIHO DODELJUJE NAGRADE
             } else {
@@ -2281,7 +2266,7 @@ class YambApp {
                 
                 let penalty = data.penalty !== undefined ? data.penalty : 50; 
                 
-                if (penalty > 0) {
+                if (penalty > 0 && !data.serverApplied) {
                     this.stats = this.stats || {};
                     this.stats.penaltyPoints = (this.stats.penaltyPoints || 0) + penalty;
                     localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
@@ -2289,22 +2274,14 @@ class YambApp {
 
                 let penStr = (gt('penalty_msg') || "Kazna zbog odugovlačenja: -{0} Power Index poena.").replace('{0}', penalty);
                 let msgDodatak = penalty > 0 ? `<br><br><span style="color:var(--danger); font-weight:bold;">${penStr}</span>` : '';
-                
-                let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati = Math.max(0, currentDukati - myAvg); 
-                localStorage.setItem('yamb_dukati', currentDukati);
-                if (window.statsManager) {
-                    window.statsManager.stats.balance = currentDukati;
-                    window.statsManager.saveStats();
-                }
 
                 if (window.kvartalnaLiga) {
-                    window.kvartalnaLiga.addPoints(-myAvg);
-                    let ptsLostStr = (gt('league_pts_lost') || "-{0} poena u Ligi<br>-{0} 💰 Dukata").replace(/\{0\}/g, myAvg);
+                    window.kvartalnaLiga.addPoints(-coinPenalty);
+                    let ptsLostStr = (gt('league_pts_lost') || "-{0} poena u Ligi<br>-{0} 💰 Dukata").replace(/\{0\}/g, coinPenalty);
                     msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">${ptsLostStr}</span>`;
                 }
 
-                this.updateStats(0, 'loss', 0, true); 
+                this.updateStats(0, 'loss', 0, true);
 
                 const msg = (data.message || gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak;
                 await this.modal.alert(msg, gt('timeout_loss_title') || "PORAZ");
@@ -2611,8 +2588,8 @@ class YambApp {
         });
 
         this.socket.off('opponent_left');
-        this.socket.on('opponent_left', async () => { 
-            localStorage.removeItem('yamb_active_online_room'); 
+        this.socket.on('opponent_left', async (data = {}) => {
+            localStorage.removeItem('yamb_active_online_room');
             if(this.isSpectator) {
                 this.modal.alert(gt('spectator_opp_left') || "Igrač je napustio sobu.", gt('modal_title_info') || "INFO").then(() => {
                     this.showMainMenu();
@@ -2630,36 +2607,29 @@ class YambApp {
                     btnRematch.style.background = 'gray';
                     btnRematch.style.boxShadow = 'none';
                 }
-                return; 
+                return;
             }
 
             // Ako je igra ZAPRAVO u toku, dodeljujemo tehničku pobedu
-            this.gameActive = false; 
-            
+            this.gameActive = false;
+
             this.soundMgr.win();
             this.effectMgr.celebrateWin();
-            
+
             let myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
             if (isNaN(myAvg) || myAvg < 0) myAvg = 500;
             if (myAvg > 2000) myAvg = 2000;
-
-            let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-            currentDukati += myAvg; 
-            localStorage.setItem('yamb_dukati', currentDukati);
-            if (window.statsManager) {
-                window.statsManager.stats.balance = currentDukati;
-                window.statsManager.saveStats();
-            }
+            const rewardAmount = Number.isFinite(Number(data.reward)) ? Math.max(0, Math.floor(Number(data.reward))) : myAvg;
 
             if (window.kvartalnaLiga) {
-                window.kvartalnaLiga.addPoints(myAvg);
+                window.kvartalnaLiga.addPoints(rewardAmount);
             }
 
-            this.updateStats(myAvg, 'win', 0, true); 
-            
+            this.updateStats(rewardAmount, 'win', 0, true);
+
             // UKLONJEN MODAL ZA POBEDNIKA PO ZAHTEVU, PARTIJA SE TIHO ZAVRŠAVA
-            this.cancelOnline(); 
-        }); 
+            this.cancelOnline();
+        });
 
         this.socket.on('incoming_friend_req', async (data) => {
             if (this.currentHostingRoomId) {
@@ -3661,13 +3631,17 @@ class YambApp {
             this.effectMgr.trigger('gold_rain');
             
             if (this.lastGameType === 'daily') {
+                const uid = localStorage.getItem('yamb_uid') || this.playerId;
+                const today = new Date().toDateString();
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati += finalAmount; 
+                currentDukati += finalAmount;
                 localStorage.setItem('yamb_dukati', currentDukati);
-                
-                if (window.statsManager) { 
-                    window.statsManager.stats.balance = currentDukati; 
-                    window.statsManager.saveStats(); 
+                localStorage.setItem('yamb_daily_reward_claimed_' + uid, today);
+                localStorage.setItem('yamb_daily_reward_amount_' + uid, String(finalAmount));
+
+                if (window.statsManager) {
+                    window.statsManager.stats.balance = currentDukati;
+                    window.statsManager.saveStats();
                 }
 
                 if (this.socket && this.socket.connected) {
