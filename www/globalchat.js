@@ -78,6 +78,7 @@ class GlobalChatManager {
     appendMessage(sender, text, type, senderId = null, skipSound = false) { 
         const body = document.getElementById('global-chat-body'); 
         if (!body) return;
+        const sec = window.YambSecurity;
         
         const sada = Date.now();
         // Sprečavanje spama
@@ -97,12 +98,16 @@ class GlobalChatManager {
         const msgDiv = document.createElement('div'); 
         msgDiv.className = `msg-bubble ${type}`; 
         
-        let nameHtml = `<strong>${sender}:</strong>`;
+        const safeSender = sec.escapeHtml(sender);
+        const safeText = sec.escapeHtml(text);
+        let nameHtml = `<strong>${safeSender}:</strong>`;
         if (senderId && senderId !== (this.app.socket ? this.app.socket.id : null) && sender !== this.gt('sys_name') && type === "msg-incoming") {
-            nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="window.app.challengePlayer('${senderId}', '${sender}')" title="${this.gt('tooltip_challenge') || 'Izazovi na duel ⚔️'}">${sender}:</strong>`;
+            const handler = sec.escapeAttr(`window.app.challengePlayer(${sec.jsString(senderId)}, ${sec.jsString(sender)})`);
+            const title = sec.escapeAttr(this.gt('tooltip_challenge') || 'Izazovi na duel ⚔️');
+            nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="${handler}" title="${title}">${safeSender}:</strong>`;
         }
         
-        msgDiv.innerHTML = `${nameHtml} ${text}`; 
+        msgDiv.innerHTML = `${nameHtml} ${safeText}`;
         body.appendChild(msgDiv); 
         body.scrollTop = body.scrollHeight; 
         

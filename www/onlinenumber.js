@@ -5,6 +5,7 @@
  * Prikazuje custom toast notifikaciju iznad svih elemenata.
  */
 window.showNotification = function(title, message) {
+    const sec = window.YambSecurity;
     const containerId = 'custom-notification-container';
     let container = document.getElementById(containerId);
     if (!container) {
@@ -27,8 +28,8 @@ window.showNotification = function(title, message) {
     const toast = document.createElement('div');
     toast.className = 'custom-toast';
     toast.innerHTML = `
-        <div class="toast-title">${title}</div>
-        <div class="toast-msg">${message}</div>
+        <div class="toast-title">${sec.escapeHtml(title)}</div>
+        <div class="toast-msg">${sec.escapeHtml(message)}</div>
     `;
     
     toast.style.background = 'var(--glass-panel)';
@@ -70,6 +71,7 @@ window.showNotification = function(title, message) {
 
 // --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
 window.openOnlinePlayersModal = function() {
+    const sec = window.YambSecurity;
     const overlay = document.getElementById('online-players-overlay');
     
     if (overlay) {
@@ -111,7 +113,7 @@ window.openOnlinePlayersModal = function() {
         body.style.gap = '12px';
 
         const loadingText = window.t ? window.t('online_loading') : 'Učitavam igrače... ⏳';
-        body.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${loadingText}</div>`;
+        body.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${sec.escapeHtml(loadingText)}</div>`;
     }
 
     if (window.app && window.app.socket && window.app.socket.connected) {
@@ -121,7 +123,8 @@ window.openOnlinePlayersModal = function() {
             if (!body) return;
 
             if (!players || players.length === 0) {
-                body.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding-top: 20px;">${window.t ? window.t('online_no_players') : 'Trenutno nema igrača.'}</div>`;
+                const noPlayers = window.t ? window.t('online_no_players') : 'Trenutno nema igrača.';
+                body.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding-top: 20px;">${sec.escapeHtml(noPlayers)}</div>`;
                 return;
             }
 
@@ -129,14 +132,21 @@ window.openOnlinePlayersModal = function() {
             players.forEach(p => {
                 const isMe = p.socketId === window.app.socket.id;
                 const youText = window.t ? window.t('online_you') : '(Vi)';
+                const rawName = String(p.name || 'Igrac');
+                const safeNameHtml = sec.escapeHtml(rawName);
+                const socketIdArg = sec.jsString(p.socketId || '');
+                const nameArg = sec.jsString(rawName);
+                const uidArg = sec.jsString(p.uid || '');
+                const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(rawName)}&background=333&color=E0C995`;
+                const photoSrc = sec.escapeAttr(sec.safeUrl(p.photoUrl, fallbackPhoto));
 
                 let actionButtons = '';
                 if (!isMe) {
-                    const safeName = p.name.replace(/'/g, "\\'");
-                    const pUid = p.uid || '';
-                    
                     // Znamo sigurno sa servera da li su već prijatelji!
                     const isAlreadyFriend = p.isFriend;
+                    const addFriendHandler = sec.escapeAttr(`if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest(${socketIdArg}, ${nameArg}, ${uidArg}); this.disabled=true; this.style.opacity='0.4'; this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.cursor='not-allowed'; } else { showNotification('INFO', 'Funkcija nije dostupna.') }`);
+                    const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame(${socketIdArg}) } else { showNotification('INFO', 'Greska') }`);
+                    const challengeHandler = sec.escapeAttr(`window.app.challengePlayer(${socketIdArg}, ${nameArg})`);
 
                     // 1. Dugme za DODAVANJE (Zatamnjeno ako su već prijatelji)
                     let addFriendBtn = '';
@@ -144,7 +154,7 @@ window.openOnlinePlayersModal = function() {
                         addFriendBtn = `<button disabled title="Već ste prijatelji" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">➕</button>`;
                     } else {
                         // Dodata logika da se dugme "ugasi" čim se klikne da bi se izbegao spam
-                        addFriendBtn = `<button onclick="if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest('${p.socketId}', '${safeName}', '${pUid}'); this.disabled=true; this.style.opacity='0.4'; this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.cursor='not-allowed'; } else { showNotification('INFO', 'Funkcija nije dostupna.') }" title="Dodaj prijatelja" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">➕</button>`;
+                        addFriendBtn = `<button onclick="${addFriendHandler}" title="Dodaj prijatelja" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">➕</button>`;
                     }
 
                     // 2. Dugme za GLEDANJE (Zatamnjeno ako igrač ne igra)
@@ -152,11 +162,11 @@ window.openOnlinePlayersModal = function() {
                     if (!p.isPlaying) {
                         spectateBtn = `<button disabled title="Igrač trenutno ne igra" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">👁️</button>`;
                     } else {
-                        spectateBtn = `<button onclick="if(window.app && window.app.spectateGame) { window.app.spectateGame('${p.socketId}') } else { showNotification('INFO', 'Greška') }" title="Gledaj partiju" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>`;
+                        spectateBtn = `<button onclick="${spectateHandler}" title="Gledaj partiju" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>`;
                     }
 
                     // 3. Dugme za DUEL (Uvek aktivno)
-                    const challengeBtn = `<button onclick="window.app.challengePlayer('${p.socketId}', '${safeName}')" title="Izazovi na duel" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
+                    const challengeBtn = `<button onclick="${challengeHandler}" title="Izazovi na duel" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
 
                     actionButtons = `
                     <div style="display: flex; gap: 8px; flex-shrink: 0;">
@@ -169,9 +179,9 @@ window.openOnlinePlayersModal = function() {
                 html += `
                 <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
-                        <img src="${p.photoUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`}" style="width:45px; height:45px; border-radius:50%; border: 2px solid ${p.isPlaying ? '#2196F3' : 'var(--success)'}; object-fit: cover; flex-shrink: 0;">
+                        <img src="${photoSrc}" style="width:45px; height:45px; border-radius:50%; border: 2px solid ${p.isPlaying ? '#2196F3' : 'var(--success)'}; object-fit: cover; flex-shrink: 0;">
                         <span style="color: var(--text-main); font-weight: bold; font-size: 0.95rem; word-break: break-word; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
-                            ${p.name} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${youText}</span>` : ''}
+                            ${safeNameHtml} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${sec.escapeHtml(youText)}</span>` : ''}
                         </span>
                     </div>
                     ${actionButtons}
@@ -185,7 +195,7 @@ window.openOnlinePlayersModal = function() {
     } else {
         if (body) {
             const noConnText = window.t ? window.t('online_no_conn') : 'Niste povezani na server.';
-            body.innerHTML = `<div style="text-align: center; color: var(--danger); font-weight: bold; padding-top: 20px;">${noConnText}</div>`;
+            body.innerHTML = `<div style="text-align: center; color: var(--danger); font-weight: bold; padding-top: 20px;">${sec.escapeHtml(noConnText)}</div>`;
         }
     }
 };

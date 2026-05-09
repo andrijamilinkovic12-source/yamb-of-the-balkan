@@ -221,6 +221,7 @@ class TopListManager {
         }
 
         const currentLang = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
+        const sec = window.YambSecurity;
 
         // Rendamo samo validne Google igrače (koristimo validData umesto data)
         validData.forEach((entry, index) => {
@@ -240,7 +241,8 @@ class TopListManager {
                 }
             }
 
-            const displayName = entry.playerName || entry.name || this._t('player_unknown');
+            const displayName = String(entry.playerName || entry.name || this._t('player_unknown'));
+            const safeDisplayName = sec.escapeHtml(displayName);
             const scoreFormatted = entry.score.toLocaleString(currentLang);
             
             // --- DINAMIČKO SMANJIVANJE FONTA PREMA DUŽINI IMENA ---
@@ -258,16 +260,20 @@ class TopListManager {
             const photoUrl = (entry.photoUrl && entry.photoUrl.length > 5) 
                 ? entry.photoUrl 
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
+            const fallbackPhotoUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
+            const safePhotoUrl = sec.escapeAttr(sec.safeUrl(photoUrl, fallbackPhotoUrl));
+            const safeMode = sec.escapeHtml(entry.mode || 'Solo');
+            const safeDateDisplay = sec.escapeHtml(dateDisplay);
             
             // NAPOMENA: U HTML-u imamo grid postavljen na 4 kolone (Rang, Slika, Info, Skor)
             li.innerHTML = `
                 <div class="${rankClass}"><span style="position: relative; z-index: 2;">${rankText}</span></div>
-                <img src="${photoUrl}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
+                <img src="${safePhotoUrl}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
                 <div class="hs-info">
-                    <div class="hs-name" style="${nameStyle} font-weight: 800; color: var(--text-main); white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; padding-bottom: 2px; margin-bottom: 2px;">${displayName}</div>
+                    <div class="hs-name" style="${nameStyle} font-weight: 800; color: var(--text-main); white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; padding-bottom: 2px; margin-bottom: 2px;">${safeDisplayName}</div>
                     <div class="hs-meta" style="font-size: 0.65rem; color: var(--text-muted); display: flex; gap: 5px;">
-                        <span>${entry.mode || 'Solo'}</span>
-                        ${dateDisplay ? `<span>• ${dateDisplay}</span>` : ''}
+                        <span>${safeMode}</span>
+                        ${safeDateDisplay ? `<span>• ${safeDateDisplay}</span>` : ''}
                     </div>
                 </div>
                 <div class="hs-score-pill" style="justify-self: center;">${scoreFormatted}</div>

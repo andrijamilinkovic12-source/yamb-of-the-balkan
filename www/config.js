@@ -37,6 +37,40 @@ const KOLONE = ["Nadole", "Slobodna", "Sredina", "Nagore", "Ručno", "Najava"];
 const REDOVI_IGRA = ["1", "2", "3", "4", "5", "6", "Max", "Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
 const REDOVI_PRIKAZ = ["1", "2", "3", "4", "5", "6", "ZBIR 1", "Max", "Min", "ZBIR 2", "Triling", "Kenta", "Ful", "Poker", "Yamb", "ZBIR 3"];
 
+// --- 3.1. BEZBEDNO RENDEROVANJE KORISNICKOG SADRZAJA ---
+const YambSecurity = (() => {
+    const entityMap = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    };
+
+    const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, char => entityMap[char]);
+    const escapeAttr = escapeHtml;
+    const jsString = (value) => JSON.stringify(String(value ?? ''));
+
+    const safeUrl = (value, fallback = '') => {
+        const raw = String(value ?? '').trim();
+        if (!raw) return fallback;
+
+        try {
+            const base = (typeof window !== 'undefined' && window.location) ? window.location.origin : 'https://yamb.local';
+            const parsed = new URL(raw, base);
+            return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : fallback;
+        } catch (err) {
+            return fallback;
+        }
+    };
+
+    return Object.freeze({ escapeHtml, escapeAttr, jsString, safeUrl });
+})();
+
+if (typeof window !== 'undefined') {
+    window.YambSecurity = YambSecurity;
+}
+
 // --- 4. PODACI PRODAVNICE (SKINOVI, EFEKTI, TROFEJI, TEME) ---
 const SHOP_DATA = {
     SKINS: [
