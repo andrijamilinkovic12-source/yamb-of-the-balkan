@@ -3,3 +3,21 @@ node_modules
 firebase-service-account*.json
 service-account*.json
 *.service-account.json
+
+# Local/editor files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+android/.idea/
+android/local.properties
+
+# Build outputs
+www/.well-known/assetlinks.json.tmp
+android/.gradle/
+android/build/
+android/app/build/
+android/app/release/
+android/capacitor-cordova-android-plugins/build/
+
+# Generated Capacitor web assets
+android/app/src/main/assets/

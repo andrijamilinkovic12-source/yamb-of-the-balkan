@@ -639,7 +639,119 @@ function advanceTournamentBracket(round, index, winnerObj) {
     else if (round === 'f') {
         tournamentState.status = 'finished';
     }
-    saveTournamentToDb(); 
+    saveTournamentToDb();
+}
+
+// ==================================================================
+// TURNIR: SERVER-SIDE VALIDACIJA I AUTORIZACIJA
+// ==================================================================
+const TOURNEY_ADMIN_UIDS = new Set(
+    (process.env.TOURNEY_ADMIN_UIDS || process.env.TOURNEY_ADMIN_UID || '')
+        .split(',')
+        .map(uid => uid.trim())
+        .filter(Boolean)
+);
+
+const TOURNEY_ROUNDS = new Set(['qf', 'sf', 'f']);
+
+function getVerifiedUid(socket) {
+    return (typeof socket.verifiedUid === 'string' && socket.verifiedUid.length >= 20)
+        ? socket.verifiedUid
+        : null;
+}
+
+function rejectTournamentAction(socket, reason = 'err_invalid_room') {
+    socket.emit('error_msg', reason);
+    return false;
+}
+
+function requireTournamentAuth(socket) {
+    const uid = getVerifiedUid(socket);
+    if (!uid) {
+        socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+        rejectTournamentAction(socket, 'auth_required');
+        return null;
+    }
+    return uid;
+}
+
+function isTournamentAdmin(socket) {
+    const uid = getVerifiedUid(socket);
+    return Boolean(uid && TOURNEY_ADMIN_UIDS.has(uid));
+}
+
+function sanitizeTournamentName(name) {
+    let safeName = String(name || '').trim().substring(0, MAX_NAME_LENGTH);
+    if (!safeName || sadrziPsovku(safeName)) {
+        safeName = "Igrač_" + Math.floor(1000 + Math.random() * 9000);
+    }
+    return safeName;
+}
+
+function sanitizeTournamentPhotoUrl(value) {
+    const raw = String(value || '').trim().substring(0, 500);
+    if (!raw) return '';
+
+    try {
+        const parsed = new URL(raw);
+        return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : '';
+    } catch (err) {
+        return '';
+    }
+}
+
+function sanitizeTournamentPi(value) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return '0';
+    return String(Math.max(0, Math.min(999999, Math.round(num))));
+}
+
+function getTournamentMatch(round, index) {
+    if (!TOURNEY_ROUNDS.has(round)) return null;
+
+    const matchIndex = Number(index);
+    if (!Number.isInteger(matchIndex) || matchIndex < 0) return null;
+
+    const matches = tournamentState.bracket && tournamentState.bracket[round];
+    if (!Array.isArray(matches) || matchIndex >= matches.length) return null;
+
+    const match = matches[matchIndex];
+    if (!match || !match.p1 || !match.p2) return null;
+
+    return { match, index: matchIndex };
+}
+
+function isTournamentParticipant(match, uid) {
+    return Boolean(match && uid && (
+        (match.p1 && match.p1.id === uid) ||
+        (match.p2 && match.p2.id === uid)
+    ));
+}
+
+function getTournamentPlayer(match, uid) {
+    if (!match || !uid) return null;
+    if (match.p1 && match.p1.id === uid) return match.p1;
+    if (match.p2 && match.p2.id === uid) return match.p2;
+    return null;
+}
+
+function getTournamentOpponent(match, uid) {
+    if (!match || !uid) return null;
+    if (match.p1 && match.p1.id === uid) return match.p2;
+    if (match.p2 && match.p2.id === uid) return match.p1;
+    return null;
+}
+
+function normalizeTournamentTime(value) {
+    const raw = String(value || '').trim().substring(0, 40);
+    const parsedTime = Date.parse(raw);
+    if (!raw || !Number.isFinite(parsedTime)) return null;
+
+    const now = Date.now();
+    const maxFuture = now + (90 * 24 * 60 * 60 * 1000);
+    if (parsedTime < now - (60 * 60 * 1000) || parsedTime > maxFuture) return null;
+
+    return raw;
 }
 
 // ==================================================================
@@ -2522,7 +2634,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('send_room_invite', (data) => {
-        const { targetSocketId, roomId, hostName } = data;
+        const { targetSocketId, roomId } = data;
         const targetSocket = io.sockets.sockets.get(targetSocketId);
         
         if (targetSocket) {
@@ -2533,6 +2645,7 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            const hostName = `${sanitizeTournamentName(socket.playerName || 'Igrač')}|||${socket.id}`;
             socket.to(targetSocketId).emit('incoming_room_invite', { roomId, hostName });
         } else {
             socket.emit('error_msg', 'err_player_not_on_server');
@@ -2856,7 +2969,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('send_challenge', (data) => {
-        const { targetId, challengerName } = data;
+        const { targetId } = data;
         const targetSocket = io.sockets.sockets.get(targetId);
         
         if (targetSocket) {
@@ -2868,7 +2981,7 @@ io.on('connection', (socket) => {
 
             socket.to(targetId).emit('incoming_challenge', {
                 challengerId: socket.id,
-                challengerName: challengerName || "Gost"
+                challengerName: sanitizeTournamentName(socket.playerName || "Igrač")
             });
         } else {
             socket.emit('error_msg', 'err_player_not_on_server');
@@ -2968,6 +3081,13 @@ io.on('connection', (socket) => {
     });
 
     socket.on('tourney_reset', () => {
+        if (!requireTournamentAuth(socket)) return;
+        if (!isTournamentAdmin(socket)) {
+            console.warn(`⚠️ Odbijen pokušaj resetovanja turnira od ${socket.verifiedUid}.`);
+            rejectTournamentAction(socket, 'err_invalid_room');
+            return;
+        }
+
         console.log("⚠️ TURNIR JE RESETOVAN OD STRANE KORISNIKA!");
         tournamentState = {
             status: 'registration',
@@ -2994,32 +3114,38 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_register', (playerData) => {
+    socket.on('tourney_register', (playerData = {}) => {
+        const uid = requireTournamentAuth(socket);
+        if (!uid) return;
+
         if (tournamentState.status === 'registration' && tournamentState.players.length < 8) {
-            const alreadyRegistered = tournamentState.players.find(p => p.id === playerData.id);
+            const alreadyRegistered = tournamentState.players.find(p => p.id === uid);
             if (!alreadyRegistered) {
-                tournamentState.players.push({ 
-                    id: playerData.id, 
-                    name: playerData.name, 
-                    photoUrl: playerData.photoUrl || '',
-                    pi: playerData.pi || '0'
+                tournamentState.players.push({
+                    id: uid,
+                    name: sanitizeTournamentName(socket.playerName || playerData.name),
+                    photoUrl: sanitizeTournamentPhotoUrl(socket.photoUrl || playerData.photoUrl),
+                    pi: sanitizeTournamentPi(playerData.pi)
                 });
-                
+
                 if (tournamentState.players.length === 8) {
-                    generateTournamentBracket(); 
+                    generateTournamentBracket();
                 } else {
-                    saveTournamentToDb(); 
+                    saveTournamentToDb();
                 }
                 io.emit('tourney_state_update', tournamentState);
             }
         }
     });
 
-    socket.on('tourney_update_pi', (data) => {
-        const { id, pi } = data;
+    socket.on('tourney_update_pi', (data = {}) => {
+        const uid = requireTournamentAuth(socket);
+        if (!uid) return;
+
+        const pi = sanitizeTournamentPi(data.pi);
         let updated = false;
 
-        const player = tournamentState.players.find(p => p.id === id);
+        const player = tournamentState.players.find(p => p.id === uid);
         if (player && player.pi !== pi) {
             player.pi = pi;
             updated = true;
@@ -3030,11 +3156,11 @@ io.on('connection', (socket) => {
                 if (tournamentState.bracket[round]) {
                     tournamentState.bracket[round].forEach(match => {
                         if (match) {
-                            if (match.p1 && match.p1.id === id && match.p1.pi !== pi) {
+                            if (match.p1 && match.p1.id === uid && match.p1.pi !== pi) {
                                 match.p1.pi = pi;
                                 updated = true;
                             }
-                            if (match.p2 && match.p2.id === id && match.p2.pi !== pi) {
+                            if (match.p2 && match.p2.id === uid && match.p2.pi !== pi) {
                                 match.p2.pi = pi;
                                 updated = true;
                             }
@@ -3045,70 +3171,110 @@ io.on('connection', (socket) => {
         }
 
         if (updated) {
-            saveTournamentToDb(); 
-            io.emit('tourney_state_update', tournamentState); 
+            saveTournamentToDb();
+            io.emit('tourney_state_update', tournamentState);
         }
     });
 
-    socket.on('tourney_unregister', (playerId) => {
+    socket.on('tourney_unregister', () => {
+        const uid = requireTournamentAuth(socket);
+        if (!uid) return;
+
         if (tournamentState.status === 'registration') {
-            const index = tournamentState.players.findIndex(p => p.id === playerId);
+            const index = tournamentState.players.findIndex(p => p.id === uid);
             if (index !== -1) {
                 tournamentState.players.splice(index, 1);
-                saveTournamentToDb(); 
+                saveTournamentToDb();
                 io.emit('tourney_state_update', tournamentState);
-                console.log(`↩️ Poništena prijava za turnir: ${playerId}`);
+                console.log(`↩️ Poništena prijava za turnir: ${uid}`);
             }
         }
     });
 
-    socket.on('tourney_propose_time', (data) => {
-        const { round, index, proposedTime, playerId } = data;
-        const match = tournamentState.bracket[round][index];
-        
-        if (match && (match.p1.id === playerId || match.p2.id === playerId)) {
-            match.proposedTime = proposedTime;
-            match.proposedById = playerId;
-            match.timeAccepted = false;
-            match.time = null;
-            saveTournamentToDb(); 
-            io.emit('tourney_state_update', tournamentState);
-        }
+    socket.on('tourney_propose_time', (data = {}) => {
+        const uid = requireTournamentAuth(socket);
+        if (!uid) return;
+
+        const matchInfo = getTournamentMatch(data.round, data.index);
+        if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        const { match } = matchInfo;
+        if (!isTournamentParticipant(match, uid)) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        const proposedTime = normalizeTournamentTime(data.proposedTime);
+        if (!proposedTime) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        match.proposedTime = proposedTime;
+        match.proposedById = uid;
+        match.timeAccepted = false;
+        match.time = null;
+        saveTournamentToDb();
+        io.emit('tourney_state_update', tournamentState);
     });
 
-    socket.on('tourney_accept_time', (data) => {
-        const { round, index } = data;
-        const match = tournamentState.bracket[round][index];
-        
-        if (match) {
-            match.timeAccepted = true;
-            match.time = match.proposedTime;
-            saveTournamentToDb(); 
-            io.emit('tourney_state_update', tournamentState);
-        }
+    socket.on('tourney_accept_time', (data = {}) => {
+        const uid = requireTournamentAuth(socket);
+        if (!uid) return;
+
+        const matchInfo = getTournamentMatch(data.round, data.index);
+        if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        const { match } = matchInfo;
+        if (!isTournamentParticipant(match, uid)) return rejectTournamentAction(socket, 'err_invalid_room');
+        if (!match.proposedTime) return rejectTournamentAction(socket, 'err_invalid_room');
+        if (match.proposedById && match.proposedById === uid) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        match.timeAccepted = true;
+        match.time = match.proposedTime;
+        saveTournamentToDb();
+        io.emit('tourney_state_update', tournamentState);
     });
 
-    socket.on('tourney_start_duel', (data) => {
-        const { matchRoomId, targetId, opponentName } = data;
-        
-        if (onlinePlayers[targetId]) {
-            const targetRoom = playerRooms[onlinePlayers[targetId]];
+    socket.on('tourney_start_duel', (data = {}) => {
+        const uid = requireTournamentAuth(socket);
+        if (!uid) return;
+
+        const matchInfo = getTournamentMatch(data.round, data.index);
+        if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        const { match, index } = matchInfo;
+        if (!isTournamentParticipant(match, uid)) return rejectTournamentAction(socket, 'err_invalid_room');
+        if (match.winnerId || !match.timeAccepted) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        const opponent = getTournamentOpponent(match, uid);
+        const starter = getTournamentPlayer(match, uid);
+        if (!opponent) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        if (onlinePlayers[opponent.id]) {
+            const targetRoom = playerRooms[onlinePlayers[opponent.id]];
             if (targetRoom && !targetRoom.startsWith('local_')) {
                 socket.emit('error_msg', 'err_player_busy');
                 return;
             }
 
-            io.to(onlinePlayers[targetId]).emit('tourney_duel_ready', { matchRoomId, targetId: targetId, opponentName: opponentName });
+            const matchRoomId = `tourney_${data.round}_${index}_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+            io.to(onlinePlayers[opponent.id]).emit('tourney_duel_ready', {
+                matchRoomId,
+                targetId: opponent.id,
+                opponentName: sanitizeTournamentName(starter?.name || socket.playerName)
+            });
             socket.emit('tourney_join_allowed', matchRoomId);
         } else {
             socket.emit('error_msg', 'err_tourney_opp_offline');
         }
     });
 
-    socket.on('tourney_submit_winner', async (data) => {
-        const { round, index, winnerId } = data;
-        const match = tournamentState.bracket[round][index];
-        
+    socket.on('tourney_submit_winner', async (data = {}) => {
+        const uid = requireTournamentAuth(socket);
+        if (!uid) return;
+
+        const matchInfo = getTournamentMatch(data.round, data.index);
+        if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');
+
+        const { match } = matchInfo;
+        const winnerId = String(data.winnerId || '');
+        if (!isTournamentParticipant(match, uid) || winnerId !== uid) return rejectTournamentAction(socket, 'err_invalid_room');
+
         if (match && match.winnerId === null) {
             match.winnerId = winnerId;
             const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;

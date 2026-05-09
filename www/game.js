@@ -212,6 +212,19 @@ class YambApp {
         }
     }
 
+    escapeHtml(value) {
+        if (window.YambSecurity && typeof window.YambSecurity.escapeHtml === 'function') {
+            return window.YambSecurity.escapeHtml(value);
+        }
+        return String(value ?? '').replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
+    }
+
     // --- NOVO: HEADER LOGIKA (MENI, ZVUK, VIB, OKO, AVATAR, MUZIKA) ---
 
     toggleGameMenu() {
@@ -698,13 +711,13 @@ class YambApp {
         }
     }
 
-    sendFriendRequest(targetId, targetName, targetUid = null) { 
+    sendFriendRequest(targetId, targetName, targetUid = null) {
         if (!this.requireLogin()) return;
-        this.initSocketConnection(); 
+        this.initSocketConnection();
         if (!this.socket || !this.socket.connected) return;
         this.socket.emit('send_friend_req', { targetId, targetUid, challengerName: this.playerName });
-        
-        let msg = (gt('alert_friend_req_sent') || "Zahtev za prijateljstvo poslat igraču {0}.").replace('{0}', targetName);
+
+        let msg = (gt('alert_friend_req_sent') || "Zahtev za prijateljstvo poslat igraču {0}.").replace('{0}', this.escapeHtml(targetName || 'Igrač'));
         this.modal.alert(msg, gt('alert_sent_title') || "POSLATO");
     }
 
@@ -979,10 +992,11 @@ class YambApp {
 
                 this.socket.on('incoming_challenge', async (data) => {
                     const { challengerId, challengerName } = data;
+                    const safeChallengerName = this.escapeHtml(challengerName || 'Igrač');
                     let text = gt('duel_incoming');
                     if(text === 'duel_incoming') text = `Igrač {0} vas izaziva na duel! Prihvatate?`;
-                    
-                    const accepted = await this.modal.confirm(text.replace('{0}', challengerName));
+
+                    const accepted = await this.modal.confirm(text.replace('{0}', safeChallengerName));
                     this.socket.emit('challenge_response', {
                         challengerId: challengerId,
                         accepted: accepted
@@ -1372,7 +1386,8 @@ class YambApp {
         let askText = gt('duel_ask');
         if (askText === 'duel_ask') askText = `Želite li da izazovete igrača {0} na duel?`;
 
-        const isConfirmed = await this.modal.confirm(askText.replace('{0}', targetName));
+        const safeTargetName = this.escapeHtml(targetName || 'Igrač');
+        const isConfirmed = await this.modal.confirm(askText.replace('{0}', safeTargetName));
         if(isConfirmed) {
             this.socket.emit('send_challenge', { targetId, challengerName: this.playerName });
             
@@ -1380,9 +1395,9 @@ class YambApp {
             if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
             
             if (typeof window.showNotification === 'function') {
-                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName));
+                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || 'Igrač'));
             } else {
-                this.modal.alert(sentText.replace('{0}', targetName), gt('duel_title') || "IZAZOV");
+                this.modal.alert(sentText.replace('{0}', safeTargetName), gt('duel_title') || "IZAZOV");
             }
         }
     }
@@ -2623,13 +2638,13 @@ class YambApp {
             if (this.currentHostingRoomId) {
                 this.socket.emit('get_friends_list');
             } else {
-                const msg = (gt('alert_friend_req_pending') || "Novi zahtev za prijateljstvo od igrača {0}! Možete ga videti u sekciji 'Prijatelj'.").replace('{0}', data.challengerName);
+                const msg = (gt('alert_friend_req_pending') || "Novi zahtev za prijateljstvo od igrača {0}! Možete ga videti u sekciji 'Prijatelj'.").replace('{0}', this.escapeHtml(data.challengerName || 'Igrač'));
                 this.modal.alert(msg, gt('alert_info') || "NOVI ZAHTEV");
             }
         });
 
         this.socket.on('friend_req_accepted', (data) => {
-            const msg = (gt('alert_friend_added') || "Igrač {0} je sada vaš prijatelj! Možete ga pozvati na partiju iz menija 'Prijatelj'.").replace('{0}', data.name);
+            const msg = (gt('alert_friend_added') || "Igrač {0} je sada vaš prijatelj! Možete ga pozvati na partiju iz menija 'Prijatelj'.").replace('{0}', this.escapeHtml(data.name || 'Igrač'));
             this.modal.alert(msg, gt('alert_new_friend') || "NOVI PRIJATELJ");
             if (this.currentHostingRoomId) {
                 this.socket.emit('get_friends_list');
@@ -2637,7 +2652,7 @@ class YambApp {
         });
 
         this.socket.on('friend_req_declined', (data) => {
-            const msg = (gt('alert_friend_declined') || "Igrač {0} je nažalost odbio vaš zahtev za prijateljstvo.").replace('{0}', data.name);
+            const msg = (gt('alert_friend_declined') || "Igrač {0} je nažalost odbio vaš zahtev za prijateljstvo.").replace('{0}', this.escapeHtml(data.name || 'Igrač'));
             this.modal.alert(msg, gt('alert_info') || "OBAVEŠTENJE");
         });
 
@@ -2660,11 +2675,12 @@ class YambApp {
                      return;
                 }
 
-                const msg = (gt('alert_search_found') || "Pronađen je igrač: {0}. Da li želiš da mu pošalješ zahtev za prijateljstvo?").replace('{0}', p.name);
+                const safeSearchName = this.escapeHtml(p.name || 'Igrač');
+                const msg = (gt('alert_search_found') || "Pronađen je igrač: {0}. Da li želiš da mu pošalješ zahtev za prijateljstvo?").replace('{0}', safeSearchName);
                 const send = await this.modal.confirm(msg);
                 if (send) {
                     this.sendFriendRequest(p.socketId, p.name, p.uid);
-                    let successMsg = (gt('friend_req_success') || "Zahtev je poslat! Igrač {0} će ga dobiti sledeći put kada bude na mreži.").replace('{0}', p.name);
+                    let successMsg = (gt('friend_req_success') || "Zahtev je poslat! Igrač {0} će ga dobiti sledeći put kada bude na mreži.").replace('{0}', safeSearchName);
                     this.modal.alert(successMsg, gt('title_success') || "USPEŠNO");
                 }
             }
@@ -2680,7 +2696,7 @@ class YambApp {
                 hostSocketId = parts[1];
             }
 
-            const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', realHostName);
+            const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', this.escapeHtml(realHostName || 'Igrač'));
             const accepted = await this.modal.confirm(msg);
             
             if (accepted) {
