@@ -1360,7 +1360,9 @@ class ShopManager {
                 
                 if (progress >= target) {
                     // Otključano
-                    this.unlocked.push(id);
+                    if (!this.unlocked.includes(id)) {
+                        this.unlocked.push(id);
+                    }
                     localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
                     localStorage.removeItem(`yamb_adprogress_${id}`);
 
@@ -1371,6 +1373,7 @@ class ShopManager {
                     }
 
                     if(window.app && window.app.soundMgr) window.app.soundMgr.trophy();
+                    this.syncShopStateToServer();
                     
                     if (typeof window.showNotification === 'function') {
                         window.showNotification("USPEŠNO!", "Tema je uspešno otključana!");
@@ -1387,7 +1390,7 @@ class ShopManager {
         }
     }
 
-    addBalance(amount) {
+    addBalance(amount, syncToServer = true) {
         this.balance += amount;
         localStorage.setItem('yamb_dukati', this.balance);
         if (window.statsManager) {
@@ -1396,9 +1399,74 @@ class ShopManager {
         }
         this.updateBalanceDisplay();
         
-        if (window.app && window.app.socket && window.app.socket.connected) {
+        if (syncToServer && window.app && window.app.socket && window.app.socket.connected) {
             window.app.socket.emit('set_player_data', {
                 uid: localStorage.getItem('yamb_uid') || window.app.playerId,
+                name: window.app.playerName,
+                stats: window.app.getFullLocalStats(),
+                playerId: window.app.playerId
+            });
+        }
+    }
+
+    setServerBalance(balance) {
+        const safeBalance = Math.max(0, parseInt(balance) || 0);
+        this.balance = safeBalance;
+        localStorage.setItem('yamb_dukati', safeBalance);
+        if (window.statsManager) {
+            window.statsManager.stats.balance = safeBalance;
+            window.statsManager.saveStats();
+        }
+        this.updateBalanceDisplay();
+    }
+
+    async claimServerAdReward() {
+        const app = window.app;
+        if (!app || !app.socket || !app.socket.connected) {
+            return { ok: true, localFallback: true, reward: 500 };
+        }
+
+        if (typeof app.authenticateSocketIdentity === 'function') {
+            const authResult = await app.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: 'auth_required' };
+            }
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'err_server_conn' });
+            }, 8000);
+
+            app.socket.emit('claim_shop_ad_reward', {}, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            });
+        });
+    }
+
+    showRewardMessage(message, title) {
+        if (typeof window.showNotification === 'function') {
+            window.showNotification(title, message);
+        } else if (window.modalManager && window.modalManager.overlay) {
+            window.modalManager.alert(message, title);
+        }
+    }
+
+    syncShopStateToServer() {
+        if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {
+            if (typeof window.app.emitPlayerData === 'function') {
+                window.app.emitPlayerData();
+                return;
+            }
+
+            window.app.socket.emit('set_player_data', {
+                uid: localStorage.getItem('yamb_uid'),
                 name: window.app.playerName,
                 stats: window.app.getFullLocalStats(),
                 playerId: window.app.playerId
@@ -1421,17 +1489,31 @@ class ShopManager {
 
              const success = await adCtrl.showRewardVideo();
              if (success) {
-                 this.addBalance(500); 
+                 const rewardResult = await this.claimServerAdReward();
+                 if (!rewardResult.ok) {
+                     const cooldown = Math.ceil((rewardResult.retryAfterMs || 0) / 1000);
+                     let message = _safeT('err_server_conn') || "Greška pri konekciji sa serverom.";
+                     if (rewardResult.reason === 'ad_reward_cooldown') {
+                         message = `Nagrada je već obrađena. Pokušajte ponovo za ${cooldown || 1}s.`;
+                     } else if (rewardResult.reason === 'auth_required') {
+                         message = _safeT('auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
+                     }
+                     this.showRewardMessage(message, _safeT('modal_title_info') || "INFO");
+                     return;
+                 }
+
+                 const rewardAmount = parseInt(rewardResult.reward) || 500;
+                 if (rewardResult.localFallback) {
+                     this.addBalance(rewardAmount, false);
+                 } else if (rewardResult.balance !== undefined) {
+                     this.setServerBalance(rewardResult.balance);
+                 }
                  
-                 if(window.app && window.app.soundMgr) window.app.soundMgr.win(); 
+                 if(window.app && window.app.soundMgr) window.app.soundMgr.win();
 
                  this.updateBalanceDisplay();
                  
-                 if (typeof window.showNotification === 'function') {
-                     window.showNotification(_safeT('msg_reward_title') || "NAGRADA", "+500 💰");
-                 } else if (window.modalManager && window.modalManager.overlay) {
-                     window.modalManager.alert("+500 💰", _safeT('msg_reward_title') || "NAGRADA");
-                 }
+                 this.showRewardMessage(`+${rewardAmount} 💰`, _safeT('msg_reward_title') || "NAGRADA");
              }
         }
     }

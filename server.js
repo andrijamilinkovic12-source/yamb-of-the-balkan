@@ -275,6 +275,7 @@ const UserProfileSchema = new mongoose.Schema({
     activeTheme: { type: String, default: 'dark' },
     lastDaily: { type: String, default: "" },
     lastDailyRewardClaimed: { type: String, default: "" },
+    lastShopAdRewardAt: { type: Number, default: 0 },
     soundEnabled: { type: Boolean, default: true },
     vibrationEnabled: { type: Boolean, default: true },  
     penaltyPoints: { type: Number, default: 0 },         
@@ -320,6 +321,8 @@ const MAX_TOURNEY_REWARD = 50000;
 const TOURNEY_ENTRY_FEE = 2500;
 const TOURNEY_WINNER_REWARD = 20000;
 const TOURNEY_RUNNER_UP_REWARD = 2500;
+const SHOP_AD_REWARD_AMOUNT = 500;
+const SHOP_AD_REWARD_COOLDOWN_MS = 15000;
 const MAX_IMPORTED_UNDO_TOKENS_BASE = 20;
 const MAX_PROFILE_GAMES = 250000;
 const MAX_PROFILE_GAME_DELTA_PER_SYNC = 50;
@@ -2220,6 +2223,59 @@ io.on('connection', (socket) => {
 
         } catch (err) {
             console.error("Greška pri proveri kvartalne nagrade:", err);
+        }
+    });
+
+    socket.on('claim_shop_ad_reward', async (data = {}, ack) => {
+        const reply = (payload) => {
+            socket.emit('shop_ad_reward_result', payload);
+            if (typeof ack === 'function') ack(payload);
+        };
+
+        try {
+            if (!MONGO_URI) {
+                reply({ ok: true, reward: SHOP_AD_REWARD_AMOUNT, localFallback: true });
+                return;
+            }
+
+            const uid = getVerifiedUid(socket);
+            if (!uid) {
+                socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+                reply({ ok: false, reason: 'auth_required' });
+                return;
+            }
+
+            const user = await UserProfile.findOne({ firebaseUid: uid });
+            if (!user) {
+                reply({ ok: false, reason: 'auth_required' });
+                return;
+            }
+
+            const now = Date.now();
+            const lastRewardAt = Math.max(0, toSafeInt(user.lastShopAdRewardAt, 0));
+            const elapsed = now - lastRewardAt;
+
+            if (lastRewardAt > 0 && elapsed < SHOP_AD_REWARD_COOLDOWN_MS) {
+                reply({
+                    ok: false,
+                    reason: 'ad_reward_cooldown',
+                    retryAfterMs: SHOP_AD_REWARD_COOLDOWN_MS - elapsed
+                });
+                return;
+            }
+
+            user.lastShopAdRewardAt = now;
+            user.balance = Math.min(
+                MAX_BALANCE,
+                Math.max(0, toSafeInt(user.balance, 0)) + SHOP_AD_REWARD_AMOUNT
+            );
+            await user.save();
+
+            emitProfileSync(socket, user);
+            reply({ ok: true, reward: SHOP_AD_REWARD_AMOUNT, balance: user.balance });
+        } catch (err) {
+            console.error("Greška pri shop ad nagradi:", err);
+            reply({ ok: false, reason: 'err_server_conn' });
         }
     });
 
