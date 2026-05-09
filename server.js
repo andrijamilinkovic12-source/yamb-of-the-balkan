@@ -7,6 +7,7 @@ const http = require('http');
 const { Server } = require("socket.io");
 const mongoose = require('mongoose');
 const cors = require('cors');
+const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
@@ -17,6 +18,10 @@ function parseFirebaseServiceAccount() {
 
     if (!raw && process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
         raw = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64').toString('utf8');
+    }
+
+    if (!raw && process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
+        raw = fs.readFileSync(process.env.FIREBASE_SERVICE_ACCOUNT_PATH, 'utf8');
     }
 
     if (!raw) return null;
