@@ -1070,6 +1070,15 @@ class YambApp {
                     let localStats = JSON.parse(localStorage.getItem('yamb_stats')) || this.stats || {};
                     let statsUpdated = false;
 
+                    if (Array.isArray(data.unlockedTrophies)) {
+                        const currentTrophies = Array.isArray(localStats.unlockedTrophies) ? localStats.unlockedTrophies : [];
+                        const serverTrophies = data.unlockedTrophies;
+                        if (JSON.stringify(currentTrophies) !== JSON.stringify(serverTrophies)) {
+                            localStats.unlockedTrophies = serverTrophies;
+                            statsUpdated = true;
+                        }
+                    }
+
                     if (data.tournamentWins !== undefined && data.tournamentWins !== (localStats.tournamentWins || 0)) {
                         localStats.tournamentWins = data.tournamentWins;
                         statsUpdated = true;
@@ -3478,8 +3487,8 @@ class YambApp {
              if (myIndex !== -1 && this.allScores[myIndex]) {
                  try {
                      if (window.trophyManager && typeof window.trophyManager.checkEndGameTrophies === 'function') {
-                         let detectedModeForTrophies = this.onlineMode ? "Online" : (this.players.length > 1 ? "Hotseat" : "Solo");
-                         const scoreDiff = winnerScore - myScoreEntry.score; 
+                         let detectedModeForTrophies = this.onlineMode ? "Online" : (this.aiMode ? "AI" : (this.players.length > 1 ? "Hotseat" : "Solo"));
+                         const scoreDiff = winnerScore - myScoreEntry.score;
                          window.trophyManager.checkEndGameTrophies(
                              myScoreEntry.score, 
                              this.allScores[myIndex], 

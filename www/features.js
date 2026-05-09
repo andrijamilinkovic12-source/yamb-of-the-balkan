@@ -42,7 +42,7 @@ if (typeof window.YambFeatures === 'undefined') {
          * GLAVNA FUNKCIJA: Proverava sve uslove za trofeje na kraju igre.
          */
         checkAchievements(finalScore, sheet) {
-            if (!window.trophyManager || !window.statsManager) return;
+            if (!window.statsManager) return;
 
             const stats = this.app.stats; 
             const isOnline = this.app.onlineMode;
@@ -52,19 +52,63 @@ if (typeof window.YambFeatures === 'undefined') {
             // POMOĆNA FUNKCIJA ZA BEZBEDAN PREVOD
             const _safeT = (key) => (typeof t !== 'undefined' ? t(key) : key);
 
+            const getTrophyData = (id) => {
+                if(typeof SHOP_DATA !== 'undefined' && SHOP_DATA.TROPHIES) {
+                    return SHOP_DATA.TROPHIES.find(t => t.id === id);
+                }
+                if (typeof CONFIG !== 'undefined' && CONFIG.TROPHIES) {
+                    return CONFIG.TROPHIES.find(t => t.id === id);
+                }
+                return null;
+            };
+
+            const buildProof = () => {
+                const statsSnapshot = window.statsManager.getStats ? window.statsManager.getStats() : (window.statsManager.stats || {});
+                const playedGames = Math.max(Number(statsSnapshot.games) || 0, Number(statsSnapshot.totalGames) || 0);
+                let scoreDiff = 0;
+
+                if ((is2Player || isVsAi) && this.app.players && this.app.players.length > 1) {
+                    const myName = this.app.playerName;
+                    const myIdx = this.app.players.findIndex(p => p === myName);
+                    if (myIdx !== -1) {
+                        const oppIdx = (myIdx === 0) ? 1 : 0;
+                        const myTotal = this.app.calculateTotalScore(myIdx);
+                        const oppTotal = this.app.calculateTotalScore(oppIdx);
+                        scoreDiff = oppTotal - myTotal;
+                    }
+                }
+
+                return {
+                    finalScore,
+                    sheet,
+                    mode: isOnline ? 'Online' : (is2Player && !isVsAi ? 'Hotseat' : (isVsAi ? 'AI' : 'Solo')),
+                    flags: {
+                        hasProphet: !!this.app.hasProphet,
+                        hasSvetiIlija: !!this.app.hasSvetiIlija,
+                        scoreDiff,
+                        localHour: new Date().getHours()
+                    },
+                    stats: {
+                        ...statsSnapshot,
+                        games: playedGames + 1,
+                        totalGames: playedGames + 1,
+                        highscore: Math.max(Number(statsSnapshot.highscore) || 0, Number(finalScore) || 0)
+                    }
+                };
+            };
+
             // POMOĆNA FUNKCIJA ZA OTKLJUČAVANJE I ISPLATU
             const unlock = (id) => {
+                const trophyData = getTrophyData(id);
+
+                if (trophyData && window.trophyManager && typeof window.trophyManager.unlock === 'function') {
+                    window.trophyManager.unlock(trophyData, buildProof());
+                    return;
+                }
+
                 if (window.statsManager.unlockTrophy(id)) {
                      console.log(`🏆 OSVOJEN TROFEJ: ${id}`);
                      
-                     // Pokušavamo da nađemo podatke o trofeju u globalnoj CONFIG ili SHOP_DATA
-                     let trophyData = null;
-                     if(typeof SHOP_DATA !== 'undefined' && SHOP_DATA.TROPHIES) {
-                         trophyData = SHOP_DATA.TROPHIES.find(t => t.id === id);
-                     } else if (typeof CONFIG !== 'undefined' && CONFIG.TROPHIES) { // Fallback ako je u CONFIG
-                         trophyData = CONFIG.TROPHIES.find(t => t.id === id);
-                     }
-
                      const rewardAmount = trophyData ? trophyData.reward : 0;
                      const lang = localStorage.getItem('yamb_lang') || 'sr';
                      const title = trophyData ? (trophyData.title[lang] || trophyData.title['sr']) : "TROPHY";

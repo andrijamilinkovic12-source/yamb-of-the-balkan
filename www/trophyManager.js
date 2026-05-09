@@ -5,11 +5,97 @@ class TrophyManager {
         this.trophies = SHOP_DATA.TROPHIES; // Učitava definicije iz config.js
     }
 
+    getProjectedStats(score) {
+        const stats = this.statsMgr && typeof this.statsMgr.getStats === 'function'
+            ? this.statsMgr.getStats()
+            : {};
+        const playedGames = Math.max(Number(stats.games) || 0, Number(stats.totalGames) || 0);
+
+        return {
+            ...stats,
+            games: playedGames + 1,
+            totalGames: playedGames + 1,
+            highscore: Math.max(Number(stats.highscore) || 0, Number(score) || 0)
+        };
+    }
+
+    buildClaimProof(score, sheet, mode, flags = {}) {
+        return {
+            finalScore: Number(score) || 0,
+            sheet,
+            mode,
+            flags: {
+                ...flags,
+                localHour: new Date().getHours()
+            },
+            stats: this.getProjectedStats(score)
+        };
+    }
+
+    updateBalanceDisplay() {
+        const balanceEl = document.getElementById('stat-balance');
+        if (balanceEl && this.statsMgr && this.statsMgr.stats) {
+            balanceEl.innerText = this.statsMgr.stats.balance;
+        }
+    }
+
+    applyLocalReward(trophy) {
+        const reward = Math.max(0, Number(trophy.reward) || 0);
+        if (!this.statsMgr || !this.statsMgr.stats || reward <= 0) return;
+
+        this.statsMgr.stats.balance = Math.max(0, (Number(this.statsMgr.stats.balance) || 0) + reward);
+        this.statsMgr.saveStats();
+        this.updateBalanceDisplay();
+    }
+
+    setServerBalance(balance) {
+        if (!this.statsMgr || !this.statsMgr.stats || typeof balance !== 'number') return;
+
+        this.statsMgr.stats.balance = Math.max(0, balance);
+        this.statsMgr.saveStats();
+        this.updateBalanceDisplay();
+    }
+
+    async claimServerReward(trophy, proof) {
+        const app = window.app;
+        const reward = Math.max(0, Number(trophy.reward) || 0);
+
+        if (!app || !app.socket || !app.socket.connected) {
+            return { ok: true, localFallback: true, trophyId: trophy.id, reward };
+        }
+
+        if (typeof app.authenticateSocketIdentity !== 'function') {
+            return { ok: true, localFallback: true, trophyId: trophy.id, reward, reason: 'auth_helper_missing' };
+        }
+
+        const authResult = await app.authenticateSocketIdentity();
+        if (!authResult || !authResult.ok) {
+            return { ok: true, localFallback: true, trophyId: trophy.id, reward, reason: authResult?.reason || 'auth_failed' };
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'claim_timeout', trophyId: trophy.id });
+            }, 8000);
+
+            app.socket.emit('claim_trophy_reward', { trophyId: trophy.id, proof }, result => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'empty_claim_response', trophyId: trophy.id });
+            });
+        });
+    }
+
     // Ovu funkciju poziva game.js na kraju partije (handleGameOver)
     checkEndGameTrophies(score, sheet, mode, flags = {}) {
         if (!this.statsMgr) return;
         
-        const stats = this.statsMgr.getStats();
+        const stats = this.getProjectedStats(score);
+        const proof = this.buildClaimProof(score, sheet, mode, flags);
         const unlockedNow = [];
 
         // Prolazimo kroz sve trofeje definisane u config.js
@@ -127,7 +213,7 @@ class TrophyManager {
             }
 
             if (conditionMet) {
-                this.unlock(trophy);
+                this.unlock(trophy, proof);
                 unlockedNow.push(trophy);
             }
         });
@@ -186,53 +272,57 @@ class TrophyManager {
         return false;
     }
 
-    unlock(trophy) {
+    unlock(trophy, proof = {}) {
         console.log(`🏆 OTKLJUČAN TROFEJ: ${trophy.id}`);
         
         // 1. Sačuvaj u stats
-        this.statsMgr.unlockTrophy(trophy.id);
-        
-        // 2. Dodaj nagradu
-        if (this.statsMgr.stats) {
-            this.statsMgr.stats.balance += trophy.reward;
-            this.statsMgr.saveStats();
-            
-            // --- DODATO ZA CLOUD SYNC ---
-            if (window.app && window.app.socket && window.app.socket.connected) {
-                window.app.socket.emit('set_player_data', {
-                    uid: localStorage.getItem('yamb_uid') || window.app.playerId,
-                    name: window.app.playerName,
-                    stats: window.app.getFullLocalStats(),
-                    playerId: window.app.playerId
-                });
-            }
+        if (!this.statsMgr.unlockTrophy(trophy.id)) return;
 
-            // Ažuriraj prikaz stanja ako smo u game-over ekranu
-            const balanceEl = document.getElementById('stat-balance'); 
-            if (balanceEl) balanceEl.innerText = this.statsMgr.stats.balance;
-        }
+        const notify = (rewardAmount = Math.max(0, Number(trophy.reward) || 0)) => {
+            if (this.soundMgr) this.soundMgr.trophy();
+            this.showNotification(trophy, rewardAmount);
+        };
 
-        // 3. Zvuk
-        if (this.soundMgr) this.soundMgr.trophy();
+        this.claimServerReward(trophy, proof)
+            .then(result => {
+                if (result && result.ok && result.localFallback) {
+                    this.applyLocalReward(trophy);
+                    notify(trophy.reward);
+                    return;
+                }
 
-        // 4. Vizuelna notifikacija
-        this.showNotification(trophy);
+                if (result && result.ok) {
+                    if (typeof result.balance === 'number') this.setServerBalance(result.balance);
+                    notify(Math.max(0, Number(result.reward) || 0));
+                    return;
+                }
+
+                console.warn(`Trofej ${trophy.id} nije isplaćen na serveru: ${result?.reason || 'unknown_error'}`);
+                notify(0);
+            })
+            .catch(err => {
+                console.warn("Greška pri server isplati trofeja, koristim lokalni fallback:", err);
+                this.applyLocalReward(trophy);
+                notify(trophy.reward);
+            });
     }
 
-    showNotification(trophy) {
+    showNotification(trophy, rewardOverride = null) {
         const div = document.createElement('div');
         div.className = 'trophy-popup';
         
         const lang = localStorage.getItem('yamb_lang') || 'sr';
         const title = trophy.title[lang] || trophy.title['sr'];
         const desc = trophy.desc[lang] || trophy.desc['sr'];
+        const reward = rewardOverride !== null ? rewardOverride : trophy.reward;
+        const rewardHtml = reward > 0 ? `<div class="tp-reward">+${reward} 💰</div>` : '';
 
         div.innerHTML = `
             <div class="tp-icon">${trophy.icon}</div>
             <div class="tp-content">
                 <div class="tp-title">${title}</div>
                 <div class="tp-desc">${desc}</div>
-                <div class="tp-reward">+${trophy.reward} 💰</div>
+                ${rewardHtml}
             </div>
         `;
 

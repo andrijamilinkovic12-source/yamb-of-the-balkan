@@ -1349,6 +1349,169 @@ function isProgressTrophyEarned(trophyId, stats) {
     }
 }
 
+function getTrophyCell(sheet, col, row) {
+    const colData = sheet && typeof sheet === 'object' && sheet[col] && typeof sheet[col] === 'object'
+        ? sheet[col]
+        : null;
+    if (!colData || !Object.prototype.hasOwnProperty.call(colData, row)) return null;
+
+    const value = colData[row];
+    if (value === null || value === undefined || value === '') return null;
+
+    const num = Number(value);
+    if (!Number.isFinite(num)) return null;
+    return Math.max(0, Math.min(MAX_SCORE, Math.floor(num)));
+}
+
+function sumTopRows(sheet, col) {
+    return ['1', '2', '3', '4', '5', '6'].reduce((total, row) => total + (getTrophyCell(sheet, col, row) || 0), 0);
+}
+
+function isBelgradeNightOwlHour() {
+    try {
+        const hourString = new Intl.DateTimeFormat('en-US', {
+            hour: 'numeric',
+            hour12: false,
+            timeZone: 'Europe/Belgrade'
+        }).format(new Date());
+        const hour = Number(hourString);
+        return hour >= 3 && hour <= 5;
+    } catch (err) {
+        const hour = new Date().getHours();
+        return hour >= 3 && hour <= 5;
+    }
+}
+
+function normalizeTrophyProof(rawProof) {
+    const proof = rawProof && typeof rawProof === 'object' ? rawProof : {};
+    const flags = proof.flags && typeof proof.flags === 'object' ? proof.flags : {};
+    const stats = proof.stats && typeof proof.stats === 'object' ? proof.stats : {};
+
+    return {
+        finalScore: clampSafeInt(proof.finalScore, 0, MAX_SCORE),
+        sheet: proof.sheet && typeof proof.sheet === 'object' ? proof.sheet : {},
+        mode: typeof proof.mode === 'string' ? proof.mode.substring(0, 30) : '',
+        flags: {
+            hasProphet: flags.hasProphet === true,
+            hasSvetiIlija: flags.hasSvetiIlija === true,
+            scoreDiff: clampSafeInt(flags.scoreDiff, -MAX_SCORE, MAX_SCORE)
+        },
+        stats: normalizeProfileStats({
+            ...stats,
+            highscore: Math.max(toSafeInt(stats.highscore), toSafeInt(proof.finalScore))
+        })
+    };
+}
+
+function getTrophyProgressStats(user, proof) {
+    const serverStats = normalizeProfileStats({
+        games: user?.games,
+        wins: user?.wins,
+        losses: user?.losses,
+        highscore: user?.highscore,
+        totalScoreSum: user?.totalScoreSum,
+        tournamentWins: user?.tournamentWins,
+        maxWinStreak: user?.maxWinStreak,
+        currentWinStreak: user?.currentWinStreak,
+        penaltyPoints: user?.penaltyPoints
+    });
+
+    return {
+        games: Math.max(serverStats.games, proof.stats.games),
+        wins: Math.max(serverStats.wins, proof.stats.wins),
+        losses: Math.max(serverStats.losses, proof.stats.losses),
+        highscore: Math.max(serverStats.highscore, proof.stats.highscore, proof.finalScore),
+        totalScoreSum: Math.max(serverStats.totalScoreSum, proof.stats.totalScoreSum),
+        tournamentWins: Math.max(serverStats.tournamentWins, proof.stats.tournamentWins),
+        maxWinStreak: Math.max(serverStats.maxWinStreak, proof.stats.maxWinStreak),
+        currentWinStreak: Math.max(serverStats.currentWinStreak, proof.stats.currentWinStreak),
+        penaltyPoints: Math.max(serverStats.penaltyPoints, proof.stats.penaltyPoints)
+    };
+}
+
+function isSpecialTrophyEarned(trophyId, proof) {
+    const sheet = proof.sheet;
+
+    switch (trophyId) {
+        case 'kafana':
+            return proof.mode === 'Hotseat';
+        case 'surgeon':
+            return REDOVI_IGRA.every(row => {
+                const value = getTrophyCell(sheet, 'Ručno', row);
+                return value !== null && value !== 0;
+            });
+        case 'immortal':
+            return KOLONE.every(col => REDOVI_IGRA.every(row => {
+                const value = getTrophyCell(sheet, col, row);
+                return value !== null && value !== 0;
+            }));
+        case 'minimal':
+            return KOLONE.some(col => {
+                const value = getTrophyCell(sheet, col, 'Min');
+                return value !== null && value > 0 && value < 7;
+            });
+        case 'math':
+            return KOLONE.some(col => sumTopRows(sheet, col) === 63);
+        case 'concrete':
+            return KOLONE.every(col => {
+                const value = getTrophyCell(sheet, col, 'Kenta');
+                return value !== null && value > 0;
+            });
+        case 'perfectionist':
+            return KOLONE.every(col => sumTopRows(sheet, col) >= 60);
+        case 'miner':
+            return KOLONE.some(col => {
+                const max = getTrophyCell(sheet, col, 'Max');
+                const min = getTrophyCell(sheet, col, 'Min');
+                const one = getTrophyCell(sheet, col, '1');
+                return max !== null && min !== null && one !== null && ((max - min) * one) > 60;
+            });
+        case 'prophet':
+            return proof.flags.hasProphet;
+        case 'sveti_ilija':
+            return proof.flags.hasSvetiIlija;
+        case 'sniper': {
+            const value = getTrophyCell(sheet, 'Najava', 'Yamb');
+            return value !== null && value > 0;
+        }
+        case 'hazard': {
+            const value = getTrophyCell(sheet, 'Ručno', 'Yamb');
+            return value !== null && value > 0;
+        }
+        case 'firecracker':
+            return KOLONE.every(col => {
+                const value = getTrophyCell(sheet, col, 'Yamb');
+                return value !== null && value > 0;
+            });
+        case 'potato':
+            return KOLONE.some(col => getTrophyCell(sheet, col, 'Yamb') === 0);
+        case 'achilles': {
+            const yambZeros = KOLONE.filter(col => getTrophyCell(sheet, col, 'Yamb') === 0).length;
+            return yambZeros >= 3 && proof.finalScore > 800;
+        }
+        case 'night_owl':
+            return isBelgradeNightOwlHour();
+        case 'close_call': {
+            const diff = Math.abs(proof.flags.scoreDiff);
+            return diff > 0 && diff < 5;
+        }
+        case 'spite':
+            return proof.flags.scoreDiff >= 200;
+        default:
+            return false;
+    }
+}
+
+function isTrophyClaimEarned(trophyId, user, rawProof) {
+    const proof = normalizeTrophyProof(rawProof);
+    const progressStats = getTrophyProgressStats(user, proof);
+
+    if (isProgressTrophyEarned(trophyId, progressStats)) return true;
+    if (!SPECIAL_TROPHY_IDS.has(trophyId)) return false;
+
+    return isSpecialTrophyEarned(trophyId, proof);
+}
+
 function filterAllowedTrophies(stats, clientTrophies, serverTrophies = [], allowLegacySpecial = false) {
     const accepted = new Set(
         sanitizeIdArray(serverTrophies).filter(id => ALL_TROPHY_IDS.has(id))
@@ -1608,6 +1771,118 @@ io.on('connection', (socket) => {
         const result = { ok: false, reason: 'firebase_token_required' };
         if (typeof ack === 'function') ack(result);
         socket.emit('auth_required', result);
+    });
+
+    socket.on('claim_trophy_reward', async (data, ack) => {
+        data = data || {};
+
+        const reply = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            socket.emit('trophy_reward_result', payload);
+        };
+
+        const trophyId = typeof data.trophyId === 'string' ? data.trophyId.trim().substring(0, 80) : '';
+        if (!ALL_TROPHY_IDS.has(trophyId)) {
+            reply({ ok: false, reason: 'invalid_trophy' });
+            return;
+        }
+
+        const reward = TROPHY_REWARDS[trophyId] || 0;
+
+        if (!MONGO_URI) {
+            reply({ ok: true, localFallback: true, trophyId, reward });
+            return;
+        }
+
+        const verifiedUid = socket.verifiedUid;
+        if (!verifiedUid) {
+            const result = { ok: false, reason: 'firebase_token_required' };
+            reply(result);
+            socket.emit('auth_required', result);
+            return;
+        }
+
+        try {
+            const user = await UserProfile.findOne({ firebaseUid: verifiedUid });
+            if (!user) {
+                reply({ ok: false, reason: 'profile_not_found' });
+                return;
+            }
+
+            const unlocked = new Set(sanitizeIdArray(user.unlockedTrophies));
+            if (unlocked.has(trophyId)) {
+                emitProfileSync(socket, user, {
+                    trophyReward: {
+                        trophyId,
+                        reward: 0,
+                        alreadyClaimed: true
+                    }
+                });
+                reply({
+                    ok: true,
+                    trophyId,
+                    reward: 0,
+                    alreadyClaimed: true,
+                    balance: Math.max(0, toSafeInt(user.balance)),
+                    unlockedTrophies: Array.from(unlocked)
+                });
+                return;
+            }
+
+            if (!isTrophyClaimEarned(trophyId, user, data.proof)) {
+                reply({ ok: false, reason: 'trophy_not_earned', trophyId });
+                return;
+            }
+
+            const updatedUser = await UserProfile.findOneAndUpdate(
+                {
+                    firebaseUid: verifiedUid,
+                    unlockedTrophies: { $ne: trophyId }
+                },
+                {
+                    $addToSet: { unlockedTrophies: trophyId },
+                    $inc: { balance: reward }
+                },
+                { new: true }
+            );
+
+            if (!updatedUser) {
+                const freshUser = await UserProfile.findOne({ firebaseUid: verifiedUid });
+                if (freshUser) emitProfileSync(socket, freshUser);
+                reply({
+                    ok: true,
+                    trophyId,
+                    reward: 0,
+                    alreadyClaimed: true,
+                    balance: freshUser ? Math.max(0, toSafeInt(freshUser.balance)) : Math.max(0, toSafeInt(user.balance)),
+                    unlockedTrophies: freshUser ? freshUser.unlockedTrophies : Array.from(unlocked)
+                });
+                return;
+            }
+
+            if (toSafeInt(updatedUser.balance) > MAX_BALANCE) {
+                updatedUser.balance = MAX_BALANCE;
+                await updatedUser.save();
+            }
+
+            emitProfileSync(socket, updatedUser, {
+                trophyReward: {
+                    trophyId,
+                    reward,
+                    balance: updatedUser.balance
+                }
+            });
+            reply({
+                ok: true,
+                trophyId,
+                reward,
+                balance: updatedUser.balance,
+                unlockedTrophies: updatedUser.unlockedTrophies
+            });
+        } catch (err) {
+            console.error('❌ claim_trophy_reward greška:', err);
+            reply({ ok: false, reason: 'server_error' });
+        }
     });
 
     socket.on('set_player_data', async (data) => {
