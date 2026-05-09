@@ -286,6 +286,8 @@ const UserProfileSchema = new mongoose.Schema({
     },
     legacyMigrationApplied: { type: Boolean, default: false },
     legacyMigratedAt: { type: Date, default: null },
+    economyMigrationApplied: { type: Boolean, default: false },
+    economyMigratedAt: { type: Date, default: null },
     lastLogin: { type: Date, default: Date.now }
 });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
@@ -306,6 +308,108 @@ const MAX_GAME_DURATION = 6 * 60 * 60 * 1000;
 const MAX_LEAGUE_SCORE = 1000000;
 const MAX_LEAGUE_SCORE_DELTA = MAX_SCORE + 500;
 const MIN_LEAGUE_SESSION_DURATION = 30000;
+const MAX_BALANCE = 5000000;
+const MAX_UNDO_TOKENS = 250;
+const MAX_DAILY_REWARD = 2000;
+const MAX_AD_REWARD_PER_SYNC = 1500;
+const MAX_REWARD_PER_GAME = 8000;
+const MAX_TOURNEY_REWARD = 50000;
+const MAX_IMPORTED_UNDO_TOKENS_BASE = 20;
+
+const TROPHY_REWARDS = Object.freeze({
+    first_play: 500,
+    apprentice: 1000,
+    kafana: 500,
+    score_1000: 2500,
+    grandmaster: 5000,
+    legend: 7500,
+    mythic: 15000,
+    godlike: 30000,
+    surgeon: 3000,
+    prophet: 1500,
+    sniper: 2500,
+    math: 1000,
+    sveti_ilija: 10000,
+    hazard: 3000,
+    firecracker: 4000,
+    concrete: 2500,
+    perfectionist: 3500,
+    miner: 2000,
+    immortal: 10000,
+    potato: 500,
+    minimal: 2000,
+    achilles: 5000,
+    close_call: 1000,
+    night_owl: 1000,
+    spite: 1000,
+    veteran: 3000
+});
+
+const SHOP_ITEM_PRICES = Object.freeze({
+    default: 0,
+    classic_red: 1500,
+    classic_blue: 1500,
+    classic_black: 2000,
+    bronze_antique: 2500,
+    bronze_patina: 3000,
+    bronze_steampunk: 3500,
+    bronze_spartan: 4000,
+    bronze_rose: 4500,
+    bronze_forge: 5000,
+    silver_classic: 5500,
+    silver_brushed: 6000,
+    silver_moonlight: 6500,
+    silver_knight: 7000,
+    silver_titanium: 7500,
+    silver_chrome: 8000,
+    gold_classic: 10000,
+    gold_rose: 12000,
+    gold_ancient: 14000,
+    gold_midas: 16000,
+    wood: 18000,
+    marble: 20000,
+    pearl: 22000,
+    carbon: 25000,
+    obsidian: 28000,
+    leather: 30000,
+    neon_blue: 35000,
+    neon_pink: 35000,
+    neon_green: 35000,
+    stealth: 40000,
+    glass_clear: 45000,
+    glass_ruby: 50000,
+    glass_emerald: 50000,
+    glass_sapphire: 50000,
+    magma: 75000,
+    galaxy: 85000,
+    retro: 100000,
+    hologram: 150000,
+    confetti: 0,
+    gold_rain: 10000,
+    fireflies: 5000,
+    bubbles: 8000,
+    ice_age: 12000,
+    black_hole: 15000,
+    supernova: 18000,
+    neon_pulse: 15000,
+    thunder: 20000,
+    balkan: 25000,
+    fireworks: 30000,
+    drones: 25000,
+    cosmic_dust: 40000,
+    dragon_fire: 45000,
+    dark: 0,
+    light: 0,
+    medium: 0,
+    winter: 0,
+    neon: 15000,
+    amethyst: 20000,
+    easter: 10000,
+    desert: 0,
+    moon: 25000
+});
+
+const FREE_UNLOCK_IDS = new Set(Object.entries(SHOP_ITEM_PRICES).filter(([, price]) => price === 0).map(([id]) => id));
 
 // NOVE PROMENLJIVE ZA ČUVANJE CHATA
 let globalChatHistory = [];
@@ -695,6 +799,162 @@ async function maybeApplyLegacyLeagueMigration(user, submittedStats, playerName,
     console.log(`✅ LEGACY MIGRATION: Prebačeno ${migratedLeague.quarterlyScore} liga poena za ${user.firebaseUid}`);
 }
 
+function toSafeInt(value, fallback = 0) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return fallback;
+    return Math.floor(num);
+}
+
+function sanitizeIdArray(value, maxItems = 150) {
+    if (!Array.isArray(value)) return [];
+    const seen = new Set();
+
+    value.forEach(item => {
+        if (typeof item !== 'string') return;
+        const cleaned = item.trim().substring(0, 80);
+        if (cleaned) seen.add(cleaned);
+    });
+
+    return Array.from(seen).slice(0, maxItems);
+}
+
+function sumTrophyRewards(trophyIds) {
+    return sanitizeIdArray(trophyIds).reduce((sum, id) => sum + (TROPHY_REWARDS[id] || 0), 0);
+}
+
+function getNewTrophyRewards(clientTrophies, serverTrophies) {
+    const serverSet = new Set(sanitizeIdArray(serverTrophies));
+    return sanitizeIdArray(clientTrophies).reduce((sum, id) => {
+        if (serverSet.has(id)) return sum;
+        return sum + (TROPHY_REWARDS[id] || 0);
+    }, 0);
+}
+
+function getRequestedUnlockSet(stats) {
+    return new Set([
+        ...sanitizeIdArray(stats?.unlockedSkins),
+        ...sanitizeIdArray(stats?.unlockedEffects),
+        ...sanitizeIdArray(stats?.yamb_unlocked),
+        ...sanitizeIdArray(stats?.unlockedThemes)
+    ]);
+}
+
+function getExistingUnlockSet(user) {
+    return new Set([
+        ...sanitizeIdArray(user?.unlockedSkins),
+        ...sanitizeIdArray(user?.unlockedEffects),
+        ...sanitizeIdArray(user?.yamb_unlocked),
+        ...sanitizeIdArray(user?.unlockedTrophies)
+    ]);
+}
+
+function getPaidUnlockCost(requestedUnlocks, existingUnlocks, requestedTrophies) {
+    const trophySet = new Set(sanitizeIdArray(requestedTrophies));
+    let total = 0;
+
+    requestedUnlocks.forEach(id => {
+        if (existingUnlocks.has(id) || FREE_UNLOCK_IDS.has(id) || trophySet.has(id)) return;
+        const price = SHOP_ITEM_PRICES[id];
+        if (typeof price !== 'number') {
+            total += 50000;
+            return;
+        }
+        total += Math.floor(price * 0.8);
+    });
+
+    return total;
+}
+
+function estimateEconomyCeiling(stats) {
+    const games = Math.max(0, toSafeInt(stats?.games));
+    const tournamentWins = Math.max(0, toSafeInt(stats?.tournamentWins));
+    const trophyRewards = sumTrophyRewards(stats?.unlockedTrophies);
+
+    return Math.min(
+        MAX_BALANCE,
+        1000 + (games * MAX_REWARD_PER_GAME) + trophyRewards + (tournamentWins * MAX_TOURNEY_REWARD) + 50000
+    );
+}
+
+function calculateAllowedBalanceIncrease(user, stats, oldUserGames, oldTournamentWins, newTrophyRewards) {
+    const newGames = Math.max(oldUserGames, toSafeInt(stats?.games));
+    const gameDelta = Math.max(0, newGames - oldUserGames);
+    const tournamentDelta = Math.max(0, toSafeInt(stats?.tournamentWins) - oldTournamentWins);
+    const todayStr = new Date().toDateString();
+    const dailyAllowance = user.lastDaily !== todayStr && stats?.lastDaily === todayStr ? MAX_DAILY_REWARD : 0;
+
+    return MAX_AD_REWARD_PER_SYNC +
+        (gameDelta * MAX_REWARD_PER_GAME) +
+        (tournamentDelta * MAX_TOURNEY_REWARD) +
+        newTrophyRewards +
+        dailyAllowance;
+}
+
+function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, acceptPaidUnlocks) {
+    const serverSet = new Set(sanitizeIdArray(serverItems));
+    const trophySet = new Set(sanitizeIdArray(requestedTrophies));
+
+    sanitizeIdArray(clientItems).forEach(id => {
+        if (serverSet.has(id) || FREE_UNLOCK_IDS.has(id) || trophySet.has(id) || (acceptPaidUnlocks && SHOP_ITEM_PRICES[id] !== undefined)) {
+            serverSet.add(id);
+        }
+    });
+
+    return Array.from(serverSet);
+}
+
+function pickAllowedInventoryItem(requested, allowedItems, fallback, defaultId) {
+    const allowedSet = new Set([...sanitizeIdArray(allowedItems), ...FREE_UNLOCK_IDS]);
+    const requestedId = sanitizeIdArray([requested], 1)[0];
+    const fallbackId = sanitizeIdArray([fallback], 1)[0];
+
+    if (requestedId && allowedSet.has(requestedId)) return requestedId;
+    if (fallbackId && allowedSet.has(fallbackId)) return fallbackId;
+    return defaultId;
+}
+
+function normalizeActiveSelections(user, fallbackActive = {}) {
+    const skinItems = [...sanitizeIdArray(user.unlockedSkins), ...sanitizeIdArray(user.yamb_unlocked)];
+    const effectItems = [...sanitizeIdArray(user.unlockedEffects), ...sanitizeIdArray(user.yamb_unlocked)];
+    const themeItems = [...sanitizeIdArray(user.yamb_unlocked), ...sanitizeIdArray(user.unlockedSkins)];
+
+    user.activeSkin = pickAllowedInventoryItem(user.activeSkin, skinItems, fallbackActive.activeSkin, 'default');
+    user.activeEffect = pickAllowedInventoryItem(user.activeEffect, effectItems, fallbackActive.activeEffect, 'confetti');
+    user.activeTheme = pickAllowedInventoryItem(user.activeTheme, themeItems, fallbackActive.activeTheme, 'dark');
+}
+
+function buildInitialEconomyState(stats) {
+    const requestedTrophies = sanitizeIdArray(stats?.unlockedTrophies);
+    const requestedUnlocks = getRequestedUnlockSet(stats);
+    const requestedPaidUnlockCost = getPaidUnlockCost(requestedUnlocks, new Set(requestedTrophies), requestedTrophies);
+    const economyCeiling = estimateEconomyCeiling(stats);
+    const requestedBalance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(stats?.balance, 0)));
+    const purchaseCoverage = Math.max(0, economyCeiling - requestedBalance);
+    const acceptsPaidUnlocks = requestedPaidUnlockCost === 0 || purchaseCoverage >= requestedPaidUnlockCost;
+    const acceptedBalance = acceptsPaidUnlocks ? requestedBalance : Math.min(requestedBalance, economyCeiling);
+    const undoLimit = Math.min(
+        MAX_UNDO_TOKENS,
+        MAX_IMPORTED_UNDO_TOKENS_BASE + (Math.max(0, toSafeInt(stats?.games)) * 3)
+    );
+    const generalUnlocks = [
+        ...sanitizeIdArray(stats?.yamb_unlocked),
+        ...sanitizeIdArray(stats?.unlockedThemes)
+    ];
+
+    if (!acceptsPaidUnlocks && requestedPaidUnlockCost > 0) {
+        console.log(`🚨 ECONOMY GUARD: Novi profil poslao unlock-e bez pokrića. Potrebno ${requestedPaidUnlockCost}, pokriće ${purchaseCoverage}.`);
+    }
+
+    return {
+        balance: Math.max(0, Math.min(MAX_BALANCE, acceptedBalance)),
+        undoTokens: Math.max(0, Math.min(MAX_UNDO_TOKENS, undoLimit, toSafeInt(stats?.undoTokens, 0))),
+        unlockedTrophies: requestedTrophies,
+        unlockedSkins: filterAllowedUnlocks(stats?.unlockedSkins, [], requestedTrophies, acceptsPaidUnlocks),
+        unlockedEffects: filterAllowedUnlocks(stats?.unlockedEffects, [], requestedTrophies, acceptsPaidUnlocks),
+        yamb_unlocked: filterAllowedUnlocks(generalUnlocks, [], requestedTrophies, acceptsPaidUnlocks)
+    };
+}
+
 // ==================================================================
 // --- POMOĆNA FUNKCIJA ZA BROJANJE GLEDALACA ---
 // ==================================================================
@@ -830,7 +1090,12 @@ io.on('connection', (socket) => {
                 user.playerName = data.name;
                 user.lastLogin = Date.now();
                 user.photoUrl = socket.photoUrl || user.photoUrl;
-                
+                const previousActive = {
+                    activeSkin: user.activeSkin,
+                    activeEffect: user.activeEffect,
+                    activeTheme: user.activeTheme
+                };
+
                 if (s.activeSkin !== undefined && s.activeSkin !== null) user.activeSkin = s.activeSkin;
                 if (s.activeEffect !== undefined && s.activeEffect !== null) user.activeEffect = s.activeEffect;
                 if (s.activeTheme !== undefined && s.activeTheme !== null) user.activeTheme = s.activeTheme;
@@ -844,6 +1109,14 @@ io.on('connection', (socket) => {
                 // 🛡️ NOVO: Popravljena logika (INVENTORY DESYNC FIX)
                 const isFreshLogin = (s.games === 0);
                 const oldUserGames = user.games || 0;
+                const oldTournamentWins = user.tournamentWins || 0;
+                const oldBalance = Math.max(0, toSafeInt(user.balance));
+                const oldUndoTokens = Math.max(0, toSafeInt(user.undoTokens));
+                const requestedTrophies = sanitizeIdArray(s.unlockedTrophies);
+                const newTrophyRewards = getNewTrophyRewards(requestedTrophies, user.unlockedTrophies);
+                const existingUnlocksBefore = getExistingUnlockSet(user);
+                const requestedUnlocks = getRequestedUnlockSet(s);
+                const requestedPaidUnlockCost = getPaidUnlockCost(requestedUnlocks, existingUnlocksBefore, requestedTrophies);
 
                 if (!isFreshLogin) {
                     if (s.games > user.games) user.games = s.games;
@@ -859,12 +1132,8 @@ io.on('connection', (socket) => {
                         user.maxWinStreak = s.maxWinStreak;
                     }
 
-                    if (typeof s.undoTokens === 'number') {
-                        user.undoTokens = s.undoTokens;
-                    }
-
                     if (typeof s.currentWinStreak === 'number') {
-                        user.currentWinStreak = s.currentWinStreak; 
+                        user.currentWinStreak = s.currentWinStreak;
                     }
                 }
                 
@@ -885,40 +1154,75 @@ io.on('connection', (socket) => {
                     isUsingOldBackup = true;
                 }
 
-                // ⚖️ FIX BALANSA: Ultimativna zaštita dukata
-                if (typeof s.balance === 'number') {
-                    const razlika = s.balance - user.balance;
-                    
-                    if (isUsingOldBackup && s.balance > user.balance) {
-                        console.log(`🚨 HACK POKUŠAJ (Inventory Desync): Igrač ${user.playerName} odbijen skok dukata sa ${user.balance} na ${s.balance}!`);
-                        // Zadržavamo manji iznos (onaj nakon kupovine)
-                    } else if (isClientSynced) {
-                        if (razlika > 80000) { 
-                            console.log(`🚨 HACK POKUŠAJ (Speed/Mod): Igrač ${user.playerName} sumnjiv skok dukata!`);
-                        } else {
-                            user.balance = s.balance; // Sve je legalno, upiši novac
-                        }
+                let acceptedBalance = oldBalance;
+                const requestedBalance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(s.balance, oldBalance)));
+                const requestedBalanceDelta = requestedBalance - oldBalance;
+                const legacyEconomyAllowance = !user.economyMigrationApplied
+                    ? Math.max(0, estimateEconomyCeiling(s) - oldBalance)
+                    : 0;
+                const allowedBalanceIncrease = calculateAllowedBalanceIncrease(user, s, oldUserGames, oldTournamentWins, newTrophyRewards) + legacyEconomyAllowance;
+                const purchaseCoverage = Math.max(0, oldBalance + allowedBalanceIncrease - requestedBalance);
+                const acceptsPaidUnlocks = requestedPaidUnlockCost === 0 || purchaseCoverage >= requestedPaidUnlockCost;
+
+                if (typeof s.balance === 'number' && isClientSynced) {
+                    if (isUsingOldBackup && requestedBalance > oldBalance) {
+                        console.log(`🚨 HACK POKUŠAJ (Inventory Desync): Igrač ${user.playerName} odbijen skok dukata sa ${oldBalance} na ${requestedBalance}!`);
+                    } else if (requestedBalanceDelta <= 0) {
+                        acceptedBalance = requestedBalance;
+                    } else if (requestedBalanceDelta <= allowedBalanceIncrease) {
+                        acceptedBalance = requestedBalance;
+                    } else {
+                        console.log(`🚨 ECONOMY GUARD: Odbijen skok dukata sa ${oldBalance} na ${requestedBalance}. Dozvoljeno +${allowedBalanceIncrease}, traženo +${requestedBalanceDelta}.`);
+                    }
+
+                    user.balance = acceptedBalance;
+                }
+
+                if (typeof s.undoTokens === 'number' && isClientSynced) {
+                    const requestedUndoTokens = Math.max(0, Math.min(MAX_UNDO_TOKENS, toSafeInt(s.undoTokens, oldUndoTokens)));
+                    const undoDelta = requestedUndoTokens - oldUndoTokens;
+                    const legacyUndoAllowance = !user.economyMigrationApplied
+                        ? Math.max(0, Math.min(MAX_UNDO_TOKENS, (Math.max(0, toSafeInt(s.games)) * 3) + 20) - oldUndoTokens)
+                        : 0;
+                    const allowedUndoIncrease = 3 + Math.max(0, toSafeInt(s.games) - oldUserGames) + legacyUndoAllowance;
+
+                    if (undoDelta <= 0 || undoDelta <= allowedUndoIncrease) {
+                        user.undoTokens = requestedUndoTokens;
+                    } else {
+                        console.log(`🚨 ECONOMY GUARD: Odbijen skok undo tokena sa ${oldUndoTokens} na ${requestedUndoTokens}.`);
                     }
                 }
-                
+
                 // 🛡️ SECURITY FIX INVENTARA: Dodajemo u bazu SAMO ako je klijent sinhronizovan
                 if (isClientSynced) {
-                    if (s.unlockedTrophies && s.unlockedTrophies.length > 0) {
-                        const mergedTrophies = new Set([...user.unlockedTrophies, ...s.unlockedTrophies]);
+                    if (requestedTrophies.length > 0) {
+                        const mergedTrophies = new Set([...user.unlockedTrophies, ...requestedTrophies]);
                         user.unlockedTrophies = Array.from(mergedTrophies);
                     }
                     if (s.unlockedSkins && s.unlockedSkins.length > 0) {
-                        const mergedSkins = new Set([...user.unlockedSkins, ...s.unlockedSkins]);
-                        user.unlockedSkins = Array.from(mergedSkins);
+                        user.unlockedSkins = filterAllowedUnlocks(s.unlockedSkins, user.unlockedSkins, requestedTrophies, acceptsPaidUnlocks);
                     }
                     if (s.unlockedEffects && s.unlockedEffects.length > 0) {
-                        const mergedEffects = new Set([...user.unlockedEffects, ...s.unlockedEffects]);
-                        user.unlockedEffects = Array.from(mergedEffects);
+                        user.unlockedEffects = filterAllowedUnlocks(s.unlockedEffects, user.unlockedEffects, requestedTrophies, acceptsPaidUnlocks);
                     }
-                    if (s.yamb_unlocked && s.yamb_unlocked.length > 0) {
-                        const mergedAll = new Set([...(user.yamb_unlocked || []), ...s.yamb_unlocked]);
-                        user.yamb_unlocked = Array.from(mergedAll);
+                    const generalUnlocks = [
+                        ...sanitizeIdArray(s.yamb_unlocked),
+                        ...sanitizeIdArray(s.unlockedThemes)
+                    ];
+                    if (generalUnlocks.length > 0) {
+                        user.yamb_unlocked = filterAllowedUnlocks(generalUnlocks, user.yamb_unlocked, requestedTrophies, acceptsPaidUnlocks);
                     }
+
+                    if (!acceptsPaidUnlocks && requestedPaidUnlockCost > 0) {
+                        console.log(`🚨 ECONOMY GUARD: Odbijeni novi unlock-i bez pokrića kupovine. Potrebno ${requestedPaidUnlockCost}, pokriće ${purchaseCoverage}.`);
+                    }
+                }
+
+                normalizeActiveSelections(user, previousActive);
+
+                if (!user.economyMigrationApplied) {
+                    user.economyMigrationApplied = true;
+                    user.economyMigratedAt = Date.now();
                 }
 
                 const todayStr = new Date().toDateString();
@@ -1049,29 +1353,39 @@ io.on('connection', (socket) => {
                     leagueData: user.leagueData 
                 });
             } else {
+                const initialEconomy = buildInitialEconomyState(s);
+                const initialGames = Math.max(0, toSafeInt(s.games, 0));
+                const initialWins = Math.max(0, Math.min(initialGames, toSafeInt(s.wins, 0)));
+                const initialLosses = Math.max(0, Math.min(initialGames, toSafeInt(s.losses, 0)));
+                const initialHighscore = Math.max(0, Math.min(MAX_SCORE, toSafeInt(s.highscore, 0)));
+                const initialTotalScoreSum = Math.max(0, Math.min(toSafeInt(s.totalScoreSum, 0), initialGames * MAX_SCORE));
+
                 user = new UserProfile({
                     firebaseUid: verifiedUid,
                     playerName: data.name,
                     photoUrl: socket.photoUrl || '',
-                    wins: s.wins || 0, losses: s.losses || 0, games: s.games || 0,
-                    highscore: s.highscore || 0, totalScoreSum: s.totalScoreSum || 0,
-                    balance: s.balance || 0, undoTokens: s.undoTokens || 0, currentWinStreak: s.currentWinStreak || 0,
-                    maxWinStreak: s.maxWinStreak || 0, 
-                    tournamentWins: s.tournamentWins || 0, 
-                    activeSkin: s.activeSkin || 'default', 
-                    activeTheme: s.activeTheme || 'dark', 
-                    activeEffect: s.activeEffect || 'confetti', 
-                    soundEnabled: s.soundEnabled !== undefined ? s.soundEnabled : true,       
-                    vibrationEnabled: s.vibrationEnabled !== undefined ? s.vibrationEnabled : true, 
-                    penaltyPoints: s.penaltyPoints || 0,
-                    h2hStats: s.h2hStats || {}, 
-                    unlockedTrophies: s.unlockedTrophies || [],
-                    unlockedSkins: s.unlockedSkins || [],
-                    unlockedEffects: s.unlockedEffects || [],
-                    yamb_unlocked: s.yamb_unlocked || [], 
+                    wins: initialWins, losses: initialLosses, games: initialGames,
+                    highscore: initialHighscore, totalScoreSum: initialTotalScoreSum,
+                    balance: initialEconomy.balance, undoTokens: initialEconomy.undoTokens, currentWinStreak: Math.max(0, toSafeInt(s.currentWinStreak, 0)),
+                    maxWinStreak: Math.max(0, toSafeInt(s.maxWinStreak, 0)),
+                    tournamentWins: Math.max(0, toSafeInt(s.tournamentWins, 0)),
+                    activeSkin: s.activeSkin || 'default',
+                    activeTheme: s.activeTheme || 'dark',
+                    activeEffect: s.activeEffect || 'confetti',
+                    soundEnabled: s.soundEnabled !== undefined ? s.soundEnabled : true,
+                    vibrationEnabled: s.vibrationEnabled !== undefined ? s.vibrationEnabled : true,
+                    penaltyPoints: Math.max(0, toSafeInt(s.penaltyPoints, 0)),
+                    h2hStats: s.h2hStats || {},
+                    unlockedTrophies: initialEconomy.unlockedTrophies,
+                    unlockedSkins: initialEconomy.unlockedSkins,
+                    unlockedEffects: initialEconomy.unlockedEffects,
+                    yamb_unlocked: initialEconomy.yamb_unlocked,
                     lastDaily: s.lastDaily || "",
-                    leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 }
+                    leagueData: s.leagueData || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 },
+                    economyMigrationApplied: true,
+                    economyMigratedAt: Date.now()
                 });
+                normalizeActiveSelections(user);
                 await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
                 await user.save();
                 
@@ -1330,6 +1644,7 @@ io.on('connection', (socket) => {
 
                 if (!user.claimedLeagueRewards) user.claimedLeagueRewards = [];
                 user.claimedLeagueRewards.push(rewardKey);
+                user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + rewardAmount);
                 await user.save();
 
                 socket.emit('quarter_reward', { rank: rank, reward: rewardAmount });
