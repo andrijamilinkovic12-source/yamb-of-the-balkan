@@ -1088,6 +1088,9 @@ io.on('connection', (socket) => {
     const MAX_NAME_LENGTH = 24;
     const MIN_GAME_DURATION = 120000;
     const MAX_GAME_DURATION = 6 * 60 * 60 * 1000;
+    const MAX_LEAGUE_SCORE = 1000000;
+    const MAX_LEAGUE_SCORE_DELTA = MAX_SCORE + 500;
+    const MIN_LEAGUE_SESSION_DURATION = 30000;
 
     socket.on('start_local_game', (roomId) => {
         socket.join(roomId);
@@ -1372,7 +1375,7 @@ io.on('connection', (socket) => {
 
             const finalUid = socket.playerId || data?.uid || data?.playerId;
 
-            if (!finalUid || finalUid.startsWith('guest_') || finalUid.length < 20) {
+            if (typeof finalUid !== 'string' || finalUid.length === 0 || finalUid.startsWith('guest_') || finalUid.length < 20) {
                 return replyScoreSubmit(false, 'invalid_player');
             }
 
@@ -1480,48 +1483,87 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('submit_league_score', async (data) => {
-        try {
-            if (!MONGO_URI) return;
-            if (typeof data.score !== 'number' || isNaN(data.score)) return;
+    socket.on('submit_league_score', async (data, ack) => {
+        const replyLeagueSubmit = (ok, reason = null, permanent = !ok) => {
+            const result = { ok, reason, permanent };
+            if (typeof ack === 'function') ack(result);
+            if (!ok) socket.emit('league_score_rejected', result);
+            return result;
+        };
 
-            let uniqueId = data.uid || data.playerId || socket.playerId || socket.id;
-            
-            if (uniqueId && uniqueId.startsWith('guest_')) {
-                return;
+        try {
+            if (!MONGO_URI) return replyLeagueSubmit(false, 'db_unavailable', false);
+
+            const submittedScore = Number(data?.score);
+            const submittedYear = Number(data?.year);
+            const submittedQuarter = Number(data?.quarter);
+            const uniqueId = socket.playerId || registeredSockets[socket.id];
+
+            if (typeof uniqueId !== 'string' || uniqueId.length === 0 || uniqueId.startsWith('guest_') || uniqueId.startsWith('usr_') || uniqueId.length < 20) {
+                return replyLeagueSubmit(false, 'invalid_player');
             }
 
-            let rawName = (data.playerName || "Nepoznat Igrač").trim().substring(0, 24);
-            let finalName = sadrziPsovku(rawName) 
-                ? "Igrač_" + Math.floor(1000 + Math.random() * 9000) 
+            if (!Number.isInteger(submittedScore) || submittedScore < 0 || submittedScore > MAX_LEAGUE_SCORE) {
+                return replyLeagueSubmit(false, 'score_out_of_range');
+            }
+
+            if (!Number.isInteger(submittedYear) || !Number.isInteger(submittedQuarter) || submittedQuarter < 1 || submittedQuarter > 4) {
+                return replyLeagueSubmit(false, 'invalid_period');
+            }
+
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentQuarter = Math.floor(now.getMonth() / 3) + 1;
+            if (submittedYear !== currentYear || submittedQuarter !== currentQuarter) {
+                return replyLeagueSubmit(false, 'stale_period');
+            }
+
+            let rawName = (socket.playerName || data?.playerName || "Nepoznat Igrač").toString().trim().substring(0, MAX_NAME_LENGTH);
+            let finalName = sadrziPsovku(rawName)
+                ? "Igrač_" + Math.floor(1000 + Math.random() * 9000)
                 : rawName;
 
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
 
-            const currentDoc = await LeagueScore.findOne({ playerId: uniqueId, year: data.year, quarter: data.quarter });
-            if (currentDoc) {
-                const diff = currentDoc.score - data.score;
-                if (diff > 4000) {
-                    console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran overwrite tabele sa ${currentDoc.score} na ${data.score}`);
-                    return; 
+            const currentDoc = await LeagueScore.findOne({ playerId: uniqueId, year: submittedYear, quarter: submittedQuarter });
+            const currentScore = currentDoc ? Number(currentDoc.score) || 0 : 0;
+            const delta = submittedScore - currentScore;
+
+            if (currentDoc && currentScore - submittedScore > MAX_LEAGUE_SCORE_DELTA) {
+                console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran pad lige sa ${currentScore} na ${submittedScore}`);
+                return replyLeagueSubmit(false, 'league_drop_too_large');
+            }
+
+            if (delta > MAX_LEAGUE_SCORE_DELTA) {
+                console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran skok lige sa ${currentScore} na ${submittedScore}`);
+                return replyLeagueSubmit(false, 'league_jump_too_large');
+            }
+
+            if (delta > 0) {
+                const startTime = gameStartTimes[socket.id];
+                const duration = startTime ? Date.now() - startTime : 0;
+                if (!startTime || duration < MIN_LEAGUE_SESSION_DURATION || duration > MAX_GAME_DURATION) {
+                    return replyLeagueSubmit(false, 'invalid_game_session');
                 }
             }
 
             await LeagueScore.findOneAndUpdate(
-                { playerId: uniqueId, year: data.year, quarter: data.quarter }, 
-                { 
-                    $set: { 
-                        playerName: finalName, 
-                        photoUrl: data.photoUrl || '', 
+                { playerId: uniqueId, year: submittedYear, quarter: submittedQuarter },
+                {
+                    $set: {
+                        playerName: finalName,
+                        photoUrl: (socket.photoUrl || data?.photoUrl || '').toString().substring(0, 500),
                         date: Date.now(),
-                        score: data.score 
+                        score: submittedScore
                     }
-                }, 
-                { upsert: true, new: true } 
+                },
+                { upsert: true, new: true }
             );
-            
+
+            return replyLeagueSubmit(true);
         } catch (err) {
             console.error("Greška pri upisu u kvartalnu ligu:", err);
+            return replyLeagueSubmit(false, 'server_error', false);
         }
     });
 

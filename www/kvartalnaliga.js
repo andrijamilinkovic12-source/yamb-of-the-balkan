@@ -143,7 +143,7 @@ class KvartalnaLigaManager {
     }
 
     syncWithServer() {
-        if (!window.app || !window.app.socket) return;
+        if (!window.app || !window.app.socket || !window.app.socket.connected) return;
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         const data = this.getScores();
@@ -151,11 +151,8 @@ class KvartalnaLigaManager {
         let pName = localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost");
         let pPhoto = localStorage.getItem('yamb_player_photo') || ''; 
 
-        let pId = localStorage.getItem('yamb_uid') || localStorage.getItem('yamb_player_id');
-        if (!pId) {
-            pId = 'usr_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
-            localStorage.setItem('yamb_player_id', pId);
-        }
+        let pId = localStorage.getItem('yamb_uid');
+        if (!pId) return;
 
         window.app.socket.emit('submit_league_score', {
             playerId: pId,
@@ -164,6 +161,9 @@ class KvartalnaLigaManager {
             score: data.quarterlyScore,
             year: currentYear,
             quarter: currentQuarter
+        }, (result) => {
+            if (result && result.ok) return;
+            console.warn(`Server je odbio upis u Kvartalnu Ligu: ${result?.reason || 'unknown_error'}`);
         });
     }
 
