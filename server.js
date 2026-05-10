@@ -2083,11 +2083,17 @@ io.on('connection', (socket) => {
                     ? Math.max(0, estimateEconomyCeiling(s) - oldBalance)
                     : 0;
                 const allowedBalanceIncrease = calculateAllowedBalanceIncrease(user, s, oldUserGames, oldTournamentWins, newTrophyRewards) + legacyEconomyAllowance;
+                const earnedBalanceIncrease = (Math.max(0, statsGuard.acceptedGameDelta) * MAX_REWARD_PER_GAME) +
+                    (Math.max(0, statsGuard.acceptedTournamentDelta) * MAX_TOURNEY_REWARD) +
+                    newTrophyRewards +
+                    (shouldMarkDailyRewardClaimed ? requestedDailyReward : 0) +
+                    legacyEconomyAllowance;
+                const hasEarnedBalanceIncrease = requestedBalanceDelta > 0 && requestedBalanceDelta <= earnedBalanceIncrease;
                 const purchaseCoverage = Math.max(0, oldBalance + allowedBalanceIncrease - requestedBalance);
                 const acceptsPaidUnlocks = requestedPaidUnlockCost === 0 || purchaseCoverage >= requestedPaidUnlockCost;
 
                 if (typeof s.balance === 'number' && isClientSynced) {
-                    if (isUsingOldBackup && requestedBalance > oldBalance) {
+                    if (isUsingOldBackup && requestedBalance > oldBalance && !hasEarnedBalanceIncrease) {
                         console.log(`🚨 HACK POKUŠAJ (Inventory Desync): Igrač ${user.playerName} odbijen skok dukata sa ${oldBalance} na ${requestedBalance}!`);
                     } else if (requestedBalanceDelta <= 0) {
                         acceptedBalance = requestedBalance;
