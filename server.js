@@ -318,6 +318,7 @@ const MAX_DAILY_REWARD = 2000;
 const MAX_AD_REWARD_PER_SYNC = 1500;
 const MAX_REWARD_PER_GAME = 8000;
 const MAX_TOURNEY_REWARD = 50000;
+const TOP_SCORE_SUBMIT_GRACE_MS = 15000;
 const TOURNEY_ENTRY_FEE = 2500;
 const TOURNEY_WINNER_REWARD = 20000;
 const TOURNEY_RUNNER_UP_REWARD = 2500;
@@ -3665,6 +3666,16 @@ io.on('connection', (socket) => {
 
     socket.on('game_over', () => {
         const roomId = playerRooms[socket.id];
+        const scoreSessionStartedAt = gameStartTimes[socket.id];
+
+        if (scoreSessionStartedAt) {
+            setTimeout(() => {
+                if (gameStartTimes[socket.id] === scoreSessionStartedAt) {
+                    delete gameStartTimes[socket.id];
+                }
+            }, TOP_SCORE_SUBMIT_GRACE_MS);
+        }
+
         if (roomId) {
             console.log(`🏁 Igra završena u sobi: ${roomId}`);
             delete playerRooms[socket.id];

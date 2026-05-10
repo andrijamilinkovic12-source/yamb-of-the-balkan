@@ -47,6 +47,7 @@ class TopListManager {
 
         // Pripremamo objekat za bazu
         const entry = {
+            localId: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
             uid: currentUid, // <-- DODATO OVO POLJE
             playerName: name || this._t('player_unknown'), 
             score: parseInt(score),
@@ -59,7 +60,19 @@ class TopListManager {
         // 1. Uvek prvo sačuvaj lokalno
         await this._saveLocal(entry);
 
-        // 2. Pokušaj odmah da sinhronizuješ ako ima neta
+        // 2. Skor iz upravo završene partije šaljemo odmah i čekamo odgovor,
+        // dok server još ima aktivnu validnu game sesiju za taj socket.
+        if (this.app.socket && this.app.socket.connected) {
+            const result = await this._submitScoreToServer(entry);
+            await this._markLocalSubmitResult(entry, result);
+
+            if (result && result.ok) {
+                this._loadGlobal();
+                return;
+            }
+        }
+
+        // 3. Neuspeh bez trajnog odbijanja ostaje za kasniji pokušaj.
         this.syncOfflineScores();
     }
 
@@ -75,6 +88,46 @@ class TopListManager {
             setTimeout(() => finish({ ok: false, reason: 'score_submit_timeout', permanent: false }), 8000);
             this.app.socket.emit('submit_score', entry, finish);
         });
+    }
+
+    async _markLocalSubmitResult(entry, result) {
+        if (!entry || !result) return;
+        if (!result.ok && !result.permanent) return;
+
+        try {
+            let scores = [];
+            if (window.localforage) {
+                scores = (await localforage.getItem(this.storageKey)) || [];
+            } else {
+                const stored = localStorage.getItem(this.storageKey);
+                if (stored) scores = JSON.parse(stored);
+            }
+
+            const idx = scores.findIndex(item => {
+                if (entry.localId && item.localId === entry.localId) return true;
+                return !item.synced &&
+                    item.uid === entry.uid &&
+                    item.score === entry.score &&
+                    item.date === entry.date;
+            });
+
+            if (idx === -1) return;
+
+            if (result.ok) {
+                scores[idx].synced = true;
+                delete scores[idx].syncRejected;
+            } else if (result.permanent) {
+                scores[idx].syncRejected = result.reason || 'server_rejected';
+            }
+
+            if (window.localforage) {
+                await localforage.setItem(this.storageKey, scores);
+            } else {
+                localStorage.setItem(this.storageKey, JSON.stringify(scores));
+            }
+        } catch (e) {
+            console.warn("Nije moguće označiti sync status skora:", e);
+        }
     }
 
     /**
