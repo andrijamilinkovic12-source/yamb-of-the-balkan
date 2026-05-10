@@ -3757,7 +3757,31 @@ class YambApp {
         }
     }
 
-    async watchAdForDouble() { 
+    claimServerGameReward(score, doubled) {
+        return new Promise(resolve => {
+            if (!this.socket || !this.socket.connected) {
+                resolve({ ok: false, reason: 'socket_disconnected', localFallback: true });
+                return;
+            }
+
+            let settled = false;
+            const finish = (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'empty_reward_response', permanent: false });
+            };
+            const timer = setTimeout(() => finish({ ok: false, reason: 'game_reward_timeout', permanent: false }), 7000);
+
+            this.socket.emit('claim_game_reward', {
+                score: Math.max(0, parseInt(score) || 0),
+                doubled: !!doubled,
+                stats: this.getFullLocalStats()
+            }, finish);
+        });
+    }
+
+    async watchAdForDouble() {
         let success = false;
         
         if (this.adMob && this.adMob.showRewardVideo) {
@@ -3787,6 +3811,28 @@ class YambApp {
             } catch (err) {
                 console.warn("Cloud potvrda dukata nije uspela:", err);
             }
+        };
+        const applyServerBalance = (balance) => {
+            const safeBalance = Math.max(0, parseInt(balance) || 0);
+            localStorage.setItem('yamb_dukati', safeBalance);
+            if (window.statsManager) {
+                window.statsManager.stats.balance = safeBalance;
+                window.statsManager.saveStats();
+            }
+        };
+        const claimNormalGameReward = async (baseScore, wasDoubled) => {
+            const result = await this.claimServerGameReward(baseScore, wasDoubled);
+            if (result && result.ok && typeof result.balance === 'number') {
+                applyServerBalance(result.balance);
+                return true;
+            }
+
+            if (result && result.localFallback) {
+                await syncRewardBalance();
+            } else {
+                console.warn(`Server nije potvrdio nagradu partije: ${result?.reason || 'unknown_error'}`);
+            }
+            return false;
         };
 
         let finalAmount = this.pendingScore;
@@ -3829,8 +3875,8 @@ class YambApp {
         currentDukati += finalAmount;
         localStorage.setItem('yamb_dukati', currentDukati);
         if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
-        
-        await syncRewardBalance();
+
+        await claimNormalGameReward(this.pendingScore, doubled);
 
         if (window.kvartalnaLiga) {
             window.kvartalnaLiga.syncWithServer();

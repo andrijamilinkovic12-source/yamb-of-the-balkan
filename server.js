@@ -298,10 +298,11 @@ const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
 
 // --- GLOBALNE PROMENLJIVE ZA IGRU ---
 let waitingPlayer = null; 
-let privateRooms = {};    
-let playerRooms = {};     
-let gameStartTimes = {}; 
-const chatBans = {}; 
+let privateRooms = {};
+let playerRooms = {};
+let gameStartTimes = {};
+const pendingGameRewards = {};
+const chatBans = {};
 const onlinePlayers = {};
 const registeredSockets = {};
 
@@ -319,6 +320,7 @@ const MAX_AD_REWARD_PER_SYNC = 1500;
 const MAX_REWARD_PER_GAME = 8000;
 const MAX_TOURNEY_REWARD = 50000;
 const TOP_SCORE_SUBMIT_GRACE_MS = 15000;
+const GAME_REWARD_CLAIM_WINDOW_MS = 5 * 60 * 1000;
 const TOURNEY_ENTRY_FEE = 2500;
 const TOURNEY_WINNER_REWARD = 20000;
 const TOURNEY_RUNNER_UP_REWARD = 2500;
@@ -2849,12 +2851,95 @@ io.on('connection', (socket) => {
             await newScore.save();
             console.log(`✅ USPESAN UPIS: ${finalName} (UID: ${finalUid}) -> ${submittedScore} (${newScore.mode})`);
 
+            const rewardSession = {
+                uid: finalUid,
+                score: submittedScore,
+                mode: finalMode,
+                createdAt: Date.now()
+            };
+            pendingGameRewards[socket.id] = rewardSession;
+            setTimeout(() => {
+                if (pendingGameRewards[socket.id] === rewardSession) {
+                    delete pendingGameRewards[socket.id];
+                }
+            }, GAME_REWARD_CLAIM_WINDOW_MS);
+
             delete gameStartTimes[socket.id];
             return replyScoreSubmit(true);
 
         } catch (err) {
             console.error("❌ Greška pri upisu u MongoDB:", err);
             return replyScoreSubmit(false, 'server_error', false);
+        }
+    });
+
+    socket.on('claim_game_reward', async (data = {}, ack) => {
+        const replyGameReward = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            socket.emit('game_reward_result', payload);
+            return payload;
+        };
+
+        try {
+            const finalUid = socket.verifiedUid || socket.playerId;
+            if (typeof finalUid !== 'string' || finalUid.length === 0 || finalUid.startsWith('guest_') || finalUid.length < 20) {
+                return replyGameReward({ ok: false, reason: 'invalid_player', permanent: true });
+            }
+
+            if (!MONGO_URI) {
+                const localScore = Math.max(0, Math.min(MAX_SCORE, toSafeInt(data?.score, 0)));
+                const localReward = Math.min(MAX_REWARD_PER_GAME, localScore * (data?.doubled ? 2 : 1));
+                return replyGameReward({ ok: true, localFallback: true, reward: localReward });
+            }
+
+            const rewardSession = pendingGameRewards[socket.id];
+            if (!rewardSession || rewardSession.uid !== finalUid) {
+                return replyGameReward({ ok: false, reason: 'missing_reward_session', permanent: false });
+            }
+
+            if (Date.now() - rewardSession.createdAt > GAME_REWARD_CLAIM_WINDOW_MS) {
+                delete pendingGameRewards[socket.id];
+                return replyGameReward({ ok: false, reason: 'reward_session_expired', permanent: true });
+            }
+
+            const submittedScore = Number(data?.score);
+            if (Number.isFinite(submittedScore) && Math.floor(submittedScore) !== rewardSession.score) {
+                return replyGameReward({ ok: false, reason: 'score_mismatch', permanent: true });
+            }
+
+            const multiplier = data?.doubled ? 2 : 1;
+            const reward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, rewardSession.score * multiplier));
+            const user = await UserProfile.findOne({ firebaseUid: finalUid });
+            if (!user) {
+                return replyGameReward({ ok: false, reason: 'profile_not_found', permanent: false });
+            }
+
+            if (data?.stats && typeof data.stats === 'object') {
+                const statsGuard = applyProfileStatsGuard(user, data.stats);
+                user.unlockedTrophies = statsGuard.acceptedTrophies;
+            }
+
+            user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
+            await user.save();
+            delete pendingGameRewards[socket.id];
+
+            emitProfileSync(socket, user, {
+                gameReward: {
+                    reward,
+                    balance: user.balance,
+                    doubled: multiplier === 2
+                }
+            });
+
+            return replyGameReward({
+                ok: true,
+                reward,
+                balance: user.balance,
+                doubled: multiplier === 2
+            });
+        } catch (err) {
+            console.error("❌ claim_game_reward greška:", err);
+            return replyGameReward({ ok: false, reason: 'server_error', permanent: false });
         }
     });
 
@@ -4108,6 +4193,7 @@ io.on('connection', (socket) => {
         if (gameStartTimes[socket.id]) {
             delete gameStartTimes[socket.id];
         }
+        delete pendingGameRewards[socket.id];
 
         if (waitingPlayer && waitingPlayer.id === socket.id) {
             waitingPlayer = null;
