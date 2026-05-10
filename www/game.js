@@ -1339,11 +1339,34 @@ class YambApp {
         });
     }
 
-    async emitPlayerData(forceRefreshAuth = false) {
+    waitForProfileSync(timeoutMs = 4000) {
+        return new Promise(resolve => {
+            if (!this.socket || !this.socket.connected) {
+                resolve(null);
+                return;
+            }
+
+            let settled = false;
+            const finish = (payload) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                this.socket.off('sync_local_stats', onSync);
+                resolve(payload || null);
+            };
+            const onSync = (payload) => finish(payload);
+            const timer = setTimeout(() => finish(null), timeoutMs);
+
+            this.socket.once('sync_local_stats', onSync);
+        });
+    }
+
+    async emitPlayerData(forceRefreshAuth = false, options = {}) {
         if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
 
         const authResult = await this.authenticateSocketIdentity(forceRefreshAuth);
         const uid = authResult && authResult.ok ? authResult.uid : localStorage.getItem('yamb_uid');
+        const syncWait = options.waitForSync ? this.waitForProfileSync(options.timeoutMs || 4000) : null;
 
         this.socket.emit('set_player_data', {
             uid: uid,
@@ -1352,6 +1375,16 @@ class YambApp {
             stats: this.getFullLocalStats(),
             playerId: this.playerId
         });
+
+        if (syncWait) {
+            const cloudStats = await syncWait;
+            return {
+                ...(authResult || {}),
+                ok: !!(authResult && authResult.ok),
+                synced: !!cloudStats,
+                cloudStats
+            };
+        }
 
         return authResult;
     }
@@ -3744,6 +3777,17 @@ class YambApp {
             this.rewardClaimInProgress = false;
             this.pendingScore = 0;
         };
+        const syncRewardBalance = async () => {
+            if (!this.socket || !this.socket.connected) return;
+            try {
+                const result = await this.emitPlayerData(false, { waitForSync: true, timeoutMs: 5000 });
+                if (!result || !result.synced) {
+                    console.warn("Dukati su sačuvani lokalno, ali cloud potvrda još nije stigla.");
+                }
+            } catch (err) {
+                console.warn("Cloud potvrda dukata nije uspela:", err);
+            }
+        };
 
         let finalAmount = this.pendingScore;
         
@@ -3765,9 +3809,7 @@ class YambApp {
                     window.statsManager.saveStats();
                 }
 
-                if (this.socket && this.socket.connected) {
-                    this.emitPlayerData();
-                }
+                await syncRewardBalance();
 
                 finishRewardClaim();
                 this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount * 2}`, gt('modal_title_reward')).then(() => { this.effectMgr.stop(); this.showMainMenu(); });
@@ -3788,9 +3830,7 @@ class YambApp {
         localStorage.setItem('yamb_dukati', currentDukati);
         if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
         
-        if (this.socket && this.socket.connected) {
-            this.emitPlayerData();
-        }
+        await syncRewardBalance();
 
         if (window.kvartalnaLiga) {
             window.kvartalnaLiga.syncWithServer();

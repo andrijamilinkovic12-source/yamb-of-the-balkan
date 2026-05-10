@@ -389,6 +389,21 @@ async function odjaviSe() {
     }
 
     try {
+        const logoutUid = localStorage.getItem('yamb_uid');
+        if (logoutUid && window.app && window.app.socket) {
+            try {
+                await syncLoggedInProfileToCloud({
+                    uid: logoutUid,
+                    displayName: localStorage.getItem('yamb_player_name') || window.app.playerName || _t('hs_player', "Igrač")
+                }, {
+                    waitForSync: true,
+                    timeoutMs: 5000
+                });
+            } catch (syncErr) {
+                console.warn("Cloud sync pre odjave nije potvrđen:", syncErr);
+            }
+        }
+
         await Capacitor.Plugins.FirebaseAuthentication.signOut();
         console.log("Korisnik uspešno odjavljen.");
 
