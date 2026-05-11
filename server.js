@@ -845,6 +845,24 @@ function buildProfileSyncPayload(user) {
     };
 }
 
+function buildH2HRecordSummary(h2hStats = {}) {
+    const summary = { wins: 0, losses: 0, draws: 0, games: 0 };
+    if (!h2hStats || typeof h2hStats !== 'object') return summary;
+
+    Object.values(h2hStats).forEach(record => {
+        if (!record || typeof record !== 'object') return;
+        const wins = Math.max(0, toSafeInt(record.wins, 0));
+        const losses = Math.max(0, toSafeInt(record.losses, 0));
+        const draws = Math.max(0, toSafeInt(record.draws, 0));
+        summary.wins += wins;
+        summary.losses += losses;
+        summary.draws += draws;
+    });
+
+    summary.games = summary.wins + summary.losses + summary.draws;
+    return summary;
+}
+
 function emitProfileSync(socket, user, extra = {}) {
     if (!socket || !user) return;
     socket.emit('sync_local_stats', { ...buildProfileSyncPayload(user), ...extra });
@@ -3337,6 +3355,8 @@ io.on('connection', (socket) => {
                             }
                         }
 
+                        const h2hRecord = buildH2HRecordSummary(f.h2hStats);
+
                         return { 
                             uid: f.firebaseUid, 
                             socketId: friendSocketId,
@@ -3354,8 +3374,13 @@ io.on('connection', (socket) => {
                                 maxWinStreak: f.maxWinStreak, 
                                 unlockedTrophies: f.unlockedTrophies, 
                                 leagueData: f.leagueData,
-                                penaltyPoints: f.penaltyPoints || 0
-                            }
+                                penaltyPoints: f.penaltyPoints || 0,
+                                h2hWins: h2hRecord.wins,
+                                h2hLosses: h2hRecord.losses,
+                                h2hDraws: h2hRecord.draws,
+                                h2hGames: h2hRecord.games
+                            },
+                            h2hRecord
                         };
                     });
                 }
