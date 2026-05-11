@@ -7,7 +7,6 @@ class DnevniIzazov {
         this.interval = null;
         this.diceValues = [0, 0, 0, 0, 0, 0];
         this.isActive = false;
-        this.UNICODE = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
         this.calculatedReward = 0;
         
         this.injectGlassCSS();
@@ -133,6 +132,19 @@ class DnevniIzazov {
         document.body.appendChild(overlay);
     }
 
+    getDiceDotsHTML(val) {
+        if (this.app && typeof this.app.getDiceDotsHTML === 'function') {
+            return this.app.getDiceDotsHTML(val);
+        }
+
+        if (!val || val < 1 || val > 6) return '';
+        let dots = '';
+        for (let i = 0; i < val; i++) {
+            dots += '<div class="dice-dot"></div>';
+        }
+        return `<div class="dice-dots-wrapper val-${val}">${dots}</div>`;
+    }
+
     open() {
         if (!this.app.requireLogin()) return;
 
@@ -200,7 +212,7 @@ class DnevniIzazov {
         // Reset kockica i primena skinova
         for(let i=0; i<6; i++) {
             const el = document.getElementById(`gd-${i}`);
-            el.innerText = "?";
+            el.innerHTML = "?";
             el.className = 'glass-die'; // Reset klasa
             if (this.app.features) this.app.features.applySkinToElement(el);
         }
@@ -221,7 +233,7 @@ class DnevniIzazov {
         
         this.interval = setInterval(() => {
             const rnd = Math.floor(Math.random() * 6) + 1;
-            dieEl.innerText = this.UNICODE[rnd];
+            dieEl.innerHTML = this.getDiceDotsHTML(rnd);
             dieEl.dataset.val = rnd; 
         }, 50); 
     }
@@ -237,7 +249,7 @@ class DnevniIzazov {
         let finalVal = parseInt(dieEl.dataset.val) || Math.floor(Math.random()*6)+1;
         
         this.diceValues[this.currentIndex] = finalVal;
-        dieEl.innerText = this.UNICODE[finalVal];
+        dieEl.innerHTML = this.getDiceDotsHTML(finalVal);
         
         dieEl.classList.remove('rolling');
         dieEl.classList.add('locked');
