@@ -280,6 +280,8 @@ const UserProfileSchema = new mongoose.Schema({
     vibrationEnabled: { type: Boolean, default: true },  
     penaltyPoints: { type: Number, default: 0 },         
     h2hStats: { type: Object, default: {} },             
+    chatBanUntil: { type: Number, default: 0 },
+    chatBanStrikes: { type: Number, default: 0 },
     leagueData: {
         year: { type: Number, default: 0 },
         quarter: { type: Number, default: 0 },
@@ -309,6 +311,7 @@ const registeredSockets = {};
 const GLOBAL_CHAT_MIN_INTERVAL_MS = 1200;
 const GLOBAL_CHAT_SPAM_STRIKE_LIMIT = 4;
 const GLOBAL_CHAT_SPAM_MUTE_MS = 15000;
+const GLOBAL_CHAT_PROFANITY_BAN_BASE_MS = 60 * 60 * 1000;
 
 const MAX_SCORE = 3500;
 const MAX_NAME_LENGTH = 24;
@@ -3697,10 +3700,10 @@ io.on('connection', (socket) => {
         socket.emit('global_chat_history', globalChatHistory);
     });
 
-    socket.on('global_chat_msg', (data) => {
+    socket.on('global_chat_msg', async (data) => {
         if (!data || !data.msg) return;
 
-        if (!socket.playerName) {
+        if (!socket.playerName || !socket.verifiedUid) {
             socket.emit('error_msg', 'auth_required');
             return;
         }
@@ -3709,8 +3712,24 @@ io.on('connection', (socket) => {
         if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
 
         const now = Date.now();
+        let chatProfile = null;
 
-        if (chatBans[clientIp] && chatBans[clientIp].banUntil > now) {
+        if (MONGO_URI) {
+            try {
+                chatProfile = await UserProfile.findOne({ firebaseUid: socket.verifiedUid })
+                    .select('chatBanUntil chatBanStrikes')
+                    .lean();
+
+                if (chatProfile && toSafeInt(chatProfile.chatBanUntil, 0) > now) {
+                    socket.emit('error_msg', 'err_chat_suspended');
+                    return;
+                }
+            } catch (err) {
+                console.error('Greška pri proveri chat bana:', err);
+            }
+        }
+
+        if (!MONGO_URI && chatBans[clientIp] && chatBans[clientIp].banUntil > now) {
             socket.emit('error_msg', 'err_chat_suspended');
             return; 
         }
@@ -3740,14 +3759,29 @@ io.on('connection', (socket) => {
         const safeMsg = cenzurisiPoruku(originalMsg);
 
         if (safeMsg !== originalMsg) {
-            if (!chatBans[clientIp]) {
-                chatBans[clientIp] = { strikes: 0, banUntil: 0 };
+            if (MONGO_URI) {
+                const currentStrikes = Math.max(0, toSafeInt(chatProfile?.chatBanStrikes, 0));
+                const nextStrikes = currentStrikes + 1;
+                const banUntil = now + (Math.pow(2, nextStrikes - 1) * GLOBAL_CHAT_PROFANITY_BAN_BASE_MS);
+
+                try {
+                    await UserProfile.findOneAndUpdate(
+                        { firebaseUid: socket.verifiedUid },
+                        { $set: { chatBanUntil: banUntil }, $inc: { chatBanStrikes: 1 } },
+                        { upsert: false }
+                    );
+                } catch (err) {
+                    console.error('Greška pri upisu chat bana:', err);
+                }
+            } else {
+                if (!chatBans[clientIp]) {
+                    chatBans[clientIp] = { strikes: 0, banUntil: 0 };
+                }
+                chatBans[clientIp].strikes += 1;
+
+                const satiBana = Math.pow(2, chatBans[clientIp].strikes - 1);
+                chatBans[clientIp].banUntil = now + (satiBana * GLOBAL_CHAT_PROFANITY_BAN_BASE_MS);
             }
-            chatBans[clientIp].strikes += 1; 
-            
-            const satiBana = Math.pow(2, chatBans[clientIp].strikes - 1);
-            const banTrajanjeMs = satiBana * 60 * 60 * 1000;
-            chatBans[clientIp].banUntil = now + banTrajanjeMs;
 
             socket.emit('error_msg', 'err_chat_banned');
             return; 
