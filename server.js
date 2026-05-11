@@ -3789,8 +3789,10 @@ io.on('connection', (socket) => {
 
         const chatObj = {
             sender: safeSender,
-            senderId: socket.id, 
-            msg: safeMsg
+            senderId: socket.id,
+            senderUid: socket.verifiedUid,
+            msg: safeMsg,
+            createdAt: now
         };
 
         globalChatHistory.push(chatObj);
@@ -3803,17 +3805,23 @@ io.on('connection', (socket) => {
     });
 
     socket.on('send_challenge', (data) => {
-        const { targetId } = data;
-        const targetSocket = io.sockets.sockets.get(targetId);
+        const { targetId, targetUid } = data || {};
+        let resolvedTargetId = targetId;
+        let targetSocket = resolvedTargetId ? io.sockets.sockets.get(resolvedTargetId) : null;
+
+        if ((!targetSocket || targetSocket.id === socket.id) && targetUid && onlinePlayers[targetUid]) {
+            resolvedTargetId = onlinePlayers[targetUid];
+            targetSocket = io.sockets.sockets.get(resolvedTargetId);
+        }
         
-        if (targetSocket) {
-            const targetRoom = playerRooms[targetId];
+        if (targetSocket && targetSocket.id !== socket.id) {
+            const targetRoom = playerRooms[resolvedTargetId];
             if (targetRoom && !targetRoom.startsWith('local_')) {
                 socket.emit('error_msg', 'err_player_busy');
                 return;
             }
 
-            socket.to(targetId).emit('incoming_challenge', {
+            socket.to(resolvedTargetId).emit('incoming_challenge', {
                 challengerId: socket.id,
                 challengerName: sanitizeTournamentName(socket.playerName || "Igrač")
             });

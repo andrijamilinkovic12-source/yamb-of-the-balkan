@@ -1650,7 +1650,7 @@ class YambApp {
         } 
     }
 
-    async challengePlayer(targetId, targetName) {
+    async challengePlayer(targetId, targetName, targetUid = null) {
         if (!this.requireLogin()) return;
         this.initSocketConnection(); 
         if (!this.socket || !this.socket.connected) return;
@@ -1661,7 +1661,7 @@ class YambApp {
         const safeTargetName = this.escapeHtml(targetName || 'Igrač');
         const isConfirmed = await this.modal.confirm(askText.replace('{0}', safeTargetName));
         if(isConfirmed) {
-            this.socket.emit('send_challenge', { targetId, challengerName: this.playerName });
+            this.socket.emit('send_challenge', { targetId, targetUid, challengerName: this.playerName });
             
             let sentText = gt('duel_sent');
             if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;

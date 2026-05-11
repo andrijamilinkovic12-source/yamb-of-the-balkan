@@ -75,7 +75,7 @@ class GlobalChatManager {
         }
     }
 
-    appendMessage(sender, text, type, senderId = null, skipSound = false) { 
+    appendMessage(sender, text, type, senderId = null, skipSound = false, senderUid = null, createdAt = null) { 
         const body = document.getElementById('global-chat-body'); 
         if (!body) return;
         const sec = window.YambSecurity;
@@ -101,13 +101,28 @@ class GlobalChatManager {
         const safeSender = sec.escapeHtml(sender);
         const safeText = sec.escapeHtml(text);
         let nameHtml = `<strong>${safeSender}:</strong>`;
-        if (senderId && senderId !== (this.app.socket ? this.app.socket.id : null) && sender !== this.gt('sys_name') && type === "msg-incoming") {
-            const handler = sec.escapeAttr(`window.app.challengePlayer(${sec.jsString(senderId)}, ${sec.jsString(sender)})`);
+        const myUid = localStorage.getItem('yamb_uid');
+        const canChallenge = (senderId || senderUid) &&
+            senderId !== (this.app.socket ? this.app.socket.id : null) &&
+            (!senderUid || senderUid !== myUid) &&
+            sender !== this.gt('sys_name') &&
+            type === "msg-incoming";
+        if (canChallenge) {
+            const handler = sec.escapeAttr(`window.app.challengePlayer(${sec.jsString(senderId)}, ${sec.jsString(sender)}, ${sec.jsString(senderUid)})`);
             const title = sec.escapeAttr(this.gt('tooltip_challenge') || 'Izazovi na duel ⚔️');
             nameHtml = `<strong style="cursor:pointer; color:var(--gold-main); text-decoration:underline;" onclick="${handler}" title="${title}">${safeSender}:</strong>`;
         }
         
-        msgDiv.innerHTML = `${nameHtml} ${safeText}`;
+        let timeHtml = "";
+        if (createdAt) {
+            const parsedTime = new Date(createdAt);
+            if (!Number.isNaN(parsedTime.getTime())) {
+                const safeTime = sec.escapeHtml(parsedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+                timeHtml = ` <span style="font-size: 0.68rem; color: var(--text-muted); opacity: 0.75;">${safeTime}</span>`;
+            }
+        }
+
+        msgDiv.innerHTML = `${nameHtml} ${safeText}${timeHtml}`;
         body.appendChild(msgDiv); 
         body.scrollTop = body.scrollHeight; 
         
@@ -146,8 +161,9 @@ class GlobalChatManager {
 
         socket.off('global_chat_msg');
         socket.on('global_chat_msg', (data) => {
-            const isMe = (data.senderId === socket.id);
-            this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId);
+            const myUid = localStorage.getItem('yamb_uid');
+            const isMe = (data.senderId === socket.id) || (data.senderUid && data.senderUid === myUid);
+            this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, false, data.senderUid, data.createdAt);
         });
 
         socket.off('global_chat_history');
@@ -158,8 +174,9 @@ class GlobalChatManager {
             body.innerHTML = `<div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;" data-lang="global_chat_welcome">${this.gt('global_chat_welcome') || "Dobrodošli u Globalni Chat! Budite pristojni."}</div>`;
             
             history.forEach(data => {
-                const isMe = (data.senderId === socket.id);
-                this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, true);
+                const myUid = localStorage.getItem('yamb_uid');
+                const isMe = (data.senderId === socket.id) || (data.senderUid && data.senderUid === myUid);
+                this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, true, data.senderUid, data.createdAt);
             });
         });
     }
