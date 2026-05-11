@@ -259,6 +259,18 @@ const GlobalChatSchema = new mongoose.Schema({
 });
 mongoose.model('GlobalChat', GlobalChatSchema);
 
+const GlobalChatReportSchema = new mongoose.Schema({
+    messageId: { type: String, required: true },
+    reportedByUid: { type: String, required: true },
+    reportedByName: { type: String, default: 'Nepoznat' },
+    senderUid: { type: String, default: '' },
+    senderName: { type: String, default: 'Nepoznat' },
+    msg: { type: String, default: '' },
+    messageCreatedAt: { type: Number, default: 0 },
+    reportedAt: { type: Number, default: Date.now }
+});
+mongoose.model('GlobalChatReport', GlobalChatReportSchema);
+
 const UserProfileSchema = new mongoose.Schema({
     firebaseUid: { type: String, unique: true, required: true },
     playerName: String,
@@ -316,6 +328,7 @@ let gameStartTimes = {};
 const pendingGameRewards = {};
 const chatBans = {};
 const globalChatRateLimits = {};
+const globalChatReportLimits = {};
 const onlinePlayers = {};
 const registeredSockets = {};
 
@@ -324,6 +337,7 @@ const GLOBAL_CHAT_SPAM_STRIKE_LIMIT = 4;
 const GLOBAL_CHAT_SPAM_MUTE_MS = 15000;
 const GLOBAL_CHAT_PROFANITY_BAN_BASE_MS = 60 * 60 * 1000;
 const GLOBAL_CHAT_RATE_LIMIT_TTL_MS = 60 * 60 * 1000;
+const GLOBAL_CHAT_REPORT_COOLDOWN_MS = 30000;
 
 const MAX_SCORE = 3500;
 const MAX_NAME_LENGTH = 24;
@@ -3860,6 +3874,56 @@ io.on('connection', (socket) => {
         io.emit('global_chat_msg', chatObj);
     });
 
+    socket.on('report_global_chat_msg', async (data = {}) => {
+        if (!socket.playerName || !socket.verifiedUid) {
+            socket.emit('global_chat_report_result', { ok: false, reason: 'err_chat_auth_required' });
+            return;
+        }
+
+        if (!MONGO_URI) {
+            socket.emit('global_chat_report_result', { ok: false, reason: 'err_server_conn' });
+            return;
+        }
+
+        const now = Date.now();
+        const lastReportAt = globalChatReportLimits[socket.verifiedUid] || 0;
+        if (now - lastReportAt < GLOBAL_CHAT_REPORT_COOLDOWN_MS) {
+            socket.emit('global_chat_report_result', { ok: false, reason: 'err_chat_report_slow_down' });
+            return;
+        }
+
+        const messageId = String(data.messageId || '');
+        const reportedMessage = globalChatHistory.find(message => message.id === messageId);
+        if (!reportedMessage) {
+            socket.emit('global_chat_report_result', { ok: false, reason: 'err_chat_report_missing' });
+            return;
+        }
+
+        if (reportedMessage.senderUid && reportedMessage.senderUid === socket.verifiedUid) {
+            socket.emit('global_chat_report_result', { ok: false, reason: 'err_chat_report_self' });
+            return;
+        }
+
+        try {
+            const GlobalChatReport = mongoose.model('GlobalChatReport');
+            await GlobalChatReport.create({
+                messageId: reportedMessage.id,
+                reportedByUid: socket.verifiedUid,
+                reportedByName: socket.playerName,
+                senderUid: reportedMessage.senderUid || '',
+                senderName: reportedMessage.sender || 'Nepoznat',
+                msg: reportedMessage.msg || '',
+                messageCreatedAt: reportedMessage.createdAt || 0,
+                reportedAt: now
+            });
+            globalChatReportLimits[socket.verifiedUid] = now;
+            socket.emit('global_chat_report_result', { ok: true, reason: 'chat_report_sent' });
+        } catch (err) {
+            console.error('Greška pri čuvanju prijave chat poruke:', err);
+            socket.emit('global_chat_report_result', { ok: false, reason: 'err_server_conn' });
+        }
+    });
+
     socket.on('send_challenge', (data) => {
         const { targetId, targetUid } = data || {};
         let resolvedTargetId = targetId;
@@ -4391,6 +4455,11 @@ setInterval(() => {
         const state = globalChatRateLimits[uid];
         if (!state || now - (state.lastSeenAt || state.lastAt || 0) > GLOBAL_CHAT_RATE_LIMIT_TTL_MS) {
             delete globalChatRateLimits[uid];
+        }
+    }
+    for (const uid in globalChatReportLimits) {
+        if (now - globalChatReportLimits[uid] > GLOBAL_CHAT_REPORT_COOLDOWN_MS) {
+            delete globalChatReportLimits[uid];
         }
     }
     if (obrisano > 0) {

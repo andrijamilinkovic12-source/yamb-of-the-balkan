@@ -103,6 +103,18 @@ class GlobalChatManager {
         return true;
     }
 
+    async reportMessage(messageId) {
+        if (!messageId || !this.app.socket || !this.app.socket.connected) {
+            this.showStatus('sys_no_conn');
+            return;
+        }
+
+        const confirmed = await this.app.modal.confirm(this.gt('chat_report_confirm'));
+        if (!confirmed) return;
+
+        this.app.socket.emit('report_global_chat_msg', { messageId });
+    }
+
     appendMessage(sender, text, type, senderId = null, skipSound = false, senderUid = null, createdAt = null, messageId = null) { 
         const body = document.getElementById('global-chat-body'); 
         if (!body) return;
@@ -151,7 +163,14 @@ class GlobalChatManager {
             }
         }
 
-        msgDiv.innerHTML = `${nameHtml} ${safeText}${timeHtml}`;
+        let reportHtml = "";
+        if (messageId && type === "msg-incoming") {
+            const reportTitle = sec.escapeAttr(this.gt('chat_report_action'));
+            const handler = sec.escapeAttr(`window.app.globalChat.reportMessage(${sec.jsString(messageId)})`);
+            reportHtml = ` <button type="button" onclick="${handler}" title="${reportTitle}" style="border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-weight: 900; padding: 0 2px; opacity: 0.75;">!</button>`;
+        }
+
+        msgDiv.innerHTML = `${nameHtml} ${safeText}${timeHtml}${reportHtml}`;
         body.appendChild(msgDiv); 
         body.scrollTop = body.scrollHeight; 
         
@@ -208,6 +227,11 @@ class GlobalChatManager {
                 const isMe = (data.senderId === socket.id) || (data.senderUid && data.senderUid === myUid);
                 this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, true, data.senderUid, data.createdAt, data.id);
             });
+        });
+
+        socket.off('global_chat_report_result');
+        socket.on('global_chat_report_result', (result = {}) => {
+            this.showStatus(result.reason || (result.ok ? 'chat_report_sent' : 'err_server_conn'));
         });
     }
 }
