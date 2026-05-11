@@ -582,7 +582,7 @@ class YambApp {
                         <span class="val" style="color: #FF5722;">${r.currentWinStreak || 0} <span style="font-size:0.65rem; color:#aaa; margin-left: 4px;">(${gt('h2h_max_short') || 'Max'}: ${r.maxWinStreak || 0})</span></span>
                     </div>
                     <div class="h2h-stat-row">
-                        <span class="lbl">${gt('go_draw') || 'Nerešeno'}:</span>
+                        <span class="lbl">${gt('h2h_draws') || '🤝 Nerešeno:'}</span>
                         <span class="val">${r.draws || 0}</span>
                     </div>
                     <div class="h2h-stat-row">
