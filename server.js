@@ -2333,7 +2333,8 @@ io.on('connection', (socket) => {
                 tournamentWins: user.tournamentWins,
                 unlockedTrophies: user.unlockedTrophies,
                 leagueData: user.leagueData,
-                penaltyPoints: user.penaltyPoints || 0
+                penaltyPoints: user.penaltyPoints || 0,
+                h2hRecord: buildH2HRecordSummary(user.h2hStats)
             };
 
             updateOnlineCount(); 

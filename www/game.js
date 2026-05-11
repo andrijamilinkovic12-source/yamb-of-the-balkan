@@ -838,6 +838,25 @@ class YambApp {
         }
     }
 
+    getLocalH2HRecordSummary() {
+        const h2h = this.readLocalJson('yamb_h2h_stats', {});
+        const summary = { wins: 0, losses: 0, draws: 0, games: 0 };
+        if (!h2h || typeof h2h !== 'object') return summary;
+
+        Object.values(h2h).forEach(record => {
+            if (!record || typeof record !== 'object') return;
+            const name = String(record.name || '').trim();
+            if (!name || name === 'undefined' || name === 'null' || name === 'Nepoznat') return;
+
+            summary.wins += Math.max(0, parseInt(record.wins) || 0);
+            summary.losses += Math.max(0, parseInt(record.losses) || 0);
+            summary.draws += Math.max(0, parseInt(record.draws) || 0);
+        });
+
+        summary.games = summary.wins + summary.losses + summary.draws;
+        return summary;
+    }
+
     applyCloudProfileSync(data = {}) {
         const uid = localStorage.getItem('yamb_uid');
 
@@ -2057,11 +2076,12 @@ class YambApp {
         }
         
         const myStats = this.getFullLocalStats();
+        const myH2HRecord = this.getLocalH2HRecordSummary();
         const myPowerEl = document.getElementById('waiting-my-power');
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
         const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+        if (myWlEl) myWlEl.innerText = `${myH2HRecord.wins || 0} / ${myH2HRecord.losses || 0}`;
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');
@@ -2170,11 +2190,12 @@ class YambApp {
         }
         
         const myStats = this.getFullLocalStats();
+        const myH2HRecord = this.getLocalH2HRecordSummary();
         const myPowerEl = document.getElementById('waiting-my-power');
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
         const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+        if (myWlEl) myWlEl.innerText = `${myH2HRecord.wins || 0} / ${myH2HRecord.losses || 0}`;
 
         const oppBox = document.getElementById('waiting-opp-box');
         if (oppBox) {
@@ -2236,11 +2257,12 @@ class YambApp {
         }
         
         const myStats = this.getFullLocalStats();
+        const myH2HRecord = this.getLocalH2HRecordSummary();
         const myPowerEl = document.getElementById('waiting-my-power');
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
         const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = `${myStats.wins || 0} / ${myStats.losses || 0}`;
+        if (myWlEl) myWlEl.innerText = `${myH2HRecord.wins || 0} / ${myH2HRecord.losses || 0}`;
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');
@@ -2688,8 +2710,9 @@ class YambApp {
                 let oppW = 0, oppL = 0;
                 if (data.oppStats) {
                     oppPI = this.calculatePowerIndex(data.oppStats, false);
-                    oppW = data.oppStats.wins || 0;
-                    oppL = data.oppStats.losses || 0;
+                    const oppH2HRecord = data.oppStats.h2hRecord || {};
+                    oppW = oppH2HRecord.wins !== undefined ? oppH2HRecord.wins : (data.oppStats.h2hWins || 0);
+                    oppL = oppH2HRecord.losses !== undefined ? oppH2HRecord.losses : (data.oppStats.h2hLosses || 0);
                 }
                 
                 document.getElementById('waiting-opp-power').innerText = oppPI;
