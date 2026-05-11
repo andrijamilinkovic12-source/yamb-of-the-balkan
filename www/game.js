@@ -419,7 +419,8 @@ class YambApp {
                 uid: oppUid || '',
                 photo: oppPhoto || '', 
                 wins: 0, 
-                losses: 0, 
+                losses: 0,
+                draws: 0,
                 myTotalScore: 0, 
                 gamesWithScore: 0, 
                 myHighScore: 0, 
@@ -429,6 +430,9 @@ class YambApp {
                 maxWinStreak: 0
             };
         } else {
+            h2h[h2hKey].wins = Math.max(0, parseInt(h2h[h2hKey].wins) || 0);
+            h2h[h2hKey].losses = Math.max(0, parseInt(h2h[h2hKey].losses) || 0);
+            h2h[h2hKey].draws = Math.max(0, parseInt(h2h[h2hKey].draws) || 0);
             if (oppPhoto && oppPhoto.length > 5) h2h[h2hKey].photo = oppPhoto;
             if (oppUid && !h2h[h2hKey].uid) h2h[h2hKey].uid = oppUid;
         }
@@ -443,6 +447,7 @@ class YambApp {
             h2h[h2hKey].losses++;
             h2h[h2hKey].currentWinStreak = 0;
         } else if (resultType === 'draw') {
+            h2h[h2hKey].draws++;
             h2h[h2hKey].currentWinStreak = 0;
         }
 
@@ -490,10 +495,34 @@ class YambApp {
             return;
         }
 
-        rivals.sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses));
+        const toSafeCount = (value) => Math.max(0, parseInt(value) || 0);
+        const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (char) => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
+
+        rivals = rivals.map(r => ({
+            ...r,
+            wins: toSafeCount(r.wins),
+            losses: toSafeCount(r.losses),
+            draws: toSafeCount(r.draws),
+            myTotalScore: toSafeCount(r.myTotalScore),
+            gamesWithScore: toSafeCount(r.gamesWithScore),
+            myHighScore: toSafeCount(r.myHighScore),
+            maxWinMargin: toSafeCount(r.maxWinMargin),
+            maxLossMargin: toSafeCount(r.maxLossMargin),
+            currentWinStreak: toSafeCount(r.currentWinStreak),
+            maxWinStreak: toSafeCount(r.maxWinStreak)
+        }));
+
+        rivals.sort((a, b) => ((b.wins + b.losses + b.draws) - (a.wins + a.losses + a.draws)));
 
         const myName = this.playerName || gt('h2h_me') || "Ja";
         const myPhoto = localStorage.getItem('yamb_player_photo') || `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=333&color=E0C995`;
+        const safeMyName = escapeHtml(myName);
 
         const getFontSize = (name) => {
             if (!name) return '0.9rem';
@@ -506,10 +535,11 @@ class YambApp {
 
         let html = '';
         rivals.forEach(r => {
-            const total = r.wins + r.losses;
+            const total = r.wins + r.losses + r.draws;
             let winPct = total > 0 ? Math.round((r.wins / total) * 100) : 0;
             let oppAvatar = r.photo && r.photo.length > 5 ? r.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`;
             let oppFontSize = getFontSize(r.name);
+            const safeOppName = escapeHtml(r.name);
 
             let avg = r.gamesWithScore > 0 ? Math.round((r.myTotalScore || 0) / r.gamesWithScore) : 0;
 
@@ -518,7 +548,7 @@ class YambApp {
                 <div class="h2h-players-area">
                     <div class="h2h-player me">
                         <img src="${myPhoto}" class="h2h-avatar">
-                        <div class="h2h-name" style="font-size: ${myFontSize};">${myName}</div>
+                        <div class="h2h-name" style="font-size: ${myFontSize};">${safeMyName}</div>
                         <div class="h2h-wl w-color">${r.wins} ${gt('h2h_wins_short') || 'W'}</div>
                     </div>
                     
@@ -529,7 +559,7 @@ class YambApp {
 
                     <div class="h2h-player opp">
                         <img src="${oppAvatar}" class="h2h-avatar">
-                        <div class="h2h-name" style="font-size: ${oppFontSize};">${r.name}</div>
+                        <div class="h2h-name" style="font-size: ${oppFontSize};">${safeOppName}</div>
                         <div class="h2h-wl l-color">${r.losses} ${gt('h2h_losses_short') || 'L'}</div>
                     </div>
                 </div>
@@ -550,6 +580,10 @@ class YambApp {
                     <div class="h2h-stat-row">
                         <span class="lbl">${gt('h2h_win_streak') || '🔥 Vatreni niz:'}</span>
                         <span class="val" style="color: #FF5722;">${r.currentWinStreak || 0} <span style="font-size:0.65rem; color:#aaa; margin-left: 4px;">(${gt('h2h_max_short') || 'Max'}: ${r.maxWinStreak || 0})</span></span>
+                    </div>
+                    <div class="h2h-stat-row">
+                        <span class="lbl">${gt('go_draw') || 'Nerešeno'}:</span>
+                        <span class="val">${r.draws || 0}</span>
                     </div>
                     <div class="h2h-stat-row">
                         <span class="lbl">${gt('h2h_avg_pts') || '🎯 Tvoj prosek poena:'}</span>
@@ -631,7 +665,51 @@ class YambApp {
         else if (theme === 'moon') document.body.classList.add('moon-theme');
     }
 
+    normalizeLocalStats(stats = {}) {
+        const safeNumber = (value) => {
+            const num = Number(value);
+            return Number.isFinite(num) ? Math.max(0, Math.floor(num)) : 0;
+        };
+
+        return {
+            games: safeNumber(stats.games || stats.totalGames),
+            totalGames: safeNumber(stats.games || stats.totalGames),
+            wins: safeNumber(stats.wins),
+            losses: safeNumber(stats.losses),
+            highscore: safeNumber(stats.highscore || stats.highScore),
+            totalScoreSum: safeNumber(stats.totalScoreSum),
+            currentWinStreak: safeNumber(stats.currentWinStreak),
+            maxWinStreak: safeNumber(stats.maxWinStreak),
+            tournamentWins: safeNumber(stats.tournamentWins),
+            penaltyPoints: safeNumber(stats.penaltyPoints),
+            balance: safeNumber(stats.balance),
+            unlockedTrophies: Array.isArray(stats.unlockedTrophies) ? stats.unlockedTrophies : [],
+            unlockedSkins: Array.isArray(stats.unlockedSkins) ? stats.unlockedSkins : [],
+            unlockedEffects: Array.isArray(stats.unlockedEffects) ? stats.unlockedEffects : []
+        };
+    }
+
+    refreshLocalStats() {
+        const storedStats = this.readLocalJson('yamb_stats', {});
+        const managerStats = (window.statsManager && window.statsManager.stats) ? window.statsManager.stats : {};
+        const mergedStats = {
+            ...this.normalizeLocalStats(this.stats || {}),
+            ...this.normalizeLocalStats(managerStats),
+            ...this.normalizeLocalStats(storedStats)
+        };
+
+        this.stats = { ...(this.stats || {}), ...mergedStats };
+
+        if (window.statsManager) {
+            window.statsManager.stats = { ...window.statsManager.stats, ...this.stats };
+        }
+
+        localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
+        return this.stats;
+    }
+
     getFullLocalStats() {
+        this.refreshLocalStats();
         const uid = localStorage.getItem('yamb_uid');
         if (!uid) return {};
 
@@ -653,9 +731,9 @@ class YambApp {
             maxWinStreak: this.stats.maxWinStreak || 0,
             balance: parseInt(localStorage.getItem('yamb_dukati')) || 0,
             undoTokens: parseInt(localStorage.getItem('yamb_undo_tokens')) || 0,
-            currentWinStreak: window.statsManager ? window.statsManager.stats.currentWinStreak : 0,
-            tournamentWins: window.statsManager ? (window.statsManager.stats.tournamentWins || 0) : 0,
-            unlockedTrophies: window.statsManager ? window.statsManager.stats.unlockedTrophies : [],
+            currentWinStreak: this.stats.currentWinStreak || 0,
+            tournamentWins: this.stats.tournamentWins || 0,
+            unlockedTrophies: this.stats.unlockedTrophies || [],
             yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
             unlockedSkins: JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
             unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
@@ -737,6 +815,7 @@ class YambApp {
                 ...cloudData,
                 wins: Math.max(localData.wins || 0, cloudData.wins || 0),
                 losses: Math.max(localData.losses || 0, cloudData.losses || 0),
+                draws: Math.max(localData.draws || 0, cloudData.draws || 0),
                 myTotalScore: Math.max(localData.myTotalScore || 0, cloudData.myTotalScore || 0),
                 gamesWithScore: Math.max(localData.gamesWithScore || 0, cloudData.gamesWithScore || 0),
                 myHighScore: Math.max(localData.myHighScore || 0, cloudData.myHighScore || 0),
@@ -1753,6 +1832,7 @@ class YambApp {
     }
 
     showStats() { 
+        this.refreshLocalStats();
         this.navigateTo('stats-screen'); 
         document.getElementById('stat-games').innerText = this.stats.games; 
         document.getElementById('stat-high').innerText = this.stats.highscore; 
@@ -1819,9 +1899,9 @@ class YambApp {
         const favImgEl = document.getElementById('stat-fav-opp-img');
 
         if (rivals.length > 0) {
-            rivals.sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses));
+            rivals.sort((a, b) => ((b.wins || 0) + (b.losses || 0) + (b.draws || 0)) - ((a.wins || 0) + (a.losses || 0) + (a.draws || 0)));
             let topRival = rivals[0];
-            let totalGames = topRival.wins + topRival.losses;
+            let totalGames = (topRival.wins || 0) + (topRival.losses || 0) + (topRival.draws || 0);
 
             if (favNameEl) favNameEl.innerText = topRival.name;
             if (favGamesEl) favGamesEl.innerText = `${totalGames} ${gt('stat_matches')}`;
@@ -4170,110 +4250,6 @@ class YambApp {
         document.body.insertAdjacentHTML('beforeend', modalHtml);
     }
     
-    renderH2HStats() {
-        const container = document.getElementById('h2h-list-container');
-        if (!container) return;
-
-        let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
-        let needsCleanup = false;
-        
-        // 🧹 AUTO-CLEANUP: Brišemo sve "undefined" i oštećene protivnike iz memorije
-        for (const key in h2h) {
-            if (!h2h[key].name || String(h2h[key].name) === 'undefined' || String(h2h[key].name) === 'null' || h2h[key].name.trim() === '') {
-                delete h2h[key];
-                needsCleanup = true;
-            }
-        }
-        if (needsCleanup) {
-            localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
-        }
-
-        let rivals = Object.values(h2h);
-
-        if (rivals.length === 0) {
-            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">${gt('stat_h2h_empty') || "Nema odigranih duela..."}</div>`;
-            return;
-        }
-
-        rivals.sort((a, b) => (b.wins + b.losses) - (a.wins + a.losses));
-
-        const myName = this.playerName || gt('h2h_me') || "Ja";
-        const myPhoto = localStorage.getItem('yamb_player_photo') || `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=333&color=E0C995`;
-
-        const getFontSize = (name) => {
-            if (!name) return '0.9rem';
-            if (name.length > 20) return '0.65rem';
-            if (name.length >= 14) return '0.75rem';
-            return '0.9rem';
-        };
-
-        const myFontSize = getFontSize(myName);
-
-        let html = '';
-        rivals.forEach(r => {
-            const total = r.wins + r.losses;
-            let winPct = total > 0 ? Math.round((r.wins / total) * 100) : 0;
-            let oppAvatar = r.photo && r.photo.length > 5 ? r.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`;
-            let oppFontSize = getFontSize(r.name);
-
-            let avg = r.gamesWithScore > 0 ? Math.round((r.myTotalScore || 0) / r.gamesWithScore) : 0;
-
-            html += `
-            <div class="h2h-card-new">
-                <div class="h2h-players-area">
-                    <div class="h2h-player me">
-                        <img src="${myPhoto}" class="h2h-avatar">
-                        <div class="h2h-name" style="font-size: ${myFontSize};">${myName}</div>
-                        <div class="h2h-wl w-color">${r.wins} ${gt('h2h_wins_short') || 'W'}</div>
-                    </div>
-                    
-                    <div class="h2h-vs-divider">
-                        <div class="vs-circle">VS</div>
-                        <div class="vs-line"></div>
-                    </div>
-
-                    <div class="h2h-player opp">
-                        <img src="${oppAvatar}" class="h2h-avatar">
-                        <div class="h2h-name" style="font-size: ${oppFontSize};">${r.name}</div>
-                        <div class="h2h-wl l-color">${r.losses} ${gt('h2h_losses_short') || 'L'}</div>
-                    </div>
-                </div>
-
-                <div class="h2h-stats-area">
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_highest_score') || '🏆 Najviše poena:'}</span>
-                        <span class="val">${r.myHighScore || 0}</span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_max_diff') || '📈 Najveća razlika:'}</span>
-                        <span class="val c-success">+${r.maxWinMargin || 0}</span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_worst_loss') || '📉 Najteži poraz:'}</span>
-                        <span class="val c-danger">-${r.maxLossMargin || 0}</span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_win_streak') || '🔥 Vatreni niz:'}</span>
-                        <span class="val" style="color: #FF5722;">${r.currentWinStreak || 0} <span style="font-size:0.65rem; color:#aaa; margin-left: 4px;">(${gt('h2h_max_short') || 'Max'}: ${r.maxWinStreak || 0})</span></span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_avg_pts') || '🎯 Tvoj prosek poena:'}</span>
-                        <span class="val">${avg}</span>
-                    </div>
-                </div>
-
-                <div class="h2h-bar-wrapper">
-                    <div class="h2h-bar-bg">
-                        <div class="h2h-bar-win" style="width: ${winPct}%"></div>
-                    </div>
-                    <div class="h2h-bar-text">${winPct}% ${gt('h2h_win_pct') || 'POBEDA'}</div>
-                </div>
-            </div>`;
-        });
-
-        container.innerHTML = html;
-    }
-
 }
 
 window.app = new YambApp();

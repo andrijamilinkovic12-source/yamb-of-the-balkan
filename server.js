@@ -2204,12 +2204,13 @@ io.on('connection', (socket) => {
                         } else {
                             let cloudData = cloudH2H[oppName];
                             
-                            const localTotal = (localData.wins || 0) + (localData.losses || 0);
-                            const cloudTotal = (cloudData.wins || 0) + (cloudData.losses || 0);
+                            const localTotal = (localData.wins || 0) + (localData.losses || 0) + (localData.draws || 0);
+                            const cloudTotal = (cloudData.wins || 0) + (cloudData.losses || 0) + (cloudData.draws || 0);
                             
                             if (localTotal > cloudTotal) {
                                 cloudData.wins = localData.wins;
                                 cloudData.losses = localData.losses;
+                                cloudData.draws = localData.draws || 0;
                                 cloudData.currentWinStreak = localData.currentWinStreak || 0; 
                                 isModified = true;
                             }
