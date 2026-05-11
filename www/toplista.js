@@ -175,19 +175,17 @@ class TopListManager {
     }
 
     switchTab(tab) {
-        // Obzirom da su obe liste sada u swipe karticama, odmah učitavamo obe
         this._loadLocal();
         this._loadGlobal();
 
-        // LOGIKA ZA SKROL: Globalna je sada na indeksu 0 (prva), Lokalna je indeks 1
-        const carousel = document.getElementById('hs-carousel');
-        if(carousel) {
-            if (tab === 'global') {
-                carousel.scrollLeft = 0;
-            } else if (tab === 'local') {
-                carousel.scrollLeft = carousel.clientWidth;
-            }
-        }
+        const activeTab = tab === 'local' ? 'local' : 'global';
+        document.querySelectorAll('.hs-tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.hsTab === activeTab);
+        });
+
+        document.querySelectorAll('.hs-panel').forEach(panel => {
+            panel.classList.toggle('active', panel.dataset.hsPanel === activeTab);
+        });
     }
 
     filterGlobal(period) {
