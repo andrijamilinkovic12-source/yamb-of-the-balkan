@@ -177,7 +177,7 @@ class TrophyManager {
                     if (sheet['Ručno']['Yamb'] !== null && sheet['Ručno']['Yamb'] > 0) conditionMet = true;
                     break;
                 case 'firecracker':
-                    conditionMet = KOLONE.every(col => sheet[col]['Yamb'] !== null && sheet[col]['Yamb'] > 0);
+                    conditionMet = KOLONE.filter(col => sheet[col]['Yamb'] !== null && sheet[col]['Yamb'] > 0).length >= 5;
                     break;
                 
                 // 5. NESREĆE
@@ -185,9 +185,7 @@ class TrophyManager {
                     conditionMet = KOLONE.some(col => sheet[col]['Yamb'] === 0);
                     break;
                 case 'achilles':
-                    // Yamb je 0 u bar 3 kolone a skor preko 800
-                    const yambZeros = KOLONE.filter(c => sheet[c]['Yamb'] === 0).length;
-                    if (yambZeros >= 3 && score > 800) conditionMet = true;
+                    conditionMet = this.checkOnlyYambZeros(sheet);
                     break;
                 
                 // --- 6. NEDOSTAJUĆI TROFEJI ---
@@ -270,6 +268,23 @@ class TrophyManager {
             }
         }
         return false;
+    }
+
+    checkOnlyYambZeros(sheet) {
+        let hasYambZero = false;
+
+        for (let col of KOLONE) {
+            for (let row of REDOVI_IGRA) {
+                const val = sheet[col][row];
+                if (val === null) return false;
+                if (val === 0) {
+                    if (row !== 'Yamb') return false;
+                    hasYambZero = true;
+                }
+            }
+        }
+
+        return hasYambZero;
     }
 
     unlock(trophy, proof = {}) {

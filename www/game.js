@@ -3611,12 +3611,6 @@ class YambApp {
             console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
         }
 
-        if (window.statsManager && this.stats) {
-            const currentTotalGames = (this.stats.games || 0) + 1;
-            window.statsManager.stats.totalGames = currentTotalGames;
-            window.statsManager.saveStats();
-        }
-
         if (myScoreEntry) {
              const myIndex = this.players.findIndex(p => p === myScoreEntry.name);
              if (myIndex !== -1 && this.allScores[myIndex]) {

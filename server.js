@@ -1451,6 +1451,19 @@ function sumTopRows(sheet, col) {
     return ['1', '2', '3', '4', '5', '6'].reduce((total, row) => total + (getTrophyCell(sheet, col, row) || 0), 0);
 }
 
+function hasOnlyYambZeros(sheet) {
+    let hasYambZero = false;
+
+    return KOLONE.every(col => REDOVI_IGRA.every(row => {
+        const value = getTrophyCell(sheet, col, row);
+        if (value === null) return false;
+        if (value !== 0) return true;
+        if (row !== 'Yamb') return false;
+        hasYambZero = true;
+        return true;
+    })) && hasYambZero;
+}
+
 function isBelgradeNightOwlHour() {
     try {
         const hourString = new Intl.DateTimeFormat('en-US', {
@@ -1563,16 +1576,14 @@ function isSpecialTrophyEarned(trophyId, proof) {
             return value !== null && value > 0;
         }
         case 'firecracker':
-            return KOLONE.every(col => {
+            return KOLONE.filter(col => {
                 const value = getTrophyCell(sheet, col, 'Yamb');
                 return value !== null && value > 0;
-            });
+            }).length >= 5;
         case 'potato':
             return KOLONE.some(col => getTrophyCell(sheet, col, 'Yamb') === 0);
-        case 'achilles': {
-            const yambZeros = KOLONE.filter(col => getTrophyCell(sheet, col, 'Yamb') === 0).length;
-            return yambZeros >= 3 && proof.finalScore > 800;
-        }
+        case 'achilles':
+            return hasOnlyYambZeros(sheet);
         case 'night_owl':
             return isBelgradeNightOwlHour();
         case 'close_call': {
