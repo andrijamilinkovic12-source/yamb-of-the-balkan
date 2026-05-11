@@ -1353,6 +1353,10 @@ class YambApp {
                 });
                 
                 this.socket.on('error_msg', (msgKey) => {
+                    if (this.globalChat && this.globalChat.handleError && this.globalChat.handleError(msgKey)) {
+                        return;
+                    }
+
                     let finalMsg = msgKey;
                     if (typeof t === 'function' && t(msgKey) !== msgKey) {
                         finalMsg = gt(msgKey);

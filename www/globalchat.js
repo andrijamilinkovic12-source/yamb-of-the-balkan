@@ -26,6 +26,7 @@ class GlobalChatManager {
             
             // Dinamički brojač karaktera
             inputGlobalChat.addEventListener('input', (e) => {
+                this.clearStatus();
                 const charCountEl = document.getElementById('global-chat-char-count');
                 if (charCountEl) {
                     charCountEl.innerText = `${e.target.value.length}/550`;
@@ -43,6 +44,7 @@ class GlobalChatManager {
         const pokreniChat = () => {
             const overlay = document.getElementById('global-chat-overlay');
             if (overlay) overlay.style.display = 'flex';
+            this.clearStatus();
             
             if (this.app.socket && this.app.socket.connected) {
                 this.app.socket.emit('request_global_chat_history');
@@ -73,6 +75,32 @@ class GlobalChatManager {
         if (!skipAd && this.app.adMob && this.app.adMob.showInterstitial) {
             await this.app.adMob.showInterstitial();
         }
+    }
+
+    isOpen() {
+        const overlay = document.getElementById('global-chat-overlay');
+        return !!overlay && overlay.style.display !== 'none';
+    }
+
+    clearStatus() {
+        const statusEl = document.getElementById('global-chat-status');
+        if (!statusEl) return;
+        statusEl.innerText = "";
+        statusEl.style.display = "none";
+    }
+
+    showStatus(messageKey) {
+        const statusEl = document.getElementById('global-chat-status');
+        if (!statusEl) return;
+        statusEl.innerText = this.gt(messageKey);
+        statusEl.style.display = "block";
+    }
+
+    handleError(messageKey) {
+        const chatErrors = new Set(['err_chat_slow_down', 'err_chat_suspended', 'err_chat_banned', 'err_chat_auth_required']);
+        if (!chatErrors.has(messageKey) || !this.isOpen()) return false;
+        this.showStatus(messageKey);
+        return true;
     }
 
     appendMessage(sender, text, type, senderId = null, skipSound = false, senderUid = null, createdAt = null) { 
@@ -137,6 +165,7 @@ class GlobalChatManager {
         if (!text) return; 
         
         input.value = ""; 
+        this.clearStatus();
         
         const charCountEl = document.getElementById('global-chat-char-count');
         if (charCountEl) charCountEl.innerText = "0/550";

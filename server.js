@@ -3704,7 +3704,7 @@ io.on('connection', (socket) => {
         if (!data || !data.msg) return;
 
         if (!socket.playerName || !socket.verifiedUid) {
-            socket.emit('error_msg', 'auth_required');
+            socket.emit('error_msg', 'err_chat_auth_required');
             return;
         }
         
