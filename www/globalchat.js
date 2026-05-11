@@ -4,7 +4,9 @@ class GlobalChatManager {
     constructor(app) {
         this.app = app;
         this.lastGlobalMsg = null;
+        this.updateViewportVars = this.updateViewportVars.bind(this);
         this.initDOM();
+        this.initViewportTracking();
     }
 
     // Pomoćna funkcija za prevode
@@ -35,6 +37,26 @@ class GlobalChatManager {
         }
     }
 
+    initViewportTracking() {
+        this.updateViewportVars();
+        window.addEventListener('resize', this.updateViewportVars);
+        window.addEventListener('orientationchange', this.updateViewportVars);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', this.updateViewportVars);
+            window.visualViewport.addEventListener('scroll', this.updateViewportVars);
+        }
+    }
+
+    updateViewportVars() {
+        const root = document.documentElement;
+        const viewport = window.visualViewport;
+        const height = viewport ? viewport.height : window.innerHeight;
+        const top = viewport ? viewport.offsetTop : 0;
+
+        root.style.setProperty('--global-chat-height', `${Math.max(320, Math.round(height))}px`);
+        root.style.setProperty('--global-chat-top', `${Math.round(top)}px`);
+    }
+
     async open() {
         if (!this.app.requireLogin()) return;
 
@@ -44,6 +66,7 @@ class GlobalChatManager {
         const pokreniChat = () => {
             const overlay = document.getElementById('global-chat-overlay');
             if (overlay) overlay.style.display = 'flex';
+            this.updateViewportVars();
             this.clearStatus();
             
             if (this.app.socket && this.app.socket.connected) {
@@ -71,6 +94,7 @@ class GlobalChatManager {
     async close(skipAd = false) {
         const overlay = document.getElementById('global-chat-overlay');
         if (overlay) overlay.style.display = 'none';
+        document.documentElement.style.removeProperty('--global-chat-top');
 
         if (!skipAd && this.app.adMob && this.app.adMob.showInterstitial) {
             await this.app.adMob.showInterstitial();
