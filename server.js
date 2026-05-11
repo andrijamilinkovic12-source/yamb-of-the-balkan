@@ -2094,11 +2094,19 @@ io.on('connection', (socket) => {
                 const purchaseCoverage = Math.max(0, oldBalance + allowedBalanceIncrease - requestedBalance);
                 const acceptsPaidUnlocks = requestedPaidUnlockCost === 0 || purchaseCoverage >= requestedPaidUnlockCost;
 
+                const hasAcceptedPaidPurchase = requestedPaidUnlockCost > 0 && acceptsPaidUnlocks;
+
                 if (typeof s.balance === 'number' && isClientSynced) {
                     if (isUsingOldBackup && requestedBalance > oldBalance && !hasEarnedBalanceIncrease) {
                         console.log(`🚨 HACK POKUŠAJ (Inventory Desync): Igrač ${user.playerName} odbijen skok dukata sa ${oldBalance} na ${requestedBalance}!`);
-                    } else if (requestedBalanceDelta <= 0) {
+                    } else if (requestedBalanceDelta === 0) {
                         acceptedBalance = requestedBalance;
+                    } else if (requestedBalanceDelta < 0) {
+                        if (hasAcceptedPaidPurchase) {
+                            acceptedBalance = requestedBalance;
+                        } else {
+                            console.log(`🛡️ ECONOMY GUARD: Ignorišem zastareli pad dukata sa ${oldBalance} na ${requestedBalance} bez nove kupovine.`);
+                        }
                     } else if (requestedBalanceDelta <= allowedBalanceIncrease) {
                         acceptedBalance = requestedBalance;
                         if (shouldMarkDailyRewardClaimed) {
