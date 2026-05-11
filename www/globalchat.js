@@ -159,7 +159,7 @@ class GlobalChatManager {
             const parsedTime = new Date(createdAt);
             if (!Number.isNaN(parsedTime.getTime())) {
                 const safeTime = sec.escapeHtml(parsedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-                timeHtml = ` <span style="font-size: 0.68rem; color: var(--text-muted); opacity: 0.75;">${safeTime}</span>`;
+                timeHtml = `<span>${safeTime}</span>`;
             }
         }
 
@@ -167,10 +167,11 @@ class GlobalChatManager {
         if (messageId && type === "msg-incoming") {
             const reportTitle = sec.escapeAttr(this.gt('chat_report_action'));
             const handler = sec.escapeAttr(`window.app.globalChat.reportMessage(${sec.jsString(messageId)})`);
-            reportHtml = ` <button type="button" onclick="${handler}" title="${reportTitle}" style="border: none; background: transparent; color: var(--text-muted); cursor: pointer; font-weight: 900; padding: 0 2px; opacity: 0.75;">!</button>`;
+            reportHtml = `<button type="button" class="global-chat-report-btn" onclick="${handler}" title="${reportTitle}" aria-label="${reportTitle}">!</button>`;
         }
 
-        msgDiv.innerHTML = `${nameHtml} ${safeText}${timeHtml}${reportHtml}`;
+        const metaHtml = (timeHtml || reportHtml) ? `<div class="global-chat-meta">${timeHtml}${reportHtml}</div>` : "";
+        msgDiv.innerHTML = `${nameHtml} ${safeText}${metaHtml}`;
         body.appendChild(msgDiv); 
         body.scrollTop = body.scrollHeight; 
         

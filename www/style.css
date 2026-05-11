@@ -332,6 +332,9 @@ body {
 .msg-bubble { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 0.85rem; line-height: 1.4; word-wrap: break-word; }
 .msg-incoming { align-self: flex-start; background: rgba(255,255,255,0.1); color: var(--text-main); border-bottom-left-radius: 2px; }
 .msg-outgoing { align-self: flex-end; background: var(--gold-main); color: #000; border-bottom-right-radius: 2px; }
+.global-chat-meta { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 4px; font-size: 0.68rem; color: var(--text-muted); opacity: 0.8; }
+.global-chat-report-btn { min-width: 24px; min-height: 24px; border: none; border-radius: 50%; background: rgba(255,255,255,0.08); color: var(--text-muted); cursor: pointer; font-weight: 900; line-height: 1; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
+.global-chat-report-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.14); }
 @media (max-width: 1024px) and (orientation: portrait) { .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; } .chat-window.active { transform: translateX(-50%); } .chat-float-btn { bottom: 145px; } }
 
 #btn-ad-double { animation: pulseButton 1.5s infinite; position: relative; overflow: hidden; }
