@@ -273,13 +273,18 @@ class TopListManager {
 
         list.innerHTML = "";
 
-        // --- NOVO: STRIKTNO FILTRIRANJE GOSTIJU I STARIH REZULTATA ---
+        const isGlobalList = elementId === 'global-hs-list';
+
         let validData = [];
         if (data && Array.isArray(data)) {
             validData = data.filter(entry => {
-                // Firebase Google UID je uvek dugačak (oko 28 karaktera).
-                // Odbacujemo sve koji nemaju UID, koji su kraći od 20 karaktera ili sadrže reč 'guest'
-                return entry.uid && typeof entry.uid === 'string' && entry.uid.length > 20 && !entry.uid.toLowerCase().includes('guest');
+                const score = Number(entry?.score);
+                if (!Number.isFinite(score) || score <= 0) return false;
+
+                if (!isGlobalList) return true;
+
+                const uid = entry.uid || entry.playerId;
+                return uid && typeof uid === 'string' && uid.length > 20 && !uid.toLowerCase().includes('guest');
             });
         }
 
@@ -294,7 +299,6 @@ class TopListManager {
         const currentLang = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
         const sec = window.YambSecurity;
 
-        // Rendamo samo validne Google igrače (koristimo validData umesto data)
         validData.forEach((entry, index) => {
             const li = document.createElement('li');
             li.className = 'highscore-item'; 
