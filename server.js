@@ -305,6 +305,7 @@ let playerRooms = {};
 let gameStartTimes = {};
 const pendingGameRewards = {};
 const chatBans = {};
+const globalChatRateLimits = {};
 const onlinePlayers = {};
 const registeredSockets = {};
 
@@ -312,6 +313,7 @@ const GLOBAL_CHAT_MIN_INTERVAL_MS = 1200;
 const GLOBAL_CHAT_SPAM_STRIKE_LIMIT = 4;
 const GLOBAL_CHAT_SPAM_MUTE_MS = 15000;
 const GLOBAL_CHAT_PROFANITY_BAN_BASE_MS = 60 * 60 * 1000;
+const GLOBAL_CHAT_RATE_LIMIT_TTL_MS = 60 * 60 * 1000;
 
 const MAX_SCORE = 3500;
 const MAX_NAME_LENGTH = 24;
@@ -3734,27 +3736,36 @@ io.on('connection', (socket) => {
             return; 
         }
 
-        if (socket.globalChatMutedUntil && socket.globalChatMutedUntil > now) {
+        const originalMsg = data.msg.toString().replace(/\s+/g, ' ').trim().substring(0, 550).trim();
+        if (!originalMsg) return;
+
+        const rateKey = socket.verifiedUid;
+        const rateState = globalChatRateLimits[rateKey] || { lastAt: 0, spamStrikes: 0, mutedUntil: 0 };
+
+        if (rateState.mutedUntil && rateState.mutedUntil > now) {
             socket.emit('error_msg', 'err_chat_slow_down');
             return;
         }
 
-        const lastGlobalChatAt = socket.lastGlobalChatAt || 0;
+        const lastGlobalChatAt = rateState.lastAt || 0;
         if (now - lastGlobalChatAt < GLOBAL_CHAT_MIN_INTERVAL_MS) {
-            socket.globalChatSpamStrikes = (socket.globalChatSpamStrikes || 0) + 1;
-            if (socket.globalChatSpamStrikes >= GLOBAL_CHAT_SPAM_STRIKE_LIMIT) {
-                socket.globalChatMutedUntil = now + GLOBAL_CHAT_SPAM_MUTE_MS;
-                socket.globalChatSpamStrikes = 0;
+            rateState.spamStrikes = (rateState.spamStrikes || 0) + 1;
+            rateState.lastSeenAt = now;
+            if (rateState.spamStrikes >= GLOBAL_CHAT_SPAM_STRIKE_LIMIT) {
+                rateState.mutedUntil = now + GLOBAL_CHAT_SPAM_MUTE_MS;
+                rateState.spamStrikes = 0;
             }
+            globalChatRateLimits[rateKey] = rateState;
             socket.emit('error_msg', 'err_chat_slow_down');
             return;
         }
 
-        socket.lastGlobalChatAt = now;
-        socket.globalChatSpamStrikes = 0;
+        rateState.lastAt = now;
+        rateState.lastSeenAt = now;
+        rateState.spamStrikes = 0;
+        globalChatRateLimits[rateKey] = rateState;
 
         const safeSender = socket.playerName.toString().substring(0, 20);
-        const originalMsg = data.msg.toString().substring(0, 550); 
 
         const safeMsg = cenzurisiPoruku(originalMsg);
 
@@ -4329,6 +4340,12 @@ setInterval(() => {
         if (now > chatBans[ip].banUntil + (24 * 60 * 60 * 1000)) { 
             delete chatBans[ip];
             obrisano++;
+        }
+    }
+    for (const uid in globalChatRateLimits) {
+        const state = globalChatRateLimits[uid];
+        if (!state || now - (state.lastSeenAt || state.lastAt || 0) > GLOBAL_CHAT_RATE_LIMIT_TTL_MS) {
+            delete globalChatRateLimits[uid];
         }
     }
     if (obrisano > 0) {
