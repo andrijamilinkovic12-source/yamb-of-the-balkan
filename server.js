@@ -306,6 +306,10 @@ const chatBans = {};
 const onlinePlayers = {};
 const registeredSockets = {};
 
+const GLOBAL_CHAT_MIN_INTERVAL_MS = 1200;
+const GLOBAL_CHAT_SPAM_STRIKE_LIMIT = 4;
+const GLOBAL_CHAT_SPAM_MUTE_MS = 15000;
+
 const MAX_SCORE = 3500;
 const MAX_NAME_LENGTH = 24;
 const MIN_GAME_DURATION = 120000;
@@ -3710,6 +3714,25 @@ io.on('connection', (socket) => {
             socket.emit('error_msg', 'err_chat_suspended');
             return; 
         }
+
+        if (socket.globalChatMutedUntil && socket.globalChatMutedUntil > now) {
+            socket.emit('error_msg', 'err_chat_slow_down');
+            return;
+        }
+
+        const lastGlobalChatAt = socket.lastGlobalChatAt || 0;
+        if (now - lastGlobalChatAt < GLOBAL_CHAT_MIN_INTERVAL_MS) {
+            socket.globalChatSpamStrikes = (socket.globalChatSpamStrikes || 0) + 1;
+            if (socket.globalChatSpamStrikes >= GLOBAL_CHAT_SPAM_STRIKE_LIMIT) {
+                socket.globalChatMutedUntil = now + GLOBAL_CHAT_SPAM_MUTE_MS;
+                socket.globalChatSpamStrikes = 0;
+            }
+            socket.emit('error_msg', 'err_chat_slow_down');
+            return;
+        }
+
+        socket.lastGlobalChatAt = now;
+        socket.globalChatSpamStrikes = 0;
 
         const safeSender = socket.playerName.toString().substring(0, 20);
         const originalMsg = data.msg.toString().substring(0, 550); 
