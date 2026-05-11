@@ -271,6 +271,22 @@ const GlobalChatReportSchema = new mongoose.Schema({
 });
 mongoose.model('GlobalChatReport', GlobalChatReportSchema);
 
+const GlobalChatModerationLogSchema = new mongoose.Schema({
+    action: { type: String, default: 'auto_profanity_ban' },
+    uid: { type: String, default: '' },
+    playerName: { type: String, default: 'Nepoznat' },
+    socketId: { type: String, default: '' },
+    ip: { type: String, default: '' },
+    originalMsg: { type: String, default: '' },
+    filteredMsg: { type: String, default: '' },
+    previousStrikes: { type: Number, default: 0 },
+    nextStrikes: { type: Number, default: 0 },
+    banUntil: { type: Number, default: 0 },
+    banDurationMs: { type: Number, default: 0 },
+    createdAt: { type: Number, default: Date.now }
+});
+mongoose.model('GlobalChatModerationLog', GlobalChatModerationLogSchema);
+
 const UserProfileSchema = new mongoose.Schema({
     firebaseUid: { type: String, unique: true, required: true },
     playerName: String,
@@ -3831,7 +3847,8 @@ io.on('connection', (socket) => {
             if (MONGO_URI) {
                 const currentStrikes = Math.max(0, toSafeInt(chatProfile?.chatBanStrikes, 0));
                 const nextStrikes = currentStrikes + 1;
-                const banUntil = now + (Math.pow(2, nextStrikes - 1) * GLOBAL_CHAT_PROFANITY_BAN_BASE_MS);
+                const banDurationMs = Math.pow(2, nextStrikes - 1) * GLOBAL_CHAT_PROFANITY_BAN_BASE_MS;
+                const banUntil = now + banDurationMs;
 
                 try {
                     await UserProfile.findOneAndUpdate(
@@ -3839,8 +3856,23 @@ io.on('connection', (socket) => {
                         { $set: { chatBanUntil: banUntil }, $inc: { chatBanStrikes: 1 } },
                         { upsert: false }
                     );
+
+                    const GlobalChatModerationLog = mongoose.model('GlobalChatModerationLog');
+                    await GlobalChatModerationLog.create({
+                        uid: socket.verifiedUid,
+                        playerName: safeSender,
+                        socketId: socket.id,
+                        ip: clientIp || '',
+                        originalMsg,
+                        filteredMsg: safeMsg,
+                        previousStrikes: currentStrikes,
+                        nextStrikes,
+                        banUntil,
+                        banDurationMs,
+                        createdAt: now
+                    });
                 } catch (err) {
-                    console.error('Greška pri upisu chat bana:', err);
+                    console.error('Greška pri upisu chat bana ili moderation loga:', err);
                 }
             } else {
                 if (!chatBans[clientIp]) {
