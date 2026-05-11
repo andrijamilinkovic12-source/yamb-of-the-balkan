@@ -851,6 +851,9 @@ function buildH2HRecordSummary(h2hStats = {}) {
 
     Object.values(h2hStats).forEach(record => {
         if (!record || typeof record !== 'object') return;
+        const name = String(record.name || '').trim();
+        if (!name || name === 'undefined' || name === 'null' || name === 'Nepoznat') return;
+
         const wins = Math.max(0, toSafeInt(record.wins, 0));
         const losses = Math.max(0, toSafeInt(record.losses, 0));
         const draws = Math.max(0, toSafeInt(record.draws, 0));
