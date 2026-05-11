@@ -1854,17 +1854,18 @@ class YambApp {
     showStats() { 
         this.refreshLocalStats();
         this.navigateTo('stats-screen'); 
+        const h2hRecord = this.getLocalH2HRecordSummary();
         document.getElementById('stat-games').innerText = this.stats.games; 
         document.getElementById('stat-high').innerText = this.stats.highscore; 
-        document.getElementById('stat-wins').innerText = this.stats.wins; 
-        document.getElementById('stat-losses').innerText = this.stats.losses; 
+        document.getElementById('stat-wins').innerText = h2hRecord.wins; 
+        document.getElementById('stat-losses').innerText = h2hRecord.losses; 
         
         const avg = this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 0; 
         document.getElementById('stat-avg').innerText = avg; 
 
-        const totalCompetitive = this.stats.wins + this.stats.losses; 
+        const totalCompetitive = h2hRecord.wins + h2hRecord.losses + h2hRecord.draws; 
         let rate = 0; let winWidth = 50; let lossWidth = 50;
-        if (totalCompetitive > 0) { rate = Math.round((this.stats.wins / totalCompetitive) * 100); winWidth = rate; lossWidth = 100 - rate; } 
+        if (totalCompetitive > 0) { rate = Math.round((h2hRecord.wins / totalCompetitive) * 100); winWidth = rate; lossWidth = 100 - rate; } 
         else { winWidth = 0; lossWidth = 0; }
 
         document.getElementById('stat-rate').innerText = rate + "%"; 
