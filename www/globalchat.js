@@ -127,12 +127,12 @@ class GlobalChatManager {
         if (charCountEl) charCountEl.innerText = "0/550";
         
         if (this.app.socket && this.app.socket.connected) { 
-            this.app.socket.emit('global_chat_msg', { sender: this.app.playerName, msg: text }); 
+            this.app.socket.emit('global_chat_msg', { msg: text }); 
         } else {
             this.app.initSocketConnection();
             setTimeout(() => {
                 if (this.app.socket && this.app.socket.connected) {
-                    this.app.socket.emit('global_chat_msg', { sender: this.app.playerName, msg: text }); 
+                    this.app.socket.emit('global_chat_msg', { msg: text }); 
                 } else {
                     this.appendMessage(this.gt('sys_name') || "Sistem", this.gt('sys_no_conn') || "Niste povezani na server.", "msg-incoming");
                 }

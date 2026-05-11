@@ -3695,6 +3695,11 @@ io.on('connection', (socket) => {
 
     socket.on('global_chat_msg', (data) => {
         if (!data || !data.msg) return;
+
+        if (!socket.playerName) {
+            socket.emit('error_msg', 'auth_required');
+            return;
+        }
         
         let clientIp = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address;
         if (typeof clientIp === 'string') clientIp = clientIp.split(',')[0].trim();
@@ -3706,7 +3711,7 @@ io.on('connection', (socket) => {
             return; 
         }
 
-        const safeSender = (data.sender || 'Nepoznat').toString().substring(0, 20);
+        const safeSender = socket.playerName.toString().substring(0, 20);
         const originalMsg = data.msg.toString().substring(0, 550); 
 
         const safeMsg = cenzurisiPoruku(originalMsg);
