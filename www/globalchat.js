@@ -103,7 +103,7 @@ class GlobalChatManager {
         return true;
     }
 
-    appendMessage(sender, text, type, senderId = null, skipSound = false, senderUid = null, createdAt = null) { 
+    appendMessage(sender, text, type, senderId = null, skipSound = false, senderUid = null, createdAt = null, messageId = null) { 
         const body = document.getElementById('global-chat-body'); 
         if (!body) return;
         const sec = window.YambSecurity;
@@ -125,6 +125,7 @@ class GlobalChatManager {
 
         const msgDiv = document.createElement('div'); 
         msgDiv.className = `msg-bubble ${type}`; 
+        if (messageId) msgDiv.dataset.chatId = String(messageId);
         
         const safeSender = sec.escapeHtml(sender);
         const safeText = sec.escapeHtml(text);
@@ -192,7 +193,7 @@ class GlobalChatManager {
         socket.on('global_chat_msg', (data) => {
             const myUid = localStorage.getItem('yamb_uid');
             const isMe = (data.senderId === socket.id) || (data.senderUid && data.senderUid === myUid);
-            this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, false, data.senderUid, data.createdAt);
+            this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, false, data.senderUid, data.createdAt, data.id);
         });
 
         socket.off('global_chat_history');
@@ -205,7 +206,7 @@ class GlobalChatManager {
             history.forEach(data => {
                 const myUid = localStorage.getItem('yamb_uid');
                 const isMe = (data.senderId === socket.id) || (data.senderUid && data.senderUid === myUid);
-                this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, true, data.senderUid, data.createdAt);
+                this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, true, data.senderUid, data.createdAt, data.id);
             });
         });
     }

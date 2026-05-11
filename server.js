@@ -10,6 +10,7 @@ const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+const crypto = require('crypto');
 
 let firebaseAuth = null;
 
@@ -244,8 +245,17 @@ const TournamentStateSchema = new mongoose.Schema({
 });
 mongoose.model('TournamentState', TournamentStateSchema);
 
+const GlobalChatMessageSchema = new mongoose.Schema({
+    id: { type: String, required: true },
+    sender: { type: String, default: 'Nepoznat' },
+    senderId: { type: String, default: '' },
+    senderUid: { type: String, default: '' },
+    msg: { type: String, default: '' },
+    createdAt: { type: Number, default: Date.now }
+}, { _id: false });
+
 const GlobalChatSchema = new mongoose.Schema({
-    messages: { type: Array, default: [] }
+    messages: { type: [GlobalChatMessageSchema], default: [] }
 });
 mongoose.model('GlobalChat', GlobalChatSchema);
 
@@ -465,6 +475,28 @@ const FREE_UNLOCK_IDS = new Set(Object.entries(SHOP_ITEM_PRICES).filter(([, pric
 let globalChatHistory = [];
 const MAX_CHAT_HISTORY = 50;
 
+function createGlobalChatMessageId() {
+    return crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+function normalizeGlobalChatMessage(raw, index = 0) {
+    if (!raw || typeof raw !== 'object') return null;
+
+    const msg = String(raw.msg ?? '').replace(/\s+/g, ' ').trim().substring(0, 550).trim();
+    if (!msg) return null;
+
+    const createdAt = Math.max(0, toSafeInt(raw.createdAt, 0)) || Date.now();
+
+    return {
+        id: String(raw.id || `legacy_${createdAt}_${index}_${Math.random().toString(36).slice(2, 8)}`),
+        sender: String(raw.sender || 'Nepoznat').substring(0, 20),
+        senderId: String(raw.senderId || ''),
+        senderUid: String(raw.senderUid || ''),
+        msg,
+        createdAt
+    };
+}
+
 // Funkcije za manipulaciju chatom
 async function initChatFromDb() {
     if (!process.env.MONGO_URI) return;
@@ -472,7 +504,14 @@ async function initChatFromDb() {
         const GlobalChatDb = mongoose.model('GlobalChat');
         let dbChat = await GlobalChatDb.findOne();
         if (dbChat) {
-            globalChatHistory = dbChat.messages || [];
+            const rawMessages = Array.isArray(dbChat.messages) ? dbChat.messages : [];
+            globalChatHistory = rawMessages
+                .map((message, index) => normalizeGlobalChatMessage(message, index))
+                .filter(Boolean)
+                .slice(-MAX_CHAT_HISTORY);
+            if (globalChatHistory.length !== rawMessages.length || globalChatHistory.some((message, index) => message.id !== rawMessages[index]?.id)) {
+                await saveChatToDb();
+            }
             console.log("💬 Globalni chat uspešno učitan iz baze.");
         } else {
             let newChat = new GlobalChatDb({ messages: [] });
@@ -488,7 +527,12 @@ async function saveChatToDb() {
     if (!process.env.MONGO_URI) return;
     try {
         const GlobalChatDb = mongoose.model('GlobalChat');
-        await GlobalChatDb.findOneAndUpdate({}, { messages: globalChatHistory }, { upsert: true });
+        const messages = globalChatHistory
+            .map((message, index) => normalizeGlobalChatMessage(message, index))
+            .filter(Boolean)
+            .slice(-MAX_CHAT_HISTORY);
+        globalChatHistory = messages;
+        await GlobalChatDb.findOneAndUpdate({}, { messages }, { upsert: true });
     } catch (err) {
         console.error("Greška pri čuvanju chata u bazu:", err);
     }
@@ -3799,6 +3843,7 @@ io.on('connection', (socket) => {
         }
 
         const chatObj = {
+            id: createGlobalChatMessageId(),
             sender: safeSender,
             senderId: socket.id,
             senderUid: socket.verifiedUid,
