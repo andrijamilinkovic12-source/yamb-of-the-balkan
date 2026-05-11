@@ -383,6 +383,59 @@ const MAX_PROFILE_COMPETITIVE_BUFFER = 250;
 const MAX_PROFILE_TOURNEY_DELTA_PER_SYNC = 3;
 const MAX_PROFILE_LEGACY_TOURNEY_IMPORT = 100;
 const MAX_PENALTY_POINTS = 100000;
+const LEADERBOARD_TIME_ZONE = 'Europe/Belgrade';
+
+function getTimeZoneParts(date, timeZone) {
+    const parts = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23'
+    }).formatToParts(date);
+
+    return Object.fromEntries(parts
+        .filter(part => part.type !== 'literal')
+        .map(part => [part.type, Number(part.value)]));
+}
+
+function getTimeZoneOffsetMs(date, timeZone) {
+    const parts = getTimeZoneParts(date, timeZone);
+    const zonedAsUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+    return zonedAsUtc - date.getTime();
+}
+
+function zonedLocalMidnightToUtc(year, month, day, timeZone) {
+    const localMidnightAsUtc = Date.UTC(year, month - 1, day, 0, 0, 0);
+    let result = new Date(localMidnightAsUtc - getTimeZoneOffsetMs(new Date(localMidnightAsUtc), timeZone));
+    result = new Date(localMidnightAsUtc - getTimeZoneOffsetMs(result, timeZone));
+    return result;
+}
+
+function getLeaderboardPeriodStart(period, now = new Date(), timeZone = LEADERBOARD_TIME_ZONE) {
+    const parts = getTimeZoneParts(now, timeZone);
+
+    if (period === 'monthly') {
+        return zonedLocalMidnightToUtc(parts.year, parts.month, 1, timeZone);
+    }
+
+    if (period === 'weekly') {
+        const utcCalendarDay = new Date(Date.UTC(parts.year, parts.month - 1, parts.day));
+        const dayOfWeek = utcCalendarDay.getUTCDay() || 7;
+        const monday = new Date(Date.UTC(parts.year, parts.month - 1, parts.day - dayOfWeek + 1));
+        return zonedLocalMidnightToUtc(
+            monday.getUTCFullYear(),
+            monday.getUTCMonth() + 1,
+            monday.getUTCDate(),
+            timeZone
+        );
+    }
+
+    return null;
+}
 
 const TROPHY_REWARDS = Object.freeze({
     first_play: 500,
@@ -2821,11 +2874,8 @@ io.on('connection', (socket) => {
     socket.on('get_weekly_top3', async () => {
         try {
             if (!MONGO_URI) return;
-            
-            const now = new Date();
-            now.setHours(0, 0, 0, 0);
-            const dayOfWeek = now.getDay() || 7; 
-            const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
+
+            const startOfWeek = getLeaderboardPeriodStart('weekly');
 
             const topScores = await Score.aggregate([
                 { 
@@ -2877,16 +2927,10 @@ io.on('connection', (socket) => {
                 ]
             };
             
-            const now = new Date();
-            now.setHours(0, 0, 0, 0);
-            
             if (period === 'weekly') {
-                const dayOfWeek = now.getDay() || 7; 
-                const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek + 1);
-                matchFilter.date = { $gte: startOfWeek };
+                matchFilter.date = { $gte: getLeaderboardPeriodStart('weekly') };
             } else if (period === 'monthly') {
-                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-                matchFilter.date = { $gte: startOfMonth };
+                matchFilter.date = { $gte: getLeaderboardPeriodStart('monthly') };
             }
 
             const scores = await Score.aggregate([
