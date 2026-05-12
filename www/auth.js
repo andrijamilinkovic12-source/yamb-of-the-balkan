@@ -317,6 +317,26 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
     return !!cloudStats;
 }
 
+async function clearAccountLocalCache(uid) {
+    if (!uid) return;
+
+    [
+        'yamb_quarter_data_' + uid,
+        'yamb_last_daily_' + uid,
+        'yamb_daily_reward_claimed_' + uid,
+        'yamb_daily_reward_amount_' + uid,
+        'yamb_legacy_migration_pending_' + uid,
+        'yamb_tourney_reg_' + uid
+    ].forEach(key => localStorage.removeItem(key));
+
+    if (window.localforage && typeof localforage.removeItem === 'function') {
+        await Promise.all([
+            localforage.removeItem('yamb_saved_game_' + uid + '_1'),
+            localforage.removeItem('yamb_saved_game_' + uid + '_2')
+        ]);
+    }
+}
+
 // --- FUNKCIJA ZA PRIJAVU ---
 async function prijaviSe() {
     console.log("Iniciram proces prijave...");
@@ -406,6 +426,7 @@ async function odjaviSe() {
 
         await Capacitor.Plugins.FirebaseAuthentication.signOut();
         console.log("Korisnik uspešno odjavljen.");
+        await clearAccountLocalCache(logoutUid);
 
         // 1. Brisanje Firebase podataka
         localStorage.removeItem('yamb_player_photo');
@@ -416,7 +437,6 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_dukati');
         localStorage.removeItem('yamb_undo_tokens'); // DODATO: Brisanje tokena pri odjavi
         
-        // UID liga ostaje kao lokalni cache za isti nalog; drugi nalozi imaju drugi UID ključ.
         localStorage.removeItem('yamb_quarter_data');
 
         localStorage.removeItem('yamb_unlocked_skins');
