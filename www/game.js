@@ -105,6 +105,7 @@ class YambApp {
         this.isSpectator = false; 
         this.roomId = null; 
         this.myOnlineIndex = 0;
+        this.onlineRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
         this.isAnimating = false; 
         this.currentHostingRoomId = null;
@@ -194,10 +195,10 @@ class YambApp {
             });
         }
 
-        document.addEventListener("resume", () => { setTimeout(() => { this.checkForInvite(); }, 500); }, false);
-        document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') setTimeout(() => { this.checkForInvite(); }, 500); });
+        document.addEventListener("resume", () => { setTimeout(() => { this.handleAppResume(); }, 500); }, false);
+        document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') setTimeout(() => { this.handleAppResume(); }, 500); });
 
-        setTimeout(() => { this.checkForInvite(); }, 500);
+        setTimeout(() => { this.handleAppResume(); }, 500);
 
         this.handleRotationLock();
         window.addEventListener('resize', () => this.handleRotationLock());
@@ -1559,6 +1560,28 @@ class YambApp {
             this.navigateTo('splash-screen'); 
             setTimeout(() => { this.joinPrivateGame(this.playerName, roomId); }, 500); 
         } 
+    }
+
+    handleAppResume() {
+        this.checkForInvite();
+
+        if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket) {
+            const requestSync = () => {
+                this.socket.emit('request_state_sync', { roomId: this.roomId });
+            };
+
+            if (this.socket.connected) {
+                requestSync();
+            } else {
+                this.socket.once('connect', requestSync);
+                if (this.socket.disconnected) this.socket.connect();
+            }
+            return;
+        }
+
+        if (localStorage.getItem('yamb_active_online_room')) {
+            this.checkSavedGame();
+        }
     }
     
     navigateTo(screenId) { 
@@ -2990,18 +3013,32 @@ class YambApp {
             }
         });
 
+        this.setupOnlineRecoveryListeners();
+    }
+
+    setupOnlineRecoveryListeners() {
+        if (!this.socket) return;
+
         // DODATO: Osluškivač odgovora servera o stanju prekinute partije
         this.socket.off('room_status_result');
         this.socket.on('room_status_result', async (data) => {
             if (data.active) {
-                const zeliNastavak = await this.modal.confirm("Imate prekinut online duel! Da li želite da se vratite u igru?");
-                if (zeliNastavak) {
-                    this.resumeOnlineGame(data.roomId);
-                } else {
-                    localStorage.removeItem('yamb_active_online_room');
-                    if (this.socket && this.socket.connected) {
-                        this.socket.emit('back_to_menu');
+                if (this.gameActive && this.onlineMode) return;
+                if (this.onlineRecoveryPromptOpen) return;
+
+                this.onlineRecoveryPromptOpen = true;
+                try {
+                    const zeliNastavak = await this.modal.confirm("Imate prekinut online duel! Da li želite da se vratite u igru?");
+                    if (zeliNastavak) {
+                        this.resumeOnlineGame(data.roomId);
+                    } else {
+                        localStorage.removeItem('yamb_active_online_room');
+                        if (this.socket && this.socket.connected) {
+                            this.socket.emit('back_to_menu');
+                        }
                     }
+                } finally {
+                    this.onlineRecoveryPromptOpen = false;
                 }
             } else {
                 // Soba više ne postoji (istekao grace period), obavesti ga direktno
@@ -4086,6 +4123,7 @@ class YambApp {
         
         if (activeOnlineRoom) {
             this.initSocketConnection();
+            this.setupOnlineRecoveryListeners();
 
             const checkRoom = () => {
                 this.socket.emit('check_room_status', { roomId: activeOnlineRoom });
