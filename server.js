@@ -3476,16 +3476,20 @@ io.on('connection', (socket) => {
         if (!MONGO_URI) return;
 
         try {
+            const targetSocket = targetId ? io.sockets.sockets.get(targetId) : null;
+            const resolvedTargetUid = targetUid || (targetSocket && targetSocket.playerId);
+            if (!socket.playerId || !resolvedTargetUid || resolvedTargetUid === socket.playerId) return;
+
             const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
-            const targetProfile = await UserProfile.findOne({ firebaseUid: targetUid });
-            
+            const targetProfile = await UserProfile.findOne({ firebaseUid: resolvedTargetUid });
+
             if (me && targetProfile) {
                 if (!targetProfile.friends.includes(me.firebaseUid) && !targetProfile.friendRequests.includes(me.firebaseUid)) {
                     targetProfile.friendRequests.push(me.firebaseUid);
                     await targetProfile.save();
                 }
-                
-                const targetSocketId = onlinePlayers[targetUid];
+
+                const targetSocketId = onlinePlayers[resolvedTargetUid];
                 if (targetSocketId) {
                     io.to(targetSocketId).emit('incoming_friend_req', {
                         challengerName: me.playerName
@@ -4097,6 +4101,15 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            const challengerRoom = playerRooms[challengerId];
+            const responderRoom = playerRooms[socket.id];
+            if ((challengerRoom && !challengerRoom.startsWith('local_')) ||
+                (responderRoom && !responderRoom.startsWith('local_'))) {
+                socket.emit('error_msg', 'err_player_busy');
+                if (challengerSocket) challengerSocket.emit('error_msg', 'err_player_busy');
+                return;
+            }
+
             const roomName = `duel_${challengerId}_${socket.id}`;
             
             socket.join(roomName);
@@ -4107,7 +4120,20 @@ io.on('connection', (socket) => {
             gameStartTimes[socket.id] = Date.now();
             gameStartTimes[challengerId] = Date.now();
 
-            io.to(roomName).emit('game_started', { room: roomName, player1: challengerId, player2: socket.id });
+            challengerSocket.emit('game_start', {
+                roomId: roomName,
+                opponent: socket.playerName || "Igrač 2",
+                oppStats: socket.playerStats,
+                oppPhoto: socket.photoUrl || '',
+                myIndex: 0
+            });
+            socket.emit('game_start', {
+                roomId: roomName,
+                opponent: challengerSocket.playerName || "Igrač 1",
+                oppStats: challengerSocket.playerStats,
+                oppPhoto: challengerSocket.photoUrl || '',
+                myIndex: 1
+            });
             console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
 
             roomState[roomName] = { 
