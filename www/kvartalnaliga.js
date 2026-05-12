@@ -353,11 +353,6 @@ class KvartalnaLigaManager {
             return;
         }
         
-        if (this.hofData) {
-            this.renderHofMedals();
-            return;
-        }
-
         window.app.socket.off('hall_of_fame_data'); 
         window.app.socket.on('hall_of_fame_data', (data) => {
             this.hofData = data;
