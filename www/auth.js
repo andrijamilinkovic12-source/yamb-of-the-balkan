@@ -447,7 +447,7 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_h2h_stats'); 
         
         // Resetovanje aktivnih skinova i tema
-        localStorage.setItem('yamb_theme', 'dark');
+        localStorage.removeItem('yamb_theme');
         localStorage.removeItem('yamb_active_skin');
         localStorage.removeItem('yamb_active_effect');
 
