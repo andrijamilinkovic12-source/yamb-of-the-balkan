@@ -3087,7 +3087,16 @@ class YambApp {
 
         // DODATO: Zaštita u slučaju da je igrač prekasno ušao (istekao Grace Period)
         this.socket.off('force_cancel_online');
-        this.socket.on('force_cancel_online', () => {
+        this.socket.on('force_cancel_online', (data = {}) => {
+            const responseRoomId = data && data.roomId;
+
+            if (this.gameActive && this.onlineMode) {
+                if (!responseRoomId || responseRoomId !== this.roomId) {
+                    console.log("ℹ️ Ignorišem force_cancel_online za staru/nepoznatu sobu:", responseRoomId);
+                    return;
+                }
+            }
+
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
             localStorage.removeItem('yamb_active_online_room');
             if (this.modal) {

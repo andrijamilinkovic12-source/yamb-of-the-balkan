@@ -802,6 +802,11 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
     const state = roomState[roomId];
     if (!state) return;
 
+    if (state.players[state.turnIndex] !== inactivePlayerSocketId) {
+        console.log(`ℹ️ Ignorišem zastareli timeout u sobi ${roomId}; potez više nije na socketu ${inactivePlayerSocketId}.`);
+        return;
+    }
+
     const winnerSocketId = state.players.find(id => id !== inactivePlayerSocketId);
 
     if (winnerSocketId) {
@@ -3985,9 +3990,17 @@ io.on('connection', (socket) => {
     // --- OVO JE ISPRAVLJENO U KORAKU 2 (Bezbedan State Sync + Prevencija lažne pobede) ---
     socket.on('request_state_sync', (data) => {
         // Ako socket još nije ubačen u sobu (mikro-delay kod rekonekcije), probaj iz payload-a
-        const roomId = playerRooms[socket.id] || (data && data.roomId);
+        const requestedRoomId = data && data.roomId;
+        const roomId = playerRooms[socket.id] || requestedRoomId;
+        const roomClients = roomId ? io.sockets.adapter.rooms.get(roomId) : null;
+        const socketIsRoomMember = !!(roomClients && roomClients.has(socket.id));
 
-        if (roomId && roomState[roomId]) {
+        if (requestedRoomId && playerRooms[socket.id] && requestedRoomId !== playerRooms[socket.id]) {
+            console.log(`ℹ️ Ignorišem sync zahtev za staru sobu ${requestedRoomId}; aktivna soba je ${playerRooms[socket.id]}.`);
+            return;
+        }
+
+        if (roomId && roomState[roomId] && socketIsRoomMember) {
             const state = roomState[roomId];
             console.log(`🛡️ SERVER SYNC: Šaljem bezbedno autoritativno stanje sobe ${roomId} igraču ${socket.id}`);
             
@@ -4008,27 +4021,37 @@ io.on('connection', (socket) => {
                 najavaAktivna: state.najavaAktivna || false,
                 najavljenoPolje: state.najavljenoPolje || null
             });
-        } else if (roomId) {
+        } else if (roomId && socketIsRoomMember) {
              // Pitaj protivnika za state ako je na serveru izgubljen, ALI SAMO AKO JE PROTIVNIK TU
-             const clients = io.sockets.adapter.rooms.get(roomId);
+             const clients = roomClients;
              if (clients && clients.size > 0 && Array.from(clients).some(c => c !== socket.id)) {
                  socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
              } else {
                  // Protivnik nije tu, partija je zvanično mrtva!
-                 socket.emit('force_cancel_online');
+                 socket.emit('force_cancel_online', { roomId });
              }
         } else {
             // Ako soba više ne postoji (istekao grace period)
-            socket.emit('force_cancel_online'); // Izbacujemo ga nazad u meni
+            socket.emit('force_cancel_online', { roomId: roomId || requestedRoomId || null }); // Izbacujemo ga nazad u meni
         }
     });
 
     socket.on('sync_state_response', (data) => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
+            if (data && data.roomId && data.roomId !== roomId) {
+                console.log(`ℹ️ Ignorišem sync_state_response za staru sobu ${data.roomId}; aktivna soba je ${roomId}.`);
+                return;
+            }
+
             if (roomState[roomId]) {
                 const state = roomState[roomId];
-                
+
+                if (!state.players.includes(socket.id)) {
+                    console.log(`ℹ️ Ignorišem sync_state_response od socket-a koji nije igrač u sobi ${roomId}: ${socket.id}`);
+                    return;
+                }
+
                 state.allScores = data.allScores || state.allScores;
                 state.turnIndex = data.currentPlayerIdx !== undefined ? data.currentPlayerIdx : state.turnIndex;
                 state.brojBacanja = data.brojBacanja || 0;
@@ -4736,14 +4759,28 @@ io.on('connection', (socket) => {
             io.to(activeRoomId).emit('opponent_connection_lost');
 
             disconnectTimers[pid] = setTimeout(async () => {
+                const ghost = ghostSessions[pid];
+                if (!ghost || ghost.roomId !== activeRoomId || ghost.oldSocketId !== socket.id) {
+                    console.log(`ℹ️ Ignorišem zastareli disconnect timeout za ${pid}; sesija je već obnovljena ili promenjena.`);
+                    delete disconnectTimers[pid];
+                    return;
+                }
+
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
                 let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
 
                 if (roomState[activeRoomId]) {
+                    if (!roomState[activeRoomId].players.includes(ghost.oldSocketId)) {
+                        console.log(`ℹ️ Ignorišem disconnect timeout za ${pid}; stari socket više nije igrač u sobi ${activeRoomId}.`);
+                        delete ghostSessions[pid];
+                        delete disconnectTimers[pid];
+                        return;
+                    }
+
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
 
                     let h2hKey = null;
-                    const oppSocketId = roomState[activeRoomId].players.find(id => id !== ghostSessions[pid]?.oldSocketId);
+                    const oppSocketId = roomState[activeRoomId].players.find(id => id !== ghost.oldSocketId);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
                     const winnerUid = registeredSockets[oppSocketId];
                     if (oppSocket) {
@@ -4761,15 +4798,15 @@ io.on('connection', (socket) => {
                     coinPenalty: technicalResult.loserCoinPenalty
                 });
                 
-                delete playerRooms[ghostSessions[pid]?.oldSocketId];
+                delete playerRooms[ghost.oldSocketId];
                 
                 stopTurnTimer(activeRoomId); 
                 if (roomState[activeRoomId]) delete roomState[activeRoomId];
 
                 if (privateRooms[activeRoomId]) {
-                    if (privateRooms[activeRoomId].p1 && privateRooms[activeRoomId].p1.id === ghostSessions[pid]?.oldSocketId) {
+                    if (privateRooms[activeRoomId].p1 && privateRooms[activeRoomId].p1.id === ghost.oldSocketId) {
                         delete privateRooms[activeRoomId];
-                    } else if (privateRooms[activeRoomId].p2 && privateRooms[activeRoomId].p2.id === ghostSessions[pid]?.oldSocketId) {
+                    } else if (privateRooms[activeRoomId].p2 && privateRooms[activeRoomId].p2.id === ghost.oldSocketId) {
                         delete privateRooms[activeRoomId].p2;
                     }
                 }
