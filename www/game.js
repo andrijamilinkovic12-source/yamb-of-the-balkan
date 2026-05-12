@@ -994,8 +994,29 @@ class YambApp {
 
     calculatePowerIndex(statsObj, isLocal = false) {
         if (!statsObj) return 0;
-        let totalCompetitive = (statsObj.wins || 0) + (statsObj.losses || 0);
-        let rate = totalCompetitive > 0 ? ((statsObj.wins || 0) / totalCompetitive) * 100 : 0;
+        let wins = statsObj.wins || 0;
+        let losses = statsObj.losses || 0;
+        let draws = statsObj.draws || 0;
+        if (statsObj.h2hStats && typeof statsObj.h2hStats === 'object') {
+            const h2hSummary = Object.values(statsObj.h2hStats).reduce((summary, record) => {
+                if (!record || typeof record !== 'object') return summary;
+                const name = String(record.name || '').trim();
+                if (!name || name === 'undefined' || name === 'null' || name === 'Nepoznat') return summary;
+                summary.wins += Math.max(0, parseInt(record.wins) || 0);
+                summary.losses += Math.max(0, parseInt(record.losses) || 0);
+                summary.draws += Math.max(0, parseInt(record.draws) || 0);
+                return summary;
+            }, { wins: 0, losses: 0, draws: 0 });
+
+            if (h2hSummary.wins + h2hSummary.losses + h2hSummary.draws > 0) {
+                wins = h2hSummary.wins;
+                losses = h2hSummary.losses;
+                draws = h2hSummary.draws;
+            }
+        }
+
+        let totalCompetitive = wins + losses + draws;
+        let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
         let avg = (statsObj.games || 0) > 0 ? (statsObj.totalScoreSum || 0) / statsObj.games : 0;
         let hs = statsObj.highscore || 0;
         let maxStreak = statsObj.maxWinStreak || 0;

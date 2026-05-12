@@ -94,6 +94,7 @@ class TournamentManager {
         let hs = parseInt(s.highscore) || 0;
         let maxStreak = parseInt(s.maxWinStreak) || 0;
         let tourneyWins = parseInt(s.tournamentWins) || 0;
+        let penalty = parseInt(s.penaltyPoints) || 0;
 
         // Fallback na statsManager u slučaju da su se ključevi drugačije sačuvali u memoriji
         if (window.statsManager && window.statsManager.stats) {
@@ -105,9 +106,28 @@ class TournamentManager {
             hs = hs || parseInt(sm.highscore) || 0;
             maxStreak = maxStreak || parseInt(sm.maxWinStreak) || 0;
             tourneyWins = tourneyWins || parseInt(sm.tournamentWins) || 0;
+            penalty = penalty || parseInt(sm.penaltyPoints) || 0;
         }
 
-        let totalCompetitive = wins + losses;
+        let draws = parseInt(s.draws) || 0;
+        const h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
+        const h2hSummary = Object.values(h2h).reduce((summary, record) => {
+            if (!record || typeof record !== 'object') return summary;
+            const name = String(record.name || '').trim();
+            if (!name || name === 'undefined' || name === 'null' || name === 'Nepoznat') return summary;
+            summary.wins += Math.max(0, parseInt(record.wins) || 0);
+            summary.losses += Math.max(0, parseInt(record.losses) || 0);
+            summary.draws += Math.max(0, parseInt(record.draws) || 0);
+            return summary;
+        }, { wins: 0, losses: 0, draws: 0 });
+
+        if (h2hSummary.wins + h2hSummary.losses + h2hSummary.draws > 0) {
+            wins = h2hSummary.wins;
+            losses = h2hSummary.losses;
+            draws = h2hSummary.draws;
+        }
+
+        let totalCompetitive = wins + losses + draws;
         let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
         let avg = games > 0 ? totalScoreSum / games : 0;
 
@@ -132,19 +152,13 @@ class TournamentManager {
             unlocked.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
         }
 
-        const power = Math.round(
+        const basePower = Math.round(
             (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) +
             (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
         );
+        const power = Math.max(0, basePower - penalty);
 
-        // Pokušaj 3: Uzimamo broj sa UI-a ako je on veći (Znači da je app skripta savršeno odradila posao na ekranu)
-        let uiPower = 0;
-        const piEl = document.getElementById('stat-power-index');
-        if (piEl && piEl.innerText) {
-            uiPower = parseInt(piEl.innerText.replace(/\D/g, '')) || 0;
-        }
-
-        return Math.max(power, uiPower).toString();
+        return power.toString();
     }
 
     // --- NOVA FUNKCIJA: LOGIKA ZA PAMETNI BEDŽ TURNIRA ---

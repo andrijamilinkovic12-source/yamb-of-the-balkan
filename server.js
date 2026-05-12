@@ -3418,8 +3418,12 @@ io.on('connection', (socket) => {
             const users = await UserProfile.find({ games: { $gt: 0 } }).lean();
 
             const rankedPlayers = users.map(user => {
-                let totalCompetitive = (user.wins || 0) + (user.losses || 0);
-                let rate = totalCompetitive > 0 ? ((user.wins || 0) / totalCompetitive) * 100 : 0;
+                const h2hRecord = buildH2HRecordSummary(user.h2hStats);
+                const wins = h2hRecord.games > 0 ? h2hRecord.wins : (user.wins || 0);
+                const losses = h2hRecord.games > 0 ? h2hRecord.losses : (user.losses || 0);
+                const draws = h2hRecord.games > 0 ? h2hRecord.draws : 0;
+                let totalCompetitive = wins + losses + draws;
+                let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
                 let avg = (user.games || 0) > 0 ? (user.totalScoreSum || 0) / user.games : 0;
                 let hs = user.highscore || 0;
                 let maxStreak = user.maxWinStreak || 0;
