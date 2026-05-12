@@ -3893,30 +3893,47 @@ class YambApp {
              this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, { deferServerSync: true });
         }
         
-        this.soundMgr.win(); 
+        this.soundMgr.win();
         const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
-        let title = gt('game_over'); let message = ""; 
-        
-        if (this.players.length === 1) { 
-            if (myScoreEntry && myScoreEntry.score >= 1000) { this.effectMgr.celebrateWin(); title = gt('go_title_great'); } else { title = gt('go_title_good'); }
-            message = `${gt('go_msg_solo')} ${myScoreEntry ? myScoreEntry.score : 0}`;
+        let title = gt('game_over'); let message = "";
+        let scoreLabel = gt('go_msg_solo') || "OSVOJENI POENI";
+
+        if (this.players.length === 1) {
+            const myScore = myScoreEntry ? myScoreEntry.score : 0;
+            if (myScore >= 1000) {
+                this.effectMgr.celebrateWin();
+                title = gt('go_title_great');
+                message = (gt('go_msg_solo_great') || "Sjajna partija! Osvojio si {0} poena.").replace('{0}', myScore);
+            } else {
+                title = gt('go_title_good');
+                message = (gt('go_msg_solo_good') || "Završio si partiju sa {0} poena. Sledeća može bolje.").replace('{0}', myScore);
+            }
         } else {
             const isDraw = (finalResults.every(r => r.score === finalResults[0].score));
             const amIWinner = (myScoreEntry && winner.name === myScoreEntry.name);
-            
+            scoreLabel = gt('go_label_your_score') || "TVOJ REZULTAT";
+
             if (isDraw) {
                 title = gt('go_draw') || "NEREŠENO!";
-                message = `${gt('go_msg_solo')} ${winner.score}`;
+                message = (gt('go_msg_online_draw') || "Partija je završena bez pobednika. Oboje imate {0} poena.").replace('{0}', winner.score);
             } else {
-                title = amIWinner ? gt('go_win') : gt('go_loss'); 
+                title = amIWinner ? gt('go_win') : gt('go_loss');
                 if (amIWinner) { this.effectMgr.celebrateWin(); }
-                message = `${gt('go_msg_win')} ${winner.name} (${winner.score})`; 
+                if (amIWinner) {
+                    message = (gt('go_msg_online_win') || "Pobedio si sa {0} poena.").replace('{0}', winner.score);
+                } else {
+                    message = (gt('go_msg_online_loss') || "Nije prošlo ovaj put. {0} je pobedio sa {1} poena.")
+                        .replace('{0}', winner.name)
+                        .replace('{1}', winner.score);
+                }
             }
         }
 
         document.getElementById('go-title').innerText = title;
         document.getElementById('go-msg').innerText = message;
-        document.getElementById('go-score').innerText = myScoreEntry ? myScoreEntry.score : winner.score; 
+        document.getElementById('go-score').innerText = myScoreEntry ? myScoreEntry.score : winner.score;
+        const goScoreLabel = document.querySelector('#game-over-screen [data-lang="go_msg_solo"]');
+        if (goScoreLabel) goScoreLabel.innerText = scoreLabel;
         
         const btnAd = document.getElementById('btn-ad-double');
         if ((myScoreEntry && myScoreEntry.score <= 0)) { if(btnAd) btnAd.style.display = 'none'; } else { if(btnAd) btnAd.style.display = 'flex'; }
