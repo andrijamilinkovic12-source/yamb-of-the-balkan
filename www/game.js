@@ -4150,6 +4150,14 @@ class YambApp {
         const saveNow = async () => {
             if(!this.gameActive) return;
 
+            const uid = localStorage.getItem('yamb_uid') || 'guest';
+            const saveKey = `yamb_saved_game_${uid}_${this.players.length}`;
+
+            if (!this.hasLocalGameProgress()) {
+                if (immediate && window.localforage) await localforage.removeItem(saveKey);
+                return;
+            }
+
             const data = { 
                 players: this.players, 
                 scores: this.allScores, 
@@ -4164,8 +4172,7 @@ class YambApp {
                 date: new Date().toISOString() 
             }; 
             try {
-                const uid = localStorage.getItem('yamb_uid') || 'guest';
-                if(window.localforage) await localforage.setItem(`yamb_saved_game_${uid}_${this.players.length}`, data); 
+                if(window.localforage) await localforage.setItem(saveKey, data); 
             } catch(e) { console.warn("Greška pri čuvanju:", e); }
         };
 
@@ -4175,6 +4182,19 @@ class YambApp {
         }
 
         this._saveTimeout = setTimeout(saveNow, 800);
+    }
+
+    hasLocalGameProgress() {
+        if (this.brojBacanja > 0 || this.najavaAktivna || this.najavljenoPolje) return true;
+        if (!Array.isArray(this.allScores)) return false;
+
+        return this.allScores.some(sheet => {
+            if (!sheet) return false;
+            return KOLONE.some(col => {
+                const column = sheet[col];
+                return column && REDOVI_IGRA.some(row => column[row] !== null && column[row] !== undefined);
+            });
+        });
     }
     
     async loadSavedGame(numPlayers = this.pendingNewGamePlayers) { 
