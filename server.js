@@ -342,6 +342,7 @@ let privateRooms = {};
 let playerRooms = {};
 let gameStartTimes = {};
 const pendingGameRewards = {};
+const pendingGameRewardsByUid = {};
 const chatBans = {};
 const globalChatRateLimits = {};
 const globalChatReportLimits = {};
@@ -3022,14 +3023,23 @@ io.on('connection', (socket) => {
 
             const rewardSession = {
                 uid: finalUid,
+                socketId: socket.id,
                 score: submittedScore,
                 mode: finalMode,
                 createdAt: Date.now()
             };
+            const previousRewardSession = pendingGameRewardsByUid[finalUid];
+            if (previousRewardSession && previousRewardSession.socketId) {
+                delete pendingGameRewards[previousRewardSession.socketId];
+            }
             pendingGameRewards[socket.id] = rewardSession;
+            pendingGameRewardsByUid[finalUid] = rewardSession;
             setTimeout(() => {
                 if (pendingGameRewards[socket.id] === rewardSession) {
                     delete pendingGameRewards[socket.id];
+                }
+                if (pendingGameRewardsByUid[finalUid] === rewardSession) {
+                    delete pendingGameRewardsByUid[finalUid];
                 }
             }, GAME_REWARD_CLAIM_WINDOW_MS);
 
@@ -3061,13 +3071,15 @@ io.on('connection', (socket) => {
                 return replyGameReward({ ok: true, localFallback: true, reward: localReward });
             }
 
-            const rewardSession = pendingGameRewards[socket.id];
+            const rewardSession = pendingGameRewards[socket.id] || pendingGameRewardsByUid[finalUid];
             if (!rewardSession || rewardSession.uid !== finalUid) {
                 return replyGameReward({ ok: false, reason: 'missing_reward_session', permanent: false });
             }
 
             if (Date.now() - rewardSession.createdAt > GAME_REWARD_CLAIM_WINDOW_MS) {
+                if (rewardSession.socketId) delete pendingGameRewards[rewardSession.socketId];
                 delete pendingGameRewards[socket.id];
+                delete pendingGameRewardsByUid[finalUid];
                 return replyGameReward({ ok: false, reason: 'reward_session_expired', permanent: true });
             }
 
@@ -3090,7 +3102,9 @@ io.on('connection', (socket) => {
 
             user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
             await user.save();
+            if (rewardSession.socketId) delete pendingGameRewards[rewardSession.socketId];
             delete pendingGameRewards[socket.id];
+            delete pendingGameRewardsByUid[finalUid];
 
             emitProfileSync(socket, user, {
                 gameReward: {
