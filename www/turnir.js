@@ -85,80 +85,39 @@ class TournamentManager {
             }
         }
 
+        if (!window.powerIndexCore) return '0';
+
         // Pokušaj 2: Čupanje direktno iz baze (localStorage) - SADA IZ CENTRALNOG yamb_stats JSON-a
         let s = JSON.parse(localStorage.getItem('yamb_stats') || '{}');
-        let wins = parseInt(s.wins) || 0;
-        let losses = parseInt(s.losses) || 0;
-        let games = parseInt(s.games || s.totalGames) || 0;
-        let totalScoreSum = parseFloat(s.totalScoreSum) || 0;
-        let hs = parseInt(s.highscore) || 0;
-        let maxStreak = parseInt(s.maxWinStreak) || 0;
-        let tourneyWins = parseInt(s.tournamentWins) || 0;
-        let penalty = parseInt(s.penaltyPoints) || 0;
 
         // Fallback na statsManager u slučaju da su se ključevi drugačije sačuvali u memoriji
         if (window.statsManager && window.statsManager.stats) {
             let sm = window.statsManager.stats;
-            wins = wins || parseInt(sm.wins) || 0;
-            losses = losses || parseInt(sm.losses) || 0;
-            games = games || parseInt(sm.games || sm.totalGames) || 0;
-            totalScoreSum = totalScoreSum || parseFloat(sm.totalScoreSum) || 0;
-            hs = hs || parseInt(sm.highscore) || 0;
-            maxStreak = maxStreak || parseInt(sm.maxWinStreak) || 0;
-            tourneyWins = tourneyWins || parseInt(sm.tournamentWins) || 0;
-            penalty = penalty || parseInt(sm.penaltyPoints) || 0;
+            s = {
+                ...sm,
+                ...s,
+                games: s.games || s.totalGames || sm.games || sm.totalGames
+            };
         }
 
-        let draws = parseInt(s.draws) || 0;
-        const h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
-        const h2hSummary = Object.values(h2h).reduce((summary, record) => {
-            if (!record || typeof record !== 'object') return summary;
-            const name = String(record.name || '').trim();
-            if (!name || name === 'undefined' || name === 'null' || name === 'Nepoznat') return summary;
-            summary.wins += Math.max(0, parseInt(record.wins) || 0);
-            summary.losses += Math.max(0, parseInt(record.losses) || 0);
-            summary.draws += Math.max(0, parseInt(record.draws) || 0);
-            return summary;
-        }, { wins: 0, losses: 0, draws: 0 });
-
-        if (h2hSummary.wins + h2hSummary.losses + h2hSummary.draws > 0) {
-            wins = h2hSummary.wins;
-            losses = h2hSummary.losses;
-            draws = h2hSummary.draws;
-        }
-
-        let totalCompetitive = wins + losses + draws;
-        let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
-        let avg = games > 0 ? totalScoreSum / games : 0;
+        s.h2hStats = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
 
         // Kvartalna liga bodovi
-        let leaguePts = 0;
+        let leaguePts;
         if (window.kvartalnaLiga && typeof window.kvartalnaLiga.getScores === 'function') {
             let ls = window.kvartalnaLiga.getScores();
             leaguePts = parseInt(ls.quarterlyScore) || 0;
         }
 
-        // Trofeji (takođe čitamo iz glavnog objekta umesto odvojenog stringa)
-        let trophyCount = 0;
         let unlocked = s.unlockedTrophies || [];
         if (!unlocked || unlocked.length === 0) {
             if (window.statsManager && window.statsManager.stats && window.statsManager.stats.unlockedTrophies) {
                 unlocked = window.statsManager.stats.unlockedTrophies;
             }
         }
+        s.unlockedTrophies = unlocked;
 
-        if (Array.isArray(unlocked)) {
-            const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
-            unlocked.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
-        }
-
-        const basePower = Math.round(
-            (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) +
-            (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
-        );
-        const power = Math.max(0, basePower - penalty);
-
-        return power.toString();
+        return window.powerIndexCore.calculatePowerIndex(s, { leaguePts }).toString();
     }
 
     // --- NOVA FUNKCIJA: LOGIKA ZA PAMETNI BEDŽ TURNIRA ---

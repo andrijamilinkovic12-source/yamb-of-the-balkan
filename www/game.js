@@ -993,55 +993,13 @@ class YambApp {
     }
 
     calculatePowerIndex(statsObj, isLocal = false) {
-        if (!statsObj) return 0;
-        let wins = statsObj.wins || 0;
-        let losses = statsObj.losses || 0;
-        let draws = statsObj.draws || 0;
-        if (statsObj.h2hStats && typeof statsObj.h2hStats === 'object') {
-            const h2hSummary = Object.values(statsObj.h2hStats).reduce((summary, record) => {
-                if (!record || typeof record !== 'object') return summary;
-                const name = String(record.name || '').trim();
-                if (!name || name === 'undefined' || name === 'null' || name === 'Nepoznat') return summary;
-                summary.wins += Math.max(0, parseInt(record.wins) || 0);
-                summary.losses += Math.max(0, parseInt(record.losses) || 0);
-                summary.draws += Math.max(0, parseInt(record.draws) || 0);
-                return summary;
-            }, { wins: 0, losses: 0, draws: 0 });
-
-            if (h2hSummary.wins + h2hSummary.losses + h2hSummary.draws > 0) {
-                wins = h2hSummary.wins;
-                losses = h2hSummary.losses;
-                draws = h2hSummary.draws;
-            }
-        }
-
-        let totalCompetitive = wins + losses + draws;
-        let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
-        let avg = (statsObj.games || 0) > 0 ? (statsObj.totalScoreSum || 0) / statsObj.games : 0;
-        let hs = statsObj.highscore || 0;
-        let maxStreak = statsObj.maxWinStreak || 0;
-        let tourneyWins = statsObj.tournamentWins || 0;
-        
-        let leaguePts = 0;
+        if (!statsObj || !window.powerIndexCore) return 0;
+        let leaguePts;
         if (isLocal && window.kvartalnaLiga) {
             leaguePts = parseInt(window.kvartalnaLiga.getScores().quarterlyScore) || 0;
-        } else if (statsObj.leagueData && statsObj.leagueData.quarterlyScore) {
-            leaguePts = statsObj.leagueData.quarterlyScore;
         }
 
-        let trophyCount = 0;
-        if (statsObj.unlockedTrophies) {
-            const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
-            statsObj.unlockedTrophies.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
-        }
-
-        let basePI = Math.round(
-            (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) + 
-            (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
-        );
-
-        let penalty = statsObj.penaltyPoints || 0;
-        return Math.max(0, basePI - penalty); 
+        return window.powerIndexCore.calculatePowerIndex(statsObj, { leaguePts });
     }
 
     // --- SISTEM PRIJATELJA ---
@@ -1970,10 +1928,9 @@ class YambApp {
         const sm = window.statsManager;
         let trophyList = [];
         if (sm && sm.stats) { trophyList = sm.stats.unlockedTrophies || []; }
-        const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
-        let realTrophyCount = 0;
-        trophyList.forEach(item => { if (ALL_TROPHY_IDS.includes(item)) realTrophyCount++; });
-        document.getElementById('stat-trophies').innerText = `${realTrophyCount} / ${ALL_TROPHY_IDS.length}`;
+        const trophyIds = window.powerIndexCore ? window.powerIndexCore.TROPHY_IDS : [];
+        const realTrophyCount = window.powerIndexCore ? window.powerIndexCore.countPowerIndexTrophies(trophyList) : 0;
+        document.getElementById('stat-trophies').innerText = `${realTrophyCount} / ${trophyIds.length}`;
         
         let currentStreak = this.stats.currentWinStreak || 0;
         if (sm) { const stats = sm.getStats(); currentStreak = stats.currentWinStreak > 0 ? stats.currentWinStreak : currentStreak; }

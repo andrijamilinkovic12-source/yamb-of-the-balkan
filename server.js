@@ -11,6 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const crypto = require('crypto');
+const powerIndexCore = require('./www/powerIndexCore');
 
 let firebaseAuth = null;
 
@@ -3418,35 +3419,7 @@ io.on('connection', (socket) => {
             const users = await UserProfile.find({ games: { $gt: 0 } }).lean();
 
             const rankedPlayers = users.map(user => {
-                const h2hRecord = buildH2HRecordSummary(user.h2hStats);
-                const wins = h2hRecord.games > 0 ? h2hRecord.wins : (user.wins || 0);
-                const losses = h2hRecord.games > 0 ? h2hRecord.losses : (user.losses || 0);
-                const draws = h2hRecord.games > 0 ? h2hRecord.draws : 0;
-                let totalCompetitive = wins + losses + draws;
-                let rate = totalCompetitive > 0 ? (wins / totalCompetitive) * 100 : 0;
-                let avg = (user.games || 0) > 0 ? (user.totalScoreSum || 0) / user.games : 0;
-                let hs = user.highscore || 0;
-                let maxStreak = user.maxWinStreak || 0;
-                let tourneyWins = user.tournamentWins || 0;
-                
-                let leaguePts = 0;
-                if (user.leagueData && user.leagueData.quarterlyScore) {
-                    leaguePts = user.leagueData.quarterlyScore;
-                }
-
-                let trophyCount = 0;
-                if (user.unlockedTrophies) {
-                    const ALL_TROPHY_IDS = ['first_play', 'apprentice', 'kafana', 'score_1000', 'grandmaster', 'legend', 'mythic', 'godlike', 'surgeon', 'prophet', 'sniper', 'math', 'sveti_ilija', 'hazard', 'firecracker', 'concrete', 'perfectionist', 'miner', 'immortal', 'potato', 'minimal', 'achilles', 'close_call', 'night_owl', 'spite', 'veteran'];
-                    user.unlockedTrophies.forEach(t => { if(ALL_TROPHY_IDS.includes(t)) trophyCount++; });
-                }
-
-                const basePI = Math.round(
-                    (rate * 10) + (leaguePts * 0.02) + (tourneyWins * 300) + 
-                    (avg * 0.5) + (hs * 0.2) + (maxStreak * 30) + (trophyCount * 50)
-                );
-
-                const penalty = user.penaltyPoints || 0;
-                const power = Math.max(0, basePI - penalty); 
+                const power = powerIndexCore.calculatePowerIndex(user);
 
                 return {
                     playerName: user.playerName,
