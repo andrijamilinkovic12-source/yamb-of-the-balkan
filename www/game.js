@@ -3908,6 +3908,9 @@ class YambApp {
             if (!this.socket || !this.socket.connected) return;
             try {
                 const result = await this.emitPlayerData(false, { waitForSync: true, timeoutMs: 5000 });
+                if (result && result.cloudStats && typeof this.applyCloudProfileSync === 'function') {
+                    this.applyCloudProfileSync(result.cloudStats);
+                }
                 if (!result || !result.synced) {
                     console.warn("Dukati su sačuvani lokalno, ali cloud potvrda još nije stigla.");
                 }
@@ -3930,7 +3933,7 @@ class YambApp {
                 return true;
             }
 
-            if (result && result.localFallback) {
+            if (result && (result.localFallback || !result.permanent)) {
                 await syncRewardBalance();
             } else {
                 console.warn(`Server nije potvrdio nagradu partije: ${result?.reason || 'unknown_error'}`);

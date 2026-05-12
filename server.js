@@ -1519,6 +1519,36 @@ function calculateAllowedBalanceIncrease(user, stats, oldUserGames, oldTournamen
         dailyAllowance;
 }
 
+function clearPendingGameRewardSession(uid, rewardSession) {
+    if (!uid || !rewardSession) return;
+    if (rewardSession.socketId) delete pendingGameRewards[rewardSession.socketId];
+    if (pendingGameRewardsByUid[uid] === rewardSession) delete pendingGameRewardsByUid[uid];
+}
+
+function getPendingGameRewardIncrease(uid, requestedBalanceDelta) {
+    const rewardSession = uid ? pendingGameRewardsByUid[uid] : null;
+    if (!rewardSession || requestedBalanceDelta <= 0) {
+        return { amount: 0, session: null };
+    }
+
+    if (Date.now() - rewardSession.createdAt > GAME_REWARD_CLAIM_WINDOW_MS) {
+        clearPendingGameRewardSession(uid, rewardSession);
+        return { amount: 0, session: null };
+    }
+
+    const baseReward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, toSafeInt(rewardSession.score, 0)));
+    const doubledReward = Math.max(baseReward, Math.min(MAX_REWARD_PER_GAME, baseReward * 2));
+    let amount = 0;
+
+    if (requestedBalanceDelta >= doubledReward) {
+        amount = doubledReward;
+    } else if (requestedBalanceDelta >= baseReward) {
+        amount = baseReward;
+    }
+
+    return { amount, session: amount > 0 ? rewardSession : null };
+}
+
 function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, acceptPaidUnlocks) {
     const serverSet = new Set(sanitizeIdArray(serverItems));
     const trophySet = new Set(sanitizeIdArray(requestedTrophies));
@@ -2250,14 +2280,18 @@ io.on('connection', (socket) => {
                 let acceptedBalance = oldBalance;
                 const requestedBalance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(s.balance, oldBalance)));
                 const requestedBalanceDelta = requestedBalance - oldBalance;
+                const pendingGameReward = getPendingGameRewardIncrease(verifiedUid, requestedBalanceDelta);
                 const legacyEconomyAllowance = !user.economyMigrationApplied
                     ? Math.max(0, estimateEconomyCeiling(s) - oldBalance)
                     : 0;
-                const allowedBalanceIncrease = calculateAllowedBalanceIncrease(user, s, oldUserGames, oldTournamentWins, newTrophyRewards) + legacyEconomyAllowance;
+                const allowedBalanceIncrease = calculateAllowedBalanceIncrease(user, s, oldUserGames, oldTournamentWins, newTrophyRewards) +
+                    pendingGameReward.amount +
+                    legacyEconomyAllowance;
                 const earnedBalanceIncrease = (Math.max(0, statsGuard.acceptedGameDelta) * MAX_REWARD_PER_GAME) +
                     (Math.max(0, statsGuard.acceptedTournamentDelta) * MAX_TOURNEY_REWARD) +
                     newTrophyRewards +
                     (shouldMarkDailyRewardClaimed ? requestedDailyReward : 0) +
+                    pendingGameReward.amount +
                     legacyEconomyAllowance;
                 const hasEarnedBalanceIncrease = requestedBalanceDelta > 0 && requestedBalanceDelta <= earnedBalanceIncrease;
                 const purchaseCoverage = Math.max(0, oldBalance + allowedBalanceIncrease - requestedBalance);
@@ -2265,7 +2299,7 @@ io.on('connection', (socket) => {
 
                 const hasAcceptedPaidPurchase = requestedPaidUnlockCost > 0 && acceptsPaidUnlocks;
 
-                if (typeof s.balance === 'number' && isClientSynced) {
+                if (typeof s.balance === 'number' && (isClientSynced || pendingGameReward.amount > 0)) {
                     if (isUsingOldBackup && requestedBalance > oldBalance && !hasEarnedBalanceIncrease) {
                         console.log(`🚨 HACK POKUŠAJ (Inventory Desync): Igrač ${user.playerName} odbijen skok dukata sa ${oldBalance} na ${requestedBalance}!`);
                     } else if (requestedBalanceDelta === 0) {
@@ -2286,6 +2320,9 @@ io.on('connection', (socket) => {
                     }
 
                     user.balance = acceptedBalance;
+                    if (pendingGameReward.session && acceptedBalance >= oldBalance + pendingGameReward.amount) {
+                        clearPendingGameRewardSession(verifiedUid, pendingGameReward.session);
+                    }
                 }
 
                 if (typeof s.undoTokens === 'number' && isClientSynced) {
@@ -3077,9 +3114,8 @@ io.on('connection', (socket) => {
             }
 
             if (Date.now() - rewardSession.createdAt > GAME_REWARD_CLAIM_WINDOW_MS) {
-                if (rewardSession.socketId) delete pendingGameRewards[rewardSession.socketId];
                 delete pendingGameRewards[socket.id];
-                delete pendingGameRewardsByUid[finalUid];
+                clearPendingGameRewardSession(finalUid, rewardSession);
                 return replyGameReward({ ok: false, reason: 'reward_session_expired', permanent: true });
             }
 
@@ -3102,9 +3138,8 @@ io.on('connection', (socket) => {
 
             user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
             await user.save();
-            if (rewardSession.socketId) delete pendingGameRewards[rewardSession.socketId];
             delete pendingGameRewards[socket.id];
-            delete pendingGameRewardsByUid[finalUid];
+            clearPendingGameRewardSession(finalUid, rewardSession);
 
             emitProfileSync(socket, user, {
                 gameReward: {
