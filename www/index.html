@@ -640,51 +640,56 @@
         </style>
     </div>
 
-    <div id="settings-screen" class="screen" style="justify-content: flex-start; padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom));">
-        <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <h2 class="menu-title" style="margin-top: 10px; margin-bottom: 12px; flex-shrink: 0; text-transform: uppercase;" data-lang="menu_settings">PODEŠAVANJA</h2>
-        
-        <div class="modal-box" style="text-align: left; padding: 18px; width: 90%; max-width: 400px; gap: 13px !important; max-height: 85vh; overflow-y: auto;">
+    <div id="settings-screen" class="screen">
+        <div class="hs-card modal-box settings-shell">
+            <div class="chat-header global-chat-header settings-card-header">
+                <div class="global-chat-title-group">
+                    <span class="global-chat-title" data-lang="menu_settings">PODEŠAVANJA</span>
+                </div>
+                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori podešavanja">×</button>
+            </div>
+
+            <div class="chat-body global-chat-body settings-card-body">
             
-            <div style="width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
-                <span data-lang="settings_profile_acc" style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Profil i Nalog</span>
+            <div class="settings-section">
+                <span class="settings-section-title" data-lang="settings_profile_acc">Profil i Nalog</span>
                 
-                <input type="text" id="setting-name" class="modal-input" placeholder="Igrač" onchange="app.saveSettingAuto('name', this.value)" style="padding: 11px; font-size: 0.95rem; text-align: center; margin-top: 8px;">
+                <input type="text" id="setting-name" class="modal-input settings-input" placeholder="Igrač" onchange="app.saveSettingAuto('name', this.value)">
                 
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 10px 12px; border-radius: 12px; border: 1px solid var(--glass-border); margin-top: 8px;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img id="auth-user-photo" src="" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold-main); display: none; object-fit: cover;">
-                        <div style="display: flex; flex-direction: column;">
-                            <span id="auth-user-info" data-lang="settings_not_logged_in" style="font-size: 0.8rem; color: var(--text-main); font-weight: bold;">Niste prijavljeni</span>
+                <div class="settings-account-card">
+                    <div class="settings-account-info">
+                        <img id="auth-user-photo" src="" alt="Avatar" class="settings-avatar">
+                        <div class="settings-account-copy">
+                            <span id="auth-user-info" data-lang="settings_not_logged_in" class="settings-account-name">Niste prijavljeni</span>
                         </div>
                     </div>
-                    <button id="btn-google-logout" class="btn-menu btn-secondary" style="display:none; padding: 6px 12px; font-size: 0.7rem; margin: 0; background: rgba(244,67,54,0.2); border-color: var(--danger); color: white; width: auto; min-height: auto;" onclick="odjaviSe()" data-lang="settings_logout">Odjavi</button>
+                    <button id="btn-google-logout" class="btn-menu btn-secondary settings-logout-btn" onclick="odjaviSe()" data-lang="settings_logout">Odjavi</button>
                 </div>
             </div>
 
-            <div style="width: 100%; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px;">
-                <span data-lang="settings_sound_haptics" style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Zvuk i Haptika</span>
+            <div class="settings-section">
+                <span class="settings-section-title" data-lang="settings_sound_haptics">Zvuk i Haptika</span>
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px; background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 12px;">
-                    <span style="font-size: 0.9rem; font-weight: bold;">🎵 <span data-lang="settings_sound">Zvučni efekti</span></span>
-                    <input type="checkbox" id="setting-sound" onchange="app.saveSettingAuto('sound', this.checked)" style="transform: scale(1.3); margin-right: 5px;">
+                <div class="settings-row">
+                    <span class="settings-row-label">🎵 <span data-lang="settings_sound">Zvučni efekti</span></span>
+                    <input type="checkbox" id="setting-sound" class="settings-checkbox" onchange="app.saveSettingAuto('sound', this.checked)">
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 12px;">
-                    <span style="font-size: 0.9rem; font-weight: bold;">🎧 <span data-lang="settings_music">Muzika</span></span>
-                    <input type="checkbox" id="setting-music" onchange="app.saveSettingAuto('music', this.checked)" style="transform: scale(1.3); margin-right: 5px;">
+                <div class="settings-row">
+                    <span class="settings-row-label">🎧 <span data-lang="settings_music">Muzika</span></span>
+                    <input type="checkbox" id="setting-music" class="settings-checkbox" onchange="app.saveSettingAuto('music', this.checked)">
                 </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; background: rgba(0,0,0,0.2); padding: 10px 12px; border-radius: 12px;">
-                    <span style="font-size: 0.9rem; font-weight: bold;">📳 <span data-lang="set_vibration">Vibracija</span></span>
-                    <input type="checkbox" id="setting-vibration" onchange="app.saveSettingAuto('vibration', this.checked)" style="transform: scale(1.3); margin-right: 5px;">
+                <div class="settings-row">
+                    <span class="settings-row-label">📳 <span data-lang="set_vibration">Vibracija</span></span>
+                    <input type="checkbox" id="setting-vibration" class="settings-checkbox" onchange="app.saveSettingAuto('vibration', this.checked)">
                 </div>
             </div>
 
-            <div style="width: 100%;">
-                <span data-lang="settings_display_lang" style="color: var(--gold-main); font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Prikaz i Jezik</span>
+            <div class="settings-section settings-section-last">
+                <span class="settings-section-title" data-lang="settings_display_lang">Prikaz i Jezik</span>
                 
-                <select id="setting-theme" class="modal-input" onchange="app.saveSettingAuto('theme', this.value)" style="padding: 10px 12px; font-size: 0.9rem; text-align: center; text-align-last: center; margin-top: 8px;">
+                <select id="setting-theme" class="modal-input settings-input settings-select" onchange="app.saveSettingAuto('theme', this.value)">
                     <option value="dark" data-lang="theme_dark">Zelena</option>
                     <option value="light" data-lang="theme_light">Svetlo Zlato</option>
                     <option value="medium" data-lang="theme_medium">Trula Višnja 🍒</option>
@@ -696,16 +701,17 @@
                     <option value="moon" data-lang="theme_moon">Mesečev Sjaj 🌕</option>
                 </select>
 
-                <div style="display:flex; gap:10px; justify-content: center; margin-top: 8px;">
-                    <button class="btn-menu btn-secondary" style="flex:1; padding:10px; font-weight:bold; font-size: 0.85rem; margin: 0; min-height: auto;" onclick="setLanguage('sr')">🇷🇸 SRB</button>
-                    <button class="btn-menu btn-secondary" style="flex:1; padding:10px; font-weight:bold; font-size: 0.85rem; margin: 0; min-height: auto;" onclick="setLanguage('en')">🇬🇧 ENG</button>
+                <div class="settings-language-row">
+                    <button class="btn-menu btn-secondary settings-language-btn" onclick="setLanguage('sr')">🇷🇸 SRB</button>
+                    <button class="btn-menu btn-secondary settings-language-btn" onclick="setLanguage('en')">🇬🇧 ENG</button>
                 </div>
             </div>
 
-            <div style="margin-top: 10px; text-align: center; font-size: 0.65rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px; display: flex; justify-content: center; gap: 8px; width: 100%;">
-                <span onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" style="color: var(--text-muted); cursor: pointer; font-weight: 600;" data-lang="settings_terms_short">📜 Uslovi</span>
-                <span style="color: rgba(255,255,255,0.2);">|</span>
-                <span onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" style="color: var(--text-muted); cursor: pointer; font-weight: 600;" data-lang="settings_privacy_short">🔒 Privatnost</span>
+            <div class="settings-legal-row">
+                <span onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="settings-legal-link" data-lang="settings_terms_short">📜 Uslovi</span>
+                <span class="settings-legal-divider">|</span>
+                <span onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="settings-legal-link" data-lang="settings_privacy_short">🔒 Privatnost</span>
+            </div>
             </div>
         </div>
     </div>

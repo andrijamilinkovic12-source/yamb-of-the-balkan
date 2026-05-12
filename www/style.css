@@ -308,6 +308,196 @@ body {
     .hs-card-toolbar { padding: 12px 18px; }
 }
 
+/* --- SETTINGS SCREEN --- */
+#settings-screen {
+    justify-content: flex-start;
+    padding-top: max(10px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom) + 4px);
+}
+#settings-screen .settings-shell {
+    width: calc(100vw - max(10px, env(safe-area-inset-left)) - max(10px, env(safe-area-inset-right)));
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 100%;
+    padding: 0 !important;
+    margin: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--glass-panel, #111) !important;
+    border: var(--glass-border) !important;
+    box-shadow: var(--glass-shadow) !important;
+    color: var(--text-main);
+    backdrop-filter: blur(30px) saturate(135%);
+    -webkit-backdrop-filter: blur(30px) saturate(135%);
+}
+#settings-screen .settings-card-header {
+    min-height: 58px;
+    background: var(--glass-bg);
+    border-bottom: var(--glass-border);
+}
+#settings-screen .settings-card-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 14px;
+    gap: 12px;
+    align-items: stretch;
+    overflow-y: auto;
+    background: transparent;
+}
+.settings-section {
+    width: 100%;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.settings-section-last {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.settings-section-title {
+    color: var(--gold-main);
+    font-size: 0.75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0;
+}
+.settings-input {
+    min-height: 45px;
+    padding: 11px 12px;
+    margin: 8px 0 0;
+    font-size: 0.95rem;
+    text-align: center;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.16);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 8px 20px rgba(0,0,0,0.18);
+}
+.settings-select {
+    font-size: 0.9rem;
+    text-align-last: center;
+}
+.settings-account-card,
+.settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: var(--glass-border);
+    background: rgba(0,0,0,0.24);
+}
+.settings-row {
+    margin-top: 6px;
+}
+.settings-account-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+.settings-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-main);
+    display: none;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.settings-account-copy {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.settings-account-name,
+.settings-row-label {
+    color: var(--text-main);
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+.settings-account-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.settings-checkbox {
+    transform: scale(1.25);
+    margin-right: 5px;
+    accent-color: var(--gold-main);
+    flex-shrink: 0;
+}
+.settings-logout-btn {
+    display: none;
+    width: auto;
+    max-width: 120px;
+    min-height: 34px;
+    margin: 0;
+    padding: 7px 12px;
+    border-color: var(--danger);
+    background: rgba(244,67,54,0.2);
+    color: var(--text-main);
+    font-size: 0.7rem;
+    letter-spacing: 0;
+    flex-shrink: 0;
+}
+.settings-language-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 8px;
+}
+.settings-language-btn {
+    max-width: none;
+    min-height: 40px;
+    margin: 0;
+    padding: 10px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+.settings-legal-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 2px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    font-size: 0.65rem;
+}
+.settings-legal-link {
+    color: var(--text-muted);
+    cursor: pointer;
+    font-weight: 700;
+}
+.settings-legal-divider {
+    color: rgba(255,255,255,0.22);
+}
+@media (min-width: 760px) {
+    #settings-screen {
+        padding-top: 22px;
+        padding-bottom: 22px;
+    }
+    #settings-screen .settings-shell {
+        width: min(760px, calc(100vw - 44px));
+        border-radius: 22px;
+    }
+    #settings-screen .settings-card-body {
+        padding: 16px 18px;
+    }
+    .settings-section {
+        padding-bottom: 14px;
+    }
+}
+
 /* --- QUARTERLY LEAGUE MODAL --- */
 #league-modal-overlay {
     z-index: 100000 !important;
