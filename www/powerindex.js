@@ -30,17 +30,17 @@ class PowerIndexLeaderboard {
 
         // Glassmorphism Modal Struktura
         const modalHtml = `
-        <div id="pi-modal-overlay" class="modal-overlay" style="z-index: 999999; display: flex;">
-            <div class="modal-box" style="width: 95%; max-width: 450px; height: 80vh; max-height: 700px; display: flex; flex-direction: column; padding: 0; background: var(--glass-panel); border: var(--glass-border); box-shadow: var(--glass-shadow); backdrop-filter: blur(12px); border-radius: 16px; overflow: hidden;">
+        <div id="pi-modal-overlay" class="modal-overlay global-chat-overlay pi-modal-overlay" style="z-index: 999999; display: flex;">
+            <div class="modal-box global-chat-shell pi-modal-shell">
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,215,0,0.2); background: rgba(0,0,0,0.2); flex-shrink: 0;">
-                    <h2 style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px;">
+                <div class="chat-header global-chat-header pi-modal-header">
+                    <h2 class="pi-modal-title">
                         <span style="font-size: 1.5rem;">⚡</span> ${gt('pi_title', 'TOP IGRAČI')}
                     </h2>
-                    <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold; line-height: 1;" onclick="document.getElementById('pi-modal-overlay').remove()">✖</span>
+                    <button type="button" class="global-chat-close" onclick="document.getElementById('pi-modal-overlay').remove()" aria-label="Zatvori Power index listu">×</button>
                 </div>
 
-                <div style="flex: 1; overflow-y: auto; padding: 15px; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; gap: 10px;" id="pi-list-container">
+                <div class="chat-body global-chat-body pi-list-container" id="pi-list-container">
                     <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">
                         ${gt('league_loading', 'Učitavanje servera... ⏳')}
                     </div>

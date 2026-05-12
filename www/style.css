@@ -432,6 +432,34 @@ body {
 .global-chat-send {
     box-shadow: 0 14px 28px rgba(255,215,0,0.22), inset 0 1px 2px rgba(255,255,255,0.55);
 }
+.pi-modal-overlay {
+    z-index: 999999;
+}
+.pi-modal-shell {
+    max-width: 100%;
+}
+.pi-modal-header {
+    justify-content: space-between;
+}
+.pi-modal-title {
+    color: var(--gold-main);
+    font-size: 1.05rem;
+    font-weight: 900;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.pi-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    padding-bottom: max(16px, env(safe-area-inset-bottom) + 4px);
+}
 @media (min-width: 760px) {
     .global-chat-shell { left: 50%; top: calc(var(--global-chat-top, 0px) + 22px); width: min(760px, calc(100vw - 44px)); height: calc(var(--global-chat-height, 100dvh) - 44px); max-height: calc(var(--global-chat-height, 100dvh) - 44px); transform: translateX(-50%); border-radius: 22px; }
     .global-chat-header { min-height: 58px; padding: 12px 18px; }
