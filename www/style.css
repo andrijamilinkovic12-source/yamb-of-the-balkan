@@ -368,6 +368,61 @@ body {
 .global-chat-meta { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 4px; font-size: 0.68rem; color: var(--text-muted); opacity: 0.8; }
 .global-chat-report-btn { min-width: 24px; min-height: 24px; border: none; border-radius: 50%; background: rgba(255,255,255,0.08); color: var(--text-muted); cursor: pointer; font-weight: 900; line-height: 1; padding: 0; display: inline-flex; align-items: center; justify-content: center; }
 .global-chat-report-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.14); }
+
+.online-players-overlay {
+    z-index: 100000;
+    align-items: stretch;
+    justify-content: stretch;
+    padding: 0;
+    overscroll-behavior: none;
+    background: rgba(0,0,0,0.76);
+}
+.online-players-shell {
+    position: fixed;
+    top: max(10px, env(safe-area-inset-top));
+    left: max(10px, env(safe-area-inset-left));
+    width: calc(100vw - max(10px, env(safe-area-inset-left)) - max(10px, env(safe-area-inset-right)));
+    height: calc(100dvh - max(10px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom) + 4px));
+    max-width: 100%;
+    max-height: calc(100dvh - max(10px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom) + 4px));
+    padding: 0 !important;
+    margin: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    background: var(--glass-panel, #111) !important;
+    border: var(--glass-border) !important;
+    box-shadow: var(--glass-shadow) !important;
+    color: var(--text-main);
+    backdrop-filter: blur(30px) saturate(135%);
+    -webkit-backdrop-filter: blur(30px) saturate(135%);
+}
+.online-players-header {
+    flex-shrink: 0;
+    cursor: default;
+    min-height: 58px;
+    padding: 12px 14px;
+    background: var(--glass-bg);
+    border-bottom: var(--glass-border);
+}
+.online-players-title {
+    color: var(--success);
+}
+#online-players-body.online-players-body {
+    flex: 1 1 auto !important;
+    min-height: 0;
+    width: 100%;
+    padding: 14px !important;
+    gap: 10px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    background: transparent;
+}
+
 /* Spatial glass pass: visual depth only, dimensions stay inherited. */
 .global-chat-overlay {
     background:
@@ -489,6 +544,9 @@ body {
     .global-chat-header { min-height: 58px; padding: 12px 18px; }
     .global-chat-footer { padding: 12px 18px 14px; }
     .global-chat-body { padding: 16px 18px; }
+    .online-players-shell { left: 50%; top: 22px; width: min(760px, calc(100vw - 44px)); height: calc(100dvh - 44px); max-height: calc(100dvh - 44px); transform: translateX(-50%); border-radius: 22px; }
+    .online-players-header { min-height: 58px; padding: 12px 18px; }
+    #online-players-body.online-players-body { padding: 16px 18px !important; }
 }
 @media (max-width: 1024px) and (orientation: portrait) { .chat-window { width: 85%; right: auto; left: 50%; transform: translateX(-50%); bottom: 160px; height: 320px; } .chat-window.active { transform: translateX(-50%); } .chat-float-btn { bottom: 145px; } }
 

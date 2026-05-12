@@ -76,30 +76,6 @@ window.openOnlinePlayersModal = function() {
     
     if (overlay) {
         overlay.style.display = 'flex';
-        
-        // Dinamičko forsiranje CSS stilova
-        const modalBox = overlay.querySelector('.modal-box');
-        if (modalBox) {
-            modalBox.style.width = '95%';
-            modalBox.style.maxWidth = '500px';
-            modalBox.style.height = '80vh';
-            modalBox.style.maxHeight = '800px';
-        }
-        
-        const header = overlay.querySelector('.chat-header');
-        if (header) {
-            header.style.padding = '15px 20px';
-            const titleSpan = header.querySelector('span:first-child');
-            if (titleSpan) {
-                titleSpan.style.fontSize = '1.2rem';
-                titleSpan.style.letterSpacing = '1px';
-            }
-            const closeSpan = header.querySelector('span:last-child');
-            if (closeSpan) {
-                closeSpan.style.fontSize = '1.5rem';
-                closeSpan.style.lineHeight = '1';
-            }
-        }
     }
 
     const body = document.getElementById('online-players-body');
