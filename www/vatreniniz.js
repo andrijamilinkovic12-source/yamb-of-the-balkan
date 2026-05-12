@@ -13,15 +13,15 @@ class VatreniNizManager {
         const loading = typeof t !== 'undefined' ? t('streak_loading') : 'Učitavam listu... ⏳';
 
         const modalHtml = `
-        <div id="streak-overlay" class="modal-overlay" style="display: none; z-index: 100000;">
-            <div class="modal-box" style="width: 95%; max-width: 500px; height: 80vh; max-height: 800px; display: flex; flex-direction: column; padding: 0 !important; overflow: hidden; background: var(--glass-bg); border: 1px solid var(--glass-border);">
+        <div id="streak-overlay" class="modal-overlay global-chat-overlay streak-modal-overlay" style="display: none; z-index: 100000;">
+            <div class="modal-box global-chat-shell streak-modal-shell">
                 
-                <div class="chat-header" style="background: rgba(0,0,0,0.2); padding: 15px 20px; border-bottom: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #FF5722; font-weight: 800; font-size: 1.1rem; letter-spacing: 1px;">${title}</span>
-                    <span style="cursor: pointer; color: var(--danger); font-size: 1.2rem; font-weight: bold; padding: 0 5px;" onclick="document.getElementById('streak-overlay').style.display='none'">✖</span>
+                <div class="chat-header global-chat-header streak-modal-header">
+                    <span class="streak-modal-title">${title}</span>
+                    <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="Zatvori Vatreni niz listu">×</button>
                 </div>
 
-                <div id="streak-body" style="flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <div id="streak-body" class="chat-body global-chat-body streak-list-container">
                     <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">${loading}</div>
                 </div>
 
