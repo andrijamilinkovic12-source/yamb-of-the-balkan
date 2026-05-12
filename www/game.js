@@ -2015,9 +2015,14 @@ class YambApp {
     async showMainMenu() { 
         await this.autoSaveGame(true);
 
-        if (this.isSpectator) {
+        const wasSpectator = this.isSpectator;
+
+        if (wasSpectator) {
             this.isSpectator = false;
             if (this.socket) this.socket.emit('stop_spectating');
+            this.onlineMode = false;
+            this.gameActive = false;
+            this.roomId = null;
 
             const btnBacaj = document.getElementById('btn-bacaj');
             const btnNajava = document.getElementById('btn-najava');
@@ -2052,7 +2057,7 @@ class YambApp {
         const timerDisplay = document.getElementById('turn-timer-display');
         if (timerDisplay && !this.isSpectator) timerDisplay.style.display = 'none';
 
-        if (this.socket && this.socket.connected) {
+        if (!wasSpectator && this.socket && this.socket.connected) {
             this.socket.emit('back_to_menu');
         }
 

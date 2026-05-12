@@ -2795,16 +2795,36 @@ io.on('connection', (socket) => {
     socket.on('back_to_menu', async () => {
         const activeRoomId = playerRooms[socket.id];
 
+        if (socket.isSpectator && socket.spectatingRoom) {
+            const roomId = socket.spectatingRoom;
+            socket.leave(roomId);
+            socket.isSpectator = false;
+            socket.spectatingRoom = null;
+            updateRoomSpectators(roomId);
+            return;
+        }
+
         if (activeRoomId) {
+            const state = roomState[activeRoomId];
+            const isActivePlayer = !state || state.players.includes(socket.id);
+
+            if (!isActivePlayer) {
+                console.log(`ℹ️ Ignorišem back_to_menu za socket koji nije igrač u sobi ${activeRoomId}: ${socket.id}`);
+                socket.leave(activeRoomId);
+                delete playerRooms[socket.id];
+                updateRoomSpectators(activeRoomId);
+                return;
+            }
+
             console.log(`📢 Igrač ${socket.id} se vratio u meni, napušta sobu ${activeRoomId}`);
             let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
 
-            if (roomState[activeRoomId]) {
+            if (state) {
                 const pid = registeredSockets[socket.id];
                 if (pid) {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
                     let h2hKey = null;
-                    const oppSocketId = roomState[activeRoomId].players.find(id => id !== socket.id);
+                    const oppSocketId = state.players.find(id => id !== socket.id);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
                     const winnerUid = registeredSockets[oppSocketId];
                     if (oppSocket) {
