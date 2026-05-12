@@ -1981,6 +1981,8 @@ class YambApp {
     }
 
     async showMainMenu() { 
+        await this.autoSaveGame(true);
+
         if (this.isSpectator) {
             this.isSpectator = false;
             if (this.socket) this.socket.emit('stop_spectating');
@@ -4135,14 +4137,17 @@ class YambApp {
         }
     }
     
-    async autoSaveGame() { 
+    async autoSaveGame(immediate = false) { 
         if(this.onlineMode) return; 
 
         if(!this.gameActive) return;
 
-        if (this._saveTimeout) clearTimeout(this._saveTimeout);
+        if (this._saveTimeout) {
+            clearTimeout(this._saveTimeout);
+            this._saveTimeout = null;
+        }
 
-        this._saveTimeout = setTimeout(async () => {
+        const saveNow = async () => {
             if(!this.gameActive) return;
 
             const data = { 
@@ -4162,7 +4167,14 @@ class YambApp {
                 const uid = localStorage.getItem('yamb_uid') || 'guest';
                 if(window.localforage) await localforage.setItem(`yamb_saved_game_${uid}_${this.players.length}`, data); 
             } catch(e) { console.warn("Greška pri čuvanju:", e); }
-        }, 800);
+        };
+
+        if (immediate) {
+            await saveNow();
+            return;
+        }
+
+        this._saveTimeout = setTimeout(saveNow, 800);
     }
     
     async loadSavedGame(numPlayers = this.pendingNewGamePlayers) { 
@@ -4172,7 +4184,7 @@ class YambApp {
         try { 
             const data = await localforage.getItem(saveKey); 
             if (!data) { this.modal.alert(gt('msg_no_saved_game')); return; } 
-            KOLONE.forEach(col => { this.players.forEach((_, idx) => { if (data.scores[idx] && !data.scores[idx][col]) { data.scores[idx][col] = {}; REDOVI_IGRA.forEach(r => data.scores[idx][col][r] = null); } }); });
+            KOLONE.forEach(col => { data.players.forEach((_, idx) => { if (data.scores[idx] && !data.scores[idx][col]) { data.scores[idx][col] = {}; REDOVI_IGRA.forEach(r => data.scores[idx][col][r] = null); } }); });
             
             this.players = data.players; 
             this.allScores = data.scores; 

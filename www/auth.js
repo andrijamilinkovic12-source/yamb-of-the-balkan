@@ -329,12 +329,8 @@ async function clearAccountLocalCache(uid) {
         'yamb_tourney_reg_' + uid
     ].forEach(key => localStorage.removeItem(key));
 
-    if (window.localforage && typeof localforage.removeItem === 'function') {
-        await Promise.all([
-            localforage.removeItem('yamb_saved_game_' + uid + '_1'),
-            localforage.removeItem('yamb_saved_game_' + uid + '_2')
-        ]);
-    }
+    // Namerno ne brišemo yamb_saved_game_* ovde: nedovršene lokalne partije
+    // moraju da prežive odjavu i da se pojave posle ponovne prijave istog naloga.
 }
 
 // --- FUNKCIJA ZA PRIJAVU ---
@@ -410,6 +406,10 @@ async function odjaviSe() {
 
     try {
         const logoutUid = localStorage.getItem('yamb_uid');
+        if (window.app && typeof window.app.autoSaveGame === 'function') {
+            await window.app.autoSaveGame(true);
+        }
+
         if (logoutUid && window.app && window.app.socket) {
             try {
                 await syncLoggedInProfileToCloud({
