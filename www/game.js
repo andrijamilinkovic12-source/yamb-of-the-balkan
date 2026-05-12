@@ -1316,14 +1316,20 @@ class YambApp {
                 }
 
                 this.socket.on('incoming_challenge', async (data) => {
-                    const { challengerId, challengerName } = data;
+                    const { challengerId, challengerName, challengeId, expiresAt } = data;
                     const safeChallengerName = this.escapeHtml(challengerName || 'Igrač');
                     let text = gt('duel_incoming');
                     if(text === 'duel_incoming') text = `Igrač {0} vas izaziva na duel! Prihvatate?`;
 
                     const accepted = await this.modal.confirm(text.replace('{0}', safeChallengerName));
+                    if (accepted && expiresAt && Date.now() > expiresAt) {
+                        this.modal.alert(gt('duel_expired') || 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.', gt('modal_title_info') || "INFO");
+                        return;
+                    }
+
                     this.socket.emit('challenge_response', {
                         challengerId: challengerId,
+                        challengeId: challengeId,
                         accepted: accepted
                     });
                 });
@@ -1335,6 +1341,16 @@ class YambApp {
                     setTimeout(() => {
                         let text = data.message || gt('duel_declined');
                         if (text === 'duel_declined') text = "Igrač je nažalost odbio vaš izazov.";
+                        this.modal.alert(text, gt('modal_title_info') || "INFO");
+                    }, 50);
+                });
+
+                this.socket.on('challenge_expired', (data = {}) => {
+                    const customModal = document.getElementById('custom-modal-overlay');
+                    if (customModal) customModal.style.display = 'none';
+
+                    setTimeout(() => {
+                        const text = data.message || gt('duel_expired') || 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.';
                         this.modal.alert(text, gt('modal_title_info') || "INFO");
                     }, 50);
                 });

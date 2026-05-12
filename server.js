@@ -359,6 +359,7 @@ const globalChatRateLimits = {};
 const globalChatReportLimits = {};
 const onlinePlayers = {};
 const registeredSockets = {};
+const pendingChallenges = {};
 
 const GLOBAL_CHAT_MIN_INTERVAL_MS = 1200;
 const GLOBAL_CHAT_SPAM_STRIKE_LIMIT = 4;
@@ -366,6 +367,7 @@ const GLOBAL_CHAT_SPAM_MUTE_MS = 15000;
 const GLOBAL_CHAT_PROFANITY_BAN_BASE_MS = 60 * 60 * 1000;
 const GLOBAL_CHAT_RATE_LIMIT_TTL_MS = 60 * 60 * 1000;
 const GLOBAL_CHAT_REPORT_COOLDOWN_MS = 30000;
+const CHALLENGE_RESPONSE_WINDOW_MS = 60 * 1000;
 
 const MAX_SCORE = 3500;
 const MAX_NAME_LENGTH = 24;
@@ -1263,6 +1265,57 @@ function bindVerifiedPlayerSocket(socket, playerId) {
     onlinePlayers[playerId] = socket.id;
     registeredSockets[socket.id] = playerId;
     return true;
+}
+
+function getChallengeKey(challengerId, targetId) {
+    if (!challengerId || !targetId) return null;
+    return `${challengerId}:${targetId}`;
+}
+
+function clearPendingChallenge(key) {
+    const challenge = key ? pendingChallenges[key] : null;
+    if (!challenge) return null;
+    if (challenge.timeoutId) clearTimeout(challenge.timeoutId);
+    delete pendingChallenges[key];
+    return challenge;
+}
+
+function findPendingChallenge(challengerId, targetId) {
+    const directKey = getChallengeKey(challengerId, targetId);
+    if (directKey && pendingChallenges[directKey]) {
+        return { key: directKey, challenge: pendingChallenges[directKey] };
+    }
+
+    for (const key in pendingChallenges) {
+        const challenge = pendingChallenges[key];
+        if (challenge && challenge.challengerId === challengerId && challenge.targetId === targetId) {
+            return { key, challenge };
+        }
+    }
+
+    return null;
+}
+
+function expirePendingChallenge(key, reason = 'timeout') {
+    const challenge = clearPendingChallenge(key);
+    if (!challenge) return;
+
+    const payload = {
+        reason,
+        message: 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.'
+    };
+
+    io.to(challenge.targetId).emit('challenge_expired', payload);
+    io.to(challenge.challengerId).emit('challenge_expired', payload);
+}
+
+function clearChallengesForSocket(socketId) {
+    for (const key of Object.keys(pendingChallenges)) {
+        const challenge = pendingChallenges[key];
+        if (challenge && (challenge.challengerId === socketId || challenge.targetId === socketId)) {
+            clearPendingChallenge(key);
+        }
+    }
 }
 
 async function verifyFirebaseSocketToken(socket, token) {
@@ -4198,9 +4251,26 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            const challengeKey = getChallengeKey(socket.id, resolvedTargetId);
+            clearPendingChallenge(challengeKey);
+
+            const createdAt = Date.now();
+            const expiresAt = createdAt + CHALLENGE_RESPONSE_WINDOW_MS;
+            pendingChallenges[challengeKey] = {
+                challengerId: socket.id,
+                targetId: resolvedTargetId,
+                createdAt,
+                expiresAt,
+                timeoutId: setTimeout(() => {
+                    expirePendingChallenge(challengeKey, 'timeout');
+                }, CHALLENGE_RESPONSE_WINDOW_MS)
+            };
+
             socket.to(resolvedTargetId).emit('incoming_challenge', {
                 challengerId: socket.id,
-                challengerName: sanitizeTournamentName(socket.playerName || "Igrač")
+                challengerName: sanitizeTournamentName(socket.playerName || "Igrač"),
+                challengeId: challengeKey,
+                expiresAt
             });
         } else {
             socket.emit('error_msg', 'err_player_not_on_server');
@@ -4210,9 +4280,20 @@ io.on('connection', (socket) => {
     socket.on('challenge_response', (data) => {
         const { challengerId, accepted } = data;
         const challengerSocket = io.sockets.sockets.get(challengerId);
+        const pending = findPendingChallenge(challengerId, socket.id);
 
         if (accepted) {
+            if (!pending || !pending.challenge || Date.now() > pending.challenge.expiresAt) {
+                if (pending) expirePendingChallenge(pending.key, 'late_response');
+                else socket.emit('challenge_expired', {
+                    reason: 'late_response',
+                    message: 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.'
+                });
+                return;
+            }
+
             if (!challengerSocket) {
+                clearPendingChallenge(pending.key);
                 socket.emit('error_msg', 'err_challenger_left');
                 return;
             }
@@ -4221,11 +4302,13 @@ io.on('connection', (socket) => {
             const responderRoom = playerRooms[socket.id];
             if ((challengerRoom && !challengerRoom.startsWith('local_')) ||
                 (responderRoom && !responderRoom.startsWith('local_'))) {
+                clearPendingChallenge(pending.key);
                 socket.emit('error_msg', 'err_player_busy');
                 if (challengerSocket) challengerSocket.emit('error_msg', 'err_player_busy');
                 return;
             }
 
+            clearPendingChallenge(pending.key);
             const roomName = `duel_${challengerId}_${socket.id}`;
             
             socket.join(roomName);
@@ -4267,6 +4350,7 @@ io.on('connection', (socket) => {
             startTurnTimer(roomName); 
 
         } else {
+            if (pending) clearPendingChallenge(pending.key);
             if (challengerSocket) {
                 socket.to(challengerId).emit('challenge_declined', {});
             }
@@ -4639,6 +4723,7 @@ io.on('connection', (socket) => {
         activeConnections.delete(socket.id);
         const pid = registeredSockets[socket.id];
         const activeRoomId = playerRooms[socket.id];
+        clearChallengesForSocket(socket.id);
 
         if (pid && activeRoomId) {
             console.log(`⏳ Pokrećem Grace Period od 30s za igrača: ${pid}`);
