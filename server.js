@@ -554,6 +554,24 @@ const SHOP_ITEM_PRICES = Object.freeze({
 });
 
 const FREE_UNLOCK_IDS = new Set(Object.entries(SHOP_ITEM_PRICES).filter(([, price]) => price === 0).map(([id]) => id));
+const SKIN_UNLOCK_IDS = new Set([
+    'default', 'classic_red', 'classic_blue', 'classic_black',
+    'bronze_antique', 'bronze_patina', 'bronze_steampunk', 'bronze_spartan', 'bronze_rose', 'bronze_forge',
+    'silver_classic', 'silver_brushed', 'silver_moonlight', 'silver_knight', 'silver_titanium', 'silver_chrome',
+    'gold_classic', 'gold_rose', 'gold_ancient', 'gold_midas',
+    'wood', 'marble', 'pearl', 'carbon', 'obsidian', 'leather',
+    'neon_blue', 'neon_pink', 'neon_green', 'stealth',
+    'glass_clear', 'glass_ruby', 'glass_emerald', 'glass_sapphire',
+    'magma', 'galaxy', 'retro', 'hologram'
+]);
+const EFFECT_UNLOCK_IDS = new Set([
+    'confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age', 'black_hole',
+    'supernova', 'neon_pulse', 'thunder', 'balkan', 'fireworks', 'drones',
+    'cosmic_dust', 'dragon_fire'
+]);
+const THEME_UNLOCK_IDS = new Set([
+    'dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'
+]);
 
 // NOVE PROMENLJIVE ZA ČUVANJE CHATA
 let globalChatHistory = [];
@@ -972,6 +990,7 @@ function buildProfileSyncPayload(user) {
         unlockedSkins: Array.isArray(user.unlockedSkins) ? user.unlockedSkins : [],
         unlockedEffects: Array.isArray(user.unlockedEffects) ? user.unlockedEffects : [],
         yamb_unlocked: Array.isArray(user.yamb_unlocked) ? user.yamb_unlocked : [],
+        unlockedThemes: filterIdsByCategory(user.yamb_unlocked, THEME_UNLOCK_IDS),
         lastDaily: user.lastDaily,
         lastDailyRewardClaimed: user.lastDailyRewardClaimed,
         soundEnabled: user.soundEnabled,
@@ -1440,6 +1459,10 @@ function sanitizeIdArray(value, maxItems = 150) {
     });
 
     return Array.from(seen).slice(0, maxItems);
+}
+
+function filterIdsByCategory(items, allowedIds) {
+    return sanitizeIdArray(items).filter(id => allowedIds.has(id));
 }
 
 function sumTrophyRewards(trophyIds) {
@@ -1925,7 +1948,7 @@ function applyProfileStatsGuard(user, stats) {
 }
 
 function pickAllowedInventoryItem(requested, allowedItems, fallback, defaultId) {
-    const allowedSet = new Set([...sanitizeIdArray(allowedItems), ...FREE_UNLOCK_IDS]);
+    const allowedSet = new Set(sanitizeIdArray(allowedItems));
     const requestedId = sanitizeIdArray([requested], 1)[0];
     const fallbackId = sanitizeIdArray([fallback], 1)[0];
 
@@ -1935,9 +1958,20 @@ function pickAllowedInventoryItem(requested, allowedItems, fallback, defaultId) 
 }
 
 function normalizeActiveSelections(user, fallbackActive = {}) {
-    const skinItems = [...sanitizeIdArray(user.unlockedSkins), ...sanitizeIdArray(user.yamb_unlocked)];
-    const effectItems = [...sanitizeIdArray(user.unlockedEffects), ...sanitizeIdArray(user.yamb_unlocked)];
-    const themeItems = [...sanitizeIdArray(user.yamb_unlocked), ...sanitizeIdArray(user.unlockedSkins)];
+    const skinItems = filterIdsByCategory([
+        ...sanitizeIdArray(user.unlockedSkins),
+        ...sanitizeIdArray(user.yamb_unlocked),
+        ...Array.from(FREE_UNLOCK_IDS)
+    ], SKIN_UNLOCK_IDS);
+    const effectItems = filterIdsByCategory([
+        ...sanitizeIdArray(user.unlockedEffects),
+        ...sanitizeIdArray(user.yamb_unlocked),
+        ...Array.from(FREE_UNLOCK_IDS)
+    ], EFFECT_UNLOCK_IDS);
+    const themeItems = filterIdsByCategory([
+        ...sanitizeIdArray(user.yamb_unlocked),
+        ...Array.from(FREE_UNLOCK_IDS)
+    ], THEME_UNLOCK_IDS);
 
     user.activeSkin = pickAllowedInventoryItem(user.activeSkin, skinItems, fallbackActive.activeSkin, 'default');
     user.activeEffect = pickAllowedInventoryItem(user.activeEffect, effectItems, fallbackActive.activeEffect, 'confetti');

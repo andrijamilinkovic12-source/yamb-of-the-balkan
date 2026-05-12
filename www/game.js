@@ -940,11 +940,13 @@ class YambApp {
         if (Array.isArray(data.unlockedSkins)) localStorage.setItem('yamb_unlocked_skins', JSON.stringify(data.unlockedSkins));
         if (Array.isArray(data.unlockedEffects)) localStorage.setItem('yamb_unlocked_effects', JSON.stringify(data.unlockedEffects));
 
+        const validThemeIds = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
         const localThemes = this.readLocalJson('yamb_unlocked_themes', []);
         const cloudThemes = Array.isArray(data.unlockedThemes) ? data.unlockedThemes : [];
-        const hiddenThemes = (Array.isArray(data.unlockedSkins) ? data.unlockedSkins : []).filter(theme => ['neon', 'amethyst'].includes(theme));
-        const generalThemes = serverGeneralUnlocks.filter(theme => ['neon', 'amethyst'].includes(theme));
-        const mergedThemes = [...new Set([...localThemes, ...cloudThemes, ...hiddenThemes, ...generalThemes])];
+        const skinThemeLeak = (Array.isArray(data.unlockedSkins) ? data.unlockedSkins : []).filter(theme => validThemeIds.includes(theme));
+        const generalThemes = serverGeneralUnlocks.filter(theme => validThemeIds.includes(theme));
+        const mergedThemes = [...new Set([...localThemes, ...cloudThemes, ...skinThemeLeak, ...generalThemes])]
+            .filter(theme => validThemeIds.includes(theme));
         localStorage.setItem('yamb_unlocked_themes', JSON.stringify(mergedThemes));
 
         if (data.activeSkin) localStorage.setItem('yamb_active_skin', data.activeSkin);
