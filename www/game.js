@@ -1266,8 +1266,16 @@ class YambApp {
                                 year: parsedReward.year,
                                 quarter: parsedReward.quarter,
                                 playerId: this.playerId
+                            }, (result = {}) => {
+                                if (result.ok) {
+                                    localStorage.removeItem('yamb_pending_quarter_check');
+                                } else if (result.permanent) {
+                                    console.warn("Kvartalna nagrada trajno odbijena:", result.reason || 'unknown');
+                                    localStorage.removeItem('yamb_pending_quarter_check');
+                                } else {
+                                    console.warn("Kvartalna nagrada nije potvrđena, pokušaću ponovo pri sledećoj konekciji:", result.reason || 'unknown');
+                                }
                             });
-                            localStorage.removeItem('yamb_pending_quarter_check'); 
                         } catch(e) { console.error("Greška pri čitanju pending nagrade:", e); }
                     }
                     
@@ -2498,6 +2506,13 @@ class YambApp {
 
             this.showQuarterWinnerModal(data);
             localStorage.setItem(shownKey, 'true');
+        });
+
+        this.socket.off('quarter_reward_check_result');
+        this.socket.on('quarter_reward_check_result', (result = {}) => {
+            if (result.ok || result.permanent) {
+                localStorage.removeItem('yamb_pending_quarter_check');
+            }
         });
 
         this.socket.off('quarter_reward');

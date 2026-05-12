@@ -231,6 +231,16 @@ const LeagueScoreSchema = new mongoose.Schema({
 });
 const LeagueScore = mongoose.model('LeagueScore', LeagueScoreSchema);
 
+const LeagueHallOfFameSchema = new mongoose.Schema({
+    periodKey: { type: String, unique: true, required: true },
+    year: Number,
+    quarter: Number,
+    topScores: { type: Array, default: [] },
+    champion: { type: Object, default: null },
+    archivedAt: { type: Date, default: Date.now }
+});
+const LeagueHallOfFame = mongoose.model('LeagueHallOfFame', LeagueHallOfFameSchema);
+
 const TourneyStatsSchema = new mongoose.Schema({
     playerId: String,
     playerName: String,
@@ -1327,6 +1337,14 @@ function compareLeaguePeriod(a, b) {
     return a.quarter - b.quarter;
 }
 
+function getLeaguePeriodKey(year, quarter) {
+    return `${year}-Q${quarter}`;
+}
+
+function isPastLeaguePeriod(year, quarter) {
+    return compareLeaguePeriod({ year, quarter }, getServerQuarterInfo()) < 0;
+}
+
 function isCurrentLeaguePeriod(leagueData) {
     const currentPeriod = getServerQuarterInfo();
     return Boolean(
@@ -1388,6 +1406,66 @@ function mergeLeagueDataIntoUser(user, incomingRaw) {
     const mergedLeague = mergeLeagueDataValues(user.leagueData, incomingRaw);
     user.leagueData = mergedLeague;
     return mergedLeague;
+}
+
+async function archiveLeagueQuarter(year, quarter) {
+    if (!Number.isInteger(year) || !Number.isInteger(quarter) || quarter < 1 || quarter > 4) return null;
+    if (!isPastLeaguePeriod(year, quarter)) return null;
+
+    const periodKey = getLeaguePeriodKey(year, quarter);
+    const existingArchive = await LeagueHallOfFame.findOne({ periodKey }).lean();
+    if (existingArchive) return existingArchive;
+
+    const topScores = await LeagueScore.find({ year, quarter })
+        .sort({ score: -1 })
+        .limit(3)
+        .lean();
+
+    if (!topScores.length) return null;
+
+    const archivedScores = await Promise.all(topScores.map(async (score, index) => {
+        const user = await UserProfile.findOne({ firebaseUid: score.playerId }).lean();
+        return {
+            rank: index + 1,
+            playerId: score.playerId,
+            playerName: score.playerName,
+            photoUrl: score.photoUrl || user?.photoUrl || '',
+            score: Math.max(0, toSafeInt(score.score, 0))
+        };
+    }));
+
+    const champion = archivedScores[0] || null;
+    return LeagueHallOfFame.findOneAndUpdate(
+        { periodKey },
+        {
+            $set: {
+                year,
+                quarter,
+                topScores: archivedScores,
+                champion,
+                archivedAt: Date.now()
+            }
+        },
+        { upsert: true, new: true }
+    ).lean();
+}
+
+async function archiveCompletedLeagueQuarters() {
+    const periods = await LeagueScore.aggregate([
+        { $group: { _id: { year: '$year', quarter: '$quarter' } } },
+        { $sort: { '_id.year': 1, '_id.quarter': 1 } }
+    ]);
+
+    const archived = [];
+    for (const period of periods) {
+        const year = Number(period?._id?.year);
+        const quarter = Number(period?._id?.quarter);
+        if (!Number.isInteger(year) || !Number.isInteger(quarter) || !isPastLeaguePeriod(year, quarter)) continue;
+        const archive = await archiveLeagueQuarter(year, quarter);
+        if (archive) archived.push(archive);
+    }
+
+    return archived;
 }
 
 async function syncCurrentLeagueScoreFromUserProfile(user, playerName, photoUrl) {
@@ -2769,27 +2847,40 @@ io.on('connection', (socket) => {
         console.log(`⏱️ Igrač ${socket.id} započeo partiju u ${new Date().toLocaleTimeString()}`);
     });
 
-    socket.on('check_quarter_reward', async (data) => {
+    socket.on('check_quarter_reward', async (data, ack) => {
+        const replyQuarterReward = (payload) => {
+            socket.emit('quarter_reward_check_result', payload);
+            if (typeof ack === 'function') ack(payload);
+        };
+
         try {
-            if (!MONGO_URI) return;
+            if (!MONGO_URI) return replyQuarterReward({ ok: false, reason: 'db_unavailable', permanent: false });
             const { year, quarter } = data || {};
             const playerId = socket.verifiedUid;
 
-            if (!year || !quarter || !playerId) return;
-
-            const rewardKey = `${year}-Q${quarter}`;
-
-            const user = await UserProfile.findOne({ firebaseUid: playerId });
-            if (!user) return;
-
-            if (user.claimedLeagueRewards && user.claimedLeagueRewards.includes(rewardKey)) {
-                return; 
+            if (!year || !quarter) {
+                return replyQuarterReward({ ok: false, reason: 'invalid_request', permanent: true });
+            }
+            if (!playerId) {
+                return replyQuarterReward({ ok: false, reason: 'auth_required', permanent: false });
             }
 
-            const topScores = await LeagueScore.find({ year: year, quarter: quarter })
-                                               .sort({ score: -1 })
-                                               .limit(3)
-                                               .lean();
+            const rewardKey = getLeaguePeriodKey(year, quarter);
+
+            const user = await UserProfile.findOne({ firebaseUid: playerId });
+            if (!user) return replyQuarterReward({ ok: false, reason: 'auth_required', permanent: true });
+
+            if (user.claimedLeagueRewards && user.claimedLeagueRewards.includes(rewardKey)) {
+                return replyQuarterReward({ ok: true, status: 'already_claimed', periodKey: rewardKey });
+            }
+
+            const archivedQuarter = isPastLeaguePeriod(Number(year), Number(quarter))
+                ? await archiveLeagueQuarter(Number(year), Number(quarter))
+                : null;
+            const topScores = archivedQuarter?.topScores || await LeagueScore.find({ year: year, quarter: quarter })
+                .sort({ score: -1 })
+                .limit(3)
+                .lean();
             
             let rank = -1;
             for (let i = 0; i < topScores.length; i++) {
@@ -2812,10 +2903,13 @@ io.on('connection', (socket) => {
 
                 emitProfileSync(socket, user);
                 socket.emit('quarter_reward', { rank: rank, reward: rewardAmount });
+                return replyQuarterReward({ ok: true, status: 'reward_claimed', periodKey: rewardKey, rank, reward: rewardAmount });
             }
 
+            return replyQuarterReward({ ok: true, status: 'not_qualified', periodKey: rewardKey });
         } catch (err) {
             console.error("Greška pri proveri kvartalne nagrade:", err);
+            return replyQuarterReward({ ok: false, reason: 'server_error', permanent: false });
         }
     });
 
@@ -2876,10 +2970,10 @@ io.on('connection', (socket) => {
         try {
             if (!MONGO_URI) return;
             const { year, quarter } = data;
-            
-            const topScore = await LeagueScore.findOne({ year: year, quarter: quarter })
-                                              .sort({ score: -1 })
-                                              .lean();
+            const archivedQuarter = await archiveLeagueQuarter(Number(year), Number(quarter));
+            const topScore = archivedQuarter?.champion || await LeagueScore.findOne({ year: year, quarter: quarter })
+                .sort({ score: -1 })
+                .lean();
             
             if (topScore) {
                 const user = await UserProfile.findOne({ firebaseUid: topScore.playerId }).lean();
@@ -2903,62 +2997,47 @@ io.on('connection', (socket) => {
     socket.on('get_hall_of_fame', async () => {
         try {
             if (!MONGO_URI) return;
-            
-            const allScores = await LeagueScore.find().sort({ year: 1, quarter: 1, score: -1 }).lean();
-            
-            let quartersMap = {};
-            
-            allScores.forEach(s => {
-                let key = `${s.year}-Q${s.quarter}`;
-                if (!quartersMap[key]) quartersMap[key] = [];
-                quartersMap[key].push(s);
-            });
-            
+
+            await archiveCompletedLeagueQuarters();
+            const archivedQuarters = await LeagueHallOfFame.find()
+                .sort({ year: 1, quarter: 1 })
+                .lean();
+
             let champions = [];
             let medalsCount = {};
             let cycleCounter = 1;
-            
-            const now = new Date();
-            const currentYear = now.getFullYear();
-            const currentQuarter = Math.floor(now.getMonth() / 3) + 1;
-            
-            for (let key in quartersMap) {
-                let [yStr, qStr] = key.split('-Q');
-                let y = parseInt(yStr);
-                let q = parseInt(qStr);
-                
-                if (y === currentYear && q === currentQuarter) continue;
-                
-                let qScores = quartersMap[key];
-                
-                for (let i = 0; i < Math.min(3, qScores.length); i++) {
-                    let p = qScores[i];
-                    if (!medalsCount[p.playerId]) {
-                        const user = await UserProfile.findOne({ firebaseUid: p.playerId }).lean();
-                        medalsCount[p.playerId] = {
+
+            archivedQuarters.forEach(quarterArchive => {
+                const qScores = Array.isArray(quarterArchive.topScores) ? quarterArchive.topScores : [];
+
+                qScores.slice(0, 3).forEach((p, index) => {
+                    const playerKey = p.playerId || `${p.playerName}_${index}`;
+                    if (!medalsCount[playerKey]) {
+                        medalsCount[playerKey] = {
                             playerId: p.playerId,
                             playerName: p.playerName,
-                            photoUrl: user ? user.photoUrl : '',
+                            photoUrl: p.photoUrl || '',
                             gold: 0, silver: 0, bronze: 0, total: 0
                         };
                     }
-                    if (i === 0) medalsCount[p.playerId].gold++;
-                    if (i === 1) medalsCount[p.playerId].silver++;
-                    if (i === 2) medalsCount[p.playerId].bronze++;
-                    medalsCount[p.playerId].total++;
-                    
-                    if (i === 0) {
-                        champions.push({
-                            cycle: cycleCounter++,
-                            year: y,
-                            quarter: q,
-                            playerName: p.playerName,
-                            photoUrl: medalsCount[p.playerId].photoUrl,
-                            score: p.score
-                        });
-                    }
+                    if (index === 0) medalsCount[playerKey].gold++;
+                    if (index === 1) medalsCount[playerKey].silver++;
+                    if (index === 2) medalsCount[playerKey].bronze++;
+                    medalsCount[playerKey].total++;
+                });
+
+                const champion = quarterArchive.champion || qScores[0];
+                if (champion) {
+                    champions.push({
+                        cycle: cycleCounter++,
+                        year: quarterArchive.year,
+                        quarter: quarterArchive.quarter,
+                        playerName: champion.playerName,
+                        photoUrl: champion.photoUrl || '',
+                        score: champion.score
+                    });
                 }
-            }
+            });
             
             let medalsList = Object.values(medalsCount);
             medalsList.sort((a, b) => {
