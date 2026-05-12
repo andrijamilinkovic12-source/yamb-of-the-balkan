@@ -3038,6 +3038,28 @@ class YambApp {
         // DODATO: Osluškivač odgovora servera o stanju prekinute partije
         this.socket.off('room_status_result');
         this.socket.on('room_status_result', async (data) => {
+            const responseRoomId = data && data.roomId;
+            const savedRoomId = localStorage.getItem('yamb_active_online_room');
+
+            if (!responseRoomId) return;
+
+            if (this.gameActive && this.onlineMode) {
+                if (this.roomId !== responseRoomId) {
+                    console.log("ℹ️ Ignorišem zakašneli status stare online sobe:", responseRoomId);
+                    return;
+                }
+
+                if (!data.active) {
+                    console.log("ℹ️ Ignorišem neaktivan room_status za duel koji je već aktivan na klijentu:", responseRoomId);
+                    return;
+                }
+            }
+
+            if (savedRoomId && savedRoomId !== responseRoomId) {
+                console.log("ℹ️ Ignorišem room_status za sobu koja više nije zapamćena:", responseRoomId);
+                return;
+            }
+
             if (data.active) {
                 if (this.gameActive && this.onlineMode) return;
                 if (this.onlineRecoveryPromptOpen) return;
@@ -4133,8 +4155,10 @@ class YambApp {
         }); 
     }
     
-    async checkSavedGame() { 
+    async checkSavedGame() {
         // Provera za prekinut online duel
+        if (this.gameActive && this.onlineMode && !this.isSpectator) return;
+
         const activeOnlineRoom = localStorage.getItem('yamb_active_online_room');
         
         if (activeOnlineRoom) {
