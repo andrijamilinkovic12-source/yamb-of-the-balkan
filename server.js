@@ -1390,6 +1390,41 @@ function mergeLeagueDataIntoUser(user, incomingRaw) {
     return mergedLeague;
 }
 
+async function syncCurrentLeagueScoreFromUserProfile(user, playerName, photoUrl) {
+    if (!user || !user.firebaseUid) return null;
+
+    const leagueData = normalizeUserLeagueDataForCurrentPeriod(user);
+    if (!isCurrentLeaguePeriod(leagueData)) return null;
+
+    const score = Math.max(0, Math.min(MAX_LEAGUE_SCORE, toSafeInt(leagueData.quarterlyScore, 0)));
+    if (score <= 0) return null;
+
+    let safeName = String(playerName || user.playerName || 'Nepoznat Igrač').trim().substring(0, MAX_NAME_LENGTH);
+    if (!safeName || sadrziPsovku(safeName)) {
+        safeName = 'Igrač_' + Math.floor(1000 + Math.random() * 9000);
+    }
+
+    const safePhotoUrl = String(photoUrl || user.photoUrl || '').substring(0, 500);
+
+    try {
+        return await LeagueScore.findOneAndUpdate(
+            { playerId: user.firebaseUid, year: leagueData.year, quarter: leagueData.quarter },
+            {
+                $set: {
+                    playerName: safeName,
+                    photoUrl: safePhotoUrl,
+                    date: Date.now()
+                },
+                $max: { score }
+            },
+            { upsert: true, new: true }
+        );
+    } catch (err) {
+        console.error('Greška pri sinhronizaciji profila sa Kvartalnom Ligom:', err);
+        return null;
+    }
+}
+
 async function maybeApplyLegacyLeagueMigration(user, submittedStats, playerName, photoUrl) {
     if (!user || !submittedStats || !submittedStats.legacyMigration || user.legacyMigrationApplied) return;
 
@@ -2490,6 +2525,7 @@ io.on('connection', (socket) => {
 
                 await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
                 await user.save();
+                await syncCurrentLeagueScoreFromUserProfile(user, data.name, socket.photoUrl || '');
 
                 emitProfileSync(socket, user);
             } else {
@@ -2528,6 +2564,7 @@ io.on('connection', (socket) => {
                 normalizeActiveSelections(user);
                 await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
                 await user.save();
+                await syncCurrentLeagueScoreFromUserProfile(user, data.name, socket.photoUrl || '');
 
                 emitProfileSync(socket, user);
             }
