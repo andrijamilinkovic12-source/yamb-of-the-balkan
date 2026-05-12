@@ -2212,6 +2212,7 @@ io.on('connection', (socket) => {
 
         try {
             if (!MONGO_URI) {
+                socket.emit('sync_unavailable', { ok: false, reason: 'mongo_unavailable' });
                 updateOnlineCount(); 
                 return;
             }

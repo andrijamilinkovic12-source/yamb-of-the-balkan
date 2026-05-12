@@ -99,6 +99,8 @@ class YambApp {
         this.friendsListUids = []; 
         
         this.socket = null; 
+        this.socketVerifiedUid = null;
+        this.authRetryInProgress = false;
         this.onlineMode = false; 
         this.isSpectator = false; 
         this.roomId = null; 
@@ -1242,6 +1244,7 @@ class YambApp {
                 
                 this.socket.on('connect', async () => {
                     console.log("✅ Socket povezan! ID:", this.socket.id);
+                    this.socketVerifiedUid = null;
                     
                     if (!this.playerId) return;
 
@@ -1303,6 +1306,19 @@ class YambApp {
                 this.socket.on('users_count', (count) => {
                     this.onlineUsersCount = count;
                     this.updateOnlineCounterUI();
+                });
+
+                this.socket.on('disconnect', () => {
+                    this.socketVerifiedUid = null;
+                    this.authRetryInProgress = false;
+                });
+
+                this.socket.on('auth_required', (result = {}) => {
+                    this.handleAuthRequired(result);
+                });
+
+                this.socket.on('sync_unavailable', (result = {}) => {
+                    console.warn(`Cloud sync nije dostupan: ${result.reason || 'unknown_error'}`);
                 });
 
                 if (this.globalChat) {
@@ -1440,6 +1456,35 @@ class YambApp {
                 resolve(result || { ok: false, reason: 'empty_auth_response' });
             });
         });
+    }
+
+    async handleAuthRequired(result = {}) {
+        if (!this.socket || !this.socket.connected) return;
+        if (!localStorage.getItem('yamb_uid')) return;
+        if (this.authRetryInProgress) return;
+
+        const retryableReasons = new Set([
+            'auth_required',
+            'firebase_token_required',
+            'missing_firebase_token',
+            'invalid_firebase_token'
+        ]);
+        const reason = result.reason || 'auth_required';
+        if (!retryableReasons.has(reason)) return;
+
+        this.authRetryInProgress = true;
+        this.socketVerifiedUid = null;
+
+        try {
+            const authResult = await this.authenticateSocketIdentity(true);
+            if (authResult && authResult.ok) {
+                await this.emitPlayerData(false);
+            } else {
+                console.warn(`Ponovna Firebase verifikacija nije uspela: ${authResult?.reason || 'unknown_error'}`);
+            }
+        } finally {
+            this.authRetryInProgress = false;
+        }
     }
 
     waitForProfileSync(timeoutMs = 4000) {

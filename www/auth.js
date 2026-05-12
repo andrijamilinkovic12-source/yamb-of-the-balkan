@@ -439,6 +439,8 @@ async function odjaviSe() {
         // 3. RESETOVANJE OBJEKATA U RADNOJ MEMORIJI
         if (window.app) {
             window.app.stats = { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
+            window.app.socketVerifiedUid = null;
+            window.app.authRetryInProgress = false;
             
             if (window.app.socket && window.app.socket.connected) {
                 window.app.socket.disconnect(); 
