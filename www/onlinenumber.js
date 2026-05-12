@@ -141,8 +141,12 @@ window.openOnlinePlayersModal = function() {
                         spectateBtn = `<button onclick="${spectateHandler}" title="Gledaj partiju" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>`;
                     }
 
-                    // 3. Dugme za DUEL (Uvek aktivno)
-                    const challengeBtn = `<button onclick="${challengeHandler}" title="Izazovi na duel" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
+                    let challengeBtn = '';
+                    if (p.isPlaying) {
+                        challengeBtn = `<button disabled title="Igrač trenutno igra" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">⚔️</button>`;
+                    } else {
+                        challengeBtn = `<button onclick="${challengeHandler}" title="Izazovi na duel" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
+                    }
 
                     actionButtons = `
                     <div style="display: flex; gap: 8px; flex-shrink: 0;">

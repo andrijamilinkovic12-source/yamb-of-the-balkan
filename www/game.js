@@ -1331,22 +1331,7 @@ class YambApp {
                     }, 50);
                 });
 
-                this.socket.on('game_started', (data) => {
-                    this.closeGlobalChat(true); 
-                    
-                    // NOVO: Zapamti da je korisnik u online meču
-                    localStorage.setItem('yamb_active_online_room', data.roomId);
-                    
-                    const customModal = document.getElementById('custom-modal-overlay');
-                    if (customModal) customModal.style.display = 'none';
-                    
-                    const onlineModal = document.getElementById('online-players-overlay');
-                    if (onlineModal) onlineModal.style.display = 'none';
-
-                    this.joinPrivateGame(this.playerName, data.room);
-                });
-
-                this.socket.on('global_highscores_data', (data) => { 
+                this.socket.on('global_highscores_data', (data) => {
                     if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list'); 
                 });
                 
