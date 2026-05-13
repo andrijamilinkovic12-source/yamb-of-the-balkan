@@ -1170,15 +1170,15 @@ body {
     border-radius: 50%;
     border: none;
     padding: 0;
-    background: rgba(255,255,255,0.22);
+    background: var(--carousel-dot-idle);
     cursor: pointer;
     transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     box-shadow: inset 0 0 3px rgba(0,0,0,0.5);
 }
 .rule-dot.active {
-    background: var(--gold-main);
+    background: var(--carousel-dot-active);
     transform: scale(1.4);
-    box-shadow: 0 0 10px var(--gold-glow);
+    box-shadow: 0 0 10px var(--carousel-dot-glow);
 }
 .pi-modal-overlay {
     z-index: 999999;

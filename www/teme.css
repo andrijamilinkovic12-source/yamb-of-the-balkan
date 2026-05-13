@@ -11,6 +11,9 @@
     --gold-dark: #16a34a;
     --gold-highlight: #bbf7d0;
     --gold-glow: rgba(74, 222, 128, 0.5);
+    --carousel-dot-idle: color-mix(in srgb, var(--gold-main) 28%, transparent);
+    --carousel-dot-active: var(--gold-main);
+    --carousel-dot-glow: var(--gold-glow);
     --text-main: #e2e8f0;       
     --text-filled: #ffffff;     
     --text-sum: #86efac;

@@ -788,8 +788,8 @@ class TournamentManager {
                 .tourney-card::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
 
                 .tourney-pagination { display: flex; gap: 12px; justify-content: center; margin-top: 15px; margin-bottom: 15px; flex-shrink: 0; }
-                .tourney-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.2); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
-                .tourney-pagination .dot.active { background: var(--gold-main); transform: scale(1.4); box-shadow: 0 0 10px var(--gold-glow); }
+                .tourney-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--carousel-dot-idle); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
+                .tourney-pagination .dot.active { background: var(--carousel-dot-active); transform: scale(1.4); box-shadow: 0 0 10px var(--carousel-dot-glow); }
             </style>
         `;
     }

@@ -231,7 +231,7 @@ class KvartalnaLigaManager {
         `).join('');
 
         let dotsHtml = currentRanks.map((_, i) => `
-            <div id="league-dot-${i}" style="width: 8px; height: 8px; border-radius: 50%; background: ${i === this.currentSlide ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; margin: 0 4px; transition: background 0.3s;"></div>
+            <div id="league-dot-${i}" style="width: 8px; height: 8px; border-radius: 50%; background: ${i === this.currentSlide ? 'var(--carousel-dot-active)' : 'var(--carousel-dot-idle)'}; margin: 0 4px; transition: background 0.3s, box-shadow 0.3s; box-shadow: ${i === this.currentSlide ? '0 0 10px var(--carousel-dot-glow)' : 'inset 0 0 3px rgba(0,0,0,0.5)'};"></div>
         `).join('');
 
         let modalHtml = `
@@ -496,7 +496,10 @@ class KvartalnaLigaManager {
         
         currentRanks.forEach((_, i) => {
             const dot = document.getElementById(`league-dot-${i}`);
-            if (dot) dot.style.background = i === this.currentSlide ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)';
+            if (dot) {
+                dot.style.background = i === this.currentSlide ? 'var(--carousel-dot-active)' : 'var(--carousel-dot-idle)';
+                dot.style.boxShadow = i === this.currentSlide ? '0 0 10px var(--carousel-dot-glow)' : 'inset 0 0 3px rgba(0,0,0,0.5)';
+            }
         });
     }
 
