@@ -577,21 +577,37 @@ class TournamentManager {
 
         let buttonHtml = '';
         if (!isRegistrationOpen) {
-            buttonHtml = `<button class="btn-menu btn-secondary" disabled style="opacity: 0.7; width: 100%; margin-top: auto;">🚀 ${isRegistered ? (tt('tourney_reg_active_in_progress') || 'Prijavljeni ste (Turnir u toku)') : (tt('tourney_reg_started') || 'Turnir je već počeo')}</button>`;
+            const label = isRegistered
+                ? (tt('tourney_reg_active_in_progress') || 'Prijavljeni ste (Turnir u toku)')
+                : (tt('tourney_reg_started') || 'Turnir je već počeo');
+            buttonHtml = `
+                <button class="btn-menu btn-secondary tourney-action-button tourney-action-button--locked" disabled>
+                    <span class="tourney-action-icon" aria-hidden="true">🏁</span>
+                    <span class="tourney-action-label">${label}</span>
+                </button>
+            `;
         } else if (isRegistered) {
             const disabledAttr = this.pendingUnregister ? 'disabled' : '';
-            const buttonOpacity = this.pendingUnregister ? 'opacity: 0.7;' : '';
-            const label = this.pendingUnregister ? '...' : `${tt('tourney_unregister') || 'ODJAVI SE'} ${tt('tourney_refund') || '(Povraćaj)'}`;
+            const label = this.pendingUnregister
+                ? (tt('tourney_unregistering') || 'Odjava u toku...')
+                : `${tt('tourney_unregister') || 'ODJAVI SE'} ${tt('tourney_refund') || '(Povraćaj)'}`;
             buttonHtml = `
-                <button class="btn-menu btn-secondary" ${disabledAttr} style="width: 100%; font-size: 0.95rem; padding: 15px; background: rgba(244, 67, 54, 0.2); border: 2px solid var(--danger); color: #ffcccc; margin-top: auto; ${buttonOpacity}" onclick="app.tournamentManager.unregisterPlayer()">
-                    ❌ ${label}
+                <button class="btn-menu btn-secondary tourney-action-button tourney-action-button--unregister" ${disabledAttr} onclick="app.tournamentManager.unregisterPlayer()">
+                    <span class="tourney-action-icon" aria-hidden="true">${this.pendingUnregister ? '⏳' : '↩️'}</span>
+                    <span class="tourney-action-label">${label}</span>
                 </button>
             `;
         } else {
             const disabledAttr = this.pendingRegistration ? 'disabled' : '';
-            const buttonOpacity = this.pendingRegistration ? 'opacity: 0.7;' : '';
-            const label = this.pendingRegistration ? '...' : `${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)`;
-            buttonHtml = `<button class="btn-menu btn-primary" ${disabledAttr} style="width: 100%; font-size: 1rem; padding: 15px; box-shadow: 0 0 15px var(--gold-glow); margin-top: auto; ${buttonOpacity}" onclick="app.tournamentManager.registerPlayer()">🎟️ ${label}</button>`;
+            const label = this.pendingRegistration
+                ? (tt('tourney_registering') || 'Prijava u toku...')
+                : `${tt('tourney_register_me') || 'PRIJAVI SE'} (2500 💰)`;
+            buttonHtml = `
+                <button class="btn-menu btn-primary tourney-action-button tourney-action-button--register" ${disabledAttr} onclick="app.tournamentManager.registerPlayer()">
+                    <span class="tourney-action-icon" aria-hidden="true">${this.pendingRegistration ? '⏳' : '🎟️'}</span>
+                    <span class="tourney-action-label">${label}</span>
+                </button>
+            `;
         }
 
         container.innerHTML = `
