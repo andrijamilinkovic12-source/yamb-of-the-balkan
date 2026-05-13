@@ -823,6 +823,7 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
         }
 
         const technicalResult = await applyServerSideTechnicalResult(winnerUid, inactiveUid, penaltyAmount, h2hKey);
+        await applyTournamentTechnicalWinner(roomId, winnerUid, 'turn_timeout');
 
         console.log(`⏱️ TIMEOUT: Isteklo vreme u sobi ${roomId}. Pobednik je ${winnerSocketId} (Tehnička pobeda)`);
 
@@ -988,6 +989,44 @@ function getTournamentOpponent(match, uid) {
     if (match.p1 && match.p1.id === uid) return match.p2;
     if (match.p2 && match.p2.id === uid) return match.p1;
     return null;
+}
+
+function parseTournamentRoomId(roomId) {
+    const match = String(roomId || '').match(/^tourney_(qf|sf|f)_(\d+)_/);
+    if (!match) return null;
+    return { round: match[1], index: Number(match[2]) };
+}
+
+async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'technical') {
+    const roomInfo = parseTournamentRoomId(roomId);
+    if (!roomInfo || !winnerUid) return false;
+
+    const matchInfo = getTournamentMatch(roomInfo.round, roomInfo.index);
+    if (!matchInfo) return false;
+
+    const { match, index } = matchInfo;
+    if (!match || match.winnerId || !isTournamentParticipant(match, winnerUid)) return false;
+
+    match.winnerId = winnerUid;
+    match.technicalWinReason = reason;
+    match.technicalWinAt = Date.now();
+
+    const winnerObj = match.p1.id === winnerUid ? match.p1 : match.p2;
+    advanceTournamentBracket(roomInfo.round, index, winnerObj);
+    io.emit('tourney_state_update', tournamentState);
+
+    if (roomInfo.round === 'f') {
+        try {
+            await settleTournamentFinalPrizes(match, winnerObj);
+            if (match.prizesAwarded) {
+                await recordTournamentChampion(match, winnerObj);
+            }
+        } catch (err) {
+            console.error("Greška pri tehničkom upisu finala turnira:", err);
+        }
+    }
+
+    return true;
 }
 
 function normalizeTournamentTime(value) {
@@ -4824,6 +4863,7 @@ io.on('connection', (socket) => {
                     }
 
                     technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey);
+                    await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
                 } else {
                     console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
                 }
