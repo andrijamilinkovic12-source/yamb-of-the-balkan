@@ -257,7 +257,7 @@ class KvartalnaLigaManager {
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 1.1rem; color: var(--gold-main); font-weight: bold;">${pts} PTS</div>
-                                <div style="font-size: 0.65rem; color: var(--text-muted);">${gt('league_all_time', 'SVA VREMENA')}: ${allTime}</div>
+                                <div id="league-summary-alltime" style="font-size: 0.65rem; color: var(--text-muted);">${gt('league_all_time', 'SVA VREMENA')}: ${allTime}</div>
                             </div>
                         </div>
                     </div>
@@ -535,18 +535,25 @@ class KvartalnaLigaManager {
         const myName = localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost");
         const myPhoto = localStorage.getItem('yamb_player_photo') || '';
         let myScore = isAllTime ? (localData.baselineScore + localData.quarterlyScore) : localData.quarterlyScore;
+        const myUid = localStorage.getItem('yamb_uid') || '';
+        const isMyScore = (score) => {
+            const scoreUid = score && (score.playerId || score._id || '');
+            return (myUid && scoreUid === myUid) || score?.playerName === myName;
+        };
 
         if (myScore > 0) {
-            let found = safeScores.find(s => s.playerName === myName);
+            let found = safeScores.find(isMyScore);
             if (found) {
                 if (myScore > found.score) found.score = myScore; 
             } else {
-                safeScores.push({ playerName: myName, photoUrl: myPhoto, score: myScore }); 
+                safeScores.push({ _id: myUid, playerId: myUid, playerName: myName, photoUrl: myPhoto, score: myScore }); 
             }
         }
 
         if (isAllTime) { 
             this.renderList('alltime', safeScores); 
+            const myAllTimeEntry = safeScores.find(isMyScore);
+            this.updateAllTimeSummary(myAllTimeEntry ? myAllTimeEntry.score : myScore);
             return; 
         }
         
@@ -558,6 +565,13 @@ class KvartalnaLigaManager {
             });
             this.renderList(rank.id, rankScores);
         });
+    }
+
+    updateAllTimeSummary(score) {
+        const summaryEl = document.getElementById('league-summary-alltime');
+        if (!summaryEl) return;
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        summaryEl.textContent = `${gt('league_all_time', 'SVA VREMENA')}: ${parseInt(score) || 0}`;
     }
 
     renderList(rankId, scores) {
