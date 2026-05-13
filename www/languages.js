@@ -331,6 +331,7 @@ const TRANSLATIONS = {
         "alert_wrong_order": "Morate poštovati redosled popunjavanja!",
         "alert_manual_lock": "Upozorenje: Ako upišete nulu ovde, gubite mogućnost daljeg igranja Ručne kolone!\nDa li ste sigurni?",
         "alert_quit_confirm": "Da li želite da prekinete partiju?",
+        "alert_spectate_quit_confirm": "Da li želite da prekinete gledanje partije?",
         
         "msg_room_full": "Ova soba je puna ili igra već traje!",
         "msg_opponent_left": "Protivnik je izašao!",
@@ -932,6 +933,7 @@ const TRANSLATIONS = {
         "alert_wrong_order": "You must follow the column order!",
         "alert_manual_lock": "Warning: If you write a zero here, you lose the Hand column!\nAre you sure?",
         "alert_quit_confirm": "Do you want to quit the game?",
+        "alert_spectate_quit_confirm": "Do you want to stop spectating this game?",
 
         "msg_room_full": "This room is full or the game is already in progress!",
         "msg_opponent_left": "Opponent has left!",

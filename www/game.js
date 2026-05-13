@@ -2096,7 +2096,8 @@ class YambApp {
     }
     
     async quitToMenu() { 
-        if (await this.modal.confirm(gt('alert_quit_confirm'))) { 
+        const confirmKey = this.isSpectator ? 'alert_spectate_quit_confirm' : 'alert_quit_confirm';
+        if (await this.modal.confirm(gt(confirmKey))) { 
             if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
                 this.applyAbandonPenalty();
                 
