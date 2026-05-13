@@ -316,37 +316,25 @@ class RulesUI {
 
         this.overlay = document.createElement('div');
         this.overlay.id = 'rules-overlay-ui';
-        this.overlay.className = 'modal-overlay';
+        this.overlay.className = 'modal-overlay global-chat-overlay rules-overlay';
         
-        // --- KLJUČNA PROMENA: CSS SCROLL SNAP umesto custom JS transformacije ---
-        // Takođe ugrađen kompletan CSS da sadržaj izgleda fenomenalno u modalu
         this.overlay.innerHTML = `
-            <style>
-                #rules-slider-track::-webkit-scrollbar { display: none; }
-                .rules-slide-content { text-align: left; padding: 0 5px; }
-                .rules-slide-content h3 { color: var(--pure-white); font-size: 1.2rem; margin-bottom: 10px; margin-top: 15px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 5px;}
-                .rules-slide-content h3:first-child { margin-top: 0; }
-                .rules-slide-content h4 { color: var(--success); margin-top: 15px; margin-bottom: 5px; font-size: 1rem; text-transform: uppercase; }
-                .rules-slide-content p { color: var(--text-muted); line-height: 1.5; margin-bottom: 10px; font-size: 0.9rem; }
-                .rules-slide-content ul { list-style-type: none; padding: 0; display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-                .rules-slide-content li { background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255,255,255,0.05); padding: 10px 12px; border-radius: 8px; color: var(--text-muted); line-height: 1.4; font-size: 0.85rem; }
-                .rules-slide-content li strong { color: var(--gold-main); font-weight: bold; }
-            </style>
-
-            <div class="rules-card modal-box" style="padding: 0; width: 90%; max-width: 500px; height: 80vh; max-height: 700px; display: flex; flex-direction: column; position: relative; overflow: hidden;">
+            <div class="rules-card modal-box global-chat-shell">
                 
-                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--glass-border); flex-shrink: 0;">
-                    <h3 id="rules-main-title" style="color: var(--gold-main); margin: 0; font-size: 1.1rem; text-transform: uppercase;">
-                        ${this.currentLang === 'sr' ? 'Pravila i Uputstvo' : 'Rules & Guide'}
-                    </h3>
-                    <button id="btn-close-rules" style="background: transparent; border: none; color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold;">&times;</button>
+                <div class="chat-header global-chat-header rules-card-header">
+                    <div class="global-chat-title-group">
+                        <span id="rules-main-title" class="global-chat-title">
+                            ${this.currentLang === 'sr' ? 'Pravila i Uputstvo' : 'Rules & Guide'}
+                        </span>
+                    </div>
+                    <button id="btn-close-rules" type="button" class="global-chat-close" aria-label="Zatvori pravila">&times;</button>
                 </div>
 
-                <div id="rules-slider-track" style="flex: 1; display: flex; width: 100%; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-behavior: smooth;">
+                <div id="rules-slider-track" class="chat-body global-chat-body rules-slider-track">
                     ${this.generateSlides()}
                 </div>
 
-                <div id="rules-dots-container" style="display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; padding: 15px; background: rgba(0,0,0,0.2); border-top: 1px solid var(--glass-border); flex-shrink: 0;">
+                <div id="rules-dots-container" class="chat-footer global-chat-footer rules-dots-container">
                     ${this.generateDots()}
                 </div>
             </div>
@@ -362,9 +350,9 @@ class RulesUI {
     generateSlides() {
         const data = RulesData[this.currentLang];
         return data.map((slide, index) => `
-            <div class="rules-slide" style="flex: 0 0 100%; width: 100%; height: 100%; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; overflow: hidden; scroll-snap-align: center;">
-                <h2 style="color: var(--gold-main); font-size: 1.2rem; margin-bottom: 10px; text-align: center; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; flex-shrink: 0;">${slide.title}</h2>
-                <div class="pravni-tekst-container rules-slide-content" style="flex: 1; overflow-y: auto; max-height: none; background: transparent; border: none; padding: 5px; -webkit-overflow-scrolling: touch;">
+            <div class="rules-slide">
+                <h2 class="rules-slide-title">${slide.title}</h2>
+                <div class="pravni-tekst-container rules-slide-content">
                     ${slide.content}
                 </div>
             </div>
@@ -374,7 +362,7 @@ class RulesUI {
     generateDots() {
         const data = RulesData[this.currentLang];
         return data.map((_, index) => `
-            <div class="rule-dot" data-index="${index}" style="width: 10px; height: 10px; border-radius: 50%; background: ${index === 0 ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; cursor: pointer; transition: 0.3s; box-shadow: ${index === 0 ? '0 0 10px var(--gold-glow)' : 'none'};"></div>
+            <button type="button" class="rule-dot${index === 0 ? ' active' : ''}" data-index="${index}" aria-label="Slide ${index + 1}"></button>
         `).join('');
     }
 
@@ -401,13 +389,9 @@ class RulesUI {
     updateDots() {
         this.dots.forEach((dot, i) => {
             if (i === this.currentSlide) {
-                dot.style.background = 'var(--gold-main)';
-                dot.style.boxShadow = '0 0 10px var(--gold-glow)';
-                dot.style.transform = 'scale(1.3)';
+                dot.classList.add('active');
             } else {
-                dot.style.background = 'rgba(255,255,255,0.2)';
-                dot.style.boxShadow = 'none';
-                dot.style.transform = 'scale(1)';
+                dot.classList.remove('active');
             }
         });
     }
