@@ -574,20 +574,20 @@
     </div>
 
     <div id="riznica-screen" class="screen">
-        <button class="back-btn" onclick="riznicaManager.close()">←</button>
+        <button class="back-btn riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
         
-        <div class="header" style="justify-content: flex-end; padding-top: max(45px, env(safe-area-inset-top)); padding-bottom: 10px; border-bottom: none; background: transparent;">
+        <div class="header riznica-header">
             <div class="balance-group">
                 <div class="balance-display"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
                 <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 💰 🎬</button>
             </div>
         </div>
 
-        <div class="nav-tabs">
-            <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" data-lang="tab_trophies">TROFEJI 🏆</button>
-            <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" data-lang="tab_dice">KOCKICE 🎲</button>
-            <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" data-lang="tab_effects">EFEKTI ✨</button>
-            <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" data-lang="tab_themes">TEME 🎨</button>
+        <div class="nav-tabs riznica-tabs" aria-label="Kategorije riznice">
+            <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" aria-label="Trofeji" data-lang-aria="tab_trophies" title="Trofeji" data-lang-title="tab_trophies">🏆</button>
+            <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" aria-label="Kockice" data-lang-aria="tab_dice" title="Kockice" data-lang-title="tab_dice">🎲</button>
+            <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" aria-label="Efekti" data-lang-aria="tab_effects" title="Efekti" data-lang-title="tab_effects">✨</button>
+            <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" aria-label="Teme" data-lang-aria="tab_themes" title="Teme" data-lang-title="tab_themes">🎨</button>
         </div>
 
         <div id="riznica-shop-container" class="content-area"></div>
