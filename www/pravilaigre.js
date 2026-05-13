@@ -308,6 +308,8 @@ class RulesUI {
         this.overlay = null;
         this.sliderTrack = null;
         this.dots = [];
+        this.touchStartX = 0;
+        this.touchStartY = 0;
     }
 
     init() {
@@ -384,6 +386,30 @@ class RulesUI {
                 this.goToSlide(i);
             });
         });
+
+        this.sliderTrack.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            if (!touch) return;
+            this.touchStartX = touch.clientX;
+            this.touchStartY = touch.clientY;
+        }, { passive: true });
+
+        this.sliderTrack.addEventListener('touchend', (e) => {
+            const touch = e.changedTouches[0];
+            if (!touch) return;
+
+            const deltaX = touch.clientX - this.touchStartX;
+            const deltaY = touch.clientY - this.touchStartY;
+            const isHorizontalSwipe = Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
+
+            if (!isHorizontalSwipe) return;
+
+            if (deltaX < 0) {
+                this.goToSlide(this.currentSlide + 1);
+            } else {
+                this.goToSlide(this.currentSlide - 1);
+            }
+        }, { passive: true });
     }
 
     updateDots() {
@@ -397,9 +423,11 @@ class RulesUI {
     }
 
     goToSlide(index) {
-        this.currentSlide = index;
+        const data = RulesData[this.currentLang] || [];
+        const lastIndex = Math.max(0, data.length - 1);
+        this.currentSlide = Math.min(Math.max(index, 0), lastIndex);
         this.updateDots();
-        const targetScroll = this.sliderTrack.clientWidth * index;
+        const targetScroll = this.sliderTrack.clientWidth * this.currentSlide;
         this.sliderTrack.scrollTo({ left: targetScroll, behavior: 'smooth' });
     }
 
