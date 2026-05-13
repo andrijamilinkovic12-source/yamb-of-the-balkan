@@ -3746,14 +3746,26 @@ class YambApp {
         this.startClientTimer();
     }
     
+    calculateMiddleSectionScore(data, col) {
+        const vMax = data[col]["Max"];
+        const vMin = data[col]["Min"];
+        const v1 = data[col]["1"];
+        if (vMax === null || vMin === null || v1 === null) return 0;
+        if (vMin <= 0) return 0;
+
+        let score = (vMax - vMin) * v1;
+        if (score < 0) score = 0;
+        if (score >= 60) score += 40;
+        return score;
+    }
+
     calculateTotalScore(pIdx) {
         const data = this.allScores[pIdx]; if (!data) return 0; 
         let grandTotal = 0;
         KOLONE.forEach(col => {
             const val = (r) => (data[col][r] === null) ? 0 : data[col][r];
             let sum1 = 0; ["1", "2", "3", "4", "5", "6"].forEach(r => sum1 += val(r)); if (sum1 >= 60) sum1 += 30;
-            let sum2 = 0; const vMax = data[col]["Max"]; const vMin = data[col]["Min"]; const v1 = data[col]["1"]; 
-            if (vMax !== null && vMin !== null && v1 !== null) { let calc = (vMax - vMin) * v1; if (calc < 0) calc = 0; sum2 = calc; if (sum2 >= 60) sum2 += 40; }
+            let sum2 = this.calculateMiddleSectionScore(data, col);
             let sum3 = 0; ["Triling", "Kenta", "Ful", "Poker", "Yamb"].forEach(r => sum3 += val(r));
             grandTotal += sum1 + sum2 + sum3;
         });
@@ -4157,8 +4169,7 @@ class YambApp {
                 let s1El = document.getElementById(`sum-${idx}-${col}-ZBIR 1`);
                 if(s1El && s1El.innerText != sum1) s1El.innerText = sum1; 
 
-                let sum2 = 0; const vMax = data[col]["Max"]; const vMin = data[col]["Min"]; const v1 = data[col]["1"]; 
-                if (vMax!==null && vMin!==null && v1!==null) { sum2 = (vMax - vMin) * v1; if (sum2 >= 60) sum2 += 40; } 
+                let sum2 = this.calculateMiddleSectionScore(data, col);
                 let s2El = document.getElementById(`sum-${idx}-${col}-ZBIR 2`);
                 if(s2El && s2El.innerText != sum2) s2El.innerText = sum2; 
 

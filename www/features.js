@@ -169,7 +169,7 @@ if (typeof window.YambFeatures === 'undefined') {
                 if (sum1 === 63) unlock('math'); 
 
                 const vMax = data["Max"], vMin = data["Min"], v1 = data["1"];
-                if (vMax !== null && vMin !== null && v1 !== null) {
+                if (vMax !== null && vMin !== null && v1 !== null && vMin > 0) {
                     if ((vMax - vMin) * v1 > 60) maxMinDiffOver60 = true;
                 }
             });
