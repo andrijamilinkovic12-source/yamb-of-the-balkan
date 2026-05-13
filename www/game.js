@@ -1054,7 +1054,9 @@ class YambApp {
 
         if (friends && friends.length > 0) {
             friends.forEach(f => {
-                const pi = this.calculatePowerIndex(f.stats, false);
+                const pi = (f.pi !== undefined && f.pi !== null && f.pi !== '')
+                    ? f.pi
+                    : this.calculatePowerIndex(f.stats, false);
                 const h2hRecord = f.h2hRecord || {};
                 const w = h2hRecord.wins !== undefined ? h2hRecord.wins : (f.stats ? (f.stats.h2hWins || 0) : 0);
                 const l = h2hRecord.losses !== undefined ? h2hRecord.losses : (f.stats ? (f.stats.h2hLosses || 0) : 0);

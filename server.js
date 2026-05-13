@@ -3665,7 +3665,7 @@ io.on('connection', (socket) => {
             const users = await UserProfile.find({ games: { $gt: 0 } }).lean();
 
             const rankedPlayers = users.map(user => {
-                const power = powerIndexCore.calculatePowerIndex(user);
+                const power = sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(user));
 
                 return {
                     playerName: user.playerName,
@@ -3798,6 +3798,7 @@ io.on('connection', (socket) => {
                         }
 
                         const h2hRecord = buildH2HRecordSummary(f.h2hStats);
+                        const pi = sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(f));
 
                         return { 
                             uid: f.firebaseUid, 
@@ -3805,6 +3806,7 @@ io.on('connection', (socket) => {
                             name: f.playerName, 
                             photoUrl: f.photoUrl, 
                             isOnline: isOnline,
+                            pi,
                             stats: { 
                                 wins: f.wins, 
                                 losses: f.losses, 
