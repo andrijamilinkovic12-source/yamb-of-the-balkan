@@ -42,8 +42,8 @@ class RiznicaManager {
         const lang = localStorage.getItem('yamb_lang') || 'sr';
         const introLabel = lang === 'en' ? 'T R E A S U R Y' : 'R I Z N I C A';
         const typeDuration = 2600;
-        const openBehindOverlayAt = 3500;
-        const introDuration = 4300;
+        const openBehindOverlayAt = 3700;
+        const introDuration = 4700;
         let step = 0;
         let completed = false;
 

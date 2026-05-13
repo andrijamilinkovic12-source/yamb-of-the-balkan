@@ -151,14 +151,14 @@ body {
     backdrop-filter: blur(20px);
     color: var(--gold-main);
     pointer-events: none;
-    animation: riznicaIntroFade 4.3s ease forwards;
+    animation: riznicaIntroFade 4.7s ease forwards;
 }
 
 .riznica-intro-emoji {
     font-size: clamp(6rem, 30vw, 13rem);
     line-height: 1;
     text-shadow: 0 0 28px var(--gold-glow), 0 0 60px rgba(255, 215, 0, 0.22), 0 22px 55px rgba(0, 0, 0, 0.46);
-    animation: riznicaGemPop 4.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: riznicaGemPop 4.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .riznica-intro-line {
@@ -178,7 +178,7 @@ body {
 @keyframes riznicaIntroFade {
     0% { opacity: 0; }
     12% { opacity: 1; }
-    82% { opacity: 1; }
+    86% { opacity: 1; }
     100% { opacity: 0; }
 }
 
@@ -186,7 +186,7 @@ body {
     0% { opacity: 0; transform: scale(0.35) rotate(-8deg); }
     15% { opacity: 1; transform: scale(1.08) rotate(3deg); }
     28% { transform: scale(1) rotate(0deg); }
-    76% { transform: scale(1.06) translateY(-5px); }
+    84% { transform: scale(1.06) translateY(-5px); }
     100% { opacity: 0; transform: scale(0.92) translateY(-12px); }
 }
 
