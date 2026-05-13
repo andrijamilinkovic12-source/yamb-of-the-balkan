@@ -768,221 +768,248 @@ body.desert-theme .daily-score-box {
     border: none;
 }
 
-/* --- TEMA 9: MESEČEV SJAJ (MOONLIGHT / GALACTIC) V5.0 --- */
+/* --- TEMA 9: MESEČEV SJAJ (MOONLIGHT / LUNAR SURFACE) V6.0 --- */
 body.moon-theme {
-    --bg-base: #050608; 
-    --bg-gradient-1: #0d1018;
-    --bg-gradient-2: #020304;
-    --gold-main: #f8fafc; /* Oštra Mesečeva srebrna */
-    --gold-glow: rgba(248, 250, 252, 0.5);
-    --carousel-dot-idle: rgba(148, 163, 184, 0.32);
-    --carousel-dot-active: #f8fafc;
-    --carousel-dot-glow: rgba(248, 250, 252, 0.55);
-    --text-main: #cbd5e1;
+    --bg-base: #02040a;
+    --bg-gradient-1: #101827;
+    --bg-gradient-2: #02040a;
+    --gold-main: #f4f7fb;
+    --gold-glow: rgba(211, 226, 255, 0.48);
+    --carousel-dot-idle: rgba(170, 184, 205, 0.34);
+    --carousel-dot-active: #f4f7fb;
+    --carousel-dot-glow: rgba(211, 226, 255, 0.62);
+    --text-main: #dce6f4;
     --text-filled: #ffffff;
-    --text-sum: #a5b4fc; /* Svetlija kosmičko plava za jači kontrast */
-    --text-sum-label: #94a3b8;
-    --text-muted: #64748b;
+    --text-sum: #aecaef;
+    --text-sum-label: #8fa2bd;
+    --text-muted: #8b9bb2;
 
-    --glass-bg: rgba(15, 18, 25, 0.6);
-    --glass-panel: rgba(8, 10, 15, 0.92);
-    --glass-border: 1px solid rgba(248, 250, 252, 0.1);
-    --modal-bg: linear-gradient(145deg, #10141e, #050608);
-    --input-bg: rgba(0, 0, 0, 0.8);
-    --input-border: rgba(248, 250, 252, 0.2);
+    --glass-bg: rgba(15, 22, 34, 0.62);
+    --glass-panel: rgba(7, 12, 21, 0.82);
+    --glass-border: 1px solid rgba(221, 231, 246, 0.18);
+    --glass-shadow: 0 24px 55px rgba(0,0,0,0.62), inset 0 1px 0 rgba(255,255,255,0.11);
+    --grid-cell-bg: rgba(11, 17, 28, 0.62);
+    --grid-header-bg: rgba(20, 30, 46, 0.86);
+    --modal-bg: linear-gradient(145deg, rgba(19, 27, 42, 0.96), rgba(3, 6, 13, 0.98));
+    --input-bg: rgba(2, 6, 14, 0.88);
+    --input-border: rgba(221, 231, 246, 0.22);
 
-    --dice-bg: linear-gradient(145deg, #1e2430, #0a0d14);
-    --dice-border: #f8fafc;
-    --dice-color: #cbd5e1;
+    --dice-bg: radial-gradient(circle at 34% 24%, #ffffff 0 14%, #dfe7f2 15% 42%, #8794a8 43% 72%, #2d3544 100%);
+    --dice-border: #d8e2ef;
+    --dice-color: #111827;
     --dice-active: #ffffff;
 
-    /* Kosmičke pastelne boje kolona */
-    --col-nadole: #0ea5e9;
-    --col-nagore: #d946ef;
-    --col-sredina: #cbd5e1;
-    --col-rucno: #8b5cf6;
-    --col-najava: #6366f1;
-    --col-slobodna: #94a3b8;
+    --col-nadole: #61c8ff;
+    --col-nagore: #c6a7ff;
+    --col-sredina: #f4f7fb;
+    --col-rucno: #8aa9ff;
+    --col-najava: #7ee6d8;
+    --col-slobodna: #b7c4d8;
 }
 
-/* --- V5.0: SAMO KRATERI I RUPIČASTA STRUKTURA (BEZ PRAŠINE) --- */
+/* Realistican lunarni horizont sa slojevitim kraterima i zvezdama */
 body.moon-theme::before {
     content: "";
     position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
+    inset: 0;
     z-index: -1;
     background-color: var(--bg-base);
-    
     background-image:
-        /* --- MIKRO-KRATERI (Rupičasta tekstura tla) --- */
-        radial-gradient(circle at 12% 45%, rgba(0,0,0,0.9) 0%, transparent 2.5%),
-        radial-gradient(circle at 12.5% 45.5%, rgba(248,250,252,0.15) 0%, transparent 3%),
-        
-        radial-gradient(circle at 78% 25%, rgba(0,0,0,0.95) 0%, transparent 1.8%),
-        radial-gradient(circle at 78.5% 25.5%, rgba(248,250,252,0.2) 0%, transparent 2.5%),
-        
-        radial-gradient(circle at 45% 85%, rgba(0,0,0,0.85) 0%, transparent 3%),
-        radial-gradient(circle at 45.8% 85.8%, rgba(248,250,252,0.12) 0%, transparent 4%),
-        
-        radial-gradient(circle at 92% 65%, rgba(0,0,0,0.9) 0%, transparent 2%),
-        radial-gradient(circle at 92.5% 65.5%, rgba(248,250,252,0.15) 0%, transparent 2.8%),
-
-        /* 1. Opšte osvetljenje (Kosmička izmaglica) */
-        radial-gradient(ellipse at 10% 10%, rgba(99, 102, 241, 0.12) 0%, transparent 65%),
-        radial-gradient(ellipse at 90% 90%, rgba(248, 250, 252, 0.06) 0%, transparent 60%),
-
-        /* --- KRATER 1 (Veliki, Dole Desno) --- */
-        radial-gradient(circle at 82% 82%, rgba(0, 0, 0, 1) 0%, transparent 9%),
-        radial-gradient(circle at 86% 86%, rgba(248, 250, 252, 0.2) 0%, transparent 12%),
-        radial-gradient(circle at 81% 81%, transparent 11%, rgba(248, 250, 252, 0.4) 12.5%, transparent 15%),
-        radial-gradient(circle at 85% 85%, transparent 12%, rgba(0, 0, 0, 0.95) 14%, transparent 18%),
-        radial-gradient(circle at 84% 84%, #020304 0%, #050608 13.5%, transparent 14%),
-
-        /* --- KRATER 2 (Srednji, Gore Levo) --- */
-        radial-gradient(circle at 15% 18%, rgba(0, 0, 0, 1) 0%, transparent 5%),
-        radial-gradient(circle at 18% 21%, rgba(248, 250, 252, 0.25) 0%, transparent 7%),
-        radial-gradient(circle at 14% 17%, transparent 6.5%, rgba(248, 250, 252, 0.35) 7.5%, transparent 9%),
-        radial-gradient(circle at 17% 20%, transparent 7%, rgba(0, 0, 0, 0.95) 8.5%, transparent 11%),
-        radial-gradient(circle at 16% 19%, #020304 0%, #050608 8%, transparent 8.2%),
-
-        /* --- KRATER 3 (Mali udubljen, Sredina Desno) --- */
-        radial-gradient(circle at 88% 44%, rgba(0, 0, 0, 1) 0%, transparent 3%),
-        radial-gradient(circle at 89.5% 45.5%, rgba(248, 250, 252, 0.3) 0%, transparent 4.5%),
-        radial-gradient(circle at 87.5% 43.5%, transparent 4%, rgba(248, 250, 252, 0.4) 4.8%, transparent 6%),
-        radial-gradient(circle at 89% 45%, transparent 4.2%, rgba(0, 0, 0, 0.9) 5.5%, transparent 7%),
-        radial-gradient(circle at 88.5% 44.5%, #000 0%, #050608 5%, transparent 5.1%),
-
-        /* --- KRATER 4 (Klaster udubljenja, Dole Levo) --- */
-        radial-gradient(circle at 25% 75%, rgba(0, 0, 0, 1) 0%, transparent 3%),
-        radial-gradient(circle at 26.5% 76.5%, rgba(248, 250, 252, 0.25) 0%, transparent 4%),
-        radial-gradient(circle at 24.5% 74.5%, transparent 3.5%, rgba(248, 250, 252, 0.35) 4.2%, transparent 5.5%),
-        radial-gradient(circle at 26% 76%, transparent 4%, rgba(0, 0, 0, 0.95) 5%, transparent 7%),
-        radial-gradient(circle at 25.5% 75.5%, #000 0%, #050608 4.5%, transparent 4.6%);
+        radial-gradient(circle at 70% 19%, rgba(255,255,255,0.24), transparent 13%),
+        radial-gradient(circle at 72% 22%, rgba(239, 244, 250, 0.98) 0 6.8%, rgba(196, 207, 221, 0.96) 7% 9.2%, rgba(88, 100, 118, 0.18) 9.4% 10.2%, transparent 10.4%),
+        radial-gradient(circle at 68.7% 19.8%, rgba(61, 70, 86, 0.38) 0 1.3%, rgba(255,255,255,0.20) 1.35% 1.72%, transparent 1.78%),
+        radial-gradient(circle at 74.5% 25.2%, rgba(41, 49, 62, 0.34) 0 1.1%, rgba(255,255,255,0.18) 1.15% 1.52%, transparent 1.58%),
+        radial-gradient(circle at 71.5% 26.5%, rgba(52, 61, 76, 0.30) 0 0.82%, rgba(255,255,255,0.14) 0.86% 1.12%, transparent 1.18%),
+        radial-gradient(ellipse at 50% 102%, rgba(179, 190, 205, 0.95) 0 18%, rgba(90, 101, 118, 0.82) 18.4% 33%, rgba(32, 39, 52, 0.72) 33.4% 48%, transparent 48.4%),
+        radial-gradient(ellipse at 18% 90%, rgba(17, 22, 32, 0.92) 0 6%, rgba(211, 220, 232, 0.24) 6.4% 7.5%, transparent 7.8%),
+        radial-gradient(ellipse at 38% 86%, rgba(20, 25, 35, 0.88) 0 3.8%, rgba(221, 231, 246, 0.20) 4.1% 4.9%, transparent 5.2%),
+        radial-gradient(ellipse at 76% 88%, rgba(14, 18, 27, 0.88) 0 5.6%, rgba(230, 237, 248, 0.22) 5.9% 7%, transparent 7.4%),
+        radial-gradient(ellipse at 58% 96%, rgba(12, 16, 24, 0.86) 0 2.7%, rgba(230, 237, 248, 0.18) 3% 3.6%, transparent 3.9%),
+        radial-gradient(circle at 8% 14%, rgba(255,255,255,0.92) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 18% 26%, rgba(210,225,255,0.72) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 31% 12%, rgba(255,255,255,0.78) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 52% 28%, rgba(180,205,255,0.58) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 84% 13%, rgba(255,255,255,0.84) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 94% 33%, rgba(210,225,255,0.58) 0 1px, transparent 1.4px),
+        radial-gradient(ellipse at 20% 12%, rgba(84, 112, 175, 0.20), transparent 42%),
+        radial-gradient(ellipse at 82% 28%, rgba(210, 226, 255, 0.14), transparent 36%),
+        linear-gradient(180deg, #02040a 0%, #08111f 42%, #131927 66%, #0b0f17 100%);
 
     background-attachment: fixed;
-    background-size: cover;
     pointer-events: none;
 }
 
-/* Tabla - Vraćena na standardne dimenzije (uklonjeni margin/radius problemi) */
+body.moon-theme::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+        radial-gradient(circle at 68.7% 19.8%, rgba(42, 49, 61, 0.48) 0 1.25%, rgba(255,255,255,0.18) 1.34% 1.72%, transparent 1.82%),
+        radial-gradient(circle at 74.5% 25.2%, rgba(35, 42, 54, 0.42) 0 1.08%, rgba(255,255,255,0.16) 1.18% 1.52%, transparent 1.62%),
+        radial-gradient(circle at 71.5% 26.5%, rgba(45, 53, 67, 0.38) 0 0.82%, rgba(255,255,255,0.13) 0.9% 1.16%, transparent 1.24%),
+        radial-gradient(circle at 70.2% 22.6%, rgba(36, 44, 57, 0.34) 0 0.62%, rgba(255,255,255,0.12) 0.7% 0.94%, transparent 1.02%),
+        radial-gradient(circle at 75.8% 20.6%, rgba(48, 57, 70, 0.30) 0 0.55%, rgba(255,255,255,0.11) 0.64% 0.84%, transparent 0.92%),
+        radial-gradient(circle at 22% 96%, rgba(255,255,255,0.10) 0 0.35%, transparent 0.42%),
+        radial-gradient(circle at 31% 92%, rgba(0,0,0,0.30) 0 0.45%, transparent 0.56%),
+        radial-gradient(circle at 47% 91%, rgba(255,255,255,0.08) 0 0.28%, transparent 0.36%),
+        radial-gradient(circle at 63% 95%, rgba(0,0,0,0.28) 0 0.52%, transparent 0.62%),
+        radial-gradient(circle at 82% 93%, rgba(255,255,255,0.09) 0 0.32%, transparent 0.42%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+    pointer-events: none;
+}
+
+body.moon-theme .header,
+body.moon-theme .game-header,
+body.moon-theme .controls-area {
+    background: rgba(5, 10, 18, 0.78);
+    border-color: rgba(211, 226, 255, 0.16);
+    box-shadow: 0 12px 36px rgba(0,0,0,0.56), inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+/* Tabla - tamno orbitalno staklo preko meseceve povrsine */
 body.moon-theme .player-table {
-    border-radius: 16px; /* Standardno zaobljenje */
-    border: 1px solid rgba(248, 250, 252, 0.1);
-    background: var(--glass-panel);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    border-radius: 18px;
+    border: 1px solid rgba(221, 231, 246, 0.22);
+    background:
+        linear-gradient(145deg, rgba(18, 27, 43, 0.86), rgba(4, 8, 16, 0.90)),
+        radial-gradient(circle at 82% 14%, rgba(211, 226, 255, 0.12), transparent 34%);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     box-shadow:
-        0 25px 50px rgba(0,0,0,1),
-        inset 0 0 30px rgba(0,0,0,0.95), 
-        inset 2px 2px 4px rgba(248,250,252,0.15), 
-        inset -2px -2px 10px rgba(0, 0, 0, 0.8) !important;
-    transform: perspective(1000px) rotateX(1deg); /* Standardni ugao */
+        0 8px 0 #02050b,
+        0 28px 60px rgba(0,0,0,0.76),
+        0 0 34px rgba(174, 202, 239, 0.14),
+        inset 0 1px 0 rgba(255,255,255,0.16),
+        inset 0 0 32px rgba(0,0,0,0.58) !important;
+    transform: perspective(1000px) rotateX(0.8deg);
 }
 
-/* --- POLJA (Zadržan 3D krater efekat unutar ćelija) --- */
+/* Polja - kraterasta tamna staklena udubljenja */
 body.moon-theme .grid-cell {
-    border: 1px solid rgba(0, 0, 0, 0.8); 
-    background: rgba(4, 5, 8, 0.7); 
-    /* Uklonjen border-radius i margin kako se tabla ne bi širila */
+    border: 1px solid rgba(221, 231, 246, 0.08);
+    background:
+        radial-gradient(circle at 24% 28%, rgba(255,255,255,0.045), transparent 28%),
+        rgba(8, 13, 23, 0.66);
     box-shadow:
-        inset 5px 5px 12px rgba(0, 0, 0, 1), 
-        inset -2px -2px 6px rgba(248, 250, 252, 0.08), 
-        0 1px 1px rgba(248, 250, 252, 0.05); 
+        inset 3px 3px 9px rgba(0,0,0,0.70),
+        inset -1px -1px 3px rgba(221,231,246,0.08),
+        0 1px 0 rgba(255,255,255,0.03);
 }
 
-/* Zaglavlja */
 body.moon-theme .col-header,
 body.moon-theme .row-header {
-    background: linear-gradient(145deg, rgba(20, 25, 35, 0.9), rgba(8, 10, 15, 0.95));
+    background: linear-gradient(180deg, rgba(42, 54, 75, 0.92), rgba(11, 17, 29, 0.94));
     color: var(--gold-main);
-    border-bottom: 1px solid rgba(248, 250, 252, 0.1);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.8), inset 1px 1px 0 rgba(248, 250, 252, 0.05);
-    text-shadow: 0 0 10px rgba(248, 250, 252, 0.6);
+    border-bottom: 1px solid rgba(221, 231, 246, 0.14);
+    border-right: 1px solid rgba(221, 231, 246, 0.08);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.55), inset 1px 1px 0 rgba(255,255,255,0.10);
+    text-shadow: 0 0 12px rgba(211, 226, 255, 0.58);
 }
 
-/* Polja za zbir */
 body.moon-theme .row-header.sum,
 body.moon-theme .cell-sum {
-    background: rgba(99, 102, 241, 0.1) !important;
-    color: #a5b4fc !important;
-    border: 1px solid rgba(99, 102, 241, 0.3) !important;
-    box-shadow: 
-        inset 4px 4px 10px rgba(0,0,0,0.9),
-        0 0 8px rgba(99, 102, 241, 0.2) !important;
+    background: linear-gradient(180deg, rgba(69, 88, 122, 0.34), rgba(17, 26, 43, 0.78)) !important;
+    color: #c8dcff !important;
+    border: 1px solid rgba(151, 181, 226, 0.28) !important;
+    box-shadow:
+        inset 3px 3px 9px rgba(0,0,0,0.62),
+        0 0 12px rgba(151,181,226,0.14) !important;
 }
 
-/* Popunjeni upisi */
 body.moon-theme .score-btn.filled {
     color: #ffffff !important;
-    text-shadow: 0 0 12px #ffffff, 0 0 24px #818cf8;
+    text-shadow: 0 0 9px rgba(255,255,255,0.96), 0 0 20px rgba(126, 166, 255, 0.56);
     font-weight: 900;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 75%) !important;
+    background: radial-gradient(circle, rgba(174, 202, 239, 0.18) 0%, transparent 74%) !important;
 }
 
-/* Sva Dugmad - Tamni lunarni kamen */
 body.moon-theme .btn-menu,
 body.moon-theme .mode-btn,
 body.moon-theme .btn-square,
 body.moon-theme .btn-special-square,
 body.moon-theme #btn-theme-toggle {
-    background: linear-gradient(145deg, #161c26, #080a0f) !important;
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), transparent 38%),
+        linear-gradient(145deg, #1a2638, #050913) !important;
     color: var(--gold-main) !important;
-    border: 1px solid rgba(248, 250, 252, 0.15) !important;
-    border-radius: 20px;
+    border: 1px solid rgba(221, 231, 246, 0.20) !important;
+    border-radius: 18px;
     box-shadow:
-        6px 6px 14px rgba(0,0,0,1),
-        inset 1px 1px 0 rgba(248, 250, 252, 0.1) !important;
+        0 5px 0 #02050b,
+        0 13px 22px rgba(0,0,0,0.58),
+        inset 1px 1px 0 rgba(255,255,255,0.14) !important;
     transform: translateY(0) !important;
+    text-shadow: 0 0 10px rgba(211, 226, 255, 0.36);
 }
 
-/* Aktivno stanje dugmića */
 body.moon-theme .btn-menu:active,
 body.moon-theme .mode-btn:active,
 body.moon-theme .btn-square:active,
 body.moon-theme .btn-special-square:active,
 body.moon-theme #btn-theme-toggle:active {
     transform: translateY(4px) !important;
-    box-shadow: inset 5px 5px 12px rgba(0,0,0,0.95) !important; 
-    border-color: rgba(248, 250, 252, 0.05) !important;
+    box-shadow: inset 4px 4px 12px rgba(0,0,0,0.78), 0 0 0 #02050b !important;
+    border-color: rgba(221, 231, 246, 0.10) !important;
 }
 
-/* Istaknuta Dugmad (Bacaj / Igraj) */
 body.moon-theme .btn-primary,
-body.moon-theme .btn-throw {
-    background: linear-gradient(145deg, #e2e8f0, #94a3b8) !important;
-    color: #050608 !important;
+body.moon-theme .btn-throw,
+body.moon-theme .mode-solo,
+body.moon-theme .daily-btn-main {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.78), transparent 42%),
+        linear-gradient(135deg, #f8fafc 0%, #aebfd5 52%, #617086 100%) !important;
+    color: #050913 !important;
     font-weight: 900 !important;
     border: 1px solid #ffffff !important;
-    box-shadow: 
-        0 8px 20px rgba(0,0,0,0.8), 
+    box-shadow:
+        0 6px 0 #536174,
+        0 16px 28px rgba(0,0,0,0.62),
+        0 0 24px rgba(211, 226, 255, 0.22),
         inset 0 2px 6px rgba(255,255,255,0.8) !important;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    text-shadow: 0 1px 0 rgba(255,255,255,0.66);
 }
 
 body.moon-theme .btn-primary:active,
-body.moon-theme .btn-throw:active {
+body.moon-theme .btn-throw:active,
+body.moon-theme .mode-solo:active,
+body.moon-theme .daily-btn-main:active {
     transform: translateY(5px) !important;
-    box-shadow: inset 0 6px 12px rgba(0,0,0,0.7) !important;
+    box-shadow: inset 0 6px 12px rgba(0,0,0,0.46), 0 0 0 #536174 !important;
 }
 
-/* Modali / Kartice */
+body.moon-theme .dice {
+    box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.82),
+        inset 0 -4px 0 rgba(0,0,0,0.22),
+        0 8px 18px rgba(0,0,0,0.58),
+        0 0 18px rgba(211,226,255,0.12);
+}
+
+body.moon-theme .dice.held {
+    border-color: #aecaef !important;
+    filter: brightness(0.78) saturate(0.88);
+    box-shadow: 0 0 0 3px rgba(174,202,239,0.22), 0 0 22px rgba(174,202,239,0.28) !important;
+}
+
 body.moon-theme .modal-box,
 body.moon-theme .card {
-    background: linear-gradient(145deg, #0f121a, #040507) !important;
-    border: 1px solid rgba(248, 250, 252, 0.1) !important;
-    border-radius: 24px !important;
-    box-shadow: 0 30px 60px rgba(0,0,0,1), inset 0 0 30px rgba(0,0,0,0.8) !important;
+    background:
+        linear-gradient(145deg, rgba(19, 28, 43, 0.94), rgba(4, 8, 16, 0.96)) !important;
+    border: 1px solid rgba(221, 231, 246, 0.17) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,255,255,0.10), inset 0 0 30px rgba(0,0,0,0.44) !important;
 }
 
-/* Dnevni Izazov Kartice */
 body.moon-theme .daily-challenge-card {
-    background: linear-gradient(145deg, #0f121a, #040507) !important;
-    border: 1px solid rgba(248, 250, 252, 0.15) !important;
-    box-shadow: 0 15px 30px rgba(0,0,0,1) !important;
+    background: linear-gradient(145deg, rgba(19, 28, 43, 0.94), rgba(4, 8, 16, 0.96)) !important;
+    border: 1px solid rgba(221, 231, 246, 0.20) !important;
+    box-shadow: 0 18px 34px rgba(0,0,0,0.62), 0 0 22px rgba(174,202,239,0.10) !important;
 }
 body.moon-theme .daily-score-box {
-    background: rgba(0,0,0,0.8) !important;
+    background: rgba(2,6,14,0.72) !important;
     border-radius: 12px;
-    box-shadow: inset 5px 5px 12px rgba(0,0,0,0.95) !important;
-    border: 1px solid rgba(248, 250, 252, 0.05) !important;
+    border: 1px solid rgba(221,231,246,0.12);
+    box-shadow: inset 4px 4px 12px rgba(0,0,0,0.62) !important;
 }
