@@ -807,7 +807,7 @@ body.moon-theme {
     --col-slobodna: #b7c4d8;
 }
 
-/* Realistican lunarni horizont sa slojevitim kraterima i zvezdama */
+/* Realistican lunarni pejzaz: raster asset umesto CSS imitacije meseca */
 body.moon-theme::before {
     content: "";
     position: fixed;
@@ -815,27 +815,13 @@ body.moon-theme::before {
     z-index: -1;
     background-color: var(--bg-base);
     background-image:
-        radial-gradient(circle at 70% 19%, rgba(255,255,255,0.24), transparent 13%),
-        radial-gradient(circle at 72% 22%, rgba(239, 244, 250, 0.98) 0 6.8%, rgba(196, 207, 221, 0.96) 7% 9.2%, rgba(88, 100, 118, 0.18) 9.4% 10.2%, transparent 10.4%),
-        radial-gradient(circle at 68.7% 19.8%, rgba(61, 70, 86, 0.38) 0 1.3%, rgba(255,255,255,0.20) 1.35% 1.72%, transparent 1.78%),
-        radial-gradient(circle at 74.5% 25.2%, rgba(41, 49, 62, 0.34) 0 1.1%, rgba(255,255,255,0.18) 1.15% 1.52%, transparent 1.58%),
-        radial-gradient(circle at 71.5% 26.5%, rgba(52, 61, 76, 0.30) 0 0.82%, rgba(255,255,255,0.14) 0.86% 1.12%, transparent 1.18%),
-        radial-gradient(ellipse at 50% 102%, rgba(179, 190, 205, 0.95) 0 18%, rgba(90, 101, 118, 0.82) 18.4% 33%, rgba(32, 39, 52, 0.72) 33.4% 48%, transparent 48.4%),
-        radial-gradient(ellipse at 18% 90%, rgba(17, 22, 32, 0.92) 0 6%, rgba(211, 220, 232, 0.24) 6.4% 7.5%, transparent 7.8%),
-        radial-gradient(ellipse at 38% 86%, rgba(20, 25, 35, 0.88) 0 3.8%, rgba(221, 231, 246, 0.20) 4.1% 4.9%, transparent 5.2%),
-        radial-gradient(ellipse at 76% 88%, rgba(14, 18, 27, 0.88) 0 5.6%, rgba(230, 237, 248, 0.22) 5.9% 7%, transparent 7.4%),
-        radial-gradient(ellipse at 58% 96%, rgba(12, 16, 24, 0.86) 0 2.7%, rgba(230, 237, 248, 0.18) 3% 3.6%, transparent 3.9%),
-        radial-gradient(circle at 8% 14%, rgba(255,255,255,0.92) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 18% 26%, rgba(210,225,255,0.72) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 31% 12%, rgba(255,255,255,0.78) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 52% 28%, rgba(180,205,255,0.58) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 84% 13%, rgba(255,255,255,0.84) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 94% 33%, rgba(210,225,255,0.58) 0 1px, transparent 1.4px),
-        radial-gradient(ellipse at 20% 12%, rgba(84, 112, 175, 0.20), transparent 42%),
-        radial-gradient(ellipse at 82% 28%, rgba(210, 226, 255, 0.14), transparent 36%),
-        linear-gradient(180deg, #02040a 0%, #08111f 42%, #131927 66%, #0b0f17 100%);
+        linear-gradient(180deg, rgba(1, 4, 11, 0.18) 0%, rgba(1, 4, 11, 0.34) 52%, rgba(1, 4, 11, 0.18) 100%),
+        url("assets/moonlight-lunar-bg.png");
 
     background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    filter: saturate(0.92) contrast(1.08) brightness(0.82);
     pointer-events: none;
 }
 
@@ -845,17 +831,8 @@ body.moon-theme::after {
     inset: 0;
     z-index: -1;
     background-image:
-        radial-gradient(circle at 68.7% 19.8%, rgba(42, 49, 61, 0.48) 0 1.25%, rgba(255,255,255,0.18) 1.34% 1.72%, transparent 1.82%),
-        radial-gradient(circle at 74.5% 25.2%, rgba(35, 42, 54, 0.42) 0 1.08%, rgba(255,255,255,0.16) 1.18% 1.52%, transparent 1.62%),
-        radial-gradient(circle at 71.5% 26.5%, rgba(45, 53, 67, 0.38) 0 0.82%, rgba(255,255,255,0.13) 0.9% 1.16%, transparent 1.24%),
-        radial-gradient(circle at 70.2% 22.6%, rgba(36, 44, 57, 0.34) 0 0.62%, rgba(255,255,255,0.12) 0.7% 0.94%, transparent 1.02%),
-        radial-gradient(circle at 75.8% 20.6%, rgba(48, 57, 70, 0.30) 0 0.55%, rgba(255,255,255,0.11) 0.64% 0.84%, transparent 0.92%),
-        radial-gradient(circle at 22% 96%, rgba(255,255,255,0.10) 0 0.35%, transparent 0.42%),
-        radial-gradient(circle at 31% 92%, rgba(0,0,0,0.30) 0 0.45%, transparent 0.56%),
-        radial-gradient(circle at 47% 91%, rgba(255,255,255,0.08) 0 0.28%, transparent 0.36%),
-        radial-gradient(circle at 63% 95%, rgba(0,0,0,0.28) 0 0.52%, transparent 0.62%),
-        radial-gradient(circle at 82% 93%, rgba(255,255,255,0.09) 0 0.32%, transparent 0.42%),
-        linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+        radial-gradient(ellipse at 50% 50%, rgba(5, 10, 18, 0.12) 0%, rgba(5, 10, 18, 0.32) 58%, rgba(0, 0, 0, 0.58) 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.20), transparent 28%, transparent 72%, rgba(0,0,0,0.22));
     pointer-events: none;
 }
 
