@@ -117,6 +117,26 @@ const TRANSLATIONS = {
         "modal_btn_ok": "U REDU",
         "modal_btn_cancel": "OTKAŽI",
         "btn_continue": "NASTAVI",
+        "ui_chat_title": "CHAT",
+        "ui_online_short": "Online",
+        "ui_global_chat_title": "GLOBALNI CHAT",
+        "ui_chat_placeholder": "Napiši poruku...",
+        "tooltip_undo_menu": "Vrati pogrešan upis",
+        "tooltip_exit_game": "Izađi iz igre",
+        "tooltip_spectators": "Gledaoci",
+        "tooltip_undo_move": "Ispravka poteza",
+        "tooltip_change_theme": "Promeni temu",
+        "tooltip_sound": "Zvuk",
+        "tooltip_vibration": "Vibracija",
+        "tooltip_music": "Muzika",
+        "tooltip_global_chat_online": "Trenutno igrača na serveru",
+        "aria_close_chat": "Zatvori chat",
+        "aria_close_stats": "Zatvori statistiku",
+        "aria_close_highscores": "Zatvori top listu",
+        "aria_close_settings": "Zatvori podešavanja",
+        "aria_send_message": "Pošalji poruku",
+        "aria_close_online_players": "Zatvori online igrače",
+        "aria_close_tourney": "Zatvori turnir",
         "err_server_conn": "Greška pri konekciji sa serverom.",
         "err_title": "GREŠKA",
         "err_undo_select": "Prvo odaberite polje za ispravku!",
@@ -139,6 +159,9 @@ const TRANSLATIONS = {
         "chat_report_action": "Prijavi poruku",
         "chat_report_confirm": "Želite li da prijavite ovu poruku moderatorima?",
         "chat_report_sent": "Prijava je poslata moderatorima.",
+        "alert_info": "OBAVEŠTENJE",
+        "alert_friend_req_pending": "Novi zahtev za prijateljstvo od igrača {0}! Možete ga videti u sekciji 'Prijatelj'.",
+        "alert_friend_declined": "Igrač {0} je nažalost odbio vaš zahtev za prijateljstvo.",
         "err_player_not_on_server": "Igrač više nije na serveru.",
         "err_challenger_left": "Igrač koji vas je izazvao je napustio server.",
         "err_tourney_opp_offline": "Protivnik trenutno nije u aplikaciji. Dogovorite termin kada je online.",
@@ -208,6 +231,7 @@ const TRANSLATIONS = {
         "status_choose_field": "Izaberite kolonu i red za upis.",
         "status_roll_first": "Prvo baci kockice!",
         "status_undo_click": "Ispravka: Klikni na upisano polje da ga obrišeš.",
+        "timeout_grace": "Ističe...",
         "fallback_quote_text": "Sreća prati hrabre.",
         "fallback_quote_author": "Aleksandar Veliki",
         
@@ -327,6 +351,7 @@ const TRANSLATIONS = {
 
         // --- PODEŠAVANJA ---
         "settings_name": "Vaše Ime:",
+        "settings_name_placeholder": "Ime Igrača",
         "settings_theme": "Tema:",
         "theme_dark": "Zelena",
         "theme_light": "Svetlo Zlato",
@@ -693,6 +718,26 @@ const TRANSLATIONS = {
         "modal_btn_ok": "OK",
         "modal_btn_cancel": "CANCEL",
         "btn_continue": "CONTINUE",
+        "ui_chat_title": "CHAT",
+        "ui_online_short": "Online",
+        "ui_global_chat_title": "GLOBAL CHAT",
+        "ui_chat_placeholder": "Type a message...",
+        "tooltip_undo_menu": "Undo wrong entry",
+        "tooltip_exit_game": "Exit game",
+        "tooltip_spectators": "Spectators",
+        "tooltip_undo_move": "Undo move",
+        "tooltip_change_theme": "Change theme",
+        "tooltip_sound": "Sound",
+        "tooltip_vibration": "Vibration",
+        "tooltip_music": "Music",
+        "tooltip_global_chat_online": "Players currently on the server",
+        "aria_close_chat": "Close chat",
+        "aria_close_stats": "Close statistics",
+        "aria_close_highscores": "Close leaderboard",
+        "aria_close_settings": "Close settings",
+        "aria_send_message": "Send message",
+        "aria_close_online_players": "Close online players",
+        "aria_close_tourney": "Close tournament",
         "err_server_conn": "Error connecting to the server.",
         "err_title": "ERROR",
         "err_undo_select": "Select a field to correct first!",
@@ -715,6 +760,9 @@ const TRANSLATIONS = {
         "chat_report_action": "Report message",
         "chat_report_confirm": "Do you want to report this message to moderators?",
         "chat_report_sent": "Report sent to moderators.",
+        "alert_info": "NOTICE",
+        "alert_friend_req_pending": "New friend request from {0}! You can see it in the 'Friend' section.",
+        "alert_friend_declined": "{0} declined your friend request.",
         "err_player_not_on_server": "The player is no longer on the server.",
         "err_challenger_left": "The challenging player has left the server.",
         "err_tourney_opp_offline": "Opponent is currently offline. Schedule a match when they are online.",
@@ -784,6 +832,7 @@ const TRANSLATIONS = {
         "status_choose_field": "Select a column and row to write.",
         "status_roll_first": "Roll the dice first!",
         "status_undo_click": "Undo: Click on a filled field to clear it.",
+        "timeout_grace": "Expiring...",
         "fallback_quote_text": "Fortune favors the bold.",
         "fallback_quote_author": "Alexander the Great",
         
@@ -903,6 +952,7 @@ const TRANSLATIONS = {
 
         // --- SETTINGS ---
         "settings_name": "Your Name:",
+        "settings_name_placeholder": "Player Name",
         "settings_theme": "Theme:",
         "theme_dark": "Green",
         "theme_light": "Light Gold",
@@ -1176,11 +1226,26 @@ function applyTranslations() {
         const key = el.getAttribute('data-lang');
         if (key) el.innerHTML = t(key); // Koristimo innerHTML zbog <b> i <strong> tagova
     });
+
+    document.querySelectorAll('[data-lang-title]').forEach(el => {
+        const key = el.getAttribute('data-lang-title');
+        if (key) el.title = t(key);
+    });
+
+    document.querySelectorAll('[data-lang-aria]').forEach(el => {
+        const key = el.getAttribute('data-lang-aria');
+        if (key) el.setAttribute('aria-label', t(key));
+    });
+
+    document.querySelectorAll('[data-lang-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-lang-placeholder');
+        if (key) el.placeholder = t(key);
+    });
     
     // Input polja
     const nameInput = document.getElementById('setting-name');
     if (nameInput) {
-        nameInput.placeholder = (localStorage.getItem('yamb_lang') === 'en') ? "Player Name" : "Ime Igrača";
+        nameInput.placeholder = t('settings_name_placeholder');
     }
 
     const globalChatInput = document.getElementById('global-chat-input');

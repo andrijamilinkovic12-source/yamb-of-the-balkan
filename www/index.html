@@ -127,9 +127,9 @@
 
     <div id="chat-float-btn" class="chat-float-btn hidden" onclick="app.toggleChat()">💬<div id="chat-badge" class="chat-notification"></div></div>
     <div id="chat-window" class="chat-window">
-        <div id="chat-header" class="chat-header"><span>CHAT</span><span style="cursor:pointer;" onclick="app.toggleChat()">▼</span></div>
+        <div id="chat-header" class="chat-header"><span data-lang="ui_chat_title">CHAT</span><span style="cursor:pointer;" onclick="app.toggleChat()">▼</span></div>
         <div id="chat-body" class="chat-body"></div>
-        <div class="chat-footer"><input type="text" id="chat-input-field" class="chat-input" placeholder="..."><button id="btn-chat-send" class="btn-chat-send">➤</button></div>
+        <div class="chat-footer"><input type="text" id="chat-input-field" class="chat-input" placeholder="..." data-lang-placeholder="ui_chat_placeholder"><button id="btn-chat-send" class="btn-chat-send" data-lang-aria="aria_send_message" aria-label="Pošalji poruku">➤</button></div>
     </div>
 
     <div id="splash-screen" class="screen active">
@@ -197,7 +197,8 @@
         <button class="btn-square" 
                 style="position: absolute; top: 30px; right: 20px; z-index: 100; width: 45px; height: 45px; font-size: 1.4rem; padding: 0;" 
                 onclick="app.openUndoMenu()" 
-                title="Vrati pogrešan upis">
+                title="Vrati pogrešan upis"
+                data-lang-title="tooltip_undo_menu">
             ↩️
         </button>
 
@@ -211,7 +212,7 @@
                         <div style="position: absolute; top: 0; right: -5px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success); animation: pulse 2s infinite;"></div>
                     </div>
                     <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
-                    <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Online</span>
+                    <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;" data-lang="ui_online_short">Online</span>
                 </div>
             </div>
 
@@ -321,7 +322,7 @@
 
     <div id="game-scene" class="screen">
         <div class="game-header">
-            <button class="btn-secondary" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;" onclick="app.quitToMenu()" title="Izađi iz igre">🚪</button>
+            <button class="btn-secondary" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;" onclick="app.quitToMenu()" title="Izađi iz igre" data-lang-title="tooltip_exit_game">🚪</button>
             
             <div style="display:flex; gap:12px; align-items:center; justify-content: flex-end; flex: 1;">
                 
@@ -329,9 +330,9 @@
 
                 <img id="gh-current-avatar" src="" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; display: none; box-shadow: 0 0 5px rgba(255,215,0,0.5);">
 
-                <span id="gh-spectator-icon" class="gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci">👁️</span>
+                <span id="gh-spectator-icon" class="gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci" data-lang-title="tooltip_spectators">👁️</span>
 
-                <button id="btn-undo-move" class="btn-secondary gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; font-size:1.1rem; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza">↩️</button>
+                <button id="btn-undo-move" class="btn-secondary gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; font-size:1.1rem; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza" data-lang-title="tooltip_undo_move">↩️</button>
                 
                 <button id="btn-game-menu-toggle" class="btn-secondary" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-weight: bold; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; padding-bottom: 4px;" onclick="app.toggleGameMenu()">⋮</button>
             </div>
@@ -339,13 +340,13 @@
 
         <div id="game-dropdown-menu" style="position: absolute; top: calc(var(--safe-top) + 60px); right: 15px; background: var(--glass-panel); border: 1px solid rgba(255,215,0,0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 12px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); z-index: 100; transform: translateY(-20px); opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
             <div style="display: flex; gap: 10px; justify-content: space-between;">
-                <button class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleTheme(); app.toggleGameMenu();" title="Promeni Temu">🎨</button>
-                <button id="btn-gh-sound" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickSound()" title="Zvuk">🔊</button>
-                <button id="btn-gh-vib" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickVib()" title="Vibracija">📳</button>
+                <button class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleTheme(); app.toggleGameMenu();" title="Promeni Temu" data-lang-title="tooltip_change_theme">🎨</button>
+                <button id="btn-gh-sound" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickSound()" title="Zvuk" data-lang-title="tooltip_sound">🔊</button>
+                <button id="btn-gh-vib" class="btn-secondary" style="border-radius:50%; padding:0; width:40px; height:40px; font-size: 1.2rem; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickVib()" title="Vibracija" data-lang-title="tooltip_vibration">📳</button>
             </div>
             
             <div style="display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); padding: 8px 10px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
-                <button id="btn-gh-music" class="btn-secondary" style="border-radius:50%; padding:0; width:30px; height:30px; font-size: 1rem; border: none; background: transparent; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickMusic()" title="Muzika">🎧</button>
+                <button id="btn-gh-music" class="btn-secondary" style="border-radius:50%; padding:0; width:30px; height:30px; font-size: 1rem; border: none; background: transparent; display:flex; justify-content:center; align-items:center;" onclick="app.toggleQuickMusic()" title="Muzika" data-lang-title="tooltip_music">🎧</button>
                 <input type="range" id="music-volume-slider" min="0" max="1" step="0.05" value="0.4" oninput="app.changeMusicVolume(this.value)" style="flex: 1; accent-color: var(--gold-main); height: 4px; outline: none;">
             </div>
         </div>
@@ -374,7 +375,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title" data-lang="menu_stats">STATISTIKA</span>
                 </div>
-                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori statistiku">×</button>
+                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori statistiku" data-lang-aria="aria_close_stats">×</button>
             </div>
 
             <div class="chat-body global-chat-body stats-card-body">
@@ -597,7 +598,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title" data-lang="menu_hs">🏆 TOP LISTA</span>
                 </div>
-                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori top listu">×</button>
+                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori top listu" data-lang-aria="aria_close_highscores">×</button>
             </div>
 
             <div class="hs-card-toolbar">
@@ -646,7 +647,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title" data-lang="menu_settings">PODEŠAVANJA</span>
                 </div>
-                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori podešavanja">×</button>
+                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori podešavanja" data-lang-aria="aria_close_settings">×</button>
             </div>
 
             <div class="chat-body global-chat-body settings-card-body">
@@ -654,7 +655,7 @@
             <div class="settings-section">
                 <span class="settings-section-title" data-lang="settings_profile_acc">Profil i Nalog</span>
                 
-                <input type="text" id="setting-name" class="modal-input settings-input" placeholder="Igrač" onchange="app.saveSettingAuto('name', this.value)">
+                <input type="text" id="setting-name" class="modal-input settings-input" placeholder="Igrač" data-lang-placeholder="settings_name_placeholder" onchange="app.saveSettingAuto('name', this.value)">
                 
                 <div class="settings-account-card">
                     <div class="settings-account-info">
@@ -906,12 +907,12 @@
             
             <div class="chat-header global-chat-header">
                 <div class="global-chat-title-group">
-                    <span class="global-chat-title">GLOBAL CHAT</span>
-                    <span class="global-chat-online-pill" title="Trenutno igrača na serveru">
+                    <span class="global-chat-title" data-lang="ui_global_chat_title">GLOBAL CHAT</span>
+                    <span class="global-chat-online-pill" title="Trenutno igrača na serveru" data-lang-title="tooltip_global_chat_online">
                         <span class="global-chat-online-dot"></span><span id="global-chat-online-count">1</span>
                     </span>
                 </div>
-                <button type="button" class="global-chat-close" onclick="app.closeGlobalChat()" aria-label="Zatvori chat">×</button>
+                <button type="button" class="global-chat-close" onclick="app.closeGlobalChat()" aria-label="Zatvori chat" data-lang-aria="aria_close_chat">×</button>
             </div>
 
             <div id="global-chat-body" class="chat-body global-chat-body">
@@ -922,8 +923,8 @@
 
             <div class="chat-footer global-chat-footer">
                 <div class="global-chat-compose">
-                    <input type="text" id="global-chat-input" class="modal-input global-chat-input" maxlength="550" placeholder="Napiši poruku..." autocomplete="off">
-                    <button id="btn-global-send" class="btn-chat-send global-chat-send" aria-label="Pošalji poruku">➤</button>
+                    <input type="text" id="global-chat-input" class="modal-input global-chat-input" maxlength="550" placeholder="Napiši poruku..." data-lang-placeholder="global_chat_placeholder" autocomplete="off">
+                    <button id="btn-global-send" class="btn-chat-send global-chat-send" aria-label="Pošalji poruku" data-lang-aria="aria_send_message">➤</button>
                 </div>
                 <div class="global-chat-hint-row">
                     <span id="global-chat-char-count" class="global-chat-char-count">0/550</span>
@@ -940,7 +941,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title online-players-title" data-lang="online_players_title">🟢 ONLINE IGRAČI</span>
                 </div>
-                <button type="button" class="global-chat-close" onclick="document.getElementById('online-players-overlay').style.display='none'" aria-label="Zatvori online igrače">×</button>
+                <button type="button" class="global-chat-close" onclick="document.getElementById('online-players-overlay').style.display='none'" aria-label="Zatvori online igrače" data-lang-aria="aria_close_online_players">×</button>
             </div>
 
             <div id="online-players-body" class="chat-body global-chat-body online-players-body">
@@ -956,7 +957,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title" data-lang="tourney_title">TURNIR ⚔️</span>
                 </div>
-                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori turnir">×</button>
+                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori turnir" data-lang-aria="aria_close_tourney">×</button>
             </div>
 
             <div id="tourney-content" class="chat-body global-chat-body tourney-card-body"></div>
