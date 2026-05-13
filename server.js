@@ -941,6 +941,19 @@ function sanitizeTournamentPi(value) {
     return String(Math.max(0, Math.min(999999, Math.round(num))));
 }
 
+async function calculateTournamentPi(uid, fallbackPi = 0) {
+    if (!MONGO_URI || !uid) return sanitizeTournamentPi(fallbackPi);
+
+    try {
+        const user = await UserProfile.findOne({ firebaseUid: uid }).lean();
+        if (!user) return sanitizeTournamentPi(fallbackPi);
+        return sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(user));
+    } catch (err) {
+        console.error("Greška pri server-side računanju turnirskog PI:", err);
+        return sanitizeTournamentPi(fallbackPi);
+    }
+}
+
 function getTournamentMatch(round, index) {
     if (!TOURNEY_ROUNDS.has(round)) return null;
 
@@ -4533,11 +4546,13 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            const serverPi = await calculateTournamentPi(uid, playerData.pi);
+
             tournamentState.players.push({
                 id: uid,
                 name: sanitizeTournamentName(socket.playerName || playerData.name),
                 photoUrl: sanitizeTournamentPhotoUrl(socket.photoUrl || playerData.photoUrl),
-                pi: sanitizeTournamentPi(playerData.pi)
+                pi: serverPi
             });
 
             if (tournamentState.players.length === 8) {
@@ -4562,11 +4577,11 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_update_pi', (data = {}) => {
+    socket.on('tourney_update_pi', async (data = {}) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) return;
 
-        const pi = sanitizeTournamentPi(data.pi);
+        const pi = await calculateTournamentPi(uid, data.pi);
         let updated = false;
 
         const player = tournamentState.players.find(p => p.id === uid);
