@@ -990,3 +990,15 @@ body.moon-theme .daily-score-box {
     border: 1px solid rgba(221,231,246,0.12);
     box-shadow: inset 4px 4px 12px rgba(0,0,0,0.62) !important;
 }
+
+/* Standardizovana tabla za igru: ista dimenzija u svim temama, bez spoljnog 3D efekta. */
+.player-table {
+    border-width: 1px !important;
+    border-radius: 16px !important;
+    padding: 2px !important;
+    margin-bottom: 5px !important;
+    transform: none !important;
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.10) !important;
+}
