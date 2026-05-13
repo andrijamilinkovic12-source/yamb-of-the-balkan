@@ -43,6 +43,7 @@ class TournamentManager {
         this.activeTab = 'info';
         this.pendingRegistration = false;
         this.pendingUnregister = false;
+        this.reminderInFlight = false;
 
         if (this.app) {
             this.app.openTournament = () => this.open();
@@ -73,6 +74,11 @@ class TournamentManager {
         if (!key) return fallback || tt('err_server_conn');
         const translated = tt(key);
         return translated && translated !== key ? translated : (fallback || key || tt('err_server_conn'));
+    }
+
+    tr(key, fallback) {
+        const translated = tt(key);
+        return translated && translated !== key ? translated : fallback;
     }
 
     // --- NOVA BULLETPROOF FUNKCIJA ZA INDEKS MOĆI (AŽURIRANA ZA CENTRALNU BAZU) ---
@@ -189,6 +195,110 @@ class TournamentManager {
         badge.classList.remove('tourney-badge-pulse');
     }
 
+    findMyActiveMatch(state = this.state) {
+        if (!this.app || !this.app.playerId || !state || state.status !== 'active' || !state.bracket) return null;
+
+        const myId = this.app.playerId;
+        const rounds = ['qf', 'sf', 'f'];
+
+        for (const round of rounds) {
+            const matches = Array.isArray(state.bracket[round]) ? state.bracket[round] : [];
+            for (let index = 0; index < matches.length; index++) {
+                const match = matches[index];
+                if (!match || !match.p1 || !match.p2 || match.winnerId) continue;
+
+                const isP1 = match.p1.id === myId;
+                const isP2 = match.p2.id === myId;
+                if (!isP1 && !isP2) continue;
+
+                const opponent = isP1 ? match.p2 : match.p1;
+                if (!opponent || !opponent.id) continue;
+
+                return { round, index, match, opponent };
+            }
+        }
+
+        return null;
+    }
+
+    getTournamentReminderKey(info) {
+        if (!info || !info.match) return '';
+        const match = info.match;
+        const proposedPart = match.proposedTime || 'no-time';
+        const acceptedPart = match.timeAccepted ? 'accepted' : 'pending';
+        return [
+            this.app && this.app.playerId ? this.app.playerId : 'player',
+            this.state.status,
+            info.round,
+            info.index,
+            proposedPart,
+            acceptedPart
+        ].join('|');
+    }
+
+    maybeShowTournamentReminder(state = this.state) {
+        if (!this.app || !this.app.modal || this.reminderInFlight) return;
+        if (document.getElementById('tournament-screen')?.classList.contains('active')) return;
+        if (document.getElementById('game-scene')?.classList.contains('active')) return;
+        if (this.app.gameActive) return;
+
+        const info = this.findMyActiveMatch(state);
+        if (!info) return;
+
+        const key = this.getTournamentReminderKey(info);
+        if (!key) return;
+
+        const reminderCooldownMs = 6 * 60 * 60 * 1000;
+        let reminderState = null;
+        try {
+            reminderState = JSON.parse(localStorage.getItem('yamb_tourney_reminder_seen') || 'null');
+        } catch (err) {
+            reminderState = null;
+        }
+
+        if (
+            reminderState &&
+            reminderState.key === key &&
+            Date.now() - Number(reminderState.time || 0) < reminderCooldownMs
+        ) {
+            return;
+        }
+
+        localStorage.setItem('yamb_tourney_reminder_seen', JSON.stringify({ key, time: Date.now() }));
+        this.reminderInFlight = true;
+
+        const opponentName = this.escape(info.opponent.name || 'Protivnik');
+        let msg;
+
+        if (info.match.timeAccepted) {
+            msg = `${this.tr('tourney_reminder_ready', 'Vaš turnirski meč je dogovoren.')}<br><br><strong>${opponentName}</strong><br>${this.formatDate(info.match.time || info.match.proposedTime)}<br><br>${this.tr('tourney_reminder_open', 'Otvorite turnir da pokrenete meč.')}`;
+        } else if (info.match.proposedTime && info.match.proposedById !== this.app.playerId) {
+            msg = `${this.tr('tourney_reminder_pending_accept', 'Protivnik je predložio termin za turnirski meč.')}<br><br><strong>${opponentName}</strong><br>${this.formatDate(info.match.proposedTime)}<br><br>${this.tr('tourney_reminder_open_accept', 'Otvorite turnir da prihvatite ili predložite drugo vreme.')}`;
+        } else if (info.match.proposedTime) {
+            msg = `${this.tr('tourney_reminder_waiting', 'Prijavljeni ste za turnir i čekate odgovor protivnika.')}<br><br><strong>${opponentName}</strong><br>${this.formatDate(info.match.proposedTime)}<br><br>${this.tr('tourney_reminder_open_change', 'Možete otvoriti turnir i promeniti predlog termina.')}`;
+        } else {
+            msg = `${this.tr('tourney_reminder_schedule', 'Prijavljeni ste za turnir. Vaš meč čeka zakazivanje.')}<br><br><strong>${opponentName}</strong><br><br>${this.tr('tourney_reminder_open_schedule', 'Otvorite turnir i zakažite termin sa ovim igračem.')}`;
+        }
+
+        this.app.modal.confirm(msg).then(open => {
+            this.reminderInFlight = false;
+            if (!open) return;
+            this.openMatchFromReminder(info.round, info.index);
+        });
+    }
+
+    openMatchFromReminder(round, index) {
+        this.activeTab = 'bracket';
+        this.open();
+
+        setTimeout(() => {
+            const freshInfo = this.findMyActiveMatch();
+            const targetRound = freshInfo ? freshInfo.round : round;
+            const targetIndex = freshInfo ? freshInfo.index : index;
+            this.openMatchModal(targetRound, targetIndex);
+        }, 250);
+    }
+
     setupSocketListeners() {
         if(this.app && !this.app.socket) {
             this.app.initSocketConnection();
@@ -258,6 +368,8 @@ class TournamentManager {
                     if (oldStatus === 'registration' && newState.status !== 'registration') {
                         this.activeTab = 'bracket';
                     }
+
+                    this.maybeShowTournamentReminder(newState);
 
                     if(document.getElementById('tournament-screen').classList.contains('active')) {
                         this.render();

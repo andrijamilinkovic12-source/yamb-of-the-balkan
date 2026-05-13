@@ -1574,6 +1574,19 @@ class YambApp {
     handleAppResume() {
         this.checkForInvite();
 
+        if (this.tournamentManager && this.socket) {
+            const requestTournamentState = () => {
+                this.socket.emit('tourney_get_state');
+            };
+
+            if (this.socket.connected) {
+                requestTournamentState();
+            } else {
+                this.socket.once('connect', requestTournamentState);
+                if (this.socket.disconnected) this.socket.connect();
+            }
+        }
+
         if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket) {
             const requestSync = () => {
                 this.socket.emit('request_state_sync', { roomId: this.roomId });
