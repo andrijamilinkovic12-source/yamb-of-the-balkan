@@ -27,10 +27,9 @@ class RiznicaManager {
 
     playIntro(onComplete) {
         const overlay = document.getElementById('riznica-intro');
-        const srLine = document.getElementById('riznica-intro-sr');
-        const enLine = document.getElementById('riznica-intro-en');
+        const introText = document.getElementById('riznica-intro-text');
 
-        if (!overlay || !srLine || !enLine) {
+        if (!overlay || !introText) {
             onComplete();
             return;
         }
@@ -38,29 +37,25 @@ class RiznicaManager {
         this.isIntroPlaying = true;
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
-        srLine.textContent = '';
-        enLine.textContent = '';
+        introText.textContent = '';
 
-        const srText = 'R I Z N I C A';
-        const enText = 'T R E A S U R Y';
-        const steps = Math.max(srText.length, enText.length);
-        const typeDuration = 1850;
+        const lang = localStorage.getItem('yamb_lang') || 'sr';
+        const introLabel = lang === 'en' ? 'T R E A S U R Y' : 'R I Z N I C A';
+        const typeDuration = 2850;
         let step = 0;
 
         const typeTimer = setInterval(() => {
             step += 1;
-            srLine.textContent = srText.slice(0, step);
-            enLine.textContent = enText.slice(0, step);
+            introText.textContent = introLabel.slice(0, step);
 
-            if (step >= steps) {
+            if (step >= introLabel.length) {
                 clearInterval(typeTimer);
             }
-        }, typeDuration / steps);
+        }, typeDuration / introLabel.length);
 
         setTimeout(() => {
             clearInterval(typeTimer);
-            srLine.textContent = srText;
-            enLine.textContent = enText;
+            introText.textContent = introLabel;
         }, typeDuration + 80);
 
         setTimeout(() => {
@@ -68,7 +63,7 @@ class RiznicaManager {
             overlay.setAttribute('aria-hidden', 'true');
             this.isIntroPlaying = false;
             onComplete();
-        }, 2400);
+        }, 3600);
     }
 
     close() {
