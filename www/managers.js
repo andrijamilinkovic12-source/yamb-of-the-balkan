@@ -146,7 +146,8 @@ class ModalManager {
             msg: document.getElementById('cm-msg'),
             input: document.getElementById('cm-input'),
             btnCancel: document.getElementById('cm-cancel'),
-            btnOk: document.getElementById('cm-ok')
+            btnOk: document.getElementById('cm-ok'),
+            btnClose: document.getElementById('cm-close')
         };
     }
 
@@ -177,24 +178,30 @@ class ModalManager {
         });
     }
 
-    prompt(text) {
+    prompt(text, options = {}) {
         const safeTitle = _safeT('modal_title_input') || "UNOS";
         return new Promise(resolve => {
             const els = this.elements;
             if(!els.overlay) { console.warn("Modal overlay missing! Prompt:", text); resolve(null); return; }
             
-            this.setup(safeTitle, text, true);
+            this.setup(safeTitle, text, true, options);
             
             els.btnOk.onclick = () => { 
                 const val = els.input.value; 
                 this.close(); 
                 resolve(val); 
             };
+            if (options.cancellable && els.btnClose) {
+                els.btnClose.onclick = () => {
+                    this.close();
+                    resolve(null);
+                };
+            }
             this.open();
         });
     }
 
-    setup(title, msg, hasInput) {
+    setup(title, msg, hasInput, options = {}) {
         const els = this.elements;
         if(!els.overlay) return;
 
@@ -202,6 +209,10 @@ class ModalManager {
         if(els.msg) els.msg.innerHTML = msg; 
         
         if(els.btnCancel) els.btnCancel.classList.add('hidden');
+        if(els.btnClose) {
+            els.btnClose.classList.toggle('hidden', !options.cancellable);
+            els.btnClose.onclick = null;
+        }
         if(hasInput && els.input) { els.input.classList.remove('hidden'); els.input.value = ""; els.input.focus(); } 
         else if (els.input) { els.input.classList.add('hidden'); }
         

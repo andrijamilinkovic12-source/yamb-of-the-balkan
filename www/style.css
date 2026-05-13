@@ -287,6 +287,9 @@ body {
 .modal-overlay.active, .modal-overlay[style*="display: flex"] { opacity: 1; visibility: visible; }
 
 .modal-card, .custom-modal, .modal-box { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; border-top: 1px solid rgba(255, 255, 255, 0.15) !important; border-left: 1px solid rgba(255, 255, 255, 0.08) !important; color: var(--text-main); box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 30px rgba(255, 255, 255, 0.02), inset 0 1px 1px rgba(255,255,255,0.2) !important; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 25px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; gap: 15px; width: 90%; max-width: 450px; }
+.custom-modal { position: relative; }
+.cm-close { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.28); color: var(--text-main); font-size: 0.85rem; font-weight: 900; line-height: 1; cursor: pointer; }
+.cm-close:active { transform: scale(0.94); }
 
 .modal-icon { font-size: 3rem; margin-bottom: 5px; }
 .modal-title, .cm-title { color: var(--gold-main); font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }

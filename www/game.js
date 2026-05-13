@@ -3202,13 +3202,18 @@ class YambApp {
         const p1Name = this.playerName; 
         
         if (numPlayers === 1) { this.modeTag = "Solo"; this.players.push(p1Name); } 
-        else { 
+        else {
             this.modeTag = "Hotseat"; this.players.push(p1Name);
-            for(let i=1; i<numPlayers; i++) { 
-                let guestName = await this.modal.prompt(`${gt('prompt_player_name')} ${i+1}:`); 
-                this.players.push(guestName || `${gt('player_guest')} ${i}`); 
-            } 
-        } 
+            for(let i=1; i<numPlayers; i++) {
+                let guestName = await this.modal.prompt(`${gt('prompt_player_name')} ${i+1}:`, { cancellable: true });
+                if (guestName === null) {
+                    this.players = [];
+                    this.modeTag = "Solo";
+                    return;
+                }
+                this.players.push(guestName || `${gt('player_guest')} ${i}`);
+            }
+        }
         
         this.initScores(); this.currentPlayerIdx = 0; 
         
