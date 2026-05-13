@@ -304,6 +304,7 @@ class EffectManager {
                 const shards = Array.from({ length: 22 }, (_, i) => `<span class="sn-shard" style="--i:${i}; --r:${34 + (i % 7) * 8}px; --d:${(i % 5) * 0.045}s;"></span>`).join('');
                 snContainer.innerHTML = `
                     <div class="sn-nebula"></div>
+                    <div class="sn-bitmap"></div>
                     <div class="sn-lens"></div>
                     <div class="sn-core"></div>
                     <div class="sn-ring sn-ring-1"></div>
