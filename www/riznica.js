@@ -4,14 +4,71 @@ class RiznicaManager {
     constructor() {
         this.currentTab = 'trophy';
         this.shop = null;
+        this.isIntroPlaying = false;
         this.initGlobalModals();
     }
 
     open() {
+        if (this.isIntroPlaying) return;
+
+        if (!document.getElementById('riznica-screen')?.classList.contains('active')) {
+            this.playIntro(() => this.showRiznica());
+            return;
+        }
+        this.showRiznica();
+    }
+
+    showRiznica() {
         if(window.app) {
             window.app.navigateTo('riznica-screen');
         }
         this.switchTab(this.currentTab);
+    }
+
+    playIntro(onComplete) {
+        const overlay = document.getElementById('riznica-intro');
+        const srLine = document.getElementById('riznica-intro-sr');
+        const enLine = document.getElementById('riznica-intro-en');
+
+        if (!overlay || !srLine || !enLine) {
+            onComplete();
+            return;
+        }
+
+        this.isIntroPlaying = true;
+        overlay.classList.remove('hidden');
+        overlay.setAttribute('aria-hidden', 'false');
+        srLine.textContent = '';
+        enLine.textContent = '';
+
+        const srText = 'R I Z N I C A';
+        const enText = 'T R E A S U R Y';
+        const steps = Math.max(srText.length, enText.length);
+        const typeDuration = 1850;
+        let step = 0;
+
+        const typeTimer = setInterval(() => {
+            step += 1;
+            srLine.textContent = srText.slice(0, step);
+            enLine.textContent = enText.slice(0, step);
+
+            if (step >= steps) {
+                clearInterval(typeTimer);
+            }
+        }, typeDuration / steps);
+
+        setTimeout(() => {
+            clearInterval(typeTimer);
+            srLine.textContent = srText;
+            enLine.textContent = enText;
+        }, typeDuration + 80);
+
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            overlay.setAttribute('aria-hidden', 'true');
+            this.isIntroPlaying = false;
+            onComplete();
+        }, 2400);
     }
 
     close() {
