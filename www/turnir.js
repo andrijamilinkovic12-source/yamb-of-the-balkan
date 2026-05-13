@@ -386,14 +386,14 @@ class TournamentManager {
 
         container.innerHTML = `
             <div class="tourney-tabs" role="tablist" aria-label="Turnir sekcije">
-                <button class="tourney-tab-btn ${this.activeTab === 'info' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'info'}" onclick="app.tournamentManager.switchTab('info')">
-                        ${tt('tourney_tab_info') || '📋 INFO'}
+                <button class="tourney-tab-btn ${this.activeTab === 'info' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'info'}" aria-label="${tt('tourney_tab_info') || 'Info'}" title="${tt('tourney_tab_info') || 'Info'}" onclick="app.tournamentManager.switchTab('info')">
+                    <span class="tourney-tab-icon">📝</span>
                 </button>
-                <button class="tourney-tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'bracket'}" onclick="app.tournamentManager.switchTab('bracket')">
-                        ${tt('tourney_tab_bracket') || '🏆 KOSTUR'}
+                <button class="tourney-tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'bracket'}" aria-label="${tt('tourney_tab_bracket') || 'Kostur'}" title="${tt('tourney_tab_bracket') || 'Kostur'}" onclick="app.tournamentManager.switchTab('bracket')">
+                    <span class="tourney-tab-icon">⚔️</span>
                 </button>
-                <button class="tourney-tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'leaderboard'}" onclick="app.tournamentManager.switchTab('leaderboard')">
-                        ${tt('tourney_tab_fame') || '👑 SLAVNI'}
+                <button class="tourney-tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'leaderboard'}" aria-label="${tt('tourney_tab_fame') || 'Slavni'}" title="${tt('tourney_tab_fame') || 'Slavni'}" onclick="app.tournamentManager.switchTab('leaderboard')">
+                    <span class="tourney-tab-icon">👑</span>
                 </button>
             </div>
 
@@ -483,17 +483,22 @@ class TournamentManager {
         }
 
         container.innerHTML = `
-            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; max-width: 350px;">
-                <div class="tourney-icon-large" style="font-size: 4.5rem; margin-bottom: 10px; text-shadow: 0 0 15px var(--gold-main); text-align: center;">🏆</div>
-                <h3 style="font-size: 1.4rem; margin-bottom: 5px; text-align: center; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px;">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
-                <p style="font-size: 0.85rem; margin-bottom: 25px; text-align: center; color: var(--text-muted); line-height: 1.4;">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
+            <div class="tourney-registration-panel">
+                <div class="tourney-icon-large tourney-registration-icon">🏆</div>
+                <h3 class="tourney-registration-title">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
+                <p class="tourney-registration-desc">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
 
-                <div style="font-size: 1.1rem; font-weight: 800; text-align: center; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--text-main)'}; margin-bottom: auto; background: rgba(0,0,0,0.4); padding: 15px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: inset 0 0 10px rgba(0,0,0,0.5);">
-                    <span style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">${tt('tourney_registered') || 'Prijavljeno igrača'}</span><br>
-                    <div style="font-size: 2.2rem; color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'}; margin-top: 5px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">${this.state.players.length} <span style="font-size: 1.2rem; color: var(--text-muted);">/ 8</span></div>
+                <div class="tourney-register-status">
+                    <span class="tourney-register-label">${tt('tourney_registered') || 'Prijavljeno igrača'}</span>
+                    <div class="tourney-register-count" style="color: ${isRegistrationOpen && spotsLeft === 0 ? 'var(--danger)' : 'var(--success)'};">
+                        ${this.state.players.length}<span>/8</span>
+                    </div>
+                    <div class="tourney-register-dots" aria-hidden="true">
+                        ${Array.from({ length: 8 }, (_, i) => `<span class="${i < this.state.players.length ? 'filled' : ''}"></span>`).join('')}
+                    </div>
                 </div>
 
-                <div style="width: 100%; display: flex; flex-direction: column; margin-top: 25px;">
+                <div class="tourney-register-action">
                     ${buttonHtml}
                 </div>
             </div>
