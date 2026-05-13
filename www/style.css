@@ -871,6 +871,7 @@ body {
 }
 .rules-slider-track {
     display: flex;
+    flex-direction: row;
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
@@ -911,8 +912,10 @@ body {
     min-height: 0;
     overflow-y: auto;
     max-height: none;
-    background: transparent;
-    border: none;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     padding: 0 2px max(16px, env(safe-area-inset-bottom) + 4px);
     text-align: left;
     -webkit-overflow-scrolling: touch;
@@ -951,11 +954,12 @@ body {
     margin: 0 0 15px;
 }
 .rules-slide-content li {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.08);
-    padding: 10px 12px;
-    border-radius: 8px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: none;
+    padding: 8px 2px 10px;
+    border-radius: 0;
     color: var(--text-muted);
     line-height: 1.4;
     font-size: 0.85rem;

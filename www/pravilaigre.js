@@ -352,7 +352,7 @@ class RulesUI {
         return data.map((slide, index) => `
             <div class="rules-slide">
                 <h2 class="rules-slide-title">${slide.title}</h2>
-                <div class="pravni-tekst-container rules-slide-content">
+                <div class="rules-slide-content">
                     ${slide.content}
                 </div>
             </div>
