@@ -35,6 +35,7 @@ class RiznicaManager {
         }
 
         this.isIntroPlaying = true;
+        this.applyIntroTheme(overlay);
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
         introText.textContent = '';
@@ -76,6 +77,15 @@ class RiznicaManager {
             overlay.setAttribute('aria-hidden', 'true');
             this.isIntroPlaying = false;
         }, introDuration);
+    }
+
+    applyIntroTheme(overlay) {
+        const knownThemes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const introTheme = knownThemes.includes(activeTheme) ? activeTheme : 'dark';
+
+        knownThemes.forEach(theme => overlay.classList.remove(`theme-${theme}`));
+        overlay.classList.add(`theme-${introTheme}`);
     }
 
     close() {
