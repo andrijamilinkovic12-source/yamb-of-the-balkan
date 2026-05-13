@@ -11,9 +11,9 @@
     --gold-dark: #16a34a;
     --gold-highlight: #bbf7d0;
     --gold-glow: rgba(74, 222, 128, 0.5);
-    --carousel-dot-idle: color-mix(in srgb, var(--gold-main) 28%, transparent);
-    --carousel-dot-active: var(--gold-main);
-    --carousel-dot-glow: var(--gold-glow);
+    --carousel-dot-idle: rgba(74, 222, 128, 0.28);
+    --carousel-dot-active: #4ade80;
+    --carousel-dot-glow: rgba(74, 222, 128, 0.5);
     --text-main: #e2e8f0;       
     --text-filled: #ffffff;     
     --text-sum: #86efac;
@@ -75,6 +75,9 @@ body.light-theme {
     /* Bogato zlato */
     --gold-main: #d4af37; 
     --gold-glow: rgba(212, 175, 55, 0.4);
+    --carousel-dot-idle: rgba(212, 175, 55, 0.28);
+    --carousel-dot-active: #d4af37;
+    --carousel-dot-glow: rgba(212, 175, 55, 0.45);
     
     /* Tekst */
     --text-main: #334155; 
@@ -148,6 +151,7 @@ body.light-theme .mode-btn:active { box-shadow: 0 0 0 #cbd5e1, inset 0 3px 10px 
 body.medium-theme {
     --bg-base: #2b0a16; --bg-gradient-1: #560e1d; --bg-gradient-2: #2b0a16;
     --gold-main: #ffccbc; --gold-glow: rgba(255, 204, 188, 0.3);
+    --carousel-dot-idle: rgba(255, 204, 188, 0.28); --carousel-dot-active: #ffccbc; --carousel-dot-glow: rgba(255, 204, 188, 0.45);
     --text-main: #fff0f3; --text-filled: #ffffff; --text-sum: #ffd700; --text-sum-label: #ffccbc; --text-muted: #d8a6b0;
     --glass-bg: rgba(60, 10, 20, 0.3); --glass-panel: linear-gradient(145deg, rgba(70, 14, 29, 0.9), rgba(40, 8, 16, 0.95)); --glass-border: 1px solid rgba(255, 204, 188, 0.25); 
     --modal-bg: linear-gradient(135deg, #4a0e19, #2b0a16); --input-bg: rgba(0, 0, 0, 0.3); --input-border: var(--gold-main);
@@ -172,6 +176,7 @@ body.medium-theme .modal-box, body.medium-theme .card { background: linear-gradi
 body.winter-theme {
     --bg-base: #002244; --bg-gradient-1: #004080; --bg-gradient-2: #001833;
     --gold-main: #4fc3f7; --gold-glow: rgba(79, 195, 247, 0.5);
+    --carousel-dot-idle: rgba(79, 195, 247, 0.28); --carousel-dot-active: #4fc3f7; --carousel-dot-glow: rgba(79, 195, 247, 0.55);
     --text-main: #e6f1ff; --text-filled: #ffffff; --text-sum: #4fc3f7; --text-sum-label: #29b6f6; --text-muted: #8bb4e5;
     --glass-bg: rgba(0, 102, 204, 0.15); --glass-panel: rgba(0, 51, 102, 0.85); --glass-border: 1px solid rgba(79, 195, 247, 0.3);
     --modal-bg: #003366; --input-bg: #002b5e; --input-border: #4fc3f7;
@@ -197,6 +202,7 @@ body.winter-theme .modal-box, body.winter-theme .card { background: linear-gradi
 body.neon-theme {
     --bg-base: #06080d; --bg-gradient-1: #0f121b; --bg-gradient-2: #030406;
     --gold-main: #00ffcc; --gold-glow: rgba(0, 255, 204, 0.6);
+    --carousel-dot-idle: rgba(0, 255, 204, 0.25); --carousel-dot-active: #00ffcc; --carousel-dot-glow: rgba(0, 255, 204, 0.7);
     --text-main: #e0e0ff; --text-filled: #ffffff; --text-sum: #ff00ff; --text-sum-label: #ff66ff; --text-muted: #5a6b8c;
     --glass-bg: rgba(10, 20, 30, 0.4); --glass-panel: rgba(15, 18, 30, 0.85); --glass-border: 1px solid rgba(0, 255, 204, 0.3);
     --modal-bg: linear-gradient(135deg, #0f121b, #06080d); --input-bg: rgba(0,0,0,0.5); --input-border: #00ffcc;
@@ -222,6 +228,7 @@ body.neon-theme .modal-box, body.neon-theme .card { background: linear-gradient(
 body.amethyst-theme {
     --bg-base: #1a0b2e; --bg-gradient-1: #2d1457; --bg-gradient-2: #0f051c;
     --gold-main: #d4af37; --gold-glow: rgba(212, 175, 55, 0.5);
+    --carousel-dot-idle: rgba(212, 175, 55, 0.28); --carousel-dot-active: #d4af37; --carousel-dot-glow: rgba(212, 175, 55, 0.55);
     --text-main: #f3e8ff; --text-filled: #ffffff; --text-sum: #d4af37; --text-sum-label: #f1da8b; --text-muted: #a388cc;
     --glass-bg: rgba(45, 20, 87, 0.3); --glass-panel: rgba(35, 15, 60, 0.9); --glass-border: 1px solid rgba(212, 175, 55, 0.3);
     --modal-bg: linear-gradient(135deg, #2d1457, #1a0b2e); --input-bg: rgba(0,0,0,0.3); --input-border: #d4af37;
@@ -328,6 +335,9 @@ body.easter-theme {
     --bg-gradient-2: #c8e6c9; 
     --gold-main: #ab47bc; /* Jorgovan (Lilac) za naglaske */
     --gold-glow: rgba(171, 71, 188, 0.4);
+    --carousel-dot-idle: rgba(171, 71, 188, 0.24);
+    --carousel-dot-active: #ab47bc;
+    --carousel-dot-glow: rgba(171, 71, 188, 0.45);
     --text-main: #2e7d32; 
     --text-filled: #6a1b9a; /* Duboka ljubičasta za popunjena polja */
     --text-sum: #d81b60; 
@@ -541,6 +551,9 @@ body.desert-theme {
     --bg-gradient-2: #E8E8D0;
     --gold-main: #9E7B4A; /* Malo tamnija zlatna za bolji kontrast */
     --gold-glow: rgba(158, 123, 74, 0.4);
+    --carousel-dot-idle: rgba(158, 123, 74, 0.28);
+    --carousel-dot-active: #9E7B4A;
+    --carousel-dot-glow: rgba(158, 123, 74, 0.45);
     --text-main: #4A4635; /* Zatamnjeno - Topla siva/braon za bolji kontrast */
     --text-filled: #2D2A1F; /* Zatamnjeno */
     --text-sum: #8A6532; /* Zatamnjeno */
@@ -707,6 +720,9 @@ body.moon-theme {
     --bg-gradient-2: #020304;
     --gold-main: #f8fafc; /* Oštra Mesečeva srebrna */
     --gold-glow: rgba(248, 250, 252, 0.5);
+    --carousel-dot-idle: rgba(148, 163, 184, 0.32);
+    --carousel-dot-active: #f8fafc;
+    --carousel-dot-glow: rgba(248, 250, 252, 0.55);
     --text-main: #cbd5e1;
     --text-filled: #ffffff;
     --text-sum: #a5b4fc; /* Svetlija kosmičko plava za jači kontrast */
