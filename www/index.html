@@ -950,11 +950,16 @@
         </div>
     </div>
 
-    <div id="tournament-screen" class="screen" style="justify-content: flex-start; padding-top: max(60px, env(safe-area-inset-top)); padding-bottom: max(20px, env(safe-area-inset-bottom));">
-        <button class="back-btn" onclick="app.showMainMenu()">←</button>
-        <h2 class="menu-title" style="margin-top: 10px; margin-bottom: 15px; flex-shrink: 0; text-transform: uppercase;" data-lang="tourney_title">TURNIR ⚔️</h2>
-        
-        <div id="tourney-content" style="width: 100%; max-width: 900px; flex: 1; overflow-y: hidden; display: flex; flex-direction: column; align-items: center;">
+    <div id="tournament-screen" class="screen">
+        <div class="hs-card modal-box tourney-shell">
+            <div class="chat-header global-chat-header tourney-card-header">
+                <div class="global-chat-title-group">
+                    <span class="global-chat-title" data-lang="tourney_title">TURNIR ⚔️</span>
+                </div>
+                <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori turnir">×</button>
+            </div>
+
+            <div id="tourney-content" class="chat-body global-chat-body tourney-card-body"></div>
         </div>
     </div>
 

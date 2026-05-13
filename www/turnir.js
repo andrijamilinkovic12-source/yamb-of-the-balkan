@@ -378,45 +378,38 @@ class TournamentManager {
         container.style.overflow = "hidden";
         container.style.display = "flex";
         container.style.flexDirection = "column";
-        container.style.alignItems = "center";
+        container.style.alignItems = "stretch";
 
         container.style.height = "";
         container.style.paddingTop = "";
         container.style.paddingBottom = "";
 
         container.innerHTML = `
-            <div class="modal-box" style="width: 95%; max-width: 500px; flex: 1; min-height: 0; max-height: 85vh; padding: 0 !important; overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(180deg, rgba(20,20,20,0.95) 0%, rgba(10,10,10,0.95) 100%); border: 2px solid var(--gold-main); box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 15px; margin-bottom: 10px;">
-
-                <div style="display: flex; width: 100%; background: rgba(0,0,0,0.6); border-bottom: 2px solid rgba(255,215,0,0.3); flex-shrink: 0;">
-                    <button style="flex: 1; padding: 15px 5px; font-size: 0.8rem; border: none; background: transparent; border-bottom: ${this.activeTab === 'info' ? '3px solid var(--gold-main)' : '3px solid transparent'}; color: ${this.activeTab === 'info' ? 'var(--gold-main)' : 'var(--text-muted)'}; font-weight: 800; transition: all 0.2s; border-radius: 0; outline: none; cursor: pointer;" onclick="app.tournamentManager.switchTab('info')">
+            <div class="tourney-tabs" role="tablist" aria-label="Turnir sekcije">
+                <button class="tourney-tab-btn ${this.activeTab === 'info' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'info'}" onclick="app.tournamentManager.switchTab('info')">
                         ${tt('tourney_tab_info') || '📋 INFO'}
-                    </button>
-                    <button style="flex: 1; padding: 15px 5px; font-size: 0.8rem; border: none; background: transparent; border-bottom: ${this.activeTab === 'bracket' ? '3px solid var(--gold-main)' : '3px solid transparent'}; color: ${this.activeTab === 'bracket' ? 'var(--gold-main)' : 'var(--text-muted)'}; font-weight: 800; transition: all 0.2s; border-radius: 0; outline: none; cursor: pointer;" onclick="app.tournamentManager.switchTab('bracket')">
+                </button>
+                <button class="tourney-tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'bracket'}" onclick="app.tournamentManager.switchTab('bracket')">
                         ${tt('tourney_tab_bracket') || '🏆 KOSTUR'}
-                    </button>
-                    <button style="flex: 1; padding: 15px 5px; font-size: 0.8rem; border: none; background: transparent; border-bottom: ${this.activeTab === 'leaderboard' ? '3px solid var(--gold-main)' : '3px solid transparent'}; color: ${this.activeTab === 'leaderboard' ? 'var(--gold-main)' : 'var(--text-muted)'}; font-weight: 800; transition: all 0.2s; border-radius: 0; outline: none; cursor: pointer;" onclick="app.tournamentManager.switchTab('leaderboard')">
+                </button>
+                <button class="tourney-tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'leaderboard'}" onclick="app.tournamentManager.switchTab('leaderboard')">
                         ${tt('tourney_tab_fame') || '👑 SLAVNI'}
-                    </button>
-                </div>
-
-                <div id="tourney-tab-content" style="width: 100%; flex: 1; display: flex; flex-direction: column; align-items: center; box-sizing: border-box;"></div>
-
+                </button>
             </div>
+
+            <div id="tourney-tab-content" class="tourney-tab-content"></div>
         `;
 
         const tabContent = document.getElementById('tourney-tab-content');
 
         if (this.activeTab === 'bracket') {
-            tabContent.style.padding = '5px 0';
             tabContent.style.overflowY = 'hidden';
             tabContent.style.overflowX = 'hidden';
             this.renderBracket(tabContent);
         } else if (this.activeTab === 'info') {
-            tabContent.style.padding = '20px 10px';
             tabContent.style.overflowY = 'auto';
             this.renderRegistration(tabContent);
         } else if (this.activeTab === 'leaderboard') {
-            tabContent.style.padding = '20px 10px';
             tabContent.style.overflowY = 'auto';
             tabContent.innerHTML = this.getLeaderboardHTML();
         }
