@@ -41,8 +41,11 @@ class RiznicaManager {
 
         const lang = localStorage.getItem('yamb_lang') || 'sr';
         const introLabel = lang === 'en' ? 'T R E A S U R Y' : 'R I Z N I C A';
-        const typeDuration = 2850;
+        const typeDuration = 2600;
+        const openBehindOverlayAt = 3500;
+        const introDuration = 4300;
         let step = 0;
+        let completed = false;
 
         const typeTimer = setInterval(() => {
             step += 1;
@@ -59,11 +62,20 @@ class RiznicaManager {
         }, typeDuration + 80);
 
         setTimeout(() => {
+            if (completed) return;
+            completed = true;
+            onComplete();
+        }, openBehindOverlayAt);
+
+        setTimeout(() => {
+            if (!completed) {
+                completed = true;
+                onComplete();
+            }
             overlay.classList.add('hidden');
             overlay.setAttribute('aria-hidden', 'true');
             this.isIntroPlaying = false;
-            onComplete();
-        }, 3600);
+        }, introDuration);
     }
 
     close() {
