@@ -304,9 +304,7 @@ class EffectManager {
                 const shards = Array.from({ length: 22 }, (_, i) => `<span class="sn-shard" style="--i:${i}; --r:${34 + (i % 7) * 8}px; --d:${(i % 5) * 0.045}s;"></span>`).join('');
                 snContainer.innerHTML = `
                     <div class="sn-nebula"></div>
-                    <div class="sn-bitmap sn-bitmap-main"></div>
-                    <div class="sn-bitmap sn-bitmap-glass"></div>
-                    <div class="sn-bitmap sn-bitmap-sparks"></div>
+                    <video class="sn-video" src="assets/supernova-bloom.mp4" autoplay muted playsinline preload="auto"></video>
                     <div class="sn-lens"></div>
                     <div class="sn-core"></div>
                     <div class="sn-ring sn-ring-1"></div>
@@ -314,6 +312,8 @@ class EffectManager {
                     <div class="sn-shards">${shards}</div>
                 `;
                 document.body.appendChild(snContainer);
+                const snVideo = snContainer.querySelector('.sn-video');
+                if (snVideo) snVideo.play().catch(() => {});
                 
                 targetTable.classList.add('anim-supernova-table');
                 
