@@ -61,10 +61,10 @@ body {
 }
 
 #riznica-screen .riznica-close-btn {
-    top: max(14px, calc(var(--safe-top) + 10px));
-    left: max(12px, calc(var(--safe-left) + 10px));
+    position: static;
     width: 42px;
     height: 42px;
+    flex: 0 0 42px;
     border-radius: 50%;
     background: rgba(255,255,255,0.07);
     border: 1px solid rgba(255,255,255,0.16);
@@ -78,34 +78,37 @@ body {
 }
 
 #riznica-screen .riznica-header {
-    justify-content: flex-start;
+    position: relative;
+    justify-content: space-between;
     min-height: 64px;
-    padding: max(12px, calc(var(--safe-top) + 10px)) max(10px, var(--safe-right)) 8px max(64px, calc(var(--safe-left) + 62px));
+    padding: max(12px, calc(var(--safe-top) + 10px)) max(12px, var(--safe-right)) 8px max(12px, var(--safe-left));
     border-bottom: none;
     background: transparent;
     backdrop-filter: none;
-}
-
-#riznica-screen .balance-group {
-    gap: 8px;
-    min-width: 0;
+    gap: 10px;
 }
 
 #riznica-screen .balance-display {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     min-height: 36px;
     padding: 7px 12px;
     white-space: nowrap;
+    max-width: calc(100vw - 180px - var(--safe-left) - var(--safe-right));
+    justify-content: center;
 }
 
 #riznica-screen .btn-add-coins {
     min-height: 36px;
+    flex: 0 0 auto;
     margin-left: 0;
     white-space: nowrap;
 }
 
 #riznica-screen .riznica-tabs {
     flex-wrap: nowrap;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 10px;
     margin: 4px 0 8px;
     padding: 0 max(10px, var(--safe-right)) 0 max(10px, var(--safe-left));
@@ -133,10 +136,6 @@ body {
 
 @media (max-width: 380px) {
     #riznica-screen .riznica-header {
-        padding-left: max(58px, calc(var(--safe-left) + 56px));
-    }
-
-    #riznica-screen .balance-group {
         gap: 6px;
     }
 
@@ -145,6 +144,10 @@ body {
         font-size: 0.72rem;
         padding-left: 9px;
         padding-right: 9px;
+    }
+
+    #riznica-screen .balance-display {
+        max-width: calc(100vw - 164px - var(--safe-left) - var(--safe-right));
     }
 
     #riznica-screen .tab-btn {

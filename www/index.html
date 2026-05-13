@@ -574,13 +574,10 @@
     </div>
 
     <div id="riznica-screen" class="screen">
-        <button class="back-btn riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
-        
         <div class="header riznica-header">
-            <div class="balance-group">
-                <div class="balance-display"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
-                <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 💰 🎬</button>
-            </div>
+            <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 💰 🎬</button>
+            <div class="balance-display"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
+            <button class="back-btn riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
         </div>
 
         <div class="nav-tabs riznica-tabs" aria-label="Kategorije riznice">
