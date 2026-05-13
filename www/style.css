@@ -650,15 +650,15 @@ body {
 .tourney-action-button {
     width: 100%;
     max-width: none;
-    min-height: 52px;
+    min-height: 48px;
     margin-top: auto;
-    padding: 14px 16px;
+    padding: 10px 14px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    font-size: 0.95rem;
-    line-height: 1.15;
+    gap: 9px;
+    font-size: 0.9rem;
+    line-height: 1.1;
     letter-spacing: 0;
     white-space: normal;
     text-align: center;
@@ -690,8 +690,26 @@ body {
 .tourney-action-label {
     min-width: 0;
     max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+.tourney-action-primary,
+.tourney-action-secondary {
     display: block;
+    max-width: 100%;
     overflow-wrap: anywhere;
+}
+.tourney-action-primary {
+    font-weight: 900;
+}
+.tourney-action-secondary {
+    font-size: 0.72rem;
+    font-weight: 800;
+    opacity: 0.82;
+    text-transform: none;
 }
 @media (min-width: 760px) {
     #tournament-screen { padding-top: 22px; padding-bottom: 22px; }
