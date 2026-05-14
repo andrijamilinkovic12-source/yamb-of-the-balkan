@@ -4,6 +4,7 @@ class KvartalnaLigaManager {
         this.storageKey = 'yamb_quarter_data'; 
         this.currentSlide = 0;
         this.hofData = null; 
+        this.isIntroPlaying = false;
         
         this.selfHeal(); // <-- Pametna funkcija za čišćenje
         this.init();
@@ -207,6 +208,55 @@ class KvartalnaLigaManager {
     }
 
     openModal() {
+        if (this.isIntroPlaying) return;
+
+        this.playIntro(() => this.showModal());
+    }
+
+    playIntro(onComplete) {
+        const overlay = document.getElementById('league-intro');
+
+        if (!overlay) {
+            onComplete();
+            return;
+        }
+
+        this.isIntroPlaying = true;
+        this.applyIntroTheme(overlay);
+        overlay.classList.remove('hidden');
+        overlay.setAttribute('aria-hidden', 'false');
+
+        let completed = false;
+        const openBehindOverlayAt = 3650;
+        const introDuration = 4600;
+
+        setTimeout(() => {
+            if (completed) return;
+            completed = true;
+            onComplete();
+        }, openBehindOverlayAt);
+
+        setTimeout(() => {
+            if (!completed) {
+                completed = true;
+                onComplete();
+            }
+            overlay.classList.add('hidden');
+            overlay.setAttribute('aria-hidden', 'true');
+            this.isIntroPlaying = false;
+        }, introDuration);
+    }
+
+    applyIntroTheme(overlay) {
+        const knownThemes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const introTheme = knownThemes.includes(activeTheme) ? activeTheme : 'dark';
+
+        knownThemes.forEach(theme => overlay.classList.remove(`theme-${theme}`));
+        overlay.classList.add(`theme-${introTheme}`);
+    }
+
+    showModal() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const data = this.getScores();
         

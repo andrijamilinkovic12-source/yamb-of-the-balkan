@@ -257,6 +257,215 @@ body {
     100% { opacity: 0; transform: scale(0.92) translateY(-12px); }
 }
 
+.league-intro {
+    --league-intro-a: rgba(255, 215, 0, 0.3);
+    --league-intro-b: rgba(102, 187, 106, 0.2);
+    --league-intro-text: #fff8c9;
+    --league-intro-glow: rgba(102, 187, 106, 0.76);
+    position: fixed;
+    inset: 0;
+    z-index: 999998;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: max(24px, var(--safe-top)) max(18px, var(--safe-right)) max(24px, var(--safe-bottom)) max(18px, var(--safe-left));
+    background:
+        radial-gradient(circle at 50% 42%, var(--league-intro-a), transparent 38%),
+        radial-gradient(circle at 50% 62%, var(--league-intro-b), transparent 34%),
+        rgba(7, 11, 18, 0.78);
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    pointer-events: none;
+    overflow: hidden;
+    animation: leagueIntroFade 4.6s ease forwards;
+}
+
+.league-intro::before,
+.league-intro::after {
+    content: "";
+    position: absolute;
+    width: 58vmin;
+    height: 58vmin;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--league-intro-a), transparent 62%);
+    opacity: 0;
+    filter: blur(2px);
+    animation: leagueIntroAura 4.6s ease forwards;
+}
+
+.league-intro::before {
+    transform: translate(-32vmin, -18vmin);
+}
+
+.league-intro::after {
+    background: radial-gradient(circle, var(--league-intro-b), transparent 64%);
+    transform: translate(30vmin, 16vmin);
+    animation-delay: 0.18s;
+}
+
+.league-intro-mark-wrap {
+    position: relative;
+    z-index: 1;
+    width: 214px;
+    height: 214px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 58%);
+    filter: drop-shadow(0 0 26px var(--league-intro-glow)) drop-shadow(0 0 54px var(--league-intro-a));
+    animation: leagueWatermarkReveal 4.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.league-intro-mark {
+    width: 190px;
+    height: 190px;
+    object-fit: contain;
+    filter: saturate(1.24) brightness(1.28);
+}
+
+.league-intro-title {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    width: min(92vw, 560px);
+    min-height: 58px;
+    text-align: center;
+    color: var(--league-intro-text);
+    text-transform: uppercase;
+    font-size: 2rem;
+    line-height: 1.05;
+    font-weight: 900;
+    text-shadow: 0 0 16px var(--league-intro-glow), 0 2px 14px rgba(0, 0, 0, 0.35);
+}
+
+.league-intro-word {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.league-intro-word-left {
+    animation: leagueWordLeft 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
+}
+
+.league-intro-word-right {
+    animation: leagueWordRight 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
+}
+
+.league-intro.theme-dark {
+    --league-intro-a: rgba(255, 215, 0, 0.28);
+    --league-intro-b: rgba(102, 187, 106, 0.22);
+    --league-intro-text: #fff8c9;
+    --league-intro-glow: rgba(102, 187, 106, 0.78);
+}
+
+.league-intro.theme-light {
+    --league-intro-a: rgba(255, 215, 0, 0.34);
+    --league-intro-b: rgba(255, 244, 185, 0.24);
+    --league-intro-text: #fff1a8;
+    --league-intro-glow: rgba(255, 215, 0, 0.82);
+    background:
+        radial-gradient(circle at 50% 42%, var(--league-intro-a), transparent 38%),
+        radial-gradient(circle at 50% 62%, var(--league-intro-b), transparent 34%),
+        rgba(245, 238, 216, 0.64);
+}
+
+.league-intro.theme-medium {
+    --league-intro-a: rgba(255, 204, 188, 0.34);
+    --league-intro-b: rgba(255, 112, 137, 0.22);
+    --league-intro-text: #ffe3ea;
+    --league-intro-glow: rgba(255, 112, 137, 0.78);
+}
+
+.league-intro.theme-winter {
+    --league-intro-a: rgba(79, 195, 247, 0.34);
+    --league-intro-b: rgba(180, 232, 255, 0.22);
+    --league-intro-text: #e4f8ff;
+    --league-intro-glow: rgba(79, 195, 247, 0.82);
+}
+
+.league-intro.theme-neon {
+    --league-intro-a: rgba(0, 255, 204, 0.3);
+    --league-intro-b: rgba(255, 0, 255, 0.22);
+    --league-intro-text: #c7fff7;
+    --league-intro-glow: rgba(0, 255, 204, 0.88);
+}
+
+.league-intro.theme-amethyst {
+    --league-intro-a: rgba(190, 130, 255, 0.32);
+    --league-intro-b: rgba(212, 175, 55, 0.2);
+    --league-intro-text: #efe0ff;
+    --league-intro-glow: rgba(190, 130, 255, 0.82);
+}
+
+.league-intro.theme-easter {
+    --league-intro-a: rgba(255, 182, 193, 0.34);
+    --league-intro-b: rgba(151, 220, 184, 0.24);
+    --league-intro-text: #ffe8f1;
+    --league-intro-glow: rgba(255, 182, 193, 0.78);
+    background:
+        radial-gradient(circle at 50% 42%, var(--league-intro-a), transparent 38%),
+        radial-gradient(circle at 50% 62%, var(--league-intro-b), transparent 34%),
+        rgba(255, 248, 238, 0.68);
+}
+
+.league-intro.theme-desert {
+    --league-intro-a: rgba(244, 196, 128, 0.34);
+    --league-intro-b: rgba(218, 165, 90, 0.24);
+    --league-intro-text: #ffe7bd;
+    --league-intro-glow: rgba(218, 165, 90, 0.8);
+}
+
+.league-intro.theme-moon {
+    --league-intro-a: rgba(214, 229, 245, 0.3);
+    --league-intro-b: rgba(124, 160, 210, 0.22);
+    --league-intro-text: #f0f8ff;
+    --league-intro-glow: rgba(174, 196, 219, 0.84);
+}
+
+@keyframes leagueIntroFade {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    86% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes leagueIntroAura {
+    0% { opacity: 0; transform: scale(0.72); }
+    24% { opacity: 0.72; }
+    76% { opacity: 0.62; }
+    100% { opacity: 0; transform: scale(1.22); }
+}
+
+@keyframes leagueWatermarkReveal {
+    0% { opacity: 0; transform: scale(0.42) rotate(-14deg); }
+    18% { opacity: 1; transform: scale(1.12) rotate(4deg); }
+    31% { transform: scale(1) rotate(0deg); }
+    62% { transform: scale(1.08); filter: drop-shadow(0 0 34px var(--league-intro-glow)) drop-shadow(0 0 74px var(--league-intro-a)); }
+    82% { opacity: 1; transform: scale(1.08); }
+    100% { opacity: 0; transform: scale(0.96) translateY(-10px); }
+}
+
+@keyframes leagueWordLeft {
+    0% { opacity: 0; transform: translateX(-48vw); }
+    23% { opacity: 0; transform: translateX(-48vw); }
+    54% { opacity: 1; transform: translateX(0); }
+    84% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(-8px); }
+}
+
+@keyframes leagueWordRight {
+    0% { opacity: 0; transform: translateX(48vw); }
+    23% { opacity: 0; transform: translateX(48vw); }
+    54% { opacity: 1; transform: translateX(0); }
+    84% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(8px); }
+}
+
 @media (max-width: 380px) {
     #riznica-screen .riznica-header {
         gap: 6px;
@@ -278,6 +487,22 @@ body {
         height: 42px;
         min-width: 42px;
         font-size: 1.22rem;
+    }
+
+    .league-intro-mark-wrap {
+        width: 176px;
+        height: 176px;
+    }
+
+    .league-intro-mark {
+        width: 158px;
+        height: 158px;
+    }
+
+    .league-intro-title {
+        gap: 8px;
+        font-size: 1.45rem;
+        min-height: 48px;
     }
 }
 
