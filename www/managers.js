@@ -315,7 +315,7 @@ class EffectManager {
                 let rafId = 0;
 
                 const resizeCanvas = () => {
-                    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
                     canvas.width = Math.floor(window.innerWidth * dpr);
                     canvas.height = Math.floor(window.innerHeight * dpr);
                     canvas.style.width = '100vw';
@@ -331,23 +331,23 @@ class EffectManager {
                     return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2;
                 };
 
-                const particles = Array.from({ length: 190 }, (_, i) => {
+                const particles = Array.from({ length: 78 }, (_, i) => {
                     const a = (i * 2.3999632297) + (i % 7) * 0.09;
-                    const lane = i % 5;
+                    const lane = i % 4;
                     return {
                         a,
-                        r: 70 + lane * 32 + (i % 17) * 9,
-                        size: 0.8 + (i % 6) * 0.28,
+                        r: 90 + lane * 42 + (i % 13) * 11,
+                        size: 0.9 + (i % 5) * 0.34,
                         speed: 0.78 + (i % 11) * 0.025,
-                        drift: ((i % 9) - 4) * 0.15,
+                        drift: ((i % 9) - 4) * 0.10,
                         delay: (i % 13) * 0.012
                     };
                 });
-                const glassCuts = Array.from({ length: 34 }, (_, i) => ({
-                    a: (Math.PI * 2 * i) / 34 + ((i % 4) - 1.5) * 0.035,
-                    start: 26 + (i % 5) * 12,
-                    len: 125 + (i % 9) * 28,
-                    width: 0.6 + (i % 3) * 0.35
+                const glassCuts = Array.from({ length: 10 }, (_, i) => ({
+                    a: (Math.PI * 2 * i) / 10 + ((i % 4) - 1.5) * 0.055,
+                    start: 110 + (i % 4) * 22,
+                    len: 115 + (i % 6) * 22,
+                    width: 0.7 + (i % 3) * 0.28
                 }));
 
                 const drawRing = (x, y, radius, alpha, width, blur) => {
@@ -378,19 +378,20 @@ class EffectManager {
                     ctx.clearRect(0, 0, w, h);
                     ctx.globalCompositeOperation = 'source-over';
 
-                    const bg = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, maxR * 0.85);
-                    bg.addColorStop(0, `rgba(205,230,255,${0.15 * alive})`);
-                    bg.addColorStop(0.28, `rgba(50,92,150,${0.10 * alive})`);
+                    const bg = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, maxR * 0.9);
+                    bg.addColorStop(0, `rgba(232,248,255,${0.24 * alive})`);
+                    bg.addColorStop(0.22, `rgba(73,121,178,${0.16 * alive})`);
+                    bg.addColorStop(0.62, `rgba(5,14,29,${0.18 * alive})`);
                     bg.addColorStop(1, `rgba(0,0,0,${0.34 * alive})`);
                     ctx.fillStyle = bg;
                     ctx.fillRect(0, 0, w, h);
 
                     ctx.globalCompositeOperation = 'screen';
-                    const coreR = 8 + birth * 18 + blast * 58;
+                    const coreR = 14 + birth * 26 + blast * 82;
                     const core = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, coreR * 3.2);
                     core.addColorStop(0, `rgba(255,255,255,${0.92 * alive})`);
                     core.addColorStop(0.12, `rgba(224,244,255,${0.78 * alive})`);
-                    core.addColorStop(0.38, `rgba(116,184,242,${0.34 * alive})`);
+                    core.addColorStop(0.34, `rgba(116,184,242,${0.50 * alive})`);
                     core.addColorStop(1, 'rgba(116,184,242,0)');
                     ctx.fillStyle = core;
                     ctx.beginPath();
@@ -398,6 +399,22 @@ class EffectManager {
                     ctx.fill();
 
                     const shockR = 42 + blast * Math.min(maxR * 0.72, 620);
+                    const sphereAlpha = Math.sin(clamp01((p - 0.16) / 0.64) * Math.PI) * alive;
+                    if (sphereAlpha > 0) {
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'screen';
+                        const shell = ctx.createRadialGradient(center.x, center.y, shockR * 0.18, center.x, center.y, shockR * 0.96);
+                        shell.addColorStop(0, `rgba(255,255,255,${0.04 * sphereAlpha})`);
+                        shell.addColorStop(0.48, `rgba(110,177,235,${0.055 * sphereAlpha})`);
+                        shell.addColorStop(0.72, `rgba(232,246,255,${0.18 * sphereAlpha})`);
+                        shell.addColorStop(0.78, `rgba(120,190,245,${0.075 * sphereAlpha})`);
+                        shell.addColorStop(1, 'rgba(120,190,245,0)');
+                        ctx.fillStyle = shell;
+                        ctx.beginPath();
+                        ctx.arc(center.x, center.y, shockR * 0.98, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    }
                     drawRing(center.x, center.y, shockR, 0.56 * (1 - blast * 0.55) * alive, 1.4, 16);
                     drawRing(center.x, center.y, shockR * 0.72, 0.25 * alive, 0.8, 8);
                     drawRing(center.x, center.y, shockR * 1.06, 0.12 * alive, 1, 20);
@@ -408,20 +425,19 @@ class EffectManager {
                     ctx.rotate(p * 0.45);
                     glassCuts.forEach(cut => {
                         const local = easeOutCubic((p - 0.18) / 0.54);
-                        const r1 = cut.start + local * 30;
-                        const r2 = cut.start + cut.len * (0.36 + local * 0.84);
+                        const r1 = cut.start + local * 18;
+                        const r2 = cut.start + cut.len * (0.34 + local * 0.76);
                         const x1 = Math.cos(cut.a) * r1;
                         const y1 = Math.sin(cut.a) * r1;
                         const x2 = Math.cos(cut.a + cut.width * 0.012) * r2;
                         const y2 = Math.sin(cut.a + cut.width * 0.012) * r2;
                         const grad = ctx.createLinearGradient(x1, y1, x2, y2);
                         grad.addColorStop(0, 'rgba(255,255,255,0)');
-                        grad.addColorStop(0.42, 'rgba(235,248,255,0.42)');
+                        grad.addColorStop(0.42, 'rgba(235,248,255,0.22)');
                         grad.addColorStop(1, 'rgba(135,196,255,0)');
                         ctx.strokeStyle = grad;
                         ctx.lineWidth = cut.width;
-                        ctx.shadowColor = 'rgba(194,228,255,0.75)';
-                        ctx.shadowBlur = 10;
+                        ctx.shadowBlur = 0;
                         ctx.beginPath();
                         ctx.moveTo(x1, y1);
                         ctx.lineTo(x2, y2);
@@ -432,17 +448,16 @@ class EffectManager {
                     ctx.save();
                     ctx.translate(center.x, center.y);
                     ctx.rotate(-p * 0.28);
-                    for (let i = 0; i < 11; i++) {
+                    for (let i = 0; i < 12; i++) {
                         const local = easeOutCubic((p - 0.2) / 0.58);
                         const base = shockR * (0.42 + (i % 4) * 0.11) + i * 6;
                         const start = i * 0.71 + p * 0.35;
                         const span = 0.26 + (i % 3) * 0.08;
-                        const alpha = (0.18 + (i % 4) * 0.018) * alive * Math.sin(clamp01((p - 0.18) / 0.42) * Math.PI);
+                        const alpha = (0.20 + (i % 4) * 0.018) * alive * Math.sin(clamp01((p - 0.18) / 0.42) * Math.PI);
                         ctx.globalAlpha = Math.max(0, alpha);
                         ctx.strokeStyle = i % 2 ? 'rgba(205,236,255,0.66)' : 'rgba(255,255,255,0.58)';
-                        ctx.lineWidth = 0.8 + (i % 3) * 0.35;
-                        ctx.shadowColor = 'rgba(160,216,255,0.8)';
-                        ctx.shadowBlur = 12;
+                        ctx.lineWidth = 1 + (i % 3) * 0.45;
+                        ctx.shadowBlur = 0;
                         ctx.beginPath();
                         ctx.arc(0, 0, base * (0.55 + local * 0.55), start, start + span);
                         ctx.stroke();
@@ -452,7 +467,7 @@ class EffectManager {
                     ctx.save();
                     ctx.translate(center.x, center.y);
                     ctx.rotate(p * 0.18);
-                    for (let i = 0; i < 14; i++) {
+                    for (let i = 0; i < 11; i++) {
                         const local = easeOutCubic((p - 0.16 - (i % 5) * 0.012) / 0.64);
                         if (local <= 0 || local >= 1) continue;
                         const a = i * 0.448 + Math.sin(i) * 0.14;
@@ -464,15 +479,14 @@ class EffectManager {
                         const y1 = Math.sin(a) * r1;
                         const x2 = Math.cos(a + 0.08) * r2;
                         const y2 = Math.sin(a + 0.08) * r2;
-                        const alpha = Math.sin(local * Math.PI) * 0.24 * alive;
+                        const alpha = Math.sin(local * Math.PI) * 0.26 * alive;
                         const grad = ctx.createLinearGradient(x1, y1, x2, y2);
                         grad.addColorStop(0, 'rgba(255,255,255,0)');
                         grad.addColorStop(0.5, `rgba(185,228,255,${alpha})`);
                         grad.addColorStop(1, 'rgba(255,255,255,0)');
                         ctx.strokeStyle = grad;
-                        ctx.lineWidth = 1.1;
-                        ctx.shadowColor = 'rgba(151,211,255,0.75)';
-                        ctx.shadowBlur = 9;
+                        ctx.lineWidth = 1.25;
+                        ctx.shadowBlur = 0;
                         ctx.beginPath();
                         ctx.moveTo(x1, y1);
                         ctx.quadraticCurveTo(cpx, cpy, x2, y2);
@@ -488,10 +502,8 @@ class EffectManager {
                         const r = (28 + pt.r * pt.speed) * e + shockR * 0.08;
                         const x = center.x + Math.cos(a) * r;
                         const y = center.y + Math.sin(a) * r;
-                        const alpha = Math.sin(life * Math.PI) * 0.86 * alive;
+                        const alpha = Math.sin(life * Math.PI) * 0.62 * alive;
                         ctx.fillStyle = `rgba(210,236,255,${alpha})`;
-                        ctx.shadowColor = 'rgba(170,218,255,0.9)';
-                        ctx.shadowBlur = 8;
                         ctx.beginPath();
                         ctx.arc(x, y, pt.size * (1 + e * 0.8), 0, Math.PI * 2);
                         ctx.fill();
