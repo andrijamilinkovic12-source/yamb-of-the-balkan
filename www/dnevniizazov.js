@@ -18,79 +18,273 @@ class DnevniIzazov {
         const style = document.createElement('style');
         style.id = 'glass-daily-css';
         style.innerHTML = `
-            /* Glassmorphism Osnova */
             .glass-overlay {
-                position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-                background: rgba(0, 0, 0, 0.6);
-                backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-                z-index: 99999; display: none; align-items: center; justify-content: center;
-                opacity: 0; transition: opacity 0.4s ease;
+                position: fixed;
+                inset: 0;
+                width: 100vw;
+                height: 100dvh;
+                padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+                background:
+                    linear-gradient(180deg, rgba(5, 10, 18, 0.86), rgba(1, 5, 10, 0.94)),
+                    radial-gradient(circle at 50% 0%, rgba(224, 201, 149, 0.16), transparent 44%);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                z-index: 99999;
+                display: none;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.28s ease;
             }
+
             .glass-overlay.active { display: flex; opacity: 1; }
-            
-            /* Glavna Kartica */
+
             .glass-card {
-                background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
-                border: 1px solid rgba(255, 215, 0, 0.3);
-                border-radius: 24px;
-                box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(224, 201, 149, 0.1);
-                width: 90%; max-width: 420px; padding: 30px 20px;
-                display: flex; flex-direction: column; align-items: center;
-                position: relative; overflow: hidden;
+                width: min(430px, 100%);
+                max-height: calc(100dvh - 34px);
+                padding: 26px 18px 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: relative;
+                overflow: hidden;
+                isolation: isolate;
+                border-radius: 22px;
+                border: 1px solid rgba(224, 201, 149, 0.34);
+                background:
+                    linear-gradient(180deg, rgba(21, 31, 42, 0.96), rgba(7, 14, 22, 0.98)),
+                    linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+                box-shadow:
+                    0 26px 70px rgba(0, 0, 0, 0.62),
+                    0 0 0 1px rgba(255,255,255,0.05) inset,
+                    0 14px 0 rgba(0,0,0,0.28);
             }
-            
-            /* Zlatni odsjaj na ivicama */
+
             .glass-card::before {
-                content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-                background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 60%);
-                pointer-events: none; z-index: 0;
+                content: '';
+                position: absolute;
+                inset: 0;
+                background:
+                    linear-gradient(90deg, transparent, rgba(224, 201, 149, 0.12), transparent) top / 100% 1px no-repeat,
+                    linear-gradient(180deg, rgba(255,255,255,0.08), transparent 38%);
+                pointer-events: none;
+                z-index: 0;
             }
 
-            .glass-header { z-index: 1; text-align: center; margin-bottom: 25px; }
-            .glass-title { color: var(--gold-main); font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; text-shadow: 0 4px 10px rgba(0,0,0,0.8); margin: 0; }
-            .glass-subtitle { color: #ddd; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 5px; }
+            .glass-card::after {
+                content: '';
+                position: absolute;
+                left: 18px;
+                right: 18px;
+                bottom: 13px;
+                height: 4px;
+                border-radius: 999px;
+                background: linear-gradient(90deg, transparent, rgba(224, 201, 149, 0.38), transparent);
+                opacity: 0.75;
+                pointer-events: none;
+                z-index: 0;
+            }
 
-            /* Kockice Mreža */
+            .glass-header {
+                z-index: 1;
+                width: 100%;
+                text-align: center;
+                margin-bottom: 20px;
+                padding: 0 10px;
+            }
+
+            .glass-title {
+                color: var(--gold-main);
+                font-size: clamp(1.45rem, 7vw, 1.95rem);
+                font-weight: 950;
+                letter-spacing: 0;
+                text-shadow: 0 2px 0 rgba(0,0,0,0.48), 0 0 18px rgba(224, 201, 149, 0.28);
+                margin: 0;
+                line-height: 1.08;
+            }
+
+            .glass-subtitle {
+                color: rgba(255,255,255,0.72);
+                font-size: 0.78rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                line-height: 1.45;
+                margin-top: 8px;
+            }
+
             .glass-dice-grid {
-                display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;
-                z-index: 1; margin-bottom: 25px; width: 100%; padding: 0 10px;
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 12px;
+                z-index: 1;
+                width: 100%;
+                margin-bottom: 18px;
+                padding: 12px;
+                border-radius: 18px;
+                border: 1px solid rgba(255,255,255,0.09);
+                background: rgba(0,0,0,0.22);
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -18px 38px rgba(0,0,0,0.16);
             }
-            
+
             .glass-die {
-                background: transparent; border: none;
-                border-radius: 16px; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
-                font-size: 2.5rem; color: #fff; box-shadow: none;
-                transition: transform 0.2s, filter 0.2s;
+                min-width: 0;
+                aspect-ratio: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 16px;
+                border: 1px solid rgba(255,255,255,0.15);
+                background: linear-gradient(145deg, rgba(248, 250, 252, 0.98), rgba(218, 226, 236, 0.96));
+                color: #111827;
+                font-size: 2.1rem;
+                font-weight: 900;
+                box-shadow:
+                    0 8px 0 rgba(92, 71, 25, 0.45),
+                    0 14px 24px rgba(0,0,0,0.28),
+                    inset 0 2px 0 rgba(255,255,255,0.82);
+                transform: translateY(0);
+                transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
             }
-            .glass-die.rolling { color: var(--gold-main); text-shadow: 0 0 15px var(--gold-glow); animation: shake 0.2s infinite; }
-            .glass-die.locked { transform: scale(1.05); filter: drop-shadow(0 0 10px rgba(255,215,0,0.5)); }
 
-            /* Score Box */
+            .glass-die .dice-dots-wrapper {
+                width: 68%;
+                height: 68%;
+            }
+
+            .glass-die .dice-dot {
+                background: #101827;
+                box-shadow: 0 1px 0 rgba(255,255,255,0.24) inset;
+            }
+
+            .glass-die.rolling {
+                color: var(--gold-main);
+                background: linear-gradient(145deg, rgba(255, 249, 224, 1), rgba(224, 201, 149, 0.96));
+                filter: saturate(1.08);
+                animation: dailyDiceShake 0.24s infinite;
+                box-shadow:
+                    0 8px 0 rgba(128, 92, 18, 0.58),
+                    0 0 26px rgba(224, 201, 149, 0.42),
+                    inset 0 2px 0 rgba(255,255,255,0.88);
+            }
+
+            .glass-die.locked {
+                transform: translateY(-3px);
+                border-color: rgba(224, 201, 149, 0.56);
+                box-shadow:
+                    0 10px 0 rgba(97, 70, 17, 0.62),
+                    0 18px 26px rgba(0,0,0,0.32),
+                    0 0 18px rgba(224, 201, 149, 0.24),
+                    inset 0 2px 0 rgba(255,255,255,0.88);
+            }
+
             .glass-score-box {
-                background: rgba(0, 0, 0, 0.5); border-radius: 16px; padding: 15px 30px;
-                display: flex; flex-direction: column; align-items: center; z-index: 1; margin-bottom: 25px;
-                border: 1px solid rgba(255,215,0,0.2); width: 80%;
+                width: 100%;
+                z-index: 1;
+                margin-bottom: 18px;
+                padding: 14px 18px;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                align-items: center;
+                gap: 14px;
+                border-radius: 16px;
+                border: 1px solid rgba(224, 201, 149, 0.22);
+                background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
             }
-            .glass-score-lbl { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-            .glass-score-val { font-size: 2.5rem; font-weight: 900; color: var(--gold-main); text-shadow: 0 2px 5px rgba(0,0,0,0.8); line-height: 1; margin-top: 5px; }
 
-            /* Dugmići */
+            .glass-score-lbl {
+                min-width: 0;
+                color: rgba(255,255,255,0.66);
+                font-size: 0.72rem;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                text-align: left;
+            }
+
+            .glass-score-val {
+                color: var(--gold-main);
+                font-size: 2.25rem;
+                font-weight: 950;
+                line-height: 1;
+                min-width: 72px;
+                text-align: right;
+                text-shadow: 0 2px 0 rgba(0,0,0,0.44), 0 0 16px rgba(224, 201, 149, 0.24);
+            }
+
             .glass-btn {
-                background: linear-gradient(135deg, rgba(255,215,0,0.8), rgba(255,160,0,0.8));
-                border: 1px solid rgba(255,255,255,0.4); border-radius: 30px;
-                color: #000; font-weight: 900; font-size: 1.1rem; letter-spacing: 1px;
-                padding: 15px 40px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-                transition: transform 0.1s, filter 0.2s; z-index: 1; width: 80%; text-transform: uppercase;
+                width: 100%;
+                min-height: 54px;
+                z-index: 1;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding: 15px 20px;
+                border: 1px solid rgba(255,255,255,0.42);
+                border-radius: 16px;
+                background: linear-gradient(180deg, #f7d76a, #d79a22);
+                color: #161008;
+                font-weight: 950;
+                font-size: 1rem;
+                letter-spacing: 0;
+                text-transform: uppercase;
+                cursor: pointer;
+                box-shadow: 0 8px 0 #765018, 0 16px 28px rgba(0,0,0,0.34), inset 0 2px 0 rgba(255,255,255,0.45);
+                transition: transform 0.1s ease, filter 0.2s ease, box-shadow 0.1s ease;
             }
-            .glass-btn:active { transform: scale(0.95); }
-            .glass-btn:disabled { filter: grayscale(100%); opacity: 0.6; cursor: not-allowed; transform: none; }
-            
-            .glass-btn-close {
-                position: absolute; top: 15px; right: 20px; background: transparent; border: none;
-                color: #fff; font-size: 1.5rem; cursor: pointer; z-index: 2; opacity: 0.7;
+
+            .glass-btn:active {
+                transform: translateY(5px);
+                box-shadow: 0 3px 0 #765018, 0 9px 18px rgba(0,0,0,0.32), inset 0 3px 8px rgba(88,55,6,0.22);
             }
-            
-            @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+
+            .glass-btn:disabled {
+                filter: grayscale(85%);
+                opacity: 0.62;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            .glass-daily-result {
+                width: 100%;
+                z-index: 2;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 2px;
+            }
+
+            .glass-btn-double {
+                background: linear-gradient(180deg, #ffe27a, #e4a72a);
+            }
+
+            .glass-btn-claim {
+                background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.07));
+                color: #fff;
+                border-color: rgba(255,255,255,0.18);
+                box-shadow: 0 7px 0 rgba(0,0,0,0.36), 0 14px 24px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+            }
+
+            .glass-btn-claim:active {
+                box-shadow: 0 2px 0 rgba(0,0,0,0.36), 0 9px 18px rgba(0,0,0,0.22), inset 0 3px 8px rgba(0,0,0,0.20);
+            }
+
+            @media (max-width: 380px) {
+                .glass-card { padding: 22px 14px 18px; border-radius: 20px; }
+                .glass-dice-grid { gap: 9px; padding: 9px; }
+                .glass-die { border-radius: 13px; font-size: 1.75rem; }
+                .glass-score-val { font-size: 2rem; min-width: 58px; }
+                .glass-btn { min-height: 50px; font-size: 0.92rem; }
+            }
+
+            @keyframes dailyDiceShake {
+                0% { transform: translate(1px, 1px) rotate(0deg); }
+                25% { transform: translate(-2px, 1px) rotate(-1deg); }
+                50% { transform: translate(2px, -1px) rotate(1deg); }
+                75% { transform: translate(-1px, -2px) rotate(-1deg); }
+                100% { transform: translate(1px, 1px) rotate(0deg); }
+            }
         `;
         document.head.appendChild(style);
     }
@@ -106,7 +300,6 @@ class DnevniIzazov {
         overlay.className = 'glass-overlay';
         overlay.innerHTML = `
             <div class="glass-card" id="glass-daily-card">
-                <button class="glass-btn-close" onclick="dnevniIzazov.close()">✖</button>
                 <div class="glass-header">
                     <h2 class="glass-title">${txtTitle}</h2>
                     <div class="glass-subtitle">${txtSub}</div>
@@ -300,18 +493,13 @@ class DnevniIzazov {
         
         const resDiv = document.createElement('div');
         resDiv.id = 'glass-daily-result';
-        resDiv.style.width = '100%';
-        resDiv.style.display = 'flex';
-        resDiv.style.flexDirection = 'column';
-        resDiv.style.gap = '10px';
-        resDiv.style.marginTop = '10px';
-        resDiv.style.zIndex = '2';
+        resDiv.className = 'glass-daily-result';
 
         resDiv.innerHTML = `
-            <button class="glass-btn" style="width: 100%; background: linear-gradient(45deg, #FFD700, #FFA000); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 0.95rem;" onclick="dnevniIzazov.watchAdToDouble()">
+            <button class="glass-btn glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 🎥 ${t('btn_double_short')} 💰 (x2)
             </button>
-            <button class="glass-btn" style="width: 100%; background: rgba(255,255,255,0.1); color: #fff; border: 1px solid rgba(255,255,255,0.2); font-size: 0.95rem;" onclick="dnevniIzazov.claim(false)">
+            <button class="glass-btn glass-btn-claim" onclick="dnevniIzazov.claim(false)">
                 ${t('btn_claim_short')}
             </button>
         `;
