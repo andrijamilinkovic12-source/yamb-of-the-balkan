@@ -2084,12 +2084,21 @@ body {
     filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)) drop-shadow(0 0 8px rgba(255,214,111,0.2));
     pointer-events: none;
 }
+.menu-rules-icon {
+    width: 38px;
+    height: 38px;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)) drop-shadow(0 0 8px rgba(255,214,111,0.2));
+    pointer-events: none;
+}
 
 /* Prilagođavanje za telefone - ZADRŽANE ORIGINALNE MARGINE I RAZMACI */
 @media (max-width: 599px) and (orientation: portrait) { 
     .btn-square { width: 48px; height: 48px; font-size: 1.4rem; border-radius: 12px; } 
     .menu-stats-icon { width: 34px; height: 34px; }
     .menu-daily-icon { width: 35px; height: 35px; }
+    .menu-rules-icon { width: 34px; height: 34px; }
     .icon-menu-grid { gap: 12px; } 
     .modes-grid { gap: 10px; } 
     .mode-icon { font-size: 2rem; } 

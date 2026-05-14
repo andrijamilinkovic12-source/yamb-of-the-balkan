@@ -1,0 +1,54 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Pravila igre</title>
+  <desc id="desc">Stilizovana ikonica pravila igre sa zlatnom tablom, kockicama i oznakama poteza.</desc>
+  <defs>
+    <linearGradient id="panelGold" x1="25" y1="21" x2="72" y2="75" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF5BA"/>
+      <stop offset="0.43" stop-color="#E7B95E"/>
+      <stop offset="1" stop-color="#9B5F18"/>
+    </linearGradient>
+    <linearGradient id="panelEdge" x1="20" y1="20" x2="77" y2="78" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8DFFF2"/>
+      <stop offset="1" stop-color="#0D7778"/>
+    </linearGradient>
+    <linearGradient id="diceFace" x1="48" y1="48" x2="76" y2="77" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8D3"/>
+      <stop offset="0.48" stop-color="#E8C46B"/>
+      <stop offset="1" stop-color="#A96A1D"/>
+    </linearGradient>
+    <linearGradient id="markAmber" x1="24" y1="29" x2="57" y2="62" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE6A3"/>
+      <stop offset="1" stop-color="#FF8F3D"/>
+    </linearGradient>
+    <radialGradient id="rulesGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) rotate(90) scale(40)">
+      <stop stop-color="#FFD66F" stop-opacity="0.34"/>
+      <stop offset="0.62" stop-color="#0F8F8B" stop-opacity="0.13"/>
+      <stop offset="1" stop-color="#061313" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="rulesShadow" x="8" y="8" width="82" height="82" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.36"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#FFD66F" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <circle cx="48" cy="48" r="40" fill="url(#rulesGlow)"/>
+  <g filter="url(#rulesShadow)">
+    <path d="M23 25C23 21.6863 25.6863 19 29 19H67C70.3137 19 73 21.6863 73 25V70C73 73.3137 70.3137 76 67 76H29C25.6863 76 23 73.3137 23 70V25Z" fill="#132727"/>
+    <path d="M27 29C27 25.6863 29.6863 23 33 23H63C66.3137 23 69 25.6863 69 29V66C69 69.3137 66.3137 72 63 72H33C29.6863 72 27 69.3137 27 66V29Z" fill="url(#panelGold)"/>
+    <path d="M27 29C27 25.6863 29.6863 23 33 23H63C66.3137 23 69 25.6863 69 29V35H27V29Z" fill="url(#markAmber)"/>
+    <path d="M27 36H69" stroke="url(#panelEdge)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M36 20V27" stroke="#FFF0B3" stroke-width="5" stroke-linecap="round"/>
+    <path d="M60 20V27" stroke="#FFF0B3" stroke-width="5" stroke-linecap="round"/>
+    <path d="M36 48L41 53L51 42" stroke="#17302C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M36 63L41 68L51 57" stroke="#17302C" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M54 48H62" stroke="#17302C" stroke-width="4" stroke-linecap="round"/>
+    <path d="M54 63H61" stroke="#17302C" stroke-width="4" stroke-linecap="round"/>
+    <path d="M49 46C49 42.6863 51.6863 40 55 40H69C72.3137 40 75 42.6863 75 46V60C75 63.3137 72.3137 66 69 66H55C51.6863 66 49 63.3137 49 60V46Z" fill="#102927" stroke="url(#panelEdge)" stroke-width="3"/>
+    <path d="M54 47C54 44.7909 55.7909 43 58 43H68C70.2091 43 72 44.7909 72 47V57C72 59.2091 70.2091 61 68 61H58C55.7909 61 54 59.2091 54 57V47Z" fill="url(#diceFace)"/>
+    <circle cx="59" cy="48" r="2.3" fill="#17302C"/>
+    <circle cx="67" cy="48" r="2.3" fill="#17302C"/>
+    <circle cx="63" cy="52" r="2.3" fill="#17302C"/>
+    <circle cx="59" cy="56" r="2.3" fill="#17302C"/>
+    <circle cx="67" cy="56" r="2.3" fill="#17302C"/>
+  </g>
+</svg>
