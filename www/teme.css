@@ -14,6 +14,17 @@
     --carousel-dot-idle: rgba(74, 222, 128, 0.28);
     --carousel-dot-active: #4ade80;
     --carousel-dot-glow: rgba(74, 222, 128, 0.5);
+    --menu-icon-face-light: #dcfce7;
+    --menu-icon-face-main: #4ade80;
+    --menu-icon-face-dark: #166534;
+    --menu-icon-warm-light: #fef9c3;
+    --menu-icon-warm-main: #fbbf24;
+    --menu-icon-accent-light: #a7f3d0;
+    --menu-icon-accent-main: #14b8a6;
+    --menu-icon-core: #052e16;
+    --menu-icon-detail: #022c22;
+    --menu-icon-glow: #4ade80;
+    --menu-icon-css-glow: rgba(74, 222, 128, 0.24);
     --text-main: #e2e8f0;       
     --text-filled: #ffffff;     
     --text-sum: #86efac;
@@ -78,6 +89,17 @@ body.light-theme {
     --carousel-dot-idle: rgba(212, 175, 55, 0.28);
     --carousel-dot-active: #d4af37;
     --carousel-dot-glow: rgba(212, 175, 55, 0.45);
+    --menu-icon-face-light: #fff7c2;
+    --menu-icon-face-main: #d4af37;
+    --menu-icon-face-dark: #9a6b12;
+    --menu-icon-warm-light: #fff0b8;
+    --menu-icon-warm-main: #f59e0b;
+    --menu-icon-accent-light: #bae6fd;
+    --menu-icon-accent-main: #0ea5e9;
+    --menu-icon-core: #334155;
+    --menu-icon-detail: #422006;
+    --menu-icon-glow: #d4af37;
+    --menu-icon-css-glow: rgba(212, 175, 55, 0.22);
     
     /* Tekst */
     --text-main: #334155; 
@@ -152,6 +174,10 @@ body.medium-theme {
     --bg-base: #2b0a16; --bg-gradient-1: #560e1d; --bg-gradient-2: #2b0a16;
     --gold-main: #ffccbc; --gold-glow: rgba(255, 204, 188, 0.3);
     --carousel-dot-idle: rgba(255, 204, 188, 0.28); --carousel-dot-active: #ffccbc; --carousel-dot-glow: rgba(255, 204, 188, 0.45);
+    --menu-icon-face-light: #ffe4de; --menu-icon-face-main: #ff9f8f; --menu-icon-face-dark: #9f263d;
+    --menu-icon-warm-light: #ffe8a3; --menu-icon-warm-main: #ff6f61;
+    --menu-icon-accent-light: #ffc4d6; --menu-icon-accent-main: #d9467f;
+    --menu-icon-core: #4a0e19; --menu-icon-detail: #2b0a16; --menu-icon-glow: #ffccbc; --menu-icon-css-glow: rgba(255, 204, 188, 0.25);
     --text-main: #fff0f3; --text-filled: #ffffff; --text-sum: #ffd700; --text-sum-label: #ffccbc; --text-muted: #d8a6b0;
     --glass-bg: rgba(60, 10, 20, 0.3); --glass-panel: linear-gradient(145deg, rgba(70, 14, 29, 0.9), rgba(40, 8, 16, 0.95)); --glass-border: 1px solid rgba(255, 204, 188, 0.25); 
     --modal-bg: linear-gradient(135deg, #4a0e19, #2b0a16); --input-bg: rgba(0, 0, 0, 0.3); --input-border: var(--gold-main);
@@ -177,6 +203,10 @@ body.winter-theme {
     --bg-base: #002244; --bg-gradient-1: #004080; --bg-gradient-2: #001833;
     --gold-main: #4fc3f7; --gold-glow: rgba(79, 195, 247, 0.5);
     --carousel-dot-idle: rgba(79, 195, 247, 0.28); --carousel-dot-active: #4fc3f7; --carousel-dot-glow: rgba(79, 195, 247, 0.55);
+    --menu-icon-face-light: #e0f7ff; --menu-icon-face-main: #4fc3f7; --menu-icon-face-dark: #0369a1;
+    --menu-icon-warm-light: #ccfbf1; --menu-icon-warm-main: #22d3ee;
+    --menu-icon-accent-light: #ffffff; --menu-icon-accent-main: #38bdf8;
+    --menu-icon-core: #002244; --menu-icon-detail: #001833; --menu-icon-glow: #4fc3f7; --menu-icon-css-glow: rgba(79, 195, 247, 0.28);
     --text-main: #e6f1ff; --text-filled: #ffffff; --text-sum: #4fc3f7; --text-sum-label: #29b6f6; --text-muted: #8bb4e5;
     --glass-bg: rgba(0, 102, 204, 0.15); --glass-panel: rgba(0, 51, 102, 0.85); --glass-border: 1px solid rgba(79, 195, 247, 0.3);
     --modal-bg: #003366; --input-bg: #002b5e; --input-border: #4fc3f7;
@@ -203,6 +233,10 @@ body.neon-theme {
     --bg-base: #06080d; --bg-gradient-1: #0f121b; --bg-gradient-2: #030406;
     --gold-main: #00ffcc; --gold-glow: rgba(0, 255, 204, 0.6);
     --carousel-dot-idle: rgba(0, 255, 204, 0.25); --carousel-dot-active: #00ffcc; --carousel-dot-glow: rgba(0, 255, 204, 0.7);
+    --menu-icon-face-light: #bffff5; --menu-icon-face-main: #00ffcc; --menu-icon-face-dark: #008f7a;
+    --menu-icon-warm-light: #ffb6ff; --menu-icon-warm-main: #ff00ff;
+    --menu-icon-accent-light: #7df9ff; --menu-icon-accent-main: #00bfff;
+    --menu-icon-core: #06080d; --menu-icon-detail: #000000; --menu-icon-glow: #00ffcc; --menu-icon-css-glow: rgba(0, 255, 204, 0.32);
     --text-main: #e0e0ff; --text-filled: #ffffff; --text-sum: #ff00ff; --text-sum-label: #ff66ff; --text-muted: #5a6b8c;
     --glass-bg: rgba(10, 20, 30, 0.4); --glass-panel: rgba(15, 18, 30, 0.85); --glass-border: 1px solid rgba(0, 255, 204, 0.3);
     --modal-bg: linear-gradient(135deg, #0f121b, #06080d); --input-bg: rgba(0,0,0,0.5); --input-border: #00ffcc;
@@ -229,6 +263,10 @@ body.amethyst-theme {
     --bg-base: #1a0b2e; --bg-gradient-1: #2d1457; --bg-gradient-2: #0f051c;
     --gold-main: #d4af37; --gold-glow: rgba(212, 175, 55, 0.5);
     --carousel-dot-idle: rgba(212, 175, 55, 0.28); --carousel-dot-active: #d4af37; --carousel-dot-glow: rgba(212, 175, 55, 0.55);
+    --menu-icon-face-light: #fff0b8; --menu-icon-face-main: #d4af37; --menu-icon-face-dark: #8b6508;
+    --menu-icon-warm-light: #f3e8ff; --menu-icon-warm-main: #a855f7;
+    --menu-icon-accent-light: #e9d5ff; --menu-icon-accent-main: #7c3aed;
+    --menu-icon-core: #1a0b2e; --menu-icon-detail: #0f051c; --menu-icon-glow: #d4af37; --menu-icon-css-glow: rgba(212, 175, 55, 0.26);
     --text-main: #f3e8ff; --text-filled: #ffffff; --text-sum: #d4af37; --text-sum-label: #f1da8b; --text-muted: #a388cc;
     --glass-bg: rgba(45, 20, 87, 0.3); --glass-panel: rgba(35, 15, 60, 0.9); --glass-border: 1px solid rgba(212, 175, 55, 0.3);
     --modal-bg: linear-gradient(135deg, #2d1457, #1a0b2e); --input-bg: rgba(0,0,0,0.3); --input-border: #d4af37;
@@ -337,6 +375,17 @@ body.easter-theme {
     --carousel-dot-idle: rgba(156, 77, 204, 0.22);
     --carousel-dot-active: #9c4dcc;
     --carousel-dot-glow: rgba(156, 77, 204, 0.42);
+    --menu-icon-face-light: #fff5c7;
+    --menu-icon-face-main: #f2b84b;
+    --menu-icon-face-dark: #b8751c;
+    --menu-icon-warm-light: #ffd6e6;
+    --menu-icon-warm-main: #d94d7d;
+    --menu-icon-accent-light: #d9f2d5;
+    --menu-icon-accent-main: #4f9f55;
+    --menu-icon-core: #6b2c8f;
+    --menu-icon-detail: #315d38;
+    --menu-icon-glow: #9c4dcc;
+    --menu-icon-css-glow: rgba(156, 77, 204, 0.24);
     --text-main: #315d38;
     --text-filled: #6b2c8f;
     --text-sum: #c23a68;
@@ -609,6 +658,17 @@ body.desert-theme {
     --carousel-dot-idle: rgba(158, 123, 74, 0.28);
     --carousel-dot-active: #9E7B4A;
     --carousel-dot-glow: rgba(158, 123, 74, 0.45);
+    --menu-icon-face-light: #fff7d6;
+    --menu-icon-face-main: #caa66c;
+    --menu-icon-face-dark: #7a5526;
+    --menu-icon-warm-light: #ffe0b8;
+    --menu-icon-warm-main: #c5685f;
+    --menu-icon-accent-light: #d4f1d5;
+    --menu-icon-accent-main: #5aab7e;
+    --menu-icon-core: #4a4635;
+    --menu-icon-detail: #2d2a1f;
+    --menu-icon-glow: #9E7B4A;
+    --menu-icon-css-glow: rgba(158, 123, 74, 0.23);
     --text-main: #4A4635; /* Zatamnjeno - Topla siva/braon za bolji kontrast */
     --text-filled: #2D2A1F; /* Zatamnjeno */
     --text-sum: #8A6532; /* Zatamnjeno */
@@ -778,6 +838,17 @@ body.moon-theme {
     --carousel-dot-idle: rgba(170, 184, 205, 0.34);
     --carousel-dot-active: #f4f7fb;
     --carousel-dot-glow: rgba(211, 226, 255, 0.62);
+    --menu-icon-face-light: #ffffff;
+    --menu-icon-face-main: #c8d3e1;
+    --menu-icon-face-dark: #5f6f86;
+    --menu-icon-warm-light: #e8eef8;
+    --menu-icon-warm-main: #8fa2bd;
+    --menu-icon-accent-light: #c5fff7;
+    --menu-icon-accent-main: #7ee6d8;
+    --menu-icon-core: #101827;
+    --menu-icon-detail: #02040a;
+    --menu-icon-glow: #d3e2ff;
+    --menu-icon-css-glow: rgba(211, 226, 255, 0.3);
     --text-main: #dce6f4;
     --text-filled: #ffffff;
     --text-sum: #aecaef;

@@ -75,6 +75,118 @@
     </style>
 </head>
 <body>
+    <svg class="menu-icon-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+        <defs>
+            <linearGradient id="menuIconFace" x1="24" y1="18" x2="72" y2="78" gradientUnits="userSpaceOnUse">
+                <stop stop-color="var(--menu-icon-face-light, #FFF5BA)"/>
+                <stop offset="0.45" stop-color="var(--menu-icon-face-main, #E7B95E)"/>
+                <stop offset="1" stop-color="var(--menu-icon-face-dark, #965616)"/>
+            </linearGradient>
+            <linearGradient id="menuIconWarm" x1="25" y1="20" x2="70" y2="50" gradientUnits="userSpaceOnUse">
+                <stop stop-color="var(--menu-icon-warm-light, #FFE6A3)"/>
+                <stop offset="1" stop-color="var(--menu-icon-warm-main, #FF8F3D)"/>
+            </linearGradient>
+            <linearGradient id="menuIconAccent" x1="18" y1="24" x2="78" y2="76" gradientUnits="userSpaceOnUse">
+                <stop stop-color="var(--menu-icon-accent-light, #8DFFF2)"/>
+                <stop offset="1" stop-color="var(--menu-icon-accent-main, #0D7778)"/>
+            </linearGradient>
+            <radialGradient id="menuIconGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) rotate(90) scale(40)">
+                <stop stop-color="var(--menu-icon-glow, #FFD66F)" stop-opacity="0.34"/>
+                <stop offset="0.64" stop-color="var(--menu-icon-accent-main, #0D7778)" stop-opacity="0.13"/>
+                <stop offset="1" stop-color="#061313" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="menuIconShadow" x="7" y="6" width="82" height="84" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.36"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="var(--menu-icon-glow, #FFD66F)" flood-opacity="0.2"/>
+            </filter>
+        </defs>
+
+        <symbol id="menu-icon-daily" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="40" fill="url(#menuIconGlow)"/>
+            <g filter="url(#menuIconShadow)">
+                <path d="M48 12V22" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M27 19.5L33 28" stroke="var(--menu-icon-face-main, #E7B95E)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M69 19.5L63 28" stroke="var(--menu-icon-face-main, #E7B95E)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M25 35C25 29.4772 29.4772 25 35 25H61C66.5228 25 71 29.4772 71 35V63C71 68.5228 66.5228 73 61 73H35C29.4772 73 25 68.5228 25 63V35Z" fill="var(--menu-icon-core, #132727)"/>
+                <path d="M25 35C25 29.4772 29.4772 25 35 25H61C66.5228 25 71 29.4772 71 35V40H25V35Z" fill="url(#menuIconWarm)"/>
+                <path d="M31 42H65V62C65 65.3137 62.3137 68 59 68H37C33.6863 68 31 65.3137 31 62V42Z" fill="url(#menuIconFace)"/>
+                <path d="M25 40H71" stroke="url(#menuIconAccent)" stroke-width="3"/>
+                <circle cx="39" cy="53" r="3.5" fill="var(--menu-icon-core, #132727)"/>
+                <circle cx="48" cy="59" r="3.5" fill="var(--menu-icon-core, #132727)"/>
+                <circle cx="57" cy="53" r="3.5" fill="var(--menu-icon-core, #132727)"/>
+                <path d="M35 25V20" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="5" stroke-linecap="round"/>
+                <path d="M61 25V20" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="5" stroke-linecap="round"/>
+                <path d="M58 28.5L63.5 34L58 39.5" stroke="var(--menu-icon-detail, #321B10)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+        </symbol>
+
+        <symbol id="menu-icon-leaderboard" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="40" fill="url(#menuIconGlow)"/>
+            <g filter="url(#menuIconShadow)">
+                <path d="M48 11V20" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M27 18L33 26" stroke="var(--menu-icon-face-main, #E7B95E)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M69 18L63 26" stroke="var(--menu-icon-face-main, #E7B95E)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M32 27H64V41C64 51.4934 56.8366 60 48 60C39.1634 60 32 51.4934 32 41V27Z" fill="url(#menuIconFace)"/>
+                <path d="M32 27H64V35H32V27Z" fill="url(#menuIconWarm)"/>
+                <path d="M32 36H64" stroke="url(#menuIconAccent)" stroke-width="3" stroke-linecap="round"/>
+                <path d="M32 33H25C22.2386 33 20 35.2386 20 38V41C20 49.2843 26.7157 56 35 56H39" stroke="url(#menuIconFace)" stroke-width="7" stroke-linecap="round"/>
+                <path d="M64 33H71C73.7614 33 76 35.2386 76 38V41C76 49.2843 69.2843 56 61 56H57" stroke="url(#menuIconFace)" stroke-width="7" stroke-linecap="round"/>
+                <path d="M43 59H53V68H43V59Z" fill="var(--menu-icon-core, #132727)"/>
+                <path d="M36 68C36 65.7909 37.7909 64 40 64H56C58.2091 64 60 65.7909 60 68V72H36V68Z" fill="url(#menuIconFace)"/>
+                <path d="M28 72H68C70.2091 72 72 73.7909 72 76V78H24V76C24 73.7909 25.7909 72 28 72Z" fill="var(--menu-icon-core, #132727)" stroke="url(#menuIconAccent)" stroke-width="3"/>
+                <path d="M45.5 40.5L48 34L50.5 40.5L57 41L52 45L53.7 51.5L48 48L42.3 51.5L44 45L39 41L45.5 40.5Z" fill="var(--menu-icon-core, #132727)"/>
+            </g>
+        </symbol>
+
+        <symbol id="menu-icon-stats" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="39" fill="url(#menuIconGlow)"/>
+            <g filter="url(#menuIconShadow)">
+                <path d="M20 70.5H77" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M27 54C27 51.7909 28.7909 50 31 50H36C38.2091 50 40 51.7909 40 54V70H27V54Z" fill="url(#menuIconFace)"/>
+                <path d="M43 41C43 38.7909 44.7909 37 47 37H52C54.2091 37 56 38.7909 56 41V70H43V41Z" fill="url(#menuIconFace)"/>
+                <path d="M59 30C59 27.7909 60.7909 26 63 26H68C70.2091 26 72 27.7909 72 30V70H59V30Z" fill="url(#menuIconFace)"/>
+                <path d="M23 45.5L36 38L49.5 43.5L70 25" stroke="url(#menuIconWarm)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="23" cy="45.5" r="4.5" fill="var(--menu-icon-face-light, #FFF5BA)"/>
+                <circle cx="36" cy="38" r="4.5" fill="var(--menu-icon-face-light, #FFF5BA)"/>
+                <circle cx="49.5" cy="43.5" r="4.5" fill="var(--menu-icon-face-light, #FFF5BA)"/>
+                <circle cx="70" cy="25" r="4.5" fill="var(--menu-icon-face-light, #FFF5BA)"/>
+            </g>
+        </symbol>
+
+        <symbol id="menu-icon-settings" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="40" fill="url(#menuIconGlow)"/>
+            <g filter="url(#menuIconShadow)">
+                <path d="M45 16H51L53.6 26.1C55.6 26.6 57.5 27.4 59.2 28.4L68.2 23.1L72.5 27.5L67.3 36.5C68.3 38.2 69.1 40.1 69.6 42.1L80 45V51L69.6 53.9C69.1 55.9 68.3 57.8 67.3 59.5L72.5 68.5L68.2 72.9L59.2 67.6C57.5 68.6 55.6 69.4 53.6 69.9L51 80H45L42.4 69.9C40.4 69.4 38.5 68.6 36.8 67.6L27.8 72.9L23.5 68.5L28.7 59.5C27.7 57.8 26.9 55.9 26.4 53.9L16 51V45L26.4 42.1C26.9 40.1 27.7 38.2 28.7 36.5L23.5 27.5L27.8 23.1L36.8 28.4C38.5 27.4 40.4 26.6 42.4 26.1L45 16Z" fill="var(--menu-icon-core, #132727)"/>
+                <path d="M46.2 21H49.8L52.1 30.3C54.7 30.9 57.1 31.9 59.2 33.2L67.5 28.4L70.1 31L65.3 39.3C66.6 41.4 67.6 43.8 68.2 46.4L77 48.9V52.5L68.1 55C67.5 57.5 66.5 59.9 65.2 62L69.8 70L67.2 72.6L59.2 67.9C57.1 69.2 54.7 70.2 52.1 70.8L49.8 80H46.2L43.9 70.8C41.3 70.2 38.9 69.2 36.8 67.9L28.8 72.6L26.2 70L30.8 62C29.5 59.9 28.5 57.5 27.9 55L19 52.5V48.9L27.8 46.4C28.4 43.8 29.4 41.4 30.7 39.3L25.9 31L28.5 28.4L36.8 33.2C38.9 31.9 41.3 30.9 43.9 30.3L46.2 21Z" fill="url(#menuIconFace)"/>
+                <path d="M48 34C55.732 34 62 40.268 62 48C62 55.732 55.732 62 48 62C40.268 62 34 55.732 34 48C34 40.268 40.268 34 48 34Z" fill="var(--menu-icon-core, #132727)"/>
+                <path d="M48 39C52.9706 39 57 43.0294 57 48C57 52.9706 52.9706 57 48 57C43.0294 57 39 52.9706 39 48C39 43.0294 43.0294 39 48 39Z" fill="url(#menuIconAccent)"/>
+                <path d="M48 43.5C50.4853 43.5 52.5 45.5147 52.5 48C52.5 50.4853 50.4853 52.5 48 52.5C45.5147 52.5 43.5 50.4853 43.5 48C43.5 45.5147 45.5147 43.5 48 43.5Z" fill="url(#menuIconWarm)"/>
+            </g>
+        </symbol>
+
+        <symbol id="menu-icon-rules" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="40" fill="url(#menuIconGlow)"/>
+            <g filter="url(#menuIconShadow)">
+                <path d="M23 25C23 21.6863 25.6863 19 29 19H67C70.3137 19 73 21.6863 73 25V70C73 73.3137 70.3137 76 67 76H29C25.6863 76 23 73.3137 23 70V25Z" fill="var(--menu-icon-core, #132727)"/>
+                <path d="M27 29C27 25.6863 29.6863 23 33 23H63C66.3137 23 69 25.6863 69 29V66C69 69.3137 66.3137 72 63 72H33C29.6863 72 27 69.3137 27 66V29Z" fill="url(#menuIconFace)"/>
+                <path d="M27 29C27 25.6863 29.6863 23 33 23H63C66.3137 23 69 25.6863 69 29V35H27V29Z" fill="url(#menuIconWarm)"/>
+                <path d="M27 36H69" stroke="url(#menuIconAccent)" stroke-width="3" stroke-linecap="round"/>
+                <path d="M36 20V27" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="5" stroke-linecap="round"/>
+                <path d="M60 20V27" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="5" stroke-linecap="round"/>
+                <path d="M36 48L41 53L51 42" stroke="var(--menu-icon-core, #132727)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M36 63L41 68L51 57" stroke="var(--menu-icon-core, #132727)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M54 48H62" stroke="var(--menu-icon-core, #132727)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M54 63H61" stroke="var(--menu-icon-core, #132727)" stroke-width="4" stroke-linecap="round"/>
+                <path d="M49 46C49 42.6863 51.6863 40 55 40H69C72.3137 40 75 42.6863 75 46V60C75 63.3137 72.3137 66 69 66H55C51.6863 66 49 63.3137 49 60V46Z" fill="var(--menu-icon-core, #132727)" stroke="url(#menuIconAccent)" stroke-width="3"/>
+                <path d="M54 47C54 44.7909 55.7909 43 58 43H68C70.2091 43 72 44.7909 72 47V57C72 59.2091 70.2091 61 68 61H58C55.7909 61 54 59.2091 54 57V47Z" fill="url(#menuIconFace)"/>
+                <circle cx="59" cy="48" r="2.3" fill="var(--menu-icon-core, #132727)"/>
+                <circle cx="67" cy="48" r="2.3" fill="var(--menu-icon-core, #132727)"/>
+                <circle cx="63" cy="52" r="2.3" fill="var(--menu-icon-core, #132727)"/>
+                <circle cx="59" cy="56" r="2.3" fill="var(--menu-icon-core, #132727)"/>
+                <circle cx="67" cy="56" r="2.3" fill="var(--menu-icon-core, #132727)"/>
+            </g>
+        </symbol>
+    </svg>
 
     <canvas id="confetti-canvas"></canvas>
 
@@ -301,19 +413,19 @@
 
         <div class="icon-menu-grid">
             <button class="btn-square" onclick="if(window.dnevniIzazov) { dnevniIzazov.open(); } else { app.dailyManager.open(); }" aria-label="Dnevni izazov" data-lang-aria="daily_challenge_title">
-                <img class="menu-daily-icon" src="assets/daily-challenge-icon.svg" alt="" aria-hidden="true">
+                <svg class="menu-svg-icon menu-svg-icon--daily" aria-hidden="true" focusable="false"><use href="#menu-icon-daily"></use></svg>
             </button>
             <button class="btn-square" onclick="app.showHighscoresScreen()" aria-label="Top lista" data-lang-aria="menu_hs">
-                <img class="menu-leaderboard-icon" src="assets/leaderboard-icon.svg" alt="" aria-hidden="true">
+                <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-leaderboard"></use></svg>
             </button>
             <button class="btn-square" onclick="app.showStats()" aria-label="Statistika" data-lang-aria="menu_stats">
-                <img class="menu-stats-icon" src="assets/stats-icon.svg" alt="" aria-hidden="true">
+                <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-stats"></use></svg>
             </button>
             <button class="btn-square" onclick="app.showSettings()" aria-label="Podešavanja" data-lang-aria="menu_settings">
-                <img class="menu-settings-icon" src="assets/settings-icon.svg" alt="" aria-hidden="true">
+                <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-settings"></use></svg>
             </button>
             <button class="btn-square" onclick="app.showRules()" aria-label="Pravila igre" data-lang-aria="menu_rules">
-                <img class="menu-rules-icon" src="assets/rules-icon.svg" alt="" aria-hidden="true">
+                <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-rules"></use></svg>
             </button>
         </div>
     </div>
