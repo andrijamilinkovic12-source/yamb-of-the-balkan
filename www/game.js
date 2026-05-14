@@ -103,9 +103,10 @@ class YambApp {
         this.authRetryInProgress = false;
         this.onlineMode = false; 
         this.isSpectator = false; 
-        this.roomId = null; 
+        this.roomId = null;
         this.myOnlineIndex = 0;
         this.onlineRecoveryPromptOpen = false;
+        this.localRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
         this.isAnimating = false; 
         this.currentHostingRoomId = null;
@@ -195,8 +196,15 @@ class YambApp {
             });
         }
 
+        document.addEventListener("pause", () => { this.handleAppPause(); }, false);
         document.addEventListener("resume", () => { setTimeout(() => { this.handleAppResume(); }, 500); }, false);
-        document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') setTimeout(() => { this.handleAppResume(); }, 500); });
+        document.addEventListener("visibilitychange", () => {
+            if (document.visibilityState === 'hidden') {
+                this.handleAppPause();
+            } else if (document.visibilityState === 'visible') {
+                setTimeout(() => { this.handleAppResume(); }, 500);
+            }
+        });
 
         setTimeout(() => { this.handleAppResume(); }, 500);
 
@@ -1573,8 +1581,19 @@ class YambApp {
         } 
     }
 
+    handleAppPause() {
+        if (this.gameActive && !this.onlineMode) {
+            this.autoSaveGame(true);
+        }
+    }
+
     handleAppResume() {
         this.checkForInvite();
+
+        if (this.gameActive && !this.onlineMode) {
+            this.autoSaveGame(true);
+            return;
+        }
 
         if (this.tournamentManager && this.socket) {
             const requestTournamentState = () => {
@@ -1603,9 +1622,7 @@ class YambApp {
             return;
         }
 
-        if (localStorage.getItem('yamb_active_online_room')) {
-            this.checkSavedGame();
-        }
+        this.checkSavedGame();
     }
     
     navigateTo(screenId) { 
@@ -3196,9 +3213,10 @@ class YambApp {
         }
     }
     
-    async setupGame(numPlayers, isAi = false, diff = 'medium') { 
+    async setupGame(numPlayers, isAi = false, diff = 'medium') {
         if (isAi) { console.log("AI is disabled."); return; }
-        this.onlineMode = false; this.players = []; this.allScores = []; 
+        localStorage.removeItem('yamb_active_online_room');
+        this.onlineMode = false; this.players = []; this.allScores = [];
         const p1Name = this.playerName; 
         
         if (numPlayers === 1) { this.modeTag = "Solo"; this.players.push(p1Name); } 
@@ -4221,6 +4239,7 @@ class YambApp {
     async checkSavedGame() {
         // Provera za prekinut online duel
         if (this.gameActive && this.onlineMode && !this.isSpectator) return;
+        if (this.gameActive && !this.onlineMode) return;
 
         const activeOnlineRoom = localStorage.getItem('yamb_active_online_room');
         
@@ -4237,6 +4256,53 @@ class YambApp {
             } else {
                 this.socket.once('connect', checkRoom);
             }
+            return;
+        }
+
+        await this.checkSavedLocalGame();
+    }
+
+    async findLatestSavedLocalGame() {
+        if (!window.localforage) return null;
+
+        const uid = localStorage.getItem('yamb_uid') || 'guest';
+        const saves = [];
+
+        for (const numPlayers of [1, 2]) {
+            const saveKey = `yamb_saved_game_${uid}_${numPlayers}`;
+            try {
+                const data = await localforage.getItem(saveKey);
+                if (data && Array.isArray(data.players) && data.players.length === numPlayers) {
+                    saves.push({
+                        numPlayers,
+                        date: data.date ? new Date(data.date).getTime() : 0
+                    });
+                }
+            } catch (e) {
+                console.warn("Greška pri proveri snimljene lokalne partije:", e);
+            }
+        }
+
+        saves.sort((a, b) => b.date - a.date);
+        return saves[0] || null;
+    }
+
+    async checkSavedLocalGame() {
+        if (this.localRecoveryPromptOpen || this.gameActive || this.inviteDetected) return;
+        if (!document.getElementById('main-menu')?.classList.contains('active')) return;
+
+        const latestSave = await this.findLatestSavedLocalGame();
+        if (!latestSave || this.localRecoveryPromptOpen || this.gameActive) return;
+
+        this.localRecoveryPromptOpen = true;
+        try {
+            const label = latestSave.numPlayers === 1 ? "solo partiju" : "partiju za 2 igrača";
+            const shouldResume = await this.modal.confirm(`Imate prekinutu ${label}. Želite li da nastavite?`);
+            if (shouldResume) {
+                await this.loadSavedGame(latestSave.numPlayers);
+            }
+        } finally {
+            this.localRecoveryPromptOpen = false;
         }
     }
 
