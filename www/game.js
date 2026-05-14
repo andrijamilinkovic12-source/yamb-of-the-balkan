@@ -3106,7 +3106,7 @@ class YambApp {
 
                 this.onlineRecoveryPromptOpen = true;
                 try {
-                    const zeliNastavak = await this.modal.confirm("Imate prekinut online duel! Da li želite da se vratite u igru?");
+                    const zeliNastavak = await this.modal.confirm(gt('online_recovery_prompt') || "Imate prekinut online duel! Da li želite da se vratite u igru?");
                     if (zeliNastavak) {
                         this.resumeOnlineGame(data.roomId);
                     } else {
@@ -3121,7 +3121,10 @@ class YambApp {
             } else {
                 // Soba više ne postoji (istekao grace period), obavesti ga direktno
                 localStorage.removeItem('yamb_active_online_room');
-                this.modal.alert("Kraj partije zato što ste napustili igru i niste se vratili na vreme.", "KRAJ PARTIJE");
+                this.modal.alert(
+                    gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme.",
+                    gt('online_recovery_expired_title') || "KRAJ PARTIJE"
+                );
             }
         });
 
@@ -3140,9 +3143,12 @@ class YambApp {
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
             localStorage.removeItem('yamb_active_online_room');
             if (this.modal) {
-                this.modal.alert("Kraj partije zato što ste napustili igru i niste se vratili na vreme.", "KRAJ PARTIJE");
+                this.modal.alert(
+                    gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme.",
+                    gt('online_recovery_expired_title') || "KRAJ PARTIJE"
+                );
             } else {
-                alert("Kraj partije zato što ste napustili igru i niste se vratili na vreme.");
+                alert(gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme.");
             }
             this.cancelOnline(); 
         });
@@ -4304,8 +4310,8 @@ class YambApp {
 
         this.localRecoveryPromptOpen = true;
         try {
-            const label = latestSave.numPlayers === 1 ? "solo partiju" : "partiju za 2 igrača";
-            const shouldResume = await this.modal.confirm(`Imate prekinutu ${label}. Želite li da nastavite?`);
+            const recoveryKey = latestSave.numPlayers === 1 ? 'local_recovery_solo' : 'local_recovery_dual';
+            const shouldResume = await this.modal.confirm(gt(recoveryKey));
             localStorage.removeItem('yamb_local_recovery_pending');
             if (shouldResume) {
                 await this.loadSavedGame(latestSave.numPlayers);
