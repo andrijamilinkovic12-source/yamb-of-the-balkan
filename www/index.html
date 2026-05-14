@@ -300,11 +300,8 @@
         </div>
 
         <div class="icon-menu-grid">
-            <button class="btn-square" onclick="if(window.dnevniIzazov) { dnevniIzazov.open(); } else { app.dailyManager.open(); }" style="padding: 0;">
-                <div style="display:flex; flex-direction:column; align-items:center; width: 34px; height: 36px; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);">
-                    <div id="live-month" style="background: #d32f2f; color: white; font-size: 0.45rem; width: 100%; text-align: center; font-weight: 800; padding: 2px 0;">MAR</div>
-                    <div id="live-day" style="background: #fff; color: #222; font-size: 0.9rem; width: 100%; text-align: center; font-weight: 900; flex-grow: 1; display: flex; align-items: center; justify-content: center;">07</div>
-                </div>
+            <button class="btn-square" onclick="if(window.dnevniIzazov) { dnevniIzazov.open(); } else { app.dailyManager.open(); }" aria-label="Dnevni izazov" data-lang-aria="daily_challenge_title">
+                <img class="menu-daily-icon" src="assets/daily-challenge-icon.svg" alt="" aria-hidden="true">
             </button>
             <button class="btn-square" onclick="app.showHighscoresScreen()">🏆</button>
             <button class="btn-square" onclick="app.showStats()" aria-label="Statistika" data-lang-aria="menu_stats">
