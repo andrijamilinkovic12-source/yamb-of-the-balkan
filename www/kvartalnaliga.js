@@ -215,6 +215,8 @@ class KvartalnaLigaManager {
 
     playIntro(onComplete) {
         const overlay = document.getElementById('league-intro');
+        const leftWord = overlay?.querySelector('.league-intro-word-left');
+        const rightWord = overlay?.querySelector('.league-intro-word-right');
 
         if (!overlay) {
             onComplete();
@@ -223,6 +225,7 @@ class KvartalnaLigaManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
+        this.setIntroTitle(leftWord, rightWord);
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
 
@@ -254,6 +257,17 @@ class KvartalnaLigaManager {
 
         knownThemes.forEach(theme => overlay.classList.remove(`theme-${theme}`));
         overlay.classList.add(`theme-${introTheme}`);
+    }
+
+    setIntroTitle(leftWord, rightWord) {
+        if (!leftWord || !rightWord) return;
+
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        const label = gt('menu_league', 'Kvartalna Liga');
+        const parts = label.trim().split(/\s+/);
+
+        leftWord.textContent = parts[0] || 'Kvartalna';
+        rightWord.textContent = parts.slice(1).join(' ') || 'Liga';
     }
 
     showModal() {
