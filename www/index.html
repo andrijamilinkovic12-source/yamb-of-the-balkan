@@ -307,7 +307,9 @@
                 </div>
             </button>
             <button class="btn-square" onclick="app.showHighscoresScreen()">🏆</button>
-            <button class="btn-square" onclick="app.showStats()">📊</button>
+            <button class="btn-square" onclick="app.showStats()" aria-label="Statistika" data-lang-aria="menu_stats">
+                <img class="menu-stats-icon" src="assets/stats-icon.svg" alt="" aria-hidden="true">
+            </button>
             <button class="btn-square" onclick="app.showSettings()">⚙</button>
             <button class="btn-square" onclick="app.showRules()">📖</button>
         </div>
