@@ -1583,6 +1583,7 @@ class YambApp {
 
     handleAppPause() {
         if (this.gameActive && !this.onlineMode) {
+            localStorage.setItem('yamb_local_recovery_pending', 'true');
             this.autoSaveGame(true);
         }
     }
@@ -2046,6 +2047,7 @@ class YambApp {
 
     async showMainMenu() { 
         await this.autoSaveGame(true);
+        localStorage.removeItem('yamb_local_recovery_pending');
 
         const wasSpectator = this.isSpectator;
 
@@ -3216,6 +3218,7 @@ class YambApp {
     async setupGame(numPlayers, isAi = false, diff = 'medium') {
         if (isAi) { console.log("AI is disabled."); return; }
         localStorage.removeItem('yamb_active_online_room');
+        localStorage.removeItem('yamb_local_recovery_pending');
         this.onlineMode = false; this.players = []; this.allScores = [];
         const p1Name = this.playerName; 
         
@@ -4290,14 +4293,20 @@ class YambApp {
     async checkSavedLocalGame() {
         if (this.localRecoveryPromptOpen || this.gameActive || this.inviteDetected) return;
         if (!document.getElementById('main-menu')?.classList.contains('active')) return;
+        if (localStorage.getItem('yamb_local_recovery_pending') !== 'true') return;
 
         const latestSave = await this.findLatestSavedLocalGame();
-        if (!latestSave || this.localRecoveryPromptOpen || this.gameActive) return;
+        if (!latestSave) {
+            localStorage.removeItem('yamb_local_recovery_pending');
+            return;
+        }
+        if (this.localRecoveryPromptOpen || this.gameActive) return;
 
         this.localRecoveryPromptOpen = true;
         try {
             const label = latestSave.numPlayers === 1 ? "solo partiju" : "partiju za 2 igrača";
             const shouldResume = await this.modal.confirm(`Imate prekinutu ${label}. Želite li da nastavite?`);
+            localStorage.removeItem('yamb_local_recovery_pending');
             if (shouldResume) {
                 await this.loadSavedGame(latestSave.numPlayers);
             }
