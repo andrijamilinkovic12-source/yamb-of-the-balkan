@@ -303,11 +303,15 @@
             <button class="btn-square" onclick="if(window.dnevniIzazov) { dnevniIzazov.open(); } else { app.dailyManager.open(); }" aria-label="Dnevni izazov" data-lang-aria="daily_challenge_title">
                 <img class="menu-daily-icon" src="assets/daily-challenge-icon.svg" alt="" aria-hidden="true">
             </button>
-            <button class="btn-square" onclick="app.showHighscoresScreen()">🏆</button>
+            <button class="btn-square" onclick="app.showHighscoresScreen()" aria-label="Top lista" data-lang-aria="menu_hs">
+                <img class="menu-leaderboard-icon" src="assets/leaderboard-icon.svg" alt="" aria-hidden="true">
+            </button>
             <button class="btn-square" onclick="app.showStats()" aria-label="Statistika" data-lang-aria="menu_stats">
                 <img class="menu-stats-icon" src="assets/stats-icon.svg" alt="" aria-hidden="true">
             </button>
-            <button class="btn-square" onclick="app.showSettings()">⚙</button>
+            <button class="btn-square" onclick="app.showSettings()" aria-label="Podešavanja" data-lang-aria="menu_settings">
+                <img class="menu-settings-icon" src="assets/settings-icon.svg" alt="" aria-hidden="true">
+            </button>
             <button class="btn-square" onclick="app.showRules()" aria-label="Pravila igre" data-lang-aria="menu_rules">
                 <img class="menu-rules-icon" src="assets/rules-icon.svg" alt="" aria-hidden="true">
             </button>

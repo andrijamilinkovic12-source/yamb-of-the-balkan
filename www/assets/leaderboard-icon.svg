@@ -1,0 +1,44 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Top lista</title>
+  <desc id="desc">Stilizovana ikonica top liste sa zlatnim peharom, postoljem i pobednickim sjajem.</desc>
+  <defs>
+    <linearGradient id="cupGold" x1="27" y1="18" x2="68" y2="75" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF5BA"/>
+      <stop offset="0.42" stop-color="#E7B95E"/>
+      <stop offset="1" stop-color="#965616"/>
+    </linearGradient>
+    <linearGradient id="cupAmber" x1="28" y1="22" x2="68" y2="47" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE6A3"/>
+      <stop offset="1" stop-color="#FF8F3D"/>
+    </linearGradient>
+    <linearGradient id="tealRim" x1="18" y1="27" x2="78" y2="71" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8DFFF2"/>
+      <stop offset="1" stop-color="#0D7778"/>
+    </linearGradient>
+    <radialGradient id="leaderGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) rotate(90) scale(41)">
+      <stop stop-color="#FFD66F" stop-opacity="0.36"/>
+      <stop offset="0.62" stop-color="#0F8F8B" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#061313" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="leaderShadow" x="7" y="6" width="82" height="84" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.36"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#FFD66F" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <circle cx="48" cy="48" r="40" fill="url(#leaderGlow)"/>
+  <g filter="url(#leaderShadow)">
+    <path d="M48 11V20" stroke="#F5D37B" stroke-width="4" stroke-linecap="round"/>
+    <path d="M27 18L33 26" stroke="#F5D37B" stroke-width="4" stroke-linecap="round"/>
+    <path d="M69 18L63 26" stroke="#F5D37B" stroke-width="4" stroke-linecap="round"/>
+    <path d="M32 27H64V41C64 51.4934 56.8366 60 48 60C39.1634 60 32 51.4934 32 41V27Z" fill="url(#cupGold)"/>
+    <path d="M32 27H64V35H32V27Z" fill="url(#cupAmber)"/>
+    <path d="M32 36H64" stroke="url(#tealRim)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M32 33H25C22.2386 33 20 35.2386 20 38V41C20 49.2843 26.7157 56 35 56H39" stroke="url(#cupGold)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M64 33H71C73.7614 33 76 35.2386 76 38V41C76 49.2843 69.2843 56 61 56H57" stroke="url(#cupGold)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M43 59H53V68H43V59Z" fill="#132727"/>
+    <path d="M36 68C36 65.7909 37.7909 64 40 64H56C58.2091 64 60 65.7909 60 68V72H36V68Z" fill="url(#cupGold)"/>
+    <path d="M28 72H68C70.2091 72 72 73.7909 72 76V78H24V76C24 73.7909 25.7909 72 28 72Z" fill="#132727" stroke="url(#tealRim)" stroke-width="3"/>
+    <path d="M45.5 40.5L48 34L50.5 40.5L57 41L52 45L53.7 51.5L48 48L42.3 51.5L44 45L39 41L45.5 40.5Z" fill="#17302C"/>
+  </g>
+</svg>
