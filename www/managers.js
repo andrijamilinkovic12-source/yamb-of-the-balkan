@@ -1768,6 +1768,7 @@ class AdMobController {
         this.bannerSlot = null;
         this.bannerLoaded = false;
         this.lastBannerMargin = null;
+        this.bannerLoadTimer = null;
         
         this.ads = {
             rewarded: { isReady: false, isLoading: false, retryCount: 0 },
@@ -1941,11 +1942,13 @@ class AdMobController {
     }
 
     handleBannerLoaded() {
+        this.clearBannerLoadTimer();
         this.bannerLoaded = true;
         this.setBannerSlotState('loaded');
     }
 
     handleBannerFailed(err) {
+        this.clearBannerLoadTimer();
         this.bannerVisible = false;
         this.bannerLoaded = false;
         this.lastBannerMargin = null;
@@ -1955,9 +1958,29 @@ class AdMobController {
 
     handleBannerSizeChanged(size = {}) {
         if (Number(size.height) > 0) {
+            this.clearBannerLoadTimer();
             this.bannerLoaded = true;
             this.setBannerSlotState('loaded');
         }
+    }
+
+    clearBannerLoadTimer() {
+        if (this.bannerLoadTimer) {
+            clearTimeout(this.bannerLoadTimer);
+            this.bannerLoadTimer = null;
+        }
+    }
+
+    startBannerLoadTimer() {
+        this.clearBannerLoadTimer();
+        this.bannerLoadTimer = setTimeout(() => {
+            if (!this.bannerLoaded) {
+                this.bannerVisible = false;
+                this.lastBannerMargin = null;
+                this.setBannerSlotState('failed', _safeT('economy_ad_failed') || 'AdMob nije spreman');
+                console.warn("⚠️ Banner reklama nije poslala load/fail signal na vreme.");
+            }
+        }, 15000);
     }
 
     getEconomyBannerMargin(slotEl) {
@@ -1991,6 +2014,7 @@ class AdMobController {
         } catch (e) {
             console.warn("⚠️ Banner reklama nije uklonjena.", e);
         } finally {
+            this.clearBannerLoadTimer();
             this.bannerVisible = false;
             this.bannerLoaded = false;
             this.lastBannerMargin = null;
@@ -2001,16 +2025,16 @@ class AdMobController {
         if (!this.adMobPlugin || !slotEl || !navigator.onLine) return;
 
         this.bannerSlot = slotEl;
-        this.bannerLoaded = false;
-        this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
-
         const margin = this.getEconomyBannerMargin(slotEl);
         if (this.bannerVisible && this.lastBannerMargin === margin) return;
 
-        if (this.bannerVisible) {
-            await this.removeCurrentBanner();
-            this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
-        }
+        this.bannerLoaded = false;
+        this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
+
+        await this.removeCurrentBanner();
+        this.bannerSlot = slotEl;
+        this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
+        this.startBannerLoadTimer();
 
         try {
             await this.adMobPlugin.showBanner({
@@ -2023,6 +2047,7 @@ class AdMobController {
             this.bannerVisible = true;
             this.lastBannerMargin = margin;
         } catch (e) {
+            this.clearBannerLoadTimer();
             this.bannerVisible = false;
             this.bannerLoaded = false;
             this.lastBannerMargin = null;
