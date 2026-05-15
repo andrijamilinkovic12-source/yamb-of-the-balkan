@@ -1765,6 +1765,8 @@ class AdMobController {
         
         this.adMobPlugin = null;
         this.bannerVisible = false;
+        this.bannerSlot = null;
+        this.bannerLoaded = false;
         
         this.ads = {
             rewarded: { isReady: false, isLoading: false, retryCount: 0 },
@@ -1835,6 +1837,10 @@ class AdMobController {
             await this.adMobPlugin.addListener('interstitialAdLoaded', () => this.handleAdLoaded('interstitial'));
             await this.adMobPlugin.addListener('interstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
             await this.adMobPlugin.addListener('interstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
+
+            await this.adMobPlugin.addListener('bannerAdLoaded', () => this.handleBannerLoaded());
+            await this.adMobPlugin.addListener('bannerAdFailedToLoad', (err) => this.handleBannerFailed(err));
+            await this.adMobPlugin.addListener('bannerAdSizeChanged', (size) => this.handleBannerSizeChanged(size));
 
             await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
@@ -1922,9 +1928,43 @@ class AdMobController {
     loadInterstitialAd() { this.preloadAd('interstitial'); }
     prepareReward() { this.triggerHighPriorityLoad('rewarded'); }
 
+    setBannerSlotState(state, text = '') {
+        const slotEl = this.bannerSlot || document.getElementById('economy-banner-slot');
+        if (!slotEl) return;
+
+        slotEl.dataset.adState = state;
+        slotEl.setAttribute('aria-hidden', state === 'loaded' ? 'true' : 'false');
+
+        const label = slotEl.querySelector('[data-lang="economy_ad_label"]');
+        if (label && text) label.innerText = text;
+    }
+
+    handleBannerLoaded() {
+        this.bannerLoaded = true;
+        this.setBannerSlotState('loaded');
+    }
+
+    handleBannerFailed(err) {
+        this.bannerVisible = false;
+        this.bannerLoaded = false;
+        this.setBannerSlotState('failed', _safeT('economy_ad_failed') || 'AdMob nije spreman');
+        console.warn("⚠️ Banner reklama nije učitana.", err);
+    }
+
+    handleBannerSizeChanged(size = {}) {
+        if (Number(size.height) > 0) {
+            this.bannerLoaded = true;
+            this.setBannerSlotState('loaded');
+        }
+    }
+
     async showEconomyBanner(slotEl = document.getElementById('economy-banner-slot')) {
         if (!this.adMobPlugin || !slotEl || !navigator.onLine) return;
         if (this.bannerVisible) return;
+
+        this.bannerSlot = slotEl;
+        this.bannerLoaded = false;
+        this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
 
         const rect = slotEl.getBoundingClientRect();
         const margin = Math.max(0, Math.round(rect.top));
@@ -1932,7 +1972,7 @@ class AdMobController {
         try {
             await this.adMobPlugin.showBanner({
                 adId: this.bannerId,
-                adSize: 'ADAPTIVE_BANNER',
+                adSize: 'BANNER',
                 position: 'TOP_CENTER',
                 margin,
                 isTesting: false
@@ -1940,6 +1980,8 @@ class AdMobController {
             this.bannerVisible = true;
         } catch (e) {
             this.bannerVisible = false;
+            this.bannerLoaded = false;
+            this.setBannerSlotState('failed', _safeT('economy_ad_failed') || 'AdMob nije spreman');
             console.warn("⚠️ Banner reklama nije prikazana.", e);
         }
     }
@@ -1957,6 +1999,8 @@ class AdMobController {
             console.warn("⚠️ Banner reklama nije sakrivena.", e);
         } finally {
             this.bannerVisible = false;
+            this.bannerLoaded = false;
+            this.setBannerSlotState('idle', _safeT('economy_ad_label') || 'Oglas');
         }
     }
 
