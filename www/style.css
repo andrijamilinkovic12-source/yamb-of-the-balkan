@@ -56,6 +56,16 @@ body {
     height: 2rem;
 }
 
+.rules-inline-icon {
+    width: 1.18em;
+    height: 1.18em;
+    display: inline-block;
+    vertical-align: -0.23em;
+    margin-right: 0.28em;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.45)) drop-shadow(0 0 6px var(--menu-icon-css-glow, rgba(255,214,111,0.2)));
+    pointer-events: none;
+}
+
 .balance-group { display: flex; align-items: center; gap: 10px; }
 .balance-display { background: var(--glass-bg); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--gold-main); font-weight: bold; color: var(--gold-main); display: flex; align-items: center; gap: 8px; font-size: 0.9rem; box-shadow: 0 0 10px var(--gold-glow); }
 

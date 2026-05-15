@@ -1,5 +1,10 @@
 // pravilaigre.js - Pravila igre i mogućnosti aplikacije (Bilingual + Native Scroll Snap Carousel UI + HTML Website Content)
 
+function rulesIconHtml(symbolId, extraClass = '') {
+    const className = `rules-inline-icon${extraClass ? ` ${extraClass}` : ''}`;
+    return `<svg class="${className}" aria-hidden="true" focusable="false"><use href="#${symbolId}"></use></svg>`;
+}
+
 const RulesData = {
     sr: [
         {
@@ -8,7 +13,7 @@ const RulesData = {
                 <h3>🎯 Cilj Igre</h3>
                 <p>Cilj je osvojiti što više bodova bacanjem 6 kockica i kombinovanjem dobijenih vrednosti u tabelu. Imate 3 bacanja po potezu.</p>
                 
-                <h3>📊 Kolone u Igri</h3>
+                <h3>${rulesIconHtml('menu-icon-stats')} Kolone u Igri</h3>
                 <ul>
                     <li><strong>↓ NADOLE:</strong> Popunjava se redom od broja 1 do Yamba. Ne sme se preskakati.</li>
                     <li><strong>↑ NAGORE:</strong> Popunjava se redom od Yamba do broja 1.</li>
@@ -18,7 +23,7 @@ const RulesData = {
                     <li><strong>📢 NAJAVA:</strong> Morate izričito najaviti željeno polje odmah nakon prvog bacanja.</li>
                 </ul>
                 
-                <h3>🏆 Bodovanje i Sekcije</h3>
+                <h3>${rulesIconHtml('menu-icon-leaderboard')} Bodovanje i Sekcije</h3>
                 <h4>1. SEKCIJA (Polja od 1 do 6)</h4>
                 <p>Sabiraju se samo odgovarajući brojevi. Ukoliko je zbir u ovoj sekciji ≥ 60, ostvarujete <strong>bonus od +30 poena</strong>.</p>
                 <h4>2. SEKCIJA (MIN - MAX)</h4>
@@ -34,13 +39,13 @@ const RulesData = {
             `
         },
         {
-            title: "📈 Statistika i Liste",
+            title: `${rulesIconHtml('menu-icon-stats')} Statistika i Liste`,
             content: `
-                <h3>📊 Praćenje Statistike</h3>
+                <h3>${rulesIconHtml('menu-icon-stats')} Praćenje Statistike</h3>
                 <p>Yamb of the Balkan beleži svaki vaš potez. Evo šta sve pratimo:</p>
                 <ul>
                     <li><strong>⚡ Indeks moći (Power Index):</strong> Glavni pokazatelj vašeg uspeha koji analizira sve vaše rezultate i veštinu.</li>
-                    <li><strong>🏆 Rekord:</strong> Vaš lični najbolji rezultat ikada ostvaren u bilo kom modu igre.</li>
+                    <li><strong>${rulesIconHtml('menu-icon-leaderboard')} Rekord:</strong> Vaš lični najbolji rezultat ikada ostvaren u bilo kom modu igre.</li>
                     <li><strong>⚖️ Odnos Pobeda/Poraza (W/L Ratio):</strong> Prikazuje vašu ukupnu efikasnost u direktnim okršajima u online modovima i turnirima.</li>
                     <li><strong>🔥 Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u duelima i turnirima.</li>
                     <li><strong>🌟 All-Time PTS:</strong> Ukupan broj poena koje ste osvojili od instalacije igre.</li>
@@ -50,7 +55,7 @@ const RulesData = {
                 <h3>⚔️ Međusobni Dueli (H2H)</h3>
                 <p>Za svakog rivala koji postane prijatelj, formira se posebna H2H kartica u statistici koja čuva istoriju vaših okršaja (Najveća pobeda, najteži poraz, prosečni poeni i aktuelni vatreni niz protiv tog rivala).</p>
                 
-                <h3>🏆 Top Liste i Rangiranje</h3>
+                <h3>${rulesIconHtml('menu-icon-leaderboard')} Top Liste i Rangiranje</h3>
                 <ul>
                     <li><strong>Nedeljna lista:</strong> Borba za vrh se resetuje svake nedelje. Prikazuje najbolje rezultate ostvarene u tekućoj nedelji.</li>
                     <li><strong>Mesečna lista:</strong> Prikazuje najupornije i najuspešnije igrače koji su dominirali tokom celog meseca.</li>
@@ -68,7 +73,7 @@ const RulesData = {
                 <h4>🤝 Dueli sa Prijateljima</h4>
                 <p>Organizujte privatne mečeve i gradite istoriju okršaja sa svojim poznanicima! Prijatelja možete dodati preko liste aktivnih igrača ili direktnim unosom njegovog imena.</p>
 
-                <h3>🏆 TAKMIČENJA</h3>
+                <h3>${rulesIconHtml('menu-icon-leaderboard')} TAKMIČENJA</h3>
                 <h4>⚔️ TURNIRI</h4>
                 <ul>
                     <li><strong>Sistem takmičenja:</strong> Nedeljni turnir sa 8 igrača koji se igra na ispadanje (četvrtfinale, polufinale, finale). Svaki duel je na jednu dobijenu partiju.</li>
@@ -100,20 +105,20 @@ const RulesData = {
             `
         },
         {
-            title: "💎 Dukati i Riznica",
+            title: `${dukatIconHtml()} Dukati i Riznica`,
             content: `
                 <h3>${dukatIconHtml()} Dukati i Ekonomija</h3>
                 <p>Dukati su glavna valuta. Kako ih zaraditi:</p>
                 <ul>
                     <li><strong>🎲 Igranje partija:</strong> Svaka završena partija donosi vam dukata srazmerno poenima. Zaradu na kraju meča možete duplirati reklamom!</li>
-                    <li><strong>🎁 Dnevni izazov:</strong> Okušajte sreću svaki dan! 4 kockice se sabiraju, 5. kockica ih množi, a 6. kockica množi celokupan iznos!</li>
-                    <li><strong>🏆 Turniri i Kvartalna liga:</strong> Najbolji na turnirima i u ligi se nagrađuju ogromnim svotama dukata.</li>
+                    <li><strong>${rulesIconHtml('menu-icon-daily')} Dnevni izazov:</strong> Okušajte sreću svaki dan! 4 kockice se sabiraju, 5. kockica ih množi, a 6. kockica množi celokupan iznos!</li>
+                    <li><strong>${rulesIconHtml('menu-icon-leaderboard')} Turniri i Kvartalna liga:</strong> Najbolji na turnirima i u ligi se nagrađuju ogromnim svotama dukata.</li>
                 </ul>
 
                 <h3>💎 Riznica (Prodavnica)</h3>
                 <p>Riznica je mesto za personalizaciju vaše igre. Ovde možete trošiti zarađene dukate:</p>
                 <ul>
-                    <li><strong>🏆 Trofeji:</strong> Pratite sve otključane i zaključane izazove (npr. osvojen Yamb iz prvog bacanja, odigrano 50 partija).</li>
+                    <li><strong>${rulesIconHtml('menu-icon-leaderboard')} Trofeji:</strong> Pratite sve otključane i zaključane izazove (npr. osvojen Yamb iz prvog bacanja, odigrano 50 partija).</li>
                     <li><strong>🎲 Kockice (Skinovi):</strong> Promenite standardne bele kockice i kupite unikatne setove.</li>
                     <li><strong>✨ Efekti:</strong> Spektakularne vizuelne animacije koje se aktiviraju ISKLJUČIVO kada u partiji dobijete Yamb!</li>
                     <li><strong>🎨 Teme:</strong> Promenite boju i celokupan vizuelni stil aplikacije.</li>
@@ -121,7 +126,7 @@ const RulesData = {
             `
         },
         {
-            title: "⚙️ Nalog, Privatnost i Server",
+            title: `${rulesIconHtml('menu-icon-settings')} Nalog, Privatnost i Server`,
             content: `
                 <h3>🔐 Google Integracija i Cloud Save</h3>
                 <p>Yamb of the Balkan koristi bezbednu Google Sign-In tehnologiju kako bi vam pružio najbolje moguće igračko iskustvo, bez muke oko pamćenja novih lozinki.</p>
@@ -157,7 +162,7 @@ const RulesData = {
                 <h3>🎯 Goal of the Game</h3>
                 <p>The goal is to score as many points as possible by rolling 6 dice and combining the values into the table. You have 3 rolls per turn.</p>
                 
-                <h3>📊 Game Columns</h3>
+                <h3>${rulesIconHtml('menu-icon-stats')} Game Columns</h3>
                 <ul>
                     <li><strong>↓ DOWN:</strong> Must be filled sequentially from 1 to Yamb.</li>
                     <li><strong>↑ UP:</strong> Must be filled sequentially from Yamb to 1.</li>
@@ -167,7 +172,7 @@ const RulesData = {
                     <li><strong>📢 ANNOUNCE:</strong> You must explicitly announce the field immediately after the first roll.</li>
                 </ul>
                 
-                <h3>🏆 Scoring & Sections</h3>
+                <h3>${rulesIconHtml('menu-icon-leaderboard')} Scoring & Sections</h3>
                 <h4>SECTION 1 (Rows 1 to 6)</h4>
                 <p>Sum of the respective numbers. If the sum is ≥ 60, you get a <strong>+30 point bonus</strong>.</p>
                 <h4>SECTION 2 (MIN - MAX)</h4>
@@ -183,13 +188,13 @@ const RulesData = {
             `
         },
         {
-            title: "📈 Stats & Leaderboards",
+            title: `${rulesIconHtml('menu-icon-stats')} Stats & Leaderboards`,
             content: `
-                <h3>📊 Stat Tracking</h3>
+                <h3>${rulesIconHtml('menu-icon-stats')} Stat Tracking</h3>
                 <p>Yamb of the Balkan tracks every move. Here is what we monitor:</p>
                 <ul>
                     <li><strong>⚡ Power Index:</strong> The main indicator of your success analyzing all your results and skill.</li>
-                    <li><strong>🏆 Highscore:</strong> Your personal best score ever achieved.</li>
+                    <li><strong>${rulesIconHtml('menu-icon-leaderboard')} Highscore:</strong> Your personal best score ever achieved.</li>
                     <li><strong>⚖️ W/L Ratio:</strong> Shows your overall efficiency in direct online and tournament matchups.</li>
                     <li><strong>🔥 Win Streak:</strong> Number of consecutive wins in duels and tournaments.</li>
                     <li><strong>🌟 All-Time PTS:</strong> Total sum of points you've scored since installation.</li>
@@ -199,7 +204,7 @@ const RulesData = {
                 <h3>⚔️ Head-to-Head (H2H)</h3>
                 <p>For every rival who becomes a friend, a special H2H card is created in stats keeping track of your history (Biggest win, worst loss, average points, and current win streak against that rival).</p>
                 
-                <h3>🏆 Leaderboards</h3>
+                <h3>${rulesIconHtml('menu-icon-leaderboard')} Leaderboards</h3>
                 <ul>
                     <li><strong>Weekly:</strong> The battle for the top resets every week.</li>
                     <li><strong>Monthly:</strong> The most persistent and successful players of the month.</li>
@@ -217,7 +222,7 @@ const RulesData = {
                 <h4>🤝 Friend Duels</h4>
                 <p>Host private matches and build a rivalry history with your acquaintances! Add friends via the player list or by direct invite.</p>
 
-                <h3>🏆 COMPETITIONS</h3>
+                <h3>${rulesIconHtml('menu-icon-leaderboard')} COMPETITIONS</h3>
                 <h4>⚔️ TOURNAMENTS</h4>
                 <ul>
                     <li><strong>System:</strong> An 8-player weekly knockout tournament (Quarter-finals, semi-finals, finals). Single elimination matches.</li>
@@ -249,20 +254,20 @@ const RulesData = {
             `
         },
         {
-            title: "💎 Economy & Treasury",
+            title: `${dukatIconHtml()} Economy & Treasury`,
             content: `
                 <h3>${dukatIconHtml()} Coins & Economy</h3>
                 <p>Coins are the main currency. How to earn them:</p>
                 <ul>
                     <li><strong>🎲 Playing matches:</strong> Every finished match earns you coins based on your score. Double your earnings with an ad!</li>
-                    <li><strong>🎁 Daily Challenge:</strong> Try your luck every day! 4 dice are summed, the 5th multiplies the sum, and the 6th multiplies everything!</li>
-                    <li><strong>🏆 Tournaments & League:</strong> Best players are rewarded with thousands of coins.</li>
+                    <li><strong>${rulesIconHtml('menu-icon-daily')} Daily Challenge:</strong> Try your luck every day! 4 dice are summed, the 5th multiplies the sum, and the 6th multiplies everything!</li>
+                    <li><strong>${rulesIconHtml('menu-icon-leaderboard')} Tournaments & League:</strong> Best players are rewarded with thousands of coins.</li>
                 </ul>
 
                 <h3>💎 Treasury (Shop)</h3>
                 <p>Personalize your game. Spend coins on:</p>
                 <ul>
-                    <li><strong>🏆 Trophies:</strong> View unlocked special achievements (e.g., getting Yamb on the 1st roll).</li>
+                    <li><strong>${rulesIconHtml('menu-icon-leaderboard')} Trophies:</strong> View unlocked special achievements (e.g., getting Yamb on the 1st roll).</li>
                     <li><strong>🎲 Dice (Skins):</strong> Buy unique dice sets.</li>
                     <li><strong>✨ Effects:</strong> Special visual animations that trigger ONLY when you roll a Yamb!</li>
                     <li><strong>🎨 Themes:</strong> Change the entire visual style of the app.</li>
@@ -270,7 +275,7 @@ const RulesData = {
             `
         },
         {
-            title: "⚙️ Account, Privacy & Server",
+            title: `${rulesIconHtml('menu-icon-settings')} Account, Privacy & Server`,
             content: `
                 <h3>🔐 Google Integration & Cloud Save</h3>
                 <p>Yamb of the Balkan uses secure Google Sign-In technology to provide the best possible gaming experience without the hassle of remembering new passwords.</p>
