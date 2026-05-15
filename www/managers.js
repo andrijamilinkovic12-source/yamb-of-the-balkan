@@ -1841,15 +1841,6 @@ class AdMobController {
             await this.adMobPlugin.addListener('onInterstitialAdFailedToLoad', (err) => this.handleAdFailed('interstitial', err));
             await this.adMobPlugin.addListener('onInterstitialAdDismissed', () => this.handleAdDismissed('interstitial'));
 
-            await this.adMobPlugin.addListener('bannerAdLoaded', () => {
-                this.bannerVisible = true;
-                console.log("✅ Economy banner učitan.");
-            });
-            await this.adMobPlugin.addListener('bannerAdFailedToLoad', (err) => {
-                this.bannerVisible = false;
-                console.warn("⚠️ Economy banner nije učitan.", err);
-            });
-
         } catch (e) {
             console.warn("⚠️ Osluškivači za reklame pukli.", e);
             this.adMobPlugin = null; 
@@ -1926,29 +1917,20 @@ class AdMobController {
 
     async showEconomyBanner(slotEl = document.getElementById('economy-banner-slot')) {
         if (!this.adMobPlugin || !slotEl || !navigator.onLine) return;
+        if (this.bannerVisible) return;
 
         const rect = slotEl.getBoundingClientRect();
-        const bannerHeight = 50;
-        const maxMargin = Math.max(0, window.innerHeight - bannerHeight);
-        const margin = Math.min(maxMargin, Math.max(0, Math.round(rect.top + ((rect.height - bannerHeight) / 2))));
+        const margin = Math.max(0, Math.round(rect.top));
 
         try {
-            if (typeof this.adMobPlugin.removeBanner === 'function') {
-                await this.adMobPlugin.removeBanner();
-            } else if (typeof this.adMobPlugin.hideBanner === 'function') {
-                await this.adMobPlugin.hideBanner();
-            }
-            this.bannerVisible = false;
-
             await this.adMobPlugin.showBanner({
                 adId: this.bannerId,
-                adSize: 'BANNER',
+                adSize: 'ADAPTIVE_BANNER',
                 position: 'TOP_CENTER',
                 margin,
                 isTesting: false
             });
             this.bannerVisible = true;
-            console.log("📺 Economy banner prikaz zatražen.", { margin });
         } catch (e) {
             this.bannerVisible = false;
             console.warn("⚠️ Banner reklama nije prikazana.", e);
@@ -1956,13 +1938,13 @@ class AdMobController {
     }
 
     async hideEconomyBanner() {
-        if (!this.adMobPlugin) return;
+        if (!this.adMobPlugin || !this.bannerVisible) return;
 
         try {
-            if (typeof this.adMobPlugin.removeBanner === 'function') {
-                await this.adMobPlugin.removeBanner();
-            } else if (typeof this.adMobPlugin.hideBanner === 'function') {
+            if (typeof this.adMobPlugin.hideBanner === 'function') {
                 await this.adMobPlugin.hideBanner();
+            } else if (typeof this.adMobPlugin.removeBanner === 'function') {
+                await this.adMobPlugin.removeBanner();
             }
         } catch (e) {
             console.warn("⚠️ Banner reklama nije sakrivena.", e);

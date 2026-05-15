@@ -13,7 +13,7 @@ class UndoManager {
         if (overlay) overlay.style.display = 'flex';
         setTimeout(() => {
             this.scrollMenuTo(0);
-            this.scheduleEconomyBanner(0);
+            this.syncEconomyBanner(0);
         }, 0);
     }
 
@@ -66,22 +66,10 @@ class UndoManager {
         if (!adMob) return;
 
         if (index === 0 && document.getElementById('undo-menu-overlay')?.style.display === 'flex') {
-            this.scheduleEconomyBanner(index);
+            setTimeout(() => adMob.showEconomyBanner && adMob.showEconomyBanner(), 120);
         } else if (adMob.hideEconomyBanner) {
             adMob.hideEconomyBanner();
         }
-    }
-
-    scheduleEconomyBanner(index) {
-        if (index !== 0) return;
-        const adMob = window.adMobGlobal;
-        if (!adMob || !adMob.showEconomyBanner) return;
-
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                setTimeout(() => adMob.showEconomyBanner(), 180);
-            });
-        });
     }
 
     async claimCoinAdReward(type = 'rewarded') {
