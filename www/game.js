@@ -110,6 +110,8 @@ class YambApp {
         this.onlineUsersCount = 1; 
         this.isAnimating = false; 
         this.currentHostingRoomId = null;
+        this.waitingHofPeriod = 'weekly';
+        this.waitingHofInterval = null;
         
         this.currentOpponentPhoto = '';
         this.currentOpponentUid = null;
@@ -1125,48 +1127,101 @@ class YambApp {
         if (listEl) {
             listEl.innerHTML = `<div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>`;
         }
-        
-        this.initSocketConnection();
-        if (this.socket && this.socket.connected) {
-            this.socket.emit('get_weekly_top3');
-        } else {
-            setTimeout(() => {
-                if (this.socket && this.socket.connected) {
-                    this.socket.emit('get_weekly_top3');
-                }
-            }, 500);
+        this.waitingHofPeriod = 'weekly';
+        this.updateWaitingHofTitle();
+        this.stopWaitingHofRotation();
+        this.startWaitingHofRotation();
+        this.requestWaitingTop3(this.waitingHofPeriod);
+    }
+
+    startWaitingHofRotation() {
+        this.stopWaitingHofRotation();
+        this.waitingHofInterval = setInterval(() => {
+            const waitingScreen = document.getElementById('waiting-screen');
+            const hofContainer = document.getElementById('ws-hall-of-fame');
+            if (!waitingScreen || !waitingScreen.classList.contains('active') || !hofContainer || hofContainer.classList.contains('hidden')) {
+                this.stopWaitingHofRotation();
+                return;
+            }
+
+            const periods = ['weekly', 'monthly', 'all_time'];
+            const currentIndex = periods.indexOf(this.waitingHofPeriod);
+            this.waitingHofPeriod = periods[(currentIndex + 1) % periods.length];
+            this.updateWaitingHofTitle();
+            this.requestWaitingTop3(this.waitingHofPeriod, true);
+        }, 4500);
+    }
+
+    stopWaitingHofRotation() {
+        if (this.waitingHofInterval) {
+            clearInterval(this.waitingHofInterval);
+            this.waitingHofInterval = null;
         }
+    }
+
+    updateWaitingHofTitle() {
+        const titleEl = document.getElementById('ws-hof-title');
+        if (!titleEl) return;
+
+        const titles = {
+            weekly: '🏆 Top 3 Ove Nedelje',
+            monthly: '🏆 Top 3 Ovog Meseca',
+            all_time: '🏆 Top 3 Svih Vremena'
+        };
+        titleEl.innerText = titles[this.waitingHofPeriod] || titles.weekly;
+    }
+
+    requestWaitingTop3(period = 'weekly', animate = false) {
+        const listEl = document.getElementById('ws-hof-list');
+        if (animate && listEl) listEl.classList.add('is-switching');
+
+        this.initSocketConnection();
+        const emitRequest = () => {
+            if (this.socket && this.socket.connected) {
+                this.socket.emit('get_waiting_top3', period);
+            }
+        };
+
+        if (this.socket && this.socket.connected) emitRequest();
+        else setTimeout(emitRequest, 500);
     }
 
     renderHallOfFame(data) {
         const listEl = document.getElementById('ws-hof-list');
         if (!listEl) return;
+        listEl.classList.remove('is-switching');
 
         if (!data || data.length === 0) {
-            listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">Još uvek nema rezultata za ovu nedelju.</div>`;
+            listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">Još uvek nema rezultata za ovaj period.</div>`;
             return;
         }
 
         let html = '';
         const medals = ['🥇', '🥈', '🥉'];
         const colors = ['#FFD700', '#C0C0C0', '#CD7F32'];
+        const sec = window.YambSecurity;
 
         data.sort((a, b) => b.score - a.score).slice(0, 3).forEach((p, index) => {
             const medal = medals[index] || '';
             const color = colors[index] || '#fff';
+            const displayName = String(p.name || p.playerName || 'Igrač');
             const avatar = p.photoUrl && p.photoUrl.length > 5 
                 ? p.photoUrl 
-                : `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=333&color=E0C995`;
+                : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
+            const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
+            const safeAvatar = sec ? sec.escapeAttr(sec.safeUrl(avatar, fallbackAvatar)) : avatar;
+            const safeName = sec ? sec.escapeHtml(displayName) : displayName;
+            const safeScore = Number(p.score || 0).toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
 
             html += `
                 <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span style="font-size: 1.2rem; font-weight: 900; width: 25px; text-align: center;">${medal}</span>
-                        <img src="${avatar}" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid ${color}; object-fit: cover;">
-                        <span style="color: var(--text-main); font-weight: 800; font-size: 0.85rem; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${p.name}</span>
+                        <img src="${safeAvatar}" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid ${color}; object-fit: cover;">
+                        <span style="color: var(--text-main); font-weight: 800; font-size: 0.85rem; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeName}</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="color: ${color}; font-weight: 900; font-size: 0.95rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${p.score}</span>
+                        <span style="color: ${color}; font-weight: 900; font-size: 0.95rem; text-shadow: 0 1px 2px rgba(0,0,0,0.8);">${safeScore}</span>
                     </div>
                 </div>
             `;
@@ -2218,6 +2273,7 @@ class YambApp {
 
         const hofContainer = document.getElementById('ws-hall-of-fame');
         if (hofContainer) hofContainer.classList.add('hidden');
+        this.stopWaitingHofRotation();
         
         this.joinPrivateGame(nickname, roomId, true); 
     }
@@ -2311,6 +2367,7 @@ class YambApp {
                 const foundUI = document.getElementById('waiting-opp-found');
                 if (searchingUI) searchingUI.style.display = 'flex';
                 if (foundUI) foundUI.style.display = 'none';
+                oppBox.classList.add('is-searching');
                 oppBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
                 oppBox.style.boxShadow = 'var(--glass-shadow)';
             }
@@ -2321,6 +2378,7 @@ class YambApp {
 
         const hofContainer = document.getElementById('ws-hall-of-fame');
         if (hofContainer) hofContainer.classList.add('hidden');
+        this.stopWaitingHofRotation();
 
         this.initSocketConnection();
         this.setupSocketListeners(nickname); 
@@ -2377,6 +2435,7 @@ class YambApp {
             const foundUI = document.getElementById('waiting-opp-found');
             if (searchingUI) searchingUI.style.display = 'flex';
             if (foundUI) foundUI.style.display = 'none';
+            oppBox.classList.add('is-searching');
         }
         if (vsBadge) vsBadge.style.display = 'block';
 
@@ -2504,6 +2563,11 @@ class YambApp {
         this.socket.off('weekly_top3_data');
         this.socket.on('weekly_top3_data', (data) => {
             this.renderHallOfFame(data);
+        });
+        this.socket.off('waiting_top3_data');
+        this.socket.on('waiting_top3_data', (payload) => {
+            if (payload && payload.period && payload.period !== this.waitingHofPeriod) return;
+            this.renderHallOfFame(payload && Array.isArray(payload.data) ? payload.data : payload);
         });
 
         this.socket.off('opponent_connection_lost');
@@ -2800,6 +2864,7 @@ class YambApp {
                 oppBox.style.display = 'flex'; 
                 searchingUI.style.display = 'none';
                 foundUI.style.display = 'flex';
+                oppBox.classList.remove('is-searching');
                 
                 oppBox.style.borderColor = 'var(--danger)';
                 oppBox.style.boxShadow = '0 5px 15px rgba(244, 67, 54, 0.2)';
@@ -3156,6 +3221,7 @@ class YambApp {
     
     cancelOnline() { 
         localStorage.removeItem('yamb_active_online_room'); 
+        this.stopWaitingHofRotation();
         this.showMainMenu(); 
         window.history.pushState({}, document.title, window.location.pathname); 
     }

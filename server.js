@@ -3231,6 +3231,47 @@ io.on('connection', (socket) => {
             console.error("Greška pri dohvatanju Weekly Top 3:", err);
         }
     });
+
+    socket.on('get_waiting_top3', async (period = 'weekly') => {
+        try {
+            if (!MONGO_URI) return;
+
+            const safePeriod = ['weekly', 'monthly', 'all_time'].includes(period) ? period : 'weekly';
+            const matchFilter = {
+                $or: [
+                    { playerId: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } },
+                    { uid: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } }
+                ]
+            };
+            const periodStart = getLeaderboardPeriodStart(safePeriod);
+            if (periodStart) matchFilter.date = { $gte: periodStart };
+
+            const topScores = await Score.aggregate([
+                { $match: matchFilter },
+                { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
+                { $sort: { numScore: -1 } },
+                {
+                    $group: {
+                        _id: { $ifNull: ["$playerId", "$uid"] },
+                        bestEntry: { $first: "$$ROOT" }
+                    }
+                },
+                { $replaceRoot: { newRoot: "$bestEntry" } },
+                { $sort: { numScore: -1 } },
+                { $limit: 3 }
+            ]);
+
+            const formattedTop3 = topScores.map(s => ({
+                name: s.playerName,
+                score: s.score,
+                photoUrl: s.photoUrl || ''
+            }));
+
+            socket.emit('waiting_top3_data', { period: safePeriod, data: formattedTop3 });
+        } catch (err) {
+            console.error("Greška pri dohvatanju Waiting Top 3:", err);
+        }
+    });
     // ==================================================================
 
     // ==================================================================
