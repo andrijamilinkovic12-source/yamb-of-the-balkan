@@ -153,16 +153,17 @@ class UndoManager {
 
         this.updateMenuCounts();
         if (this.app.soundMgr) this.app.soundMgr.win();
-        this.app.modal.alert(`+${rewardAmount} dukata`, gt('msg_reward_title') || "NAGRADA");
+        const rewardMessage = (gt('economy_reward_message') || "+{0} dukata").replace('{0}', rewardAmount);
+        this.app.modal.alert(rewardMessage, gt('msg_reward_title') || "NAGRADA");
     }
 
     showRewardError(result = {}) {
         const cooldown = Math.ceil((result.retryAfterMs || 0) / 1000);
         let message = gt('err_server_conn') || "Greška pri konekciji sa serverom.";
         if (result.reason === 'ad_reward_cooldown') {
-            message = `Nagrada je već obrađena. Pokušajte ponovo za ${cooldown || 1}s.`;
+            message = (gt('economy_reward_cooldown') || "Nagrada je već obrađena. Pokušajte ponovo za {0}s.").replace('{0}', cooldown || 1);
         } else if (result.reason === 'auth_required') {
-            message = gt('auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
+            message = gt('economy_auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
         }
 
         this.app.modal.alert(message, gt('modal_title_info') || "INFO");

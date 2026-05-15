@@ -200,7 +200,7 @@
         <div class="modal-box global-chat-shell economy-shell">
             <div class="chat-header global-chat-header economy-card-header">
                 <div class="global-chat-title-group">
-                    <span class="global-chat-title">DUKATI</span>
+                    <span class="global-chat-title" data-lang="menu_ducats">DUKATI</span>
                     <span class="economy-balance-pill">
                         <img src="assets/dukat-icon.svg" alt="" aria-hidden="true">
                         <span id="economy-dukati-count">0</span>
@@ -216,8 +216,8 @@
                             <div class="economy-hero">
                                 <img src="assets/dukat-icon.svg" alt="" aria-hidden="true">
                                 <div>
-                                    <span class="economy-kicker">Stanje</span>
-                                    <strong><span id="economy-dukati-count-large">0</span> dukata</strong>
+                                    <span class="economy-kicker" data-lang="stat_balance">Stanje</span>
+                                    <strong><span id="economy-dukati-count-large">0</span> <span data-lang="economy_ducats_lower">dukata</span></strong>
                                 </div>
                             </div>
 
@@ -225,19 +225,19 @@
                                 <button class="economy-reward-card economy-reward-card-blue" type="button" onclick="app.claimCoinAdReward('interstitial')">
                                     <span class="economy-reward-top">
                                         <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
-                                        <span>Interstitial</span>
+                                        <span data-lang="economy_interstitial">Interstitial</span>
                                     </span>
                                     <strong>+200</strong>
-                                    <small>dukata</small>
+                                    <small data-lang="economy_ducats_lower">dukata</small>
                                 </button>
 
                                 <button class="economy-reward-card economy-reward-card-green" type="button" onclick="app.claimCoinAdReward('rewarded')">
                                     <span class="economy-reward-top">
                                         <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
-                                        <span>Rewarded</span>
+                                        <span data-lang="economy_rewarded">Rewarded</span>
                                     </span>
                                     <strong>+500</strong>
-                                    <small>dukata</small>
+                                    <small data-lang="economy_ducats_lower">dukata</small>
                                 </button>
                             </div>
                         </div>
@@ -251,7 +251,7 @@
                             </p>
 
                             <div class="economy-token-box">
-                                <span>Vaši tokeni</span>
+                                <span data-lang="economy_your_tokens">Vaši tokeni</span>
                                 <strong>
                                     <img src="assets/undo-token-icon.svg" alt="" aria-hidden="true">
                                     <span id="undo-token-count">0</span>
@@ -262,19 +262,19 @@
                                 <button class="economy-reward-card economy-reward-card-blue" type="button" onclick="app.buyUndoTokens(1)">
                                     <span class="economy-reward-top">
                                         <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
-                                        <span>Gledaj reklamu</span>
+                                        <span data-lang="economy_watch_ad">Gledaj reklamu</span>
                                     </span>
                                     <strong>+1</strong>
-                                    <small>token</small>
+                                    <small data-lang="economy_token_singular">token</small>
                                 </button>
 
                                 <button class="economy-reward-card economy-reward-card-green" type="button" onclick="app.buyUndoTokens(3)">
                                     <span class="economy-reward-top">
                                         <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
-                                        <span>Nagradni video</span>
+                                        <span data-lang="economy_reward_video">Nagradni video</span>
                                     </span>
                                     <strong>+3</strong>
-                                    <small>tokena</small>
+                                    <small data-lang="economy_tokens_plural">tokena</small>
                                 </button>
                             </div>
                         </div>
@@ -284,8 +284,8 @@
 
             <div class="global-chat-footer economy-card-footer">
                 <div class="stats-pagination economy-pagination">
-                    <button type="button" class="dot active" onclick="if(window.undoManager) window.undoManager.scrollMenuTo(0)" aria-label="Dukati"></button>
-                    <button type="button" class="dot" onclick="if(window.undoManager) window.undoManager.scrollMenuTo(1)" aria-label="Vraćanje upisa"></button>
+                    <button type="button" class="dot active" onclick="if(window.undoManager) window.undoManager.scrollMenuTo(0)" aria-label="Dukati" data-lang-aria="menu_ducats"></button>
+                    <button type="button" class="dot" onclick="if(window.undoManager) window.undoManager.scrollMenuTo(1)" aria-label="Vraćanje upisa" data-lang-aria="undo_title"></button>
                 </div>
             </div>
         </div>
