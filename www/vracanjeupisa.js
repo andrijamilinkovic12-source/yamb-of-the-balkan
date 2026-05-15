@@ -8,16 +8,164 @@ class UndoManager {
     // --- OTVARANJE I ZATVARANJE MENIJA ---
     openMenu() {
         const overlay = document.getElementById('undo-menu-overlay');
-        const tokenCount = document.getElementById('undo-token-count');
-        if (tokenCount) {
-            tokenCount.innerText = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
-        }
+        this.updateMenuCounts();
         if (overlay) overlay.style.display = 'flex';
+        setTimeout(() => this.scrollMenuTo(0), 0);
     }
 
     closeMenu() {
         const overlay = document.getElementById('undo-menu-overlay');
         if (overlay) overlay.style.display = 'none';
+    }
+
+    updateMenuCounts() {
+        const dukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+        const tokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
+        ['economy-dukati-count', 'economy-dukati-count-large', 'menu-dukati-count'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerText = dukati;
+        });
+
+        const tokenCount = document.getElementById('undo-token-count');
+        if (tokenCount) tokenCount.innerText = tokens;
+    }
+
+    scrollMenuTo(index) {
+        const carousel = document.getElementById('economy-carousel');
+        if (!carousel) return;
+        carousel.scrollTo({ left: carousel.clientWidth * index, behavior: 'smooth' });
+        this.updateMenuPagination(index);
+    }
+
+    updateMenuPagination(forcedIndex = null) {
+        const carousel = document.getElementById('economy-carousel');
+        const dots = document.querySelectorAll('.economy-pagination .dot');
+        if (!carousel || !dots.length) return;
+
+        const index = forcedIndex !== null
+            ? forcedIndex
+            : Math.round(carousel.scrollLeft / Math.max(1, carousel.clientWidth));
+
+        dots.forEach((dot, dotIndex) => {
+            dot.classList.toggle('active', dotIndex === index);
+        });
+    }
+
+    async claimCoinAdReward(type = 'rewarded') {
+        const parsedType = String(type);
+        const adMob = window.adMobGlobal;
+
+        if (parsedType === 'interstitial') {
+            if (!adMob || !adMob.showInterstitial) {
+                this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
+                return;
+            }
+
+            const success = await adMob.showInterstitial();
+            if (!success) return;
+
+            const result = await this.claimServerCoinReward('interstitial');
+            if (!result.ok) {
+                this.showRewardError(result);
+                return;
+            }
+
+            this.applyCoinReward(result, 200);
+            return;
+        }
+
+        const shop = window.shop || (window.riznicaManager && window.riznicaManager.shop);
+        if (shop && typeof shop.watchAdForCoins === 'function') {
+            await shop.watchAdForCoins();
+            this.updateMenuCounts();
+            return;
+        }
+
+        if (!adMob || !adMob.showRewardVideo) {
+            this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
+            return;
+        }
+
+        const success = await adMob.showRewardVideo();
+        if (!success) return;
+
+        const result = await this.claimServerCoinReward('rewarded');
+        if (!result.ok) {
+            this.showRewardError(result);
+            return;
+        }
+
+        this.applyCoinReward(result, 500);
+    }
+
+    async claimServerCoinReward(type) {
+        if (!this.app || !this.app.socket || !this.app.socket.connected) {
+            return { ok: true, localFallback: true, reward: type === 'interstitial' ? 200 : 500 };
+        }
+
+        if (typeof this.app.authenticateSocketIdentity === 'function') {
+            const authResult = await this.app.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: 'auth_required' };
+            }
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'err_server_conn' });
+            }, 8000);
+
+            const eventName = type === 'interstitial' ? 'claim_shop_interstitial_reward' : 'claim_shop_ad_reward';
+            this.app.socket.emit(eventName, {}, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            });
+        });
+    }
+
+    applyCoinReward(result, fallbackAmount) {
+        const rewardAmount = parseInt(result.reward) || fallbackAmount;
+
+        if (result.localFallback) {
+            let balance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+            balance += rewardAmount;
+            localStorage.setItem('yamb_dukati', balance);
+            if (window.statsManager) {
+                window.statsManager.stats.balance = balance;
+                window.statsManager.saveStats();
+            }
+            if (this.app && typeof this.app.emitPlayerData === 'function') {
+                this.app.emitPlayerData();
+            }
+        } else if (result.balance !== undefined) {
+            const balance = Math.max(0, parseInt(result.balance) || 0);
+            localStorage.setItem('yamb_dukati', balance);
+            if (window.statsManager) {
+                window.statsManager.stats.balance = balance;
+                window.statsManager.saveStats();
+            }
+        }
+
+        this.updateMenuCounts();
+        if (this.app.soundMgr) this.app.soundMgr.win();
+        this.app.modal.alert(`+${rewardAmount} dukata`, gt('msg_reward_title') || "NAGRADA");
+    }
+
+    showRewardError(result = {}) {
+        const cooldown = Math.ceil((result.retryAfterMs || 0) / 1000);
+        let message = gt('err_server_conn') || "Greška pri konekciji sa serverom.";
+        if (result.reason === 'ad_reward_cooldown') {
+            message = `Nagrada je već obrađena. Pokušajte ponovo za ${cooldown || 1}s.`;
+        } else if (result.reason === 'auth_required') {
+            message = gt('auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
+        }
+
+        this.app.modal.alert(message, gt('modal_title_info') || "INFO");
     }
 
     // --- KUPOVINA TOKENA GLEDANJEM REKLAMA ---
@@ -52,6 +200,7 @@ class UndoManager {
         
         const tokenCount = document.getElementById('undo-token-count');
         if (tokenCount) tokenCount.innerText = tokens;
+        this.updateMenuCounts();
 
         if (this.app.soundMgr) this.app.soundMgr.win();
         

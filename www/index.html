@@ -196,32 +196,98 @@
         <div class="rotate-sub" data-lang="rotate_sub">Ova igra je optimizovana za uspravni prikaz<br>na telefonima.</div>
     </div>
 
-    <div id="undo-menu-overlay" class="modal-overlay" style="display: none; z-index: 100000;">
-        <div class="modal-box" style="width: 90%; max-width: 350px; text-align: center; padding: 25px; gap: 15px !important;">
-            <h2 data-lang="undo_title" style="color: var(--gold-main); margin-bottom: 10px; text-transform: uppercase;">Ispravi zadnji upis</h2>
-            
-            <p data-lang="undo_info_text" style="color: #ddd; font-size: 0.8rem; line-height: 1.5; margin-bottom: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.15);">
-                Polja su sitna i greške se dešavaju! Ovi tokeni ti omogućavaju da poništiš slučajan pogrešan upis. Zbog toga u online duelima postoji zadrška od 2.5 sekunde pre protivnikovog bacanja – kako bi imao dovoljno vremena da reaguješ i ispraviš potez.
-            </p>
-            
-            <p data-lang="undo_menu_desc" style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">Nabavi tokene za vraćanje poteza</p>
-            
-            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 15px; border-radius: 12px; margin-bottom: 10px;">
-                <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: bold;">Vaši tokeni</span>
-                <div style="font-size: 2.5rem; font-weight: 900; color: var(--success); text-shadow: 0 0 10px rgba(76, 175, 80, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px;">
-                    🪙 <span id="undo-token-count">0</span>
+    <div id="undo-menu-overlay" class="modal-overlay economy-overlay" style="display: none;">
+        <div class="modal-box global-chat-shell economy-shell">
+            <div class="chat-header global-chat-header economy-card-header">
+                <div class="global-chat-title-group">
+                    <span class="global-chat-title">DUKATI</span>
+                    <span class="economy-balance-pill">
+                        <img src="assets/dukat-icon.svg" alt="" aria-hidden="true">
+                        <span id="economy-dukati-count">0</span>
+                    </span>
+                </div>
+                <button type="button" class="global-chat-close" onclick="app.closeUndoMenu()" aria-label="Zatvori">×</button>
+            </div>
+
+            <div class="chat-body global-chat-body economy-card-body">
+                <div id="economy-carousel" class="economy-carousel" onscroll="if(window.undoManager) window.undoManager.updateMenuPagination()">
+                    <section class="economy-page">
+                        <div class="economy-page-panel">
+                            <div class="economy-hero">
+                                <img src="assets/dukat-icon.svg" alt="" aria-hidden="true">
+                                <div>
+                                    <span class="economy-kicker">Stanje</span>
+                                    <strong><span id="economy-dukati-count-large">0</span> dukata</strong>
+                                </div>
+                            </div>
+
+                            <div class="economy-ad-grid">
+                                <button class="economy-reward-card economy-reward-card-blue" type="button" onclick="app.claimCoinAdReward('interstitial')">
+                                    <span class="economy-reward-top">
+                                        <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
+                                        <span>Interstitial</span>
+                                    </span>
+                                    <strong>+200</strong>
+                                    <small>dukata</small>
+                                </button>
+
+                                <button class="economy-reward-card economy-reward-card-green" type="button" onclick="app.claimCoinAdReward('rewarded')">
+                                    <span class="economy-reward-top">
+                                        <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
+                                        <span>Rewarded</span>
+                                    </span>
+                                    <strong>+500</strong>
+                                    <small>dukata</small>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="economy-page">
+                        <div class="economy-page-panel economy-undo-panel">
+                            <h2 data-lang="undo_title">Ispravi zadnji upis</h2>
+                            <p data-lang="undo_info_text">
+                                Polja su sitna i greške se dešavaju! Ovi tokeni ti omogućavaju da poništiš slučajan pogrešan upis. Zbog toga u online duelima postoji zadrška od 2.5 sekunde pre protivnikovog bacanja kako bi imao dovoljno vremena da reaguješ i ispraviš potez.
+                            </p>
+
+                            <div class="economy-token-box">
+                                <span>Vaši tokeni</span>
+                                <strong>
+                                    <img src="assets/undo-token-icon.svg" alt="" aria-hidden="true">
+                                    <span id="undo-token-count">0</span>
+                                </strong>
+                            </div>
+
+                            <div class="economy-ad-grid">
+                                <button class="economy-reward-card economy-reward-card-blue" type="button" onclick="app.buyUndoTokens(1)">
+                                    <span class="economy-reward-top">
+                                        <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
+                                        <span>Gledaj reklamu</span>
+                                    </span>
+                                    <strong>+1</strong>
+                                    <small>token</small>
+                                </button>
+
+                                <button class="economy-reward-card economy-reward-card-green" type="button" onclick="app.buyUndoTokens(3)">
+                                    <span class="economy-reward-top">
+                                        <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
+                                        <span>Nagradni video</span>
+                                    </span>
+                                    <strong>+3</strong>
+                                    <small>tokena</small>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
 
-            <button class="btn-menu" style="background: linear-gradient(45deg, #2196F3, #1976D2); color: white; border: none; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px;" onclick="app.buyUndoTokens(1)">
-                <span>📺 <span data-lang="undo_btn_ad_1">Gledaj reklamu (+1)</span></span>
-            </button>
-
-            <button class="btn-menu" style="background: linear-gradient(45deg, #4CAF50, #388E3C); color: white; border: none; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;" onclick="app.buyUndoTokens(3)">
-                <span>🎁 <span data-lang="undo_btn_ad_3">Gledaj nagradni video (+3)</span></span>
-            </button>
-
-            <button class="btn-menu btn-secondary" onclick="app.closeUndoMenu()" data-lang="undo_close">Zatvori</button>
+            <div class="global-chat-footer economy-card-footer">
+                <div class="stats-pagination economy-pagination">
+                    <button type="button" class="dot active" onclick="if(window.undoManager) window.undoManager.scrollMenuTo(0)" aria-label="Dukati"></button>
+                    <button type="button" class="dot" onclick="if(window.undoManager) window.undoManager.scrollMenuTo(1)" aria-label="Vraćanje upisa"></button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -307,14 +373,6 @@
             💬
         </div>
 
-        <button class="btn-square" 
-                style="position: absolute; top: 30px; right: 20px; z-index: 100; width: 45px; height: 45px; font-size: 1.4rem; padding: 0;" 
-                onclick="app.openUndoMenu()" 
-                title="Vrati pogrešan upis"
-                data-lang-title="tooltip_undo_menu">
-            ↩️
-        </button>
-
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
             
             <div onclick="openOnlinePlayersModal()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
@@ -342,10 +400,13 @@
                 </div>
             </div>
 
-            <div style="flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;">
-                <div style="position: absolute; bottom: -15px; right: -10px; font-size: 4.5rem; opacity: 0.05; pointer-events: none;">💰</div>
+            <div onclick="app.openUndoMenu()" title="Dukati i vraćanje upisa" data-lang-title="tooltip_undo_menu" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                <img src="assets/dukat-icon.svg" alt="" aria-hidden="true" style="position: absolute; bottom: -18px; right: -14px; width: 74px; height: 74px; opacity: 0.08; pointer-events: none;">
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                    <span style="font-size: 1.3rem;">💰</span>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                        <img src="assets/dukat-icon.svg" alt="" aria-hidden="true" style="width: 24px; height: 24px;">
+                        <img src="assets/undo-token-icon.svg" alt="" aria-hidden="true" style="width: 21px; height: 21px; opacity: 0.95;">
+                    </div>
                     <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
                     <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
                 </div>

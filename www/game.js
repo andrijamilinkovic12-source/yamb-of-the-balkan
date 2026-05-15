@@ -4600,6 +4600,10 @@ class YambApp {
         if (this.undoManager) await this.undoManager.buyTokens(type);
     }
 
+    async claimCoinAdReward(type) {
+        if (this.undoManager) await this.undoManager.claimCoinAdReward(type);
+    }
+
     addUndoTokens(amount) {
         if (this.undoManager) this.undoManager.addTokens(amount);
     }
