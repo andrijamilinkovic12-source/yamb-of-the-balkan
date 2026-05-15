@@ -3,6 +3,7 @@
 class UndoManager {
     constructor(appInstance) {
         this.app = appInstance;
+        this.currentMenuPage = 0;
     }
 
     // --- OTVARANJE I ZATVARANJE MENIJA ---
@@ -10,12 +11,16 @@ class UndoManager {
         const overlay = document.getElementById('undo-menu-overlay');
         this.updateMenuCounts();
         if (overlay) overlay.style.display = 'flex';
-        setTimeout(() => this.scrollMenuTo(0), 0);
+        setTimeout(() => {
+            this.scrollMenuTo(0);
+            this.syncEconomyBanner(0);
+        }, 0);
     }
 
     closeMenu() {
         const overlay = document.getElementById('undo-menu-overlay');
         if (overlay) overlay.style.display = 'none';
+        this.syncEconomyBanner(1);
     }
 
     updateMenuCounts() {
@@ -49,6 +54,22 @@ class UndoManager {
         dots.forEach((dot, dotIndex) => {
             dot.classList.toggle('active', dotIndex === index);
         });
+
+        if (index !== this.currentMenuPage) {
+            this.currentMenuPage = index;
+            this.syncEconomyBanner(index);
+        }
+    }
+
+    syncEconomyBanner(index) {
+        const adMob = window.adMobGlobal;
+        if (!adMob) return;
+
+        if (index === 0 && document.getElementById('undo-menu-overlay')?.style.display === 'flex') {
+            setTimeout(() => adMob.showEconomyBanner && adMob.showEconomyBanner(), 120);
+        } else if (adMob.hideEconomyBanner) {
+            adMob.hideEconomyBanner();
+        }
     }
 
     async claimCoinAdReward(type = 'rewarded') {

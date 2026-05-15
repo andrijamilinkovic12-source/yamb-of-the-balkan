@@ -1751,10 +1751,13 @@ class ShopManager {
 // --- 7. ADMOB CONTROLLER (SAMO KLASIČAN REWARD I INTERSTITIAL) ---
 class AdMobController {
     constructor() {
+        this.appId = 'ca-app-pub-4319963185096437~6323121643';
+        this.bannerId = 'ca-app-pub-4319963185096437/8508521924';
         this.rewardedId = 'ca-app-pub-4319963185096437/7896891915'; 
         this.interstitialId = 'ca-app-pub-4319963185096437/2913237519'; 
         
         this.adMobPlugin = null;
+        this.bannerVisible = false;
         
         this.ads = {
             rewarded: { isReady: false, isLoading: false, retryCount: 0 },
@@ -1911,6 +1914,44 @@ class AdMobController {
     loadRewardAd() { this.preloadAd('rewarded'); }
     loadInterstitialAd() { this.preloadAd('interstitial'); }
     prepareReward() { this.triggerHighPriorityLoad('rewarded'); }
+
+    async showEconomyBanner(slotEl = document.getElementById('economy-banner-slot')) {
+        if (!this.adMobPlugin || !slotEl || !navigator.onLine) return;
+        if (this.bannerVisible) return;
+
+        const rect = slotEl.getBoundingClientRect();
+        const margin = Math.max(0, Math.round(rect.top));
+
+        try {
+            await this.adMobPlugin.showBanner({
+                adId: this.bannerId,
+                adSize: 'ADAPTIVE_BANNER',
+                position: 'TOP_CENTER',
+                margin,
+                isTesting: false
+            });
+            this.bannerVisible = true;
+        } catch (e) {
+            this.bannerVisible = false;
+            console.warn("⚠️ Banner reklama nije prikazana.", e);
+        }
+    }
+
+    async hideEconomyBanner() {
+        if (!this.adMobPlugin || !this.bannerVisible) return;
+
+        try {
+            if (typeof this.adMobPlugin.hideBanner === 'function') {
+                await this.adMobPlugin.hideBanner();
+            } else if (typeof this.adMobPlugin.removeBanner === 'function') {
+                await this.adMobPlugin.removeBanner();
+            }
+        } catch (e) {
+            console.warn("⚠️ Banner reklama nije sakrivena.", e);
+        } finally {
+            this.bannerVisible = false;
+        }
+    }
 
     updateUI(ready) {
         this.uiSelectors.forEach(selector => {
