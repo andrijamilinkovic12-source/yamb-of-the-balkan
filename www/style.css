@@ -1754,9 +1754,11 @@ body {
     margin-bottom: 5px;
 }
 .economy-banner-slot {
-    width: min(100%, 360px);
-    min-height: 58px;
-    margin-top: auto;
+    width: min(100%, 320px);
+    height: 50px;
+    min-height: 50px;
+    flex: 0 0 50px;
+    margin: 0 auto;
     align-self: center;
     display: flex;
     align-items: center;

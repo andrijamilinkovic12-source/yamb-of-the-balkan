@@ -1988,16 +1988,11 @@ class AdMobController {
         const viewportHeight = window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight || 0;
         const bannerHeight = 50;
         const slotTop = Math.round(rect.top);
-        const slotCenteredTop = Math.round(rect.top + Math.max(0, rect.height - bannerHeight) / 2);
         const safeTop = Math.max(0, Math.round(window.visualViewport?.offsetTop || 0));
         const safeBottom = 8;
         const maxTop = viewportHeight > bannerHeight
             ? Math.max(safeTop, Math.floor(viewportHeight - bannerHeight - safeBottom))
             : safeTop;
-
-        if (slotTop >= safeTop && slotTop <= maxTop) {
-            return Math.min(Math.max(slotCenteredTop, safeTop), maxTop);
-        }
 
         return Math.min(Math.max(slotTop, safeTop), maxTop);
     }
