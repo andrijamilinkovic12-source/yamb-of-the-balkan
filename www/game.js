@@ -1163,11 +1163,16 @@ class YambApp {
         if (!titleEl) return;
 
         const titles = {
-            weekly: '🏆 Top 3 Ove Nedelje',
-            monthly: '🏆 Top 3 Ovog Meseca',
-            all_time: '🏆 Top 3 Svih Vremena'
+            weekly: gt('ws_hof_top3_weekly') || '🏆 Top 3 This Week',
+            monthly: gt('ws_hof_top3_monthly') || '🏆 Top 3 This Month',
+            all_time: gt('ws_hof_top3_all_time') || '🏆 Top 3 All Time'
         };
         titleEl.innerText = titles[period] || titles.weekly;
+    }
+
+    refreshWaitingOpponentSearchText() {
+        const searchingTextEl = document.querySelector('.waiting-opp-searching-text');
+        if (searchingTextEl) searchingTextEl.innerHTML = gt('ws_searching_opp') || 'Finding<br>opponent...';
     }
 
     requestWaitingTop3(period = 'weekly', animate = false) {
@@ -2452,6 +2457,7 @@ class YambApp {
             if (searchingUI) searchingUI.style.display = 'flex';
             if (foundUI) foundUI.style.display = 'none';
             oppBox.classList.add('is-searching');
+            this.refreshWaitingOpponentSearchText();
         }
         if (vsBadge) vsBadge.style.display = 'block';
 
