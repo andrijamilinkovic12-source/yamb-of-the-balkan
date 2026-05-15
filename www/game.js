@@ -1476,12 +1476,12 @@ class YambApp {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         this.modal.alert(
-                            gt('tourney_prize_winner') || "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 💰!",
+                            gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 ${dukatIconHtml()}!`,
                             gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆"
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            gt('tourney_prize_runnerup') || "Kao finalisti, vraćen Vam je ulog od 2500 💰. Više sreće sledeći put!",
+                            gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 2500 ${dukatIconHtml()}. Više sreće sledeći put!`,
                             gt('tourney_finalist_title') || "FINALISTA 🥈"
                         );
                     }
@@ -2669,7 +2669,7 @@ class YambApp {
             this.effectMgr.trigger('gold_rain');
             
             let medalja = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
-            let msg = (gt('quarter_reward_msg') || "Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} 💰!")
+            let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
             
             this.modal.alert(msg, gt('quarter_reward_title') || "KRAJ KVARTALA 🏆");
@@ -2721,7 +2721,7 @@ class YambApp {
 
                 if (window.kvartalnaLiga) {
                     window.kvartalnaLiga.addPoints(-coinPenalty);
-                    let ptsLostStr = (gt('league_pts_lost') || "-{0} poena u Ligi<br>-{0} 💰 Dukata").replace(/\{0\}/g, coinPenalty);
+                    let ptsLostStr = (gt('league_pts_lost') || `-{0} poena u Ligi<br>-{0} ${dukatIconHtml()} Dukata`).replace(/\{0\}/g, coinPenalty);
                     msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">${ptsLostStr}</span>`;
                 }
 
@@ -4247,7 +4247,7 @@ class YambApp {
                 await syncRewardBalance();
 
                 finishRewardClaim();
-                this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount * 2}`, gt('modal_title_reward')).then(() => { this.effectMgr.stop(); this.showMainMenu(); });
+                this.modal.alert(`${gt('msg_reward_doubled')} ${dukatIconHtml()} ${finalAmount * 2}`, gt('modal_title_reward')).then(() => { this.effectMgr.stop(); this.showMainMenu(); });
                 return;
             } else {
                 finalAmount *= 2;
@@ -4273,7 +4273,7 @@ class YambApp {
 
         finishRewardClaim();
         if (doubled) {
-            this.modal.alert(`${gt('msg_reward_doubled')} 💰 ${finalAmount}`, gt('modal_title_reward')).then(() => {
+            this.modal.alert(`${gt('msg_reward_doubled')} ${dukatIconHtml()} ${finalAmount}`, gt('modal_title_reward')).then(() => {
                 this.effectMgr.stop(); 
                 this.showMainMenu(); 
             }); 

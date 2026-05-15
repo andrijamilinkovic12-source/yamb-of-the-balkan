@@ -405,7 +405,7 @@ class TournamentManager {
 
                         if (!result.alreadyUnregistered && this.app && this.app.modal) {
                             this.app.modal.alert(
-                                tt('tourney_unregistered_success') || "Uspešno ste se odjavili. Vraćeno Vam je 2500 💰.",
+                                tt('tourney_unregistered_success') || `Uspešno ste se odjavili. Vraćeno Vam je 2500 ${dukatIconHtml()}.`,
                                 tt('modal_title_info') || "INFO"
                             );
                         }
@@ -610,7 +610,7 @@ class TournamentManager {
             const labelPrimary = this.pendingRegistration
                 ? (tt('tourney_registering') || 'Prijava u toku...')
                 : (tt('tourney_register_me') || 'PRIJAVI SE');
-            const labelSecondary = this.pendingRegistration ? '' : '2500 💰';
+            const labelSecondary = this.pendingRegistration ? '' : `2500 ${dukatIconHtml()}`;
             buttonHtml = `
                 <button class="btn-menu btn-primary tourney-action-button tourney-action-button--register" ${disabledAttr} onclick="app.tournamentManager.registerPlayer()">
                     <span class="tourney-action-icon" aria-hidden="true">${this.pendingRegistration ? '⏳' : '🎟️'}</span>
@@ -660,13 +660,13 @@ class TournamentManager {
         if (currentBalance < fee) {
             if(this.app.soundMgr.error) this.app.soundMgr.error();
             this.app.modal.alert(
-                tt('tourney_not_enough_money') || `Nemate dovoljno dukata za prijavu!\nCena prijave je ${fee} 💰.`,
+                tt('tourney_not_enough_money') || `Nemate dovoljno dukata za prijavu!\nCena prijave je ${fee} ${dukatIconHtml()}.`,
                 tt('warning_title') || "UPOZORENJE"
             );
             return;
         }
 
-        const confirmMsg = tt('tourney_confirm_fee') || `Prijava za turnir košta ${fee} 💰.\nDa li želite da se prijavite?`;
+        const confirmMsg = tt('tourney_confirm_fee') || `Prijava za turnir košta ${fee} ${dukatIconHtml()}.\nDa li želite da se prijavite?`;
 
         this.app.modal.confirm(confirmMsg).then(potvrda => {
             if (potvrda) {

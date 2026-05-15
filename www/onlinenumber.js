@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="alert-reward">
                         <div class="reward-pill">
-                            <span class="pill-icon">💰</span>
+                            <span class="pill-icon">${dukatIconHtml()}</span>
                             <span>1000</span>
                             <span>${t('coins_upper')}</span>
                         </div>

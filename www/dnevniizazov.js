@@ -497,7 +497,7 @@ class DnevniIzazov {
 
         resDiv.innerHTML = `
             <button class="glass-btn glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
-                🎥 ${t('btn_double_short')} 💰 (x2)
+                🎥 ${t('btn_double_short')} ${dukatIconHtml()} (x2)
             </button>
             <button class="glass-btn glass-btn-claim" onclick="dnevniIzazov.claim(false)">
                 ${t('btn_claim_short')}

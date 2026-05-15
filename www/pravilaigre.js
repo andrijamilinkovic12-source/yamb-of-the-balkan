@@ -102,7 +102,7 @@ const RulesData = {
         {
             title: "💎 Dukati i Riznica",
             content: `
-                <h3>💰 Dukati i Ekonomija</h3>
+                <h3>${dukatIconHtml()} Dukati i Ekonomija</h3>
                 <p>Dukati su glavna valuta. Kako ih zaraditi:</p>
                 <ul>
                     <li><strong>🎲 Igranje partija:</strong> Svaka završena partija donosi vam dukata srazmerno poenima. Zaradu na kraju meča možete duplirati reklamom!</li>
@@ -251,7 +251,7 @@ const RulesData = {
         {
             title: "💎 Economy & Treasury",
             content: `
-                <h3>💰 Coins & Economy</h3>
+                <h3>${dukatIconHtml()} Coins & Economy</h3>
                 <p>Coins are the main currency. How to earn them:</p>
                 <ul>
                     <li><strong>🎲 Playing matches:</strong> Every finished match earns you coins based on your score. Double your earnings with an ad!</li>

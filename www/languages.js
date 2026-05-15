@@ -75,22 +75,22 @@ const TRANSLATIONS = {
         "league_winner_q": "Pobednik za Q{0} / {1}.",
         "league_congrats": "Čestitamo na osvajanju Kvartalne lige!<br>Nova sezona je počela, srećno svima!",
         "quarter_reward_title": "KRAJ KVARTALA 🏆",
-        "quarter_reward_msg": "Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} 💰!",
-        "league_pts_won": "+{0} poena u Ligi<br>+{0} 💰 Dukata",
-        "league_pts_lost": "-{0} poena u Ligi<br>-{0} 💰 Dukata",
+        "quarter_reward_msg": "Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} {DUKAT_ICON}!",
+        "league_pts_won": "+{0} poena u Ligi<br>+{0} {DUKAT_ICON} Dukata",
+        "league_pts_lost": "-{0} poena u Ligi<br>-{0} {DUKAT_ICON} Dukata",
 
         // --- PRODAVNICA I RIZNICA ---
         "tab_trophies": "TROFEJI 🏆",
         "tab_dice": "KOCKICE 🎲",
         "tab_effects": "EFEKTI ✨",
         "tab_themes": "TEME 🎨",
-        "balance": "💰", 
+        "balance": "{DUKAT_ICON}", 
         "btn_buy": "KUPI",
         "btn_equip": "KORISTI",
         "btn_active": "AKTIVNO",
         "btn_bought": "✔ Kupljeno",
         "btn_won": "✔ Osvojeno",
-        "msg_no_money": "Nemate dovoljno 💰!", 
+        "msg_no_money": "Nemate dovoljno {DUKAT_ICON}!", 
         "msg_confirm_buy": "Želite li kupiti",
         "shop_unlock": "Otključaj:",
         "msg_purchase_success": "Uspešna kupovina!",
@@ -101,7 +101,7 @@ const TRANSLATIONS = {
         "msg_ad_error": "Greška pri učitavanju reklame.",
         "msg_ad_reward": "Nagrada od 500 dukata je spremna!",
         "msg_reward_title": "NAGRADA",
-        "btn_free_coins": "+ 500 💰 🎬",
+        "btn_free_coins": "+ 500 {DUKAT_ICON} 🎬",
         "ad_not_ready": "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.",
         
         // --- KATEGORIJE I TROFEJI ---
@@ -320,7 +320,7 @@ const TRANSLATIONS = {
         "go_msg_online_win": "Pobedio si sa {0} poena.",
         "go_msg_online_loss": "Nije prošlo ovaj put. {0} je pobedio sa {1} poena.",
         "go_msg_online_draw": "Partija je završena bez pobednika. Oboje imate {0} poena.",
-        "go_double": "🎥 DUPLIRAJ 💰 (x2)",
+        "go_double": "🎥 DUPLIRAJ {DUKAT_ICON} (x2)",
         "go_claim": "Preuzmi i Izađi",
         "go_rematch": "🔄 REVANŠ",
         "msg_reward_doubled": "Uspešno ste duplirali nagradu!\nUkupno osvojeno:",
@@ -361,8 +361,8 @@ const TRANSLATIONS = {
         "dc_sum": "TRENUTNI ZBIR",
         "dc_done": "Već ste odigrali dnevni izazov za danas. Vratite se sutra!",
         "dc_ads_unavailable": "Reklame trenutno nisu dostupne.",
-        "dc_reward_doubled": "Nagrada je duplirana! Osvojili ste 💰 {0} dukata!",
-        "dc_reward_won": "Osvojili ste 💰 {0} dukata!",
+        "dc_reward_doubled": "Nagrada je duplirana! Osvojili ste {DUKAT_ICON} {0} dukata!",
+        "dc_reward_won": "Osvojili ste {DUKAT_ICON} {0} dukata!",
         "dc_congrats": "ČESTITAMO",
         "dc_success": "USPEŠNO",
         "btn_double_short": "DUPLIRAJ",
@@ -465,10 +465,10 @@ const TRANSLATIONS = {
         "tourney_unregistering": "Odjava u toku...",
         "tourney_cannot_unregister": "Turnir je već počeo, odjava više nije moguća!",
         "tourney_confirm_unregister": "Da li ste sigurni da želite da se odjavite sa turnira?\nPrikazaće se reklama pre povraćaja dukata.",
-        "tourney_unregistered_success": "Uspešno ste se odjavili. Vraćeno Vam je 2500 💰.",
+        "tourney_unregistered_success": "Uspešno ste se odjavili. Vraćeno Vam je 2500 {DUKAT_ICON}.",
         "tourney_register_me": "PRIJAVI ME",
-        "tourney_not_enough_money": "Nemate dovoljno dukata za prijavu!\nCena prijave je 2500 💰.",
-        "tourney_confirm_fee": "Prijava za turnir košta 2500 💰.\nDa li želite da se prijavite?",
+        "tourney_not_enough_money": "Nemate dovoljno dukata za prijavu!\nCena prijave je 2500 {DUKAT_ICON}.",
+        "tourney_confirm_fee": "Prijava za turnir košta 2500 {DUKAT_ICON}.\nDa li želite da se prijavite?",
         "tourney_empty_slot": "Slobodno mesto",
         "tourney_qf": "ČETVRTFINALE",
         "tourney_sf": "POLUFINALE",
@@ -514,9 +514,9 @@ const TRANSLATIONS = {
         "tourney_choose_time_match": "Izaberite termin za meč:",
         "tourney_negotiating": "Dogovor u toku...",
         "tourney_opponent_ready": "{0} je pokrenuo vaš turnirski meč. Da li ulazite?",
-        "tourney_prize_winner": "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 💰!",
+        "tourney_prize_winner": "ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 {DUKAT_ICON}!",
         "tourney_champion_title": "ŠAMPION TURNIRA 🏆",
-        "tourney_prize_runnerup": "Kao finalisti, vraćen Vam je ulog od 2500 💰. Više sreće sledeći put!",
+        "tourney_prize_runnerup": "Kao finalisti, vraćen Vam je ulog od 2500 {DUKAT_ICON}. Više sreće sledeći put!",
         "tourney_finalist_title": "FINALISTA 🥈",
         "tourney_tab_fame": "👑 SLAVNI",
         "tourney_hall_of_fame": "DVORANA SLAVNIH (OSVAJAČI)",
@@ -613,11 +613,11 @@ const TRANSLATIONS = {
         // --- TIMEOUT, SPECTATOR I KAZNE ---
         "timeout_title": "KRAJ (TIMEOUT)",
         "timeout_spectator": "Vreme je isteklo, partija je gotova.",
-        "timeout_win_msg": "Protivnik nije odigrao potez na vreme. Tehnička pobeda za vas (+500 💰)!",
+        "timeout_win_msg": "Protivnik nije odigrao potez na vreme. Tehnička pobeda za vas (+500 {DUKAT_ICON})!",
         "timeout_loss_title": "PORAZ (TIMEOUT)",
         "timeout_loss_msg": "Isteklo vam je vreme za potez! Izgubili ste partiju.",
         "spectator_opp_left": "Jedan od igrača je napustio igru. Gledanje prekinuto.",
-        "opp_fled_win": "Protivnik je pobegao iz partije! Tehnička pobeda za vas (+500 💰)!",
+        "opp_fled_win": "Protivnik je pobegao iz partije! Tehnička pobeda za vas (+500 {DUKAT_ICON})!",
         "friend_already_added": "Ovaj igrač je već u vašoj listi prijatelja.",
         "friend_req_success": "Zahtev je poslat! Igrač {0} će ga dobiti sledeći put kada bude na mreži.",
         "title_success": "USPEŠNO",
@@ -704,22 +704,22 @@ const TRANSLATIONS = {
         "league_winner_q": "Winner for Q{0} / {1}.",
         "league_congrats": "Congratulations on winning the Quarterly League!<br>The new season has started, good luck to everyone!",
         "quarter_reward_title": "QUARTER ENDED 🏆",
-        "quarter_reward_msg": "Congratulations! You won {0}. place {1} in the Quarterly League and a reward of {2} 💰!",
-        "league_pts_won": "+{0} League points<br>+{0} 💰 Ducats",
-        "league_pts_lost": "-{0} League points<br>-{0} 💰 Ducats",
+        "quarter_reward_msg": "Congratulations! You won {0}. place {1} in the Quarterly League and a reward of {2} {DUKAT_ICON}!",
+        "league_pts_won": "+{0} League points<br>+{0} {DUKAT_ICON} Ducats",
+        "league_pts_lost": "-{0} League points<br>-{0} {DUKAT_ICON} Ducats",
 
         // --- SHOP & TREASURY ---
         "tab_trophies": "TROPHIES 🏆",
         "tab_dice": "DICE 🎲",
         "tab_effects": "EFFECTS ✨",
         "tab_themes": "THEMES 🎨",
-        "balance": "💰", 
+        "balance": "{DUKAT_ICON}", 
         "btn_buy": "BUY",
         "btn_equip": "EQUIP",
         "btn_active": "ACTIVE",
         "btn_bought": "✔ Owned",
         "btn_won": "✔ Earned",
-        "msg_no_money": "Not enough 💰!", 
+        "msg_no_money": "Not enough {DUKAT_ICON}!", 
         "msg_confirm_buy": "Do you want to buy",
         "shop_unlock": "Unlock:",
         "msg_purchase_success": "Purchase successful!",
@@ -730,7 +730,7 @@ const TRANSLATIONS = {
         "msg_ad_error": "Error loading Ad.",
         "msg_ad_reward": "Reward of 500 coins is ready!",
         "msg_reward_title": "REWARD",
-        "btn_free_coins": "+ 500 💰 🎬",
+        "btn_free_coins": "+ 500 {DUKAT_ICON} 🎬",
         "ad_not_ready": "The ad is loading or currently unavailable. Please try again in a few seconds.",
 
         // --- CATEGORIES & TROPHIES ---
@@ -949,7 +949,7 @@ const TRANSLATIONS = {
         "go_msg_online_win": "You won with {0} points.",
         "go_msg_online_loss": "Not this time. {0} won with {1} points.",
         "go_msg_online_draw": "The game ended without a winner. You both scored {0} points.",
-        "go_double": "🎥 DOUBLE 💰 (x2)",
+        "go_double": "🎥 DOUBLE {DUKAT_ICON} (x2)",
         "go_claim": "Claim & Exit",
         "go_rematch": "🔄 REMATCH",
         "msg_reward_doubled": "Reward successfully doubled!\nTotal won:",
@@ -990,8 +990,8 @@ const TRANSLATIONS = {
         "dc_sum": "CURRENT SUM",
         "dc_done": "You already played the daily challenge today. Come back tomorrow!",
         "dc_ads_unavailable": "Ads are currently unavailable.",
-        "dc_reward_doubled": "Reward doubled! You won 💰 {0} ducats!",
-        "dc_reward_won": "You won 💰 {0} ducats!",
+        "dc_reward_doubled": "Reward doubled! You won {DUKAT_ICON} {0} ducats!",
+        "dc_reward_won": "You won {DUKAT_ICON} {0} ducats!",
         "dc_congrats": "CONGRATULATIONS",
         "dc_success": "SUCCESS",
         "btn_double_short": "DOUBLE",
@@ -1094,10 +1094,10 @@ const TRANSLATIONS = {
         "tourney_unregistering": "Unregistering...",
         "tourney_cannot_unregister": "The tournament has already started, unregistering is no longer possible!",
         "tourney_confirm_unregister": "Are you sure you want to unregister from the tournament?\nAn ad will be shown before refunding your coins.",
-        "tourney_unregistered_success": "Successfully unregistered. 2500 💰 have been refunded to you.",
+        "tourney_unregistered_success": "Successfully unregistered. 2500 {DUKAT_ICON} have been refunded to you.",
         "tourney_register_me": "REGISTER ME",
-        "tourney_not_enough_money": "Not enough coins to register!\nEntry fee is 2500 💰.",
-        "tourney_confirm_fee": "Tournament registration costs 2500 💰.\nDo you want to register?",
+        "tourney_not_enough_money": "Not enough coins to register!\nEntry fee is 2500 {DUKAT_ICON}.",
+        "tourney_confirm_fee": "Tournament registration costs 2500 {DUKAT_ICON}.\nDo you want to register?",
         "tourney_empty_slot": "Empty slot",
         "tourney_qf": "QUARTERFINALS",
         "tourney_sf": "SEMIFINALS",
@@ -1143,9 +1143,9 @@ const TRANSLATIONS = {
         "tourney_choose_time_match": "Choose match time:",
         "tourney_negotiating": "Negotiation in progress...",
         "tourney_opponent_ready": "{0} started your tournament match. Do you want to join?",
-        "tourney_prize_winner": "CONGRATULATIONS! You won the tournament and the grand prize of 20,000 💰!",
+        "tourney_prize_winner": "CONGRATULATIONS! You won the tournament and the grand prize of 20,000 {DUKAT_ICON}!",
         "tourney_champion_title": "TOURNAMENT CHAMPION 🏆",
-        "tourney_prize_runnerup": "As a finalist, your entry fee of 2500 💰 has been refunded. Better luck next time!",
+        "tourney_prize_runnerup": "As a finalist, your entry fee of 2500 {DUKAT_ICON} has been refunded. Better luck next time!",
         "tourney_finalist_title": "FINALIST 🥈",
         "tourney_tab_fame": "👑 HALL OF FAME",
         "tourney_hall_of_fame": "HALL OF FAME (CHAMPIONS)",
@@ -1242,11 +1242,11 @@ const TRANSLATIONS = {
         // --- TIMEOUT, SPECTATOR AND PENALTIES ---
         "timeout_title": "GAME OVER (TIMEOUT)",
         "timeout_spectator": "Time is up, the game has ended.",
-        "timeout_win_msg": "Opponent didn't make a move in time. Technical victory for you (+500 💰)!",
+        "timeout_win_msg": "Opponent didn't make a move in time. Technical victory for you (+500 {DUKAT_ICON})!",
         "timeout_loss_title": "DEFEAT (TIMEOUT)",
         "timeout_loss_msg": "Your time to move has expired! You lost the game.",
         "spectator_opp_left": "One of the players left the match. Spectating stopped.",
-        "opp_fled_win": "Opponent fled the match! Technical victory for you (+500 💰)!",
+        "opp_fled_win": "Opponent fled the match! Technical victory for you (+500 {DUKAT_ICON})!",
         "friend_already_added": "This player is already in your friends list.",
         "friend_req_success": "Request sent! Player {0} will receive it next time they are online.",
         "title_success": "SUCCESS",
@@ -1263,10 +1263,20 @@ const TRANSLATIONS = {
 
 // --- HELPER FUNKCIJE ---
 
+function dukatIconHtml(extraClass = '') {
+    const className = `dukat-icon-inline${extraClass ? ` ${extraClass}` : ''}`;
+    return `<img class="${className}" src="assets/dukat-icon.svg" alt="" aria-hidden="true">`;
+}
+
+function formatDukatIcons(value) {
+    if (typeof value !== 'string') return value;
+    return value.replace(/\{DUKAT_ICON\}/g, dukatIconHtml());
+}
+
 function t(key) {
     const lang = localStorage.getItem('yamb_lang') || 'sr';
     if (TRANSLATIONS[lang] && TRANSLATIONS[lang].hasOwnProperty(key)) {
-        return TRANSLATIONS[lang][key];
+        return formatDukatIcons(TRANSLATIONS[lang][key]);
     }
     return key;
 }

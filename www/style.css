@@ -40,6 +40,20 @@ body {
 
 .header { width: 100%; padding: var(--safe-top) 20px 10px 20px; display: flex; align-items: center; justify-content: flex-end; border-bottom: var(--glass-border); background: var(--glass-panel); backdrop-filter: blur(12px); z-index: 10; min-height: calc(60px + var(--safe-top)); }
 
+.dukat-icon-inline {
+    width: 1.25em;
+    height: 1.25em;
+    display: inline-block;
+    vertical-align: -0.24em;
+    object-fit: contain;
+    filter: drop-shadow(0 0 4px var(--gold-glow));
+}
+
+.dukat-icon-large {
+    width: 2rem;
+    height: 2rem;
+}
+
 .balance-group { display: flex; align-items: center; gap: 10px; }
 .balance-display { background: var(--glass-bg); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--gold-main); font-weight: bold; color: var(--gold-main); display: flex; align-items: center; gap: 8px; font-size: 0.9rem; box-shadow: 0 0 10px var(--gold-glow); }
 

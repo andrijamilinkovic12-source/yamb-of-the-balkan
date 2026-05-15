@@ -239,7 +239,7 @@ class EffectManager {
     
     trigger(type) {
         if (type === 'confetti') this.spawnConfetti();
-        if (type === 'gold_rain') this.spawnEmojiRain(['💰', '🪙', '💎', '👑'], 50);
+        if (type === 'gold_rain') this.spawnEmojiRain(['dukat-icon', '🪙', '💎', '👑'], 50);
         if (type === 'fireflies') this.spawnFloatingEmoji(['✨', '🌟', '💫', '🧚'], 40);
         if (type === 'bubbles') this.spawnBubbles(35); 
         
@@ -755,7 +755,14 @@ class EffectManager {
     spawnEmojiRain(emojis, count) {
         for (let i = 0; i < count; i++) {
             setTimeout(() => {
-                const el = document.createElement('div'); el.innerText = emojis[Math.floor(Math.random() * emojis.length)]; el.className = 'falling-coin';
+                const el = document.createElement('div');
+                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                if (emoji === 'dukat-icon') {
+                    el.innerHTML = dukatIconHtml();
+                } else {
+                    el.innerText = emoji;
+                }
+                el.className = 'falling-coin';
                 el.style.left = Math.random() * 100 + 'vw'; el.style.animationDuration = (Math.random() * 2 + 1) + 's';
                 document.body.appendChild(el); setTimeout(() => el.remove(), 3000);
             }, Math.random() * 2000);
@@ -1381,7 +1388,7 @@ class ShopManager {
 
                 let priceHtml = '';
                 if (this.type === 'trophy') {
-                    priceHtml = `<div class="status ${isUnlocked ? 'status-unlocked' : 'status-locked'}">${isUnlocked ? _safeT('btn_won') : `💰 ${item.reward}`}</div>`;
+                    priceHtml = `<div class="status ${isUnlocked ? 'status-unlocked' : 'status-locked'}">${isUnlocked ? _safeT('btn_won') : `${dukatIconHtml()} ${item.reward}`}</div>`;
                 } else {
                     if (isUnlocked) {
                         priceHtml = `<div class="price">${_safeT('btn_bought')}</div>`;
@@ -1742,7 +1749,7 @@ class ShopManager {
 
                  this.updateBalanceDisplay();
                  
-                 this.showRewardMessage(`+${rewardAmount} 💰`, _safeT('msg_reward_title') || "NAGRADA");
+                 this.showRewardMessage(`+${rewardAmount} ${dukatIconHtml()}`, _safeT('msg_reward_title') || "NAGRADA");
              }
         }
     }

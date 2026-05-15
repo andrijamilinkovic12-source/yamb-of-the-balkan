@@ -330,7 +330,7 @@ class TrophyManager {
         const title = trophy.title[lang] || trophy.title['sr'];
         const desc = trophy.desc[lang] || trophy.desc['sr'];
         const reward = rewardOverride !== null ? rewardOverride : trophy.reward;
-        const rewardHtml = reward > 0 ? `<div class="tp-reward">+${reward} 💰</div>` : '';
+        const rewardHtml = reward > 0 ? `<div class="tp-reward">+${reward} ${dukatIconHtml()}</div>` : '';
 
         div.innerHTML = `
             <div class="tp-icon">${trophy.icon}</div>
