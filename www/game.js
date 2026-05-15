@@ -1147,9 +1147,8 @@ class YambApp {
             const periods = ['weekly', 'monthly', 'all_time'];
             const currentIndex = periods.indexOf(this.waitingHofPeriod);
             this.waitingHofPeriod = periods[(currentIndex + 1) % periods.length];
-            this.updateWaitingHofTitle();
             this.requestWaitingTop3(this.waitingHofPeriod, true);
-        }, 4500);
+        }, 6500);
     }
 
     stopWaitingHofRotation() {
@@ -1159,7 +1158,7 @@ class YambApp {
         }
     }
 
-    updateWaitingHofTitle() {
+    updateWaitingHofTitle(period = this.waitingHofPeriod) {
         const titleEl = document.getElementById('ws-hof-title');
         if (!titleEl) return;
 
@@ -1168,31 +1167,47 @@ class YambApp {
             monthly: '🏆 Top 3 Ovog Meseca',
             all_time: '🏆 Top 3 Svih Vremena'
         };
-        titleEl.innerText = titles[this.waitingHofPeriod] || titles.weekly;
+        titleEl.innerText = titles[period] || titles.weekly;
     }
 
     requestWaitingTop3(period = 'weekly', animate = false) {
         const listEl = document.getElementById('ws-hof-list');
-        if (animate && listEl) listEl.classList.add('is-switching');
+        const titleEl = document.querySelector('.waiting-hof-title');
+        if (animate) {
+            if (listEl) listEl.classList.add('is-switching');
+            if (titleEl) titleEl.classList.add('is-switching');
+        } else {
+            this.updateWaitingHofTitle(period);
+        }
 
         this.initSocketConnection();
         const emitRequest = () => {
+            this.updateWaitingHofTitle(period);
             if (this.socket && this.socket.connected) {
                 this.socket.emit('get_waiting_top3', period);
             }
         };
 
-        if (this.socket && this.socket.connected) emitRequest();
+        if (animate) setTimeout(emitRequest, 320);
+        else if (this.socket && this.socket.connected) emitRequest();
         else setTimeout(emitRequest, 500);
     }
 
     renderHallOfFame(data) {
         const listEl = document.getElementById('ws-hof-list');
         if (!listEl) return;
-        listEl.classList.remove('is-switching');
+        const titleEl = document.querySelector('.waiting-hof-title');
+
+        const revealHallOfFame = () => {
+            requestAnimationFrame(() => {
+                listEl.classList.remove('is-switching');
+                if (titleEl) titleEl.classList.remove('is-switching');
+            });
+        };
 
         if (!data || data.length === 0) {
             listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">Još uvek nema rezultata za ovaj period.</div>`;
+            revealHallOfFame();
             return;
         }
 
@@ -1228,6 +1243,7 @@ class YambApp {
         });
 
         listEl.innerHTML = html;
+        revealHallOfFame();
     }
 
     // --- SPECTATE FUNKCIJA ---

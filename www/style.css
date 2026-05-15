@@ -2369,6 +2369,14 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     flex-shrink: 0;
 }
 
+.waiting-screen-shell .ws-vs-area-horizontal {
+    margin-top: clamp(26px, 7vh, 76px) !important;
+}
+
+.waiting-screen-shell .waiting-hof {
+    margin-top: clamp(24px, 5vh, 44px) !important;
+}
+
 .waiting-opp-searching {
     flex-direction: column;
     align-items: center;
@@ -2443,14 +2451,24 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     flex-shrink: 0;
 }
 
+.waiting-hof-title {
+    transition: opacity 0.45s ease, transform 0.45s ease;
+}
+
+.waiting-hof-title.is-switching {
+    opacity: 0;
+    transform: translateY(4px);
+}
+
 .waiting-hof-list {
     min-height: 150px;
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: opacity 0.55s ease, transform 0.55s ease, filter 0.55s ease;
 }
 
 .waiting-hof-list.is-switching {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(6px);
+    filter: blur(1px);
 }
 
 @keyframes opponentScanPulse {
