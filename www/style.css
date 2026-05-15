@@ -1673,9 +1673,10 @@ body {
     font-size: 0.78rem;
     font-weight: 900;
 }
-.economy-balance-pill img {
-    width: 18px;
-    height: 18px;
+.economy-balance-pill .dukat-icon-inline {
+    width: 22px;
+    height: 22px;
+    vertical-align: 0;
 }
 .economy-carousel {
     display: flex;
@@ -1720,16 +1721,17 @@ body {
     background: linear-gradient(145deg, rgba(255, 215, 0, 0.12), rgba(255,255,255,0.04));
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 14px 28px rgba(0,0,0,0.2);
 }
-.economy-hero img {
-    width: 62px;
-    height: 62px;
+.economy-hero .dukat-icon-inline {
+    width: 72px;
+    height: 72px;
     flex-shrink: 0;
-    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.32));
+    vertical-align: 0;
+    filter: drop-shadow(0 12px 20px rgba(0,0,0,0.34)) drop-shadow(0 0 12px rgba(255,214,111,0.18));
 }
 .economy-hero strong {
     display: block;
     color: var(--gold-main);
-    font-size: 1.9rem;
+    font-size: 2.15rem;
     line-height: 1.05;
     font-weight: 900;
 }
