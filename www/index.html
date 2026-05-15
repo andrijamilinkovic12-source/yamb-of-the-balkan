@@ -186,6 +186,29 @@
                 <circle cx="67" cy="56" r="2.3" fill="var(--menu-icon-core, #132727)"/>
             </g>
         </symbol>
+
+        <symbol id="app-icon-dukat" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="40" fill="url(#menuIconGlow)"/>
+            <g filter="url(#menuIconShadow)">
+                <circle cx="48" cy="46" r="34" fill="url(#menuIconWarm)"/>
+                <circle cx="48" cy="46" r="27" fill="url(#menuIconFace)" stroke="var(--menu-icon-detail, #321B10)" stroke-opacity="0.35" stroke-width="2"/>
+                <path d="M35 36c4-7 15-10 24-5 5 3 8 8 8 15 0 8-4 14-11 17-8 4-18 2-23-5" fill="none" stroke="var(--menu-icon-core, #132727)" stroke-width="5" stroke-linecap="round"/>
+                <path d="M36 38c5-5 13-7 20-3 4 2 6 6 6 11 0 6-3 10-8 13-6 3-14 2-18-3" fill="none" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                <path d="M48 24v44" stroke="var(--menu-icon-detail, #321B10)" stroke-opacity="0.32" stroke-width="3" stroke-linecap="round"/>
+                <path d="M30 43h36" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+            </g>
+        </symbol>
+
+        <symbol id="app-icon-undo-token" viewBox="0 0 96 96">
+            <circle cx="48" cy="48" r="40" fill="url(#menuIconGlow)"/>
+            <g filter="url(#menuIconShadow)">
+                <circle cx="48" cy="46" r="34" fill="url(#menuIconAccent)"/>
+                <circle cx="48" cy="46" r="27" fill="url(#menuIconFace)" stroke="var(--menu-icon-core, #132727)" stroke-opacity="0.36" stroke-width="2"/>
+                <path d="M62 35c-4-5-11-8-18-6-10 2-17 12-14 22 2 9 10 15 19 15 7 0 13-4 17-9" fill="none" stroke="var(--menu-icon-core, #132727)" stroke-width="5" stroke-linecap="round"/>
+                <path d="M62 35l1-12 10 7" fill="none" stroke="var(--menu-icon-core, #132727)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M58 37c-4-3-9-5-14-4-7 2-12 9-10 16 1 7 8 12 15 12 5 0 10-3 13-7" fill="none" stroke="var(--menu-icon-face-light, #FFF5BA)" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+            </g>
+        </symbol>
     </svg>
 
     <canvas id="confetti-canvas"></canvas>
@@ -202,7 +225,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title" data-lang="menu_ducats">DUKATI</span>
                     <span class="economy-balance-pill">
-                        <img src="assets/dukat-icon.svg" alt="" aria-hidden="true">
+                        <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
                         <span id="economy-dukati-count">0</span>
                     </span>
                 </div>
@@ -214,7 +237,7 @@
                     <section class="economy-page">
                         <div class="economy-page-panel">
                             <div class="economy-hero">
-                                <img src="assets/dukat-icon.svg" alt="" aria-hidden="true">
+                                <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
                                 <div>
                                     <span class="economy-kicker" data-lang="stat_balance">Stanje</span>
                                     <strong><span id="economy-dukati-count-large">0</span> <span data-lang="economy_ducats_lower">dukata</span></strong>
@@ -257,7 +280,7 @@
                             <div class="economy-token-box">
                                 <span data-lang="economy_your_tokens">Vaši tokeni</span>
                                 <strong>
-                                    <img src="assets/undo-token-icon.svg" alt="" aria-hidden="true">
+                                    <svg class="token-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg>
                                     <span id="undo-token-count">0</span>
                                 </strong>
                             </div>
@@ -405,11 +428,11 @@
             </div>
 
             <div onclick="app.openUndoMenu()" title="Dukati i vraćanje upisa" data-lang-title="tooltip_undo_menu" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="assets/dukat-icon.svg" alt="" aria-hidden="true" style="position: absolute; bottom: -18px; right: -14px; width: 74px; height: 74px; opacity: 0.08; pointer-events: none;">
+                <svg class="dukat-icon-inline" aria-hidden="true" focusable="false" style="position: absolute; bottom: -18px; right: -14px; width: 74px; height: 74px; opacity: 0.08; pointer-events: none;"><use href="#app-icon-dukat"></use></svg>
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                        <img src="assets/dukat-icon.svg" alt="" aria-hidden="true" style="width: 24px; height: 24px;">
-                        <img src="assets/undo-token-icon.svg" alt="" aria-hidden="true" style="width: 21px; height: 21px; opacity: 0.95;">
+                        <svg class="dukat-icon-inline" aria-hidden="true" focusable="false" style="width: 24px; height: 24px;"><use href="#app-icon-dukat"></use></svg>
+                        <svg class="token-icon-inline" aria-hidden="true" focusable="false" style="width: 21px; height: 21px; opacity: 0.95;"><use href="#app-icon-undo-token"></use></svg>
                     </div>
                     <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
                     <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
@@ -626,7 +649,7 @@
                         </div>
                         
                         <div class="stat-item compact-grid-item">
-                            <img class="dukat-icon-inline" src="assets/dukat-icon.svg" alt="" aria-hidden="true" style="width: 1.35rem; height: 1.35rem;">
+                            <svg class="dukat-icon-inline" aria-hidden="true" focusable="false" style="width: 1.35rem; height: 1.35rem;"><use href="#app-icon-dukat"></use></svg>
                             <span class="stat-lbl-mini" data-lang="stat_balance">Stanje</span>
                             <span id="stat-balance" class="stat-val-mini c-gold">0</span>
                         </div>
@@ -757,7 +780,7 @@
 
     <div id="riznica-screen" class="screen">
         <div class="header riznica-header">
-            <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 <img class="dukat-icon-inline" src="assets/dukat-icon.svg" alt="" aria-hidden="true"> 🎬</button>
+            <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg> 🎬</button>
             <div class="balance-display"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
             <button class="back-btn riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
         </div>
@@ -920,7 +943,7 @@
             <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);">
                 <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="go_msg_solo">Osvojeni Poeni</div>
                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
-                    <img class="dukat-icon-inline dukat-icon-large" src="assets/dukat-icon.svg" alt="" aria-hidden="true">
+                    <svg class="dukat-icon-inline dukat-icon-large" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
                     <span id="go-score" style="font-size: 2.2rem; font-weight: 800; color: var(--gold-main);">0</span>
                 </div>
             </div>
@@ -930,7 +953,7 @@
             </button>
 
             <button id="btn-ad-double" class="btn-menu btn-ad-double" style="background: linear-gradient(45deg, #FFD700, #FFA000); color: #000; border: none; font-weight: 800; margin-bottom: 10px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4); display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="app.watchAdForDouble()">
-                <span data-lang="go_double">🎥 DUPLIRAJ <img class="dukat-icon-inline" src="assets/dukat-icon.svg" alt="" aria-hidden="true"> (x2)</span>
+                <span data-lang="go_double">🎥 DUPLIRAJ <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg> (x2)</span>
             </button>
             <button class="btn-menu btn-secondary" onclick="app.claimReward(false)" data-lang="go_claim">Preuzmi i Izađi</button>
         </div>

@@ -1265,7 +1265,7 @@ const TRANSLATIONS = {
 
 function dukatIconHtml(extraClass = '') {
     const className = `dukat-icon-inline${extraClass ? ` ${extraClass}` : ''}`;
-    return `<img class="${className}" src="assets/dukat-icon.svg" alt="" aria-hidden="true">`;
+    return `<svg class="${className}" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>`;
 }
 
 function formatDukatIcons(value) {
