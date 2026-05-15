@@ -2881,6 +2881,8 @@ class YambApp {
                 searchingUI.style.display = 'none';
                 foundUI.style.display = 'flex';
                 oppBox.classList.remove('is-searching');
+                const startMsgEl = document.getElementById('waiting-start-msg');
+                if (startMsgEl) startMsgEl.innerHTML = gt('ws_game_starting') || 'Protivnik je tu. Partija počinje...';
                 
                 oppBox.style.borderColor = 'var(--danger)';
                 oppBox.style.boxShadow = '0 5px 15px rgba(244, 67, 54, 0.2)';

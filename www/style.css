@@ -2396,6 +2396,17 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     letter-spacing: 0;
 }
 
+.waiting-start-msg {
+    display: block;
+    margin: 4px 0 8px 0;
+    color: var(--success);
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1.2;
+    text-align: center;
+    text-transform: uppercase;
+}
+
 .opponent-scan {
     position: relative;
     width: 74px;
