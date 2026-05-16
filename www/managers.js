@@ -1769,6 +1769,7 @@ class AdMobController {
         this.bannerLoaded = false;
         this.lastBannerMargin = null;
         this.bannerLoadTimer = null;
+        this.bannerSyncTimer = null;
         
         this.ads = {
             rewarded: { isReady: false, isLoading: false, retryCount: 0 },
@@ -1983,6 +1984,16 @@ class AdMobController {
         }, 15000);
     }
 
+    scheduleBannerSync() {
+        if (!this.bannerVisible || !this.bannerSlot) return;
+        clearTimeout(this.bannerSyncTimer);
+        this.bannerSyncTimer = setTimeout(() => {
+            if (this.bannerVisible && this.bannerSlot?.isConnected) {
+                this.showEconomyBanner(this.bannerSlot);
+            }
+        }, 180);
+    }
+
     getEconomyBannerMargin(slotEl) {
         const rect = slotEl.getBoundingClientRect();
         const viewportHeight = window.visualViewport?.height || window.innerHeight || document.documentElement.clientHeight || 0;
@@ -2010,6 +2021,8 @@ class AdMobController {
             console.warn("⚠️ Banner reklama nije uklonjena.", e);
         } finally {
             this.clearBannerLoadTimer();
+            clearTimeout(this.bannerSyncTimer);
+            this.bannerSyncTimer = null;
             this.bannerVisible = false;
             this.bannerLoaded = false;
             this.lastBannerMargin = null;
@@ -2115,6 +2128,9 @@ window.effectManager = new EffectManager();
 
 document.addEventListener('DOMContentLoaded', () => {
     window.adMobGlobal.initialize();
+
+    window.addEventListener('resize', () => window.adMobGlobal.scheduleBannerSync());
+    window.addEventListener('orientationchange', () => window.adMobGlobal.scheduleBannerSync());
 
     // --- GLOBALNI CLICK LISTENER ZA UI ZVUKOVE ---
     document.body.addEventListener('click', function(event) {

@@ -12,6 +12,7 @@ class UndoManager {
         this.updateMenuCounts();
         if (overlay) overlay.style.display = 'flex';
         setTimeout(() => {
+            this.currentMenuPage = 0;
             this.scrollMenuTo(0);
             this.syncEconomyBanner(0);
         }, 0);
@@ -65,8 +66,10 @@ class UndoManager {
         const adMob = window.adMobGlobal;
         if (!adMob) return;
 
-        if (index === 0 && document.getElementById('undo-menu-overlay')?.style.display === 'flex') {
-            setTimeout(() => adMob.showEconomyBanner && adMob.showEconomyBanner(), 120);
+        const overlay = document.getElementById('undo-menu-overlay');
+        const bannerSlot = document.getElementById('economy-banner-slot');
+        if (index === 0 && overlay?.style.display === 'flex' && bannerSlot) {
+            setTimeout(() => adMob.showEconomyBanner && adMob.showEconomyBanner(bannerSlot), 120);
         } else if (adMob.hideEconomyBanner) {
             adMob.hideEconomyBanner();
         }
