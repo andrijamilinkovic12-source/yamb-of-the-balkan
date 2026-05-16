@@ -1670,6 +1670,51 @@ body {
     box-shadow: none !important;
     background: transparent !important;
 }
+.economy-card-header {
+    background: transparent;
+    border-bottom: 0;
+    box-shadow: none;
+    min-height: 64px;
+    padding: max(12px, calc(env(safe-area-inset-top) + 10px)) max(12px, env(safe-area-inset-right)) 8px max(12px, env(safe-area-inset-left));
+}
+.economy-card-header .global-chat-title-group {
+    min-width: 0;
+}
+.economy-card-header .global-chat-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.economy-card-header .global-chat-close {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border-radius: 50%;
+}
+.economy-tabs {
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 12px;
+    margin: 4px 0 8px;
+    padding: 0 max(10px, env(safe-area-inset-right)) 0 max(10px, env(safe-area-inset-left));
+}
+.economy-tabs .tab-btn {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0;
+}
+.economy-tabs .dukat-icon-inline,
+.economy-tabs .token-icon-inline {
+    width: 30px;
+    height: 30px;
+    vertical-align: 0;
+}
 .economy-card-header,
 .economy-card-footer {
     flex-shrink: 0;
@@ -1700,27 +1745,14 @@ body {
     height: 22px;
     vertical-align: 0;
 }
-.economy-carousel {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+.economy-tab-panel {
+    display: none;
     width: 100%;
-    max-width: 100%;
     flex: 1 1 auto;
     min-height: 0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-.economy-carousel::-webkit-scrollbar {
-    display: none;
-}
-.economy-page {
-    flex: 0 0 100%;
-    width: 100%;
-    min-height: 0;
-    scroll-snap-align: center;
     padding: 0 16px;
+}
+.economy-tab-panel.active {
     display: flex;
 }
 .economy-page-panel {
@@ -1903,9 +1935,6 @@ body {
     width: 34px;
     height: 34px;
 }
-.economy-pagination .dot {
-    cursor: pointer;
-}
 @media (min-width: 768px) {
     .economy-shell {
         left: 50%;
@@ -1919,7 +1948,7 @@ body {
     .economy-card-body {
         padding: 14px 0;
     }
-    .economy-page {
+    .economy-tab-panel {
         padding: 0 18px;
     }
 }

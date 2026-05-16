@@ -12,9 +12,7 @@ class UndoManager {
         this.updateMenuCounts();
         if (overlay) overlay.style.display = 'flex';
         setTimeout(() => {
-            this.currentMenuPage = 0;
-            this.scrollMenuTo(0);
-            this.syncEconomyBanner(0);
+            this.switchMenuTab(0);
         }, 0);
     }
 
@@ -37,36 +35,43 @@ class UndoManager {
     }
 
     scrollMenuTo(index) {
-        const carousel = document.getElementById('economy-carousel');
-        if (!carousel) return;
-        carousel.scrollTo({ left: carousel.clientWidth * index, behavior: 'smooth' });
-        this.updateMenuPagination(index);
+        this.switchMenuTab(index);
     }
 
     updateMenuPagination(forcedIndex = null) {
-        const carousel = document.getElementById('economy-carousel');
-        const dots = document.querySelectorAll('.economy-pagination .dot');
-        if (!carousel || !dots.length) return;
+        this.switchMenuTab(forcedIndex ?? this.currentMenuPage);
+    }
 
-        const index = forcedIndex !== null
-            ? forcedIndex
-            : Math.round(carousel.scrollLeft / Math.max(1, carousel.clientWidth));
+    switchMenuTab(index = 0) {
+        const normalizedIndex = Number(index) === 1 ? 1 : 0;
+        const tabs = [
+            document.getElementById('economy-tab-ducats'),
+            document.getElementById('economy-tab-undo')
+        ];
+        const panels = [
+            document.getElementById('economy-panel-ducats'),
+            document.getElementById('economy-panel-undo')
+        ];
+
+        tabs.forEach((tab, tabIndex) => {
+            if (tab) tab.classList.toggle('active', tabIndex === normalizedIndex);
+        });
+        panels.forEach((panel, panelIndex) => {
+            if (panel) panel.classList.toggle('active', panelIndex === normalizedIndex);
+        });
 
         const titleEl = document.getElementById('economy-menu-title');
         if (titleEl) {
-            const key = index === 0 ? 'menu_ducats' : 'undo_title';
+            const key = normalizedIndex === 0 ? 'menu_ducats' : 'undo_title';
             titleEl.dataset.lang = key;
-            titleEl.innerText = (typeof t === 'function') ? t(key) : (index === 0 ? 'DUKATI' : 'ISPRAVI ZADNJI UPIS');
+            titleEl.innerText = (typeof t === 'function') ? t(key) : (normalizedIndex === 0 ? 'DUKATI' : 'ISPRAVI ZADNJI UPIS');
         }
 
-        dots.forEach((dot, dotIndex) => {
-            dot.classList.toggle('active', dotIndex === index);
-        });
-
-        if (index !== this.currentMenuPage) {
-            this.currentMenuPage = index;
-            this.syncEconomyBanner(index);
+        if (normalizedIndex !== this.currentMenuPage) {
+            this.currentMenuPage = normalizedIndex;
         }
+
+        this.syncEconomyBanner(normalizedIndex);
     }
 
     syncEconomyBanner(index) {
