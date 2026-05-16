@@ -69,14 +69,35 @@ class UndoManager {
 
         const balancePill = document.querySelector('#undo-menu-overlay .economy-balance-pill');
         if (balancePill) {
-            balancePill.hidden = normalizedIndex === 1;
+            const shouldHideBalance = normalizedIndex === 1;
+            balancePill.hidden = false;
+            balancePill.classList.toggle('economy-balance-pill--offscreen', shouldHideBalance);
+            balancePill.setAttribute('aria-hidden', shouldHideBalance ? 'true' : 'false');
         }
 
         if (normalizedIndex !== this.currentMenuPage) {
             this.currentMenuPage = normalizedIndex;
         }
 
+        this.refreshMenuTabIcons();
+        requestAnimationFrame(() => this.refreshMenuTabIcons());
         this.syncEconomyBanner(normalizedIndex);
+    }
+
+    refreshMenuTabIcons() {
+        const icons = {
+            'economy-tab-ducats': '#app-icon-dukat',
+            'economy-tab-undo': '#app-icon-undo-token'
+        };
+
+        Object.keys(icons).forEach(tabId => {
+            const useEl = document.querySelector(`#${tabId} svg use`);
+            if (!useEl) return;
+
+            const href = icons[tabId];
+            useEl.setAttribute('href', href);
+            useEl.setAttributeNS('http://www.w3.org/1999/xlink', 'href', href);
+        });
     }
 
     syncEconomyBanner(index) {
