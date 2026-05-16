@@ -1747,11 +1747,6 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    position: relative;
-    overflow: hidden;
-    appearance: none;
-    -webkit-appearance: none;
-    font-size: 0;
     letter-spacing: 0;
     line-height: 0;
     transform: none;
@@ -1776,12 +1771,8 @@ body {
     width: 30px;
     height: 30px;
     flex: 0 0 30px;
-    display: block;
-    position: static;
-    margin: 0;
     vertical-align: 0;
     filter: none;
-    transform: none;
 }
 .economy-card-header,
 .economy-card-footer {
