@@ -1661,25 +1661,32 @@ body {
     --economy-native-banner-space: 128px;
 }
 .economy-shell {
+    position: fixed;
     max-width: 100%;
     left: 0;
-    top: max(0px, env(safe-area-inset-top));
+    top: 0;
     width: 100vw;
-    height: calc(var(--global-chat-height, 100dvh) - max(10px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom) + 4px) - var(--economy-native-banner-space));
-    max-height: calc(var(--global-chat-height, 100dvh) - max(10px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom) + 4px) - var(--economy-native-banner-space));
+    height: calc(var(--global-chat-height, 100dvh) - var(--economy-native-banner-space));
+    max-height: calc(var(--global-chat-height, 100dvh) - var(--economy-native-banner-space));
     border-radius: 0;
-    border: 0 !important;
-    border-top: 0 !important;
-    border-left: 0 !important;
-    border-right: 0 !important;
-    border-bottom: 0 !important;
-    box-shadow: none !important;
-    background: transparent !important;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    padding: 0 !important;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    color: var(--text-main);
 }
 .economy-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     background: transparent;
     border-bottom: 0;
     box-shadow: none;
