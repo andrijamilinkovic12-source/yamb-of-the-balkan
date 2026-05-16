@@ -2040,9 +2040,10 @@ class AdMobController {
     async showEconomyBanner(slotEl = document.getElementById('economy-banner-slot')) {
         if (!this.adMobPlugin || !slotEl || !navigator.onLine) return;
 
+        const isSameSlot = this.bannerSlot === slotEl;
         this.bannerSlot = slotEl;
         const margin = 72;
-        if (this.bannerVisible && this.lastBannerMargin === margin) return;
+        if (this.bannerVisible && this.lastBannerMargin === margin && isSameSlot) return;
 
         this.bannerLoaded = false;
         this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');

@@ -84,8 +84,9 @@ class UndoManager {
         if (!adMob) return;
 
         const overlay = document.getElementById('undo-menu-overlay');
-        const bannerSlot = document.getElementById('economy-banner-slot');
-        if (index === 0 && overlay?.style.display === 'flex' && bannerSlot) {
+        const bannerSlotId = Number(index) === 1 ? 'economy-undo-banner-slot' : 'economy-banner-slot';
+        const bannerSlot = document.getElementById(bannerSlotId);
+        if (overlay?.style.display === 'flex' && bannerSlot) {
             setTimeout(() => adMob.showEconomyBanner && adMob.showEconomyBanner(bannerSlot), 120);
         } else if (adMob.hideEconomyBanner) {
             adMob.hideEconomyBanner();
