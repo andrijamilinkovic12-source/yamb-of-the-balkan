@@ -1916,11 +1916,19 @@ body {
     flex-shrink: 0;
 }
 .economy-reward-card strong {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 1.8rem;
     line-height: 1;
     font-weight: 900;
     margin-left: auto;
     padding-left: 12px;
+}
+.economy-reward-card strong .dukat-icon-inline {
+    width: 1.05em;
+    height: 1.05em;
+    vertical-align: 0;
 }
 .economy-reward-card small {
     font-size: 0.68rem;
