@@ -67,6 +67,11 @@ class UndoManager {
             titleEl.innerText = (typeof t === 'function') ? t(key) : (normalizedIndex === 0 ? 'DUKATI' : 'ISPRAVI ZADNJI UPIS');
         }
 
+        const balancePill = document.querySelector('#undo-menu-overlay .economy-balance-pill');
+        if (balancePill) {
+            balancePill.hidden = normalizedIndex === 1;
+        }
+
         if (normalizedIndex !== this.currentMenuPage) {
             this.currentMenuPage = normalizedIndex;
         }

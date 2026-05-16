@@ -1930,6 +1930,11 @@ body {
     height: 1.05em;
     vertical-align: 0;
 }
+.economy-reward-card strong .token-icon-inline {
+    width: 1.05em;
+    height: 1.05em;
+    vertical-align: 0;
+}
 .economy-reward-card small {
     font-size: 0.68rem;
     color: rgba(255,255,255,0.78);
