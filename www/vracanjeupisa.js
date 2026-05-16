@@ -52,6 +52,13 @@ class UndoManager {
             ? forcedIndex
             : Math.round(carousel.scrollLeft / Math.max(1, carousel.clientWidth));
 
+        const titleEl = document.getElementById('economy-menu-title');
+        if (titleEl) {
+            const key = index === 0 ? 'menu_ducats' : 'undo_title';
+            titleEl.dataset.lang = key;
+            titleEl.innerText = (typeof t === 'function') ? t(key) : (index === 0 ? 'DUKATI' : 'ISPRAVI ZADNJI UPIS');
+        }
+
         dots.forEach((dot, dotIndex) => {
             dot.classList.toggle('active', dotIndex === index);
         });

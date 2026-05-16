@@ -2041,7 +2041,7 @@ class AdMobController {
         if (!this.adMobPlugin || !slotEl || !navigator.onLine) return;
 
         this.bannerSlot = slotEl;
-        const margin = 0;
+        const margin = 72;
         if (this.bannerVisible && this.lastBannerMargin === margin) return;
 
         this.bannerLoaded = false;
