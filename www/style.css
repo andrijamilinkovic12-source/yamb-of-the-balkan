@@ -1806,13 +1806,6 @@ body {
 .economy-balance-pill[hidden] {
     display: none !important;
 }
-.economy-balance-pill--offscreen {
-    position: absolute;
-    left: -9999px;
-    top: 0;
-    opacity: 0;
-    pointer-events: none;
-}
 .economy-balance-pill .dukat-icon-inline {
     width: 22px;
     height: 22px;

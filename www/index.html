@@ -234,10 +234,24 @@
 
             <div class="nav-tabs economy-tabs" aria-label="Dukati opcije">
                 <button id="economy-tab-ducats" class="tab-btn active" type="button" onclick="if(window.undoManager) window.undoManager.switchMenuTab(0)" aria-label="Dukati" data-lang-aria="menu_ducats" title="Dukati" data-lang-title="menu_ducats">
-                    <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat" xlink:href="#app-icon-dukat"></use></svg>
+                    <svg class="dukat-icon-inline" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+                        <circle cx="48" cy="48" r="39" fill="rgba(255,214,111,0.18)"/>
+                        <circle cx="48" cy="46" r="34" fill="#FFB23F"/>
+                        <circle cx="48" cy="46" r="27" fill="#FFD66F" stroke="#5A3514" stroke-opacity="0.35" stroke-width="2"/>
+                        <path d="M35 36c4-7 15-10 24-5 5 3 8 8 8 15 0 8-4 14-11 17-8 4-18 2-23-5" fill="none" stroke="#132727" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M36 38c5-5 13-7 20-3 4 2 6 6 6 11 0 6-3 10-8 13-6 3-14 2-18-3" fill="none" stroke="#FFF5BA" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                        <path d="M48 24v44M30 43h36" stroke="#FFF5BA" stroke-opacity="0.48" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
                 </button>
                 <button id="economy-tab-undo" class="tab-btn" type="button" onclick="if(window.undoManager) window.undoManager.switchMenuTab(1)" aria-label="Vraćanje upisa" data-lang-aria="undo_title" title="Vraćanje upisa" data-lang-title="undo_title">
-                    <svg class="token-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token" xlink:href="#app-icon-undo-token"></use></svg>
+                    <svg class="token-icon-inline" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
+                        <circle cx="48" cy="48" r="39" fill="rgba(141,255,242,0.16)"/>
+                        <circle cx="48" cy="46" r="34" fill="#17A9A6"/>
+                        <circle cx="48" cy="46" r="27" fill="#FFD66F" stroke="#132727" stroke-opacity="0.36" stroke-width="2"/>
+                        <path d="M62 35c-4-5-11-8-18-6-10 2-17 12-14 22 2 9 10 15 19 15 7 0 13-4 17-9" fill="none" stroke="#132727" stroke-width="5" stroke-linecap="round"/>
+                        <path d="M62 35l1-12 10 7" fill="none" stroke="#132727" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M58 37c-4-3-9-5-14-4-7 2-12 9-10 16 1 7 8 12 15 12 5 0 10-3 13-7" fill="none" stroke="#FFF5BA" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+                    </svg>
                 </button>
             </div>
 
