@@ -1,0 +1,59 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Turnir</title>
+  <desc id="desc">Stilizovana turnirska ikona sa zlatnim peharom, ukrstenim sabljama i bracket oznakama.</desc>
+  <defs>
+    <linearGradient id="tourneyGold" x1="29" y1="18" x2="68" y2="78" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF7BD"/>
+      <stop offset="0.43" stop-color="#EBC060"/>
+      <stop offset="1" stop-color="#955715"/>
+    </linearGradient>
+    <linearGradient id="tourneyAmber" x1="31" y1="21" x2="65" y2="43" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE9A5"/>
+      <stop offset="1" stop-color="#FF9238"/>
+    </linearGradient>
+    <linearGradient id="tourneyTeal" x1="18" y1="22" x2="79" y2="76" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8DFFF2"/>
+      <stop offset="1" stop-color="#0D7778"/>
+    </linearGradient>
+    <linearGradient id="tourneyBlade" x1="21" y1="20" x2="75" y2="75" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F5FFFA"/>
+      <stop offset="0.48" stop-color="#AEE9DE"/>
+      <stop offset="1" stop-color="#285452"/>
+    </linearGradient>
+    <radialGradient id="tourneyGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) rotate(90) scale(41)">
+      <stop stop-color="#FFD66F" stop-opacity="0.38"/>
+      <stop offset="0.6" stop-color="#0F8F8B" stop-opacity="0.15"/>
+      <stop offset="1" stop-color="#061313" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="tourneyShadow" x="7" y="6" width="82" height="84" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.38"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#FFD66F" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <circle cx="48" cy="48" r="40" fill="url(#tourneyGlow)"/>
+  <g filter="url(#tourneyShadow)">
+    <path d="M22 36H31M22 60H31M22 36V60" stroke="url(#tourneyTeal)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M74 36H65M74 60H65M74 36V60" stroke="url(#tourneyTeal)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="22" cy="36" r="3.2" fill="#FFE6A3"/>
+    <circle cx="22" cy="60" r="3.2" fill="#FFE6A3"/>
+    <circle cx="74" cy="36" r="3.2" fill="#FFE6A3"/>
+    <circle cx="74" cy="60" r="3.2" fill="#FFE6A3"/>
+
+    <path d="M23 70L65 28L73 20L77 24L69 32L27 74L20 77L23 70Z" fill="url(#tourneyBlade)" stroke="#102927" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M73 70L31 28L23 20L19 24L27 32L69 74L76 77L73 70Z" fill="url(#tourneyBlade)" stroke="#102927" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M25 63L33 71M63 71L71 63" stroke="#321B10" stroke-width="6" stroke-linecap="round"/>
+    <path d="M28 60L36 68M60 68L68 60" stroke="url(#tourneyAmber)" stroke-width="3" stroke-linecap="round"/>
+
+    <path d="M31 31H65V42C65 53.0457 57.3888 62 48 62C38.6112 62 31 53.0457 31 42V31Z" fill="url(#tourneyGold)"/>
+    <path d="M31 31H65V39H31V31Z" fill="url(#tourneyAmber)"/>
+    <path d="M31 40H65" stroke="url(#tourneyTeal)" stroke-width="3" stroke-linecap="round"/>
+    <path d="M31 36H24C21.2386 36 19 38.2386 19 41V44C19 52.2843 25.7157 59 34 59H39" stroke="url(#tourneyGold)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M65 36H72C74.7614 36 77 38.2386 77 41V44C77 52.2843 70.2843 59 62 59H57" stroke="url(#tourneyGold)" stroke-width="7" stroke-linecap="round"/>
+    <path d="M43 61H53V70H43V61Z" fill="#132727"/>
+    <path d="M36 70C36 67.7909 37.7909 66 40 66H56C58.2091 66 60 67.7909 60 70V74H36V70Z" fill="url(#tourneyGold)"/>
+    <path d="M27 74H69C71.2091 74 73 75.7909 73 78V80H23V78C23 75.7909 24.7909 74 27 74Z" fill="#132727" stroke="url(#tourneyTeal)" stroke-width="3"/>
+    <path d="M45.3 44.5L48 37.5L50.7 44.5L58 45.1L52.4 49.7L54.1 56.9L48 53L41.9 56.9L43.6 49.7L38 45.1L45.3 44.5Z" fill="#17302C"/>
+    <path d="M39 24L44 29L48 21L52 29L57 24L55.5 32H40.5L39 24Z" fill="url(#tourneyAmber)" stroke="#321B10" stroke-width="2" stroke-linejoin="round"/>
+  </g>
+</svg>
