@@ -1,0 +1,61 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Riznica</title>
+  <desc id="desc">Stilizovani dijamant za riznicu sa tirkiznim fasetama, zlatnim obrubom i mekanim sjajem.</desc>
+  <defs>
+    <linearGradient id="treasuryGold" x1="25" y1="19" x2="72" y2="77" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF7BD"/>
+      <stop offset="0.44" stop-color="#E7B95E"/>
+      <stop offset="1" stop-color="#965616"/>
+    </linearGradient>
+    <linearGradient id="treasuryIce" x1="24" y1="22" x2="73" y2="72" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EFFFFA"/>
+      <stop offset="0.36" stop-color="#8DFFF2"/>
+      <stop offset="1" stop-color="#0D7778"/>
+    </linearGradient>
+    <linearGradient id="treasuryDeep" x1="27" y1="35" x2="67" y2="77" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3BD6D1"/>
+      <stop offset="0.52" stop-color="#0D7778"/>
+      <stop offset="1" stop-color="#102927"/>
+    </linearGradient>
+    <linearGradient id="treasuryRuby" x1="33" y1="25" x2="65" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE6A3"/>
+      <stop offset="1" stop-color="#FF8F3D"/>
+    </linearGradient>
+    <radialGradient id="treasuryGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 49) rotate(90) scale(42)">
+      <stop stop-color="#FFD66F" stop-opacity="0.34"/>
+      <stop offset="0.55" stop-color="#28D7CF" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#061313" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="treasuryShadow" x="7" y="7" width="82" height="84" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.38"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#FFD66F" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <circle cx="48" cy="48" r="40" fill="url(#treasuryGlow)"/>
+  <g filter="url(#treasuryShadow)">
+    <path d="M48 12V21" stroke="#FFF0B3" stroke-width="4" stroke-linecap="round"/>
+    <path d="M24 20L31 28" stroke="#E7B95E" stroke-width="4" stroke-linecap="round"/>
+    <path d="M72 20L65 28" stroke="#E7B95E" stroke-width="4" stroke-linecap="round"/>
+    <path d="M17 45H26" stroke="#8DFFF2" stroke-width="4" stroke-linecap="round" opacity="0.88"/>
+    <path d="M70 45H79" stroke="#8DFFF2" stroke-width="4" stroke-linecap="round" opacity="0.88"/>
+
+    <path d="M31 26H65L77 41L48 78L19 41L31 26Z" fill="#102927"/>
+    <path d="M33 29H63L73 41L48 73L23 41L33 29Z" fill="url(#treasuryIce)"/>
+    <path d="M23 41H73L48 73L23 41Z" fill="url(#treasuryDeep)"/>
+    <path d="M33 29L23 41H36L42 29H33Z" fill="#EFFFFA" opacity="0.82"/>
+    <path d="M42 29L36 41H48V29H42Z" fill="#B7FFF5" opacity="0.92"/>
+    <path d="M48 29V41H60L54 29H48Z" fill="#72F4E8" opacity="0.92"/>
+    <path d="M54 29L60 41H73L63 29H54Z" fill="url(#treasuryRuby)" opacity="0.98"/>
+    <path d="M36 41L48 73L60 41H36Z" fill="#DFFFF8" opacity="0.22"/>
+    <path d="M23 41L48 73L36 41H23Z" fill="#25A8A8" opacity="0.72"/>
+    <path d="M73 41L48 73L60 41H73Z" fill="#074C51" opacity="0.76"/>
+
+    <path d="M31 26H65L77 41L48 78L19 41L31 26Z" stroke="url(#treasuryGold)" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M23 41H73" stroke="#FFF5BA" stroke-opacity="0.76" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M36 41L48 73L60 41M42 29L36 41M48 29V41M54 29L60 41" stroke="#102927" stroke-opacity="0.35" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M34 33L28 40" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity="0.76"/>
+    <path d="M41 32H51" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" opacity="0.72"/>
+    <path d="M60 34L66 40" stroke="#FFE6A3" stroke-width="2.8" stroke-linecap="round" opacity="0.82"/>
+  </g>
+</svg>

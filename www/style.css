@@ -184,10 +184,12 @@ body {
     animation: riznicaIntroFade 4.7s ease forwards;
 }
 
-.riznica-intro-emoji {
-    font-size: clamp(6rem, 30vw, 13rem);
-    line-height: 1;
-    text-shadow: 0 0 28px var(--riznica-intro-glow), 0 0 60px var(--riznica-intro-smoke-a), 0 22px 55px rgba(0, 0, 0, 0.46);
+.riznica-intro-gem {
+    width: clamp(6rem, 30vw, 13rem);
+    height: clamp(6rem, 30vw, 13rem);
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 0 28px var(--riznica-intro-glow)) drop-shadow(0 0 60px var(--riznica-intro-smoke-a)) drop-shadow(0 22px 55px rgba(0, 0, 0, 0.46));
     animation: riznicaGemPop 4.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
@@ -2477,6 +2479,7 @@ body {
 
 .btn-special-square:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.2); }
 .btn-special-square:active { transform: translateY(2px) scale(0.95); box-shadow: 0 5px 15px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.15); }
+.spec-riznica { position: relative; }
 .spec-turnir { position: relative; }
 .special-svg-icon {
     width: 58px;
@@ -2486,6 +2489,7 @@ body {
     pointer-events: none;
     filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)) drop-shadow(0 0 10px rgba(255,214,111,0.28));
 }
+.special-svg-icon--treasury { transform: translateY(-1px); }
 .special-svg-icon--tournament { transform: translateY(-1px); }
 
 @media (max-width: 360px) {
