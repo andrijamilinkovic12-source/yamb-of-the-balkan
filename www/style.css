@@ -1748,6 +1748,7 @@ body {
     width: 30px;
     height: 30px;
     vertical-align: 0;
+    filter: none;
 }
 .economy-card-header,
 .economy-card-footer {
