@@ -1770,6 +1770,7 @@ class AdMobController {
         this.lastBannerMargin = null;
         this.bannerLoadTimer = null;
         this.bannerSyncTimer = null;
+        this.bannerTestMode = localStorage.getItem('yamb_admob_test_ads') === '1';
         
         this.ads = {
             rewarded: { isReady: false, isLoading: false, retryCount: 0 },
@@ -1933,6 +1934,12 @@ class AdMobController {
 
     setBannerSlotState(state, text = '') {
         const slotEl = this.bannerSlot || document.getElementById('economy-banner-slot');
+        const overlay = document.getElementById('undo-menu-overlay');
+
+        if (overlay) {
+            overlay.dataset.bannerActive = state === 'loading' || state === 'loaded' ? 'true' : 'false';
+        }
+
         if (!slotEl) return;
 
         slotEl.dataset.adState = state;
@@ -1946,6 +1953,7 @@ class AdMobController {
         this.clearBannerLoadTimer();
         this.bannerLoaded = true;
         this.setBannerSlotState('loaded');
+        console.info("AdMob banner učitan.");
     }
 
     handleBannerFailed(err) {
@@ -1954,7 +1962,7 @@ class AdMobController {
         this.bannerLoaded = false;
         this.lastBannerMargin = null;
         this.setBannerSlotState('failed', _safeT('economy_ad_failed') || 'AdMob nije spreman');
-        console.warn("⚠️ Banner reklama nije učitana.", err);
+        console.warn("Banner reklama nije učitana.", err);
     }
 
     handleBannerSizeChanged(size = {}) {
@@ -2033,7 +2041,7 @@ class AdMobController {
         if (!this.adMobPlugin || !slotEl || !navigator.onLine) return;
 
         this.bannerSlot = slotEl;
-        const margin = this.getEconomyBannerMargin(slotEl);
+        const margin = 0;
         if (this.bannerVisible && this.lastBannerMargin === margin) return;
 
         this.bannerLoaded = false;
@@ -2047,13 +2055,14 @@ class AdMobController {
         try {
             await this.adMobPlugin.showBanner({
                 adId: this.bannerId,
-                adSize: 'BANNER',
-                position: 'TOP_CENTER',
+                adSize: 'ADAPTIVE_BANNER',
+                position: 'BOTTOM_CENTER',
                 margin,
-                isTesting: false
+                isTesting: this.bannerTestMode
             });
             this.bannerVisible = true;
             this.lastBannerMargin = margin;
+            console.info(`AdMob banner zatražen (${this.bannerTestMode ? 'test' : 'production'} mode).`);
         } catch (e) {
             this.clearBannerLoadTimer();
             this.bannerVisible = false;

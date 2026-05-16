@@ -1651,13 +1651,19 @@ body {
     align-items: stretch;
     justify-content: stretch;
     padding: 0;
+    --economy-native-banner-space: 0px;
     overscroll-behavior: none;
     background:
         radial-gradient(circle at 18% 0%, rgba(255, 215, 0, 0.1), transparent 32%),
         rgba(0,0,0,0.78);
 }
+.economy-overlay[data-banner-active="true"] {
+    --economy-native-banner-space: 58px;
+}
 .economy-shell {
     max-width: 100%;
+    height: calc(var(--global-chat-height, 100dvh) - max(10px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom) + 4px) - var(--economy-native-banner-space));
+    max-height: calc(var(--global-chat-height, 100dvh) - max(10px, env(safe-area-inset-top)) - max(16px, env(safe-area-inset-bottom) + 4px) - var(--economy-native-banner-space));
 }
 .economy-card-header,
 .economy-card-footer {
@@ -1895,8 +1901,8 @@ body {
         left: 50%;
         top: calc(var(--global-chat-top, 0px) + 22px);
         width: min(760px, calc(100vw - 44px));
-        height: calc(var(--global-chat-height, 100dvh) - 44px);
-        max-height: calc(var(--global-chat-height, 100dvh) - 44px);
+        height: calc(var(--global-chat-height, 100dvh) - 44px - var(--economy-native-banner-space));
+        max-height: calc(var(--global-chat-height, 100dvh) - 44px - var(--economy-native-banner-space));
         transform: translateX(-50%);
         border-radius: 22px;
     }
