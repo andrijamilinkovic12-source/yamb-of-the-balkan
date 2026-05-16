@@ -97,6 +97,8 @@ class YambApp {
         this.lastMoveSnapshot = null; 
         this.pendingNewGamePlayers = 1;
         this.friendsListUids = []; 
+        this.localGameElapsedMs = 0;
+        this.localGameActiveStartedAt = 0;
         
         this.socket = null; 
         this.socketVerifiedUid = null;
@@ -1368,6 +1370,8 @@ class YambApp {
                     if (this.gameActive && this.onlineMode && !this.isSpectator) {
                         console.log("🔄 Rekonekcija detektovana, tražim stanje table od protivnika...");
                         this.socket.emit('request_state_sync');
+                    } else if (this.gameActive && !this.onlineMode) {
+                        this.emitLocalGameSessionStart();
                     }
                     
                     const authResult = await this.emitPlayerData();
@@ -1657,8 +1661,61 @@ class YambApp {
         } 
     }
 
+    clampLocalGameElapsed(value) {
+        const elapsed = parseInt(value, 10);
+        if (!Number.isFinite(elapsed) || elapsed < 0) return 0;
+        return Math.min(elapsed, 6 * 60 * 60 * 1000);
+    }
+
+    startLocalGameClock(carriedElapsedMs = 0) {
+        this.localGameElapsedMs = this.clampLocalGameElapsed(carriedElapsedMs);
+        this.localGameActiveStartedAt = Date.now();
+    }
+
+    getLocalGameElapsedMs() {
+        let elapsed = this.clampLocalGameElapsed(this.localGameElapsedMs);
+        if (this.gameActive && !this.onlineMode && this.localGameActiveStartedAt) {
+            elapsed += Date.now() - this.localGameActiveStartedAt;
+        }
+        return this.clampLocalGameElapsed(elapsed);
+    }
+
+    pauseLocalGameClock() {
+        this.localGameElapsedMs = this.getLocalGameElapsedMs();
+        this.localGameActiveStartedAt = 0;
+    }
+
+    resumeLocalGameClock() {
+        if (!this.gameActive || this.onlineMode || this.localGameActiveStartedAt) return;
+        this.localGameActiveStartedAt = Date.now();
+    }
+
+    buildLocalGameSessionPayload(roomId = this.roomId) {
+        return {
+            roomId,
+            carriedDurationMs: this.getLocalGameElapsedMs()
+        };
+    }
+
+    emitLocalGameSessionStart() {
+        if (!this.socket || !this.roomId || this.onlineMode || this.isSpectator) return;
+        const emitStart = () => {
+            if (this.socket && this.socket.connected && this.roomId) {
+                this.socket.emit('start_local_game', this.buildLocalGameSessionPayload());
+            }
+        };
+
+        if (this.socket.connected) {
+            emitStart();
+        } else {
+            this.socket.once('connect', emitStart);
+            if (this.socket.disconnected) this.socket.connect();
+        }
+    }
+
     handleAppPause() {
         if (this.gameActive && !this.onlineMode) {
+            this.pauseLocalGameClock();
             localStorage.setItem('yamb_local_recovery_pending', 'true');
             this.autoSaveGame(true);
         }
@@ -1668,6 +1725,9 @@ class YambApp {
         this.checkForInvite();
 
         if (this.gameActive && !this.onlineMode) {
+            this.resumeLocalGameClock();
+            this.initSocketConnection();
+            this.emitLocalGameSessionStart();
             this.autoSaveGame(true);
             return;
         }
@@ -3335,17 +3395,12 @@ class YambApp {
         this.initScores(); this.currentPlayerIdx = 0; 
         
         this.roomId = "local_" + Math.random().toString(36).substring(2, 10);
+        this.startLocalGameClock(0);
 
         this.initSocketConnection();
         this.setupSocketListeners(p1Name);
 
-        if (this.socket && this.socket.connected) {
-            this.socket.emit('start_local_game', this.roomId);
-        } else if (this.socket) {
-            this.socket.once('connect', () => {
-                this.socket.emit('start_local_game', this.roomId);
-            });
-        }
+        this.emitLocalGameSessionStart();
         
         // ---> DODATO: Puštanje muzike kada partija krene <---
         if(this.soundMgr) this.soundMgr.playMusic();
@@ -4479,6 +4534,7 @@ class YambApp {
                 brojBacanja: this.brojBacanja,
                 najavaAktivna: this.najavaAktivna,
                 najavljenoPolje: this.najavljenoPolje,
+                localGameElapsedMs: this.getLocalGameElapsedMs(),
                 aiMode: false, 
                 diff: this.aiDifficulty, 
                 date: new Date().toISOString() 
@@ -4531,17 +4587,12 @@ class YambApp {
             if (this.players.length > 1) this.modeTag = "Hotseat"; else this.modeTag = "Solo";
 
             this.roomId = "local_" + Math.random().toString(36).substring(2, 10);
+            this.startLocalGameClock(data.localGameElapsedMs || 0);
 
             this.initSocketConnection();
             this.setupSocketListeners(this.playerName);
 
-            if (this.socket && this.socket.connected) {
-                this.socket.emit('start_local_game', this.roomId);
-            } else if (this.socket) {
-                this.socket.once('connect', () => {
-                    this.socket.emit('start_local_game', this.roomId);
-                });
-            }
+            this.emitLocalGameSessionStart();
 
             this.lastMoveSnapshot = null;
             const btnUndo = document.getElementById('btn-undo-move');

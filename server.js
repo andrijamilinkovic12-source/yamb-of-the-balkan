@@ -388,6 +388,29 @@ const GAME_REWARD_CLAIM_WINDOW_MS = 5 * 60 * 1000;
 const TOURNEY_ENTRY_FEE = 2500;
 const TOURNEY_WINNER_REWARD = 20000;
 const TOURNEY_RUNNER_UP_REWARD = 2500;
+
+const gameCarriedDurations = {};
+
+function normalizeCarriedGameDuration(value) {
+    const duration = toSafeInt(value, 0);
+    return Math.max(0, Math.min(MAX_GAME_DURATION, duration));
+}
+
+function startScoreSession(socketId, carriedDurationMs = 0) {
+    gameStartTimes[socketId] = Date.now();
+    gameCarriedDurations[socketId] = normalizeCarriedGameDuration(carriedDurationMs);
+}
+
+function getScoreSessionDuration(socketId) {
+    const startTime = gameStartTimes[socketId];
+    if (!startTime) return null;
+    return (Date.now() - startTime) + (gameCarriedDurations[socketId] || 0);
+}
+
+function clearScoreSession(socketId) {
+    delete gameStartTimes[socketId];
+    delete gameCarriedDurations[socketId];
+}
 const SHOP_AD_REWARD_AMOUNT = 500;
 const SHOP_INTERSTITIAL_REWARD_AMOUNT = 200;
 const SHOP_AD_REWARD_COOLDOWN_MS = 15000;
@@ -2968,15 +2991,17 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('start_local_game', (roomId) => {
+    socket.on('start_local_game', (payload) => {
+        const roomId = typeof payload === 'string' ? payload : payload?.roomId;
+        const carriedDurationMs = typeof payload === 'object' ? payload?.carriedDurationMs : 0;
         socket.join(roomId);
         playerRooms[socket.id] = roomId;
-        gameStartTimes[socket.id] = Date.now();
+        startScoreSession(socket.id, carriedDurationMs);
         console.log(`🏠 Igrač ${socket.id} započeo lokalnu partiju u sobi: ${roomId}`);
     });
 
     socket.on('game_session_start', () => {
-        gameStartTimes[socket.id] = Date.now();
+        startScoreSession(socket.id);
         console.log(`⏱️ Igrač ${socket.id} započeo partiju u ${new Date().toLocaleTimeString()}`);
     });
 
@@ -3402,14 +3427,13 @@ io.on('connection', (socket) => {
                 return replyScoreSubmit(false, 'score_out_of_range');
             }
 
-            const startTime = gameStartTimes[socket.id];
+            const duration = getScoreSessionDuration(socket.id);
 
-            if (!startTime) {
+            if (duration === null) {
                 console.log(`🚨 HACK POKUSAJ (No Session): ${socket.id} pokusava upis skora ${submittedScore} bez aktivne server sesije.`);
                 return replyScoreSubmit(false, 'missing_game_session');
             }
 
-            const duration = Date.now() - startTime;
             if (duration < MIN_GAME_DURATION) {
                 console.log(`🚨 HACK POKUSAJ (Speed): Trajanje ${duration}ms. Blokiram skor: ${submittedScore}`);
                 return replyScoreSubmit(false, 'game_too_short');
@@ -3459,7 +3483,7 @@ io.on('connection', (socket) => {
                 }
             }, GAME_REWARD_CLAIM_WINDOW_MS);
 
-            delete gameStartTimes[socket.id];
+            clearScoreSession(socket.id);
             return replyScoreSubmit(true);
 
         } catch (err) {
@@ -3653,9 +3677,8 @@ io.on('connection', (socket) => {
             }
 
             if (delta > 0) {
-                const startTime = gameStartTimes[socket.id];
-                const duration = startTime ? Date.now() - startTime : 0;
-                if (!startTime || duration < MIN_LEAGUE_SESSION_DURATION || duration > MAX_GAME_DURATION) {
+                const duration = getScoreSessionDuration(socket.id);
+                if (duration === null || duration < MIN_LEAGUE_SESSION_DURATION || duration > MAX_GAME_DURATION) {
                     return replyLeagueSubmit(false, 'invalid_game_session');
                 }
             }
@@ -3985,8 +4008,8 @@ io.on('connection', (socket) => {
                 playerRooms[socket.id] = roomId;
                 playerRooms[opponentId] = roomId;
                 
-                gameStartTimes[socket.id] = Date.now();
-                gameStartTimes[opponentId] = Date.now();
+                startScoreSession(socket.id);
+                startScoreSession(opponentId);
 
                 console.log(`⚔️ RANDOM MATCH: ${nickname} vs ${opponentName} (Room: ${roomId})`);
 
@@ -4054,7 +4077,7 @@ io.on('connection', (socket) => {
             privateRooms[roomId].p2 = { id: socket.id, name: nickname };
             socket.join(roomId);
             playerRooms[socket.id] = roomId; playerRooms[p1.id] = roomId;
-            gameStartTimes[socket.id] = Date.now(); gameStartTimes[p1.id] = Date.now();
+            startScoreSession(socket.id); startScoreSession(p1.id);
 
             console.log(`⚔️ PRIVATE MATCH: ${p1.name} vs ${nickname} u sobi ${roomId}`);
 
@@ -4510,8 +4533,8 @@ io.on('connection', (socket) => {
 
             playerRooms[socket.id] = roomName;
             playerRooms[challengerId] = roomName;
-            gameStartTimes[socket.id] = Date.now();
-            gameStartTimes[challengerId] = Date.now();
+            startScoreSession(socket.id);
+            startScoreSession(challengerId);
 
             challengerSocket.emit('game_start', {
                 roomId: roomName,
@@ -4554,11 +4577,12 @@ io.on('connection', (socket) => {
     socket.on('game_over', () => {
         const roomId = playerRooms[socket.id];
         const scoreSessionStartedAt = gameStartTimes[socket.id];
+        const carriedDurationAtGameOver = gameCarriedDurations[socket.id];
 
         if (scoreSessionStartedAt) {
             setTimeout(() => {
-                if (gameStartTimes[socket.id] === scoreSessionStartedAt) {
-                    delete gameStartTimes[socket.id];
+                if (gameStartTimes[socket.id] === scoreSessionStartedAt && gameCarriedDurations[socket.id] === carriedDurationAtGameOver) {
+                    clearScoreSession(socket.id);
                 }
             }, TOP_SCORE_SUBMIT_GRACE_MS);
         }
@@ -5004,9 +5028,7 @@ io.on('connection', (socket) => {
         }
         delete registeredSockets[socket.id];
 
-        if (gameStartTimes[socket.id]) {
-            delete gameStartTimes[socket.id];
-        }
+        clearScoreSession(socket.id);
         delete pendingGameRewards[socket.id];
 
         if (waitingPlayer && waitingPlayer.id === socket.id) {
