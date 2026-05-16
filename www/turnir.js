@@ -749,12 +749,21 @@ class TournamentManager {
         let f = this.state.bracket.f || [];
 
         if (this.state.status === 'registration') {
-            qf = Array(4).fill(null).map((_, i) => {
-                const p1 = this.state.players[i*2] || null;
-                const p2 = this.state.players[i*2+1] || null;
-                if (!p1 && !p2) return null;
-                return { p1: p1 || null, p2: p2 || null };
-            });
+            const serverQf = Array.isArray(this.state.bracket && this.state.bracket.qf) ? this.state.bracket.qf : [];
+            const hasServerBracketPreview = serverQf.some(match => match && (match.p1 || match.p2));
+
+            qf = hasServerBracketPreview
+                ? Array(4).fill(null).map((_, i) => {
+                    const match = serverQf[i];
+                    if (!match || (!match.p1 && !match.p2)) return null;
+                    return { p1: match.p1 || null, p2: match.p2 || null };
+                })
+                : Array(4).fill(null).map((_, i) => {
+                    const p1 = this.state.players[i*2] || null;
+                    const p2 = this.state.players[i*2+1] || null;
+                    if (!p1 && !p2) return null;
+                    return { p1: p1 || null, p2: p2 || null };
+                });
         }
 
         if (qf.length === 0) qf = Array(4).fill(null);

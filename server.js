@@ -871,15 +871,122 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
 
 function generateTournamentBracket() {
     tournamentState.status = 'active';
-    const shuffled = [...tournamentState.players].sort(() => 0.5 - Math.random());
-    const createMatch = (p1, p2) => ({
-        p1: p1, p2: p2, winnerId: null, time: null, proposedTime: null, proposedById: null, timeAccepted: false
+    ensureTournamentRegistrationBracket();
+
+    const registrationSlots = tournamentState.bracket.qf
+        .flatMap(match => match ? [match.p1, match.p2] : [null, null])
+        .filter(Boolean);
+    const slotIds = new Set(registrationSlots.map(player => player.id));
+    const hasRandomRegistrationBracket = (
+        registrationSlots.length === 8 &&
+        slotIds.size === 8 &&
+        tournamentState.players.length === 8 &&
+        tournamentState.players.every(player => slotIds.has(player.id))
+    );
+
+    const qfPlayers = hasRandomRegistrationBracket
+        ? registrationSlots
+        : shuffleTournamentPlayers(tournamentState.players);
+
+    tournamentState.bracket = {
+        qf: [
+            createTournamentMatch(qfPlayers[0], qfPlayers[1]),
+            createTournamentMatch(qfPlayers[2], qfPlayers[3]),
+            createTournamentMatch(qfPlayers[4], qfPlayers[5]),
+            createTournamentMatch(qfPlayers[6], qfPlayers[7])
+        ],
+        sf: [null, null],
+        f: [null]
+    };
+    saveTournamentToDb();
+}
+
+function createTournamentMatch(p1 = null, p2 = null) {
+    return {
+        p1,
+        p2,
+        winnerId: null,
+        time: null,
+        proposedTime: null,
+        proposedById: null,
+        timeAccepted: false
+    };
+}
+
+function createEmptyTournamentBracket() {
+    return { qf: [null, null, null, null], sf: [null, null], f: [null] };
+}
+
+function shuffleTournamentPlayers(players) {
+    const shuffled = [...players];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+function ensureTournamentRegistrationBracket() {
+    if (!tournamentState.bracket || typeof tournamentState.bracket !== 'object') {
+        tournamentState.bracket = createEmptyTournamentBracket();
+    }
+
+    if (!Array.isArray(tournamentState.bracket.qf)) {
+        tournamentState.bracket.qf = [null, null, null, null];
+    } else {
+        tournamentState.bracket.qf = tournamentState.bracket.qf.slice(0, 4);
+        while (tournamentState.bracket.qf.length < 4) tournamentState.bracket.qf.push(null);
+    }
+
+    if (!Array.isArray(tournamentState.bracket.sf)) tournamentState.bracket.sf = [null, null];
+    if (!Array.isArray(tournamentState.bracket.f)) tournamentState.bracket.f = [null];
+}
+
+function assignPlayerToRandomTournamentSlot(player) {
+    ensureTournamentRegistrationBracket();
+
+    for (const match of tournamentState.bracket.qf) {
+        if (!match) continue;
+        if ((match.p1 && match.p1.id === player.id) || (match.p2 && match.p2.id === player.id)) {
+            return true;
+        }
+    }
+
+    const emptySlots = [];
+    for (let matchIndex = 0; matchIndex < 4; matchIndex++) {
+        const match = tournamentState.bracket.qf[matchIndex];
+        if (!match) {
+            emptySlots.push({ matchIndex, position: 'p1' }, { matchIndex, position: 'p2' });
+            continue;
+        }
+        if (!match.p1) emptySlots.push({ matchIndex, position: 'p1' });
+        if (!match.p2) emptySlots.push({ matchIndex, position: 'p2' });
+    }
+
+    if (emptySlots.length === 0) return false;
+
+    const slot = emptySlots[Math.floor(Math.random() * emptySlots.length)];
+    if (!tournamentState.bracket.qf[slot.matchIndex]) {
+        tournamentState.bracket.qf[slot.matchIndex] = createTournamentMatch();
+    }
+    tournamentState.bracket.qf[slot.matchIndex][slot.position] = player;
+    return true;
+}
+
+function removePlayerFromTournamentBracket(uid) {
+    if (!uid || !tournamentState.bracket) return;
+
+    ['qf', 'sf', 'f'].forEach(round => {
+        const matches = tournamentState.bracket[round];
+        if (!Array.isArray(matches)) return;
+
+        matches.forEach((match, index) => {
+            if (!match) return;
+            if (match.p1 && match.p1.id === uid) match.p1 = null;
+            if (match.p2 && match.p2.id === uid) match.p2 = null;
+            if (!match.p1 && !match.p2 && round === 'qf') matches[index] = null;
+        });
     });
-    tournamentState.bracket.qf = [
-        createMatch(shuffled[0], shuffled[1]), createMatch(shuffled[2], shuffled[3]),
-        createMatch(shuffled[4], shuffled[5]), createMatch(shuffled[6], shuffled[7])
-    ];
-    saveTournamentToDb(); 
 }
 
 function advanceTournamentBracket(round, index, winnerObj) {
@@ -4710,12 +4817,18 @@ io.on('connection', (socket) => {
 
             const serverPi = await calculateTournamentPi(uid, playerData.pi);
 
-            tournamentState.players.push({
+            const tournamentPlayer = {
                 id: uid,
                 name: sanitizeTournamentName(socket.playerName || playerData.name),
                 photoUrl: sanitizeTournamentPhotoUrl(socket.photoUrl || playerData.photoUrl),
                 pi: serverPi
-            });
+            };
+
+            tournamentState.players.push(tournamentPlayer);
+            if (!assignPlayerToRandomTournamentSlot(tournamentPlayer)) {
+                tournamentState.players = tournamentState.players.filter(player => player.id !== uid);
+                throw new Error('No free tournament bracket slot.');
+            }
 
             if (tournamentState.players.length === 8) {
                 generateTournamentBracket();
@@ -4799,6 +4912,7 @@ io.on('connection', (socket) => {
             const refundedUser = await refundTournamentEntryFee(uid);
 
             tournamentState.players.splice(index, 1);
+            removePlayerFromTournamentBracket(uid);
             saveTournamentToDb();
             io.emit('tourney_state_update', tournamentState);
 
