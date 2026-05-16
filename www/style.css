@@ -1698,6 +1698,7 @@ body {
     min-width: 0;
     justify-content: flex-start;
     gap: 10px;
+    overflow: hidden;
 }
 .economy-card-header .global-chat-title {
     overflow: hidden;
@@ -1721,6 +1722,8 @@ body {
     justify-content: center;
     align-items: center;
     gap: 14px;
+    width: 100%;
+    box-sizing: border-box;
     margin: 4px 0 10px;
     padding: 0 max(10px, env(safe-area-inset-right)) 0 max(10px, env(safe-area-inset-left));
     min-height: 48px;
@@ -1733,6 +1736,7 @@ body {
     flex: 0 0 48px;
     min-width: 48px;
     min-height: 48px;
+    box-sizing: border-box;
     padding: 0;
     border-radius: 50%;
     background: transparent;
@@ -1743,6 +1747,11 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 0;
     letter-spacing: 0;
     line-height: 0;
     transform: none;
@@ -1767,8 +1776,12 @@ body {
     width: 30px;
     height: 30px;
     flex: 0 0 30px;
+    display: block;
+    position: static;
+    margin: 0;
     vertical-align: 0;
     filter: none;
+    transform: none;
 }
 .economy-card-header,
 .economy-card-footer {
@@ -1790,6 +1803,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    flex: 0 0 auto;
     padding: 4px 9px;
     border-radius: 999px;
     border: 1px solid rgba(255, 215, 0, 0.34);
@@ -1797,6 +1811,9 @@ body {
     color: var(--gold-main);
     font-size: 0.78rem;
     font-weight: 900;
+}
+.economy-balance-pill[hidden] {
+    display: none !important;
 }
 .economy-balance-pill .dukat-icon-inline {
     width: 22px;
