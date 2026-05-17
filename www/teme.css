@@ -76,97 +76,100 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .col-header, body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .row-header { background: linear-gradient(to bottom, rgba(20, 45, 25, 0.6), rgba(10, 15, 12, 0.8)); box-shadow: 0 2px 5px rgba(0,0,0,0.5); border-bottom: 1px solid rgba(74, 222, 128, 0.3); color: var(--gold-main); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .modal-box, body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .card { background: linear-gradient(135deg, #0a170d, #060e08) !important; border: 1px solid rgba(74, 222, 128, 0.4) !important; box-shadow: 0 25px 50px rgba(0,0,0,0.9), inset 0 1px 0 rgba(255,255,255,0.05) !important; }
 
-/* --- TEMA 2: SVETLO ZLATO V2.0 (PREMIUM PEARL & GOLD) --- */
+/* --- TEMA 2: SVETLO ZLATO V3.0 (PREMIUM CHAMPAGNE GOLD) --- */
 body.light-theme {
-    /* Luksuzna biserno bela / krem pozadina */
-    --bg-base: #f4f6f8; 
-    --bg-gradient-1: #ffffff; 
-    --bg-gradient-2: #eef2f5;
+    /* Topla svetlo-zlatna osnova bez ciste bele koja zamara oci */
+    --bg-base: #d8b466;
+    --bg-gradient-1: #f7e6b7;
+    --bg-gradient-2: #b9822c;
     
-    /* Bogato zlato */
-    --gold-main: #d4af37; 
-    --gold-glow: rgba(212, 175, 55, 0.4);
-    --carousel-dot-idle: rgba(212, 175, 55, 0.28);
-    --carousel-dot-active: #d4af37;
-    --carousel-dot-glow: rgba(212, 175, 55, 0.45);
-    --menu-icon-face-light: #fff7c2;
-    --menu-icon-face-main: #d4af37;
-    --menu-icon-face-dark: #9a6b12;
-    --menu-icon-warm-light: #fff0b8;
-    --menu-icon-warm-main: #f59e0b;
-    --menu-icon-accent-light: #bae6fd;
-    --menu-icon-accent-main: #0ea5e9;
-    --menu-icon-core: #334155;
+    /* Bogato, ali citljivo zlato */
+    --gold-main: #a86f13;
+    --gold-dark: #7a4b08;
+    --gold-highlight: #ffe8a3;
+    --gold-glow: rgba(168, 111, 19, 0.32);
+    --carousel-dot-idle: rgba(122, 75, 8, 0.26);
+    --carousel-dot-active: #a86f13;
+    --carousel-dot-glow: rgba(168, 111, 19, 0.42);
+    --menu-icon-face-light: #fff0bd;
+    --menu-icon-face-main: #d89d2f;
+    --menu-icon-face-dark: #7a4b08;
+    --menu-icon-warm-light: #ffe6a0;
+    --menu-icon-warm-main: #c8821c;
+    --menu-icon-accent-light: #cfe8ff;
+    --menu-icon-accent-main: #2f7faa;
+    --menu-icon-core: #3b2a12;
     --menu-icon-detail: #422006;
-    --menu-icon-glow: #d4af37;
-    --menu-icon-css-glow: rgba(212, 175, 55, 0.22);
+    --menu-icon-glow: #d89d2f;
+    --menu-icon-css-glow: rgba(168, 111, 19, 0.20);
     
     /* Tekst */
-    --text-main: #334155; 
-    --text-filled: #0f172a;
-    --text-sum: #b45309; 
-    --text-sum-label: #d4af37; 
-    --text-muted: #94a3b8;
+    --text-main: #3b2a12;
+    --text-filled: #1f1608;
+    --text-sum: #6f4408;
+    --text-sum-label: #7a4b08;
+    --text-muted: #735a31;
     
-    /* Premium Pearl Glassmorphism */
-    --glass-bg: rgba(255, 255, 255, 0.6); 
-    --glass-panel: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.85));
-    --glass-border: 1px solid rgba(212, 175, 55, 0.4); 
-    --glass-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), inset 0 1px 0 #ffffff;
+    /* Champagne glassmorphism */
+    --glass-bg: rgba(255, 229, 166, 0.40);
+    --glass-panel: linear-gradient(135deg, rgba(255, 238, 195, 0.88), rgba(214, 170, 85, 0.58));
+    --glass-border: 1px solid rgba(122, 75, 8, 0.30);
+    --glass-shadow: 0 18px 36px rgba(91, 55, 7, 0.20), inset 0 1px 0 rgba(255, 248, 224, 0.74);
     
-    --modal-bg: #ffffff; 
-    --input-bg: #f8fafc; 
-    --input-border: rgba(212, 175, 55, 0.5);
+    --modal-bg: linear-gradient(145deg, #f8e8bc, #d7ad59);
+    --input-bg: rgba(255, 239, 200, 0.76);
+    --input-border: rgba(122, 75, 8, 0.36);
     
-    /* Kockice - Sedefasto bele sa zlatnim okvirom */
-    --dice-bg: linear-gradient(145deg, #ffffff, #f1f5f9); 
-    --dice-border: rgba(212, 175, 55, 0.5);
-    --dice-color: #334155; 
-    --dice-active: #d4af37;
+    /* Kockice - topli porcelan sa zlatnim ramom */
+    --dice-bg: linear-gradient(145deg, #fff0bd, #dba74d);
+    --dice-border: rgba(122, 75, 8, 0.48);
+    --dice-color: #2a1b08;
+    --dice-active: #8a560c;
     
-    --grid-cell-bg: transparent; 
-    --grid-header-bg: linear-gradient(to bottom, #ffffff, #f8fafc);
+    --grid-cell-bg: rgba(255, 239, 200, 0.26);
+    --grid-header-bg: linear-gradient(to bottom, rgba(248, 221, 157, 0.92), rgba(202, 147, 50, 0.74));
     
-    /* Modernizovane pastelne premium boje kolona */
-    --col-nadole: #0ea5e9; --col-nagore: #f43f5e; --col-sredina: #f59e0b; 
-    --col-rucno: #d946ef; --col-najava: #d4af37; --col-slobodna: #64748b;
+    /* Kontrastne kolone na svetlom zlatu */
+    --col-nadole: #1d78a7; --col-nagore: #b13f4a; --col-sredina: #9a5e0a;
+    --col-rucno: #8f4aa5; --col-najava: #7a4b08; --col-slobodna: #59616d;
 }
 
-/* 3D Sinhronizacija i Dugmad (Light Theme V2.0) */
-body.light-theme .btn-menu { border: 1px solid rgba(212, 175, 55, 0.3); background: linear-gradient(145deg, #ffffff, #f1f5f9); color: var(--gold-main); border-radius: 50px; font-weight: 800; box-shadow: 0 6px 0 #cbd5e1, 0 12px 25px rgba(0, 0, 0, 0.08), inset 0 2px 0 #ffffff; transform: translateY(0); transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1); }
-body.light-theme .btn-menu:active { transform: translateY(6px); box-shadow: 0 0 0 #cbd5e1, inset 0 3px 10px rgba(0,0,0,0.05); border-color: var(--gold-main); }
-body.light-theme .btn-primary { background: linear-gradient(135deg, #f3d56b, #d4af37); color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.2); border: 1px solid #ffe898; box-shadow: 0 6px 0 #b5952f, 0 15px 30px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4); }
-body.light-theme .btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #b5952f, inset 0 3px 10px rgba(0,0,0,0.2); }
-body.light-theme .btn-throw { background: linear-gradient(to bottom, #fde047, #eab308); color: #422006; border: 1px solid #fef08a; font-weight: 900; box-shadow: 0 6px 0 #ca8a04, 0 12px 25px rgba(234, 179, 8, 0.3), inset 0 2px 0 rgba(255,255,255,0.5); transform: translateY(0); text-shadow: 0 1px 0 rgba(255,255,255,0.5); }
-body.light-theme .btn-throw:active { transform: translateY(6px); box-shadow: 0 0 0 #ca8a04, inset 0 3px 8px rgba(133, 77, 14, 0.2); }
-body.light-theme .btn-secondary, body.light-theme #btn-najava { background: linear-gradient(to bottom, #ffffff, #f8fafc); color: var(--gold-main); border: 1px solid rgba(212, 175, 55, 0.3); font-weight: 800; box-shadow: 0 5px 0 #e2e8f0, 0 8px 15px rgba(0,0,0,0.05), inset 0 1px 0 #ffffff; }
-body.light-theme .btn-secondary:active, body.light-theme #btn-najava:active { transform: translateY(5px); box-shadow: 0 0 0 #e2e8f0, inset 0 3px 8px rgba(0,0,0,0.05); color: #b45309; }
+/* 3D Sinhronizacija i Dugmad (Light Theme V3.0) */
+body.light-theme .btn-menu { border: 1px solid rgba(122, 75, 8, 0.26); background: linear-gradient(145deg, #f9e8b6, #d2a24a); color: #4a3009; border-radius: 50px; font-weight: 800; box-shadow: 0 6px 0 #9d6b1a, 0 12px 24px rgba(91, 55, 7, 0.18), inset 0 2px 0 rgba(255,248,224,0.72); transform: translateY(0); transition: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1); }
+body.light-theme .btn-menu:active { transform: translateY(6px); box-shadow: 0 0 0 #9d6b1a, inset 0 3px 10px rgba(91,55,7,0.16); border-color: #7a4b08; }
+body.light-theme .btn-primary { background: linear-gradient(135deg, #ffe49a, #c9881f); color: #2b1a04; text-shadow: 0 1px 0 rgba(255,245,214,0.62); border: 1px solid #fff0bd; box-shadow: 0 6px 0 #8f5a0f, 0 15px 28px rgba(168, 111, 19, 0.28), inset 0 2px 0 rgba(255,248,224,0.62); }
+body.light-theme .btn-primary:active { transform: translateY(6px); box-shadow: 0 0 0 #8f5a0f, inset 0 3px 10px rgba(91,55,7,0.24); }
+body.light-theme .btn-throw { background: linear-gradient(to bottom, #ffe9a8, #d59224); color: #2b1a04; border: 1px solid #fff0bd; font-weight: 900; box-shadow: 0 6px 0 #8f5a0f, 0 12px 25px rgba(168, 111, 19, 0.30), inset 0 2px 0 rgba(255,248,224,0.64); transform: translateY(0); text-shadow: 0 1px 0 rgba(255,248,224,0.68); }
+body.light-theme .btn-throw:active { transform: translateY(6px); box-shadow: 0 0 0 #8f5a0f, inset 0 3px 8px rgba(91,55,7,0.24); }
+body.light-theme .btn-secondary, body.light-theme #btn-najava { background: linear-gradient(to bottom, #f8e3ab, #cfa04c); color: #4a3009; border: 1px solid rgba(122, 75, 8, 0.30); font-weight: 800; box-shadow: 0 5px 0 #9d6b1a, 0 8px 15px rgba(91,55,7,0.14), inset 0 1px 0 rgba(255,248,224,0.58); }
+body.light-theme .btn-secondary:active, body.light-theme #btn-najava:active { transform: translateY(5px); box-shadow: 0 0 0 #9d6b1a, inset 0 3px 8px rgba(91,55,7,0.18); color: #2b1a04; }
 
 /* Tabla i Polja */
-body.light-theme .player-table { transform: perspective(1000px) rotateX(1deg); border-radius: 16px; border: 1px solid var(--gold-main); box-shadow: 0 10px 0 #c2a132, 0 25px 45px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255,255,255,0.8) !important; background: var(--glass-panel); }
-body.light-theme .grid-cell { border: 1px solid rgba(212, 175, 55, 0.15); background: transparent; box-shadow: inset 1px 1px 4px rgba(0,0,0,0.03), inset -1px -1px 0 #ffffff; }
-body.light-theme .col-header, body.light-theme .row-header { background: linear-gradient(to bottom, #ffffff, #f8fafc); border-bottom: 1px solid rgba(212, 175, 55, 0.3); color: var(--gold-main); text-shadow: 0 1px 0 #ffffff; }
+body.light-theme .player-table { transform: perspective(1000px) rotateX(1deg); border-radius: 16px; border: 1px solid rgba(122, 75, 8, 0.38); box-shadow: 0 10px 0 #9d6b1a, 0 25px 45px rgba(91, 55, 7, 0.22), inset 0 1px 0 rgba(255,248,224,0.75) !important; background: var(--glass-panel); }
+body.light-theme .grid-cell { border: 1px solid rgba(122, 75, 8, 0.13); background: rgba(255, 239, 200, 0.24); color: #735a31; box-shadow: inset 1px 1px 4px rgba(91,55,7,0.07), inset -1px -1px 0 rgba(255,248,224,0.42); }
+body.light-theme .score-btn { color: #3b2a12; text-shadow: 0 1px 0 rgba(255,248,224,0.52); }
+body.light-theme .col-header, body.light-theme .row-header { background: linear-gradient(to bottom, #f4d991, #c98d2c); border-bottom: 1px solid rgba(122, 75, 8, 0.28); color: #3a2608; text-shadow: 0 1px 0 rgba(255,248,224,0.58); }
 
 /* Zbirovi i naglasci */
-body.light-theme .row-header.sum, body.light-theme .cell-sum { background: linear-gradient(to bottom, #fffbeb, #fef3c7) !important; border-top: 1px solid #fde68a !important; border-bottom: 1px solid #fde68a !important; color: #b45309 !important; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.02) !important; }
-body.light-theme .score-btn.filled { color: #0f172a !important; text-shadow: 0 1px 0 #ffffff, 0 0 12px rgba(212, 175, 55, 0.4); background: radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%); font-weight: 900; }
-body.light-theme .modal-box, body.light-theme .card { background: #ffffff !important; border: 2px solid var(--gold-main) !important; box-shadow: 0 15px 0 #e2e8f0, 0 30px 60px rgba(0,0,0,0.12) !important; color: var(--text-filled); }
+body.light-theme .row-header.sum, body.light-theme .cell-sum { background: linear-gradient(to bottom, #f7df9c, #c98d2c) !important; border-top: 1px solid rgba(122,75,8,0.34) !important; border-bottom: 1px solid rgba(122,75,8,0.34) !important; color: #3a2608 !important; box-shadow: inset 1px 1px 4px rgba(91,55,7,0.10) !important; }
+body.light-theme .score-btn.filled { color: #1f1608 !important; text-shadow: 0 1px 0 rgba(255,248,224,0.72), 0 0 10px rgba(168,111,19,0.26); background: radial-gradient(circle, rgba(168, 111, 19, 0.13) 0%, transparent 70%); font-weight: 900; }
+body.light-theme .modal-box, body.light-theme .card { background: linear-gradient(145deg, #f8e8bc, #d7ad59) !important; border: 1px solid rgba(122,75,8,0.34) !important; box-shadow: 0 14px 0 #9d6b1a, 0 30px 60px rgba(91,55,7,0.20), inset 0 1px 0 rgba(255,248,224,0.72) !important; color: var(--text-filled); }
 
 /* Tema dugmići (okrugli i specijalni u meniju) */
-body.light-theme #btn-theme-toggle, body.light-theme .game-header .btn-secondary { background: linear-gradient(to bottom, #ffffff, #f8fafc); border-color: var(--gold-main); color: var(--gold-main); box-shadow: 0 5px 0 #cbd5e1, 0 10px 15px rgba(0,0,0,0.08), inset 0 2px 0 #ffffff; }
-body.light-theme .btn-square, body.light-theme .btn-special-square { border-color: rgba(212, 175, 55, 0.4); color: var(--gold-main); background: linear-gradient(145deg, #ffffff, #f1f5f9); box-shadow: 0 4px 0 #cbd5e1, 0 8px 15px rgba(0,0,0,0.08), inset 0 1px 0 #ffffff; }
-body.light-theme .btn-square:active, body.light-theme .btn-special-square:active { box-shadow: 0 0 0 #cbd5e1, inset 0 2px 8px rgba(0,0,0,0.05); border-color: var(--gold-main); }
+body.light-theme #btn-theme-toggle, body.light-theme .game-header .btn-secondary { background: linear-gradient(to bottom, #f8e3ab, #cfa04c); border-color: #7a4b08; color: #3a2608; box-shadow: 0 5px 0 #9d6b1a, 0 10px 15px rgba(91,55,7,0.16), inset 0 2px 0 rgba(255,248,224,0.64); }
+body.light-theme .btn-square, body.light-theme .btn-special-square { border-color: rgba(122,75,8,0.34); color: #4a3009; background: linear-gradient(145deg, #f9e8b6, #d2a24a); box-shadow: 0 4px 0 #9d6b1a, 0 8px 15px rgba(91,55,7,0.16), inset 0 1px 0 rgba(255,248,224,0.62); }
+body.light-theme .btn-square:active, body.light-theme .btn-special-square:active { box-shadow: 0 0 0 #9d6b1a, inset 0 2px 8px rgba(91,55,7,0.18); border-color: #7a4b08; }
 
 /* Dnevni izazov kartica za Light temu */
-body.light-theme .daily-btn-main { box-shadow: 0 8px 0 #b5952f, 0 15px 30px rgba(212, 175, 55, 0.3), inset 0 2px 0 rgba(255,255,255,0.4) !important; }
-body.light-theme .daily-btn-main:active { box-shadow: 0 0 0 #b5952f, inset 0 5px 10px rgba(0,0,0,0.1) !important; }
-body.light-theme .daily-title { color: var(--gold-main); text-shadow: 0 1px 0 #ffffff; }
-body.light-theme .daily-score-box { background: linear-gradient(to bottom, #fffbeb, #fef3c7); border: 2px solid var(--gold-main); box-shadow: inset 1px 1px 4px rgba(0,0,0,0.05); }
-body.light-theme .daily-value { color: #0f172a; text-shadow: 0 1px 0 #ffffff; }
+body.light-theme .daily-btn-main { box-shadow: 0 8px 0 #8f5a0f, 0 15px 30px rgba(168, 111, 19, 0.28), inset 0 2px 0 rgba(255,248,224,0.62) !important; }
+body.light-theme .daily-btn-main:active { box-shadow: 0 0 0 #8f5a0f, inset 0 5px 10px rgba(91,55,7,0.16) !important; }
+body.light-theme .daily-title { color: #5b3909; text-shadow: 0 1px 0 rgba(255,248,224,0.70); }
+body.light-theme .daily-score-box { background: linear-gradient(to bottom, #f7df9c, #d0a24d); border: 1px solid rgba(122,75,8,0.34); box-shadow: inset 1px 1px 4px rgba(91,55,7,0.10); }
+body.light-theme .daily-value { color: #1f1608; text-shadow: 0 1px 0 rgba(255,248,224,0.70); }
 
 /* Grid Meni dugmići (Solo, Dual, Random...) */
-body.light-theme .mode-btn { background: linear-gradient(145deg, #ffffff, #f1f5f9); box-shadow: 0 6px 0 #cbd5e1, 0 15px 25px rgba(0,0,0,0.08), inset 0 1px 0 #ffffff; border-color: rgba(212, 175, 55, 0.3); color: var(--text-main); }
-body.light-theme .mode-btn:active { box-shadow: 0 0 0 #cbd5e1, inset 0 3px 10px rgba(0,0,0,0.05); }
+body.light-theme .mode-btn { background: linear-gradient(145deg, #f9e8b6, #d2a24a); box-shadow: 0 6px 0 #9d6b1a, 0 15px 25px rgba(91,55,7,0.18), inset 0 1px 0 rgba(255,248,224,0.62); border-color: rgba(122,75,8,0.28); color: var(--text-main); }
+body.light-theme .mode-btn:active { box-shadow: 0 0 0 #9d6b1a, inset 0 3px 10px rgba(91,55,7,0.18); }
 
 
 /* --- TEMA 3: MEDIUM (TRULA VIŠNJA) --- */
