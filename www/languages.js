@@ -374,6 +374,7 @@ const TRANSLATIONS = {
         "btn_claim_short": "PREUZMI",
 
         // --- PODEŠAVANJA ---
+        "settings_title": "PODEŠAVANJA",
         "settings_name": "Vaše Ime:",
         "settings_name_placeholder": "Ime Igrača",
         "settings_theme": "Tema:",
@@ -1010,6 +1011,7 @@ const TRANSLATIONS = {
         "btn_claim_short": "CLAIM",
 
         // --- SETTINGS ---
+        "settings_title": "SETTINGS",
         "settings_name": "Your Name:",
         "settings_name_placeholder": "Player Name",
         "settings_theme": "Theme:",
