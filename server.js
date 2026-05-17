@@ -784,13 +784,192 @@ function createEmptyScores() {
     let scores = [];
     for (let i = 0; i < 2; i++) {
         let sheet = {};
-        KOLONE.forEach(c => { 
+        KOLONE.forEach(c => {
             sheet[c] = {}; 
             REDOVI_IGRA.forEach(r => sheet[c][r] = null); 
         });
         scores.push(sheet);
     }
     return scores;
+}
+
+function getCompletedDuelCell(sheet, col, row) {
+    const value = sheet && sheet[col] ? sheet[col][row] : null;
+    if (value === null || value === undefined || value === '') return null;
+    const num = Number(value);
+    if (!Number.isFinite(num)) return null;
+    return Math.max(0, Math.min(MAX_SCORE, Math.floor(num)));
+}
+
+function isCompletedDuelSheet(sheet) {
+    return KOLONE.every(col => sheet && sheet[col] && REDOVI_IGRA.every(row => {
+        return getCompletedDuelCell(sheet, col, row) !== null;
+    }));
+}
+
+function calculateCompletedDuelMiddleScore(sheet, col) {
+    const max = getCompletedDuelCell(sheet, col, 'Max') || 0;
+    const min = getCompletedDuelCell(sheet, col, 'Min') || 0;
+    const ones = getCompletedDuelCell(sheet, col, '1') || 0;
+    if (min <= 0) return 0;
+    const score = Math.max(0, (max - min) * ones);
+    return score >= 60 ? score + 40 : score;
+}
+
+function calculateCompletedDuelTotal(sheet) {
+    if (!isCompletedDuelSheet(sheet)) return null;
+
+    return KOLONE.reduce((grandTotal, col) => {
+        let top = ['1', '2', '3', '4', '5', '6']
+            .reduce((total, row) => total + (getCompletedDuelCell(sheet, col, row) || 0), 0);
+        if (top >= 60) top += 30;
+
+        const middle = calculateCompletedDuelMiddleScore(sheet, col);
+        const bottom = ['Triling', 'Kenta', 'Ful', 'Poker', 'Yamb']
+            .reduce((total, row) => total + (getCompletedDuelCell(sheet, col, row) || 0), 0);
+
+        return grandTotal + top + middle + bottom;
+    }, 0);
+}
+
+function getDuelParticipantMeta(socketId, fallbackName = 'Igrac') {
+    const participantSocket = io.sockets.sockets.get(socketId);
+    return {
+        socketId,
+        uid: registeredSockets[socketId] || participantSocket?.playerId || '',
+        name: sanitizeTournamentName(participantSocket?.playerName || fallbackName || 'Igrac'),
+        photoUrl: String(participantSocket?.photoUrl || '').substring(0, 500)
+    };
+}
+
+function getH2HKeyForOpponent(opponent) {
+    const uid = String(opponent?.uid || '').trim();
+    if (uid && uid.length >= 20 && !uid.startsWith('guest_')) return uid;
+    return sanitizeTournamentName(opponent?.name || 'Nepoznat').replace(/\./g, '_').replace(/\$/g, '_');
+}
+
+function applyCompletedDuelH2H(user, opponent, resultType, myScore, opponentScore) {
+    if (!user || !opponent) return;
+
+    const h2hKey = getH2HKeyForOpponent(opponent);
+    if (!h2hKey) return;
+
+    const h2h = user.h2hStats && typeof user.h2hStats === 'object' ? { ...user.h2hStats } : {};
+    const existing = h2h[h2hKey] && typeof h2h[h2hKey] === 'object' ? h2h[h2hKey] : {};
+    const record = {
+        ...existing,
+        name: sanitizeTournamentName(existing.name || opponent.name || 'Nepoznat'),
+        uid: opponent.uid || existing.uid || '',
+        photo: opponent.photoUrl || existing.photo || '',
+        wins: Math.max(0, toSafeInt(existing.wins, 0)),
+        losses: Math.max(0, toSafeInt(existing.losses, 0)),
+        draws: Math.max(0, toSafeInt(existing.draws, 0)),
+        myTotalScore: Math.max(0, toSafeInt(existing.myTotalScore, 0)),
+        gamesWithScore: Math.max(0, toSafeInt(existing.gamesWithScore, 0)),
+        myHighScore: Math.max(0, toSafeInt(existing.myHighScore, 0)),
+        maxWinMargin: Math.max(0, toSafeInt(existing.maxWinMargin, 0)),
+        maxLossMargin: Math.max(0, toSafeInt(existing.maxLossMargin, 0)),
+        currentWinStreak: Math.max(0, toSafeInt(existing.currentWinStreak, 0)),
+        maxWinStreak: Math.max(0, toSafeInt(existing.maxWinStreak, 0))
+    };
+
+    if (resultType === 'win') {
+        record.wins += 1;
+        record.currentWinStreak += 1;
+        record.maxWinStreak = Math.max(record.maxWinStreak, record.currentWinStreak);
+        record.maxWinMargin = Math.max(record.maxWinMargin, Math.max(0, myScore - opponentScore));
+    } else if (resultType === 'loss') {
+        record.losses += 1;
+        record.currentWinStreak = 0;
+        record.maxLossMargin = Math.max(record.maxLossMargin, Math.max(0, opponentScore - myScore));
+    } else if (resultType === 'draw') {
+        record.draws += 1;
+        record.currentWinStreak = 0;
+    }
+
+    record.myTotalScore += myScore;
+    record.gamesWithScore += 1;
+    record.myHighScore = Math.max(record.myHighScore, myScore);
+
+    h2h[h2hKey] = record;
+    user.set('h2hStats', h2h);
+    user.markModified('h2hStats');
+}
+
+function applyCompletedDuelProfileStats(user, resultType, score) {
+    const safeScore = Math.max(0, Math.min(MAX_SCORE, toSafeInt(score, 0)));
+
+    user.games = Math.max(0, toSafeInt(user.games, 0)) + 1;
+    user.totalScoreSum = Math.max(0, toSafeInt(user.totalScoreSum, 0)) + safeScore;
+    user.highscore = Math.max(Math.max(0, toSafeInt(user.highscore, 0)), safeScore);
+
+    if (resultType === 'win') {
+        user.wins = Math.max(0, toSafeInt(user.wins, 0)) + 1;
+        user.currentWinStreak = Math.max(0, toSafeInt(user.currentWinStreak, 0)) + 1;
+        user.maxWinStreak = Math.max(
+            Math.max(0, toSafeInt(user.maxWinStreak, 0)),
+            user.currentWinStreak
+        );
+    } else if (resultType === 'loss') {
+        user.losses = Math.max(0, toSafeInt(user.losses, 0)) + 1;
+        user.currentWinStreak = 0;
+    } else if (resultType === 'draw') {
+        user.currentWinStreak = 0;
+    }
+}
+
+async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
+    if (!MONGO_URI || !roomId || !roomState[roomId]) return false;
+
+    const state = roomState[roomId];
+    if (state.completedDuelStatsApplied) return false;
+    if (!Array.isArray(state.players) || state.players.length !== 2) return false;
+    if (finisherSocketId && !state.players.includes(finisherSocketId)) return false;
+    if (!Array.isArray(state.allScores) || state.allScores.length < 2) return false;
+
+    const totals = state.allScores.slice(0, 2).map(sheet => calculateCompletedDuelTotal(sheet));
+    if (totals.some(score => score === null)) return false;
+
+    const participants = state.players.slice(0, 2).map((socketId, index) => ({
+        ...getDuelParticipantMeta(socketId, state.playerNames?.[index]),
+        score: totals[index]
+    }));
+
+    if (participants.some(player => !player.uid || player.uid.startsWith('guest_'))) return false;
+
+    state.completedDuelStatsApplied = true;
+
+    try {
+        const isDraw = participants[0].score === participants[1].score;
+
+        for (let i = 0; i < participants.length; i++) {
+            const player = participants[i];
+            const opponent = participants[i === 0 ? 1 : 0];
+            const resultType = isDraw ? 'draw' : (player.score > opponent.score ? 'win' : 'loss');
+            const user = await UserProfile.findOne({ firebaseUid: player.uid });
+
+            if (!user) continue;
+
+            applyCompletedDuelProfileStats(user, resultType, player.score);
+            applyCompletedDuelH2H(user, opponent, resultType, player.score, opponent.score);
+            await user.save();
+            emitProfileSyncToUid(player.uid, user, {
+                duelResult: {
+                    roomId,
+                    resultType,
+                    score: player.score,
+                    opponentScore: opponent.score
+                }
+            });
+        }
+
+        console.log(`SERVER DUEL RESULT: Upisan regularan online rezultat za sobu ${roomId}: ${participants[0].score}-${participants[1].score}.`);
+        return true;
+    } catch (err) {
+        state.completedDuelStatsApplied = false;
+        console.error("Greska pri serverskom upisu regularnog online duela:", err);
+        return false;
+    }
 }
 
 // ==================================================================
@@ -2273,8 +2452,26 @@ function applyProfileStatsGuard(user, stats) {
     user.tournamentWins = oldStats.tournamentWins + acceptedTournamentDelta;
 
     user.penaltyPoints = Math.max(oldStats.penaltyPoints, Math.min(incoming.penaltyPoints, MAX_PENALTY_POINTS));
-    user.maxWinStreak = Math.max(oldStats.maxWinStreak, Math.min(incoming.maxWinStreak, user.wins));
-    user.currentWinStreak = Math.min(incoming.currentWinStreak, user.maxWinStreak);
+
+    const nextMaxWinStreak = Math.max(oldStats.maxWinStreak, Math.min(incoming.maxWinStreak, user.wins));
+    let nextCurrentWinStreak = Math.min(oldStats.currentWinStreak, nextMaxWinStreak);
+
+    if (allowLegacyImport) {
+        nextCurrentWinStreak = Math.min(
+            Math.max(nextCurrentWinStreak, incoming.currentWinStreak),
+            nextMaxWinStreak
+        );
+    } else if (acceptedLossesDelta > 0 && incoming.currentWinStreak === 0) {
+        nextCurrentWinStreak = 0;
+    } else if (acceptedWinsDelta > 0) {
+        nextCurrentWinStreak = Math.min(
+            Math.max(oldStats.currentWinStreak + acceptedWinsDelta, incoming.currentWinStreak),
+            nextMaxWinStreak
+        );
+    }
+
+    user.maxWinStreak = nextMaxWinStreak;
+    user.currentWinStreak = nextCurrentWinStreak;
 
     const acceptedStats = {
         games: user.games,
@@ -4121,11 +4318,11 @@ io.on('connection', (socket) => {
 
                 console.log(`⚔️ RANDOM MATCH: ${nickname} vs ${opponentName} (Room: ${roomId})`);
 
-                io.to(opponentId).emit('game_start', { 
-                    roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, myIndex: 0 
+                io.to(opponentId).emit('game_start', {
+                    roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0
                 });
-                socket.emit('game_start', { 
-                    roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, myIndex: 1 
+                socket.emit('game_start', {
+                    roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, oppUid: opponentSocket.playerId || registeredSockets[opponentId] || '', myIndex: 1
                 });
 
                 roomState[roomId] = { 
@@ -4162,7 +4359,7 @@ io.on('connection', (socket) => {
         if (!roomId) { socket.emit('error_msg', 'err_invalid_room'); return; }
 
         if (!privateRooms[roomId]) {
-            privateRooms[roomId] = { p1: { id: socket.id, name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
+            privateRooms[roomId] = { p1: { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
             socket.join(roomId);
             playerRooms[socket.id] = roomId;
             socket.emit('private_waiting', { roomId });
@@ -4174,7 +4371,7 @@ io.on('connection', (socket) => {
             
             if (!p1Socket) {
                 console.log("--> Host je nestao. Postajem novi host.");
-                privateRooms[roomId] = { p1: { id: socket.id, name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
+                privateRooms[roomId] = { p1: { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
                 socket.join(roomId); playerRooms[socket.id] = roomId;
                 socket.emit('private_waiting', { roomId });
                 return;
@@ -4182,15 +4379,15 @@ io.on('connection', (socket) => {
 
             if (p1.id === socket.id) return; 
 
-            privateRooms[roomId].p2 = { id: socket.id, name: nickname };
+            privateRooms[roomId].p2 = { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname };
             socket.join(roomId);
             playerRooms[socket.id] = roomId; playerRooms[p1.id] = roomId;
             startScoreSession(socket.id); startScoreSession(p1.id);
 
             console.log(`⚔️ PRIVATE MATCH: ${p1.name} vs ${nickname} u sobi ${roomId}`);
 
-            io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, myIndex: 0 });
-            socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, myIndex: 1 });
+            io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0 });
+            socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, oppUid: p1.uid || registeredSockets[p1.id] || '', myIndex: 1 });
 
             roomState[roomId] = { 
                 players: [p1.id, socket.id], 
@@ -4649,6 +4846,7 @@ io.on('connection', (socket) => {
                 opponent: socket.playerName || "Igrač 2",
                 oppStats: socket.playerStats,
                 oppPhoto: socket.photoUrl || '',
+                oppUid: socket.playerId || registeredSockets[socket.id] || '',
                 myIndex: 0
             });
             socket.emit('game_start', {
@@ -4656,6 +4854,7 @@ io.on('connection', (socket) => {
                 opponent: challengerSocket.playerName || "Igrač 1",
                 oppStats: challengerSocket.playerStats,
                 oppPhoto: challengerSocket.photoUrl || '',
+                oppUid: challengerSocket.playerId || registeredSockets[challengerId] || '',
                 myIndex: 1
             });
             console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
@@ -4682,7 +4881,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('game_over', () => {
+    socket.on('game_over', async () => {
         const roomId = playerRooms[socket.id];
         const scoreSessionStartedAt = gameStartTimes[socket.id];
         const carriedDurationAtGameOver = gameCarriedDurations[socket.id];
@@ -4697,6 +4896,7 @@ io.on('connection', (socket) => {
 
         if (roomId) {
             console.log(`🏁 Igra završena u sobi: ${roomId}`);
+            await applyServerSideCompletedDuel(roomId, socket.id);
             delete playerRooms[socket.id];
             stopTurnTimer(roomId);
             if (roomState[roomId]) delete roomState[roomId];
