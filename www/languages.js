@@ -458,7 +458,7 @@ const TRANSLATIONS = {
         "msg_save_error": "Greška pri učitavanju.\nPodaci su zastareli.",
         
         // --- TURNIR ---
-        "tourney_title": "TURNIR ⚔️",
+        "tourney_title": "TURNIR",
         "tourney_intro_title": "TURNIR",
         "tourney_weekly": "NEDELJNI TURNIR",
         "tourney_desc": "Turnir 8 igrača. Prijavi se, zagovori termin sa protivnikom i osvoji glavnu nagradu! Turnir traje maksimalno 7 dana.",
@@ -1092,7 +1092,7 @@ const TRANSLATIONS = {
         "msg_save_error": "Error loading game.\nData format is outdated.",
         
         // --- TOURNAMENT ---
-        "tourney_title": "TOURNAMENT ⚔️",
+        "tourney_title": "TOURNAMENT",
         "tourney_intro_title": "TOURNAMENT",
         "tourney_weekly": "WEEKLY TOURNAMENT",
         "tourney_desc": "8 player tournament. Register, schedule a match with your opponent and win the grand prize! The tournament lasts a maximum of 7 days.",
@@ -1350,7 +1350,7 @@ function applyTranslations() {
         const onclickAttr = btn.getAttribute('onclick');
         if (onclickAttr) {
             if (onclickAttr.includes('riznicaManager.open()')) btn.title = t('menu_shop').replace('💎 ', '');
-            if (onclickAttr.includes('openTournament()')) btn.title = t('tourney_title').replace(' ⚔️', '');
+            if (onclickAttr.includes('openTournament()')) btn.title = t('tourney_title');
         }
     });
 }
