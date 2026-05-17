@@ -986,14 +986,15 @@ function startTurnTimer(roomId) {
     const state = roomState[roomId];
     if (!state) return;
 
-    stopTurnTimer(roomId); 
+    stopTurnTimer(roomId);
 
-    const currentPlayerSocketId = state.players[state.turnIndex];
-
-    state.turnStartTime = Date.now(); 
+    state.turnStartTime = Date.now();
+    state.turnTimerToken = (Math.max(0, toSafeInt(state.turnTimerToken, 0)) + 1);
+    const timerToken = state.turnTimerToken;
 
     roomTimers[roomId] = setTimeout(() => {
-        handleTechnicalTimeout(roomId, currentPlayerSocketId);
+        delete roomTimers[roomId];
+        handleTechnicalTimeout(roomId, null, timerToken);
     }, TOTAL_TIMEOUT);
 }
 
@@ -1004,19 +1005,54 @@ function stopTurnTimer(roomId) {
     }
 }
 
-async function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
+function cleanupOnlineRoom(roomId) {
+    if (!roomId) return;
+
+    const state = roomState[roomId];
+    if (state && Array.isArray(state.players)) {
+        state.players.forEach(socketId => {
+            if (playerRooms[socketId] === roomId) {
+                delete playerRooms[socketId];
+            }
+        });
+    }
+
+    Object.keys(playerRooms).forEach(socketId => {
+        if (playerRooms[socketId] === roomId) {
+            delete playerRooms[socketId];
+        }
+    });
+
+    stopTurnTimer(roomId);
+    delete roomState[roomId];
+    if (privateRooms[roomId]) delete privateRooms[roomId];
+}
+
+async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, expectedTimerToken = null) {
     const state = roomState[roomId];
     if (!state) return;
 
-    if (state.players[state.turnIndex] !== inactivePlayerSocketId) {
-        console.log(`ℹ️ Ignorišem zastareli timeout u sobi ${roomId}; potez više nije na socketu ${inactivePlayerSocketId}.`);
+    if (expectedTimerToken !== null && state.turnTimerToken !== expectedTimerToken) {
+        console.log(`ℹ️ Ignorišem zastareli timeout u sobi ${roomId}; token ${expectedTimerToken} više nije aktivan.`);
         return;
     }
 
-    const winnerSocketId = state.players.find(id => id !== inactivePlayerSocketId);
+    if (state.technicalTimeoutInProgress) return;
+
+    const currentTurnSocketId = state.players[state.turnIndex];
+    const timedOutSocketId = inactivePlayerSocketId || currentTurnSocketId;
+
+    if (!timedOutSocketId || currentTurnSocketId !== timedOutSocketId) {
+        console.log(`ℹ️ Ignorišem timeout u sobi ${roomId}; aktivni socket je ${currentTurnSocketId}, zahtev je za ${timedOutSocketId}.`);
+        return;
+    }
+
+    state.technicalTimeoutInProgress = true;
+
+    const winnerSocketId = state.players.find(id => id !== timedOutSocketId);
 
     if (winnerSocketId) {
-        const inactiveUid = registeredSockets[inactivePlayerSocketId];
+        const inactiveUid = registeredSockets[timedOutSocketId];
         const winnerUid = registeredSockets[winnerSocketId];
         const penaltyAmount = getDynamicPenalty(roomId);
 
@@ -1035,7 +1071,7 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
 
         io.to(roomId).emit('game_over_timeout', {
             winnerId: winnerSocketId,
-            loserId: inactivePlayerSocketId,
+            loserId: timedOutSocketId,
             winnerReward: technicalResult.winnerReward,
             coinPenalty: technicalResult.loserCoinPenalty,
             serverApplied: technicalResult.serverApplied,
@@ -1044,8 +1080,7 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId) {
         });
     }
 
-    stopTurnTimer(roomId);
-    delete roomState[roomId];
+    cleanupOnlineRoom(roomId);
 }
 // ==================================================================
 
@@ -1677,6 +1712,23 @@ function expirePendingChallenge(key, reason = 'timeout') {
 
     io.to(challenge.targetId).emit('challenge_expired', payload);
     io.to(challenge.challengerId).emit('challenge_expired', payload);
+}
+
+function getActiveOnlineRoomForSocket(socketId) {
+    if (!socketId) return null;
+
+    const directRoom = playerRooms[socketId];
+    if (directRoom && !String(directRoom).startsWith('local_')) {
+        return directRoom;
+    }
+
+    for (const [roomId, state] of Object.entries(roomState)) {
+        if (state && Array.isArray(state.players) && state.players.includes(socketId)) {
+            return roomId;
+        }
+    }
+
+    return null;
 }
 
 function clearChallengesForSocket(socketId) {
@@ -2603,21 +2655,33 @@ io.on('connection', (socket) => {
     socket.on('check_timeout', (data) => {
         const roomId = data.roomId;
         const state = roomState[roomId];
-        
-        if (state && roomTimers[roomId]) {
-            const currentTurnPlayer = state.players[state.turnIndex];
-            
-            if (socket.id !== currentTurnPlayer) {
-                const elapsed = Date.now() - (state.turnStartTime || 0);
-                
-                if (elapsed >= TOTAL_TIMEOUT) {
-                    console.log(`🛡️ SAFETY NET: Vreme zaista isteklo (${elapsed}ms). Prekidam!`);
-                    handleTechnicalTimeout(roomId, currentTurnPlayer);
-                } else {
-                    console.log(`⏳ SAFETY NET: Klijent žuri. Još uvek teče Grace Period. Preostalo: ${TOTAL_TIMEOUT - elapsed}ms`);
-                }
-            }
+
+        if (!state) {
+            socket.emit('force_cancel_online', { roomId: roomId || null });
+            return;
         }
+
+        const currentTurnPlayer = state.players[state.turnIndex];
+        if (socket.id === currentTurnPlayer) return;
+
+        const elapsed = Date.now() - (state.turnStartTime || 0);
+
+        if (elapsed >= TOTAL_TIMEOUT) {
+            console.log(`🛡️ SAFETY NET: Vreme zaista isteklo (${elapsed}ms). Prekidam!`);
+            handleTechnicalTimeout(roomId);
+            return;
+        }
+
+        if (!roomTimers[roomId]) {
+            const remaining = Math.max(1, TOTAL_TIMEOUT - elapsed);
+            const timerToken = state.turnTimerToken;
+            roomTimers[roomId] = setTimeout(() => {
+                delete roomTimers[roomId];
+                handleTechnicalTimeout(roomId, null, timerToken);
+            }, remaining);
+        }
+
+        console.log(`⏳ SAFETY NET: Klijent žuri. Još uvek teče Grace Period. Preostalo: ${TOTAL_TIMEOUT - elapsed}ms`);
     });
 
     // DODATO: Provera da li je soba još uvek živa kada se klijent vrati u igru
@@ -4508,17 +4572,21 @@ io.on('connection', (socket) => {
                 return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
             });
 
+            const syncNow = Date.now();
             socket.emit('sync_state_response', {
                 roomId: roomId,
-                myIndex: state.players.indexOf(socket.id), 
-                players: playerNamesToSync, 
+                myIndex: state.players.indexOf(socket.id),
+                players: playerNamesToSync,
                 allScores: state.allScores || createEmptyScores(),
                 currentPlayerIdx: state.turnIndex,
                 brojBacanja: state.brojBacanja || 0,
                 kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
                 zadrzane: state.zadrzane || [false,false,false,false,false,false],
                 najavaAktivna: state.najavaAktivna || false,
-                najavljenoPolje: state.najavljenoPolje || null
+                najavljenoPolje: state.najavljenoPolje || null,
+                turnStartTime: state.turnStartTime || syncNow,
+                turnTimeLimitMs: TURN_TIME_LIMIT,
+                serverNow: syncNow
             });
         } else if (roomId && socketIsRoomMember) {
              // Pitaj protivnika za state ako je na serveru izgubljen, ALI SAMO AKO JE PROTIVNIK TU
@@ -4566,7 +4634,14 @@ io.on('connection', (socket) => {
                 startTurnTimer(roomId);
             }
             
-            socket.to(roomId).emit('sync_state_response', data);
+            const relayState = roomState[roomId];
+            const relayNow = Date.now();
+            socket.to(roomId).emit('sync_state_response', {
+                ...data,
+                turnStartTime: relayState ? relayState.turnStartTime || relayNow : relayNow,
+                turnTimeLimitMs: TURN_TIME_LIMIT,
+                serverNow: relayNow
+            });
         }
     });
 
@@ -4767,7 +4842,13 @@ io.on('connection', (socket) => {
         }
         
         if (targetSocket && targetSocket.id !== socket.id) {
-            const targetRoom = playerRooms[resolvedTargetId];
+            const challengerRoom = getActiveOnlineRoomForSocket(socket.id);
+            if (challengerRoom) {
+                socket.emit('error_msg', 'err_player_busy');
+                return;
+            }
+
+            const targetRoom = getActiveOnlineRoomForSocket(resolvedTargetId);
             if (targetRoom && !targetRoom.startsWith('local_')) {
                 socket.emit('error_msg', 'err_player_busy');
                 return;
@@ -4820,10 +4901,9 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const challengerRoom = playerRooms[challengerId];
-            const responderRoom = playerRooms[socket.id];
-            if ((challengerRoom && !challengerRoom.startsWith('local_')) ||
-                (responderRoom && !responderRoom.startsWith('local_'))) {
+            const challengerRoom = getActiveOnlineRoomForSocket(challengerId);
+            const responderRoom = getActiveOnlineRoomForSocket(socket.id);
+            if (challengerRoom || responderRoom) {
                 clearPendingChallenge(pending.key);
                 socket.emit('error_msg', 'err_player_busy');
                 if (challengerSocket) challengerSocket.emit('error_msg', 'err_player_busy');
@@ -4897,9 +4977,7 @@ io.on('connection', (socket) => {
         if (roomId) {
             console.log(`🏁 Igra završena u sobi: ${roomId}`);
             await applyServerSideCompletedDuel(roomId, socket.id);
-            delete playerRooms[socket.id];
-            stopTurnTimer(roomId);
-            if (roomState[roomId]) delete roomState[roomId];
+            cleanupOnlineRoom(roomId);
         }
     });
 

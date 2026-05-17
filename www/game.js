@@ -1408,6 +1408,16 @@ class YambApp {
 
                 this.socket.on('incoming_challenge', async (data) => {
                     const { challengerId, challengerName, challengeId, expiresAt } = data;
+
+                    if (this.gameActive && this.onlineMode && !this.isSpectator) {
+                        this.socket.emit('challenge_response', {
+                            challengerId: challengerId,
+                            challengeId: challengeId,
+                            accepted: false
+                        });
+                        return;
+                    }
+
                     const safeChallengerName = this.escapeHtml(challengerName || 'Igrač');
                     let text = gt('duel_incoming');
                     if(text === 'duel_incoming') text = `Igrač {0} vas izaziva na duel! Prihvatate?`;
@@ -2543,11 +2553,15 @@ class YambApp {
         }
     }
     
-    startClientTimer() {
+    startClientTimer(initialTimeLeft = 90) {
         if (!this.onlineMode || this.isSpectator) return;
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
-        
-        this.timeLeft = 90; 
+
+        const parsedInitialTimeLeft = Number(initialTimeLeft);
+        this.timeLeft = Number.isFinite(parsedInitialTimeLeft)
+            ? Math.max(-3, Math.min(90, Math.ceil(parsedInitialTimeLeft)))
+            : 90;
+        this.lastTimeoutCheckAt = 0;
         this.updateStatusLabel();
 
         this.turnTimerInterval = setInterval(() => {
@@ -2566,9 +2580,10 @@ class YambApp {
             }
 
             if (this.timeLeft <= -3) {
-                clearInterval(this.turnTimerInterval);
-                
                 if (!isMyTurn && this.socket && this.roomId) {
+                    const now = Date.now();
+                    if (this.lastTimeoutCheckAt && now - this.lastTimeoutCheckAt < 3000) return;
+                    this.lastTimeoutCheckAt = now;
                     console.log("🛡️ SAFETY NET: Tajmer na nuli! Tražim tehničku pobedu od servera...");
                     this.socket.emit('check_timeout', { roomId: this.roomId });
                 }
@@ -2871,7 +2886,14 @@ class YambApp {
                 this.updateDiceVisuals();
                 this.highlightCurrentPlayer();
                 this.updateStatusLabel();
-                this.startClientTimer(); 
+
+                const turnStartTime = Number(data.turnStartTime);
+                const serverNow = Number(data.serverNow);
+                const turnTimeLimitMs = Number(data.turnTimeLimitMs) || 90000;
+                const syncedTimeLeft = Number.isFinite(turnStartTime) && Number.isFinite(serverNow)
+                    ? Math.ceil((turnTimeLimitMs - Math.max(0, serverNow - turnStartTime)) / 1000)
+                    : undefined;
+                this.startClientTimer(syncedTimeLeft);
 
                 if (!this.isSpectator) {
                     const btnBacaj = document.getElementById('btn-bacaj');
