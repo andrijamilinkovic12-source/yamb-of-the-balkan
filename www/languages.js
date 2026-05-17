@@ -358,6 +358,8 @@ const TRANSLATIONS = {
 
         // --- DNEVNI IZAZOV ---
         "dc_title": "DNEVNI IZAZOV",
+        "dc_intro_left": "DNEVNI",
+        "dc_intro_right": "IZAZOV",
         "dc_desc": "Zaustavi kockice u pravom trenutku!",
         "dc_stop": "STOP 🛑",
         "dc_sum": "TRENUTNI ZBIR",
@@ -989,6 +991,8 @@ const TRANSLATIONS = {
 
         // --- DAILY CHALLENGE ---
         "dc_title": "DAILY CHALLENGE",
+        "dc_intro_left": "DAILY",
+        "dc_intro_right": "CHALLENGE",
         "dc_desc": "Stop the dice at the right moment!",
         "dc_stop": "STOP 🛑",
         "dc_sum": "CURRENT SUM",

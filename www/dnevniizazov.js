@@ -7,6 +7,7 @@ class DnevniIzazov {
         this.interval = null;
         this.diceValues = [0, 0, 0, 0, 0, 0];
         this.isActive = false;
+        this.isIntroPlaying = false;
         this.calculatedReward = 0;
         
         this.injectGlassCSS();
@@ -410,16 +411,75 @@ class DnevniIzazov {
 
     open() {
         if (!this.app.requireLogin()) return;
+        if (this.isIntroPlaying || this.isActive) return;
 
-        const uid = localStorage.getItem('yamb_uid');
+        const uid = localStorage.getItem('yamb_uid') || this.app.playerId;
         const lastPlayed = localStorage.getItem('yamb_last_daily_' + uid);
         const today = new Date().toDateString();
+        const alreadyPlayed = lastPlayed === today;
 
-        if (lastPlayed === today) {
-            this.app.modal.alert(t('dc_done'), t('info_title'));
+        if (!alreadyPlayed) {
+            this.markDailyAttempt(uid, today);
+        }
+
+        this.playIntro(() => {
+            if (alreadyPlayed) {
+                this.app.modal.alert(t('dc_done'), t('info_title'));
+                return;
+            }
+            this.startDailyChallenge();
+        });
+    }
+
+    playIntro(onComplete) {
+        const overlay = document.getElementById('daily-intro');
+        const leftWord = overlay?.querySelector('.daily-intro-word-left');
+        const rightWord = overlay?.querySelector('.daily-intro-word-right');
+
+        if (!overlay) {
+            onComplete();
             return;
         }
 
+        this.isIntroPlaying = true;
+        this.applyIntroTheme(overlay);
+        this.setIntroTitle(leftWord, rightWord);
+        overlay.classList.remove('hidden');
+        overlay.setAttribute('aria-hidden', 'false');
+
+        let completed = false;
+        const introDuration = 4600;
+
+        setTimeout(() => {
+            if (completed) return;
+            completed = true;
+            overlay.classList.add('hidden');
+            overlay.setAttribute('aria-hidden', 'true');
+            this.isIntroPlaying = false;
+            onComplete();
+        }, introDuration);
+    }
+
+    applyIntroTheme(overlay) {
+        const knownThemes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const introTheme = knownThemes.includes(activeTheme) ? activeTheme : 'dark';
+
+        knownThemes.forEach(theme => overlay.classList.remove(`theme-${theme}`));
+        overlay.classList.add(`theme-${introTheme}`);
+    }
+
+    setIntroTitle(leftWord, rightWord) {
+        if (!leftWord || !rightWord) return;
+
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        const label = gt('dc_title', 'DNEVNI IZAZOV').trim().split(/\s+/);
+
+        leftWord.textContent = gt('dc_intro_left', label[0] || 'DNEVNI');
+        rightWord.textContent = gt('dc_intro_right', label.slice(1).join(' ') || 'IZAZOV');
+    }
+
+    markDailyAttempt(uid, today) {
         // --- ANTI-CHEAT: Zapisujemo odmah na klijentu čim se izazov otvori ---
         localStorage.setItem('yamb_last_daily_' + uid, today);
         
@@ -446,7 +506,9 @@ class DnevniIzazov {
             });
         }
         // ----------------------------------------------------------------------
+    }
 
+    startDailyChallenge() {
         const overlay = document.getElementById('glass-daily-overlay');
         if(overlay) overlay.classList.add('active');
 

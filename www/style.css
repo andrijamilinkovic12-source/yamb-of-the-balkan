@@ -455,6 +455,178 @@ body {
     --league-intro-glow: rgba(174, 196, 219, 0.84);
 }
 
+.daily-intro {
+    --daily-intro-a: rgba(255, 214, 111, 0.32);
+    --daily-intro-b: rgba(15, 143, 139, 0.2);
+    --daily-intro-text: #fff4bd;
+    --daily-intro-glow: rgba(255, 214, 111, 0.78);
+    position: fixed;
+    inset: 0;
+    z-index: 999998;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: max(24px, var(--safe-top)) max(18px, var(--safe-right)) max(24px, var(--safe-bottom)) max(18px, var(--safe-left));
+    background:
+        radial-gradient(circle at 50% 40%, var(--daily-intro-a), transparent 38%),
+        radial-gradient(circle at 48% 66%, var(--daily-intro-b), transparent 34%),
+        rgba(7, 11, 18, 0.8);
+    backdrop-filter: blur(14px) saturate(1.22);
+    -webkit-backdrop-filter: blur(14px) saturate(1.22);
+    pointer-events: none;
+    overflow: hidden;
+    animation: dailyIntroFade 4.6s ease forwards;
+}
+
+.daily-intro::before,
+.daily-intro::after {
+    content: "";
+    position: absolute;
+    width: 58vmin;
+    height: 58vmin;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--daily-intro-a), transparent 62%);
+    opacity: 0;
+    filter: blur(2px);
+    animation: dailyIntroAura 4.6s ease forwards;
+}
+
+.daily-intro::before {
+    transform: translate(-30vmin, -18vmin);
+}
+
+.daily-intro::after {
+    background: radial-gradient(circle, var(--daily-intro-b), transparent 64%);
+    transform: translate(28vmin, 16vmin);
+    animation-delay: 0.18s;
+}
+
+.daily-intro-mark-wrap {
+    position: relative;
+    z-index: 1;
+    width: 204px;
+    height: 204px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.17), transparent 58%);
+    filter: drop-shadow(0 0 26px var(--daily-intro-glow)) drop-shadow(0 0 54px var(--daily-intro-a));
+    animation: dailyIconReveal 4.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.daily-intro-mark {
+    width: 176px;
+    height: 176px;
+    object-fit: contain;
+    filter: saturate(1.22) brightness(1.2);
+}
+
+.daily-intro-title {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    width: min(88vw, 460px);
+    min-height: 126px;
+    color: var(--daily-intro-text);
+    text-transform: uppercase;
+    font-size: 2.45rem;
+    line-height: 0.96;
+    font-weight: 950;
+    text-shadow: 0 0 16px var(--daily-intro-glow), 0 2px 14px rgba(0, 0, 0, 0.36);
+}
+
+.daily-intro-word {
+    display: block;
+    white-space: nowrap;
+}
+
+.daily-intro-word-left {
+    align-self: flex-start;
+    animation: dailyWordLeft 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
+}
+
+.daily-intro-word-right {
+    align-self: flex-end;
+    margin-top: 8px;
+    animation: dailyWordRight 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
+}
+
+.daily-intro.theme-dark {
+    --daily-intro-a: rgba(255, 214, 111, 0.3);
+    --daily-intro-b: rgba(15, 143, 139, 0.24);
+    --daily-intro-text: #fff4bd;
+    --daily-intro-glow: rgba(255, 214, 111, 0.8);
+}
+
+.daily-intro.theme-light {
+    --daily-intro-a: rgba(255, 215, 0, 0.34);
+    --daily-intro-b: rgba(255, 244, 185, 0.24);
+    --daily-intro-text: #fff0a8;
+    --daily-intro-glow: rgba(255, 215, 0, 0.82);
+    background:
+        radial-gradient(circle at 50% 40%, var(--daily-intro-a), transparent 38%),
+        radial-gradient(circle at 48% 66%, var(--daily-intro-b), transparent 34%),
+        rgba(245, 238, 216, 0.64);
+}
+
+.daily-intro.theme-medium {
+    --daily-intro-a: rgba(255, 204, 188, 0.34);
+    --daily-intro-b: rgba(255, 112, 137, 0.22);
+    --daily-intro-text: #ffe1e8;
+    --daily-intro-glow: rgba(255, 112, 137, 0.78);
+}
+
+.daily-intro.theme-winter {
+    --daily-intro-a: rgba(79, 195, 247, 0.34);
+    --daily-intro-b: rgba(180, 232, 255, 0.22);
+    --daily-intro-text: #e3f8ff;
+    --daily-intro-glow: rgba(79, 195, 247, 0.82);
+}
+
+.daily-intro.theme-neon {
+    --daily-intro-a: rgba(0, 255, 204, 0.31);
+    --daily-intro-b: rgba(255, 0, 255, 0.22);
+    --daily-intro-text: #c5fff6;
+    --daily-intro-glow: rgba(0, 255, 204, 0.88);
+}
+
+.daily-intro.theme-amethyst {
+    --daily-intro-a: rgba(190, 130, 255, 0.32);
+    --daily-intro-b: rgba(212, 175, 55, 0.2);
+    --daily-intro-text: #f0e0ff;
+    --daily-intro-glow: rgba(190, 130, 255, 0.82);
+}
+
+.daily-intro.theme-easter {
+    --daily-intro-a: rgba(255, 182, 193, 0.34);
+    --daily-intro-b: rgba(151, 220, 184, 0.24);
+    --daily-intro-text: #ffe8f1;
+    --daily-intro-glow: rgba(255, 182, 193, 0.78);
+    background:
+        radial-gradient(circle at 50% 40%, var(--daily-intro-a), transparent 38%),
+        radial-gradient(circle at 48% 66%, var(--daily-intro-b), transparent 34%),
+        rgba(255, 248, 238, 0.68);
+}
+
+.daily-intro.theme-desert {
+    --daily-intro-a: rgba(244, 196, 128, 0.34);
+    --daily-intro-b: rgba(218, 165, 90, 0.24);
+    --daily-intro-text: #ffe6b8;
+    --daily-intro-glow: rgba(218, 165, 90, 0.8);
+}
+
+.daily-intro.theme-moon {
+    --daily-intro-a: rgba(214, 229, 245, 0.3);
+    --daily-intro-b: rgba(124, 160, 210, 0.22);
+    --daily-intro-text: #f0f8ff;
+    --daily-intro-glow: rgba(174, 196, 219, 0.84);
+}
+
 @keyframes leagueIntroFade {
     0% { opacity: 0; }
     10% { opacity: 1; }
@@ -490,6 +662,45 @@ body {
     0% { opacity: 0; transform: translateX(48vw); }
     23% { opacity: 0; transform: translateX(48vw); }
     54% { opacity: 1; transform: translateX(0); }
+    84% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(8px); }
+}
+
+@keyframes dailyIntroFade {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    86% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes dailyIntroAura {
+    0% { opacity: 0; transform: scale(0.72); }
+    24% { opacity: 0.7; }
+    76% { opacity: 0.62; }
+    100% { opacity: 0; transform: scale(1.22); }
+}
+
+@keyframes dailyIconReveal {
+    0% { opacity: 0; transform: scale(0.42) rotate(-12deg); }
+    18% { opacity: 1; transform: scale(1.1) rotate(4deg); }
+    31% { transform: scale(1) rotate(0deg); }
+    62% { transform: scale(1.08); filter: drop-shadow(0 0 34px var(--daily-intro-glow)) drop-shadow(0 0 74px var(--daily-intro-a)); }
+    82% { opacity: 1; transform: scale(1.08); }
+    100% { opacity: 0; transform: scale(0.96) translateY(-10px); }
+}
+
+@keyframes dailyWordLeft {
+    0% { opacity: 0; transform: translateX(-52vw); }
+    24% { opacity: 0; transform: translateX(-52vw); }
+    56% { opacity: 1; transform: translateX(0); }
+    84% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(-8px); }
+}
+
+@keyframes dailyWordRight {
+    0% { opacity: 0; transform: translateX(52vw); }
+    30% { opacity: 0; transform: translateX(52vw); }
+    61% { opacity: 1; transform: translateX(0); }
     84% { opacity: 1; transform: translateX(0); }
     100% { opacity: 0; transform: translateX(8px); }
 }
@@ -531,6 +742,22 @@ body {
         gap: 8px;
         font-size: 1.45rem;
         min-height: 48px;
+    }
+
+    .daily-intro-mark-wrap {
+        width: 172px;
+        height: 172px;
+    }
+
+    .daily-intro-mark {
+        width: 148px;
+        height: 148px;
+    }
+
+    .daily-intro-title {
+        width: min(90vw, 330px);
+        min-height: 110px;
+        font-size: 1.9rem;
     }
 }
 
