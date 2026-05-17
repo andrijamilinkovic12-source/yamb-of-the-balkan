@@ -627,6 +627,180 @@ body {
     --daily-intro-glow: rgba(174, 196, 219, 0.84);
 }
 
+.tournament-intro {
+    --tournament-intro-a: rgba(255, 214, 111, 0.34);
+    --tournament-intro-b: rgba(15, 143, 139, 0.24);
+    --tournament-intro-text: #fff4bd;
+    --tournament-intro-glow: rgba(255, 214, 111, 0.84);
+    --tournament-intro-line: rgba(255, 214, 111, 0.32);
+    position: fixed;
+    inset: 0;
+    z-index: 999998;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: max(24px, var(--safe-top)) max(18px, var(--safe-right)) max(24px, var(--safe-bottom)) max(18px, var(--safe-left));
+    background:
+        linear-gradient(90deg, transparent 0 18%, var(--tournament-intro-line) 18.2% 18.8%, transparent 19% 81%, var(--tournament-intro-line) 81.2% 81.8%, transparent 82%),
+        linear-gradient(180deg, transparent 0 26%, rgba(255,255,255,0.055) 26.2% 26.8%, transparent 27% 73%, rgba(255,255,255,0.045) 73.2% 73.8%, transparent 74%),
+        linear-gradient(145deg, var(--tournament-intro-a) 0%, transparent 48%, var(--tournament-intro-b) 100%),
+        rgba(7, 11, 18, 0.82);
+    backdrop-filter: blur(14px) saturate(1.22);
+    -webkit-backdrop-filter: blur(14px) saturate(1.22);
+    pointer-events: none;
+    overflow: hidden;
+    animation: tournamentIntroFade 4.6s ease forwards;
+}
+
+.tournament-intro::before,
+.tournament-intro::after {
+    content: "";
+    position: absolute;
+    top: 20%;
+    bottom: 20%;
+    width: min(20vw, 112px);
+    opacity: 0;
+    animation: tournamentBracketReveal 4.6s ease forwards;
+}
+
+.tournament-intro::before {
+    --tournament-bracket-offset: -18px;
+    left: max(18px, 8vw);
+    border-left: 3px solid var(--tournament-intro-line);
+    border-top: 3px solid var(--tournament-intro-line);
+    border-bottom: 3px solid var(--tournament-intro-line);
+    transform: translateX(-18px);
+}
+
+.tournament-intro::after {
+    --tournament-bracket-offset: 18px;
+    right: max(18px, 8vw);
+    border-right: 3px solid var(--tournament-intro-line);
+    border-top: 3px solid var(--tournament-intro-line);
+    border-bottom: 3px solid var(--tournament-intro-line);
+    transform: translateX(18px);
+}
+
+.tournament-intro-mark-wrap {
+    position: relative;
+    z-index: 1;
+    width: 238px;
+    height: 238px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: transparent;
+    filter: drop-shadow(0 0 28px var(--tournament-intro-glow)) drop-shadow(0 0 58px var(--tournament-intro-a));
+    animation: tournamentIconRevealShake 4.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.tournament-intro-mark {
+    width: 214px;
+    height: 214px;
+    object-fit: contain;
+    filter: saturate(1.24) brightness(1.24);
+}
+
+.tournament-intro-title {
+    position: relative;
+    z-index: 1;
+    width: min(92vw, 560px);
+    min-height: 64px;
+    color: var(--tournament-intro-text);
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 3.2rem;
+    line-height: 1.02;
+    font-weight: 950;
+    letter-spacing: 0;
+    text-shadow: 0 0 16px var(--tournament-intro-glow), 0 2px 14px rgba(0, 0, 0, 0.38);
+    animation: tournamentTitleRise 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
+}
+
+.tournament-intro.theme-dark {
+    --tournament-intro-a: rgba(255, 214, 111, 0.32);
+    --tournament-intro-b: rgba(15, 143, 139, 0.26);
+    --tournament-intro-text: #fff4bd;
+    --tournament-intro-glow: rgba(255, 214, 111, 0.84);
+    --tournament-intro-line: rgba(255, 214, 111, 0.34);
+}
+
+.tournament-intro.theme-light {
+    --tournament-intro-a: rgba(255, 215, 0, 0.36);
+    --tournament-intro-b: rgba(255, 244, 185, 0.24);
+    --tournament-intro-text: #fff0a8;
+    --tournament-intro-glow: rgba(255, 215, 0, 0.86);
+    --tournament-intro-line: rgba(151, 106, 24, 0.3);
+    background:
+        linear-gradient(90deg, transparent 0 18%, var(--tournament-intro-line) 18.2% 18.8%, transparent 19% 81%, var(--tournament-intro-line) 81.2% 81.8%, transparent 82%),
+        linear-gradient(180deg, transparent 0 26%, rgba(84,58,8,0.065) 26.2% 26.8%, transparent 27% 73%, rgba(84,58,8,0.05) 73.2% 73.8%, transparent 74%),
+        linear-gradient(145deg, var(--tournament-intro-a) 0%, transparent 48%, var(--tournament-intro-b) 100%),
+        rgba(245, 238, 216, 0.66);
+}
+
+.tournament-intro.theme-medium {
+    --tournament-intro-a: rgba(255, 204, 188, 0.36);
+    --tournament-intro-b: rgba(255, 112, 137, 0.24);
+    --tournament-intro-text: #ffe1e8;
+    --tournament-intro-glow: rgba(255, 112, 137, 0.8);
+    --tournament-intro-line: rgba(255, 204, 188, 0.32);
+}
+
+.tournament-intro.theme-winter {
+    --tournament-intro-a: rgba(79, 195, 247, 0.36);
+    --tournament-intro-b: rgba(180, 232, 255, 0.24);
+    --tournament-intro-text: #e3f8ff;
+    --tournament-intro-glow: rgba(79, 195, 247, 0.84);
+    --tournament-intro-line: rgba(180, 232, 255, 0.32);
+}
+
+.tournament-intro.theme-neon {
+    --tournament-intro-a: rgba(0, 255, 204, 0.32);
+    --tournament-intro-b: rgba(255, 0, 255, 0.24);
+    --tournament-intro-text: #c5fff6;
+    --tournament-intro-glow: rgba(0, 255, 204, 0.9);
+    --tournament-intro-line: rgba(0, 255, 204, 0.34);
+}
+
+.tournament-intro.theme-amethyst {
+    --tournament-intro-a: rgba(190, 130, 255, 0.34);
+    --tournament-intro-b: rgba(212, 175, 55, 0.22);
+    --tournament-intro-text: #f0e0ff;
+    --tournament-intro-glow: rgba(190, 130, 255, 0.84);
+    --tournament-intro-line: rgba(212, 175, 55, 0.3);
+}
+
+.tournament-intro.theme-easter {
+    --tournament-intro-a: rgba(255, 182, 193, 0.36);
+    --tournament-intro-b: rgba(151, 220, 184, 0.26);
+    --tournament-intro-text: #ffe8f1;
+    --tournament-intro-glow: rgba(255, 182, 193, 0.8);
+    --tournament-intro-line: rgba(151, 120, 185, 0.28);
+    background:
+        linear-gradient(90deg, transparent 0 18%, var(--tournament-intro-line) 18.2% 18.8%, transparent 19% 81%, var(--tournament-intro-line) 81.2% 81.8%, transparent 82%),
+        linear-gradient(180deg, transparent 0 26%, rgba(112,70,116,0.06) 26.2% 26.8%, transparent 27% 73%, rgba(112,70,116,0.05) 73.2% 73.8%, transparent 74%),
+        linear-gradient(145deg, var(--tournament-intro-a) 0%, transparent 48%, var(--tournament-intro-b) 100%),
+        rgba(255, 248, 238, 0.68);
+}
+
+.tournament-intro.theme-desert {
+    --tournament-intro-a: rgba(244, 196, 128, 0.36);
+    --tournament-intro-b: rgba(218, 165, 90, 0.26);
+    --tournament-intro-text: #ffe6b8;
+    --tournament-intro-glow: rgba(218, 165, 90, 0.82);
+    --tournament-intro-line: rgba(244, 196, 128, 0.32);
+}
+
+.tournament-intro.theme-moon {
+    --tournament-intro-a: rgba(214, 229, 245, 0.32);
+    --tournament-intro-b: rgba(124, 160, 210, 0.24);
+    --tournament-intro-text: #f0f8ff;
+    --tournament-intro-glow: rgba(174, 196, 219, 0.86);
+    --tournament-intro-line: rgba(214, 229, 245, 0.28);
+}
+
 @keyframes leagueIntroFade {
     0% { opacity: 0; }
     10% { opacity: 1; }
@@ -705,6 +879,44 @@ body {
     100% { opacity: 0; transform: translateX(8px); }
 }
 
+@keyframes tournamentIntroFade {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    86% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes tournamentBracketReveal {
+    0% { opacity: 0; transform: translateX(var(--tournament-bracket-offset, 0)); }
+    24% { opacity: 0; transform: translateX(var(--tournament-bracket-offset, 0)); }
+    44% { opacity: 0.62; transform: translateX(0); }
+    78% { opacity: 0.48; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(0); }
+}
+
+@keyframes tournamentIconRevealShake {
+    0% { opacity: 0; transform: scale(0.44) rotate(-12deg); }
+    15% { opacity: 1; transform: scale(1.18) rotate(5deg); }
+    25% { transform: scale(1.04) rotate(0deg); }
+    34% { transform: translate(0, 0) scale(1.1) rotate(0deg); }
+    39% { transform: translate(-2px, 1px) scale(1.1) rotate(-1deg); }
+    44% { transform: translate(2px, -1px) scale(1.1) rotate(1deg); }
+    49% { transform: translate(-1px, -2px) scale(1.1) rotate(-0.8deg); }
+    54% { transform: translate(1px, 1px) scale(1.1) rotate(0.8deg); }
+    59% { transform: translate(0, 0) scale(1.1) rotate(0deg); }
+    72% { transform: scale(1.14); filter: drop-shadow(0 0 36px var(--tournament-intro-glow)) drop-shadow(0 0 78px var(--tournament-intro-a)); }
+    86% { opacity: 1; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(0.96) translateY(-10px); }
+}
+
+@keyframes tournamentTitleRise {
+    0% { opacity: 0; transform: translateY(22px) scale(0.94); }
+    28% { opacity: 0; transform: translateY(22px) scale(0.94); }
+    52% { opacity: 1; transform: translateY(0) scale(1); }
+    84% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(8px) scale(0.98); }
+}
+
 @media (max-width: 380px) {
     #riznica-screen .riznica-header {
         gap: 6px;
@@ -758,6 +970,21 @@ body {
         width: min(90vw, 330px);
         min-height: 110px;
         font-size: 1.9rem;
+    }
+
+    .tournament-intro-mark-wrap {
+        width: 190px;
+        height: 190px;
+    }
+
+    .tournament-intro-mark {
+        width: 168px;
+        height: 168px;
+    }
+
+    .tournament-intro-title {
+        min-height: 54px;
+        font-size: 2rem;
     }
 }
 

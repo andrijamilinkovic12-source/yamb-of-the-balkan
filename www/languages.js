@@ -459,6 +459,7 @@ const TRANSLATIONS = {
         
         // --- TURNIR ---
         "tourney_title": "TURNIR ⚔️",
+        "tourney_intro_title": "TURNIR",
         "tourney_weekly": "NEDELJNI TURNIR",
         "tourney_desc": "Turnir 8 igrača. Prijavi se, zagovori termin sa protivnikom i osvoji glavnu nagradu! Turnir traje maksimalno 7 dana.",
         "tourney_registered": "Prijavljeno igrača:",
@@ -1092,6 +1093,7 @@ const TRANSLATIONS = {
         
         // --- TOURNAMENT ---
         "tourney_title": "TOURNAMENT ⚔️",
+        "tourney_intro_title": "TOURNAMENT",
         "tourney_weekly": "WEEKLY TOURNAMENT",
         "tourney_desc": "8 player tournament. Register, schedule a match with your opponent and win the grand prize! The tournament lasts a maximum of 7 days.",
         "tourney_registered": "Players registered:",

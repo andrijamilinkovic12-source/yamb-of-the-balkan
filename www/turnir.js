@@ -44,6 +44,7 @@ class TournamentManager {
         this.pendingRegistration = false;
         this.pendingUnregister = false;
         this.reminderInFlight = false;
+        this.isIntroPlaying = false;
 
         if (this.app) {
             this.app.openTournament = () => this.open();
@@ -314,7 +315,7 @@ class TournamentManager {
 
     openMatchFromReminder(round, index) {
         this.activeTab = 'bracket';
-        this.open();
+        this.open({ skipIntro: true });
 
         setTimeout(() => {
             const freshInfo = this.findMyActiveMatch();
@@ -479,7 +480,71 @@ class TournamentManager {
         }, 1000);
     }
 
-    open() {
+    open(options = {}) {
+        const skipIntro = Boolean(options.skipIntro);
+        const tournamentScreen = document.getElementById('tournament-screen');
+        const alreadyOpen = tournamentScreen?.classList.contains('active');
+
+        if (!skipIntro && !alreadyOpen) {
+            if (this.isIntroPlaying) return;
+            this.playIntro(() => this.openScreen());
+            return;
+        }
+
+        this.openScreen();
+    }
+
+    playIntro(onComplete) {
+        const overlay = document.getElementById('tournament-intro');
+        const title = overlay?.querySelector('.tournament-intro-title');
+
+        if (!overlay) {
+            onComplete();
+            return;
+        }
+
+        this.isIntroPlaying = true;
+        this.applyIntroTheme(overlay);
+        this.setIntroTitle(title);
+        overlay.classList.remove('hidden');
+        overlay.setAttribute('aria-hidden', 'false');
+
+        let completed = false;
+        const openBehindOverlayAt = 3650;
+        const introDuration = 4600;
+
+        setTimeout(() => {
+            if (completed) return;
+            completed = true;
+            onComplete();
+        }, openBehindOverlayAt);
+
+        setTimeout(() => {
+            if (!completed) {
+                completed = true;
+                onComplete();
+            }
+            overlay.classList.add('hidden');
+            overlay.setAttribute('aria-hidden', 'true');
+            this.isIntroPlaying = false;
+        }, introDuration);
+    }
+
+    applyIntroTheme(overlay) {
+        const knownThemes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const introTheme = knownThemes.includes(activeTheme) ? activeTheme : 'dark';
+
+        knownThemes.forEach(theme => overlay.classList.remove(`theme-${theme}`));
+        overlay.classList.add(`theme-${introTheme}`);
+    }
+
+    setIntroTitle(title) {
+        if (!title) return;
+        title.textContent = this.tr('tourney_intro_title', 'TURNIR');
+    }
+
+    openScreen() {
         if (this.state.status !== 'registration' && this.activeTab === 'info') {
             this.activeTab = 'bracket';
         }
