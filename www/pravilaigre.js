@@ -330,8 +330,9 @@ class RulesUI {
                 
                 <div class="chat-header global-chat-header rules-card-header">
                     <div class="global-chat-title-group">
-                        <span id="rules-main-title" class="global-chat-title">
-                            ${this.currentLang === 'sr' ? 'Pravila i Uputstvo' : 'Rules & Guide'}
+                        <span id="rules-main-title" class="global-chat-title rules-header-title">
+                            <img class="rules-header-icon" src="assets/rules-icon.svg" alt="" aria-hidden="true" decoding="async">
+                            <span>${typeof t === 'function' ? t('rules_header_title') : (this.currentLang === 'sr' ? 'PRAVILA I UPUTSTVO' : 'RULES & GUIDE')}</span>
                         </span>
                     </div>
                     <button id="btn-close-rules" type="button" class="global-chat-close" aria-label="Zatvori pravila">&times;</button>

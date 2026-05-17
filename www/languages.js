@@ -408,6 +408,7 @@ const TRANSLATIONS = {
         "settings_privacy_short": "🔒 Privatnost",
 
         // --- PRAVILA (SR) ---
+        "rules_header_title": "PRAVILA I UPUTSTVO",
         "rules_title": "PRAVILA IGRE",
         "rules_goal_title": "CILJ IGRE",
         "rules_goal_text": "Cilj je osvojiti što više bodova bacanjem 6 kockica i kombinovanjem dobijenih vrednosti u tabelu. Imate 3 bacanja po potezu.",
@@ -1046,6 +1047,7 @@ const TRANSLATIONS = {
         "settings_privacy_short": "🔒 Privacy",
 
         // --- RULES (EN) ---
+        "rules_header_title": "RULES & GUIDE",
         "rules_title": "GAME RULES",
         "rules_goal_title": "OBJECTIVE",
         "rules_goal_text": "The goal is to score as many points as possible by rolling 6 dice and filling the table. You have 3 rolls per turn.",

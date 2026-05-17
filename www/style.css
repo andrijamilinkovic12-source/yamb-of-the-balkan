@@ -2588,6 +2588,18 @@ body {
 .rules-card-header {
     justify-content: space-between;
 }
+.rules-header-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.rules-header-icon {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 8px rgba(255,214,111,0.24));
+}
 .rules-slider-track {
     display: flex;
     flex-direction: row;
