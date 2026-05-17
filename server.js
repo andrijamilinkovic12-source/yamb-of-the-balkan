@@ -590,7 +590,7 @@ const SHOP_ITEM_PRICES = Object.freeze({
     easter: 10000,
     desert: 0,
     moon: 25000,
-    severna: 0
+    severna: 45000
 });
 
 const FREE_UNLOCK_IDS = new Set(Object.entries(SHOP_ITEM_PRICES).filter(([, price]) => price === 0).map(([id]) => id));

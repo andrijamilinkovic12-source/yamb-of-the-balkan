@@ -347,7 +347,7 @@ class YambApp {
 
     toggleTheme() {
         // 1. Prikupi sve otključane teme (osnovne + kupljene + cloud)
-        let unlockedThemes = ['dark', 'light', 'medium', 'winter', 'severna'];
+        let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
         try {
             const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
             const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
@@ -1938,7 +1938,7 @@ class YambApp {
         
         const themeSelect = document.getElementById('setting-theme');
         if (themeSelect) {
-            let unlockedThemes = ['dark', 'light', 'medium', 'winter', 'severna'];
+            let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
             try {
                 const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
                 const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
