@@ -220,6 +220,7 @@ const TRANSLATIONS = {
         "h2h_max_short": "Max",
 
         // --- TOP LISTA ---
+        "hs_title": "TOP LISTA",
         "hs_local": "LOKALNA",
         "hs_global": "GLOBALNA 🌍",
         "hs_weekly": "NEDELJA",   
@@ -855,6 +856,7 @@ const TRANSLATIONS = {
         "h2h_max_short": "Max",
 
         // --- HIGH SCORES ---
+        "hs_title": "HIGH SCORES",
         "hs_local": "LOCAL",
         "hs_global": "GLOBAL 🌍",
         "hs_weekly": "WEEKLY",      

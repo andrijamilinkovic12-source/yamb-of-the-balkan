@@ -1274,6 +1274,8 @@ body {
 #highscores-screen { padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom) + 4px); }
 #highscores-screen .hs-card { width: calc(100vw - max(10px, env(safe-area-inset-left)) - max(10px, env(safe-area-inset-right))); flex: 1 1 auto; min-height: 0; max-height: 100%; padding: 0 !important; margin: 0; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; align-items: stretch; gap: 0; background: var(--glass-panel, #111) !important; border: var(--glass-border) !important; box-shadow: var(--glass-shadow) !important; color: var(--text-main); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); }
 .hs-card-header { flex-shrink: 0; cursor: default; }
+.hs-header-title { display: inline-flex; align-items: center; gap: 8px; }
+.hs-header-icon { width: 30px; height: 30px; flex: 0 0 30px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 8px rgba(255,214,111,0.24)); }
 .hs-card-toolbar { flex-shrink: 0; width: 100%; padding: 12px 14px; border-bottom: var(--glass-border); background: rgba(0,0,0,0.52); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); }
 .hs-tabs { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0; }
 #highscores-screen .hs-card-body { flex: 1 1 auto; min-height: 0; padding: 0; gap: 0; }
