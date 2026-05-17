@@ -589,13 +589,13 @@ class TournamentManager {
         container.innerHTML = `
             <div class="tourney-tabs" role="tablist" aria-label="Turnir sekcije">
                 <button class="tourney-tab-btn ${this.activeTab === 'info' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'info'}" aria-label="${tt('tourney_tab_info') || 'Info'}" title="${tt('tourney_tab_info') || 'Info'}" onclick="app.tournamentManager.switchTab('info')">
-                    <span class="tourney-tab-icon">📝</span>
+                    <img class="tourney-tab-icon tourney-tab-icon--info" src="assets/tournament-info-icon.svg" alt="" aria-hidden="true" decoding="async">
                 </button>
                 <button class="tourney-tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'bracket'}" aria-label="${tt('tourney_tab_bracket') || 'Kostur'}" title="${tt('tourney_tab_bracket') || 'Kostur'}" onclick="app.tournamentManager.switchTab('bracket')">
                     <img class="tourney-tab-icon tourney-tab-icon--tournament" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
                 </button>
                 <button class="tourney-tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'leaderboard'}" aria-label="${tt('tourney_tab_fame') || 'Slavni'}" title="${tt('tourney_tab_fame') || 'Slavni'}" onclick="app.tournamentManager.switchTab('leaderboard')">
-                    <span class="tourney-tab-icon">👑</span>
+                    <img class="tourney-tab-icon tourney-tab-icon--fame" src="assets/tournament-hall-icon.svg" alt="" aria-hidden="true" decoding="async">
                 </button>
             </div>
 

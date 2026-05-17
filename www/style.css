@@ -1396,11 +1396,21 @@ body {
     line-height: 1;
     filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42));
 }
-.tourney-tab-icon--tournament {
+.tourney-tab-icon--tournament,
+.tourney-tab-icon--info,
+.tourney-tab-icon--fame {
     width: 32px;
     height: 32px;
     object-fit: contain;
     filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 8px rgba(255,214,111,0.24));
+}
+.tourney-tab-icon--info {
+    transform: translateY(-1px);
+}
+.tourney-tab-icon--fame {
+    width: 34px;
+    height: 34px;
+    transform: translateY(-1px);
 }
 .tourney-tab-content {
     width: 100%;
