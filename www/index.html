@@ -594,7 +594,10 @@
         <div class="hs-card modal-box stats-shell">
             <div class="chat-header global-chat-header stats-card-header">
                 <div class="global-chat-title-group">
-                    <span class="global-chat-title" data-lang="menu_stats">STATISTIKA</span>
+                    <span class="global-chat-title stats-header-title">
+                        <img class="stats-header-icon" src="assets/stats-icon.svg" alt="" aria-hidden="true" decoding="async">
+                        <span data-lang="stats_title">STATISTIKA</span>
+                    </span>
                 </div>
                 <button type="button" class="global-chat-close" onclick="app.showMainMenu()" aria-label="Zatvori statistiku" data-lang-aria="aria_close_stats">×</button>
             </div>
@@ -727,6 +730,8 @@
             #stats-screen { padding-top: max(10px, env(safe-area-inset-top)); padding-bottom: max(16px, env(safe-area-inset-bottom) + 4px); }
             #stats-screen .stats-shell { width: calc(100vw - max(10px, env(safe-area-inset-left)) - max(10px, env(safe-area-inset-right))); flex: 1 1 auto; min-height: 0; max-height: 100%; padding: 0 !important; margin: 0; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; align-items: stretch; gap: 0; background: var(--glass-panel) !important; border: var(--glass-border) !important; box-shadow: var(--glass-shadow) !important; backdrop-filter: blur(30px) saturate(135%); -webkit-backdrop-filter: blur(30px) saturate(135%); color: var(--text-main); }
             #stats-screen .stats-card-header { min-height: 58px; background: var(--glass-bg); border-bottom: var(--glass-border); }
+            .stats-header-title { display: inline-flex; align-items: center; gap: 8px; }
+            .stats-header-icon { width: 30px; height: 30px; flex: 0 0 30px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 8px rgba(255,214,111,0.24)); }
             #stats-screen .stats-card-body { flex: 1 1 auto; min-height: 0; padding: 12px 0; align-items: stretch; overflow: hidden; background: transparent; }
             #stats-screen .stats-card-footer { padding: 10px 14px 12px; align-items: center; background: var(--glass-bg); border-top: var(--glass-border); }
             .stats-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; max-width: 100%; flex: 1 1 auto; min-height: 0; scrollbar-width: none; -ms-overflow-style: none; padding: 0; }

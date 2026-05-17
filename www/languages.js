@@ -188,6 +188,7 @@ const TRANSLATIONS = {
         "err_player_busy": "Igrač trenutno igra online meč. Pokušajte da ga pozovete kasnije!",
 
         // --- STATISTIKA ---
+        "stats_title": "STATISTIKA",
         "stat_record": "REKORD",
         "stat_total": "UKUPNO PARTIJA",
         "stat_wins": "POBEDE",
@@ -825,6 +826,7 @@ const TRANSLATIONS = {
         "err_player_busy": "The player is currently in an online match. Try inviting them later!",
 
         // --- STATISTICS ---
+        "stats_title": "STATISTICS",
         "stat_record": "RECORD",
         "stat_total": "TOTAL GAMES",
         "stat_wins": "WINS",
