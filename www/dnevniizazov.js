@@ -461,7 +461,7 @@ class DnevniIzazov {
     }
 
     applyIntroTheme(overlay) {
-        const knownThemes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
+        const knownThemes = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         const introTheme = knownThemes.includes(activeTheme) ? activeTheme : 'dark';
 

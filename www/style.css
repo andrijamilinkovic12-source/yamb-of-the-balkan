@@ -270,6 +270,13 @@ body {
     --riznica-intro-glow: rgba(174, 196, 219, 0.74);
 }
 
+.riznica-intro.theme-severna {
+    --riznica-intro-smoke-a: rgba(37, 216, 209, 0.25);
+    --riznica-intro-smoke-b: rgba(246, 199, 107, 0.16);
+    --riznica-intro-text: #e8fffb;
+    --riznica-intro-glow: rgba(37, 216, 209, 0.78);
+}
+
 @keyframes riznicaIntroFade {
     0% { opacity: 0; }
     12% { opacity: 1; }
@@ -455,6 +462,13 @@ body {
     --league-intro-glow: rgba(174, 196, 219, 0.84);
 }
 
+.league-intro.theme-severna {
+    --league-intro-a: rgba(37, 216, 209, 0.32);
+    --league-intro-b: rgba(246, 199, 107, 0.22);
+    --league-intro-text: #e8fffb;
+    --league-intro-glow: rgba(37, 216, 209, 0.86);
+}
+
 .daily-intro {
     --daily-intro-a: rgba(255, 214, 111, 0.32);
     --daily-intro-b: rgba(15, 143, 139, 0.2);
@@ -625,6 +639,13 @@ body {
     --daily-intro-b: rgba(124, 160, 210, 0.22);
     --daily-intro-text: #f0f8ff;
     --daily-intro-glow: rgba(174, 196, 219, 0.84);
+}
+
+.daily-intro.theme-severna {
+    --daily-intro-a: rgba(37, 216, 209, 0.32);
+    --daily-intro-b: rgba(246, 199, 107, 0.22);
+    --daily-intro-text: #e8fffb;
+    --daily-intro-glow: rgba(37, 216, 209, 0.86);
 }
 
 .tournament-intro {
@@ -799,6 +820,14 @@ body {
     --tournament-intro-text: #f0f8ff;
     --tournament-intro-glow: rgba(174, 196, 219, 0.86);
     --tournament-intro-line: rgba(214, 229, 245, 0.28);
+}
+
+.tournament-intro.theme-severna {
+    --tournament-intro-a: rgba(37, 216, 209, 0.34);
+    --tournament-intro-b: rgba(246, 199, 107, 0.24);
+    --tournament-intro-text: #e8fffb;
+    --tournament-intro-glow: rgba(37, 216, 209, 0.88);
+    --tournament-intro-line: rgba(245, 196, 126, 0.28);
 }
 
 @keyframes leagueIntroFade {

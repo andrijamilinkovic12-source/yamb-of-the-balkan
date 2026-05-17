@@ -155,7 +155,8 @@ const SHOP_DATA = {
         { id: 'easter', name: { sr: 'Vaskršnja', en: 'Joyful Easter' }, price: 10000, desc: { sr: 'Premium pastelna tema sa prolećnim vrtom i porcelanskom tablom.', en: 'Premium pastel theme with a spring garden and porcelain board.' }, icon: '🐇', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
         { id: 'desert', name: { sr: 'Pustinjsko Staklo', en: 'Desert Glass' }, price: 0, adUnlock: 3, desc: { sr: 'Luksuzni bež neumorfizam i staklo.', en: 'Luxury beige neumorphism & glass.' }, icon: '🏜️', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
         // --- DODATO: Mesečev Sjaj ---
-        { id: 'moon', name: { sr: 'Mesečev Sjaj', en: 'Moonlight' }, price: 25000, desc: { sr: 'Profesionalna lunarna tema sa realističnim kraterima, zvezdanim nebom i srebrnim UI sjajem.', en: 'Professional lunar theme with realistic craters, starfield depth, and silver UI glow.' }, icon: '🌕', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } }
+        { id: 'moon', name: { sr: 'Mesečev Sjaj', en: 'Moonlight' }, price: 25000, desc: { sr: 'Profesionalna lunarna tema sa realističnim kraterima, zvezdanim nebom i srebrnim UI sjajem.', en: 'Professional lunar theme with realistic craters, starfield depth, and silver UI glow.' }, icon: '🌕', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
+        { id: 'severna', name: { sr: 'Severna Maglina', en: 'Northern Nebula' }, price: 45000, desc: { sr: 'Premium tema sa dubokom noći, mlečnom maglinom i zlatno-tirkiznim staklom.', en: 'Premium theme with deep night, soft nebula, and gold-teal glass.' }, icon: '🌌', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } }
     ],
 
     TROPHIES: [

@@ -589,7 +589,8 @@ const SHOP_ITEM_PRICES = Object.freeze({
     amethyst: 20000,
     easter: 10000,
     desert: 0,
-    moon: 25000
+    moon: 25000,
+    severna: 45000
 });
 
 const FREE_UNLOCK_IDS = new Set(Object.entries(SHOP_ITEM_PRICES).filter(([, price]) => price === 0).map(([id]) => id));
@@ -609,7 +610,7 @@ const EFFECT_UNLOCK_IDS = new Set([
     'cosmic_dust', 'dragon_fire'
 ]);
 const THEME_UNLOCK_IDS = new Set([
-    'dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'
+    'dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'
 ]);
 
 // NOVE PROMENLJIVE ZA ČUVANJE CHATA
