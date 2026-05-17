@@ -1306,7 +1306,7 @@ class ShopManager {
         savedUnlocked = [...new Set([...savedUnlocked, ...opstiNiz, ...cloudSkins])];
         
         if (this.type === 'theme') {
-            ['dark', 'light', 'medium', 'winter'].forEach(item => {
+            ['dark', 'light', 'medium', 'winter', 'severna'].forEach(item => {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
         } else {
