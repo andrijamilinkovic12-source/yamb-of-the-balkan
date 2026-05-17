@@ -18,82 +18,102 @@ class DnevniIzazov {
         const style = document.createElement('style');
         style.id = 'glass-daily-css';
         style.innerHTML = `
-            .glass-overlay {
+            .daily-glass-overlay,
+            .daily-glass-overlay * {
+                box-sizing: border-box;
+            }
+
+            .daily-glass-overlay {
                 position: fixed;
                 inset: 0;
                 width: 100vw;
                 height: 100dvh;
                 padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
                 background:
-                    linear-gradient(180deg, rgba(5, 10, 18, 0.86), rgba(1, 5, 10, 0.94)),
-                    radial-gradient(circle at 50% 0%, rgba(224, 201, 149, 0.16), transparent 44%);
-                backdrop-filter: blur(18px);
-                -webkit-backdrop-filter: blur(18px);
+                    repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 56px),
+                    repeating-linear-gradient(0deg, rgba(255,255,255,0.026) 0 1px, transparent 1px 56px),
+                    linear-gradient(180deg, rgba(5, 10, 16, 0.76), rgba(0, 4, 8, 0.9));
+                backdrop-filter: blur(22px) saturate(135%);
+                -webkit-backdrop-filter: blur(22px) saturate(135%);
                 z-index: 99999;
                 display: none;
                 align-items: center;
                 justify-content: center;
                 opacity: 0;
+                transform: none;
                 transition: opacity 0.28s ease;
             }
 
-            .glass-overlay.active { display: flex; opacity: 1; }
+            .daily-glass-overlay::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                opacity: 0.28;
+                background:
+                    radial-gradient(circle, rgba(255,255,255,0.36) 0 2px, transparent 3px) 14% 18% / 78px 78px,
+                    radial-gradient(circle, rgba(224,201,149,0.30) 0 2px, transparent 3px) 86% 74% / 88px 88px;
+                filter: blur(0.3px);
+            }
 
-            .glass-card {
-                width: min(430px, 100%);
+            .daily-glass-overlay.active { display: flex; opacity: 1; }
+
+            .daily-glass-card {
+                width: min(430px, calc(100vw - 32px));
                 max-height: calc(100dvh - 34px);
-                padding: 26px 18px 20px;
+                padding: 24px 18px 18px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 position: relative;
                 overflow: hidden;
+                overflow-y: auto;
                 isolation: isolate;
-                border-radius: 22px;
-                border: 1px solid rgba(224, 201, 149, 0.34);
-                background:
-                    linear-gradient(180deg, rgba(21, 31, 42, 0.96), rgba(7, 14, 22, 0.98)),
-                    linear-gradient(135deg, rgba(255,255,255,0.10), rgba(255,255,255,0.02));
+                border-radius: 24px;
+                border: 1px solid rgba(0, 0, 0, 0.22);
+                border-top: 1px solid rgba(255, 255, 255, 0.18);
+                border-left: 1px solid rgba(255, 255, 255, 0.11);
+                background: rgba(255, 255, 255, 0.035);
                 box-shadow:
-                    0 26px 70px rgba(0, 0, 0, 0.62),
-                    0 0 0 1px rgba(255,255,255,0.05) inset,
-                    0 14px 0 rgba(0,0,0,0.28);
+                    0 24px 55px rgba(0, 0, 0, 0.46),
+                    0 0 30px rgba(255, 255, 255, 0.035),
+                    inset 0 1px 1px rgba(255,255,255,0.22);
+                backdrop-filter: blur(30px) saturate(145%);
+                -webkit-backdrop-filter: blur(30px) saturate(145%);
+                transform: none;
             }
 
-            .glass-card::before {
+            .daily-glass-card::before {
                 content: '';
                 position: absolute;
                 inset: 0;
                 background:
-                    linear-gradient(90deg, transparent, rgba(224, 201, 149, 0.12), transparent) top / 100% 1px no-repeat,
-                    linear-gradient(180deg, rgba(255,255,255,0.08), transparent 38%);
+                    linear-gradient(90deg, transparent, rgba(224, 201, 149, 0.18), transparent) top / 100% 1px no-repeat,
+                    linear-gradient(180deg, rgba(255,255,255,0.12), transparent 42%),
+                    repeating-linear-gradient(135deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 18px);
                 pointer-events: none;
                 z-index: 0;
             }
 
-            .glass-card::after {
+            .daily-glass-card::after {
                 content: '';
                 position: absolute;
-                left: 18px;
-                right: 18px;
-                bottom: 13px;
-                height: 4px;
-                border-radius: 999px;
-                background: linear-gradient(90deg, transparent, rgba(224, 201, 149, 0.38), transparent);
-                opacity: 0.75;
+                inset: 12px;
+                border-radius: 18px;
+                border: 1px solid rgba(255,255,255,0.055);
                 pointer-events: none;
                 z-index: 0;
             }
 
-            .glass-header {
+            .daily-glass-header {
                 z-index: 1;
                 width: 100%;
                 text-align: center;
-                margin-bottom: 20px;
+                margin-bottom: 18px;
                 padding: 0 10px;
             }
 
-            .glass-title {
+            .daily-glass-title {
                 color: var(--gold-main);
                 font-size: clamp(1.45rem, 7vw, 1.95rem);
                 font-weight: 950;
@@ -103,7 +123,7 @@ class DnevniIzazov {
                 line-height: 1.08;
             }
 
-            .glass-subtitle {
+            .daily-glass-subtitle {
                 color: rgba(255,255,255,0.72);
                 font-size: 0.78rem;
                 text-transform: uppercase;
@@ -112,7 +132,7 @@ class DnevniIzazov {
                 margin-top: 8px;
             }
 
-            .glass-dice-grid {
+            .daily-glass-dice-grid {
                 display: grid;
                 grid-template-columns: repeat(3, minmax(0, 1fr));
                 gap: 12px;
@@ -120,64 +140,98 @@ class DnevniIzazov {
                 width: 100%;
                 margin-bottom: 18px;
                 padding: 12px;
-                border-radius: 18px;
-                border: 1px solid rgba(255,255,255,0.09);
-                background: rgba(0,0,0,0.22);
-                box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -18px 38px rgba(0,0,0,0.16);
+                position: relative;
+                border-radius: 20px;
+                border: 1px solid rgba(255,255,255,0.13);
+                background:
+                    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)),
+                    rgba(0,0,0,0.18);
+                box-shadow:
+                    inset 0 1px 0 rgba(255,255,255,0.11),
+                    inset 0 -18px 38px rgba(0,0,0,0.16),
+                    0 12px 28px rgba(0,0,0,0.18);
+                backdrop-filter: blur(18px) saturate(125%);
+                -webkit-backdrop-filter: blur(18px) saturate(125%);
             }
 
-            .glass-die {
+            .daily-glass-dice-grid::before {
+                content: '';
+                position: absolute;
+                inset: 8px;
+                border-radius: 16px;
+                border: 1px solid rgba(224,201,149,0.09);
+                pointer-events: none;
+            }
+
+            .daily-glass-die {
                 min-width: 0;
                 aspect-ratio: 1;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                position: relative;
+                overflow: hidden;
                 border-radius: 16px;
-                border: 1px solid rgba(255,255,255,0.15);
-                background: linear-gradient(145deg, rgba(248, 250, 252, 0.98), rgba(218, 226, 236, 0.96));
-                color: #111827;
+                border: 1px solid rgba(255,255,255,0.42);
+                background: linear-gradient(145deg, rgba(255,255,255,0.48), rgba(255,255,255,0.13));
+                color: rgba(255,255,255,0.94);
                 font-size: 2.1rem;
                 font-weight: 900;
                 box-shadow:
-                    0 8px 0 rgba(92, 71, 25, 0.45),
-                    0 14px 24px rgba(0,0,0,0.28),
-                    inset 0 2px 0 rgba(255,255,255,0.82);
+                    0 14px 28px rgba(0,0,0,0.28),
+                    inset 0 2px 0 rgba(255,255,255,0.34),
+                    inset 0 -18px 28px rgba(0,0,0,0.12);
+                text-shadow: 0 2px 8px rgba(0,0,0,0.55);
                 transform: translateY(0);
-                transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+                line-height: 1;
+                backdrop-filter: blur(14px) saturate(145%);
+                -webkit-backdrop-filter: blur(14px) saturate(145%);
+                transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
             }
 
-            .glass-die .dice-dots-wrapper {
+            .daily-glass-die::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(135deg, rgba(255,255,255,0.36), transparent 38%, rgba(255,255,255,0.06));
+                pointer-events: none;
+            }
+
+            .daily-glass-die .dice-dots-wrapper {
                 width: 68%;
                 height: 68%;
+                padding: 0;
+                position: relative;
+                z-index: 1;
             }
 
-            .glass-die .dice-dot {
-                background: #101827;
-                box-shadow: 0 1px 0 rgba(255,255,255,0.24) inset;
+            .daily-glass-die .dice-dot {
+                background: currentColor;
+                box-shadow: 0 1px 0 rgba(255,255,255,0.28) inset, 0 1px 6px rgba(0,0,0,0.26);
             }
 
-            .glass-die.rolling {
+            .daily-glass-die.rolling {
                 color: var(--gold-main);
-                background: linear-gradient(145deg, rgba(255, 249, 224, 1), rgba(224, 201, 149, 0.96));
-                filter: saturate(1.08);
-                animation: dailyDiceShake 0.24s infinite;
+                background: linear-gradient(145deg, rgba(255, 247, 210, 0.74), rgba(224, 201, 149, 0.30));
+                border-color: rgba(224, 201, 149, 0.62);
+                filter: saturate(1.12) brightness(1.05);
+                animation: dailyDicePulse 0.32s ease-in-out infinite;
                 box-shadow:
-                    0 8px 0 rgba(128, 92, 18, 0.58),
-                    0 0 26px rgba(224, 201, 149, 0.42),
-                    inset 0 2px 0 rgba(255,255,255,0.88);
+                    0 16px 30px rgba(0,0,0,0.28),
+                    0 0 26px rgba(224, 201, 149, 0.44),
+                    inset 0 2px 0 rgba(255,255,255,0.46);
             }
 
-            .glass-die.locked {
-                transform: translateY(-3px);
-                border-color: rgba(224, 201, 149, 0.56);
+            .daily-glass-die.locked {
+                transform: translateY(-2px);
+                border-color: rgba(224, 201, 149, 0.62);
                 box-shadow:
-                    0 10px 0 rgba(97, 70, 17, 0.62),
-                    0 18px 26px rgba(0,0,0,0.32),
+                    0 16px 28px rgba(0,0,0,0.32),
                     0 0 18px rgba(224, 201, 149, 0.24),
-                    inset 0 2px 0 rgba(255,255,255,0.88);
+                    inset 0 2px 0 rgba(255,255,255,0.38);
             }
 
-            .glass-score-box {
+            .daily-glass-score-box {
                 width: 100%;
                 z-index: 1;
                 margin-bottom: 18px;
@@ -188,11 +242,15 @@ class DnevniIzazov {
                 gap: 14px;
                 border-radius: 16px;
                 border: 1px solid rgba(224, 201, 149, 0.22);
-                background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-                box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+                background:
+                    linear-gradient(180deg, rgba(255,255,255,0.095), rgba(255,255,255,0.035)),
+                    rgba(0,0,0,0.12);
+                box-shadow: inset 0 1px 0 rgba(255,255,255,0.11), 0 10px 22px rgba(0,0,0,0.16);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
             }
 
-            .glass-score-lbl {
+            .daily-glass-score-lbl {
                 min-width: 0;
                 color: rgba(255,255,255,0.66);
                 font-size: 0.72rem;
@@ -202,7 +260,7 @@ class DnevniIzazov {
                 text-align: left;
             }
 
-            .glass-score-val {
+            .daily-glass-score-val {
                 color: var(--gold-main);
                 font-size: 2.25rem;
                 font-weight: 950;
@@ -212,7 +270,7 @@ class DnevniIzazov {
                 text-shadow: 0 2px 0 rgba(0,0,0,0.44), 0 0 16px rgba(224, 201, 149, 0.24);
             }
 
-            .glass-btn {
+            .daily-glass-btn {
                 width: 100%;
                 min-height: 54px;
                 z-index: 1;
@@ -221,25 +279,31 @@ class DnevniIzazov {
                 justify-content: center;
                 gap: 10px;
                 padding: 15px 20px;
-                border: 1px solid rgba(255,255,255,0.42);
-                border-radius: 16px;
-                background: linear-gradient(180deg, #f7d76a, #d79a22);
+                border: 1px solid rgba(255,255,255,0.34);
+                border-top-color: rgba(255,255,255,0.56);
+                border-left-color: rgba(255,255,255,0.42);
+                border-radius: 18px;
+                background:
+                    linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.03)),
+                    linear-gradient(135deg, #f8d970 0%, #d79a22 55%, #8f3727 100%);
                 color: #161008;
                 font-weight: 950;
                 font-size: 1rem;
                 letter-spacing: 0;
                 text-transform: uppercase;
                 cursor: pointer;
-                box-shadow: 0 8px 0 #765018, 0 16px 28px rgba(0,0,0,0.34), inset 0 2px 0 rgba(255,255,255,0.45);
-                transition: transform 0.1s ease, filter 0.2s ease, box-shadow 0.1s ease;
+                box-shadow: 0 10px 24px rgba(0,0,0,0.34), 0 0 18px rgba(224,201,149,0.18), inset 0 2px 0 rgba(255,255,255,0.32);
+                backdrop-filter: blur(18px) saturate(135%);
+                -webkit-backdrop-filter: blur(18px) saturate(135%);
+                transition: transform 0.1s ease, filter 0.2s ease, box-shadow 0.1s ease, border-color 0.2s ease;
             }
 
-            .glass-btn:active {
-                transform: translateY(5px);
-                box-shadow: 0 3px 0 #765018, 0 9px 18px rgba(0,0,0,0.32), inset 0 3px 8px rgba(88,55,6,0.22);
+            .daily-glass-btn:active {
+                transform: translateY(2px) scale(0.99);
+                box-shadow: 0 7px 16px rgba(0,0,0,0.34), inset 0 3px 8px rgba(88,55,6,0.22);
             }
 
-            .glass-btn:disabled {
+            .daily-glass-btn:disabled {
                 filter: grayscale(85%);
                 opacity: 0.62;
                 cursor: not-allowed;
@@ -255,35 +319,41 @@ class DnevniIzazov {
                 margin-top: 2px;
             }
 
-            .glass-btn-double {
-                background: linear-gradient(180deg, #ffe27a, #e4a72a);
+            .daily-glass-btn-double {
+                background:
+                    linear-gradient(180deg, rgba(255,255,255,0.24), rgba(255,255,255,0.04)),
+                    linear-gradient(135deg, #ffe27a, #e4a72a);
             }
 
-            .glass-btn-claim {
-                background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.07));
+            .daily-glass-btn-claim {
+                background: linear-gradient(180deg, rgba(255,255,255,0.14), rgba(255,255,255,0.055));
                 color: #fff;
-                border-color: rgba(255,255,255,0.18);
-                box-shadow: 0 7px 0 rgba(0,0,0,0.36), 0 14px 24px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
+                border-color: rgba(255,255,255,0.2);
+                box-shadow: 0 12px 24px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.12);
             }
 
-            .glass-btn-claim:active {
-                box-shadow: 0 2px 0 rgba(0,0,0,0.36), 0 9px 18px rgba(0,0,0,0.22), inset 0 3px 8px rgba(0,0,0,0.20);
+            .daily-glass-btn-claim:active {
+                box-shadow: 0 8px 16px rgba(0,0,0,0.22), inset 0 3px 8px rgba(0,0,0,0.20);
             }
 
             @media (max-width: 380px) {
-                .glass-card { padding: 22px 14px 18px; border-radius: 20px; }
-                .glass-dice-grid { gap: 9px; padding: 9px; }
-                .glass-die { border-radius: 13px; font-size: 1.75rem; }
-                .glass-score-val { font-size: 2rem; min-width: 58px; }
-                .glass-btn { min-height: 50px; font-size: 0.92rem; }
+                .daily-glass-card { padding: 22px 14px 18px; border-radius: 20px; }
+                .daily-glass-dice-grid { gap: 9px; padding: 9px; }
+                .daily-glass-die { border-radius: 13px; font-size: 1.75rem; }
+                .daily-glass-score-val { font-size: 2rem; min-width: 58px; }
+                .daily-glass-btn { min-height: 50px; font-size: 0.92rem; }
             }
 
-            @keyframes dailyDiceShake {
-                0% { transform: translate(1px, 1px) rotate(0deg); }
-                25% { transform: translate(-2px, 1px) rotate(-1deg); }
-                50% { transform: translate(2px, -1px) rotate(1deg); }
-                75% { transform: translate(-1px, -2px) rotate(-1deg); }
-                100% { transform: translate(1px, 1px) rotate(0deg); }
+            @media (max-height: 620px) {
+                .daily-glass-card { padding-top: 18px; padding-bottom: 14px; }
+                .daily-glass-header { margin-bottom: 12px; }
+                .daily-glass-dice-grid,
+                .daily-glass-score-box { margin-bottom: 12px; }
+            }
+
+            @keyframes dailyDicePulse {
+                0%, 100% { transform: translateY(0) scale(1); }
+                50% { transform: translateY(-2px) scale(1.035); }
             }
         `;
         document.head.appendChild(style);
@@ -297,29 +367,29 @@ class DnevniIzazov {
 
         const overlay = document.createElement('div');
         overlay.id = 'glass-daily-overlay';
-        overlay.className = 'glass-overlay';
+        overlay.className = 'daily-glass-overlay';
         overlay.innerHTML = `
-            <div class="glass-card" id="glass-daily-card">
-                <div class="glass-header">
-                    <h2 class="glass-title">${txtTitle}</h2>
-                    <div class="glass-subtitle">${txtSub}</div>
+            <div class="daily-glass-card" id="glass-daily-card">
+                <div class="daily-glass-header">
+                    <h2 class="daily-glass-title">${txtTitle}</h2>
+                    <div class="daily-glass-subtitle">${txtSub}</div>
                 </div>
                 
-                <div class="glass-dice-grid">
-                    <div id="gd-0" class="glass-die">?</div>
-                    <div id="gd-1" class="glass-die">?</div>
-                    <div id="gd-2" class="glass-die">?</div>
-                    <div id="gd-3" class="glass-die">?</div>
-                    <div id="gd-4" class="glass-die">?</div>
-                    <div id="gd-5" class="glass-die">?</div>
+                <div class="daily-glass-dice-grid">
+                    <div id="gd-0" class="daily-glass-die dice">?</div>
+                    <div id="gd-1" class="daily-glass-die dice">?</div>
+                    <div id="gd-2" class="daily-glass-die dice">?</div>
+                    <div id="gd-3" class="daily-glass-die dice">?</div>
+                    <div id="gd-4" class="daily-glass-die dice">?</div>
+                    <div id="gd-5" class="daily-glass-die dice">?</div>
                 </div>
 
-                <div class="glass-score-box">
-                    <div class="glass-score-lbl">${txtSum}</div>
-                    <div class="glass-score-val" id="glass-daily-sum">0</div>
+                <div class="daily-glass-score-box">
+                    <div class="daily-glass-score-lbl">${txtSum}</div>
+                    <div class="daily-glass-score-val" id="glass-daily-sum">0</div>
                 </div>
 
-                <button id="glass-btn-action" class="glass-btn" onclick="dnevniIzazov.stopDice()">${txtStop}</button>
+                <button id="glass-btn-action" class="daily-glass-btn daily-glass-btn-stop" onclick="dnevniIzazov.stopDice()">${txtStop}</button>
             </div>
         `;
         document.body.appendChild(overlay);
@@ -406,7 +476,7 @@ class DnevniIzazov {
         for(let i=0; i<6; i++) {
             const el = document.getElementById(`gd-${i}`);
             el.innerHTML = "?";
-            el.className = 'glass-die'; // Reset klasa
+            el.className = 'daily-glass-die dice'; // Reset klasa
             if (this.app.features) this.app.features.applySkinToElement(el);
         }
 
@@ -496,10 +566,10 @@ class DnevniIzazov {
         resDiv.className = 'glass-daily-result';
 
         resDiv.innerHTML = `
-            <button class="glass-btn glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
+            <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 🎥 ${t('btn_double_short')} ${dukatIconHtml()} (x2)
             </button>
-            <button class="glass-btn glass-btn-claim" onclick="dnevniIzazov.claim(false)">
+            <button class="daily-glass-btn daily-glass-btn-claim" onclick="dnevniIzazov.claim(false)">
                 ${t('btn_claim_short')}
             </button>
         `;
