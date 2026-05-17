@@ -3321,6 +3321,7 @@ io.on('connection', (socket) => {
             if (roomState[roomId]) {
                 const state = roomState[roomId];
                 
+                const syncNow = Date.now();
                 socket.emit('sync_state_response', {
                     roomId: roomId,
                     players: state.players.map(id => {
@@ -3333,7 +3334,10 @@ io.on('connection', (socket) => {
                     kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
                     zadrzane: state.zadrzane || [false,false,false,false,false,false],
                     najavaAktivna: state.najavaAktivna || false,
-                    najavljenoPolje: state.najavljenoPolje || null
+                    najavljenoPolje: state.najavljenoPolje || null,
+                    turnStartTime: state.turnStartTime || syncNow,
+                    turnTimeLimitMs: TURN_TIME_LIMIT,
+                    serverNow: syncNow
                 });
                 
                 console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Server Sync)`);
@@ -4490,17 +4494,21 @@ io.on('connection', (socket) => {
                         return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
                     });
 
+                    const syncNow = Date.now();
                     socket.emit('sync_state_response', {
                         roomId: roomId,
-                        myIndex: playerIndex !== -1 ? playerIndex : 0, 
-                        players: playerNamesToSync, 
+                        myIndex: playerIndex !== -1 ? playerIndex : 0,
+                        players: playerNamesToSync,
                         allScores: state.allScores || createEmptyScores(),
                         currentPlayerIdx: state.turnIndex,
                         brojBacanja: state.brojBacanja || 0,
                         kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
                         zadrzane: state.zadrzane || [false,false,false,false,false,false],
                         najavaAktivna: state.najavaAktivna || false,
-                        najavljenoPolje: state.najavljenoPolje || null
+                        najavljenoPolje: state.najavljenoPolje || null,
+                        turnStartTime: state.turnStartTime || syncNow,
+                        turnTimeLimitMs: TURN_TIME_LIMIT,
+                        serverNow: syncNow
                     });
                     
                     return; 

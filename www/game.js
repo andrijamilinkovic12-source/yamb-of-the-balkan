@@ -2847,6 +2847,8 @@ class YambApp {
         this.socket.on('sync_state_response', (data) => {
             if ((this.gameActive || this.isSpectator) && this.onlineMode) {
                 console.log("📥 Stiglo osveženo stanje. Primenjujem...");
+                const previousTurnIdx = this.currentPlayerIdx;
+                const previousTimeLeft = this.timeLeft;
                 
                 if (data.players) { 
                     this.players = data.players.map(p => {
@@ -2893,7 +2895,8 @@ class YambApp {
                 const syncedTimeLeft = Number.isFinite(turnStartTime) && Number.isFinite(serverNow)
                     ? Math.ceil((turnTimeLimitMs - Math.max(0, serverNow - turnStartTime)) / 1000)
                     : undefined;
-                this.startClientTimer(syncedTimeLeft);
+                const fallbackTimeLeft = this.currentPlayerIdx === previousTurnIdx ? previousTimeLeft : 90;
+                this.startClientTimer(syncedTimeLeft !== undefined ? syncedTimeLeft : fallbackTimeLeft);
 
                 if (!this.isSpectator) {
                     const btnBacaj = document.getElementById('btn-bacaj');
