@@ -690,6 +690,40 @@ class EffectManager {
                 if(container.parentNode) container.remove();
             }, 5500); 
         }
+
+        if (type === 'royal_yamb') {
+            document.body.classList.add('fx-royal_yamb');
+
+            const container = document.createElement('div');
+            container.className = 'royal-yamb-container';
+            container.innerHTML = `
+                <div class="royal-yamb-spotlight spotlight-left"></div>
+                <div class="royal-yamb-spotlight spotlight-right"></div>
+                <div class="royal-yamb-rays"></div>
+                <div class="royal-yamb-crown-active">&#128081;</div>
+                <div class="royal-yamb-title-active">YAMB</div>
+                <div class="royal-yamb-sparkles"></div>
+            `;
+            document.body.appendChild(container);
+
+            this.spawnEmojiRain(['dukat-icon', 'dukat-icon', '✨', '💎', '👑'], 75);
+            for (let i = 0; i < 4; i++) {
+                setTimeout(() => this.spawnRealFirework(), 750 + i * 850);
+            }
+
+            if (window.app && window.app.soundMgr) {
+                window.app.soundMgr.trophy();
+            }
+
+            if (window.app && typeof window.app.vibrate === 'function') {
+                window.app.vibrate([80, 40, 120, 60, 220, 80, 120]);
+            }
+
+            setTimeout(() => {
+                document.body.classList.remove('fx-royal_yamb');
+                if (container.parentNode) container.remove();
+            }, 7000);
+        }
     }
 
     spawnRealFirework() {
@@ -871,9 +905,9 @@ class EffectManager {
     }
     
     stop() {
-        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-dragon_fire');
+        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-dragon_fire', 'fx-royal_yamb');
         
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
