@@ -4036,10 +4036,7 @@ class YambApp {
             btnUndo.classList.add('gh-btn-inactive');
             btnUndo.classList.remove('gh-btn-active');
         }
-        
-        if(window.adMobGlobal) window.adMobGlobal.prepareReward(); 
-
-        const finalResults = this.players.map((name, i) => { return { name: name, score: this.calculateTotalScore(i) }; }); 
+        const finalResults = this.players.map((name, i) => { return { name: name, score: this.calculateTotalScore(i) }; });
         const winnerScore = finalResults.reduce((max, r) => r.score > max ? r.score : max, 0);
 
         if(window.localforage) {
@@ -4111,8 +4108,11 @@ class YambApp {
                  }
              }
              
-             this.pendingScore = myScoreEntry.score;
-             this.rewardClaimed = false;
+              this.pendingScore = myScoreEntry.score;
+              if (window.adMobGlobal && myScoreEntry.score > 0) {
+                  window.adMobGlobal.prepareReward({ context: 'game_double', amount: myScoreEntry.score * 2 });
+              }
+              this.rewardClaimed = false;
              this.rewardClaimInProgress = false;
              this.lastGameType = 'normal';
              let resultType = 'solo';

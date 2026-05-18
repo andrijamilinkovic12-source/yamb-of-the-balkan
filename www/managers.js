@@ -1719,7 +1719,7 @@ class ShopManager {
                  } else if (window.modalManager && window.modalManager.overlay) {
                      window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna na mreži. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
                  }
-                 adCtrl.prepareReward(); 
+                 adCtrl.prepareReward({ context: 'shop_ad_reward', amount: 500 });
                  return;
              }
 
@@ -1925,10 +1925,18 @@ class AdMobController {
         return `${Date.now().toString(36)}${randomPart}`.slice(0, 32);
     }
 
+    normalizeRewardContext(value) {
+        return String(value || 'generic_reward').replace(/[^A-Za-z0-9_.:-]/g, '').slice(0, 48) || 'generic_reward';
+    }
+
+    normalizeRewardAmount(value) {
+        return Math.max(0, parseInt(value) || 0);
+    }
+
     createRewardSsvInfo(options = {}) {
         const uid = localStorage.getItem('yamb_uid') || window.app?.playerId || '';
-        const context = String(options.context || 'generic_reward').replace(/[^A-Za-z0-9_.:-]/g, '').slice(0, 48) || 'generic_reward';
-        const amount = Math.max(0, parseInt(options.amount) || 0);
+        const context = this.normalizeRewardContext(options.context);
+        const amount = this.normalizeRewardAmount(options.amount);
         const nonce = this.createRewardNonce();
         const customData = JSON.stringify({
             v: 1,
@@ -1950,9 +1958,17 @@ class AdMobController {
         };
     }
 
-    isRewardSsvReadyForCurrentUser() {
+    isRewardSsvReadyForCurrentUser(rewardOptions = {}) {
         const uid = localStorage.getItem('yamb_uid') || window.app?.playerId || '';
-        return !!(this.rewardSsvInfo && this.rewardSsvInfo.uid && this.rewardSsvInfo.uid === uid);
+        const expectedContext = this.normalizeRewardContext(rewardOptions.context);
+        const expectedAmount = this.normalizeRewardAmount(rewardOptions.amount);
+        return !!(
+            this.rewardSsvInfo &&
+            this.rewardSsvInfo.uid &&
+            this.rewardSsvInfo.uid === uid &&
+            this.rewardSsvInfo.context === expectedContext &&
+            this.rewardSsvInfo.amount === expectedAmount
+        );
     }
 
     consumeLastRewardSsvNonce() {
@@ -2168,7 +2184,7 @@ class AdMobController {
     showRewardVideo(rewardOptions = {}) {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) { resolve(false); return; }
-            if (this.ads.rewarded.isReady && this.isRewardSsvReadyForCurrentUser()) {
+            if (this.ads.rewarded.isReady && this.isRewardSsvReadyForCurrentUser(rewardOptions)) {
                 try {
                     this.rewardResolve = resolve;
                     this.activeRewardSsvInfo = this.rewardSsvInfo;
@@ -2178,6 +2194,8 @@ class AdMobController {
                 }
             } else {
                 if (typeof window.showNotification === 'function') window.showNotification(_safeT('info_title') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
+                this.rewardSsvInfo = null;
+                this.activeRewardSsvInfo = null;
                 this.ads.rewarded.isReady = false;
                 this.triggerHighPriorityLoad('rewarded', rewardOptions); resolve(false);
             }

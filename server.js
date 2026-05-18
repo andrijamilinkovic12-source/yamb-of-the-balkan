@@ -326,6 +326,8 @@ const UserProfileSchema = new mongoose.Schema({
     lastDailyRewardClaimed: { type: String, default: "" },
     lastShopAdRewardAt: { type: Number, default: 0 },
     lastShopInterstitialRewardAt: { type: Number, default: 0 },
+    lastUndoRewardedRewardAt: { type: Number, default: 0 },
+    lastUndoInterstitialRewardAt: { type: Number, default: 0 },
     soundEnabled: { type: Boolean, default: true },
     vibrationEnabled: { type: Boolean, default: true },  
     penaltyPoints: { type: Number, default: 0 },         
@@ -410,6 +412,7 @@ const ADMOB_REWARD_KEYS_URL = process.env.ADMOB_REWARD_KEYS_URL || 'https://www.
 const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
 const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '12000', 10)));
 const ADMOB_SSV_POLL_MS = 750;
+const ADMOB_SSV_MAX_AGE_MS = Math.max(60000, Math.min(15 * 60 * 1000, parseInt(process.env.ADMOB_SSV_MAX_AGE_MS || '600000', 10)));
 const REQUIRE_ADMOB_SSV = process.env.REQUIRE_ADMOB_SSV !== 'false';
 const ADMOB_REWARDED_AD_UNIT_ID = process.env.ADMOB_REWARDED_AD_UNIT_ID || 'ca-app-pub-4319963185096437/7896891915';
 const ADMOB_REWARDED_AD_UNIT_NUMERIC_ID = ADMOB_REWARDED_AD_UNIT_ID.includes('/')
@@ -447,8 +450,12 @@ function clearScoreSession(socketId) {
 }
 const SHOP_AD_REWARD_AMOUNT = 500;
 const SHOP_INTERSTITIAL_REWARD_AMOUNT = 200;
+const UNDO_REWARDED_REWARD_AMOUNT = 3;
+const UNDO_INTERSTITIAL_REWARD_AMOUNT = 1;
 const SHOP_AD_REWARD_COOLDOWN_MS = 15000;
 const SHOP_INTERSTITIAL_REWARD_COOLDOWN_MS = 15000;
+const UNDO_REWARDED_REWARD_COOLDOWN_MS = 15000;
+const UNDO_INTERSTITIAL_REWARD_COOLDOWN_MS = 15000;
 const MAX_IMPORTED_UNDO_TOKENS_BASE = 20;
 const MAX_PROFILE_GAMES = 250000;
 const MAX_PROFILE_GAME_DELTA_PER_SYNC = 50;
@@ -2613,10 +2620,14 @@ async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
     }
 
     const allowedContexts = Array.isArray(contexts) && contexts.length > 0
-        ? contexts.map(sanitizeAdMobContext)
+        ? [...new Set(contexts.map(sanitizeAdMobContext).filter(Boolean))]
         : [];
     const deadline = Date.now() + (options.timeoutMs || ADMOB_SSV_WAIT_TIMEOUT_MS);
-    const minAdTimestamp = Math.max(0, toSafeInt(options.minAdTimestamp, 0));
+    const minAdTimestamp = Math.max(
+        0,
+        Date.now() - ADMOB_SSV_MAX_AGE_MS,
+        toSafeInt(options.minAdTimestamp, 0)
+    );
 
     while (Date.now() <= deadline) {
         const query = {
@@ -3632,7 +3643,7 @@ io.on('connection', (socket) => {
                     const legacyUndoAllowance = !user.economyMigrationApplied
                         ? Math.max(0, Math.min(MAX_UNDO_TOKENS, (Math.max(0, toSafeInt(s.games)) * 3) + 20) - oldUndoTokens)
                         : 0;
-                    const allowedUndoIncrease = 3 + Math.max(0, toSafeInt(s.games) - oldUserGames) + legacyUndoAllowance;
+                    const allowedUndoIncrease = legacyUndoAllowance;
 
                     if (undoDelta <= 0 || undoDelta <= allowedUndoIncrease) {
                         user.undoTokens = requestedUndoTokens;
@@ -3867,7 +3878,7 @@ io.on('connection', (socket) => {
                 const adVerification = await waitForVerifiedAdMobReward(
                     uid,
                     data?.ssvNonce,
-                    ['daily_double', 'generic_reward', 'rewarded_ad'],
+                    ['daily_double'],
                     { claimedBy: 'daily_double' }
                 );
                 if (!adVerification.ok) {
@@ -4207,7 +4218,7 @@ io.on('connection', (socket) => {
             const adVerification = await waitForVerifiedAdMobReward(
                 uid,
                 data?.ssvNonce,
-                ['shop_ad_reward', 'shop_coins', 'generic_reward', 'rewarded_ad'],
+                ['shop_ad_reward'],
                 { claimedBy: 'shop_ad_reward', minAdTimestamp: lastRewardAt }
             );
             if (!adVerification.ok) {
@@ -4279,6 +4290,93 @@ io.on('connection', (socket) => {
             reply({ ok: true, reward: SHOP_INTERSTITIAL_REWARD_AMOUNT, balance: user.balance });
         } catch (err) {
             console.error("Greška pri shop interstitial nagradi:", err);
+            reply({ ok: false, reason: 'err_server_conn' });
+        }
+    });
+
+    socket.on('claim_undo_token_reward', async (data = {}, ack) => {
+        const reply = (payload) => {
+            socket.emit('undo_token_reward_result', payload);
+            if (typeof ack === 'function') ack(payload);
+        };
+
+        try {
+            const rewardType = String(data?.type || 'rewarded') === 'interstitial' ? 'interstitial' : 'rewarded';
+            const rewardAmount = rewardType === 'interstitial'
+                ? UNDO_INTERSTITIAL_REWARD_AMOUNT
+                : UNDO_REWARDED_REWARD_AMOUNT;
+
+            if (!MONGO_URI) {
+                reply({ ok: true, reward: rewardAmount, localFallback: true, type: rewardType });
+                return;
+            }
+
+            const uid = getVerifiedUid(socket);
+            if (!uid) {
+                socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+                reply({ ok: false, reason: 'auth_required' });
+                return;
+            }
+
+            const user = await UserProfile.findOne({ firebaseUid: uid });
+            if (!user) {
+                reply({ ok: false, reason: 'auth_required' });
+                return;
+            }
+
+            const currentTokens = Math.max(0, Math.min(MAX_UNDO_TOKENS, toSafeInt(user.undoTokens, 0)));
+            if (currentTokens >= MAX_UNDO_TOKENS) {
+                emitProfileSync(socket, user);
+                reply({ ok: false, reason: 'undo_tokens_max', undoTokens: currentTokens, permanent: true });
+                return;
+            }
+
+            const now = Date.now();
+            const lastRewardField = rewardType === 'interstitial'
+                ? 'lastUndoInterstitialRewardAt'
+                : 'lastUndoRewardedRewardAt';
+            const cooldownMs = rewardType === 'interstitial'
+                ? UNDO_INTERSTITIAL_REWARD_COOLDOWN_MS
+                : UNDO_REWARDED_REWARD_COOLDOWN_MS;
+            const lastRewardAt = Math.max(0, toSafeInt(user[lastRewardField], 0));
+            const elapsed = now - lastRewardAt;
+
+            if (lastRewardAt > 0 && elapsed < cooldownMs) {
+                reply({
+                    ok: false,
+                    reason: 'ad_reward_cooldown',
+                    retryAfterMs: cooldownMs - elapsed
+                });
+                return;
+            }
+
+            if (rewardType === 'rewarded') {
+                const adVerification = await waitForVerifiedAdMobReward(
+                    uid,
+                    data?.ssvNonce,
+                    ['undo_tokens'],
+                    { claimedBy: 'undo_tokens', minAdTimestamp: lastRewardAt }
+                );
+                if (!adVerification.ok) {
+                    reply(adVerification);
+                    return;
+                }
+            }
+
+            const grantedTokens = Math.min(rewardAmount, MAX_UNDO_TOKENS - currentTokens);
+            user[lastRewardField] = now;
+            user.undoTokens = currentTokens + grantedTokens;
+            await user.save();
+
+            emitProfileSync(socket, user);
+            reply({
+                ok: true,
+                reward: grantedTokens,
+                undoTokens: user.undoTokens,
+                type: rewardType
+            });
+        } catch (err) {
+            console.error("Greška pri undo token ad nagradi:", err);
             reply({ ok: false, reason: 'err_server_conn' });
         }
     });
@@ -4644,8 +4742,8 @@ io.on('connection', (socket) => {
                 const adVerification = await waitForVerifiedAdMobReward(
                     finalUid,
                     data?.ssvNonce,
-                    ['game_double', 'generic_reward', 'rewarded_ad'],
-                    { claimedBy: 'game_double' }
+                    ['game_double'],
+                    { claimedBy: 'game_double', minAdTimestamp: rewardSession.createdAt - 5000 }
                 );
                 if (!adVerification.ok) {
                     return replyGameReward(adVerification);

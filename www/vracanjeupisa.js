@@ -174,6 +174,35 @@ class UndoManager {
         });
     }
 
+    async claimServerUndoTokenReward(type, ssvNonce = '') {
+        if (!this.app || !this.app.socket || !this.app.socket.connected) {
+            return { ok: false, reason: 'err_server_conn' };
+        }
+
+        if (typeof this.app.authenticateSocketIdentity === 'function') {
+            const authResult = await this.app.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: 'auth_required' };
+            }
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'err_server_conn' });
+            }, 18000);
+
+            this.app.socket.emit('claim_undo_token_reward', { type, ssvNonce }, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            });
+        });
+    }
+
     applyCoinReward(result, fallbackAmount) {
         const rewardAmount = parseInt(result.reward) || fallbackAmount;
 
@@ -212,6 +241,8 @@ class UndoManager {
             message = gt('economy_auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
         } else if (result.reason === 'ad_verification_required' || result.reason === 'ad_verification_pending') {
             message = "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
+        } else if (result.reason === 'undo_tokens_max') {
+            message = gt('undo_tokens_max') || "Već imate maksimalan broj tokena.";
         }
 
         this.app.modal.alert(message, gt('modal_title_info') || "INFO");
@@ -228,21 +259,58 @@ class UndoManager {
             if (adMob && adMob.showInterstitial) {
                 const success = await adMob.showInterstitial();
                 if (success) {
-                    this.addTokens(1);
+                    const result = await this.claimServerUndoTokenReward('interstitial');
+                    if (!result.ok) {
+                        this.showRewardError(result);
+                        return;
+                    }
+                    this.applyTokenReward(result, 1);
                 }
             }
         } else if (parsedType === 3) {
             if (adMob && adMob.showRewardVideo) {
-                const success = await adMob.showRewardVideo();
+                const success = await adMob.showRewardVideo({ context: 'undo_tokens', amount: 3 });
                 if (success) {
-                    this.addTokens(3);
+                    const ssvNonce = typeof adMob.consumeLastRewardSsvNonce === 'function'
+                        ? adMob.consumeLastRewardSsvNonce()
+                        : '';
+                    const result = await this.claimServerUndoTokenReward('rewarded', ssvNonce);
+                    if (!result.ok) {
+                        this.showRewardError(result);
+                        return;
+                    }
+                    this.applyTokenReward(result, 3);
                 }
             }
         }
     }
 
+    applyTokenReward(result, fallbackAmount) {
+        const rewardAmount = parseInt(result.reward) || fallbackAmount;
+
+        if (result.localFallback) {
+            this.addTokens(rewardAmount, false);
+            return;
+        }
+
+        if (result.undoTokens !== undefined) {
+            const tokens = Math.max(0, parseInt(result.undoTokens) || 0);
+            localStorage.setItem('yamb_undo_tokens', tokens);
+            if (window.statsManager) {
+                window.statsManager.stats.undoTokens = tokens;
+                window.statsManager.saveStats();
+            }
+        }
+
+        this.updateMenuCounts();
+        if (this.app.soundMgr) this.app.soundMgr.win();
+
+        const successMsg = (gt('undo_earned_msg') || "Dobili ste {0} tokena!").replace('{0}', rewardAmount);
+        this.app.modal.alert(successMsg, gt('undo_earned_title') || "TOKENI DODATI");
+    }
+
     // --- DODAVANJE TOKENA I ČUVANJE U BAZI ---
-    addTokens(amount) {
+    addTokens(amount, syncToServer = true) {
         let tokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
         tokens += amount;
         localStorage.setItem('yamb_undo_tokens', tokens);
@@ -258,7 +326,7 @@ class UndoManager {
         this.app.modal.alert(successMsg, gt('undo_earned_title') || "TOKENI DODATI");
 
         // Sinhronizacija sa Cloud-om odmah po dobijanju (ISPRAVLJENO)
-        if (this.app.socket && this.app.socket.connected) {
+        if (syncToServer && this.app.socket && this.app.socket.connected) {
             let currentStats = this.app.getFullLocalStats() || {};
             currentStats.undoTokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
 
