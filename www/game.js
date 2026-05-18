@@ -3227,6 +3227,16 @@ class YambApp {
                 hostSocketId = parts[1];
             }
 
+            if (this.gameActive && this.onlineMode && !this.isSpectator) {
+                if (hostSocketId) {
+                    this.socket.emit('challenge_response', {
+                        challengerId: hostSocketId,
+                        accepted: false
+                    });
+                }
+                return;
+            }
+
             const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', this.escapeHtml(realHostName || 'Igrač'));
             const accepted = await this.modal.confirm(msg);
             

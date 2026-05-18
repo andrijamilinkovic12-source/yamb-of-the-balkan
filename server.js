@@ -832,11 +832,12 @@ function calculateCompletedDuelTotal(sheet) {
     }, 0);
 }
 
-function getDuelParticipantMeta(socketId, fallbackName = 'Igrac') {
+function getDuelParticipantMeta(socketId, fallbackName = 'Igrac', fallbackUid = '') {
     const participantSocket = io.sockets.sockets.get(socketId);
+    const stableUid = String(fallbackUid || '').trim();
     return {
         socketId,
-        uid: registeredSockets[socketId] || participantSocket?.playerId || '',
+        uid: registeredSockets[socketId] || participantSocket?.verifiedUid || participantSocket?.playerId || stableUid,
         name: sanitizeTournamentName(participantSocket?.playerName || fallbackName || 'Igrac'),
         photoUrl: String(participantSocket?.photoUrl || '').substring(0, 500)
     };
@@ -930,8 +931,9 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
     const totals = state.allScores.slice(0, 2).map(sheet => calculateCompletedDuelTotal(sheet));
     if (totals.some(score => score === null)) return false;
 
+    const stablePlayerUids = Array.isArray(state.playerUids) ? state.playerUids : [];
     const participants = state.players.slice(0, 2).map((socketId, index) => ({
-        ...getDuelParticipantMeta(socketId, state.playerNames?.[index]),
+        ...getDuelParticipantMeta(socketId, state.playerNames?.[index], stablePlayerUids[index]),
         score: totals[index]
     }));
 
@@ -4606,8 +4608,14 @@ io.on('connection', (socket) => {
     socket.on('find_game', (data) => {
         let nickname = typeof data === 'string' ? data : data.nickname;
         let photoUrl = typeof data === 'string' ? '' : data.photoUrl;
+        const requesterUid = getSocketUid(socket.id);
 
-        if (waitingPlayer && waitingPlayer.id === socket.id) return; 
+        if (getActiveOnlineRoomForPlayer(socket.id, requesterUid)) {
+            socket.emit('error_msg', 'err_player_busy');
+            return;
+        }
+
+        if (waitingPlayer && waitingPlayer.id === socket.id) return;
 
         if (waitingPlayer) {
             const opponentId = waitingPlayer.id;
@@ -4618,8 +4626,15 @@ io.on('connection', (socket) => {
             const opponentSocket = io.sockets.sockets.get(opponentId);
 
             if (opponentSocket) {
+                const opponentUid = getSocketUid(opponentId);
+                if (getActiveOnlineRoomForPlayer(opponentId, opponentUid)) {
+                    waitingPlayer = { id: socket.id, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+                    socket.emit('waiting_for_opponent');
+                    return;
+                }
+
                 const roomId = `room_${opponentId}_${socket.id}`;
-                waitingPlayer = null; 
+                waitingPlayer = null;
 
                 socket.join(roomId);
                 opponentSocket.join(roomId);
@@ -4675,6 +4690,13 @@ io.on('connection', (socket) => {
         console.log(`🏠 Zahtev za Private sobu: ${roomId} od ${nickname}`);
 
         if (!roomId) { socket.emit('error_msg', 'err_invalid_room'); return; }
+
+        const requesterUid = getSocketUid(socket.id);
+        const activeRoom = getActiveOnlineRoomForPlayer(socket.id, requesterUid);
+        if (activeRoom && activeRoom !== roomId) {
+            socket.emit('error_msg', 'err_player_busy');
+            return;
+        }
 
         if (!privateRooms[roomId]) {
             privateRooms[roomId] = { p1: { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
@@ -5643,9 +5665,17 @@ io.on('connection', (socket) => {
 
                 console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
                 let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
+                const stateAfterGrace = roomState[activeRoomId];
 
-                if (roomState[activeRoomId]) {
-                    if (!roomState[activeRoomId].players.includes(ghost.oldSocketId)) {
+                if (stateAfterGrace && stateAfterGrace.gameFinished) {
+                    console.log(`ℹ️ Grace timeout za ${pid} preskočen; soba ${activeRoomId} je već završena.`);
+                    delete ghostSessions[pid];
+                    delete disconnectTimers[pid];
+                    return;
+                }
+
+                if (stateAfterGrace) {
+                    if (!stateAfterGrace.players.includes(ghost.oldSocketId)) {
                         console.log(`ℹ️ Ignorišem disconnect timeout za ${pid}; stari socket više nije igrač u sobi ${activeRoomId}.`);
                         delete ghostSessions[pid];
                         delete disconnectTimers[pid];
@@ -5655,7 +5685,7 @@ io.on('connection', (socket) => {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
 
                     let h2hKey = null;
-                    const oppSocketId = roomState[activeRoomId].players.find(id => id !== ghost.oldSocketId);
+                    const oppSocketId = stateAfterGrace.players.find(id => id !== ghost.oldSocketId);
                     const oppSocket = io.sockets.sockets.get(oppSocketId);
                     const winnerUid = registeredSockets[oppSocketId];
                     if (oppSocket) {
