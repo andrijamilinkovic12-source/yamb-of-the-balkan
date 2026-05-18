@@ -1370,7 +1370,7 @@ class YambApp {
                     
                     if (this.gameActive && this.onlineMode && !this.isSpectator) {
                         console.log("🔄 Rekonekcija detektovana, tražim stanje table od protivnika...");
-                        this.socket.emit('request_state_sync');
+                        this.socket.emit('request_state_sync', { roomId: this.roomId });
                     } else if (this.gameActive && !this.onlineMode) {
                         this.emitLocalGameSessionStart();
                     }
@@ -2575,7 +2575,7 @@ class YambApp {
                 // Ako čekamo protivnika, tiho pitamo server za pravo stanje svakih 10 sekundi
                 if (this.timeLeft % 10 === 0) {
                     console.log("🔄 ANTI-DESYNC: Tiha provera stanja sa serverom da sprečimo zaglavljivanje...");
-                    this.socket.emit('request_state_sync');
+                    this.socket.emit('request_state_sync', { roomId: this.roomId });
                 }
             }
 
@@ -2694,7 +2694,7 @@ class YambApp {
             }
             
             if (this.socket) {
-                this.socket.emit('request_state_sync');
+                this.socket.emit('request_state_sync', { roomId: this.roomId });
             }
         });
 
@@ -4172,7 +4172,7 @@ class YambApp {
         const btnClaim = document.querySelector('#game-over-screen .btn-secondary');
         if(btnClaim) btnClaim.innerText = gt('go_claim');
         const btnDouble = document.querySelector('#btn-ad-double span');
-        if(btnDouble) btnDouble.innerText = gt('go_double');
+        if(btnDouble) btnDouble.innerHTML = gt('go_double');
 
         const btnRematch = document.getElementById('btn-rematch');
         if (this.onlineMode) {

@@ -975,16 +975,22 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
 // ==================================================================
 // --- SERVER-SIDE TURN TIMER I STATE LOGIC (AUTORITATIVNI TAJMER) ---
 // ==================================================================
-const TURN_TIME_LIMIT = 90000; 
-const GRACE_PERIOD = 3000;     
+const TURN_TIME_LIMIT = 90000;
+const GRACE_PERIOD = 3000;
 const TOTAL_TIMEOUT = TURN_TIME_LIMIT + GRACE_PERIOD;
+const TURN_TIMEOUT_WATCHDOG_MS = 5000;
+const FINISHED_ROOM_CLEANUP_MS = 5 * 60 * 1000;
 
 const roomTimers = {};
 const roomState = {};
+const finishedRoomCleanupTimers = {};
 
 function startTurnTimer(roomId) {
     const state = roomState[roomId];
     if (!state) return;
+    if (state.gameFinished) return;
+
+    clearFinishedRoomCleanup(roomId);
 
     stopTurnTimer(roomId);
 
@@ -1005,8 +1011,38 @@ function stopTurnTimer(roomId) {
     }
 }
 
+function clearFinishedRoomCleanup(roomId) {
+    if (finishedRoomCleanupTimers[roomId]) {
+        clearTimeout(finishedRoomCleanupTimers[roomId]);
+        delete finishedRoomCleanupTimers[roomId];
+    }
+}
+
+function scheduleFinishedRoomCleanup(roomId) {
+    clearFinishedRoomCleanup(roomId);
+    finishedRoomCleanupTimers[roomId] = setTimeout(() => {
+        const state = roomState[roomId];
+        if (state && state.gameFinished) {
+            cleanupOnlineRoom(roomId);
+        }
+    }, FINISHED_ROOM_CLEANUP_MS);
+}
+
+function markOnlineRoomGameFinished(roomId) {
+    const state = roomState[roomId];
+    if (!state) return false;
+
+    state.gameFinished = true;
+    state.finishedAt = Date.now();
+    stopTurnTimer(roomId);
+    scheduleFinishedRoomCleanup(roomId);
+    return true;
+}
+
 function cleanupOnlineRoom(roomId) {
     if (!roomId) return;
+
+    clearFinishedRoomCleanup(roomId);
 
     const state = roomState[roomId];
     if (state && Array.isArray(state.players)) {
@@ -1026,11 +1062,27 @@ function cleanupOnlineRoom(roomId) {
     stopTurnTimer(roomId);
     delete roomState[roomId];
     if (privateRooms[roomId]) delete privateRooms[roomId];
+
+    const clients = io.sockets.adapter.rooms.get(roomId);
+    if (clients) {
+        Array.from(clients).forEach(socketId => {
+            const clientSocket = io.sockets.sockets.get(socketId);
+            if (!clientSocket) return;
+
+            if (clientSocket.spectatingRoom === roomId) {
+                clientSocket.isSpectator = false;
+                clientSocket.spectatingRoom = null;
+            }
+
+            clientSocket.leave(roomId);
+        });
+    }
 }
 
 async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, expectedTimerToken = null) {
     const state = roomState[roomId];
     if (!state) return;
+    if (state.gameFinished) return;
 
     if (expectedTimerToken !== null && state.turnTimerToken !== expectedTimerToken) {
         console.log(`ℹ️ Ignorišem zastareli timeout u sobi ${roomId}; token ${expectedTimerToken} više nije aktivan.`);
@@ -1082,6 +1134,26 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
 
     cleanupOnlineRoom(roomId);
 }
+
+function sweepTurnTimeouts() {
+    const now = Date.now();
+
+    for (const [roomId, state] of Object.entries(roomState)) {
+        if (!state || state.gameFinished || state.technicalTimeoutInProgress) continue;
+        if (!Array.isArray(state.players) || state.players.length < 2) continue;
+        if (!state.turnStartTime) continue;
+
+        const elapsed = now - state.turnStartTime;
+        if (elapsed < TOTAL_TIMEOUT) continue;
+
+        const currentTurnSocketId = state.players[state.turnIndex];
+        const timerToken = state.turnTimerToken !== undefined ? state.turnTimerToken : null;
+        console.log(`🛡️ WATCHDOG: Soba ${roomId} je prešla limit (${elapsed}ms). Pokrećem tehničku pobedu.`);
+        handleTechnicalTimeout(roomId, currentTurnSocketId, timerToken);
+    }
+}
+
+setInterval(sweepTurnTimeouts, TURN_TIMEOUT_WATCHDOG_MS);
 // ==================================================================
 
 function generateTournamentBracket() {
@@ -1630,6 +1702,8 @@ function bindVerifiedPlayerSocket(socket, playerId) {
                 const idx = players.indexOf(stariSocketId);
                 if (idx !== -1) {
                     players[idx] = socket.id;
+                    if (!Array.isArray(roomState[aktivnaSoba].playerUids)) roomState[aktivnaSoba].playerUids = [];
+                    roomState[aktivnaSoba].playerUids[idx] = playerId;
                 }
             }
             io.to(aktivnaSoba).emit('opponent_connection_restored');
@@ -1656,6 +1730,8 @@ function bindVerifiedPlayerSocket(socket, playerId) {
                     const idx = players.indexOf(ghost.oldSocketId);
                     if (idx !== -1) {
                         players[idx] = socket.id;
+                        if (!Array.isArray(roomState[ghost.roomId].playerUids)) roomState[ghost.roomId].playerUids = [];
+                        roomState[ghost.roomId].playerUids[idx] = playerId;
                     }
                 }
                 io.to(ghost.roomId).emit('opponent_connection_restored');
@@ -1719,16 +1795,107 @@ function getActiveOnlineRoomForSocket(socketId) {
 
     const directRoom = playerRooms[socketId];
     if (directRoom && !String(directRoom).startsWith('local_')) {
-        return directRoom;
+        const state = roomState[directRoom];
+        if (state) {
+            if (!state.gameFinished && Array.isArray(state.players) && state.players.includes(socketId)) {
+                return directRoom;
+            }
+
+            if (!state.gameFinished) delete playerRooms[socketId];
+            return null;
+        }
+
+        if (privateRooms[directRoom]) {
+            return directRoom;
+        }
+
+        delete playerRooms[socketId];
     }
 
     for (const [roomId, state] of Object.entries(roomState)) {
-        if (state && Array.isArray(state.players) && state.players.includes(socketId)) {
+        if (state && !state.gameFinished && Array.isArray(state.players) && state.players.includes(socketId)) {
             return roomId;
         }
     }
 
     return null;
+}
+
+function getSocketUid(socketId) {
+    if (!socketId) return '';
+    const clientSocket = io.sockets.sockets.get(socketId);
+    return registeredSockets[socketId] || clientSocket?.verifiedUid || clientSocket?.playerId || '';
+}
+
+function getActiveOnlineRoomForUid(uid) {
+    if (!uid) return null;
+
+    const currentSocketId = onlinePlayers[uid];
+    const currentRoom = getActiveOnlineRoomForSocket(currentSocketId);
+    if (currentRoom) return currentRoom;
+
+    const ghost = ghostSessions[uid];
+    if (ghost && ghost.roomId) {
+        const ghostState = roomState[ghost.roomId];
+        if (ghostState && !ghostState.gameFinished) return ghost.roomId;
+    }
+
+    for (const [roomId, state] of Object.entries(roomState)) {
+        if (!state || state.gameFinished || !Array.isArray(state.players)) continue;
+
+        if (Array.isArray(state.playerUids) && state.playerUids.includes(uid)) {
+            return roomId;
+        }
+
+        if (state.players.some(playerSocketId => getSocketUid(playerSocketId) === uid)) {
+            return roomId;
+        }
+    }
+
+    for (const [roomId, room] of Object.entries(privateRooms)) {
+        const participants = [room?.p1, room?.p2].filter(Boolean);
+        if (participants.some(player => player.uid === uid || getSocketUid(player.id) === uid)) {
+            return roomId;
+        }
+    }
+
+    return null;
+}
+
+function getActiveOnlineRoomForPlayer(socketId, uid = '') {
+    return getActiveOnlineRoomForSocket(socketId) || getActiveOnlineRoomForUid(uid);
+}
+
+function reattachSocketToRoomByUid(socket, roomId) {
+    if (!socket) return false;
+    const state = roomState[roomId];
+    const uid = getSocketUid(socket.id);
+    if (!state || state.gameFinished || !uid || !Array.isArray(state.players)) return false;
+
+    let playerIndex = Array.isArray(state.playerUids) ? state.playerUids.indexOf(uid) : -1;
+    if (playerIndex === -1) {
+        playerIndex = state.players.findIndex(playerSocketId => getSocketUid(playerSocketId) === uid);
+    }
+    if (playerIndex === -1) return false;
+
+    const oldSocketId = state.players[playerIndex];
+    state.players[playerIndex] = socket.id;
+    if (!Array.isArray(state.playerUids)) state.playerUids = [];
+    state.playerUids[playerIndex] = uid;
+
+    socket.join(roomId);
+    playerRooms[socket.id] = roomId;
+    if (oldSocketId && oldSocketId !== socket.id && playerRooms[oldSocketId] === roomId) {
+        delete playerRooms[oldSocketId];
+    }
+    if (oldSocketId && oldSocketId !== socket.id) {
+        const oldSocket = io.sockets.sockets.get(oldSocketId);
+        if (oldSocket) oldSocket.leave(roomId);
+    }
+
+    console.log(`♻️ SYNC REATTACH: Vratio sam ${socket.id} u sobu ${roomId} preko UID-a.`);
+    io.to(roomId).emit('opponent_connection_restored');
+    return true;
 }
 
 function clearChallengesForSocket(socketId) {
@@ -1738,6 +1905,84 @@ function clearChallengesForSocket(socketId) {
             clearPendingChallenge(key);
         }
     }
+}
+
+function clearPendingChallengesBetweenSockets(socketA, socketB) {
+    for (const key of Object.keys(pendingChallenges)) {
+        const challenge = pendingChallenges[key];
+        if (!challenge) continue;
+
+        const samePair = (
+            (challenge.challengerId === socketA && challenge.targetId === socketB) ||
+            (challenge.challengerId === socketB && challenge.targetId === socketA)
+        );
+
+        if (samePair) clearPendingChallenge(key);
+    }
+}
+
+function clearPendingChallengesBetweenPlayers(socketA, uidA, socketB, uidB) {
+    for (const key of Object.keys(pendingChallenges)) {
+        const challenge = pendingChallenges[key];
+        if (!challenge) continue;
+
+        const sameSocketPair = (
+            (challenge.challengerId === socketA && challenge.targetId === socketB) ||
+            (challenge.challengerId === socketB && challenge.targetId === socketA)
+        );
+        const sameUidPair = uidA && uidB && (
+            (challenge.challengerUid === uidA && challenge.targetUid === uidB) ||
+            (challenge.challengerUid === uidB && challenge.targetUid === uidA)
+        );
+
+        if (sameSocketPair || sameUidPair) clearPendingChallenge(key);
+    }
+}
+
+function getActivePendingChallengeBetweenSockets(socketA, socketB) {
+    const candidates = [
+        findPendingChallenge(socketA, socketB),
+        findPendingChallenge(socketB, socketA)
+    ];
+
+    for (const pending of candidates) {
+        if (!pending || !pending.challenge) continue;
+
+        if (Date.now() > pending.challenge.expiresAt) {
+            clearPendingChallenge(pending.key);
+            continue;
+        }
+
+        return pending;
+    }
+
+    return null;
+}
+
+function getActivePendingChallengeBetweenPlayers(socketA, uidA, socketB, uidB) {
+    const socketPending = getActivePendingChallengeBetweenSockets(socketA, socketB);
+    if (socketPending) return socketPending;
+    if (!uidA || !uidB) return null;
+
+    for (const key of Object.keys(pendingChallenges)) {
+        const challenge = pendingChallenges[key];
+        if (!challenge) continue;
+
+        const sameUidPair = (
+            (challenge.challengerUid === uidA && challenge.targetUid === uidB) ||
+            (challenge.challengerUid === uidB && challenge.targetUid === uidA)
+        );
+        if (!sameUidPair) continue;
+
+        if (Date.now() > challenge.expiresAt) {
+            clearPendingChallenge(key);
+            continue;
+        }
+
+        return { key, challenge };
+    }
+
+    return null;
 }
 
 async function verifyFirebaseSocketToken(socket, token) {
@@ -2661,6 +2906,8 @@ io.on('connection', (socket) => {
             return;
         }
 
+        if (state.gameFinished) return;
+
         const currentTurnPlayer = state.players[state.turnIndex];
         if (socket.id === currentTurnPlayer) return;
 
@@ -2668,7 +2915,8 @@ io.on('connection', (socket) => {
 
         if (elapsed >= TOTAL_TIMEOUT) {
             console.log(`🛡️ SAFETY NET: Vreme zaista isteklo (${elapsed}ms). Prekidam!`);
-            handleTechnicalTimeout(roomId);
+            const timerToken = state.turnTimerToken !== undefined ? state.turnTimerToken : null;
+            handleTechnicalTimeout(roomId, currentTurnPlayer, timerToken);
             return;
         }
 
@@ -3263,6 +3511,14 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            if (state && state.gameFinished) {
+                console.log(`📢 Igrač ${socket.id} napušta završenu sobu ${activeRoomId}`);
+                socket.to(activeRoomId).emit('opponent_left', { gameFinished: true });
+                cleanupOnlineRoom(activeRoomId);
+                updateOnlineCount();
+                return;
+            }
+
             console.log(`📢 Igrač ${socket.id} se vratio u meni, napušta sobu ${activeRoomId}`);
             let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
 
@@ -3287,18 +3543,8 @@ io.on('connection', (socket) => {
                 reward: technicalResult.winnerReward,
                 coinPenalty: technicalResult.loserCoinPenalty
             });
-            delete playerRooms[socket.id];
-            
-            stopTurnTimer(activeRoomId);
-            if (roomState[activeRoomId]) delete roomState[activeRoomId];
 
-            if (privateRooms[activeRoomId]) {
-                if (privateRooms[activeRoomId].p1 && privateRooms[activeRoomId].p1.id === socket.id) {
-                    delete privateRooms[activeRoomId];
-                } else if (privateRooms[activeRoomId].p2 && privateRooms[activeRoomId].p2.id === socket.id) {
-                    delete privateRooms[activeRoomId].p2;
-                }
-            }
+            cleanupOnlineRoom(activeRoomId);
             socket.leave(activeRoomId);
         }
 
@@ -4393,9 +4639,13 @@ io.on('connection', (socket) => {
                     roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, oppUid: opponentSocket.playerId || registeredSockets[opponentId] || '', myIndex: 1
                 });
 
-                roomState[roomId] = { 
-                    players: [opponentId, socket.id], 
-                    playerNames: [opponentName, nickname], 
+                roomState[roomId] = {
+                    players: [opponentId, socket.id],
+                    playerUids: [
+                        opponentSocket.playerId || registeredSockets[opponentId] || '',
+                        socket.playerId || registeredSockets[socket.id] || ''
+                    ],
+                    playerNames: [opponentName, nickname],
                     turnIndex: 0,
                     moveCount: 0,
                     allScores: createEmptyScores(),
@@ -4457,9 +4707,13 @@ io.on('connection', (socket) => {
             io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0 });
             socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, oppUid: p1.uid || registeredSockets[p1.id] || '', myIndex: 1 });
 
-            roomState[roomId] = { 
-                players: [p1.id, socket.id], 
-                playerNames: [p1.name, nickname], 
+            roomState[roomId] = {
+                players: [p1.id, socket.id],
+                playerUids: [
+                    p1.uid || registeredSockets[p1.id] || '',
+                    socket.playerId || registeredSockets[socket.id] || ''
+                ],
+                playerNames: [p1.name, nickname],
                 turnIndex: 0,
                 moveCount: 0,
                 allScores: createEmptyScores(),
@@ -4483,8 +4737,10 @@ io.on('connection', (socket) => {
             const state = roomState[roomId];
             
             if (state && ['remote_move', 'remote_roll', 'remote_hold', 'remote_announce'].includes(eventName)) {
+                if (state.gameFinished) return;
+
                 const playerIndex = state.players.indexOf(socket.id);
-                
+
                 if (playerIndex === -1 || state.turnIndex !== playerIndex) {
                     console.warn(`🚨 BLOKIRAN LAG/POTEZ (${eventName}) - Igrač: ${socket.id}, Na potezu je: ${state.turnIndex}`);
                     
@@ -4562,14 +4818,19 @@ io.on('connection', (socket) => {
     socket.on('request_state_sync', (data) => {
         // Ako socket još nije ubačen u sobu (mikro-delay kod rekonekcije), probaj iz payload-a
         const requestedRoomId = data && data.roomId;
-        const roomId = playerRooms[socket.id] || requestedRoomId;
-        const roomClients = roomId ? io.sockets.adapter.rooms.get(roomId) : null;
-        const socketIsRoomMember = !!(roomClients && roomClients.has(socket.id));
 
         if (requestedRoomId && playerRooms[socket.id] && requestedRoomId !== playerRooms[socket.id]) {
             console.log(`ℹ️ Ignorišem sync zahtev za staru sobu ${requestedRoomId}; aktivna soba je ${playerRooms[socket.id]}.`);
             return;
         }
+
+        if (requestedRoomId && !playerRooms[socket.id]) {
+            reattachSocketToRoomByUid(socket, requestedRoomId);
+        }
+
+        const roomId = playerRooms[socket.id] || requestedRoomId;
+        const roomClients = roomId ? io.sockets.adapter.rooms.get(roomId) : null;
+        const socketIsRoomMember = !!(roomClients && roomClients.has(socket.id));
 
         if (roomId && roomState[roomId] && socketIsRoomMember) {
             const state = roomState[roomId];
@@ -4621,6 +4882,8 @@ io.on('connection', (socket) => {
 
             if (roomState[roomId]) {
                 const state = roomState[roomId];
+
+                if (state.gameFinished) return;
 
                 if (!state.players.includes(socket.id)) {
                     console.log(`ℹ️ Ignorišem sync_state_response od socket-a koji nije igrač u sobi ${roomId}: ${socket.id}`);
@@ -4843,6 +5106,7 @@ io.on('connection', (socket) => {
         const { targetId, targetUid } = data || {};
         let resolvedTargetId = targetId;
         let targetSocket = resolvedTargetId ? io.sockets.sockets.get(resolvedTargetId) : null;
+        const challengerUid = getSocketUid(socket.id);
 
         if ((!targetSocket || targetSocket.id === socket.id) && targetUid && onlinePlayers[targetUid]) {
             resolvedTargetId = onlinePlayers[targetUid];
@@ -4850,15 +5114,21 @@ io.on('connection', (socket) => {
         }
         
         if (targetSocket && targetSocket.id !== socket.id) {
-            const challengerRoom = getActiveOnlineRoomForSocket(socket.id);
+            const resolvedTargetUid = getSocketUid(resolvedTargetId) || targetUid || '';
+            const challengerRoom = getActiveOnlineRoomForPlayer(socket.id, challengerUid);
             if (challengerRoom) {
                 socket.emit('error_msg', 'err_player_busy');
                 return;
             }
 
-            const targetRoom = getActiveOnlineRoomForSocket(resolvedTargetId);
+            const targetRoom = getActiveOnlineRoomForPlayer(resolvedTargetId, resolvedTargetUid);
             if (targetRoom && !targetRoom.startsWith('local_')) {
                 socket.emit('error_msg', 'err_player_busy');
+                return;
+            }
+
+            if (getActivePendingChallengeBetweenPlayers(socket.id, challengerUid, resolvedTargetId, resolvedTargetUid)) {
+                socket.emit('error_msg', 'duel_pending');
                 return;
             }
 
@@ -4870,6 +5140,8 @@ io.on('connection', (socket) => {
             pendingChallenges[challengeKey] = {
                 challengerId: socket.id,
                 targetId: resolvedTargetId,
+                challengerUid,
+                targetUid: resolvedTargetUid,
                 createdAt,
                 expiresAt,
                 timeoutId: setTimeout(() => {
@@ -4909,16 +5181,18 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const challengerRoom = getActiveOnlineRoomForSocket(challengerId);
-            const responderRoom = getActiveOnlineRoomForSocket(socket.id);
+            const challengerUid = pending.challenge.challengerUid || getSocketUid(challengerId);
+            const responderUid = pending.challenge.targetUid || getSocketUid(socket.id);
+            const challengerRoom = getActiveOnlineRoomForPlayer(challengerId, challengerUid);
+            const responderRoom = getActiveOnlineRoomForPlayer(socket.id, responderUid);
             if (challengerRoom || responderRoom) {
-                clearPendingChallenge(pending.key);
+                clearPendingChallengesBetweenPlayers(challengerId, challengerUid, socket.id, responderUid);
                 socket.emit('error_msg', 'err_player_busy');
                 if (challengerSocket) challengerSocket.emit('error_msg', 'err_player_busy');
                 return;
             }
 
-            clearPendingChallenge(pending.key);
+            clearPendingChallengesBetweenPlayers(challengerId, challengerUid, socket.id, responderUid);
             const roomName = `duel_${challengerId}_${socket.id}`;
             
             socket.join(roomName);
@@ -4947,9 +5221,10 @@ io.on('connection', (socket) => {
             });
             console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
 
-            roomState[roomName] = { 
-                players: [challengerId, socket.id], 
-                playerNames: [challengerSocket.playerName || "Igrač 1", socket.playerName || "Igrač 2"], 
+            roomState[roomName] = {
+                players: [challengerId, socket.id],
+                playerUids: [challengerUid, responderUid],
+                playerNames: [challengerSocket.playerName || "Igrač 1", socket.playerName || "Igrač 2"],
                 turnIndex: 0,
                 moveCount: 0,
                 allScores: createEmptyScores(),
@@ -4985,7 +5260,7 @@ io.on('connection', (socket) => {
         if (roomId) {
             console.log(`🏁 Igra završena u sobi: ${roomId}`);
             await applyServerSideCompletedDuel(roomId, socket.id);
-            cleanupOnlineRoom(roomId);
+            markOnlineRoomGameFinished(roomId);
         }
     });
 
@@ -5008,9 +5283,10 @@ io.on('connection', (socket) => {
                 const p1 = io.sockets.sockets.get(playersArr[0]);
                 const p2 = io.sockets.sockets.get(playersArr[1]);
                 
-                roomState[roomId] = { 
-                    players: playersArr, 
-                    playerNames: [p1 ? p1.playerName : "Igrač 1", p2 ? p2.playerName : "Igrač 2"], 
+                roomState[roomId] = {
+                    players: playersArr,
+                    playerUids: playersArr.map(playerSocketId => getSocketUid(playerSocketId)),
+                    playerNames: [p1 ? p1.playerName : "Igrač 1", p2 ? p2.playerName : "Igrač 2"],
                     turnIndex: 0,
                     moveCount: 0,
                     allScores: createEmptyScores(),
@@ -5344,9 +5620,10 @@ io.on('connection', (socket) => {
         activeConnections.delete(socket.id);
         const pid = registeredSockets[socket.id];
         const activeRoomId = playerRooms[socket.id];
+        const activeRoomState = activeRoomId ? roomState[activeRoomId] : null;
         clearChallengesForSocket(socket.id);
 
-        if (pid && activeRoomId) {
+        if (pid && activeRoomId && !(activeRoomState && activeRoomState.gameFinished)) {
             console.log(`⏳ Pokrećem Grace Period od 30s za igrača: ${pid}`);
             
             ghostSessions[pid] = {
@@ -5396,20 +5673,9 @@ io.on('connection', (socket) => {
                     reward: technicalResult.winnerReward,
                     coinPenalty: technicalResult.loserCoinPenalty
                 });
-                
-                delete playerRooms[ghost.oldSocketId];
-                
-                stopTurnTimer(activeRoomId); 
-                if (roomState[activeRoomId]) delete roomState[activeRoomId];
 
-                if (privateRooms[activeRoomId]) {
-                    if (privateRooms[activeRoomId].p1 && privateRooms[activeRoomId].p1.id === ghost.oldSocketId) {
-                        delete privateRooms[activeRoomId];
-                    } else if (privateRooms[activeRoomId].p2 && privateRooms[activeRoomId].p2.id === ghost.oldSocketId) {
-                        delete privateRooms[activeRoomId].p2;
-                    }
-                }
-                
+                cleanupOnlineRoom(activeRoomId);
+
                 delete ghostSessions[pid];
                 delete disconnectTimers[pid];
             }, 30000); 
@@ -5417,10 +5683,7 @@ io.on('connection', (socket) => {
         } else {
             if (activeRoomId) {
                 socket.to(activeRoomId).emit('opponent_left');
-                delete playerRooms[socket.id];
-                
-                stopTurnTimer(activeRoomId); 
-                if (roomState[activeRoomId]) delete roomState[activeRoomId];
+                cleanupOnlineRoom(activeRoomId);
             }
         }
 
