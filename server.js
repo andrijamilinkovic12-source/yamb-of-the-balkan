@@ -700,10 +700,29 @@ async function getTechnicalCoinAmount(playerId) {
     return calculateTechnicalCoinAmount(user);
 }
 
-async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = null, coinPenalty = 0) {
+async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = null, coinPenalty = 0, opponentMeta = null) {
     if (!process.env.MONGO_URI || !playerId) return null;
     try {
         const UserProfile = mongoose.model('UserProfile');
+
+        if (opponentMeta) {
+            const user = await UserProfile.findOne({ firebaseUid: playerId });
+            if (!user) return null;
+
+            user.penaltyPoints = Math.max(0, toSafeInt(user.penaltyPoints, 0)) + penaltyAmount;
+            user.losses = Math.max(0, toSafeInt(user.losses, 0)) + 1;
+            user.currentWinStreak = 0;
+            applyTechnicalDuelH2H(user, opponentMeta, 'loss');
+
+            if (coinPenalty > 0) {
+                user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
+            }
+
+            await user.save();
+            emitProfileSyncToUid(playerId, user);
+            console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ${opponentMeta.uid || opponentMeta.name || h2hKey || 'nepoznatog'}.`);
+            return user;
+        }
 
         let updateInc = { penaltyPoints: penaltyAmount, losses: 1 };
         let updateSet = { currentWinStreak: 0 };
@@ -736,7 +755,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
     }
 }
 
-async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount = 50, h2hKey = null) {
+async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount = 50, h2hKey = null, h2hContext = {}) {
     const winnerReward = await getTechnicalCoinAmount(winnerId);
     const loserCoinPenalty = await getTechnicalCoinAmount(loserId);
 
@@ -754,12 +773,16 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
                 Math.max(0, toSafeInt(winner.maxWinStreak, 0)),
                 winner.currentWinStreak
             );
+            const winnerOpponent = h2hContext.winnerOpponent || (loserId ? { uid: loserId, name: 'Nepoznat' } : null);
+            if (winnerOpponent) {
+                applyTechnicalDuelH2H(winner, winnerOpponent, 'win');
+            }
             await winner.save();
             emitProfileSyncToUid(winnerId, winner);
         }
     }
 
-    await applyServerSidePenalty(loserId, penaltyAmount, h2hKey, loserCoinPenalty);
+    await applyServerSidePenalty(loserId, penaltyAmount, h2hKey, loserCoinPenalty, h2hContext.loserOpponent || null);
     return { winnerReward, loserCoinPenalty, serverApplied: true };
 }
 
@@ -843,6 +866,16 @@ function getDuelParticipantMeta(socketId, fallbackName = 'Igrac', fallbackUid = 
     };
 }
 
+function getRoomParticipantMeta(state, socketId) {
+    if (!state || !socketId) return getDuelParticipantMeta(socketId);
+
+    const playerIndex = Array.isArray(state.players) ? state.players.indexOf(socketId) : -1;
+    const fallbackName = playerIndex >= 0 && Array.isArray(state.playerNames) ? state.playerNames[playerIndex] : undefined;
+    const fallbackUid = playerIndex >= 0 && Array.isArray(state.playerUids) ? state.playerUids[playerIndex] : '';
+
+    return getDuelParticipantMeta(socketId, fallbackName, fallbackUid);
+}
+
 function getH2HKeyForOpponent(opponent) {
     const uid = String(opponent?.uid || '').trim();
     if (uid && uid.length >= 20 && !uid.startsWith('guest_')) return uid;
@@ -891,6 +924,48 @@ function applyCompletedDuelH2H(user, opponent, resultType, myScore, opponentScor
     record.myTotalScore += myScore;
     record.gamesWithScore += 1;
     record.myHighScore = Math.max(record.myHighScore, myScore);
+
+    h2h[h2hKey] = record;
+    user.set('h2hStats', h2h);
+    user.markModified('h2hStats');
+}
+
+function applyTechnicalDuelH2H(user, opponent, resultType) {
+    if (!user || !opponent) return;
+
+    const h2hKey = getH2HKeyForOpponent(opponent);
+    if (!h2hKey) return;
+
+    const h2h = user.h2hStats && typeof user.h2hStats === 'object' ? { ...user.h2hStats } : {};
+    const existing = h2h[h2hKey] && typeof h2h[h2hKey] === 'object' ? h2h[h2hKey] : {};
+    const record = {
+        ...existing,
+        name: sanitizeTournamentName(existing.name || opponent.name || 'Nepoznat'),
+        uid: opponent.uid || existing.uid || '',
+        photo: opponent.photoUrl || existing.photo || '',
+        wins: Math.max(0, toSafeInt(existing.wins, 0)),
+        losses: Math.max(0, toSafeInt(existing.losses, 0)),
+        draws: Math.max(0, toSafeInt(existing.draws, 0)),
+        myTotalScore: Math.max(0, toSafeInt(existing.myTotalScore, 0)),
+        gamesWithScore: Math.max(0, toSafeInt(existing.gamesWithScore, 0)),
+        myHighScore: Math.max(0, toSafeInt(existing.myHighScore, 0)),
+        maxWinMargin: Math.max(0, toSafeInt(existing.maxWinMargin, 0)),
+        maxLossMargin: Math.max(0, toSafeInt(existing.maxLossMargin, 0)),
+        currentWinStreak: Math.max(0, toSafeInt(existing.currentWinStreak, 0)),
+        maxWinStreak: Math.max(0, toSafeInt(existing.maxWinStreak, 0))
+    };
+
+    if (resultType === 'win') {
+        record.wins += 1;
+        record.currentWinStreak += 1;
+        record.maxWinStreak = Math.max(record.maxWinStreak, record.currentWinStreak);
+    } else if (resultType === 'loss') {
+        record.losses += 1;
+        record.currentWinStreak = 0;
+    } else if (resultType === 'draw') {
+        record.draws += 1;
+        record.currentWinStreak = 0;
+    }
 
     h2h[h2hKey] = record;
     user.set('h2hStats', h2h);
@@ -1106,19 +1181,17 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
     const winnerSocketId = state.players.find(id => id !== timedOutSocketId);
 
     if (winnerSocketId) {
-        const inactiveUid = registeredSockets[timedOutSocketId];
-        const winnerUid = registeredSockets[winnerSocketId];
+        const winnerParticipant = getRoomParticipantMeta(state, winnerSocketId);
+        const inactiveParticipant = getRoomParticipantMeta(state, timedOutSocketId);
+        const inactiveUid = inactiveParticipant.uid;
+        const winnerUid = winnerParticipant.uid;
         const penaltyAmount = getDynamicPenalty(roomId);
 
-        const winnerSocket = io.sockets.sockets.get(winnerSocketId);
-
-        let h2hKey = null;
-        if (winnerSocket) {
-            let safeOppName = winnerSocket.playerName ? winnerSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
-            h2hKey = winnerSocket.playerId ? winnerSocket.playerId : safeOppName;
-        }
-
-        const technicalResult = await applyServerSideTechnicalResult(winnerUid, inactiveUid, penaltyAmount, h2hKey);
+        const h2hKey = getH2HKeyForOpponent(winnerParticipant);
+        const technicalResult = await applyServerSideTechnicalResult(winnerUid, inactiveUid, penaltyAmount, h2hKey, {
+            winnerOpponent: inactiveParticipant,
+            loserOpponent: winnerParticipant
+        });
         await applyTournamentTechnicalWinner(roomId, winnerUid, 'turn_timeout');
 
         console.log(`⏱️ TIMEOUT: Isteklo vreme u sobi ${roomId}. Pobednik je ${winnerSocketId} (Tehnička pobeda)`);
@@ -3525,25 +3598,26 @@ io.on('connection', (socket) => {
             let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
 
             if (state) {
-                const pid = registeredSockets[socket.id];
+                const quitterParticipant = getRoomParticipantMeta(state, socket.id);
+                const pid = quitterParticipant.uid;
                 if (pid) {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
-                    let h2hKey = null;
                     const oppSocketId = state.players.find(id => id !== socket.id);
-                    const oppSocket = io.sockets.sockets.get(oppSocketId);
-                    const winnerUid = registeredSockets[oppSocketId];
-                    if (oppSocket) {
-                        let safeOppName = oppSocket.playerName ? oppSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
-                        h2hKey = oppSocket.playerId ? oppSocket.playerId : safeOppName;
-                    }
+                    const winnerParticipant = getRoomParticipantMeta(state, oppSocketId);
+                    const winnerUid = winnerParticipant.uid;
+                    const h2hKey = getH2HKeyForOpponent(winnerParticipant);
 
-                    technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey);
+                    technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
+                        winnerOpponent: quitterParticipant,
+                        loserOpponent: winnerParticipant
+                    });
                 }
             }
 
             socket.to(activeRoomId).emit('opponent_left', {
                 reward: technicalResult.winnerReward,
-                coinPenalty: technicalResult.loserCoinPenalty
+                coinPenalty: technicalResult.loserCoinPenalty,
+                serverApplied: technicalResult.serverApplied
             });
 
             cleanupOnlineRoom(activeRoomId);
@@ -5684,16 +5758,16 @@ io.on('connection', (socket) => {
 
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
 
-                    let h2hKey = null;
                     const oppSocketId = stateAfterGrace.players.find(id => id !== ghost.oldSocketId);
-                    const oppSocket = io.sockets.sockets.get(oppSocketId);
-                    const winnerUid = registeredSockets[oppSocketId];
-                    if (oppSocket) {
-                        let safeOppName = oppSocket.playerName ? oppSocket.playerName.replace(/\./g, '_').replace(/\$/g, '_') : 'Nepoznat';
-                        h2hKey = oppSocket.playerId ? oppSocket.playerId : safeOppName;
-                    }
+                    const winnerParticipant = getRoomParticipantMeta(stateAfterGrace, oppSocketId);
+                    const loserParticipant = getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId);
+                    const winnerUid = winnerParticipant.uid;
+                    const h2hKey = getH2HKeyForOpponent(winnerParticipant);
 
-                    technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey);
+                    technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
+                        winnerOpponent: loserParticipant,
+                        loserOpponent: winnerParticipant
+                    });
                     await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
                 } else {
                     console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
@@ -5701,7 +5775,8 @@ io.on('connection', (socket) => {
 
                 io.to(activeRoomId).emit('opponent_left', {
                     reward: technicalResult.winnerReward,
-                    coinPenalty: technicalResult.loserCoinPenalty
+                    coinPenalty: technicalResult.loserCoinPenalty,
+                    serverApplied: technicalResult.serverApplied
                 });
 
                 cleanupOnlineRoom(activeRoomId);

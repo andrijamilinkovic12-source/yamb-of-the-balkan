@@ -826,21 +826,30 @@ class YambApp {
             if (!oppName || String(oppName) === 'undefined' || String(oppName) === 'null' || oppName === 'Nepoznat') continue;
 
             const localData = localH2H[oppKey] || {};
+            const localWins = Math.max(0, parseInt(localData.wins) || 0);
+            const localLosses = Math.max(0, parseInt(localData.losses) || 0);
+            const localDraws = Math.max(0, parseInt(localData.draws) || 0);
+            const cloudWins = Math.max(0, parseInt(cloudData.wins) || 0);
+            const cloudLosses = Math.max(0, parseInt(cloudData.losses) || 0);
+            const cloudDraws = Math.max(0, parseInt(cloudData.draws) || 0);
+            const localTotal = localWins + localLosses + localDraws;
+            const cloudTotal = cloudWins + cloudLosses + cloudDraws;
+            const cloudCurrentStreak = Math.max(0, parseInt(cloudData.currentWinStreak) || 0);
             const merged = {
                 ...localData,
                 ...cloudData,
-                wins: Math.max(localData.wins || 0, cloudData.wins || 0),
-                losses: Math.max(localData.losses || 0, cloudData.losses || 0),
-                draws: Math.max(localData.draws || 0, cloudData.draws || 0),
+                wins: Math.max(localWins, cloudWins),
+                losses: Math.max(localLosses, cloudLosses),
+                draws: Math.max(localDraws, cloudDraws),
                 myTotalScore: Math.max(localData.myTotalScore || 0, cloudData.myTotalScore || 0),
                 gamesWithScore: Math.max(localData.gamesWithScore || 0, cloudData.gamesWithScore || 0),
                 myHighScore: Math.max(localData.myHighScore || 0, cloudData.myHighScore || 0),
                 maxWinMargin: Math.max(localData.maxWinMargin || 0, cloudData.maxWinMargin || 0),
                 maxLossMargin: Math.max(localData.maxLossMargin || 0, cloudData.maxLossMargin || 0),
                 maxWinStreak: Math.max(localData.maxWinStreak || 0, cloudData.maxWinStreak || 0),
-                currentWinStreak: cloudData.currentWinStreak === 0
-                    ? 0
-                    : Math.max(localData.currentWinStreak || 0, cloudData.currentWinStreak || 0)
+                currentWinStreak: cloudTotal >= localTotal
+                    ? cloudCurrentStreak
+                    : (cloudCurrentStreak === 0 ? 0 : Math.max(localData.currentWinStreak || 0, cloudCurrentStreak))
             };
 
             if (JSON.stringify(localData) !== JSON.stringify(merged)) {
@@ -2072,7 +2081,7 @@ class YambApp {
                 this.stats.currentWinStreak = 0; 
             }
 
-            if (this.players.length === 2) {
+            if (this.players.length === 2 && !options.skipH2H) {
                 const oppName = this.players.find(p => p !== this.playerName);
                 if (oppName) {
                     let passMyScore = isTechnical ? 0 : score;
@@ -2283,7 +2292,7 @@ class YambApp {
                     window.kvartalnaLiga.addPoints(-myAvg);
                 }
                 
-                this.updateStats(0, 'loss', 0, true); 
+                this.updateStats(0, 'loss', 0, true, { skipH2H: true });
             }
 
             if (!this.isSpectator && this.adMob && this.adMob.showInterstitial) {
@@ -2778,7 +2787,7 @@ class YambApp {
                     window.kvartalnaLiga.addPoints(winnerReward);
                 }
 
-                this.updateStats(winnerReward, 'win', 0, true);
+                this.updateStats(winnerReward, 'win', 0, true, { skipH2H: !!data.serverApplied });
 
                 // UKLONJEN MODAL ZA POBEDNIKA, IGRA TIHO DODELJUJE NAGRADE
             } else {
@@ -2801,7 +2810,7 @@ class YambApp {
                     msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">${ptsLostStr}</span>`;
                 }
 
-                this.updateStats(0, 'loss', 0, true);
+                this.updateStats(0, 'loss', 0, true, { skipH2H: !!data.serverApplied });
 
                 const msg = (data.message || gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak;
                 await this.modal.alert(msg, gt('timeout_loss_title') || "PORAZ");
@@ -3159,7 +3168,7 @@ class YambApp {
                 window.kvartalnaLiga.addPoints(rewardAmount);
             }
 
-            this.updateStats(rewardAmount, 'win', 0, true);
+            this.updateStats(rewardAmount, 'win', 0, true, { skipH2H: !!data.serverApplied });
 
             // UKLONJEN MODAL ZA POBEDNIKA PO ZAHTEVU, PARTIJA SE TIHO ZAVRŠAVA
             this.cancelOnline();
