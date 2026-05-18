@@ -4243,7 +4243,7 @@ class YambApp {
         }
     }
 
-    claimServerGameReward(score, doubled) {
+    claimServerGameReward(score, doubled, ssvNonce = '') {
         return new Promise(resolve => {
             if (!this.socket || !this.socket.connected) {
                 resolve({ ok: false, reason: 'socket_disconnected', localFallback: true });
@@ -4257,11 +4257,12 @@ class YambApp {
                 clearTimeout(timer);
                 resolve(result || { ok: false, reason: 'empty_reward_response', permanent: false });
             };
-            const timer = setTimeout(() => finish({ ok: false, reason: 'game_reward_timeout', permanent: false }), 7000);
+            const timer = setTimeout(() => finish({ ok: false, reason: 'game_reward_timeout', permanent: false }), 18000);
 
             this.socket.emit('claim_game_reward', {
                 score: Math.max(0, parseInt(score) || 0),
                 doubled: !!doubled,
+                ssvNonce,
                 stats: this.getFullLocalStats()
             }, finish);
         });
@@ -4271,10 +4272,16 @@ class YambApp {
         let success = false;
         
         if (this.adMob && this.adMob.showRewardVideo) {
-            success = await this.adMob.showRewardVideo();
+            success = await this.adMob.showRewardVideo({
+                context: 'game_double',
+                amount: (parseInt(this.pendingScore) || 0) * 2
+            });
         }
         
         if (success) { 
+            this.pendingRewardSsvNonce = typeof this.adMob.consumeLastRewardSsvNonce === 'function'
+                ? this.adMob.consumeLastRewardSsvNonce()
+                : '';
             this.claimReward(true); 
         } 
     }
@@ -4310,9 +4317,10 @@ class YambApp {
             }
         };
         const claimNormalGameReward = async (baseScore, wasDoubled) => {
-            const result = await this.claimServerGameReward(baseScore, wasDoubled);
+            const result = await this.claimServerGameReward(baseScore, wasDoubled, wasDoubled ? (this.pendingRewardSsvNonce || '') : '');
             if (result && result.ok && typeof result.balance === 'number') {
                 applyServerBalance(result.balance);
+                this.pendingRewardSsvNonce = '';
                 return true;
             }
 
@@ -4360,12 +4368,21 @@ class YambApp {
             }
         }
         
-        let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-        currentDukati += finalAmount;
-        localStorage.setItem('yamb_dukati', currentDukati);
-        if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
+        if (doubled) {
+            const confirmed = await claimNormalGameReward(this.pendingScore, true);
+            if (!confirmed) {
+                this.rewardClaimInProgress = false;
+                this.modal.alert("Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.", gt('modal_title_info') || "INFO");
+                return;
+            }
+        } else {
+            let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
+            currentDukati += finalAmount;
+            localStorage.setItem('yamb_dukati', currentDukati);
+            if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
 
-        await claimNormalGameReward(this.pendingScore, doubled);
+            await claimNormalGameReward(this.pendingScore, false);
+        }
 
         if (window.kvartalnaLiga) {
             window.kvartalnaLiga.syncWithServer();

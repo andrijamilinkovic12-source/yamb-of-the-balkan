@@ -711,9 +711,15 @@ class DnevniIzazov {
 
         if (window.adMobGlobal) {
             try {
-                const success = await window.adMobGlobal.showRewardVideo();
+                const success = await window.adMobGlobal.showRewardVideo({
+                    context: 'daily_double',
+                    amount: this.calculatedReward * 2
+                });
                 if (success) {
-                    await this.claim(true);
+                    const ssvNonce = typeof window.adMobGlobal.consumeLastRewardSsvNonce === 'function'
+                        ? window.adMobGlobal.consumeLastRewardSsvNonce()
+                        : '';
+                    await this.claim(true, ssvNonce);
                     return;
                 }
             } finally {
@@ -733,7 +739,7 @@ class DnevniIzazov {
         });
     }
 
-    async claimDailyRewardOnServer(amount) {
+    async claimDailyRewardOnServer(amount, doubled = false, ssvNonce = '') {
         const app = this.app;
         const socket = app?.socket;
         if (!socket) return { ok: false, reason: 'err_server_conn' };
@@ -770,9 +776,9 @@ class DnevniIzazov {
                 if (settled) return;
                 settled = true;
                 resolve({ ok: false, reason: 'err_server_conn' });
-            }, 8000);
+            }, 18000);
 
-            socket.emit('claim_daily_reward', { amount }, (result) => {
+            socket.emit('claim_daily_reward', { amount, doubled: !!doubled, ssvNonce }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -796,7 +802,7 @@ class DnevniIzazov {
         }
     }
 
-    async claim(doubled) {
+    async claim(doubled, ssvNonce = '') {
         if (this.rewardClaimed || this.claimInProgress) return;
 
         this.claimInProgress = true;
@@ -807,7 +813,7 @@ class DnevniIzazov {
         const uid = localStorage.getItem('yamb_uid') || this.app.playerId;
         const today = new Date().toDateString();
         
-        const rewardResult = await this.claimDailyRewardOnServer(finalAmount);
+        const rewardResult = await this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce);
         if (!rewardResult.ok) {
             if (rewardResult.reason === 'daily_already_claimed') {
                 const serverBalance = Math.max(0, parseInt(rewardResult.balance) || parseInt(localStorage.getItem('yamb_dukati')) || 0);
@@ -823,7 +829,9 @@ class DnevniIzazov {
 
             const message = rewardResult.reason === 'auth_required'
                 ? (t('auth_required') || t('economy_auth_required'))
-                : (t('err_server_conn') || t('dc_ads_unavailable'));
+                : (rewardResult.reason === 'ad_verification_required' || rewardResult.reason === 'ad_verification_pending'
+                    ? 'Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.'
+                    : (t('err_server_conn') || t('dc_ads_unavailable')));
             this.app.modal.alert(message, t('info_title'));
             return;
         }

@@ -1656,10 +1656,10 @@ class ShopManager {
         this.updateBalanceDisplay();
     }
 
-    async claimServerAdReward() {
+    async claimServerAdReward(ssvNonce = '') {
         const app = window.app;
         if (!app || !app.socket || !app.socket.connected) {
-            return { ok: true, localFallback: true, reward: 500 };
+            return { ok: false, reason: 'err_server_conn' };
         }
 
         if (typeof app.authenticateSocketIdentity === 'function') {
@@ -1675,9 +1675,9 @@ class ShopManager {
                 if (settled) return;
                 settled = true;
                 resolve({ ok: false, reason: 'err_server_conn' });
-            }, 8000);
+            }, 18000);
 
-            app.socket.emit('claim_shop_ad_reward', {}, (result) => {
+            app.socket.emit('claim_shop_ad_reward', { ssvNonce }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -1723,17 +1723,22 @@ class ShopManager {
                  return;
              }
 
-             const success = await adCtrl.showRewardVideo();
-             if (success) {
-                 const rewardResult = await this.claimServerAdReward();
-                 if (!rewardResult.ok) {
-                     const cooldown = Math.ceil((rewardResult.retryAfterMs || 0) / 1000);
-                     let message = _safeT('err_server_conn') || "Greška pri konekciji sa serverom.";
-                     if (rewardResult.reason === 'ad_reward_cooldown') {
-                         message = `Nagrada je već obrađena. Pokušajte ponovo za ${cooldown || 1}s.`;
-                     } else if (rewardResult.reason === 'auth_required') {
-                         message = _safeT('auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
-                     }
+              const success = await adCtrl.showRewardVideo({ context: 'shop_ad_reward', amount: 500 });
+              if (success) {
+                  const ssvNonce = typeof adCtrl.consumeLastRewardSsvNonce === 'function'
+                      ? adCtrl.consumeLastRewardSsvNonce()
+                      : '';
+                  const rewardResult = await this.claimServerAdReward(ssvNonce);
+                  if (!rewardResult.ok) {
+                      const cooldown = Math.ceil((rewardResult.retryAfterMs || 0) / 1000);
+                      let message = _safeT('err_server_conn') || "Greška pri konekciji sa serverom.";
+                      if (rewardResult.reason === 'ad_reward_cooldown') {
+                          message = `Nagrada je već obrađena. Pokušajte ponovo za ${cooldown || 1}s.`;
+                      } else if (rewardResult.reason === 'auth_required') {
+                          message = _safeT('auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
+                      } else if (rewardResult.reason === 'ad_verification_required' || rewardResult.reason === 'ad_verification_pending') {
+                          message = "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
+                      }
                      this.showRewardMessage(message, _safeT('modal_title_info') || "INFO");
                      return;
                  }
@@ -1779,6 +1784,9 @@ class AdMobController {
         
         this.baseRetryDelay = 1000;   
         this.maxRetryDelay = 30000;   
+        this.rewardSsvInfo = null;
+        this.activeRewardSsvInfo = null;
+        this.lastRewardSsvInfo = null;
         
         this.uiSelectors = ['.btn-ad-double', '.btn-add-coins', '.btn-discount', '.btn-ad-state-aware']; 
     }
@@ -1832,7 +1840,7 @@ class AdMobController {
         try {
             await this.adMobPlugin.addListener('rewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
-            await this.adMobPlugin.addListener('rewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
+            await this.adMobPlugin.addListener('rewardedVideoAdReward', () => this.handleRewardEarned());
             await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => {
                 if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
                 this.handleAdDismissed('rewarded');
@@ -1848,7 +1856,7 @@ class AdMobController {
 
             await this.adMobPlugin.addListener('onRewardedVideoAdLoaded', () => this.handleAdLoaded('rewarded'));
             await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
-            await this.adMobPlugin.addListener('onRewardedVideoAdReward', () => { if (this.rewardResolve) { this.rewardResolve(true); this.rewardResolve = null; } });
+            await this.adMobPlugin.addListener('onRewardedVideoAdReward', () => this.handleRewardEarned());
             await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', () => {
                 if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
                 this.handleAdDismissed('rewarded');
@@ -1865,6 +1873,14 @@ class AdMobController {
         }
     }
 
+    handleRewardEarned() {
+        this.lastRewardSsvInfo = this.activeRewardSsvInfo || this.rewardSsvInfo || null;
+        if (this.rewardResolve) {
+            this.rewardResolve(true);
+            this.rewardResolve = null;
+        }
+    }
+
     handleAdLoaded(type) {
         this.ads[type].isReady = true; 
         this.ads[type].isLoading = false; 
@@ -1878,6 +1894,8 @@ class AdMobController {
         this.ads[type].isReady = false; 
         this.ads[type].isLoading = false;
         if (type === 'rewarded') {
+            this.rewardSsvInfo = null;
+            this.activeRewardSsvInfo = null;
             this.updateUI(this.ads.rewarded.isReady);
         }
 
@@ -1889,13 +1907,59 @@ class AdMobController {
     handleAdDismissed(type) {
         this.ads[type].isReady = false;
         if (type === 'rewarded') {
+            this.activeRewardSsvInfo = null;
+        }
+        if (type === 'rewarded') {
             this.updateUI(this.ads.rewarded.isReady);
         }
         this.ads[type].retryCount = 0; 
         setTimeout(() => this.preloadAd(type), 500);
     }
 
-    async preloadAd(type) {
+    createRewardNonce() {
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+            return window.crypto.randomUUID().replace(/-/g, '');
+        }
+
+        const randomPart = Math.random().toString(36).slice(2);
+        return `${Date.now().toString(36)}${randomPart}`.slice(0, 32);
+    }
+
+    createRewardSsvInfo(options = {}) {
+        const uid = localStorage.getItem('yamb_uid') || window.app?.playerId || '';
+        const context = String(options.context || 'generic_reward').replace(/[^A-Za-z0-9_.:-]/g, '').slice(0, 48) || 'generic_reward';
+        const amount = Math.max(0, parseInt(options.amount) || 0);
+        const nonce = this.createRewardNonce();
+        const customData = JSON.stringify({
+            v: 1,
+            nonce,
+            context,
+            amount,
+            uid
+        });
+
+        return {
+            uid,
+            nonce,
+            context,
+            amount,
+            ssv: {
+                userId: uid,
+                customData
+            }
+        };
+    }
+
+    isRewardSsvReadyForCurrentUser() {
+        const uid = localStorage.getItem('yamb_uid') || window.app?.playerId || '';
+        return !!(this.rewardSsvInfo && this.rewardSsvInfo.uid && this.rewardSsvInfo.uid === uid);
+    }
+
+    consumeLastRewardSsvNonce() {
+        return this.lastRewardSsvInfo?.nonce || '';
+    }
+
+    async preloadAd(type, rewardOptions = {}) {
         if (!this.adMobPlugin || !navigator.onLine) return; 
         if (this.ads[type].isLoading || this.ads[type].isReady) return;
         
@@ -1910,7 +1974,12 @@ class AdMobController {
 
         try {
             if (type === 'rewarded') {
-                await this.adMobPlugin.prepareRewardVideoAd({ adId: this.rewardedId, isTesting: false });
+                this.rewardSsvInfo = this.createRewardSsvInfo(rewardOptions);
+                await this.adMobPlugin.prepareRewardVideoAd({
+                    adId: this.rewardedId,
+                    isTesting: false,
+                    ssv: this.rewardSsvInfo.ssv
+                });
             } else if (type === 'interstitial') {
                 await this.adMobPlugin.prepareInterstitial({ adId: this.interstitialId, isTesting: false, autoShow: false });
             } 
@@ -1921,16 +1990,16 @@ class AdMobController {
         }
     }
 
-    triggerHighPriorityLoad(type = 'rewarded') {
+    triggerHighPriorityLoad(type = 'rewarded', rewardOptions = {}) {
         if (!this.ads[type] || (!this.ads[type].isLoading && !this.ads[type].isReady)) {
             if (this.ads[type]) this.ads[type].retryCount = 0; 
-            this.preloadAd(type);
+            this.preloadAd(type, rewardOptions);
         }
     }
 
     loadRewardAd() { this.preloadAd('rewarded'); }
     loadInterstitialAd() { this.preloadAd('interstitial'); }
-    prepareReward() { this.triggerHighPriorityLoad('rewarded'); }
+    prepareReward(rewardOptions = {}) { this.triggerHighPriorityLoad('rewarded', rewardOptions); }
 
     setBannerSlotState(state, text = '') {
         const slotEl = this.bannerSlot || document.getElementById('economy-banner-slot');
@@ -2096,19 +2165,21 @@ class AdMobController {
         });
     }
 
-    showRewardVideo() {
+    showRewardVideo(rewardOptions = {}) {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) { resolve(false); return; }
-            if (this.ads.rewarded.isReady) {
+            if (this.ads.rewarded.isReady && this.isRewardSsvReadyForCurrentUser()) {
                 try {
                     this.rewardResolve = resolve;
+                    this.activeRewardSsvInfo = this.rewardSsvInfo;
                     await this.adMobPlugin.showRewardVideoAd();
                 } catch (e) {
-                    this.rewardResolve = null; this.handleAdFailed('rewarded', e); resolve(false);
+                    this.rewardResolve = null; this.activeRewardSsvInfo = null; this.handleAdFailed('rewarded', e); resolve(false);
                 }
             } else {
                 if (typeof window.showNotification === 'function') window.showNotification(_safeT('info_title') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
-                this.triggerHighPriorityLoad('rewarded'); resolve(false);
+                this.ads.rewarded.isReady = false;
+                this.triggerHighPriorityLoad('rewarded', rewardOptions); resolve(false);
             }
         });
     }

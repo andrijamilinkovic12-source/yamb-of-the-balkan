@@ -348,6 +348,23 @@ const UserProfileSchema = new mongoose.Schema({
 });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
 
+const AdMobRewardVerificationSchema = new mongoose.Schema({
+    transactionId: { type: String, unique: true, required: true },
+    uid: { type: String, index: true },
+    nonce: { type: String, index: true },
+    context: { type: String, index: true },
+    adUnit: String,
+    adNetwork: String,
+    rewardAmount: { type: Number, default: 0 },
+    rewardItem: String,
+    adTimestamp: { type: Number, default: 0 },
+    receivedAt: { type: Date, default: Date.now },
+    claimedAt: { type: Date, default: null },
+    claimedBy: { type: String, default: '' },
+    raw: { type: Object, default: {} }
+});
+const AdMobRewardVerification = mongoose.model('AdMobRewardVerification', AdMobRewardVerificationSchema);
+
 // --- GLOBALNE PROMENLJIVE ZA IGRU ---
 let waitingPlayer = null; 
 let privateRooms = {};
@@ -380,6 +397,7 @@ const MIN_LEAGUE_SESSION_DURATION = 30000;
 const MAX_BALANCE = 5000000;
 const MAX_UNDO_TOKENS = 250;
 const MAX_DAILY_REWARD = 2000;
+const MAX_DAILY_BASE_REWARD = 864;
 const MAX_AD_REWARD_PER_SYNC = 1500;
 const MAX_REWARD_PER_GAME = 8000;
 const MAX_TOURNEY_REWARD = 50000;
@@ -388,6 +406,22 @@ const GAME_REWARD_CLAIM_WINDOW_MS = 5 * 60 * 1000;
 const TOURNEY_ENTRY_FEE = 2500;
 const TOURNEY_WINNER_REWARD = 20000;
 const TOURNEY_RUNNER_UP_REWARD = 2500;
+const ADMOB_REWARD_KEYS_URL = process.env.ADMOB_REWARD_KEYS_URL || 'https://www.gstatic.com/admob/reward/verifier-keys.json';
+const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
+const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '12000', 10)));
+const ADMOB_SSV_POLL_MS = 750;
+const REQUIRE_ADMOB_SSV = process.env.REQUIRE_ADMOB_SSV !== 'false';
+const ADMOB_REWARDED_AD_UNIT_ID = process.env.ADMOB_REWARDED_AD_UNIT_ID || 'ca-app-pub-4319963185096437/7896891915';
+const ADMOB_REWARDED_AD_UNIT_NUMERIC_ID = ADMOB_REWARDED_AD_UNIT_ID.includes('/')
+    ? ADMOB_REWARDED_AD_UNIT_ID.split('/').pop()
+    : ADMOB_REWARDED_AD_UNIT_ID;
+const ADMOB_ALLOWED_REWARDED_AD_UNITS = new Set(
+    (process.env.ADMOB_ALLOWED_REWARDED_AD_UNITS || '')
+        .split(',')
+        .map(id => id.trim())
+        .filter(Boolean)
+        .concat([ADMOB_REWARDED_AD_UNIT_ID, ADMOB_REWARDED_AD_UNIT_NUMERIC_ID].filter(Boolean))
+);
 
 const gameCarriedDurations = {};
 
@@ -2357,6 +2391,284 @@ function toSafeInt(value, fallback = 0) {
     return Math.floor(num);
 }
 
+let admobRewardKeyCache = {
+    fetchedAt: 0,
+    keys: new Map()
+};
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function sanitizeAdMobNonce(value) {
+    const nonce = typeof value === 'string' ? value.trim() : '';
+    return /^[A-Za-z0-9_-]{12,96}$/.test(nonce) ? nonce : '';
+}
+
+function sanitizeAdMobContext(value) {
+    const context = typeof value === 'string' ? value.trim().substring(0, 48) : '';
+    return /^[A-Za-z0-9_.:-]+$/.test(context) ? context : 'rewarded_ad';
+}
+
+function sanitizeAdMobUid(value) {
+    const uid = typeof value === 'string' ? value.trim().substring(0, 128) : '';
+    return uid && !uid.startsWith('guest_') ? uid : '';
+}
+
+function parseAdMobTimestamp(value) {
+    const raw = Math.max(0, toSafeInt(value, 0));
+    if (raw > 100000000000000) return Math.floor(raw / 1000);
+    return raw;
+}
+
+function base64UrlToBuffer(value) {
+    let normalized = String(value || '').replace(/-/g, '+').replace(/_/g, '/');
+    while (normalized.length % 4) normalized += '=';
+    return Buffer.from(normalized, 'base64');
+}
+
+function httpsGetJson(url, redirectCount = 0) {
+    return new Promise((resolve, reject) => {
+        const req = https.get(url, { timeout: 8000 }, (res) => {
+            if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location && redirectCount < 3) {
+                res.resume();
+                resolve(httpsGetJson(new URL(res.headers.location, url).toString(), redirectCount + 1));
+                return;
+            }
+
+            if (res.statusCode !== 200) {
+                res.resume();
+                reject(new Error(`AdMob keys HTTP ${res.statusCode}`));
+                return;
+            }
+
+            let body = '';
+            res.setEncoding('utf8');
+            res.on('data', chunk => { body += chunk; });
+            res.on('end', () => {
+                try {
+                    resolve(JSON.parse(body));
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        });
+
+        req.on('timeout', () => req.destroy(new Error('AdMob keys timeout')));
+        req.on('error', reject);
+    });
+}
+
+async function getAdMobRewardPublicKeys() {
+    if (Date.now() - admobRewardKeyCache.fetchedAt < ADMOB_REWARD_KEYS_CACHE_MS && admobRewardKeyCache.keys.size > 0) {
+        return admobRewardKeyCache.keys;
+    }
+
+    const payload = await httpsGetJson(ADMOB_REWARD_KEYS_URL);
+    const keys = new Map();
+    (payload.keys || []).forEach(key => {
+        const keyId = key.keyId !== undefined ? String(key.keyId) : '';
+        const pem = typeof key.pem === 'string' ? key.pem : '';
+        if (keyId && pem) keys.set(keyId, pem);
+    });
+
+    if (keys.size === 0) throw new Error('AdMob keys response empty');
+    admobRewardKeyCache = { fetchedAt: Date.now(), keys };
+    return keys;
+}
+
+function getRawAdMobSsvQuery(req) {
+    const originalUrl = req.originalUrl || req.url || '';
+    const queryStart = originalUrl.indexOf('?');
+    return queryStart >= 0 ? originalUrl.slice(queryStart + 1) : '';
+}
+
+function splitAdMobSsvSignedQuery(rawQuery) {
+    const signatureMarker = '&signature=';
+    const signatureIndex = rawQuery.indexOf(signatureMarker);
+    if (signatureIndex < 0) return null;
+
+    const signedPart = rawQuery.slice(0, signatureIndex);
+    const signatureAndKey = rawQuery.slice(signatureIndex + signatureMarker.length);
+    const keyMarker = '&key_id=';
+    const keyIndex = signatureAndKey.indexOf(keyMarker);
+    if (keyIndex < 0) return null;
+
+    return {
+        signedPart,
+        signature: decodeURIComponent(signatureAndKey.slice(0, keyIndex)),
+        keyId: decodeURIComponent(signatureAndKey.slice(keyIndex + keyMarker.length))
+    };
+}
+
+function parseAdMobCustomData(rawCustomData) {
+    if (typeof rawCustomData !== 'string' || !rawCustomData.trim()) return {};
+    try {
+        const parsed = JSON.parse(rawCustomData);
+        return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (err) {
+        console.warn('AdMob SSV custom_data nije JSON:', err.message);
+        return {};
+    }
+}
+
+function isAllowedAdMobRewardUnit(adUnit) {
+    if (!ADMOB_ALLOWED_REWARDED_AD_UNITS.size) return true;
+    const value = String(adUnit || '').trim();
+    if (!value) return false;
+    if (ADMOB_ALLOWED_REWARDED_AD_UNITS.has(value)) return true;
+    if (value.includes('/')) return ADMOB_ALLOWED_REWARDED_AD_UNITS.has(value.split('/').pop());
+    return ADMOB_ALLOWED_REWARDED_AD_UNITS.has(`ca-app-pub-4319963185096437/${value}`);
+}
+
+async function verifyAdMobRewardSsvRequest(req) {
+    const rawQuery = getRawAdMobSsvQuery(req);
+    const signed = splitAdMobSsvSignedQuery(rawQuery);
+    if (!signed || !signed.signature || !signed.keyId) {
+        return { ok: false, reason: 'missing_signature' };
+    }
+
+    const keys = await getAdMobRewardPublicKeys();
+    const publicKey = keys.get(String(signed.keyId));
+    if (!publicKey) {
+        admobRewardKeyCache = { fetchedAt: 0, keys: new Map() };
+        const refreshedKeys = await getAdMobRewardPublicKeys();
+        const refreshedPublicKey = refreshedKeys.get(String(signed.keyId));
+        if (!refreshedPublicKey) return { ok: false, reason: 'unknown_key_id' };
+        return verifyAdMobRewardSignatureAndParams(req, signed, refreshedPublicKey);
+    }
+
+    return verifyAdMobRewardSignatureAndParams(req, signed, publicKey);
+}
+
+function verifyAdMobRewardSignatureAndParams(req, signed, publicKey) {
+    const verifier = crypto.createVerify('sha256');
+    verifier.update(signed.signedPart);
+    verifier.end();
+
+    const signature = base64UrlToBuffer(signed.signature);
+    if (!verifier.verify(publicKey, signature)) {
+        return { ok: false, reason: 'invalid_signature' };
+    }
+
+    const params = {};
+    for (const [key, value] of new URLSearchParams(getRawAdMobSsvQuery(req))) {
+        params[key] = value;
+    }
+
+    if (!isAllowedAdMobRewardUnit(params.ad_unit)) {
+        return { ok: false, reason: 'invalid_ad_unit' };
+    }
+
+    return { ok: true, params };
+}
+
+async function recordVerifiedAdMobReward(params) {
+    if (!MONGO_URI) return { ok: true, recorded: false, reason: 'mongo_unavailable' };
+
+    const customData = parseAdMobCustomData(params.custom_data);
+    const uid = sanitizeAdMobUid(params.user_id || customData.uid);
+    const nonce = sanitizeAdMobNonce(customData.nonce);
+    const transactionId = typeof params.transaction_id === 'string' ? params.transaction_id.trim().substring(0, 160) : '';
+
+    if (!uid || !nonce || !transactionId) {
+        return { ok: true, recorded: false, reason: 'missing_uid_nonce_or_transaction' };
+    }
+
+    const context = sanitizeAdMobContext(customData.context);
+    const rewardAmount = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(customData.amount || params.reward_amount, 0)));
+    const adTimestamp = parseAdMobTimestamp(params.timestamp);
+    const record = {
+        transactionId,
+        uid,
+        nonce,
+        context,
+        adUnit: typeof params.ad_unit === 'string' ? params.ad_unit.substring(0, 120) : '',
+        adNetwork: typeof params.ad_network === 'string' ? params.ad_network.substring(0, 120) : '',
+        rewardAmount,
+        rewardItem: typeof params.reward_item === 'string' ? params.reward_item.substring(0, 80) : '',
+        adTimestamp,
+        receivedAt: new Date(),
+        raw: params
+    };
+
+    const result = await AdMobRewardVerification.findOneAndUpdate(
+        { transactionId },
+        { $setOnInsert: record },
+        { upsert: true, new: true }
+    );
+
+    return { ok: true, recorded: true, reward: result };
+}
+
+async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
+    if (!REQUIRE_ADMOB_SSV) {
+        return { ok: true, bypassed: true };
+    }
+
+    const cleanUid = sanitizeAdMobUid(uid);
+    const cleanNonce = sanitizeAdMobNonce(nonce);
+    if (!cleanUid || !cleanNonce) {
+        return { ok: false, reason: 'ad_verification_required', permanent: false };
+    }
+
+    const allowedContexts = Array.isArray(contexts) && contexts.length > 0
+        ? contexts.map(sanitizeAdMobContext)
+        : [];
+    const deadline = Date.now() + (options.timeoutMs || ADMOB_SSV_WAIT_TIMEOUT_MS);
+    const minAdTimestamp = Math.max(0, toSafeInt(options.minAdTimestamp, 0));
+
+    while (Date.now() <= deadline) {
+        const query = {
+            uid: cleanUid,
+            nonce: cleanNonce,
+            claimedAt: null
+        };
+
+        if (allowedContexts.length > 0) query.context = { $in: allowedContexts };
+        if (minAdTimestamp > 0) query.adTimestamp = { $gte: minAdTimestamp };
+
+        const reward = await AdMobRewardVerification.findOneAndUpdate(
+            query,
+            { $set: { claimedAt: new Date(), claimedBy: options.claimedBy || allowedContexts[0] || 'rewarded_ad' } },
+            { new: true }
+        );
+
+        if (reward) return { ok: true, reward };
+        await sleep(ADMOB_SSV_POLL_MS);
+    }
+
+    return { ok: false, reason: 'ad_verification_pending', permanent: false, retryAfterMs: 2000 };
+}
+
+app.get('/api/admob/reward-ssv', async (req, res) => {
+    try {
+        const verified = await verifyAdMobRewardSsvRequest(req);
+        if (!verified.ok) {
+            console.warn(`⚠️ AdMob SSV odbijen: ${verified.reason}`);
+            res.status(400).send(verified.reason || 'invalid');
+            return;
+        }
+
+        const recordResult = await recordVerifiedAdMobReward(verified.params);
+        if (recordResult.recorded) {
+            const uid = recordResult.reward?.uid;
+            const socketId = uid ? onlinePlayers[uid] : null;
+            if (socketId) {
+                io.to(socketId).emit('admob_reward_verified', {
+                    nonce: recordResult.reward.nonce,
+                    context: recordResult.reward.context
+                });
+            }
+        }
+
+        res.status(200).send('OK');
+    } catch (err) {
+        console.error('❌ AdMob SSV callback greška:', err);
+        res.status(500).send('server_error');
+    }
+});
+
 function sanitizeIdArray(value, maxItems = 150) {
     if (!Array.isArray(value)) return [];
     const seen = new Set();
@@ -2440,11 +2752,13 @@ function calculateAllowedBalanceIncrease(user, stats, oldUserGames, oldTournamen
     const requestedDailyReward = Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(stats?.dailyRewardAmount, 0)));
     const dailyStartedToday = user.lastDaily === todayStr || stats?.lastDaily === todayStr;
     const dailyClaimRequested = stats?.dailyRewardClaimed === todayStr && requestedDailyReward > 0;
-    const dailyAllowance = dailyStartedToday && dailyClaimRequested && user.lastDailyRewardClaimed !== todayStr
+    const dailyAllowance = !REQUIRE_ADMOB_SSV && dailyStartedToday && dailyClaimRequested && user.lastDailyRewardClaimed !== todayStr
         ? requestedDailyReward
         : 0;
 
-    return MAX_AD_REWARD_PER_SYNC +
+    const adSyncAllowance = REQUIRE_ADMOB_SSV ? 0 : MAX_AD_REWARD_PER_SYNC;
+
+    return adSyncAllowance +
         (gameDelta * MAX_REWARD_PER_GAME) +
         (tournamentDelta * MAX_TOURNEY_REWARD) +
         newTrophyRewards +
@@ -3220,7 +3534,8 @@ io.on('connection', (socket) => {
                 const requestedDailyReward = Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(s.dailyRewardAmount, 0)));
                 const hasDailyClaimPayload = s.dailyRewardClaimed === todayStr || s.dailyRewardAmount !== undefined;
                 const dailyStartedToday = user.lastDaily === todayStr || s.lastDaily === todayStr;
-                const shouldMarkDailyRewardClaimed = dailyStartedToday &&
+                const shouldMarkDailyRewardClaimed = !REQUIRE_ADMOB_SSV &&
+                    dailyStartedToday &&
                     s.dailyRewardClaimed === todayStr &&
                     requestedDailyReward > 0 &&
                     user.lastDailyRewardClaimed !== todayStr;
@@ -3546,6 +3861,18 @@ io.on('connection', (socket) => {
                     balance: Math.max(0, toSafeInt(user.balance, 0)),
                     permanent: true
                 });
+            }
+
+            if (data?.doubled || reward > MAX_DAILY_BASE_REWARD) {
+                const adVerification = await waitForVerifiedAdMobReward(
+                    uid,
+                    data?.ssvNonce,
+                    ['daily_double', 'generic_reward', 'rewarded_ad'],
+                    { claimedBy: 'daily_double' }
+                );
+                if (!adVerification.ok) {
+                    return replyDailyReward(adVerification);
+                }
             }
 
             user.lastDaily = todayStr;
@@ -3874,6 +4201,17 @@ io.on('connection', (socket) => {
                     reason: 'ad_reward_cooldown',
                     retryAfterMs: SHOP_AD_REWARD_COOLDOWN_MS - elapsed
                 });
+                return;
+            }
+
+            const adVerification = await waitForVerifiedAdMobReward(
+                uid,
+                data?.ssvNonce,
+                ['shop_ad_reward', 'shop_coins', 'generic_reward', 'rewarded_ad'],
+                { claimedBy: 'shop_ad_reward', minAdTimestamp: lastRewardAt }
+            );
+            if (!adVerification.ok) {
+                reply(adVerification);
                 return;
             }
 
@@ -4300,6 +4638,18 @@ io.on('connection', (socket) => {
             const user = await UserProfile.findOne({ firebaseUid: finalUid });
             if (!user) {
                 return replyGameReward({ ok: false, reason: 'profile_not_found', permanent: false });
+            }
+
+            if (multiplier === 2) {
+                const adVerification = await waitForVerifiedAdMobReward(
+                    finalUid,
+                    data?.ssvNonce,
+                    ['game_double', 'generic_reward', 'rewarded_ad'],
+                    { claimedBy: 'game_double' }
+                );
+                if (!adVerification.ok) {
+                    return replyGameReward(adVerification);
+                }
             }
 
             if (data?.stats && typeof data.stats === 'object') {

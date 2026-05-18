@@ -128,10 +128,13 @@ class UndoManager {
             return;
         }
 
-        const success = await adMob.showRewardVideo();
+        const success = await adMob.showRewardVideo({ context: 'shop_ad_reward', amount: 500 });
         if (!success) return;
 
-        const result = await this.claimServerCoinReward('rewarded');
+        const ssvNonce = typeof adMob.consumeLastRewardSsvNonce === 'function'
+            ? adMob.consumeLastRewardSsvNonce()
+            : '';
+        const result = await this.claimServerCoinReward('rewarded', ssvNonce);
         if (!result.ok) {
             this.showRewardError(result);
             return;
@@ -140,9 +143,10 @@ class UndoManager {
         this.applyCoinReward(result, 500);
     }
 
-    async claimServerCoinReward(type) {
+    async claimServerCoinReward(type, ssvNonce = '') {
         if (!this.app || !this.app.socket || !this.app.socket.connected) {
-            return { ok: true, localFallback: true, reward: type === 'interstitial' ? 200 : 500 };
+            if (type === 'rewarded') return { ok: false, reason: 'err_server_conn' };
+            return { ok: true, localFallback: true, reward: 200 };
         }
 
         if (typeof this.app.authenticateSocketIdentity === 'function') {
@@ -158,10 +162,10 @@ class UndoManager {
                 if (settled) return;
                 settled = true;
                 resolve({ ok: false, reason: 'err_server_conn' });
-            }, 8000);
+            }, 18000);
 
             const eventName = type === 'interstitial' ? 'claim_shop_interstitial_reward' : 'claim_shop_ad_reward';
-            this.app.socket.emit(eventName, {}, (result) => {
+            this.app.socket.emit(eventName, { ssvNonce }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -206,6 +210,8 @@ class UndoManager {
             message = (gt('economy_reward_cooldown') || "Nagrada je već obrađena. Pokušajte ponovo za {0}s.").replace('{0}', cooldown || 1);
         } else if (result.reason === 'auth_required') {
             message = gt('economy_auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
+        } else if (result.reason === 'ad_verification_required' || result.reason === 'ad_verification_pending') {
+            message = "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
         }
 
         this.app.modal.alert(message, gt('modal_title_info') || "INFO");
