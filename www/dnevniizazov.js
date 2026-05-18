@@ -59,6 +59,11 @@ class DnevniIzazov {
 
             .daily-glass-overlay.active { display: flex; opacity: 1; }
 
+            .daily-glass-overlay.daily-glass-overlay--blank .daily-glass-card {
+                visibility: hidden;
+                pointer-events: none;
+            }
+
             .daily-glass-card {
                 width: min(430px, calc(100vw - 32px));
                 max-height: calc(100dvh - 34px);
@@ -422,16 +427,20 @@ class DnevniIzazov {
             this.markDailyAttempt(uid, today);
         }
 
+        if (alreadyPlayed) {
+            this.showIntroBackdrop();
+        }
+
         this.playIntro(() => {
             if (alreadyPlayed) {
-                this.app.modal.alert(t('dc_done'), t('info_title'));
+                this.showAlreadyPlayedInfo();
                 return;
             }
             this.startDailyChallenge();
-        });
+        }, { openBehindOverlayAt: alreadyPlayed ? null : 3650 });
     }
 
-    playIntro(onComplete) {
+    playIntro(onComplete, options = {}) {
         const overlay = document.getElementById('daily-intro');
         const leftWord = overlay?.querySelector('.daily-intro-word-left');
         const rightWord = overlay?.querySelector('.daily-intro-word-right');
@@ -448,16 +457,50 @@ class DnevniIzazov {
         overlay.setAttribute('aria-hidden', 'false');
 
         let completed = false;
+        const openBehindOverlayAt = options.openBehindOverlayAt === null
+            ? null
+            : (Number.isFinite(options.openBehindOverlayAt) ? options.openBehindOverlayAt : 3650);
         const introDuration = 4600;
-
-        setTimeout(() => {
+        const completeOnce = () => {
             if (completed) return;
             completed = true;
+            onComplete();
+        };
+
+        if (openBehindOverlayAt !== null && openBehindOverlayAt < introDuration) {
+            setTimeout(completeOnce, Math.max(0, openBehindOverlayAt));
+        }
+
+        setTimeout(() => {
+            completeOnce();
             overlay.classList.add('hidden');
             overlay.setAttribute('aria-hidden', 'true');
             this.isIntroPlaying = false;
-            onComplete();
         }, introDuration);
+    }
+
+    showIntroBackdrop() {
+        const overlay = document.getElementById('glass-daily-overlay');
+        if (!overlay) return;
+
+        overlay.classList.add('daily-glass-overlay--blank');
+        overlay.classList.add('active');
+    }
+
+    hideIntroBackdrop() {
+        const overlay = document.getElementById('glass-daily-overlay');
+        if (!overlay) return;
+
+        overlay.classList.remove('active');
+        overlay.classList.remove('daily-glass-overlay--blank');
+    }
+
+    showAlreadyPlayedInfo() {
+        const alertPromise = this.app?.modal?.alert
+            ? this.app.modal.alert(t('dc_done'), t('info_title'))
+            : Promise.resolve(window.alert(t('dc_done')));
+
+        Promise.resolve(alertPromise).finally(() => this.hideIntroBackdrop());
     }
 
     applyIntroTheme(overlay) {
