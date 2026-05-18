@@ -3218,7 +3218,10 @@ io.on('connection', (socket) => {
 
                 const todayStr = new Date().toDateString();
                 const requestedDailyReward = Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(s.dailyRewardAmount, 0)));
-                const shouldMarkDailyRewardClaimed = s.dailyRewardClaimed === todayStr &&
+                const hasDailyClaimPayload = s.dailyRewardClaimed === todayStr || s.dailyRewardAmount !== undefined;
+                const dailyStartedToday = user.lastDaily === todayStr || s.lastDaily === todayStr;
+                const shouldMarkDailyRewardClaimed = dailyStartedToday &&
+                    s.dailyRewardClaimed === todayStr &&
                     requestedDailyReward > 0 &&
                     user.lastDailyRewardClaimed !== todayStr;
 
@@ -3271,6 +3274,10 @@ io.on('connection', (socket) => {
                     pendingGameReward.amount +
                     legacyEconomyAllowance;
                 const hasEarnedBalanceIncrease = requestedBalanceDelta > 0 && requestedBalanceDelta <= earnedBalanceIncrease;
+                const isDailyBalanceOverage = hasDailyClaimPayload && requestedDailyReward > 0 && requestedBalanceDelta > 0 && (
+                    (shouldMarkDailyRewardClaimed && requestedBalanceDelta > earnedBalanceIncrease) ||
+                    (!shouldMarkDailyRewardClaimed && user.lastDailyRewardClaimed === todayStr && requestedBalanceDelta === requestedDailyReward)
+                );
                 const purchaseCoverage = Math.max(0, oldBalance + allowedBalanceIncrease - requestedBalance);
                 const acceptsPaidUnlocks = requestedPaidUnlockCost === 0 || purchaseCoverage >= requestedPaidUnlockCost;
 
@@ -3287,6 +3294,8 @@ io.on('connection', (socket) => {
                         } else {
                             console.log(`🛡️ ECONOMY GUARD: Ignorišem zastareli pad dukata sa ${oldBalance} na ${requestedBalance} bez nove kupovine.`);
                         }
+                    } else if (isDailyBalanceOverage) {
+                        console.log(`🛡️ DAILY GUARD: Odbijen dodatni dnevni skok dukata za ${user.playerName}. Dozvoljeno daily +earned ${earnedBalanceIncrease}, traženo +${requestedBalanceDelta}.`);
                     } else if (requestedBalanceDelta <= allowedBalanceIncrease) {
                         acceptedBalance = requestedBalance;
                         if (shouldMarkDailyRewardClaimed) {
@@ -3495,6 +3504,70 @@ io.on('connection', (socket) => {
             console.error("Greška pri sinhronizaciji korisnika:", err);
             socket.playerStats = data.stats || { wins: 0, losses: 0 };
             updateOnlineCount(); 
+        }
+    });
+
+    socket.on('claim_daily_reward', async (data = {}, ack) => {
+        const replyDailyReward = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            socket.emit('daily_reward_result', payload);
+            return payload;
+        };
+
+        try {
+            const todayStr = new Date().toDateString();
+            const rawReward = toSafeInt(data?.amount, 0);
+            const reward = Math.max(0, rawReward);
+
+            if (reward <= 0 || reward > MAX_DAILY_REWARD) {
+                return replyDailyReward({ ok: false, reason: 'invalid_reward', permanent: true });
+            }
+
+            if (!MONGO_URI) {
+                return replyDailyReward({ ok: true, reward, localFallback: true });
+            }
+
+            const uid = getVerifiedUid(socket);
+            if (!uid) {
+                socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+                return replyDailyReward({ ok: false, reason: 'auth_required' });
+            }
+
+            const user = await UserProfile.findOne({ firebaseUid: uid });
+            if (!user) {
+                return replyDailyReward({ ok: false, reason: 'auth_required' });
+            }
+
+            if (user.lastDailyRewardClaimed === todayStr) {
+                emitProfileSync(socket, user);
+                return replyDailyReward({
+                    ok: false,
+                    reason: 'daily_already_claimed',
+                    balance: Math.max(0, toSafeInt(user.balance, 0)),
+                    permanent: true
+                });
+            }
+
+            user.lastDaily = todayStr;
+            user.lastDailyRewardClaimed = todayStr;
+            user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
+            await user.save();
+
+            emitProfileSync(socket, user, {
+                dailyReward: {
+                    reward,
+                    balance: user.balance
+                }
+            });
+
+            return replyDailyReward({
+                ok: true,
+                reward,
+                balance: user.balance
+            });
+        } catch (err) {
+            console.error('❌ claim_daily_reward greška:', err);
+            return replyDailyReward({ ok: false, reason: 'server_error', permanent: false });
         }
     });
 

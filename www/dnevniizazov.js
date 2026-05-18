@@ -9,6 +9,9 @@ class DnevniIzazov {
         this.isActive = false;
         this.isIntroPlaying = false;
         this.calculatedReward = 0;
+        this.claimInProgress = false;
+        this.rewardClaimed = false;
+        this.adInProgress = false;
         
         this.injectGlassCSS();
         this.buildUI();
@@ -525,30 +528,45 @@ class DnevniIzazov {
     markDailyAttempt(uid, today) {
         // --- ANTI-CHEAT: Zapisujemo odmah na klijentu čim se izazov otvori ---
         localStorage.setItem('yamb_last_daily_' + uid, today);
-        
-        // --- ANTI-CHEAT: Šaljemo odmah na server pre nego što igra i krene ---
-        if (this.app.socket) {
-            if (this.app.socket.disconnected) {
-                this.app.socket.connect();
+
+        this.syncDailyProgress({ lastDaily: today });
+        // ----------------------------------------------------------------------
+    }
+
+    syncDailyProgress(extraStats = {}) {
+        const socket = this.app?.socket;
+        if (!socket) return;
+
+        const emitVerifiedProfile = () => {
+            if (typeof this.app.emitPlayerData === 'function') {
+                this.app.emitPlayerData(false).catch(err => {
+                    console.warn('Daily sync nije potvrđen:', err);
+                });
+                return;
             }
-            
-            // Osiguravamo ispravno dohvatanje statistike 
+
             let currentStats = {};
             if (typeof getFullLocalStats === 'function') {
                 currentStats = getFullLocalStats();
             } else if (typeof this.app.getFullLocalStats === 'function') {
                 currentStats = this.app.getFullLocalStats();
             }
-            currentStats.lastDaily = today;
 
             this.app.socket.emit('set_player_data', {
-                uid: uid || this.app.playerId,
+                uid: localStorage.getItem('yamb_uid') || this.app.playerId,
                 name: this.app.playerName,
-                stats: currentStats,
+                stats: { ...currentStats, ...extraStats },
                 playerId: this.app.playerId
             });
+        };
+
+        if (socket.connected) {
+            emitVerifiedProfile();
+            return;
         }
-        // ----------------------------------------------------------------------
+
+        socket.once('connect', emitVerifiedProfile);
+        socket.connect();
     }
 
     startDailyChallenge() {
@@ -570,6 +588,9 @@ class DnevniIzazov {
         this.diceValues = [0, 0, 0, 0, 0, 0];
         this.isActive = true;
         this.calculatedReward = 0;
+        this.claimInProgress = false;
+        this.rewardClaimed = false;
+        this.adInProgress = false;
         
         document.getElementById('glass-daily-sum').innerText = "0";
         
@@ -683,61 +704,145 @@ class DnevniIzazov {
     }
 
     async watchAdToDouble() {
+        if (this.rewardClaimed || this.claimInProgress || this.adInProgress) return;
+
+        this.adInProgress = true;
+        this.setResultButtonsDisabled(true);
+
         if (window.adMobGlobal) {
-            const success = await window.adMobGlobal.showRewardVideo();
-            if (success) {
-                this.claim(true);
+            try {
+                const success = await window.adMobGlobal.showRewardVideo();
+                if (success) {
+                    await this.claim(true);
+                    return;
+                }
+            } finally {
+                this.adInProgress = false;
+                if (!this.rewardClaimed) this.setResultButtonsDisabled(false);
             }
         } else {
             this.app.modal.alert(t('dc_ads_unavailable'), t('info_title'));
-            this.claim(false);
+            this.adInProgress = false;
+            await this.claim(false);
         }
     }
 
-    claim(doubled) {
+    setResultButtonsDisabled(disabled) {
+        document.querySelectorAll('#glass-daily-result .daily-glass-btn').forEach(btn => {
+            btn.disabled = disabled;
+        });
+    }
+
+    async claimDailyRewardOnServer(amount) {
+        const app = this.app;
+        const socket = app?.socket;
+        if (!socket) return { ok: false, reason: 'err_server_conn' };
+
+        if (!socket.connected) {
+            if (socket.disconnected) socket.connect();
+            const connected = await new Promise(resolve => {
+                let settled = false;
+                const finish = (ok) => {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timer);
+                    socket.off('connect', onConnect);
+                    resolve(ok);
+                };
+                const onConnect = () => finish(true);
+                const timer = setTimeout(() => finish(false), 5000);
+                socket.once('connect', onConnect);
+            });
+
+            if (!connected) return { ok: false, reason: 'err_server_conn' };
+        }
+
+        if (typeof app.authenticateSocketIdentity === 'function') {
+            const authResult = await app.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: 'auth_required' };
+            }
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'err_server_conn' });
+            }, 8000);
+
+            socket.emit('claim_daily_reward', { amount }, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            });
+        });
+    }
+
+    setLocalRewardState(uid, today, amount, balance) {
+        localStorage.setItem('yamb_dukati', balance);
+        localStorage.setItem('yamb_daily_reward_claimed_' + uid, today);
+        localStorage.setItem('yamb_daily_reward_amount_' + uid, String(amount));
+
+        if (window.statsManager) {
+            window.statsManager.stats.balance = balance;
+            window.statsManager.saveStats();
+        }
+
+        if (typeof updateMainMenuDashboard === 'function') {
+            updateMainMenuDashboard();
+        }
+    }
+
+    async claim(doubled) {
+        if (this.rewardClaimed || this.claimInProgress) return;
+
+        this.claimInProgress = true;
+        this.rewardClaimed = true;
+        this.setResultButtonsDisabled(true);
+
         let finalAmount = doubled ? this.calculatedReward * 2 : this.calculatedReward;
         const uid = localStorage.getItem('yamb_uid') || this.app.playerId;
         const today = new Date().toDateString();
         
-        // 1. Lokalni upis balansa
+        const rewardResult = await this.claimDailyRewardOnServer(finalAmount);
+        if (!rewardResult.ok) {
+            if (rewardResult.reason === 'daily_already_claimed') {
+                const serverBalance = Math.max(0, parseInt(rewardResult.balance) || parseInt(localStorage.getItem('yamb_dukati')) || 0);
+                this.setLocalRewardState(uid, today, 0, serverBalance);
+                this.close();
+                this.app.modal.alert(t('dc_done'), t('info_title'));
+                return;
+            }
+
+            this.claimInProgress = false;
+            this.rewardClaimed = false;
+            this.setResultButtonsDisabled(false);
+
+            const message = rewardResult.reason === 'auth_required'
+                ? (t('auth_required') || t('economy_auth_required'))
+                : (t('err_server_conn') || t('dc_ads_unavailable'));
+            this.app.modal.alert(message, t('info_title'));
+            return;
+        }
+
+        const awardedAmount = parseInt(rewardResult.reward) || finalAmount;
         let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-        currentDukati += finalAmount;
-        localStorage.setItem('yamb_dukati', currentDukati);
-        localStorage.setItem('yamb_daily_reward_claimed_' + uid, today);
-        localStorage.setItem('yamb_daily_reward_amount_' + uid, String(finalAmount));
-        
-        // 2. Upis u Stats Manager
-        if (window.statsManager) { 
-            window.statsManager.stats.balance = currentDukati; 
-            window.statsManager.saveStats(); 
+        if (rewardResult.balance !== undefined) {
+            currentDukati = Math.max(0, parseInt(rewardResult.balance) || 0);
+        } else {
+            currentDukati += awardedAmount;
         }
 
-        // 3. Osveži UI glavnog menija
-        if (typeof updateMainMenuDashboard === 'function') {
-            updateMainMenuDashboard();
-        }
+        this.setLocalRewardState(uid, today, awardedAmount, currentDukati);
 
-        // 4. TIHA Sinhronizacija sa Cloud-om
-        if (this.app.socket) {
-            if (this.app.socket.disconnected) {
-                this.app.socket.connect();
-            }
-
-            let currentStats = {};
-            if (typeof getFullLocalStats === 'function') {
-                currentStats = getFullLocalStats();
-            } else if (typeof this.app.getFullLocalStats === 'function') {
-                currentStats = this.app.getFullLocalStats();
-            }
-            currentStats.lastDaily = today;
-            currentStats.dailyRewardClaimed = today;
-            currentStats.dailyRewardAmount = finalAmount;
-
-            this.app.socket.emit('set_player_data', {
-                uid: uid,
-                name: this.app.playerName,
-                stats: currentStats,
-                playerId: this.app.playerId
+        if (rewardResult.localFallback) {
+            this.syncDailyProgress({
+                lastDaily: today,
+                dailyRewardClaimed: today,
+                dailyRewardAmount: awardedAmount
             });
         }
 
@@ -746,9 +851,9 @@ class DnevniIzazov {
 
         if (doubled) {
             if (this.app.effectMgr) this.app.effectMgr.trigger('confetti');
-            this.app.modal.alert(t('dc_reward_doubled').replace('{0}', finalAmount), t('dc_congrats'));
+            this.app.modal.alert(t('dc_reward_doubled').replace('{0}', awardedAmount), t('dc_congrats'));
         } else {
-            this.app.modal.alert(t('dc_reward_won').replace('{0}', finalAmount), t('dc_success'));
+            this.app.modal.alert(t('dc_reward_won').replace('{0}', awardedAmount), t('dc_success'));
         }
     }
 }
