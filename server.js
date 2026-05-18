@@ -622,7 +622,7 @@ const SHOP_ITEM_PRICES = Object.freeze({
     drones: 25000,
     cosmic_dust: 40000,
     dragon_fire: 45000,
-    royal_yamb: 0,
+    royal_yamb: 60000,
     dark: 0,
     light: 0,
     medium: 0,

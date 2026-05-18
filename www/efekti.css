@@ -732,35 +732,59 @@ body.fx-dragon_fire .game-scene {
     pointer-events: none;
     overflow: hidden;
     background:
-        radial-gradient(circle at 50% 38%, rgba(255, 226, 124, 0.24), transparent 34%),
-        linear-gradient(180deg, rgba(18, 5, 3, 0.72), rgba(0, 0, 0, 0.18) 52%, rgba(43, 12, 5, 0.66));
-    animation: royalSceneFade 7s ease-in-out forwards;
+        radial-gradient(circle at 50% 35%, rgba(255, 239, 168, 0.34), transparent 28%),
+        radial-gradient(ellipse at 50% 72%, rgba(255, 196, 64, 0.22), transparent 42%),
+        linear-gradient(180deg, rgba(18, 5, 3, 0.74), rgba(0, 0, 0, 0.18) 52%, rgba(43, 12, 5, 0.66));
+    animation: royalSceneFade 8s ease-in-out forwards;
 }
 
 .royal-yamb-spotlight {
     position: fixed;
-    bottom: -24vh;
-    width: 34vw;
-    min-width: 180px;
-    height: 130vh;
+    bottom: -28vh;
+    width: 42vw;
+    min-width: 220px;
+    height: 138vh;
     z-index: 99989;
     pointer-events: none;
-    background: linear-gradient(to top, rgba(255, 211, 87, 0.34), rgba(255, 246, 199, 0.18) 42%, transparent 86%);
-    filter: blur(12px);
+    background:
+        radial-gradient(ellipse at 50% 100%, rgba(255, 241, 178, 0.48), transparent 24%),
+        linear-gradient(to top, rgba(255, 214, 90, 0.42), rgba(255, 246, 199, 0.24) 44%, rgba(255, 236, 166, 0.06) 68%, transparent 92%);
+    filter: blur(15px);
     mix-blend-mode: screen;
     transform-origin: bottom center;
-    animation: royalSpotlightSweep 7s ease-in-out forwards;
+    animation: royalSpotlightSweep 8s ease-in-out forwards;
+}
+
+.royal-yamb-spotlight::after {
+    content: "";
+    position: absolute;
+    inset: 0 34%;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.34), rgba(255, 236, 149, 0.2) 38%, transparent 82%);
+    filter: blur(6px);
+    opacity: 0.76;
 }
 
 .royal-yamb-spotlight.spotlight-left {
-    left: 10vw;
+    left: 4vw;
     transform: rotate(-22deg);
 }
 
 .royal-yamb-spotlight.spotlight-right {
-    right: 10vw;
+    right: 4vw;
     transform: rotate(22deg);
     animation-name: royalSpotlightSweepRight;
+}
+
+.royal-yamb-spotlight.spotlight-center {
+    left: 50%;
+    width: 30vw;
+    min-width: 170px;
+    transform: translateX(-50%) rotate(0deg) scaleX(0.82);
+    background:
+        radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.38), transparent 24%),
+        linear-gradient(to top, rgba(255, 230, 142, 0.34), rgba(255, 255, 255, 0.16) 45%, transparent 88%);
+    filter: blur(18px);
+    animation-name: royalCenterSpotlight;
 }
 
 .royal-yamb-rays {
@@ -777,7 +801,24 @@ body.fx-dragon_fire .game-scene {
     border-radius: 50%;
     transform: translate(-50%, -50%);
     mix-blend-mode: screen;
-    animation: royalRaysSpin 7s linear forwards;
+    animation: royalRaysSpin 8s linear forwards;
+}
+
+.royal-yamb-stage-glow {
+    position: fixed;
+    left: 50%;
+    top: 48%;
+    width: min(96vw, 760px);
+    height: min(52vw, 320px);
+    z-index: 99994;
+    pointer-events: none;
+    border-radius: 50%;
+    background:
+        radial-gradient(ellipse at center, rgba(255, 255, 255, 0.28) 0 8%, rgba(255, 214, 94, 0.24) 28%, rgba(255, 184, 46, 0.08) 54%, transparent 72%);
+    filter: blur(12px);
+    mix-blend-mode: screen;
+    transform: translate(-50%, -50%) scale(0.72);
+    animation: royalStageGlow 8s ease-in-out forwards;
 }
 
 .royal-yamb-crown-active {
@@ -790,7 +831,7 @@ body.fx-dragon_fire .game-scene {
     line-height: 1;
     text-shadow: 0 0 24px rgba(255, 232, 130, 0.96), 0 18px 26px rgba(0, 0, 0, 0.48);
     transform: translate(-50%, -30%) scale(0.3);
-    animation: royalCrownDrop 7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: royalCrownDrop 8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .royal-yamb-title-active {
@@ -810,9 +851,10 @@ body.fx-dragon_fire .game-scene {
     text-shadow:
         0 0 12px rgba(255, 255, 255, 0.8),
         0 0 34px rgba(255, 200, 68, 0.9),
+        0 0 72px rgba(255, 226, 124, 0.52),
         0 12px 28px rgba(0, 0, 0, 0.58);
     transform: translate(-50%, -50%) scale(0.62);
-    animation: royalTitlePunch 7s cubic-bezier(0.18, 0.84, 0.28, 1) forwards;
+    animation: royalTitlePunch 8s cubic-bezier(0.18, 0.84, 0.28, 1) forwards;
 }
 
 .royal-yamb-sparkles {
@@ -832,11 +874,11 @@ body.fx-dragon_fire .game-scene {
         88vw 62vh 0 2px #f7c84b, 12vw 48vh 0 1px #ffffff, 28vw 38vh 0 2px #ffe184,
         47vw 30vh 0 1px #ffffff, 66vw 40vh 0 2px #f6bd3b, 84vw 46vh 0 1px #ffffff;
     filter: drop-shadow(0 0 8px rgba(255, 221, 115, 0.92));
-    animation: royalSparkleLift 7s ease-out forwards;
+    animation: royalSparkleLift 8s ease-out forwards;
 }
 
 body.fx-royal_yamb .game-scene {
-    animation: royalBoardPulse 7s ease-in-out forwards;
+    animation: royalBoardPulse 8s ease-in-out forwards;
 }
 
 @media (max-width: 520px) {
@@ -867,21 +909,39 @@ body.fx-royal_yamb .game-scene {
 }
 
 @keyframes royalSpotlightSweep {
-    0% { opacity: 0; transform: rotate(-42deg) translateX(-18vw); }
-    18%, 78% { opacity: 1; }
-    100% { opacity: 0; transform: rotate(18deg) translateX(10vw); }
+    0% { opacity: 0; transform: rotate(-48deg) translateX(-22vw) scaleY(0.82); }
+    16% { opacity: 0.92; transform: rotate(-28deg) translateX(-8vw) scaleY(1); }
+    44% { opacity: 1; transform: rotate(-12deg) translateX(2vw) scaleY(1.06); }
+    78% { opacity: 0.9; transform: rotate(14deg) translateX(8vw) scaleY(1); }
+    100% { opacity: 0; transform: rotate(26deg) translateX(14vw) scaleY(0.88); }
 }
 
 @keyframes royalSpotlightSweepRight {
-    0% { opacity: 0; transform: rotate(42deg) translateX(18vw); }
-    18%, 78% { opacity: 1; }
-    100% { opacity: 0; transform: rotate(-18deg) translateX(-10vw); }
+    0% { opacity: 0; transform: rotate(48deg) translateX(22vw) scaleY(0.82); }
+    16% { opacity: 0.92; transform: rotate(28deg) translateX(8vw) scaleY(1); }
+    44% { opacity: 1; transform: rotate(12deg) translateX(-2vw) scaleY(1.06); }
+    78% { opacity: 0.9; transform: rotate(-14deg) translateX(-8vw) scaleY(1); }
+    100% { opacity: 0; transform: rotate(-26deg) translateX(-14vw) scaleY(0.88); }
+}
+
+@keyframes royalCenterSpotlight {
+    0% { opacity: 0; transform: translateX(-50%) scaleX(0.46) scaleY(0.72); }
+    18% { opacity: 0.72; transform: translateX(-50%) scaleX(0.72) scaleY(1); }
+    38%, 76% { opacity: 0.86; transform: translateX(-50%) scaleX(0.95) scaleY(1.04); }
+    100% { opacity: 0; transform: translateX(-50%) scaleX(0.62) scaleY(0.9); }
 }
 
 @keyframes royalRaysSpin {
     0% { opacity: 0; transform: translate(-50%, -50%) rotate(0deg) scale(0.65); }
     15%, 78% { opacity: 1; }
     100% { opacity: 0; transform: translate(-50%, -50%) rotate(135deg) scale(1.12); }
+}
+
+@keyframes royalStageGlow {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.62); }
+    18% { opacity: 0.96; transform: translate(-50%, -50%) scale(1); }
+    42%, 76% { opacity: 0.78; transform: translate(-50%, -50%) scale(1.12); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
 }
 
 @keyframes royalCrownDrop {

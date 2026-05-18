@@ -699,16 +699,18 @@ class EffectManager {
             container.innerHTML = `
                 <div class="royal-yamb-spotlight spotlight-left"></div>
                 <div class="royal-yamb-spotlight spotlight-right"></div>
+                <div class="royal-yamb-spotlight spotlight-center"></div>
                 <div class="royal-yamb-rays"></div>
+                <div class="royal-yamb-stage-glow"></div>
                 <div class="royal-yamb-crown-active">&#128081;</div>
                 <div class="royal-yamb-title-active">YAMB</div>
                 <div class="royal-yamb-sparkles"></div>
             `;
             document.body.appendChild(container);
 
-            this.spawnEmojiRain(['dukat-icon', 'dukat-icon', '✨', '💎', '👑'], 75);
-            for (let i = 0; i < 4; i++) {
-                setTimeout(() => this.spawnRealFirework(), 750 + i * 850);
+            this.spawnEmojiRain(['dukat-icon', 'dukat-icon', '✨', '💎', '👑'], 90);
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => this.spawnRealFirework(), 700 + i * 900);
             }
 
             if (window.app && window.app.soundMgr) {
@@ -722,7 +724,7 @@ class EffectManager {
             setTimeout(() => {
                 document.body.classList.remove('fx-royal_yamb');
                 if (container.parentNode) container.remove();
-            }, 7000);
+            }, 8000);
         }
     }
 
