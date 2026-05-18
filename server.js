@@ -1802,7 +1802,7 @@ function getActiveOnlineRoomForSocket(socketId) {
             }
 
             if (!state.gameFinished) delete playerRooms[socketId];
-            return null;
+            if (state.gameFinished) return null;
         }
 
         if (privateRooms[directRoom]) {
