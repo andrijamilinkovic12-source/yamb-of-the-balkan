@@ -410,7 +410,7 @@ const TOURNEY_WINNER_REWARD = 20000;
 const TOURNEY_RUNNER_UP_REWARD = 2500;
 const ADMOB_REWARD_KEYS_URL = process.env.ADMOB_REWARD_KEYS_URL || 'https://www.gstatic.com/admob/reward/verifier-keys.json';
 const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
-const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '12000', 10)));
+const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '20000', 10)));
 const ADMOB_SSV_POLL_MS = 750;
 const ADMOB_SSV_MAX_AGE_MS = Math.max(60000, Math.min(15 * 60 * 1000, parseInt(process.env.ADMOB_SSV_MAX_AGE_MS || '600000', 10)));
 const REQUIRE_ADMOB_SSV = process.env.REQUIRE_ADMOB_SSV !== 'false';

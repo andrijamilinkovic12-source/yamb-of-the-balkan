@@ -1711,7 +1711,7 @@ class ShopManager {
                 if (settled) return;
                 settled = true;
                 resolve({ ok: false, reason: 'err_server_conn' });
-            }, 18000);
+            }, 45000);
 
             app.socket.emit('claim_shop_ad_reward', { ssvNonce }, (result) => {
                 if (settled) return;
@@ -1749,22 +1749,31 @@ class ShopManager {
     async watchAdForCoins() {
         const adCtrl = this.getAdController();
         if (adCtrl) {
-             if (!adCtrl.ads.rewarded.isReady) {
+             const rewardOptions = { context: 'shop_ad_reward', amount: 500 };
+             const isRewardReady = typeof adCtrl.isRewardVideoReadyFor === 'function'
+                 ? adCtrl.isRewardVideoReadyFor(rewardOptions)
+                 : adCtrl.ads.rewarded.isReady;
+             if (!isRewardReady) {
                  if (typeof window.showNotification === 'function') {
                      window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.");
                  } else if (window.modalManager && window.modalManager.overlay) {
                      window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna na mreži. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
                  }
-                 adCtrl.prepareReward({ context: 'shop_ad_reward', amount: 500 });
+                 adCtrl.prepareReward(rewardOptions);
                  return;
              }
 
-              const success = await adCtrl.showRewardVideo({ context: 'shop_ad_reward', amount: 500 });
+              const success = await adCtrl.showRewardVideo(rewardOptions);
               if (success) {
                   const ssvNonce = typeof adCtrl.consumeLastRewardSsvNonce === 'function'
                       ? adCtrl.consumeLastRewardSsvNonce()
                       : '';
-                  const rewardResult = await this.claimServerAdReward(ssvNonce);
+                  const rewardResult = typeof adCtrl.claimRewardWithSsvRetry === 'function'
+                      ? await adCtrl.claimRewardWithSsvRetry(
+                          () => this.claimServerAdReward(ssvNonce),
+                          { nonce: ssvNonce, context: 'shop_ad_reward' }
+                      )
+                      : await this.claimServerAdReward(ssvNonce);
                   if (!rewardResult.ok) {
                       const cooldown = Math.ceil((rewardResult.retryAfterMs || 0) / 1000);
                       let message = _safeT('err_server_conn') || "Greška pri konekciji sa serverom.";
@@ -1823,8 +1832,11 @@ class AdMobController {
         this.rewardSsvInfo = null;
         this.activeRewardSsvInfo = null;
         this.lastRewardSsvInfo = null;
+        this.currentRewardOptions = null;
+        this.pendingRewardOptions = null;
+        this.rewardClaimRetryTimeoutMs = 60000;
         
-        this.uiSelectors = ['.btn-ad-double', '.btn-add-coins', '.btn-discount', '.btn-ad-state-aware']; 
+        this.uiSelectors = ['.btn-ad-double', '.daily-glass-btn-double', '.btn-add-coins', '.btn-discount', '.btn-ad-state-aware'];
     }
 
     async initialize() {
@@ -1922,6 +1934,17 @@ class AdMobController {
         this.ads[type].isLoading = false; 
         this.ads[type].retryCount = 0; 
         if (type === 'rewarded') {
+            if (this.pendingRewardOptions && !this.isRewardSsvInfoMatch(this.rewardSsvInfo, this.pendingRewardOptions)) {
+                const pendingOptions = this.pendingRewardOptions;
+                this.pendingRewardOptions = null;
+                this.ads.rewarded.isReady = false;
+                this.rewardSsvInfo = null;
+                this.updateUI(false);
+                this.preloadAd('rewarded', pendingOptions);
+                return;
+            }
+
+            this.pendingRewardOptions = null;
             this.updateUI(this.ads.rewarded.isReady);
         }
     }
@@ -1932,7 +1955,12 @@ class AdMobController {
         if (type === 'rewarded') {
             this.rewardSsvInfo = null;
             this.activeRewardSsvInfo = null;
+            const retryOptions = this.pendingRewardOptions || this.currentRewardOptions || {};
             this.updateUI(this.ads.rewarded.isReady);
+            this.ads[type].retryCount++;
+            const nextDelay = Math.min(this.baseRetryDelay * Math.pow(1.2, this.ads[type].retryCount), this.maxRetryDelay);
+            setTimeout(() => this.preloadAd(type, retryOptions), nextDelay);
+            return;
         }
 
         this.ads[type].retryCount++;
@@ -1942,6 +1970,9 @@ class AdMobController {
 
     handleAdDismissed(type) {
         this.ads[type].isReady = false;
+        const nextRewardOptions = type === 'rewarded'
+            ? (this.pendingRewardOptions || this.currentRewardOptions || {})
+            : {};
         if (type === 'rewarded') {
             this.activeRewardSsvInfo = null;
         }
@@ -1949,7 +1980,7 @@ class AdMobController {
             this.updateUI(this.ads.rewarded.isReady);
         }
         this.ads[type].retryCount = 0; 
-        setTimeout(() => this.preloadAd(type), 500);
+        setTimeout(() => this.preloadAd(type, nextRewardOptions), 500);
     }
 
     createRewardNonce() {
@@ -1969,10 +2000,16 @@ class AdMobController {
         return Math.max(0, parseInt(value) || 0);
     }
 
+    normalizeRewardOptions(options = {}) {
+        return {
+            uid: localStorage.getItem('yamb_uid') || window.app?.playerId || '',
+            context: this.normalizeRewardContext(options.context),
+            amount: this.normalizeRewardAmount(options.amount)
+        };
+    }
+
     createRewardSsvInfo(options = {}) {
-        const uid = localStorage.getItem('yamb_uid') || window.app?.playerId || '';
-        const context = this.normalizeRewardContext(options.context);
-        const amount = this.normalizeRewardAmount(options.amount);
+        const { uid, context, amount } = this.normalizeRewardOptions(options);
         const nonce = this.createRewardNonce();
         const customData = JSON.stringify({
             v: 1,
@@ -1994,21 +2031,106 @@ class AdMobController {
         };
     }
 
-    isRewardSsvReadyForCurrentUser(rewardOptions = {}) {
-        const uid = localStorage.getItem('yamb_uid') || window.app?.playerId || '';
-        const expectedContext = this.normalizeRewardContext(rewardOptions.context);
-        const expectedAmount = this.normalizeRewardAmount(rewardOptions.amount);
+    isRewardSsvInfoMatch(info, rewardOptions = {}) {
+        const expected = this.normalizeRewardOptions(rewardOptions);
         return !!(
-            this.rewardSsvInfo &&
-            this.rewardSsvInfo.uid &&
-            this.rewardSsvInfo.uid === uid &&
-            this.rewardSsvInfo.context === expectedContext &&
-            this.rewardSsvInfo.amount === expectedAmount
+            info &&
+            info.uid &&
+            info.uid === expected.uid &&
+            info.context === expected.context &&
+            info.amount === expected.amount
         );
+    }
+
+    isRewardSsvReadyForCurrentUser(rewardOptions = {}) {
+        return this.isRewardSsvInfoMatch(this.rewardSsvInfo, rewardOptions);
+    }
+
+    isRewardVideoReadyFor(rewardOptions = {}) {
+        return !!(this.ads.rewarded.isReady && this.isRewardSsvReadyForCurrentUser(rewardOptions));
     }
 
     consumeLastRewardSsvNonce() {
         return this.lastRewardSsvInfo?.nonce || '';
+    }
+
+    isRewardClaimRetryable(result = {}, nonce = '') {
+        if (!result || result.ok || result.permanent) return false;
+        const reason = result.reason;
+        if (reason === 'ad_verification_required' && !nonce) return false;
+        return reason === 'ad_verification_pending' ||
+            reason === 'ad_verification_required' ||
+            (!!nonce && !!window.app?.socket?.connected && (
+                reason === 'err_server_conn' ||
+                reason === 'server_error' ||
+                reason === 'game_reward_timeout' ||
+                reason === 'empty_reward_response'
+            ));
+    }
+
+    waitForRewardSsvEvent(nonce = '', context = '', timeoutMs = 2000) {
+        const waitMs = Math.max(300, Math.min(8000, parseInt(timeoutMs) || 2000));
+        const socket = window.app?.socket;
+        const expectedContext = context ? this.normalizeRewardContext(context) : '';
+
+        return new Promise(resolve => {
+            let settled = false;
+            let timer = null;
+
+            const finish = (matched) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                if (socket && typeof socket.off === 'function') {
+                    socket.off('admob_reward_verified', onVerified);
+                }
+                resolve(!!matched);
+            };
+
+            const onVerified = (payload = {}) => {
+                const payloadContext = this.normalizeRewardContext(payload.context);
+                if (payload.nonce === nonce && (!expectedContext || payloadContext === expectedContext)) {
+                    finish(true);
+                }
+            };
+
+            timer = setTimeout(() => finish(false), waitMs);
+            if (socket && nonce && typeof socket.on === 'function') {
+                socket.on('admob_reward_verified', onVerified);
+            }
+        });
+    }
+
+    async claimRewardWithSsvRetry(claimFn, options = {}) {
+        if (typeof claimFn !== 'function') return { ok: false, reason: 'err_server_conn' };
+
+        const nonce = typeof options.nonce === 'string' ? options.nonce : '';
+        const context = options.context || '';
+        const maxWaitMs = Math.max(2000, parseInt(options.maxWaitMs) || this.rewardClaimRetryTimeoutMs);
+        const deadline = Date.now() + maxWaitMs;
+        let result = null;
+
+        const claimOnce = async () => {
+            try {
+                return await claimFn();
+            } catch (err) {
+                console.warn("Reward claim pokušaj nije uspeo:", err);
+                return { ok: false, reason: 'err_server_conn' };
+            }
+        };
+
+        do {
+            result = await claimOnce();
+            if (!this.isRewardClaimRetryable(result, nonce)) return result;
+
+            const remaining = deadline - Date.now();
+            if (remaining <= 0) break;
+
+            const retryAfterMs = Math.max(1000, Math.min(5000, parseInt(result.retryAfterMs) || 2000));
+            await this.waitForRewardSsvEvent(nonce, context, Math.min(retryAfterMs, remaining));
+        } while (Date.now() < deadline);
+
+        return result || { ok: false, reason: 'ad_verification_pending', permanent: false };
     }
 
     async preloadAd(type, rewardOptions = {}) {
@@ -2026,7 +2148,8 @@ class AdMobController {
 
         try {
             if (type === 'rewarded') {
-                this.rewardSsvInfo = this.createRewardSsvInfo(rewardOptions);
+                this.currentRewardOptions = this.normalizeRewardOptions(rewardOptions);
+                this.rewardSsvInfo = this.createRewardSsvInfo(this.currentRewardOptions);
                 await this.adMobPlugin.prepareRewardVideoAd({
                     adId: this.rewardedId,
                     isTesting: false,
@@ -2043,6 +2166,30 @@ class AdMobController {
     }
 
     triggerHighPriorityLoad(type = 'rewarded', rewardOptions = {}) {
+        if (type === 'rewarded') {
+            if (!this.ads.rewarded) return;
+
+            const matchingReady = this.ads.rewarded.isReady && this.isRewardSsvReadyForCurrentUser(rewardOptions);
+            const matchingLoading = this.ads.rewarded.isLoading && this.isRewardSsvInfoMatch(this.rewardSsvInfo, rewardOptions);
+            if (matchingReady || matchingLoading) return;
+
+            if (this.ads.rewarded.isLoading) {
+                this.pendingRewardOptions = this.normalizeRewardOptions(rewardOptions);
+                return;
+            }
+
+            if (this.ads.rewarded.isReady) {
+                this.ads.rewarded.isReady = false;
+                this.rewardSsvInfo = null;
+                this.activeRewardSsvInfo = null;
+                this.updateUI(false);
+            }
+
+            this.ads.rewarded.retryCount = 0;
+            this.preloadAd('rewarded', rewardOptions);
+            return;
+        }
+
         if (!this.ads[type] || (!this.ads[type].isLoading && !this.ads[type].isReady)) {
             if (this.ads[type]) this.ads[type].retryCount = 0; 
             this.preloadAd(type, rewardOptions);
@@ -2208,10 +2355,10 @@ class AdMobController {
             buttons.forEach(btn => {
                 if (ready) {
                     btn.classList.remove('disabled', 'ad-loading'); btn.disabled = false; btn.style.opacity = '1'; btn.style.filter = 'none';
-                    if (btn.dataset.originalText) btn.innerText = btn.dataset.originalText;
+                    if (btn.dataset.originalHtml) btn.innerHTML = btn.dataset.originalHtml;
                 } else {
                     btn.classList.add('disabled', 'ad-loading'); btn.disabled = true; btn.style.opacity = '0.6'; btn.style.filter = 'grayscale(100%)';
-                    if (!btn.dataset.originalText) btn.dataset.originalText = btn.innerText;
+                    if (!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;
                 }
             });
         });
@@ -2230,9 +2377,6 @@ class AdMobController {
                 }
             } else {
                 if (typeof window.showNotification === 'function') window.showNotification(_safeT('info_title') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
-                this.rewardSsvInfo = null;
-                this.activeRewardSsvInfo = null;
-                this.ads.rewarded.isReady = false;
                 this.triggerHighPriorityLoad('rewarded', rewardOptions); resolve(false);
             }
         });

@@ -701,6 +701,13 @@ class DnevniIzazov {
         `;
         
         card.appendChild(resDiv);
+
+        if (window.adMobGlobal && typeof window.adMobGlobal.prepareReward === 'function') {
+            window.adMobGlobal.prepareReward({
+                context: 'daily_double',
+                amount: this.calculatedReward * 2
+            });
+        }
     }
 
     async watchAdToDouble() {
@@ -772,11 +779,12 @@ class DnevniIzazov {
 
         return new Promise(resolve => {
             let settled = false;
+            const claimTimeoutMs = doubled ? 45000 : 18000;
             const timer = setTimeout(() => {
                 if (settled) return;
                 settled = true;
                 resolve({ ok: false, reason: 'err_server_conn' });
-            }, 18000);
+            }, claimTimeoutMs);
 
             socket.emit('claim_daily_reward', { amount, doubled: !!doubled, ssvNonce }, (result) => {
                 if (settled) return;
@@ -813,7 +821,12 @@ class DnevniIzazov {
         const uid = localStorage.getItem('yamb_uid') || this.app.playerId;
         const today = new Date().toDateString();
         
-        const rewardResult = await this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce);
+        const rewardResult = doubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
+            ? await window.adMobGlobal.claimRewardWithSsvRetry(
+                () => this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce),
+                { nonce: ssvNonce, context: 'daily_double' }
+            )
+            : await this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce);
         if (!rewardResult.ok) {
             if (rewardResult.reason === 'daily_already_claimed') {
                 const serverBalance = Math.max(0, parseInt(rewardResult.balance) || parseInt(localStorage.getItem('yamb_dukati')) || 0);

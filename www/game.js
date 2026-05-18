@@ -4257,7 +4257,8 @@ class YambApp {
                 clearTimeout(timer);
                 resolve(result || { ok: false, reason: 'empty_reward_response', permanent: false });
             };
-            const timer = setTimeout(() => finish({ ok: false, reason: 'game_reward_timeout', permanent: false }), 18000);
+            const claimTimeoutMs = doubled ? 45000 : 18000;
+            const timer = setTimeout(() => finish({ ok: false, reason: 'game_reward_timeout', permanent: false }), claimTimeoutMs);
 
             this.socket.emit('claim_game_reward', {
                 score: Math.max(0, parseInt(score) || 0),
@@ -4317,7 +4318,13 @@ class YambApp {
             }
         };
         const claimNormalGameReward = async (baseScore, wasDoubled) => {
-            const result = await this.claimServerGameReward(baseScore, wasDoubled, wasDoubled ? (this.pendingRewardSsvNonce || '') : '');
+            const ssvNonce = wasDoubled ? (this.pendingRewardSsvNonce || '') : '';
+            const result = wasDoubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
+                ? await window.adMobGlobal.claimRewardWithSsvRetry(
+                    () => this.claimServerGameReward(baseScore, wasDoubled, ssvNonce),
+                    { nonce: ssvNonce, context: 'game_double' }
+                )
+                : await this.claimServerGameReward(baseScore, wasDoubled, ssvNonce);
             if (result && result.ok && typeof result.balance === 'number') {
                 applyServerBalance(result.balance);
                 this.pendingRewardSsvNonce = '';
