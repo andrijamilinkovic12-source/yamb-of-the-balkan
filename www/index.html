@@ -799,17 +799,20 @@
     </div>
 
     <div id="riznica-screen" class="screen">
-        <div class="header riznica-header">
-            <button class="btn-add-coins" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg> 🎬</button>
-            <div class="balance-display"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
-            <button class="back-btn riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
+        <div class="chat-header global-chat-header riznica-header">
+            <div class="global-chat-title-group riznica-title-group">
+                <img class="riznica-header-logo" src="assets/treasury-icon.svg" alt="Riznica" decoding="async">
+            </div>
+            <button type="button" class="global-chat-close riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
         </div>
 
         <div class="nav-tabs riznica-tabs" aria-label="Kategorije riznice">
+            <div class="balance-display riznica-balance-pill"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
             <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" aria-label="Trofeji" data-lang-aria="tab_trophies" title="Trofeji" data-lang-title="tab_trophies">🏆</button>
             <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" aria-label="Kockice" data-lang-aria="tab_dice" title="Kockice" data-lang-title="tab_dice">🎲</button>
             <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" aria-label="Efekti" data-lang-aria="tab_effects" title="Efekti" data-lang-title="tab_effects">✨</button>
             <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" aria-label="Teme" data-lang-aria="tab_themes" title="Teme" data-lang-title="tab_themes">🎨</button>
+            <button type="button" class="btn-add-coins riznica-ad-btn" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg> 🎬</button>
         </div>
 
         <div id="riznica-shop-container" class="content-area"></div>

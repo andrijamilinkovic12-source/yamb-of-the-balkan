@@ -88,63 +88,75 @@ body {
 
 #riznica-screen .riznica-close-btn {
     position: static;
-    width: 42px;
-    height: 42px;
-    flex: 0 0 42px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.16);
-    color: var(--text-main);
-    font-size: 1.7rem;
-    line-height: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.18), inset 0 1px 1px rgba(255,255,255,0.12);
 }
 
 #riznica-screen .riznica-header {
     position: relative;
+    width: min(500px, calc(100% - 20px));
     justify-content: space-between;
-    min-height: 64px;
-    padding: max(12px, calc(var(--safe-top) + 10px)) max(12px, var(--safe-right)) 8px max(12px, var(--safe-left));
-    border-bottom: none;
-    background: transparent;
-    backdrop-filter: none;
-    gap: 10px;
+    min-height: 58px;
+    margin: max(10px, var(--safe-top)) auto 12px auto;
+    padding: 8px 12px;
+    border: var(--glass-border);
+    border-radius: 20px;
+    background: rgba(0,0,0,0.42);
+    box-shadow: var(--glass-shadow);
+    gap: 12px;
+}
+
+#riznica-screen .riznica-title-group {
+    flex: 1 1 auto;
+}
+
+#riznica-screen .riznica-header-logo {
+    width: 46px;
+    height: 46px;
+    display: block;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.48)) drop-shadow(0 0 12px var(--gold-glow));
 }
 
 #riznica-screen .balance-display {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    min-height: 36px;
-    padding: 7px 12px;
+    min-height: 40px;
+    min-width: 82px;
+    max-width: 112px;
+    padding: 7px 10px;
+    margin: 0;
     white-space: nowrap;
-    max-width: calc(100vw - 180px - var(--safe-left) - var(--safe-right));
     justify-content: center;
+    overflow: hidden;
+}
+
+#riznica-screen #riznica-balance {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 #riznica-screen .btn-add-coins {
-    min-height: 36px;
+    min-height: 40px;
+    min-width: 96px;
     flex: 0 0 auto;
     margin-left: 0;
+    padding: 7px 10px;
     white-space: nowrap;
+    justify-content: center;
 }
 
 #riznica-screen .riznica-tabs {
     flex-wrap: nowrap;
     justify-content: center;
-    gap: 10px;
-    margin: 4px 0 8px;
-    padding: 0 max(10px, var(--safe-right)) 0 max(10px, var(--safe-left));
-    max-width: 1200px;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    padding: 0;
+    width: min(560px, calc(100% - 20px));
+    max-width: 560px;
 }
 
 #riznica-screen .tab-btn {
-    width: 46px;
-    height: 46px;
-    min-width: 46px;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
     padding: 0;
     border-radius: 50%;
     font-size: 1.35rem;
@@ -949,24 +961,48 @@ body {
 @media (max-width: 380px) {
     #riznica-screen .riznica-header {
         gap: 6px;
+        width: calc(100% - 16px);
+        margin-bottom: 10px;
+        padding: 7px 10px;
+    }
+
+    #riznica-screen .riznica-header-logo {
+        width: 42px;
+        height: 42px;
+    }
+
+    #riznica-screen .riznica-tabs {
+        width: calc(100% - 8px);
+        gap: 4px;
     }
 
     #riznica-screen .balance-display,
     #riznica-screen .btn-add-coins {
-        font-size: 0.72rem;
-        padding-left: 9px;
-        padding-right: 9px;
+        min-height: 38px;
+        font-size: 0.68rem;
+        padding-left: 7px;
+        padding-right: 7px;
     }
 
     #riznica-screen .balance-display {
-        max-width: calc(100vw - 164px - var(--safe-left) - var(--safe-right));
+        min-width: 62px;
+        max-width: 76px;
+    }
+
+    #riznica-screen .btn-add-coins {
+        min-width: 82px;
+        gap: 3px;
     }
 
     #riznica-screen .tab-btn {
-        width: 42px;
-        height: 42px;
-        min-width: 42px;
+        width: 38px;
+        height: 38px;
+        min-width: 38px;
         font-size: 1.22rem;
+    }
+
+    #riznica-screen .content-area {
+        padding-top: 4px;
     }
 
     .league-intro-mark-wrap {
@@ -1014,6 +1050,29 @@ body {
     .tournament-intro-title {
         min-height: 54px;
         font-size: 2rem;
+    }
+}
+
+@media (max-width: 340px) {
+    #riznica-screen .riznica-tabs {
+        gap: 3px;
+    }
+
+    #riznica-screen .balance-display {
+        min-width: 58px;
+        max-width: 68px;
+    }
+
+    #riznica-screen .btn-add-coins {
+        min-width: 78px;
+        font-size: 0.64rem;
+    }
+
+    #riznica-screen .tab-btn {
+        width: 36px;
+        height: 36px;
+        min-width: 36px;
+        font-size: 1.12rem;
     }
 }
 
