@@ -1834,6 +1834,8 @@ class AdMobController {
         this.lastRewardSsvInfo = null;
         this.currentRewardOptions = null;
         this.pendingRewardOptions = null;
+        this.activeRewardEarned = false;
+        this.rewardDismissTimer = null;
         this.rewardClaimRetryTimeoutMs = 60000;
         
         this.uiSelectors = ['.btn-ad-double', '.daily-glass-btn-double', '.btn-add-coins', '.btn-discount', '.btn-ad-state-aware'];
@@ -1890,7 +1892,6 @@ class AdMobController {
             await this.adMobPlugin.addListener('rewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
             await this.adMobPlugin.addListener('rewardedVideoAdReward', () => this.handleRewardEarned());
             await this.adMobPlugin.addListener('rewardedVideoAdDismissed', () => {
-                if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
                 this.handleAdDismissed('rewarded');
             });
 
@@ -1906,7 +1907,6 @@ class AdMobController {
             await this.adMobPlugin.addListener('onRewardedVideoAdFailedToLoad', (err) => this.handleAdFailed('rewarded', err));
             await this.adMobPlugin.addListener('onRewardedVideoAdReward', () => this.handleRewardEarned());
             await this.adMobPlugin.addListener('onRewardedVideoAdDismissed', () => {
-                if (this.rewardResolve) { this.rewardResolve(false); this.rewardResolve = null; }
                 this.handleAdDismissed('rewarded');
             });
 
@@ -1922,11 +1922,28 @@ class AdMobController {
     }
 
     handleRewardEarned() {
+        this.activeRewardEarned = true;
         this.lastRewardSsvInfo = this.activeRewardSsvInfo || this.rewardSsvInfo || null;
-        if (this.rewardResolve) {
-            this.rewardResolve(true);
-            this.rewardResolve = null;
+        this.settleRewardVideo(true);
+    }
+
+    settleRewardVideo(success) {
+        if (this.rewardDismissTimer) {
+            clearTimeout(this.rewardDismissTimer);
+            this.rewardDismissTimer = null;
         }
+
+        const resolve = this.rewardResolve;
+        this.rewardResolve = null;
+
+        if (success) {
+            this.lastRewardSsvInfo = this.activeRewardSsvInfo || this.rewardSsvInfo || this.lastRewardSsvInfo || null;
+        }
+
+        this.activeRewardSsvInfo = null;
+        this.activeRewardEarned = false;
+
+        if (resolve) resolve(!!success);
     }
 
     handleAdLoaded(type) {
@@ -1955,6 +1972,11 @@ class AdMobController {
         if (type === 'rewarded') {
             this.rewardSsvInfo = null;
             this.activeRewardSsvInfo = null;
+            this.activeRewardEarned = false;
+            if (this.rewardDismissTimer) {
+                clearTimeout(this.rewardDismissTimer);
+                this.rewardDismissTimer = null;
+            }
             const retryOptions = this.pendingRewardOptions || this.currentRewardOptions || {};
             this.updateUI(this.ads.rewarded.isReady);
             this.ads[type].retryCount++;
@@ -1974,7 +1996,16 @@ class AdMobController {
             ? (this.pendingRewardOptions || this.currentRewardOptions || {})
             : {};
         if (type === 'rewarded') {
-            this.activeRewardSsvInfo = null;
+            if (this.rewardResolve) {
+                if (this.activeRewardEarned) {
+                    this.settleRewardVideo(true);
+                } else if (!this.rewardDismissTimer) {
+                    this.rewardDismissTimer = setTimeout(() => this.settleRewardVideo(false), 5000);
+                }
+            } else {
+                this.activeRewardSsvInfo = null;
+                this.activeRewardEarned = false;
+            }
         }
         if (type === 'rewarded') {
             this.updateUI(this.ads.rewarded.isReady);
@@ -2371,9 +2402,10 @@ class AdMobController {
                 try {
                     this.rewardResolve = resolve;
                     this.activeRewardSsvInfo = this.rewardSsvInfo;
+                    this.activeRewardEarned = false;
                     await this.adMobPlugin.showRewardVideoAd();
                 } catch (e) {
-                    this.rewardResolve = null; this.activeRewardSsvInfo = null; this.handleAdFailed('rewarded', e); resolve(false);
+                    this.settleRewardVideo(false); this.handleAdFailed('rewarded', e);
                 }
             } else {
                 if (typeof window.showNotification === 'function') window.showNotification(_safeT('info_title') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
