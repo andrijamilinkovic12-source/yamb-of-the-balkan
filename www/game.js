@@ -179,7 +179,9 @@ class YambApp {
         }
         
         const savedTheme = localStorage.getItem('yamb_theme') || 'dark';
-        this.applyTheme(savedTheme);
+        const startupTheme = this.isThemeUnlocked(savedTheme) ? savedTheme : 'dark';
+        if (startupTheme !== savedTheme) localStorage.setItem('yamb_theme', startupTheme);
+        this.applyTheme(startupTheme);
         
         this.initSocketConnection();
 
@@ -347,22 +349,7 @@ class YambApp {
     }
 
     toggleTheme() {
-        // 1. Prikupi sve otključane teme (osnovne + kupljene + cloud)
-        let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
-        try {
-            const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
-            const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
-            let cloudSkins = [];
-            if(window.statsManager && window.statsManager.stats.unlockedSkins) {
-                cloudSkins = window.statsManager.stats.unlockedSkins;
-            }
-            unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
-        } catch(e) {}
-
-        // Filtriraj samo validne teme i ukloni duplikate
-        const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
-        unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
-        unlockedThemes = [...new Set(unlockedThemes)];
+        const unlockedThemes = this.getUnlockedThemeIds();
 
         // 2. Pronađi trenutnu temu i odredi sledeću
         const currentTheme = localStorage.getItem('yamb_theme') || 'dark';
@@ -780,6 +767,57 @@ class YambApp {
         }
     }
 
+    getValidThemeIds() {
+        return ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+    }
+
+    getFreeThemeIds() {
+        return ['dark', 'light', 'medium', 'winter'];
+    }
+
+    getUnlockedThemeIds(extraSources = []) {
+        const validThemeIds = this.getValidThemeIds();
+        const themeSources = [
+            this.getFreeThemeIds(),
+            this.readLocalJson('yamb_unlocked_themes', []),
+            this.readLocalJson('yamb_unlocked', []),
+            ...extraSources
+        ];
+
+        if (window.statsManager && window.statsManager.stats) {
+            themeSources.push(window.statsManager.stats.unlockedThemes || []);
+            // Legacy fallback: older builds could leak bought themes into unlockedSkins.
+            themeSources.push(window.statsManager.stats.unlockedSkins || []);
+        }
+
+        return [...new Set(themeSources.flat())]
+            .filter(theme => validThemeIds.includes(theme));
+    }
+
+    isThemeUnlocked(themeId, extraSources = []) {
+        return this.getUnlockedThemeIds(extraSources).includes(themeId);
+    }
+
+    syncThemeSelectOptions(themeSelect) {
+        if (!themeSelect) return;
+
+        const unlockedThemes = this.getUnlockedThemeIds();
+        Array.from(themeSelect.options).forEach(opt => {
+            if (unlockedThemes.includes(opt.value)) {
+                opt.disabled = false;
+                opt.text = opt.text.replace(' 🔒', '');
+            } else {
+                opt.disabled = true;
+                if (!opt.text.includes('🔒')) opt.text += ' 🔒';
+            }
+        });
+
+        const selectedTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const safeSelectedTheme = unlockedThemes.includes(selectedTheme) ? selectedTheme : 'dark';
+        if (safeSelectedTheme !== selectedTheme) localStorage.setItem('yamb_theme', safeSelectedTheme);
+        themeSelect.value = safeSelectedTheme;
+    }
+
     mergeCloudLeagueData(uid, leagueData) {
         if (!uid || !leagueData) return;
 
@@ -964,7 +1002,7 @@ class YambApp {
         if (Array.isArray(data.unlockedSkins)) localStorage.setItem('yamb_unlocked_skins', JSON.stringify(data.unlockedSkins));
         if (Array.isArray(data.unlockedEffects)) localStorage.setItem('yamb_unlocked_effects', JSON.stringify(data.unlockedEffects));
 
-        const validThemeIds = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon'];
+        const validThemeIds = this.getValidThemeIds();
         const localThemes = this.readLocalJson('yamb_unlocked_themes', []);
         const cloudThemes = Array.isArray(data.unlockedThemes) ? data.unlockedThemes : [];
         const skinThemeLeak = (Array.isArray(data.unlockedSkins) ? data.unlockedSkins : []).filter(theme => validThemeIds.includes(theme));
@@ -1753,7 +1791,7 @@ class YambApp {
             if (this.splashTimeout) { clearTimeout(this.splashTimeout); this.splashTimeout = null; }
             this.navigateTo('splash-screen'); 
             setTimeout(() => { this.joinPrivateGame(this.playerName, roomId); }, 500); 
-        } 
+        }
     }
 
     clampLocalGameElapsed(value) {
@@ -2043,32 +2081,7 @@ class YambApp {
         
         const themeSelect = document.getElementById('setting-theme');
         if (themeSelect) {
-            let unlockedThemes = ['dark', 'light', 'medium', 'winter'];
-            try {
-                const boughtThemes = JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]');
-                const generalThemes = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
-                let cloudSkins = [];
-                if(window.statsManager && window.statsManager.stats.unlockedSkins) {
-                    cloudSkins = window.statsManager.stats.unlockedSkins;
-                }
-                unlockedThemes = [...unlockedThemes, ...boughtThemes, ...generalThemes, ...cloudSkins];
-            } catch(e) {}
-
-            const sveValidneTeme = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
-            unlockedThemes = unlockedThemes.filter(t => sveValidneTeme.includes(t));
-            unlockedThemes = [...new Set(unlockedThemes)];
-
-            Array.from(themeSelect.options).forEach(opt => {
-                if (unlockedThemes.includes(opt.value)) {
-                    opt.disabled = false;
-                    opt.text = opt.text.replace(' 🔒', ''); 
-                } else {
-                    opt.disabled = true;
-                    if (!opt.text.includes('🔒')) opt.text += ' 🔒'; 
-                }
-            });
-
-            themeSelect.value = localStorage.getItem('yamb_theme') || 'dark'; 
+            this.syncThemeSelectOptions(themeSelect);
         }
     }
     
@@ -2098,11 +2111,14 @@ class YambApp {
         else if (type === 'vibration') {
             this.vibrationEnabled = value;
             localStorage.setItem('yamb_vibration', value);
-            if (value) this.vibrate(50); 
-        } 
+            if (value) this.vibrate(50);
+        }
         else if (type === 'theme') {
-            localStorage.setItem('yamb_theme', value);
-            this.applyTheme(value);
+            const nextTheme = this.isThemeUnlocked(value) ? value : 'dark';
+            localStorage.setItem('yamb_theme', nextTheme);
+            this.applyTheme(nextTheme);
+            const themeSelect = document.getElementById('setting-theme');
+            if (themeSelect) themeSelect.value = nextTheme;
         }
 
         if (this.socket && this.socket.connected) {

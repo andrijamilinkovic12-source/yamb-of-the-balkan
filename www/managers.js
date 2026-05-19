@@ -10,6 +10,11 @@ const resolveText = (data) => {
     }
     return data; 
 };
+const YAMB_THEME_IDS = ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+const YAMB_FREE_THEME_IDS = ['dark', 'light', 'medium', 'winter'];
+const filterYambThemeIds = (items = []) => Array.isArray(items)
+    ? items.filter(item => YAMB_THEME_IDS.includes(item))
+    : [];
 
 // --- 1. STATE MANAGER ---
 class StateManager {
@@ -1594,14 +1599,29 @@ class ShopManager {
         
         let savedUnlocked = JSON.parse(localStorage.getItem(this.unlockKey)) || [];
         let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
-        let cloudSkins = (window.statsManager && window.statsManager.stats.unlockedSkins) ? window.statsManager.stats.unlockedSkins : [];
-        savedUnlocked = [...new Set([...savedUnlocked, ...opstiNiz, ...cloudSkins])];
+        const statsInventory = (window.statsManager && window.statsManager.stats) ? window.statsManager.stats : {};
         
         if (this.type === 'theme') {
-            ['dark', 'light', 'medium', 'winter'].forEach(item => {
+            const cloudThemes = [
+                ...(Array.isArray(statsInventory.unlockedThemes) ? statsInventory.unlockedThemes : []),
+                ...filterYambThemeIds(statsInventory.unlockedSkins)
+            ];
+            savedUnlocked = [...new Set([
+                ...filterYambThemeIds(savedUnlocked),
+                ...filterYambThemeIds(opstiNiz),
+                ...filterYambThemeIds(cloudThemes)
+            ])];
+            YAMB_FREE_THEME_IDS.forEach(item => {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
         } else {
+            let typedCloudUnlocks = [];
+            if (this.type === 'skin' && Array.isArray(statsInventory.unlockedSkins)) {
+                typedCloudUnlocks = statsInventory.unlockedSkins.filter(item => !YAMB_THEME_IDS.includes(item));
+            } else if (this.type === 'effect' && Array.isArray(statsInventory.unlockedEffects)) {
+                typedCloudUnlocks = statsInventory.unlockedEffects;
+            }
+            savedUnlocked = [...new Set([...savedUnlocked, ...opstiNiz, ...typedCloudUnlocks])];
             ['default', 'confetti', 'dark', 'light', 'medium', 'winter'].forEach(item => {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
@@ -1825,9 +1845,34 @@ class ShopManager {
 
         if (window.statsManager) {
             window.statsManager.stats.balance = this.balance;
-            if (!window.statsManager.stats.unlockedSkins) window.statsManager.stats.unlockedSkins = [];
-            if (!window.statsManager.stats.unlockedSkins.includes(id)) {
-                window.statsManager.stats.unlockedSkins.push(id);
+            const statsFieldByType = {
+                skin: 'unlockedSkins',
+                effect: 'unlockedEffects',
+                theme: 'unlockedThemes'
+            };
+            const storageKeyByType = {
+                skin: 'yamb_unlocked_skins',
+                effect: 'yamb_unlocked_effects',
+                theme: 'yamb_unlocked_themes'
+            };
+            const statsField = statsFieldByType[this.type];
+            const storageKey = storageKeyByType[this.type];
+
+            if (statsField) {
+                if (!Array.isArray(window.statsManager.stats[statsField])) {
+                    window.statsManager.stats[statsField] = [];
+                }
+                if (!window.statsManager.stats[statsField].includes(id)) {
+                    window.statsManager.stats[statsField].push(id);
+                }
+            }
+
+            if (storageKey) {
+                const typedUnlocked = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                if (!typedUnlocked.includes(id)) {
+                    typedUnlocked.push(id);
+                    localStorage.setItem(storageKey, JSON.stringify(typedUnlocked));
+                }
             }
             window.statsManager.saveStats();
         }
