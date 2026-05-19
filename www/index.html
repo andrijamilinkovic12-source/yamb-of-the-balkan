@@ -6,7 +6,7 @@
     <title>Yamb of the Balkan - Divine Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=4.7">
+    <link rel="stylesheet" href="style.css?v=4.8">
     <link rel="stylesheet" href="teme.css?v=1.4">
     <link rel="stylesheet" href="kockice.css?v=1.0">
     <link rel="stylesheet" href="efekti.css?v=1.2">
@@ -223,11 +223,9 @@
         <div class="economy-shell">
             <div class="economy-card-header">
                 <div class="global-chat-title-group">
+                    <svg id="economy-header-ducats-icon" class="economy-header-icon" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
+                    <svg id="economy-header-undo-icon" class="economy-header-icon hidden" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg>
                     <span id="economy-menu-title" class="global-chat-title" data-lang="menu_ducats">DUKATI</span>
-                    <span class="economy-balance-pill">
-                        <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
-                        <span id="economy-dukati-count">0</span>
-                    </span>
                 </div>
                 <button type="button" class="global-chat-close" onclick="app.closeUndoMenu()" aria-label="Zatvori">×</button>
             </div>
@@ -1302,7 +1300,7 @@
     <script src="powerIndexCore.js?v=1.0"></script>
     <script src="turnir.js?v=999"></script> 
     <script src="pravilaigre.js?v=1.0"></script> 
-    <script src="vracanjeupisa.js?v=1.2"></script>
+    <script src="vracanjeupisa.js?v=1.3"></script>
     <script src="globalchat.js?v=1.0"></script>
     <script src="auth.js?v=1002"></script>
     <script src="game.js?v=4.5"></script>

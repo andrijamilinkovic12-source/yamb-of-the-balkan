@@ -25,7 +25,7 @@ class UndoManager {
     updateMenuCounts() {
         const dukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
         const tokens = parseInt(localStorage.getItem('yamb_undo_tokens')) || 0;
-        ['economy-dukati-count', 'economy-dukati-count-large', 'menu-dukati-count'].forEach(id => {
+        ['economy-dukati-count-large', 'menu-dukati-count'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.innerText = dukati;
         });
@@ -67,10 +67,10 @@ class UndoManager {
             titleEl.innerText = (typeof t === 'function') ? t(key) : (normalizedIndex === 0 ? 'DUKATI' : 'ISPRAVI ZADNJI UPIS');
         }
 
-        const balancePill = document.querySelector('#undo-menu-overlay .economy-balance-pill');
-        if (balancePill) {
-            balancePill.hidden = normalizedIndex === 1;
-        }
+        const ducatsIcon = document.getElementById('economy-header-ducats-icon');
+        const undoIcon = document.getElementById('economy-header-undo-icon');
+        if (ducatsIcon) ducatsIcon.classList.toggle('hidden', normalizedIndex === 1);
+        if (undoIcon) undoIcon.classList.toggle('hidden', normalizedIndex === 0);
 
         if (normalizedIndex !== this.currentMenuPage) {
             this.currentMenuPage = normalizedIndex;
