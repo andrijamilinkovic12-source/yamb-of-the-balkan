@@ -1938,11 +1938,31 @@ body {
     backdrop-filter: blur(22px);
     -webkit-backdrop-filter: blur(22px);
 }
+#league-modal-overlay .league-modal-title-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+#league-modal-overlay .league-modal-header-icon {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 9px rgba(255,214,111,0.28));
+    pointer-events: none;
+}
 #league-modal-overlay .modal-box > div:first-child h2 {
     color: var(--gold-main) !important;
     font-size: 1rem !important;
     letter-spacing: 0 !important;
     line-height: 1.1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 #league-modal-overlay .modal-box > div:first-child span {
     width: 38px;
