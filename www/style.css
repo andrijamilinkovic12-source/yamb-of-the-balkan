@@ -108,6 +108,11 @@ body {
     flex: 1 1 auto;
 }
 
+#riznica-screen .riznica-header-title {
+    color: var(--gold-main);
+    font-size: 1rem;
+}
+
 #riznica-screen .riznica-header-logo {
     width: 46px;
     height: 46px;
@@ -969,6 +974,10 @@ body {
     #riznica-screen .riznica-header-logo {
         width: 42px;
         height: 42px;
+    }
+
+    #riznica-screen .riznica-header-title {
+        font-size: 0.92rem;
     }
 
     #riznica-screen .riznica-tabs {

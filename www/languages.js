@@ -82,6 +82,7 @@ const TRANSLATIONS = {
         "league_pts_lost": "-{0} poena u Ligi<br>-{0} {DUKAT_ICON} Dukata",
 
         // --- PRODAVNICA I RIZNICA ---
+        "treasury_title": "RIZNICA",
         "tab_trophies": "TROFEJI 🏆",
         "tab_dice": "KOCKICE 🎲",
         "tab_effects": "EFEKTI ✨",
@@ -723,6 +724,7 @@ const TRANSLATIONS = {
         "league_pts_lost": "-{0} League points<br>-{0} {DUKAT_ICON} Ducats",
 
         // --- SHOP & TREASURY ---
+        "treasury_title": "TREASURY",
         "tab_trophies": "TROPHIES 🏆",
         "tab_dice": "DICE 🎲",
         "tab_effects": "EFFECTS ✨",
