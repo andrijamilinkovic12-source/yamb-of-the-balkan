@@ -702,16 +702,15 @@ class EffectManager {
                 <div class="royal-yamb-spotlight spotlight-center"></div>
                 <div class="royal-yamb-rays"></div>
                 <div class="royal-yamb-stage-glow"></div>
+                <canvas class="royal-yamb-canvas"></canvas>
                 <div class="royal-yamb-crown-active">&#128081;</div>
                 <div class="royal-yamb-title-active">YAMB</div>
                 <div class="royal-yamb-sparkles"></div>
             `;
             document.body.appendChild(container);
 
-            this.spawnEmojiRain(['dukat-icon', 'dukat-icon', '✨', '💎', '👑'], 90);
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => this.spawnRealFirework(), 700 + i * 900);
-            }
+            this.runRoyalYambCanvas(container.querySelector('.royal-yamb-canvas'), 8000);
+            this.playRoyalYambAccents();
 
             if (window.app && window.app.soundMgr) {
                 window.app.soundMgr.trophy();
@@ -726,6 +725,263 @@ class EffectManager {
                 if (container.parentNode) container.remove();
             }, 8000);
         }
+    }
+
+    playRoyalYambAccents() {
+        const sound = window.app && window.app.soundMgr;
+        if (!sound) return;
+
+        [760, 1840, 3120, 4680].forEach(delay => {
+            setTimeout(() => {
+                if (typeof sound.fireworkLaunch === 'function') sound.fireworkLaunch();
+                setTimeout(() => {
+                    if (typeof sound.fireworkExplode === 'function') sound.fireworkExplode();
+                }, 240);
+            }, delay);
+        });
+    }
+
+    runRoyalYambCanvas(canvas, duration = 8000) {
+        if (!canvas || !canvas.getContext) return;
+
+        const ctx = canvas.getContext('2d', { alpha: true });
+        if (!ctx) return;
+
+        const start = performance.now();
+        let rafId = 0;
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+
+        const clamp01 = value => Math.max(0, Math.min(1, value));
+        const random = (min, max) => min + Math.random() * (max - min);
+        const easeOutCubic = value => 1 - Math.pow(1 - clamp01(value), 3);
+        const easeInOut = value => {
+            value = clamp01(value);
+            return value < 0.5 ? 4 * value * value * value : 1 - Math.pow(-2 * value + 2, 3) / 2;
+        };
+
+        const resizeCanvas = () => {
+            width = window.innerWidth || document.documentElement.clientWidth || 1;
+            height = window.innerHeight || document.documentElement.clientHeight || 1;
+            const compact = width < 560 || height < 620;
+            dpr = Math.min(window.devicePixelRatio || 1, compact ? 1.15 : 1.45);
+            canvas.width = Math.floor(width * dpr);
+            canvas.height = Math.floor(height * dpr);
+            canvas.style.width = '100vw';
+            canvas.style.height = '100vh';
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas, { passive: true });
+
+        const compact = width < 560 || height < 620;
+        const golds = ['#fff7c2', '#ffd66f', '#f6b63d', '#d98b18'];
+        const burstColors = ['#fff7c2', '#ffd66f', '#ffffff', '#ffb13d', '#7fffe1'];
+        const coinCount = compact ? 34 : 52;
+        const sparkleCount = compact ? 46 : 72;
+        const burstParticleCount = compact ? 24 : 36;
+
+        const falling = Array.from({ length: coinCount }, (_, index) => {
+            const size = random(compact ? 7 : 8, compact ? 14 : 18);
+            return {
+                kind: index % 7 === 0 ? 'diamond' : 'coin',
+                x: random(width * 0.04, width * 0.96),
+                y: random(-height * 0.45, -size * 2),
+                drift: random(-80, 80),
+                size,
+                delay: random(120, 3400),
+                life: random(2800, 4300),
+                spin: random(-5.2, 5.2),
+                wobble: random(0.8, 2.4),
+                color: golds[index % golds.length]
+            };
+        });
+
+        const sparkles = Array.from({ length: sparkleCount }, (_, index) => ({
+            x: random(width * 0.08, width * 0.92),
+            y: random(height * 0.12, height * 0.86),
+            size: random(1.3, compact ? 3.1 : 4.1),
+            delay: random(0, 2400),
+            life: random(2100, 5200),
+            drift: random(-18, 18),
+            phase: random(0, Math.PI * 2),
+            color: index % 4 === 0 ? '#ffffff' : '#ffe79a'
+        }));
+
+        const burstTimes = [760, 1840, 3120, 4680, 5900];
+        const bursts = [];
+        burstTimes.forEach((time, burstIndex) => {
+            const originX = width * (0.22 + (burstIndex % 3) * 0.28) + random(-width * 0.05, width * 0.05);
+            const originY = height * random(0.2, 0.42);
+            for (let i = 0; i < burstParticleCount; i++) {
+                const angle = (Math.PI * 2 * i) / burstParticleCount + random(-0.08, 0.08);
+                bursts.push({
+                    start: time + random(-80, 130),
+                    life: random(1150, 1650),
+                    x: originX,
+                    y: originY,
+                    angle,
+                    speed: random(compact ? 68 : 92, compact ? 150 : 210),
+                    size: random(1.4, compact ? 3.1 : 3.8),
+                    color: burstColors[(i + burstIndex) % burstColors.length],
+                    gravity: random(54, 104)
+                });
+            }
+        });
+
+        const drawStar = (x, y, radius, color, alpha, rotation = 0) => {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+            ctx.strokeStyle = color;
+            ctx.lineWidth = Math.max(1, radius * 0.42);
+            ctx.shadowBlur = radius * 3.5;
+            ctx.shadowColor = color;
+            ctx.beginPath();
+            ctx.moveTo(-radius, 0);
+            ctx.lineTo(radius, 0);
+            ctx.moveTo(0, -radius);
+            ctx.lineTo(0, radius);
+            ctx.stroke();
+            ctx.restore();
+        };
+
+        const drawCoin = (x, y, radius, rotation, alpha, color) => {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+            ctx.scale(1, 0.74);
+            const gradient = ctx.createRadialGradient(-radius * 0.28, -radius * 0.32, radius * 0.12, 0, 0, radius);
+            gradient.addColorStop(0, '#fffbe0');
+            gradient.addColorStop(0.35, color);
+            gradient.addColorStop(0.72, '#d88614');
+            gradient.addColorStop(1, '#6e3504');
+            ctx.fillStyle = gradient;
+            ctx.shadowBlur = radius * 1.4;
+            ctx.shadowColor = 'rgba(255, 216, 111, 0.55)';
+            ctx.beginPath();
+            ctx.arc(0, 0, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(92, 44, 4, 0.55)';
+            ctx.lineWidth = Math.max(1, radius * 0.14);
+            ctx.stroke();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.42)';
+            ctx.lineWidth = Math.max(1, radius * 0.08);
+            ctx.beginPath();
+            ctx.arc(0, 0, radius * 0.58, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        };
+
+        const drawDiamond = (x, y, radius, rotation, alpha) => {
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.translate(x, y);
+            ctx.rotate(rotation);
+            ctx.shadowBlur = radius * 2.2;
+            ctx.shadowColor = 'rgba(132, 255, 232, 0.7)';
+            const gradient = ctx.createLinearGradient(0, -radius, 0, radius);
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(0.45, '#8dfff2');
+            gradient.addColorStop(1, '#168b94');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(0, -radius);
+            ctx.lineTo(radius * 0.86, 0);
+            ctx.lineTo(0, radius);
+            ctx.lineTo(-radius * 0.86, 0);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        };
+
+        const draw = now => {
+            if (!canvas.isConnected) {
+                window.removeEventListener('resize', resizeCanvas);
+                return;
+            }
+
+            const elapsed = now - start;
+            ctx.clearRect(0, 0, width, height);
+
+            const stagePulse = Math.sin(elapsed / 520);
+            const glow = ctx.createRadialGradient(width * 0.5, height * 0.43, 0, width * 0.5, height * 0.43, Math.min(width, height) * 0.42);
+            glow.addColorStop(0, `rgba(255, 255, 255, ${0.11 + stagePulse * 0.025})`);
+            glow.addColorStop(0.22, 'rgba(255, 214, 111, 0.12)');
+            glow.addColorStop(1, 'rgba(255, 214, 111, 0)');
+            ctx.globalCompositeOperation = 'lighter';
+            ctx.fillStyle = glow;
+            ctx.fillRect(0, 0, width, height);
+
+            sparkles.forEach(sparkle => {
+                const local = (elapsed - sparkle.delay) % sparkle.life;
+                const progress = local / sparkle.life;
+                const alpha = Math.sin(progress * Math.PI) * (0.42 + 0.38 * Math.sin(elapsed / 180 + sparkle.phase));
+                if (alpha <= 0.04) return;
+                drawStar(
+                    sparkle.x + Math.sin(elapsed / 900 + sparkle.phase) * sparkle.drift,
+                    sparkle.y - easeInOut(progress) * 46,
+                    sparkle.size,
+                    sparkle.color,
+                    alpha,
+                    elapsed / 1200 + sparkle.phase
+                );
+            });
+
+            bursts.forEach(particle => {
+                const local = elapsed - particle.start;
+                if (local < 0 || local > particle.life) return;
+                const progress = local / particle.life;
+                const travel = easeOutCubic(progress);
+                const x = particle.x + Math.cos(particle.angle) * particle.speed * travel;
+                const y = particle.y + Math.sin(particle.angle) * particle.speed * travel + particle.gravity * progress * progress;
+                const alpha = (1 - progress) * 0.95;
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = particle.color;
+                ctx.shadowBlur = particle.size * 5;
+                ctx.shadowColor = particle.color;
+                ctx.beginPath();
+                ctx.arc(x, y, particle.size * (1 - progress * 0.35), 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.shadowBlur = 0;
+            ctx.globalAlpha = 1;
+
+            ctx.globalCompositeOperation = 'source-over';
+            falling.forEach(item => {
+                const local = elapsed - item.delay;
+                if (local < 0 || local > item.life) return;
+                const progress = local / item.life;
+                const eased = easeInOut(progress);
+                const alpha = progress < 0.12 ? progress / 0.12 : Math.min(1, (1 - progress) / 0.16);
+                const x = item.x + item.drift * Math.sin(progress * Math.PI * item.wobble);
+                const y = item.y + (height + Math.abs(item.y) + item.size * 4) * eased;
+                const rotation = item.spin * progress * Math.PI * 2;
+                if (item.kind === 'diamond') {
+                    drawDiamond(x, y, item.size * 0.86, rotation, alpha);
+                } else {
+                    drawCoin(x, y, item.size, rotation, alpha, item.color);
+                }
+            });
+
+            if (elapsed < duration) {
+                rafId = requestAnimationFrame(draw);
+            } else {
+                ctx.clearRect(0, 0, width, height);
+                window.removeEventListener('resize', resizeCanvas);
+            }
+        };
+
+        rafId = requestAnimationFrame(draw);
+        setTimeout(() => {
+            cancelAnimationFrame(rafId);
+            window.removeEventListener('resize', resizeCanvas);
+        }, duration + 120);
     }
 
     spawnRealFirework() {
