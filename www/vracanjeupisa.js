@@ -79,8 +79,19 @@ class UndoManager {
         this.syncEconomyBanner(normalizedIndex);
         const adMob = window.adMobGlobal;
         if (adMob && typeof adMob.prepareReward === 'function') {
-            setTimeout(() => adMob.prepareReward(), 150);
+            const rewardOptions = normalizedIndex === 1
+                ? this.getUndoTokenRewardOptions()
+                : this.getCoinRewardOptions();
+            setTimeout(() => adMob.prepareReward(rewardOptions), 150);
         }
+    }
+
+    getCoinRewardOptions() {
+        return { context: 'shop_ad_reward', amount: 500 };
+    }
+
+    getUndoTokenRewardOptions() {
+        return { context: 'undo_tokens', amount: 3 };
     }
 
     syncEconomyBanner(index) {
@@ -132,14 +143,17 @@ class UndoManager {
             return;
         }
 
-        const isCoinRewardReady = adMob.ads?.rewarded?.isReady;
+        const rewardOptions = this.getCoinRewardOptions();
+        const isCoinRewardReady = typeof adMob.isRewardVideoReadyFor === 'function'
+            ? adMob.isRewardVideoReadyFor(rewardOptions)
+            : adMob.ads?.rewarded?.isReady;
         if (!isCoinRewardReady) {
-            if (typeof adMob.prepareReward === 'function') adMob.prepareReward();
+            if (typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
             this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
             return;
         }
 
-        const success = await adMob.showRewardVideo();
+        const success = await adMob.showRewardVideo(rewardOptions);
         if (!success) return;
 
         const ssvNonce = typeof adMob.consumeLastRewardSsvNonce === 'function'
@@ -148,7 +162,7 @@ class UndoManager {
         const result = typeof adMob.claimRewardWithSsvRetry === 'function'
             ? await adMob.claimRewardWithSsvRetry(
                 () => this.claimServerCoinReward('rewarded', ssvNonce),
-                { nonce: ssvNonce }
+                { nonce: ssvNonce, context: 'shop_ad_reward' }
             )
             : await this.claimServerCoinReward('rewarded', ssvNonce);
         if (!result.ok) {
@@ -287,14 +301,17 @@ class UndoManager {
             }
         } else if (parsedType === 3) {
             if (adMob && adMob.showRewardVideo) {
-                const isTokenRewardReady = adMob.ads?.rewarded?.isReady;
+                const rewardOptions = this.getUndoTokenRewardOptions();
+                const isTokenRewardReady = typeof adMob.isRewardVideoReadyFor === 'function'
+                    ? adMob.isRewardVideoReadyFor(rewardOptions)
+                    : adMob.ads?.rewarded?.isReady;
                 if (!isTokenRewardReady) {
-                    if (typeof adMob.prepareReward === 'function') adMob.prepareReward();
+                    if (typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
                     this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
                     return;
                 }
 
-                const success = await adMob.showRewardVideo();
+                const success = await adMob.showRewardVideo(rewardOptions);
                 if (success) {
                     const ssvNonce = typeof adMob.consumeLastRewardSsvNonce === 'function'
                         ? adMob.consumeLastRewardSsvNonce()
@@ -302,7 +319,7 @@ class UndoManager {
                     const result = typeof adMob.claimRewardWithSsvRetry === 'function'
                         ? await adMob.claimRewardWithSsvRetry(
                             () => this.claimServerUndoTokenReward('rewarded', ssvNonce),
-                            { nonce: ssvNonce }
+                            { nonce: ssvNonce, context: 'undo_tokens' }
                         )
                         : await this.claimServerUndoTokenReward('rewarded', ssvNonce);
                     if (!result.ok) {

@@ -703,8 +703,15 @@ class DnevniIzazov {
         card.appendChild(resDiv);
 
         if (window.adMobGlobal && typeof window.adMobGlobal.prepareReward === 'function') {
-            window.adMobGlobal.prepareReward();
+            window.adMobGlobal.prepareReward(this.getDoubleRewardOptions());
         }
+    }
+
+    getDoubleRewardOptions() {
+        return {
+            context: 'daily_double',
+            amount: Math.max(0, (parseInt(this.calculatedReward) || 0) * 2)
+        };
     }
 
     async watchAdToDouble() {
@@ -715,7 +722,8 @@ class DnevniIzazov {
 
         if (window.adMobGlobal) {
             try {
-                const success = await window.adMobGlobal.showRewardVideo();
+                const rewardOptions = this.getDoubleRewardOptions();
+                const success = await window.adMobGlobal.showRewardVideo(rewardOptions);
                 if (success) {
                     const ssvNonce = typeof window.adMobGlobal.consumeLastRewardSsvNonce === 'function'
                         ? window.adMobGlobal.consumeLastRewardSsvNonce()
@@ -818,7 +826,7 @@ class DnevniIzazov {
         const rewardResult = doubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
             ? await window.adMobGlobal.claimRewardWithSsvRetry(
                 () => this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce),
-                { nonce: ssvNonce }
+                { nonce: ssvNonce, context: 'daily_double' }
             )
             : await this.claimDailyRewardOnServer(finalAmount, doubled, ssvNonce);
         if (!rewardResult.ok) {
