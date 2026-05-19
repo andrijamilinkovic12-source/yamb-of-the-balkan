@@ -1079,6 +1079,10 @@ body {
 }
 
 @media (max-width: 340px) {
+    .economy-undo-panel p {
+        min-height: 9.6rem;
+    }
+
     #riznica-screen .riznica-tabs {
         gap: 3px;
     }
@@ -2598,6 +2602,10 @@ body {
     font-weight: 900;
 }
 .economy-undo-panel p {
+    width: 100%;
+    max-width: 100%;
+    min-height: 8.8rem;
+    flex: 0 0 auto;
     color: var(--text-muted);
     font-size: 0.9rem;
     line-height: 1.55;
@@ -2606,6 +2614,9 @@ body {
     border-radius: 0;
     border: 0;
     background: transparent;
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+    contain: layout paint;
 }
 .economy-token-box {
     display: flex;
@@ -2653,6 +2664,9 @@ body {
     }
     .economy-tab-panel {
         padding: 0 18px;
+    }
+    .economy-undo-panel p {
+        min-height: 5.6rem;
     }
 }
 @media (max-width: 360px) {
