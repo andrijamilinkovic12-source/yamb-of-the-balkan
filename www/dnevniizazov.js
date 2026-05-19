@@ -572,6 +572,9 @@ class DnevniIzazov {
     startDailyChallenge() {
         const overlay = document.getElementById('glass-daily-overlay');
         if(overlay) overlay.classList.add('active');
+        if (this.app && typeof this.app.setInviteBusyState === 'function') {
+            this.app.setInviteBusyState(true, 'daily_challenge');
+        }
 
         this.resetGame();
         this.startRolling(0);
@@ -674,6 +677,9 @@ class DnevniIzazov {
 
     finishGame() {
         this.isActive = false;
+        if (this.app && typeof this.app.setInviteBusyState === 'function') {
+            this.app.setInviteBusyState(false);
+        }
 
         // Više nema potrebe za upisom datuma ovde, jer smo to uradili na samom početku (open metoda)
 

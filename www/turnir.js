@@ -457,6 +457,8 @@ class TournamentManager {
                 this.app.socket.on('tourney_duel_ready', (data) => {
                     const myId = this.app.playerId;
                     if (data.targetId === myId) {
+                        if (this.app.isDoNotDisturbActive && this.app.isDoNotDisturbActive()) return;
+
                         const opponentName = this.escape(data.opponentName || 'Protivnik');
                         let msg = tt('tourney_opponent_ready');
                         if (msg !== 'tourney_opponent_ready') {

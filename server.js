@@ -1983,6 +1983,124 @@ function getActiveOnlineRoomForPlayer(socketId, uid = '') {
     return getActiveOnlineRoomForSocket(socketId) || getActiveOnlineRoomForUid(uid);
 }
 
+function isLocalRoomId(roomId) {
+    return !!roomId && String(roomId).startsWith('local_');
+}
+
+function makeBusyState(reason, roomId = null) {
+    return { busy: true, reason, roomId };
+}
+
+function getWaitingBusyState(socketId, uid = '', options = {}) {
+    if (!waitingPlayer) return null;
+    if (options.ignoreWaitingSocketId && waitingPlayer.id === options.ignoreWaitingSocketId) return null;
+    if (options.ignoreWaitingUid && waitingPlayer.uid && waitingPlayer.uid === options.ignoreWaitingUid) return null;
+
+    if (waitingPlayer.id === socketId) return makeBusyState('waiting_matchmaking');
+    if (uid && waitingPlayer.uid && waitingPlayer.uid === uid) return makeBusyState('waiting_matchmaking');
+    return null;
+}
+
+function getClientBusyState(socketId) {
+    if (!socketId) return null;
+    const clientSocket = io.sockets.sockets.get(socketId);
+    if (clientSocket && clientSocket.clientBusyForInvites) {
+        return makeBusyState(clientSocket.clientBusyReason || 'client_busy');
+    }
+    return null;
+}
+
+function getActiveGameStateForSocket(socketId, uid = '', options = {}) {
+    if (!socketId) return null;
+
+    const directRoom = playerRooms[socketId];
+    if (directRoom) {
+        if (isLocalRoomId(directRoom)) {
+            return makeBusyState('local_game', directRoom);
+        }
+
+        const state = roomState[directRoom];
+        if (state) {
+            if (!state.gameFinished && Array.isArray(state.players) && state.players.includes(socketId)) {
+                return makeBusyState('online_game', directRoom);
+            }
+
+            if (state.gameFinished) return null;
+        }
+
+        if (privateRooms[directRoom]) {
+            return makeBusyState('private_room', directRoom);
+        }
+
+        if (!state) delete playerRooms[socketId];
+    }
+
+    for (const [roomId, state] of Object.entries(roomState)) {
+        if (state && !state.gameFinished && Array.isArray(state.players) && state.players.includes(socketId)) {
+            return makeBusyState('online_game', roomId);
+        }
+    }
+
+    for (const [roomId, room] of Object.entries(privateRooms)) {
+        const participants = [room?.p1, room?.p2].filter(Boolean);
+        if (participants.some(player => player.id === socketId)) {
+            return makeBusyState('private_room', roomId);
+        }
+    }
+
+    return getWaitingBusyState(socketId, uid, options) || getClientBusyState(socketId);
+}
+
+function getActiveGameStateForUid(uid = '', options = {}) {
+    if (!uid) return null;
+
+    const currentSocketId = onlinePlayers[uid];
+    const currentSocketState = getActiveGameStateForSocket(currentSocketId, uid, options);
+    if (currentSocketState) return currentSocketState;
+
+    const ghost = ghostSessions[uid];
+    if (ghost && ghost.roomId && !isLocalRoomId(ghost.roomId)) {
+        const ghostState = roomState[ghost.roomId];
+        if (ghostState && !ghostState.gameFinished) return makeBusyState('online_reconnect', ghost.roomId);
+    }
+
+    for (const [roomId, state] of Object.entries(roomState)) {
+        if (!state || state.gameFinished || !Array.isArray(state.players)) continue;
+
+        if (Array.isArray(state.playerUids) && state.playerUids.includes(uid)) {
+            return makeBusyState('online_game', roomId);
+        }
+
+        if (state.players.some(playerSocketId => getSocketUid(playerSocketId) === uid)) {
+            return makeBusyState('online_game', roomId);
+        }
+    }
+
+    for (const [roomId, room] of Object.entries(privateRooms)) {
+        const participants = [room?.p1, room?.p2].filter(Boolean);
+        if (participants.some(player => player.uid === uid || getSocketUid(player.id) === uid)) {
+            return makeBusyState('private_room', roomId);
+        }
+    }
+
+    return getWaitingBusyState('', uid, options);
+}
+
+function getPlayerBusyState(socketId, uid = '', options = {}) {
+    return getActiveGameStateForSocket(socketId, uid, options) || getActiveGameStateForUid(uid, options);
+}
+
+function isPlayerBusyForInvite(socketId, uid = '', options = {}) {
+    return !!getPlayerBusyState(socketId, uid, options);
+}
+
+function emitPlayerBusy(socket, ack = null) {
+    const payload = { ok: false, reason: 'err_player_busy' };
+    if (typeof ack === 'function') ack(payload);
+    else if (socket) socket.emit('error_msg', 'err_player_busy');
+    return payload;
+}
+
 function reattachSocketToRoomByUid(socket, roomId) {
     if (!socket) return false;
     const state = roomState[roomId];
@@ -3932,8 +4050,8 @@ io.on('connection', (socket) => {
                     name: clientSocket.playerName,
                     photoUrl: clientSocket.photoUrl || '',
                     uid: clientSocket.playerId || '',
-                    isPlaying: !!playerRooms[clientSocket.id], 
-                    isFriend: myFriends.includes(clientSocket.playerId) 
+                    isPlaying: isPlayerBusyForInvite(clientSocket.id, clientSocket.playerId || registeredSockets[clientSocket.id] || ''),
+                    isFriend: myFriends.includes(clientSocket.playerId)
                 });
             }
         });
@@ -3947,7 +4065,7 @@ io.on('connection', (socket) => {
         io.sockets.sockets.forEach((clientSocket, id) => {
             if (!clientSocket.playerName) return;
 
-            const isPlaying = !!playerRooms[id];
+            const isPlaying = isPlayerBusyForInvite(id, clientSocket.playerId || registeredSockets[id] || '');
             const ip = activeConnections.get(id) || "unknown_ip";
             
             let uniqueKey = clientSocket.playerId || registeredSockets[id] || ip;
@@ -3975,6 +4093,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('back_to_menu', async () => {
+        socket.clientBusyForInvites = false;
+        socket.clientBusyReason = '';
         const activeRoomId = playerRooms[socket.id];
 
         if (socket.isSpectator && socket.spectatingRoom) {
@@ -4101,10 +4221,22 @@ io.on('connection', (socket) => {
     socket.on('start_local_game', (payload) => {
         const roomId = typeof payload === 'string' ? payload : payload?.roomId;
         const carriedDurationMs = typeof payload === 'object' ? payload?.carriedDurationMs : 0;
+        if (!roomId) return;
+        const previousRoomId = playerRooms[socket.id];
+        if (previousRoomId && previousRoomId !== roomId && isLocalRoomId(previousRoomId)) {
+            socket.leave(previousRoomId);
+        }
         socket.join(roomId);
         playerRooms[socket.id] = roomId;
         startScoreSession(socket.id, carriedDurationMs);
         console.log(`🏠 Igrač ${socket.id} započeo lokalnu partiju u sobi: ${roomId}`);
+    });
+
+    socket.on('set_player_busy', (data = {}) => {
+        socket.clientBusyForInvites = !!data.busy;
+        socket.clientBusyReason = socket.clientBusyForInvites
+            ? String(data.reason || 'client_busy').slice(0, 40)
+            : '';
     });
 
     socket.on('game_session_start', () => {
@@ -5182,22 +5314,26 @@ io.on('connection', (socket) => {
         } catch(err) { console.error(err); }
     });
 
-    socket.on('send_room_invite', (data) => {
+    socket.on('send_room_invite', (data, ack) => {
         const { targetSocketId, roomId } = data;
         const targetSocket = io.sockets.sockets.get(targetSocketId);
-        
+        const replyInvite = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            else if (!payload.ok) socket.emit('error_msg', payload.reason || 'err_server_conn');
+        };
+
         if (targetSocket) {
-            // FIX: Zabrana poziva u privatnu sobu ako je igrač već u online partiji
-            const targetRoom = playerRooms[targetSocketId];
-            if (targetRoom && !targetRoom.startsWith('local_')) {
-                socket.emit('error_msg', 'err_player_busy');
+            const targetUid = getSocketUid(targetSocketId);
+            if (isPlayerBusyForInvite(targetSocketId, targetUid)) {
+                emitPlayerBusy(socket, ack);
                 return;
             }
 
             const hostName = `${sanitizeTournamentName(socket.playerName || 'Igrač')}|||${socket.id}`;
             socket.to(targetSocketId).emit('incoming_room_invite', { roomId, hostName });
+            replyInvite({ ok: true });
         } else {
-            socket.emit('error_msg', 'err_player_not_on_server');
+            replyInvite({ ok: false, reason: 'err_player_not_on_server' });
         }
     });
 
@@ -5206,12 +5342,12 @@ io.on('connection', (socket) => {
         let photoUrl = typeof data === 'string' ? '' : data.photoUrl;
         const requesterUid = getSocketUid(socket.id);
 
-        if (getActiveOnlineRoomForPlayer(socket.id, requesterUid)) {
+        if (waitingPlayer && waitingPlayer.id === socket.id) return;
+
+        if (isPlayerBusyForInvite(socket.id, requesterUid)) {
             socket.emit('error_msg', 'err_player_busy');
             return;
         }
-
-        if (waitingPlayer && waitingPlayer.id === socket.id) return;
 
         if (waitingPlayer) {
             const opponentId = waitingPlayer.id;
@@ -5223,8 +5359,8 @@ io.on('connection', (socket) => {
 
             if (opponentSocket) {
                 const opponentUid = getSocketUid(opponentId);
-                if (getActiveOnlineRoomForPlayer(opponentId, opponentUid)) {
-                    waitingPlayer = { id: socket.id, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+                if (isPlayerBusyForInvite(opponentId, opponentUid, { ignoreWaitingSocketId: opponentId, ignoreWaitingUid: opponentUid })) {
+                    waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
                     socket.emit('waiting_for_opponent');
                     return;
                 }
@@ -5269,11 +5405,11 @@ io.on('connection', (socket) => {
                 startTurnTimer(roomId); 
 
             } else {
-                waitingPlayer = { id: socket.id, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+                waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
                 socket.emit('waiting_for_opponent');
             }
         } else {
-            waitingPlayer = { id: socket.id, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+            waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
             socket.emit('waiting_for_opponent');
             console.log(`⏳ ${nickname} čeka random protivnika...`);
         }
@@ -5288,8 +5424,8 @@ io.on('connection', (socket) => {
         if (!roomId) { socket.emit('error_msg', 'err_invalid_room'); return; }
 
         const requesterUid = getSocketUid(socket.id);
-        const activeRoom = getActiveOnlineRoomForPlayer(socket.id, requesterUid);
-        if (activeRoom && activeRoom !== roomId) {
+        const busyState = getPlayerBusyState(socket.id, requesterUid);
+        if (busyState && busyState.roomId !== roomId) {
             socket.emit('error_msg', 'err_player_busy');
             return;
         }
@@ -5720,11 +5856,15 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('send_challenge', (data) => {
+    socket.on('send_challenge', (data, ack) => {
         const { targetId, targetUid } = data || {};
         let resolvedTargetId = targetId;
         let targetSocket = resolvedTargetId ? io.sockets.sockets.get(resolvedTargetId) : null;
         const challengerUid = getSocketUid(socket.id);
+        const replyChallenge = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            else if (!payload.ok) socket.emit('error_msg', payload.reason || 'err_server_conn');
+        };
 
         if ((!targetSocket || targetSocket.id === socket.id) && targetUid && onlinePlayers[targetUid]) {
             resolvedTargetId = onlinePlayers[targetUid];
@@ -5733,20 +5873,18 @@ io.on('connection', (socket) => {
         
         if (targetSocket && targetSocket.id !== socket.id) {
             const resolvedTargetUid = getSocketUid(resolvedTargetId) || targetUid || '';
-            const challengerRoom = getActiveOnlineRoomForPlayer(socket.id, challengerUid);
-            if (challengerRoom) {
-                socket.emit('error_msg', 'err_player_busy');
+            if (isPlayerBusyForInvite(socket.id, challengerUid)) {
+                emitPlayerBusy(socket, ack);
                 return;
             }
 
-            const targetRoom = getActiveOnlineRoomForPlayer(resolvedTargetId, resolvedTargetUid);
-            if (targetRoom && !targetRoom.startsWith('local_')) {
-                socket.emit('error_msg', 'err_player_busy');
+            if (isPlayerBusyForInvite(resolvedTargetId, resolvedTargetUid)) {
+                emitPlayerBusy(socket, ack);
                 return;
             }
 
             if (getActivePendingChallengeBetweenPlayers(socket.id, challengerUid, resolvedTargetId, resolvedTargetUid)) {
-                socket.emit('error_msg', 'duel_pending');
+                replyChallenge({ ok: false, reason: 'duel_pending' });
                 return;
             }
 
@@ -5773,8 +5911,9 @@ io.on('connection', (socket) => {
                 challengeId: challengeKey,
                 expiresAt
             });
+            replyChallenge({ ok: true });
         } else {
-            socket.emit('error_msg', 'err_player_not_on_server');
+            replyChallenge({ ok: false, reason: 'err_player_not_on_server' });
         }
     });
 
@@ -5801,9 +5940,7 @@ io.on('connection', (socket) => {
 
             const challengerUid = pending.challenge.challengerUid || getSocketUid(challengerId);
             const responderUid = pending.challenge.targetUid || getSocketUid(socket.id);
-            const challengerRoom = getActiveOnlineRoomForPlayer(challengerId, challengerUid);
-            const responderRoom = getActiveOnlineRoomForPlayer(socket.id, responderUid);
-            if (challengerRoom || responderRoom) {
+            if (isPlayerBusyForInvite(challengerId, challengerUid) || isPlayerBusyForInvite(socket.id, responderUid)) {
                 clearPendingChallengesBetweenPlayers(challengerId, challengerUid, socket.id, responderUid);
                 socket.emit('error_msg', 'err_player_busy');
                 if (challengerSocket) challengerSocket.emit('error_msg', 'err_player_busy');
@@ -5857,7 +5994,11 @@ io.on('connection', (socket) => {
         } else {
             if (pending) clearPendingChallenge(pending.key);
             if (challengerSocket) {
-                socket.to(challengerId).emit('challenge_declined', {});
+                if (data && data.busy) {
+                    socket.to(challengerId).emit('error_msg', 'err_player_busy');
+                } else {
+                    socket.to(challengerId).emit('challenge_declined', {});
+                }
             }
         }
     });
@@ -5876,6 +6017,12 @@ io.on('connection', (socket) => {
         }
 
         if (roomId) {
+            if (isLocalRoomId(roomId)) {
+                if (playerRooms[socket.id] === roomId) delete playerRooms[socket.id];
+                socket.leave(roomId);
+                return;
+            }
+
             console.log(`🏁 Igra završena u sobi: ${roomId}`);
             await applyServerSideCompletedDuel(roomId, socket.id);
             markOnlineRoomGameFinished(roomId);
@@ -6163,15 +6310,20 @@ io.on('connection', (socket) => {
         const starter = getTournamentPlayer(match, uid);
         if (!opponent) return rejectTournamentAction(socket, 'err_invalid_room');
 
+        if (isPlayerBusyForInvite(socket.id, uid)) {
+            socket.emit('error_msg', 'err_player_busy');
+            return;
+        }
+
         if (onlinePlayers[opponent.id]) {
-            const targetRoom = playerRooms[onlinePlayers[opponent.id]];
-            if (targetRoom && !targetRoom.startsWith('local_')) {
+            const opponentSocketId = onlinePlayers[opponent.id];
+            if (isPlayerBusyForInvite(opponentSocketId, opponent.id)) {
                 socket.emit('error_msg', 'err_player_busy');
                 return;
             }
 
             const matchRoomId = `tourney_${data.round}_${index}_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
-            io.to(onlinePlayers[opponent.id]).emit('tourney_duel_ready', {
+            io.to(opponentSocketId).emit('tourney_duel_ready', {
                 matchRoomId,
                 targetId: opponent.id,
                 opponentName: sanitizeTournamentName(starter?.name || socket.playerName)

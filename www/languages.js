@@ -185,7 +185,7 @@ const TRANSLATIONS = {
         "err_player_not_on_server": "Igrač više nije na serveru.",
         "err_challenger_left": "Igrač koji vas je izazvao je napustio server.",
         "err_tourney_opp_offline": "Protivnik trenutno nije u aplikaciji. Dogovorite termin kada je online.",
-        "err_player_busy": "Igrač trenutno igra online meč. Pokušajte da ga pozovete kasnije!",
+        "err_player_busy": "Igrač je zauzet i trenutno igra partiju. Pokušajte kasnije da ga pozovete.",
 
         // --- STATISTIKA ---
         "stats_title": "STATISTIKA",
@@ -826,7 +826,7 @@ const TRANSLATIONS = {
         "err_player_not_on_server": "The player is no longer on the server.",
         "err_challenger_left": "The challenging player has left the server.",
         "err_tourney_opp_offline": "Opponent is currently offline. Schedule a match when they are online.",
-        "err_player_busy": "The player is currently in an online match. Try inviting them later!",
+        "err_player_busy": "The player is busy and currently playing a game. Try inviting them later.",
 
         // --- STATISTICS ---
         "stats_title": "STATISTICS",

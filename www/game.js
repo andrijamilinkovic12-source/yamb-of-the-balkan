@@ -189,6 +189,7 @@ class YambApp {
                     const url = new URL(data.url);
                     const roomId = url.searchParams.get('room');
                     if (roomId) {
+                        if (this.isDoNotDisturbActive()) return;
                         this.inviteDetected = true;
                         if (!this.requireLogin()) return; // Gosti ne mogu prihvatiti poziv
 
@@ -1119,19 +1120,24 @@ class YambApp {
 
     inviteFriendToRoom(friendSocketId) {
         if (!this.currentHostingRoomId) return;
-        
+
         const payloadHostName = this.playerName + "|||" + this.socket.id;
-        
-        this.socket.emit('send_room_invite', { targetSocketId: friendSocketId, roomId: this.currentHostingRoomId, hostName: payloadHostName });
-        
-        let sentText = gt('alert_invite_sent') || "Pozivnica za partiju je poslata prijatelju!";
-        let titleText = gt('alert_invite_title') || "POZIVNICA";
-        
-        if (typeof window.showNotification === 'function') {
-            window.showNotification(titleText, sentText);
-        } else {
-            this.modal.alert(sentText, titleText);
-        }
+
+        this.socket.emit('send_room_invite', { targetSocketId: friendSocketId, roomId: this.currentHostingRoomId, hostName: payloadHostName }, (result = {}) => {
+            if (!result.ok) {
+                this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
+                return;
+            }
+
+            let sentText = gt('alert_invite_sent') || "Pozivnica za partiju je poslata prijatelju!";
+            let titleText = gt('alert_invite_title') || "POZIVNICA";
+
+            if (typeof window.showNotification === 'function') {
+                window.showNotification(titleText, sentText);
+            } else {
+                this.modal.alert(sentText, titleText);
+            }
+        });
     }
 
     loadHallOfFame() {
@@ -1418,11 +1424,12 @@ class YambApp {
                 this.socket.on('incoming_challenge', async (data) => {
                     const { challengerId, challengerName, challengeId, expiresAt } = data;
 
-                    if (this.gameActive && this.onlineMode && !this.isSpectator) {
+                    if (this.isDoNotDisturbActive()) {
                         this.socket.emit('challenge_response', {
                             challengerId: challengerId,
                             challengeId: challengeId,
-                            accepted: false
+                            accepted: false,
+                            busy: true
                         });
                         return;
                     }
@@ -1654,6 +1661,48 @@ class YambApp {
         if (waitCount) waitCount.innerText = this.onlineUsersCount;
     }
 
+    isDoNotDisturbActive() {
+        const dailyActive = window.dnevniIzazov && (window.dnevniIzazov.isActive || window.dnevniIzazov.isIntroPlaying);
+        return !!((this.gameActive && !this.isSpectator) || dailyActive);
+    }
+
+    setInviteBusyState(isBusy, reason = 'client_busy') {
+        this.clientInviteBusy = !!isBusy;
+        this.clientInviteBusyReason = this.clientInviteBusy ? reason : '';
+
+        const emitBusy = () => {
+            if (this.socket && this.socket.connected) {
+                this.socket.emit('set_player_busy', {
+                    busy: this.clientInviteBusy,
+                    reason: this.clientInviteBusyReason
+                });
+            }
+        };
+
+        if (this.socket && this.socket.connected) {
+            emitBusy();
+        } else if (this.socket && this.clientInviteBusy) {
+            this.socket.once('connect', emitBusy);
+            if (this.socket.disconnected) this.socket.connect();
+        }
+    }
+
+    showServerNotice(msgKey, titleKey = 'modal_title_info') {
+        let finalMsg = msgKey;
+        if (typeof t === 'function' && t(msgKey) !== msgKey) {
+            finalMsg = gt(msgKey);
+        }
+
+        const title = gt(titleKey) || gt('modal_title_info') || "INFO";
+        if (this.modal) {
+            this.modal.alert(finalMsg, title);
+        } else if (typeof window.showNotification === 'function') {
+            window.showNotification(title, finalMsg);
+        } else {
+            alert(finalMsg);
+        }
+    }
+
     handleRotationLock() {
         const overlay = document.getElementById('rotate-lock-overlay');
         if(!overlay) return;
@@ -1670,6 +1719,7 @@ class YambApp {
         const params = new URLSearchParams(window.location.search); 
         const roomId = params.get('room'); 
         if (roomId) { 
+            if (this.isDoNotDisturbActive()) return;
             console.log("Invite detected: " + roomId);
             this.inviteDetected = true;
 
@@ -1912,16 +1962,21 @@ class YambApp {
         const safeTargetName = this.escapeHtml(targetName || 'Igrač');
         const isConfirmed = await this.modal.confirm(askText.replace('{0}', safeTargetName));
         if(isConfirmed) {
-            this.socket.emit('send_challenge', { targetId, targetUid, challengerName: this.playerName });
-            
-            let sentText = gt('duel_sent');
-            if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
-            
-            if (typeof window.showNotification === 'function') {
-                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || 'Igrač'));
-            } else {
-                this.modal.alert(sentText.replace('{0}', safeTargetName), gt('duel_title') || "IZAZOV");
-            }
+            this.socket.emit('send_challenge', { targetId, targetUid, challengerName: this.playerName }, (result = {}) => {
+                if (!result.ok) {
+                    this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
+                    return;
+                }
+
+                let sentText = gt('duel_sent');
+                if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
+
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || 'Igrač'));
+                } else {
+                    this.modal.alert(sentText.replace('{0}', safeTargetName), gt('duel_title') || "IZAZOV");
+                }
+            });
         }
     }
     
@@ -2204,6 +2259,7 @@ class YambApp {
     async showMainMenu() { 
         await this.autoSaveGame(true);
         localStorage.removeItem('yamb_local_recovery_pending');
+        this.setInviteBusyState(false);
 
         const wasSpectator = this.isSpectator;
 
@@ -3236,11 +3292,12 @@ class YambApp {
                 hostSocketId = parts[1];
             }
 
-            if (this.gameActive && this.onlineMode && !this.isSpectator) {
+            if (this.isDoNotDisturbActive()) {
                 if (hostSocketId) {
                     this.socket.emit('challenge_response', {
                         challengerId: hostSocketId,
-                        accepted: false
+                        accepted: false,
+                        busy: true
                     });
                 }
                 return;
@@ -4226,6 +4283,7 @@ class YambApp {
                 }
             }
         } else {
+            if (this.socket) this.socket.emit('game_over');
             if (btnRematch) btnRematch.style.display = 'none';
         }
 
