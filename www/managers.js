@@ -674,6 +674,10 @@ class EffectManager {
             }, 6000); 
         }
 
+        if (type === 'ufo_abduction') {
+            this.runUfoAbduction();
+        }
+
         if (type === 'dragon_fire') {
             document.body.classList.add('fx-dragon_fire');
             
@@ -730,6 +734,176 @@ class EffectManager {
                 if (container.parentNode) container.remove();
             }, 8000);
         }
+    }
+
+    getTargetTable() {
+        let targetTable = null;
+        const tables = document.querySelectorAll('.player-table');
+        tables.forEach(tbl => {
+            if (tbl.style.opacity === '1' || tbl.style.borderColor.includes('gold') || tbl.style.borderColor.includes('224')) {
+                targetTable = tbl;
+            }
+        });
+
+        if (!targetTable && window.app && Number.isInteger(window.app.currentPlayerIdx)) {
+            targetTable = document.getElementById(`ptable-${window.app.currentPlayerIdx}`);
+        }
+
+        if (!targetTable && tables.length > 0) targetTable = tables[0];
+        return targetTable;
+    }
+
+    runUfoAbduction() {
+        const targetTable = this.getTargetTable();
+        if (!targetTable) return;
+
+        const rect = targetTable.getBoundingClientRect();
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth || rect.width;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || rect.height;
+        const ufoX = Math.max(110, Math.min(viewportWidth - 110, rect.left + rect.width / 2));
+        const ufoY = Math.max(92, Math.min(viewportHeight - 170, rect.top + rect.height * 0.34));
+        const beamHeight = Math.max(250, Math.min(viewportHeight * 0.74, rect.bottom - ufoY + 70));
+        const beamWidth = Math.max(220, Math.min(viewportWidth * 0.86, rect.width * 1.08));
+
+        document.body.classList.add('fx-ufo_abduction');
+        targetTable.classList.add('anim-ufo-table');
+
+        const container = document.createElement('div');
+        container.className = 'ufo-abduction-container';
+        container.setAttribute('aria-hidden', 'true');
+        container.style.setProperty('--ufo-x', `${ufoX}px`);
+        container.style.setProperty('--ufo-y', `${ufoY}px`);
+        container.style.setProperty('--ufo-beam-height', `${beamHeight}px`);
+        container.style.setProperty('--ufo-beam-width', `${beamWidth}px`);
+        container.innerHTML = `
+            <div class="ufo-space-layer"></div>
+            <div class="ufo-scan-grid"></div>
+            <div class="ufo-stage">
+                <div class="ufo-speech">BIP?</div>
+                <div class="ufo-beam">
+                    <div class="ufo-beam-core"></div>
+                    <div class="ufo-ray ray-one"></div>
+                    <div class="ufo-ray ray-two"></div>
+                    <div class="ufo-ray ray-three"></div>
+                    <div class="ufo-ray ray-four"></div>
+                </div>
+                <div class="ufo-ship">
+                    <div class="ufo-dome">
+                        <div class="ufo-alien alien-left"><span></span><span></span></div>
+                        <div class="ufo-alien alien-center"><span></span><span></span></div>
+                        <div class="ufo-alien alien-right"><span></span><span></span></div>
+                    </div>
+                    <div class="ufo-body">
+                        <i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                    <div class="ufo-rim"></div>
+                    <div class="ufo-legs"></div>
+                </div>
+                <div class="ufo-score-vortex"></div>
+            </div>
+        `;
+        document.body.appendChild(container);
+
+        const sound = window.app && window.app.soundMgr;
+        if (sound && typeof sound.ufoAbduction === 'function') {
+            sound.ufoAbduction();
+        } else if (sound && typeof sound.epicDroneShow === 'function') {
+            sound.epicDroneShow();
+        }
+
+        if (window.app && typeof window.app.vibrate === 'function') {
+            window.app.vibrate([35, 45, 35, 90, 35, 45, 160]);
+        }
+
+        setTimeout(() => {
+            if (!container.isConnected || !document.body.classList.contains('fx-ufo_abduction')) return;
+            this.abductVisibleScores(container, targetTable, ufoX, ufoY);
+        }, 1050);
+
+        setTimeout(() => {
+            document.body.classList.remove('fx-ufo_abduction');
+            targetTable.classList.remove('anim-ufo-table');
+            targetTable.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
+            document.querySelectorAll('.ufo-abducted-score, .ufo-target-ray').forEach(el => el.remove());
+            if (container.parentNode) container.remove();
+        }, 7500);
+    }
+
+    abductVisibleScores(container, targetTable, ufoX, ufoY) {
+        const buttons = Array.from(targetTable.querySelectorAll('.score-btn.filled'))
+            .filter(btn => (btn.textContent || '').trim() !== '');
+
+        if (buttons.length === 0) return;
+
+        const rayStep = Math.max(1, Math.ceil(buttons.length / 30));
+        const stagger = Math.max(18, Math.min(46, 1450 / buttons.length));
+
+        buttons.forEach((btn, index) => {
+            const text = (btn.textContent || '').trim();
+            const rect = btn.getBoundingClientRect();
+            const startX = rect.left + rect.width / 2;
+            const startY = rect.top + rect.height / 2;
+            const targetX = ufoX + (Math.random() * 44 - 22);
+            const targetY = ufoY + 20 + Math.random() * 22;
+            const dx = targetX - startX;
+            const dy = targetY - startY;
+            const delay = 180 + index * stagger + Math.random() * 120;
+            const duration = 2350 + Math.random() * 950;
+            const wobble = (index % 2 === 0 ? 1 : -1) * (18 + Math.random() * 18);
+            const spin = (index % 2 === 0 ? 1 : -1) * (220 + Math.random() * 260);
+
+            btn.classList.add('ufo-score-dimmed');
+
+            const clone = document.createElement('div');
+            clone.className = 'ufo-abducted-score';
+            clone.textContent = text;
+            clone.style.left = `${startX}px`;
+            clone.style.top = `${startY}px`;
+            clone.style.setProperty('--score-hue', `${160 + (index % 5) * 22}deg`);
+            container.appendChild(clone);
+
+            const animation = clone.animate([
+                { opacity: 0, transform: 'translate3d(0, 0, 0) scale(0.86) rotate(0deg)', filter: 'blur(2px)', offset: 0 },
+                { opacity: 1, transform: `translate3d(${wobble}px, -10px, 0) scale(1.1) rotate(${spin * 0.08}deg)`, filter: 'blur(0)', offset: 0.16 },
+                { opacity: 0.95, transform: `translate3d(${dx * 0.44 + wobble}px, ${dy * 0.42 - 24}px, 0) scale(0.82) rotate(${spin * 0.45}deg)`, filter: 'blur(0.5px)', offset: 0.62 },
+                { opacity: 0, transform: `translate3d(${dx}px, ${dy}px, 0) scale(0.18) rotate(${spin}deg)`, filter: 'blur(5px)', offset: 1 }
+            ], {
+                duration,
+                delay,
+                easing: 'cubic-bezier(0.16, 0.8, 0.24, 1)',
+                fill: 'forwards'
+            });
+
+            animation.onfinish = () => {
+                if (clone.parentNode) clone.remove();
+            };
+
+            if (index % rayStep === 0) {
+                this.spawnUfoTargetRay(container, ufoX, ufoY + 48, startX, startY, delay, Math.min(1900, duration));
+            }
+        });
+    }
+
+    spawnUfoTargetRay(container, fromX, fromY, toX, toY, delay, duration) {
+        if (!container || !container.isConnected) return;
+
+        const dx = toX - fromX;
+        const dy = toY - fromY;
+        const length = Math.hypot(dx, dy);
+        const angle = Math.atan2(dy, dx);
+        const ray = document.createElement('div');
+        ray.className = 'ufo-target-ray';
+        ray.style.left = `${fromX}px`;
+        ray.style.top = `${fromY}px`;
+        ray.style.width = `${length}px`;
+        ray.style.transform = `rotate(${angle}rad)`;
+        ray.style.animationDelay = `${delay}ms`;
+        ray.style.animationDuration = `${duration}ms`;
+        container.appendChild(ray);
+
+        setTimeout(() => {
+            if (ray.parentNode) ray.remove();
+        }, delay + duration + 120);
     }
 
     playRoyalYambAccents() {
@@ -1168,14 +1342,16 @@ class EffectManager {
     }
     
     stop() {
-        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-dragon_fire', 'fx-royal_yamb');
+        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-ufo_abduction', 'fx-dragon_fire', 'fx-royal_yamb');
         
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
         document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
         document.querySelectorAll('.anim-neon-pulse').forEach(tbl => tbl.classList.remove('anim-neon-pulse'));
+        document.querySelectorAll('.anim-ufo-table').forEach(tbl => tbl.classList.remove('anim-ufo-table'));
+        document.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
     }
 }
 
@@ -1344,6 +1520,49 @@ class SoundManager {
                 osc.type = 'sine'; osc.frequency.value = f;
                 gain.gain.setValueAtTime(0.2, t); gain.gain.exponentialRampToValueAtTime(0.001, t + 1.5);
                 osc.connect(gain); gain.connect(this.ctx.destination); osc.start(t); osc.stop(t + 1.5);
+            });
+        });
+    }
+
+    ufoAbduction() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+
+            const humOsc = this.ctx.createOscillator();
+            const humGain = this.ctx.createGain();
+            const humFilter = this.ctx.createBiquadFilter();
+            humOsc.type = 'sawtooth';
+            humOsc.frequency.setValueAtTime(78, now);
+            humOsc.frequency.linearRampToValueAtTime(54, now + 1.6);
+            humOsc.frequency.linearRampToValueAtTime(118, now + 4.6);
+            humOsc.frequency.exponentialRampToValueAtTime(36, now + 7.2);
+            humFilter.type = 'lowpass';
+            humFilter.frequency.setValueAtTime(420, now);
+            humFilter.frequency.linearRampToValueAtTime(1100, now + 2.4);
+            humFilter.frequency.exponentialRampToValueAtTime(180, now + 7.2);
+            humGain.gain.setValueAtTime(0, now);
+            humGain.gain.linearRampToValueAtTime(0.18, now + 0.35);
+            humGain.gain.linearRampToValueAtTime(0.24, now + 2.2);
+            humGain.gain.exponentialRampToValueAtTime(0.001, now + 7.3);
+            humOsc.connect(humFilter);
+            humFilter.connect(humGain);
+            humGain.connect(this.ctx.destination);
+            humOsc.start(now);
+            humOsc.stop(now + 7.4);
+
+            [0.58, 0.92, 1.28, 4.45, 5.15, 5.78].forEach((offset, index) => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = index % 2 ? 'square' : 'triangle';
+                osc.frequency.setValueAtTime(index % 2 ? 980 : 620, now + offset);
+                osc.frequency.exponentialRampToValueAtTime(index % 2 ? 360 : 1320, now + offset + 0.22);
+                gain.gain.setValueAtTime(0, now + offset);
+                gain.gain.linearRampToValueAtTime(0.08, now + offset + 0.025);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.34);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now + offset);
+                osc.stop(now + offset + 0.36);
             });
         });
     }

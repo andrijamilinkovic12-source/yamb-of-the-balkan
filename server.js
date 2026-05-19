@@ -621,6 +621,7 @@ const SHOP_ITEM_PRICES = Object.freeze({
     fireworks: 30000,
     drones: 25000,
     cosmic_dust: 40000,
+    ufo_abduction: 35000,
     dragon_fire: 45000,
     royal_yamb: 60000,
     dark: 0,
@@ -649,7 +650,7 @@ const SKIN_UNLOCK_IDS = new Set([
 const EFFECT_UNLOCK_IDS = new Set([
     'confetti', 'gold_rain', 'fireflies', 'bubbles', 'ice_age', 'black_hole',
     'supernova', 'neon_pulse', 'thunder', 'balkan', 'fireworks', 'drones',
-    'cosmic_dust', 'dragon_fire', 'royal_yamb'
+    'cosmic_dust', 'ufo_abduction', 'dragon_fire', 'royal_yamb'
 ]);
 const THEME_UNLOCK_IDS = new Set([
     'dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'
