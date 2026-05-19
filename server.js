@@ -3879,7 +3879,7 @@ io.on('connection', (socket) => {
                 const adVerification = await waitForVerifiedAdMobReward(
                     uid,
                     data?.ssvNonce,
-                    ['daily_double'],
+                    ['daily_double', 'generic_reward'],
                     { claimedBy: 'daily_double' }
                 );
                 if (!adVerification.ok) {
@@ -4219,7 +4219,7 @@ io.on('connection', (socket) => {
             const adVerification = await waitForVerifiedAdMobReward(
                 uid,
                 data?.ssvNonce,
-                ['shop_ad_reward'],
+                ['shop_ad_reward', 'generic_reward'],
                 { claimedBy: 'shop_ad_reward', minAdTimestamp: lastRewardAt }
             );
             if (!adVerification.ok) {
@@ -4355,7 +4355,7 @@ io.on('connection', (socket) => {
                 const adVerification = await waitForVerifiedAdMobReward(
                     uid,
                     data?.ssvNonce,
-                    ['undo_tokens'],
+                    ['undo_tokens', 'generic_reward'],
                     { claimedBy: 'undo_tokens', minAdTimestamp: lastRewardAt }
                 );
                 if (!adVerification.ok) {
@@ -4743,7 +4743,7 @@ io.on('connection', (socket) => {
                 const adVerification = await waitForVerifiedAdMobReward(
                     finalUid,
                     data?.ssvNonce,
-                    ['game_double'],
+                    ['game_double', 'generic_reward'],
                     { claimedBy: 'game_double', minAdTimestamp: rewardSession.createdAt - 5000 }
                 );
                 if (!adVerification.ok) {

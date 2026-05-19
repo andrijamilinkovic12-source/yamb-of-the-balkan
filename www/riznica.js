@@ -127,7 +127,7 @@ class RiznicaManager {
         // Priprema reklame u pozadini
         setTimeout(() => {
             if (this.shop && this.shop.getAdController()) {
-                this.shop.getAdController().prepareReward({ context: 'shop_ad_reward', amount: 500 });
+                this.shop.getAdController().prepareReward();
             }
         }, 1000);
     }
