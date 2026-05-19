@@ -118,6 +118,8 @@ window.openOnlinePlayersModal = function() {
 
                 let actionButtons = '';
                 if (!isMe) {
+                    const canSpectate = p.canSpectate !== undefined ? !!p.canSpectate : !!p.isPlaying;
+                    const isBusy = !!p.isBusy || !!p.isPlaying;
                     // Znamo sigurno sa servera da li su već prijatelji!
                     const isAlreadyFriend = p.isFriend;
                     const addFriendHandler = sec.escapeAttr(`if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest(${socketIdArg}, ${nameArg}, ${uidArg}); this.disabled=true; this.style.opacity='0.4'; this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.cursor='not-allowed'; } else { showNotification('INFO', 'Funkcija nije dostupna.') }`);
@@ -135,14 +137,14 @@ window.openOnlinePlayersModal = function() {
 
                     // 2. Dugme za GLEDANJE (Zatamnjeno ako igrač ne igra)
                     let spectateBtn = '';
-                    if (!p.isPlaying) {
+                    if (!canSpectate) {
                         spectateBtn = `<button disabled title="Igrač trenutno ne igra" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">👁️</button>`;
                     } else {
                         spectateBtn = `<button onclick="${spectateHandler}" title="Gledaj partiju" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>`;
                     }
 
                     let challengeBtn = '';
-                    if (p.isPlaying) {
+                    if (isBusy) {
                         challengeBtn = `<button disabled title="Igrač trenutno igra" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">⚔️</button>`;
                     } else {
                         challengeBtn = `<button onclick="${challengeHandler}" title="Izazovi na duel" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
@@ -159,7 +161,7 @@ window.openOnlinePlayersModal = function() {
                 html += `
                 <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
-                        <img src="${photoSrc}" style="width:45px; height:45px; border-radius:50%; border: 2px solid ${p.isPlaying ? '#2196F3' : 'var(--success)'}; object-fit: cover; flex-shrink: 0;">
+                        <img src="${photoSrc}" style="width:45px; height:45px; border-radius:50%; border: 2px solid ${p.isPlaying ? '#2196F3' : (p.isBusy ? '#FF9800' : 'var(--success)')}; object-fit: cover; flex-shrink: 0;">
                         <span style="color: var(--text-main); font-weight: bold; font-size: 0.95rem; word-break: break-word; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                             ${safeNameHtml} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${sec.escapeHtml(youText)}</span>` : ''}
                         </span>

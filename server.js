@@ -1803,6 +1803,7 @@ function bindVerifiedPlayerSocket(socket, playerId) {
     if (typeof playerId !== 'string' || playerId.length < 20) return false;
 
     const stariSocketId = onlinePlayers[playerId];
+    let restoredRoomId = null;
 
     if (stariSocketId && stariSocketId !== socket.id) {
         const aktivnaSoba = playerRooms[stariSocketId];
@@ -1824,6 +1825,7 @@ function bindVerifiedPlayerSocket(socket, playerId) {
                 }
             }
             io.to(aktivnaSoba).emit('opponent_connection_restored');
+            restoredRoomId = aktivnaSoba;
         }
 
         const oldSocket = io.sockets.sockets.get(stariSocketId);
@@ -1854,6 +1856,7 @@ function bindVerifiedPlayerSocket(socket, playerId) {
                 io.to(ghost.roomId).emit('opponent_connection_restored');
                 delete playerRooms[ghost.oldSocketId];
             }
+            restoredRoomId = ghost.roomId;
             delete ghostSessions[playerId];
         }
     }
@@ -1862,6 +1865,9 @@ function bindVerifiedPlayerSocket(socket, playerId) {
     socket.playerId = playerId;
     onlinePlayers[playerId] = socket.id;
     registeredSockets[socket.id] = playerId;
+    if (restoredRoomId && roomState[restoredRoomId] && !roomState[restoredRoomId].gameFinished) {
+        socket.pendingOnlineRoomResume = restoredRoomId;
+    }
     return true;
 }
 
@@ -2130,6 +2136,85 @@ function reattachSocketToRoomByUid(socket, roomId) {
 
     console.log(`♻️ SYNC REATTACH: Vratio sam ${socket.id} u sobu ${roomId} preko UID-a.`);
     io.to(roomId).emit('opponent_connection_restored');
+    return true;
+}
+
+function getParticipantIndexForSocketOrUid(state, socketId, uid = '') {
+    if (!state || !Array.isArray(state.players)) return -1;
+
+    const directIndex = socketId ? state.players.indexOf(socketId) : -1;
+    if (directIndex !== -1) return directIndex;
+
+    if (uid && Array.isArray(state.playerUids)) {
+        const uidIndex = state.playerUids.indexOf(uid);
+        if (uidIndex !== -1) return uidIndex;
+    }
+
+    if (uid) {
+        return state.players.findIndex(playerSocketId => getSocketUid(playerSocketId) === uid);
+    }
+
+    return -1;
+}
+
+function getLiveOnlineRoomForSocket(socketId, uid = '') {
+    if (!socketId && !uid) return null;
+
+    const directRoom = socketId ? playerRooms[socketId] : null;
+    if (directRoom && !isLocalRoomId(directRoom)) {
+        const state = roomState[directRoom];
+        if (state && !state.gameFinished && getParticipantIndexForSocketOrUid(state, socketId, uid) !== -1) {
+            return directRoom;
+        }
+    }
+
+    for (const [roomId, state] of Object.entries(roomState)) {
+        if (!state || state.gameFinished || isLocalRoomId(roomId)) continue;
+        if (getParticipantIndexForSocketOrUid(state, socketId, uid) !== -1) {
+            return roomId;
+        }
+    }
+
+    return null;
+}
+
+function emitAuthoritativeRoomState(socket, roomId, myIndex = null) {
+    const state = roomState[roomId];
+    if (!socket || !state || state.gameFinished) return false;
+
+    const playerNamesToSync = state.playerNames || state.players.map(id => {
+        const pSocket = io.sockets.sockets.get(id);
+        return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
+    });
+
+    const syncNow = Date.now();
+    socket.emit('sync_state_response', {
+        roomId: roomId,
+        myIndex: Number.isInteger(myIndex) ? myIndex : state.players.indexOf(socket.id),
+        players: playerNamesToSync,
+        allScores: state.allScores || createEmptyScores(),
+        currentPlayerIdx: state.turnIndex,
+        brojBacanja: state.brojBacanja || 0,
+        kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
+        zadrzane: state.zadrzane || [false,false,false,false,false,false],
+        najavaAktivna: state.najavaAktivna || false,
+        najavljenoPolje: state.najavljenoPolje || null,
+        turnStartTime: state.turnStartTime || syncNow,
+        turnTimeLimitMs: TURN_TIME_LIMIT,
+        serverNow: syncNow
+    });
+    return true;
+}
+
+function flushPendingOnlineRoomResume(socket) {
+    const roomId = socket?.pendingOnlineRoomResume;
+    if (!roomId) return false;
+
+    delete socket.pendingOnlineRoomResume;
+    const state = roomState[roomId];
+    if (!state || state.gameFinished) return false;
+
+    socket.emit('online_room_resume_available', { roomId });
     return true;
 }
 
@@ -3634,6 +3719,7 @@ io.on('connection', (socket) => {
             if (!MONGO_URI) {
                 socket.emit('sync_unavailable', { ok: false, reason: 'mongo_unavailable' });
                 updateOnlineCount(); 
+                flushPendingOnlineRoomResume(socket);
                 return;
             }
 
@@ -3944,11 +4030,13 @@ io.on('connection', (socket) => {
                 h2hRecord: buildH2HRecordSummary(user.h2hStats)
             };
 
-            updateOnlineCount(); 
+            updateOnlineCount();
+            flushPendingOnlineRoomResume(socket);
         } catch (err) {
             console.error("Greška pri sinhronizaciji korisnika:", err);
             socket.playerStats = data.stats || { wins: 0, losses: 0 };
-            updateOnlineCount(); 
+            updateOnlineCount();
+            flushPendingOnlineRoomResume(socket);
         }
     });
 
@@ -4045,12 +4133,18 @@ io.on('connection', (socket) => {
         
         io.sockets.sockets.forEach((clientSocket) => {
             if (clientSocket.playerName) {
+                const playerUid = clientSocket.playerId || registeredSockets[clientSocket.id] || '';
+                const busyState = getPlayerBusyState(clientSocket.id, playerUid);
+                const liveRoomId = getLiveOnlineRoomForSocket(clientSocket.id, playerUid);
+
                 onlinePlayersList.push({
                     socketId: clientSocket.id,
                     name: clientSocket.playerName,
                     photoUrl: clientSocket.photoUrl || '',
                     uid: clientSocket.playerId || '',
-                    isPlaying: isPlayerBusyForInvite(clientSocket.id, clientSocket.playerId || registeredSockets[clientSocket.id] || ''),
+                    isPlaying: !!liveRoomId,
+                    canSpectate: !!liveRoomId,
+                    isBusy: !!busyState,
                     isFriend: myFriends.includes(clientSocket.playerId)
                 });
             }
@@ -4065,7 +4159,9 @@ io.on('connection', (socket) => {
         io.sockets.sockets.forEach((clientSocket, id) => {
             if (!clientSocket.playerName) return;
 
-            const isPlaying = isPlayerBusyForInvite(id, clientSocket.playerId || registeredSockets[id] || '');
+            const playerUid = clientSocket.playerId || registeredSockets[id] || '';
+            const isPlaying = !!getLiveOnlineRoomForSocket(id, playerUid);
+            const isBusy = !!getPlayerBusyState(id, playerUid);
             const ip = activeConnections.get(id) || "unknown_ip";
             
             let uniqueKey = clientSocket.playerId || registeredSockets[id] || ip;
@@ -4076,7 +4172,7 @@ io.on('connection', (socket) => {
                 name: clientSocket.playerName, 
                 photoUrl: clientSocket.photoUrl, 
                 stats: clientSocket.playerStats || { wins: 0, losses: 0 },
-                status: isPlaying ? 'playing' : 'idle'
+                status: isPlaying ? 'playing' : (isBusy ? 'busy' : 'idle')
             };
 
             if (playersMap.has(uniqueKey)) {
@@ -4164,46 +4260,42 @@ io.on('connection', (socket) => {
     });
 
     socket.on('request_spectate', (targetSocketId) => {
-        const roomId = playerRooms[targetSocketId];
-        if (roomId) {
-            socket.join(roomId);
-            socket.isSpectator = true;
-            socket.spectatingRoom = roomId;
+        const targetUid = getSocketUid(targetSocketId);
+        const roomId = getLiveOnlineRoomForSocket(targetSocketId, targetUid);
+        const state = roomId ? roomState[roomId] : null;
 
-            socket.emit('spectate_started', { roomId: roomId });
-
-            if (roomState[roomId]) {
-                const state = roomState[roomId];
-                
-                const syncNow = Date.now();
-                socket.emit('sync_state_response', {
-                    roomId: roomId,
-                    players: state.players.map(id => {
-                        const pSocket = io.sockets.sockets.get(id);
-                        return pSocket && pSocket.playerName ? pSocket.playerName : "Igrač";
-                    }),
-                    allScores: state.allScores || createEmptyScores(),
-                    currentPlayerIdx: state.turnIndex,
-                    brojBacanja: state.brojBacanja || 0,
-                    kockiceVals: state.kockiceVals || [0,0,0,0,0,0],
-                    zadrzane: state.zadrzane || [false,false,false,false,false,false],
-                    najavaAktivna: state.najavaAktivna || false,
-                    najavljenoPolje: state.najavljenoPolje || null,
-                    turnStartTime: state.turnStartTime || syncNow,
-                    turnTimeLimitMs: TURN_TIME_LIMIT,
-                    serverNow: syncNow
-                });
-                
-                console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Server Sync)`);
-            } else {
-                io.to(targetSocketId).emit('request_state_sync', { senderSocketId: socket.id });
-                console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Client Sync Fallback)`);
-            }
-            
-            updateRoomSpectators(roomId);
-        } else {
+        if (!roomId || !state || state.gameFinished) {
             socket.emit('error_msg', 'err_spectate_not_in_game');
+            return;
         }
+
+        const requesterUid = getSocketUid(socket.id);
+        if (getParticipantIndexForSocketOrUid(state, socket.id, requesterUid) !== -1) {
+            const previousSpectatingRoom = socket.isSpectator ? socket.spectatingRoom : null;
+            socket.isSpectator = false;
+            socket.spectatingRoom = null;
+            if (previousSpectatingRoom && previousSpectatingRoom !== roomId) {
+                socket.leave(previousSpectatingRoom);
+                updateRoomSpectators(previousSpectatingRoom);
+            }
+            if (state.players.indexOf(socket.id) === -1 && !reattachSocketToRoomByUid(socket, roomId)) {
+                socket.emit('error_msg', 'err_spectate_not_in_game');
+                return;
+            }
+            socket.join(roomId);
+            playerRooms[socket.id] = roomId;
+            socket.emit('online_room_resume_available', { roomId });
+            return;
+        }
+
+        socket.join(roomId);
+        socket.isSpectator = true;
+        socket.spectatingRoom = roomId;
+
+        socket.emit('spectate_started', { roomId: roomId });
+        emitAuthoritativeRoomState(socket, roomId, -1);
+        console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Server Sync)`);
+        updateRoomSpectators(roomId);
     });
 
     socket.on('stop_spectating', () => {
@@ -5918,11 +6010,19 @@ io.on('connection', (socket) => {
     });
 
     socket.on('challenge_response', (data) => {
-        const { challengerId, accepted } = data;
+        const { challengerId, accepted, challengeId } = data;
         const challengerSocket = io.sockets.sockets.get(challengerId);
         const pending = findPendingChallenge(challengerId, socket.id);
 
         if (accepted) {
+            if (pending && challengeId && pending.key !== challengeId) {
+                socket.emit('challenge_expired', {
+                    reason: 'late_response',
+                    message: 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.'
+                });
+                return;
+            }
+
             if (!pending || !pending.challenge || Date.now() > pending.challenge.expiresAt) {
                 if (pending) expirePendingChallenge(pending.key, 'late_response');
                 else socket.emit('challenge_expired', {
@@ -5992,6 +6092,8 @@ io.on('connection', (socket) => {
             startTurnTimer(roomName); 
 
         } else {
+            if (!pending) return;
+            if (pending && challengeId && pending.key !== challengeId) return;
             if (pending) clearPendingChallenge(pending.key);
             if (challengerSocket) {
                 if (data && data.busy) {

@@ -1423,6 +1423,8 @@ class YambApp {
 
                 this.socket.on('incoming_challenge', async (data) => {
                     const { challengerId, challengerName, challengeId, expiresAt } = data;
+                    const socketAtPrompt = this.socket;
+                    const socketIdAtPrompt = socketAtPrompt ? socketAtPrompt.id : '';
 
                     if (this.isDoNotDisturbActive()) {
                         this.socket.emit('challenge_response', {
@@ -1439,6 +1441,13 @@ class YambApp {
                     if(text === 'duel_incoming') text = `Igrač {0} vas izaziva na duel! Prihvatate?`;
 
                     const accepted = await this.modal.confirm(text.replace('{0}', safeChallengerName));
+                    if (!socketAtPrompt || socketAtPrompt !== this.socket || !socketAtPrompt.connected || socketAtPrompt.id !== socketIdAtPrompt) {
+                        if (accepted) {
+                            this.modal.alert(gt('duel_expired') || 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.', gt('modal_title_info') || "INFO");
+                        }
+                        return;
+                    }
+
                     if (accepted && expiresAt && Date.now() > expiresAt) {
                         this.modal.alert(gt('duel_expired') || 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.', gt('modal_title_info') || "INFO");
                         return;
@@ -1472,8 +1481,24 @@ class YambApp {
                     }, 50);
                 });
 
+                this.socket.on('online_room_resume_available', (data = {}) => {
+                    const roomId = data.roomId;
+                    if (!roomId) return;
+
+                    localStorage.setItem('yamb_active_online_room', roomId);
+
+                    if (this.gameActive && this.onlineMode && !this.isSpectator) {
+                        if (this.roomId === roomId) {
+                            this.socket.emit('request_state_sync', { roomId });
+                        }
+                        return;
+                    }
+
+                    this.resumeOnlineGame(roomId);
+                });
+
                 this.socket.on('global_highscores_data', (data) => {
-                    if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list'); 
+                    if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list');
                 });
                 
                 this.socket.on('error_msg', (msgKey) => {
@@ -1955,13 +1980,19 @@ class YambApp {
         if (!this.requireLogin()) return;
         this.initSocketConnection(); 
         if (!this.socket || !this.socket.connected) return;
-        
+        const socketAtPrompt = this.socket;
+
         let askText = gt('duel_ask');
         if (askText === 'duel_ask') askText = `Želite li da izazovete igrača {0} na duel?`;
 
         const safeTargetName = this.escapeHtml(targetName || 'Igrač');
         const isConfirmed = await this.modal.confirm(askText.replace('{0}', safeTargetName));
         if(isConfirmed) {
+            if (!socketAtPrompt || socketAtPrompt !== this.socket || !socketAtPrompt.connected) {
+                this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", gt('err_title') || "GREŠKA");
+                return;
+            }
+
             this.socket.emit('send_challenge', { targetId, targetUid, challengerName: this.playerName }, (result = {}) => {
                 if (!result.ok) {
                     this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
@@ -3022,12 +3053,18 @@ class YambApp {
 
             console.log(`[SYNC] Moj igrački indeks je striktno: ${this.myOnlineIndex}`);
 
-            this.onlineMode = true; 
-            this.modeTag = "Online"; 
-            this.roomId = data.roomId; 
-            this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname]; 
-            this.initScores(); 
-            this.currentPlayerIdx = 0; 
+            this.onlineMode = true;
+            this.gameActive = true;
+            this.modeTag = "Online";
+            this.isSpectator = false;
+            this.roomId = data.roomId;
+            this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname];
+            this.initScores();
+            this.currentPlayerIdx = 0;
+            const btnBacajActive = document.getElementById('btn-bacaj');
+            const btnNajavaActive = document.getElementById('btn-najava');
+            if (btnBacajActive) btnBacajActive.style.display = '';
+            if (btnNajavaActive) btnNajavaActive.style.display = '';
             
             const searchingUI = document.getElementById('waiting-opp-searching');
             const foundUI = document.getElementById('waiting-opp-found');
@@ -4599,9 +4636,13 @@ class YambApp {
         this.roomId = roomId;
         this.modeTag = "Online";
         this.isSpectator = false;
-        
+        const btnBacaj = document.getElementById('btn-bacaj');
+        const btnNajava = document.getElementById('btn-najava');
+        if (btnBacaj) btnBacaj.style.display = '';
+        if (btnNajava) btnNajava.style.display = '';
+
         // Privremena imena dok ne stignu prava sa servera
-        this.players = [this.playerName, "Protivnik"]; 
+        this.players = [this.playerName, "Protivnik"];
         this.initScores();
         
         // ---> FIX: Iscrtavanje table unapred kako ne bi bila prazna <---
