@@ -270,6 +270,26 @@ class KvartalnaLigaManager {
         rightWord.textContent = parts.slice(1).join(' ') || 'Liga';
     }
 
+    getMainTabIcon(icon) {
+        if (icon === 'hof') {
+            return `
+                <svg class="league-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M4 9.3L12 4.8L20 9.3H4Z" fill="currentColor" opacity="0.22"/>
+                    <path d="M4 9.3L12 4.8L20 9.3M6 19H18M7.5 16.7H16.5M8 10.5V16.5M12 10.5V16.5M16 10.5V16.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 6.7L12.8 8.2L14.5 8.45L13.25 9.62L13.55 11.28L12 10.48L10.45 11.28L10.75 9.62L9.5 8.45L11.2 8.2L12 6.7Z" fill="currentColor"/>
+                </svg>
+            `;
+        }
+
+        return `
+            <svg class="league-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M6.5 18.5V12.5H10V18.5H6.5ZM10.7 18.5V8.5H14.3V18.5H10.7ZM15 18.5V10.8H18.5V18.5H15Z" fill="currentColor" opacity="0.22"/>
+                <path d="M5 19H19M8.2 18.5V12.5M12.5 18.5V8.5M16.8 18.5V10.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M8.6 7.4L10.8 8.15L12.5 6L14.2 8.15L16.4 7.4L15.65 11.25H9.35L8.6 7.4Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+        `;
+    }
+
     showModal() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const data = this.getScores();
@@ -282,6 +302,8 @@ class KvartalnaLigaManager {
 
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
+        const leagueTabLabel = gt('hof_tab_league', 'LIGA');
+        const hofTabLabel = gt('hof_tab_main', 'DVORANA SLAVNIH');
 
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 15px; display: flex; flex-direction: column; height: 100%; min-height: 0;">
@@ -311,8 +333,8 @@ class KvartalnaLigaManager {
                 </div>
 
                 <div style="display: flex; justify-content: center; gap: 10px; padding: 15px 15px 5px 15px; flex-shrink: 0;">
-                    <button id="tab-league-main" class="btn-menu btn-primary" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('league')">${gt('hof_tab_league', 'LIGA')}</button>
-                    <button id="tab-league-hof" class="btn-menu btn-secondary" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('hof')">${gt('hof_tab_main', 'DVORANA SLAVNIH 🏛️')}</button>
+                    <button id="tab-league-main" class="btn-menu btn-primary league-tab-button" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('league')">${this.getMainTabIcon('league')}<span>${leagueTabLabel}</span></button>
+                    <button id="tab-league-hof" class="btn-menu btn-secondary league-tab-button" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('hof')">${this.getMainTabIcon('hof')}<span>${hofTabLabel}</span></button>
                 </div>
 
                 <div id="league-main-content" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; width: 100%; min-height: 0;">
