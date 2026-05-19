@@ -578,12 +578,14 @@ body {
 
 .daily-intro-word-left {
     align-self: flex-start;
+    margin-left: clamp(16px, 5vw, 36px);
     animation: dailyWordLeft 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
 }
 
 .daily-intro-word-right {
     align-self: flex-end;
     margin-top: 8px;
+    margin-right: clamp(16px, 5vw, 36px);
     animation: dailyWordRight 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
 }
 
