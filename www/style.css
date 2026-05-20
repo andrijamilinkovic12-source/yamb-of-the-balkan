@@ -3466,6 +3466,229 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
 }
 
 /* =========================================================
+   END GAME TROPHY SHOWCASE
+   ========================================================= */
+.trophy-showcase {
+    position: fixed;
+    inset: 0;
+    z-index: 100001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(18px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+    background: rgba(0, 0, 0, 0.74);
+    backdrop-filter: blur(24px) saturate(130%);
+    -webkit-backdrop-filter: blur(24px) saturate(130%);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.trophy-showcase.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.trophy-showcase.closing {
+    opacity: 0;
+}
+
+.trophy-showcase-panel {
+    position: relative;
+    width: min(760px, calc(100vw - 28px));
+    max-height: calc(100vh - 42px);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, var(--glass-panel), rgba(255, 255, 255, 0.045));
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    color: var(--text-main);
+}
+
+.trophy-showcase-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -45%;
+    width: 34%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.16), transparent);
+    transform: skewX(-14deg);
+    animation: trophyShowcaseSweep 8s ease-in-out forwards;
+    pointer-events: none;
+}
+
+.trophy-showcase-kicker {
+    position: relative;
+    color: var(--gold-main);
+    font-size: 1.6rem;
+    line-height: 1.05;
+    font-weight: 950;
+    text-align: center;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px var(--gold-glow), 0 3px 14px rgba(0, 0, 0, 0.6);
+}
+
+.trophy-showcase-subtitle {
+    position: relative;
+    color: var(--text-muted);
+    font-size: 0.86rem;
+    line-height: 1.25;
+    font-weight: 800;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0;
+}
+
+.trophy-showcase-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
+    gap: 10px;
+    overflow-y: auto;
+    padding: 2px;
+    min-height: 0;
+}
+
+.trophy-showcase-card {
+    min-height: 128px;
+    border-radius: 8px;
+    padding: 12px 8px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.065);
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 10px 22px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    transform: translateY(18px) scale(0.92);
+    animation: trophyCardReveal 0.72s cubic-bezier(0.2, 0.85, 0.25, 1.2) forwards;
+    animation-delay: calc(0.18s + (var(--i) * 0.12s));
+}
+
+.trophy-showcase-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.28);
+    border: 1px solid var(--gold-main);
+    box-shadow: 0 0 20px var(--gold-glow), inset 0 0 12px rgba(255, 255, 255, 0.08);
+    font-size: 2rem;
+    line-height: 1;
+    animation: trophyIconPulse 2.2s ease-in-out infinite;
+    animation-delay: calc(0.9s + (var(--i) * 0.1s));
+}
+
+.trophy-showcase-name {
+    width: 100%;
+    color: var(--text-main);
+    font-size: 0.82rem;
+    line-height: 1.15;
+    font-weight: 900;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.trophy-showcase-reward {
+    color: var(--success);
+    font-size: 0.78rem;
+    line-height: 1;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: rgba(76, 175, 80, 0.13);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.trophy-showcase-total {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    font-weight: 800;
+}
+
+.trophy-showcase-total strong {
+    color: var(--gold-main);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+@keyframes trophyShowcaseSweep {
+    0% { left: -45%; }
+    48% { left: 115%; }
+    100% { left: 115%; }
+}
+
+@keyframes trophyCardReveal {
+    0% { opacity: 0; transform: translateY(18px) scale(0.92); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes trophyIconPulse {
+    0%, 100% { transform: translateY(0) scale(1); filter: brightness(1); }
+    50% { transform: translateY(-4px) scale(1.06); filter: brightness(1.18); }
+}
+
+@media (max-width: 520px) {
+    .trophy-showcase-panel {
+        padding: 16px;
+        gap: 10px;
+    }
+
+    .trophy-showcase-kicker {
+        font-size: 1.25rem;
+    }
+
+    .trophy-showcase-grid {
+        grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+        gap: 8px;
+    }
+
+    .trophy-showcase-card {
+        min-height: 112px;
+        padding: 10px 7px 8px;
+    }
+
+    .trophy-showcase-icon {
+        width: 46px;
+        height: 46px;
+        font-size: 1.65rem;
+    }
+
+    .trophy-showcase-name {
+        font-size: 0.74rem;
+    }
+
+    .trophy-showcase-total {
+        flex-direction: column;
+        gap: 4px;
+    }
+}
+
+/* =========================================================
    CITAT ANIMACIJA (NOVO)
    ========================================================= */
 @keyframes quoteFadeInOut {

@@ -4136,7 +4136,80 @@ class YambApp {
         return grandTotal;
     }
 
-    async handleGameOver() { 
+    showTrophyUnlockShowcase(trophies = []) {
+        const earnedTrophies = Array.isArray(trophies)
+            ? trophies.filter(trophy => trophy && trophy.id)
+            : [];
+
+        if (earnedTrophies.length === 0) return Promise.resolve(false);
+
+        return new Promise(resolve => {
+            const lang = localStorage.getItem('yamb_lang') || 'sr';
+            const textFor = (value) => {
+                if (value && typeof value === 'object') {
+                    return value[lang] || value.sr || value.en || '';
+                }
+                return value || '';
+            };
+            const coinIcon = (typeof dukatIconHtml === 'function') ? dukatIconHtml() : 'dukata';
+            const totalReward = earnedTrophies.reduce((sum, trophy) => sum + Math.max(0, Number(trophy.reward) || 0), 0);
+            const title = lang === 'en'
+                ? (earnedTrophies.length === 1 ? 'TROPHY UNLOCKED' : 'TROPHIES UNLOCKED')
+                : (earnedTrophies.length === 1 ? 'OSVOJEN TROFEJ' : 'OSVOJENI TROFEJI');
+            const subtitle = lang === 'en'
+                ? `${earnedTrophies.length} new ${earnedTrophies.length === 1 ? 'honor' : 'honors'}`
+                : `${earnedTrophies.length} ${earnedTrophies.length === 1 ? 'novo priznanje' : 'novih priznanja'}`;
+            const totalLabel = lang === 'en' ? 'Total reward' : 'Ukupna nagrada';
+
+            document.querySelectorAll('.trophy-showcase').forEach(el => el.remove());
+
+            const overlay = document.createElement('div');
+            overlay.className = 'trophy-showcase';
+            overlay.setAttribute('role', 'status');
+            overlay.setAttribute('aria-live', 'polite');
+
+            const cardsHtml = earnedTrophies.map((trophy, index) => {
+                const trophyTitle = this.escapeHtml(textFor(trophy.title) || trophy.id);
+                const reward = Math.max(0, Number(trophy.reward) || 0);
+                const icon = trophy.icon || '🏆';
+
+                return `
+                    <div class="trophy-showcase-card" style="--i:${index};">
+                        <div class="trophy-showcase-icon">${icon}</div>
+                        <div class="trophy-showcase-name">${trophyTitle}</div>
+                        <div class="trophy-showcase-reward">+${reward} ${coinIcon}</div>
+                    </div>
+                `;
+            }).join('');
+
+            overlay.innerHTML = `
+                <div class="trophy-showcase-panel">
+                    <div class="trophy-showcase-kicker">${this.escapeHtml(title)}</div>
+                    <div class="trophy-showcase-subtitle">${this.escapeHtml(subtitle)}</div>
+                    <div class="trophy-showcase-grid">${cardsHtml}</div>
+                    <div class="trophy-showcase-total">
+                        <span>${this.escapeHtml(totalLabel)}</span>
+                        <strong>+${totalReward} ${coinIcon}</strong>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+            if (this.soundMgr && typeof this.soundMgr.trophy === 'function') {
+                this.soundMgr.trophy();
+            }
+
+            requestAnimationFrame(() => overlay.classList.add('active'));
+
+            setTimeout(() => overlay.classList.add('closing'), 7300);
+            setTimeout(() => {
+                overlay.remove();
+                resolve(true);
+            }, 8000);
+        });
+    }
+
+    async handleGameOver() {
         localStorage.removeItem('yamb_active_online_room'); // Obrisano jer je igra gotova
         // ---> DODATO: Blokada duplog Game Over-a (Fiks 1) <---
         if (!this.gameActive && !this.isSpectator) {
@@ -4187,8 +4260,9 @@ class YambApp {
         
         let detectedMode = "Solo";
         if (this.onlineMode) detectedMode = "Online"; else if (this.players.length > 1) detectedMode = "Hotseat";
-        
+
         let myScoreEntry = finalResults.find(r => r.name === this.playerName) || finalResults[0];
+        let unlockedTrophiesNow = [];
 
         try {
             if (window.kvartalnaLiga && myScoreEntry && myScoreEntry.score > 0) {
@@ -4229,16 +4303,17 @@ class YambApp {
                      if (window.trophyManager && typeof window.trophyManager.checkEndGameTrophies === 'function') {
                          let detectedModeForTrophies = this.onlineMode ? "Online" : (this.aiMode ? "AI" : (this.players.length > 1 ? "Hotseat" : "Solo"));
                          const scoreDiff = winnerScore - myScoreEntry.score;
-                         window.trophyManager.checkEndGameTrophies(
-                             myScoreEntry.score, 
-                             this.allScores[myIndex], 
+                         unlockedTrophiesNow = window.trophyManager.checkEndGameTrophies(
+                             myScoreEntry.score,
+                             this.allScores[myIndex],
                              detectedModeForTrophies,
-                             { 
-                                 hasSvetiIlija: this.hasSvetiIlija, 
+                             {
+                                 hasSvetiIlija: this.hasSvetiIlija,
                                  hasProphet: this.hasProphet,
-                                 scoreDiff: scoreDiff 
-                             }
-                         );
+                                 scoreDiff: scoreDiff
+                             },
+                             { silent: true }
+                         ) || [];
                      } else if (this.features && typeof this.features.checkAchievements === 'function') {
                          this.features.checkAchievements(myScoreEntry.score, this.allScores[myIndex]);
                      }
@@ -4374,6 +4449,7 @@ class YambApp {
             if (btnRematch) btnRematch.style.display = 'none';
         }
 
+        await this.showTrophyUnlockShowcase(unlockedTrophiesNow);
         this.navigateTo('game-over-screen');
     }
 
