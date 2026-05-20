@@ -235,6 +235,7 @@ class ModalManager {
 class EffectManager {
     constructor() {
         this.activeEffects = [];
+        this.confettiAnimationId = null;
     }
     
     applyPermanent(type) {
@@ -1293,42 +1294,220 @@ class EffectManager {
     }
     
     spawnConfetti() {
+        const colors = ['#FFD166', '#F7B801', '#EF476F', '#06D6A0', '#4CC9F0', '#FFFFFF'];
+
         if (window.confetti) { 
-            const colors = ['#FFD700', '#FF007F', '#00E5FF', '#39FF14', '#FF4500', '#9400D3'];
-            const end = Date.now() + 5000; 
-            
-            (function frame() {
+            const baseOptions = {
+                colors,
+                zIndex: 99999,
+                disableForReducedMotion: true
+            };
+
+            window.confetti({
+                ...baseOptions,
+                particleCount: 90,
+                spread: 74,
+                startVelocity: 54,
+                gravity: 0.82,
+                scalar: 1.02,
+                ticks: 190,
+                origin: { x: 0.5, y: 0.72 }
+            });
+
+            window.confetti({
+                ...baseOptions,
+                particleCount: 42,
+                angle: 58,
+                spread: 56,
+                startVelocity: 48,
+                gravity: 0.86,
+                scalar: 0.92,
+                ticks: 170,
+                origin: { x: 0.02, y: 0.84 }
+            });
+
+            window.confetti({
+                ...baseOptions,
+                particleCount: 42,
+                angle: 122,
+                spread: 56,
+                startVelocity: 48,
+                gravity: 0.86,
+                scalar: 0.92,
+                ticks: 170,
+                origin: { x: 0.98, y: 0.84 }
+            });
+
+            const end = Date.now() + 1600;
+            const drift = () => {
                 window.confetti({
-                    particleCount: 6,
-                    angle: 60,
-                    spread: 60,
-                    origin: { x: 0, y: 0.9 },
-                    colors: colors,
-                    zIndex: 99999
+                    ...baseOptions,
+                    particleCount: 8,
+                    spread: 110,
+                    startVelocity: 20,
+                    gravity: 0.55,
+                    drift: (Math.random() - 0.5) * 1.2,
+                    scalar: 0.72,
+                    ticks: 210,
+                    origin: { x: Math.random(), y: -0.08 }
                 });
-                window.confetti({
-                    particleCount: 6,
-                    angle: 120,
-                    spread: 60,
-                    origin: { x: 1, y: 0.9 }, 
-                    colors: colors,
-                    zIndex: 99999
-                });
-                
+
                 if (Date.now() < end) {
-                    requestAnimationFrame(frame);
+                    setTimeout(drift, 180);
                 }
-            }());
-        } else { 
-            const end = Date.now() + 5000;
-            const interval = setInterval(() => {
-                if (Date.now() > end) {
-                    clearInterval(interval);
-                    return;
-                }
-                this.spawnEmojiRain(['🎉', '🎊', '🎈', '✨', '🏆', '💫'], 5);
-            }, 250); 
+            };
+
+            setTimeout(drift, 260);
+            return;
         }
+
+        this.spawnCanvasConfetti(colors);
+    }
+
+    spawnCanvasConfetti(colors) {
+        const canvas = document.getElementById('confetti-canvas');
+        const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (reducedMotion) return;
+
+        if (!canvas) {
+            this.spawnEmojiRain(['🎉', '🎊', '✨', '🏆', '💫'], 8);
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+            this.spawnEmojiRain(['🎉', '🎊', '✨', '🏆', '💫'], 8);
+            return;
+        }
+
+        if (this.confettiAnimationId) {
+            cancelAnimationFrame(this.confettiAnimationId);
+            this.confettiAnimationId = null;
+        }
+
+        const particles = [];
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        let width = 0;
+        let height = 0;
+        let lastFrame = performance.now();
+        let nextDrift = 0;
+        const startedAt = performance.now();
+        const rand = (min, max) => min + Math.random() * (max - min);
+        const degToRad = deg => deg * Math.PI / 180;
+
+        const resizeCanvas = () => {
+            width = window.innerWidth || document.documentElement.clientWidth || 1;
+            height = window.innerHeight || document.documentElement.clientHeight || 1;
+            canvas.width = Math.ceil(width * dpr);
+            canvas.height = Math.ceil(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        };
+
+        const addParticle = (x, y, angleDeg, speed, sizeScale = 1) => {
+            const angle = degToRad(angleDeg);
+            particles.push({
+                x,
+                y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                gravity: rand(0.13, 0.24),
+                drift: rand(-0.035, 0.035),
+                wobble: rand(0, Math.PI * 2),
+                wobbleSpeed: rand(0.08, 0.16),
+                rotation: rand(0, Math.PI * 2),
+                rotationSpeed: rand(-0.22, 0.22),
+                size: rand(5, 10) * sizeScale,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                shape: Math.random() > 0.78 ? 'circle' : 'ribbon',
+                age: 0,
+                ttl: rand(125, 185)
+            });
+        };
+
+        const addBurst = (x, y, count, minAngle, maxAngle, minSpeed, maxSpeed, sizeScale = 1) => {
+            for (let i = 0; i < count; i++) {
+                addParticle(x, y, rand(minAngle, maxAngle), rand(minSpeed, maxSpeed), sizeScale);
+            }
+        };
+
+        const addDrift = () => {
+            for (let i = 0; i < 8; i++) {
+                addParticle(rand(0, width), -18, rand(74, 106), rand(1.2, 3), 0.78);
+            }
+        };
+
+        resizeCanvas();
+        addBurst(width * 0.5, height * 0.72, 90, 205, 335, 6.5, 13.5, 1.02);
+        addBurst(width * 0.02, height * 0.84, 42, 292, 348, 5.8, 11.5, 0.92);
+        addBurst(width * 0.98, height * 0.84, 42, 192, 248, 5.8, 11.5, 0.92);
+
+        const drawParticle = particle => {
+            const fadeStart = particle.ttl * 0.66;
+            const alpha = particle.age > fadeStart
+                ? Math.max(0, 1 - ((particle.age - fadeStart) / (particle.ttl - fadeStart)))
+                : 1;
+
+            ctx.save();
+            ctx.globalAlpha = alpha;
+            ctx.translate(particle.x + Math.sin(particle.wobble) * 5, particle.y);
+            ctx.rotate(particle.rotation);
+            ctx.fillStyle = particle.color;
+
+            if (particle.shape === 'circle') {
+                ctx.beginPath();
+                ctx.arc(0, 0, particle.size * 0.45, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                ctx.fillRect(-particle.size * 0.75, -particle.size * 0.22, particle.size * 1.5, particle.size * 0.44);
+            }
+
+            ctx.restore();
+        };
+
+        const animate = now => {
+            const delta = Math.min(2, (now - lastFrame) / 16.67);
+            lastFrame = now;
+            const currentWidth = window.innerWidth || document.documentElement.clientWidth || 1;
+            const currentHeight = window.innerHeight || document.documentElement.clientHeight || 1;
+
+            if (currentWidth !== width || currentHeight !== height) {
+                resizeCanvas();
+            }
+
+            ctx.clearRect(0, 0, width, height);
+
+            if (now - startedAt > 260 && now - startedAt < 1700 && now > nextDrift) {
+                addDrift();
+                nextDrift = now + 180;
+            }
+
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const particle = particles[i];
+                particle.age += delta;
+                particle.x += particle.vx * delta;
+                particle.y += particle.vy * delta;
+                particle.vy += particle.gravity * delta;
+                particle.vx += particle.drift * delta;
+                particle.wobble += particle.wobbleSpeed * delta;
+                particle.rotation += particle.rotationSpeed * delta;
+
+                if (particle.age > particle.ttl || particle.y > height + 60) {
+                    particles.splice(i, 1);
+                } else {
+                    drawParticle(particle);
+                }
+            }
+
+            if (particles.length) {
+                this.confettiAnimationId = requestAnimationFrame(animate);
+            } else {
+                ctx.clearRect(0, 0, width, height);
+                this.confettiAnimationId = null;
+            }
+        };
+
+        this.confettiAnimationId = requestAnimationFrame(animate);
     }
     
     celebrateYamb() {
@@ -1343,6 +1522,17 @@ class EffectManager {
     
     stop() {
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-ufo_abduction', 'fx-dragon_fire', 'fx-royal_yamb');
+
+        if (this.confettiAnimationId) {
+            cancelAnimationFrame(this.confettiAnimationId);
+            this.confettiAnimationId = null;
+        }
+
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        if (confettiCanvas) {
+            const confettiCtx = confettiCanvas.getContext('2d');
+            if (confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        }
         
         document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container').forEach(e => e.remove());
         
