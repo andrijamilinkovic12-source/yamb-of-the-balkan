@@ -1818,7 +1818,14 @@ class ShopManager {
         
         let savedUnlocked = JSON.parse(localStorage.getItem(this.unlockKey)) || [];
         let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
-        const statsInventory = (window.statsManager && window.statsManager.stats) ? window.statsManager.stats : {};
+        let storedStatsInventory = {};
+        try {
+            storedStatsInventory = JSON.parse(localStorage.getItem('yamb_stats')) || {};
+        } catch(e) {
+            storedStatsInventory = {};
+        }
+        const managerStatsInventory = (window.statsManager && window.statsManager.stats) ? window.statsManager.stats : {};
+        const statsInventory = { ...storedStatsInventory, ...managerStatsInventory };
         
         if (this.type === 'theme') {
             const cloudThemes = [
@@ -1839,6 +1846,11 @@ class ShopManager {
                 typedCloudUnlocks = statsInventory.unlockedSkins.filter(item => !YAMB_THEME_IDS.includes(item));
             } else if (this.type === 'effect' && Array.isArray(statsInventory.unlockedEffects)) {
                 typedCloudUnlocks = statsInventory.unlockedEffects;
+            } else if (this.type === 'trophy') {
+                typedCloudUnlocks = [
+                    ...(Array.isArray(storedStatsInventory.unlockedTrophies) ? storedStatsInventory.unlockedTrophies : []),
+                    ...(Array.isArray(managerStatsInventory.unlockedTrophies) ? managerStatsInventory.unlockedTrophies : [])
+                ];
             }
             savedUnlocked = [...new Set([...savedUnlocked, ...opstiNiz, ...typedCloudUnlocks])];
             ['default', 'confetti', 'dark', 'light', 'medium', 'winter'].forEach(item => {
