@@ -936,26 +936,42 @@ class YambApp {
 
         const localStats = this.readLocalJson('yamb_stats', {}) || {};
         const nextStats = { ...localStats };
-        const numericFields = [
+        const monotonicNumericFields = [
             'games',
             'wins',
             'losses',
             'highscore',
             'totalScoreSum',
-            'currentWinStreak',
             'maxWinStreak',
             'tournamentWins',
             'penaltyPoints'
         ];
+        const localGames = Math.max(0, toNumber(localStats.games || localStats.totalGames, 0));
+        const incomingGames = data.games !== undefined
+            ? Math.max(0, toNumber(data.games, localGames))
+            : null;
+        const cloudStatsAreStale = incomingGames !== null && incomingGames < localGames;
 
-        numericFields.forEach(field => {
+        monotonicNumericFields.forEach(field => {
             if (data[field] !== undefined) {
-                nextStats[field] = Math.max(0, toNumber(data[field], nextStats[field] || 0));
+                const localValue = Math.max(0, toNumber(nextStats[field], 0));
+                const cloudValue = Math.max(0, toNumber(data[field], localValue));
+                nextStats[field] = Math.max(localValue, cloudValue);
             }
         });
 
         if (data.games !== undefined) {
-            nextStats.totalGames = nextStats.games || 0;
+            nextStats.games = Math.max(localGames, incomingGames || 0);
+            nextStats.totalGames = Math.max(
+                nextStats.games,
+                Math.max(0, toNumber(nextStats.totalGames, 0))
+            );
+        }
+
+        if (data.currentWinStreak !== undefined) {
+            const localStreak = Math.max(0, toNumber(nextStats.currentWinStreak, 0));
+            const cloudStreak = Math.max(0, toNumber(data.currentWinStreak, localStreak));
+            nextStats.currentWinStreak = cloudStatsAreStale ? localStreak : cloudStreak;
         }
 
         if (data.balance !== undefined) {
@@ -2162,11 +2178,24 @@ class YambApp {
     updateStats(score, resultType, oppScore = 0, isTechnical = false, options = {}) {
         let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
         this.stats = freshStats || this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, currentWinStreak: 0, maxWinStreak: 0 };
-        
+        const safeStatNumber = (value) => {
+            const num = Number(value);
+            return Number.isFinite(num) ? Math.max(0, Math.floor(num)) : 0;
+        };
+        this.stats.games = Math.max(safeStatNumber(this.stats.games), safeStatNumber(this.stats.totalGames));
+        this.stats.totalGames = this.stats.games;
+        this.stats.totalScoreSum = safeStatNumber(this.stats.totalScoreSum);
+        this.stats.highscore = safeStatNumber(this.stats.highscore || this.stats.highScore);
+        this.stats.wins = safeStatNumber(this.stats.wins);
+        this.stats.losses = safeStatNumber(this.stats.losses);
+        this.stats.currentWinStreak = safeStatNumber(this.stats.currentWinStreak);
+        this.stats.maxWinStreak = safeStatNumber(this.stats.maxWinStreak);
+
         if (!isTechnical) {
-            this.stats.games++; 
-            this.stats.totalScoreSum += score; 
-            if (score > this.stats.highscore) this.stats.highscore = score; 
+            this.stats.games++;
+            this.stats.totalGames = this.stats.games;
+            this.stats.totalScoreSum += score;
+            if (score > this.stats.highscore) this.stats.highscore = score;
         }
 
         if (this.onlineMode && !this.isSpectator) {
@@ -4251,8 +4280,13 @@ class YambApp {
              }
 
              this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, { deferServerSync: true });
+             if (!this.onlineMode && this.socket && this.socket.connected) {
+                 this.emitPlayerData(false).catch(err => {
+                     console.warn("Nije moguće odmah sinhronizovati završenu lokalnu partiju:", err);
+                 });
+             }
         }
-        
+
         this.soundMgr.win();
         const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
         let title = gt('game_over'); let message = "";
