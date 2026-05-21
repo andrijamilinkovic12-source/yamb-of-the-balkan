@@ -1997,6 +1997,45 @@ function isLocalRoomId(roomId) {
     return !!roomId && String(roomId).startsWith('local_');
 }
 
+function isSpectatableLocalRoom(roomId, socketId = '', uid = '') {
+    if (!isLocalRoomId(roomId)) return false;
+
+    const roomClients = io.sockets.adapter.rooms.get(roomId);
+    if (!roomClients) return false;
+
+    for (const clientId of roomClients) {
+        const clientSocket = io.sockets.sockets.get(clientId);
+        if (!clientSocket || clientSocket.isSpectator) continue;
+
+        if (socketId && clientId === socketId) return true;
+        if (uid && getSocketUid(clientId) === uid) return true;
+        if (!socketId && !uid) return true;
+    }
+
+    return false;
+}
+
+function getLiveLocalRoomForSocket(socketId, uid = '') {
+    const candidateSocketIds = new Set();
+    if (socketId) candidateSocketIds.add(socketId);
+    if (uid && onlinePlayers[uid]) candidateSocketIds.add(onlinePlayers[uid]);
+
+    for (const candidateSocketId of candidateSocketIds) {
+        const directRoom = playerRooms[candidateSocketId];
+        if (isSpectatableLocalRoom(directRoom, candidateSocketId, uid)) return directRoom;
+
+        const joinedRooms = io.sockets.adapter.sids.get(candidateSocketId);
+        if (!joinedRooms) continue;
+
+        for (const roomId of joinedRooms) {
+            if (roomId === candidateSocketId) continue;
+            if (isSpectatableLocalRoom(roomId, candidateSocketId, uid)) return roomId;
+        }
+    }
+
+    return null;
+}
+
 function makeBusyState(reason, roomId = null) {
     return { busy: true, reason, roomId };
 }
@@ -2256,9 +2295,10 @@ function buildOnlinePlayerPresence(clientSocket, socketId, myFriends = []) {
     const playerUid = getPublicPlayerUid(clientSocket, socketId);
     const busyState = getPlayerBusyState(socketId, playerUid);
     const liveRoomId = getLiveOnlineRoomForSocket(socketId, playerUid);
+    const localRoomId = getLiveLocalRoomForSocket(socketId, playerUid);
     const fallbackRoomId = busyState?.roomId;
     const fallbackRoomState = fallbackRoomId ? roomState[fallbackRoomId] : null;
-    const spectatableRoomId = liveRoomId || (
+    const spectatableRoomId = liveRoomId || localRoomId || (
         fallbackRoomState && !fallbackRoomState.gameFinished && !isLocalRoomId(fallbackRoomId)
             ? fallbackRoomId
             : null
@@ -4386,21 +4426,35 @@ io.on('connection', (socket) => {
             ? String(target.uid || target.playerId || '')
             : '';
         const targetUid = getSocketUid(targetSocketId) || requestedTargetUid;
+        const requestedLocalRoom = requestedRoomId && isSpectatableLocalRoom(requestedRoomId, targetSocketId, targetUid);
         const roomId = (
-            requestedRoomId &&
+            requestedLocalRoom ||
+            (requestedRoomId &&
             isActiveOnlineRoom(requestedRoomId) &&
             (
                 (!targetSocketId && !targetUid) ||
                 isPlayerInLiveOnlineRoom(requestedRoomId, targetSocketId, targetUid)
-            )
+            ))
         )
             ? requestedRoomId
-            : getLiveOnlineRoomForSocket(targetSocketId, targetUid);
+            : (getLiveOnlineRoomForSocket(targetSocketId, targetUid) || getLiveLocalRoomForSocket(targetSocketId, targetUid));
         const state = roomId ? roomState[roomId] : null;
 
-        if (!roomId || !state || state.gameFinished) {
+        if (!roomId || (!isLocalRoomId(roomId) && (!state || state.gameFinished))) {
             socket.emit('error_msg', 'err_spectate_not_in_game');
             return replySpectate({ ok: false, reason: 'err_spectate_not_in_game' });
+        }
+
+        if (isLocalRoomId(roomId)) {
+            socket.join(roomId);
+            socket.isSpectator = true;
+            socket.spectatingRoom = roomId;
+
+            socket.emit('spectate_started', { roomId: roomId });
+            socket.to(roomId).emit('request_state_sync', { senderSocketId: socket.id });
+            console.log(`👁️ Igrač ${socket.id} počeo da gleda lokalnu sobu ${roomId} (Client Sync)`);
+            updateRoomSpectators(roomId);
+            return replySpectate({ ok: true, roomId, spectating: true, local: true });
         }
 
         const requesterUid = getSocketUid(socket.id);
