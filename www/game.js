@@ -1324,7 +1324,7 @@ class YambApp {
     }
 
     // --- SPECTATE FUNKCIJA ---
-    async spectateGame(targetSocketId) {
+    async spectateGame(target) {
         if (!this.requireLogin()) return;
 
         const overlay = document.getElementById('online-players-overlay');
@@ -1334,7 +1334,7 @@ class YambApp {
         this.setupSocketListeners(this.playerName);
 
         const doSpectate = () => {
-            this.socket.emit('request_spectate', targetSocketId);
+            this.socket.emit('request_spectate', target);
         };
 
         if (this.socket && this.socket.connected) {
@@ -3604,7 +3604,10 @@ class YambApp {
     
     startGame() { 
         if (this.socket && this.socket.connected && !this.isSpectator && this.playerId) {
-            this.socket.emit('game_session_start');
+            this.socket.emit('game_session_start', {
+                roomId: this.roomId,
+                onlineMode: this.onlineMode
+            });
         }
 
         this.updateQuickMenuIcons();

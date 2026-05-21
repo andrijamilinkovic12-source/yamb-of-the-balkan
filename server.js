@@ -2161,6 +2161,31 @@ function getParticipantIndexForSocketOrUid(state, socketId, uid = '') {
     return -1;
 }
 
+function refreshOnlineRoomMembership(socket, roomId) {
+    if (!socket || !roomId || isLocalRoomId(roomId)) return false;
+
+    const state = roomState[roomId];
+    const uid = getSocketUid(socket.id);
+    const playerIndex = getParticipantIndexForSocketOrUid(state, socket.id, uid);
+    if (!state || state.gameFinished || playerIndex === -1) return false;
+
+    const oldSocketId = state.players[playerIndex];
+    state.players[playerIndex] = socket.id;
+
+    if (!Array.isArray(state.playerUids)) state.playerUids = [];
+    if (uid) state.playerUids[playerIndex] = uid;
+
+    socket.join(roomId);
+    playerRooms[socket.id] = roomId;
+
+    if (oldSocketId && oldSocketId !== socket.id && playerRooms[oldSocketId] === roomId) {
+        delete playerRooms[oldSocketId];
+    }
+
+    notifyOnlinePlayersStatusChanged();
+    return true;
+}
+
 function getLiveOnlineRoomForSocket(socketId, uid = '') {
     if (!socketId && !uid) return null;
 
@@ -2190,19 +2215,27 @@ function buildOnlinePlayerPresence(clientSocket, socketId, myFriends = []) {
     if (!clientSocket || !clientSocket.playerName) return null;
 
     const playerUid = getPublicPlayerUid(clientSocket, socketId);
-    const liveRoomId = getLiveOnlineRoomForSocket(socketId, playerUid);
     const busyState = getPlayerBusyState(socketId, playerUid);
+    const liveRoomId = getLiveOnlineRoomForSocket(socketId, playerUid);
+    const fallbackRoomId = busyState?.roomId;
+    const fallbackRoomState = fallbackRoomId ? roomState[fallbackRoomId] : null;
+    const spectatableRoomId = liveRoomId || (
+        fallbackRoomState && !fallbackRoomState.gameFinished && !isLocalRoomId(fallbackRoomId)
+            ? fallbackRoomId
+            : null
+    );
 
     return {
         socketId,
         name: clientSocket.playerName,
         photoUrl: clientSocket.photoUrl || '',
         uid: playerUid,
-        isPlaying: !!liveRoomId,
-        canSpectate: !!liveRoomId,
+        roomId: spectatableRoomId || fallbackRoomId || '',
+        isPlaying: !!spectatableRoomId,
+        canSpectate: !!spectatableRoomId,
         isBusy: !!busyState,
         isFriend: Array.isArray(myFriends) && myFriends.includes(playerUid),
-        status: liveRoomId ? 'playing' : (busyState ? 'busy' : 'idle')
+        status: spectatableRoomId ? 'playing' : (busyState ? 'busy' : 'idle')
     };
 }
 
@@ -4208,6 +4241,7 @@ io.on('connection', (socket) => {
 
             const playerData = {
                 id,
+                socketId: id,
                 playerId: presence.uid,
                 name: presence.name,
                 photoUrl: presence.photoUrl,
@@ -4302,9 +4336,19 @@ io.on('connection', (socket) => {
         updateOnlineCount();
     });
 
-    socket.on('request_spectate', (targetSocketId) => {
+    socket.on('request_spectate', (target) => {
+        const targetSocketId = typeof target === 'string' ? target : target?.socketId;
+        const requestedRoomId = typeof target === 'object' && target ? String(target.roomId || '') : '';
         const targetUid = getSocketUid(targetSocketId);
-        const roomId = getLiveOnlineRoomForSocket(targetSocketId, targetUid);
+        const requestedState = requestedRoomId ? roomState[requestedRoomId] : null;
+        const roomId = (
+            requestedState &&
+            !requestedState.gameFinished &&
+            (targetSocketId || targetUid) &&
+            getParticipantIndexForSocketOrUid(requestedState, targetSocketId, targetUid) !== -1
+        )
+            ? requestedRoomId
+            : getLiveOnlineRoomForSocket(targetSocketId, targetUid);
         const state = roomId ? roomState[roomId] : null;
 
         if (!roomId || !state || state.gameFinished) {
@@ -4375,7 +4419,9 @@ io.on('connection', (socket) => {
         notifyOnlinePlayersStatusChanged();
     });
 
-    socket.on('game_session_start', () => {
+    socket.on('game_session_start', (data = {}) => {
+        const roomId = typeof data === 'string' ? data : data?.roomId;
+        if (roomId) refreshOnlineRoomMembership(socket, roomId);
         startScoreSession(socket.id);
         console.log(`⏱️ Igrač ${socket.id} započeo partiju u ${new Date().toLocaleTimeString()}`);
     });
@@ -5515,13 +5561,6 @@ io.on('connection', (socket) => {
 
                 console.log(`⚔️ RANDOM MATCH: ${nickname} vs ${opponentName} (Room: ${roomId})`);
 
-                io.to(opponentId).emit('game_start', {
-                    roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0
-                });
-                socket.emit('game_start', {
-                    roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, oppUid: opponentSocket.playerId || registeredSockets[opponentId] || '', myIndex: 1
-                });
-
                 roomState[roomId] = {
                     players: [opponentId, socket.id],
                     playerUids: [
@@ -5540,6 +5579,13 @@ io.on('connection', (socket) => {
                 };
                 startTurnTimer(roomId); 
                 notifyOnlinePlayersStatusChanged();
+
+                io.to(opponentId).emit('game_start', {
+                    roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0
+                });
+                socket.emit('game_start', {
+                    roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, oppUid: opponentSocket.playerId || registeredSockets[opponentId] || '', myIndex: 1
+                });
 
             } else {
                 waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
@@ -5595,9 +5641,6 @@ io.on('connection', (socket) => {
 
             console.log(`⚔️ PRIVATE MATCH: ${p1.name} vs ${nickname} u sobi ${roomId}`);
 
-            io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0 });
-            socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, oppUid: p1.uid || registeredSockets[p1.id] || '', myIndex: 1 });
-
             roomState[roomId] = {
                 players: [p1.id, socket.id],
                 playerUids: [
@@ -5616,6 +5659,9 @@ io.on('connection', (socket) => {
             };
             startTurnTimer(roomId); 
             notifyOnlinePlayersStatusChanged();
+
+            io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0 });
+            socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, oppUid: p1.uid || registeredSockets[p1.id] || '', myIndex: 1 });
 
             delete privateRooms[roomId]; 
         } else {
@@ -6104,22 +6150,6 @@ io.on('connection', (socket) => {
             startScoreSession(socket.id);
             startScoreSession(challengerId);
 
-            challengerSocket.emit('game_start', {
-                roomId: roomName,
-                opponent: socket.playerName || "Igrač 2",
-                oppStats: socket.playerStats,
-                oppPhoto: socket.photoUrl || '',
-                oppUid: socket.playerId || registeredSockets[socket.id] || '',
-                myIndex: 0
-            });
-            socket.emit('game_start', {
-                roomId: roomName,
-                opponent: challengerSocket.playerName || "Igrač 1",
-                oppStats: challengerSocket.playerStats,
-                oppPhoto: challengerSocket.photoUrl || '',
-                oppUid: challengerSocket.playerId || registeredSockets[challengerId] || '',
-                myIndex: 1
-            });
             console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
 
             roomState[roomName] = {
@@ -6137,6 +6167,23 @@ io.on('connection', (socket) => {
             };
             startTurnTimer(roomName); 
             notifyOnlinePlayersStatusChanged();
+
+            challengerSocket.emit('game_start', {
+                roomId: roomName,
+                opponent: socket.playerName || "Igrač 2",
+                oppStats: socket.playerStats,
+                oppPhoto: socket.photoUrl || '',
+                oppUid: socket.playerId || registeredSockets[socket.id] || '',
+                myIndex: 0
+            });
+            socket.emit('game_start', {
+                roomId: roomName,
+                opponent: challengerSocket.playerName || "Igrač 1",
+                oppStats: challengerSocket.playerStats,
+                oppPhoto: challengerSocket.photoUrl || '',
+                oppUid: challengerSocket.playerId || registeredSockets[challengerId] || '',
+                myIndex: 1
+            });
 
         } else {
             if (!pending) return;
