@@ -1327,6 +1327,11 @@ class YambApp {
     async spectateGame(target) {
         if (!this.requireLogin()) return;
 
+        if (this.gameActive && this.onlineMode && !this.isSpectator) {
+            this.showServerNotice('Već ste u online partiji. Za gledanje tuđe partije otvorite nalog koji nije učesnik tog meča.');
+            return;
+        }
+
         const overlay = document.getElementById('online-players-overlay');
         if (overlay) overlay.style.display = 'none';
 
@@ -1334,7 +1339,35 @@ class YambApp {
         this.setupSocketListeners(this.playerName);
 
         const doSpectate = () => {
-            this.socket.emit('request_spectate', target);
+            let settled = false;
+            const finish = () => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                this.socket.off('spectate_started', finish);
+                this.socket.off('online_room_resume_available', finish);
+                this.socket.off('error_msg', finishOnSpectateError);
+            };
+            const finishOnSpectateError = (msgKey) => {
+                if (String(msgKey || '').includes('spectate')) finish();
+            };
+            const timer = setTimeout(() => {
+                if (settled) return;
+                finish();
+                this.showServerNotice('Ne mogu da otvorim gledanje ove partije. Osvežite online listu i probajte ponovo.');
+            }, 8000);
+
+            this.socket.once('spectate_started', finish);
+            this.socket.once('online_room_resume_available', finish);
+            this.socket.on('error_msg', finishOnSpectateError);
+            this.socket.emit('request_spectate', target, (result = {}) => {
+                if (result && result.ok === false) {
+                    finish();
+                    console.warn(`Gledanje partije odbijeno: ${result.reason || 'unknown_error'}`);
+                } else if (result && result.ok) {
+                    finish();
+                }
+            });
         };
 
         if (this.socket && this.socket.connected) {

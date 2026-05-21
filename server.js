@@ -4375,7 +4375,11 @@ io.on('connection', (socket) => {
         updateOnlineCount();
     });
 
-    socket.on('request_spectate', (target) => {
+    socket.on('request_spectate', (target, ack) => {
+        const replySpectate = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            return payload;
+        };
         const targetSocketId = typeof target === 'string' ? target : target?.socketId;
         const requestedRoomId = typeof target === 'object' && target ? String(target.roomId || '') : '';
         const requestedTargetUid = typeof target === 'object' && target
@@ -4384,8 +4388,11 @@ io.on('connection', (socket) => {
         const targetUid = getSocketUid(targetSocketId) || requestedTargetUid;
         const roomId = (
             requestedRoomId &&
-            (targetSocketId || targetUid) &&
-            isPlayerInLiveOnlineRoom(requestedRoomId, targetSocketId, targetUid)
+            isActiveOnlineRoom(requestedRoomId) &&
+            (
+                (!targetSocketId && !targetUid) ||
+                isPlayerInLiveOnlineRoom(requestedRoomId, targetSocketId, targetUid)
+            )
         )
             ? requestedRoomId
             : getLiveOnlineRoomForSocket(targetSocketId, targetUid);
@@ -4393,7 +4400,7 @@ io.on('connection', (socket) => {
 
         if (!roomId || !state || state.gameFinished) {
             socket.emit('error_msg', 'err_spectate_not_in_game');
-            return;
+            return replySpectate({ ok: false, reason: 'err_spectate_not_in_game' });
         }
 
         const requesterUid = getSocketUid(socket.id);
@@ -4412,7 +4419,7 @@ io.on('connection', (socket) => {
             socket.join(roomId);
             playerRooms[socket.id] = roomId;
             socket.emit('online_room_resume_available', { roomId });
-            return;
+            return replySpectate({ ok: true, roomId, resumed: true });
         }
 
         socket.join(roomId);
@@ -4423,6 +4430,7 @@ io.on('connection', (socket) => {
         emitAuthoritativeRoomState(socket, roomId, -1);
         console.log(`👁️ Igrač ${socket.id} počeo da gleda sobu ${roomId} (Server Sync)`);
         updateRoomSpectators(roomId);
+        return replySpectate({ ok: true, roomId, spectating: true });
     });
 
     socket.on('stop_spectating', () => {
