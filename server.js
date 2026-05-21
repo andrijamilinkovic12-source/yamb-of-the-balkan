@@ -1156,6 +1156,7 @@ function markOnlineRoomGameFinished(roomId) {
     state.finishedAt = Date.now();
     stopTurnTimer(roomId);
     scheduleFinishedRoomCleanup(roomId);
+    notifyOnlinePlayersStatusChanged();
     return true;
 }
 
@@ -1182,6 +1183,7 @@ function cleanupOnlineRoom(roomId) {
     stopTurnTimer(roomId);
     delete roomState[roomId];
     if (privateRooms[roomId]) delete privateRooms[roomId];
+    notifyOnlinePlayersStatusChanged();
 
     const clients = io.sockets.adapter.rooms.get(roomId);
     if (clients) {
@@ -1798,6 +1800,7 @@ function updateOnlineCount() {
     });
 
     io.emit('users_count', uniqueKeys.size);
+    notifyOnlinePlayersStatusChanged();
 }
 
 function bindVerifiedPlayerSocket(socket, playerId) {
@@ -2177,6 +2180,54 @@ function getLiveOnlineRoomForSocket(socketId, uid = '') {
     }
 
     return null;
+}
+
+function getPublicPlayerUid(clientSocket, socketId) {
+    return clientSocket?.playerId || registeredSockets[socketId] || clientSocket?.verifiedUid || '';
+}
+
+function buildOnlinePlayerPresence(clientSocket, socketId, myFriends = []) {
+    if (!clientSocket || !clientSocket.playerName) return null;
+
+    const playerUid = getPublicPlayerUid(clientSocket, socketId);
+    const liveRoomId = getLiveOnlineRoomForSocket(socketId, playerUid);
+    const busyState = getPlayerBusyState(socketId, playerUid);
+
+    return {
+        socketId,
+        name: clientSocket.playerName,
+        photoUrl: clientSocket.photoUrl || '',
+        uid: playerUid,
+        isPlaying: !!liveRoomId,
+        canSpectate: !!liveRoomId,
+        isBusy: !!busyState,
+        isFriend: Array.isArray(myFriends) && myFriends.includes(playerUid),
+        status: liveRoomId ? 'playing' : (busyState ? 'busy' : 'idle')
+    };
+}
+
+function getOnlinePresenceRank(player) {
+    if (!player) return -1;
+
+    const stateRank = player.isPlaying ? 3 : (player.isBusy ? 2 : 1);
+    const currentSocketRank = player.uid && onlinePlayers[player.uid] === player.socketId ? 1 : 0;
+    return stateRank * 10 + currentSocketRank;
+}
+
+function shouldUseOnlinePresence(existing, candidate) {
+    if (!candidate) return false;
+    if (!existing) return true;
+
+    const candidateRank = getOnlinePresenceRank(candidate);
+    const existingRank = getOnlinePresenceRank(existing);
+    if (candidateRank !== existingRank) return candidateRank > existingRank;
+
+    if (!existing.photoUrl && candidate.photoUrl) return true;
+    return false;
+}
+
+function notifyOnlinePlayersStatusChanged() {
+    io.emit('online_players_status_changed');
 }
 
 function emitAuthoritativeRoomState(socket, roomId, myIndex = null) {
@@ -4130,55 +4181,46 @@ io.on('connection', (socket) => {
             }
         }
 
-        let onlinePlayersList = [];
+        const onlinePlayersByUid = new Map();
         
-        io.sockets.sockets.forEach((clientSocket) => {
-            if (clientSocket.playerName) {
-                const playerUid = clientSocket.playerId || registeredSockets[clientSocket.id] || '';
-                const busyState = getPlayerBusyState(clientSocket.id, playerUid);
-                const liveRoomId = getLiveOnlineRoomForSocket(clientSocket.id, playerUid);
+        io.sockets.sockets.forEach((clientSocket, id) => {
+            const player = buildOnlinePlayerPresence(clientSocket, id, myFriends);
+            if (!player) return;
 
-                onlinePlayersList.push({
-                    socketId: clientSocket.id,
-                    name: clientSocket.playerName,
-                    photoUrl: clientSocket.photoUrl || '',
-                    uid: clientSocket.playerId || '',
-                    isPlaying: !!liveRoomId,
-                    canSpectate: !!liveRoomId,
-                    isBusy: !!busyState,
-                    isFriend: myFriends.includes(clientSocket.playerId)
-                });
+            const playerKey = player.uid || id;
+            const existing = onlinePlayersByUid.get(playerKey);
+            if (shouldUseOnlinePresence(existing, player)) {
+                onlinePlayersByUid.set(playerKey, player);
             }
         });
 
-        socket.emit('online_players_list_data', onlinePlayersList);
+        socket.emit('online_players_list_data', Array.from(onlinePlayersByUid.values()));
     });
 
     socket.on('get_online_players', () => {
         const playersMap = new Map(); 
         
         io.sockets.sockets.forEach((clientSocket, id) => {
-            if (!clientSocket.playerName) return;
-
-            const playerUid = clientSocket.playerId || registeredSockets[id] || '';
-            const isPlaying = !!getLiveOnlineRoomForSocket(id, playerUid);
-            const isBusy = !!getPlayerBusyState(id, playerUid);
-            const ip = activeConnections.get(id) || "unknown_ip";
+            const presence = buildOnlinePlayerPresence(clientSocket, id);
+            if (!presence) return;
             
-            let uniqueKey = clientSocket.playerId || registeredSockets[id] || ip;
+            let uniqueKey = presence.uid || activeConnections.get(id) || id;
 
             const playerData = {
-                id: id, 
-                playerId: clientSocket.playerId,
-                name: clientSocket.playerName, 
-                photoUrl: clientSocket.photoUrl, 
+                id,
+                playerId: presence.uid,
+                name: presence.name,
+                photoUrl: presence.photoUrl,
                 stats: clientSocket.playerStats || { wins: 0, losses: 0 },
-                status: isPlaying ? 'playing' : (isBusy ? 'busy' : 'idle')
+                status: presence.status,
+                isPlaying: presence.isPlaying,
+                isBusy: presence.isBusy,
+                canSpectate: presence.canSpectate
             };
 
             if (playersMap.has(uniqueKey)) {
                 const existing = playersMap.get(uniqueKey);
-                if (existing.status !== 'playing' && playerData.status === 'playing') {
+                if (shouldUseOnlinePresence(existing, playerData)) {
                     playersMap.set(uniqueKey, playerData);
                 }
             } else {
@@ -4330,6 +4372,7 @@ io.on('connection', (socket) => {
         socket.clientBusyReason = socket.clientBusyForInvites
             ? String(data.reason || 'client_busy').slice(0, 40)
             : '';
+        notifyOnlinePlayersStatusChanged();
     });
 
     socket.on('game_session_start', () => {
@@ -5496,6 +5539,7 @@ io.on('connection', (socket) => {
                     najavljenoPolje: null
                 };
                 startTurnTimer(roomId); 
+                notifyOnlinePlayersStatusChanged();
 
             } else {
                 waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
@@ -5571,6 +5615,7 @@ io.on('connection', (socket) => {
                 najavljenoPolje: null
             };
             startTurnTimer(roomId); 
+            notifyOnlinePlayersStatusChanged();
 
             delete privateRooms[roomId]; 
         } else {
@@ -6091,6 +6136,7 @@ io.on('connection', (socket) => {
                 najavljenoPolje: null
             };
             startTurnTimer(roomName); 
+            notifyOnlinePlayersStatusChanged();
 
         } else {
             if (!pending) return;
@@ -6165,6 +6211,7 @@ io.on('connection', (socket) => {
                     najavljenoPolje: null
                 };
                 startTurnTimer(roomId); 
+                notifyOnlinePlayersStatusChanged();
             }
 
             console.log(`🔄 Revanš pokrenut u sobi: ${roomId}`);

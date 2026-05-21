@@ -69,6 +69,39 @@ window.showNotification = function(title, message) {
     }, 4000);
 };
 
+let onlinePlayersRefreshTimer = null;
+
+function isOnlinePlayersModalOpen() {
+    const overlay = document.getElementById('online-players-overlay');
+    return !!(overlay && overlay.style.display !== 'none');
+}
+
+function requestOnlinePlayersList() {
+    if (window.app && window.app.socket && window.app.socket.connected) {
+        window.app.socket.emit('get_online_players_list');
+        return true;
+    }
+    return false;
+}
+
+function stopOnlinePlayersAutoRefresh() {
+    if (onlinePlayersRefreshTimer) {
+        clearInterval(onlinePlayersRefreshTimer);
+        onlinePlayersRefreshTimer = null;
+    }
+}
+
+function startOnlinePlayersAutoRefresh() {
+    stopOnlinePlayersAutoRefresh();
+    onlinePlayersRefreshTimer = setInterval(() => {
+        if (!isOnlinePlayersModalOpen()) {
+            stopOnlinePlayersAutoRefresh();
+            return;
+        }
+        requestOnlinePlayersList();
+    }, 6000);
+}
+
 // --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
 window.openOnlinePlayersModal = function() {
     const sec = window.YambSecurity;
@@ -92,10 +125,15 @@ window.openOnlinePlayersModal = function() {
         body.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${sec.escapeHtml(loadingText)}</div>`;
     }
 
-    if (window.app && window.app.socket && window.app.socket.connected) {
-        
-        window.app.socket.off('online_players_list_data'); 
-        window.app.socket.on('online_players_list_data', (players) => {
+    if (window.app && typeof window.app.initSocketConnection === 'function') {
+        window.app.initSocketConnection();
+    }
+
+    if (window.app && window.app.socket) {
+        const bindOnlinePlayersList = () => {
+            if (!isOnlinePlayersModalOpen()) return;
+            window.app.socket.off('online_players_list_data'); 
+            window.app.socket.on('online_players_list_data', (players) => {
             if (!body) return;
 
             if (!players || players.length === 0) {
@@ -172,8 +210,21 @@ window.openOnlinePlayersModal = function() {
             body.innerHTML = html;
         });
 
-        window.app.socket.emit('get_online_players_list');
+            window.app.socket.off('online_players_status_changed');
+            window.app.socket.on('online_players_status_changed', () => {
+                if (isOnlinePlayersModalOpen()) requestOnlinePlayersList();
+            });
 
+            startOnlinePlayersAutoRefresh();
+            requestOnlinePlayersList();
+        };
+
+        if (window.app.socket.connected) {
+            bindOnlinePlayersList();
+        } else {
+            window.app.socket.once('connect', bindOnlinePlayersList);
+            if (window.app.socket.disconnected) window.app.socket.connect();
+        }
     } else {
         if (body) {
             const noConnText = window.t ? window.t('online_no_conn') : 'Niste povezani na server.';
