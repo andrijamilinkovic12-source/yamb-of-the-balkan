@@ -144,25 +144,30 @@ window.openOnlinePlayersModal = function() {
 
             let html = '';
             players.forEach(p => {
-                const isMe = p.socketId === window.app.socket.id;
+                const myUid = String(window.app.playerId || localStorage.getItem('yamb_uid') || '');
+                const playerUid = String(p.uid || p.playerId || '');
+                const roomId = String(p.roomId || '');
+                const status = String(p.status || '').toLowerCase();
+                const isMe = p.socketId === window.app.socket.id || (myUid && playerUid && myUid === playerUid);
                 const youText = window.t ? window.t('online_you') : '(Vi)';
                 const rawName = String(p.name || 'Igrac');
                 const safeNameHtml = sec.escapeHtml(rawName);
                 const socketIdArg = sec.jsString(p.socketId || '');
                 const nameArg = sec.jsString(rawName);
-                const uidArg = sec.jsString(p.uid || '');
-                const roomIdArg = sec.jsString(p.roomId || '');
+                const uidArg = sec.jsString(playerUid);
+                const roomIdArg = sec.jsString(roomId);
                 const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(rawName)}&background=333&color=E0C995`;
                 const photoSrc = sec.escapeAttr(sec.safeUrl(p.photoUrl, fallbackPhoto));
 
                 let actionButtons = '';
                 if (!isMe) {
-                    const canSpectate = p.canSpectate !== undefined ? !!p.canSpectate : !!p.isPlaying;
-                    const isBusy = !!p.isBusy || !!p.isPlaying;
+                    const hasLiveRoom = !!roomId && !roomId.startsWith('local_');
+                    const canSpectate = !!p.canSpectate || (hasLiveRoom && (!!p.isPlaying || status === 'playing'));
+                    const isBusy = !!p.isBusy || !!p.isPlaying || status === 'playing';
                     // Znamo sigurno sa servera da li su već prijatelji!
                     const isAlreadyFriend = p.isFriend;
                     const addFriendHandler = sec.escapeAttr(`if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest(${socketIdArg}, ${nameArg}, ${uidArg}); this.disabled=true; this.style.opacity='0.4'; this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.cursor='not-allowed'; } else { showNotification('INFO', 'Funkcija nije dostupna.') }`);
-                    const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame({ socketId: ${socketIdArg}, roomId: ${roomIdArg} }) } else { showNotification('INFO', 'Greska') }`);
+                    const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame({ socketId: ${socketIdArg}, roomId: ${roomIdArg}, uid: ${uidArg} }) } else { showNotification('INFO', 'Greska') }`);
                     const challengeHandler = sec.escapeAttr(`window.app.challengePlayer(${socketIdArg}, ${nameArg}, ${uidArg})`);
 
                     // 1. Dugme za DODAVANJE (Zatamnjeno ako su već prijatelji)

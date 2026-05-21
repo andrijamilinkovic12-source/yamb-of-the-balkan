@@ -2161,6 +2161,47 @@ function getParticipantIndexForSocketOrUid(state, socketId, uid = '') {
     return -1;
 }
 
+function isActiveOnlineRoom(roomId) {
+    if (!roomId || isLocalRoomId(roomId)) return false;
+    const state = roomState[roomId];
+    return !!(state && !state.gameFinished && Array.isArray(state.players));
+}
+
+function isSocketJoinedAsActivePlayer(socketId, roomId) {
+    if (!socketId || !isActiveOnlineRoom(roomId)) return false;
+
+    const roomClients = io.sockets.adapter.rooms.get(roomId);
+    if (!roomClients || !roomClients.has(socketId)) return false;
+
+    const clientSocket = io.sockets.sockets.get(socketId);
+    return !!(clientSocket && !clientSocket.isSpectator);
+}
+
+function isPlayerInLiveOnlineRoom(roomId, socketId, uid = '') {
+    if (!isActiveOnlineRoom(roomId)) return false;
+
+    const state = roomState[roomId];
+    if (getParticipantIndexForSocketOrUid(state, socketId, uid) !== -1) return true;
+
+    return isSocketJoinedAsActivePlayer(socketId, roomId);
+}
+
+function getLiveOnlineRoomFromSocketMembership(socketId, uid = '') {
+    if (!socketId) return null;
+
+    const joinedRooms = io.sockets.adapter.sids.get(socketId);
+    if (!joinedRooms) return null;
+
+    for (const roomId of joinedRooms) {
+        if (roomId === socketId) continue;
+        if (isPlayerInLiveOnlineRoom(roomId, socketId, uid)) {
+            return roomId;
+        }
+    }
+
+    return null;
+}
+
 function refreshOnlineRoomMembership(socket, roomId) {
     if (!socket || !roomId || isLocalRoomId(roomId)) return false;
 
@@ -2190,16 +2231,14 @@ function getLiveOnlineRoomForSocket(socketId, uid = '') {
     if (!socketId && !uid) return null;
 
     const directRoom = socketId ? playerRooms[socketId] : null;
-    if (directRoom && !isLocalRoomId(directRoom)) {
-        const state = roomState[directRoom];
-        if (state && !state.gameFinished && getParticipantIndexForSocketOrUid(state, socketId, uid) !== -1) {
-            return directRoom;
-        }
-    }
+    if (isPlayerInLiveOnlineRoom(directRoom, socketId, uid)) return directRoom;
+
+    const membershipRoom = getLiveOnlineRoomFromSocketMembership(socketId, uid);
+    if (membershipRoom) return membershipRoom;
 
     for (const [roomId, state] of Object.entries(roomState)) {
         if (!state || state.gameFinished || isLocalRoomId(roomId)) continue;
-        if (getParticipantIndexForSocketOrUid(state, socketId, uid) !== -1) {
+        if (isPlayerInLiveOnlineRoom(roomId, socketId, uid)) {
             return roomId;
         }
     }
@@ -4339,13 +4378,14 @@ io.on('connection', (socket) => {
     socket.on('request_spectate', (target) => {
         const targetSocketId = typeof target === 'string' ? target : target?.socketId;
         const requestedRoomId = typeof target === 'object' && target ? String(target.roomId || '') : '';
-        const targetUid = getSocketUid(targetSocketId);
-        const requestedState = requestedRoomId ? roomState[requestedRoomId] : null;
+        const requestedTargetUid = typeof target === 'object' && target
+            ? String(target.uid || target.playerId || '')
+            : '';
+        const targetUid = getSocketUid(targetSocketId) || requestedTargetUid;
         const roomId = (
-            requestedState &&
-            !requestedState.gameFinished &&
+            requestedRoomId &&
             (targetSocketId || targetUid) &&
-            getParticipantIndexForSocketOrUid(requestedState, targetSocketId, targetUid) !== -1
+            isPlayerInLiveOnlineRoom(requestedRoomId, targetSocketId, targetUid)
         )
             ? requestedRoomId
             : getLiveOnlineRoomForSocket(targetSocketId, targetUid);
