@@ -298,12 +298,21 @@ const GlobalChatModerationLogSchema = new mongoose.Schema({
 });
 mongoose.model('GlobalChatModerationLog', GlobalChatModerationLogSchema);
 
+const FriendNotificationSchema = new mongoose.Schema({
+    type: { type: String, default: '' },
+    fromUid: { type: String, default: '' },
+    fromName: { type: String, default: '' },
+    photoUrl: { type: String, default: '' },
+    createdAt: { type: Number, default: Date.now }
+}, { _id: false });
+
 const UserProfileSchema = new mongoose.Schema({
     firebaseUid: { type: String, unique: true, required: true },
     playerName: String,
     photoUrl: { type: String, default: '' },
     friends: { type: [String], default: [] },
-    friendRequests: { type: [String], default: [] }, 
+    friendRequests: { type: [String], default: [] },
+    friendNotifications: { type: [FriendNotificationSchema], default: [] },
     wins: { type: Number, default: 0 },
     losses: { type: Number, default: 0 },
     games: { type: Number, default: 0 },
@@ -5437,165 +5446,323 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('search_player', async (query) => {
-        if (!MONGO_URI) return;
+    const getConnectedFriendSocketId = (uid) => {
+        const socketId = uid ? onlinePlayers[uid] : null;
+        if (!socketId) return null;
+
+        const liveSocket = io.sockets.sockets.get(socketId);
+        if (liveSocket && liveSocket.connected) return socketId;
+
+        delete onlinePlayers[uid];
+        return null;
+    };
+
+    const buildFriendsListPayload = async (profile) => {
+        let friendsData = [];
+        let requestsData = [];
+        const notificationsData = Array.isArray(profile.friendNotifications)
+            ? profile.friendNotifications.map(n => ({
+                type: n.type || '',
+                fromUid: n.fromUid || '',
+                fromName: n.fromName || 'Igrač',
+                photoUrl: n.photoUrl || '',
+                createdAt: n.createdAt || Date.now()
+            }))
+            : [];
+
+        if (profile.friends && profile.friends.length > 0) {
+            const friends = await UserProfile.find({ firebaseUid: { $in: profile.friends } });
+            friendsData = friends.map(f => {
+                const friendSocketId = getConnectedFriendSocketId(f.firebaseUid);
+                const isOnline = !!friendSocketId;
+
+                const h2hRecord = buildH2HRecordSummary(f.h2hStats);
+                const pi = sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(f));
+
+                return {
+                    uid: f.firebaseUid,
+                    socketId: friendSocketId,
+                    name: f.playerName,
+                    photoUrl: f.photoUrl,
+                    isOnline: isOnline,
+                    pi,
+                    stats: {
+                        wins: f.wins,
+                        losses: f.losses,
+                        games: f.games,
+                        highscore: f.highscore,
+                        totalScoreSum: f.totalScoreSum,
+                        tournamentWins: f.tournamentWins,
+                        currentWinStreak: f.currentWinStreak,
+                        maxWinStreak: f.maxWinStreak,
+                        unlockedTrophies: f.unlockedTrophies,
+                        leagueData: f.leagueData,
+                        penaltyPoints: f.penaltyPoints || 0,
+                        h2hWins: h2hRecord.wins,
+                        h2hLosses: h2hRecord.losses,
+                        h2hDraws: h2hRecord.draws,
+                        h2hGames: h2hRecord.games
+                    },
+                    h2hRecord
+                };
+            });
+        }
+
+        if (profile.friendRequests && profile.friendRequests.length > 0) {
+            const requests = await UserProfile.find({ firebaseUid: { $in: profile.friendRequests } });
+            requestsData = requests.map(r => ({
+                uid: r.firebaseUid,
+                name: r.playerName,
+                photoUrl: r.photoUrl
+            }));
+        }
+
+        return { ok: true, friends: friendsData, requests: requestsData, notifications: notificationsData };
+    };
+
+    socket.on('search_player', async (query, ack) => {
+        const replySearch = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            else socket.emit('search_results', payload.ok === false ? payload : (Array.isArray(payload.results) ? payload.results : []));
+        };
+
+        if (!MONGO_URI) {
+            replySearch({ ok: false, reason: 'err_friends_unavailable', results: [] });
+            return;
+        }
+
         try {
-            const regex = new RegExp('^' + query + '$', 'i'); 
+            const safeQuery = String(query || '').trim();
+            if (!safeQuery) {
+                replySearch({ ok: true, results: [] });
+                return;
+            }
+
+            const escapedQuery = safeQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp('^' + escapedQuery + '$', 'i');
             const users = await UserProfile.find({ playerName: regex }).limit(5);
 
             const results = users.map(u => {
-                let friendSocketId = onlinePlayers[u.firebaseUid];
-                let isOnline = false;
-
-                if (friendSocketId) {
-                    const actualSocket = io.sockets.sockets.get(friendSocketId);
-                    if (actualSocket && actualSocket.connected) {
-                        isOnline = true;
-                    } else {
-                        delete onlinePlayers[u.firebaseUid];
-                        friendSocketId = null;
-                    }
-                }
+                const friendSocketId = getConnectedFriendSocketId(u.firebaseUid);
 
                 return {
                     uid: u.firebaseUid,
                     name: u.playerName,
                     photoUrl: u.photoUrl,
-                    socketId: friendSocketId
+                    socketId: friendSocketId,
+                    isOnline: !!friendSocketId
                 };
             });
-            socket.emit('search_results', results);
+            replySearch({ ok: true, results });
         } catch(err) {
             console.error(err);
+            replySearch({ ok: false, reason: 'err_server_conn', results: [] });
         }
     });
 
-    socket.on('send_friend_req', async (data) => {
-        const { targetId, targetUid, challengerName } = data;
-        if (!MONGO_URI) return;
+    socket.on('send_friend_req', async (data = {}, ack) => {
+        const { targetId, targetUid } = data || {};
+        const replyRequest = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            else if (!payload.ok) socket.emit('error_msg', payload.reason || 'err_server_conn');
+        };
+
+        if (!MONGO_URI) {
+            replyRequest({ ok: false, reason: 'err_friends_unavailable' });
+            return;
+        }
 
         try {
             const targetSocket = targetId ? io.sockets.sockets.get(targetId) : null;
-            const resolvedTargetUid = targetUid || (targetSocket && targetSocket.playerId);
-            if (!socket.playerId || !resolvedTargetUid || resolvedTargetUid === socket.playerId) return;
+            const requesterUid = getSocketUid(socket.id) || socket.playerId;
+            const resolvedTargetUid = targetUid || (targetSocket && getSocketUid(targetSocket.id)) || (targetSocket && targetSocket.playerId);
 
-            const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
-            const targetProfile = await UserProfile.findOne({ firebaseUid: resolvedTargetUid });
-
-            if (me && targetProfile) {
-                if (!targetProfile.friends.includes(me.firebaseUid) && !targetProfile.friendRequests.includes(me.firebaseUid)) {
-                    targetProfile.friendRequests.push(me.firebaseUid);
-                    await targetProfile.save();
-                }
-
-                const targetSocketId = onlinePlayers[resolvedTargetUid];
-                if (targetSocketId) {
-                    io.to(targetSocketId).emit('incoming_friend_req', {
-                        challengerName: me.playerName
-                    });
-                }
+            if (!requesterUid) {
+                replyRequest({ ok: false, reason: 'err_friend_auth_required' });
+                return;
             }
-        } catch(e) { console.error(e); }
+            if (!resolvedTargetUid) {
+                replyRequest({ ok: false, reason: 'err_friend_target_missing' });
+                return;
+            }
+            if (resolvedTargetUid === requesterUid) {
+                replyRequest({ ok: false, reason: 'err_friend_self' });
+                return;
+            }
+
+            const [me, targetProfile] = await Promise.all([
+                UserProfile.findOne({ firebaseUid: requesterUid }),
+                UserProfile.findOne({ firebaseUid: resolvedTargetUid })
+            ]);
+
+            if (!me) {
+                replyRequest({ ok: false, reason: 'err_friend_profile_missing' });
+                return;
+            }
+            if (!targetProfile) {
+                replyRequest({ ok: false, reason: 'err_friend_target_missing' });
+                return;
+            }
+
+            const targetFriends = Array.isArray(targetProfile.friends) ? targetProfile.friends : [];
+            const targetRequests = Array.isArray(targetProfile.friendRequests) ? targetProfile.friendRequests : [];
+            const myRequests = Array.isArray(me.friendRequests) ? me.friendRequests : [];
+
+            if (targetFriends.includes(me.firebaseUid)) {
+                replyRequest({ ok: false, reason: 'err_friend_already_added' });
+                return;
+            }
+            if (myRequests.includes(targetProfile.firebaseUid)) {
+                replyRequest({ ok: false, reason: 'err_friend_request_waiting_on_you' });
+                return;
+            }
+            if (targetRequests.includes(me.firebaseUid)) {
+                replyRequest({ ok: true, status: 'already_pending' });
+                return;
+            }
+
+            targetProfile.friendRequests = targetRequests;
+            targetProfile.friendRequests.push(me.firebaseUid);
+            await targetProfile.save();
+
+            const targetSocketId = getConnectedFriendSocketId(resolvedTargetUid);
+            if (targetSocketId) {
+                io.to(targetSocketId).emit('incoming_friend_req', {
+                    challengerUid: me.firebaseUid,
+                    challengerName: me.playerName,
+                    photoUrl: me.photoUrl || ''
+                });
+            }
+
+            replyRequest({ ok: true, status: 'sent', targetOnline: !!targetSocketId });
+        } catch(e) {
+            console.error(e);
+            replyRequest({ ok: false, reason: 'err_server_conn' });
+        }
     });
 
-    socket.on('resolve_friend_req', async (data) => {
-        const { challengerUid, accepted } = data;
-        if (!MONGO_URI) return;
+    socket.on('resolve_friend_req', async (data = {}, ack) => {
+        const { challengerUid, accepted } = data || {};
+        const shouldAccept = accepted === true;
+        const replyResolve = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            else if (!payload.ok) socket.emit('error_msg', payload.reason || 'err_server_conn');
+        };
+
+        if (!MONGO_URI) {
+            replyResolve({ ok: false, reason: 'err_friends_unavailable' });
+            return;
+        }
 
         try {
-            const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
+            const responderUid = getSocketUid(socket.id) || socket.playerId;
+            if (!responderUid) {
+                replyResolve({ ok: false, reason: 'err_friend_auth_required' });
+                return;
+            }
+            if (!challengerUid) {
+                replyResolve({ ok: false, reason: 'err_friend_request_missing' });
+                return;
+            }
+
+            const me = await UserProfile.findOne({ firebaseUid: responderUid });
             const friend = await UserProfile.findOne({ firebaseUid: challengerUid });
 
-            if (me && friend) {
-                me.friendRequests = me.friendRequests.filter(uid => uid !== challengerUid);
-                
-                if (accepted) {
-                    if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
-                    if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
-                }
-                await me.save();
-                await friend.save();
-
-                const challengerSocketId = onlinePlayers[challengerUid];
-                if (accepted) {
-                    if (challengerSocketId) io.to(challengerSocketId).emit('friend_req_accepted', { name: me.playerName });
-                } else {
-                    if (challengerSocketId) io.to(challengerSocketId).emit('friend_req_declined', { name: me.playerName });
-                }
+            if (!me || !friend) {
+                replyResolve({ ok: false, reason: 'err_friend_request_missing' });
+                return;
             }
-        } catch(err) { console.error(err); }
+
+            const meRequests = Array.isArray(me.friendRequests) ? me.friendRequests : [];
+            const hadRequest = meRequests.includes(challengerUid);
+            const alreadyFriends = Array.isArray(me.friends) && me.friends.includes(friend.firebaseUid);
+
+            if (!hadRequest && !alreadyFriends) {
+                replyResolve({ ok: false, reason: 'err_friend_request_missing' });
+                return;
+            }
+
+            me.friendRequests = meRequests.filter(uid => uid !== challengerUid);
+
+            if (shouldAccept) {
+                if (!Array.isArray(me.friends)) me.friends = [];
+                if (!Array.isArray(friend.friends)) friend.friends = [];
+                if (!me.friends.includes(friend.firebaseUid)) me.friends.push(friend.firebaseUid);
+                if (!friend.friends.includes(me.firebaseUid)) friend.friends.push(me.firebaseUid);
+            }
+
+            const challengerSocketId = getConnectedFriendSocketId(challengerUid);
+            const notificationPayload = {
+                name: me.playerName,
+                uid: me.firebaseUid,
+                photoUrl: me.photoUrl || ''
+            };
+
+            if (challengerSocketId) {
+                io.to(challengerSocketId).emit(shouldAccept ? 'friend_req_accepted' : 'friend_req_declined', notificationPayload);
+            } else {
+                if (!Array.isArray(friend.friendNotifications)) friend.friendNotifications = [];
+                friend.friendNotifications.push({
+                    type: shouldAccept ? 'accepted' : 'declined',
+                    fromUid: me.firebaseUid,
+                    fromName: me.playerName,
+                    photoUrl: me.photoUrl || '',
+                    createdAt: Date.now()
+                });
+            }
+
+            await me.save();
+            await friend.save();
+
+            replyResolve({
+                ok: true,
+                accepted: shouldAccept,
+                challengerOnline: !!challengerSocketId,
+                friend: {
+                    uid: friend.firebaseUid,
+                    name: friend.playerName,
+                    photoUrl: friend.photoUrl || ''
+                }
+            });
+        } catch(err) {
+            console.error(err);
+            replyResolve({ ok: false, reason: 'err_server_conn' });
+        }
     });
 
-    socket.on('get_friends_list', async () => {
-        if (!MONGO_URI) return;
+    socket.on('get_friends_list', async (ack) => {
+        const replyList = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            socket.emit('friends_list_data', payload);
+        };
+
+        if (!MONGO_URI) {
+            replyList({ ok: false, reason: 'err_friends_unavailable', friends: [], requests: [], notifications: [] });
+            return;
+        }
+
         try {
-            const me = await UserProfile.findOne({ firebaseUid: socket.playerId });
-            if (me) {
-                let friendsData = [];
-                let requestsData = [];
-
-                if (me.friends && me.friends.length > 0) {
-                    const friends = await UserProfile.find({ firebaseUid: { $in: me.friends } });
-                    friendsData = friends.map(f => {
-                        let friendSocketId = onlinePlayers[f.firebaseUid];
-                        let isOnline = false;
-
-                        if (friendSocketId) {
-                            const actualSocket = io.sockets.sockets.get(friendSocketId);
-                            if (actualSocket && actualSocket.connected) {
-                                isOnline = true;
-                            } else {
-                                delete onlinePlayers[f.firebaseUid];
-                                friendSocketId = null;
-                            }
-                        }
-
-                        const h2hRecord = buildH2HRecordSummary(f.h2hStats);
-                        const pi = sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(f));
-
-                        return { 
-                            uid: f.firebaseUid, 
-                            socketId: friendSocketId,
-                            name: f.playerName, 
-                            photoUrl: f.photoUrl, 
-                            isOnline: isOnline,
-                            pi,
-                            stats: { 
-                                wins: f.wins, 
-                                losses: f.losses, 
-                                games: f.games,
-                                highscore: f.highscore,
-                                totalScoreSum: f.totalScoreSum, 
-                                tournamentWins: f.tournamentWins, 
-                                currentWinStreak: f.currentWinStreak, 
-                                maxWinStreak: f.maxWinStreak, 
-                                unlockedTrophies: f.unlockedTrophies, 
-                                leagueData: f.leagueData,
-                                penaltyPoints: f.penaltyPoints || 0,
-                                h2hWins: h2hRecord.wins,
-                                h2hLosses: h2hRecord.losses,
-                                h2hDraws: h2hRecord.draws,
-                                h2hGames: h2hRecord.games
-                            },
-                            h2hRecord
-                        };
-                    });
-                }
-                
-                if (me.friendRequests && me.friendRequests.length > 0) {
-                    const requests = await UserProfile.find({ firebaseUid: { $in: me.friendRequests } });
-                    requestsData = requests.map(r => ({
-                        uid: r.firebaseUid,
-                        name: r.playerName,
-                        photoUrl: r.photoUrl
-                    }));
-                }
-
-                socket.emit('friends_list_data', { friends: friendsData, requests: requestsData });
-            } else {
-                socket.emit('friends_list_data', { friends: [], requests: [] });
+            const requesterUid = getSocketUid(socket.id) || socket.playerId;
+            if (!requesterUid) {
+                replyList({ ok: false, reason: 'err_friend_auth_required', friends: [], requests: [], notifications: [] });
+                return;
             }
-        } catch(err) { console.error(err); }
+
+            const me = await UserProfile.findOne({ firebaseUid: requesterUid });
+            if (me) {
+                const payload = await buildFriendsListPayload(me);
+                if (payload.notifications.length > 0) {
+                    me.friendNotifications = [];
+                    await me.save();
+                }
+                replyList(payload);
+            } else {
+                replyList({ ok: false, reason: 'err_friend_profile_missing', friends: [], requests: [], notifications: [] });
+            }
+        } catch(err) {
+            console.error(err);
+            replyList({ ok: false, reason: 'err_server_conn', friends: [], requests: [], notifications: [] });
+        }
     });
 
     socket.on('send_room_invite', (data, ack) => {

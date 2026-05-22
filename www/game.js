@@ -1081,23 +1081,131 @@ class YambApp {
     }
 
     // --- SISTEM PRIJATELJA ---
+    waitForSocketConnection(timeoutMs = 8000) {
+        if (!this.socket) return Promise.resolve({ ok: false, reason: 'sys_no_conn' });
+        if (this.socket.connected) return Promise.resolve({ ok: true });
+
+        return new Promise(resolve => {
+            let settled = false;
+            const finish = (payload) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                this.socket.off('connect', onConnect);
+                this.socket.off('connect_error', onError);
+                resolve(payload);
+            };
+            const onConnect = () => finish({ ok: true });
+            const onError = () => finish({ ok: false, reason: 'err_server_conn' });
+            const timer = setTimeout(() => finish({ ok: false, reason: 'err_friend_timeout' }), timeoutMs);
+
+            this.socket.once('connect', onConnect);
+            this.socket.once('connect_error', onError);
+            if (this.socket.disconnected) this.socket.connect();
+        });
+    }
+
+    emitSocketAck(eventName, payload = {}, timeoutMs = 8000) {
+        return new Promise(resolve => {
+            if (!this.socket || !this.socket.connected) {
+                resolve({ ok: false, reason: 'sys_no_conn' });
+                return;
+            }
+
+            let settled = false;
+            const finish = (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            };
+            const timer = setTimeout(() => finish({ ok: false, reason: 'err_friend_timeout' }), timeoutMs);
+            this.socket.emit(eventName, payload, finish);
+        });
+    }
+
+    async emitFriendAck(eventName, payload = {}, timeoutMs = 8000) {
+        if (!this.requireLogin()) return { ok: false, reason: 'auth_required' };
+        this.initSocketConnection();
+
+        const ready = await this.waitForSocketConnection(timeoutMs);
+        if (!ready.ok) return ready;
+
+        let result = await this.emitSocketAck(eventName, payload, timeoutMs);
+        const authReasons = new Set([
+            'err_friend_auth_required',
+            'auth_required',
+            'firebase_token_required',
+            'missing_firebase_token',
+            'invalid_firebase_token'
+        ]);
+
+        if (result && result.ok === false && authReasons.has(result.reason)) {
+            const authResult = await this.authenticateSocketIdentity(true);
+            if (authResult && authResult.ok) {
+                result = await this.emitSocketAck(eventName, payload, timeoutMs);
+            }
+        }
+
+        return result || { ok: false, reason: 'err_server_conn' };
+    }
+
+    escapeJsString(value) {
+        return String(value ?? '')
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/\r/g, '\\r')
+            .replace(/\n/g, '\\n')
+            .replace(/\u2028/g, '\\u2028')
+            .replace(/\u2029/g, '\\u2029');
+    }
+
+    friendAvatarUrl(name, photoUrl) {
+        const rawPhoto = String(photoUrl || '');
+        if (rawPhoto.length > 5) return rawPhoto;
+        return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Igrac')}&background=333&color=E0C995`;
+    }
+
+    requestFriendsList() {
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('get_friends_list');
+        }
+    }
+
     async searchAndAddFriend() {
         if (!this.requireLogin()) return;
         const searchName = await this.modal.prompt(gt('prompt_search_friend') || "Unesi tačno ime igrača (Google ime) za pretragu:", gt('alert_search_title') || "PRETRAGA");
         if (searchName && searchName.trim().length > 0) {
-            this.initSocketConnection();
-            this.socket.emit('search_player', searchName.trim());
+            const result = await this.emitFriendAck('search_player', searchName.trim());
+            if (!result.ok) {
+                this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
+                return;
+            }
+            await this.handleFriendSearchResults(result.results || []);
         }
     }
 
-    sendFriendRequest(targetId, targetName, targetUid = null) {
-        if (!this.requireLogin()) return;
-        this.initSocketConnection();
-        if (!this.socket || !this.socket.connected) return;
-        this.socket.emit('send_friend_req', { targetId, targetUid, challengerName: this.playerName });
+    async sendFriendRequest(targetId, targetName, targetUid = null) {
+        const result = await this.emitFriendAck('send_friend_req', { targetId, targetUid, challengerName: this.playerName });
+        if (!result.ok) {
+            this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
+            if (result.reason === 'err_friend_request_waiting_on_you') this.requestFriendsList();
+            return false;
+        }
 
-        let msg = (gt('alert_friend_req_sent') || "Zahtev za prijateljstvo poslat igraču {0}.").replace('{0}', this.escapeHtml(targetName || 'Igrač'));
-        this.modal.alert(msg, gt('alert_sent_title') || "POSLATO");
+        const safeTargetName = this.escapeHtml(targetName || 'Igrač');
+        const msgKey = result.status === 'already_pending'
+            ? 'friend_req_already_pending'
+            : (result.targetOnline ? 'alert_friend_req_sent' : 'friend_req_success');
+        const fallbackMsg = result.status === 'already_pending'
+            ? "Zahtev za prijateljstvo je već poslat igraču {0}."
+            : (result.targetOnline
+                ? "Zahtev za prijateljstvo poslat igraču {0}."
+                : "Zahtev je poslat! Igrač {0} će ga dobiti sledeći put kada bude na mreži.");
+        const msg = (gt(msgKey) || fallbackMsg).replace('{0}', safeTargetName);
+        await this.modal.alert(msg, gt('alert_sent_title') || "POSLATO");
+        this.requestFriendsList();
+        return true;
     }
 
     renderFriendsList(friends, requests = []) {
@@ -1115,14 +1223,21 @@ class YambApp {
 
         if (requests && requests.length > 0) {
             requests.forEach(r => {
+                const requestName = String(r.name || 'Igrač');
+                const safeName = this.escapeHtml(requestName);
+                const safeAvatar = this.escapeHtml(this.friendAvatarUrl(requestName, r.photoUrl));
+                const safeUid = this.escapeHtml(this.escapeJsString(r.uid || ''));
+                const safeRequestNameJs = this.escapeHtml(this.escapeJsString(requestName));
+                const acceptTitle = this.escapeHtml(gt('btn_accept') || 'Prihvati');
+                const declineTitle = this.escapeHtml(gt('btn_decline') || 'Odbij');
                 html += `
                     <div class="friend-card" style="border: 1px dashed var(--gold-main); background: rgba(224, 201, 149, 0.1);">
-                        <img src="${r.photoUrl && r.photoUrl.length > 5 ? r.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`}" class="friend-card-img" style="border: 2px solid #aaa;">
-                        <span class="friend-card-name">${r.name}</span>
+                        <img src="${safeAvatar}" class="friend-card-img" style="border: 2px solid #aaa;">
+                        <span class="friend-card-name">${safeName}</span>
                         <span style="font-size: 0.7rem; color: #aaa; text-align: center; margin-bottom: 5px; font-weight: bold;">${gt('friend_req_new') || 'Novi zahtev'}</span>
                         <div style="display:flex; gap:10px; width: 100%; justify-content: center;">
-                            <button onclick="app.resolveFriendRequest('${r.uid}', true)" style="background:var(--success); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="${gt('btn_accept') || 'Prihvati'}">✅</button>
-                            <button onclick="app.resolveFriendRequest('${r.uid}', false)" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="${gt('btn_decline') || 'Odbij'}">❌</button>
+                            <button onclick="app.resolveFriendRequest('${safeUid}', true, '${safeRequestNameJs}')" style="background:var(--success); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="${acceptTitle}">✅</button>
+                            <button onclick="app.resolveFriendRequest('${safeUid}', false, '${safeRequestNameJs}')" style="background:var(--danger); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="${declineTitle}">❌</button>
                         </div>
                     </div>
                 `;
@@ -1138,21 +1253,26 @@ class YambApp {
                 const w = h2hRecord.wins !== undefined ? h2hRecord.wins : (f.stats ? (f.stats.h2hWins || 0) : 0);
                 const l = h2hRecord.losses !== undefined ? h2hRecord.losses : (f.stats ? (f.stats.h2hLosses || 0) : 0);
                 const isOnline = f.isOnline;
-                
+
                 const statusColor = isOnline ? 'var(--success)' : 'var(--danger)';
-                const btnDisabled = !isOnline ? 'disabled' : '';
+                const btnDisabled = (!isOnline || !f.socketId) ? 'disabled' : '';
                 const btnStyle = isOnline ? 'background:var(--gold-main); color:#000; cursor:pointer;' : 'background:gray; color:#ddd; cursor:not-allowed;';
-                
+
                 const btnText = isOnline ? (gt('btn_invite_friend') || 'POZOVI') : (gt('btn_offline') || 'OFFLINE');
+                const friendName = String(f.name || 'Igrač');
+                const safeName = this.escapeHtml(friendName);
+                const safeAvatar = this.escapeHtml(this.friendAvatarUrl(friendName, f.photoUrl));
+                const safeSocketId = this.escapeHtml(this.escapeJsString(f.socketId || ''));
+                const safePi = this.escapeHtml(pi);
 
                 html += `
                     <div class="friend-card">
                         <div style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 8px ${statusColor};"></div>
-                        <img src="${f.photoUrl && f.photoUrl.length > 5 ? f.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.name)}&background=333&color=E0C995`}" class="friend-card-img" style="border: 2px solid ${statusColor};">
-                        <span class="friend-card-name">${f.name}</span>
-                        <span style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${pi}</span>
+                        <img src="${safeAvatar}" class="friend-card-img" style="border: 2px solid ${statusColor};">
+                        <span class="friend-card-name">${safeName}</span>
+                        <span style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${safePi}</span>
                         <span class="friend-card-wl">W/L: ${w} / ${l}</span>
-                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${f.socketId}')" style="${btnStyle}">${btnText}</button>
+                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}')" style="${btnStyle}">${this.escapeHtml(btnText)}</button>
                     </div>
                 `;
             });
@@ -1160,16 +1280,68 @@ class YambApp {
         list.innerHTML = html;
     }
 
-    resolveFriendRequest(uid, accepted) {
-        if (!this.requireLogin()) return;
-        this.initSocketConnection();
-        if (!this.socket || !this.socket.connected) return;
-        
-        this.socket.emit('resolve_friend_req', { challengerUid: uid, accepted: accepted });
-        
-        setTimeout(() => {
-            if (this.socket && this.socket.connected) this.socket.emit('get_friends_list');
-        }, 300);
+    async resolveFriendRequest(uid, accepted, friendName = '') {
+        const result = await this.emitFriendAck('resolve_friend_req', { challengerUid: uid, accepted: accepted });
+        if (!result.ok) {
+            this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
+            this.requestFriendsList();
+            return false;
+        }
+
+        const resolvedFriendName = (result.friend && result.friend.name) || friendName || 'Igrač';
+        const safeFriendName = this.escapeHtml(resolvedFriendName);
+        const msgKey = accepted ? 'friend_req_accept_success' : 'friend_req_decline_success';
+        const fallbackMsg = accepted
+            ? "Igrač {0} je sada vaš prijatelj."
+            : "Zahtev igrača {0} je odbijen.";
+        const msg = (gt(msgKey) || fallbackMsg).replace('{0}', safeFriendName);
+        await this.modal.alert(msg, accepted ? (gt('alert_new_friend') || "NOVI PRIJATELJ") : (gt('alert_info') || "OBAVEŠTENJE"));
+
+        this.requestFriendsList();
+        return true;
+    }
+
+    async handleFriendSearchResults(payload) {
+        const results = Array.isArray(payload) ? payload : (payload && Array.isArray(payload.results) ? payload.results : []);
+        if (payload && payload.ok === false) {
+            this.showServerNotice(payload.reason || 'err_server_conn', 'err_title');
+            return;
+        }
+
+        if (results.length === 0) {
+            this.modal.alert(gt('alert_search_not_found') || "Nije pronađen nijedan igrač sa tim imenom. Pokušajte ponovo.", gt('alert_search_title') || "PRETRAGA");
+            return;
+        }
+
+        const p = results[0];
+        if (this.friendsListUids.includes(p.uid)) {
+            this.modal.alert(gt('friend_already_added'), gt('modal_title_info') || "INFO");
+            return;
+        }
+
+        const safeSearchName = this.escapeHtml(p.name || 'Igrač');
+        const msg = (gt('alert_search_found') || "Pronađen je igrač: {0}. Da li želiš da mu pošalješ zahtev za prijateljstvo?").replace('{0}', safeSearchName);
+        const send = await this.modal.confirm(msg);
+        if (send) {
+            await this.sendFriendRequest(p.socketId, p.name, p.uid);
+        }
+    }
+
+    async showFriendResolutionNotice(type, name) {
+        const safeName = this.escapeHtml(name || 'Igrač');
+        const accepted = type === 'accepted';
+        const msg = (gt(accepted ? 'alert_friend_added' : 'alert_friend_declined') || (accepted
+            ? "Igrač {0} je sada vaš prijatelj! Možete ga pozvati na partiju iz menija 'Prijatelj'."
+            : "Igrač {0} je nažalost odbio vaš zahtev za prijateljstvo.")).replace('{0}', safeName);
+        await this.modal.alert(msg, accepted ? (gt('alert_new_friend') || "NOVI PRIJATELJ") : (gt('alert_info') || "OBAVEŠTENJE"));
+    }
+
+    async showQueuedFriendNotifications(notifications = []) {
+        if (!Array.isArray(notifications) || notifications.length === 0) return;
+
+        for (const note of notifications) {
+            await this.showFriendResolutionNotice(note.type, note.fromName || note.name || 'Igrač');
+        }
     }
 
     inviteFriendToRoom(friendSocketId) {
@@ -3368,56 +3540,64 @@ class YambApp {
             this.cancelOnline();
         });
 
-        this.socket.on('incoming_friend_req', async (data) => {
-            if (this.currentHostingRoomId) {
-                this.socket.emit('get_friends_list');
-            } else {
-                const msg = (gt('alert_friend_req_pending') || "Novi zahtev za prijateljstvo od igrača {0}! Možete ga videti u sekciji 'Prijatelj'.").replace('{0}', this.escapeHtml(data.challengerName || 'Igrač'));
-                this.modal.alert(msg, gt('alert_info') || "NOVI ZAHTEV");
+        this.socket.on('incoming_friend_req', async (data = {}) => {
+            this.requestFriendsList();
+
+            const challengerUid = data.challengerUid || data.uid || '';
+            const challengerName = data.challengerName || 'Igrač';
+            const safeName = this.escapeHtml(challengerName);
+
+            if (!challengerUid) {
+                const msg = (gt('alert_friend_req_pending') || "Novi zahtev za prijateljstvo od igrača {0}! Možete ga videti u sekciji 'Prijatelj'.").replace('{0}', safeName);
+                await this.modal.alert(msg, gt('alert_info') || "NOVI ZAHTEV");
+                return;
             }
+
+            const msg = (gt('alert_friend_req') || "Igrač {0} želi da vas doda u prijatelje. Prihvatate?").replace('{0}', safeName);
+            const accepted = await this.modal.confirm(msg, {
+                title: gt('alert_info') || "NOVI ZAHTEV",
+                okText: gt('btn_accept') || "Prihvati",
+                cancelText: gt('btn_decline') || "Odbij"
+            });
+
+            await this.resolveFriendRequest(challengerUid, accepted, challengerName);
         });
 
-        this.socket.on('friend_req_accepted', (data) => {
-            const msg = (gt('alert_friend_added') || "Igrač {0} je sada vaš prijatelj! Možete ga pozvati na partiju iz menija 'Prijatelj'.").replace('{0}', this.escapeHtml(data.name || 'Igrač'));
-            this.modal.alert(msg, gt('alert_new_friend') || "NOVI PRIJATELJ");
-            if (this.currentHostingRoomId) {
-                this.socket.emit('get_friends_list');
+        this.socket.on('friend_req_accepted', async (data = {}) => {
+            await this.showFriendResolutionNotice('accepted', data.name || 'Igrač');
+            this.requestFriendsList();
+        });
+
+        this.socket.on('friend_req_declined', async (data = {}) => {
+            await this.showFriendResolutionNotice('declined', data.name || 'Igrač');
+            this.requestFriendsList();
+        });
+
+        this.socket.on('friends_list_data', async (data = {}) => {
+            if (data && data.ok === false) {
+                this.renderFriendsList([], []);
+                this.friendsListUids = [];
+                const now = Date.now();
+                if (this.lastFriendsListErrorReason !== data.reason || !this.lastFriendsListErrorAt || now - this.lastFriendsListErrorAt > 15000) {
+                    this.lastFriendsListErrorReason = data.reason;
+                    this.lastFriendsListErrorAt = now;
+                    this.showServerNotice(data.reason || 'err_server_conn', 'err_title');
+                }
+                return;
             }
-        });
 
-        this.socket.on('friend_req_declined', (data) => {
-            const msg = (gt('alert_friend_declined') || "Igrač {0} je nažalost odbio vaš zahtev za prijateljstvo.").replace('{0}', this.escapeHtml(data.name || 'Igrač'));
-            this.modal.alert(msg, gt('alert_info') || "OBAVEŠTENJE");
-        });
-
-        this.socket.on('friends_list_data', (data) => {
             let friends = Array.isArray(data) ? data : (data.friends || []);
             let requests = data.requests || [];
-            
+
+            this.lastFriendsListErrorReason = '';
+            this.lastFriendsListErrorAt = 0;
             this.friendsListUids = friends.map(f => f.uid);
             this.renderFriendsList(friends, requests);
+            await this.showQueuedFriendNotifications(data.notifications || []);
         });
 
         this.socket.on('search_results', async (results) => {
-            if (results.length === 0) {
-                this.modal.alert(gt('alert_search_not_found') || "Nije pronađen nijedan igrač sa tim imenom. Pokušajte ponovo.", gt('alert_search_title') || "PRETRAGA");
-            } else {
-                const p = results[0]; 
-                
-                if (this.friendsListUids.includes(p.uid)) {
-                     this.modal.alert(gt('friend_already_added'), gt('modal_title_info') || "INFO");
-                     return;
-                }
-
-                const safeSearchName = this.escapeHtml(p.name || 'Igrač');
-                const msg = (gt('alert_search_found') || "Pronađen je igrač: {0}. Da li želiš da mu pošalješ zahtev za prijateljstvo?").replace('{0}', safeSearchName);
-                const send = await this.modal.confirm(msg);
-                if (send) {
-                    this.sendFriendRequest(p.socketId, p.name, p.uid);
-                    let successMsg = (gt('friend_req_success') || "Zahtev je poslat! Igrač {0} će ga dobiti sledeći put kada bude na mreži.").replace('{0}', safeSearchName);
-                    this.modal.alert(successMsg, gt('title_success') || "USPEŠNO");
-                }
-            }
+            await this.handleFriendSearchResults(results);
         });
 
         this.socket.on('incoming_room_invite', async (data) => {

@@ -168,14 +168,16 @@ class ModalManager {
         });
     }
 
-    confirm(text) {
-        const safeTitle = _safeT('modal_title_confirm') || "POTVRDA";
+    confirm(text, options = {}) {
+        const safeTitle = options.title || _safeT('modal_title_confirm') || "POTVRDA";
         return new Promise(resolve => {
             const els = this.elements;
             if(!els.overlay) { console.warn("Modal overlay missing! Confirm:", text); resolve(false); return; }
             
             this.setup(safeTitle, text, false);
             els.btnCancel.classList.remove('hidden');
+            if (options.okText && els.btnOk) els.btnOk.innerText = options.okText;
+            if (options.cancelText && els.btnCancel) els.btnCancel.innerText = options.cancelText;
             
             els.btnOk.onclick = () => { this.close(); resolve(true); };
             els.btnCancel.onclick = () => { this.close(); resolve(false); };
