@@ -1212,7 +1212,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title online-players-title" data-lang="online_players_title">🟢 ONLINE IGRAČI</span>
                 </div>
-                <button type="button" class="global-chat-close" onclick="document.getElementById('online-players-overlay').style.display='none'" aria-label="Zatvori online igrače" data-lang-aria="aria_close_online_players">×</button>
+                <button type="button" class="global-chat-close" onclick="if(window.closeOnlinePlayersModal) window.closeOnlinePlayersModal(); else document.getElementById('online-players-overlay').style.display='none'" aria-label="Zatvori online igrače" data-lang-aria="aria_close_online_players">×</button>
             </div>
 
             <div id="online-players-body" class="chat-body global-chat-body online-players-body">

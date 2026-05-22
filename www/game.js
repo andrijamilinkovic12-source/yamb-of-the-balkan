@@ -1332,14 +1332,28 @@ class YambApp {
             return;
         }
 
-        const overlay = document.getElementById('online-players-overlay');
-        if (overlay) overlay.style.display = 'none';
+        if (typeof window.closeOnlinePlayersModal === 'function') {
+            window.closeOnlinePlayersModal();
+        } else {
+            const overlay = document.getElementById('online-players-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        let reopenOnlinePlayersListScheduled = false;
+        const reopenOnlinePlayersList = () => {
+            if (reopenOnlinePlayersListScheduled) return;
+            reopenOnlinePlayersListScheduled = true;
+            if (typeof window.openOnlinePlayersModal === 'function') {
+                setTimeout(() => window.openOnlinePlayersModal(), 250);
+            }
+        };
 
         this.initSocketConnection();
         this.setupSocketListeners(this.playerName);
 
         const doSpectate = () => {
             let settled = false;
+            let spectateErrorHandled = false;
             const finish = () => {
                 if (settled) return;
                 settled = true;
@@ -1349,12 +1363,17 @@ class YambApp {
                 this.socket.off('error_msg', finishOnSpectateError);
             };
             const finishOnSpectateError = (msgKey) => {
-                if (String(msgKey || '').includes('spectate')) finish();
+                if (String(msgKey || '').includes('spectate')) {
+                    spectateErrorHandled = true;
+                    finish();
+                    reopenOnlinePlayersList();
+                }
             };
             const timer = setTimeout(() => {
                 if (settled) return;
                 finish();
                 this.showServerNotice('Ne mogu da otvorim gledanje ove partije. Osvežite online listu i probajte ponovo.');
+                reopenOnlinePlayersList();
             }, 8000);
 
             this.socket.once('spectate_started', finish);
@@ -1363,6 +1382,10 @@ class YambApp {
             this.socket.emit('request_spectate', target, (result = {}) => {
                 if (result && result.ok === false) {
                     finish();
+                    if (!spectateErrorHandled) {
+                        this.showServerNotice(result.reason || 'err_spectate_not_in_game', 'err_title');
+                    }
+                    reopenOnlinePlayersList();
                     console.warn(`Gledanje partije odbijeno: ${result.reason || 'unknown_error'}`);
                 } else if (result && result.ok) {
                     finish();

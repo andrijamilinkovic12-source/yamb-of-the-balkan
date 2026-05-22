@@ -4468,7 +4468,7 @@ io.on('connection', (socket) => {
             }
             if (state.players.indexOf(socket.id) === -1 && !reattachSocketToRoomByUid(socket, roomId)) {
                 socket.emit('error_msg', 'err_spectate_not_in_game');
-                return;
+                return replySpectate({ ok: false, reason: 'err_spectate_not_in_game' });
             }
             socket.join(roomId);
             playerRooms[socket.id] = roomId;

@@ -91,16 +91,39 @@ function stopOnlinePlayersAutoRefresh() {
     }
 }
 
+function cleanupOnlinePlayersSocketListeners() {
+    const socket = window.app && window.app.socket;
+    if (!socket || typeof socket.off !== 'function') return;
+
+    socket.off('online_players_list_data');
+    socket.off('online_players_status_changed');
+}
+
 function startOnlinePlayersAutoRefresh() {
     stopOnlinePlayersAutoRefresh();
     onlinePlayersRefreshTimer = setInterval(() => {
         if (!isOnlinePlayersModalOpen()) {
-            stopOnlinePlayersAutoRefresh();
+            window.closeOnlinePlayersModal({ skipOverlay: true });
             return;
         }
         requestOnlinePlayersList();
     }, 6000);
 }
+
+window.closeOnlinePlayersModal = function(options = {}) {
+    const overlay = document.getElementById('online-players-overlay');
+    if (overlay && !options.skipOverlay) {
+        overlay.style.display = 'none';
+    }
+
+    stopOnlinePlayersAutoRefresh();
+    cleanupOnlinePlayersSocketListeners();
+};
+
+window.refreshOnlinePlayersModal = function() {
+    if (!isOnlinePlayersModalOpen()) return false;
+    return requestOnlinePlayersList();
+};
 
 // --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
 window.openOnlinePlayersModal = function() {
