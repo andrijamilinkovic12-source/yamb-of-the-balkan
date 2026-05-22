@@ -3190,11 +3190,18 @@ class YambApp {
 
                 this.updateStats(winnerReward, 'win', 0, true, { skipH2H: !!data.serverApplied });
 
-                // UKLONJEN MODAL ZA POBEDNIKA, IGRA TIHO DODELJUJE NAGRADE
+                await this.showTechnicalGameOver({
+                    resultType: 'win',
+                    winnerName: data.winnerName || this.playerName,
+                    loserName: data.loserName || data.opponent || 'Protivnik',
+                    rewardAmount: winnerReward,
+                    penaltyAmount: coinPenalty,
+                    message: data.message || 'Protivniku je isteklo vreme. Tehnička pobeda.'
+                });
             } else {
                 this.soundMgr.loss();
-                
-                let penalty = data.penalty !== undefined ? data.penalty : 50; 
+
+                let penalty = data.penalty !== undefined ? data.penalty : 50;
                 
                 if (penalty > 0 && !data.serverApplied) {
                     this.stats = this.stats || {};
@@ -3213,11 +3220,15 @@ class YambApp {
 
                 this.updateStats(0, 'loss', 0, true, { skipH2H: !!data.serverApplied });
 
-                const msg = (data.message || gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak;
-                await this.modal.alert(msg, gt('timeout_loss_title') || "PORAZ");
+                await this.showTechnicalGameOver({
+                    resultType: 'loss',
+                    winnerName: data.winnerName || 'Protivnik',
+                    loserName: data.loserName || this.playerName,
+                    rewardAmount: winnerReward,
+                    penaltyAmount: coinPenalty || penalty,
+                    message: (data.message || gt('timeout_loss_msg') || "Isteklo vam je vreme!") + msgDodatak
+                });
             }
-            
-            this.cancelOnline();
         });
 
         this.socket.on('spectate_started', (data) => {
@@ -3585,8 +3596,6 @@ class YambApp {
             }
 
             // Ako je igra ZAPRAVO u toku, dodeljujemo tehničku pobedu
-            this.gameActive = false;
-
             this.soundMgr.win();
             this.effectMgr.celebrateWin();
 
@@ -3601,8 +3610,14 @@ class YambApp {
 
             this.updateStats(rewardAmount, 'win', 0, true, { skipH2H: !!data.serverApplied });
 
-            // UKLONJEN MODAL ZA POBEDNIKA PO ZAHTEVU, PARTIJA SE TIHO ZAVRŠAVA
-            this.cancelOnline();
+            await this.showTechnicalGameOver({
+                resultType: 'win',
+                winnerName: data.winnerName || this.playerName,
+                loserName: data.loserName || 'Protivnik',
+                rewardAmount,
+                penaltyAmount: Number.isFinite(Number(data.coinPenalty)) ? Math.max(0, Math.floor(Number(data.coinPenalty))) : rewardAmount,
+                message: gt('msg_opponent_left') || "Protivnik je izašao!"
+            });
         });
 
         this.socket.on('incoming_friend_req', async (data = {}) => {
@@ -4523,6 +4538,55 @@ class YambApp {
         });
     }
 
+    async showTechnicalGameOver(data = {}) {
+        localStorage.removeItem('yamb_active_online_room');
+        if (this.turnTimerInterval) {
+            clearInterval(this.turnTimerInterval);
+            this.turnTimerInterval = null;
+        }
+        if(this.soundMgr) this.soundMgr.stopMusic();
+
+        const resultType = data.resultType === 'loss' ? 'loss' : 'win';
+        const iAmWinner = resultType === 'win';
+        const rewardAmount = Math.max(0, Math.floor(Number(data.rewardAmount) || 0));
+        const penaltyAmount = Math.max(0, Math.floor(Number(data.penaltyAmount) || 0));
+        const winnerName = data.winnerName || (iAmWinner ? this.playerName : 'Protivnik');
+        const loserName = data.loserName || (iAmWinner ? 'Protivnik' : this.playerName);
+
+        this.gameActive = false;
+        this.pendingScore = 0;
+        this.rewardClaimed = false;
+        this.rewardClaimInProgress = false;
+        this.lastGameType = 'technical';
+
+        const title = iAmWinner ? (gt('go_win') || 'POBEDA!') : (gt('go_loss') || 'PORAZ');
+        const fallbackMsg = iAmWinner
+            ? `Tehnička pobeda. ${loserName} je napustio partiju.`
+            : `Tehnički poraz. ${winnerName} je pobedio.`;
+        const message = data.message || fallbackMsg;
+
+        const titleEl = document.getElementById('go-title');
+        const msgEl = document.getElementById('go-msg');
+        const scoreEl = document.getElementById('go-score');
+        const labelEl = document.querySelector('#game-over-screen [data-lang="go_msg_solo"]');
+        if (titleEl) titleEl.innerText = title;
+        if (msgEl) msgEl.innerHTML = message;
+        if (scoreEl) scoreEl.innerText = iAmWinner ? rewardAmount : penaltyAmount;
+        if (labelEl) labelEl.innerText = iAmWinner ? 'NAGRADA' : 'KAZNA';
+
+        const btnAd = document.getElementById('btn-ad-double');
+        if (btnAd) btnAd.style.display = 'none';
+
+        const btnRematch = document.getElementById('btn-rematch');
+        if (btnRematch) btnRematch.style.display = 'none';
+
+        const btnClaim = document.querySelector('#game-over-screen .btn-secondary');
+        if(btnClaim) btnClaim.innerText = gt('go_claim') || 'Preuzmi i Izađi';
+
+        if (iAmWinner && this.effectMgr) this.effectMgr.celebrateWin();
+        this.navigateTo('game-over-screen');
+    }
+
     async handleGameOver() {
         localStorage.removeItem('yamb_active_online_room'); // Obrisano jer je igra gotova
         // ---> DODATO: Blokada duplog Game Over-a (Fiks 1) <---
@@ -4830,6 +4894,11 @@ class YambApp {
             this.rewardClaimInProgress = false;
             this.pendingScore = 0;
         };
+        if (this.lastGameType === 'technical') {
+            finishRewardClaim();
+            this.showMainMenu();
+            return;
+        }
         const syncRewardBalance = async () => {
             if (!this.socket || !this.socket.connected) return;
             try {

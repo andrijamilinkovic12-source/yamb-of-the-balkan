@@ -1275,6 +1275,8 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
         io.to(roomId).emit('game_over_timeout', {
             winnerId: winnerSocketId,
             loserId: timedOutSocketId,
+            winnerName: winnerParticipant.name,
+            loserName: inactiveParticipant.name,
             winnerReward: technicalResult.winnerReward,
             coinPenalty: technicalResult.loserCoinPenalty,
             serverApplied: technicalResult.serverApplied,
@@ -4411,16 +4413,20 @@ io.on('connection', (socket) => {
 
             console.log(`📢 Igrač ${socket.id} se vratio u meni, napušta sobu ${activeRoomId}`);
             let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
+            let technicalWinner = null;
+            let technicalLoser = null;
 
             if (state) {
                 const quitterParticipant = getRoomParticipantMeta(state, socket.id);
                 const pid = quitterParticipant.uid;
+                technicalLoser = quitterParticipant;
                 if (pid) {
                     const penaltyAmount = getDynamicPenalty(activeRoomId);
                     const oppSocketId = state.players.find(id => id !== socket.id);
                     const winnerParticipant = getRoomParticipantMeta(state, oppSocketId);
                     const winnerUid = winnerParticipant.uid;
                     const h2hKey = getH2HKeyForOpponent(winnerParticipant);
+                    technicalWinner = winnerParticipant;
 
                     technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
                         winnerOpponent: quitterParticipant,
@@ -4430,6 +4436,10 @@ io.on('connection', (socket) => {
             }
 
             socket.to(activeRoomId).emit('opponent_left', {
+                winnerId: technicalWinner?.socketId || '',
+                loserId: technicalLoser?.socketId || socket.id,
+                winnerName: technicalWinner?.name || 'Igrac',
+                loserName: technicalLoser?.name || 'Igrac',
                 reward: technicalResult.winnerReward,
                 coinPenalty: technicalResult.loserCoinPenalty,
                 serverApplied: technicalResult.serverApplied
@@ -6465,8 +6475,11 @@ io.on('connection', (socket) => {
                 directDuel: true
             });
 
-            challengerSocket.emit('online_room_resume_available', { roomId: roomName, directDuel: true });
-            socket.emit('online_room_resume_available', { roomId: roomName, directDuel: true });
+            setTimeout(() => {
+                if (!roomState[roomName] || roomState[roomName].gameFinished) return;
+                challengerSocket.emit('online_room_resume_available', { roomId: roomName, directDuel: true });
+                socket.emit('online_room_resume_available', { roomId: roomName, directDuel: true });
+            }, 1200);
 
         } else {
             if (!pending) return;
@@ -6928,7 +6941,21 @@ io.on('connection', (socket) => {
                     console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
                 }
 
+                const technicalWinnerSocketId = Array.isArray(stateAfterGrace?.players)
+                    ? stateAfterGrace.players.find(id => id !== ghost.oldSocketId)
+                    : '';
+                const technicalWinner = stateAfterGrace && technicalWinnerSocketId
+                    ? getRoomParticipantMeta(stateAfterGrace, technicalWinnerSocketId)
+                    : null;
+                const technicalLoser = stateAfterGrace
+                    ? getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId)
+                    : null;
+
                 io.to(activeRoomId).emit('opponent_left', {
+                    winnerId: technicalWinnerSocketId || '',
+                    loserId: ghost.oldSocketId,
+                    winnerName: technicalWinner?.name || 'Igrac',
+                    loserName: technicalLoser?.name || 'Igrac',
                     reward: technicalResult.winnerReward,
                     coinPenalty: technicalResult.loserCoinPenalty,
                     serverApplied: technicalResult.serverApplied
@@ -6942,7 +6969,22 @@ io.on('connection', (socket) => {
 
         } else {
             if (activeRoomId) {
-                socket.to(activeRoomId).emit('opponent_left');
+                const stateOnDisconnect = roomState[activeRoomId];
+                const winnerSocketId = Array.isArray(stateOnDisconnect?.players)
+                    ? stateOnDisconnect.players.find(id => id !== socket.id)
+                    : '';
+                const winnerParticipant = stateOnDisconnect && winnerSocketId
+                    ? getRoomParticipantMeta(stateOnDisconnect, winnerSocketId)
+                    : null;
+                const loserParticipant = stateOnDisconnect
+                    ? getRoomParticipantMeta(stateOnDisconnect, socket.id)
+                    : null;
+                socket.to(activeRoomId).emit('opponent_left', {
+                    winnerId: winnerSocketId || '',
+                    loserId: socket.id,
+                    winnerName: winnerParticipant?.name || 'Igrac',
+                    loserName: loserParticipant?.name || 'Igrac'
+                });
                 cleanupOnlineRoom(activeRoomId);
             }
         }
