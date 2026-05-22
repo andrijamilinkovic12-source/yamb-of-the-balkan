@@ -1722,7 +1722,11 @@ class YambApp {
                     let text = gt('duel_incoming');
                     if(text === 'duel_incoming') text = `Igrač {0} vas izaziva na duel! Prihvatate?`;
 
-                    const accepted = await this.modal.confirm(text.replace('{0}', safeChallengerName));
+                    const accepted = await this.modal.confirm(text.replace('{0}', safeChallengerName), {
+                        title: gt('duel_title') || "IZAZOV",
+                        okText: gt('btn_accept') || "Prihvati",
+                        cancelText: gt('btn_decline') || "Odbij"
+                    });
                     if (!socketAtPrompt || socketAtPrompt !== this.socket || !socketAtPrompt.connected || socketAtPrompt.id !== socketIdAtPrompt) {
                         if (accepted) {
                             this.modal.alert(gt('duel_expired') || 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.', gt('modal_title_info') || "INFO");
@@ -2260,36 +2264,46 @@ class YambApp {
 
     async challengePlayer(targetId, targetName, targetUid = null) {
         if (!this.requireLogin()) return;
-        this.initSocketConnection(); 
-        if (!this.socket || !this.socket.connected) return;
+        this.initSocketConnection();
+
+        const ready = await this.waitForSocketConnection(8000);
+        if (!ready.ok) {
+            const reason = ready.reason === 'err_friend_timeout' ? 'err_duel_timeout' : ready.reason;
+            this.showServerNotice(reason || 'sys_no_conn', 'err_title');
+            return;
+        }
         const socketAtPrompt = this.socket;
 
         let askText = gt('duel_ask');
         if (askText === 'duel_ask') askText = `Želite li da izazovete igrača {0} na duel?`;
 
         const safeTargetName = this.escapeHtml(targetName || 'Igrač');
-        const isConfirmed = await this.modal.confirm(askText.replace('{0}', safeTargetName));
+        const isConfirmed = await this.modal.confirm(askText.replace('{0}', safeTargetName), {
+            title: gt('duel_title') || "IZAZOV",
+            okText: gt('online_challenge_btn') || "IZAZOVI",
+            cancelText: gt('modal_btn_cancel') || "OTKAŽI"
+        });
         if(isConfirmed) {
             if (!socketAtPrompt || socketAtPrompt !== this.socket || !socketAtPrompt.connected) {
                 this.modal.alert(gt('sys_no_conn') || "Niste povezani na server.", gt('err_title') || "GREŠKA");
                 return;
             }
 
-            this.socket.emit('send_challenge', { targetId, targetUid, challengerName: this.playerName }, (result = {}) => {
-                if (!result.ok) {
-                    this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
-                    return;
-                }
+            const result = await this.emitSocketAck('send_challenge', { targetId, targetUid, challengerName: this.playerName }, 8000);
+            if (!result.ok) {
+                const reason = result.reason === 'err_friend_timeout' ? 'err_duel_timeout' : result.reason;
+                this.showServerNotice(reason || 'err_server_conn', 'err_title');
+                return;
+            }
 
-                let sentText = gt('duel_sent');
-                if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
+            let sentText = gt('duel_sent');
+            if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
 
-                if (typeof window.showNotification === 'function') {
-                    window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || 'Igrač'));
-                } else {
-                    this.modal.alert(sentText.replace('{0}', safeTargetName), gt('duel_title') || "IZAZOV");
-                }
-            });
+            if (typeof window.showNotification === 'function') {
+                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || 'Igrač'));
+            } else {
+                this.modal.alert(sentText.replace('{0}', safeTargetName), gt('duel_title') || "IZAZOV");
+            }
         }
     }
     
@@ -2561,11 +2575,14 @@ class YambApp {
     }
 
     async showMainMenu() { 
+        const wasSpectator = this.isSpectator;
+        const hadLiveGameContext = !wasSpectator && (this.gameActive || this.onlineMode || !!this.roomId);
+        const wasLocalLiveGame = hadLiveGameContext && this.gameActive && !this.onlineMode;
+
         await this.autoSaveGame(true);
+        if (wasLocalLiveGame) this.pauseLocalGameClock();
         localStorage.removeItem('yamb_local_recovery_pending');
         this.setInviteBusyState(false);
-
-        const wasSpectator = this.isSpectator;
 
         if (wasSpectator) {
             this.isSpectator = false;
@@ -2596,20 +2613,32 @@ class YambApp {
         // ---> DODATO OVDJE: Zaustavljanje muzike kada se pređe u glavni meni <---
         if(this.soundMgr) this.soundMgr.stopMusic();
 
-        this.navigateTo('main-menu'); 
-        const floatBtn = document.getElementById('chat-float-btn');
-        if(floatBtn) floatBtn.classList.add('hidden'); 
-        document.getElementById('chat-window').classList.remove('active'); 
-        this.chatOpen = false; 
-        
-        if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
-        
-        const timerDisplay = document.getElementById('turn-timer-display');
-        if (timerDisplay && !this.isSpectator) timerDisplay.style.display = 'none';
-
         if (!wasSpectator && this.socket && this.socket.connected) {
             this.socket.emit('back_to_menu');
         }
+
+        if (hadLiveGameContext) {
+            if (this.onlineMode) localStorage.removeItem('yamb_active_online_room');
+            this.gameActive = false;
+            this.onlineMode = false;
+            this.isSpectator = false;
+            this.roomId = null;
+            this.myOnlineIndex = 0;
+            this.currentOpponentPhoto = '';
+            this.currentOpponentUid = null;
+            this.timeLeft = 90;
+        }
+
+        this.navigateTo('main-menu');
+        const floatBtn = document.getElementById('chat-float-btn');
+        if(floatBtn) floatBtn.classList.add('hidden');
+        document.getElementById('chat-window').classList.remove('active');
+        this.chatOpen = false;
+
+        if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+
+        const timerDisplay = document.getElementById('turn-timer-display');
+        if (timerDisplay && !this.isSpectator) timerDisplay.style.display = 'none';
 
         if (this.friendsInterval) {
             clearInterval(this.friendsInterval);

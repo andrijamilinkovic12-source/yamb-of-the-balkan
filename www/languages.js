@@ -196,6 +196,7 @@ const TRANSLATIONS = {
         "err_friend_request_waiting_on_you": "Ovaj igrač je vama već poslao zahtev. Prihvatite ili odbijte zahtev iz liste prijatelja.",
         "err_friend_request_missing": "Ovaj zahtev više nije dostupan.",
         "err_friend_timeout": "Server nije potvrdio zahtev na vreme. Pokušajte ponovo.",
+        "err_duel_timeout": "Server nije potvrdio duel izazov na vreme. Pokušajte ponovo.",
 
         // --- STATISTIKA ---
         "stats_title": "STATISTIKA",
@@ -850,6 +851,7 @@ const TRANSLATIONS = {
         "err_friend_request_waiting_on_you": "This player has already sent you a request. Accept or decline it from the friends list.",
         "err_friend_request_missing": "This request is no longer available.",
         "err_friend_timeout": "The server did not confirm the request in time. Try again.",
+        "err_duel_timeout": "The server did not confirm the duel challenge in time. Try again.",
 
         // --- STATISTICS ---
         "stats_title": "STATISTICS",
