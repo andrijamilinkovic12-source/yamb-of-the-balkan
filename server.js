@@ -928,6 +928,15 @@ function getRoomParticipantMeta(state, socketId) {
     return getDuelParticipantMeta(socketId, fallbackName, fallbackUid);
 }
 
+function getOnlineDuelType(roomId = '') {
+    const id = String(roomId || '');
+    if (id.startsWith('tourney_')) return 'tournament';
+    if (id.startsWith('duel_')) return 'challenge';
+    if (id.startsWith('yamb-')) return 'friend_invite';
+    if (id.startsWith('room_')) return 'random';
+    return 'online';
+}
+
 function emitCompletedOnlineGame(roomId) {
     const state = roomState[roomId];
     if (!state || !Array.isArray(state.players) || state.players.length < 2) return false;
@@ -940,10 +949,29 @@ function emitCompletedOnlineGame(roomId) {
     const players = state.players.slice(0, 2).map((socketId, index) => {
         return getDuelParticipantMeta(socketId, state.playerNames?.[index], stablePlayerUids[index]).name;
     });
+    const finalResults = players.map((name, index) => ({
+        name,
+        score: totals[index],
+        uid: stablePlayerUids[index] || ''
+    }));
+    const winnerScore = Math.max(...totals);
+    const winnerIndexes = totals
+        .map((score, index) => ({ score, index }))
+        .filter(item => item.score === winnerScore)
+        .map(item => item.index);
+    const isDraw = winnerIndexes.length !== 1;
+    const winnerIndex = isDraw ? -1 : winnerIndexes[0];
 
     io.to(roomId).emit('online_game_finished', {
         roomId,
+        duelType: getOnlineDuelType(roomId),
         players,
+        finalResults,
+        totals,
+        isDraw,
+        winnerIndex,
+        winnerName: winnerIndex >= 0 ? players[winnerIndex] : '',
+        winnerScore,
         allScores: state.allScores,
         currentPlayerIdx: state.turnIndex
     });
@@ -1275,6 +1303,7 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
         io.to(roomId).emit('game_over_timeout', {
             winnerId: winnerSocketId,
             loserId: timedOutSocketId,
+            duelType: getOnlineDuelType(roomId),
             winnerName: winnerParticipant.name,
             loserName: inactiveParticipant.name,
             winnerReward: technicalResult.winnerReward,
@@ -4438,6 +4467,7 @@ io.on('connection', (socket) => {
             socket.to(activeRoomId).emit('opponent_left', {
                 winnerId: technicalWinner?.socketId || '',
                 loserId: technicalLoser?.socketId || socket.id,
+                duelType: getOnlineDuelType(activeRoomId),
                 winnerName: technicalWinner?.name || 'Igrac',
                 loserName: technicalLoser?.name || 'Igrac',
                 reward: technicalResult.winnerReward,
@@ -5869,10 +5899,10 @@ io.on('connection', (socket) => {
                 notifyOnlinePlayersStatusChanged();
 
                 io.to(opponentId).emit('game_start', {
-                    roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0
+                    roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0, duelType: getOnlineDuelType(roomId)
                 });
                 socket.emit('game_start', {
-                    roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, oppUid: opponentSocket.playerId || registeredSockets[opponentId] || '', myIndex: 1
+                    roomId: roomId, opponent: opponentName, oppStats: opponentStats, oppPhoto: opponentPhoto, oppUid: opponentSocket.playerId || registeredSockets[opponentId] || '', myIndex: 1, duelType: getOnlineDuelType(roomId)
                 });
 
             } else {
@@ -5948,8 +5978,8 @@ io.on('connection', (socket) => {
             startTurnTimer(roomId); 
             notifyOnlinePlayersStatusChanged();
 
-            io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0 });
-            socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, oppUid: p1.uid || registeredSockets[p1.id] || '', myIndex: 1 });
+            io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0, duelType: getOnlineDuelType(roomId) });
+            socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, oppUid: p1.uid || registeredSockets[p1.id] || '', myIndex: 1, duelType: getOnlineDuelType(roomId) });
 
             delete privateRooms[roomId]; 
         } else {
@@ -6463,6 +6493,7 @@ io.on('connection', (socket) => {
                 oppPhoto: socket.photoUrl || '',
                 oppUid: socket.playerId || registeredSockets[socket.id] || '',
                 myIndex: 0,
+                duelType: getOnlineDuelType(roomName),
                 directDuel: true
             });
             socket.emit('game_start', {
@@ -6472,6 +6503,7 @@ io.on('connection', (socket) => {
                 oppPhoto: challengerSocket.photoUrl || '',
                 oppUid: challengerSocket.playerId || registeredSockets[challengerId] || '',
                 myIndex: 1,
+                duelType: getOnlineDuelType(roomName),
                 directDuel: true
             });
 
@@ -6954,6 +6986,7 @@ io.on('connection', (socket) => {
                 io.to(activeRoomId).emit('opponent_left', {
                     winnerId: technicalWinnerSocketId || '',
                     loserId: ghost.oldSocketId,
+                    duelType: getOnlineDuelType(activeRoomId),
                     winnerName: technicalWinner?.name || 'Igrac',
                     loserName: technicalLoser?.name || 'Igrac',
                     reward: technicalResult.winnerReward,
@@ -6982,6 +7015,7 @@ io.on('connection', (socket) => {
                 socket.to(activeRoomId).emit('opponent_left', {
                     winnerId: winnerSocketId || '',
                     loserId: socket.id,
+                    duelType: getOnlineDuelType(activeRoomId),
                     winnerName: winnerParticipant?.name || 'Igrac',
                     loserName: loserParticipant?.name || 'Igrac'
                 });

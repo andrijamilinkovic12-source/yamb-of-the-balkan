@@ -107,6 +107,8 @@ class YambApp {
         this.isSpectator = false; 
         this.roomId = null;
         this.myOnlineIndex = 0;
+        this.onlineDuelType = null;
+        this.lastOnlineGameResult = null;
         this.onlineRecoveryPromptOpen = false;
         this.localRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
@@ -2602,6 +2604,8 @@ class YambApp {
             this.onlineMode = false;
             this.gameActive = false;
             this.roomId = null;
+            this.onlineDuelType = null;
+            this.lastOnlineGameResult = null;
 
             const btnBacaj = document.getElementById('btn-bacaj');
             const btnNajava = document.getElementById('btn-najava');
@@ -2636,6 +2640,8 @@ class YambApp {
             this.isSpectator = false;
             this.roomId = null;
             this.myOnlineIndex = 0;
+            this.onlineDuelType = null;
+            this.lastOnlineGameResult = null;
             this.currentOpponentPhoto = '';
             this.currentOpponentUid = null;
             this.timeLeft = 90;
@@ -2896,8 +2902,8 @@ class YambApp {
         }
     }
     
-    async setupOnline(mode = 'random') { 
-        if (!this.requireLogin()) return; 
+    async setupOnline(mode = 'random') {
+        if (!this.requireLogin()) return;
         
         const nickname = this.playerName; 
         if (!nickname) return; 
@@ -2962,7 +2968,21 @@ class YambApp {
             this.socket.emit('find_game', { nickname: nickname, photoUrl: photoUrl }); 
         }
     }
-    
+
+    inferOnlineDuelType(roomId = this.roomId, payload = {}) {
+        if (payload && payload.duelType) return payload.duelType;
+        const id = String(roomId || '');
+        if (id.startsWith('tourney_')) return 'tournament';
+        if (id.startsWith('duel_')) return 'challenge';
+        if (id.startsWith('yamb-')) return 'friend_invite';
+        if (id.startsWith('room_')) return 'random';
+        return this.onlineDuelType || 'online';
+    }
+
+    isTournamentOnlineDuel(roomId = this.roomId, payload = {}) {
+        return this.inferOnlineDuelType(roomId, payload) === 'tournament';
+    }
+
     startClientTimer(initialTimeLeft = 90) {
         if (!this.onlineMode || this.isSpectator) return;
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
@@ -3163,6 +3183,7 @@ class YambApp {
 
         this.socket.off('game_over_timeout');
         this.socket.on('game_over_timeout', async (data) => {
+            this.onlineDuelType = this.inferOnlineDuelType(this.roomId, data);
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
             this.gameActive = false;
             
@@ -3387,6 +3408,8 @@ class YambApp {
             this.modeTag = "Online";
             this.isSpectator = false;
             this.roomId = data.roomId;
+            this.onlineDuelType = this.inferOnlineDuelType(data.roomId, data);
+            this.lastOnlineGameResult = null;
             this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname];
             this.initScores();
             this.currentPlayerIdx = 0;
@@ -3463,10 +3486,12 @@ class YambApp {
                     return p || "Igrač";
                 });
             }
+            this.onlineDuelType = this.inferOnlineDuelType(data.roomId || this.roomId, data);
+            this.lastOnlineGameResult = data;
             if (Array.isArray(data.allScores)) this.allScores = data.allScores;
             if (data.currentPlayerIdx !== undefined) this.currentPlayerIdx = data.currentPlayerIdx;
 
-            await this.handleGameOver();
+            await this.handleGameOver({ onlineResult: data });
         });
 
         this.socket.on('remote_move', (data) => { 
@@ -3574,6 +3599,7 @@ class YambApp {
 
         this.socket.off('opponent_left');
         this.socket.on('opponent_left', async (data = {}) => {
+            this.onlineDuelType = this.inferOnlineDuelType(this.roomId, data);
             localStorage.removeItem('yamb_active_online_room');
             if(this.isSpectator) {
                 this.modal.alert(gt('spectator_opp_left') || "Igrač je napustio sobu.", gt('modal_title_info') || "INFO").then(() => {
@@ -4587,7 +4613,7 @@ class YambApp {
         this.navigateTo('game-over-screen');
     }
 
-    async handleGameOver() {
+    async handleGameOver(options = {}) {
         localStorage.removeItem('yamb_active_online_room'); // Obrisano jer je igra gotova
         // ---> DODATO: Blokada duplog Game Over-a (Fiks 1) <---
         if (!this.gameActive && !this.isSpectator) {
@@ -4620,14 +4646,45 @@ class YambApp {
         }
         this.gameActive = false;
 
+        const onlineResult = this.onlineMode ? (options.onlineResult || this.lastOnlineGameResult || null) : null;
+        if (onlineResult) {
+            this.onlineDuelType = this.inferOnlineDuelType(onlineResult.roomId || this.roomId, onlineResult);
+            if (Array.isArray(onlineResult.players) && onlineResult.players.length > 0) {
+                this.players = onlineResult.players.map(p => {
+                    if (typeof p === 'object' && p !== null) return p.name || "Igrač";
+                    return p || "Igrač";
+                });
+            }
+            if (Array.isArray(onlineResult.allScores)) this.allScores = onlineResult.allScores;
+            if (onlineResult.currentPlayerIdx !== undefined) this.currentPlayerIdx = onlineResult.currentPlayerIdx;
+        }
+
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
         if (btnUndo) {
             btnUndo.classList.add('gh-btn-inactive');
             btnUndo.classList.remove('gh-btn-active');
         }
-        const finalResults = this.players.map((name, i) => { return { name: name, score: this.calculateTotalScore(i) }; });
+        const serverFinalResults = onlineResult && Array.isArray(onlineResult.finalResults) && onlineResult.finalResults.length > 0
+            ? onlineResult.finalResults.map((entry, index) => ({
+                name: entry && entry.name ? entry.name : (this.players[index] || "Igrač"),
+                score: Math.max(0, parseInt(entry && entry.score) || 0)
+            }))
+            : null;
+        const finalResults = serverFinalResults || this.players.map((name, i) => { return { name: name, score: this.calculateTotalScore(i) }; });
         const winnerScore = finalResults.reduce((max, r) => r.score > max ? r.score : max, 0);
+        const fallbackWinner = [...finalResults].sort((a,b) => b.score - a.score)[0] || { name: 'Igrač', score: 0 };
+        const hasServerWinnerIndex = onlineResult
+            && onlineResult.winnerIndex !== undefined
+            && onlineResult.winnerIndex !== null
+            && Number.isInteger(Number(onlineResult.winnerIndex));
+        const serverWinnerIndex = hasServerWinnerIndex ? Number(onlineResult.winnerIndex) : -1;
+        const winner = serverWinnerIndex >= 0 && finalResults[serverWinnerIndex] ? finalResults[serverWinnerIndex] : fallbackWinner;
+        const isDraw = this.players.length > 1
+            ? (onlineResult && typeof onlineResult.isDraw === 'boolean'
+                ? onlineResult.isDraw
+                : finalResults.every(r => r.score === finalResults[0].score))
+            : false;
 
         if(window.localforage) {
             const uid = localStorage.getItem('yamb_uid') || 'guest';
@@ -4639,7 +4696,9 @@ class YambApp {
         let detectedMode = "Solo";
         if (this.onlineMode) detectedMode = "Online"; else if (this.players.length > 1) detectedMode = "Hotseat";
 
-        let myScoreEntry = finalResults.find(r => r.name === this.playerName) || finalResults[0];
+        let myScoreEntry = finalResults.find(r => r.name === this.playerName)
+            || (this.onlineMode && finalResults[this.myOnlineIndex])
+            || finalResults[0];
         let unlockedTrophiesNow = [];
 
         try {
@@ -4651,14 +4710,15 @@ class YambApp {
         }
 
         try {
-            let saveMode = detectedMode; 
-            
+            let saveMode = detectedMode;
+
             if (this.onlineMode) {
-                if (this.roomId && this.roomId.startsWith('tourney_')) {
+                const duelType = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType });
+                if (duelType === 'tournament') {
                     saveMode = 'Turnir';
-                } else if (this.roomId && this.roomId.startsWith('yamb-')) {
+                } else if (duelType === 'friend_invite') {
                     saveMode = 'Prijatelj';
-                } else if (this.roomId && this.roomId.startsWith('duel_')) { 
+                } else if (duelType === 'challenge') {
                     saveMode = 'Duel';
                 } else {
                     saveMode = 'Online';
@@ -4675,7 +4735,9 @@ class YambApp {
         }
 
         if (myScoreEntry) {
-             const myIndex = this.players.findIndex(p => p === myScoreEntry.name);
+             const myIndex = this.onlineMode && Number.isInteger(this.myOnlineIndex) && this.myOnlineIndex >= 0
+                 ? this.myOnlineIndex
+                 : this.players.findIndex(p => p === myScoreEntry.name);
              if (myIndex !== -1 && this.allScores[myIndex]) {
                  try {
                      if (window.trophyManager && typeof window.trophyManager.checkEndGameTrophies === 'function') {
@@ -4708,13 +4770,12 @@ class YambApp {
              this.rewardClaimInProgress = false;
              this.lastGameType = 'normal';
              let resultType = 'solo';
-             if (this.players.length > 1) { 
-                 const isDraw = (finalResults.every(r => r.score === finalResults[0].score));
-                 const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
-                 
+             if (this.players.length > 1) {
                  // FIX: Rešavanje nerešenog rezultata kako se ne bi upisivao lažni poraz
                  if (isDraw) {
                      resultType = 'draw';
+                 } else if (this.onlineMode && serverWinnerIndex >= 0) {
+                     resultType = serverWinnerIndex === this.myOnlineIndex ? 'win' : 'loss';
                  } else if (winner.name === myScoreEntry.name) {
                      resultType = 'win';
                  } else {
@@ -4724,10 +4785,11 @@ class YambApp {
              
              let finalOppScore = 0;
              if (this.players.length === 2) {
-                 const oppIndex = this.players.findIndex(p => p !== myScoreEntry.name);
+                 const oppIndex = this.onlineMode && Number.isInteger(this.myOnlineIndex) && this.myOnlineIndex >= 0
+                     ? (this.myOnlineIndex === 0 ? 1 : 0)
+                     : this.players.findIndex(p => p !== myScoreEntry.name);
                  if (oppIndex !== -1) {
-                     const oppName = this.players[oppIndex];
-                     let oppScoreEntry = finalResults.find(r => r.name === oppName);
+                     let oppScoreEntry = finalResults[oppIndex] || finalResults.find(r => r.name !== myScoreEntry.name);
                      finalOppScore = oppScoreEntry ? oppScoreEntry.score : 0;
                  }
              }
@@ -4741,7 +4803,6 @@ class YambApp {
         }
 
         this.soundMgr.win();
-        const winner = [...finalResults].sort((a,b) => b.score - a.score)[0];
         let title = gt('game_over'); let message = "";
         let scoreLabel = gt('go_msg_solo') || "OSVOJENI POENI";
 
@@ -4756,13 +4817,17 @@ class YambApp {
                 message = (gt('go_msg_solo_good') || "Završio si partiju sa {0} poena. Sledeća može bolje.").replace('{0}', myScore);
             }
         } else {
-            const isDraw = (finalResults.every(r => r.score === finalResults[0].score));
-            const amIWinner = (myScoreEntry && winner.name === myScoreEntry.name);
+            const amIWinner = !!myScoreEntry && (this.onlineMode && serverWinnerIndex >= 0
+                ? serverWinnerIndex === this.myOnlineIndex
+                : winner.name === myScoreEntry.name);
             scoreLabel = gt('go_label_your_score') || "TVOJ REZULTAT";
 
             if (isDraw) {
                 title = gt('go_draw') || "NEREŠENO!";
                 message = (gt('go_msg_online_draw') || "Partija je završena bez pobednika. Oboje imate {0} poena.").replace('{0}', winner.score);
+                if (this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })) {
+                    message += " Turnirski meč se ponavlja dok neko ne pobedi.";
+                }
             } else {
                 title = amIWinner ? gt('go_win') : gt('go_loss');
                 if (amIWinner) { this.effectMgr.celebrateWin(); }
@@ -4792,7 +4857,7 @@ class YambApp {
 
         const btnRematch = document.getElementById('btn-rematch');
         if (this.onlineMode) {
-            const isTournament = this.roomId && this.roomId.startsWith('tourney_');
+            const isTournament = this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType });
 
             if (btnRematch) {
                 btnRematch.style.display = isTournament ? 'none' : 'flex';
@@ -4805,15 +4870,17 @@ class YambApp {
                 this.socket.emit('game_over');
 
                 if (isTournament) {
-                    const amIWinner = (myScoreEntry && winner.name === myScoreEntry.name);
-                    const parts = this.roomId.split('_'); 
+                    const amIWinner = !!myScoreEntry && (serverWinnerIndex >= 0
+                        ? serverWinnerIndex === this.myOnlineIndex
+                        : winner.name === myScoreEntry.name);
+                    const parts = this.roomId.split('_');
                     
                     if (parts.length >= 3) {
                         const round = parts[1];
                         const index = parseInt(parts[2]);
                         
-                        if (amIWinner) {
-                            this.socket.emit('tourney_submit_winner', { 
+                        if (!isDraw && amIWinner) {
+                            this.socket.emit('tourney_submit_winner', {
                                 round: round, 
                                 index: index, 
                                 winnerId: this.playerId
