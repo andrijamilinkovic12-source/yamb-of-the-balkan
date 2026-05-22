@@ -984,6 +984,93 @@ function getH2HKeyForOpponent(opponent) {
     return sanitizeTournamentName(opponent?.name || 'Nepoznat').replace(/\./g, '_').replace(/\$/g, '_');
 }
 
+function isStableH2HUid(value, selfUid = '') {
+    const uid = String(value || '').trim();
+    return !!uid &&
+        uid !== String(selfUid || '').trim() &&
+        uid !== 'undefined' &&
+        uid !== 'null' &&
+        !uid.startsWith('guest_') &&
+        uid.length >= 16 &&
+        !/\s/.test(uid);
+}
+
+function normalizeH2HNameKey(value) {
+    const raw = String(value || '').trim();
+    if (!raw || raw === 'undefined' || raw === 'null' || raw === 'Nepoznat') return '';
+    return sanitizeTournamentName(raw)
+        .toLowerCase()
+        .replace(/\./g, '_')
+        .replace(/\$/g, '_')
+        .replace(/\s+/g, '_');
+}
+
+function mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
+    return {
+        ...base,
+        ...incoming,
+        name: identity.name || sanitizeTournamentName(incoming.name || base.name || 'Nepoznat'),
+        uid: identity.uid || incoming.uid || base.uid || '',
+        photo: incoming.photo && incoming.photo.length > 5 ? incoming.photo : (base.photo || ''),
+        wins: Math.max(toSafeInt(base.wins), toSafeInt(incoming.wins)),
+        losses: Math.max(toSafeInt(base.losses), toSafeInt(incoming.losses)),
+        draws: Math.max(toSafeInt(base.draws), toSafeInt(incoming.draws)),
+        myTotalScore: Math.max(toSafeInt(base.myTotalScore), toSafeInt(incoming.myTotalScore)),
+        gamesWithScore: Math.max(toSafeInt(base.gamesWithScore), toSafeInt(incoming.gamesWithScore)),
+        myHighScore: Math.max(toSafeInt(base.myHighScore), toSafeInt(incoming.myHighScore)),
+        maxWinMargin: Math.max(toSafeInt(base.maxWinMargin), toSafeInt(incoming.maxWinMargin)),
+        maxLossMargin: Math.max(toSafeInt(base.maxLossMargin), toSafeInt(incoming.maxLossMargin)),
+        currentWinStreak: Math.max(toSafeInt(base.currentWinStreak), toSafeInt(incoming.currentWinStreak)),
+        maxWinStreak: Math.max(toSafeInt(base.maxWinStreak), toSafeInt(incoming.maxWinStreak))
+    };
+}
+
+function normalizeH2HStatsForUser(h2hStats = {}, selfUid = '', selfName = '') {
+    const normalized = {};
+    if (!h2hStats || typeof h2hStats !== 'object') return normalized;
+
+    const selfNameKey = normalizeH2HNameKey(selfName);
+
+    for (const [rawKey, rawRecord] of Object.entries(h2hStats)) {
+        if (!rawRecord || typeof rawRecord !== 'object') continue;
+        const rawUid = String(rawRecord.uid || rawKey || '').trim();
+        if (selfUid && rawUid === String(selfUid || '').trim()) continue;
+        const rawName = String(rawRecord.name || (isStableH2HUid(rawKey, selfUid) ? '' : rawKey) || '').trim();
+        if (!rawName || rawName === 'undefined' || rawName === 'null' || rawName === 'Nepoznat') continue;
+        const name = sanitizeTournamentName(rawName);
+        const nameKey = normalizeH2HNameKey(name);
+        if (!nameKey || name === 'Nepoznat' || name === 'undefined' || name === 'null') continue;
+
+        let uid = isStableH2HUid(rawRecord.uid, selfUid) ? String(rawRecord.uid).trim() : '';
+        if (!uid && isStableH2HUid(rawKey, selfUid)) uid = String(rawKey).trim();
+        if (!uid && selfNameKey && nameKey === selfNameKey) continue;
+
+        const identity = { key: uid || `name_${nameKey}`, name, uid };
+        let targetKey = identity.key;
+
+        for (const [existingKey, existingRecord] of Object.entries(normalized)) {
+            if (existingKey === targetKey || !existingRecord) continue;
+            const sameName = normalizeH2HNameKey(existingRecord.name) === nameKey;
+            if (!sameName) continue;
+
+            const existingUid = isStableH2HUid(existingRecord.uid, selfUid)
+                ? String(existingRecord.uid).trim()
+                : (isStableH2HUid(existingKey, selfUid) ? existingKey : '');
+            if (uid || existingUid) {
+                identity.uid = uid || existingUid;
+                targetKey = identity.uid;
+            }
+
+            normalized[targetKey] = mergeH2HRecord(normalized[targetKey], existingRecord, identity);
+            delete normalized[existingKey];
+        }
+
+        normalized[targetKey] = mergeH2HRecord(normalized[targetKey], rawRecord, identity);
+    }
+
+    return normalized;
+}
+
 function applyCompletedDuelH2H(user, opponent, resultType, myScore, opponentScore) {
     if (!user || !opponent) return;
 
@@ -1668,7 +1755,7 @@ function buildProfileSyncPayload(user) {
         soundEnabled: user.soundEnabled,
         vibrationEnabled: user.vibrationEnabled,
         penaltyPoints: Math.max(0, toSafeInt(user.penaltyPoints)),
-        h2hStats: user.h2hStats || {},
+        h2hStats: normalizeH2HStatsForUser(user.h2hStats || {}, user.firebaseUid, user.playerName),
         leagueData: normalizeUserLeagueDataForCurrentPeriod(user)
     };
 }
@@ -4128,11 +4215,13 @@ io.on('connection', (socket) => {
                 mergeLeagueDataIntoUser(user, s.leagueData);
 
                 if (s.h2hStats) {
-                    let cloudH2H = user.h2hStats || {};
-                    let isModified = false;
+                    const oldCloudH2H = user.h2hStats || {};
+                    let cloudH2H = normalizeH2HStatsForUser(oldCloudH2H, user.firebaseUid, user.playerName);
+                    const localH2H = normalizeH2HStatsForUser(s.h2hStats, user.firebaseUid, user.playerName);
+                    let isModified = JSON.stringify(oldCloudH2H) !== JSON.stringify(cloudH2H);
 
-                    for (const [oppName, localData] of Object.entries(s.h2hStats)) {
-                        
+                    for (const [oppName, localData] of Object.entries(localH2H)) {
+
                         // 🛡️ SERVER H2H FILTER: Blokiramo undefined i null stringove
                         if (!oppName || String(oppName) === 'undefined' || String(oppName) === 'null' || oppName === 'Nepoznat') continue;
                         
@@ -4189,6 +4278,7 @@ io.on('connection', (socket) => {
                         }
                     }
 
+                    cloudH2H = normalizeH2HStatsForUser(cloudH2H, user.firebaseUid, user.playerName);
                     if (isModified || Object.keys(cloudH2H).length > 0) {
                         user.set('h2hStats', cloudH2H);
                         user.markModified('h2hStats');

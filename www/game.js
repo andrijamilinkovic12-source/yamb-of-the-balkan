@@ -406,22 +406,143 @@ class YambApp {
             eye.title = gt('spectator_empty') || 'Nema gledalaca';
         }
     }
-    
+
     // --- FUNKCIJE ZA H2H DETALJNU STATISTIKU ---
 
+    normalizeH2HDisplayName(value) {
+        const name = String(value || '').trim();
+        if (!name || name === 'undefined' || name === 'null' || name === 'Nepoznat' || name === 'Sistem') return '';
+        return name;
+    }
+
+    normalizeH2HNameKey(value) {
+        return this.normalizeH2HDisplayName(value)
+            .toLowerCase()
+            .replace(/\./g, '_')
+            .replace(/\$/g, '_')
+            .replace(/\s+/g, '_');
+    }
+
+    getCurrentPlayerUid() {
+        return String(this.playerId || localStorage.getItem('yamb_uid') || '').trim();
+    }
+
+    isUsableH2HUid(value) {
+        const uid = String(value || '').trim();
+        const myUid = this.getCurrentPlayerUid();
+        return !!uid &&
+            uid !== myUid &&
+            uid !== 'undefined' &&
+            uid !== 'null' &&
+            !uid.startsWith('guest_') &&
+            uid.length >= 16 &&
+            !/\s/.test(uid);
+    }
+
+    mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
+        const count = (value) => Math.max(0, parseInt(value) || 0);
+        const merged = {
+            ...base,
+            ...incoming,
+            name: identity.name || this.normalizeH2HDisplayName(incoming.name || base.name),
+            uid: identity.uid || incoming.uid || base.uid || '',
+            photo: (incoming.photo && incoming.photo.length > 5) ? incoming.photo : (base.photo || ''),
+            wins: Math.max(count(base.wins), count(incoming.wins)),
+            losses: Math.max(count(base.losses), count(incoming.losses)),
+            draws: Math.max(count(base.draws), count(incoming.draws)),
+            myTotalScore: Math.max(count(base.myTotalScore), count(incoming.myTotalScore)),
+            gamesWithScore: Math.max(count(base.gamesWithScore), count(incoming.gamesWithScore)),
+            myHighScore: Math.max(count(base.myHighScore), count(incoming.myHighScore)),
+            maxWinMargin: Math.max(count(base.maxWinMargin), count(incoming.maxWinMargin)),
+            maxLossMargin: Math.max(count(base.maxLossMargin), count(incoming.maxLossMargin)),
+            currentWinStreak: Math.max(count(base.currentWinStreak), count(incoming.currentWinStreak)),
+            maxWinStreak: Math.max(count(base.maxWinStreak), count(incoming.maxWinStreak))
+        };
+        return merged;
+    }
+
+    getH2HIdentity(oppName, oppUid = null, existingH2H = {}) {
+        const name = this.normalizeH2HDisplayName(oppName);
+        if (!name || name.includes(gt('player_guest'))) return null;
+
+        const rawUid = String(oppUid || '').trim();
+        const myUid = this.getCurrentPlayerUid();
+        if (rawUid && myUid && rawUid === myUid) return null;
+
+        let uid = this.isUsableH2HUid(oppUid) ? String(oppUid).trim() : '';
+        const myNameKey = this.normalizeH2HNameKey(this.playerName);
+        const oppNameKey = this.normalizeH2HNameKey(name);
+
+        if (!uid) {
+            for (const [key, record] of Object.entries(existingH2H || {})) {
+                if (!record || typeof record !== 'object') continue;
+                const recordNameKey = this.normalizeH2HNameKey(record.name);
+                const recordUid = this.isUsableH2HUid(record.uid) ? String(record.uid).trim() : (this.isUsableH2HUid(key) ? String(key).trim() : '');
+                if (recordNameKey && recordNameKey === oppNameKey && recordUid) {
+                    uid = recordUid;
+                    break;
+                }
+            }
+        }
+
+        if (!uid && oppNameKey && myNameKey && oppNameKey === myNameKey) return null;
+
+        return {
+            key: uid || `name_${oppNameKey}`,
+            name,
+            uid
+        };
+    }
+
+    normalizeH2HStats(h2hStats = {}) {
+        const normalized = {};
+        if (!h2hStats || typeof h2hStats !== 'object') return normalized;
+
+        for (const [rawKey, rawRecord] of Object.entries(h2hStats)) {
+            if (!rawRecord || typeof rawRecord !== 'object') continue;
+            const rawKeyUid = this.isUsableH2HUid(rawKey) ? rawKey : '';
+            const identity = this.getH2HIdentity(rawRecord.name || rawKey, rawRecord.uid || rawKeyUid, normalized);
+            if (!identity) continue;
+
+            let targetKey = identity.key;
+            for (const [existingKey, existingRecord] of Object.entries(normalized)) {
+                if (existingKey === targetKey || !existingRecord) continue;
+                const sameName = this.normalizeH2HNameKey(existingRecord.name) === this.normalizeH2HNameKey(identity.name);
+                if (!sameName) continue;
+
+                const existingUid = this.isUsableH2HUid(existingRecord.uid) ? existingRecord.uid : (this.isUsableH2HUid(existingKey) ? existingKey : '');
+                if (identity.uid || existingUid) {
+                    targetKey = identity.uid || existingUid;
+                    identity.uid = identity.uid || existingUid;
+                }
+
+                normalized[targetKey] = this.mergeH2HRecord(normalized[targetKey], existingRecord, identity);
+                delete normalized[existingKey];
+            }
+
+            const cleanRecord = {
+                ...rawRecord,
+                name: identity.name,
+                uid: identity.uid || rawRecord.uid || ''
+            };
+            normalized[targetKey] = this.mergeH2HRecord(normalized[targetKey], cleanRecord, identity);
+        }
+
+        return normalized;
+    }
+
     updateH2HStats(oppName, oppPhoto, resultType, myScore = 0, oppScore = 0, oppUid = null) {
-        if (!oppName || String(oppName) === 'undefined' || String(oppName) === 'null' || oppName.includes(gt('player_guest')) || oppName === "Sistem") return;
         if (this.isSpectator) return;
 
-        const safeOppName = oppName.replace(/\./g, '_').replace(/\$/g, '_');
-        const h2hKey = oppUid ? oppUid : safeOppName;
+        let h2h = this.normalizeH2HStats(JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}'));
+        const identity = this.getH2HIdentity(oppName, oppUid, h2h);
+        if (!identity) return;
+        const h2hKey = identity.key;
 
-        let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
-        
         if (!h2h[h2hKey]) {
-            h2h[h2hKey] = { 
-                name: oppName,
-                uid: oppUid || '',
+            h2h[h2hKey] = {
+                name: identity.name,
+                uid: identity.uid || '',
                 photo: oppPhoto || '', 
                 wins: 0, 
                 losses: 0,
@@ -439,7 +560,8 @@ class YambApp {
             h2h[h2hKey].losses = Math.max(0, parseInt(h2h[h2hKey].losses) || 0);
             h2h[h2hKey].draws = Math.max(0, parseInt(h2h[h2hKey].draws) || 0);
             if (oppPhoto && oppPhoto.length > 5) h2h[h2hKey].photo = oppPhoto;
-            if (oppUid && !h2h[h2hKey].uid) h2h[h2hKey].uid = oppUid;
+            h2h[h2hKey].name = identity.name;
+            if (identity.uid && !h2h[h2hKey].uid) h2h[h2hKey].uid = identity.uid;
         }
 
         if (resultType === 'win') {
@@ -472,24 +594,16 @@ class YambApp {
             }
         }
 
-        localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
+        localStorage.setItem('yamb_h2h_stats', JSON.stringify(this.normalizeH2HStats(h2h)));
     }
 
     renderH2HStats() {
         const container = document.getElementById('h2h-list-container');
         if (!container) return;
 
-        let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
-        let needsCleanup = false;
-        
-        // 🧹 AUTO-CLEANUP: Brišemo sve "undefined" i oštećene protivnike iz memorije
-        for (const key in h2h) {
-            if (!h2h[key].name || String(h2h[key].name) === 'undefined' || String(h2h[key].name) === 'null' || h2h[key].name.trim() === '') {
-                delete h2h[key];
-                needsCleanup = true;
-            }
-        }
-        if (needsCleanup) {
+        const rawH2H = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
+        const h2h = this.normalizeH2HStats(rawH2H);
+        if (JSON.stringify(rawH2H) !== JSON.stringify(h2h)) {
             localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
         }
 
@@ -728,6 +842,9 @@ class YambApp {
             lsData = window.kvartalnaLiga.getScores();
         }
 
+        const h2hStats = this.normalizeH2HStats(JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}'));
+        localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2hStats));
+
         return {
             games: this.stats.games || 0,
             wins: this.stats.wins || 0,
@@ -754,8 +871,8 @@ class YambApp {
             dailyRewardAmount: parseInt(localStorage.getItem('yamb_daily_reward_amount_' + uid)) || 0,
             soundEnabled: this.soundEnabled,
             vibrationEnabled: this.vibrationEnabled,
-            penaltyPoints: this.stats.penaltyPoints || 0, 
-            h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}')
+            penaltyPoints: this.stats.penaltyPoints || 0,
+            h2hStats
         };
     }
 
@@ -858,15 +975,17 @@ class YambApp {
     mergeCloudH2HStats(h2hStats) {
         if (!h2hStats || typeof h2hStats !== 'object') return;
 
-        const localH2H = this.readLocalJson('yamb_h2h_stats', {});
-        let h2hUpdated = false;
+        const originalLocalH2H = this.readLocalJson('yamb_h2h_stats', {});
+        const localH2H = this.normalizeH2HStats(originalLocalH2H);
+        const cloudH2H = this.normalizeH2HStats(h2hStats);
+        let h2hUpdated = JSON.stringify(originalLocalH2H) !== JSON.stringify(localH2H);
 
-        for (const [oppKey, cloudData] of Object.entries(h2hStats)) {
+        for (const [oppKey, cloudData] of Object.entries(cloudH2H)) {
             if (!cloudData || typeof cloudData !== 'object') continue;
-            const oppName = cloudData.name;
-            if (!oppName || String(oppName) === 'undefined' || String(oppName) === 'null' || oppName === 'Nepoznat') continue;
+            const identity = this.getH2HIdentity(cloudData.name, cloudData.uid || oppKey, localH2H);
+            if (!identity) continue;
 
-            const localData = localH2H[oppKey] || {};
+            const localData = localH2H[identity.key] || localH2H[oppKey] || {};
             const localWins = Math.max(0, parseInt(localData.wins) || 0);
             const localLosses = Math.max(0, parseInt(localData.losses) || 0);
             const localDraws = Math.max(0, parseInt(localData.draws) || 0);
@@ -894,18 +1013,19 @@ class YambApp {
             };
 
             if (JSON.stringify(localData) !== JSON.stringify(merged)) {
-                localH2H[oppKey] = merged;
+                localH2H[identity.key] = this.mergeH2HRecord(localH2H[identity.key], merged, identity);
+                if (identity.key !== oppKey && localH2H[oppKey]) delete localH2H[oppKey];
                 h2hUpdated = true;
             }
         }
 
         if (h2hUpdated) {
-            localStorage.setItem('yamb_h2h_stats', JSON.stringify(localH2H));
+            localStorage.setItem('yamb_h2h_stats', JSON.stringify(this.normalizeH2HStats(localH2H)));
         }
     }
 
     getLocalH2HRecordSummary() {
-        const h2h = this.readLocalJson('yamb_h2h_stats', {});
+        const h2h = this.normalizeH2HStats(this.readLocalJson('yamb_h2h_stats', {}));
         const summary = { wins: 0, losses: 0, draws: 0, games: 0 };
         if (!h2h || typeof h2h !== 'object') return summary;
 
@@ -2469,8 +2589,11 @@ class YambApp {
             }
 
             if (this.players.length === 2 && !options.skipH2H) {
-                const oppName = this.players.find(p => p !== this.playerName);
-                if (oppName) {
+                const oppIndex = Number.isInteger(this.myOnlineIndex) && this.myOnlineIndex >= 0
+                    ? (this.myOnlineIndex === 0 ? 1 : 0)
+                    : this.players.findIndex(p => p !== this.playerName);
+                const oppName = this.players[oppIndex];
+                if (oppIndex >= 0 && oppName) {
                     let passMyScore = isTechnical ? 0 : score;
                     let passOppScore = isTechnical ? 0 : oppScore;
                     this.updateH2HStats(oppName, this.currentOpponentPhoto || '', resultType, passMyScore, passOppScore, this.currentOpponentUid);
@@ -2548,7 +2671,8 @@ class YambApp {
         const allTimeEl = document.getElementById('stat-alltime');
         if (allTimeEl) allTimeEl.innerText = allTimePts;
 
-        let h2h = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
+        let h2h = this.normalizeH2HStats(JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}'));
+        localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
         // Filtriramo samo ispravne rivale
         let rivals = Object.values(h2h).filter(r => r.name && String(r.name) !== 'undefined' && String(r.name) !== 'null');
         
