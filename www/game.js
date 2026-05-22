@@ -1784,6 +1784,13 @@ class YambApp {
                         return;
                     }
 
+                    if (typeof window.closeOnlinePlayersModal === 'function') {
+                        window.closeOnlinePlayersModal();
+                    }
+
+                    const customModal = document.getElementById('custom-modal-overlay');
+                    if (customModal) customModal.style.display = 'none';
+
                     this.resumeOnlineGame(roomId);
                 });
 
@@ -3381,7 +3388,7 @@ class YambApp {
             const foundUI = document.getElementById('waiting-opp-found');
             const oppBox = document.getElementById('waiting-opp-box');
             const waitingScreen = document.getElementById('waiting-screen');
-            const canShowWaitingTransition = waitingScreen && waitingScreen.classList.contains('active') && searchingUI && foundUI && oppBox;
+            const canShowWaitingTransition = !data.directDuel && waitingScreen && waitingScreen.classList.contains('active') && searchingUI && foundUI && oppBox;
 
             if (canShowWaitingTransition) {
                 oppBox.style.display = 'flex'; 
@@ -3424,14 +3431,14 @@ class YambApp {
                 setTimeout(() => {
                     // ---> DODATO: Puštanje muzike na početku partije <---
                     if(this.soundMgr) this.soundMgr.playMusic();
-                    this.startGame(); 
+                    this.startGame({ skipQuote: !!data.directDuel });
                 }, 2500);
             } else {
                 // ---> DODATO: Puštanje muzike na početku partije <---
                 if(this.soundMgr) this.soundMgr.playMusic();
-                this.startGame();
+                this.startGame({ skipQuote: !!data.directDuel });
             }
-        }); 
+        });
 
         this.socket.on('remote_move', (data) => { 
             try {
@@ -3878,7 +3885,7 @@ class YambApp {
         this.consecutiveNajava = 0; this.hasSvetiIlija = false; this.hasProphet = false;
     }
     
-    startGame() { 
+    startGame(options = {}) {
         if (this.socket && this.socket.connected && !this.isSpectator && this.playerId) {
             this.socket.emit('game_session_start', {
                 roomId: this.roomId,
@@ -3896,15 +3903,25 @@ class YambApp {
             btnUndo.classList.remove('gh-btn-active');
         }
 
-        this.showQuoteAndProceed(); 
-        
-        this.createScoreTables(); 
-        this.resetTurnLogic(); 
-        this.gameActive = true; 
+        const skipQuote = !!(options && options.skipQuote);
+
+        if (skipQuote) {
+            this.navigateTo('game-scene');
+        } else {
+            this.showQuoteAndProceed();
+        }
+        this.createScoreTables();
+        this.resetTurnLogic();
+        this.gameActive = true;
         this.lastGameType = 'normal';
-        document.getElementById('chat-body').innerHTML = ""; 
-        const chatBtn = document.getElementById('chat-float-btn'); 
-        if (chatBtn) chatBtn.classList.add('hidden'); 
+        document.getElementById('chat-body').innerHTML = "";
+        const chatBtn = document.getElementById('chat-float-btn');
+        if (chatBtn) {
+            chatBtn.classList.add('hidden');
+            if (skipQuote && this.modeTag !== "Solo" && this.modeTag !== "Hotseat") {
+                chatBtn.classList.remove('hidden');
+            }
+        }
         this.effectMgr.stop(); this.loadEquippedEffect(); 
         
         this.startClientTimer();

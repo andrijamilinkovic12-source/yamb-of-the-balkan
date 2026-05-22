@@ -6430,7 +6430,8 @@ io.on('connection', (socket) => {
                 oppStats: socket.playerStats,
                 oppPhoto: socket.photoUrl || '',
                 oppUid: socket.playerId || registeredSockets[socket.id] || '',
-                myIndex: 0
+                myIndex: 0,
+                directDuel: true
             });
             socket.emit('game_start', {
                 roomId: roomName,
@@ -6438,8 +6439,12 @@ io.on('connection', (socket) => {
                 oppStats: challengerSocket.playerStats,
                 oppPhoto: challengerSocket.photoUrl || '',
                 oppUid: challengerSocket.playerId || registeredSockets[challengerId] || '',
-                myIndex: 1
+                myIndex: 1,
+                directDuel: true
             });
+
+            challengerSocket.emit('online_room_resume_available', { roomId: roomName, directDuel: true });
+            socket.emit('online_room_resume_available', { roomId: roomName, directDuel: true });
 
         } else {
             if (!pending) return;
