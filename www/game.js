@@ -1739,6 +1739,10 @@ class YambApp {
                         return;
                     }
 
+                    if (accepted) {
+                        this.setupSocketListeners(this.playerName || "Igrač");
+                    }
+
                     this.socket.emit('challenge_response', {
                         challengerId: challengerId,
                         challengeId: challengeId,
@@ -2273,6 +2277,7 @@ class YambApp {
             return;
         }
         const socketAtPrompt = this.socket;
+        this.setupSocketListeners(this.playerName || "Igrač");
 
         let askText = gt('duel_ask');
         if (askText === 'duel_ask') askText = `Želite li da izazovete igrača {0} na duel?`;
@@ -3332,9 +3337,13 @@ class YambApp {
         this.socket.on('room_full', async () => { await this.modal.alert(gt('msg_room_full')); this.cancelOnline(); }); 
         this.socket.on('private_waiting', (data) => { this.roomId = data.roomId; }); 
         
-        this.socket.on('game_start', (data) => { 
+        this.socket.on('game_start', (data) => {
             console.log("GAME START:", data);
-            
+
+            if (typeof window.closeOnlinePlayersModal === 'function') {
+                window.closeOnlinePlayersModal();
+            }
+
             // NOVO: Zapamti da je korisnik u online meču
             localStorage.setItem('yamb_active_online_room', data.roomId);
             
@@ -3371,8 +3380,10 @@ class YambApp {
             const searchingUI = document.getElementById('waiting-opp-searching');
             const foundUI = document.getElementById('waiting-opp-found');
             const oppBox = document.getElementById('waiting-opp-box');
-            
-            if (searchingUI && foundUI && oppBox) {
+            const waitingScreen = document.getElementById('waiting-screen');
+            const canShowWaitingTransition = waitingScreen && waitingScreen.classList.contains('active') && searchingUI && foundUI && oppBox;
+
+            if (canShowWaitingTransition) {
                 oppBox.style.display = 'flex'; 
                 searchingUI.style.display = 'none';
                 foundUI.style.display = 'flex';

@@ -4468,21 +4468,8 @@ io.on('connection', (socket) => {
 
         const requesterUid = getSocketUid(socket.id);
         if (getParticipantIndexForSocketOrUid(state, socket.id, requesterUid) !== -1) {
-            const previousSpectatingRoom = socket.isSpectator ? socket.spectatingRoom : null;
-            socket.isSpectator = false;
-            socket.spectatingRoom = null;
-            if (previousSpectatingRoom && previousSpectatingRoom !== roomId) {
-                socket.leave(previousSpectatingRoom);
-                updateRoomSpectators(previousSpectatingRoom);
-            }
-            if (state.players.indexOf(socket.id) === -1 && !reattachSocketToRoomByUid(socket, roomId)) {
-                socket.emit('error_msg', 'err_spectate_not_in_game');
-                return replySpectate({ ok: false, reason: 'err_spectate_not_in_game' });
-            }
-            socket.join(roomId);
-            playerRooms[socket.id] = roomId;
-            socket.emit('online_room_resume_available', { roomId });
-            return replySpectate({ ok: true, roomId, resumed: true });
+            socket.emit('error_msg', 'err_spectate_participant');
+            return replySpectate({ ok: false, reason: 'err_spectate_participant' });
         }
 
         socket.join(roomId);

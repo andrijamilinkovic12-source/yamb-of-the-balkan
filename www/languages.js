@@ -170,6 +170,7 @@ const TRANSLATIONS = {
         
         // NOVE PORUKE SA SERVERA
         "err_spectate_not_in_game": "Igrač koga želite da gledate trenutno nije u partiji.",
+        "err_spectate_participant": "Oko služi samo za gledanje tuđe partije. Vaš duel se otvara automatski.",
         "err_invalid_room": "Nevažeći ID sobe.",
         "err_chat_suspended": "Zabranjeno pisanje! Vaš chat je suspendovan zbog psovanja.",
         "err_chat_banned": "Chat vam je blokiran zbog korišćenja zabranjenih reči.",
@@ -833,6 +834,7 @@ const TRANSLATIONS = {
         
         // NEW SERVER MESSAGES
         "err_spectate_not_in_game": "The player you want to spectate is not in a game.",
+        "err_spectate_participant": "The eye button is only for watching another player's game. Your duel opens automatically.",
         "err_invalid_room": "Invalid room ID.",
         "err_chat_suspended": "Writing forbidden! Your chat is suspended due to profanity.",
         "err_chat_banned": "Your chat has been blocked for using prohibited words.",
