@@ -162,6 +162,7 @@ const TRANSLATIONS = {
         "err_title": "GREŠKA",
         "err_undo_select": "Prvo odaberite polje za ispravku!",
         "err_feature_wip": "Ova funkcionalnost još nije u potpunosti podržana.",
+        "err_feature_unavailable": "Funkcija nije dostupna.",
         "info_title": "INFO",
         "err_wait_opponent": "Sačekaj protivnika!",
         "warning_title": "UPOZORENJE",
@@ -302,6 +303,13 @@ const TRANSLATIONS = {
         "online_challenge_btn": "⚔️ IZAZOVI",
         "online_playing": "⚔️ IGRA U TOKU",
         "online_playing_short": "IGRA",
+        "online_tooltip_already_friend": "Već ste prijatelji",
+        "online_tooltip_add_friend": "Dodaj prijatelja",
+        "online_tooltip_spectate_busy_self": "Već ste u online partiji",
+        "online_tooltip_not_playing": "Igrač trenutno ne igra",
+        "online_tooltip_spectate": "Gledaj partiju",
+        "online_tooltip_player_busy": "Igrač trenutno igra",
+        "online_tooltip_challenge": "Izazovi na duel",
         
         // KOLONE (SR)
         "col_down": "↓",
@@ -817,6 +825,7 @@ const TRANSLATIONS = {
         "err_title": "ERROR",
         "err_undo_select": "Select a field to correct first!",
         "err_feature_wip": "This feature is not yet fully supported.",
+        "err_feature_unavailable": "Feature unavailable.",
         "info_title": "INFO",
         "err_wait_opponent": "Wait for the opponent!",
         "warning_title": "WARNING",
@@ -957,6 +966,13 @@ const TRANSLATIONS = {
         "online_challenge_btn": "⚔️ CHALLENGE",
         "online_playing": "⚔️ IN GAME",
         "online_playing_short": "PLAYING",
+        "online_tooltip_already_friend": "Already friends",
+        "online_tooltip_add_friend": "Add friend",
+        "online_tooltip_spectate_busy_self": "You are already in an online game",
+        "online_tooltip_not_playing": "Player is not currently playing",
+        "online_tooltip_spectate": "Watch game",
+        "online_tooltip_player_busy": "Player is currently playing",
+        "online_tooltip_challenge": "Challenge to duel",
 
         // EN KOLONE
         "col_down": "↓",

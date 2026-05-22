@@ -128,6 +128,10 @@ window.refreshOnlinePlayersModal = function() {
 // --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
 window.openOnlinePlayersModal = function() {
     const sec = window.YambSecurity;
+    const tr = (key, fallback) => {
+        const value = window.t ? window.t(key) : key;
+        return value && value !== key ? value : fallback;
+    };
     const overlay = document.getElementById('online-players-overlay');
     
     if (overlay) {
@@ -144,7 +148,7 @@ window.openOnlinePlayersModal = function() {
         body.style.flexDirection = 'column';
         body.style.gap = '12px';
 
-        const loadingText = window.t ? window.t('online_loading') : 'Učitavam igrače... ⏳';
+        const loadingText = tr('online_loading', 'Učitavam igrače... ⏳');
         body.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${sec.escapeHtml(loadingText)}</div>`;
     }
 
@@ -160,7 +164,7 @@ window.openOnlinePlayersModal = function() {
             if (!body) return;
 
             if (!players || players.length === 0) {
-                const noPlayers = window.t ? window.t('online_no_players') : 'Trenutno nema igrača.';
+                const noPlayers = tr('online_no_players', 'Trenutno nema igrača.');
                 body.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding-top: 20px;">${sec.escapeHtml(noPlayers)}</div>`;
                 return;
             }
@@ -172,7 +176,7 @@ window.openOnlinePlayersModal = function() {
                 const roomId = String(p.roomId || '');
                 const status = String(p.status || '').toLowerCase();
                 const isMe = p.socketId === window.app.socket.id || (myUid && playerUid && myUid === playerUid);
-                const youText = window.t ? window.t('online_you') : '(Vi)';
+                const youText = tr('online_you', '(Vi)');
                 const rawName = String(p.name || 'Igrac');
                 const safeNameHtml = sec.escapeHtml(rawName);
                 const socketIdArg = sec.jsString(p.socketId || '');
@@ -190,33 +194,43 @@ window.openOnlinePlayersModal = function() {
                     const isBusy = !!p.isBusy || !!p.isPlaying || status === 'playing';
                     // Znamo sigurno sa servera da li su već prijatelji!
                     const isAlreadyFriend = p.isFriend;
-                    const addFriendHandler = sec.escapeAttr(`if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest(${socketIdArg}, ${nameArg}, ${uidArg}); this.disabled=true; this.style.opacity='0.4'; this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.cursor='not-allowed'; } else { showNotification('INFO', 'Funkcija nije dostupna.') }`);
-                    const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame({ socketId: ${socketIdArg}, roomId: ${roomIdArg}, uid: ${uidArg} }) } else { showNotification('INFO', 'Greska') }`);
+                    const infoTitleArg = sec.jsString(tr('info_title', 'INFO'));
+                    const errorTitleArg = sec.jsString(tr('err_title', 'GREŠKA'));
+                    const featureUnavailableArg = sec.jsString(tr('err_feature_unavailable', 'Funkcija nije dostupna.'));
+                    const alreadyFriendTitle = tr('online_tooltip_already_friend', 'Već ste prijatelji');
+                    const addFriendTitle = tr('online_tooltip_add_friend', 'Dodaj prijatelja');
+                    const spectateBusySelfTitle = tr('online_tooltip_spectate_busy_self', 'Već ste u online partiji');
+                    const spectateNotPlayingTitle = tr('online_tooltip_not_playing', 'Igrač trenutno ne igra');
+                    const spectateTitleText = tr('online_tooltip_spectate', 'Gledaj partiju');
+                    const playerBusyTitle = tr('online_tooltip_player_busy', 'Igrač trenutno igra');
+                    const challengeTitleText = tr('online_tooltip_challenge', 'Izazovi na duel');
+                    const addFriendHandler = sec.escapeAttr(`if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest(${socketIdArg}, ${nameArg}, ${uidArg}); this.disabled=true; this.style.opacity='0.4'; this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.cursor='not-allowed'; } else { showNotification(${infoTitleArg}, ${featureUnavailableArg}) }`);
+                    const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame({ socketId: ${socketIdArg}, roomId: ${roomIdArg}, uid: ${uidArg} }) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}) }`);
                     const challengeHandler = sec.escapeAttr(`window.app.challengePlayer(${socketIdArg}, ${nameArg}, ${uidArg})`);
 
                     // 1. Dugme za DODAVANJE (Zatamnjeno ako su već prijatelji)
                     let addFriendBtn = '';
                     if (isAlreadyFriend) {
-                        addFriendBtn = `<button disabled title="Već ste prijatelji" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">➕</button>`;
+                        addFriendBtn = `<button disabled title="${sec.escapeAttr(alreadyFriendTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">➕</button>`;
                     } else {
                         // Dodata logika da se dugme "ugasi" čim se klikne da bi se izbegao spam
-                        addFriendBtn = `<button onclick="${addFriendHandler}" title="Dodaj prijatelja" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">➕</button>`;
+                        addFriendBtn = `<button onclick="${addFriendHandler}" title="${sec.escapeAttr(addFriendTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">➕</button>`;
                     }
 
                     // 2. Dugme za GLEDANJE (Zatamnjeno ako igrač ne igra)
                     let spectateBtn = '';
                     if (!canSpectate) {
-                        const spectateTitle = alreadyPlayingOnline ? 'Već ste u online partiji' : 'Igrač trenutno ne igra';
+                        const spectateTitle = alreadyPlayingOnline ? spectateBusySelfTitle : spectateNotPlayingTitle;
                         spectateBtn = `<button disabled title="${sec.escapeAttr(spectateTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">👁️</button>`;
                     } else {
-                        spectateBtn = `<button onclick="${spectateHandler}" title="Gledaj partiju" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>`;
+                        spectateBtn = `<button onclick="${spectateHandler}" title="${sec.escapeAttr(spectateTitleText)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>`;
                     }
 
                     let challengeBtn = '';
                     if (isBusy) {
-                        challengeBtn = `<button disabled title="Igrač trenutno igra" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">⚔️</button>`;
+                        challengeBtn = `<button disabled title="${sec.escapeAttr(playerBusyTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">⚔️</button>`;
                     } else {
-                        challengeBtn = `<button onclick="${challengeHandler}" title="Izazovi na duel" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
+                        challengeBtn = `<button onclick="${challengeHandler}" title="${sec.escapeAttr(challengeTitleText)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
                     }
 
                     actionButtons = `
@@ -258,7 +272,7 @@ window.openOnlinePlayersModal = function() {
         }
     } else {
         if (body) {
-            const noConnText = window.t ? window.t('online_no_conn') : 'Niste povezani na server.';
+            const noConnText = tr('online_no_conn', 'Niste povezani na server.');
             body.innerHTML = `<div style="text-align: center; color: var(--danger); font-weight: bold; padding-top: 20px;">${sec.escapeHtml(noConnText)}</div>`;
         }
     }
