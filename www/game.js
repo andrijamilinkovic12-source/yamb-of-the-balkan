@@ -1791,7 +1791,7 @@ class YambApp {
                     const customModal = document.getElementById('custom-modal-overlay');
                     if (customModal) customModal.style.display = 'none';
 
-                    this.resumeOnlineGame(roomId);
+                    this.resumeOnlineGame(roomId, { directDuel: !!data.directDuel });
                 });
 
                 this.socket.on('global_highscores_data', (data) => {
@@ -3431,13 +3431,31 @@ class YambApp {
                 setTimeout(() => {
                     // ---> DODATO: Puštanje muzike na početku partije <---
                     if(this.soundMgr) this.soundMgr.playMusic();
-                    this.startGame({ skipQuote: !!data.directDuel });
+                    this.startGame();
                 }, 2500);
             } else {
                 // ---> DODATO: Puštanje muzike na početku partije <---
                 if(this.soundMgr) this.soundMgr.playMusic();
-                this.startGame({ skipQuote: !!data.directDuel });
+                this.startGame();
             }
+        });
+
+        this.socket.off('online_game_finished');
+        this.socket.on('online_game_finished', async (data = {}) => {
+            if (this.isSpectator) return;
+            if (!this.onlineMode || !this.gameActive) return;
+            if (data.roomId && this.roomId && data.roomId !== this.roomId) return;
+
+            if (Array.isArray(data.players) && data.players.length > 0) {
+                this.players = data.players.map(p => {
+                    if (typeof p === 'object' && p !== null) return p.name || "Igrač";
+                    return p || "Igrač";
+                });
+            }
+            if (Array.isArray(data.allScores)) this.allScores = data.allScores;
+            if (data.currentPlayerIdx !== undefined) this.currentPlayerIdx = data.currentPlayerIdx;
+
+            await this.handleGameOver();
         });
 
         this.socket.on('remote_move', (data) => { 
@@ -5052,7 +5070,7 @@ class YambApp {
         }
     }
 
-    resumeOnlineGame(roomId) {
+    resumeOnlineGame(roomId, options = {}) {
         this.onlineMode = true;
         this.gameActive = true;
         this.roomId = roomId;
@@ -5072,7 +5090,11 @@ class YambApp {
         this.updateTableVisuals();
         this.highlightCurrentPlayer();
         
-        this.navigateTo('game-scene');
+        if (options && options.directDuel) {
+            this.showQuoteAndProceed();
+        } else {
+            this.navigateTo('game-scene');
+        }
         
         const lblTurn = document.getElementById('lbl-turn');
         if (lblTurn) lblTurn.innerText = "Vraćanje u igru...";

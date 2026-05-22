@@ -928,6 +928,28 @@ function getRoomParticipantMeta(state, socketId) {
     return getDuelParticipantMeta(socketId, fallbackName, fallbackUid);
 }
 
+function emitCompletedOnlineGame(roomId) {
+    const state = roomState[roomId];
+    if (!state || !Array.isArray(state.players) || state.players.length < 2) return false;
+    if (!Array.isArray(state.allScores) || state.allScores.length < 2) return false;
+
+    const totals = state.allScores.slice(0, 2).map(sheet => calculateCompletedDuelTotal(sheet));
+    if (totals.some(score => score === null)) return false;
+
+    const stablePlayerUids = Array.isArray(state.playerUids) ? state.playerUids : [];
+    const players = state.players.slice(0, 2).map((socketId, index) => {
+        return getDuelParticipantMeta(socketId, state.playerNames?.[index], stablePlayerUids[index]).name;
+    });
+
+    io.to(roomId).emit('online_game_finished', {
+        roomId,
+        players,
+        allScores: state.allScores,
+        currentPlayerIdx: state.turnIndex
+    });
+    return true;
+}
+
 function getH2HKeyForOpponent(opponent) {
     const uid = String(opponent?.uid || '').trim();
     if (uid && uid.length >= 20 && !uid.startsWith('guest_')) return uid;
@@ -6482,6 +6504,7 @@ io.on('connection', (socket) => {
 
             console.log(`🏁 Igra završena u sobi: ${roomId}`);
             await applyServerSideCompletedDuel(roomId, socket.id);
+            emitCompletedOnlineGame(roomId);
             markOnlineRoomGameFinished(roomId);
         }
     });
