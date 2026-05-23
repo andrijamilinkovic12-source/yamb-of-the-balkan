@@ -566,6 +566,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     pointer-events: none;
     overflow: hidden;
     isolation: isolate;
+    contain: strict;
     background:
         radial-gradient(circle at 50% 74%, rgba(65, 244, 255, 0.22), transparent 25%),
         radial-gradient(circle at 20% 20%, rgba(157, 124, 255, 0.22), transparent 32%),
@@ -622,7 +623,6 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
         radial-gradient(circle, rgba(255,255,255,0.9) 0 1.3px, transparent 2px) 0 0 / 96px 72px,
         radial-gradient(circle, rgba(255,214,111,0.78) 0 1px, transparent 2px) 44px 30px / 118px 86px;
     opacity: 0.54;
-    filter: blur(0.2px);
     animation: droneStarsDriftNear 8.2s linear forwards;
 }
 
@@ -632,7 +632,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     width: 68vw;
     height: 62vh;
     border-radius: 50%;
-    filter: blur(30px);
+    filter: blur(18px);
     mix-blend-mode: screen;
     opacity: 0;
     z-index: 1;
@@ -673,7 +673,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 
 .drone-holo-ring {
     border: 1px solid rgba(102, 247, 255, 0.36);
-    box-shadow: 0 0 28px rgba(102, 247, 255, 0.28), inset 0 0 32px rgba(157, 124, 255, 0.18);
+    box-shadow: 0 0 18px rgba(102, 247, 255, 0.24), inset 0 0 18px rgba(157, 124, 255, 0.16);
 }
 
 .drone-holo-ring--outer { animation: droneRingPulse 2.7s ease-in-out infinite; }
@@ -696,7 +696,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 .drone-holo-flare {
     inset: 34% 8%;
     background: radial-gradient(ellipse at center, rgba(255,255,255,0.45), rgba(102,247,255,0.22) 30%, transparent 66%);
-    filter: blur(10px);
+    filter: blur(6px);
     mix-blend-mode: screen;
     animation: droneFlarePulse 1.7s ease-in-out infinite;
 }
@@ -725,7 +725,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     background-size: 9px 9px, 100% 100%;
     -webkit-background-clip: text;
     background-clip: text;
-    filter: drop-shadow(0 0 18px rgba(102, 247, 255, 0.84)) drop-shadow(0 0 44px rgba(81, 255, 216, 0.42));
+    filter: drop-shadow(0 0 12px rgba(102, 247, 255, 0.78)) drop-shadow(0 0 24px rgba(81, 255, 216, 0.34));
     animation: droneFormTextV3 8.2s cubic-bezier(0.18, 0.86, 0.24, 1) forwards;
 }
 
@@ -743,7 +743,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 .drone-text::before {
     z-index: -1;
     background-image: linear-gradient(180deg, rgba(255,255,255,0.72), rgba(102,247,255,0.24));
-    filter: blur(12px);
+    filter: blur(6px);
     opacity: 0.9;
     transform: translate3d(0, 10px, -38px) scale(1.05);
 }
@@ -769,7 +769,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     border: 1px solid rgba(255, 255, 255, 0.28);
     border-radius: 999px 999px 6px 6px;
     opacity: 0;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5), 0 0 13px currentColor;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.44), 0 0 8px currentColor;
     transform: translate3d(var(--sx, 50vw), var(--sy, 110vh), 0) scale(0.2) rotate(var(--tilt, 0deg));
     animation: droneFlyFormationV3 var(--duration, 7.6s) cubic-bezier(0.18, 0.76, 0.18, 1) forwards;
     animation-delay: var(--delay, 0s);
@@ -785,9 +785,8 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
         radial-gradient(circle at 88% 18%, #ffffff 0 2px, currentColor 3px, transparent 7px),
         radial-gradient(circle at 12% 82%, #ffffff 0 2px, currentColor 3px, transparent 7px),
         radial-gradient(circle at 88% 82%, #ffffff 0 2px, currentColor 3px, transparent 7px);
-    filter: drop-shadow(0 0 8px currentColor);
     opacity: 0.95;
-    animation: droneRotorPulse 0.42s linear infinite;
+    animation: droneRotorPulse 0.5s steps(2, end) infinite;
 }
 
 .drone-dot::after {
@@ -799,9 +798,60 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
     height: 4px;
     border-radius: 50%;
     background: #ffffff;
-    box-shadow: 0 0 8px 2px #ffffff, 0 0 20px 5px currentColor;
+    box-shadow: 0 0 6px 1px #ffffff, 0 0 12px 3px currentColor;
     transform: translate(-50%, -50%);
-    animation: droneStrobe var(--strobe-speed, 0.58s) ease-in-out infinite alternate;
+    animation: droneStrobe var(--strobe-speed, 0.58s) steps(2, end) infinite alternate;
+}
+
+.drone-dot--lite {
+    width: 12px;
+    height: 8px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.34), 0 0 6px currentColor;
+}
+
+.drone-dot--lite::before {
+    inset: -9px -11px;
+    background:
+        radial-gradient(circle at 14% 22%, #ffffff 0 1.5px, currentColor 2.5px, transparent 5px),
+        radial-gradient(circle at 86% 22%, #ffffff 0 1.5px, currentColor 2.5px, transparent 5px),
+        radial-gradient(circle at 14% 78%, #ffffff 0 1.5px, currentColor 2.5px, transparent 5px),
+        radial-gradient(circle at 86% 78%, #ffffff 0 1.5px, currentColor 2.5px, transparent 5px);
+    animation-duration: 0.62s;
+}
+
+.drone-dot--lite::after {
+    width: 3px;
+    height: 3px;
+    box-shadow: 0 0 5px 1px #ffffff, 0 0 9px 2px currentColor;
+}
+
+.drone-night-sky--compact .drone-aurora,
+.drone-night-sky--compact .drone-starfield--near,
+.drone-night-sky--compact .drone-holo-grid {
+    display: none;
+}
+
+.drone-night-sky--compact::before,
+.drone-night-sky--compact::after,
+.drone-night-sky--compact .drone-holo-flare {
+    filter: none;
+}
+
+.drone-night-sky--compact .drone-holo-flare {
+    opacity: 0.45;
+}
+
+.drone-night-sky--compact .drone-holo-ring {
+    box-shadow: 0 0 12px rgba(102, 247, 255, 0.22), inset 0 0 10px rgba(157, 124, 255, 0.14);
+}
+
+.drone-text--compact {
+    filter: drop-shadow(0 0 8px rgba(102, 247, 255, 0.72)) drop-shadow(0 0 14px rgba(81, 255, 216, 0.28));
+}
+
+.drone-text--compact::before {
+    filter: none;
+    opacity: 0.42;
 }
 
 @keyframes droneSkyFade {
@@ -864,11 +914,11 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 }
 
 @keyframes droneFormTextV3 {
-    0% { opacity: 0; transform: translate3d(-50%, -34%, 0) rotateX(48deg) scale(1.34); filter: blur(18px); }
-    16% { opacity: 0.94; filter: blur(6px) drop-shadow(0 0 18px rgba(102,247,255,0.55)); }
-    30%, 74% { opacity: 1; transform: translate3d(-50%, -50%, 0) rotateX(13deg) scale(1); filter: drop-shadow(0 0 18px rgba(102,247,255,0.92)) drop-shadow(0 0 48px rgba(81,255,216,0.45)); }
+    0% { opacity: 0; transform: translate3d(-50%, -34%, 0) rotateX(48deg) scale(1.34); }
+    16% { opacity: 0.94; }
+    30%, 74% { opacity: 1; transform: translate3d(-50%, -50%, 0) rotateX(13deg) scale(1); }
     82% { opacity: 1; transform: translate3d(-50%, -51%, 0) rotateX(10deg) scale(1.04); }
-    100% { opacity: 0; transform: translate3d(-50%, -68%, 0) rotateX(0deg) scale(0.82); filter: blur(14px); }
+    100% { opacity: 0; transform: translate3d(-50%, -68%, 0) rotateX(0deg) scale(0.82); }
 }
 
 @keyframes droneTextSheen {
@@ -878,12 +928,12 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 }
 
 @keyframes droneFlyFormationV3 {
-    0% { opacity: 0; transform: translate3d(var(--sx, 50vw), var(--sy, 110vh), 0) scale(0.18) rotate(var(--tilt, 0deg)); filter: blur(3px); }
-    12% { opacity: 1; transform: translate3d(var(--mx, 40vw), var(--my, 74vh), 0) scale(calc(var(--scale, 1) * 1.28)) rotate(12deg); filter: blur(0); }
+    0% { opacity: 0; transform: translate3d(var(--sx, 50vw), var(--sy, 110vh), 0) scale(0.18) rotate(var(--tilt, 0deg)); }
+    12% { opacity: 1; transform: translate3d(var(--mx, 40vw), var(--my, 74vh), 0) scale(calc(var(--scale, 1) * 1.28)) rotate(12deg); }
     34% { opacity: 0.96; transform: translate3d(var(--fx, 50vw), var(--fy, 34vh), 0) scale(var(--scale, 1)) rotate(-5deg); }
     58% { opacity: 1; transform: translate3d(var(--fx, 50vw), calc(var(--fy, 34vh) + 0.9vh), 0) scale(calc(var(--scale, 1) * 1.06)) rotate(4deg); }
     76% { opacity: 0.92; transform: translate3d(calc(var(--fx, 50vw) + 1.4vw), calc(var(--fy, 34vh) - 0.7vh), 0) scale(var(--scale, 1)) rotate(-4deg); }
-    100% { opacity: 0; transform: translate3d(var(--ex, 50vw), var(--ey, -22vh), 0) scale(0.28) rotate(18deg); filter: blur(2px); }
+    100% { opacity: 0; transform: translate3d(var(--ex, 50vw), var(--ey, -22vh), 0) scale(0.28) rotate(18deg); }
 }
 
 @keyframes droneRotorPulse {
@@ -897,15 +947,56 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 }
 
 @media (max-width: 640px) {
+    .drone-night-sky,
+    .drone-night-sky--compact {
+        background:
+            radial-gradient(circle at 50% 72%, rgba(65, 244, 255, 0.18), transparent 25%),
+            radial-gradient(circle at 24% 18%, rgba(157, 124, 255, 0.16), transparent 32%),
+            linear-gradient(180deg, rgba(4, 8, 23, 0.96) 0%, rgba(2, 9, 24, 0.95) 52%, rgba(0, 0, 0, 0.92) 100%);
+    }
+
+    .drone-night-sky::before,
+    .drone-night-sky::after {
+        filter: none;
+        opacity: 0.38;
+    }
+
+    .drone-aurora {
+        display: none;
+    }
+
+    .drone-starfield--near {
+        display: none;
+    }
+
     .drone-holo-stage {
         top: 58%;
         width: 92vw;
         height: 28vh;
     }
 
+    .drone-holo-grid {
+        display: none;
+    }
+
+    .drone-holo-flare {
+        filter: none;
+        opacity: 0.45;
+    }
+
+    .drone-holo-ring {
+        box-shadow: 0 0 12px rgba(102, 247, 255, 0.22), inset 0 0 10px rgba(157, 124, 255, 0.14);
+    }
+
     .drone-text {
         top: 41%;
         font-size: clamp(2.25rem, calc(4.25rem - (var(--name-length, 6) * 0.12rem)), 3.35rem);
+        filter: drop-shadow(0 0 8px rgba(102, 247, 255, 0.72)) drop-shadow(0 0 14px rgba(81, 255, 216, 0.28));
+    }
+
+    .drone-text::before {
+        filter: none;
+        opacity: 0.42;
     }
 
     .drone-dot {
@@ -915,6 +1006,22 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 
     .drone-dot::before {
         inset: -10px -12px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .drone-aurora,
+    .drone-starfield--near,
+    .drone-holo-grid {
+        display: none;
+    }
+
+    .drone-night-sky::before,
+    .drone-night-sky::after,
+    .drone-holo-flare,
+    .drone-text,
+    .drone-text::before {
+        filter: none;
     }
 }
 

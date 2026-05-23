@@ -562,8 +562,15 @@ class EffectManager {
 
         if (type === 'drones') {
             const duration = 8200;
+            const compactDroneViewport = window.matchMedia && (
+                window.matchMedia('(max-width: 760px)').matches ||
+                window.matchMedia('(hover: none) and (pointer: coarse)').matches
+            );
+            const reducedDroneMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
             const sky = document.createElement('div');
             sky.className = 'drone-night-sky';
+            if (compactDroneViewport || reducedDroneMotion) sky.classList.add('drone-night-sky--compact');
             sky.innerHTML = `
                 <div class="drone-starfield drone-starfield--far"></div>
                 <div class="drone-starfield drone-starfield--near"></div>
@@ -590,18 +597,19 @@ class EffectManager {
 
             const textEl = document.createElement('div');
             textEl.className = 'drone-text';
+            if (compactDroneViewport || reducedDroneMotion) textEl.classList.add('drone-text--compact');
             textEl.innerText = firstName;
             textEl.dataset.text = firstName;
             textEl.style.setProperty('--name-length', String(firstName.length));
             document.body.appendChild(textEl);
 
             const colors = ['#66f7ff', '#ffffff', '#51ffd8', '#9d7cff', '#ffd66f'];
-            const droneCount = window.matchMedia && window.matchMedia('(max-width: 640px)').matches ? 58 : 86;
+            const droneCount = reducedDroneMotion ? 24 : (compactDroneViewport ? 38 : 64);
             const fragment = document.createDocumentFragment();
 
             for (let i = 0; i < droneCount; i++) {
                 const dot = document.createElement('div');
-                dot.className = 'drone-dot';
+                dot.className = compactDroneViewport || reducedDroneMotion ? 'drone-dot drone-dot--lite' : 'drone-dot';
 
                 const lane = i / Math.max(1, droneCount - 1);
                 const formationX = 18 + lane * 64 + (Math.random() - 0.5) * 8;
