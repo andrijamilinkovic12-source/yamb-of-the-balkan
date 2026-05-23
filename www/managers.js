@@ -561,8 +561,21 @@ class EffectManager {
         }
 
         if (type === 'drones') {
+            const duration = 8200;
             const sky = document.createElement('div');
             sky.className = 'drone-night-sky';
+            sky.innerHTML = `
+                <div class="drone-starfield drone-starfield--far"></div>
+                <div class="drone-starfield drone-starfield--near"></div>
+                <div class="drone-aurora drone-aurora--left"></div>
+                <div class="drone-aurora drone-aurora--right"></div>
+                <div class="drone-holo-stage">
+                    <div class="drone-holo-ring drone-holo-ring--outer"></div>
+                    <div class="drone-holo-ring drone-holo-ring--inner"></div>
+                    <div class="drone-holo-grid"></div>
+                    <div class="drone-holo-flare"></div>
+                </div>
+            `;
             document.body.appendChild(sky);
 
             let fullName = _safeT('hs_player') || "IGRAČ";
@@ -571,42 +584,59 @@ class EffectManager {
             } else if (window.app && window.app.playerName) {
                 fullName = window.app.playerName;
             }
-            
-            let firstName = fullName.trim().split(/\s+/)[0]; 
-            firstName = firstName.substring(0, 12); 
+
+            let firstName = fullName.trim().split(/\s+/)[0] || "IGRAČ";
+            firstName = firstName.substring(0, 12);
 
             const textEl = document.createElement('div');
             textEl.className = 'drone-text';
             textEl.innerText = firstName;
+            textEl.dataset.text = firstName;
+            textEl.style.setProperty('--name-length', String(firstName.length));
             document.body.appendChild(textEl);
 
-            const colors = ['#00d4ff', '#ffffff', '#00ffcc', '#aa00ff'];
-            for (let i = 0; i < 60; i++) {
+            const colors = ['#66f7ff', '#ffffff', '#51ffd8', '#9d7cff', '#ffd66f'];
+            const droneCount = window.matchMedia && window.matchMedia('(max-width: 640px)').matches ? 58 : 86;
+            const fragment = document.createDocumentFragment();
+
+            for (let i = 0; i < droneCount; i++) {
                 const dot = document.createElement('div');
                 dot.className = 'drone-dot';
-                
-                dot.style.setProperty('--sx', (20 + Math.random() * 60) + 'vw');
-                dot.style.setProperty('--dx', (10 + Math.random() * 80) + 'vw');
-                dot.style.setProperty('--dx2', (Math.random() * 80 + 10) + 'vw');
-                dot.style.setProperty('--dy2', (Math.random() * 40 + 20) + 'vh');
-                dot.style.setProperty('--dx3', (Math.random() * 100) + 'vw');
-                
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                dot.style.color = color;
-                dot.style.background = '#fff';
 
-                document.body.appendChild(dot);
-                setTimeout(() => { if(dot.parentNode) dot.remove(); }, 8000);
+                const lane = i / Math.max(1, droneCount - 1);
+                const formationX = 18 + lane * 64 + (Math.random() - 0.5) * 8;
+                const wave = Math.sin(lane * Math.PI * 4.5) * 9;
+                const formationY = 29 + wave + (Math.random() - 0.5) * 14;
+                const side = Math.random() > 0.5 ? 1 : -1;
+
+                dot.style.setProperty('--sx', (48 + side * (28 + Math.random() * 44)) + 'vw');
+                dot.style.setProperty('--sy', (106 + Math.random() * 18) + 'vh');
+                dot.style.setProperty('--mx', (8 + Math.random() * 84) + 'vw');
+                dot.style.setProperty('--my', (62 + Math.random() * 22) + 'vh');
+                dot.style.setProperty('--fx', formationX + 'vw');
+                dot.style.setProperty('--fy', formationY + 'vh');
+                dot.style.setProperty('--ex', (8 + Math.random() * 84) + 'vw');
+                dot.style.setProperty('--ey', (-18 - Math.random() * 18) + 'vh');
+                dot.style.setProperty('--delay', (Math.random() * 0.95).toFixed(2) + 's');
+                dot.style.setProperty('--duration', (7.1 + Math.random() * 0.8).toFixed(2) + 's');
+                dot.style.setProperty('--scale', (0.72 + Math.random() * 0.74).toFixed(2));
+                dot.style.setProperty('--tilt', ((Math.random() - 0.5) * 28).toFixed(1) + 'deg');
+                dot.style.setProperty('--drone-color', colors[Math.floor(Math.random() * colors.length)]);
+                dot.style.setProperty('--strobe-speed', (0.46 + Math.random() * 0.32).toFixed(2) + 's');
+                fragment.appendChild(dot);
             }
+
+            document.body.appendChild(fragment);
 
             if(window.app && window.app.soundMgr && window.app.soundMgr.epicDroneShow) {
                 window.app.soundMgr.epicDroneShow();
             }
 
-            setTimeout(() => {
+            this.scheduleEffectTimeout(() => {
                 if(sky.parentNode) sky.remove();
                 if(textEl.parentNode) textEl.remove();
-            }, 8000);
+                document.querySelectorAll('.drone-dot').forEach(dot => dot.remove());
+            }, duration);
         }
 
         if (type === 'thunder') {
