@@ -283,15 +283,61 @@ class EffectManager {
 
             if (targetTable) {
                 const rect = targetTable.getBoundingClientRect();
+                const duration = 6400;
+                const compactBlackHole = window.matchMedia && (
+                    window.matchMedia('(max-width: 760px)').matches ||
+                    window.matchMedia('(hover: none) and (pointer: coarse)').matches ||
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                );
                 const bhContainer = document.createElement('div');
-                bhContainer.className = 'black-hole-container';
-                bhContainer.style.position = 'fixed';
-                bhContainer.style.top = (rect.top + rect.height / 2) + 'px';
-                bhContainer.style.left = (rect.left + rect.width / 2) + 'px';
-                bhContainer.innerHTML = `<div class="bh-core"></div><div class="bh-ring"></div><div class="bh-particles"></div>`;
+                bhContainer.className = compactBlackHole ? 'black-hole-container black-hole-container--compact' : 'black-hole-container';
+                bhContainer.style.setProperty('--bh-x', (rect.left + rect.width / 2) + 'px');
+                bhContainer.style.setProperty('--bh-y', (rect.top + rect.height / 2) + 'px');
+                bhContainer.innerHTML = `
+                    <div class="bh-vignette"></div>
+                    <div class="bh-starfield bh-starfield--far"></div>
+                    <div class="bh-starfield bh-starfield--near"></div>
+                    <div class="bh-shockwave"></div>
+                    <div class="bh-gravity-well">
+                        <div class="bh-lensing bh-lensing--outer"></div>
+                        <div class="bh-lensing bh-lensing--inner"></div>
+                        <div class="bh-accretion bh-accretion--back"></div>
+                        <div class="bh-accretion bh-accretion--front"></div>
+                        <div class="bh-photon-ring"></div>
+                        <div class="bh-core"></div>
+                        <div class="bh-core-glow"></div>
+                    </div>
+                `;
+
+                const fragment = document.createDocumentFragment();
+                const colors = ['#67f7ff', '#9b7cff', '#ffd66f', '#ffffff'];
+                const debrisCount = compactBlackHole ? 28 : 46;
+                for (let i = 0; i < debrisCount; i++) {
+                    const particle = document.createElement('span');
+                    particle.className = (i % 5 === 0) ? 'bh-debris bh-debris--pip' : 'bh-debris';
+                    const orbit = 92 + (i % 9) * 23 + Math.random() * 38;
+                    particle.style.setProperty('--a', (i * 137.5 + Math.random() * 28).toFixed(1) + 'deg');
+                    particle.style.setProperty('--orbit', orbit.toFixed(1) + 'px');
+                    particle.style.setProperty('--orbit-mid', (orbit * (0.48 + Math.random() * 0.14)).toFixed(1) + 'px');
+                    particle.style.setProperty('--orbit-end', (12 + Math.random() * 20).toFixed(1) + 'px');
+                    const spin = 220 + Math.random() * 280;
+                    particle.style.setProperty('--spin', spin.toFixed(1) + 'deg');
+                    particle.style.setProperty('--spin-rev', (-spin).toFixed(1) + 'deg');
+                    particle.style.setProperty('--spin-end', (spin * 1.35).toFixed(1) + 'deg');
+                    particle.style.setProperty('--size', (2.4 + Math.random() * (compactBlackHole ? 2.2 : 3.6)).toFixed(1) + 'px');
+                    particle.style.setProperty('--delay', (Math.random() * 0.72).toFixed(2) + 's');
+                    particle.style.setProperty('--dur', (4.6 + Math.random() * 1.1).toFixed(2) + 's');
+                    particle.style.setProperty('--debris-color', colors[i % colors.length]);
+                    fragment.appendChild(particle);
+                }
+
+                bhContainer.appendChild(fragment);
                 document.body.appendChild(bhContainer);
-                targetTable.classList.add('anim-suck-in');
-                setTimeout(() => { targetTable.classList.remove('anim-suck-in'); if (bhContainer.parentNode) bhContainer.remove(); }, 6000);
+                targetTable.classList.add('anim-black-hole-table');
+                this.scheduleEffectTimeout(() => {
+                    targetTable.classList.remove('anim-black-hole-table');
+                    if (bhContainer.parentNode) bhContainer.remove();
+                }, duration);
             }
         }
 
@@ -1922,6 +1968,7 @@ class EffectManager {
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
+        document.querySelectorAll('.anim-black-hole-table').forEach(tbl => tbl.classList.remove('anim-black-hole-table'));
         document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
         document.querySelectorAll('.anim-neon-pulse').forEach(tbl => tbl.classList.remove('anim-neon-pulse'));
         document.querySelectorAll('.anim-ufo-table').forEach(tbl => tbl.classList.remove('anim-ufo-table'));
