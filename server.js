@@ -735,6 +735,37 @@ async function saveChatToDb() {
 // GRACE PERIOD PROMENLJIVE
 const disconnectTimers = {};
 const ghostSessions = {};
+const SERVER_TECHNICAL_SYNC_IGNORE_WINDOW_MS = 20000;
+const recentServerTechnicalResults = new Map();
+
+function rememberServerTechnicalResult(uid, resultType) {
+    if (!uid || (resultType !== 'win' && resultType !== 'loss')) return;
+
+    const marker = { resultType, at: Date.now() };
+    recentServerTechnicalResults.set(uid, marker);
+
+    const cleanupTimer = setTimeout(() => {
+        const current = recentServerTechnicalResults.get(uid);
+        if (current && current.at === marker.at) {
+            recentServerTechnicalResults.delete(uid);
+        }
+    }, SERVER_TECHNICAL_SYNC_IGNORE_WINDOW_MS);
+    if (cleanupTimer && typeof cleanupTimer.unref === 'function') cleanupTimer.unref();
+}
+
+function getRecentServerTechnicalResult(uid) {
+    if (!uid) return null;
+
+    const marker = recentServerTechnicalResults.get(uid);
+    if (!marker) return null;
+
+    if (Date.now() - marker.at > SERVER_TECHNICAL_SYNC_IGNORE_WINDOW_MS) {
+        recentServerTechnicalResults.delete(uid);
+        return null;
+    }
+
+    return marker;
+}
 
 // ==================================================================
 // --- SERVERSKA KAZNA ZA RAGE QUIT / GUBITAK KONEKCIJE (SA H2H) ---
@@ -771,6 +802,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
             }
 
             await user.save();
+            rememberServerTechnicalResult(playerId, 'loss');
             emitProfileSyncToUid(playerId, user);
             console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ${opponentMeta.uid || opponentMeta.name || h2hKey || 'nepoznatog'}.`);
             return user;
@@ -798,6 +830,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
             await user.save();
         }
 
+        if (user) rememberServerTechnicalResult(playerId, 'loss');
         emitProfileSyncToUid(playerId, user);
         console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ključa ${h2hKey || 'nepoznatog'}.`);
         return user;
@@ -830,6 +863,7 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
                 applyTechnicalDuelH2H(winner, winnerOpponent, 'win');
             }
             await winner.save();
+            rememberServerTechnicalResult(winnerId, 'win');
             emitProfileSyncToUid(winnerId, winner);
         }
     }
@@ -2046,6 +2080,38 @@ function findPendingChallenge(challengerId, targetId) {
     for (const key in pendingChallenges) {
         const challenge = pendingChallenges[key];
         if (challenge && challenge.challengerId === challengerId && challenge.targetId === targetId) {
+            return { key, challenge };
+        }
+    }
+
+    return null;
+}
+
+function findPendingChallengeById(challengeId) {
+    if (!challengeId || !pendingChallenges[challengeId]) return null;
+    return { key: challengeId, challenge: pendingChallenges[challengeId] };
+}
+
+function challengeMatchesResponder(challenge, challengerId, targetId, targetUid = '') {
+    if (!challenge || challenge.challengerId !== challengerId) return false;
+    if (challenge.targetId === targetId) return true;
+    return !!(targetUid && challenge.targetUid && challenge.targetUid === targetUid);
+}
+
+function findPendingChallengeForResponse(challengerId, targetId, challengeId = '') {
+    const targetUid = getSocketUid(targetId);
+    const byId = findPendingChallengeById(challengeId);
+    if (byId && challengeMatchesResponder(byId.challenge, challengerId, targetId, targetUid)) {
+        return byId;
+    }
+
+    const direct = findPendingChallenge(challengerId, targetId);
+    if (direct) return direct;
+    if (!targetUid) return null;
+
+    for (const key in pendingChallenges) {
+        const challenge = pendingChallenges[key];
+        if (challengeMatchesResponder(challenge, challengerId, targetId, targetUid)) {
             return { key, challenge };
         }
     }
@@ -3633,7 +3699,15 @@ function applyProfileStatsGuard(user, stats) {
     const legacyCompetitiveRoom = allowLegacyImport
         ? Math.max(0, user.games + Math.min(incoming.penaltyPoints, MAX_PROFILE_COMPETITIVE_BUFFER) - oldCompetitiveTotal)
         : 0;
-    let remainingCompetitiveDelta = acceptedGameDelta + legacyCompetitiveRoom + 1;
+    const recentTechnicalResult = getRecentServerTechnicalResult(user.firebaseUid);
+    const isServerTechnicalEcho = !allowLegacyImport &&
+        acceptedGameDelta === 0 &&
+        recentTechnicalResult &&
+        (
+            (recentTechnicalResult.resultType === 'win' && requestedWinsDelta === 1 && requestedLossesDelta === 0) ||
+            (recentTechnicalResult.resultType === 'loss' && requestedLossesDelta === 1 && requestedWinsDelta === 0)
+        );
+    let remainingCompetitiveDelta = isServerTechnicalEcho ? 0 : acceptedGameDelta + legacyCompetitiveRoom + 1;
 
     const acceptedWinsDelta = Math.min(requestedWinsDelta, remainingCompetitiveDelta);
     user.wins = oldStats.wins + acceptedWinsDelta;
@@ -3642,7 +3716,9 @@ function applyProfileStatsGuard(user, stats) {
     const acceptedLossesDelta = Math.min(requestedLossesDelta, remainingCompetitiveDelta);
     user.losses = oldStats.losses + acceptedLossesDelta;
 
-    if (requestedWinsDelta + requestedLossesDelta > acceptedWinsDelta + acceptedLossesDelta) {
+    if (isServerTechnicalEcho) {
+        console.log(`🛡️ STATS GUARD: Ignorišem eho serverske tehničke ${recentTechnicalResult.resultType === 'win' ? 'pobede' : 'kazne'} za ${user.playerName || user.firebaseUid}.`);
+    } else if (requestedWinsDelta + requestedLossesDelta > acceptedWinsDelta + acceptedLossesDelta) {
         console.log(`🚨 STATS GUARD: Ograničen skok W/L statistike za ${user.playerName || user.firebaseUid}.`);
     }
 
@@ -6453,18 +6529,27 @@ io.on('connection', (socket) => {
         let resolvedTargetId = targetId;
         let targetSocket = resolvedTargetId ? io.sockets.sockets.get(resolvedTargetId) : null;
         const challengerUid = getSocketUid(socket.id);
+        const requestedTargetUid = typeof targetUid === 'string' ? targetUid : '';
         const replyChallenge = (payload) => {
             if (typeof ack === 'function') ack(payload);
             else if (!payload.ok) socket.emit('error_msg', payload.reason || 'err_server_conn');
         };
 
-        if ((!targetSocket || targetSocket.id === socket.id) && targetUid && onlinePlayers[targetUid]) {
-            resolvedTargetId = onlinePlayers[targetUid];
+        if (requestedTargetUid && onlinePlayers[requestedTargetUid] && onlinePlayers[requestedTargetUid] !== socket.id) {
+            const currentTargetSocket = io.sockets.sockets.get(onlinePlayers[requestedTargetUid]);
+            if (currentTargetSocket) {
+                resolvedTargetId = currentTargetSocket.id;
+                targetSocket = currentTargetSocket;
+            }
+        }
+
+        if ((!targetSocket || targetSocket.id === socket.id) && requestedTargetUid && onlinePlayers[requestedTargetUid]) {
+            resolvedTargetId = onlinePlayers[requestedTargetUid];
             targetSocket = io.sockets.sockets.get(resolvedTargetId);
         }
         
         if (targetSocket && targetSocket.id !== socket.id) {
-            const resolvedTargetUid = getSocketUid(resolvedTargetId) || targetUid || '';
+            const resolvedTargetUid = getSocketUid(resolvedTargetId) || requestedTargetUid || '';
             if (isPlayerBusyForInvite(socket.id, challengerUid)) {
                 emitPlayerBusy(socket, ack);
                 return;
@@ -6512,7 +6597,7 @@ io.on('connection', (socket) => {
     socket.on('challenge_response', (data) => {
         const { challengerId, accepted, challengeId } = data;
         const challengerSocket = io.sockets.sockets.get(challengerId);
-        const pending = findPendingChallenge(challengerId, socket.id);
+        const pending = findPendingChallengeForResponse(challengerId, socket.id, challengeId);
 
         if (accepted) {
             if (pending && challengeId && pending.key !== challengeId) {
@@ -6540,6 +6625,8 @@ io.on('connection', (socket) => {
 
             const challengerUid = pending.challenge.challengerUid || getSocketUid(challengerId);
             const responderUid = pending.challenge.targetUid || getSocketUid(socket.id);
+            socket.clientBusyForInvites = false;
+            socket.clientBusyReason = '';
             if (isPlayerBusyForInvite(challengerId, challengerUid) || isPlayerBusyForInvite(socket.id, responderUid)) {
                 clearPendingChallengesBetweenPlayers(challengerId, challengerUid, socket.id, responderUid);
                 socket.emit('error_msg', 'err_player_busy');
@@ -6607,6 +6694,11 @@ io.on('connection', (socket) => {
             if (!pending) return;
             if (pending && challengeId && pending.key !== challengeId) return;
             if (pending) clearPendingChallenge(pending.key);
+            if (!data || !data.busy) {
+                socket.clientBusyForInvites = false;
+                socket.clientBusyReason = '';
+                notifyOnlinePlayersStatusChanged();
+            }
             if (challengerSocket) {
                 if (data && data.busy) {
                     socket.to(challengerId).emit('error_msg', 'err_player_busy');

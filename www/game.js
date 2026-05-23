@@ -1857,6 +1857,7 @@ class YambApp {
                     }
 
                     if (accepted && expiresAt && Date.now() > expiresAt) {
+                        this.setInviteBusyState(false);
                         this.modal.alert(gt('duel_expired') || 'Istekao je rok za odgovor na duel izazov. Nema pobede ni kazne.', gt('modal_title_info') || "INFO");
                         return;
                     }
@@ -1870,6 +1871,9 @@ class YambApp {
                         challengeId: challengeId,
                         accepted: accepted
                     });
+                    if (!accepted) {
+                        this.setInviteBusyState(false);
+                    }
                 });
 
                 this.socket.on('challenge_declined', (data) => {
@@ -2407,6 +2411,9 @@ class YambApp {
         }
         const socketAtPrompt = this.socket;
         this.setupSocketListeners(this.playerName || "Igrač");
+        if (!this.isDoNotDisturbActive() && this.clientInviteBusy) {
+            this.setInviteBusyState(false);
+        }
 
         let askText = gt('duel_ask');
         if (askText === 'duel_ask') askText = `Želite li da izazovete igrača {0} na duel?`;
@@ -2554,6 +2561,7 @@ class YambApp {
     updateStats(score, resultType, oppScore = 0, isTechnical = false, options = {}) {
         let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
         this.stats = freshStats || this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, currentWinStreak: 0, maxWinStreak: 0 };
+        const serverAppliedTechnical = !!(isTechnical && options.serverApplied);
         const safeStatNumber = (value) => {
             const num = Number(value);
             return Number.isFinite(num) ? Math.max(0, Math.floor(num)) : 0;
@@ -2574,7 +2582,7 @@ class YambApp {
             if (score > this.stats.highscore) this.stats.highscore = score;
         }
 
-        if (this.onlineMode && !this.isSpectator) {
+        if (this.onlineMode && !this.isSpectator && !serverAppliedTechnical) {
             if (resultType === 'win') {
                 this.stats.wins++; 
                 this.stats.currentWinStreak = (this.stats.currentWinStreak || 0) + 1;
@@ -2607,7 +2615,7 @@ class YambApp {
             window.statsManager.stats = this.stats;
         }
 
-        if (!options.deferServerSync && this.socket && this.socket.connected) {
+        if (!serverAppliedTechnical && !options.deferServerSync && this.socket && this.socket.connected) {
             this.emitPlayerData();
         }
     }
@@ -3333,7 +3341,7 @@ class YambApp {
                     window.kvartalnaLiga.addPoints(winnerReward);
                 }
 
-                this.updateStats(winnerReward, 'win', 0, true, { skipH2H: !!data.serverApplied });
+                this.updateStats(winnerReward, 'win', 0, true, { skipH2H: !!data.serverApplied, serverApplied: !!data.serverApplied });
 
                 await this.showTechnicalGameOver({
                     resultType: 'win',
@@ -3363,7 +3371,7 @@ class YambApp {
                     msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">${ptsLostStr}</span>`;
                 }
 
-                this.updateStats(0, 'loss', 0, true, { skipH2H: !!data.serverApplied });
+                this.updateStats(0, 'loss', 0, true, { skipH2H: !!data.serverApplied, serverApplied: !!data.serverApplied });
 
                 await this.showTechnicalGameOver({
                     resultType: 'loss',
@@ -3758,7 +3766,7 @@ class YambApp {
                 window.kvartalnaLiga.addPoints(rewardAmount);
             }
 
-            this.updateStats(rewardAmount, 'win', 0, true, { skipH2H: !!data.serverApplied });
+            this.updateStats(rewardAmount, 'win', 0, true, { skipH2H: !!data.serverApplied, serverApplied: !!data.serverApplied });
 
             await this.showTechnicalGameOver({
                 resultType: 'win',
