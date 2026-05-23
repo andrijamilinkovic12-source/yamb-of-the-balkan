@@ -389,6 +389,7 @@ const globalChatReportLimits = {};
 const onlinePlayers = {};
 const registeredSockets = {};
 const pendingChallenges = {};
+const pendingRoomInvites = {};
 
 const GLOBAL_CHAT_MIN_INTERVAL_MS = 1200;
 const GLOBAL_CHAT_SPAM_STRIKE_LIMIT = 4;
@@ -397,6 +398,7 @@ const GLOBAL_CHAT_PROFANITY_BAN_BASE_MS = 60 * 60 * 1000;
 const GLOBAL_CHAT_RATE_LIMIT_TTL_MS = 60 * 60 * 1000;
 const GLOBAL_CHAT_REPORT_COOLDOWN_MS = 30000;
 const CHALLENGE_RESPONSE_WINDOW_MS = 60 * 1000;
+const ROOM_INVITE_RESPONSE_WINDOW_MS = 60 * 1000;
 
 const MAX_SCORE = 3500;
 const MAX_NAME_LENGTH = 24;
@@ -1040,6 +1042,14 @@ function normalizeH2HNameKey(value) {
 }
 
 function mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
+    const baseTotal = toSafeInt(base.wins) + toSafeInt(base.losses) + toSafeInt(base.draws);
+    const incomingTotal = toSafeInt(incoming.wins) + toSafeInt(incoming.losses) + toSafeInt(incoming.draws);
+    const currentWinStreak = incomingTotal > baseTotal
+        ? toSafeInt(incoming.currentWinStreak)
+        : (baseTotal > incomingTotal
+            ? toSafeInt(base.currentWinStreak)
+            : Math.max(toSafeInt(base.currentWinStreak), toSafeInt(incoming.currentWinStreak)));
+
     return {
         ...base,
         ...incoming,
@@ -1054,7 +1064,7 @@ function mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
         myHighScore: Math.max(toSafeInt(base.myHighScore), toSafeInt(incoming.myHighScore)),
         maxWinMargin: Math.max(toSafeInt(base.maxWinMargin), toSafeInt(incoming.maxWinMargin)),
         maxLossMargin: Math.max(toSafeInt(base.maxLossMargin), toSafeInt(incoming.maxLossMargin)),
-        currentWinStreak: Math.max(toSafeInt(base.currentWinStreak), toSafeInt(incoming.currentWinStreak)),
+        currentWinStreak,
         maxWinStreak: Math.max(toSafeInt(base.maxWinStreak), toSafeInt(incoming.maxWinStreak))
     };
 }
@@ -2119,6 +2129,70 @@ function findPendingChallengeForResponse(challengerId, targetId, challengeId = '
     return null;
 }
 
+function getRoomInviteKey(hostId, targetId, roomId) {
+    if (!hostId || !targetId || !roomId) return null;
+    return `${hostId}:${targetId}:${roomId}`;
+}
+
+function clearPendingRoomInvite(key) {
+    const invite = key ? pendingRoomInvites[key] : null;
+    if (!invite) return null;
+    if (invite.timeoutId) clearTimeout(invite.timeoutId);
+    delete pendingRoomInvites[key];
+    return invite;
+}
+
+function roomInviteMatchesResponder(invite, hostId, targetId, targetUid = '', roomId = '') {
+    if (!invite) return false;
+    if (hostId && invite.hostId !== hostId) return false;
+    if (roomId && invite.roomId !== roomId) return false;
+    if (invite.targetId === targetId) return true;
+    return !!(targetUid && invite.targetUid && invite.targetUid === targetUid);
+}
+
+function findPendingRoomInviteForResponse(hostId, targetId, roomId = '', inviteId = '') {
+    const targetUid = getSocketUid(targetId);
+    const byId = inviteId && pendingRoomInvites[inviteId]
+        ? { key: inviteId, invite: pendingRoomInvites[inviteId] }
+        : null;
+    if (byId && roomInviteMatchesResponder(byId.invite, hostId, targetId, targetUid, roomId)) {
+        return byId;
+    }
+
+    const directKey = getRoomInviteKey(hostId, targetId, roomId);
+    if (directKey && pendingRoomInvites[directKey]) {
+        return { key: directKey, invite: pendingRoomInvites[directKey] };
+    }
+
+    for (const key of Object.keys(pendingRoomInvites)) {
+        const invite = pendingRoomInvites[key];
+        if (roomInviteMatchesResponder(invite, hostId, targetId, targetUid, roomId)) {
+            return { key, invite };
+        }
+    }
+
+    return null;
+}
+
+function clearPendingRoomInvitesForSocket(socketId) {
+    for (const key of Object.keys(pendingRoomInvites)) {
+        const invite = pendingRoomInvites[key];
+        if (invite && (invite.hostId === socketId || invite.targetId === socketId)) {
+            clearPendingRoomInvite(key);
+        }
+    }
+}
+
+function expirePendingRoomInvite(key) {
+    const invite = clearPendingRoomInvite(key);
+    if (!invite) return;
+
+    io.to(invite.hostId).emit('room_invite_expired', {
+        roomId: invite.roomId,
+        targetName: invite.targetName || 'Igrač'
+    });
+}
+
 function expirePendingChallenge(key, reason = 'timeout') {
     const challenge = clearPendingChallenge(key);
     if (!challenge) return;
@@ -2265,6 +2339,16 @@ function getWaitingBusyState(socketId, uid = '', options = {}) {
     return null;
 }
 
+function isWaitingPrivateRoomParticipant(roomId, socketId = '', uid = '') {
+    const room = roomId ? privateRooms[roomId] : null;
+    if (!room || room.p2) return false;
+
+    const host = room.p1;
+    if (!host) return false;
+    if (socketId && host.id === socketId) return true;
+    return !!(uid && (host.uid === uid || getSocketUid(host.id) === uid));
+}
+
 function getClientBusyState(socketId) {
     if (!socketId) return null;
     const clientSocket = io.sockets.sockets.get(socketId);
@@ -2293,6 +2377,9 @@ function getActiveGameStateForSocket(socketId, uid = '', options = {}) {
         }
 
         if (privateRooms[directRoom]) {
+            if (options.ignoreWaitingPrivateRoom && isWaitingPrivateRoomParticipant(directRoom, socketId, uid)) {
+                return null;
+            }
             return makeBusyState('private_room', directRoom);
         }
 
@@ -2308,6 +2395,9 @@ function getActiveGameStateForSocket(socketId, uid = '', options = {}) {
     for (const [roomId, room] of Object.entries(privateRooms)) {
         const participants = [room?.p1, room?.p2].filter(Boolean);
         if (participants.some(player => player.id === socketId)) {
+            if (options.ignoreWaitingPrivateRoom && isWaitingPrivateRoomParticipant(roomId, socketId, uid)) {
+                continue;
+            }
             return makeBusyState('private_room', roomId);
         }
     }
@@ -2343,6 +2433,9 @@ function getActiveGameStateForUid(uid = '', options = {}) {
     for (const [roomId, room] of Object.entries(privateRooms)) {
         const participants = [room?.p1, room?.p2].filter(Boolean);
         if (participants.some(player => player.uid === uid || getSocketUid(player.id) === uid)) {
+            if (options.ignoreWaitingPrivateRoom && isWaitingPrivateRoomParticipant(roomId, '', uid)) {
+                continue;
+            }
             return makeBusyState('private_room', roomId);
         }
     }
@@ -4575,6 +4668,7 @@ io.on('connection', (socket) => {
     socket.on('back_to_menu', async () => {
         socket.clientBusyForInvites = false;
         socket.clientBusyReason = '';
+        clearPendingRoomInvitesForSocket(socket.id);
         const activeRoomId = playerRooms[socket.id];
 
         if (socket.isSpectator && socket.spectatingRoom) {
@@ -5981,26 +6075,98 @@ io.on('connection', (socket) => {
     });
 
     socket.on('send_room_invite', (data, ack) => {
-        const { targetSocketId, roomId } = data;
-        const targetSocket = io.sockets.sockets.get(targetSocketId);
+        const { targetSocketId, targetUid, roomId } = data || {};
+        let resolvedTargetId = targetSocketId;
+        let targetSocket = resolvedTargetId ? io.sockets.sockets.get(resolvedTargetId) : null;
+        const requestedTargetUid = typeof targetUid === 'string' ? targetUid : '';
         const replyInvite = (payload) => {
             if (typeof ack === 'function') ack(payload);
             else if (!payload.ok) socket.emit('error_msg', payload.reason || 'err_server_conn');
         };
 
+        if (!roomId) {
+            replyInvite({ ok: false, reason: 'err_invalid_room' });
+            return;
+        }
+
+        if (requestedTargetUid && onlinePlayers[requestedTargetUid] && onlinePlayers[requestedTargetUid] !== socket.id) {
+            const currentTargetSocket = io.sockets.sockets.get(onlinePlayers[requestedTargetUid]);
+            if (currentTargetSocket) {
+                resolvedTargetId = currentTargetSocket.id;
+                targetSocket = currentTargetSocket;
+            }
+        }
+
         if (targetSocket) {
-            const targetUid = getSocketUid(targetSocketId);
-            if (isPlayerBusyForInvite(targetSocketId, targetUid)) {
+            const resolvedTargetUid = getSocketUid(resolvedTargetId) || requestedTargetUid || '';
+            if (isPlayerBusyForInvite(resolvedTargetId, resolvedTargetUid, { ignoreWaitingPrivateRoom: true })) {
                 emitPlayerBusy(socket, ack);
                 return;
             }
 
+            const existingInvite = findPendingRoomInviteForResponse(socket.id, resolvedTargetId, roomId);
+            if (existingInvite && existingInvite.invite && Date.now() <= existingInvite.invite.expiresAt) {
+                replyInvite({ ok: false, reason: 'room_invite_pending' });
+                return;
+            }
+            if (existingInvite) clearPendingRoomInvite(existingInvite.key);
+
+            const inviteKey = getRoomInviteKey(socket.id, resolvedTargetId, roomId);
+            const createdAt = Date.now();
+            const expiresAt = createdAt + ROOM_INVITE_RESPONSE_WINDOW_MS;
+            pendingRoomInvites[inviteKey] = {
+                hostId: socket.id,
+                targetId: resolvedTargetId,
+                hostUid: getSocketUid(socket.id),
+                targetUid: resolvedTargetUid,
+                roomId,
+                hostName: sanitizeTournamentName(socket.playerName || 'Igrač'),
+                targetName: sanitizeTournamentName(targetSocket.playerName || 'Igrač'),
+                createdAt,
+                expiresAt,
+                timeoutId: setTimeout(() => {
+                    expirePendingRoomInvite(inviteKey);
+                }, ROOM_INVITE_RESPONSE_WINDOW_MS)
+            };
+
             const hostName = `${sanitizeTournamentName(socket.playerName || 'Igrač')}|||${socket.id}`;
-            socket.to(targetSocketId).emit('incoming_room_invite', { roomId, hostName });
+            socket.to(resolvedTargetId).emit('incoming_room_invite', {
+                roomId,
+                hostName,
+                hostSocketId: socket.id,
+                inviteId: inviteKey,
+                expiresAt
+            });
             replyInvite({ ok: true });
         } else {
             replyInvite({ ok: false, reason: 'err_player_not_on_server' });
         }
+    });
+
+    socket.on('room_invite_response', (data = {}) => {
+        const hostSocketId = data.hostSocketId || data.hostId || '';
+        const roomId = data.roomId || '';
+        const inviteId = data.inviteId || '';
+        const accepted = data.accepted === true;
+        const isBusy = data.busy === true;
+        const pending = findPendingRoomInviteForResponse(hostSocketId, socket.id, roomId, inviteId);
+        const invite = pending ? clearPendingRoomInvite(pending.key) : null;
+        if (!invite) return;
+
+        const hostSocket = io.sockets.sockets.get(invite.hostId);
+        const targetName = invite?.targetName || sanitizeTournamentName(socket.playerName || 'Igrač');
+
+        if (!hostSocket) return;
+
+        if (isBusy) {
+            hostSocket.emit('room_invite_busy', { roomId, targetName });
+            return;
+        }
+
+        hostSocket.emit(accepted ? 'room_invite_accepted' : 'room_invite_declined', {
+            roomId,
+            targetName
+        });
     });
 
     socket.on('find_game', (data) => {
@@ -6093,8 +6259,12 @@ io.on('connection', (socket) => {
         const requesterUid = getSocketUid(socket.id);
         const busyState = getPlayerBusyState(socket.id, requesterUid);
         if (busyState && busyState.roomId !== roomId) {
-            socket.emit('error_msg', 'err_player_busy');
-            return;
+            if (busyState.reason === 'private_room' && isWaitingPrivateRoomParticipant(busyState.roomId, socket.id, requesterUid)) {
+                cleanupOnlineRoom(busyState.roomId);
+            } else {
+                socket.emit('error_msg', 'err_player_busy');
+                return;
+            }
         }
 
         if (!privateRooms[roomId]) {
@@ -6143,6 +6313,8 @@ io.on('connection', (socket) => {
             };
             startTurnTimer(roomId); 
             notifyOnlinePlayersStatusChanged();
+            clearPendingRoomInvitesForSocket(socket.id);
+            clearPendingRoomInvitesForSocket(p1.id);
 
             io.to(p1.id).emit('game_start', { roomId: roomId, opponent: nickname, oppStats: socket.playerStats, oppPhoto: photoUrl, oppUid: socket.playerId || registeredSockets[socket.id] || '', myIndex: 0, duelType: getOnlineDuelType(roomId) });
             socket.emit('game_start', { roomId: roomId, opponent: p1.name, oppStats: p1.stats, oppPhoto: p1.photoUrl, oppUid: p1.uid || registeredSockets[p1.id] || '', myIndex: 1, duelType: getOnlineDuelType(roomId) });
@@ -7100,6 +7272,7 @@ io.on('connection', (socket) => {
         const activeRoomId = playerRooms[socket.id];
         const activeRoomState = activeRoomId ? roomState[activeRoomId] : null;
         clearChallengesForSocket(socket.id);
+        clearPendingRoomInvitesForSocket(socket.id);
 
         if (pid && activeRoomId && !(activeRoomState && activeRoomState.gameFinished)) {
             console.log(`⏳ Pokrećem Grace Period od 30s za igrača: ${pid}`);

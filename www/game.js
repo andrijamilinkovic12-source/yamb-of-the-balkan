@@ -439,8 +439,17 @@ class YambApp {
             !/\s/.test(uid);
     }
 
-    mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
+    mergeH2HRecord(base = {}, incoming = {}, identity = {}, options = {}) {
         const count = (value) => Math.max(0, parseInt(value) || 0);
+        const baseTotal = count(base.wins) + count(base.losses) + count(base.draws);
+        const incomingTotal = count(incoming.wins) + count(incoming.losses) + count(incoming.draws);
+        const currentWinStreak = options.preferIncomingCurrentWinStreak
+            ? count(incoming.currentWinStreak)
+            : (incomingTotal > baseTotal
+                ? count(incoming.currentWinStreak)
+                : (baseTotal > incomingTotal
+                    ? count(base.currentWinStreak)
+                    : Math.max(count(base.currentWinStreak), count(incoming.currentWinStreak))));
         const merged = {
             ...base,
             ...incoming,
@@ -455,7 +464,7 @@ class YambApp {
             myHighScore: Math.max(count(base.myHighScore), count(incoming.myHighScore)),
             maxWinMargin: Math.max(count(base.maxWinMargin), count(incoming.maxWinMargin)),
             maxLossMargin: Math.max(count(base.maxLossMargin), count(incoming.maxLossMargin)),
-            currentWinStreak: Math.max(count(base.currentWinStreak), count(incoming.currentWinStreak)),
+            currentWinStreak,
             maxWinStreak: Math.max(count(base.maxWinStreak), count(incoming.maxWinStreak))
         };
         return merged;
@@ -1013,7 +1022,9 @@ class YambApp {
             };
 
             if (JSON.stringify(localData) !== JSON.stringify(merged)) {
-                localH2H[identity.key] = this.mergeH2HRecord(localH2H[identity.key], merged, identity);
+                localH2H[identity.key] = this.mergeH2HRecord(localH2H[identity.key], merged, identity, {
+                    preferIncomingCurrentWinStreak: true
+                });
                 if (identity.key !== oppKey && localH2H[oppKey]) delete localH2H[oppKey];
                 h2hUpdated = true;
             }
@@ -1385,6 +1396,8 @@ class YambApp {
                 const safeName = this.escapeHtml(friendName);
                 const safeAvatar = this.escapeHtml(this.friendAvatarUrl(friendName, f.photoUrl));
                 const safeSocketId = this.escapeHtml(this.escapeJsString(f.socketId || ''));
+                const safeUid = this.escapeHtml(this.escapeJsString(f.uid || ''));
+                const safeFriendNameJs = this.escapeHtml(this.escapeJsString(friendName));
                 const safePi = this.escapeHtml(pi);
 
                 html += `
@@ -1394,7 +1407,7 @@ class YambApp {
                         <span class="friend-card-name">${safeName}</span>
                         <span style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${safePi}</span>
                         <span class="friend-card-wl">W/L: ${w} / ${l}</span>
-                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}')" style="${btnStyle}">${this.escapeHtml(btnText)}</button>
+                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}">${this.escapeHtml(btnText)}</button>
                     </div>
                 `;
             });
@@ -1466,12 +1479,18 @@ class YambApp {
         }
     }
 
-    inviteFriendToRoom(friendSocketId) {
+    inviteFriendToRoom(friendSocketId, friendUid = '', friendName = '') {
         if (!this.currentHostingRoomId) return;
 
         const payloadHostName = this.playerName + "|||" + this.socket.id;
 
-        this.socket.emit('send_room_invite', { targetSocketId: friendSocketId, roomId: this.currentHostingRoomId, hostName: payloadHostName }, (result = {}) => {
+        this.socket.emit('send_room_invite', {
+            targetSocketId: friendSocketId,
+            targetUid: friendUid,
+            targetName: friendName,
+            roomId: this.currentHostingRoomId,
+            hostName: payloadHostName
+        }, (result = {}) => {
             if (!result.ok) {
                 this.showServerNotice(result.reason || 'err_server_conn', 'err_title');
                 return;
@@ -3210,6 +3229,10 @@ class YambApp {
         this.socket.off('friends_list_data');
         this.socket.off('search_results');
         this.socket.off('incoming_room_invite');
+        this.socket.off('room_invite_accepted');
+        this.socket.off('room_invite_declined');
+        this.socket.off('room_invite_busy');
+        this.socket.off('room_invite_expired');
         
         this.socket.off('request_state_sync');
         this.socket.off('sync_state_response');
@@ -3838,41 +3861,76 @@ class YambApp {
             await this.handleFriendSearchResults(results);
         });
 
+        const showRoomInviteStatus = (key, fallback, data = {}) => {
+            const safeName = this.escapeHtml(data.targetName || data.name || 'Igrač');
+            const text = (gt(key) || fallback).replace('{0}', safeName);
+            const title = gt('alert_invite_title') || "POZIVNICA";
+            if (typeof window.showNotification === 'function') {
+                window.showNotification(title, text);
+            } else {
+                this.modal.alert(text, title);
+            }
+        };
+
+        this.socket.on('room_invite_accepted', (data = {}) => {
+            showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data);
+        });
+
+        this.socket.on('room_invite_declined', (data = {}) => {
+            showRoomInviteStatus('room_invite_declined', 'Igrač {0} je odbio pozivnicu.', data);
+        });
+
+        this.socket.on('room_invite_busy', (data = {}) => {
+            showRoomInviteStatus('room_invite_busy', 'Igrač {0} je trenutno zauzet.', data);
+        });
+
+        this.socket.on('room_invite_expired', (data = {}) => {
+            showRoomInviteStatus('room_invite_expired', 'Igrač {0} nije odgovorio na pozivnicu.', data);
+        });
+
         this.socket.on('incoming_room_invite', async (data) => {
             let realHostName = data.hostName;
-            let hostSocketId = null;
+            let hostSocketId = data.hostSocketId || null;
+            const inviteId = data.inviteId || '';
+            const expiresAt = data.expiresAt || 0;
+            const sendRoomInviteResponse = (payload = {}) => {
+                if (!this.socket || !this.socket.connected) return;
+                this.socket.emit('room_invite_response', {
+                    hostSocketId,
+                    roomId: data.roomId,
+                    inviteId,
+                    ...payload
+                });
+            };
             
             if (data.hostName && data.hostName.includes('|||')) {
                 const parts = data.hostName.split('|||');
                 realHostName = parts[0];
-                hostSocketId = parts[1];
+                hostSocketId = hostSocketId || parts[1];
             }
 
             if (this.isDoNotDisturbActive()) {
-                if (hostSocketId) {
-                    this.socket.emit('challenge_response', {
-                        challengerId: hostSocketId,
-                        accepted: false,
-                        busy: true
-                    });
-                }
+                sendRoomInviteResponse({ accepted: false, busy: true });
                 return;
             }
 
             const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', this.escapeHtml(realHostName || 'Igrač'));
             const accepted = await this.modal.confirm(msg);
+
+            if (accepted && expiresAt && Date.now() > expiresAt) {
+                this.modal.alert(gt('room_invite_expired_self') || 'Istekao je rok za odgovor na pozivnicu.', gt('modal_title_info') || "INFO");
+                return;
+            }
             
             if (accepted) {
+                sendRoomInviteResponse({ accepted: true });
                 this.inviteDetected = true;
+                this.currentHostingRoomId = null;
                 this.navigateTo('splash-screen');
                 setTimeout(() => { this.joinPrivateGame(this.playerName, data.roomId); }, 800);
             } else {
-                if (hostSocketId) {
-                    this.socket.emit('challenge_response', {
-                        challengerId: hostSocketId,
-                        accepted: false
-                    });
-                }
+                sendRoomInviteResponse({ accepted: false });
+                this.setInviteBusyState(false);
             }
         });
 
