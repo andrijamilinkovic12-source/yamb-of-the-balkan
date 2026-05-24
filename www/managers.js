@@ -353,8 +353,14 @@ class EffectManager {
 
             if (targetTable) {
                 const rect = targetTable.getBoundingClientRect();
+                const compactSupernova = window.matchMedia && (
+                    window.matchMedia('(max-width: 760px)').matches ||
+                    window.matchMedia('(hover: none) and (pointer: coarse)').matches ||
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                );
                 const snContainer = document.createElement('div');
                 snContainer.className = 'supernova-container';
+                if (compactSupernova) snContainer.classList.add('supernova-container--compact');
                 snContainer.style.position = 'fixed';
                 snContainer.style.inset = '0';
                 
@@ -369,11 +375,12 @@ class EffectManager {
                     x: rect.left + rect.width / 2,
                     y: rect.top + rect.height / 2
                 };
-                const duration = 7500;
+                const duration = 7600;
                 let rafId = 0;
+                let lastSupernovaDraw = 0;
 
                 const resizeCanvas = () => {
-                    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+                    const dpr = Math.min(window.devicePixelRatio || 1, compactSupernova ? 1.15 : 1.5);
                     canvas.width = Math.floor(window.innerWidth * dpr);
                     canvas.height = Math.floor(window.innerHeight * dpr);
                     canvas.style.width = '100vw';
@@ -389,32 +396,40 @@ class EffectManager {
                     return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2;
                 };
 
-                const particles = Array.from({ length: 78 }, (_, i) => {
+                const supernovaColors = [
+                    'rgba(255,255,255,',
+                    'rgba(255,222,140,',
+                    'rgba(103,247,255,',
+                    'rgba(173,132,255,'
+                ];
+                const particles = Array.from({ length: compactSupernova ? 36 : 96 }, (_, i) => {
                     const a = (i * 2.3999632297) + (i % 7) * 0.09;
-                    const lane = i % 4;
+                    const lane = i % 5;
                     return {
                         a,
-                        r: 90 + lane * 42 + (i % 13) * 11,
-                        size: 0.9 + (i % 5) * 0.34,
-                        speed: 0.78 + (i % 11) * 0.025,
-                        drift: ((i % 9) - 4) * 0.10,
-                        delay: (i % 13) * 0.012
+                        r: 74 + lane * 34 + (i % 13) * 10,
+                        size: 0.75 + (i % 6) * 0.34,
+                        speed: 0.72 + (i % 11) * 0.032,
+                        drift: ((i % 9) - 4) * 0.115,
+                        delay: (i % 15) * 0.012,
+                        color: supernovaColors[i % supernovaColors.length],
+                        streak: i % 6 === 0
                     };
                 });
-                const glassCuts = Array.from({ length: 10 }, (_, i) => ({
-                    a: (Math.PI * 2 * i) / 10 + ((i % 4) - 1.5) * 0.055,
+                const glassCuts = Array.from({ length: compactSupernova ? 5 : 13 }, (_, i) => ({
+                    a: (Math.PI * 2 * i) / (compactSupernova ? 5 : 13) + ((i % 4) - 1.5) * 0.055,
                     start: 110 + (i % 4) * 22,
                     len: 115 + (i % 6) * 22,
                     width: 0.7 + (i % 3) * 0.28
                 }));
 
-                const drawRing = (x, y, radius, alpha, width, blur) => {
+                const drawRing = (x, y, radius, alpha, width, blur, color = 'rgba(232,244,255,0.72)', shadow = 'rgba(214,235,255,0.85)') => {
                     if (alpha <= 0) return;
                     ctx.save();
                     ctx.globalAlpha = alpha;
-                    ctx.shadowColor = 'rgba(214,235,255,0.85)';
-                    ctx.shadowBlur = blur;
-                    ctx.strokeStyle = 'rgba(232,244,255,0.72)';
+                    ctx.shadowColor = shadow;
+                    ctx.shadowBlur = compactSupernova ? Math.min(blur, 3) : blur;
+                    ctx.strokeStyle = color;
                     ctx.lineWidth = width;
                     ctx.beginPath();
                     ctx.arc(x, y, radius, 0, Math.PI * 2);
@@ -423,6 +438,12 @@ class EffectManager {
                 };
 
                 const renderFrame = start => now => {
+                    if (compactSupernova && lastSupernovaDraw && now - lastSupernovaDraw < 32) {
+                        if (snContainer.isConnected) rafId = requestAnimationFrame(renderFrame(start));
+                        return;
+                    }
+                    lastSupernovaDraw = now;
+
                     const elapsed = now - start;
                     const p = clamp01(elapsed / duration);
                     const w = window.innerWidth;
@@ -432,29 +453,85 @@ class EffectManager {
                     const blast = easeOutCubic((p - 0.14) / 0.46);
                     const fade = 1 - easeInOut((p - 0.82) / 0.18);
                     const alive = clamp01(fade);
+                    const compression = Math.sin(clamp01(p / 0.24) * Math.PI);
+                    const ignition = easeOutCubic((p - 0.18) / 0.16);
+                    const nebula = Math.sin(clamp01((p - 0.28) / 0.54) * Math.PI) * alive;
+                    const goldPulse = Math.sin(p * Math.PI * 18) * 0.5 + 0.5;
 
                     ctx.clearRect(0, 0, w, h);
                     ctx.globalCompositeOperation = 'source-over';
 
                     const bg = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, maxR * 0.9);
-                    bg.addColorStop(0, `rgba(232,248,255,${0.24 * alive})`);
-                    bg.addColorStop(0.22, `rgba(73,121,178,${0.16 * alive})`);
-                    bg.addColorStop(0.62, `rgba(5,14,29,${0.18 * alive})`);
-                    bg.addColorStop(1, `rgba(0,0,0,${0.34 * alive})`);
+                    bg.addColorStop(0, `rgba(255,246,205,${(0.20 + compression * 0.12) * alive})`);
+                    bg.addColorStop(0.18, `rgba(103,247,255,${0.13 * alive})`);
+                    bg.addColorStop(0.42, `rgba(83,45,142,${0.13 * alive})`);
+                    bg.addColorStop(0.72, `rgba(5,14,29,${0.24 * alive})`);
+                    bg.addColorStop(1, `rgba(0,0,0,${0.38 * alive})`);
                     ctx.fillStyle = bg;
                     ctx.fillRect(0, 0, w, h);
 
                     ctx.globalCompositeOperation = 'screen';
-                    const coreR = 14 + birth * 26 + blast * 82;
-                    const core = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, coreR * 3.2);
-                    core.addColorStop(0, `rgba(255,255,255,${0.92 * alive})`);
-                    core.addColorStop(0.12, `rgba(224,244,255,${0.78 * alive})`);
-                    core.addColorStop(0.34, `rgba(116,184,242,${0.50 * alive})`);
-                    core.addColorStop(1, 'rgba(116,184,242,0)');
+                    const coreR = 10 + birth * 22 + blast * (compactSupernova ? 58 : 76);
+                    const core = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, coreR * 3.45);
+                    core.addColorStop(0, `rgba(255,255,255,${0.96 * alive})`);
+                    core.addColorStop(0.10, `rgba(255,232,154,${0.86 * alive})`);
+                    core.addColorStop(0.26, `rgba(103,247,255,${0.52 * alive})`);
+                    core.addColorStop(0.50, `rgba(173,132,255,${0.25 * alive})`);
+                    core.addColorStop(1, 'rgba(103,247,255,0)');
                     ctx.fillStyle = core;
                     ctx.beginPath();
                     ctx.arc(center.x, center.y, coreR * 3.2, 0, Math.PI * 2);
                     ctx.fill();
+
+                    const flareAlpha = Math.sin(clamp01((p - 0.17) / 0.32) * Math.PI) * alive;
+                    if (flareAlpha > 0) {
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'screen';
+                        const flareW = Math.min(maxR * 0.72, compactSupernova ? 320 : 520);
+                        const horizontal = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, flareW);
+                        horizontal.addColorStop(0, `rgba(255,248,220,${0.25 * flareAlpha})`);
+                        horizontal.addColorStop(0.18, `rgba(255,214,111,${0.10 * flareAlpha})`);
+                        horizontal.addColorStop(0.42, `rgba(103,247,255,${0.07 * flareAlpha})`);
+                        horizontal.addColorStop(1, 'rgba(255,255,255,0)');
+                        ctx.fillStyle = horizontal;
+                        ctx.save();
+                        ctx.translate(center.x, center.y);
+                        ctx.scale(1, compactSupernova ? 0.055 : 0.07);
+                        ctx.beginPath();
+                        ctx.arc(0, 0, flareW, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+
+                        const vertical = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, flareW * 0.46);
+                        vertical.addColorStop(0, `rgba(255,255,255,${0.16 * flareAlpha})`);
+                        vertical.addColorStop(0.42, `rgba(103,247,255,${0.05 * flareAlpha})`);
+                        vertical.addColorStop(1, 'rgba(255,255,255,0)');
+                        ctx.fillStyle = vertical;
+                        ctx.save();
+                        ctx.translate(center.x, center.y);
+                        ctx.scale(0.075, 1);
+                        ctx.beginPath();
+                        ctx.arc(0, 0, flareW * 0.46, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                        ctx.restore();
+                    }
+
+                    if (p < 0.28) {
+                        for (let i = 0; i < 4; i++) {
+                            const rr = 18 + i * 16 + compression * (18 + i * 7);
+                            drawRing(
+                                center.x,
+                                center.y,
+                                rr,
+                                (0.16 - i * 0.022) * compression * alive,
+                                0.9,
+                                8,
+                                i % 2 ? 'rgba(103,247,255,0.84)' : 'rgba(255,222,140,0.86)',
+                                i % 2 ? 'rgba(103,247,255,0.78)' : 'rgba(255,222,140,0.72)'
+                            );
+                        }
+                    }
 
                     const shockR = 42 + blast * Math.min(maxR * 0.72, 620);
                     const sphereAlpha = Math.sin(clamp01((p - 0.16) / 0.64) * Math.PI) * alive;
@@ -462,20 +539,74 @@ class EffectManager {
                         ctx.save();
                         ctx.globalCompositeOperation = 'screen';
                         const shell = ctx.createRadialGradient(center.x, center.y, shockR * 0.18, center.x, center.y, shockR * 0.96);
-                        shell.addColorStop(0, `rgba(255,255,255,${0.04 * sphereAlpha})`);
-                        shell.addColorStop(0.48, `rgba(110,177,235,${0.055 * sphereAlpha})`);
-                        shell.addColorStop(0.72, `rgba(232,246,255,${0.18 * sphereAlpha})`);
-                        shell.addColorStop(0.78, `rgba(120,190,245,${0.075 * sphereAlpha})`);
-                        shell.addColorStop(1, 'rgba(120,190,245,0)');
+                        shell.addColorStop(0, `rgba(255,255,255,${0.045 * sphereAlpha})`);
+                        shell.addColorStop(0.42, `rgba(103,247,255,${0.07 * sphereAlpha})`);
+                        shell.addColorStop(0.64, `rgba(255,222,140,${0.15 * sphereAlpha})`);
+                        shell.addColorStop(0.75, `rgba(232,246,255,${0.20 * sphereAlpha})`);
+                        shell.addColorStop(0.84, `rgba(173,132,255,${0.07 * sphereAlpha})`);
+                        shell.addColorStop(1, 'rgba(103,247,255,0)');
                         ctx.fillStyle = shell;
                         ctx.beginPath();
                         ctx.arc(center.x, center.y, shockR * 0.98, 0, Math.PI * 2);
                         ctx.fill();
                         ctx.restore();
                     }
-                    drawRing(center.x, center.y, shockR, 0.56 * (1 - blast * 0.55) * alive, 1.4, 16);
-                    drawRing(center.x, center.y, shockR * 0.72, 0.25 * alive, 0.8, 8);
-                    drawRing(center.x, center.y, shockR * 1.06, 0.12 * alive, 1, 20);
+                    drawRing(center.x, center.y, shockR, 0.56 * (1 - blast * 0.55) * alive, 1.4, 14, 'rgba(255,246,212,0.82)', 'rgba(255,222,140,0.76)');
+                    drawRing(center.x, center.y, shockR * 0.72, 0.25 * alive, 0.85, 7, 'rgba(103,247,255,0.76)', 'rgba(103,247,255,0.62)');
+                    drawRing(center.x, center.y, shockR * 1.06, 0.12 * alive, 1, 16, 'rgba(173,132,255,0.66)', 'rgba(173,132,255,0.48)');
+
+                    if (nebula > 0 && !compactSupernova) {
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'screen';
+                        const nebulaColors = [
+                            [0.92, -0.36, 'rgba(103,247,255,'],
+                            [-0.62, 0.38, 'rgba(173,132,255,'],
+                            [0.18, 0.72, 'rgba(255,222,140,'],
+                            [-0.18, -0.68, 'rgba(103,247,255,']
+                        ];
+                        nebulaColors.forEach((blob, i) => {
+                            const bx = center.x + Math.cos(p * 2.4 + i) * shockR * 0.16 + blob[0] * shockR * 0.34;
+                            const by = center.y + Math.sin(p * 2.1 + i) * shockR * 0.10 + blob[1] * shockR * 0.24;
+                            const r = shockR * (0.18 + i * 0.018);
+                            const grad = ctx.createRadialGradient(bx, by, 0, bx, by, r);
+                            grad.addColorStop(0, `${blob[2]}${0.14 * nebula})`);
+                            grad.addColorStop(0.58, `${blob[2]}${0.045 * nebula})`);
+                            grad.addColorStop(1, 'rgba(0,0,0,0)');
+                            ctx.fillStyle = grad;
+                            ctx.beginPath();
+                            ctx.arc(bx, by, r, 0, Math.PI * 2);
+                            ctx.fill();
+                        });
+                        ctx.restore();
+                    }
+
+                    const rayLife = Math.sin(clamp01((p - 0.18) / 0.40) * Math.PI) * alive;
+                    if (rayLife > 0) {
+                        ctx.save();
+                        ctx.translate(center.x, center.y);
+                        ctx.rotate(-0.18 + p * 0.22);
+                        const rayCount = compactSupernova ? 7 : 16;
+                        for (let i = 0; i < rayCount; i++) {
+                            const a = (Math.PI * 2 * i) / rayCount + Math.sin(i * 1.7) * 0.05;
+                            const len = shockR * (0.42 + (i % 4) * 0.08);
+                            const inner = coreR * (0.9 + (i % 3) * 0.22);
+                            const x1 = Math.cos(a) * inner;
+                            const y1 = Math.sin(a) * inner;
+                            const x2 = Math.cos(a) * len;
+                            const y2 = Math.sin(a) * len;
+                            const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+                            grad.addColorStop(0, `rgba(255,255,255,${0.26 * rayLife})`);
+                            grad.addColorStop(0.38, i % 3 === 0 ? `rgba(255,222,140,${0.18 * rayLife})` : `rgba(103,247,255,${0.16 * rayLife})`);
+                            grad.addColorStop(1, 'rgba(255,255,255,0)');
+                            ctx.strokeStyle = grad;
+                            ctx.lineWidth = 1.1 + (i % 3) * 0.38;
+                            ctx.beginPath();
+                            ctx.moveTo(x1, y1);
+                            ctx.lineTo(x2, y2);
+                            ctx.stroke();
+                        }
+                        ctx.restore();
+                    }
 
                     ctx.save();
                     ctx.globalAlpha = alive;
@@ -491,8 +622,9 @@ class EffectManager {
                         const y2 = Math.sin(cut.a + cut.width * 0.012) * r2;
                         const grad = ctx.createLinearGradient(x1, y1, x2, y2);
                         grad.addColorStop(0, 'rgba(255,255,255,0)');
-                        grad.addColorStop(0.42, 'rgba(235,248,255,0.22)');
-                        grad.addColorStop(1, 'rgba(135,196,255,0)');
+                        grad.addColorStop(0.34, 'rgba(255,239,185,0.22)');
+                        grad.addColorStop(0.58, 'rgba(103,247,255,0.18)');
+                        grad.addColorStop(1, 'rgba(173,132,255,0)');
                         ctx.strokeStyle = grad;
                         ctx.lineWidth = cut.width;
                         ctx.shadowBlur = 0;
@@ -506,14 +638,14 @@ class EffectManager {
                     ctx.save();
                     ctx.translate(center.x, center.y);
                     ctx.rotate(-p * 0.28);
-                    for (let i = 0; i < 12; i++) {
+                    for (let i = 0; i < (compactSupernova ? 6 : 12); i++) {
                         const local = easeOutCubic((p - 0.2) / 0.58);
                         const base = shockR * (0.42 + (i % 4) * 0.11) + i * 6;
                         const start = i * 0.71 + p * 0.35;
                         const span = 0.26 + (i % 3) * 0.08;
                         const alpha = (0.20 + (i % 4) * 0.018) * alive * Math.sin(clamp01((p - 0.18) / 0.42) * Math.PI);
                         ctx.globalAlpha = Math.max(0, alpha);
-                        ctx.strokeStyle = i % 2 ? 'rgba(205,236,255,0.66)' : 'rgba(255,255,255,0.58)';
+                        ctx.strokeStyle = i % 3 === 0 ? 'rgba(255,222,140,0.68)' : (i % 2 ? 'rgba(103,247,255,0.66)' : 'rgba(255,255,255,0.58)');
                         ctx.lineWidth = 1 + (i % 3) * 0.45;
                         ctx.shadowBlur = 0;
                         ctx.beginPath();
@@ -525,7 +657,7 @@ class EffectManager {
                     ctx.save();
                     ctx.translate(center.x, center.y);
                     ctx.rotate(p * 0.18);
-                    for (let i = 0; i < 11; i++) {
+                    for (let i = 0; i < (compactSupernova ? 5 : 11); i++) {
                         const local = easeOutCubic((p - 0.16 - (i % 5) * 0.012) / 0.64);
                         if (local <= 0 || local >= 1) continue;
                         const a = i * 0.448 + Math.sin(i) * 0.14;
@@ -540,7 +672,9 @@ class EffectManager {
                         const alpha = Math.sin(local * Math.PI) * 0.26 * alive;
                         const grad = ctx.createLinearGradient(x1, y1, x2, y2);
                         grad.addColorStop(0, 'rgba(255,255,255,0)');
-                        grad.addColorStop(0.5, `rgba(185,228,255,${alpha})`);
+                        grad.addColorStop(0.34, `rgba(255,222,140,${alpha * 0.85})`);
+                        grad.addColorStop(0.5, `rgba(103,247,255,${alpha})`);
+                        grad.addColorStop(0.68, `rgba(173,132,255,${alpha * 0.72})`);
                         grad.addColorStop(1, 'rgba(255,255,255,0)');
                         ctx.strokeStyle = grad;
                         ctx.lineWidth = 1.25;
@@ -560,17 +694,41 @@ class EffectManager {
                         const r = (28 + pt.r * pt.speed) * e + shockR * 0.08;
                         const x = center.x + Math.cos(a) * r;
                         const y = center.y + Math.sin(a) * r;
-                        const alpha = Math.sin(life * Math.PI) * 0.62 * alive;
-                        ctx.fillStyle = `rgba(210,236,255,${alpha})`;
-                        ctx.beginPath();
-                        ctx.arc(x, y, pt.size * (1 + e * 0.8), 0, Math.PI * 2);
-                        ctx.fill();
+                        const alpha = Math.sin(life * Math.PI) * 0.78 * alive;
+                        if (pt.streak && !compactSupernova) {
+                            const tail = 18 + e * 32;
+                            const x2 = x - Math.cos(a) * tail;
+                            const y2 = y - Math.sin(a) * tail;
+                            const grad = ctx.createLinearGradient(x2, y2, x, y);
+                            grad.addColorStop(0, 'rgba(255,255,255,0)');
+                            grad.addColorStop(1, `${pt.color}${alpha})`);
+                            ctx.strokeStyle = grad;
+                            ctx.lineWidth = Math.max(0.9, pt.size * 0.82);
+                            ctx.beginPath();
+                            ctx.moveTo(x2, y2);
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+                        } else {
+                            ctx.fillStyle = `${pt.color}${alpha})`;
+                            ctx.beginPath();
+                            ctx.arc(x, y, pt.size * (1 + e), 0, Math.PI * 2);
+                            ctx.fill();
+                        }
                     });
 
                     ctx.globalCompositeOperation = 'lighter';
-                    for (let i = 0; i < 5; i++) {
+                    for (let i = 0; i < (compactSupernova ? 3 : 5); i++) {
                         const rr = coreR * (1.4 + i * 0.55) + blast * i * 12;
-                        drawRing(center.x, center.y, rr, (0.16 - i * 0.022) * alive, 0.7, 8);
+                        drawRing(
+                            center.x,
+                            center.y,
+                            rr,
+                            (0.16 - i * 0.022) * alive,
+                            0.7,
+                            8,
+                            i % 2 ? 'rgba(103,247,255,0.74)' : 'rgba(255,222,140,0.78)',
+                            i % 2 ? 'rgba(103,247,255,0.58)' : 'rgba(255,222,140,0.62)'
+                        );
                     }
 
                     if (p < 1 && snContainer.isConnected) {
@@ -580,12 +738,13 @@ class EffectManager {
 
                 rafId = requestAnimationFrame(now => renderFrame(now)(now));
                 targetTable.classList.add('anim-supernova-table');
+                if (compactSupernova) targetTable.classList.add('anim-supernova-table--compact');
                 
-                setTimeout(() => { 
+                this.scheduleEffectTimeout(() => {
                     cancelAnimationFrame(rafId);
-                    targetTable.classList.remove('anim-supernova-table'); 
+                    targetTable.classList.remove('anim-supernova-table', 'anim-supernova-table--compact');
                     if (snContainer.parentNode) snContainer.remove(); 
-                }, 7500);
+                }, duration);
             }
         }
 
@@ -1970,6 +2129,7 @@ class EffectManager {
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
         document.querySelectorAll('.anim-black-hole-table').forEach(tbl => tbl.classList.remove('anim-black-hole-table'));
         document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
+        document.querySelectorAll('.anim-supernova-table--compact').forEach(tbl => tbl.classList.remove('anim-supernova-table--compact'));
         document.querySelectorAll('.anim-neon-pulse').forEach(tbl => tbl.classList.remove('anim-neon-pulse'));
         document.querySelectorAll('.anim-ufo-table').forEach(tbl => tbl.classList.remove('anim-ufo-table'));
         document.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
