@@ -297,7 +297,7 @@ class EffectManager {
                 `;
 
                 const particleFragment = document.createDocumentFragment();
-                const particleCount = compactIce ? 34 : 64;
+                const particleCount = compactIce ? 24 : 44;
                 for (let i = 0; i < particleCount; i++) {
                     const particle = document.createElement('span');
                     particle.className = (i % 6 === 0) ? 'ice-particle ice-particle--shard' : 'ice-particle';
@@ -332,13 +332,19 @@ class EffectManager {
 
                 this.scheduleEffectTimeout(() => {
                     if (iceAgeRunId !== this.iceAgeRunId) return;
+                    atmosphere.classList.add('ice-cooling-down');
+                    container.classList.add('ice-softening');
+                }, 5400);
+
+                this.scheduleEffectTimeout(() => {
+                    if (iceAgeRunId !== this.iceAgeRunId) return;
                     container.classList.add('ice-melting');
                     atmosphere.classList.add('ice-melting');
                     targetTable.classList.remove('active-ice-table', 'anim-ice-age-table');
-                    document.body.classList.remove('fx-ice-age');
                     this.scheduleEffectTimeout(() => {
                         if (container.parentNode) container.remove();
                         if (atmosphere.parentNode) atmosphere.remove();
+                        document.body.classList.remove('fx-ice-age');
                     }, 1500);
                 }, 6800);
             }
