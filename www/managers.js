@@ -242,6 +242,7 @@ class EffectManager {
         this.goldRainResizeHandler = null;
         this.goldRainSprites = null;
         this.effectTimeouts = [];
+        this.iceAgeRunId = 0;
     }
     
     applyPermanent(type) {
@@ -262,16 +263,84 @@ class EffectManager {
             if (!targetTable && tables.length > 0) targetTable = tables[0];
 
             if (targetTable) {
-                targetTable.classList.add('active-ice-table');
+                this.iceAgeRunId += 1;
+                const iceAgeRunId = this.iceAgeRunId;
+                document.querySelectorAll('.ice-overlay-container, .ice-age-atmosphere').forEach(e => e.remove());
+                document.querySelectorAll('.active-ice-table, .anim-ice-age-table').forEach(tbl => tbl.classList.remove('active-ice-table', 'anim-ice-age-table'));
+
+                const rect = targetTable.getBoundingClientRect();
+                const compactIce = window.matchMedia && (
+                    window.matchMedia('(max-width: 760px)').matches ||
+                    window.matchMedia('(hover: none) and (pointer: coarse)').matches ||
+                    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+                );
+
+                document.body.classList.add('fx-ice-age');
+                targetTable.classList.add('active-ice-table', 'anim-ice-age-table');
+
+                if (window.app && window.app.soundMgr && typeof window.app.soundMgr.iceAge === 'function') {
+                    window.app.soundMgr.iceAge();
+                }
+                if (window.app && typeof window.app.vibrate === 'function') {
+                    window.app.vibrate([24, 36, 72, 48, 120]);
+                }
+
+                const atmosphere = document.createElement('div');
+                atmosphere.className = compactIce ? 'ice-age-atmosphere ice-age-atmosphere--compact' : 'ice-age-atmosphere';
+                atmosphere.style.setProperty('--ice-x', (rect.left + rect.width / 2) + 'px');
+                atmosphere.style.setProperty('--ice-y', (rect.top + rect.height / 2) + 'px');
+                atmosphere.innerHTML = `
+                    <div class="ice-age-aura"></div>
+                    <div class="ice-age-wave"></div>
+                    <div class="ice-age-fog ice-age-fog--one"></div>
+                    <div class="ice-age-fog ice-age-fog--two"></div>
+                `;
+
+                const particleFragment = document.createDocumentFragment();
+                const particleCount = compactIce ? 34 : 64;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('span');
+                    particle.className = (i % 6 === 0) ? 'ice-particle ice-particle--shard' : 'ice-particle';
+                    particle.style.setProperty('--x', (Math.random() * 100).toFixed(2) + 'vw');
+                    particle.style.setProperty('--y-start', (-8 - Math.random() * 18).toFixed(1) + 'vh');
+                    particle.style.setProperty('--fall', (72 + Math.random() * 44).toFixed(1) + 'vh');
+                    particle.style.setProperty('--drift', (-48 + Math.random() * 96).toFixed(1) + 'px');
+                    particle.style.setProperty('--size', (2.5 + Math.random() * (compactIce ? 3.5 : 5.5)).toFixed(1) + 'px');
+                    particle.style.setProperty('--delay', (Math.random() * 1.15).toFixed(2) + 's');
+                    particle.style.setProperty('--dur', (3.8 + Math.random() * 2.7).toFixed(2) + 's');
+                    particle.style.setProperty('--spin', (120 + Math.random() * 520).toFixed(1) + 'deg');
+                    particleFragment.appendChild(particle);
+                }
+                atmosphere.appendChild(particleFragment);
+                document.body.appendChild(atmosphere);
+
                 const container = document.createElement('div');
                 container.className = 'ice-overlay-container';
-                container.innerHTML = `<div class="ice-glass"></div><div class="ice-frost-border"></div><div class="ice-flake-center">❄️</div>`;
+                container.innerHTML = `
+                    <div class="ice-freeze-wave"></div>
+                    <div class="ice-glass"></div>
+                    <div class="ice-crack ice-crack--one"></div>
+                    <div class="ice-crack ice-crack--two"></div>
+                    <div class="ice-crack ice-crack--three"></div>
+                    <div class="ice-frost-border"></div>
+                    <div class="ice-glint ice-glint--one"></div>
+                    <div class="ice-glint ice-glint--two"></div>
+                    <div class="ice-flake-center"><span>❄</span></div>
+                    <div class="ice-cold-breath"></div>
+                `;
                 targetTable.appendChild(container);
-                setTimeout(() => {
-                    container.style.animation = 'iceMeltOut 1.5s forwards';
-                    targetTable.classList.remove('active-ice-table');
-                    setTimeout(() => { if (container.parentNode) container.remove(); }, 1500);
-                }, 6000);
+
+                this.scheduleEffectTimeout(() => {
+                    if (iceAgeRunId !== this.iceAgeRunId) return;
+                    container.classList.add('ice-melting');
+                    atmosphere.classList.add('ice-melting');
+                    targetTable.classList.remove('active-ice-table', 'anim-ice-age-table');
+                    document.body.classList.remove('fx-ice-age');
+                    this.scheduleEffectTimeout(() => {
+                        if (container.parentNode) container.remove();
+                        if (atmosphere.parentNode) atmosphere.remove();
+                    }, 1500);
+                }, 6800);
             }
         }
 
@@ -2123,9 +2192,10 @@ class EffectManager {
             if (confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
         }
         
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-spark').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-spark').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
+        document.querySelectorAll('.anim-ice-age-table').forEach(tbl => tbl.classList.remove('anim-ice-age-table'));
         document.querySelectorAll('.anim-suck-in').forEach(tbl => tbl.classList.remove('anim-suck-in'));
         document.querySelectorAll('.anim-black-hole-table').forEach(tbl => tbl.classList.remove('anim-black-hole-table'));
         document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
@@ -2347,7 +2417,63 @@ class SoundManager {
             });
         });
     }
-    
+
+    iceAge() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+            const bufferSize = Math.floor(this.ctx.sampleRate * 1.45);
+            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+
+            const frostNoise = this.ctx.createBufferSource();
+            const frostFilter = this.ctx.createBiquadFilter();
+            const frostGain = this.ctx.createGain();
+            frostNoise.buffer = noiseBuffer;
+            frostFilter.type = 'bandpass';
+            frostFilter.frequency.setValueAtTime(5200, now);
+            frostFilter.frequency.exponentialRampToValueAtTime(540, now + 1.15);
+            frostFilter.Q.setValueAtTime(1.4, now);
+            frostGain.gain.setValueAtTime(0, now);
+            frostGain.gain.linearRampToValueAtTime(0.18, now + 0.08);
+            frostGain.gain.exponentialRampToValueAtTime(0.001, now + 1.45);
+            frostNoise.connect(frostFilter);
+            frostFilter.connect(frostGain);
+            frostGain.connect(this.ctx.destination);
+            frostNoise.start(now);
+            frostNoise.stop(now + 1.5);
+
+            const hum = this.ctx.createOscillator();
+            const humGain = this.ctx.createGain();
+            hum.type = 'sine';
+            hum.frequency.setValueAtTime(96, now);
+            hum.frequency.exponentialRampToValueAtTime(44, now + 1.4);
+            humGain.gain.setValueAtTime(0, now);
+            humGain.gain.linearRampToValueAtTime(0.08, now + 0.16);
+            humGain.gain.exponentialRampToValueAtTime(0.001, now + 1.55);
+            hum.connect(humGain);
+            humGain.connect(this.ctx.destination);
+            hum.start(now);
+            hum.stop(now + 1.6);
+
+            [1760, 1320, 2217, 2637].forEach((freq, i) => {
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                const start = now + 0.08 + i * 0.075;
+                osc.type = i % 2 ? 'sine' : 'triangle';
+                osc.frequency.setValueAtTime(freq, start);
+                osc.frequency.exponentialRampToValueAtTime(freq * 0.62, start + 0.42);
+                gain.gain.setValueAtTime(0, start);
+                gain.gain.linearRampToValueAtTime(0.055, start + 0.025);
+                gain.gain.exponentialRampToValueAtTime(0.001, start + 0.5);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(start);
+                osc.stop(start + 0.52);
+            });
+        });
+    }
+     
     // --- PROCEDURALNI ZVUK GROMA ---
     thunder() {
         this.playSound(() => {
