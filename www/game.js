@@ -821,11 +821,27 @@ class YambApp {
     refreshLocalStats() {
         const storedStats = this.readLocalJson('yamb_stats', {});
         const managerStats = (window.statsManager && window.statsManager.stats) ? window.statsManager.stats : {};
-        const mergedStats = {
-            ...this.normalizeLocalStats(this.stats || {}),
-            ...this.normalizeLocalStats(managerStats),
-            ...this.normalizeLocalStats(storedStats)
-        };
+        const statSources = [
+            this.normalizeLocalStats(this.stats || {}),
+            this.normalizeLocalStats(managerStats),
+            this.normalizeLocalStats(storedStats)
+        ];
+        const mergedStats = { ...statSources[0], ...statSources[1], ...statSources[2] };
+        [
+            'games',
+            'totalGames',
+            'wins',
+            'losses',
+            'highscore',
+            'totalScoreSum',
+            'maxWinStreak',
+            'tournamentWins',
+            'penaltyPoints'
+        ].forEach(field => {
+            mergedStats[field] = Math.max(...statSources.map(stats => Number(stats[field]) || 0));
+        });
+        mergedStats.games = Math.max(mergedStats.games || 0, mergedStats.totalGames || 0);
+        mergedStats.totalGames = mergedStats.games;
 
         this.stats = { ...(this.stats || {}), ...mergedStats };
 
@@ -835,6 +851,79 @@ class YambApp {
 
         localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
         return this.stats;
+    }
+
+    recordSubmittedScoreAsHighscore(score) {
+        const safeScore = Number(score);
+        if (!Number.isFinite(safeScore) || safeScore <= 0) return false;
+
+        this.refreshLocalStats();
+        const finalScore = Math.floor(safeScore);
+        const currentHighscore = Math.max(0, Number(this.stats.highscore) || 0);
+        if (finalScore <= currentHighscore) return false;
+
+        this.stats = { ...(this.stats || {}), highscore: finalScore };
+        localStorage.setItem('yamb_stats', JSON.stringify(this.stats));
+
+        if (window.statsManager) {
+            window.statsManager.stats = {
+                ...window.statsManager.stats,
+                ...this.stats,
+                highscore: finalScore
+            };
+            window.statsManager.saveStats();
+        }
+
+        return true;
+    }
+
+    async reconcileStatsHighscoreFromStoredScores() {
+        const storageKey = (this.topListManager && this.topListManager.storageKey) || 'yamb_ultimate_scores';
+        let scores = [];
+
+        try {
+            if (window.localforage) {
+                scores = (await localforage.getItem(storageKey)) || [];
+            }
+        } catch (err) {
+            console.warn("Nije moguće pročitati lokalnu top listu iz IndexedDB-a:", err);
+        }
+
+        if (!Array.isArray(scores) || scores.length === 0) {
+            try {
+                const storedScores = localStorage.getItem(storageKey);
+                if (storedScores) scores = JSON.parse(storedScores);
+            } catch (err) {
+                console.warn("Nije moguće pročitati lokalnu top listu iz localStorage-a:", err);
+            }
+        }
+
+        if (!Array.isArray(scores) || scores.length === 0) return false;
+
+        const uid = String(localStorage.getItem('yamb_uid') || this.playerId || '').trim();
+        const playerName = String(this.playerName || localStorage.getItem('yamb_player_name') || '').trim();
+        let bestScore = 0;
+
+        scores.forEach(entry => {
+            if (!entry || typeof entry !== 'object') return;
+            const entryUid = String(entry.uid || entry.playerId || '').trim();
+            const entryName = String(entry.playerName || entry.name || '').trim();
+
+            if (uid) {
+                if (entryUid && entryUid !== uid) return;
+                if (!entryUid && !playerName) return;
+                if (!entryUid && entryName && playerName && entryName !== playerName) return;
+            } else if (playerName && entryName && entryName !== playerName) {
+                return;
+            }
+
+            const score = Number(entry.score);
+            if (Number.isFinite(score) && score > bestScore) {
+                bestScore = Math.floor(score);
+            }
+        });
+
+        return this.recordSubmittedScoreAsHighscore(bestScore);
     }
 
     getFullLocalStats() {
@@ -2645,6 +2734,11 @@ class YambApp {
         const h2hRecord = this.getLocalH2HRecordSummary();
         document.getElementById('stat-games').innerText = this.stats.games; 
         document.getElementById('stat-high').innerText = this.stats.highscore; 
+        this.reconcileStatsHighscoreFromStoredScores().then(updated => {
+            if (!updated) return;
+            const highEl = document.getElementById('stat-high');
+            if (highEl) highEl.innerText = this.stats.highscore;
+        }).catch(err => console.warn("Nije moguće uskladiti rekord iz top liste:", err));
         document.getElementById('stat-wins').innerText = h2hRecord.wins; 
         document.getElementById('stat-losses').innerText = h2hRecord.losses; 
         
@@ -5091,6 +5185,7 @@ class YambApp {
     async safeSubmitScore(name, score, mode, photoUrl = undefined) {
         try {
             let finalScore = parseInt(score); if (isNaN(finalScore)) finalScore = 0;
+            this.recordSubmittedScoreAsHighscore(finalScore);
             if(this.topListManager) {
                 await this.topListManager.submitScore(name, finalScore, mode, photoUrl);
             }

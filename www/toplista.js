@@ -59,6 +59,9 @@ class TopListManager {
 
         // 1. Uvek prvo sačuvaj lokalno
         await this._saveLocal(entry);
+        if (this.app && typeof this.app.recordSubmittedScoreAsHighscore === 'function') {
+            this.app.recordSubmittedScoreAsHighscore(entry.score);
+        }
 
         // 2. Skor iz upravo završene partije šaljemo odmah i čekamo odgovor,
         // dok server još ima aktivnu validnu game sesiju za taj socket.

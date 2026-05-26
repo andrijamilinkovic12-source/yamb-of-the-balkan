@@ -211,13 +211,16 @@ if (MONGO_URI) {
 
 // --- MODELI PODATAKA ---
 const ScoreSchema = new mongoose.Schema({
-    playerId: String, 
+    playerId: String,
+    uid: String,
     playerName: String,
     score: Number,
-    mode: String, 
-    photoUrl: { type: String, default: '' }, 
+    mode: String,
+    photoUrl: { type: String, default: '' },
     date: { type: Date, default: Date.now }
 });
+ScoreSchema.index({ playerId: 1, score: -1 });
+ScoreSchema.index({ uid: 1, score: -1 });
 const Score = mongoose.model('Score', ScoreSchema);
 
 const LeagueScoreSchema = new mongoose.Schema({
@@ -3074,6 +3077,40 @@ function toSafeInt(value, fallback = 0) {
     return Math.floor(num);
 }
 
+function isStablePlayerUid(uid) {
+    return typeof uid === 'string' &&
+        uid.length >= 20 &&
+        !uid.startsWith('guest_') &&
+        uid !== 'undefined' &&
+        uid !== 'null';
+}
+
+async function getBestSubmittedScoreForUid(uid) {
+    if (!MONGO_URI || !isStablePlayerUid(uid)) return 0;
+
+    const [bestEntry] = await Score.aggregate([
+        { $match: { $or: [{ playerId: uid }, { uid }] } },
+        { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
+        { $match: { numScore: { $gt: 0, $lte: MAX_SCORE } } },
+        { $sort: { numScore: -1 } },
+        { $limit: 1 },
+        { $project: { _id: 0, score: "$numScore" } }
+    ]);
+
+    return Math.max(0, Math.min(MAX_SCORE, toSafeInt(bestEntry?.score, 0)));
+}
+
+async function syncUserHighscoreFromScoreHistory(user, uid = user?.firebaseUid) {
+    if (!user || !isStablePlayerUid(uid)) return Math.max(0, toSafeInt(user?.highscore, 0));
+
+    const bestScore = await getBestSubmittedScoreForUid(uid);
+    const currentHighscore = Math.max(0, toSafeInt(user.highscore, 0));
+    if (bestScore > currentHighscore) {
+        user.highscore = bestScore;
+    }
+    return Math.max(currentHighscore, bestScore);
+}
+
 let admobRewardKeyCache = {
     fetchedAt: 0,
     keys: new Map()
@@ -4241,6 +4278,10 @@ io.on('connection', (socket) => {
                 // 🛡️ NOVO: Popravljena logika (INVENTORY DESYNC FIX)
                 const isFreshLogin = (toSafeInt(s.games, 0) === 0);
                 const statsGuard = applyProfileStatsGuard(user, s);
+                const scoreHistoryHighscore = await syncUserHighscoreFromScoreHistory(user, verifiedUid);
+                if (scoreHistoryHighscore > statsGuard.acceptedStats.highscore) {
+                    statsGuard.acceptedStats.highscore = scoreHistoryHighscore;
+                }
                 const oldUserGames = statsGuard.oldStats.games;
                 const oldTournamentWins = statsGuard.oldStats.tournamentWins;
                 const oldBalance = Math.max(0, toSafeInt(user.balance));
@@ -4464,7 +4505,8 @@ io.on('connection', (socket) => {
                 const initialGames = Math.max(0, toSafeInt(s.games, 0));
                 const initialWins = Math.max(0, Math.min(initialGames, toSafeInt(s.wins, 0)));
                 const initialLosses = Math.max(0, Math.min(initialGames, toSafeInt(s.losses, 0)));
-                const initialHighscore = Math.max(0, Math.min(MAX_SCORE, toSafeInt(s.highscore, 0)));
+                const scoreHistoryHighscore = await getBestSubmittedScoreForUid(verifiedUid);
+                const initialHighscore = Math.max(scoreHistoryHighscore, Math.max(0, Math.min(MAX_SCORE, toSafeInt(s.highscore, 0))));
                 const initialTotalScoreSum = Math.max(0, Math.min(toSafeInt(s.totalScoreSum, 0), initialGames * MAX_SCORE));
 
                 user = new UserProfile({
@@ -5390,6 +5432,7 @@ io.on('connection', (socket) => {
 
             const newScore = new Score({
                 playerId: finalUid,
+                uid: finalUid,
                 playerName: finalName,
                 score: submittedScore,
                 mode: finalMode,
@@ -5399,6 +5442,19 @@ io.on('connection', (socket) => {
 
             await newScore.save();
             console.log(`✅ USPESAN UPIS: ${finalName} (UID: ${finalUid}) -> ${submittedScore} (${newScore.mode})`);
+
+            const profileForRecord = await UserProfile.findOne({ firebaseUid: finalUid });
+            if (profileForRecord) {
+                profileForRecord.playerName = finalName;
+                if (finalPhoto) profileForRecord.photoUrl = finalPhoto;
+                if (submittedScore > Math.max(0, toSafeInt(profileForRecord.highscore, 0))) {
+                    profileForRecord.highscore = submittedScore;
+                    await profileForRecord.save();
+                    emitProfileSync(socket, profileForRecord);
+                } else if (profileForRecord.isModified()) {
+                    await profileForRecord.save();
+                }
+            }
 
             const rewardSession = {
                 uid: finalUid,

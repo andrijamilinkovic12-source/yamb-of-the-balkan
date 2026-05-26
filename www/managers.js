@@ -63,7 +63,7 @@ class StatsManager {
             }
 
             if (s) {
-                if (s.highScore && !s.highscore) s.highscore = s.highScore;
+                if (s.highScore) s.highscore = Math.max(Number(s.highscore) || 0, Number(s.highScore) || 0);
                 if (s.totalGames && !s.games) s.games = s.totalGames;
             }
             return s;
