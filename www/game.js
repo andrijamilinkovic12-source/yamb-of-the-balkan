@@ -2934,6 +2934,11 @@ class YambApp {
     }
     
     async quitToMenu() { 
+        if (this.onlineGameOverDelayActive) {
+            this.finishOnlineFinalBoardDelay();
+            return;
+        }
+
         const confirmKey = this.isSpectator ? 'alert_spectate_quit_confirm' : 'alert_quit_confirm';
         if (await this.modal.confirm(gt(confirmKey))) { 
             if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
@@ -4754,7 +4759,7 @@ class YambApp {
         let gameOver = true;
         this.allScores.forEach(s => { KOLONE.forEach(c => { REDOVI_IGRA.forEach(r => { if (s[c][r] === null) gameOver = false; }); }); });
         if (gameOver) {
-            if (this.onlineMode && !this.isSpectator) {
+            if (!this.isSpectator) {
                 this.beginOnlineFinalBoardDelay();
                 return;
             }
@@ -4993,7 +4998,7 @@ class YambApp {
         if (this.onlineGameOverFinishInProgress) return;
 
         this.onlineGameOverFinishInProgress = true;
-        const onlineResult = this.lastOnlineGameResult;
+        const onlineResult = this.onlineMode ? this.lastOnlineGameResult : null;
         this.clearOnlineGameOverDelay();
 
         try {
