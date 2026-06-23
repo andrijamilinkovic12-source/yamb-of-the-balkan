@@ -2935,7 +2935,6 @@ class YambApp {
     
     async quitToMenu() { 
         if (this.onlineGameOverDelayActive) {
-            this.finishOnlineFinalBoardDelay();
             return;
         }
 
@@ -4893,10 +4892,22 @@ class YambApp {
         const overlay = document.getElementById('online-final-hold-overlay');
         if (!overlay) return;
 
+        const remaining = Math.max(0, secondsLeft);
         const countdownEl = overlay.querySelector('[data-role="online-final-countdown"]');
-        const template = gt('online_final_hold_countdown') || 'Rezultati za {0}...';
+        const nextBtn = overlay.querySelector('.online-final-hold-next');
+
         if (countdownEl) {
-            countdownEl.innerText = template.replace('{0}', String(Math.max(0, secondsLeft)));
+            if (remaining > 0) {
+                const template = gt('online_final_hold_countdown') || 'Dalje za {0}...';
+                countdownEl.innerText = template.replace('{0}', String(remaining));
+            } else {
+                countdownEl.innerText = gt('online_final_hold_ready') || 'Pritisni Dalje kada završiš pregled.';
+            }
+        }
+
+        if (nextBtn) {
+            nextBtn.disabled = remaining > 0;
+            nextBtn.classList.toggle('is-ready', remaining <= 0);
         }
     }
 
@@ -4970,12 +4981,13 @@ class YambApp {
                 <strong>${this.escapeHtml(gt('online_final_hold_title') || 'Kraj partije')}</strong>
                 <span data-role="online-final-countdown"></span>
             </div>
-            <button type="button" class="online-final-hold-next">${this.escapeHtml(gt('online_final_hold_next') || 'Dalje')}</button>
+            <button type="button" class="online-final-hold-next" disabled>${this.escapeHtml(gt('online_final_hold_next') || 'Dalje')}</button>
         `;
 
         const nextBtn = overlay.querySelector('.online-final-hold-next');
         if (nextBtn) {
             nextBtn.addEventListener('click', () => {
+                if (nextBtn.disabled) return;
                 this.finishOnlineFinalBoardDelay();
             });
         }
@@ -4985,12 +4997,17 @@ class YambApp {
         const tick = () => {
             const secondsLeft = Math.ceil(Math.max(0, this.onlineGameOverDelayDeadline - Date.now()) / 1000);
             this.updateOnlineGameOverDelayOverlay(secondsLeft);
+            if (secondsLeft <= 0 && this.onlineGameOverCountdownTimer) {
+                clearInterval(this.onlineGameOverCountdownTimer);
+                this.onlineGameOverCountdownTimer = null;
+            }
         };
         tick();
 
         this.onlineGameOverCountdownTimer = setInterval(tick, 250);
         this.onlineGameOverDelayTimer = setTimeout(() => {
-            this.finishOnlineFinalBoardDelay();
+            this.onlineGameOverDelayDeadline = Date.now();
+            tick();
         }, delayMs);
     }
 
