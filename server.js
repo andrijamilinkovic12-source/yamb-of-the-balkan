@@ -373,7 +373,8 @@ const PushTokenSchema = new mongoose.Schema({
     platform: { type: String, default: 'unknown' },
     appId: { type: String, default: 'com.yamb.balkan' },
     categories: {
-        tournament: { type: Boolean, default: true }
+        tournament: { type: Boolean, default: true },
+        records: { type: Boolean, default: true }
     },
     enabled: { type: Boolean, default: true },
     createdAt: { type: Number, default: Date.now },
@@ -450,6 +451,7 @@ const PUSH_TOKEN_STALE_MS = Math.max(
     Math.min(365 * 24 * 60 * 60 * 1000, PUSH_TOKEN_STALE_DAYS * 24 * 60 * 60 * 1000)
 );
 const PUSH_NOTIFICATION_CHANNEL_ID = 'tournament_notifications';
+const LEADERBOARD_RECORD_PERIODS = ['weekly', 'monthly', 'all_time'];
 const ADMOB_REWARD_KEYS_URL = process.env.ADMOB_REWARD_KEYS_URL || 'https://www.gstatic.com/admob/reward/verifier-keys.json';
 const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
 const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '20000', 10)));
@@ -484,7 +486,8 @@ function sanitizePushPlatform(platform) {
 
 function normalizePushCategories(categories = {}) {
     return {
-        tournament: categories.tournament !== false
+        tournament: categories.tournament !== false,
+        records: categories.records !== false
     };
 }
 
@@ -654,6 +657,140 @@ async function sendPushToUids(uids, baseMessage = {}) {
         console.error('Greška pri slanju push notifikacije:', err);
         return { ok: false, reason: 'push_send_failed' };
     }
+}
+
+async function getPushEnabledUids(category = 'records') {
+    if (!MONGO_URI) return [];
+
+    const query = {
+        enabled: true,
+        lastSeenAt: { $gte: Date.now() - PUSH_TOKEN_STALE_MS }
+    };
+    query[`categories.${category}`] = { $ne: false };
+
+    return PushToken.distinct('uid', query);
+}
+
+function getLeaderboardPeriodLabel(period) {
+    if (period === 'weekly') return 'Nedeljni';
+    if (period === 'monthly') return 'Mesečni';
+    return 'Rekord svih vremena';
+}
+
+function getLeaderboardRecordTag(period) {
+    if (period === 'weekly') return 'nedeljni rekord';
+    if (period === 'monthly') return 'mesečni rekord';
+    return 'rekord svih vremena';
+}
+
+function getLeaderboardRecordMatchFilter(period) {
+    const matchFilter = {
+        $or: [
+            { playerId: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } },
+            { uid: { $type: 'string', $not: /guest/i, $regex: /.{20,}/ } }
+        ]
+    };
+
+    const periodStart = getLeaderboardPeriodStart(period);
+    if (periodStart) matchFilter.date = { $gte: periodStart };
+
+    return matchFilter;
+}
+
+async function getLeaderboardRecordSnapshot(period) {
+    if (!MONGO_URI) return null;
+
+    const records = await Score.aggregate([
+        { $match: getLeaderboardRecordMatchFilter(period) },
+        { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
+        { $sort: { numScore: -1, date: 1 } },
+        {
+            $group: {
+                _id: { $ifNull: ["$playerId", "$uid"] },
+                bestEntry: { $first: "$$ROOT" }
+            }
+        },
+        { $replaceRoot: { newRoot: "$bestEntry" } },
+        { $sort: { numScore: -1, date: 1 } },
+        { $limit: 1 }
+    ]);
+
+    const top = records[0];
+    if (!top) return null;
+
+    return {
+        period,
+        score: Math.max(0, toSafeInt(top.score, 0)),
+        uid: String(top.playerId || top.uid || ''),
+        playerName: String(top.playerName || 'Nepoznat Igrač')
+    };
+}
+
+async function captureLeaderboardRecordSnapshots() {
+    const snapshots = {};
+    await Promise.all(LEADERBOARD_RECORD_PERIODS.map(async period => {
+        snapshots[period] = await getLeaderboardRecordSnapshot(period);
+    }));
+    return snapshots;
+}
+
+function formatRecordScore(score) {
+    try {
+        return Number(score || 0).toLocaleString('sr-RS');
+    } catch (_err) {
+        return String(score || 0);
+    }
+}
+
+async function notifyBrokenLeaderboardRecords(previousRecords, newEntry) {
+    if (!newEntry || !newEntry.uid) return { ok: false, reason: 'missing_entry' };
+
+    const newScore = Math.max(0, toSafeInt(newEntry.score, 0));
+    if (newScore <= 0) return { ok: false, reason: 'invalid_score' };
+
+    const changedPeriods = LEADERBOARD_RECORD_PERIODS.filter(period => {
+        const previous = previousRecords ? previousRecords[period] : null;
+        return previous && newScore > Math.max(0, toSafeInt(previous.score, 0));
+    });
+
+    if (changedPeriods.length === 0) return { ok: true, sent: 0 };
+
+    const uids = await getPushEnabledUids('records');
+    if (uids.length === 0) return { ok: true, sent: 0 };
+
+    const playerName = sanitizeTournamentName(newEntry.playerName || 'Igrač');
+    const jobs = changedPeriods.map(period => {
+        const title = `${getLeaderboardPeriodLabel(period)} rekord je oboren`;
+        const body = `${playerName} sada drži ${getLeaderboardRecordTag(period)}: ${formatRecordScore(newScore)} poena.`;
+
+        return sendPushToUids(uids, {
+            category: 'records',
+            scope: 'records',
+            type: 'record_broken',
+            tag: `record_broken_${period}`,
+            title,
+            body,
+            data: {
+                period,
+                score: newScore,
+                playerName,
+                uid: newEntry.uid || ''
+            }
+        });
+    });
+
+    const results = await Promise.all(jobs);
+    return {
+        ok: true,
+        periods: changedPeriods,
+        sent: results.reduce((sum, item) => sum + Math.max(0, toSafeInt(item?.sent, 0)), 0)
+    };
+}
+
+function queueRecordPush(promise, label) {
+    Promise.resolve(promise).catch(err => {
+        console.error(`Greška pri rekord push notifikaciji (${label}):`, err);
+    });
 }
 
 function normalizeCarriedGameDuration(value) {
@@ -5880,6 +6017,8 @@ io.on('connection', (socket) => {
             let finalPhoto = (socket.photoUrl || data?.photoUrl || '').toString().substring(0, 500);
             let finalMode = (data?.mode || 'Solo').toString().trim().substring(0, 24) || 'Solo';
 
+            const leaderboardRecordSnapshots = await captureLeaderboardRecordSnapshots();
+
             const newScore = new Score({
                 playerId: finalUid,
                 uid: finalUid,
@@ -5892,6 +6031,14 @@ io.on('connection', (socket) => {
 
             await newScore.save();
             console.log(`✅ USPESAN UPIS: ${finalName} (UID: ${finalUid}) -> ${submittedScore} (${newScore.mode})`);
+            queueRecordPush(
+                notifyBrokenLeaderboardRecords(leaderboardRecordSnapshots, {
+                    uid: finalUid,
+                    playerName: finalName,
+                    score: submittedScore
+                }),
+                'leaderboard_record'
+            );
 
             const profileForRecord = await UserProfile.findOne({ firebaseUid: finalUid });
             if (profileForRecord) {

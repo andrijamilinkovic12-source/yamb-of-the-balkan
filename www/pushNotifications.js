@@ -108,7 +108,7 @@
         const payload = {
             token,
             platform: getPlatform(),
-            categories: { tournament: true },
+            categories: { tournament: true, records: true },
             appId: 'com.yamb.balkan'
         };
 
@@ -144,6 +144,35 @@
         }
     }
 
+    function openRecordsFromNotification(data = {}) {
+        const open = () => {
+            const app = window.app;
+            if (!app) return;
+
+            if (typeof app.showHighscoresScreen === 'function') {
+                app.showHighscoresScreen();
+            } else if (typeof app.navigateTo === 'function') {
+                app.navigateTo('highscores-screen');
+            }
+
+            const period = ['weekly', 'monthly', 'all_time'].includes(data.period)
+                ? data.period
+                : 'weekly';
+
+            setTimeout(() => {
+                if (app.topListManager && typeof app.topListManager.filterGlobal === 'function') {
+                    app.topListManager.filterGlobal(period);
+                }
+            }, 300);
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', open, { once: true });
+        } else {
+            setTimeout(open, 150);
+        }
+    }
+
     async function ensureListeners(app) {
         if (listenersReady) return;
         const plugin = getPushPlugin();
@@ -167,6 +196,8 @@
             const type = String(data.type || '');
             if (type.startsWith('tournament_') || data.scope === 'tournament') {
                 openTournamentFromNotification(data);
+            } else if (type.startsWith('record_') || data.scope === 'records') {
+                openRecordsFromNotification(data);
             }
         });
 
@@ -235,6 +266,7 @@
     window.yambPushNotifications = {
         ensureRegistered,
         unregisterCurrentDevice,
-        openTournamentFromNotification
+        openTournamentFromNotification,
+        openRecordsFromNotification
     };
 })();
