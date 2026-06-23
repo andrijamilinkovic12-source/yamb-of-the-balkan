@@ -5,6 +5,7 @@
     <string name="package_name">com.yamb.balkan</string>
     <string name="custom_url_scheme">com.yamb.balkan</string>
     <string name="attribution_label">Yamb Game Audio</string>
+    <string name="default_notification_channel_id">tournament_notifications</string>
     
     <string name="default_web_client_id">774107011856-m7msqr9afkkigsucnn2fmf4v3ggndier.apps.googleusercontent.com</string>
 </resources>

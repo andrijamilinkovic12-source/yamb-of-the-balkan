@@ -306,6 +306,11 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
         playerId: window.app.playerId
     });
 
+    if (window.yambPushNotifications && typeof window.yambPushNotifications.ensureRegistered === 'function') {
+        window.yambPushNotifications.ensureRegistered(window.app)
+            .catch(error => console.warn("Push registracija nije uspela:", error));
+    }
+
     if (!syncWait) return true;
 
     const cloudStats = await syncWait;
@@ -422,6 +427,10 @@ async function odjaviSe() {
             } catch (syncErr) {
                 console.warn("Cloud sync pre odjave nije potvrđen:", syncErr);
             }
+        }
+
+        if (window.yambPushNotifications && typeof window.yambPushNotifications.unregisterCurrentDevice === 'function') {
+            await window.yambPushNotifications.unregisterCurrentDevice(window.app);
         }
 
         await Capacitor.Plugins.FirebaseAuthentication.signOut();

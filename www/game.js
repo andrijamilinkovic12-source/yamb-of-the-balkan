@@ -2194,6 +2194,11 @@ class YambApp {
             playerId: this.playerId
         });
 
+        if (authResult && authResult.ok && window.yambPushNotifications && typeof window.yambPushNotifications.ensureRegistered === 'function') {
+            window.yambPushNotifications.ensureRegistered(this)
+                .catch(err => console.warn("Push registracija nije uspela:", err));
+        }
+
         if (syncWait) {
             const cloudStats = await syncWait;
             return {
