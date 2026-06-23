@@ -109,10 +109,16 @@ class YambApp {
         this.myOnlineIndex = 0;
         this.onlineDuelType = null;
         this.lastOnlineGameResult = null;
+        this.onlineGameOverDelayMs = 3000;
+        this.onlineGameOverDelayActive = false;
+        this.onlineGameOverDelayTimer = null;
+        this.onlineGameOverCountdownTimer = null;
+        this.onlineGameOverDelayDeadline = 0;
+        this.onlineGameOverFinishInProgress = false;
         this.onlineRecoveryPromptOpen = false;
         this.localRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
-        this.isAnimating = false; 
+        this.isAnimating = false;
         this.currentHostingRoomId = null;
         this.waitingHofPeriod = 'weekly';
         this.waitingHofInterval = null;
@@ -2388,11 +2394,12 @@ class YambApp {
         this.checkSavedGame();
     }
     
-    navigateTo(screenId) { 
-        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active')); 
-        const target = document.getElementById(screenId); 
-        if (target) target.classList.add('active'); 
-        if(screenId === 'main-menu' && !this.inviteDetected) this.checkSavedGame(); 
+    navigateTo(screenId) {
+        if (screenId !== 'game-scene') this.clearOnlineGameOverDelay();
+        document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+        const target = document.getElementById(screenId);
+        if (target) target.classList.add('active');
+        if(screenId === 'main-menu' && !this.inviteDetected) this.checkSavedGame();
         if (screenId === 'highscores-screen') { this.switchHsTab('global'); }
     }
 
@@ -2834,6 +2841,8 @@ class YambApp {
     }
 
     async showMainMenu() { 
+        this.clearOnlineGameOverDelay();
+        this.onlineGameOverFinishInProgress = false;
         const wasSpectator = this.isSpectator;
         const hadLiveGameContext = !wasSpectator && (this.gameActive || this.onlineMode || !!this.roomId);
         const wasLocalLiveGame = hadLiveGameContext && this.gameActive && !this.onlineMode;
@@ -3726,7 +3735,7 @@ class YambApp {
         this.socket.off('online_game_finished');
         this.socket.on('online_game_finished', async (data = {}) => {
             if (this.isSpectator) return;
-            if (!this.onlineMode || !this.gameActive) return;
+            if (!this.onlineMode || (!this.gameActive && !this.onlineGameOverDelayActive)) return;
             if (data.roomId && this.roomId && data.roomId !== this.roomId) return;
 
             if (Array.isArray(data.players) && data.players.length > 0) {
@@ -3740,7 +3749,7 @@ class YambApp {
             if (Array.isArray(data.allScores)) this.allScores = data.allScores;
             if (data.currentPlayerIdx !== undefined) this.currentPlayerIdx = data.currentPlayerIdx;
 
-            await this.handleGameOver({ onlineResult: data });
+            this.beginOnlineFinalBoardDelay(data);
         });
 
         this.socket.on('remote_move', (data) => { 
@@ -4229,6 +4238,9 @@ class YambApp {
     }
     
     startGame(options = {}) {
+        this.clearOnlineGameOverDelay();
+        this.onlineGameOverFinishInProgress = false;
+
         if (this.socket && this.socket.connected && !this.isSpectator && this.playerId) {
             this.socket.emit('game_session_start', {
                 roomId: this.roomId,
@@ -4738,14 +4750,21 @@ class YambApp {
         return true; 
     }
     
-    switchPlayer() { 
-        let gameOver = true; 
-        this.allScores.forEach(s => { KOLONE.forEach(c => { REDOVI_IGRA.forEach(r => { if (s[c][r] === null) gameOver = false; }); }); }); 
-        if (gameOver) { this.handleGameOver(); return; } 
-        
-        this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length; 
-        this.resetTurnLogic(); 
-        this.autoSaveGame(); 
+    switchPlayer() {
+        let gameOver = true;
+        this.allScores.forEach(s => { KOLONE.forEach(c => { REDOVI_IGRA.forEach(r => { if (s[c][r] === null) gameOver = false; }); }); });
+        if (gameOver) {
+            if (this.onlineMode && !this.isSpectator) {
+                this.beginOnlineFinalBoardDelay();
+                return;
+            }
+            this.handleGameOver();
+            return;
+        }
+
+        this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.length;
+        this.resetTurnLogic();
+        this.autoSaveGame();
         this.startClientTimer();
     }
     
@@ -4848,6 +4867,142 @@ class YambApp {
         });
     }
 
+    clearOnlineGameOverDelay() {
+        if (this.onlineGameOverDelayTimer) {
+            clearTimeout(this.onlineGameOverDelayTimer);
+            this.onlineGameOverDelayTimer = null;
+        }
+        if (this.onlineGameOverCountdownTimer) {
+            clearInterval(this.onlineGameOverCountdownTimer);
+            this.onlineGameOverCountdownTimer = null;
+        }
+
+        const overlay = document.getElementById('online-final-hold-overlay');
+        if (overlay) overlay.remove();
+
+        this.onlineGameOverDelayActive = false;
+        this.onlineGameOverDelayDeadline = 0;
+    }
+
+    updateOnlineGameOverDelayOverlay(secondsLeft) {
+        const overlay = document.getElementById('online-final-hold-overlay');
+        if (!overlay) return;
+
+        const countdownEl = overlay.querySelector('[data-role="online-final-countdown"]');
+        const template = gt('online_final_hold_countdown') || 'Rezultati za {0}...';
+        if (countdownEl) {
+            countdownEl.innerText = template.replace('{0}', String(Math.max(0, secondsLeft)));
+        }
+    }
+
+    beginOnlineFinalBoardDelay(onlineResult = null) {
+        if (this.isSpectator || this.onlineGameOverFinishInProgress) return;
+
+        if (onlineResult && typeof onlineResult === 'object') {
+            this.onlineDuelType = this.inferOnlineDuelType(onlineResult.roomId || this.roomId, onlineResult);
+            this.lastOnlineGameResult = onlineResult;
+            if (Array.isArray(onlineResult.players) && onlineResult.players.length > 0) {
+                this.players = onlineResult.players.map(p => {
+                    if (typeof p === 'object' && p !== null) return p.name || "Igrač";
+                    return p || "Igrač";
+                });
+            }
+            if (Array.isArray(onlineResult.allScores)) this.allScores = onlineResult.allScores;
+            if (onlineResult.currentPlayerIdx !== undefined) this.currentPlayerIdx = onlineResult.currentPlayerIdx;
+        }
+
+        this.updateTableVisuals();
+        localStorage.removeItem('yamb_active_online_room');
+
+        if (this.turnTimerInterval) {
+            clearInterval(this.turnTimerInterval);
+            this.turnTimerInterval = null;
+        }
+
+        const timerDisplay = document.getElementById('turn-timer-display');
+        if (timerDisplay) {
+            timerDisplay.style.display = 'none';
+            timerDisplay.style.animation = 'none';
+        }
+
+        const btnBacaj = document.getElementById('btn-bacaj');
+        const btnNajava = document.getElementById('btn-najava');
+        if (btnBacaj) {
+            btnBacaj.disabled = true;
+            btnBacaj.innerText = gt('game_over') || 'KRAJ IGRE';
+        }
+        if (btnNajava) btnNajava.disabled = true;
+
+        const btnUndo = document.getElementById('btn-undo-move');
+        if (btnUndo) {
+            btnUndo.classList.add('gh-btn-inactive');
+            btnUndo.classList.remove('gh-btn-active');
+        }
+
+        const turnLabel = document.getElementById('lbl-turn');
+        if (turnLabel) turnLabel.innerText = gt('online_final_hold_title') || 'Kraj partije';
+
+        this.lastMoveSnapshot = null;
+        this.gameActive = false;
+
+        if (this.onlineGameOverDelayActive) {
+            const secondsLeft = Math.ceil(Math.max(0, this.onlineGameOverDelayDeadline - Date.now()) / 1000);
+            this.updateOnlineGameOverDelayOverlay(secondsLeft);
+            return;
+        }
+
+        const delayMs = Math.max(2000, parseInt(this.onlineGameOverDelayMs, 10) || 3000);
+        this.onlineGameOverDelayActive = true;
+        this.onlineGameOverDelayDeadline = Date.now() + delayMs;
+
+        const overlay = document.createElement('div');
+        overlay.id = 'online-final-hold-overlay';
+        overlay.className = 'online-final-hold-overlay';
+        overlay.setAttribute('role', 'status');
+        overlay.setAttribute('aria-live', 'polite');
+        overlay.innerHTML = `
+            <div class="online-final-hold-text">
+                <strong>${this.escapeHtml(gt('online_final_hold_title') || 'Kraj partije')}</strong>
+                <span data-role="online-final-countdown"></span>
+            </div>
+            <button type="button" class="online-final-hold-next">${this.escapeHtml(gt('online_final_hold_next') || 'Dalje')}</button>
+        `;
+
+        const nextBtn = overlay.querySelector('.online-final-hold-next');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                this.finishOnlineFinalBoardDelay();
+            });
+        }
+
+        document.body.appendChild(overlay);
+
+        const tick = () => {
+            const secondsLeft = Math.ceil(Math.max(0, this.onlineGameOverDelayDeadline - Date.now()) / 1000);
+            this.updateOnlineGameOverDelayOverlay(secondsLeft);
+        };
+        tick();
+
+        this.onlineGameOverCountdownTimer = setInterval(tick, 250);
+        this.onlineGameOverDelayTimer = setTimeout(() => {
+            this.finishOnlineFinalBoardDelay();
+        }, delayMs);
+    }
+
+    async finishOnlineFinalBoardDelay() {
+        if (this.onlineGameOverFinishInProgress) return;
+
+        this.onlineGameOverFinishInProgress = true;
+        const onlineResult = this.lastOnlineGameResult;
+        this.clearOnlineGameOverDelay();
+
+        try {
+            await this.handleGameOver({ onlineResult, force: true });
+        } finally {
+            this.onlineGameOverFinishInProgress = false;
+        }
+    }
+
     async showTechnicalGameOver(data = {}) {
         localStorage.removeItem('yamb_active_online_room');
         if (this.turnTimerInterval) {
@@ -4900,7 +5055,7 @@ class YambApp {
     async handleGameOver(options = {}) {
         localStorage.removeItem('yamb_active_online_room'); // Obrisano jer je igra gotova
         // ---> DODATO: Blokada duplog Game Over-a (Fiks 1) <---
-        if (!this.gameActive && !this.isSpectator) {
+        if (!this.gameActive && !this.isSpectator && !options.force) {
             console.log("⚠️ Blokirano duplo pokretanje Game Over-a!");
             return;
         }
