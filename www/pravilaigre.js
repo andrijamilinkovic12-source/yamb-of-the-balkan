@@ -77,8 +77,8 @@ const RulesData = {
                 <h4>⚔️ TURNIRI</h4>
                 <ul>
                     <li><strong>Sistem takmičenja:</strong> Nedeljni turnir sa 8 igrača koji se igra na ispadanje (četvrtfinale, polufinale, finale). Svaki duel je na jednu dobijenu partiju.</li>
-                    <li><strong>Prijava:</strong> Kotizacija košta 2500 dukata. Kada se skupi 8 igrača, turnir počinje!</li>
-                    <li><strong>Nagrade:</strong> Pobednik turnira osvaja ogromno povećanje Indeksa Moći, biće zauvek upisan u Dvoranu slavnih, uz bogate nagrade u dukatima!</li>
+                    <li><strong>Prijava:</strong> Kotizacija košta 5500 dukata. Kada se skupi 8 igrača, turnir počinje!</li>
+                    <li><strong>Nagrade:</strong> Pobednik turnira osvaja 44.000 dukata, ogromno povećanje Indeksa Moći i biće zauvek upisan u Dvoranu slavnih.</li>
                 </ul>
                 
                 <h4>🏅 KVARTALNA LIGA</h4>
@@ -226,8 +226,8 @@ const RulesData = {
                 <h4>⚔️ TOURNAMENTS</h4>
                 <ul>
                     <li><strong>System:</strong> An 8-player weekly knockout tournament (Quarter-finals, semi-finals, finals). Single elimination matches.</li>
-                    <li><strong>Entry:</strong> Entry fee is 2500 coins. When 8 players join, the tournament starts!</li>
-                    <li><strong>Rewards:</strong> The winner gets a massive Power Index boost, a Hall of Fame spot, and rich coin rewards!</li>
+                    <li><strong>Entry:</strong> Entry fee is 5500 coins. When 8 players join, the tournament starts!</li>
+                    <li><strong>Rewards:</strong> The winner gets 44,000 coins, a massive Power Index boost, and a Hall of Fame spot.</li>
                 </ul>
                 
                 <h4>🏅 QUARTERLY LEAGUE</h4>

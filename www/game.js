@@ -2063,12 +2063,12 @@ class YambApp {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         this.modal.alert(
-                            gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 20.000 ${dukatIconHtml()}!`,
+                            gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`,
                             gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆"
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 2500 ${dukatIconHtml()}. Više sreće sledeći put!`,
+                            gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`,
                             gt('tourney_finalist_title') || "FINALISTA 🥈"
                         );
                     }

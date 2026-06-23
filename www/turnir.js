@@ -5,6 +5,8 @@ const tt = (key) => {
     return key;
 };
 
+const TOURNEY_ENTRY_FEE = 5500;
+
 const tourneySecurityFallback = {
     escapeHtml: (value) => String(value ?? '').replace(/[&<>"']/g, char => ({
         '&': '&amp;',
@@ -431,7 +433,7 @@ class TournamentManager {
 
                         if (!result.alreadyUnregistered && this.app && this.app.modal) {
                             this.app.modal.alert(
-                                tt('tourney_unregistered_success') || `Uspešno ste se odjavili. Vraćeno Vam je 2500 ${dukatIconHtml()}.`,
+                                tt('tourney_unregistered_success') || `Uspešno ste se odjavili. Vraćeno Vam je ${TOURNEY_ENTRY_FEE} ${dukatIconHtml()}.`,
                                 tt('modal_title_info') || "INFO"
                             );
                         }
@@ -702,7 +704,7 @@ class TournamentManager {
             const labelPrimary = this.pendingRegistration
                 ? (tt('tourney_registering') || 'Prijava u toku...')
                 : (tt('tourney_register_me') || 'PRIJAVI SE');
-            const labelSecondary = this.pendingRegistration ? '' : `2500 ${dukatIconHtml()}`;
+            const labelSecondary = this.pendingRegistration ? '' : `${TOURNEY_ENTRY_FEE} ${dukatIconHtml()}`;
             buttonHtml = `
                 <button class="btn-menu btn-primary tourney-action-button tourney-action-button--register" ${disabledAttr} onclick="app.tournamentManager.registerPlayer()">
                     <span class="tourney-action-icon" aria-hidden="true">${this.pendingRegistration ? '⏳' : '🎟️'}</span>
@@ -746,7 +748,7 @@ class TournamentManager {
             return;
         }
 
-        const fee = 2500;
+        const fee = TOURNEY_ENTRY_FEE;
         let currentBalance = parseInt(localStorage.getItem('yamb_dukati')) || 0;
 
         if (currentBalance < fee) {
