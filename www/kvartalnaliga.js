@@ -402,13 +402,13 @@ class KvartalnaLigaManager {
         if(view === 'league') {
             lMain.style.display = 'flex';
             hMain.style.display = 'none';
-            btnL.className = 'btn-menu btn-primary';
-            btnH.className = 'btn-menu btn-secondary';
+            btnL.className = 'btn-menu btn-primary league-tab-button';
+            btnH.className = 'btn-menu btn-secondary league-tab-button';
         } else {
             lMain.style.display = 'none';
             hMain.style.display = 'flex';
-            btnL.className = 'btn-menu btn-secondary';
-            btnH.className = 'btn-menu btn-primary';
+            btnL.className = 'btn-menu btn-secondary league-tab-button';
+            btnH.className = 'btn-menu btn-primary league-tab-button';
             this.fetchHallOfFame();
         }
     }
