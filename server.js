@@ -5739,6 +5739,64 @@ io.on('connection', (socket) => {
     // ==================================================================
     // TOP LISTA VATRENOG NIZA (MAX FIX + TRENUTNI NIZ)
     // ==================================================================
+    const buildStreakLeaderboardPayload = async (options = {}) => {
+        const offset = Math.max(0, toSafeInt(options.offset, 0));
+        const limit = Math.max(10, Math.min(100, toSafeInt(options.limit, 50)));
+        const requesterUid = String(options.requesterUid || '').trim();
+
+        // Prvo dohvatamo sve koji imaju bilo kakav niz
+        const users = await UserProfile.find({
+            $or: [
+                { maxWinStreak: { $gt: 0 } },
+                { currentWinStreak: { $gt: 0 } }
+            ]
+        }).select('firebaseUid playerName photoUrl maxWinStreak currentWinStreak').lean();
+
+        const rankedPlayers = users.map(p => {
+            const currentWinStreak = Math.max(0, toSafeInt(p.currentWinStreak, 0));
+            const maxWinStreak = Math.max(
+                Math.max(0, toSafeInt(p.maxWinStreak, 0)),
+                currentWinStreak
+            );
+
+            return {
+                uid: p.firebaseUid,
+                name: p.playerName,
+                photoUrl: sanitizeTournamentPhotoUrl(p.photoUrl || ''),
+                maxWinStreak,
+                currentWinStreak
+            };
+        });
+
+        // Sortiramo ih po najvećem ikada ostvarenom nizu, pa po trenutnom nizu kao tie-breaker.
+        rankedPlayers.sort((a, b) => {
+            if (b.maxWinStreak !== a.maxWinStreak) return b.maxWinStreak - a.maxWinStreak;
+            if (b.currentWinStreak !== a.currentWinStreak) return b.currentWinStreak - a.currentWinStreak;
+            return String(a.name || '').localeCompare(String(b.name || ''), 'sr');
+        });
+
+        const rankedWithPositions = rankedPlayers.map((player, idx) => ({
+            ...player,
+            rank: idx + 1,
+            isMe: !!requesterUid && player.uid === requesterUid
+        }));
+        const pagePlayers = rankedWithPositions.slice(offset, offset + limit);
+        const myPlayer = requesterUid
+            ? rankedWithPositions.find(player => player.uid === requesterUid) || null
+            : null;
+
+        return {
+            ok: true,
+            players: pagePlayers,
+            offset,
+            limit,
+            total: rankedWithPositions.length,
+            hasMore: offset + limit < rankedWithPositions.length,
+            myRank: myPlayer ? myPlayer.rank : null,
+            myPlayer
+        };
+    };
+
     socket.on('get_streak_leaderboard', async () => {
         try {
             if (!MONGO_URI) {
@@ -5746,38 +5804,54 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            // Prvo dohvatamo sve koji imaju bilo kakav niz
-            const users = await UserProfile.find({
-                $or: [
-                    { maxWinStreak: { $gt: 0 } },
-                    { currentWinStreak: { $gt: 0 } }
-                ]
-            }).select('firebaseUid playerName photoUrl maxWinStreak currentWinStreak').lean();
-
-            // Sortiramo ih po najvećem ikada ostvarenom nizu (max od maxWinStreak i currentWinStreak)
-            const sortedStreaks = users
-                .sort((a, b) => {
-                    let maxA = Math.max((a.maxWinStreak || 0), (a.currentWinStreak || 0));
-                    let maxB = Math.max((b.maxWinStreak || 0), (b.currentWinStreak || 0));
-                    return maxB - maxA;
-                })
-                .slice(0, 50); // Uzimamo TOP 50
-
-            const dataToSend = sortedStreaks.map(p => {
-                let maxStreak = Math.max((p.maxWinStreak || 0), (p.currentWinStreak || 0));
-                return {
-                    uid: p.firebaseUid,
-                    name: p.playerName,
-                    photoUrl: p.photoUrl || '',
-                    maxWinStreak: maxStreak,
-                    currentWinStreak: p.currentWinStreak || 0
-                };
-            });
-
-            socket.emit('streak_leaderboard_data', dataToSend);
+            const requesterUid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId || '';
+            const payload = await buildStreakLeaderboardPayload({ offset: 0, limit: 50, requesterUid });
+            socket.emit('streak_leaderboard_data', payload.players);
         } catch (err) {
             console.error("Greška pri dohvatanju streak liste:", err);
             socket.emit('streak_leaderboard_data', []);
+        }
+    });
+
+    socket.on('get_streak_leaderboard_page', async (options = {}) => {
+        try {
+            if (!MONGO_URI) {
+                socket.emit('streak_leaderboard_page_data', {
+                    ok: false,
+                    players: [],
+                    offset: 0,
+                    limit: 50,
+                    total: 0,
+                    hasMore: false,
+                    myRank: null,
+                    myPlayer: null
+                });
+                return;
+            }
+
+            const requesterUid = getSocketUid(socket.id) ||
+                socket.verifiedUid ||
+                socket.playerId ||
+                String(options.uid || '').trim();
+            const payload = await buildStreakLeaderboardPayload({
+                offset: options.offset,
+                limit: options.limit,
+                requesterUid
+            });
+
+            socket.emit('streak_leaderboard_page_data', payload);
+        } catch (err) {
+            console.error("Greška pri dohvatanju paginirane streak liste:", err);
+            socket.emit('streak_leaderboard_page_data', {
+                ok: false,
+                players: [],
+                offset: 0,
+                limit: 50,
+                total: 0,
+                hasMore: false,
+                myRank: null,
+                myPlayer: null
+            });
         }
     });
     // ==================================================================

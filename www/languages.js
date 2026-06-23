@@ -651,6 +651,10 @@ const TRANSLATIONS = {
         "streak_no_data": "Još uvek nema podataka. Odigrajte partiju!",
         "streak_current": "Trenutni",
         "streak_broken": "Prekinut niz",
+        "streak_my_rank": "MOJE MESTO",
+        "streak_load_more": "UČITAJ JOŠ",
+        "streak_loading_more": "Učitavam još igrača...",
+        "streak_all_loaded": "Prikazani su svi igrači.",
         
         // --- TIMEOUT, SPECTATOR I KAZNE ---
         "timeout_title": "KRAJ (TIMEOUT)",
@@ -1325,6 +1329,10 @@ const TRANSLATIONS = {
         "streak_no_data": "No data yet. Play a game!",
         "streak_current": "Current",
         "streak_broken": "Streak broken",
+        "streak_my_rank": "MY RANK",
+        "streak_load_more": "LOAD MORE",
+        "streak_loading_more": "Loading more players...",
+        "streak_all_loaded": "All players are shown.",
         
         // --- TIMEOUT, SPECTATOR AND PENALTIES ---
         "timeout_title": "GAME OVER (TIMEOUT)",
