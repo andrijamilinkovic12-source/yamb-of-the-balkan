@@ -5782,6 +5782,50 @@ io.on('connection', (socket) => {
     });
     // ==================================================================
 
+    const buildPowerIndexLeaderboardPayload = async (options = {}) => {
+        const offset = Math.max(0, toSafeInt(options.offset, 0));
+        const limit = Math.max(10, Math.min(100, toSafeInt(options.limit, 50)));
+        const requesterUid = String(options.requesterUid || '').trim();
+
+        const users = await UserProfile.find({ games: { $gt: 0 } }).lean();
+        const rankedPlayers = users.map(user => {
+            const power = Number(sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(user))) || 0;
+
+            return {
+                uid: user.firebaseUid,
+                playerName: user.playerName,
+                photoUrl: sanitizeTournamentPhotoUrl(user.photoUrl || ''),
+                powerIndex: power
+            };
+        });
+
+        rankedPlayers.sort((a, b) => {
+            if (b.powerIndex !== a.powerIndex) return b.powerIndex - a.powerIndex;
+            return String(a.playerName || '').localeCompare(String(b.playerName || ''), 'sr');
+        });
+
+        const rankedWithPositions = rankedPlayers.map((player, idx) => ({
+            ...player,
+            rank: idx + 1,
+            isMe: !!requesterUid && player.uid === requesterUid
+        }));
+        const pagePlayers = rankedWithPositions.slice(offset, offset + limit);
+        const myPlayer = requesterUid
+            ? rankedWithPositions.find(player => player.uid === requesterUid) || null
+            : null;
+
+        return {
+            ok: true,
+            players: pagePlayers,
+            offset,
+            limit,
+            total: rankedWithPositions.length,
+            hasMore: offset + limit < rankedWithPositions.length,
+            myRank: myPlayer ? myPlayer.rank : null,
+            myPlayer
+        };
+    };
+
     socket.on('get_power_index_leaderboard', async () => {
         try {
             if (!MONGO_URI) {
@@ -5789,25 +5833,56 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const users = await UserProfile.find({ games: { $gt: 0 } }).lean();
-
-            const rankedPlayers = users.map(user => {
-                const power = sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(user));
-
-                return {
-                    playerName: user.playerName,
-                    photoUrl: user.photoUrl || '',
-                    powerIndex: power
-                };
-            });
-
-            rankedPlayers.sort((a, b) => b.powerIndex - a.powerIndex);
-            const top50 = rankedPlayers.slice(0, 50);
+            const requesterUid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId || '';
+            const payload = await buildPowerIndexLeaderboardPayload({ offset: 0, limit: 50, requesterUid });
+            const top50 = payload.players;
 
             socket.emit('power_index_data', top50);
         } catch (err) {
             console.error("Greška pri dohvatanju Power Index liste:", err);
             socket.emit('power_index_data', []);
+        }
+    });
+
+    socket.on('get_power_index_leaderboard_page', async (options = {}) => {
+        try {
+            if (!MONGO_URI) {
+                socket.emit('power_index_page_data', {
+                    ok: false,
+                    players: [],
+                    offset: 0,
+                    limit: 50,
+                    total: 0,
+                    hasMore: false,
+                    myRank: null,
+                    myPlayer: null
+                });
+                return;
+            }
+
+            const requesterUid = getSocketUid(socket.id) ||
+                socket.verifiedUid ||
+                socket.playerId ||
+                String(options.uid || '').trim();
+            const payload = await buildPowerIndexLeaderboardPayload({
+                offset: options.offset,
+                limit: options.limit,
+                requesterUid
+            });
+
+            socket.emit('power_index_page_data', payload);
+        } catch (err) {
+            console.error("Greška pri dohvatanju paginirane Power Index liste:", err);
+            socket.emit('power_index_page_data', {
+                ok: false,
+                players: [],
+                offset: 0,
+                limit: 50,
+                total: 0,
+                hasMore: false,
+                myRank: null,
+                myPlayer: null
+            });
         }
     });
 

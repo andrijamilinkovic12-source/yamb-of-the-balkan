@@ -638,6 +638,10 @@ const TRANSLATIONS = {
         "pi_title": "TOP IGRAČI",
         "pi_no_conn": "Nema konekcije sa serverom. Zakačite se na mrežu.",
         "pi_no_data": "Još uvek nema dovoljno podataka na serveru.",
+        "pi_my_rank": "MOJE MESTO",
+        "pi_load_more": "UČITAJ JOŠ",
+        "pi_loading_more": "Učitavam još igrača...",
+        "pi_all_loaded": "Prikazani su svi igrači.",
 
         // --- VATRENI NIZ ---
         "streak_top_title": "🔥 TOP VATRENI NIZ",
@@ -1308,6 +1312,10 @@ const TRANSLATIONS = {
         "pi_title": "TOP PLAYERS",
         "pi_no_conn": "No connection to the server. Please connect to a network.",
         "pi_no_data": "Not enough data on the server yet.",
+        "pi_my_rank": "MY RANK",
+        "pi_load_more": "LOAD MORE",
+        "pi_loading_more": "Loading more players...",
+        "pi_all_loaded": "All players are shown.",
 
         // --- VATRENI NIZ ---
         "streak_top_title": "🔥 TOP WIN STREAK",
