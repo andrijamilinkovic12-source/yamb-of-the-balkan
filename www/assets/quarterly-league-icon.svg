@@ -1,103 +1,72 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="YotB Quarterly League">
   <defs>
-    <linearGradient id="ql-rim" x1="22" y1="12" x2="106" y2="116" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#fff4bc"/>
-      <stop offset=".28" stop-color="#d8ad4f"/>
-      <stop offset=".62" stop-color="#9b681d"/>
-      <stop offset="1" stop-color="#f0cf78"/>
+    <linearGradient id="ql-gold" x1="18" y1="8" x2="110" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff4bd"/>
+      <stop offset=".34" stop-color="#d2a24f"/>
+      <stop offset=".72" stop-color="#75501a"/>
+      <stop offset="1" stop-color="#f1d17a"/>
     </linearGradient>
-    <linearGradient id="ql-rim-soft" x1="34" y1="22" x2="94" y2="106" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#fff8d5"/>
-      <stop offset=".45" stop-color="#c99433"/>
-      <stop offset="1" stop-color="#6d4214"/>
+    <linearGradient id="ql-gold-soft" x1="28" y1="20" x2="100" y2="108" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fff8d8"/>
+      <stop offset=".5" stop-color="#c79638"/>
+      <stop offset="1" stop-color="#5c3812"/>
     </linearGradient>
-    <radialGradient id="ql-enamel" cx="50%" cy="38%" r="72%">
-      <stop offset="0" stop-color="#184335"/>
-      <stop offset=".5" stop-color="#071814"/>
-      <stop offset="1" stop-color="#020605"/>
-    </radialGradient>
-    <linearGradient id="ql-emerald" x1="23" y1="24" x2="105" y2="104" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#9ae780"/>
-      <stop offset=".5" stop-color="#2f9d68"/>
-      <stop offset="1" stop-color="#0d4f3d"/>
+    <linearGradient id="ql-burgundy" x1="22" y1="18" x2="106" y2="112" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6d1e27"/>
+      <stop offset=".52" stop-color="#21070b"/>
+      <stop offset="1" stop-color="#080203"/>
     </linearGradient>
-    <linearGradient id="ql-diamond" x1="36" y1="30" x2="92" y2="98" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#fff3b2"/>
-      <stop offset=".32" stop-color="#d9aa45"/>
-      <stop offset=".72" stop-color="#8b5b18"/>
-      <stop offset="1" stop-color="#f4d681"/>
+    <linearGradient id="ql-banner" x1="15" y1="48" x2="113" y2="84" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#110806"/>
+      <stop offset=".5" stop-color="#5b171d"/>
+      <stop offset="1" stop-color="#160806"/>
     </linearGradient>
-    <linearGradient id="ql-facet" x1="43" y1="40" x2="85" y2="88" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#fff7cf" stop-opacity=".8"/>
-      <stop offset=".55" stop-color="#ffe28c" stop-opacity=".18"/>
-      <stop offset="1" stop-color="#2b1707" stop-opacity=".18"/>
-    </linearGradient>
-    <linearGradient id="ql-word" x1="42" y1="54" x2="86" y2="76" gradientUnits="userSpaceOnUse">
+    <linearGradient id="ql-word" x1="30" y1="48" x2="98" y2="78" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#fff8d1"/>
-      <stop offset=".48" stop-color="#e7bd57"/>
-      <stop offset="1" stop-color="#a4681f"/>
+      <stop offset=".42" stop-color="#ecc861"/>
+      <stop offset="1" stop-color="#a96d22"/>
     </linearGradient>
-    <filter id="ql-shadow" x="-18%" y="-18%" width="136%" height="136%">
-      <feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#000000" flood-opacity=".55"/>
-      <feDropShadow dx="0" dy="0" stdDeviation="1.5" flood-color="#e2b85b" flood-opacity=".35"/>
+    <linearGradient id="ql-platinum" x1="28" y1="18" x2="102" y2="110" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#fffaf0"/>
+      <stop offset=".48" stop-color="#c6c1b6"/>
+      <stop offset="1" stop-color="#6c675f"/>
+    </linearGradient>
+    <filter id="ql-shadow" x="-22%" y="-22%" width="144%" height="144%">
+      <feDropShadow dx="0" dy="7" stdDeviation="6" flood-color="#000000" flood-opacity=".56"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#d2a24f" flood-opacity=".3"/>
     </filter>
-    <filter id="ql-text-shadow" x="-18%" y="-28%" width="136%" height="156%">
-      <feDropShadow dx="0" dy="1.4" stdDeviation="1.1" flood-color="#000000" flood-opacity=".72"/>
+    <filter id="ql-text-shadow" x="-20%" y="-32%" width="140%" height="164%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.4" flood-color="#000000" flood-opacity=".78"/>
     </filter>
   </defs>
 
-  <circle cx="64" cy="64" r="60" fill="#050807" opacity=".94"/>
-  <circle cx="64" cy="64" r="57" fill="url(#ql-enamel)" stroke="url(#ql-rim)" stroke-width="5.5"/>
-  <circle cx="64" cy="64" r="50" fill="none" stroke="url(#ql-rim-soft)" stroke-width="1.6" opacity=".82"/>
-  <circle cx="64" cy="64" r="43" fill="none" stroke="url(#ql-emerald)" stroke-width="2.2" opacity=".78"/>
-  <circle cx="64" cy="64" r="36" fill="none" stroke="#e7c46f" stroke-width=".9" opacity=".38"/>
-
-  <g stroke-linecap="round" opacity=".88">
-    <path d="M64 12v11" stroke="#f7dd8d" stroke-width="4.2"/>
-    <path d="M64 105v11" stroke="#c99433" stroke-width="4.2"/>
-    <path d="M12 64h11" stroke="#f7dd8d" stroke-width="4.2"/>
-    <path d="M105 64h11" stroke="#c99433" stroke-width="4.2"/>
-  </g>
-
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".72">
-    <path d="M30 77C37 91 49 100 64 101" stroke="#d7ad52" stroke-width="2.1"/>
-    <path d="M98 77C91 91 79 100 64 101" stroke="#d7ad52" stroke-width="2.1"/>
-    <path d="M35 82l-6 1.4M42 91l-5.8 3M52 97l-4.2 4.7M93 82l6 1.4M86 91l5.8 3M76 97l4.2 4.7" stroke="#e7c46f" stroke-width="2"/>
-  </g>
-
   <g filter="url(#ql-shadow)">
-    <path d="M64 27 98 64 64 101 30 64Z" fill="url(#ql-diamond)" stroke="#f8dda0" stroke-width="2.4"/>
-    <path d="M64 27 77 64 64 101 51 64Z" fill="url(#ql-facet)"/>
-    <path d="M30 64h68M64 27v74" stroke="#fff2bc" stroke-width="1.1" opacity=".35"/>
-    <path d="M43 48h42M43 80h42" stroke="#3f250d" stroke-width="1.2" opacity=".28"/>
-    <circle cx="48" cy="50" r="4.4" fill="#2b1908" opacity=".55"/>
-    <circle cx="80" cy="50" r="4.4" fill="#2b1908" opacity=".55"/>
-    <circle cx="48" cy="78" r="4.4" fill="#2b1908" opacity=".55"/>
-    <circle cx="80" cy="78" r="4.4" fill="#2b1908" opacity=".55"/>
-  </g>
+    <path d="M21 26C36 16 92 16 107 26V95C92 106 36 106 21 95Z" fill="#070403" opacity=".96"/>
+    <path d="M23 27C38 18 90 18 105 27V94C90 104 38 104 23 94Z" fill="url(#ql-burgundy)" stroke="url(#ql-gold)" stroke-width="4"/>
+    <path d="M31 35C44 29 84 29 97 35V87C84 94 44 94 31 87Z" fill="none" stroke="url(#ql-platinum)" stroke-width="1.4" opacity=".64"/>
 
-  <g filter="url(#ql-shadow)">
-    <path d="M43 54H85C88 54 90 56 90 59V73C90 76 88 78 85 78H43C40 78 38 76 38 73V59C38 56 40 54 43 54Z" fill="#07110e" opacity=".82" stroke="url(#ql-rim-soft)" stroke-width="1.6"/>
-    <path d="M43 56H85" stroke="#ffffff" stroke-width="1" opacity=".16"/>
-  </g>
+    <path d="M33 43H95" stroke="url(#ql-gold)" stroke-width="1.5" stroke-linecap="round" opacity=".9"/>
+    <path d="M39 100H89" stroke="url(#ql-gold)" stroke-width="2.3" stroke-linecap="round" opacity=".82"/>
+    <path d="M47 106H81" stroke="url(#ql-platinum)" stroke-width="1.4" stroke-linecap="round" opacity=".56"/>
 
-  <text x="64" y="71" text-anchor="middle"
-        font-family="Georgia, 'Times New Roman', serif"
-        font-size="24" font-weight="700" letter-spacing="0"
-        fill="url(#ql-word)" stroke="#120904" stroke-width="1"
-        paint-order="stroke" filter="url(#ql-text-shadow)">YotB</text>
+    <path d="M16 56C35 47 93 47 112 56V76C93 67 35 67 16 76Z" fill="url(#ql-banner)" stroke="url(#ql-gold)" stroke-width="2.3" stroke-linejoin="round"/>
+    <path d="M16 56 27 65 16 76Z" fill="#120706" stroke="url(#ql-gold)" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M112 56 101 65 112 76Z" fill="#120706" stroke="url(#ql-gold)" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M24 58C43 52 85 52 104 58" fill="none" stroke="#fff6d0" stroke-width="1" stroke-linecap="round" opacity=".16"/>
 
-  <path d="M47 86H81" stroke="#e7c46f" stroke-width="2.1" stroke-linecap="round" opacity=".72"/>
-  <path d="M53 89H75" stroke="#2f9d68" stroke-width="1.8" stroke-linecap="round" opacity=".76"/>
-
-  <g filter="url(#ql-text-shadow)">
-    <path d="M64 91v7" stroke="#d7ad52" stroke-width="2" stroke-linecap="round" opacity=".78"/>
-    <path d="M51 98C51 95.8 52.8 94 55 94H73C75.2 94 77 95.8 77 98V109C77 111.2 75.2 113 73 113H55C52.8 113 51 111.2 51 109V98Z" fill="#07110e" opacity=".82" stroke="url(#ql-rim-soft)" stroke-width="1.4"/>
-    <path d="M55 96H73" stroke="#ffffff" stroke-width=".8" opacity=".14"/>
-    <text x="64" y="108" text-anchor="middle"
+    <text x="64" y="74" text-anchor="middle"
           font-family="Georgia, 'Times New Roman', serif"
-          font-size="16" font-weight="700" letter-spacing="0"
+          font-size="34" font-weight="700" letter-spacing="0"
+          fill="url(#ql-word)" stroke="#120904" stroke-width="1.1"
+          paint-order="stroke" filter="url(#ql-text-shadow)">YotB</text>
+
+    <text x="64" y="95" text-anchor="middle"
+          font-family="Montserrat, Arial, sans-serif"
+          font-size="17" font-weight="900" letter-spacing="0"
           fill="url(#ql-word)" stroke="#120904" stroke-width=".7"
-          paint-order="stroke">QL</text>
+          paint-order="stroke" filter="url(#ql-text-shadow)">QL</text>
+
+    <path d="M44 83H84" stroke="url(#ql-gold-soft)" stroke-width="1.8" stroke-linecap="round" opacity=".9"/>
+    <path d="M52 88H76" stroke="url(#ql-platinum)" stroke-width="1.1" stroke-linecap="round" opacity=".48"/>
   </g>
 </svg>

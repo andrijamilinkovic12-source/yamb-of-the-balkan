@@ -7,6 +7,64 @@
     --glass-panel: rgba(255, 255, 255, 0.03);
     --glass-border: 1px solid rgba(255, 255, 255, 0.15);
     --glass-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.2);
+    --league-logo-watermark-filter: drop-shadow(0 0 14px rgba(255,214,76,0.36));
+    --league-logo-intro-filter: saturate(1.14) brightness(1.04) contrast(1.04);
+    --league-logo-header-filter: drop-shadow(0 2px 5px rgba(0,0,0,0.48)) drop-shadow(0 0 10px rgba(255,214,111,0.34));
+    --league-logo-aura-filter: drop-shadow(0 0 24px var(--league-intro-glow)) drop-shadow(0 0 46px var(--league-intro-a));
+}
+
+body.light-theme {
+    --league-logo-watermark-filter: sepia(0.08) brightness(1.06) drop-shadow(0 0 14px rgba(168,111,19,0.32));
+    --league-logo-intro-filter: sepia(0.08) saturate(1.05) brightness(1.06) contrast(1.02);
+    --league-logo-header-filter: sepia(0.08) drop-shadow(0 2px 5px rgba(91,55,7,0.34)) drop-shadow(0 0 10px rgba(168,111,19,0.3));
+}
+
+body.medium-theme {
+    --league-logo-watermark-filter: saturate(1.08) brightness(1.04) drop-shadow(0 0 14px rgba(255,171,145,0.3));
+    --league-logo-intro-filter: saturate(1.12) brightness(1.04) contrast(1.02);
+    --league-logo-header-filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)) drop-shadow(0 0 10px rgba(255,204,188,0.34));
+}
+
+body.winter-theme {
+    --league-logo-watermark-filter: saturate(0.8) brightness(1.1) drop-shadow(0 0 15px rgba(129,212,250,0.38));
+    --league-logo-intro-filter: saturate(0.86) brightness(1.08) contrast(1.04);
+    --league-logo-header-filter: drop-shadow(0 2px 5px rgba(0,18,38,0.48)) drop-shadow(0 0 11px rgba(129,212,250,0.42));
+}
+
+body.neon-theme {
+    --league-logo-watermark-filter: saturate(1.25) brightness(1.08) drop-shadow(0 0 12px rgba(0,255,204,0.36)) drop-shadow(0 0 18px rgba(255,0,255,0.2));
+    --league-logo-intro-filter: saturate(1.28) brightness(1.06) contrast(1.08);
+    --league-logo-header-filter: drop-shadow(0 2px 5px rgba(0,0,0,0.55)) drop-shadow(0 0 10px rgba(0,255,204,0.42)) drop-shadow(0 0 14px rgba(255,0,255,0.2));
+}
+
+body.amethyst-theme {
+    --league-logo-watermark-filter: saturate(1.1) brightness(1.05) drop-shadow(0 0 14px rgba(190,130,255,0.34));
+    --league-logo-intro-filter: saturate(1.16) brightness(1.05) contrast(1.03);
+    --league-logo-header-filter: drop-shadow(0 2px 5px rgba(0,0,0,0.52)) drop-shadow(0 0 11px rgba(190,130,255,0.38));
+}
+
+body.easter-theme {
+    --league-logo-watermark-filter: saturate(0.92) brightness(1.12) drop-shadow(0 0 13px rgba(255,182,193,0.36));
+    --league-logo-intro-filter: saturate(0.95) brightness(1.1) contrast(0.98);
+    --league-logo-header-filter: drop-shadow(0 2px 5px rgba(112,70,116,0.34)) drop-shadow(0 0 10px rgba(255,182,193,0.36));
+}
+
+body.desert-theme {
+    --league-logo-watermark-filter: sepia(0.16) saturate(0.9) brightness(1.05) drop-shadow(0 0 14px rgba(158,123,74,0.38));
+    --league-logo-intro-filter: sepia(0.16) saturate(0.92) brightness(1.06) contrast(1.02);
+    --league-logo-header-filter: sepia(0.16) drop-shadow(0 2px 5px rgba(64,43,19,0.42)) drop-shadow(0 0 10px rgba(158,123,74,0.38));
+}
+
+body.moon-theme {
+    --league-logo-watermark-filter: grayscale(0.18) saturate(0.82) brightness(1.14) drop-shadow(0 0 15px rgba(211,226,255,0.42));
+    --league-logo-intro-filter: grayscale(0.14) saturate(0.86) brightness(1.12) contrast(1.02);
+    --league-logo-header-filter: grayscale(0.14) drop-shadow(0 2px 5px rgba(8,14,24,0.48)) drop-shadow(0 0 11px rgba(211,226,255,0.42));
+}
+
+body.severna-theme {
+    --league-logo-watermark-filter: saturate(1.08) brightness(1.07) drop-shadow(0 0 13px rgba(37,216,209,0.32)) drop-shadow(0 0 15px rgba(246,199,107,0.24));
+    --league-logo-intro-filter: saturate(1.12) brightness(1.06) contrast(1.04);
+    --league-logo-header-filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)) drop-shadow(0 0 10px rgba(37,216,209,0.34)) drop-shadow(0 0 12px rgba(246,199,107,0.22));
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -310,10 +368,10 @@ body {
 }
 
 .league-intro {
-    --league-intro-a: rgba(255, 215, 0, 0.3);
-    --league-intro-b: rgba(102, 187, 106, 0.2);
+    --league-intro-a: rgba(255, 214, 111, 0.3);
+    --league-intro-b: rgba(111, 24, 34, 0.24);
     --league-intro-text: #fff8c9;
-    --league-intro-glow: rgba(102, 187, 106, 0.76);
+    --league-intro-glow: rgba(255, 214, 111, 0.78);
     position: fixed;
     inset: 0;
     z-index: 999998;
@@ -366,7 +424,7 @@ body {
     place-items: center;
     border-radius: 50%;
     background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 60%);
-    filter: drop-shadow(0 0 24px var(--league-intro-glow)) drop-shadow(0 0 46px var(--league-intro-a));
+    filter: var(--league-logo-aura-filter);
     animation: leagueWatermarkReveal 4.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
@@ -374,7 +432,7 @@ body {
     width: 208px;
     height: 208px;
     object-fit: contain;
-    filter: saturate(1.14) brightness(1.04) contrast(1.04);
+    filter: var(--league-logo-intro-filter);
 }
 
 .league-intro-title {
@@ -409,10 +467,10 @@ body {
 }
 
 .league-intro.theme-dark {
-    --league-intro-a: rgba(255, 215, 0, 0.28);
-    --league-intro-b: rgba(102, 187, 106, 0.22);
+    --league-intro-a: rgba(255, 214, 111, 0.3);
+    --league-intro-b: rgba(111, 24, 34, 0.25);
     --league-intro-text: #fff8c9;
-    --league-intro-glow: rgba(102, 187, 106, 0.78);
+    --league-intro-glow: rgba(255, 214, 111, 0.82);
 }
 
 .league-intro.theme-light {
@@ -2066,7 +2124,7 @@ body {
     flex: 0 0 38px;
     display: block;
     object-fit: contain;
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.48)) drop-shadow(0 0 10px rgba(255,214,111,0.34));
+    filter: var(--league-logo-header-filter);
     pointer-events: none;
 }
 #league-modal-overlay .modal-box > div:first-child h2 {
