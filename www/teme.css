@@ -129,6 +129,34 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .grid-cell { background: rgba(236, 255, 207, 0.24); border: 1px solid rgba(31, 93, 36, 0.13); color: #4f6948; box-shadow: inset 1px 1px 4px rgba(24,73,25,0.07), inset -1px -1px 0 rgba(249,255,229,0.42); }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .col-header, body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .row-header { background: linear-gradient(to bottom, #d2ec9b, #71a449); box-shadow: 0 2px 5px rgba(24,73,25,0.14); border-bottom: 1px solid rgba(31, 93, 36, 0.28); color: #173315; text-shadow: 0 1px 0 rgba(249,255,229,0.58); }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .modal-box, body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .card { background: linear-gradient(145deg, #e6f8cf, #86b95c) !important; border: 1px solid rgba(31,93,36,0.34) !important; box-shadow: 0 14px 0 #4d7f31, 0 30px 60px rgba(24,73,25,0.20), inset 0 1px 0 rgba(249,255,229,0.72) !important; color: var(--text-filled); }
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .custom-modal,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .custom-toast {
+    background:
+        linear-gradient(145deg, rgba(246, 255, 224, 0.94), rgba(174, 215, 121, 0.86)),
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,0.70), transparent 46%) !important;
+    border-color: rgba(31, 93, 36, 0.44) !important;
+    color: #10230e !important;
+    box-shadow:
+        0 18px 42px rgba(24,73,25,0.24),
+        0 0 28px rgba(231,255,189,0.24),
+        inset 0 1px 0 rgba(255,255,245,0.88),
+        inset 0 -1px 0 rgba(31,93,36,0.10) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .cm-title,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .toast-title {
+    color: #1f5d24 !important;
+    text-shadow: 0 1px 0 rgba(255,255,245,0.74), 0 0 12px rgba(47,125,50,0.14);
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .cm-msg,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .toast-msg {
+    color: #173315 !important;
+    text-shadow: 0 1px 0 rgba(255,255,245,0.56);
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .cm-close {
+    background: rgba(255,255,245,0.50);
+    border-color: rgba(31,93,36,0.28);
+    color: #173315;
+}
 
 /* --- TEMA 2: SVETLO ZLATO V3.0 (PREMIUM CHAMPAGNE GOLD) --- */
 body.light-theme {
@@ -208,6 +236,34 @@ body.light-theme .col-header, body.light-theme .row-header { background: linear-
 body.light-theme .row-header.sum, body.light-theme .cell-sum { background: linear-gradient(to bottom, #f7df9c, #c98d2c) !important; border-top: 1px solid rgba(122,75,8,0.34) !important; border-bottom: 1px solid rgba(122,75,8,0.34) !important; color: #3a2608 !important; box-shadow: inset 1px 1px 4px rgba(91,55,7,0.10) !important; }
 body.light-theme .score-btn.filled { color: #1f1608 !important; text-shadow: 0 1px 0 rgba(255,248,224,0.72), 0 0 10px rgba(168,111,19,0.26); background: radial-gradient(circle, rgba(168, 111, 19, 0.13) 0%, transparent 70%); font-weight: 900; }
 body.light-theme .modal-box, body.light-theme .card { background: linear-gradient(145deg, #f8e8bc, #d7ad59) !important; border: 1px solid rgba(122,75,8,0.34) !important; box-shadow: 0 14px 0 #9d6b1a, 0 30px 60px rgba(91,55,7,0.20), inset 0 1px 0 rgba(255,248,224,0.72) !important; color: var(--text-filled); }
+body.light-theme .custom-modal,
+body.light-theme .custom-toast {
+    background:
+        linear-gradient(145deg, rgba(255, 245, 211, 0.95), rgba(224, 179, 88, 0.86)),
+        radial-gradient(circle at 18% 0%, rgba(255,255,255,0.68), transparent 46%) !important;
+    border-color: rgba(122,75,8,0.44) !important;
+    color: #1f1608 !important;
+    box-shadow:
+        0 18px 42px rgba(91,55,7,0.24),
+        0 0 28px rgba(255,232,163,0.26),
+        inset 0 1px 0 rgba(255,250,232,0.90),
+        inset 0 -1px 0 rgba(122,75,8,0.11) !important;
+}
+body.light-theme .cm-title,
+body.light-theme .toast-title {
+    color: #6f4408 !important;
+    text-shadow: 0 1px 0 rgba(255,250,232,0.74), 0 0 12px rgba(168,111,19,0.14);
+}
+body.light-theme .cm-msg,
+body.light-theme .toast-msg {
+    color: #3b2a12 !important;
+    text-shadow: 0 1px 0 rgba(255,250,232,0.58);
+}
+body.light-theme .cm-close {
+    background: rgba(255,250,232,0.52);
+    border-color: rgba(122,75,8,0.30);
+    color: #3b2a12;
+}
 
 /* Tema dugmići (okrugli i specijalni u meniju) */
 body.light-theme #btn-theme-toggle, body.light-theme .game-header .btn-secondary { background: linear-gradient(to bottom, #f8e3ab, #cfa04c); border-color: #7a4b08; color: #3a2608; box-shadow: 0 5px 0 #9d6b1a, 0 10px 15px rgba(91,55,7,0.16), inset 0 2px 0 rgba(255,248,224,0.64); }
