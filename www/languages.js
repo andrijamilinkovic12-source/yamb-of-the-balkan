@@ -241,6 +241,7 @@ const TRANSLATIONS = {
         "h2h_share_text": "Moja Yamb H2H kartica protiv {0}.",
         "h2h_share_generating": "Priprema...",
         "h2h_share_fallback": "Deljenje slike nije dostupno na ovom uređaju. PNG kartica je pripremljena za preuzimanje.",
+        "h2h_share_update_required": "Za deljenje slike potrebno je ažurirati aplikaciju na najnoviju verziju.",
         "h2h_share_error": "Nije moguće pripremiti sliku za deljenje.",
 
         // --- TOP LISTA ---
@@ -933,6 +934,7 @@ const TRANSLATIONS = {
         "h2h_share_text": "My Yamb H2H card against {0}.",
         "h2h_share_generating": "Preparing...",
         "h2h_share_fallback": "Image sharing is not available on this device. The PNG card has been prepared for download.",
+        "h2h_share_update_required": "Image sharing requires updating the app to the latest version.",
         "h2h_share_error": "Could not prepare the image for sharing.",
 
         // --- HIGH SCORES ---

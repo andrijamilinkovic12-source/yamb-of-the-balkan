@@ -910,6 +910,28 @@ class YambApp {
             const filename = `yamb-h2h-${slug}.png`;
             const title = gt('h2h_share_title') || 'Yamb H2H statistika';
             const text = (gt('h2h_share_text') || 'Moja Yamb H2H kartica protiv {0}.').replace('{0}', data.oppName || 'rival');
+            const isNativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+            const nativeH2HShare = window.Capacitor?.Plugins?.H2HShare;
+
+            if (nativeH2HShare && typeof nativeH2HShare.shareImage === 'function') {
+                const dataUrl = await this.blobToDataUrl(blob);
+                await nativeH2HShare.shareImage({
+                    dataUrl,
+                    filename,
+                    title,
+                    text,
+                    dialogTitle: title
+                });
+                return;
+            }
+
+            if (isNativeApp) {
+                await this.modal.alert(
+                    gt('h2h_share_update_required') || 'Za deljenje slike potrebno je ažurirati aplikaciju na najnoviju verziju.',
+                    gt('h2h_share_title') || 'Yamb H2H statistika'
+                );
+                return;
+            }
 
             if (navigator.share && typeof File !== 'undefined') {
                 const file = new File([blob], filename, { type: 'image/png' });
@@ -1116,6 +1138,15 @@ class YambApp {
                 if (blob) resolve(blob);
                 else reject(new Error('PNG nije generisan'));
             }, 'image/png', 0.95);
+        });
+    }
+
+    blobToDataUrl(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error || new Error('Nije moguće pročitati sliku.'));
+            reader.readAsDataURL(blob);
         });
     }
 

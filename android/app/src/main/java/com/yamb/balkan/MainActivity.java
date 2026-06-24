@@ -11,6 +11,7 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        registerPlugin(H2HSharePlugin.class);
         super.onCreate(savedInstanceState);
 
         // --- GDPR / UMP IMPLEMENTACIJA ---
