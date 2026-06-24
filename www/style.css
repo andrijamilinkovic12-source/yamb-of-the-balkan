@@ -360,21 +360,21 @@ body {
 .league-intro-mark-wrap {
     position: relative;
     z-index: 1;
-    width: 214px;
-    height: 214px;
+    width: 232px;
+    height: 232px;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 58%);
-    filter: drop-shadow(0 0 26px var(--league-intro-glow)) drop-shadow(0 0 54px var(--league-intro-a));
+    background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 60%);
+    filter: drop-shadow(0 0 24px var(--league-intro-glow)) drop-shadow(0 0 46px var(--league-intro-a));
     animation: leagueWatermarkReveal 4.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .league-intro-mark {
-    width: 190px;
-    height: 190px;
+    width: 208px;
+    height: 208px;
     object-fit: contain;
-    filter: saturate(1.24) brightness(1.28);
+    filter: saturate(1.14) brightness(1.04) contrast(1.04);
 }
 
 .league-intro-title {
@@ -2061,12 +2061,12 @@ body {
     flex: 1 1 auto;
 }
 #league-modal-overlay .league-modal-header-icon {
-    width: 34px;
-    height: 34px;
-    flex: 0 0 34px;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
     display: block;
     object-fit: contain;
-    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 9px rgba(255,214,111,0.28));
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.48)) drop-shadow(0 0 10px rgba(255,214,111,0.34));
     pointer-events: none;
 }
 #league-modal-overlay .modal-box > div:first-child h2 {
