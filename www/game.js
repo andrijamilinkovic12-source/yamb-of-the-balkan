@@ -3923,7 +3923,7 @@ class YambApp {
                 this.soundMgr.win();
                 this.effectMgr.celebrateWin();
 
-                if (window.kvartalnaLiga) {
+                if (window.kvartalnaLiga && !data.serverApplied) {
                     window.kvartalnaLiga.addPoints(winnerReward);
                 }
 
@@ -4351,7 +4351,7 @@ class YambApp {
             if (myAvg > 2000) myAvg = 2000;
             const rewardAmount = Number.isFinite(Number(data.reward)) ? Math.max(0, Math.floor(Number(data.reward))) : myAvg;
 
-            if (window.kvartalnaLiga) {
+            if (window.kvartalnaLiga && !data.serverApplied) {
                 window.kvartalnaLiga.addPoints(rewardAmount);
             }
 

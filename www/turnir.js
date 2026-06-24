@@ -821,6 +821,47 @@ class TournamentManager {
         return d.toLocaleDateString(locale) + ` ${atStr} ` + d.toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
     }
 
+    normalizeMatchScore(value) {
+        const num = Number(value);
+        if (!Number.isFinite(num)) return null;
+        return Math.max(0, Math.floor(num));
+    }
+
+    isTechnicalMatchResult(match) {
+        return Boolean(match && (match.resultType === 'technical' || match.technicalWinReason));
+    }
+
+    getMatchResultLabel(match) {
+        if (!match || !match.winnerId) return '';
+        if (match.scoreLabel) return this.escape(match.scoreLabel);
+
+        const p1Score = this.normalizeMatchScore(match.p1Score);
+        const p2Score = this.normalizeMatchScore(match.p2Score);
+        if (p1Score !== null && p2Score !== null) {
+            return this.escape(`${p1Score}-${p2Score}${this.isTechnicalMatchResult(match) ? ' TP' : ''}`);
+        }
+
+        if (this.isTechnicalMatchResult(match) && match.p1 && match.p2) {
+            const winnerIsP1 = match.winnerId === match.p1.id;
+            return winnerIsP1 ? '1-0 TP' : '0-1 TP';
+        }
+
+        return '';
+    }
+
+    getTechnicalReasonLabel(reason) {
+        switch (String(reason || 'technical')) {
+            case 'back_to_menu':
+                return this.tr('tourney_technical_quit', 'napuštanje');
+            case 'turn_timeout':
+                return this.tr('tourney_technical_timeout', 'istek vremena');
+            case 'disconnect_grace_expired':
+                return this.tr('tourney_technical_disconnect', 'prekid veze');
+            default:
+                return this.tr('tourney_technical_default', 'tehnički');
+        }
+    }
+
     updateTourneyPagination() {
         const carousel = document.getElementById('tourney-carousel');
         if(!carousel) return;
@@ -981,10 +1022,17 @@ class TournamentManager {
             statusDot = `<div style="position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: #ff9800; border-radius: 50%; box-shadow: 0 0 8px #ff9800;"></div>`;
         }
 
+        const resultLabel = this.getMatchResultLabel(match);
+        const resultHtml = resultLabel
+            ? `<div style="text-align: center; padding: 3px 8px; font-size: 0.72rem; font-weight: 900; color: var(--gold-main); background: rgba(255,215,0,0.07); border-bottom: 1px solid rgba(255,215,0,0.12); text-shadow: 0 0 5px rgba(255,215,0,0.25);">${resultLabel}</div>`
+            : '';
+        const cardMinHeight = resultLabel ? '82px' : '65px';
+
         return `
-            <div onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; display: flex; flex-direction: column; cursor: pointer; position: relative; box-shadow: ${isMyMatch ? '0 0 10px rgba(255,215,0,0.3)' : 'none'}; transition: transform 0.1s; transform: scale(0.98); min-height: 65px;">
+            <div onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; display: flex; flex-direction: column; cursor: pointer; position: relative; box-shadow: ${isMyMatch ? '0 0 10px rgba(255,215,0,0.3)' : 'none'}; transition: transform 0.1s; transform: scale(0.98); min-height: ${cardMinHeight}; overflow: hidden;">
                 ${statusDot}
                 ${getPlayerHtml(match.p1, true)}
+                ${resultHtml}
                 ${getPlayerHtml(match.p2, false)}
             </div>
         `;
@@ -1000,7 +1048,14 @@ class TournamentManager {
 
         if (match.winnerId) {
             const winnerName = this.escape(match.winnerId === match.p1.id ? match.p1.name : match.p2.name);
-            akcijeHtml = `<p style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> 🏆</p>`;
+            const resultLabel = this.getMatchResultLabel(match);
+            const technicalReason = this.isTechnicalMatchResult(match)
+                ? this.escape(this.getTechnicalReasonLabel(match.technicalWinReason))
+                : '';
+            const resultHtml = resultLabel
+                ? `<div style="margin-top: 8px; color: var(--text-main); font-size: 0.95rem;">${this.tr('tourney_result', 'Rezultat')}: <strong style="color: var(--gold-main);">${resultLabel}</strong>${technicalReason ? ` <span style="color: var(--text-muted); font-size: 0.82rem;">(${technicalReason})</span>` : ''}</div>`
+                : '';
+            akcijeHtml = `<div style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> 🏆${resultHtml}</div>`;
         }
         else if (isMyMatch) {
             if (match.timeAccepted) {

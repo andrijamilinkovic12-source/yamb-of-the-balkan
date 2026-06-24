@@ -1396,6 +1396,7 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
             if (winnerOpponent) {
                 applyTechnicalDuelH2H(winner, winnerOpponent, 'win');
             }
+            await applyTechnicalLeagueDelta(winner, winnerReward);
             await winner.save();
             rememberServerTechnicalResult(winnerId, 'win');
             emitProfileSyncToUid(winnerId, winner, { serverTechnicalResult: 'win' });
@@ -2038,6 +2039,11 @@ function createTournamentMatch(p1 = null, p2 = null) {
         p1,
         p2,
         winnerId: null,
+        resultType: null,
+        p1Score: null,
+        p2Score: null,
+        scoreLabel: '',
+        resultRecordedAt: null,
         time: null,
         proposedTime: null,
         proposedById: null,
@@ -2480,6 +2486,63 @@ function parseTournamentRoomId(roomId) {
     return { round: match[1], index: Number(match[2]) };
 }
 
+function sanitizeTournamentMatchScore(value) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return null;
+    return Math.max(0, Math.min(MAX_SCORE, Math.floor(num)));
+}
+
+function setTournamentMatchResult(match, resultType, p1Score, p2Score, options = {}) {
+    if (!match) return false;
+
+    const safeP1Score = sanitizeTournamentMatchScore(p1Score);
+    const safeP2Score = sanitizeTournamentMatchScore(p2Score);
+    if (safeP1Score === null || safeP2Score === null) return false;
+
+    const isTechnical = resultType === 'technical';
+    match.resultType = isTechnical ? 'technical' : 'regular';
+    match.p1Score = safeP1Score;
+    match.p2Score = safeP2Score;
+    match.scoreLabel = `${safeP1Score}-${safeP2Score}${isTechnical ? ' TP' : ''}`;
+    match.resultRecordedAt = Date.now();
+
+    if (isTechnical) {
+        match.technicalWinReason = String(options.reason || 'technical').substring(0, 60);
+        match.technicalWinAt = Date.now();
+    } else {
+        delete match.technicalWinReason;
+        delete match.technicalWinAt;
+    }
+
+    return true;
+}
+
+function getTournamentRoomMatchScores(roomId, match) {
+    const state = roomState[roomId];
+    if (!state || !match || !match.p1 || !match.p2) return null;
+    if (!Array.isArray(state.players) || state.players.length < 2) return null;
+    if (!Array.isArray(state.allScores) || state.allScores.length < 2) return null;
+
+    const totals = state.allScores.slice(0, 2).map(sheet => calculateCompletedDuelTotal(sheet));
+    if (totals.some(score => score === null)) return null;
+
+    const stablePlayerUids = Array.isArray(state.playerUids) ? state.playerUids : [];
+    const scoreByUid = new Map();
+
+    state.players.slice(0, 2).forEach((socketId, index) => {
+        const participant = getDuelParticipantMeta(socketId, state.playerNames?.[index], stablePlayerUids[index]);
+        const uid = String(participant.uid || stablePlayerUids[index] || '').trim();
+        if (uid) scoreByUid.set(uid, totals[index]);
+    });
+
+    if (!scoreByUid.has(match.p1.id) || !scoreByUid.has(match.p2.id)) return null;
+
+    return {
+        p1Score: scoreByUid.get(match.p1.id),
+        p2Score: scoreByUid.get(match.p2.id)
+    };
+}
+
 async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'technical') {
     const roomInfo = parseTournamentRoomId(roomId);
     if (!roomInfo || !winnerUid) return false;
@@ -2491,8 +2554,9 @@ async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'techn
     if (!match || match.winnerId || !isTournamentParticipant(match, winnerUid)) return false;
 
     match.winnerId = winnerUid;
-    match.technicalWinReason = reason;
-    match.technicalWinAt = Date.now();
+    const p1Score = match.p1.id === winnerUid ? 1 : 0;
+    const p2Score = match.p2.id === winnerUid ? 1 : 0;
+    setTournamentMatchResult(match, 'technical', p1Score, p2Score, { reason });
 
     const winnerObj = match.p1.id === winnerUid ? match.p1 : match.p2;
     advanceTournamentBracket(roomInfo.round, index, winnerObj);
@@ -5565,6 +5629,7 @@ io.on('connection', (socket) => {
                         winnerOpponent: quitterParticipant,
                         loserOpponent: winnerParticipant
                     });
+                    await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'back_to_menu');
                 }
             }
 
@@ -8253,11 +8318,36 @@ io.on('connection', (socket) => {
         if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');
 
         const { match, index } = matchInfo;
-        const round = data.round;
+        const round = String(data.round || '');
         const winnerId = String(data.winnerId || '');
         if (!isTournamentParticipant(match, uid) || winnerId !== uid) return rejectTournamentAction(socket, 'err_invalid_room');
 
         if (match && (match.winnerId === null || match.winnerId === undefined)) {
+            const activeRoomId = playerRooms[socket.id];
+            const activeRoomInfo = parseTournamentRoomId(activeRoomId);
+            const roomMatchesSubmittedMatch = activeRoomInfo
+                && activeRoomInfo.round === round
+                && activeRoomInfo.index === index;
+            const regularScores = roomMatchesSubmittedMatch
+                ? getTournamentRoomMatchScores(activeRoomId, match)
+                : null;
+
+            if (regularScores) {
+                if (regularScores.p1Score === regularScores.p2Score) {
+                    return rejectTournamentAction(socket, 'err_invalid_room');
+                }
+
+                const scoreWinnerId = regularScores.p1Score > regularScores.p2Score ? match.p1.id : match.p2.id;
+                if (scoreWinnerId !== winnerId) {
+                    return rejectTournamentAction(socket, 'err_invalid_room');
+                }
+
+                setTournamentMatchResult(match, 'regular', regularScores.p1Score, regularScores.p2Score);
+            } else {
+                console.warn(`⚠️ TURNIR: Nije moguće izvući regularan skor za ${round}/${index} iz sobe ${activeRoomId || 'n/a'}.`);
+                return rejectTournamentAction(socket, 'err_invalid_room');
+            }
+
             match.winnerId = winnerId;
             const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
             advanceTournamentBracket(round, index, winnerObj);
