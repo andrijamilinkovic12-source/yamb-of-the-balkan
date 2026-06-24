@@ -1041,9 +1041,10 @@ class YambApp {
         themeSelect.value = safeSelectedTheme;
     }
 
-    mergeCloudLeagueData(uid, leagueData) {
+    mergeCloudLeagueData(uid, leagueData, options = {}) {
         if (!uid || !leagueData) return;
 
+        const preferIncoming = !!options.preferIncoming;
         const localLeagueKey = 'yamb_quarter_data_' + uid;
         let currentLocalLeague = this.readLocalJson(localLeagueKey, { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 });
         let leagueUpdated = false;
@@ -1053,7 +1054,16 @@ class YambApp {
             currentLocalLeague = leagueData;
             leagueUpdated = true;
         } else if (leagueData.year === currentLocalLeague.year && leagueData.quarter === currentLocalLeague.quarter) {
-            if ((leagueData.quarterlyScore || 0) > (currentLocalLeague.quarterlyScore || 0)) {
+            if (preferIncoming) {
+                const incomingScore = Math.max(0, Math.floor(Number(leagueData.quarterlyScore) || 0));
+                currentLocalLeague = {
+                    ...currentLocalLeague,
+                    ...leagueData,
+                    baselineScore: Math.max(Number(currentLocalLeague.baselineScore) || 0, Number(leagueData.baselineScore) || 0),
+                    quarterlyScore: incomingScore
+                };
+                leagueUpdated = true;
+            } else if ((leagueData.quarterlyScore || 0) > (currentLocalLeague.quarterlyScore || 0)) {
                 currentLocalLeague.quarterlyScore = leagueData.quarterlyScore;
                 if ((leagueData.baselineScore || 0) > (currentLocalLeague.baselineScore || 0)) {
                     currentLocalLeague.baselineScore = leagueData.baselineScore;
@@ -1164,6 +1174,10 @@ class YambApp {
 
         const localStats = this.readLocalJson('yamb_stats', {}) || {};
         const nextStats = { ...localStats };
+        const serverTechnicalResult = ['win', 'loss', 'draw'].includes(data.serverTechnicalResult)
+            ? data.serverTechnicalResult
+            : '';
+        const trustServerTechnicalStats = !!serverTechnicalResult;
         const monotonicNumericFields = [
             'games',
             'wins',
@@ -1178,7 +1192,7 @@ class YambApp {
         const incomingGames = data.games !== undefined
             ? Math.max(0, toNumber(data.games, localGames))
             : null;
-        const cloudStatsAreStale = incomingGames !== null && incomingGames < localGames;
+        const cloudStatsAreStale = !trustServerTechnicalStats && incomingGames !== null && incomingGames < localGames;
 
         monotonicNumericFields.forEach(field => {
             if (data[field] !== undefined) {
@@ -1199,7 +1213,7 @@ class YambApp {
         if (data.currentWinStreak !== undefined) {
             const localStreak = Math.max(0, toNumber(nextStats.currentWinStreak, 0));
             const cloudStreak = Math.max(0, toNumber(data.currentWinStreak, localStreak));
-            nextStats.currentWinStreak = cloudStatsAreStale ? localStreak : cloudStreak;
+            nextStats.currentWinStreak = trustServerTechnicalStats ? cloudStreak : (cloudStatsAreStale ? localStreak : cloudStreak);
         }
 
         if (data.balance !== undefined) {
@@ -1289,7 +1303,7 @@ class YambApp {
         }
 
         this.mergeCloudH2HStats(data.h2hStats);
-        this.mergeCloudLeagueData(uid, data.leagueData);
+        this.mergeCloudLeagueData(uid, data.leagueData, { preferIncoming: trustServerTechnicalStats });
 
         if (typeof updateMainMenuDashboard === 'function') {
             updateMainMenuDashboard();
@@ -2210,6 +2224,18 @@ class YambApp {
         }
 
         return authResult;
+    }
+
+    async refreshProfileAfterOnlineRoomClosed() {
+        if (!localStorage.getItem('yamb_uid')) return null;
+        if (!this.socket || !this.socket.connected) return null;
+
+        try {
+            return await this.emitPlayerData(false, { waitForSync: true, timeoutMs: 5000 });
+        } catch (err) {
+            console.warn("Nije uspelo osvežavanje profila posle zatvorene online sobe:", err);
+            return null;
+        }
     }
 
     updateOnlineCounterUI() {
@@ -3500,8 +3526,11 @@ class YambApp {
                 let penStr = (gt('penalty_msg') || "Kazna zbog odugovlačenja: -{0} Power Index poena.").replace('{0}', penalty);
                 let msgDodatak = penalty > 0 ? `<br><br><span style="color:var(--danger); font-weight:bold;">${penStr}</span>` : '';
 
-                if (window.kvartalnaLiga) {
+                if (window.kvartalnaLiga && !data.serverApplied) {
                     window.kvartalnaLiga.addPoints(-coinPenalty);
+                }
+
+                if (window.kvartalnaLiga) {
                     let ptsLostStr = (gt('league_pts_lost') || `-{0} poena u Ligi<br>-{0} ${dukatIconHtml()} Dukata`).replace(/\{0\}/g, coinPenalty);
                     msgDodatak += `<br><span style="color:var(--danger); font-weight:bold;">${ptsLostStr}</span>`;
                 }
@@ -4098,6 +4127,7 @@ class YambApp {
             } else {
                 // Soba više ne postoji (istekao grace period), obavesti ga direktno
                 localStorage.removeItem('yamb_active_online_room');
+                await this.refreshProfileAfterOnlineRoomClosed();
                 this.modal.alert(
                     gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme.",
                     gt('online_recovery_expired_title') || "KRAJ PARTIJE"
@@ -4107,7 +4137,7 @@ class YambApp {
 
         // DODATO: Zaštita u slučaju da je igrač prekasno ušao (istekao Grace Period)
         this.socket.off('force_cancel_online');
-        this.socket.on('force_cancel_online', (data = {}) => {
+        this.socket.on('force_cancel_online', async (data = {}) => {
             const responseRoomId = data && data.roomId;
 
             if (this.gameActive && this.onlineMode) {
@@ -4119,6 +4149,7 @@ class YambApp {
 
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
             localStorage.removeItem('yamb_active_online_room');
+            await this.refreshProfileAfterOnlineRoomClosed();
             if (this.modal) {
                 this.modal.alert(
                     gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme.",

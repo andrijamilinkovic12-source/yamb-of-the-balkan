@@ -1313,7 +1313,7 @@ async function getTechnicalCoinAmount(playerId) {
     return calculateTechnicalCoinAmount(user);
 }
 
-async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = null, coinPenalty = 0, opponentMeta = null) {
+async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = null, coinPenalty = 0, opponentMeta = null, syncExtra = {}) {
     if (!process.env.MONGO_URI || !playerId) return null;
     try {
         const UserProfile = mongoose.model('UserProfile');
@@ -1323,22 +1323,24 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
             if (!user) return null;
 
             user.penaltyPoints = Math.max(0, toSafeInt(user.penaltyPoints, 0)) + penaltyAmount;
+            user.games = Math.max(0, toSafeInt(user.games, 0)) + 1;
             user.losses = Math.max(0, toSafeInt(user.losses, 0)) + 1;
             user.currentWinStreak = 0;
             applyTechnicalDuelH2H(user, opponentMeta, 'loss');
 
             if (coinPenalty > 0) {
                 user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
+                await applyTechnicalLeagueDelta(user, -coinPenalty);
             }
 
             await user.save();
             rememberServerTechnicalResult(playerId, 'loss');
-            emitProfileSyncToUid(playerId, user);
+            emitProfileSyncToUid(playerId, user, syncExtra);
             console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ${opponentMeta.uid || opponentMeta.name || h2hKey || 'nepoznatog'}.`);
             return user;
         }
 
-        let updateInc = { penaltyPoints: penaltyAmount, losses: 1 };
+        let updateInc = { penaltyPoints: penaltyAmount, games: 1, losses: 1 };
         let updateSet = { currentWinStreak: 0 };
 
         if (h2hKey) {
@@ -1361,7 +1363,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
         }
 
         if (user) rememberServerTechnicalResult(playerId, 'loss');
-        emitProfileSyncToUid(playerId, user);
+        emitProfileSyncToUid(playerId, user, syncExtra);
         console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ključa ${h2hKey || 'nepoznatog'}.`);
         return user;
     } catch (err) {
@@ -1382,6 +1384,8 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
         const winner = await UserProfile.findOne({ firebaseUid: winnerId });
         if (winner) {
             winner.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(winner.balance, 0)) + winnerReward);
+            winner.games = Math.max(0, toSafeInt(winner.games, 0)) + 1;
+            winner.totalScoreSum = Math.max(0, toSafeInt(winner.totalScoreSum, 0)) + winnerReward;
             winner.wins = Math.max(0, toSafeInt(winner.wins, 0)) + 1;
             winner.currentWinStreak = Math.max(0, toSafeInt(winner.currentWinStreak, 0)) + 1;
             winner.maxWinStreak = Math.max(
@@ -1394,11 +1398,11 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
             }
             await winner.save();
             rememberServerTechnicalResult(winnerId, 'win');
-            emitProfileSyncToUid(winnerId, winner);
+            emitProfileSyncToUid(winnerId, winner, { serverTechnicalResult: 'win' });
         }
     }
 
-    await applyServerSidePenalty(loserId, penaltyAmount, h2hKey, loserCoinPenalty, h2hContext.loserOpponent || null);
+    await applyServerSidePenalty(loserId, penaltyAmount, h2hKey, loserCoinPenalty, h2hContext.loserOpponent || null, { serverTechnicalResult: 'loss' });
     return { winnerReward, loserCoinPenalty, serverApplied: true };
 }
 
@@ -3664,6 +3668,43 @@ function mergeLeagueDataIntoUser(user, incomingRaw) {
     const mergedLeague = mergeLeagueDataValues(user.leagueData, incomingRaw);
     user.leagueData = mergedLeague;
     return mergedLeague;
+}
+
+async function applyTechnicalLeagueDelta(user, delta) {
+    if (!user || !user.firebaseUid || !Number.isFinite(Number(delta)) || Number(delta) === 0) {
+        return normalizeUserLeagueDataForCurrentPeriod(user);
+    }
+
+    const leagueData = normalizeUserLeagueDataForCurrentPeriod(user);
+    const nextScore = Math.max(
+        0,
+        Math.min(MAX_LEAGUE_SCORE, Math.floor((Number(leagueData.quarterlyScore) || 0) + Number(delta)))
+    );
+
+    const nextLeagueData = {
+        ...leagueData,
+        quarterlyScore: nextScore
+    };
+
+    user.leagueData = nextLeagueData;
+    user.markModified('leagueData');
+
+    if (MONGO_URI) {
+        await LeagueScore.findOneAndUpdate(
+            { playerId: user.firebaseUid, year: nextLeagueData.year, quarter: nextLeagueData.quarter },
+            {
+                $set: {
+                    playerName: sanitizeTournamentName(user.playerName || 'Igrac'),
+                    photoUrl: String(user.photoUrl || '').substring(0, 500),
+                    score: nextScore,
+                    date: Date.now()
+                }
+            },
+            { upsert: true, new: true }
+        );
+    }
+
+    return nextLeagueData;
 }
 
 async function archiveLeagueQuarter(year, quarter) {
