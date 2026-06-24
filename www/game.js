@@ -253,6 +253,28 @@ class YambApp {
         }[char]));
     }
 
+    h2hMatchLabel(count) {
+        const safeCount = Math.max(0, parseInt(count, 10) || 0);
+        const lang = localStorage.getItem('yamb_lang') || 'sr';
+
+        if (lang === 'en') {
+            return safeCount === 1
+                ? (gt('stat_match_one') || 'match')
+                : (gt('stat_match_many') || gt('stat_matches') || 'matches');
+        }
+
+        const lastTwo = safeCount % 100;
+        const lastOne = safeCount % 10;
+        if (lastOne === 1 && lastTwo !== 11) return gt('stat_match_one') || 'meč';
+        if (lastOne >= 2 && lastOne <= 4 && (lastTwo < 12 || lastTwo > 14)) return gt('stat_match_few') || 'meča';
+        return gt('stat_match_many') || gt('stat_matches') || 'mečeva';
+    }
+
+    h2hMatchText(count) {
+        const safeCount = Math.max(0, parseInt(count, 10) || 0);
+        return `${safeCount} ${this.h2hMatchLabel(safeCount)}`;
+    }
+
     // --- NOVO: HEADER LOGIKA (MENI, ZVUK, VIB, OKO, AVATAR, MUZIKA) ---
 
     toggleGameMenu() {
@@ -670,8 +692,7 @@ class YambApp {
             const total = r.wins + r.losses + r.draws;
             const safeOppName = this.escapeHtml(r.name || 'Igrac');
             const oppAvatar = avatarFor(r.name, r.photo);
-            const matchesLabel = gt('stat_matches') || 'meceva';
-            const safeMatchesLabel = this.escapeHtml(matchesLabel);
+            const safeMatchText = this.escapeHtml(this.h2hMatchText(total));
             const safeWinShort = this.escapeHtml(gt('h2h_wins_short') || 'W');
             const safeLossShort = this.escapeHtml(gt('h2h_losses_short') || 'L');
 
@@ -683,7 +704,7 @@ class YambApp {
                 </span>
                 <span class="h2h-rival-name">${safeOppName}</span>
                 <span class="h2h-rival-record"><span class="w-color">${r.wins} ${safeWinShort}</span> / <span class="l-color">${r.losses} ${safeLossShort}</span></span>
-                <span class="h2h-rival-matches">${total} ${safeMatchesLabel}</span>
+                <span class="h2h-rival-matches">${safeMatchText}</span>
             </button>`;
         });
 
@@ -773,10 +794,22 @@ class YambApp {
         const oppAvatar = avatarFor(oppName, r.photo);
         const safeMyName = this.escapeHtml(myName);
         const safeOppName = this.escapeHtml(oppName);
-        const matchesLabel = this.escapeHtml(gt('stat_matches') || 'meceva');
+        const matchText = this.escapeHtml(this.h2hMatchText(total));
         const winShort = this.escapeHtml(gt('h2h_wins_short') || 'W');
         const lossShort = this.escapeHtml(gt('h2h_losses_short') || 'L');
         const maxShort = this.escapeHtml(gt('h2h_max_short') || 'Max');
+        const shareLabel = this.escapeHtml(gt('h2h_share_btn') || 'Podeli karticu');
+        const shareAria = this.escapeHtml(gt('h2h_share_aria') || gt('h2h_share_btn') || 'Podeli karticu');
+
+        this.currentH2HShareData = {
+            ...r,
+            myName,
+            oppName,
+            total,
+            matchText: this.h2hMatchText(total),
+            winPct,
+            avg
+        };
 
         content.innerHTML = `
             <div class="h2h-detail-title" id="h2h-detail-title">${this.escapeHtml(gt('stat_h2h_title') || 'MEĐUSOBNI DUELI')}</div>
@@ -793,7 +826,7 @@ class YambApp {
                     <div class="h2h-detail-score l-color">${r.losses} ${lossShort}</div>
                 </div>
             </div>
-            <div class="h2h-detail-total">${total} ${matchesLabel}</div>
+            <div class="h2h-detail-total">${matchText}</div>
             <div class="h2h-stats-area h2h-detail-stats">
                 <div class="h2h-stat-row">
                     <span class="lbl">${this.escapeHtml(gt('h2h_highest_score') || 'Najviše poena:')}</span>
@@ -825,7 +858,14 @@ class YambApp {
                     <div class="h2h-bar-win" style="width: ${winPct}%"></div>
                 </div>
                 <div class="h2h-bar-text">${winPct}% ${this.escapeHtml(gt('h2h_win_pct') || 'POBEDA')}</div>
-            </div>`;
+            </div>
+            <button type="button" class="h2h-share-btn" aria-label="${shareAria}">
+                <span aria-hidden="true">↗</span>
+                <span>${shareLabel}</span>
+            </button>`;
+
+        const shareBtn = content.querySelector('.h2h-share-btn');
+        if (shareBtn) shareBtn.addEventListener('click', () => this.shareH2HDetail());
 
         this.lastH2HTrigger = triggerEl || document.activeElement;
         modal.classList.add('active');
@@ -843,10 +883,252 @@ class YambApp {
         modal.classList.remove('active');
         modal.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('h2h-modal-open');
+        this.currentH2HShareData = null;
 
         if (this.lastH2HTrigger && typeof this.lastH2HTrigger.focus === 'function') {
             this.lastH2HTrigger.focus({ preventScroll: true });
         }
+    }
+
+    async shareH2HDetail() {
+        const data = this.currentH2HShareData;
+        if (!data) return;
+
+        const shareBtn = document.querySelector('.h2h-share-btn');
+        const originalHtml = shareBtn ? shareBtn.innerHTML : '';
+        if (shareBtn) {
+            shareBtn.disabled = true;
+            shareBtn.innerHTML = `<span>${this.escapeHtml(gt('h2h_share_generating') || 'Priprema...')}</span>`;
+        }
+
+        try {
+            const blob = await this.createH2HShareImage(data);
+            const slug = String(data.oppName || 'rival')
+                .toLowerCase()
+                .replace(/[^a-z0-9čćžšđ]+/gi, '-')
+                .replace(/^-+|-+$/g, '') || 'rival';
+            const filename = `yamb-h2h-${slug}.png`;
+            const title = gt('h2h_share_title') || 'Yamb H2H statistika';
+            const text = (gt('h2h_share_text') || 'Moja Yamb H2H kartica protiv {0}.').replace('{0}', data.oppName || 'rival');
+
+            if (navigator.share && typeof File !== 'undefined') {
+                const file = new File([blob], filename, { type: 'image/png' });
+                const payload = { title, text, files: [file] };
+                const canShareFile = !navigator.canShare || navigator.canShare(payload);
+
+                if (canShareFile) {
+                    try {
+                        await navigator.share(payload);
+                        return;
+                    } catch (err) {
+                        if (err && err.name === 'AbortError') return;
+                        console.log('H2H deljenje slike nije uspelo:', err);
+                    }
+                }
+            }
+
+            this.downloadBlob(blob, filename);
+            await this.modal.alert(
+                gt('h2h_share_fallback') || 'Deljenje slike nije dostupno na ovom uređaju. PNG kartica je pripremljena za preuzimanje.',
+                gt('h2h_share_title') || 'Yamb H2H statistika'
+            );
+        } catch (err) {
+            console.warn('Nije moguće pripremiti H2H share karticu:', err);
+            await this.modal.alert(
+                gt('h2h_share_error') || 'Nije moguće pripremiti sliku za deljenje.',
+                gt('err_title') || 'GREŠKA'
+            );
+        } finally {
+            if (shareBtn) {
+                shareBtn.disabled = false;
+                shareBtn.innerHTML = originalHtml;
+            }
+        }
+    }
+
+    async createH2HShareImage(data) {
+        const canvas = document.createElement('canvas');
+        const width = 1080;
+        const height = 1350;
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Canvas nije dostupan');
+
+        const colors = {
+            bgTop: '#132727',
+            bgBottom: '#080B10',
+            card: 'rgba(18, 22, 28, 0.94)',
+            cardLine: 'rgba(224, 201, 149, 0.38)',
+            text: '#F7ECD0',
+            muted: '#B7AA8B',
+            gold: '#E0C995',
+            success: '#4CAF50',
+            danger: '#F44336',
+            orange: '#FF8A50'
+        };
+
+        const textValue = (value) => String(value ?? '').replace(/<[^>]*>/g, '').trim();
+        const label = (key, fallback) => textValue(gt(key) || fallback).replace(/:$/, '');
+        const maxShort = textValue(gt('h2h_max_short') || 'Max');
+        const winPctLabel = textValue(gt('h2h_win_pct') || 'POBEDA');
+
+        const roundedRect = (x, y, w, h, r) => {
+            const radius = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + w - radius, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+            ctx.lineTo(x + w, y + h - radius);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+            ctx.lineTo(x + radius, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        };
+
+        const fillRound = (x, y, w, h, r, fill, stroke = null, lineWidth = 1) => {
+            roundedRect(x, y, w, h, r);
+            ctx.fillStyle = fill;
+            ctx.fill();
+            if (stroke) {
+                ctx.strokeStyle = stroke;
+                ctx.lineWidth = lineWidth;
+                ctx.stroke();
+            }
+        };
+
+        const fitText = (text, x, y, maxWidth, size, minSize, color, weight = 800, align = 'center') => {
+            const cleanText = textValue(text) || ' ';
+            let fontSize = size;
+            ctx.textAlign = align;
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = color;
+            do {
+                ctx.font = `${weight} ${fontSize}px Montserrat, Arial, sans-serif`;
+                if (ctx.measureText(cleanText).width <= maxWidth || fontSize <= minSize) break;
+                fontSize -= 2;
+            } while (fontSize > minSize);
+
+            let output = cleanText;
+            if (ctx.measureText(output).width > maxWidth) {
+                while (output.length > 3 && ctx.measureText(`${output}...`).width > maxWidth) {
+                    output = output.slice(0, -1);
+                }
+                output = `${output}...`;
+            }
+            ctx.fillText(output, x, y);
+        };
+
+        const initialsFor = (name) => {
+            const parts = textValue(name).split(/\s+/).filter(Boolean);
+            if (parts.length >= 2) return `${parts[0][0] || ''}${parts[1][0] || ''}`.toUpperCase();
+            const compact = (parts[0] || '?').slice(0, 2);
+            return compact.toUpperCase();
+        };
+
+        const drawAvatar = (x, y, radius, name, borderColor) => {
+            const grad = ctx.createLinearGradient(x - radius, y - radius, x + radius, y + radius);
+            grad.addColorStop(0, '#2D3E3E');
+            grad.addColorStop(1, '#11161D');
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
+            ctx.fill();
+            ctx.lineWidth = 8;
+            ctx.strokeStyle = borderColor;
+            ctx.stroke();
+            ctx.restore();
+
+            fitText(initialsFor(name), x, y + 21, radius * 1.35, 58, 40, colors.gold, 900);
+        };
+
+        const background = ctx.createLinearGradient(0, 0, width, height);
+        background.addColorStop(0, colors.bgTop);
+        background.addColorStop(0.52, '#15100A');
+        background.addColorStop(1, colors.bgBottom);
+        ctx.fillStyle = background;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.globalAlpha = 0.18;
+        ctx.beginPath();
+        ctx.arc(170, 170, 260, 0, Math.PI * 2);
+        ctx.fillStyle = colors.gold;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(930, 1080, 330, 0, Math.PI * 2);
+        ctx.fillStyle = colors.success;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        fillRound(58, 58, width - 116, height - 116, 48, colors.card, colors.cardLine, 3);
+
+        fitText('YAMB OF THE BALKAN', width / 2, 145, 760, 34, 24, colors.gold, 900);
+        fitText(textValue(gt('stat_h2h_title') || 'MEĐUSOBNI DUELI'), width / 2, 205, 820, 48, 32, colors.text, 900);
+
+        drawAvatar(280, 380, 92, data.myName, colors.gold);
+        drawAvatar(800, 380, 92, data.oppName, colors.danger);
+
+        fitText(data.myName, 280, 520, 360, 38, 25, colors.text, 900);
+        fitText(data.oppName, 800, 520, 360, 38, 25, colors.text, 900);
+        fitText(`${data.wins || 0} ${textValue(gt('h2h_wins_short') || 'W')}`, 280, 580, 300, 50, 32, colors.success, 900);
+        fitText(`${data.losses || 0} ${textValue(gt('h2h_losses_short') || 'L')}`, 800, 580, 300, 50, 32, colors.danger, 900);
+
+        fillRound(484, 354, 112, 72, 36, 'rgba(0,0,0,0.36)', 'rgba(224,201,149,0.54)', 3);
+        fitText('VS', width / 2, 402, 90, 28, 22, colors.gold, 900);
+
+        fillRound(350, 635, 380, 62, 31, 'rgba(224, 201, 149, 0.13)', 'rgba(224,201,149,0.24)', 2);
+        fitText(data.matchText || this.h2hMatchText(data.total), width / 2, 677, 330, 28, 20, colors.gold, 900);
+
+        const rows = [
+            { label: label('h2h_highest_score', 'Najviše poena'), value: data.myHighScore || 0, color: colors.text },
+            { label: label('h2h_max_diff', 'Najveća razlika'), value: `+${data.maxWinMargin || 0}`, color: colors.success },
+            { label: label('h2h_worst_loss', 'Najteži poraz'), value: `-${data.maxLossMargin || 0}`, color: colors.danger },
+            { label: label('h2h_win_streak', 'Vatreni niz'), value: `${data.currentWinStreak || 0} (${maxShort}: ${data.maxWinStreak || 0})`, color: colors.orange },
+            { label: label('h2h_draws', 'Nerešeno'), value: data.draws || 0, color: colors.text },
+            { label: label('h2h_avg_pts', 'Tvoj prosek poena'), value: data.avg || 0, color: colors.text }
+        ];
+
+        const rowX = 135;
+        const rowY = 750;
+        const rowW = width - 270;
+        const rowH = 72;
+        rows.forEach((row, index) => {
+            const y = rowY + (index * 82);
+            fillRound(rowX, y, rowW, rowH, 18, index % 2 === 0 ? 'rgba(255,255,255,0.055)' : 'rgba(255,255,255,0.03)', 'rgba(255,255,255,0.075)', 1);
+            fitText(row.label, rowX + 28, y + 47, rowW - 260, 27, 20, colors.muted, 700, 'left');
+            fitText(row.value, rowX + rowW - 28, y + 47, 220, 32, 22, row.color, 900, 'right');
+        });
+
+        const barX = 145;
+        const barY = 1250;
+        const barW = width - 290;
+        const barH = 24;
+        fillRound(barX, barY, barW, barH, 12, colors.danger);
+        fillRound(barX, barY, Math.max(0, Math.min(barW, barW * ((data.winPct || 0) / 100))), barH, 12, colors.success);
+        fitText(`${data.winPct || 0}% ${winPctLabel}`, width / 2, 1320, 560, 28, 20, colors.muted, 900);
+
+        return new Promise((resolve, reject) => {
+            canvas.toBlob((blob) => {
+                if (blob) resolve(blob);
+                else reject(new Error('PNG nije generisan'));
+            }, 'image/png', 0.95);
+        });
+    }
+
+    downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
     }
 
     // --- UNIVERZALNA KONTROLA VIBRACIJE (Capacitor + Web) ---
@@ -2957,7 +3239,7 @@ class YambApp {
             let totalGames = (topRival.wins || 0) + (topRival.losses || 0) + (topRival.draws || 0);
 
             if (favNameEl) favNameEl.innerText = topRival.name;
-            if (favGamesEl) favGamesEl.innerText = `${totalGames} ${gt('stat_matches')}`;
+            if (favGamesEl) favGamesEl.innerText = this.h2hMatchText(totalGames);
             
             if (favImgEl) {
                 if (topRival.photo && topRival.photo.length > 5) {
@@ -2969,7 +3251,7 @@ class YambApp {
             }
         } else {
             if (favNameEl) favNameEl.innerText = gt('stat_none') || "Nema";
-            if (favGamesEl) favGamesEl.innerText = `0 ${gt('stat_matches')}`;
+            if (favGamesEl) favGamesEl.innerText = this.h2hMatchText(0);
             if (favImgEl) favImgEl.style.display = 'none';
         }
 
