@@ -622,21 +622,32 @@ class YambApp {
             localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
         }
 
-        let rivals = Object.values(h2h);
+        let rivals = Object.values(h2h).filter(r => (
+            r &&
+            r.name &&
+            String(r.name) !== 'undefined' &&
+            String(r.name) !== 'null'
+        ));
 
         if (rivals.length === 0) {
-            container.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px;">${gt('stat_h2h_empty') || "Nema odigranih duela..."}</div>`;
+            container.innerHTML = `<div class="h2h-empty-state">${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</div>`;
             return;
         }
 
         const toSafeCount = (value) => Math.max(0, parseInt(value) || 0);
-        const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (char) => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        }[char]));
+        const sec = window.YambSecurity;
+        const safeAttr = (value) => sec && typeof sec.escapeAttr === 'function'
+            ? sec.escapeAttr(value)
+            : this.escapeHtml(value);
+        const safeUrl = (value, fallback) => sec && typeof sec.safeUrl === 'function'
+            ? sec.safeUrl(value, fallback)
+            : (value || fallback);
+        const avatarFallback = (name) => `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Igrac')}&background=333&color=E0C995`;
+        const avatarFor = (name, photo) => {
+            const fallback = avatarFallback(name);
+            const rawAvatar = photo && String(photo).length > 5 ? photo : fallback;
+            return safeAttr(safeUrl(rawAvatar, fallback));
+        };
 
         rivals = rivals.map(r => ({
             ...r,
@@ -654,87 +665,188 @@ class YambApp {
 
         rivals.sort((a, b) => ((b.wins + b.losses + b.draws) - (a.wins + a.losses + a.draws)));
 
-        const myName = this.playerName || gt('h2h_me') || "Ja";
-        const myPhoto = localStorage.getItem('yamb_player_photo') || `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=333&color=E0C995`;
-        const safeMyName = escapeHtml(myName);
-
-        const getFontSize = (name) => {
-            if (!name) return '0.9rem';
-            if (name.length > 20) return '0.65rem';
-            if (name.length >= 14) return '0.75rem';
-            return '0.9rem';
-        };
-
-        const myFontSize = getFontSize(myName);
-
         let html = '';
-        rivals.forEach(r => {
+        rivals.forEach((r, index) => {
             const total = r.wins + r.losses + r.draws;
-            let winPct = total > 0 ? Math.round((r.wins / total) * 100) : 0;
-            let oppAvatar = r.photo && r.photo.length > 5 ? r.photo : `https://ui-avatars.com/api/?name=${encodeURIComponent(r.name)}&background=333&color=E0C995`;
-            let oppFontSize = getFontSize(r.name);
-            const safeOppName = escapeHtml(r.name);
-
-            let avg = r.gamesWithScore > 0 ? Math.round((r.myTotalScore || 0) / r.gamesWithScore) : 0;
+            const safeOppName = this.escapeHtml(r.name || 'Igrac');
+            const oppAvatar = avatarFor(r.name, r.photo);
+            const matchesLabel = gt('stat_matches') || 'meceva';
+            const safeMatchesLabel = this.escapeHtml(matchesLabel);
+            const safeWinShort = this.escapeHtml(gt('h2h_wins_short') || 'W');
+            const safeLossShort = this.escapeHtml(gt('h2h_losses_short') || 'L');
 
             html += `
-            <div class="h2h-card-new">
-                <div class="h2h-players-area">
-                    <div class="h2h-player me">
-                        <img src="${myPhoto}" class="h2h-avatar">
-                        <div class="h2h-name" style="font-size: ${myFontSize};">${safeMyName}</div>
-                        <div class="h2h-wl w-color">${r.wins} ${gt('h2h_wins_short') || 'W'}</div>
-                    </div>
-                    
-                    <div class="h2h-vs-divider">
-                        <div class="vs-circle">VS</div>
-                        <div class="vs-line"></div>
-                    </div>
-
-                    <div class="h2h-player opp">
-                        <img src="${oppAvatar}" class="h2h-avatar">
-                        <div class="h2h-name" style="font-size: ${oppFontSize};">${safeOppName}</div>
-                        <div class="h2h-wl l-color">${r.losses} ${gt('h2h_losses_short') || 'L'}</div>
-                    </div>
-                </div>
-
-                <div class="h2h-stats-area">
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_highest_score') || '🏆 Najviše poena:'}</span>
-                        <span class="val">${r.myHighScore || 0}</span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_max_diff') || '📈 Najveća razlika:'}</span>
-                        <span class="val c-success">+${r.maxWinMargin || 0}</span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_worst_loss') || '📉 Najteži poraz:'}</span>
-                        <span class="val c-danger">-${r.maxLossMargin || 0}</span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_win_streak') || '🔥 Vatreni niz:'}</span>
-                        <span class="val" style="color: #FF5722;">${r.currentWinStreak || 0} <span style="font-size:0.65rem; color:#aaa; margin-left: 4px;">(${gt('h2h_max_short') || 'Max'}: ${r.maxWinStreak || 0})</span></span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_draws') || '🤝 Nerešeno:'}</span>
-                        <span class="val">${r.draws || 0}</span>
-                    </div>
-                    <div class="h2h-stat-row">
-                        <span class="lbl">${gt('h2h_avg_pts') || '🎯 Tvoj prosek poena:'}</span>
-                        <span class="val">${avg}</span>
-                    </div>
-                </div>
-
-                <div class="h2h-bar-wrapper">
-                    <div class="h2h-bar-bg">
-                        <div class="h2h-bar-win" style="width: ${winPct}%"></div>
-                    </div>
-                    <div class="h2h-bar-text">${winPct}% ${gt('h2h_win_pct') || 'POBEDA'}</div>
-                </div>
-            </div>`;
+            <button type="button" class="h2h-rival-tile" data-h2h-index="${index}" aria-label="${safeOppName}">
+                <span class="h2h-rival-avatar-wrap">
+                    <img src="${oppAvatar}" class="h2h-rival-avatar" alt="${safeOppName}" loading="lazy">
+                    <span class="h2h-rival-count">${total}</span>
+                </span>
+                <span class="h2h-rival-name">${safeOppName}</span>
+                <span class="h2h-rival-record"><span class="w-color">${r.wins} ${safeWinShort}</span> / <span class="l-color">${r.losses} ${safeLossShort}</span></span>
+                <span class="h2h-rival-matches">${total} ${safeMatchesLabel}</span>
+            </button>`;
         });
 
         container.innerHTML = html;
+        container.querySelectorAll('.h2h-rival-tile').forEach(tile => {
+            tile.addEventListener('click', () => {
+                const index = parseInt(tile.dataset.h2hIndex, 10);
+                this.openH2HDetail(rivals[index], tile);
+            });
+        });
+    }
+
+    ensureH2HDetailModal() {
+        let modal = document.getElementById('h2h-detail-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'h2h-detail-modal';
+            modal.className = 'h2h-detail-modal';
+            modal.setAttribute('aria-hidden', 'true');
+            modal.innerHTML = `
+                <button type="button" class="h2h-detail-backdrop" aria-label="Zatvori H2H statistiku"></button>
+                <div class="h2h-detail-card" role="dialog" aria-modal="true" aria-labelledby="h2h-detail-title">
+                    <button type="button" class="h2h-detail-close" aria-label="Zatvori H2H statistiku">×</button>
+                    <div id="h2h-detail-content"></div>
+                </div>`;
+            document.body.appendChild(modal);
+        }
+
+        if (!modal.dataset.bound) {
+            const backdrop = modal.querySelector('.h2h-detail-backdrop');
+            const closeBtn = modal.querySelector('.h2h-detail-close');
+            if (backdrop) backdrop.addEventListener('click', () => this.closeH2HDetail());
+            if (closeBtn) closeBtn.addEventListener('click', () => this.closeH2HDetail());
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && modal.classList.contains('active')) {
+                    this.closeH2HDetail();
+                }
+            });
+            modal.dataset.bound = 'true';
+        }
+
+        return modal;
+    }
+
+    openH2HDetail(record, triggerEl = null) {
+        if (!record) return;
+
+        const toSafeCount = (value) => Math.max(0, parseInt(value) || 0);
+        const modal = this.ensureH2HDetailModal();
+        const content = document.getElementById('h2h-detail-content');
+        if (!content) return;
+
+        const sec = window.YambSecurity;
+        const safeAttr = (value) => sec && typeof sec.escapeAttr === 'function'
+            ? sec.escapeAttr(value)
+            : this.escapeHtml(value);
+        const safeUrl = (value, fallback) => sec && typeof sec.safeUrl === 'function'
+            ? sec.safeUrl(value, fallback)
+            : (value || fallback);
+        const avatarFallback = (name) => `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Igrac')}&background=333&color=E0C995`;
+        const avatarFor = (name, photo) => {
+            const fallback = avatarFallback(name);
+            const rawAvatar = photo && String(photo).length > 5 ? photo : fallback;
+            return safeAttr(safeUrl(rawAvatar, fallback));
+        };
+
+        const r = {
+            ...record,
+            wins: toSafeCount(record.wins),
+            losses: toSafeCount(record.losses),
+            draws: toSafeCount(record.draws),
+            myTotalScore: toSafeCount(record.myTotalScore),
+            gamesWithScore: toSafeCount(record.gamesWithScore),
+            myHighScore: toSafeCount(record.myHighScore),
+            maxWinMargin: toSafeCount(record.maxWinMargin),
+            maxLossMargin: toSafeCount(record.maxLossMargin),
+            currentWinStreak: toSafeCount(record.currentWinStreak),
+            maxWinStreak: toSafeCount(record.maxWinStreak)
+        };
+
+        const myName = this.playerName || gt('h2h_me') || 'Ja';
+        const oppName = r.name || 'Igrac';
+        const total = r.wins + r.losses + r.draws;
+        const winPct = total > 0 ? Math.round((r.wins / total) * 100) : 0;
+        const avg = r.gamesWithScore > 0 ? Math.round((r.myTotalScore || 0) / r.gamesWithScore) : 0;
+        const myAvatar = avatarFor(myName, localStorage.getItem('yamb_player_photo') || '');
+        const oppAvatar = avatarFor(oppName, r.photo);
+        const safeMyName = this.escapeHtml(myName);
+        const safeOppName = this.escapeHtml(oppName);
+        const matchesLabel = this.escapeHtml(gt('stat_matches') || 'meceva');
+        const winShort = this.escapeHtml(gt('h2h_wins_short') || 'W');
+        const lossShort = this.escapeHtml(gt('h2h_losses_short') || 'L');
+        const maxShort = this.escapeHtml(gt('h2h_max_short') || 'Max');
+
+        content.innerHTML = `
+            <div class="h2h-detail-title" id="h2h-detail-title">${this.escapeHtml(gt('stat_h2h_title') || 'MEĐUSOBNI DUELI')}</div>
+            <div class="h2h-detail-players">
+                <div class="h2h-detail-player">
+                    <img src="${myAvatar}" class="h2h-detail-avatar" alt="${safeMyName}">
+                    <div class="h2h-detail-name">${safeMyName}</div>
+                    <div class="h2h-detail-score w-color">${r.wins} ${winShort}</div>
+                </div>
+                <div class="h2h-detail-vs">VS</div>
+                <div class="h2h-detail-player">
+                    <img src="${oppAvatar}" class="h2h-detail-avatar h2h-detail-avatar-opp" alt="${safeOppName}">
+                    <div class="h2h-detail-name">${safeOppName}</div>
+                    <div class="h2h-detail-score l-color">${r.losses} ${lossShort}</div>
+                </div>
+            </div>
+            <div class="h2h-detail-total">${total} ${matchesLabel}</div>
+            <div class="h2h-stats-area h2h-detail-stats">
+                <div class="h2h-stat-row">
+                    <span class="lbl">${this.escapeHtml(gt('h2h_highest_score') || 'Najviše poena:')}</span>
+                    <span class="val">${r.myHighScore || 0}</span>
+                </div>
+                <div class="h2h-stat-row">
+                    <span class="lbl">${this.escapeHtml(gt('h2h_max_diff') || 'Najveća razlika:')}</span>
+                    <span class="val c-success">+${r.maxWinMargin || 0}</span>
+                </div>
+                <div class="h2h-stat-row">
+                    <span class="lbl">${this.escapeHtml(gt('h2h_worst_loss') || 'Najteži poraz:')}</span>
+                    <span class="val c-danger">-${r.maxLossMargin || 0}</span>
+                </div>
+                <div class="h2h-stat-row">
+                    <span class="lbl">${this.escapeHtml(gt('h2h_win_streak') || 'Vatreni niz:')}</span>
+                    <span class="val h2h-streak-val">${r.currentWinStreak || 0} <span>(${maxShort}: ${r.maxWinStreak || 0})</span></span>
+                </div>
+                <div class="h2h-stat-row">
+                    <span class="lbl">${this.escapeHtml(gt('h2h_draws') || 'Nerešeno:')}</span>
+                    <span class="val">${r.draws || 0}</span>
+                </div>
+                <div class="h2h-stat-row">
+                    <span class="lbl">${this.escapeHtml(gt('h2h_avg_pts') || 'Tvoj prosek poena:')}</span>
+                    <span class="val">${avg}</span>
+                </div>
+            </div>
+            <div class="h2h-bar-wrapper h2h-detail-bar">
+                <div class="h2h-bar-bg">
+                    <div class="h2h-bar-win" style="width: ${winPct}%"></div>
+                </div>
+                <div class="h2h-bar-text">${winPct}% ${this.escapeHtml(gt('h2h_win_pct') || 'POBEDA')}</div>
+            </div>`;
+
+        this.lastH2HTrigger = triggerEl || document.activeElement;
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('h2h-modal-open');
+
+        const closeBtn = modal.querySelector('.h2h-detail-close');
+        if (closeBtn) closeBtn.focus({ preventScroll: true });
+    }
+
+    closeH2HDetail() {
+        const modal = document.getElementById('h2h-detail-modal');
+        if (!modal) return;
+
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('h2h-modal-open');
+
+        if (this.lastH2HTrigger && typeof this.lastH2HTrigger.focus === 'function') {
+            this.lastH2HTrigger.focus({ preventScroll: true });
+        }
     }
 
     // --- UNIVERZALNA KONTROLA VIBRACIJE (Capacitor + Web) ---

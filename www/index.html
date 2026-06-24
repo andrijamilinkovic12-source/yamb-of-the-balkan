@@ -686,13 +686,13 @@
 
             <div class="stats-page">
                 <div class="stats-page-panel stats-h2h-panel">
-                    <h3 style="color: var(--success); text-align: center; margin-bottom: 10px; letter-spacing: 1px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5);" data-lang="stat_h2h_title">MEĐUSOBNI DUELI ⚔️</h3>
+                    <h3 class="stats-h2h-title" data-lang="stat_h2h_title">MEĐUSOBNI DUELI ⚔️</h3>
                     
-                    <div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; padding: 0 10px;" data-lang="stat_h2h_desc">
-                        Prikazuje vaš skor protiv prijatelja i rivala.
+                    <div class="stats-h2h-desc" data-lang="stat_h2h_desc">
+                        Rivali sa najviše odigranih partija su prvi.
                     </div>
 
-                    <div id="h2h-list-container" style="flex: 1; padding: 0 15px 15px 15px; width: 100%; display: flex; flex-direction: column; gap: 10px;">
+                    <div id="h2h-list-container" class="h2h-rivals-grid">
                         </div>
                 </div>
             </div>
@@ -738,6 +738,8 @@
             .stats-page-panel { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
             .stats-overview-panel { gap: 8px; padding: 0; justify-content: space-between; }
             .stats-h2h-panel { gap: 0; padding: 0; }
+            .stats-h2h-title { color: var(--success); text-align: center; margin: 0 0 8px; letter-spacing: 1px; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1rem; line-height: 1.2; flex: 0 0 auto; }
+            .stats-h2h-desc { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; padding: 0 10px; line-height: 1.35; flex: 0 0 auto; }
             
             .stats-pagination { display: flex; gap: 12px; justify-content: center; align-items: center; margin: 0; min-height: 18px; }
             .stats-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--carousel-dot-idle); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
@@ -750,7 +752,7 @@
                 .stats-page { padding: 0 18px; }
             }
             
-            /* Zlatni skrolbar za H2H listu i glatko skrolovanje na dodir */
+            /* H2H rivals grid */
             #h2h-list-container {
                 -webkit-overflow-scrolling: touch;
                 overflow-y: auto;
@@ -767,32 +769,53 @@
                 border-radius: 10px;
             }
             
-            /* Nova H2H Card Style */
-            .h2h-card-new { display: flex; flex-direction: column; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; overflow: hidden; padding-top: 15px; margin-bottom: 5px; position: relative; flex-shrink: 0; }
-            
-            .h2h-players-area { display: flex; justify-content: space-between; position: relative; padding: 0 10px; margin-bottom: 12px;}
-            .h2h-player { display: flex; flex-direction: column; align-items: center; width: 45%; }
-            .h2h-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 2px 5px rgba(0,0,0,0.5); margin-bottom: 8px; }
-            .h2h-player.opp .h2h-avatar { border-color: var(--danger); }
-            
-            .h2h-name { color: var(--text-main); font-weight: 800; text-align: center; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 6px; min-height: 2.4em; }
-            .h2h-wl { font-weight: 900; font-size: 1.3rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+            .h2h-rivals-grid { flex: 1 1 auto; min-height: 0; width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; gap: 14px 10px; padding: 6px 8px 16px; }
+            .h2h-empty-state { grid-column: 1 / -1; text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 28px 12px; }
+            .h2h-rival-tile { appearance: none; border: 1px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.035); color: var(--text-main); border-radius: 14px; padding: 10px 6px 11px; min-width: 0; min-height: 144px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 6px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 18px rgba(0,0,0,0.18); transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease; }
+            .h2h-rival-tile:active { transform: scale(0.98); }
+            .h2h-rival-tile:hover, .h2h-rival-tile:focus-visible { background: rgba(255,255,255,0.075); border-color: rgba(255,214,111,0.44); outline: none; }
+            .h2h-rival-avatar-wrap { position: relative; width: clamp(58px, 18vw, 78px); height: clamp(58px, 18vw, 78px); flex: 0 0 auto; }
+            .h2h-rival-avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 5px 14px rgba(0,0,0,0.45), 0 0 0 4px rgba(255,214,111,0.08); background: rgba(0,0,0,0.35); }
+            .h2h-rival-count { position: absolute; right: -3px; bottom: -2px; min-width: 24px; height: 24px; padding: 0 6px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--gold-main); color: #15100A; border: 2px solid rgba(15,15,15,0.95); font-size: 0.72rem; font-weight: 900; line-height: 1; box-shadow: 0 3px 8px rgba(0,0,0,0.35); }
+            .h2h-rival-name { width: 100%; color: var(--text-main); font-weight: 800; font-size: 0.78rem; line-height: 1.18; text-align: center; min-height: 2.36em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+            .h2h-rival-record { font-size: 0.73rem; font-weight: 900; line-height: 1.1; white-space: nowrap; }
+            .h2h-rival-matches { color: var(--text-muted); font-size: 0.66rem; font-weight: 800; line-height: 1.1; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
             .w-color { color: var(--success); }
             .l-color { color: var(--danger); }
-            
-            .h2h-vs-divider { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-            .h2h-vs-divider .vs-line { position: absolute; width: 1px; height: 100%; background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.2), transparent); z-index: 1; }
-            .h2h-vs-divider .vs-circle { background: #111; color: var(--gold-main); font-size: 0.65rem; font-weight: 900; padding: 5px; border-radius: 50%; border: 1px solid var(--gold-main); z-index: 2; display: flex; align-items: center; justify-content: center; }
 
-            .h2h-stats-area { background: rgba(255,255,255,0.02); padding: 12px 15px; border-top: 1px solid rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; flex-direction: column; gap: 8px; }
+            @media (min-width: 540px) {
+                .h2h-rivals-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 12px; padding-left: 10px; padding-right: 10px; }
+                .h2h-rival-tile { min-height: 152px; }
+            }
+
+            body.h2h-modal-open { overflow: hidden; }
+            .h2h-detail-modal { position: fixed; inset: 0; z-index: 10080; display: none; align-items: center; justify-content: center; padding: max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left)); }
+            .h2h-detail-modal.active { display: flex; }
+            .h2h-detail-backdrop { position: absolute; inset: 0; border: 0; padding: 0; background: rgba(5,8,12,0.62); backdrop-filter: blur(9px) saturate(125%); -webkit-backdrop-filter: blur(9px) saturate(125%); cursor: pointer; }
+            .h2h-detail-card { position: relative; width: min(420px, calc(100vw - 28px)); max-height: min(680px, calc(100vh - 32px)); overflow-y: auto; border-radius: 20px; background: var(--glass-panel); border: var(--glass-border); box-shadow: var(--glass-shadow), 0 22px 55px rgba(0,0,0,0.46); backdrop-filter: blur(28px) saturate(140%); -webkit-backdrop-filter: blur(28px) saturate(140%); padding: 18px; color: var(--text-main); }
+            .h2h-detail-close { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.34); color: var(--text-main); font-size: 1.35rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
+            .h2h-detail-close:focus-visible, .h2h-detail-close:hover { outline: none; border-color: rgba(255,214,111,0.5); background: rgba(255,255,255,0.1); }
+            .h2h-detail-title { padding: 0 42px 14px; text-align: center; color: var(--success); font-size: 0.92rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.45); }
+            .h2h-detail-players { display: grid; grid-template-columns: 1fr 44px 1fr; align-items: start; gap: 8px; padding: 4px 2px 12px; }
+            .h2h-detail-player { min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; }
+            .h2h-detail-avatar { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 5px 16px rgba(0,0,0,0.48), 0 0 0 4px rgba(255,214,111,0.08); background: rgba(0,0,0,0.35); }
+            .h2h-detail-avatar-opp { border-color: var(--danger); box-shadow: 0 5px 16px rgba(0,0,0,0.48), 0 0 0 4px rgba(244,67,54,0.08); }
+            .h2h-detail-name { width: 100%; min-height: 2.35em; font-size: 0.82rem; line-height: 1.18; font-weight: 900; text-align: center; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+            .h2h-detail-score { font-size: 1.1rem; font-weight: 900; line-height: 1; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+            .h2h-detail-vs { align-self: center; width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.42); color: var(--gold-main); border: 1px solid rgba(255,214,111,0.52); font-size: 0.72rem; font-weight: 900; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 4px 12px rgba(0,0,0,0.3); }
+            .h2h-detail-total { width: max-content; max-width: 100%; margin: 0 auto 12px; padding: 5px 12px; border-radius: 999px; color: var(--gold-main); background: rgba(255,214,111,0.1); border: 1px solid rgba(255,214,111,0.18); font-size: 0.72rem; font-weight: 900; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .h2h-stats-area { background: rgba(255,255,255,0.035); padding: 12px 14px; border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; display: flex; flex-direction: column; gap: 8px; }
             .h2h-stat-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
             .h2h-stat-row .lbl { color: var(--text-muted); font-weight: 600; }
             .h2h-stat-row .val { color: var(--text-main); font-weight: 900; font-size: 0.9rem;}
+            .h2h-streak-val { color: #FF5722 !important; }
+            .h2h-streak-val span { font-size: 0.65rem; color: #aaa; margin-left: 4px; }
 
             .h2h-bar-wrapper { padding: 12px 15px; display: flex; flex-direction: column; gap: 6px; }
             .h2h-bar-bg { width: 100%; height: 8px; background: var(--danger); border-radius: 4px; overflow: hidden; display: flex; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); }
             .h2h-bar-win { height: 100%; background: var(--success); transition: width 0.5s ease-out; }
             .h2h-bar-text { text-align: center; font-size: 0.7rem; color: var(--text-muted); font-weight: 800; letter-spacing: 1px; }
+            .h2h-detail-bar { padding: 14px 2px 0; }
         </style>
     </div>
 
