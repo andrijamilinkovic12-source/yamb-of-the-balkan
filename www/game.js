@@ -478,6 +478,11 @@ class YambApp {
                 : (baseTotal > incomingTotal
                     ? count(base.currentWinStreak)
                     : Math.max(count(base.currentWinStreak), count(incoming.currentWinStreak))));
+        const maxWinStreak = Math.max(
+            count(base.maxWinStreak),
+            count(incoming.maxWinStreak),
+            currentWinStreak
+        );
         const merged = {
             ...base,
             ...incoming,
@@ -493,7 +498,7 @@ class YambApp {
             maxWinMargin: Math.max(count(base.maxWinMargin), count(incoming.maxWinMargin)),
             maxLossMargin: Math.max(count(base.maxLossMargin), count(incoming.maxLossMargin)),
             currentWinStreak,
-            maxWinStreak: Math.max(count(base.maxWinStreak), count(incoming.maxWinStreak))
+            maxWinStreak
         };
         return merged;
     }
@@ -1533,7 +1538,18 @@ class YambApp {
             const cloudDraws = Math.max(0, parseInt(cloudData.draws) || 0);
             const localTotal = localWins + localLosses + localDraws;
             const cloudTotal = cloudWins + cloudLosses + cloudDraws;
+            const localCurrentStreak = Math.max(0, parseInt(localData.currentWinStreak) || 0);
             const cloudCurrentStreak = Math.max(0, parseInt(cloudData.currentWinStreak) || 0);
+            const mergedCurrentWinStreak = cloudTotal > localTotal
+                ? cloudCurrentStreak
+                : (localTotal > cloudTotal
+                    ? localCurrentStreak
+                    : Math.max(localCurrentStreak, cloudCurrentStreak));
+            const mergedMaxWinStreak = Math.max(
+                localData.maxWinStreak || 0,
+                cloudData.maxWinStreak || 0,
+                mergedCurrentWinStreak
+            );
             const merged = {
                 ...localData,
                 ...cloudData,
@@ -1545,10 +1561,8 @@ class YambApp {
                 myHighScore: Math.max(localData.myHighScore || 0, cloudData.myHighScore || 0),
                 maxWinMargin: Math.max(localData.maxWinMargin || 0, cloudData.maxWinMargin || 0),
                 maxLossMargin: Math.max(localData.maxLossMargin || 0, cloudData.maxLossMargin || 0),
-                maxWinStreak: Math.max(localData.maxWinStreak || 0, cloudData.maxWinStreak || 0),
-                currentWinStreak: cloudTotal >= localTotal
-                    ? cloudCurrentStreak
-                    : (cloudCurrentStreak === 0 ? 0 : Math.max(localData.currentWinStreak || 0, cloudCurrentStreak))
+                maxWinStreak: mergedMaxWinStreak,
+                currentWinStreak: mergedCurrentWinStreak
             };
 
             if (JSON.stringify(localData) !== JSON.stringify(merged)) {

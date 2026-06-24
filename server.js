@@ -1582,6 +1582,11 @@ function mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
         : (baseTotal > incomingTotal
             ? toSafeInt(base.currentWinStreak)
             : Math.max(toSafeInt(base.currentWinStreak), toSafeInt(incoming.currentWinStreak)));
+    const maxWinStreak = Math.max(
+        toSafeInt(base.maxWinStreak),
+        toSafeInt(incoming.maxWinStreak),
+        currentWinStreak
+    );
 
     return {
         ...base,
@@ -1598,7 +1603,7 @@ function mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
         maxWinMargin: Math.max(toSafeInt(base.maxWinMargin), toSafeInt(incoming.maxWinMargin)),
         maxLossMargin: Math.max(toSafeInt(base.maxLossMargin), toSafeInt(incoming.maxLossMargin)),
         currentWinStreak,
-        maxWinStreak: Math.max(toSafeInt(base.maxWinStreak), toSafeInt(incoming.maxWinStreak))
+        maxWinStreak
     };
 }
 
