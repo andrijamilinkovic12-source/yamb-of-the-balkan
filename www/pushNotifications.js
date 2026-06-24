@@ -64,8 +64,8 @@
         try {
             await plugin.createChannel({
                 id: CHANNEL_ID,
-                name: 'Turnirske notifikacije',
-                description: 'Obavestenja za turnire i turnirske meceve',
+                name: 'Yamb obavestenja',
+                description: 'Obavestenja za turnire, rekorde i kvartalnu ligu',
                 importance: 4,
                 visibility: 1,
                 vibration: true
@@ -108,7 +108,7 @@
         const payload = {
             token,
             platform: getPlatform(),
-            categories: { tournament: true, records: true },
+            categories: { tournament: true, records: true, league: true },
             appId: 'com.yamb.balkan'
         };
 
@@ -173,6 +173,46 @@
         }
     }
 
+    function openLeagueHallOfFameFromNotification(data = {}) {
+        const openHallOfFameTab = (league, retries = 12) => {
+            const modal = document.getElementById('league-modal-overlay');
+            if (modal && typeof league.toggleMainView === 'function') {
+                league.toggleMainView('hof');
+                if (typeof league.switchHofTab === 'function') {
+                    setTimeout(() => league.switchHofTab('champions'), 150);
+                }
+                return;
+            }
+
+            if (retries > 0) {
+                setTimeout(() => openHallOfFameTab(league, retries - 1), 300);
+            }
+        };
+
+        const open = () => {
+            const app = window.app;
+            const league = window.kvartalnaLiga;
+
+            if (league) {
+                if (typeof league.openModal === 'function') {
+                    league.openModal();
+                } else if (typeof league.showModal === 'function') {
+                    league.showModal();
+                }
+                openHallOfFameTab(league);
+                return;
+            }
+
+            if (app && typeof app.navigateTo === 'function') app.navigateTo('main-menu');
+        };
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', open, { once: true });
+        } else {
+            setTimeout(open, 150);
+        }
+    }
+
     async function ensureListeners(app) {
         if (listenersReady) return;
         const plugin = getPushPlugin();
@@ -198,6 +238,8 @@
                 openTournamentFromNotification(data);
             } else if (type.startsWith('record_') || data.scope === 'records') {
                 openRecordsFromNotification(data);
+            } else if (type.startsWith('league_') || data.scope === 'league') {
+                openLeagueHallOfFameFromNotification(data);
             }
         });
 
@@ -267,6 +309,7 @@
         ensureRegistered,
         unregisterCurrentDevice,
         openTournamentFromNotification,
-        openRecordsFromNotification
+        openRecordsFromNotification,
+        openLeagueHallOfFameFromNotification
     };
 })();

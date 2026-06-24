@@ -244,6 +244,8 @@ const LeagueHallOfFameSchema = new mongoose.Schema({
     quarter: Number,
     topScores: { type: Array, default: [] },
     champion: { type: Object, default: null },
+    championPushSentAt: { type: Date, default: null },
+    championPushDateKey: { type: String, default: '' },
     archivedAt: { type: Date, default: Date.now }
 });
 const LeagueHallOfFame = mongoose.model('LeagueHallOfFame', LeagueHallOfFameSchema);
@@ -374,7 +376,8 @@ const PushTokenSchema = new mongoose.Schema({
     appId: { type: String, default: 'com.yamb.balkan' },
     categories: {
         tournament: { type: Boolean, default: true },
-        records: { type: Boolean, default: true }
+        records: { type: Boolean, default: true },
+        league: { type: Boolean, default: true }
     },
     enabled: { type: Boolean, default: true },
     createdAt: { type: Number, default: Date.now },
@@ -452,6 +455,7 @@ const PUSH_TOKEN_STALE_MS = Math.max(
 );
 const PUSH_NOTIFICATION_CHANNEL_ID = 'tournament_notifications';
 const LEADERBOARD_RECORD_PERIODS = ['weekly', 'monthly', 'all_time'];
+const LEAGUE_CHAMPION_PUSH_INTERVAL_MS = 30 * 60 * 1000;
 const ADMOB_REWARD_KEYS_URL = process.env.ADMOB_REWARD_KEYS_URL || 'https://www.gstatic.com/admob/reward/verifier-keys.json';
 const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
 const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '20000', 10)));
@@ -487,7 +491,8 @@ function sanitizePushPlatform(platform) {
 function normalizePushCategories(categories = {}) {
     return {
         tournament: categories.tournament !== false,
-        records: categories.records !== false
+        records: categories.records !== false,
+        league: categories.league !== false
     };
 }
 
@@ -881,6 +886,175 @@ function getLeaderboardPeriodStart(period, now = new Date(), timeZone = LEADERBO
     }
 
     return null;
+}
+
+const LEAGUE_CHAMPION_ANNOUNCEMENT_MONTHS = new Set([1, 4, 7, 10]);
+
+function padDatePart(value) {
+    return String(value).padStart(2, '0');
+}
+
+function getLeagueChampionAnnouncementTarget(now = new Date()) {
+    const parts = getTimeZoneParts(now, LEADERBOARD_TIME_ZONE);
+    if (parts.day !== 1 || !LEAGUE_CHAMPION_ANNOUNCEMENT_MONTHS.has(parts.month)) return null;
+
+    const year = parts.month === 1 ? parts.year - 1 : parts.year;
+    const quarter = parts.month === 1 ? 4 : (parts.month - 1) / 3;
+    if (!Number.isInteger(quarter) || quarter < 1 || quarter > 4) return null;
+
+    return {
+        year,
+        quarter,
+        periodKey: getLeaguePeriodKey(year, quarter),
+        dateKey: `${parts.year}-${padDatePart(parts.month)}-${padDatePart(parts.day)}`
+    };
+}
+
+function toRomanCycle(num) {
+    const value = Math.max(0, toSafeInt(num, 0));
+    if (value <= 0) return '';
+
+    const lookup = [
+        ['M', 1000], ['CM', 900], ['D', 500], ['CD', 400],
+        ['C', 100], ['XC', 90], ['L', 50], ['XL', 40],
+        ['X', 10], ['IX', 9], ['V', 5], ['IV', 4], ['I', 1]
+    ];
+    let remaining = value;
+    let roman = '';
+
+    for (const [symbol, amount] of lookup) {
+        while (remaining >= amount) {
+            roman += symbol;
+            remaining -= amount;
+        }
+    }
+
+    return roman;
+}
+
+async function getLeagueChampionCycleNumber(year, quarter) {
+    if (!MONGO_URI) return null;
+
+    const archivedQuarters = await LeagueHallOfFame.find()
+        .sort({ year: 1, quarter: 1 })
+        .select('year quarter topScores champion')
+        .lean();
+
+    let cycleCounter = 0;
+    for (const quarterArchive of archivedQuarters) {
+        const qScores = Array.isArray(quarterArchive.topScores) ? quarterArchive.topScores : [];
+        const champion = quarterArchive.champion || qScores[0];
+        if (!champion) continue;
+
+        cycleCounter += 1;
+        if (Number(quarterArchive.year) === year && Number(quarterArchive.quarter) === quarter) {
+            return cycleCounter;
+        }
+    }
+
+    return null;
+}
+
+function buildLeagueChampionPushPayload(champion, cycle) {
+    const playerName = sanitizeTournamentName(champion?.playerName || 'Igrač');
+    const score = Math.max(0, toSafeInt(champion?.score, 0));
+    const romanCycle = toRomanCycle(cycle);
+    const cycleText = romanCycle ? `${romanCycle} ciklusa` : 'prethodnog ciklusa';
+
+    return {
+        title: 'Pobednik Kvartalne lige',
+        body: `Pobednik ${cycleText} Kvartalne lige je ${playerName} sa ${formatRecordScore(score)} poena.`,
+        playerName,
+        score,
+        romanCycle
+    };
+}
+
+async function notifyQuarterlyLeagueChampionIfDue(now = new Date()) {
+    if (!MONGO_URI) return { ok: false, reason: 'mongo_unavailable' };
+
+    const target = getLeagueChampionAnnouncementTarget(now);
+    if (!target) return { ok: true, skipped: 'not_announcement_day' };
+
+    const archivedQuarter = await archiveLeagueQuarter(target.year, target.quarter);
+    const archivedScores = Array.isArray(archivedQuarter?.topScores) ? archivedQuarter.topScores : [];
+    const champion = archivedQuarter?.champion || archivedScores[0];
+    if (!champion) return { ok: true, skipped: 'no_champion', periodKey: target.periodKey };
+
+    const claimedArchive = await LeagueHallOfFame.findOneAndUpdate(
+        {
+            periodKey: target.periodKey,
+            championPushDateKey: { $ne: target.dateKey }
+        },
+        {
+            $set: {
+                championPushDateKey: target.dateKey,
+                championPushSentAt: new Date()
+            }
+        },
+        { new: true }
+    ).lean();
+
+    if (!claimedArchive) return { ok: true, skipped: 'already_sent', periodKey: target.periodKey };
+
+    const claimedScores = Array.isArray(claimedArchive.topScores) ? claimedArchive.topScores : [];
+    const claimedChampion = claimedArchive.champion || claimedScores[0] || champion;
+    const cycle = await getLeagueChampionCycleNumber(target.year, target.quarter);
+    const payload = buildLeagueChampionPushPayload(claimedChampion, cycle);
+    const uids = await getPushEnabledUids('league');
+    const result = uids.length > 0
+        ? await sendPushToUids(uids, {
+            category: 'league',
+            scope: 'league',
+            type: 'league_champion_announced',
+            tag: `league_champion_${target.periodKey}`,
+            title: payload.title,
+            body: payload.body,
+            data: {
+                year: target.year,
+                quarter: target.quarter,
+                periodKey: target.periodKey,
+                cycle: cycle || '',
+                cycleRoman: payload.romanCycle,
+                playerName: payload.playerName,
+                score: payload.score
+            }
+        })
+        : { ok: true, sent: 0 };
+
+    if (!result?.ok) {
+        await LeagueHallOfFame.updateOne(
+            { periodKey: target.periodKey, championPushDateKey: target.dateKey },
+            { $set: { championPushDateKey: '', championPushSentAt: null } }
+        );
+        return { ...result, periodKey: target.periodKey };
+    }
+
+    return {
+        ok: true,
+        periodKey: target.periodKey,
+        sent: Math.max(0, toSafeInt(result.sent, 0)),
+        playerName: payload.playerName,
+        score: payload.score,
+        cycle
+    };
+}
+
+let leagueChampionPushCheckInProgress = false;
+async function runLeagueChampionPushCheck() {
+    if (leagueChampionPushCheckInProgress) return;
+    leagueChampionPushCheckInProgress = true;
+
+    try {
+        const result = await notifyQuarterlyLeagueChampionIfDue();
+        if (result?.sent > 0) {
+            console.log(`✅ Kvartalna liga push poslat (${result.periodKey}): ${result.playerName}, ${result.sent} uređaja.`);
+        }
+    } catch (err) {
+        console.error('Greška pri kvartalna liga push proveri:', err);
+    } finally {
+        leagueChampionPushCheckInProgress = false;
+    }
 }
 
 const TROPHY_REWARDS = Object.freeze({
@@ -3372,11 +3546,11 @@ async function verifyFirebaseSocketToken(socket, token) {
     }
 }
 
-function getServerQuarterInfo() {
-    const now = new Date();
+function getServerQuarterInfo(now = new Date()) {
+    const parts = getTimeZoneParts(now, LEADERBOARD_TIME_ZONE);
     return {
-        year: now.getFullYear(),
-        quarter: Math.floor(now.getMonth() / 3) + 1
+        year: parts.year,
+        quarter: Math.floor((parts.month - 1) / 3) + 1
     };
 }
 
@@ -8209,6 +8383,14 @@ io.on('connection', (socket) => {
         updateOnlineCount();
     });
 });
+
+setTimeout(() => {
+    runLeagueChampionPushCheck();
+}, 15000);
+
+setInterval(() => {
+    runLeagueChampionPushCheck();
+}, LEAGUE_CHAMPION_PUSH_INTERVAL_MS);
 
 setInterval(() => {
     const now = Date.now();
