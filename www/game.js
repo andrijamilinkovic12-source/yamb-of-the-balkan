@@ -122,6 +122,7 @@ class YambApp {
         this.currentHostingRoomId = null;
         this.waitingHofPeriod = 'weekly';
         this.waitingHofInterval = null;
+        this.settingsSyncTimer = null;
         
         this.currentOpponentPhoto = '';
         this.currentOpponentUid = null;
@@ -297,6 +298,7 @@ class YambApp {
         
         const mainSetting = document.getElementById('setting-sound');
         if (mainSetting) mainSetting.checked = this.soundEnabled;
+        this.syncProfileSettingsToCloud();
     }
 
     toggleQuickVib() {
@@ -310,6 +312,7 @@ class YambApp {
 
         const mainSetting = document.getElementById('setting-vibration');
         if (mainSetting) mainSetting.checked = this.vibrationEnabled;
+        this.syncProfileSettingsToCloud();
     }
 
     toggleQuickMusic() {
@@ -324,6 +327,7 @@ class YambApp {
         
         const mainSetting = document.getElementById('setting-music');
         if (mainSetting) mainSetting.checked = isEnabled;
+        this.syncProfileSettingsToCloud();
     }
 
     changeMusicVolume(val) {
@@ -349,6 +353,20 @@ class YambApp {
                 if (mainSetting) mainSetting.checked = true;
             }
         }
+        this.syncProfileSettingsToCloud();
+    }
+
+    syncProfileSettingsToCloud(delayMs = 350) {
+        if (!localStorage.getItem('yamb_uid')) return;
+        if (!this.socket || !this.socket.connected) return;
+
+        if (this.settingsSyncTimer) clearTimeout(this.settingsSyncTimer);
+        this.settingsSyncTimer = setTimeout(() => {
+            this.settingsSyncTimer = null;
+            this.emitPlayerData(false).catch(err => {
+                console.warn("Podešavanja nisu odmah sinhronizovana:", err);
+            });
+        }, delayMs);
     }
 
     updateQuickMenuIcons() {
@@ -1379,6 +1397,12 @@ class YambApp {
         const h2hStats = this.normalizeH2HStats(JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}'));
         localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2hStats));
 
+        const soundSetting = localStorage.getItem('yamb_sound');
+        const vibrationSetting = localStorage.getItem('yamb_vibration');
+        const musicSetting = localStorage.getItem('yamb_music');
+        const musicVolumeSetting = localStorage.getItem('yamb_music_volume');
+        const languageSetting = localStorage.getItem('yamb_lang');
+
         return {
             games: this.stats.games || 0,
             wins: this.stats.wins || 0,
@@ -1403,8 +1427,11 @@ class YambApp {
             lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
             dailyRewardClaimed: localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "",
             dailyRewardAmount: parseInt(localStorage.getItem('yamb_daily_reward_amount_' + uid)) || 0,
-            soundEnabled: this.soundEnabled,
-            vibrationEnabled: this.vibrationEnabled,
+            soundEnabled: soundSetting === null ? null : this.soundEnabled,
+            vibrationEnabled: vibrationSetting === null ? null : this.vibrationEnabled,
+            musicEnabled: musicSetting === null ? null : (this.soundMgr ? this.soundMgr.musicEnabled : musicSetting !== 'false'),
+            musicVolume: musicVolumeSetting === null ? null : (this.soundMgr ? this.soundMgr.musicVolume : parseFloat(musicVolumeSetting)),
+            language: languageSetting || null,
             penaltyPoints: this.stats.penaltyPoints || 0,
             h2hStats
         };
@@ -1727,6 +1754,28 @@ class YambApp {
             localStorage.setItem('yamb_vibration', data.vibrationEnabled);
             this.vibrationEnabled = data.vibrationEnabled;
         }
+
+        if (data.musicEnabled !== undefined) {
+            const musicEnabled = data.musicEnabled !== false;
+            localStorage.setItem('yamb_music', musicEnabled);
+            if (this.soundMgr) this.soundMgr.setMusicEnabled(musicEnabled);
+        }
+
+        if (data.musicVolume !== undefined) {
+            const volume = Math.max(0, Math.min(1, Number(data.musicVolume)));
+            if (Number.isFinite(volume)) {
+                localStorage.setItem('yamb_music_volume', volume);
+                if (this.soundMgr) this.soundMgr.setMusicVolume(volume);
+            }
+        }
+
+        if (data.language === 'sr' || data.language === 'en') {
+            localStorage.setItem('yamb_lang', data.language);
+            document.documentElement.lang = data.language;
+            if (typeof applyTranslations === 'function') applyTranslations();
+        }
+
+        this.updateQuickMenuIcons();
 
         const today = new Date().toDateString();
         const localDailyKey = 'yamb_last_daily_' + uid;

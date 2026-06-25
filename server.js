@@ -348,7 +348,10 @@ const UserProfileSchema = new mongoose.Schema({
     lastUndoRewardedRewardAt: { type: Number, default: 0 },
     lastUndoInterstitialRewardAt: { type: Number, default: 0 },
     soundEnabled: { type: Boolean, default: true },
-    vibrationEnabled: { type: Boolean, default: true },  
+    vibrationEnabled: { type: Boolean, default: true },
+    musicEnabled: { type: Boolean, default: true },
+    musicVolume: { type: Number, default: 0.4 },
+    language: { type: String, default: 'sr' },
     penaltyPoints: { type: Number, default: 0 },         
     h2hStats: { type: Object, default: {} },             
     chatBanUntil: { type: Number, default: 0 },
@@ -2615,8 +2618,11 @@ function buildProfileSyncPayload(user) {
         unlockedThemes: filterIdsByCategory(user.yamb_unlocked, THEME_UNLOCK_IDS),
         lastDaily: user.lastDaily,
         lastDailyRewardClaimed: user.lastDailyRewardClaimed,
-        soundEnabled: user.soundEnabled,
-        vibrationEnabled: user.vibrationEnabled,
+        soundEnabled: coerceBooleanSetting(user.soundEnabled) ?? true,
+        vibrationEnabled: coerceBooleanSetting(user.vibrationEnabled) ?? true,
+        musicEnabled: coerceBooleanSetting(user.musicEnabled) ?? true,
+        musicVolume: normalizeMusicVolume(user.musicVolume, 0.4),
+        language: normalizeLanguageSetting(user.language, 'sr'),
         penaltyPoints: Math.max(0, toSafeInt(user.penaltyPoints)),
         h2hStats: normalizeH2HStatsForUser(user.h2hStats || {}, user.firebaseUid, user.playerName),
         leagueData: normalizeUserLeagueDataForCurrentPeriod(user)
@@ -3930,6 +3936,25 @@ function toSafeInt(value, fallback = 0) {
     return Math.floor(num);
 }
 
+function coerceBooleanSetting(value) {
+    if (typeof value === 'boolean') return value;
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return null;
+}
+
+function normalizeMusicVolume(value, fallback = 0.4) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return fallback;
+    return Math.max(0, Math.min(1, num));
+}
+
+function normalizeLanguageSetting(value, fallback = 'sr') {
+    const lang = typeof value === 'string' ? value.trim().toLowerCase() : '';
+    if (lang === 'sr' || lang === 'en') return lang;
+    return fallback;
+}
+
 function isStablePlayerUid(uid) {
     return typeof uid === 'string' &&
         uid.length >= 20 &&
@@ -5129,8 +5154,18 @@ io.on('connection', (socket) => {
                 if (s.activeSkin !== undefined && s.activeSkin !== null) user.activeSkin = s.activeSkin;
                 if (s.activeEffect !== undefined && s.activeEffect !== null) user.activeEffect = s.activeEffect;
                 if (s.activeTheme !== undefined && s.activeTheme !== null) user.activeTheme = s.activeTheme;
-                if (s.soundEnabled !== undefined) user.soundEnabled = s.soundEnabled;
-                if (s.vibrationEnabled !== undefined) user.vibrationEnabled = s.vibrationEnabled;
+                const requestedSoundEnabled = coerceBooleanSetting(s.soundEnabled);
+                const requestedVibrationEnabled = coerceBooleanSetting(s.vibrationEnabled);
+                const requestedMusicEnabled = coerceBooleanSetting(s.musicEnabled);
+                const requestedLanguage = normalizeLanguageSetting(s.language, null);
+
+                if (requestedSoundEnabled !== null) user.soundEnabled = requestedSoundEnabled;
+                if (requestedVibrationEnabled !== null) user.vibrationEnabled = requestedVibrationEnabled;
+                if (requestedMusicEnabled !== null) user.musicEnabled = requestedMusicEnabled;
+                if (s.musicVolume !== undefined && s.musicVolume !== null) {
+                    user.musicVolume = normalizeMusicVolume(s.musicVolume, user.musicVolume ?? 0.4);
+                }
+                if (requestedLanguage) user.language = requestedLanguage;
 
                 if (s.penaltyPoints !== undefined && s.penaltyPoints > (user.penaltyPoints || 0)) {
                     user.penaltyPoints = s.penaltyPoints;
@@ -5392,8 +5427,11 @@ io.on('connection', (socket) => {
                     activeSkin: s.activeSkin || 'default',
                     activeTheme: s.activeTheme || 'dark',
                     activeEffect: s.activeEffect || 'confetti',
-                    soundEnabled: s.soundEnabled !== undefined ? s.soundEnabled : true,
-                    vibrationEnabled: s.vibrationEnabled !== undefined ? s.vibrationEnabled : true,
+                    soundEnabled: coerceBooleanSetting(s.soundEnabled) ?? true,
+                    vibrationEnabled: coerceBooleanSetting(s.vibrationEnabled) ?? true,
+                    musicEnabled: coerceBooleanSetting(s.musicEnabled) ?? true,
+                    musicVolume: normalizeMusicVolume(s.musicVolume, 0.4),
+                    language: normalizeLanguageSetting(s.language, 'sr'),
                     penaltyPoints: Math.max(0, toSafeInt(s.penaltyPoints, 0)),
                     h2hStats: s.h2hStats || {},
                     unlockedTrophies: initialEconomy.unlockedTrophies,

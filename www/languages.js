@@ -434,6 +434,7 @@ const TRANSLATIONS = {
         "settings_not_logged_in": "Niste prijavljeni",
         "settings_logout": "Odjavi se",
         "msg_logout_confirm": "Da li ste sigurni da želite da se odjavite?",
+        "msg_logout_sync_warning": "Server nije potvrdio čuvanje najnovijih podataka. Ako se odjavite sada, poslednje lokalne promene možda neće biti vraćene. Nastaviti odjavu?",
         "settings_terms": "📜 Uslovi Korišćenja",
         "settings_privacy": "🔒 Politika Privatnosti",
         
@@ -1127,6 +1128,7 @@ const TRANSLATIONS = {
         "settings_not_logged_in": "Not logged in",
         "settings_logout": "Log out",
         "msg_logout_confirm": "Are you sure you want to log out?",
+        "msg_logout_sync_warning": "The server has not confirmed that your latest data was saved. If you log out now, recent local changes may not be restored. Continue logging out?",
         "settings_terms": "📜 Terms of Service",
         "settings_privacy": "🔒 Privacy Policy",
         

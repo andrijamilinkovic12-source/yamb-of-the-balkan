@@ -188,6 +188,12 @@ function getFullLocalStats() {
     if (!uid) return {}; // STRIKTNO ZABRANJEN GOST
     migrateLegacyLocalProgressToUid(uid);
 
+    const soundSetting = localStorage.getItem('yamb_sound');
+    const vibrationSetting = localStorage.getItem('yamb_vibration');
+    const musicSetting = localStorage.getItem('yamb_music');
+    const musicVolumeSetting = localStorage.getItem('yamb_music_volume');
+    const languageSetting = localStorage.getItem('yamb_lang');
+
     return {
         games: (window.app && window.app.stats) ? (window.app.stats.games || 0) : 0,
         wins: (window.app && window.app.stats) ? (window.app.stats.wins || 0) : 0,
@@ -213,8 +219,11 @@ function getFullLocalStats() {
         lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
         dailyRewardClaimed: localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "",
         dailyRewardAmount: parseInt(localStorage.getItem('yamb_daily_reward_amount_' + uid)) || 0,
-        soundEnabled: window.app ? window.app.soundEnabled : true,
-        vibrationEnabled: window.app ? window.app.vibrationEnabled : true,
+        soundEnabled: soundSetting === null ? null : soundSetting !== 'false',
+        vibrationEnabled: vibrationSetting === null ? null : vibrationSetting !== 'false',
+        musicEnabled: musicSetting === null ? null : musicSetting !== 'false',
+        musicVolume: musicVolumeSetting === null ? null : parseFloat(musicVolumeSetting),
+        language: languageSetting || null,
         h2hStats: JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}')
     };
 }
@@ -415,9 +424,10 @@ async function odjaviSe() {
             await window.app.autoSaveGame(true);
         }
 
+        let logoutSyncConfirmed = !logoutUid;
         if (logoutUid && window.app && window.app.socket) {
             try {
-                await syncLoggedInProfileToCloud({
+                logoutSyncConfirmed = await syncLoggedInProfileToCloud({
                     uid: logoutUid,
                     displayName: localStorage.getItem('yamb_player_name') || window.app.playerName || _t('hs_player', "Igrač")
                 }, {
@@ -426,7 +436,22 @@ async function odjaviSe() {
                 });
             } catch (syncErr) {
                 console.warn("Cloud sync pre odjave nije potvrđen:", syncErr);
+                logoutSyncConfirmed = false;
             }
+        }
+
+        if (logoutUid && !logoutSyncConfirmed) {
+            const syncWarning = _t(
+                'msg_logout_sync_warning',
+                "Server nije potvrdio čuvanje najnovijih podataka. Ako se odjavite sada, poslednje lokalne promene možda neće biti vraćene. Nastaviti odjavu?"
+            );
+            let nastaviOdjavu = false;
+            if (window.modalManager && typeof window.modalManager.confirm === 'function') {
+                nastaviOdjavu = await window.modalManager.confirm(syncWarning);
+            } else {
+                nastaviOdjavu = confirm(syncWarning);
+            }
+            if (!nastaviOdjavu) return;
         }
 
         if (window.yambPushNotifications && typeof window.yambPushNotifications.unregisterCurrentDevice === 'function') {
