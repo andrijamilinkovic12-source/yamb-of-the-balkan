@@ -2011,6 +2011,13 @@ setInterval(sweepTurnTimeouts, TURN_TIMEOUT_WATCHDOG_MS);
 // ==================================================================
 
 function generateTournamentBracket() {
+    if (!hasFullTournamentRoster()) {
+        tournamentState.status = 'registration';
+        ensureTournamentRegistrationBracket();
+        saveTournamentToDb();
+        return false;
+    }
+
     tournamentState.status = 'active';
     ensureTournamentRegistrationBracket();
 
@@ -2040,6 +2047,7 @@ function generateTournamentBracket() {
         f: [null]
     };
     saveTournamentToDb();
+    return true;
 }
 
 function createTournamentMatch(p1 = null, p2 = null) {
@@ -2081,6 +2089,14 @@ function getTournamentParticipantUids() {
     return (tournamentState.players || [])
         .map(player => String(player?.id || '').trim())
         .filter(Boolean);
+}
+
+function hasFullTournamentRoster() {
+    return Array.isArray(tournamentState.players) && tournamentState.players.length === 8;
+}
+
+function isTournamentSchedulingUnlocked() {
+    return tournamentState.status === 'active' && hasFullTournamentRoster();
 }
 
 function getTournamentMatchParticipantUids(match) {
@@ -8164,10 +8180,10 @@ io.on('connection', (socket) => {
                 throw new Error('No free tournament bracket slot.');
             }
 
-            const tournamentStartedByRegistration = tournamentState.players.length === 8;
-            if (tournamentStartedByRegistration) {
-                generateTournamentBracket();
-            } else {
+            const tournamentStartedByRegistration = hasFullTournamentRoster()
+                ? generateTournamentBracket()
+                : false;
+            if (!tournamentStartedByRegistration) {
                 saveTournamentToDb();
             }
 
@@ -8275,6 +8291,10 @@ io.on('connection', (socket) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) return;
 
+        if (!isTournamentSchedulingUnlocked()) {
+            return rejectTournamentAction(socket, 'tourney_schedule_locked_until_full');
+        }
+
         const matchInfo = getTournamentMatch(data.round, data.index);
         if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');
 
@@ -8297,6 +8317,10 @@ io.on('connection', (socket) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) return;
 
+        if (!isTournamentSchedulingUnlocked()) {
+            return rejectTournamentAction(socket, 'tourney_schedule_locked_until_full');
+        }
+
         const matchInfo = getTournamentMatch(data.round, data.index);
         if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');
 
@@ -8316,6 +8340,10 @@ io.on('connection', (socket) => {
     socket.on('tourney_start_duel', (data = {}) => {
         const uid = requireTournamentAuth(socket);
         if (!uid) return;
+
+        if (!isTournamentSchedulingUnlocked()) {
+            return rejectTournamentAction(socket, 'tourney_schedule_locked_until_full');
+        }
 
         const matchInfo = getTournamentMatch(data.round, data.index);
         if (!matchInfo) return rejectTournamentAction(socket, 'err_invalid_room');

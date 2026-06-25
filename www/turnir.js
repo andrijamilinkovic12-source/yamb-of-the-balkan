@@ -79,6 +79,19 @@ class TournamentManager {
         return translated && translated !== key ? translated : (fallback || key || tt('err_server_conn'));
     }
 
+    isTournamentSchedulingUnlocked() {
+        return this.state.status === 'active' && Array.isArray(this.state.players) && this.state.players.length === 8;
+    }
+
+    showSchedulingLockedMessage() {
+        if (this.app && this.app.modal) {
+            this.app.modal.alert(
+                tt('tourney_schedule_locked_until_full') || 'Termini za zakazivanje otključavaju se kada se prijavi svih 8 igrača.',
+                tt('tourney_alert_warning') || 'UPOZORENJE'
+            );
+        }
+    }
+
     tr(key, fallback) {
         const translated = tt(key);
         return translated && translated !== key ? translated : fallback;
@@ -1028,8 +1041,11 @@ class TournamentManager {
             : '';
         const cardMinHeight = resultLabel ? '82px' : '65px';
 
+        const canOpenMatch = Boolean(match.p1 && match.p2 && (this.state.status === 'finished' || this.isTournamentSchedulingUnlocked()));
+        const clickAttr = canOpenMatch ? `onclick="app.tournamentManager.openMatchModal('${round}', ${index})"` : '';
+
         return `
-            <div onclick="app.tournamentManager.openMatchModal('${round}', ${index})" style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; display: flex; flex-direction: column; cursor: pointer; position: relative; box-shadow: ${isMyMatch ? '0 0 10px rgba(255,215,0,0.3)' : 'none'}; transition: transform 0.1s; transform: scale(0.98); min-height: ${cardMinHeight}; overflow: hidden;">
+            <div ${clickAttr} style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; display: flex; flex-direction: column; cursor: ${canOpenMatch ? 'pointer' : 'default'}; position: relative; box-shadow: ${isMyMatch ? '0 0 10px rgba(255,215,0,0.3)' : 'none'}; transition: transform 0.1s; transform: scale(0.98); min-height: ${cardMinHeight}; overflow: hidden;">
                 ${statusDot}
                 ${getPlayerHtml(match.p1, true)}
                 ${resultHtml}
@@ -1039,6 +1055,11 @@ class TournamentManager {
     }
 
     openMatchModal(round, index) {
+        if (this.state.status === 'registration' || (this.state.status === 'active' && !this.isTournamentSchedulingUnlocked())) {
+            this.showSchedulingLockedMessage();
+            return;
+        }
+
         const match = this.state.bracket[round][index];
         if (!match || !match.p1 || !match.p2) return;
 
@@ -1129,6 +1150,11 @@ class TournamentManager {
     }
 
     proposeTime(round, index) {
+        if (!this.isTournamentSchedulingUnlocked()) {
+            this.showSchedulingLockedMessage();
+            return;
+        }
+
         const input = document.getElementById('tourney-time-input');
         if (!input || !input.value) {
             this.app.modal.alert(tt('tourney_alert_select_time') || "Molimo Vas da prvo izaberete vreme u kalendaru!", tt('tourney_alert_warning') || "UPOZORENJE");
@@ -1151,6 +1177,11 @@ class TournamentManager {
     }
 
     acceptTime(round, index) {
+        if (!this.isTournamentSchedulingUnlocked()) {
+            this.showSchedulingLockedMessage();
+            return;
+        }
+
         this.app.soundMgr.click();
 
         if (this.app.socket) {
@@ -1162,6 +1193,11 @@ class TournamentManager {
     }
 
     startDuel(round, index) {
+        if (!this.isTournamentSchedulingUnlocked()) {
+            this.showSchedulingLockedMessage();
+            return;
+        }
+
         const match = this.state.bracket[round][index];
         const myId = this.app.playerId;
         const opponent = match.p1.id === myId ? match.p2 : match.p1;
