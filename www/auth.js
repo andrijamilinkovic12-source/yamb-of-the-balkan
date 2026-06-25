@@ -334,11 +334,15 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
         });
     }
 
-    if (typeof window.app.authenticateSocketIdentity === 'function') {
-        const authResult = await window.app.authenticateSocketIdentity(!!options.forceRefresh);
-        if (!authResult || !authResult.ok) {
-            console.warn(`Cloud sync čeka verifikaciju identiteta: ${authResult?.reason || 'unknown_error'}`);
-        }
+    if (typeof window.app.authenticateSocketIdentity !== 'function') {
+        console.warn("Cloud sync preskočen: nedostaje Firebase verifikacija socketa.");
+        return false;
+    }
+
+    const authResult = await window.app.authenticateSocketIdentity(!!options.forceRefresh);
+    if (!authResult || !authResult.ok) {
+        console.warn(`Cloud sync blokiran dok Firebase identitet nije potvrđen: ${authResult?.reason || 'unknown_error'}`);
+        return false;
     }
 
     const shouldRestore = options.preferCloudRestore ||
@@ -617,8 +621,17 @@ async function checkLoginStatus() {
             });
 
             setTimeout(async () => {
-                await initialCloudSync;
+                const syncOk = await initialCloudSync;
                 refreshLeagueDashboardForCurrentUser();
+                if (!syncOk &&
+                    window.app &&
+                    typeof window.app.hasMeaningfulLocalProfile === 'function' &&
+                    !window.app.hasMeaningfulLocalProfile()) {
+                    console.warn("Cloud profil nije vraćen, a lokalni profil je prazan. Ostajem na prijavi da ne prikažem nalog od nule.");
+                    osveziAuthUI(null);
+                    if (splashLoginContainer) splashLoginContainer.style.display = 'flex';
+                    return;
+                }
                 if (window.app && !window.app.inviteDetected) {
                     window.app.navigateTo('main-menu'); 
                 }

@@ -2805,7 +2805,12 @@ class YambApp {
         }
 
         const authResult = await this.authenticateSocketIdentity(forceRefreshAuth);
-        const uid = authResult && authResult.ok ? authResult.uid : localStorage.getItem('yamb_uid');
+        if (!authResult || !authResult.ok) {
+            console.warn(`Ne šaljem profil serveru dok Firebase identitet nije potvrđen: ${authResult?.reason || 'unknown_error'}`);
+            return authResult || { ok: false, reason: 'auth_failed' };
+        }
+
+        const uid = authResult.uid;
         const syncWait = options.waitForSync ? this.waitForProfileSync(options.timeoutMs || 4000) : null;
 
         this.socket.emit('set_player_data', {
