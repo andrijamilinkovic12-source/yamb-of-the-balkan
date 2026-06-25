@@ -305,6 +305,17 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
         }
     }
 
+    if (window.app && typeof window.app.pullCloudProfile === 'function') {
+        const shouldRestore = options.preferCloudRestore ||
+            (typeof window.app.shouldRestoreCloudBeforeProfilePush === 'function' && window.app.shouldRestoreCloudBeforeProfilePush());
+        if (shouldRestore) {
+            await window.app.pullCloudProfile({
+                forceRefresh: !!options.forceRefresh,
+                timeoutMs: options.timeoutMs || 4000
+            });
+        }
+    }
+
     const syncWait = options.waitForSync ? waitForCloudProfileSync(socket, options.timeoutMs || 4000) : null;
 
     socket.emit('set_player_data', {
@@ -384,6 +395,7 @@ async function prijaviSe() {
 
                 await syncLoggedInProfileToCloud(user, {
                     forceRefresh: true,
+                    preferCloudRestore: true,
                     waitForSync: true,
                     timeoutMs: 5000
                 });
@@ -461,6 +473,7 @@ async function odjaviSe() {
         await Capacitor.Plugins.FirebaseAuthentication.signOut();
         console.log("Korisnik uspešno odjavljen.");
         await clearAccountLocalCache(logoutUid);
+        localStorage.setItem('yamb_force_cloud_restore_next_login', 'true');
 
         // 1. Brisanje Firebase podataka
         localStorage.removeItem('yamb_player_photo');
@@ -555,6 +568,7 @@ async function checkLoginStatus() {
             }
 
             const initialCloudSync = syncLoggedInProfileToCloud(result.user, {
+                preferCloudRestore: true,
                 waitForSync: true,
                 timeoutMs: 3500
             });

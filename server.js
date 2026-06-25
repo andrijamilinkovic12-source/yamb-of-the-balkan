@@ -5104,6 +5104,39 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('request_profile_sync', async (data = {}, ack) => {
+        const reply = typeof ack === 'function' ? ack : () => {};
+        const verifiedUid = socket.verifiedUid;
+
+        if (!verifiedUid) {
+            const result = { ok: false, reason: 'firebase_token_required' };
+            reply(result);
+            socket.emit('auth_required', result);
+            return;
+        }
+
+        if (!MONGO_URI) {
+            const result = { ok: false, reason: 'mongo_unavailable' };
+            reply(result);
+            socket.emit('sync_unavailable', result);
+            return;
+        }
+
+        try {
+            const user = await UserProfile.findOne({ firebaseUid: verifiedUid });
+            if (!user) {
+                reply({ ok: false, reason: 'profile_not_found' });
+                return;
+            }
+
+            emitProfileSync(socket, user);
+            reply({ ok: true });
+        } catch (err) {
+            console.error("Greška pri povlačenju profila:", err);
+            reply({ ok: false, reason: 'server_error' });
+        }
+    });
+
     socket.on('set_player_data', async (data) => {
         data = data || {};
         const verifiedUid = socket.verifiedUid;

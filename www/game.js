@@ -1647,6 +1647,8 @@ class YambApp {
             return false;
         }
 
+        localStorage.removeItem('yamb_force_cloud_restore_next_login');
+
         const toNumber = (value, fallback = 0) => {
             const num = Number(value);
             return Number.isFinite(num) ? Math.floor(num) : fallback;
@@ -2695,8 +2697,99 @@ class YambApp {
         });
     }
 
+    hasMeaningfulLocalProfile() {
+        const stats = this.readLocalJson('yamb_stats', {}) || {};
+        const numericFields = [
+            'games',
+            'totalGames',
+            'wins',
+            'losses',
+            'highscore',
+            'totalScoreSum',
+            'maxWinStreak',
+            'tournamentWins',
+            'penaltyPoints',
+            'balance'
+        ];
+        const hasStats = numericFields.some(field => Math.max(0, Number(stats[field]) || 0) > 0);
+        const hasBalance = (parseInt(localStorage.getItem('yamb_dukati'), 10) || 0) > 0;
+        const hasUndoTokens = (parseInt(localStorage.getItem('yamb_undo_tokens'), 10) || 0) > 0;
+        const h2hStats = this.readLocalJson('yamb_h2h_stats', {}) || {};
+        const hasH2H = Object.keys(h2hStats).length > 0;
+
+        const uid = localStorage.getItem('yamb_uid') || this.playerId || '';
+        const leagueData = uid ? (this.readLocalJson('yamb_quarter_data_' + uid, {}) || {}) : {};
+        const hasLeague = Math.max(0, Number(leagueData.baselineScore) || 0) > 0 ||
+            Math.max(0, Number(leagueData.quarterlyScore) || 0) > 0;
+
+        const freeUnlocks = new Set(['default', 'confetti', 'dark', 'light', 'medium', 'winter']);
+        const unlockSources = [
+            this.readLocalJson('yamb_unlocked', []) || [],
+            this.readLocalJson('yamb_unlocked_skins', []) || [],
+            this.readLocalJson('yamb_unlocked_effects', []) || [],
+            this.readLocalJson('yamb_unlocked_themes', []) || [],
+            Array.isArray(stats.unlockedTrophies) ? stats.unlockedTrophies : [],
+            Array.isArray(stats.unlockedSkins) ? stats.unlockedSkins : [],
+            Array.isArray(stats.unlockedEffects) ? stats.unlockedEffects : []
+        ];
+        const hasEarnedUnlock = unlockSources.some(items =>
+            Array.isArray(items) && items.some(item => item && !freeUnlocks.has(item))
+        );
+
+        return hasStats || hasBalance || hasUndoTokens || hasH2H || hasLeague || hasEarnedUnlock;
+    }
+
+    shouldRestoreCloudBeforeProfilePush() {
+        if (!localStorage.getItem('yamb_uid') && !this.playerId) return false;
+        if (this.gameActive) return false;
+        return localStorage.getItem('yamb_force_cloud_restore_next_login') === 'true' ||
+            !this.hasMeaningfulLocalProfile();
+    }
+
+    async pullCloudProfile(options = {}) {
+        if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
+
+        const authResult = await this.authenticateSocketIdentity(!!options.forceRefresh);
+        if (!authResult || !authResult.ok) {
+            return { ok: false, reason: authResult?.reason || 'auth_failed' };
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const finish = (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                this.socket.off('sync_local_stats', onSync);
+                resolve(result || { ok: false, reason: 'profile_sync_timeout' });
+            };
+            const onSync = (payload) => {
+                if (payload) {
+                    this.applyCloudProfileSync(payload);
+                    localStorage.removeItem('yamb_force_cloud_restore_next_login');
+                    finish({ ok: true, cloudStats: payload });
+                } else {
+                    finish({ ok: false, reason: 'empty_profile_payload' });
+                }
+            };
+            const timer = setTimeout(() => finish({ ok: false, reason: 'profile_sync_timeout' }), options.timeoutMs || 4000);
+
+            this.socket.once('sync_local_stats', onSync);
+            this.socket.emit('request_profile_sync', {}, (result = {}) => {
+                if (!result.ok) finish(result);
+            });
+        });
+    }
+
     async emitPlayerData(forceRefreshAuth = false, options = {}) {
         if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
+
+        if (options.preferCloudRestore || this.shouldRestoreCloudBeforeProfilePush()) {
+            await this.pullCloudProfile({
+                forceRefresh: forceRefreshAuth,
+                timeoutMs: options.timeoutMs || 4000
+            });
+        }
 
         const authResult = await this.authenticateSocketIdentity(forceRefreshAuth);
         const uid = authResult && authResult.ok ? authResult.uid : localStorage.getItem('yamb_uid');
