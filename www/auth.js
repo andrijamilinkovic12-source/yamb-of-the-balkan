@@ -297,6 +297,143 @@ function hasMeaningfulLocalProfileForSync() {
     return stats.h2hStats && typeof stats.h2hStats === 'object' && Object.keys(stats.h2hStats).length > 0;
 }
 
+function getAccountSnapshotKey(uid) {
+    return uid ? 'yamb_account_snapshot_' + uid : '';
+}
+
+function getAccountSnapshotStorageKeys(uid) {
+    const keys = [
+        'yamb_stats',
+        'yamb_dukati',
+        'yamb_undo_tokens',
+        'yamb_unlocked_skins',
+        'yamb_unlocked_effects',
+        'yamb_unlocked_themes',
+        'yamb_unlocked',
+        'yamb_h2h_stats',
+        'yamb_theme',
+        'yamb_active_skin',
+        'yamb_active_effect',
+        'yamb_sound',
+        'yamb_vibration',
+        'yamb_music',
+        'yamb_music_volume',
+        'yamb_lang',
+        'yamb_player_name',
+        'yamb_player_photo'
+    ];
+
+    if (uid) {
+        keys.push(
+            'yamb_quarter_data_' + uid,
+            'yamb_last_daily_' + uid,
+            'yamb_daily_reward_claimed_' + uid,
+            'yamb_daily_reward_amount_' + uid,
+            'yamb_legacy_migration_pending_' + uid,
+            'yamb_tourney_reg_' + uid
+        );
+    }
+
+    return keys;
+}
+
+function calculateProfileSnapshotWeight(stats = {}) {
+    const numericFields = [
+        'games',
+        'totalGames',
+        'wins',
+        'losses',
+        'highscore',
+        'totalScoreSum',
+        'maxWinStreak',
+        'tournamentWins',
+        'penaltyPoints',
+        'balance',
+        'undoTokens'
+    ];
+    const numericWeight = numericFields.reduce((sum, field) => {
+        const value = Math.max(0, Number(stats[field]) || 0);
+        return sum + value;
+    }, 0);
+    const freeUnlocks = new Set(['default', 'confetti', 'dark', 'light', 'medium', 'winter']);
+    const unlockFields = ['unlockedTrophies', 'unlockedSkins', 'unlockedEffects', 'yamb_unlocked', 'unlockedThemes'];
+    const unlockWeight = unlockFields.reduce((sum, field) => {
+        const items = Array.isArray(stats[field]) ? stats[field] : [];
+        return sum + items.filter(item => item && !freeUnlocks.has(item)).length * 1000;
+    }, 0);
+    const leagueData = stats.leagueData || {};
+    const leagueWeight = Math.max(0, Number(leagueData.baselineScore) || 0) +
+        Math.max(0, Number(leagueData.quarterlyScore) || 0);
+    const h2hWeight = stats.h2hStats && typeof stats.h2hStats === 'object'
+        ? Object.keys(stats.h2hStats).length * 500
+        : 0;
+
+    return numericWeight + unlockWeight + leagueWeight + h2hWeight;
+}
+
+function readAccountLocalSnapshot(uid) {
+    const snapshotKey = getAccountSnapshotKey(uid);
+    if (!snapshotKey) return null;
+    try {
+        const raw = localStorage.getItem(snapshotKey);
+        return raw ? JSON.parse(raw) : null;
+    } catch (err) {
+        console.warn("Neispravan lokalni account snapshot:", err);
+        return null;
+    }
+}
+
+function saveAccountLocalSnapshot(uid) {
+    if (!uid) return false;
+
+    const stats = getFullLocalStats();
+    const weight = calculateProfileSnapshotWeight(stats);
+    if (weight <= 0) return false;
+
+    const existing = readAccountLocalSnapshot(uid);
+    if (existing && Number(existing.weight || 0) > weight) {
+        return false;
+    }
+
+    const values = {};
+    getAccountSnapshotStorageKeys(uid).forEach(key => {
+        const value = localStorage.getItem(key);
+        if (value !== null) values[key] = value;
+    });
+
+    localStorage.setItem(getAccountSnapshotKey(uid), JSON.stringify({
+        uid,
+        createdAt: Date.now(),
+        weight,
+        values
+    }));
+
+    return true;
+}
+
+function restoreAccountLocalSnapshot(uid) {
+    const snapshot = readAccountLocalSnapshot(uid);
+    if (!snapshot || !snapshot.values || typeof snapshot.values !== 'object') return false;
+
+    Object.entries(snapshot.values).forEach(([key, value]) => {
+        if (typeof key === 'string' && typeof value === 'string') {
+            localStorage.setItem(key, value);
+        }
+    });
+
+    if (window.app) {
+        window.app.playerId = uid;
+        window.app.playerName = localStorage.getItem('yamb_player_name') || window.app.playerName || _t('hs_player', "Igrač");
+        if (typeof window.app.refreshLocalStats === 'function') window.app.refreshLocalStats();
+    }
+    if (window.statsManager && typeof window.statsManager.loadStats === 'function') {
+        window.statsManager.stats = window.statsManager.loadStats() || window.statsManager.stats;
+        window.statsManager.previousBalance = window.statsManager.stats.balance || 0;
+    }
+    refreshLeagueDashboardForCurrentUser();
+    return true;
+}
+
 async function syncLoggedInProfileToCloud(user, options = {}) {
     const uid = user?.uid || localStorage.getItem('yamb_uid');
     if (!uid || !window.app || !window.app.socket) return false;
@@ -385,6 +522,7 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
         window.app.applyCloudProfileSync(cloudStats);
     }
     refreshLeagueDashboardForCurrentUser();
+    saveAccountLocalSnapshot(uid);
 
     return !!cloudStats;
 }
@@ -482,6 +620,7 @@ async function odjaviSe() {
         if (window.app && typeof window.app.autoSaveGame === 'function') {
             await window.app.autoSaveGame(true);
         }
+        saveAccountLocalSnapshot(logoutUid);
 
         let logoutSyncConfirmed = !logoutUid;
         if (logoutUid && window.app && window.app.socket) {
@@ -627,10 +766,14 @@ async function checkLoginStatus() {
                     window.app &&
                     typeof window.app.hasMeaningfulLocalProfile === 'function' &&
                     !window.app.hasMeaningfulLocalProfile()) {
-                    console.warn("Cloud profil nije vraćen, a lokalni profil je prazan. Ostajem na prijavi da ne prikažem nalog od nule.");
-                    osveziAuthUI(null);
-                    if (splashLoginContainer) splashLoginContainer.style.display = 'flex';
-                    return;
+                    if (restoreAccountLocalSnapshot(result.user.uid)) {
+                        console.warn("Cloud restore nije potvrđen, koristim lokalni account snapshot kao privremeni fallback.");
+                    } else {
+                        console.warn("Cloud profil nije vraćen, a lokalni profil je prazan. Ostajem na prijavi da ne prikažem nalog od nule.");
+                        osveziAuthUI(null);
+                        if (splashLoginContainer) splashLoginContainer.style.display = 'flex';
+                        return;
+                    }
                 }
                 if (window.app && !window.app.inviteDetected) {
                     window.app.navigateTo('main-menu'); 
