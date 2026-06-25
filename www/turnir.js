@@ -612,7 +612,7 @@ class TournamentManager {
                     <img class="tourney-tab-icon tourney-tab-icon--tournament" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
                 </button>
                 <button class="tourney-tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'leaderboard'}" aria-label="${tt('tourney_tab_fame') || 'Slavni'}" title="${tt('tourney_tab_fame') || 'Slavni'}" onclick="app.tournamentManager.switchTab('leaderboard')">
-                    <img class="tourney-tab-icon tourney-tab-icon--fame" src="assets/tournament-hall-icon.svg" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-tab-icon tourney-tab-icon--fame" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                 </button>
             </div>
 
@@ -637,7 +637,7 @@ class TournamentManager {
     getLeaderboardHTML() {
         let leaderboardHtml = `
             <div style="width: 100%; max-width: 350px; display: flex; flex-direction: column; align-items: center; padding-bottom: 20px;">
-                <div class="tourney-icon-large" style="font-size: 3.5rem; margin-bottom: 15px; text-shadow: 0 0 15px var(--gold-main); text-align: center;">👑</div>
+                <img class="tourney-hof-trophy" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                 <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 10px; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 2px; width: 100%;">
                     ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH'}
                 </h3>
@@ -666,7 +666,7 @@ class TournamentManager {
                         </div>
                         <div style="display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.3);">
                             <span style="color: var(--gold-main); font-weight: 900; font-size: 1.1rem; flex-shrink: 0;">${safeWins}</span>
-                            <span style="font-size: 1rem;">🏆</span>
+                            <img class="tourney-wins-trophy-icon" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                         </div>
                     </div>
                 `;

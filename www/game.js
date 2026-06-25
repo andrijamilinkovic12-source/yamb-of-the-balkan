@@ -145,8 +145,14 @@ class YambApp {
         }
 
         const savedSound = localStorage.getItem('yamb_sound');
-        this.soundEnabled = savedSound !== 'false'; 
-        if(this.soundMgr) this.soundMgr.enabled = this.soundEnabled;
+        this.soundEnabled = savedSound !== 'false';
+        if(this.soundMgr) {
+            this.soundMgr.enabled = this.soundEnabled;
+            const splashScreen = document.getElementById('splash-screen');
+            if (splashScreen && splashScreen.classList.contains('active')) {
+                this.soundMgr.playIntro();
+            }
+        }
 
         // NOVO: Podrška za vibraciju
         const savedVib = localStorage.getItem('yamb_vibration');
@@ -294,7 +300,15 @@ class YambApp {
         const btn = document.getElementById('btn-gh-sound');
         if(btn) btn.innerText = this.soundEnabled ? '🔊' : '🔇';
         
-        if(this.soundEnabled) this.soundMgr.click();
+        if(this.soundEnabled) {
+            this.soundMgr.click();
+            const splashScreen = document.getElementById('splash-screen');
+            if (splashScreen && splashScreen.classList.contains('active') && this.soundMgr.playIntro) {
+                this.soundMgr.playIntro();
+            }
+        } else if (this.soundMgr && this.soundMgr.stopIntro) {
+            this.soundMgr.stopIntro();
+        }
         
         const mainSetting = document.getElementById('setting-sound');
         if (mainSetting) mainSetting.checked = this.soundEnabled;
@@ -2918,6 +2932,13 @@ class YambApp {
         document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
         const target = document.getElementById(screenId);
         if (target) target.classList.add('active');
+        if (this.soundMgr) {
+            if (screenId === 'splash-screen' && this.soundMgr.playIntro) {
+                this.soundMgr.playIntro();
+            } else if (this.soundMgr.stopIntro) {
+                this.soundMgr.stopIntro();
+            }
+        }
         if(screenId === 'main-menu' && !this.inviteDetected) this.checkSavedGame();
         if (screenId === 'highscores-screen') { this.switchHsTab('global'); }
     }

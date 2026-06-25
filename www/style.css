@@ -1704,6 +1704,21 @@ body {
     height: 34px;
     transform: translateY(-1px);
 }
+.tourney-hof-trophy {
+    width: 92px;
+    height: 92px;
+    object-fit: contain;
+    flex: 0 0 auto;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 8px 14px rgba(0,0,0,0.48)) drop-shadow(0 0 14px var(--gold-glow));
+}
+.tourney-wins-trophy-icon {
+    width: 21px;
+    height: 21px;
+    object-fit: contain;
+    flex: 0 0 auto;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.45)) drop-shadow(0 0 6px var(--gold-glow));
+}
 .tourney-tab-content {
     width: 100%;
     flex: 1 1 auto;

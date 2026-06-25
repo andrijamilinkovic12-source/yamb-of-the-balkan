@@ -2226,6 +2226,11 @@ class SoundManager {
         // --- INICIJALIZACIJA MUZIKE ---
         this.bgMusic = new Audio('Before_the_Numbers_Settle.mp3');
         this.bgMusic.volume = this.musicVolume; 
+        this.introAudio = new Audio('the_balkan_intro.mp3');
+        this.introAudio.preload = 'auto';
+        this.introAudio.volume = 1;
+        this.introStopTimer = null;
+        this.introRetryHandler = null;
         
         this.bgMusic.addEventListener('timeupdate', () => {
             if (this.bgMusic.duration > 0 && this.bgMusic.currentTime >= this.bgMusic.duration - 2) {
@@ -2253,6 +2258,69 @@ class SoundManager {
     playMusic() {
         if (!this.musicEnabled || this.musicVolume === 0) return;
         this.bgMusic.play().catch(e => console.log("Greška pri puštanju muzike:", e));
+    }
+
+    playIntro() {
+        if (!this.enabled || !this.introAudio) return;
+
+        this.cancelIntroRetry();
+        if (this.introStopTimer) {
+            clearTimeout(this.introStopTimer);
+            this.introStopTimer = null;
+        }
+
+        try {
+            this.introAudio.pause();
+            this.introAudio.currentTime = 0;
+            this.introAudio.volume = 1;
+
+            const playPromise = this.introAudio.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(() => this.queueIntroOnGesture());
+            }
+
+            this.introStopTimer = setTimeout(() => this.stopIntro(), 4500);
+        } catch (err) {
+            this.queueIntroOnGesture();
+        }
+    }
+
+    stopIntro() {
+        this.cancelIntroRetry();
+        if (this.introStopTimer) {
+            clearTimeout(this.introStopTimer);
+            this.introStopTimer = null;
+        }
+        if (!this.introAudio) return;
+
+        try {
+            this.introAudio.pause();
+            this.introAudio.currentTime = 0;
+        } catch (err) {}
+    }
+
+    queueIntroOnGesture() {
+        if (this.introRetryHandler) return;
+
+        this.introRetryHandler = () => {
+            this.cancelIntroRetry();
+            const splash = document.getElementById('splash-screen');
+            if (splash && splash.classList.contains('active')) {
+                this.playIntro();
+            }
+        };
+
+        document.addEventListener('pointerdown', this.introRetryHandler, { once: true });
+        document.addEventListener('touchstart', this.introRetryHandler, { once: true });
+        document.addEventListener('click', this.introRetryHandler, { once: true });
+    }
+
+    cancelIntroRetry() {
+        if (!this.introRetryHandler) return;
+        document.removeEventListener('pointerdown', this.introRetryHandler);
+        document.removeEventListener('touchstart', this.introRetryHandler);
+        document.removeEventListener('click', this.introRetryHandler);
+        this.introRetryHandler = null;
     }
 
     stopMusic() {
