@@ -372,6 +372,17 @@ const UserProfileSchema = new mongoose.Schema({
 });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
 
+const UserProfileBackupSchema = new mongoose.Schema({
+    firebaseUid: { type: String, required: true, index: true },
+    playerName: { type: String, default: '' },
+    reason: { type: String, default: 'profile_sync' },
+    profile: { type: Object, default: () => ({}) },
+    createdAt: { type: Date, default: Date.now, index: true }
+});
+UserProfileBackupSchema.index({ firebaseUid: 1, createdAt: -1 });
+const UserProfileBackup = mongoose.model('UserProfileBackup', UserProfileBackupSchema);
+const PROFILE_BACKUP_KEEP_LIMIT = 25;
+
 const PushTokenSchema = new mongoose.Schema({
     uid: { type: String, required: true, index: true },
     token: { type: String, required: true, unique: true },
@@ -4847,6 +4858,84 @@ function normalizeActiveSelections(user, fallbackActive = {}) {
     user.activeTheme = pickAllowedInventoryItem(user.activeTheme, themeItems, fallbackActive.activeTheme, 'dark');
 }
 
+function hasMeaningfulStoredProfile(user) {
+    if (!user) return false;
+
+    const numericFields = [
+        'games',
+        'wins',
+        'losses',
+        'highscore',
+        'totalScoreSum',
+        'balance',
+        'undoTokens',
+        'currentWinStreak',
+        'maxWinStreak',
+        'tournamentWins',
+        'penaltyPoints'
+    ];
+    if (numericFields.some(field => Math.max(0, toSafeInt(user[field], 0)) > 0)) return true;
+
+    const unlockFields = ['unlockedTrophies', 'unlockedSkins', 'unlockedEffects', 'yamb_unlocked'];
+    if (unlockFields.some(field => sanitizeIdArray(user[field]).some(id => !FREE_UNLOCK_IDS.has(id)))) return true;
+
+    const leagueData = user.leagueData || {};
+    if (Math.max(0, toSafeInt(leagueData.baselineScore, 0)) > 0 ||
+        Math.max(0, toSafeInt(leagueData.quarterlyScore, 0)) > 0) {
+        return true;
+    }
+
+    return user.h2hStats && typeof user.h2hStats === 'object' && Object.keys(user.h2hStats).length > 0;
+}
+
+async function backupMeaningfulProfile(user, reason = 'profile_sync') {
+    if (!MONGO_URI || !hasMeaningfulStoredProfile(user)) return;
+
+    try {
+        const rawProfile = typeof user.toObject === 'function'
+            ? user.toObject({ depopulate: true, versionKey: false })
+            : { ...user };
+        delete rawProfile._id;
+
+        await UserProfileBackup.create({
+            firebaseUid: user.firebaseUid,
+            playerName: user.playerName || '',
+            reason,
+            profile: rawProfile
+        });
+
+        const oldBackups = await UserProfileBackup.find({ firebaseUid: user.firebaseUid })
+            .sort({ createdAt: -1 })
+            .skip(PROFILE_BACKUP_KEEP_LIMIT)
+            .select('_id')
+            .lean();
+
+        if (oldBackups.length > 0) {
+            await UserProfileBackup.deleteMany({ _id: { $in: oldBackups.map(item => item._id) } });
+        }
+    } catch (err) {
+        console.warn(`⚠️ PROFILE BACKUP: Nije uspelo čuvanje snapshot-a za ${user.playerName || user.firebaseUid}:`, err.message);
+    }
+}
+
+function isEmptyClientProfileSnapshot(stats = {}) {
+    const normalized = normalizeProfileStats(stats);
+    if (hasProfileStatsPayload(stats, normalized)) return false;
+    if (Math.max(0, toSafeInt(stats.balance, 0)) > 0) return false;
+    if (Math.max(0, toSafeInt(stats.undoTokens, 0)) > 0) return false;
+
+    const unlockFields = ['unlockedSkins', 'unlockedEffects', 'yamb_unlocked', 'unlockedThemes'];
+    if (unlockFields.some(field => sanitizeIdArray(stats[field]).some(id => !FREE_UNLOCK_IDS.has(id)))) return false;
+
+    const leagueData = stats.leagueData || {};
+    if (Math.max(0, toSafeInt(leagueData.baselineScore, 0)) > 0 ||
+        Math.max(0, toSafeInt(leagueData.quarterlyScore, 0)) > 0) {
+        return false;
+    }
+
+    return !(stats.h2hStats && typeof stats.h2hStats === 'object' && Object.keys(stats.h2hStats).length > 0);
+}
+
 function buildInitialEconomyState(stats, acceptedTrophies = null) {
     const requestedTrophies = acceptedTrophies ? sanitizeIdArray(acceptedTrophies) : sanitizeIdArray(stats?.unlockedTrophies);
     const requestedUnlocks = getRequestedUnlockSet(stats);
@@ -5191,6 +5280,12 @@ io.on('connection', (socket) => {
             const s = data.stats || {}; 
 
             if (user) {
+                const emptyClientSnapshot = isEmptyClientProfileSnapshot(s);
+                const storedProfileHasProgress = hasMeaningfulStoredProfile(user);
+                if (emptyClientSnapshot && storedProfileHasProgress) {
+                    await backupMeaningfulProfile(user, 'before_empty_client_profile_sync');
+                }
+
                 user.playerName = data.name;
                 user.lastLogin = Date.now();
                 user.photoUrl = socket.photoUrl || user.photoUrl;
@@ -5199,10 +5294,14 @@ io.on('connection', (socket) => {
                     activeEffect: user.activeEffect,
                     activeTheme: user.activeTheme
                 };
+                const ignoreEmptyClientSnapshot = emptyClientSnapshot && storedProfileHasProgress;
+                if (ignoreEmptyClientSnapshot) {
+                    console.log(`🛡️ PROFILE SYNC: Ignorišem prazan lokalni snapshot za ${user.playerName || verifiedUid}; vraćam postojeći cloud profil.`);
+                }
 
-                if (s.activeSkin !== undefined && s.activeSkin !== null) user.activeSkin = s.activeSkin;
-                if (s.activeEffect !== undefined && s.activeEffect !== null) user.activeEffect = s.activeEffect;
-                if (s.activeTheme !== undefined && s.activeTheme !== null) user.activeTheme = s.activeTheme;
+                if (!ignoreEmptyClientSnapshot && s.activeSkin !== undefined && s.activeSkin !== null) user.activeSkin = s.activeSkin;
+                if (!ignoreEmptyClientSnapshot && s.activeEffect !== undefined && s.activeEffect !== null) user.activeEffect = s.activeEffect;
+                if (!ignoreEmptyClientSnapshot && s.activeTheme !== undefined && s.activeTheme !== null) user.activeTheme = s.activeTheme;
                 const requestedSoundEnabled = coerceBooleanSetting(s.soundEnabled);
                 const requestedVibrationEnabled = coerceBooleanSetting(s.vibrationEnabled);
                 const requestedMusicEnabled = coerceBooleanSetting(s.musicEnabled);
@@ -5250,7 +5349,7 @@ io.on('connection', (socket) => {
                 const statsForEconomy = { ...s, ...statsGuard.acceptedStats, unlockedTrophies: requestedTrophies };
                 
                 // 🛡️ SECURITY FIX: Da li je klijentova verzija statistike sinhronizovana
-                const isClientSynced = (s.games >= oldUserGames);
+                const isClientSynced = !ignoreEmptyClientSnapshot && (s.games >= oldUserGames);
 
                 // 🛡️ SHOP EXPLOIT FIX (ANTI-RESTORE BACKUP)
                 let isUsingOldBackup = false;

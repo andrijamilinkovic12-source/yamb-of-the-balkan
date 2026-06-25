@@ -2784,11 +2784,24 @@ class YambApp {
     async emitPlayerData(forceRefreshAuth = false, options = {}) {
         if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
 
-        if (options.preferCloudRestore || this.shouldRestoreCloudBeforeProfilePush()) {
-            await this.pullCloudProfile({
+        const shouldRestore = options.preferCloudRestore || this.shouldRestoreCloudBeforeProfilePush();
+        let restoreResult = null;
+        if (shouldRestore) {
+            restoreResult = await this.pullCloudProfile({
                 forceRefresh: forceRefreshAuth,
                 timeoutMs: options.timeoutMs || 4000
             });
+
+            if ((!restoreResult || !restoreResult.ok) &&
+                restoreResult?.reason !== 'profile_not_found' &&
+                !this.hasMeaningfulLocalProfile()) {
+                console.warn(`Cloud restore nije potvrđen (${restoreResult?.reason || 'no_restore_result'}). Blokiram slanje praznog lokalnog profila.`);
+                return {
+                    ok: false,
+                    reason: restoreResult?.reason || 'cloud_restore_required',
+                    blockedEmptyProfilePush: true
+                };
+            }
         }
 
         const authResult = await this.authenticateSocketIdentity(forceRefreshAuth);

@@ -261,6 +261,42 @@ function waitForCloudProfileSync(socket, timeoutMs = 4000) {
     });
 }
 
+function hasMeaningfulLocalProfileForSync() {
+    if (window.app && typeof window.app.hasMeaningfulLocalProfile === 'function') {
+        return window.app.hasMeaningfulLocalProfile();
+    }
+
+    const stats = getFullLocalStats();
+    const numericFields = [
+        'games',
+        'wins',
+        'losses',
+        'highscore',
+        'totalScoreSum',
+        'maxWinStreak',
+        'tournamentWins',
+        'penaltyPoints',
+        'balance',
+        'undoTokens'
+    ];
+
+    if (numericFields.some(field => Math.max(0, Number(stats[field]) || 0) > 0)) return true;
+
+    const freeUnlocks = new Set(['default', 'confetti', 'dark', 'light', 'medium', 'winter']);
+    const unlockFields = ['unlockedTrophies', 'unlockedSkins', 'unlockedEffects', 'yamb_unlocked', 'unlockedThemes'];
+    if (unlockFields.some(field => Array.isArray(stats[field]) && stats[field].some(item => item && !freeUnlocks.has(item)))) {
+        return true;
+    }
+
+    const leagueData = stats.leagueData || {};
+    if (Math.max(0, Number(leagueData.baselineScore) || 0) > 0 ||
+        Math.max(0, Number(leagueData.quarterlyScore) || 0) > 0) {
+        return true;
+    }
+
+    return stats.h2hStats && typeof stats.h2hStats === 'object' && Object.keys(stats.h2hStats).length > 0;
+}
+
 async function syncLoggedInProfileToCloud(user, options = {}) {
     const uid = user?.uid || localStorage.getItem('yamb_uid');
     if (!uid || !window.app || !window.app.socket) return false;
@@ -305,15 +341,22 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
         }
     }
 
-    if (window.app && typeof window.app.pullCloudProfile === 'function') {
-        const shouldRestore = options.preferCloudRestore ||
-            (typeof window.app.shouldRestoreCloudBeforeProfilePush === 'function' && window.app.shouldRestoreCloudBeforeProfilePush());
-        if (shouldRestore) {
-            await window.app.pullCloudProfile({
-                forceRefresh: !!options.forceRefresh,
-                timeoutMs: options.timeoutMs || 4000
-            });
-        }
+    const shouldRestore = options.preferCloudRestore ||
+        (typeof window.app.shouldRestoreCloudBeforeProfilePush === 'function' && window.app.shouldRestoreCloudBeforeProfilePush());
+    let restoreResult = null;
+    if (shouldRestore && typeof window.app.pullCloudProfile === 'function') {
+        restoreResult = await window.app.pullCloudProfile({
+            forceRefresh: !!options.forceRefresh,
+            timeoutMs: options.timeoutMs || 4000
+        });
+    }
+
+    if (shouldRestore &&
+        (!restoreResult || !restoreResult.ok) &&
+        restoreResult?.reason !== 'profile_not_found' &&
+        !hasMeaningfulLocalProfileForSync()) {
+        console.warn(`Cloud restore nije potvrđen (${restoreResult?.reason || 'no_restore_result'}). Blokiram slanje praznog lokalnog profila.`);
+        return false;
     }
 
     const syncWait = options.waitForSync ? waitForCloudProfileSync(socket, options.timeoutMs || 4000) : null;
@@ -515,7 +558,7 @@ async function odjaviSe() {
         }
         if (window.statsManager) {
             window.statsManager.stats = { games: 0, totalGames: 0, wins: 0, losses: 0, highscore: 0, tournamentWins: 0, balance: 0, currentWinStreak: 0, penaltyPoints: 0, unlockedTrophies: [], unlockedSkins: [], unlockedEffects: [] };
-            window.statsManager.saveStats();
+            window.statsManager.previousBalance = 0;
         }
 
         // 4. Izbacivanje na Splash ekran i prikazivanje dugmeta za Login
