@@ -288,6 +288,7 @@ function osveziAuthUI(user) {
         if (loginBtn) loginBtn.style.display = 'none';
         
         if (userInfo) {
+            userInfo.removeAttribute('data-lang');
             userInfo.innerText = user.displayName;
             userInfo.style.color = 'var(--gold-main)';
         }
@@ -311,6 +312,7 @@ function osveziAuthUI(user) {
         if (loginBtn) loginBtn.style.display = 'flex';
         
         if (userInfo) {
+            userInfo.setAttribute('data-lang', 'settings_not_logged_in');
             userInfo.innerText = _t('settings_not_logged_in', "Niste prijavljeni");
             userInfo.style.color = 'var(--text-main)';
         }
