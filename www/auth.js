@@ -4,7 +4,13 @@
  */
 
 // --- POMOĆNA FUNKCIJA ZA BEZBEDAN PREVOD ---
-const _t = (key, fallback) => (typeof t !== 'undefined' ? t(key) : fallback);
+const _t = (key, fallback) => {
+    if (typeof t !== 'function') return fallback;
+    const translated = t(key);
+    return (!translated || translated === key) ? fallback : translated;
+};
+
+const authDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // --- POMOĆNA FUNKCIJA ZA CUSTOM ALERTE ---
 async function prikaziObavestenje(tekst) {
@@ -20,18 +26,60 @@ async function prikaziObavestenje(tekst) {
     alert(tekst);
 }
 
-async function getYambFirebaseIdToken(forceRefresh = false) {
-    if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
+async function getYambFirebaseIdToken(forceRefresh = false, options = {}) {
+    const authPlugin = (typeof Capacitor !== 'undefined' && Capacitor.Plugins)
+        ? Capacitor.Plugins.FirebaseAuthentication
+        : null;
+
+    if (!authPlugin) {
+        window.yambLastFirebaseTokenStatus = {
+            ok: false,
+            reason: 'firebase_plugin_missing',
+            updatedAt: Date.now()
+        };
         return null;
     }
 
-    try {
-        const result = await Capacitor.Plugins.FirebaseAuthentication.getIdToken({ forceRefresh });
-        return result && result.token ? result.token : null;
-    } catch (error) {
-        console.warn("Firebase ID token nije dostupan:", error);
-        return null;
+    const attempts = Math.max(1, parseInt(options.attempts || (forceRefresh ? 8 : 3), 10) || 1);
+    const delayMs = Math.max(100, parseInt(options.delayMs || 350, 10) || 350);
+    let lastReason = 'missing_firebase_token';
+
+    for (let attempt = 1; attempt <= attempts; attempt++) {
+        try {
+            if (attempt > 1 && typeof authPlugin.getCurrentUser === 'function') {
+                await authPlugin.getCurrentUser().catch(() => null);
+            }
+
+            const result = await authPlugin.getIdToken({ forceRefresh: forceRefresh || attempt > 1 });
+            if (result && typeof result.token === 'string' && result.token.length > 100) {
+                window.yambLastFirebaseTokenStatus = {
+                    ok: true,
+                    attempts: attempt,
+                    updatedAt: Date.now()
+                };
+                return result.token;
+            }
+
+            lastReason = 'empty_firebase_token';
+        } catch (error) {
+            lastReason = error?.message || 'firebase_token_error';
+            if (attempt === attempts) {
+                console.warn("Firebase ID token nije dostupan:", error);
+            }
+        }
+
+        if (attempt < attempts) {
+            await authDelay(delayMs);
+        }
     }
+
+    window.yambLastFirebaseTokenStatus = {
+        ok: false,
+        reason: lastReason,
+        attempts,
+        updatedAt: Date.now()
+    };
+    return null;
 }
 
 window.getYambFirebaseIdToken = getYambFirebaseIdToken;
@@ -131,6 +179,8 @@ function setYambAuthState(user, options = {}) {
         isLoggedIn: true,
         loginInProgress: false,
         checkingLogin: false,
+        restoreFailed: false,
+        restoreFailedReason: null,
         updatedAt: Date.now()
     };
 
@@ -535,9 +585,30 @@ function restoreAccountLocalSnapshot(uid) {
     return true;
 }
 
+function rememberCloudSyncResult(result = {}) {
+    window.yambLastCloudSyncResult = {
+        ok: !!result.ok,
+        reason: result.reason || (result.ok ? 'ok' : 'unknown_error'),
+        ...result,
+        updatedAt: Date.now()
+    };
+    return window.yambLastCloudSyncResult;
+}
+
 async function syncLoggedInProfileToCloud(user, options = {}) {
     const uid = user?.uid || localStorage.getItem('yamb_uid');
-    if (!uid || !window.app || !window.app.socket) return false;
+    if (!uid) {
+        rememberCloudSyncResult({ ok: false, reason: 'missing_uid' });
+        return false;
+    }
+    if (!window.app) {
+        rememberCloudSyncResult({ ok: false, reason: 'app_not_ready' });
+        return false;
+    }
+    if (!window.app.socket) {
+        rememberCloudSyncResult({ ok: false, reason: 'socket_not_ready' });
+        return false;
+    }
 
     const displayName = user?.displayName || localStorage.getItem('yamb_player_name') || _t('hs_player', "Igrač");
     window.app.playerId = uid;
@@ -566,7 +637,10 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
                 const synced = await syncLoggedInProfileToCloud(user, options);
                 finish(synced);
             };
-            const timer = setTimeout(() => finish(false), options.timeoutMs || 5000);
+            const timer = setTimeout(() => {
+                rememberCloudSyncResult({ ok: false, reason: 'socket_connect_timeout' });
+                finish(false);
+            }, options.timeoutMs || 5000);
 
             socket.once('connect', onConnect);
         });
@@ -574,12 +648,18 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
 
     if (typeof window.app.authenticateSocketIdentity !== 'function') {
         console.warn("Cloud sync preskočen: nedostaje Firebase verifikacija socketa.");
+        rememberCloudSyncResult({ ok: false, reason: 'token_auth_missing' });
         return false;
     }
 
     const authResult = await window.app.authenticateSocketIdentity(!!options.forceRefresh);
     if (!authResult || !authResult.ok) {
         console.warn(`Cloud sync blokiran dok Firebase identitet nije potvrđen: ${authResult?.reason || 'unknown_error'}`);
+        rememberCloudSyncResult({
+            ...(authResult || {}),
+            ok: false,
+            reason: authResult?.reason || window.yambLastFirebaseTokenStatus?.reason || 'firebase_auth_failed'
+        });
         return false;
     }
 
@@ -598,6 +678,11 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
         restoreResult?.reason !== 'profile_not_found' &&
         !hasMeaningfulLocalProfileForSync()) {
         console.warn(`Cloud restore nije potvrđen (${restoreResult?.reason || 'no_restore_result'}). Blokiram slanje praznog lokalnog profila.`);
+        rememberCloudSyncResult({
+            ...(restoreResult || {}),
+            ok: false,
+            reason: restoreResult?.reason || 'cloud_restore_failed'
+        });
         return false;
     }
 
@@ -616,14 +701,22 @@ async function syncLoggedInProfileToCloud(user, options = {}) {
             .catch(error => console.warn("Push registracija nije uspela:", error));
     }
 
-    if (!syncWait) return true;
+    if (!syncWait) {
+        rememberCloudSyncResult({ ok: true, reason: 'sent_without_wait' });
+        return true;
+    }
 
     const cloudStats = await syncWait;
     if (cloudStats && window.app && typeof window.app.applyCloudProfileSync === 'function') {
         window.app.applyCloudProfileSync(cloudStats);
     }
     refreshLeagueDashboardForCurrentUser();
-    saveAccountLocalSnapshot(uid);
+    if (cloudStats) {
+        saveAccountLocalSnapshot(uid);
+        rememberCloudSyncResult({ ok: true, reason: 'profile_synced' });
+    } else {
+        rememberCloudSyncResult({ ok: false, reason: 'profile_sync_timeout' });
+    }
 
     return !!cloudStats;
 }
@@ -689,6 +782,7 @@ async function prijaviSe() {
 
         console.log("Uspešna prijava:", signedInUser.displayName);
         osveziAuthUI(signedInUser);
+        await getYambFirebaseIdToken(true, { attempts: 8, delayMs: 400 });
 
         let syncOk = true;
         if (window.app) {
@@ -711,10 +805,18 @@ async function prijaviSe() {
             } else {
                 console.warn("Login je uspeo, ali cloud profil nije vraćen. Ostajem na prijavi da ne prikažem prazan nalog.");
                 localStorage.setItem('yamb_force_cloud_restore_next_login', 'true');
+                window.yambAuthState = {
+                    ...(window.yambAuthState || {}),
+                    restoreFailed: true,
+                    restoreFailedReason: window.yambLastCloudSyncResult?.reason || window.yambLastFirebaseTokenStatus?.reason || 'unknown_error',
+                    updatedAt: Date.now()
+                };
                 window.app.navigateTo('splash-screen');
                 const splashLogin = document.getElementById('splash-login-container');
                 if (splashLogin) splashLogin.style.display = 'flex';
-                await prikaziObavestenje(_t('auth_profile_restore_failed', "Prijava je prošla, ali profil nije vraćen iz cloud-a. Pokušajte ponovo za par sekundi."));
+                const reason = window.yambAuthState.restoreFailedReason;
+                const reasonSuffix = reason ? ` (${reason})` : '';
+                await prikaziObavestenje(_t('auth_profile_restore_failed', "Prijava je prošla, ali profil nije vraćen iz cloud-a. Pokušajte ponovo za par sekundi.") + reasonSuffix);
                 return;
             }
         }

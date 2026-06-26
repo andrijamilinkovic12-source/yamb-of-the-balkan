@@ -1234,6 +1234,13 @@ class YambApp {
     }
 
     requireLogin() {
+        const splashLogin = document.getElementById('splash-login-container');
+        if (window.yambAuthState && window.yambAuthState.restoreFailed) {
+            this.navigateTo('splash-screen');
+            if (splashLogin) splashLogin.style.display = 'flex';
+            return false;
+        }
+
         const uid = getPlayerId() || this.playerId;
         if (uid && uid !== 'undefined' && uid !== 'null') {
             localStorage.setItem('yamb_uid', uid);
@@ -1241,7 +1248,6 @@ class YambApp {
             return true;
         }
 
-        const splashLogin = document.getElementById('splash-login-container');
         if (window.yambAuthState && (window.yambAuthState.loginInProgress || window.yambAuthState.checkingLogin)) {
             if (splashLogin) splashLogin.style.display = 'flex';
             return false;
@@ -2639,7 +2645,10 @@ class YambApp {
         const tokenProvider = window.getYambFirebaseIdToken;
         if (typeof tokenProvider !== 'function') return { ok: false, reason: 'token_provider_missing' };
 
-        const token = await tokenProvider(forceRefresh);
+        const token = await tokenProvider(forceRefresh, {
+            attempts: forceRefresh ? 8 : 4,
+            delayMs: 400
+        });
         if (!token) return { ok: false, reason: 'missing_firebase_token' };
 
         return new Promise((resolve) => {
