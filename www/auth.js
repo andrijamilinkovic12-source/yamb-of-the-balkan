@@ -36,6 +36,107 @@ async function getYambFirebaseIdToken(forceRefresh = false) {
 
 window.getYambFirebaseIdToken = getYambFirebaseIdToken;
 
+function normalizeFirebaseAuthUser(user) {
+    if (!user || typeof user !== 'object') return null;
+
+    const uid = String(user.uid || user.id || user.userId || '').trim();
+    if (!uid || uid === 'undefined' || uid === 'null') return null;
+
+    return {
+        ...user,
+        uid,
+        displayName: user.displayName || user.name || user.email || localStorage.getItem('yamb_player_name') || _t('hs_player', "Igrač"),
+        photoUrl: user.photoUrl || user.photoURL || user.imageUrl || user.photo || '',
+        email: user.email || ''
+    };
+}
+
+async function resolveFirebaseAuthUser(signInResult = null) {
+    const fromResult = normalizeFirebaseAuthUser(signInResult?.user || signInResult);
+    if (fromResult) return fromResult;
+
+    const authPlugin = (typeof Capacitor !== 'undefined' && Capacitor.Plugins)
+        ? Capacitor.Plugins.FirebaseAuthentication
+        : null;
+    if (!authPlugin) return null;
+
+    if (typeof authPlugin.getCurrentUser === 'function') {
+        try {
+            const current = await authPlugin.getCurrentUser();
+            const user = normalizeFirebaseAuthUser(current?.user);
+            if (user) return user;
+        } catch (error) {
+            console.warn("Ne mogu da pročitam trenutnog Firebase korisnika:", error);
+        }
+    }
+
+    if (typeof authPlugin.getPendingAuthResult === 'function') {
+        try {
+            const pending = await authPlugin.getPendingAuthResult();
+            const user = normalizeFirebaseAuthUser(pending?.user);
+            if (user) return user;
+        } catch (error) {
+            console.warn("Ne mogu da pročitam pending Firebase login rezultat:", error);
+        }
+    }
+
+    return null;
+}
+
+function setYambAuthState(user, options = {}) {
+    const normalized = normalizeFirebaseAuthUser(user);
+    const previousState = window.yambAuthState || {};
+
+    if (!normalized) {
+        localStorage.removeItem('yamb_uid');
+        localStorage.removeItem('yamb_player_name');
+        localStorage.removeItem('yamb_player_photo');
+
+        if (window.app) {
+            window.app.playerId = null;
+            window.app.playerName = "";
+        }
+
+        window.yambAuthState = {
+            ...previousState,
+            uid: null,
+            user: null,
+            isLoggedIn: false,
+            loginInProgress: !!options.loginInProgress,
+            checkingLogin: !!options.checkingLogin,
+            updatedAt: Date.now()
+        };
+        return null;
+    }
+
+    localStorage.setItem('yamb_uid', normalized.uid);
+    migrateLegacyLocalProgressToUid(normalized.uid);
+
+    if (normalized.displayName) {
+        localStorage.setItem('yamb_player_name', normalized.displayName);
+    }
+    if (normalized.photoUrl) {
+        localStorage.setItem('yamb_player_photo', normalized.photoUrl);
+    }
+
+    if (window.app) {
+        window.app.playerId = normalized.uid;
+        if (normalized.displayName) window.app.playerName = normalized.displayName;
+    }
+
+    window.yambAuthState = {
+        ...previousState,
+        uid: normalized.uid,
+        user: normalized,
+        isLoggedIn: true,
+        loginInProgress: false,
+        checkingLogin: false,
+        updatedAt: Date.now()
+    };
+
+    return normalized;
+}
+
 function safeParseLocalJson(key) {
     try {
         const raw = localStorage.getItem(key);
@@ -547,51 +648,89 @@ async function clearAccountLocalCache(uid) {
 async function prijaviSe() {
     console.log("Iniciram proces prijave...");
 
-    if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
+    window.yambAuthState = {
+        ...(window.yambAuthState || {}),
+        loginInProgress: true,
+        checkingLogin: false,
+        updatedAt: Date.now()
+    };
+
+    const authPlugin = (typeof Capacitor !== 'undefined' && Capacitor.Plugins)
+        ? Capacitor.Plugins.FirebaseAuthentication
+        : null;
+
+    if (!authPlugin) {
         console.warn("Google Auth nativni plugin nije dostupan u ovom okruženju.");
+        window.yambAuthState = {
+            ...(window.yambAuthState || {}),
+            loginInProgress: false,
+            checkingLogin: false,
+            updatedAt: Date.now()
+        };
         await prikaziObavestenje(_t('auth_only_mobile', "Google prijava je dostupna samo u mobilnoj aplikaciji."));
         return;
     }
 
     try {
-        const result = await Capacitor.Plugins.FirebaseAuthentication.signInWithGoogle();
+        const result = await authPlugin.signInWithGoogle();
+        const signedInUser = setYambAuthState(await resolveFirebaseAuthUser(result));
 
-        if (result.user) {
-            const user = result.user;
-            console.log("Uspešna prijava:", user.displayName);
-
-            localStorage.setItem('yamb_uid', user.uid);
-            migrateLegacyLocalProgressToUid(user.uid);
-            
-            if (user.displayName) {
-                localStorage.setItem('yamb_player_name', user.displayName);
-            }
-            if (user.photoUrl) {
-                localStorage.setItem('yamb_player_photo', user.photoUrl);
-            }
-
-            osveziAuthUI(user);
-            const playerName = user.displayName || _t('player_guest', "Igraču");
-            await prikaziObavestenje(_t('auth_welcome', "Dobrodošli, ") + playerName + "!");
-
-            if (window.app) {
-                window.app.playerId = user.uid;
-                if (user.displayName) window.app.playerName = user.displayName;
-
-                await syncLoggedInProfileToCloud(user, {
-                    forceRefresh: true,
-                    preferCloudRestore: true,
-                    waitForSync: true,
-                    timeoutMs: 5000
-                });
-            }
-
-            refreshLeagueDashboardForCurrentUser();
-            
-            if (window.app) window.app.navigateTo('main-menu');
+        if (!signedInUser) {
+            console.warn("Google login je završen bez važećeg Firebase korisnika.");
+            window.yambAuthState = {
+                ...(window.yambAuthState || {}),
+                loginInProgress: false,
+                checkingLogin: false,
+                updatedAt: Date.now()
+            };
+            await prikaziObavestenje(_t('auth_login_failed', "Prijava trenutno nije uspela. Proveri internet vezu."));
+            return;
         }
+
+        console.log("Uspešna prijava:", signedInUser.displayName);
+        osveziAuthUI(signedInUser);
+
+        let syncOk = true;
+        if (window.app) {
+            syncOk = await syncLoggedInProfileToCloud(signedInUser, {
+                forceRefresh: true,
+                preferCloudRestore: true,
+                waitForSync: true,
+                timeoutMs: 5000
+            });
+        }
+
+        refreshLeagueDashboardForCurrentUser();
+
+        if (!syncOk &&
+            window.app &&
+            typeof window.app.hasMeaningfulLocalProfile === 'function' &&
+            !window.app.hasMeaningfulLocalProfile()) {
+            if (restoreAccountLocalSnapshot(signedInUser.uid)) {
+                console.warn("Cloud restore nije potvrđen posle login-a, koristim lokalni account snapshot kao privremeni fallback.");
+            } else {
+                console.warn("Login je uspeo, ali cloud profil nije vraćen. Ostajem na prijavi da ne prikažem prazan nalog.");
+                localStorage.setItem('yamb_force_cloud_restore_next_login', 'true');
+                window.app.navigateTo('splash-screen');
+                const splashLogin = document.getElementById('splash-login-container');
+                if (splashLogin) splashLogin.style.display = 'flex';
+                await prikaziObavestenje(_t('auth_profile_restore_failed', "Prijava je prošla, ali profil nije vraćen iz cloud-a. Pokušajte ponovo za par sekundi."));
+                return;
+            }
+        }
+
+        if (window.app) window.app.navigateTo('main-menu');
+
+        const playerName = signedInUser.displayName || _t('player_guest', "Igraču");
+        await prikaziObavestenje(_t('auth_welcome', "Dobrodošli, ") + playerName + "!");
     } catch (error) {
         console.error("Greška pri prijavi:", error);
+        window.yambAuthState = {
+            ...(window.yambAuthState || {}),
+            loginInProgress: false,
+            checkingLogin: false,
+            updatedAt: Date.now()
+        };
         if (error.message && (error.message.includes("10") || error.message.includes("12500"))) {
             await prikaziObavestenje(_t('auth_sha1_error', "Greška 10/12500: Verovatno SHA-1 ključ u Firebase konzoli nije ispravan."));
         } else {
@@ -732,28 +871,38 @@ async function odjaviSe() {
 async function checkLoginStatus() {
     const splashLoginContainer = document.getElementById('splash-login-container');
 
-    if (typeof Capacitor === 'undefined' || !Capacitor.Plugins || !Capacitor.Plugins.FirebaseAuthentication) {
+    window.yambAuthState = {
+        ...(window.yambAuthState || {}),
+        loginInProgress: false,
+        checkingLogin: true,
+        updatedAt: Date.now()
+    };
+
+    const authPlugin = (typeof Capacitor !== 'undefined' && Capacitor.Plugins)
+        ? Capacitor.Plugins.FirebaseAuthentication
+        : null;
+
+    if (!authPlugin) {
         console.warn("Nema Capacitora - Prijava nije moguća na Webu.");
+        window.yambAuthState = {
+            ...(window.yambAuthState || {}),
+            loginInProgress: false,
+            checkingLogin: false,
+            updatedAt: Date.now()
+        };
         setTimeout(() => { if (splashLoginContainer) splashLoginContainer.style.display = 'flex'; }, 4000);
         return; 
     }
 
     try {
-        const result = await Capacitor.Plugins.FirebaseAuthentication.getCurrentUser();
-        if (result && result.user) {
-            console.log("Korisnik je već ulogovan:", result.user.displayName);
-            
-            localStorage.setItem('yamb_uid', result.user.uid);
-            migrateLegacyLocalProgressToUid(result.user.uid);
-            localStorage.setItem('yamb_player_name', result.user.displayName || _t('hs_player', "Igrač"));
-            osveziAuthUI(result.user);
-            
-            if (window.app) {
-                window.app.playerId = result.user.uid;
-                window.app.playerName = result.user.displayName || _t('hs_player', "Igrač");
-            }
+        const result = await authPlugin.getCurrentUser();
+        const signedInUser = setYambAuthState(normalizeFirebaseAuthUser(result?.user));
 
-            const initialCloudSync = syncLoggedInProfileToCloud(result.user, {
+        if (signedInUser) {
+            console.log("Korisnik je već ulogovan:", signedInUser.displayName);
+            osveziAuthUI(signedInUser);
+
+            const initialCloudSync = syncLoggedInProfileToCloud(signedInUser, {
                 preferCloudRestore: true,
                 waitForSync: true,
                 timeoutMs: 3500
@@ -761,15 +910,17 @@ async function checkLoginStatus() {
 
             setTimeout(async () => {
                 const syncOk = await initialCloudSync;
+                if (window.yambAuthState) window.yambAuthState.checkingLogin = false;
                 refreshLeagueDashboardForCurrentUser();
                 if (!syncOk &&
                     window.app &&
                     typeof window.app.hasMeaningfulLocalProfile === 'function' &&
                     !window.app.hasMeaningfulLocalProfile()) {
-                    if (restoreAccountLocalSnapshot(result.user.uid)) {
+                    if (restoreAccountLocalSnapshot(signedInUser.uid)) {
                         console.warn("Cloud restore nije potvrđen, koristim lokalni account snapshot kao privremeni fallback.");
                     } else {
                         console.warn("Cloud profil nije vraćen, a lokalni profil je prazan. Ostajem na prijavi da ne prikažem nalog od nule.");
+                        setYambAuthState(null);
                         osveziAuthUI(null);
                         if (splashLoginContainer) splashLoginContainer.style.display = 'flex';
                         return;
@@ -781,10 +932,12 @@ async function checkLoginStatus() {
             }, 4000);
 
         } else {
+            setYambAuthState(null);
             setTimeout(() => { if (splashLoginContainer) splashLoginContainer.style.display = 'flex'; }, 4000);
             if (window.app) window.app.navigateTo('splash-screen');
         }
     } catch (e) {
+        setYambAuthState(null);
         setTimeout(() => { if (splashLoginContainer) splashLoginContainer.style.display = 'flex'; }, 4000);
         if (window.app) window.app.navigateTo('splash-screen');
     }

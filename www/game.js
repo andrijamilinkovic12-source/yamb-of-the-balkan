@@ -6,7 +6,11 @@ const sum = (arr) => arr.reduce((a, b) => a + b, 0);
 
 // STRIKTNO PRAVILO: Samo Google nalozi (Nema generisanja usr_ ID-a)
 function getPlayerId() {
-    return localStorage.getItem('yamb_uid') || null; 
+    const uid = localStorage.getItem('yamb_uid') ||
+        (window.yambAuthState && window.yambAuthState.uid) ||
+        null;
+    if (!uid || uid === 'undefined' || uid === 'null') return null;
+    return uid;
 }
 
 const gt = (key) => {
@@ -371,7 +375,7 @@ class YambApp {
     }
 
     syncProfileSettingsToCloud(delayMs = 350) {
-        if (!localStorage.getItem('yamb_uid')) return;
+        if (!getPlayerId()) return;
         if (!this.socket || !this.socket.connected) return;
 
         if (this.settingsSyncTimer) clearTimeout(this.settingsSyncTimer);
@@ -1230,14 +1234,27 @@ class YambApp {
     }
 
     requireLogin() {
-        if (!localStorage.getItem('yamb_uid')) {
-            this.modal.alert(gt('auth_required') || "Morate se prijaviti preko Google-a da biste igrali ovu igru.", gt('auth_required_title') || "PRIJAVA OBAVEZNA");
-            this.navigateTo('splash-screen');
-            const splashLogin = document.getElementById('splash-login-container');
+        const uid = getPlayerId() || this.playerId;
+        if (uid && uid !== 'undefined' && uid !== 'null') {
+            localStorage.setItem('yamb_uid', uid);
+            this.playerId = uid;
+            return true;
+        }
+
+        const splashLogin = document.getElementById('splash-login-container');
+        if (window.yambAuthState && (window.yambAuthState.loginInProgress || window.yambAuthState.checkingLogin)) {
             if (splashLogin) splashLogin.style.display = 'flex';
             return false;
         }
-        return true;
+
+        const now = Date.now();
+        if (!this.lastAuthRequiredAlertAt || now - this.lastAuthRequiredAlertAt > 1500) {
+            this.lastAuthRequiredAlertAt = now;
+            this.modal.alert(gt('auth_required') || "Morate se prijaviti preko Google-a da biste igrali ovu igru.", gt('auth_required_title') || "PRIJAVA OBAVEZNA");
+        }
+        this.navigateTo('splash-screen');
+        if (splashLogin) splashLogin.style.display = 'flex';
+        return false;
     }
 
     syncBalance() {
@@ -2611,8 +2628,11 @@ class YambApp {
 
     async authenticateSocketIdentity(forceRefresh = false) {
         if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
-        if (!localStorage.getItem('yamb_uid')) return { ok: false, reason: 'not_logged_in' };
-        if (this.socketVerifiedUid === localStorage.getItem('yamb_uid') && !forceRefresh) {
+        const uid = getPlayerId() || this.playerId;
+        if (!uid) return { ok: false, reason: 'not_logged_in' };
+        localStorage.setItem('yamb_uid', uid);
+        this.playerId = uid;
+        if (this.socketVerifiedUid === uid && !forceRefresh) {
             return { ok: true, uid: this.socketVerifiedUid };
         }
 
@@ -2648,7 +2668,7 @@ class YambApp {
 
     async handleAuthRequired(result = {}) {
         if (!this.socket || !this.socket.connected) return;
-        if (!localStorage.getItem('yamb_uid')) return;
+        if (!getPlayerId()) return;
         if (this.authRetryInProgress) return;
 
         const retryableReasons = new Set([
@@ -2740,7 +2760,7 @@ class YambApp {
     }
 
     shouldRestoreCloudBeforeProfilePush() {
-        if (!localStorage.getItem('yamb_uid') && !this.playerId) return false;
+        if (!getPlayerId() && !this.playerId) return false;
         if (this.gameActive) return false;
         return localStorage.getItem('yamb_force_cloud_restore_next_login') === 'true' ||
             !this.hasMeaningfulLocalProfile();
@@ -2840,7 +2860,7 @@ class YambApp {
     }
 
     async refreshProfileAfterOnlineRoomClosed() {
-        if (!localStorage.getItem('yamb_uid')) return null;
+        if (!getPlayerId()) return null;
         if (!this.socket || !this.socket.connected) return null;
 
         try {
