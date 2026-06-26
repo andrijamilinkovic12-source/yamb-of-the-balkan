@@ -32,6 +32,16 @@
         return 'unknown';
     }
 
+    function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
+    }
+
     function emitWithAck(socket, eventName, payload, timeoutMs = 8000) {
         return new Promise(resolve => {
             if (!socket || !socket.connected) {
@@ -213,6 +223,46 @@
         }
     }
 
+    function handleNotificationAction(data = {}) {
+        const type = String(data.type || '');
+        if (type.startsWith('tournament_') || data.scope === 'tournament') {
+            openTournamentFromNotification(data);
+        } else if (type.startsWith('record_') || data.scope === 'records') {
+            openRecordsFromNotification(data);
+        } else if (type.startsWith('league_') || data.scope === 'league') {
+            openLeagueHallOfFameFromNotification(data);
+        }
+    }
+
+    function showForegroundNotification(notification = {}) {
+        const data = notification?.data || {};
+        const title = escapeHtml(notification?.title || 'Yamb of the Balkan');
+        const body = escapeHtml(notification?.body || '');
+        const app = window.app;
+        const modal = app?.modal || window.modalManager;
+        const canOpen = Boolean(data.scope || data.type);
+
+        if (app && typeof app.vibrate === 'function') {
+            app.vibrate(40);
+        }
+
+        if (modal && canOpen && typeof modal.confirm === 'function') {
+            const message = `${body || title}<br><br>Otvori obavestenje?`;
+            modal.confirm(message, {
+                title,
+                okText: 'Otvori',
+                cancelText: 'Kasnije'
+            }).then(open => {
+                if (open) handleNotificationAction(data);
+            });
+            return;
+        }
+
+        if (modal && typeof modal.alert === 'function') {
+            modal.alert(body || title, title);
+        }
+    }
+
     async function ensureListeners(app) {
         if (listenersReady) return;
         const plugin = getPushPlugin();
@@ -231,16 +281,13 @@
             console.warn('Push registracija nije uspela:', error);
         });
 
+        await plugin.addListener('pushNotificationReceived', notification => {
+            showForegroundNotification(notification);
+        });
+
         await plugin.addListener('pushNotificationActionPerformed', event => {
             const data = event?.notification?.data || {};
-            const type = String(data.type || '');
-            if (type.startsWith('tournament_') || data.scope === 'tournament') {
-                openTournamentFromNotification(data);
-            } else if (type.startsWith('record_') || data.scope === 'records') {
-                openRecordsFromNotification(data);
-            } else if (type.startsWith('league_') || data.scope === 'league') {
-                openLeagueHallOfFameFromNotification(data);
-            }
+            handleNotificationAction(data);
         });
 
         listenersReady = true;

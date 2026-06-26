@@ -26,7 +26,7 @@
       <stop offset="0.58" stop-color="#0F8F8B" stop-opacity="0.2"/>
       <stop offset="1" stop-color="#061313" stop-opacity="0"/>
     </radialGradient>
-    <filter id="yotbTrophyShadow" x="5" y="4" width="86" height="88" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+    <filter id="yotbTrophyShadow" x="0" y="0" width="96" height="96" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
       <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#000000" flood-opacity="0.44"/>
       <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#6AFFF0" flood-opacity="0.18"/>
       <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#FFD66F" flood-opacity="0.2"/>

@@ -1499,6 +1499,266 @@ body {
     50% { box-shadow: inset 0 1px 2px rgba(255,255,255,0.65), 0 0 22px rgba(255, 215, 0, 0.28); }
 }
 
+.tournament-final-ceremony {
+    --tournament-final-side-pad: max(16px, var(--safe-left), var(--safe-right));
+    position: fixed;
+    inset: 0;
+    z-index: 9800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: max(18px, var(--safe-top)) var(--tournament-final-side-pad) max(18px, var(--safe-bottom));
+    background:
+        radial-gradient(circle at 50% 28%, rgba(255, 215, 0, 0.22), transparent 34%),
+        radial-gradient(circle at 18% 82%, rgba(19, 185, 166, 0.16), transparent 32%),
+        rgba(3, 5, 7, 0.9);
+    opacity: 0;
+    transition: opacity 260ms ease;
+    overflow: hidden;
+}
+
+.tournament-final-ceremony.active {
+    opacity: 1;
+}
+
+.tournament-final-ceremony.closing {
+    opacity: 0;
+}
+
+.tournament-final-ceremony-panel {
+    position: relative;
+    width: min(100%, 430px);
+    min-height: min(600px, calc(100dvh - 40px));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 28px 22px 24px;
+    border: 1px solid rgba(255, 215, 0, 0.34);
+    border-radius: 20px;
+    background:
+        linear-gradient(180deg, rgba(23, 24, 27, 0.94), rgba(7, 9, 11, 0.96)),
+        rgba(8, 10, 12, 0.94);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.52), 0 0 38px rgba(255, 215, 0, 0.16);
+    text-align: center;
+    overflow: hidden;
+}
+
+.tournament-final-ceremony.is-runnerup .tournament-final-ceremony-panel {
+    border-color: rgba(187, 210, 226, 0.38);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.52), 0 0 34px rgba(106, 183, 212, 0.14);
+}
+
+.tournament-final-ceremony-rays {
+    position: absolute;
+    inset: -35%;
+    background: conic-gradient(from 0deg, transparent 0 8%, rgba(255, 215, 0, 0.18) 9% 10%, transparent 11% 20%);
+    opacity: 0.5;
+    animation: tournamentFinalRays 6s linear infinite;
+    pointer-events: none;
+}
+
+.tournament-final-ceremony.is-runnerup .tournament-final-ceremony-rays {
+    background: conic-gradient(from 0deg, transparent 0 8%, rgba(156, 215, 239, 0.18) 9% 10%, transparent 11% 20%);
+}
+
+.tournament-final-ceremony-trophy-wrap {
+    position: relative;
+    z-index: 1;
+    width: 154px;
+    height: 154px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.18), rgba(255, 215, 0, 0.04) 62%, transparent 70%);
+    animation: tournamentFinalTrophyPop 900ms cubic-bezier(0.18, 0.92, 0.2, 1.2) both;
+}
+
+.tournament-final-ceremony-trophy {
+    width: 118px;
+    height: 118px;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.42)) drop-shadow(0 0 26px rgba(255, 215, 0, 0.34));
+}
+
+.tournament-final-ceremony-kicker {
+    position: relative;
+    z-index: 1;
+    color: var(--gold-main);
+    font-size: 0.78rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0;
+}
+
+.tournament-final-ceremony.is-runnerup .tournament-final-ceremony-kicker {
+    color: #cdefff;
+}
+
+.tournament-final-ceremony-title {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    color: var(--text-main);
+    max-width: 100%;
+    font-size: 1.95rem;
+    line-height: 1.02;
+    font-weight: 1000;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+    text-shadow: 0 0 18px rgba(255, 215, 0, 0.28), 0 3px 12px rgba(0, 0, 0, 0.58);
+}
+
+.tournament-final-ceremony-message {
+    position: relative;
+    z-index: 1;
+    width: min(330px, 100%);
+    margin: 0;
+    color: var(--text-main);
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.32;
+}
+
+.tournament-final-ceremony-reward {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-width: 210px;
+    min-height: 64px;
+    padding: 10px 18px;
+    margin-top: 4px;
+    border: 1px solid rgba(255, 215, 0, 0.44);
+    border-radius: 18px;
+    background: rgba(255, 215, 0, 0.12);
+    color: var(--gold-main);
+    font-size: 2rem;
+    font-weight: 1000;
+    line-height: 1;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.15), 0 0 24px rgba(255, 215, 0, 0.14);
+    animation: tournamentFinalRewardRise 820ms 420ms cubic-bezier(0.16, 0.9, 0.22, 1.1) both;
+}
+
+.tournament-final-ceremony-reward .dukat-icon-inline {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+}
+
+.tournament-final-ceremony.is-runnerup .tournament-final-ceremony-reward {
+    border-color: rgba(187, 210, 226, 0.44);
+    background: rgba(106, 183, 212, 0.14);
+    color: #dff6ff;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.14), 0 0 24px rgba(106, 183, 212, 0.14);
+}
+
+.tournament-final-ceremony-meta {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.tournament-final-ceremony-meta strong {
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.tournament-final-ceremony-next {
+    position: relative;
+    z-index: 1;
+    width: min(240px, 100%);
+    min-height: 46px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 23px;
+    background: var(--gold-main);
+    color: #101010;
+    font-size: 0.86rem;
+    font-weight: 1000;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.55), 0 12px 26px rgba(0,0,0,0.28);
+}
+
+.tournament-final-ceremony-next:disabled {
+    opacity: 0.58;
+    cursor: wait;
+    filter: grayscale(0.35);
+    box-shadow: none;
+}
+
+.tournament-final-ceremony-next.is-ready {
+    animation: onlineFinalNextPulse 1.4s ease-in-out infinite;
+}
+
+.tournament-final-ceremony-next:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+@keyframes tournamentFinalRays {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes tournamentFinalTrophyPop {
+    0% { opacity: 0; transform: translateY(18px) scale(0.72); }
+    62% { opacity: 1; transform: translateY(-4px) scale(1.08); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes tournamentFinalRewardRise {
+    0% { opacity: 0; transform: translateY(16px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-height: 660px) {
+    .tournament-final-ceremony-panel {
+        min-height: 0;
+        gap: 8px;
+        padding: 20px 18px;
+    }
+
+    .tournament-final-ceremony-trophy-wrap {
+        width: 118px;
+        height: 118px;
+    }
+
+    .tournament-final-ceremony-trophy {
+        width: 92px;
+        height: 92px;
+    }
+
+    .tournament-final-ceremony-reward {
+        min-height: 54px;
+        font-size: 1.58rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .tournament-final-ceremony-title {
+        max-width: 270px;
+        font-size: 1.58rem;
+    }
+
+    .tournament-final-ceremony-message {
+        font-size: 0.9rem;
+    }
+}
+
 @media (max-height: 620px) {
     #game-over-screen .logo-anim {
         display: none;

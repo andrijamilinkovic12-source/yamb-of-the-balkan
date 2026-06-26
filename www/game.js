@@ -3,6 +3,8 @@
 /* --- POMOĆNE FUNKCIJE --- */
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const sum = (arr) => arr.reduce((a, b) => a + b, 0);
+const TOURNEY_FINAL_WINNER_REWARD = 44000;
+const TOURNEY_FINAL_RUNNER_UP_REWARD = 5500;
 
 // STRIKTNO PRAVILO: Samo Google nalozi (Nema generisanja usr_ ID-a)
 function getPlayerId() {
@@ -119,6 +121,12 @@ class YambApp {
         this.onlineGameOverCountdownTimer = null;
         this.onlineGameOverDelayDeadline = 0;
         this.onlineGameOverFinishInProgress = false;
+        this.tournamentFinalCeremonyActive = false;
+        this.tournamentFinalCeremonySeenAt = 0;
+        this.tournamentFinalCeremonySeenRole = '';
+        this.tournamentFinalCeremonyTimer = null;
+        this.tournamentFinalCeremonyCountdownTimer = null;
+        this.tournamentFinalWinnerSubmittedRooms = new Set();
         this.onlineRecoveryPromptOpen = false;
         this.localRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
@@ -2568,7 +2576,7 @@ class YambApp {
 
                     if (this.gameActive && this.onlineMode && !this.isSpectator) {
                         if (this.roomId === roomId) {
-                            this.socket.emit('request_state_sync', { roomId });
+                            this.requestOnlineStateSync(roomId);
                         }
                         return;
                     }
@@ -2613,6 +2621,13 @@ class YambApp {
 
                 this.socket.on('tourney_prize_awarded', (data = {}) => {
                     if (!data.role) return;
+
+                    if (this.shouldSuppressTournamentPrizeModal(data)) {
+                        if (typeof updateMainMenuDashboard === 'function') {
+                            updateMainMenuDashboard();
+                        }
+                        return;
+                    }
 
                     if (data.role === 'winner') {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
@@ -2680,6 +2695,52 @@ class YambApp {
                 }
                 resolve(result || { ok: false, reason: 'empty_auth_response' });
             });
+        });
+    }
+
+    async requestOnlineStateSync(roomId = this.roomId) {
+        const targetRoomId = roomId || this.roomId;
+        if (!targetRoomId || !this.socket) return { ok: false, reason: 'missing_room' };
+
+        const sendSync = async () => {
+            if (!this.socket || !this.socket.connected) return { ok: false, reason: 'socket_disconnected' };
+
+            const authResult = await this.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                console.warn(`Ne tražim sync online sobe dok identitet nije potvrđen: ${authResult?.reason || 'unknown_error'}`);
+                return authResult || { ok: false, reason: 'auth_failed' };
+            }
+
+            this.socket.emit('request_state_sync', { roomId: targetRoomId });
+            return { ok: true };
+        };
+
+        if (this.socket.connected) return sendSync();
+
+        return new Promise(resolve => {
+            let settled = false;
+            const finish = (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                this.socket.off('connect', onConnect);
+                this.socket.off('connect_error', onError);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            };
+            const onConnect = () => {
+                sendSync()
+                    .then(finish)
+                    .catch(err => {
+                        console.warn("Greška pri sync-u online sobe posle rekonekcije:", err);
+                        finish({ ok: false, reason: 'err_server_conn' });
+                    });
+            };
+            const onError = () => finish({ ok: false, reason: 'err_server_conn' });
+            const timer = setTimeout(() => finish({ ok: false, reason: 'sync_timeout' }), 8000);
+
+            this.socket.once('connect', onConnect);
+            this.socket.once('connect_error', onError);
+            if (this.socket.disconnected) this.socket.connect();
         });
     }
 
@@ -3060,7 +3121,7 @@ class YambApp {
 
         if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket) {
             const requestSync = () => {
-                this.socket.emit('request_state_sync', { roomId: this.roomId });
+                this.requestOnlineStateSync(this.roomId);
             };
 
             if (this.socket.connected) {
@@ -4072,10 +4133,8 @@ class YambApp {
             if (typeof window.showNotification === 'function') {
                 window.showNotification(gt('info_title') || "INFO", gt('opp_reconnected') || "Protivnik se vratio u igru!");
             }
-            
-            if (this.socket) {
-                this.socket.emit('request_state_sync', { roomId: this.roomId });
-            }
+             
+            this.requestOnlineStateSync(this.roomId);
         });
 
         this.socket.off('room_spectators_count');
@@ -5564,6 +5623,250 @@ class YambApp {
         });
     }
 
+    formatTourneyDukatAmount(amount) {
+        const safeAmount = Math.max(0, Math.floor(Number(amount) || 0));
+        return String(safeAmount).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    getTournamentRoomInfo(roomId = this.roomId) {
+        const match = String(roomId || '').match(/^tourney_(qf|sf|f)_(\d+)_/);
+        if (!match) return null;
+        return {
+            round: match[1],
+            index: Math.max(0, parseInt(match[2], 10) || 0)
+        };
+    }
+
+    getOnlineFinalResultSnapshot(onlineResult = null) {
+        const players = Array.isArray(onlineResult?.players) && onlineResult.players.length > 0
+            ? onlineResult.players.map(p => {
+                if (typeof p === 'object' && p !== null) return p.name || "Igrač";
+                return p || "Igrač";
+            })
+            : this.players;
+
+        const serverFinalResults = onlineResult && Array.isArray(onlineResult.finalResults) && onlineResult.finalResults.length > 0
+            ? onlineResult.finalResults.map((entry, index) => ({
+                name: entry && entry.name ? entry.name : (players[index] || "Igrač"),
+                score: Math.max(0, parseInt(entry && entry.score, 10) || 0)
+            }))
+            : null;
+
+        const finalResults = serverFinalResults || players.map((name, index) => ({
+            name,
+            score: this.allScores && this.allScores[index] ? this.calculateTotalScore(index) : 0
+        }));
+
+        if (!finalResults.length) return null;
+
+        const winnerScore = finalResults.reduce((max, result) => result.score > max ? result.score : max, 0);
+        const winnerIndexes = finalResults
+            .map((result, index) => ({ score: result.score, index }))
+            .filter(result => result.score === winnerScore)
+            .map(result => result.index);
+        const hasServerWinnerIndex = onlineResult
+            && onlineResult.winnerIndex !== undefined
+            && onlineResult.winnerIndex !== null
+            && Number.isInteger(Number(onlineResult.winnerIndex));
+        const serverWinnerIndex = hasServerWinnerIndex ? Number(onlineResult.winnerIndex) : -1;
+        const isDraw = players.length > 1
+            ? (onlineResult && typeof onlineResult.isDraw === 'boolean'
+                ? onlineResult.isDraw
+                : winnerIndexes.length !== 1)
+            : false;
+        const winnerIndex = isDraw ? -1 : (serverWinnerIndex >= 0 ? serverWinnerIndex : winnerIndexes[0]);
+        const myIndex = this.onlineMode && Number.isInteger(this.myOnlineIndex) && this.myOnlineIndex >= 0
+            ? this.myOnlineIndex
+            : finalResults.findIndex(result => result.name === this.playerName);
+
+        return {
+            finalResults,
+            winnerIndex,
+            winner: winnerIndex >= 0 ? finalResults[winnerIndex] : null,
+            isDraw,
+            myIndex,
+            myScoreEntry: myIndex >= 0 ? finalResults[myIndex] : finalResults[0]
+        };
+    }
+
+    getTournamentFinalCeremonyData(onlineResult = null) {
+        const roomId = String(onlineResult?.roomId || this.roomId || '');
+        const roomInfo = this.getTournamentRoomInfo(roomId);
+        if (!roomInfo || roomInfo.round !== 'f') return null;
+        if (!this.isTournamentOnlineDuel(roomId, { duelType: onlineResult?.duelType || this.onlineDuelType })) return null;
+
+        const result = this.getOnlineFinalResultSnapshot(onlineResult);
+        if (!result || result.isDraw || result.winnerIndex < 0 || result.myIndex < 0) return null;
+
+        const amIWinner = result.winnerIndex === result.myIndex;
+        const role = amIWinner ? 'winner' : 'runnerup';
+        const reward = amIWinner ? TOURNEY_FINAL_WINNER_REWARD : TOURNEY_FINAL_RUNNER_UP_REWARD;
+
+        return {
+            roomId,
+            round: roomInfo.round,
+            index: roomInfo.index,
+            role,
+            reward,
+            amIWinner,
+            winnerName: result.winner?.name || 'Igrač',
+            myScore: result.myScoreEntry?.score || 0
+        };
+    }
+
+    rememberTournamentFinalCeremony(role, active = false) {
+        this.tournamentFinalCeremonySeenRole = String(role || '');
+        this.tournamentFinalCeremonySeenAt = Date.now();
+        this.tournamentFinalCeremonyActive = !!active;
+    }
+
+    shouldSuppressTournamentPrizeModal(data = {}) {
+        const role = String(data.role || '');
+        if (!role || role !== this.tournamentFinalCeremonySeenRole) return false;
+        const suppressionWindowMs = 10 * 60 * 1000;
+        return this.tournamentFinalCeremonyActive || (Date.now() - this.tournamentFinalCeremonySeenAt < suppressionWindowMs);
+    }
+
+    submitTournamentFinalWinnerIfNeeded(ceremonyData) {
+        if (!ceremonyData || !ceremonyData.amIWinner || !this.socket || !this.playerId) return;
+        if (ceremonyData.round !== 'f') return;
+
+        const roomKey = ceremonyData.roomId || `f_${ceremonyData.index}`;
+        if (this.tournamentFinalWinnerSubmittedRooms.has(roomKey)) return;
+        this.tournamentFinalWinnerSubmittedRooms.add(roomKey);
+
+        this.socket.emit('tourney_submit_winner', {
+            round: ceremonyData.round,
+            index: ceremonyData.index,
+            winnerId: this.playerId
+        });
+    }
+
+    clearTournamentFinalCeremony() {
+        if (this.tournamentFinalCeremonyTimer) {
+            clearTimeout(this.tournamentFinalCeremonyTimer);
+            this.tournamentFinalCeremonyTimer = null;
+        }
+        if (this.tournamentFinalCeremonyCountdownTimer) {
+            clearInterval(this.tournamentFinalCeremonyCountdownTimer);
+            this.tournamentFinalCeremonyCountdownTimer = null;
+        }
+
+        const overlay = document.getElementById('tournament-final-ceremony');
+        if (overlay) overlay.remove();
+        this.tournamentFinalCeremonyActive = false;
+    }
+
+    showTournamentFinalCeremony(ceremonyData) {
+        if (!ceremonyData) return Promise.resolve(false);
+
+        return new Promise(resolve => {
+            this.clearTournamentFinalCeremony();
+            this.rememberTournamentFinalCeremony(ceremonyData.role, true);
+
+            const isWinner = ceremonyData.role === 'winner';
+            const rewardLabel = this.formatTourneyDukatAmount(ceremonyData.reward);
+            const coinIcon = (typeof dukatIconHtml === 'function') ? dukatIconHtml() : 'dukata';
+            const title = isWinner
+                ? (gt('tourney_final_ceremony_winner_title') || 'ŠAMPION TURNIRA')
+                : (gt('tourney_final_ceremony_runnerup_title') || 'FINALISTA TURNIRA');
+            const message = isWinner
+                ? (gt('tourney_final_ceremony_winner_msg') || 'Čestitamo! Osvojili ste turnir.')
+                : (gt('tourney_final_ceremony_runnerup_msg') || 'Čestitamo na učešću u finalu.');
+            const kicker = isWinner
+                ? (gt('tourney_final_ceremony_winner_kicker') || 'Velika nagrada')
+                : (gt('tourney_final_ceremony_runnerup_kicker') || 'Utešna nagrada');
+            const scoreLabel = (gt('tourney_final_ceremony_score') || 'Tvoj rezultat');
+
+            const overlay = document.createElement('div');
+            overlay.id = 'tournament-final-ceremony';
+            overlay.className = `tournament-final-ceremony ${isWinner ? 'is-winner' : 'is-runnerup'}`;
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.innerHTML = `
+                <div class="tournament-final-ceremony-panel">
+                    <div class="tournament-final-ceremony-rays" aria-hidden="true"></div>
+                    <div class="tournament-final-ceremony-trophy-wrap">
+                        <img class="tournament-final-ceremony-trophy" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
+                    </div>
+                    <div class="tournament-final-ceremony-kicker">${this.escapeHtml(kicker)}</div>
+                    <h2 class="tournament-final-ceremony-title">${this.escapeHtml(title)}</h2>
+                    <p class="tournament-final-ceremony-message">${this.escapeHtml(message)}</p>
+                    <div class="tournament-final-ceremony-reward" aria-label="${this.escapeHtml(kicker)} ${this.escapeHtml(rewardLabel)}">
+                        <span>+${this.escapeHtml(rewardLabel)}</span>
+                        ${coinIcon}
+                    </div>
+                    <div class="tournament-final-ceremony-meta">
+                        <span>${this.escapeHtml(scoreLabel)}</span>
+                        <strong>${this.escapeHtml(ceremonyData.myScore)}</strong>
+                    </div>
+                    <button type="button" class="tournament-final-ceremony-next" disabled>
+                        ${this.escapeHtml(gt('online_final_hold_next') || 'Dalje')}
+                    </button>
+                </div>
+            `;
+
+            const nextBtn = overlay.querySelector('.tournament-final-ceremony-next');
+            let resolved = false;
+            const durationMs = 6000;
+            const startedAt = Date.now();
+
+            const finish = () => {
+                if (resolved || !nextBtn || nextBtn.disabled) return;
+                resolved = true;
+                this.clearTournamentFinalCeremonyTimersOnly();
+                overlay.classList.add('closing');
+                setTimeout(() => {
+                    overlay.remove();
+                    this.tournamentFinalCeremonyActive = false;
+                    resolve(true);
+                }, 260);
+            };
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', finish);
+            }
+
+            const updateButton = () => {
+                if (!nextBtn) return;
+                const remainingMs = Math.max(0, durationMs - (Date.now() - startedAt));
+                const secondsLeft = Math.ceil(remainingMs / 1000);
+                if (secondsLeft > 0) {
+                    const template = gt('online_final_hold_countdown') || 'Dalje za {0}...';
+                    nextBtn.disabled = true;
+                    nextBtn.textContent = template.replace('{0}', String(secondsLeft));
+                } else {
+                    nextBtn.disabled = false;
+                    nextBtn.textContent = gt('online_final_hold_next') || 'Dalje';
+                    nextBtn.classList.add('is-ready');
+                    this.clearTournamentFinalCeremonyTimersOnly();
+                }
+            };
+
+            document.body.appendChild(overlay);
+            if (this.soundMgr) {
+                if (isWinner && typeof this.soundMgr.win === 'function') this.soundMgr.win();
+                else if (typeof this.soundMgr.trophy === 'function') this.soundMgr.trophy();
+            }
+
+            requestAnimationFrame(() => overlay.classList.add('active'));
+            updateButton();
+            this.tournamentFinalCeremonyCountdownTimer = setInterval(updateButton, 250);
+            this.tournamentFinalCeremonyTimer = setTimeout(updateButton, durationMs);
+        });
+    }
+
+    clearTournamentFinalCeremonyTimersOnly() {
+        if (this.tournamentFinalCeremonyTimer) {
+            clearTimeout(this.tournamentFinalCeremonyTimer);
+            this.tournamentFinalCeremonyTimer = null;
+        }
+        if (this.tournamentFinalCeremonyCountdownTimer) {
+            clearInterval(this.tournamentFinalCeremonyCountdownTimer);
+            this.tournamentFinalCeremonyCountdownTimer = null;
+        }
+    }
+
     clearOnlineGameOverDelay() {
         if (this.onlineGameOverDelayTimer) {
             clearTimeout(this.onlineGameOverDelayTimer);
@@ -5712,6 +6015,13 @@ class YambApp {
         this.clearOnlineGameOverDelay();
 
         try {
+            const tournamentFinalCeremony = this.getTournamentFinalCeremonyData(onlineResult);
+            if (tournamentFinalCeremony) {
+                this.rememberTournamentFinalCeremony(tournamentFinalCeremony.role, true);
+                this.submitTournamentFinalWinnerIfNeeded(tournamentFinalCeremony);
+                await this.showTournamentFinalCeremony(tournamentFinalCeremony);
+            }
+
             await this.handleGameOver({ onlineResult, force: true });
         } finally {
             this.onlineGameOverFinishInProgress = false;
@@ -5742,7 +6052,7 @@ class YambApp {
         const title = iAmWinner ? (gt('go_win') || 'POBEDA!') : (gt('go_loss') || 'PORAZ');
         const fallbackMsg = iAmWinner
             ? `Tehnička pobeda. ${loserName} je napustio partiju.`
-            : `Tehnički poraz. ${winnerName} je pobedio.`;
+            : `Tehnički poraz. Pobednik je ${winnerName}.`;
         const message = data.message || fallbackMsg;
 
         const titleEl = document.getElementById('go-title');
@@ -5988,7 +6298,7 @@ class YambApp {
                 if (amIWinner) {
                     message = (gt('go_msg_online_win') || "Pobedio si sa {0} poena.").replace('{0}', winner.score);
                 } else {
-                    message = (gt('go_msg_online_loss') || "Nije prošlo ovaj put. {0} je pobedio sa {1} poena.")
+                    message = (gt('go_msg_online_loss') || "Pobednik je {0} sa {1} poena.")
                         .replace('{0}', winner.name)
                         .replace('{1}', winner.score);
                 }
@@ -6397,7 +6707,7 @@ class YambApp {
         
         // 2. DODATO: Šaljemo serveru koji je roomId za slučaj da postoji mikro-delay
         const doSync = () => {
-            this.socket.emit('request_state_sync', { roomId: this.roomId });
+            this.requestOnlineStateSync(this.roomId);
         };
         
         if (this.socket && this.socket.connected) {

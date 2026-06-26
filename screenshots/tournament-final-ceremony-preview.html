@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Turnirsko finale preview</title>
+    <link rel="stylesheet" href="../www/style.css?v=tournament-final-centering">
+    <style>
+        :root {
+            --safe-top: 0px;
+            --safe-right: 0px;
+            --safe-bottom: 0px;
+            --safe-left: 0px;
+            --gold-main: #ffd700;
+            --text-main: #fff7db;
+            --text-muted: rgba(255, 247, 219, 0.7);
+            --menu-icon-core: #132727;
+            --menu-icon-face-light: #fff5ba;
+            --menu-icon-detail: #321b10;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background: #050709;
+            font-family: Montserrat, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .tournament-final-ceremony {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="preview" class="tournament-final-ceremony active is-winner" role="dialog" aria-modal="true">
+        <div class="tournament-final-ceremony-panel">
+            <div class="tournament-final-ceremony-rays" aria-hidden="true"></div>
+            <div class="tournament-final-ceremony-trophy-wrap">
+                <img class="tournament-final-ceremony-trophy" src="../www/assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
+            </div>
+            <div class="tournament-final-ceremony-kicker" id="kicker">Velika nagrada</div>
+            <h2 class="tournament-final-ceremony-title" id="title">ŠAMPION TURNIRA</h2>
+            <p class="tournament-final-ceremony-message" id="message">Čestitamo! Osvojili ste turnir.</p>
+            <div class="tournament-final-ceremony-reward" aria-label="Nagrada">
+                <span id="reward">+44.000</span>
+                <svg class="dukat-icon-inline" aria-hidden="true" focusable="false" viewBox="0 0 96 96">
+                    <circle cx="48" cy="48" r="40" fill="#ffd66f" opacity="0.34"/>
+                    <circle cx="48" cy="46" r="34" fill="#ffb43e"/>
+                    <circle cx="48" cy="46" r="27" fill="#ffe08a" stroke="#321b10" stroke-opacity="0.35" stroke-width="2"/>
+                    <path d="M35 36c4-7 15-10 24-5 5 3 8 8 8 15 0 8-4 14-11 17-8 4-18 2-23-5" fill="none" stroke="#132727" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M36 38c5-5 13-7 20-3 4 2 6 6 6 11 0 6-3 10-8 13-6 3-14 2-18-3" fill="none" stroke="#fff5ba" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
+                    <path d="M48 24v44" stroke="#321b10" stroke-opacity="0.32" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M30 43h36" stroke="#fff5ba" stroke-opacity="0.55" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="tournament-final-ceremony-meta">
+                <span>Tvoj rezultat</span>
+                <strong id="score">1240</strong>
+            </div>
+            <button type="button" class="tournament-final-ceremony-next is-ready">Dalje</button>
+        </div>
+    </div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const role = params.get('role') === 'runnerup' ? 'runnerup' : 'winner';
+        const preview = document.getElementById('preview');
+        preview.classList.toggle('is-winner', role === 'winner');
+        preview.classList.toggle('is-runnerup', role === 'runnerup');
+
+        if (role === 'runnerup') {
+            document.getElementById('kicker').textContent = 'Utešna nagrada';
+            document.getElementById('title').textContent = 'FINALISTA TURNIRA';
+            document.getElementById('message').textContent = 'Čestitamo na učešću u finalu.';
+            document.getElementById('reward').textContent = '+5.500';
+            document.getElementById('score').textContent = '1130';
+        }
+
+        window.addEventListener('load', () => {
+            const panel = document.querySelector('.tournament-final-ceremony-panel');
+            const title = document.querySelector('.tournament-final-ceremony-title');
+            const rect = panel.getBoundingClientRect();
+            const titleRect = title.getBoundingClientRect();
+            document.body.setAttribute('data-panel-left', rect.left.toFixed(2));
+            document.body.setAttribute('data-panel-right', (window.innerWidth - rect.right).toFixed(2));
+            document.body.setAttribute('data-panel-width', rect.width.toFixed(2));
+            document.body.setAttribute('data-title-width', titleRect.width.toFixed(2));
+            document.body.setAttribute('data-window-width', window.innerWidth.toFixed(2));
+        });
+    </script>
+</body>
+</html>

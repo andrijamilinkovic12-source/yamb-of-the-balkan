@@ -1002,11 +1002,15 @@ function getTimeZoneOffsetMs(date, timeZone) {
     return zonedAsUtc - date.getTime();
 }
 
-function zonedLocalMidnightToUtc(year, month, day, timeZone) {
-    const localMidnightAsUtc = Date.UTC(year, month - 1, day, 0, 0, 0);
-    let result = new Date(localMidnightAsUtc - getTimeZoneOffsetMs(new Date(localMidnightAsUtc), timeZone));
-    result = new Date(localMidnightAsUtc - getTimeZoneOffsetMs(result, timeZone));
+function zonedLocalDateTimeToUtc(year, month, day, hour, minute, second, timeZone) {
+    const localAsUtc = Date.UTC(year, month - 1, day, hour, minute, second);
+    let result = new Date(localAsUtc - getTimeZoneOffsetMs(new Date(localAsUtc), timeZone));
+    result = new Date(localAsUtc - getTimeZoneOffsetMs(result, timeZone));
     return result;
+}
+
+function zonedLocalMidnightToUtc(year, month, day, timeZone) {
+    return zonedLocalDateTimeToUtc(year, month, day, 0, 0, 0, timeZone);
 }
 
 function getLeaderboardPeriodStart(period, now = new Date(), timeZone = LEADERBOARD_TIME_ZONE) {
@@ -1410,6 +1414,31 @@ const disconnectTimers = {};
 const ghostSessions = {};
 const SERVER_TECHNICAL_SYNC_IGNORE_WINDOW_MS = 20000;
 const recentServerTechnicalResults = new Map();
+
+function clearDisconnectGraceForUid(uid, roomId = null) {
+    if (!uid) return false;
+
+    const ghost = ghostSessions[uid];
+    if (roomId && ghost && ghost.roomId !== roomId) return false;
+
+    let cleared = false;
+    if (disconnectTimers[uid]) {
+        clearTimeout(disconnectTimers[uid]);
+        delete disconnectTimers[uid];
+        cleared = true;
+    }
+
+    if (ghost && (!roomId || ghost.roomId === roomId)) {
+        delete ghostSessions[uid];
+        cleared = true;
+    }
+
+    if (cleared) {
+        console.log(`♻️ Grace period poništen za igrača ${uid}${roomId ? ` u sobi ${roomId}` : ''}.`);
+    }
+
+    return cleared;
+}
 
 function rememberServerTechnicalResult(uid, resultType) {
     if (!uid || (resultType !== 'win' && resultType !== 'loss')) return;
@@ -2252,9 +2281,43 @@ function getTournamentRoundLabel(round) {
     return 'turnirski meč';
 }
 
+const TOURNAMENT_LOCAL_DATETIME_RE = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d{1,3})?)?$/;
+
+function parseTournamentTimeMs(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return NaN;
+
+    const localMatch = raw.match(TOURNAMENT_LOCAL_DATETIME_RE);
+    if (localMatch) {
+        const year = Number(localMatch[1]);
+        const month = Number(localMatch[2]);
+        const day = Number(localMatch[3]);
+        const hour = Number(localMatch[4]);
+        const minute = Number(localMatch[5]);
+        const second = Number(localMatch[6] || 0);
+        const localDate = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+
+        if (
+            localDate.getUTCFullYear() !== year ||
+            localDate.getUTCMonth() + 1 !== month ||
+            localDate.getUTCDate() !== day ||
+            localDate.getUTCHours() !== hour ||
+            localDate.getUTCMinutes() !== minute ||
+            localDate.getUTCSeconds() !== second
+        ) {
+            return NaN;
+        }
+
+        return zonedLocalDateTimeToUtc(year, month, day, hour, minute, second, LEADERBOARD_TIME_ZONE).getTime();
+    }
+
+    return Date.parse(raw);
+}
+
 function formatTournamentPushTime(value) {
-    const date = new Date(value);
-    if (!Number.isFinite(date.getTime())) return 'zakazano vreme';
+    const timestamp = parseTournamentTimeMs(value);
+    if (!Number.isFinite(timestamp)) return 'zakazano vreme';
+    const date = new Date(timestamp);
 
     try {
         return date.toLocaleString('sr-RS', {
@@ -2384,7 +2447,6 @@ async function checkTournamentMatchReminders() {
     if (tournamentState.status !== 'active' || !tournamentState.bracket) return;
 
     const now = Date.now();
-    let changed = false;
     const jobs = [];
 
     ['qf', 'sf', 'f'].forEach(round => {
@@ -2394,7 +2456,7 @@ async function checkTournamentMatchReminders() {
         matches.forEach((match, index) => {
             if (!match || match.winnerId || !match.timeAccepted || !match.time) return;
 
-            const matchTime = new Date(match.time).getTime();
+            const matchTime = parseTournamentTimeMs(match.time);
             if (!Number.isFinite(matchTime)) return;
 
             const diff = matchTime - now;
@@ -2409,23 +2471,50 @@ async function checkTournamentMatchReminders() {
                 if (diff > windowInfo.beforeMs) return;
                 if (diff <= windowInfo.minDiffMs) return;
 
-                match.pushRemindersSent[windowInfo.key] = Date.now();
-                changed = true;
-                jobs.push(sendPushToUids(getTournamentMatchParticipantUids(match), {
-                    category: 'tournament',
-                    scope: 'tournament',
-                    type: 'tournament_match_reminder',
-                    tag: `tournament_reminder_${round}_${index}_${windowInfo.key}`,
-                    title: 'Podsetnik za turnirski meč',
-                    body: `${getTournamentRoundLabel(round)} počinje za ${windowInfo.label}.`,
-                    data: { round, index, matchIndex: index, time: match.time || '', reminder: windowInfo.key }
-                }));
+                jobs.push({
+                    match,
+                    round,
+                    index,
+                    windowInfo,
+                    promise: sendPushToUids(getTournamentMatchParticipantUids(match), {
+                        category: 'tournament',
+                        scope: 'tournament',
+                        type: 'tournament_match_reminder',
+                        tag: `tournament_reminder_${round}_${index}_${windowInfo.key}`,
+                        title: 'Podsetnik za turnirski meč',
+                        body: `${getTournamentRoundLabel(round)} počinje za ${windowInfo.label}.`,
+                        data: { round, index, matchIndex: index, time: match.time || '', reminder: windowInfo.key }
+                    })
+                });
             });
         });
     });
 
+    if (jobs.length === 0) return;
+
+    const results = await Promise.all(jobs.map(async job => {
+        try {
+            return { ...job, result: await job.promise };
+        } catch (error) {
+            return { ...job, result: { ok: false, reason: error?.message || 'push_send_failed' } };
+        }
+    }));
+
+    let changed = false;
+    results.forEach(({ match, round, index, windowInfo, result }) => {
+        const sent = Math.max(0, toSafeInt(result?.sent, 0));
+        if (result?.ok && sent > 0) {
+            match.pushRemindersSent[windowInfo.key] = Date.now();
+            changed = true;
+            return;
+        }
+
+        console.warn(
+            `⚠️ Turnirski podsetnik nije označen kao poslat (${round}/${index}/${windowInfo.key}): ${result?.reason || 'sent_0'}, sent=${sent}`
+        );
+    });
+
     if (changed) saveTournamentToDb();
-    if (jobs.length > 0) await Promise.all(jobs);
 }
 
 const tournamentReminderInterval = setInterval(() => {
@@ -2742,14 +2831,14 @@ async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'techn
 
 function normalizeTournamentTime(value) {
     const raw = String(value || '').trim().substring(0, 40);
-    const parsedTime = Date.parse(raw);
+    const parsedTime = parseTournamentTimeMs(raw);
     if (!raw || !Number.isFinite(parsedTime)) return null;
 
     const now = Date.now();
     const maxFuture = now + (90 * 24 * 60 * 60 * 1000);
     if (parsedTime < now - (60 * 60 * 1000) || parsedTime > maxFuture) return null;
 
-    return raw;
+    return new Date(parsedTime).toISOString();
 }
 
 function buildProfileSyncPayload(user) {
@@ -3012,31 +3101,28 @@ function bindVerifiedPlayerSocket(socket, playerId) {
         }
     }
 
-    if (disconnectTimers[playerId]) {
-        clearTimeout(disconnectTimers[playerId]);
-        delete disconnectTimers[playerId];
+    const ghost = ghostSessions[playerId];
+    if (ghost) {
+        if (ghost.oldSocketId !== socket.id && playerRooms[socket.id] !== ghost.roomId) {
+            socket.join(ghost.roomId);
+            playerRooms[socket.id] = ghost.roomId;
 
-        const ghost = ghostSessions[playerId];
-        if (ghost) {
-            if (ghost.oldSocketId !== socket.id && playerRooms[socket.id] !== ghost.roomId) {
-                socket.join(ghost.roomId);
-                playerRooms[socket.id] = ghost.roomId;
-
-                if (roomState[ghost.roomId]) {
-                    const players = roomState[ghost.roomId].players;
-                    const idx = players.indexOf(ghost.oldSocketId);
-                    if (idx !== -1) {
-                        players[idx] = socket.id;
-                        if (!Array.isArray(roomState[ghost.roomId].playerUids)) roomState[ghost.roomId].playerUids = [];
-                        roomState[ghost.roomId].playerUids[idx] = playerId;
-                    }
+            if (roomState[ghost.roomId]) {
+                const players = roomState[ghost.roomId].players;
+                const idx = players.indexOf(ghost.oldSocketId);
+                if (idx !== -1) {
+                    players[idx] = socket.id;
+                    if (!Array.isArray(roomState[ghost.roomId].playerUids)) roomState[ghost.roomId].playerUids = [];
+                    roomState[ghost.roomId].playerUids[idx] = playerId;
                 }
-                io.to(ghost.roomId).emit('opponent_connection_restored');
-                delete playerRooms[ghost.oldSocketId];
             }
-            restoredRoomId = ghost.roomId;
-            delete ghostSessions[playerId];
+            io.to(ghost.roomId).emit('opponent_connection_restored');
+            delete playerRooms[ghost.oldSocketId];
         }
+        restoredRoomId = ghost.roomId;
+        clearDisconnectGraceForUid(playerId, ghost.roomId);
+    } else if (disconnectTimers[playerId]) {
+        clearDisconnectGraceForUid(playerId);
     }
 
     socket.verifiedUid = playerId;
@@ -3465,6 +3551,8 @@ function reattachSocketToRoomByUid(socket, roomId) {
         const oldSocket = io.sockets.sockets.get(oldSocketId);
         if (oldSocket) oldSocket.leave(roomId);
     }
+
+    clearDisconnectGraceForUid(uid, roomId);
 
     console.log(`♻️ SYNC REATTACH: Vratio sam ${socket.id} u sobu ${roomId} preko UID-a.`);
     io.to(roomId).emit('opponent_connection_restored');
@@ -7943,9 +8031,24 @@ io.on('connection', (socket) => {
                 }
 
                 if (eventName === 'remote_move') {
+                    if (toSafeInt(data?.pIdx, -1) !== playerIndex) {
+                        console.warn(`🚨 BLOKIRAN POTEZ ZA TUĐU TABELU: socket=${socket.id}, playerIndex=${playerIndex}, pIdx=${data?.pIdx}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
+                    }
+
+                    const moveCol = typeof data?.col === 'string' ? data.col : '';
+                    const moveRow = typeof data?.row === 'string' ? data.row : '';
+                    const movePoints = Number(data?.points);
+                    if (!KOLONE.includes(moveCol) || !REDOVI_IGRA.includes(moveRow) || !Number.isFinite(movePoints) || movePoints < 0 || movePoints > MAX_SCORE) {
+                        console.warn(`🚨 BLOKIRAN NEVALIDAN POTEZ: socket=${socket.id}, col=${moveCol}, row=${moveRow}, points=${data?.points}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
+                    }
+
                     if (!state.allScores) state.allScores = createEmptyScores();
-                    if (state.allScores[data.pIdx] && state.allScores[data.pIdx][data.col]) {
-                        state.allScores[data.pIdx][data.col][data.row] = data.points;
+                    if (state.allScores[playerIndex] && state.allScores[playerIndex][moveCol]) {
+                        state.allScores[playerIndex][moveCol][moveRow] = Math.floor(movePoints);
                     }
                     state.brojBacanja = 0;
                     state.zadrzane = [false,false,false,false,false,false];
@@ -8001,11 +8104,20 @@ io.on('connection', (socket) => {
         }
 
         const roomId = playerRooms[socket.id] || requestedRoomId;
+        const requestedState = roomId ? roomState[roomId] : null;
+        const socketUid = getSocketUid(socket.id);
         const roomClients = roomId ? io.sockets.adapter.rooms.get(roomId) : null;
         const socketIsRoomMember = !!(roomClients && roomClients.has(socket.id));
 
-        if (roomId && roomState[roomId] && socketIsRoomMember) {
-            const state = roomState[roomId];
+        if (roomId && requestedState && !socketIsRoomMember && !socketUid) {
+            socket.pendingOnlineRoomResume = roomId;
+            socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+            console.log(`ℹ️ Odlažem sync za sobu ${roomId}; socket ${socket.id} još nema potvrđen UID.`);
+            return;
+        }
+
+        if (roomId && requestedState && socketIsRoomMember) {
+            const state = requestedState;
             console.log(`🛡️ SERVER SYNC: Šaljem bezbedno autoritativno stanje sobe ${roomId} igraču ${socket.id}`);
             
             const playerNamesToSync = state.playerNames || state.players.map(id => {
@@ -8052,38 +8164,19 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            if (roomState[roomId]) {
-                const state = roomState[roomId];
+            const state = roomState[roomId];
+            if (!state || state.gameFinished) return;
 
-                if (state.gameFinished) return;
-
-                if (!state.players.includes(socket.id)) {
-                    console.log(`ℹ️ Ignorišem sync_state_response od socket-a koji nije igrač u sobi ${roomId}: ${socket.id}`);
-                    return;
-                }
-
-                state.allScores = data.allScores || state.allScores;
-                state.turnIndex = data.currentPlayerIdx !== undefined ? data.currentPlayerIdx : state.turnIndex;
-                state.brojBacanja = data.brojBacanja || 0;
-                state.kockiceVals = data.kockiceVals || [0,0,0,0,0,0];
-                state.zadrzane = data.zadrzane || [false,false,false,false,false,false];
-                state.najavaAktivna = data.najavaAktivna || false;
-                state.najavljenoPolje = data.najavljenoPolje || null;
-                
-                if (data.brojBacanja === 0) {
-                    state.moveCount = Math.max(0, (state.moveCount || 0) - 1);
-                }
-
-                startTurnTimer(roomId);
+            const playerIndex = state.players.indexOf(socket.id);
+            if (playerIndex === -1) {
+                console.log(`ℹ️ Ignorišem sync_state_response od socket-a koji nije igrač u sobi ${roomId}: ${socket.id}`);
+                return;
             }
-            
-            const relayState = roomState[roomId];
-            const relayNow = Date.now();
-            socket.to(roomId).emit('sync_state_response', {
-                ...data,
-                turnStartTime: relayState ? relayState.turnStartTime || relayNow : relayNow,
-                turnTimeLimitMs: TURN_TIME_LIMIT,
-                serverNow: relayNow
+
+            console.log(`ℹ️ Ignorišem klijentski sync_state_response za sobu ${roomId}; server šalje autoritativno stanje.`);
+            state.players.forEach((playerSocketId, index) => {
+                const clientSocket = io.sockets.sockets.get(playerSocketId);
+                if (clientSocket) emitAuthoritativeRoomState(clientSocket, roomId, index);
             });
         }
     });
@@ -9007,7 +9100,7 @@ io.on('connection', (socket) => {
             }
         }
 
-        if (pid) {
+        if (pid && onlinePlayers[pid] === socket.id) {
             delete onlinePlayers[pid]; 
         }
         delete registeredSockets[socket.id];
