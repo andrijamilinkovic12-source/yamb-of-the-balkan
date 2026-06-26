@@ -8164,6 +8164,33 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            if (isLocalRoomId(roomId)) {
+                const roomClients = io.sockets.adapter.rooms.get(roomId);
+                if (!roomClients || !roomClients.has(socket.id) || socket.isSpectator) return;
+
+                const targetSocketId = typeof data?.targetSocketId === 'string' ? data.targetSocketId : '';
+                const spectatorPayload = {
+                    ...data,
+                    roomId,
+                    myIndex: -1
+                };
+                delete spectatorPayload.targetSocketId;
+
+                const emitToSpectator = (clientId) => {
+                    const clientSocket = io.sockets.sockets.get(clientId);
+                    if (!clientSocket || !clientSocket.isSpectator) return;
+                    if (clientSocket.spectatingRoom !== roomId || !roomClients.has(clientId)) return;
+                    clientSocket.emit('sync_state_response', spectatorPayload);
+                };
+
+                if (targetSocketId) {
+                    emitToSpectator(targetSocketId);
+                } else {
+                    for (const clientId of roomClients) emitToSpectator(clientId);
+                }
+                return;
+            }
+
             const state = roomState[roomId];
             if (!state || state.gameFinished) return;
 

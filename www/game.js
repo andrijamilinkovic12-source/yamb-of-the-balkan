@@ -121,6 +121,8 @@ class YambApp {
         this.onlineGameOverCountdownTimer = null;
         this.onlineGameOverDelayDeadline = 0;
         this.onlineGameOverFinishInProgress = false;
+        this.spectateSyncRetryTimer = null;
+        this.spectateSyncRetryAttempts = 0;
         this.tournamentFinalCeremonyActive = false;
         this.tournamentFinalCeremonySeenAt = 0;
         this.tournamentFinalCeremonySeenRole = '';
@@ -2289,6 +2291,50 @@ class YambApp {
     }
 
     // --- SPECTATE FUNKCIJA ---
+    hasSpectateScoreboard() {
+        const tableCount = document.querySelectorAll('#tables-container .player-table').length;
+        return Array.isArray(this.players) &&
+            this.players.length > 0 &&
+            Array.isArray(this.allScores) &&
+            this.allScores.length >= this.players.length &&
+            tableCount >= this.players.length;
+    }
+
+    requestSpectateStateSync(options = {}) {
+        if (!this.socket || !this.roomId || !this.isSpectator) return;
+
+        const attempts = Math.max(1, Number(options.attempts) || 1);
+        const delayMs = Math.max(250, Number(options.delayMs) || 800);
+
+        if (this.spectateSyncRetryTimer) {
+            clearTimeout(this.spectateSyncRetryTimer);
+            this.spectateSyncRetryTimer = null;
+        }
+
+        this.spectateSyncRetryAttempts = 0;
+
+        const sendRequest = () => {
+            if (!this.socket || !this.roomId || !this.isSpectator || this.hasSpectateScoreboard()) {
+                this.spectateSyncRetryTimer = null;
+                return;
+            }
+
+            this.socket.emit('request_state_sync', {
+                roomId: this.roomId,
+                spectator: true
+            });
+
+            this.spectateSyncRetryAttempts++;
+            if (this.spectateSyncRetryAttempts < attempts) {
+                this.spectateSyncRetryTimer = setTimeout(sendRequest, delayMs);
+            } else {
+                this.spectateSyncRetryTimer = null;
+            }
+        };
+
+        sendRequest();
+    }
+
     async spectateGame(target) {
         if (!this.requireLogin()) return;
 
@@ -3602,6 +3648,11 @@ class YambApp {
         this.setInviteBusyState(false);
 
         if (wasSpectator) {
+            if (this.spectateSyncRetryTimer) {
+                clearTimeout(this.spectateSyncRetryTimer);
+                this.spectateSyncRetryTimer = null;
+            }
+            this.spectateSyncRetryAttempts = 0;
             this.isSpectator = false;
             if (this.socket) this.socket.emit('stop_spectating');
             this.onlineMode = false;
@@ -4270,23 +4321,38 @@ class YambApp {
             this.gameActive = true;
             this.roomId = data.roomId;
             this.modeTag = "Spectator";
+            this.players = [];
+            this.allScores = [];
+            this.currentPlayerIdx = 0;
+            this.myOnlineIndex = -1;
+            this.brojBacanja = 0;
+            this.kockiceVals = [0,0,0,0,0,0];
+            this.zadrzane = [false,false,false,false,false,false];
+            this.najavaAktivna = false;
+            this.najavljenoPolje = null;
 
             this.navigateTo('game-scene');
+
+            const tablesContainer = document.getElementById('tables-container');
+            if (tablesContainer) tablesContainer.innerHTML = '';
 
             const btnBacaj = document.getElementById('btn-bacaj');
             const btnNajava = document.getElementById('btn-najava');
             if(btnBacaj) btnBacaj.style.display = 'none';
             if(btnNajava) btnNajava.style.display = 'none';
 
+            this.updateDiceVisuals();
             this.updateStatusLabel();
+            this.requestSpectateStateSync({ attempts: 5, delayMs: 900 });
         });
 
-        this.socket.on('request_state_sync', () => {
+        this.socket.on('request_state_sync', (request = {}) => {
             if (this.gameActive && !this.isSpectator) {
                 console.log("📤 Šaljem osveženo stanje table (uključujući igrače)...");
                 this.socket.emit('sync_state_response', {
                     roomId: this.roomId,
-                    players: this.players, 
+                    targetSocketId: request.senderSocketId || request.targetSocketId || '',
+                    players: this.players,
                     allScores: this.allScores,
                     currentPlayerIdx: this.currentPlayerIdx,
                     brojBacanja: this.brojBacanja,
@@ -4304,8 +4370,9 @@ class YambApp {
                 const previousTurnIdx = this.currentPlayerIdx;
                 const previousTimeLeft = this.timeLeft;
                 
-                if (data.players) { 
-                    this.players = data.players.map(p => {
+                if (data.players || (this.isSpectator && Array.isArray(data.allScores) && data.allScores.length > 0)) {
+                    const incomingPlayers = data.players || data.allScores.map((_, index) => `Igrač ${index + 1}`);
+                    this.players = incomingPlayers.map(p => {
                         if (typeof p === 'object' && p !== null) {
                             return p.name ? decodeURIComponent(p.name) : "Igrač";
                         }
@@ -4330,11 +4397,11 @@ class YambApp {
                     this.createScoreTables();
                 }
 
-                this.allScores = data.allScores;
-                this.currentPlayerIdx = data.currentPlayerIdx;
-                this.brojBacanja = data.brojBacanja;
-                this.kockiceVals = data.kockiceVals;
-                this.zadrzane = data.zadrzane;
+                if (Array.isArray(data.allScores)) this.allScores = data.allScores;
+                if (data.currentPlayerIdx !== undefined) this.currentPlayerIdx = data.currentPlayerIdx;
+                if (data.brojBacanja !== undefined) this.brojBacanja = data.brojBacanja;
+                if (Array.isArray(data.kockiceVals)) this.kockiceVals = data.kockiceVals;
+                if (Array.isArray(data.zadrzane)) this.zadrzane = data.zadrzane;
                 this.najavaAktivna = data.najavaAktivna;
                 this.najavljenoPolje = data.najavljenoPolje;
 
@@ -4342,6 +4409,11 @@ class YambApp {
                 this.updateDiceVisuals();
                 this.highlightCurrentPlayer();
                 this.updateStatusLabel();
+
+                if (this.isSpectator && this.hasSpectateScoreboard() && this.spectateSyncRetryTimer) {
+                    clearTimeout(this.spectateSyncRetryTimer);
+                    this.spectateSyncRetryTimer = null;
+                }
 
                 const turnStartTime = Number(data.turnStartTime);
                 const serverNow = Number(data.serverNow);
@@ -4508,12 +4580,19 @@ class YambApp {
 
         this.socket.on('remote_move', (data) => { 
             try {
-                const playerIdx = data.pIdx !== undefined ? data.pIdx : (this.myOnlineIndex === 0 ? 1 : 0); 
-                this.currentPlayerIdx = playerIdx; 
+                const playerIdx = data.pIdx !== undefined ? data.pIdx : (this.myOnlineIndex === 0 ? 1 : 0);
+                this.currentPlayerIdx = playerIdx;
+
+                if (!this.allScores[playerIdx] || !this.allScores[playerIdx][data.col]) {
+                    if (this.isSpectator) {
+                        this.requestSpectateStateSync({ attempts: 3, delayMs: 800 });
+                    }
+                    return;
+                }
 
                 if (this.allScores[playerIdx] && this.allScores[playerIdx][data.col]) {
-                    this.allScores[playerIdx][data.col][data.row] = data.points; 
-                    this.updateTableVisuals(); 
+                    this.allScores[playerIdx][data.col][data.row] = data.points;
+                    this.updateTableVisuals();
                     this.najavaAktivna = false;
                     
                     if (!this.isSpectator) {
