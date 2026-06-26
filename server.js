@@ -15,6 +15,27 @@ const powerIndexCore = require('./www/powerIndexCore');
 
 let firebaseAuth = null;
 let firebaseMessaging = null;
+let firebaseAdminProjectId = null;
+let firebaseAdminCredentialSource = 'none';
+
+function getFirebaseCredentialSource() {
+    if (process.env.FIREBASE_SERVICE_ACCOUNT) return 'FIREBASE_SERVICE_ACCOUNT';
+    if (process.env.FIREBASE_ADMIN_CREDENTIALS) return 'FIREBASE_ADMIN_CREDENTIALS';
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) return 'FIREBASE_SERVICE_ACCOUNT_BASE64';
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) return 'FIREBASE_SERVICE_ACCOUNT_PATH';
+    if (process.env.GOOGLE_APPLICATION_CREDENTIALS) return 'GOOGLE_APPLICATION_CREDENTIALS';
+    if (process.env.FIREBASE_CONFIG) return 'FIREBASE_CONFIG';
+    if (process.env.GOOGLE_CLOUD_PROJECT) return 'GOOGLE_CLOUD_PROJECT';
+    if (process.env.GCLOUD_PROJECT) return 'GCLOUD_PROJECT';
+    return 'none';
+}
+
+function getConfiguredFirebaseProjectId(serviceAccount = null) {
+    return serviceAccount?.project_id ||
+        process.env.GOOGLE_CLOUD_PROJECT ||
+        process.env.GCLOUD_PROJECT ||
+        null;
+}
 
 function parseFirebaseServiceAccount() {
     let raw = process.env.FIREBASE_SERVICE_ACCOUNT || process.env.FIREBASE_ADMIN_CREDENTIALS || '';
@@ -39,6 +60,8 @@ function parseFirebaseServiceAccount() {
 try {
     const admin = require('firebase-admin');
     const serviceAccount = parseFirebaseServiceAccount();
+    firebaseAdminCredentialSource = getFirebaseCredentialSource();
+    firebaseAdminProjectId = getConfiguredFirebaseProjectId(serviceAccount);
     const hasDefaultCredentials = Boolean(
         process.env.GOOGLE_APPLICATION_CREDENTIALS ||
         process.env.FIREBASE_CONFIG ||
@@ -56,7 +79,7 @@ try {
 
         firebaseAuth = admin.auth();
         firebaseMessaging = admin.messaging();
-        console.log('✅ Firebase Admin Auth/Messaging spreman.');
+        console.log(`✅ Firebase Admin Auth/Messaging spreman (${firebaseAdminProjectId || 'project_id nepoznat'}, ${firebaseAdminCredentialSource}).`);
     } else {
         console.warn('⚠️ Firebase Admin Auth nije aktivan: nedostaju service account credentials.');
     }
@@ -136,6 +159,25 @@ function sadrziPsovku(tekst) {
 app.get('/.well-known/assetlinks.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.sendFile(path.join(__dirname, 'www', '.well-known', 'assetlinks.json'));
+});
+
+function readAndroidFirebaseProjectId() {
+    try {
+        const googleServicesPath = path.join(__dirname, 'android', 'app', 'google-services.json');
+        const googleServices = JSON.parse(fs.readFileSync(googleServicesPath, 'utf8'));
+        return googleServices?.project_info?.project_id || null;
+    } catch (err) {
+        return null;
+    }
+}
+
+app.get('/api/firebase-auth-status', (req, res) => {
+    res.json({
+        firebaseAdminActive: !!firebaseAuth,
+        firebaseAdminProjectId: firebaseAdminProjectId || null,
+        firebaseAdminCredentialSource,
+        androidFirebaseProjectId: readAndroidFirebaseProjectId()
+    });
 });
 
 // ==================================================================
@@ -3629,6 +3671,65 @@ function getActivePendingChallengeBetweenPlayers(socketA, uidA, socketB, uidB) {
     return null;
 }
 
+function decodeJwtPayloadWithoutVerification(token) {
+    try {
+        if (typeof token !== 'string') return null;
+        const parts = token.split('.');
+        if (parts.length < 2) return null;
+        const payload = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(Buffer.from(payload, 'base64').toString('utf8'));
+    } catch (err) {
+        return null;
+    }
+}
+
+function classifyInvalidFirebaseToken(token) {
+    const payload = decodeJwtPayloadWithoutVerification(token);
+    const tokenAudience = payload && typeof payload.aud === 'string' ? payload.aud : '';
+    const tokenIssuer = payload && typeof payload.iss === 'string' ? payload.iss : '';
+    const expectedProjectId = firebaseAdminProjectId || '';
+
+    if (!payload) {
+        return {
+            ok: false,
+            reason: 'malformed_firebase_token',
+            permanent: false,
+            firebaseProjectId: expectedProjectId
+        };
+    }
+
+    if (tokenIssuer && !tokenIssuer.startsWith('https://securetoken.google.com/')) {
+        return {
+            ok: false,
+            reason: 'not_firebase_id_token',
+            permanent: false,
+            firebaseProjectId: expectedProjectId,
+            tokenAudience,
+            tokenIssuer
+        };
+    }
+
+    if (expectedProjectId && tokenAudience && tokenAudience !== expectedProjectId) {
+        return {
+            ok: false,
+            reason: 'firebase_project_mismatch',
+            permanent: true,
+            firebaseProjectId: expectedProjectId,
+            tokenAudience,
+            tokenIssuer
+        };
+    }
+
+    return {
+        ok: false,
+        reason: 'invalid_firebase_token',
+        permanent: false,
+        firebaseProjectId: expectedProjectId,
+        tokenAudience,
+        tokenIssuer
+    };
+}
+
 async function verifyFirebaseSocketToken(socket, token) {
     if (!firebaseAuth) {
         return { ok: false, reason: 'firebase_admin_unavailable', permanent: false };
@@ -3647,8 +3748,9 @@ async function verifyFirebaseSocketToken(socket, token) {
         bindVerifiedPlayerSocket(socket, decoded.uid);
         return { ok: true, uid: decoded.uid };
     } catch (err) {
-        console.warn('⚠️ Firebase token odbijen:', err.message);
-        return { ok: false, reason: 'invalid_firebase_token' };
+        const classified = classifyInvalidFirebaseToken(token);
+        console.warn(`⚠️ Firebase token odbijen (${classified.reason}, server=${classified.firebaseProjectId || 'unknown'}, tokenAud=${classified.tokenAudience || 'unknown'}):`, err.message);
+        return classified;
     }
 }
 
