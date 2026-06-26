@@ -5382,6 +5382,21 @@ function updateRoomSpectators(roomId) {
     io.to(roomId).emit('room_spectators_count', spectatorCount);
 }
 
+function clearSpectatingRoom(socket, options = {}) {
+    if (!socket || !socket.spectatingRoom) return null;
+
+    const previousRoomId = socket.spectatingRoom;
+    socket.leave(previousRoomId);
+    socket.isSpectator = false;
+    socket.spectatingRoom = null;
+
+    if (!options.skipSpectatorCount) {
+        updateRoomSpectators(previousRoomId);
+    }
+
+    return previousRoomId;
+}
+
 // --- SOCKET.IO LOGIKA ---
 io.on('connection', (socket) => {
 
@@ -6270,6 +6285,10 @@ io.on('connection', (socket) => {
         }
 
         if (isLocalRoomId(roomId)) {
+            if (socket.spectatingRoom && socket.spectatingRoom !== roomId) {
+                clearSpectatingRoom(socket);
+            }
+
             socket.join(roomId);
             socket.isSpectator = true;
             socket.spectatingRoom = roomId;
@@ -6285,6 +6304,10 @@ io.on('connection', (socket) => {
         if (getParticipantIndexForSocketOrUid(state, socket.id, requesterUid) !== -1) {
             socket.emit('error_msg', 'err_spectate_participant');
             return replySpectate({ ok: false, reason: 'err_spectate_participant' });
+        }
+
+        if (socket.spectatingRoom && socket.spectatingRoom !== roomId) {
+            clearSpectatingRoom(socket);
         }
 
         socket.join(roomId);

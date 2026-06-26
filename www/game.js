@@ -2291,6 +2291,11 @@ class YambApp {
     }
 
     // --- SPECTATE FUNKCIJA ---
+    isCurrentRoomPayload(data) {
+        const payloadRoomId = data && data.roomId !== undefined ? String(data.roomId || '') : '';
+        return !payloadRoomId || !this.roomId || payloadRoomId === String(this.roomId);
+    }
+
     hasSpectateScoreboard() {
         const tableCount = document.querySelectorAll('#tables-container .player-table').length;
         return Array.isArray(this.players) &&
@@ -4365,6 +4370,9 @@ class YambApp {
         });
 
         this.socket.on('sync_state_response', (data) => {
+            if (!this.isCurrentRoomPayload(data)) return;
+            if (this.isSpectator && !this.gameActive) return;
+
             if ((this.gameActive || this.isSpectator) && this.onlineMode) {
                 console.log("📥 Stiglo osveženo stanje. Primenjujem...");
                 const previousTurnIdx = this.currentPlayerIdx;
@@ -4560,7 +4568,31 @@ class YambApp {
 
         this.socket.off('online_game_finished');
         this.socket.on('online_game_finished', async (data = {}) => {
-            if (this.isSpectator) return;
+            if (!this.isCurrentRoomPayload(data)) return;
+
+            if (this.isSpectator) {
+                if (!this.onlineMode || !this.gameActive) return;
+
+                if (Array.isArray(data.players) && data.players.length > 0) {
+                    this.players = data.players.map(p => {
+                        if (typeof p === 'object' && p !== null) return p.name || "Igrač";
+                        return p || "Igrač";
+                    });
+                    this.createScoreTables();
+                }
+                this.onlineDuelType = this.inferOnlineDuelType(data.roomId || this.roomId, data);
+                this.lastOnlineGameResult = data;
+                if (Array.isArray(data.allScores)) this.allScores = data.allScores;
+                if (data.currentPlayerIdx !== undefined) this.currentPlayerIdx = data.currentPlayerIdx;
+
+                this.updateTableVisuals();
+                this.updateDiceVisuals();
+                this.highlightCurrentPlayer();
+                this.updateStatusLabel();
+                await this.handleGameOver({ force: true });
+                return;
+            }
+
             if (!this.onlineMode || (!this.gameActive && !this.onlineGameOverDelayActive)) return;
             if (data.roomId && this.roomId && data.roomId !== this.roomId) return;
 
@@ -4579,6 +4611,9 @@ class YambApp {
         });
 
         this.socket.on('remote_move', (data) => { 
+            if (!this.isCurrentRoomPayload(data)) return;
+            if (this.isSpectator && !this.gameActive) return;
+
             try {
                 const playerIdx = data.pIdx !== undefined ? data.pIdx : (this.myOnlineIndex === 0 ? 1 : 0);
                 this.currentPlayerIdx = playerIdx;
@@ -4626,6 +4661,9 @@ class YambApp {
         }); 
 
         this.socket.on('remote_roll', (data) => { 
+            if (!this.isCurrentRoomPayload(data)) return;
+            if (this.isSpectator && !this.gameActive) return;
+
             // Čim protivnik baci kockicu, više ne možemo da vratimo naš potez!
             this.lastMoveSnapshot = null; 
             const btnUndo = document.getElementById('btn-undo-move');
@@ -4641,24 +4679,35 @@ class YambApp {
         }); 
 
         this.socket.on('remote_hold', (data) => { 
+            if (!this.isCurrentRoomPayload(data)) return;
+            if (this.isSpectator && !this.gameActive) return;
+
             this.zadrzane[data.index] = data.status; 
             this.updateDiceVisuals(); 
         }); 
 
         this.socket.on('remote_announce', (data) => { 
-            if(this.isSpectator) return;
+            if (!this.isCurrentRoomPayload(data)) return;
+            if (this.isSpectator && !this.gameActive) return;
+
             const btn = document.getElementById('btn-najava');
             const type = data.type || 'start'; 
             if (type === 'start') {
                 this.najavaAktivna = true; 
-                if(btn) { btn.classList.add('btn-active-toggle'); btn.innerText = gt('game_opponent_choosing'); }
+                this.najavljenoPolje = null;
+                if(!this.isSpectator && btn) { btn.classList.add('btn-active-toggle'); btn.innerText = gt('game_opponent_choosing'); }
             } else if (type === 'cancel') {
                 this.najavaAktivna = false;
-                if(btn) { btn.classList.remove('btn-active-toggle'); btn.innerText = gt('game_announce'); }
+                this.najavljenoPolje = null;
+                if(!this.isSpectator && btn) { btn.classList.remove('btn-active-toggle'); btn.innerText = gt('game_announce'); }
             } else if (type === 'selected') {
                 this.najavaAktivna = false;
-                if(btn) { btn.classList.remove('btn-active-toggle'); btn.innerText = `${gt('game_announce')}: ${data.row}`; }
+                this.najavljenoPolje = { row: data.row, col: 'Najava' };
+                if(!this.isSpectator && btn) { btn.classList.remove('btn-active-toggle'); btn.innerText = `${gt('game_announce')}: ${data.row}`; }
             }
+
+            this.updateTableVisuals();
+            this.updateStatusLabel();
         }); 
 
         this.socket.on('chat_msg', (data) => { if (data.msg) this.appendChatMessage(gt('chat_opponent'), data.msg, "msg-incoming"); }); 
