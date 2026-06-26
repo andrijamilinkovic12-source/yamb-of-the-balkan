@@ -606,6 +606,8 @@ function formatCloudSyncFailureDetails(result = null) {
         details.push(`token:${data.tokenAudience}`);
     }
     if (data.firebaseErrorMessage) details.push(data.firebaseErrorMessage);
+    if (data.restFallback?.reason) details.push(`rest:${data.restFallback.reason}`);
+    if (data.restFallback?.firebaseRestError) details.push(data.restFallback.firebaseRestError);
 
     return details.filter(Boolean).join(' | ');
 }

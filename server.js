@@ -17,6 +17,7 @@ let firebaseAuth = null;
 let firebaseMessaging = null;
 let firebaseAdminProjectId = null;
 let firebaseAdminCredentialSource = 'none';
+let firebaseWebApiKey = process.env.FIREBASE_WEB_API_KEY || process.env.FIREBASE_API_KEY || '';
 
 function getFirebaseCredentialSource() {
     if (process.env.FIREBASE_SERVICE_ACCOUNT) return 'FIREBASE_SERVICE_ACCOUNT';
@@ -35,6 +36,24 @@ function getConfiguredFirebaseProjectId(serviceAccount = null) {
         process.env.GOOGLE_CLOUD_PROJECT ||
         process.env.GCLOUD_PROJECT ||
         null;
+}
+
+function readAndroidGoogleServices() {
+    try {
+        const googleServicesPath = path.join(__dirname, 'android', 'app', 'google-services.json');
+        return JSON.parse(fs.readFileSync(googleServicesPath, 'utf8'));
+    } catch (err) {
+        return null;
+    }
+}
+
+function getFirebaseWebApiKey() {
+    if (firebaseWebApiKey) return firebaseWebApiKey;
+
+    const googleServices = readAndroidGoogleServices();
+    const key = googleServices?.client?.[0]?.api_key?.[0]?.current_key || '';
+    if (key) firebaseWebApiKey = key;
+    return firebaseWebApiKey;
 }
 
 function parseFirebaseServiceAccount() {
@@ -162,13 +181,64 @@ app.get('/.well-known/assetlinks.json', (req, res) => {
 });
 
 function readAndroidFirebaseProjectId() {
-    try {
-        const googleServicesPath = path.join(__dirname, 'android', 'app', 'google-services.json');
-        const googleServices = JSON.parse(fs.readFileSync(googleServicesPath, 'utf8'));
-        return googleServices?.project_info?.project_id || null;
-    } catch (err) {
-        return null;
-    }
+    const googleServices = readAndroidGoogleServices();
+    return googleServices?.project_info?.project_id || null;
+}
+
+function httpsJsonRequest(urlString, options = {}) {
+    return new Promise(resolve => {
+        const url = new URL(urlString);
+        const method = options.method || 'GET';
+        const timeoutMs = options.timeoutMs || 7000;
+        const body = options.body ? JSON.stringify(options.body) : null;
+
+        const request = https.request({
+            protocol: url.protocol,
+            hostname: url.hostname,
+            path: `${url.pathname}${url.search}`,
+            method,
+            timeout: timeoutMs,
+            headers: {
+                ...(body ? {
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(body)
+                } : {}),
+                ...(options.headers || {})
+            }
+        }, response => {
+            let raw = '';
+            response.setEncoding('utf8');
+            response.on('data', chunk => {
+                raw += chunk;
+                if (raw.length > 1024 * 1024) {
+                    request.destroy(new Error('response_too_large'));
+                }
+            });
+            response.on('end', () => {
+                let parsed = null;
+                try {
+                    parsed = raw ? JSON.parse(raw) : null;
+                } catch (err) {}
+                resolve({
+                    ok: response.statusCode >= 200 && response.statusCode < 300,
+                    statusCode: response.statusCode,
+                    headers: response.headers,
+                    body: parsed,
+                    rawLength: raw.length
+                });
+            });
+        });
+
+        request.on('timeout', () => request.destroy(new Error('request_timeout')));
+        request.on('error', error => resolve({
+            ok: false,
+            reason: error.message || 'request_error',
+            code: error.code || ''
+        }));
+
+        if (body) request.write(body);
+        request.end();
+    });
 }
 
 app.get('/api/firebase-auth-status', (req, res) => {
@@ -176,7 +246,24 @@ app.get('/api/firebase-auth-status', (req, res) => {
         firebaseAdminActive: !!firebaseAuth,
         firebaseAdminProjectId: firebaseAdminProjectId || null,
         firebaseAdminCredentialSource,
-        androidFirebaseProjectId: readAndroidFirebaseProjectId()
+        androidFirebaseProjectId: readAndroidFirebaseProjectId(),
+        firebaseWebApiKeyPresent: !!getFirebaseWebApiKey()
+    });
+});
+
+app.get('/api/google-certs-status', async (req, res) => {
+    const certs = await httpsJsonRequest('https://www.googleapis.com/robot/v1/metadata/x509/securetoken@system.gserviceaccount.com', {
+        timeoutMs: 7000
+    });
+
+    res.json({
+        ok: !!certs.ok,
+        statusCode: certs.statusCode || null,
+        reason: certs.reason || null,
+        code: certs.code || null,
+        cacheControl: certs.headers?.['cache-control'] || null,
+        keyCount: certs.body && typeof certs.body === 'object' ? Object.keys(certs.body).length : 0,
+        rawLength: certs.rawLength || 0
     });
 });
 
@@ -3784,6 +3871,53 @@ function classifyInvalidFirebaseToken(token, err = null) {
     };
 }
 
+function shouldUseFirebaseRestTokenFallback(err) {
+    const message = `${err?.message || ''} ${err?.code || ''}`.toLowerCase();
+    return message.includes('public keys') ||
+        message.includes('google certs') ||
+        message.includes('certificate') ||
+        message.includes('cert') ||
+        message.includes('enotfound') ||
+        message.includes('eai_again') ||
+        message.includes('etimedout') ||
+        message.includes('econnreset') ||
+        message.includes('network');
+}
+
+async function verifyFirebaseTokenViaRest(token) {
+    const apiKey = getFirebaseWebApiKey();
+    if (!apiKey) {
+        return { ok: false, reason: 'firebase_rest_api_key_missing' };
+    }
+
+    const result = await httpsJsonRequest(`https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${encodeURIComponent(apiKey)}`, {
+        method: 'POST',
+        timeoutMs: 8000,
+        body: { idToken: token }
+    });
+
+    if (!result.ok) {
+        const errorMessage = result.body?.error?.message || result.reason || `http_${result.statusCode || 'unknown'}`;
+        return {
+            ok: false,
+            reason: 'firebase_rest_verify_failed',
+            firebaseRestStatusCode: result.statusCode || null,
+            firebaseRestError: String(errorMessage).substring(0, 160)
+        };
+    }
+
+    const user = Array.isArray(result.body?.users) ? result.body.users[0] : null;
+    if (!user || typeof user.localId !== 'string' || !user.localId) {
+        return { ok: false, reason: 'firebase_rest_user_missing' };
+    }
+
+    return {
+        ok: true,
+        uid: user.localId,
+        fallback: 'identitytoolkit_accounts_lookup'
+    };
+}
+
 async function verifyFirebaseSocketToken(socket, token) {
     if (!firebaseAuth) {
         return { ok: false, reason: 'firebase_admin_unavailable', permanent: false };
@@ -3804,6 +3938,21 @@ async function verifyFirebaseSocketToken(socket, token) {
     } catch (err) {
         const classified = classifyInvalidFirebaseToken(token, err);
         console.warn(`⚠️ Firebase token odbijen (${classified.reason}, server=${classified.firebaseProjectId || 'unknown'}, tokenAud=${classified.tokenAudience || 'unknown'}):`, err.message);
+
+        if (shouldUseFirebaseRestTokenFallback(err)) {
+            const fallbackResult = await verifyFirebaseTokenViaRest(token);
+            if (fallbackResult.ok) {
+                bindVerifiedPlayerSocket(socket, fallbackResult.uid);
+                console.warn(`✅ Firebase token potvrđen preko REST fallback-a za uid=${fallbackResult.uid}`);
+                return fallbackResult;
+            }
+
+            return {
+                ...classified,
+                restFallback: fallbackResult
+            };
+        }
+
         return classified;
     }
 }
