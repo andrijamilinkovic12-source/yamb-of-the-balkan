@@ -1235,6 +1235,9 @@ class YambApp {
 
     requireLogin() {
         const splashLogin = document.getElementById('splash-login-container');
+        const splashScreen = document.getElementById('splash-screen');
+        const isOnSplash = !!(splashScreen && splashScreen.classList.contains('active'));
+
         if (window.yambAuthState && window.yambAuthState.restoreFailed) {
             this.navigateTo('splash-screen');
             if (splashLogin) splashLogin.style.display = 'flex';
@@ -1249,6 +1252,11 @@ class YambApp {
         }
 
         if (window.yambAuthState && (window.yambAuthState.loginInProgress || window.yambAuthState.checkingLogin)) {
+            if (splashLogin) splashLogin.style.display = 'flex';
+            return false;
+        }
+
+        if (isOnSplash) {
             if (splashLogin) splashLogin.style.display = 'flex';
             return false;
         }

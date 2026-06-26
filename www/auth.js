@@ -595,6 +595,21 @@ function rememberCloudSyncResult(result = {}) {
     return window.yambLastCloudSyncResult;
 }
 
+function formatCloudSyncFailureDetails(result = null) {
+    const data = result || window.yambLastCloudSyncResult || {};
+    const details = [];
+
+    if (data.reason) details.push(data.reason);
+    if (data.firebaseErrorCode) details.push(data.firebaseErrorCode);
+    if (data.firebaseProjectId && data.tokenAudience && data.firebaseProjectId !== data.tokenAudience) {
+        details.push(`server:${data.firebaseProjectId}`);
+        details.push(`token:${data.tokenAudience}`);
+    }
+    if (data.firebaseErrorMessage) details.push(data.firebaseErrorMessage);
+
+    return details.filter(Boolean).join(' | ');
+}
+
 async function syncLoggedInProfileToCloud(user, options = {}) {
     const uid = user?.uid || localStorage.getItem('yamb_uid');
     if (!uid) {
@@ -808,7 +823,7 @@ async function prijaviSe() {
                 window.yambAuthState = {
                     ...(window.yambAuthState || {}),
                     restoreFailed: true,
-                    restoreFailedReason: window.yambLastCloudSyncResult?.reason || window.yambLastFirebaseTokenStatus?.reason || 'unknown_error',
+                    restoreFailedReason: formatCloudSyncFailureDetails() || window.yambLastFirebaseTokenStatus?.reason || 'unknown_error',
                     updatedAt: Date.now()
                 };
                 window.app.navigateTo('splash-screen');

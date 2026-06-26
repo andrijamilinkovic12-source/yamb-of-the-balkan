@@ -3683,18 +3683,69 @@ function decodeJwtPayloadWithoutVerification(token) {
     }
 }
 
-function classifyInvalidFirebaseToken(token) {
+function sanitizeFirebaseErrorMessage(err) {
+    const message = typeof err?.message === 'string' ? err.message : '';
+    return message
+        .replace(/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+/g, '[jwt]')
+        .substring(0, 220);
+}
+
+function classifyInvalidFirebaseToken(token, err = null) {
     const payload = decodeJwtPayloadWithoutVerification(token);
     const tokenAudience = payload && typeof payload.aud === 'string' ? payload.aud : '';
     const tokenIssuer = payload && typeof payload.iss === 'string' ? payload.iss : '';
     const expectedProjectId = firebaseAdminProjectId || '';
+    const firebaseErrorCode = typeof err?.code === 'string' ? err.code : '';
+    const firebaseErrorMessage = sanitizeFirebaseErrorMessage(err);
+    const lowerMessage = firebaseErrorMessage.toLowerCase();
+    const errorDetails = {
+        firebaseErrorCode,
+        firebaseErrorMessage
+    };
 
     if (!payload) {
         return {
             ok: false,
             reason: 'malformed_firebase_token',
             permanent: false,
-            firebaseProjectId: expectedProjectId
+            firebaseProjectId: expectedProjectId,
+            ...errorDetails
+        };
+    }
+
+    if (lowerMessage.includes('expired')) {
+        return {
+            ok: false,
+            reason: 'firebase_token_expired',
+            permanent: false,
+            firebaseProjectId: expectedProjectId,
+            tokenAudience,
+            tokenIssuer,
+            ...errorDetails
+        };
+    }
+
+    if (lowerMessage.includes('invalid signature')) {
+        return {
+            ok: false,
+            reason: 'firebase_token_invalid_signature',
+            permanent: false,
+            firebaseProjectId: expectedProjectId,
+            tokenAudience,
+            tokenIssuer,
+            ...errorDetails
+        };
+    }
+
+    if (lowerMessage.includes('no "kid"') || lowerMessage.includes("no 'kid'")) {
+        return {
+            ok: false,
+            reason: 'firebase_token_missing_kid',
+            permanent: false,
+            firebaseProjectId: expectedProjectId,
+            tokenAudience,
+            tokenIssuer,
+            ...errorDetails
         };
     }
 
@@ -3705,7 +3756,8 @@ function classifyInvalidFirebaseToken(token) {
             permanent: false,
             firebaseProjectId: expectedProjectId,
             tokenAudience,
-            tokenIssuer
+            tokenIssuer,
+            ...errorDetails
         };
     }
 
@@ -3716,7 +3768,8 @@ function classifyInvalidFirebaseToken(token) {
             permanent: true,
             firebaseProjectId: expectedProjectId,
             tokenAudience,
-            tokenIssuer
+            tokenIssuer,
+            ...errorDetails
         };
     }
 
@@ -3726,7 +3779,8 @@ function classifyInvalidFirebaseToken(token) {
         permanent: false,
         firebaseProjectId: expectedProjectId,
         tokenAudience,
-        tokenIssuer
+        tokenIssuer,
+        ...errorDetails
     };
 }
 
@@ -3748,7 +3802,7 @@ async function verifyFirebaseSocketToken(socket, token) {
         bindVerifiedPlayerSocket(socket, decoded.uid);
         return { ok: true, uid: decoded.uid };
     } catch (err) {
-        const classified = classifyInvalidFirebaseToken(token);
+        const classified = classifyInvalidFirebaseToken(token, err);
         console.warn(`⚠️ Firebase token odbijen (${classified.reason}, server=${classified.firebaseProjectId || 'unknown'}, tokenAud=${classified.tokenAudience || 'unknown'}):`, err.message);
         return classified;
     }
