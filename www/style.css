@@ -616,34 +616,30 @@ body {
     position: relative;
     z-index: 1;
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
+    align-items: center;
     justify-content: center;
-    width: min(88vw, 460px);
-    min-height: 126px;
+    gap: 14px;
+    width: min(92vw, 560px);
+    min-height: 58px;
+    text-align: center;
     color: var(--daily-intro-text);
     text-transform: uppercase;
-    font-size: 2.45rem;
-    line-height: 0.96;
-    font-weight: 950;
+    font-size: 2rem;
+    line-height: 1.05;
+    font-weight: 900;
     text-shadow: 0 0 16px var(--daily-intro-glow), 0 2px 14px rgba(0, 0, 0, 0.36);
 }
 
 .daily-intro-word {
-    display: block;
+    display: inline-block;
     white-space: nowrap;
 }
 
 .daily-intro-word-left {
-    align-self: flex-start;
-    margin-left: clamp(16px, 5vw, 36px);
     animation: dailyWordLeft 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
 }
 
 .daily-intro-word-right {
-    align-self: flex-end;
-    margin-top: 8px;
-    margin-right: clamp(16px, 5vw, 36px);
     animation: dailyWordRight 4.6s cubic-bezier(0.16, 0.92, 0.22, 1) forwards;
 }
 
@@ -970,17 +966,17 @@ body {
 }
 
 @keyframes dailyWordLeft {
-    0% { opacity: 0; transform: translateX(-52vw); }
-    24% { opacity: 0; transform: translateX(-52vw); }
-    56% { opacity: 1; transform: translateX(0); }
+    0% { opacity: 0; transform: translateX(-48vw); }
+    23% { opacity: 0; transform: translateX(-48vw); }
+    54% { opacity: 1; transform: translateX(0); }
     84% { opacity: 1; transform: translateX(0); }
     100% { opacity: 0; transform: translateX(-8px); }
 }
 
 @keyframes dailyWordRight {
-    0% { opacity: 0; transform: translateX(52vw); }
-    30% { opacity: 0; transform: translateX(52vw); }
-    61% { opacity: 1; transform: translateX(0); }
+    0% { opacity: 0; transform: translateX(48vw); }
+    23% { opacity: 0; transform: translateX(48vw); }
+    54% { opacity: 1; transform: translateX(0); }
     84% { opacity: 1; transform: translateX(0); }
     100% { opacity: 0; transform: translateX(8px); }
 }
@@ -1117,9 +1113,9 @@ body {
     }
 
     .daily-intro-title {
-        width: min(90vw, 330px);
-        min-height: 110px;
-        font-size: 1.9rem;
+        gap: 8px;
+        font-size: 1.45rem;
+        min-height: 48px;
     }
 
     .tournament-intro-mark-wrap {

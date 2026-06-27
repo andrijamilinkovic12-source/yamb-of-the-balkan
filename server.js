@@ -868,6 +868,54 @@ function getLeaderboardRecordTag(period) {
     return 'rekord svih vremena';
 }
 
+const STABLE_LEADERBOARD_UID_REGEX = /^(?!.*guest).{20,}$/i;
+
+function getLeaderboardUidCandidateExpression(fieldPath) {
+    return {
+        $trim: {
+            input: {
+                $convert: {
+                    input: fieldPath,
+                    to: "string",
+                    onError: "",
+                    onNull: ""
+                }
+            }
+        }
+    };
+}
+
+function getStableLeaderboardUidExpression() {
+    return {
+        $let: {
+            vars: {
+                uidCandidate: getLeaderboardUidCandidateExpression("$uid"),
+                playerIdCandidate: getLeaderboardUidCandidateExpression("$playerId")
+            },
+            in: {
+                $cond: [
+                    { $regexMatch: { input: "$$uidCandidate", regex: STABLE_LEADERBOARD_UID_REGEX } },
+                    "$$uidCandidate",
+                    {
+                        $cond: [
+                            { $regexMatch: { input: "$$playerIdCandidate", regex: STABLE_LEADERBOARD_UID_REGEX } },
+                            "$$playerIdCandidate",
+                            null
+                        ]
+                    }
+                ]
+            }
+        }
+    };
+}
+
+function getLeaderboardScoreAddFields() {
+    return {
+        numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } },
+        stableUid: getStableLeaderboardUidExpression()
+    };
+}
+
 function getLeaderboardRecordMatchFilter(period) {
     const matchFilter = {
         $or: [
@@ -887,11 +935,12 @@ async function getLeaderboardRecordSnapshot(period) {
 
     const records = await Score.aggregate([
         { $match: getLeaderboardRecordMatchFilter(period) },
-        { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
+        { $addFields: getLeaderboardScoreAddFields() },
+        { $match: { stableUid: { $ne: null } } },
         { $sort: { numScore: -1, date: 1 } },
         {
             $group: {
-                _id: { $ifNull: ["$playerId", "$uid"] },
+                _id: "$stableUid",
                 bestEntry: { $first: "$$ROOT" }
             }
         },
@@ -906,7 +955,7 @@ async function getLeaderboardRecordSnapshot(period) {
     return {
         period,
         score: Math.max(0, toSafeInt(top.score, 0)),
-        uid: String(top.playerId || top.uid || ''),
+        uid: String(top.stableUid || top.playerId || top.uid || ''),
         playerName: String(top.playerName || 'Nepoznat Igrač')
     };
 }
@@ -1015,6 +1064,11 @@ const MAX_PROFILE_TOURNEY_DELTA_PER_SYNC = 3;
 const MAX_PROFILE_LEGACY_TOURNEY_IMPORT = 100;
 const MAX_PENALTY_POINTS = 100000;
 const LEADERBOARD_TIME_ZONE = 'Europe/Belgrade';
+const DAILY_CHALLENGE_TIME_ZONE = LEADERBOARD_TIME_ZONE;
+const DAILY_CHALLENGE_SECRET = process.env.DAILY_CHALLENGE_SECRET ||
+    process.env.FIREBASE_PROJECT_ID ||
+    process.env.GOOGLE_CLOUD_PROJECT ||
+    'yamb-daily-challenge-v1';
 
 function getTimeZoneParts(date, timeZone) {
     const parts = new Intl.DateTimeFormat('en-US', {
@@ -1031,6 +1085,51 @@ function getTimeZoneParts(date, timeZone) {
     return Object.fromEntries(parts
         .filter(part => part.type !== 'literal')
         .map(part => [part.type, Number(part.value)]));
+}
+
+function getDailyChallengeDayKey(now = new Date()) {
+    const parts = getTimeZoneParts(now, DAILY_CHALLENGE_TIME_ZONE);
+    return `${parts.year}-${padDatePart(parts.month)}-${padDatePart(parts.day)}`;
+}
+
+function getLegacyDailyDayKey(now = new Date()) {
+    return now.toDateString();
+}
+
+function isDailyKeyToday(value, todayKey = getDailyChallengeDayKey(), legacyTodayKey = getLegacyDailyDayKey()) {
+    return value === todayKey || value === legacyTodayKey;
+}
+
+function normalizeDailyKeyForSync(value, todayKey = getDailyChallengeDayKey(), legacyTodayKey = getLegacyDailyDayKey()) {
+    if (!value) return "";
+    return isDailyKeyToday(value, todayKey, legacyTodayKey) ? todayKey : value;
+}
+
+function getDailyChallengeDice(uid, dayKey) {
+    const digest = crypto
+        .createHmac('sha256', DAILY_CHALLENGE_SECRET)
+        .update(`${uid}:${dayKey}:daily-challenge`)
+        .digest();
+
+    return Array.from({ length: 6 }, (_, index) => (digest[index] % 6) + 1);
+}
+
+function calculateDailyChallengeReward(dice = []) {
+    if (!Array.isArray(dice) || dice.length < 6) return 0;
+    const safeDice = dice.map(value => Math.max(1, Math.min(6, toSafeInt(value, 1))));
+    const sumFirstFour = safeDice[0] + safeDice[1] + safeDice[2] + safeDice[3];
+    return sumFirstFour * safeDice[4] * safeDice[5];
+}
+
+function getDailyChallengeForUid(uid, now = new Date()) {
+    const dayKey = getDailyChallengeDayKey(now);
+    const dice = getDailyChallengeDice(uid, dayKey);
+    return {
+        dayKey,
+        timeZone: DAILY_CHALLENGE_TIME_ZONE,
+        dice,
+        reward: calculateDailyChallengeReward(dice)
+    };
 }
 
 function getTimeZoneOffsetMs(date, timeZone) {
@@ -3066,6 +3165,8 @@ function normalizeTournamentTime(value) {
 }
 
 function buildProfileSyncPayload(user) {
+    const todayKey = getDailyChallengeDayKey();
+    const legacyTodayKey = getLegacyDailyDayKey();
     return {
         wins: Math.max(0, toSafeInt(user.wins)),
         losses: Math.max(0, toSafeInt(user.losses)),
@@ -3085,8 +3186,8 @@ function buildProfileSyncPayload(user) {
         unlockedEffects: Array.isArray(user.unlockedEffects) ? user.unlockedEffects : [],
         yamb_unlocked: Array.isArray(user.yamb_unlocked) ? user.yamb_unlocked : [],
         unlockedThemes: filterIdsByCategory(user.yamb_unlocked, THEME_UNLOCK_IDS),
-        lastDaily: user.lastDaily,
-        lastDailyRewardClaimed: user.lastDailyRewardClaimed,
+        lastDaily: normalizeDailyKeyForSync(user.lastDaily, todayKey, legacyTodayKey),
+        lastDailyRewardClaimed: normalizeDailyKeyForSync(user.lastDailyRewardClaimed, todayKey, legacyTodayKey),
         soundEnabled: coerceBooleanSetting(user.soundEnabled) ?? true,
         vibrationEnabled: coerceBooleanSetting(user.vibrationEnabled) ?? true,
         musicEnabled: coerceBooleanSetting(user.musicEnabled) ?? true,
@@ -5115,11 +5216,21 @@ function calculateAllowedBalanceIncrease(user, stats, oldUserGames, oldTournamen
     const newGames = Math.max(oldUserGames, toSafeInt(stats?.games));
     const gameDelta = Math.max(0, newGames - oldUserGames);
     const tournamentDelta = Math.max(0, toSafeInt(stats?.tournamentWins) - oldTournamentWins);
-    const todayStr = new Date().toDateString();
+    const todayStr = getDailyChallengeDayKey();
+    const legacyTodayStr = getLegacyDailyDayKey();
     const requestedDailyReward = Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(stats?.dailyRewardAmount, 0)));
-    const dailyStartedToday = user.lastDaily === todayStr || stats?.lastDaily === todayStr;
-    const dailyClaimRequested = stats?.dailyRewardClaimed === todayStr && requestedDailyReward > 0;
-    const dailyAllowance = !REQUIRE_ADMOB_SSV && dailyStartedToday && dailyClaimRequested && user.lastDailyRewardClaimed !== todayStr
+    const expectedDailyReward = user?.firebaseUid ? getDailyChallengeForUid(user.firebaseUid).reward : 0;
+    const dailyRewardMatchesChallenge = requestedDailyReward === expectedDailyReward ||
+        requestedDailyReward === expectedDailyReward * 2;
+    const dailyStartedToday = isDailyKeyToday(user.lastDaily, todayStr, legacyTodayStr) ||
+        isDailyKeyToday(stats?.lastDaily, todayStr, legacyTodayStr);
+    const dailyClaimRequested = isDailyKeyToday(stats?.dailyRewardClaimed, todayStr, legacyTodayStr) &&
+        requestedDailyReward > 0 &&
+        dailyRewardMatchesChallenge;
+    const dailyAllowance = !REQUIRE_ADMOB_SSV &&
+        dailyStartedToday &&
+        dailyClaimRequested &&
+        !isDailyKeyToday(user.lastDailyRewardClaimed, todayStr, legacyTodayStr)
         ? requestedDailyReward
         : 0;
 
@@ -5979,6 +6090,66 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('request_daily_challenge', async (data = {}, ack) => {
+        const replyDailyChallenge = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            socket.emit('daily_challenge_data', payload);
+            return payload;
+        };
+
+        try {
+            const uid = getVerifiedUid(socket);
+            if (!uid) {
+                const result = { ok: false, reason: 'auth_required' };
+                socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+                return replyDailyChallenge(result);
+            }
+
+            const challenge = getDailyChallengeForUid(uid);
+            const legacyTodayStr = getLegacyDailyDayKey();
+
+            if (!MONGO_URI) {
+                return replyDailyChallenge({
+                    ok: true,
+                    ...challenge,
+                    alreadyClaimed: false,
+                    localFallback: true
+                });
+            }
+
+            const user = await UserProfile.findOne({ firebaseUid: uid });
+            if (!user) {
+                return replyDailyChallenge({ ok: false, reason: 'auth_required' });
+            }
+
+            const alreadyStarted = isDailyKeyToday(user.lastDaily, challenge.dayKey, legacyTodayStr);
+            const alreadyClaimed = isDailyKeyToday(user.lastDailyRewardClaimed, challenge.dayKey, legacyTodayStr);
+            let changed = false;
+
+            if (!alreadyStarted || user.lastDaily !== challenge.dayKey) {
+                user.lastDaily = challenge.dayKey;
+                changed = true;
+            }
+
+            if (alreadyClaimed && user.lastDailyRewardClaimed !== challenge.dayKey) {
+                user.lastDailyRewardClaimed = challenge.dayKey;
+                changed = true;
+            }
+
+            if (changed) await user.save();
+
+            return replyDailyChallenge({
+                ok: true,
+                ...challenge,
+                alreadyClaimed,
+                balance: Math.max(0, toSafeInt(user.balance, 0))
+            });
+        } catch (err) {
+            console.error('❌ request_daily_challenge greška:', err);
+            return replyDailyChallenge({ ok: false, reason: 'server_error' });
+        }
+    });
+
     socket.on('set_player_data', async (data) => {
         data = data || {};
         const verifiedUid = socket.verifiedUid;
@@ -6072,15 +6243,28 @@ io.on('connection', (socket) => {
                     user.penaltyPoints = s.penaltyPoints;
                 }
 
-                const todayStr = new Date().toDateString();
+                const todayStr = getDailyChallengeDayKey();
+                const legacyTodayStr = getLegacyDailyDayKey();
+                const clientLastDailyToday = isDailyKeyToday(s.lastDaily, todayStr, legacyTodayStr);
+                const clientDailyClaimedToday = isDailyKeyToday(s.dailyRewardClaimed, todayStr, legacyTodayStr);
+                if (isDailyKeyToday(user.lastDaily, todayStr, legacyTodayStr) && user.lastDaily !== todayStr) {
+                    user.lastDaily = todayStr;
+                }
+                if (isDailyKeyToday(user.lastDailyRewardClaimed, todayStr, legacyTodayStr) && user.lastDailyRewardClaimed !== todayStr) {
+                    user.lastDailyRewardClaimed = todayStr;
+                }
                 const requestedDailyReward = Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(s.dailyRewardAmount, 0)));
-                const hasDailyClaimPayload = s.dailyRewardClaimed === todayStr || s.dailyRewardAmount !== undefined;
-                const dailyStartedToday = user.lastDaily === todayStr || s.lastDaily === todayStr;
+                const expectedDailyReward = getDailyChallengeForUid(verifiedUid).reward;
+                const dailyRewardMatchesChallenge = requestedDailyReward === expectedDailyReward ||
+                    requestedDailyReward === expectedDailyReward * 2;
+                const hasDailyClaimPayload = clientDailyClaimedToday || s.dailyRewardAmount !== undefined;
+                const dailyStartedToday = isDailyKeyToday(user.lastDaily, todayStr, legacyTodayStr) || clientLastDailyToday;
                 const shouldMarkDailyRewardClaimed = !REQUIRE_ADMOB_SSV &&
                     dailyStartedToday &&
-                    s.dailyRewardClaimed === todayStr &&
+                    clientDailyClaimedToday &&
                     requestedDailyReward > 0 &&
-                    user.lastDailyRewardClaimed !== todayStr;
+                    dailyRewardMatchesChallenge &&
+                    !isDailyKeyToday(user.lastDailyRewardClaimed, todayStr, legacyTodayStr);
 
                 // 🛡️ NOVO: Popravljena logika (INVENTORY DESYNC FIX)
                 const isFreshLogin = (toSafeInt(s.games, 0) === 0);
@@ -6137,7 +6321,7 @@ io.on('connection', (socket) => {
                 const hasEarnedBalanceIncrease = requestedBalanceDelta > 0 && requestedBalanceDelta <= earnedBalanceIncrease;
                 const isDailyBalanceOverage = hasDailyClaimPayload && requestedDailyReward > 0 && requestedBalanceDelta > 0 && (
                     (shouldMarkDailyRewardClaimed && requestedBalanceDelta > earnedBalanceIncrease) ||
-                    (!shouldMarkDailyRewardClaimed && user.lastDailyRewardClaimed === todayStr && requestedBalanceDelta === requestedDailyReward)
+                    (!shouldMarkDailyRewardClaimed && isDailyKeyToday(user.lastDailyRewardClaimed, todayStr, legacyTodayStr) && requestedBalanceDelta === requestedDailyReward)
                 );
                 const purchaseCoverage = Math.max(0, oldBalance + allowedBalanceIncrease - requestedBalance);
                 const acceptsPaidUnlocks = requestedPaidUnlockCost === 0 || purchaseCoverage >= requestedPaidUnlockCost;
@@ -6219,13 +6403,14 @@ io.on('connection', (socket) => {
                     user.economyMigratedAt = Date.now();
                 }
 
-                if (user.lastDaily === todayStr) {
+                if (isDailyKeyToday(user.lastDaily, todayStr, legacyTodayStr)) {
+                    user.lastDaily = todayStr;
                     if (s.lastDaily !== todayStr) {
                         s.lastDaily = todayStr;
                     }
                 } else {
                     if (s.lastDaily) {
-                        user.lastDaily = s.lastDaily;
+                        user.lastDaily = clientLastDailyToday ? todayStr : s.lastDaily;
                     }
                 }
 
@@ -6337,7 +6522,7 @@ io.on('connection', (socket) => {
                     unlockedSkins: initialEconomy.unlockedSkins,
                     unlockedEffects: initialEconomy.unlockedEffects,
                     yamb_unlocked: initialEconomy.yamb_unlocked,
-                    lastDaily: s.lastDaily || "",
+                    lastDaily: normalizeDailyKeyForSync(s.lastDaily),
                     leagueData: getDefaultCurrentLeagueData(),
                     economyMigrationApplied: true,
                     economyMigratedAt: Date.now()
@@ -6383,16 +6568,11 @@ io.on('connection', (socket) => {
         };
 
         try {
-            const todayStr = new Date().toDateString();
             const rawReward = toSafeInt(data?.amount, 0);
             const reward = Math.max(0, rawReward);
 
             if (reward <= 0 || reward > MAX_DAILY_REWARD) {
                 return replyDailyReward({ ok: false, reason: 'invalid_reward', permanent: true });
-            }
-
-            if (!MONGO_URI) {
-                return replyDailyReward({ ok: true, reward, localFallback: true });
             }
 
             const uid = getVerifiedUid(socket);
@@ -6401,12 +6581,28 @@ io.on('connection', (socket) => {
                 return replyDailyReward({ ok: false, reason: 'auth_required' });
             }
 
+            const challenge = getDailyChallengeForUid(uid);
+            const todayStr = challenge.dayKey;
+            const legacyTodayStr = getLegacyDailyDayKey();
+            const expectedReward = data?.doubled ? challenge.reward * 2 : challenge.reward;
+            if (reward !== expectedReward || expectedReward <= 0 || expectedReward > MAX_DAILY_REWARD) {
+                return replyDailyReward({ ok: false, reason: 'invalid_reward', permanent: true });
+            }
+
+            if (!MONGO_URI) {
+                return replyDailyReward({ ok: true, reward, localFallback: true });
+            }
+
             const user = await UserProfile.findOne({ firebaseUid: uid });
             if (!user) {
                 return replyDailyReward({ ok: false, reason: 'auth_required' });
             }
 
-            if (user.lastDailyRewardClaimed === todayStr) {
+            if (isDailyKeyToday(user.lastDailyRewardClaimed, todayStr, legacyTodayStr)) {
+                if (user.lastDailyRewardClaimed !== todayStr) {
+                    user.lastDailyRewardClaimed = todayStr;
+                    await user.save();
+                }
                 emitProfileSync(socket, user);
                 return replyDailyReward({
                     ok: false,
@@ -7085,16 +7281,17 @@ io.on('connection', (socket) => {
                         ]
                     } 
                 },
-                { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
-                { $sort: { numScore: -1 } },
+                { $addFields: getLeaderboardScoreAddFields() },
+                { $match: { stableUid: { $ne: null } } },
+                { $sort: { numScore: -1, date: 1 } },
                 {
                     $group: {
-                        _id: { $ifNull: ["$playerId", "$uid"] },
+                        _id: "$stableUid",
                         bestEntry: { $first: "$$ROOT" } 
                     }
                 },
                 { $replaceRoot: { newRoot: "$bestEntry" } }, 
-                { $sort: { numScore: -1 } },
+                { $sort: { numScore: -1, date: 1 } },
                 { $limit: 3 }
             ]);
 
@@ -7126,16 +7323,17 @@ io.on('connection', (socket) => {
 
             const topScores = await Score.aggregate([
                 { $match: matchFilter },
-                { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
-                { $sort: { numScore: -1 } },
+                { $addFields: getLeaderboardScoreAddFields() },
+                { $match: { stableUid: { $ne: null } } },
+                { $sort: { numScore: -1, date: 1 } },
                 {
                     $group: {
-                        _id: { $ifNull: ["$playerId", "$uid"] },
+                        _id: "$stableUid",
                         bestEntry: { $first: "$$ROOT" }
                     }
                 },
                 { $replaceRoot: { newRoot: "$bestEntry" } },
-                { $sort: { numScore: -1 } },
+                { $sort: { numScore: -1, date: 1 } },
                 { $limit: 3 }
             ]);
 
@@ -7174,22 +7372,23 @@ io.on('connection', (socket) => {
 
             const scores = await Score.aggregate([
                 { $match: matchFilter },
-                { $addFields: { numScore: { $convert: { input: "$score", to: "double", onError: 0, onNull: 0 } } } },
-                { $sort: { numScore: -1 } }, 
+                { $addFields: getLeaderboardScoreAddFields() },
+                { $match: { stableUid: { $ne: null } } },
+                { $sort: { numScore: -1, date: 1 } }, 
                 {
                     $group: {
-                        _id: { $ifNull: ["$playerId", "$uid"] }, 
+                        _id: "$stableUid", 
                         bestEntry: { $first: "$$ROOT" } 
                     }
                 },
                 { $replaceRoot: { newRoot: "$bestEntry" } },
-                { $sort: { numScore: -1 } }, 
+                { $sort: { numScore: -1, date: 1 } }, 
                 { $limit: 100 }
             ]);
             
             const formattedScores = scores.map(s => ({
                 ...s,
-                uid: s.playerId || s.uid 
+                uid: s.stableUid || s.playerId || s.uid 
             }));
 
             socket.emit('global_highscores_data', formattedScores);

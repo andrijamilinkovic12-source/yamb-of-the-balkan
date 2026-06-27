@@ -5,9 +5,12 @@ class TopListManager {
         this.app = appContext;
         this.storageKey = 'yamb_ultimate_scores';
         this.maxEntries = 100; // Ograničenje je sada 100
+        this.validPeriods = ['weekly', 'monthly', 'all_time'];
+        this.leaderboardTimeZone = 'Europe/Belgrade';
         
-        // Default filter za globalnu listu
-        this.currentGlobalFilter = 'weekly'; 
+        // Default filteri za top liste
+        this.currentGlobalFilter = 'weekly';
+        this.currentLocalFilter = 'weekly';
         
         console.log("TopListManager initialized (Sync Ready).");
     }
@@ -79,6 +82,123 @@ class TopListManager {
         this.syncOfflineScores();
     }
 
+    _normalizePeriod(period, fallback = 'weekly') {
+        return this.validPeriods.includes(period) ? period : fallback;
+    }
+
+    _getTimeZoneParts(date, timeZone = this.leaderboardTimeZone) {
+        const parts = new Intl.DateTimeFormat('en-US', {
+            timeZone,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hourCycle: 'h23'
+        }).formatToParts(date);
+
+        return Object.fromEntries(parts
+            .filter(part => part.type !== 'literal')
+            .map(part => [part.type, Number(part.value)]));
+    }
+
+    _getTimeZoneOffsetMs(date, timeZone = this.leaderboardTimeZone) {
+        const parts = this._getTimeZoneParts(date, timeZone);
+        const zonedAsUtc = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second);
+        return zonedAsUtc - date.getTime();
+    }
+
+    _zonedLocalDateTimeToUtc(year, month, day, hour, minute, second, timeZone = this.leaderboardTimeZone) {
+        const localAsUtc = Date.UTC(year, month - 1, day, hour, minute, second);
+        let result = new Date(localAsUtc - this._getTimeZoneOffsetMs(new Date(localAsUtc), timeZone));
+        result = new Date(localAsUtc - this._getTimeZoneOffsetMs(result, timeZone));
+        return result;
+    }
+
+    _getPeriodStart(period, now = new Date()) {
+        const safePeriod = this._normalizePeriod(period, 'all_time');
+        if (safePeriod === 'all_time') return null;
+
+        const parts = this._getTimeZoneParts(now);
+
+        if (safePeriod === 'monthly') {
+            return this._zonedLocalDateTimeToUtc(parts.year, parts.month, 1, 0, 0, 0);
+        }
+
+        if (safePeriod === 'weekly') {
+            const utcCalendarDay = new Date(Date.UTC(parts.year, parts.month - 1, parts.day));
+            const dayOfWeek = utcCalendarDay.getUTCDay() || 7;
+            const monday = new Date(Date.UTC(parts.year, parts.month - 1, parts.day - dayOfWeek + 1));
+            return this._zonedLocalDateTimeToUtc(
+                monday.getUTCFullYear(),
+                monday.getUTCMonth() + 1,
+                monday.getUTCDate(),
+                0,
+                0,
+                0
+            );
+        }
+
+        return null;
+    }
+
+    _getEntryTime(entry) {
+        if (!entry || entry.date === undefined || entry.date === null) return null;
+        const parsed = new Date(entry.date).getTime();
+        return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    _filterScoresForPeriod(scores, period) {
+        const safePeriod = this._normalizePeriod(period, 'all_time');
+        const start = this._getPeriodStart(safePeriod);
+        if (!start) return Array.isArray(scores) ? scores : [];
+
+        const startMs = start.getTime();
+        return (Array.isArray(scores) ? scores : []).filter(entry => {
+            const entryMs = this._getEntryTime(entry);
+            return Number.isFinite(entryMs) && entryMs >= startMs;
+        });
+    }
+
+    _sortScores(scores) {
+        return (Array.isArray(scores) ? [...scores] : []).sort((a, b) => {
+            const scoreDiff = (Number(b?.score) || 0) - (Number(a?.score) || 0);
+            if (scoreDiff !== 0) return scoreDiff;
+
+            const aTime = this._getEntryTime(a) ?? Number.MAX_SAFE_INTEGER;
+            const bTime = this._getEntryTime(b) ?? Number.MAX_SAFE_INTEGER;
+            return aTime - bTime;
+        });
+    }
+
+    async _readLocalScores() {
+        if (window.localforage) {
+            const scores = await localforage.getItem(this.storageKey);
+            return Array.isArray(scores) ? scores : [];
+        }
+
+        const stored = localStorage.getItem(this.storageKey);
+        if (!stored) return [];
+
+        const scores = JSON.parse(stored);
+        return Array.isArray(scores) ? scores : [];
+    }
+
+    async _writeLocalScores(scores) {
+        const safeScores = Array.isArray(scores) ? scores : [];
+        if (window.localforage) {
+            await localforage.setItem(this.storageKey, safeScores);
+        } else {
+            localStorage.setItem(this.storageKey, JSON.stringify(safeScores));
+        }
+    }
+
+    _renderLocalScores(scores) {
+        const periodScores = this._filterScoresForPeriod(scores, this.currentLocalFilter);
+        this.renderList(periodScores, 'local-hs-list');
+    }
+
     _submitScoreToServer(entry) {
         return new Promise(resolve => {
             let settled = false;
@@ -98,13 +218,7 @@ class TopListManager {
         if (!result.ok && !result.permanent) return;
 
         try {
-            let scores = [];
-            if (window.localforage) {
-                scores = (await localforage.getItem(this.storageKey)) || [];
-            } else {
-                const stored = localStorage.getItem(this.storageKey);
-                if (stored) scores = JSON.parse(stored);
-            }
+            let scores = await this._readLocalScores();
 
             const idx = scores.findIndex(item => {
                 if (entry.localId && item.localId === entry.localId) return true;
@@ -123,11 +237,7 @@ class TopListManager {
                 scores[idx].syncRejected = result.reason || 'server_rejected';
             }
 
-            if (window.localforage) {
-                await localforage.setItem(this.storageKey, scores);
-            } else {
-                localStorage.setItem(this.storageKey, JSON.stringify(scores));
-            }
+            await this._writeLocalScores(scores);
         } catch (e) {
             console.warn("Nije moguće označiti sync status skora:", e);
         }
@@ -140,13 +250,7 @@ class TopListManager {
         if (!this.app.socket || !this.app.socket.connected) return;
 
         try {
-            let scores = [];
-            if (window.localforage) {
-                scores = (await localforage.getItem(this.storageKey)) || [];
-            } else {
-                const stored = localStorage.getItem(this.storageKey);
-                if (stored) scores = JSON.parse(stored);
-            }
+            let scores = await this._readLocalScores();
 
             let needsUpdate = false;
 
@@ -166,11 +270,7 @@ class TopListManager {
             }
 
             if (needsUpdate) {
-                if (window.localforage) {
-                    await localforage.setItem(this.storageKey, scores);
-                } else {
-                    localStorage.setItem(this.storageKey, JSON.stringify(scores));
-                }
+                await this._writeLocalScores(scores);
             }
         } catch (e) {
             console.error("Sync error:", e);
@@ -192,42 +292,39 @@ class TopListManager {
     }
 
     filterGlobal(period) {
-        this.currentGlobalFilter = period;
-        const btns = document.querySelectorAll('.filter-btn');
+        this.currentGlobalFilter = this._normalizePeriod(period);
+        const btns = document.querySelectorAll('#global-filters .filter-btn');
         btns.forEach(b => b.classList.remove('active'));
 
         const map = { 'weekly': 0, 'monthly': 1, 'all_time': 2 };
-        if (btns[map[period]]) btns[map[period]].classList.add('active');
+        if (btns[map[this.currentGlobalFilter]]) btns[map[this.currentGlobalFilter]].classList.add('active');
 
         this._loadGlobal();
     }
 
+    filterLocal(period) {
+        this.currentLocalFilter = this._normalizePeriod(period);
+        const btns = document.querySelectorAll('#local-filters .filter-btn');
+        btns.forEach(b => b.classList.remove('active'));
+
+        const map = { 'weekly': 0, 'monthly': 1, 'all_time': 2 };
+        if (btns[map[this.currentLocalFilter]]) btns[map[this.currentLocalFilter]].classList.add('active');
+
+        this._loadLocal();
+    }
+
     async _saveLocal(newEntry) {
         try {
-            let scores = [];
-            if (window.localforage) {
-                scores = (await localforage.getItem(this.storageKey)) || [];
-            } else {
-                const stored = localStorage.getItem(this.storageKey);
-                if (stored) scores = JSON.parse(stored);
-            }
+            let scores = await this._readLocalScores();
 
             scores.push(newEntry);
-            scores.sort((a, b) => b.score - a.score);
-            
-            if (scores.length > this.maxEntries) {
-                scores = scores.slice(0, this.maxEntries);
-            }
+            scores = this._sortScores(scores);
 
-            if (window.localforage) {
-                await localforage.setItem(this.storageKey, scores);
-            } else {
-                localStorage.setItem(this.storageKey, JSON.stringify(scores));
-            }
+            await this._writeLocalScores(scores);
             
             const listLocal = document.getElementById('local-hs-list');
             if (listLocal) {
-                this.renderList(scores, 'local-hs-list');
+                this._renderLocalScores(scores);
             }
         } catch (e) {
             console.error("Local save error:", e);
@@ -236,14 +333,8 @@ class TopListManager {
 
     async _loadLocal() {
         try {
-            let scores = [];
-            if (window.localforage) {
-                scores = (await localforage.getItem(this.storageKey)) || [];
-            } else {
-                const stored = localStorage.getItem(this.storageKey);
-                if (stored) scores = JSON.parse(stored);
-            }
-            this.renderList(scores, 'local-hs-list');
+            let scores = await this._readLocalScores();
+            this._renderLocalScores(scores);
         } catch (e) {
             console.error("Local load error:", e);
         }
@@ -287,9 +378,11 @@ class TopListManager {
                 if (!isGlobalList) return true;
 
                 const uid = entry.uid || entry.playerId;
-                return uid && typeof uid === 'string' && uid.length > 20 && !uid.toLowerCase().includes('guest');
+                return uid && typeof uid === 'string' && uid.length >= 20 && !uid.toLowerCase().includes('guest');
             });
         }
+
+        validData = this._sortScores(validData).slice(0, this.maxEntries);
 
         // Ako nakon filtriranja nema rezultata
         if (validData.length === 0) {
@@ -321,7 +414,8 @@ class TopListManager {
 
             const displayName = String(entry.playerName || entry.name || this._t('player_unknown'));
             const safeDisplayName = sec.escapeHtml(displayName);
-            const scoreFormatted = entry.score.toLocaleString(currentLang);
+            const numericScore = Number(entry.score) || 0;
+            const scoreFormatted = numericScore.toLocaleString(currentLang);
             
             // --- DINAMIČKO SMANJIVANJE FONTA PREMA DUŽINI IMENA ---
             let nameStyle = "font-size: 0.85rem; line-height: 1.2;"; // Default

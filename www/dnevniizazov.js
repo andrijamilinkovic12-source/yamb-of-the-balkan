@@ -1,5 +1,43 @@
 // dnevniizazov.js - STANDALONE DAILY CHALLENGE (GLASSMORPHISM EDITION)
 
+(function initYambDailyDateHelpers() {
+    if (window.YambDailyDate) return;
+
+    const TIME_ZONE = 'Europe/Belgrade';
+    const pad = (value) => String(value).padStart(2, '0');
+    const getDayKey = (date = new Date()) => {
+        try {
+            const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: TIME_ZONE,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).formatToParts(date);
+            const mapped = Object.fromEntries(parts
+                .filter(part => part.type !== 'literal')
+                .map(part => [part.type, part.value]));
+            if (mapped.year && mapped.month && mapped.day) {
+                return `${mapped.year}-${pad(mapped.month)}-${pad(mapped.day)}`;
+            }
+        } catch (err) {
+            console.warn('Daily day key fallback:', err);
+        }
+        return date.toISOString().slice(0, 10);
+    };
+
+    const getLegacyDayKey = (date = new Date()) => date.toDateString();
+    const isToday = (value, date = new Date()) => value === getDayKey(date) || value === getLegacyDayKey(date);
+    const normalize = (value, date = new Date()) => value ? (isToday(value, date) ? getDayKey(date) : value) : "";
+
+    window.YambDailyDate = {
+        timeZone: TIME_ZONE,
+        getDayKey,
+        getLegacyDayKey,
+        isToday,
+        normalize
+    };
+})();
+
 class DnevniIzazov {
     constructor(app) {
         this.app = app;
@@ -12,6 +50,10 @@ class DnevniIzazov {
         this.claimInProgress = false;
         this.rewardClaimed = false;
         this.adInProgress = false;
+        this.loadingChallenge = false;
+        this.serverDiceValues = [];
+        this.currentDayKey = "";
+        this.currentBaseReward = 0;
         
         this.injectGlassCSS();
         this.buildUI();
@@ -63,7 +105,7 @@ class DnevniIzazov {
             .daily-glass-overlay.active { display: flex; opacity: 1; }
 
             .daily-glass-overlay.daily-glass-overlay--blank .daily-glass-card {
-                visibility: hidden;
+                display: none;
                 pointer-events: none;
             }
 
@@ -417,21 +459,156 @@ class DnevniIzazov {
         return `<div class="dice-dots-wrapper val-${val}">${dots}</div>`;
     }
 
-    open() {
+    getTodayKey(date = new Date()) {
+        return window.YambDailyDate?.getDayKey
+            ? window.YambDailyDate.getDayKey(date)
+            : date.toISOString().slice(0, 10);
+    }
+
+    getLegacyTodayKey(date = new Date()) {
+        return window.YambDailyDate?.getLegacyDayKey
+            ? window.YambDailyDate.getLegacyDayKey(date)
+            : date.toDateString();
+    }
+
+    isTodayKey(value, date = new Date()) {
+        return window.YambDailyDate?.isToday
+            ? window.YambDailyDate.isToday(value, date)
+            : value === this.getTodayKey(date) || value === this.getLegacyTodayKey(date);
+    }
+
+    getCurrentUid() {
+        return localStorage.getItem('yamb_uid') || this.app?.playerId || "";
+    }
+
+    normalizeDiceValues(values) {
+        if (!Array.isArray(values) || values.length < 6) return [];
+        const dice = values.slice(0, 6).map(value => parseInt(value, 10));
+        return dice.every(value => value >= 1 && value <= 6) ? dice : [];
+    }
+
+    calculateRewardFromDice(dice = []) {
+        const safeDice = this.normalizeDiceValues(dice);
+        if (safeDice.length < 6) return 0;
+        return (safeDice[0] + safeDice[1] + safeDice[2] + safeDice[3]) * safeDice[4] * safeDice[5];
+    }
+
+    isRewardClaimedForDay(uid, dayKey = this.getTodayKey()) {
+        if (!uid) return false;
+        const claimedKey = localStorage.getItem('yamb_daily_reward_claimed_' + uid);
+        return claimedKey === dayKey || this.isTodayKey(claimedKey);
+    }
+
+    async ensureSocketReady(timeoutMs = 6000) {
+        const socket = this.app?.socket;
+        if (!socket) return false;
+
+        if (!socket.connected) {
+            if (socket.disconnected) socket.connect();
+            const connected = await new Promise(resolve => {
+                let settled = false;
+                const finish = (ok) => {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timer);
+                    socket.off('connect', onConnect);
+                    resolve(ok);
+                };
+                const onConnect = () => finish(true);
+                const timer = setTimeout(() => finish(false), timeoutMs);
+                socket.once('connect', onConnect);
+            });
+            if (!connected) return false;
+        }
+
+        if (typeof this.app.authenticateSocketIdentity === 'function') {
+            const authResult = await this.app.authenticateSocketIdentity();
+            return !!(authResult && authResult.ok);
+        }
+
+        return true;
+    }
+
+    async requestDailyChallengeFromServer() {
+        const socket = this.app?.socket;
+        if (!socket) return { ok: false, reason: 'err_server_conn' };
+
+        const ready = await this.ensureSocketReady(7000);
+        if (!ready) return { ok: false, reason: 'auth_required' };
+
+        return new Promise(resolve => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'err_server_conn' });
+            }, 10000);
+
+            socket.emit('request_daily_challenge', {}, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            });
+        });
+    }
+
+    setChallengeState(challenge = {}) {
+        const dice = this.normalizeDiceValues(challenge.dice);
+        this.serverDiceValues = dice;
+        this.currentDayKey = challenge.dayKey || this.getTodayKey();
+        this.currentBaseReward = Math.max(0, parseInt(challenge.reward, 10) || this.calculateRewardFromDice(dice));
+    }
+
+    async open() {
         if (!this.app.requireLogin()) return;
-        if (this.isIntroPlaying || this.isActive) return;
+        if (this.isIntroPlaying || this.isActive || this.loadingChallenge) return;
 
-        const uid = localStorage.getItem('yamb_uid') || this.app.playerId;
-        const lastPlayed = localStorage.getItem('yamb_last_daily_' + uid);
-        const today = new Date().toDateString();
-        const alreadyPlayed = lastPlayed === today;
+        const uid = this.getCurrentUid();
+        const locallyClaimedToday = this.isRewardClaimedForDay(uid);
+        this.loadingChallenge = true;
 
-        if (!alreadyPlayed) {
-            this.markDailyAttempt(uid, today);
+        let challenge;
+        try {
+            challenge = await this.requestDailyChallengeFromServer();
+        } finally {
+            this.loadingChallenge = false;
+        }
+
+        if (!challenge || !challenge.ok) {
+            if (locallyClaimedToday) {
+                this.showIntroBackdrop();
+                this.playIntro(() => this.showAlreadyPlayedInfo(), { openBehindOverlayAt: null });
+                return;
+            }
+
+            const message = challenge?.reason === 'auth_required'
+                ? (t('auth_required') || t('economy_auth_required'))
+                : (t('err_server_conn') || t('dc_ads_unavailable'));
+            this.app.modal.alert(message, t('info_title'));
+            return;
+        }
+
+        this.setChallengeState(challenge);
+        const today = this.currentDayKey || this.getTodayKey();
+        const alreadyPlayed = !!challenge.alreadyClaimed || this.isRewardClaimedForDay(uid, today);
+
+        if (challenge.balance !== undefined) {
+            const serverBalance = Math.max(0, parseInt(challenge.balance, 10) || 0);
+            localStorage.setItem('yamb_dukati', serverBalance);
+            if (window.statsManager) {
+                window.statsManager.stats.balance = serverBalance;
+                window.statsManager.saveStats();
+            }
+            if (typeof updateMainMenuDashboard === 'function') updateMainMenuDashboard();
         }
 
         if (alreadyPlayed) {
+            localStorage.setItem('yamb_last_daily_' + uid, today);
+            localStorage.setItem('yamb_daily_reward_claimed_' + uid, today);
             this.showIntroBackdrop();
+        } else {
+            this.markDailyAttempt(uid, today);
         }
 
         this.playIntro(() => {
@@ -486,6 +663,15 @@ class DnevniIzazov {
         const overlay = document.getElementById('glass-daily-overlay');
         if (!overlay) return;
 
+        const resUI = document.getElementById('glass-daily-result');
+        if (resUI) resUI.remove();
+
+        const btn = document.getElementById('glass-btn-action');
+        if (btn) {
+            btn.style.display = 'block';
+            btn.disabled = false;
+        }
+
         overlay.classList.add('daily-glass-overlay--blank');
         overlay.classList.add('active');
     }
@@ -526,11 +712,8 @@ class DnevniIzazov {
     }
 
     markDailyAttempt(uid, today) {
-        // --- ANTI-CHEAT: Zapisujemo odmah na klijentu čim se izazov otvori ---
         localStorage.setItem('yamb_last_daily_' + uid, today);
-
         this.syncDailyProgress({ lastDaily: today });
-        // ----------------------------------------------------------------------
     }
 
     syncDailyProgress(extraStats = {}) {
@@ -594,6 +777,7 @@ class DnevniIzazov {
         this.claimInProgress = false;
         this.rewardClaimed = false;
         this.adInProgress = false;
+        this.currentBaseReward = this.currentBaseReward || this.calculateRewardFromDice(this.serverDiceValues);
         
         document.getElementById('glass-daily-sum').innerText = "0";
         
@@ -638,7 +822,10 @@ class DnevniIzazov {
         if (this.app.vibrate) this.app.vibrate(20);
 
         const dieEl = document.getElementById(`gd-${this.currentIndex}`);
-        let finalVal = parseInt(dieEl.dataset.val) || Math.floor(Math.random()*6)+1;
+        const serverVal = parseInt(this.serverDiceValues[this.currentIndex], 10);
+        let finalVal = (serverVal >= 1 && serverVal <= 6)
+            ? serverVal
+            : (parseInt(dieEl.dataset.val, 10) || Math.floor(Math.random() * 6) + 1);
         
         this.diceValues[this.currentIndex] = finalVal;
         dieEl.innerHTML = this.getDiceDotsHTML(finalVal);
@@ -682,6 +869,12 @@ class DnevniIzazov {
         }
 
         // Više nema potrebe za upisom datuma ovde, jer smo to uradili na samom početku (open metoda)
+        const expectedReward = this.currentBaseReward || this.calculateRewardFromDice(this.diceValues);
+        if (expectedReward > 0) {
+            this.calculatedReward = expectedReward;
+            const scoreEl = document.getElementById('glass-daily-sum');
+            if (scoreEl) scoreEl.innerText = expectedReward;
+        }
 
         if (this.app.soundMgr) this.app.soundMgr.win();
         if (this.app.effectMgr) this.app.effectMgr.trigger('gold_rain');
@@ -805,6 +998,7 @@ class DnevniIzazov {
 
     setLocalRewardState(uid, today, amount, balance) {
         localStorage.setItem('yamb_dukati', balance);
+        localStorage.setItem('yamb_last_daily_' + uid, today);
         localStorage.setItem('yamb_daily_reward_claimed_' + uid, today);
         localStorage.setItem('yamb_daily_reward_amount_' + uid, String(amount));
 
@@ -825,9 +1019,10 @@ class DnevniIzazov {
         this.rewardClaimed = true;
         this.setResultButtonsDisabled(true);
 
-        let finalAmount = doubled ? this.calculatedReward * 2 : this.calculatedReward;
-        const uid = localStorage.getItem('yamb_uid') || this.app.playerId;
-        const today = new Date().toDateString();
+        const baseAmount = Math.max(0, parseInt(this.calculatedReward, 10) || 0);
+        let finalAmount = doubled ? baseAmount * 2 : baseAmount;
+        const uid = this.getCurrentUid();
+        const today = this.currentDayKey || this.getTodayKey();
         
         const rewardResult = doubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
             ? await window.adMobGlobal.claimRewardWithSsvRetry(

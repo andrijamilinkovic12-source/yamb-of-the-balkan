@@ -276,6 +276,29 @@ class YambApp {
         }[char]));
     }
 
+    getDailyChallengeDayKey(date = new Date()) {
+        return window.YambDailyDate?.getDayKey
+            ? window.YambDailyDate.getDayKey(date)
+            : date.toISOString().slice(0, 10);
+    }
+
+    getLegacyDailyChallengeDayKey(date = new Date()) {
+        return window.YambDailyDate?.getLegacyDayKey
+            ? window.YambDailyDate.getLegacyDayKey(date)
+            : date.toDateString();
+    }
+
+    isDailyChallengeDay(value, date = new Date()) {
+        return window.YambDailyDate?.isToday
+            ? window.YambDailyDate.isToday(value, date)
+            : value === this.getDailyChallengeDayKey(date) || value === this.getLegacyDailyChallengeDayKey(date);
+    }
+
+    normalizeDailyChallengeDay(value, date = new Date()) {
+        if (!value) return "";
+        return this.isDailyChallengeDay(value, date) ? this.getDailyChallengeDayKey(date) : value;
+    }
+
     h2hMatchLabel(count) {
         const safeCount = Math.max(0, parseInt(count, 10) || 0);
         const lang = localStorage.getItem('yamb_lang') || 'sr';
@@ -1459,6 +1482,8 @@ class YambApp {
         const musicSetting = localStorage.getItem('yamb_music');
         const musicVolumeSetting = localStorage.getItem('yamb_music_volume');
         const languageSetting = localStorage.getItem('yamb_lang');
+        const lastDaily = this.normalizeDailyChallengeDay(localStorage.getItem('yamb_last_daily_' + uid) || "");
+        const dailyRewardClaimed = this.normalizeDailyChallengeDay(localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "");
 
         return {
             games: this.stats.games || 0,
@@ -1481,8 +1506,8 @@ class YambApp {
             activeSkin: localStorage.getItem('yamb_active_skin') || null,
             activeEffect: localStorage.getItem('yamb_active_effect') || null,
             activeTheme: localStorage.getItem('yamb_theme') || null,
-            lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
-            dailyRewardClaimed: localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "",
+            lastDaily,
+            dailyRewardClaimed,
             dailyRewardAmount: parseInt(localStorage.getItem('yamb_daily_reward_amount_' + uid)) || 0,
             soundEnabled: soundSetting === null ? null : this.soundEnabled,
             vibrationEnabled: vibrationSetting === null ? null : this.vibrationEnabled,
@@ -1840,17 +1865,37 @@ class YambApp {
 
         this.updateQuickMenuIcons();
 
-        const today = new Date().toDateString();
+        const today = this.getDailyChallengeDayKey();
         const localDailyKey = 'yamb_last_daily_' + uid;
-        const localDaily = localStorage.getItem(localDailyKey);
+        const localDailyRaw = localStorage.getItem(localDailyKey);
+        const localDaily = this.normalizeDailyChallengeDay(localDailyRaw);
+        const localDailyIsToday = this.isDailyChallengeDay(localDailyRaw);
+        if (localDailyRaw && localDailyRaw !== localDaily && localDailyIsToday) {
+            localStorage.setItem(localDailyKey, localDaily);
+        }
         if (data.lastDaily) {
-            if (localDaily !== today) localStorage.setItem(localDailyKey, data.lastDaily);
-        } else if (data.lastDaily !== undefined && localDaily !== today) {
+            const incomingLastDaily = this.normalizeDailyChallengeDay(data.lastDaily);
+            if (!localDailyIsToday || incomingLastDaily === today) {
+                localStorage.setItem(localDailyKey, incomingLastDaily);
+            }
+        } else if (data.lastDaily !== undefined && !localDailyIsToday) {
             localStorage.removeItem(localDailyKey);
         }
 
+        const localClaimKey = 'yamb_daily_reward_claimed_' + uid;
+        const localClaimRaw = localStorage.getItem(localClaimKey);
+        const localClaim = this.normalizeDailyChallengeDay(localClaimRaw);
+        const localClaimIsToday = this.isDailyChallengeDay(localClaimRaw);
+        if (localClaimRaw && localClaimRaw !== localClaim && localClaimIsToday) {
+            localStorage.setItem(localClaimKey, localClaim);
+        }
         if (data.lastDailyRewardClaimed) {
-            localStorage.setItem('yamb_daily_reward_claimed_' + uid, data.lastDailyRewardClaimed);
+            const incomingClaim = this.normalizeDailyChallengeDay(data.lastDailyRewardClaimed);
+            if (!localClaimIsToday || incomingClaim === today) {
+                localStorage.setItem(localClaimKey, incomingClaim);
+            }
+        } else if (data.lastDailyRewardClaimed !== undefined && !localClaimIsToday) {
+            localStorage.removeItem(localClaimKey);
         }
 
         this.mergeCloudH2HStats(data.h2hStats);
@@ -2680,7 +2725,7 @@ class YambApp {
                         this.modal.alert(finalMsg, gt('err_title') || gt('modal_title_info') || "INFO").then(() => {
                             if (finalMsg.includes('Već ste preuzeli') || finalMsg.includes('dnevnu nagradu')) {
                                 const uid = localStorage.getItem('yamb_uid');
-                                localStorage.setItem('yamb_last_daily_' + uid, new Date().toDateString());
+                                localStorage.setItem('yamb_last_daily_' + uid, this.getDailyChallengeDayKey());
                                 this.navigateTo('main-menu');
                             }
                         });
@@ -6702,7 +6747,7 @@ class YambApp {
             
             if (this.lastGameType === 'daily') {
                 const uid = localStorage.getItem('yamb_uid') || this.playerId;
-                const today = new Date().toDateString();
+                const today = this.getDailyChallengeDayKey();
                 let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
                 currentDukati += finalAmount;
                 localStorage.setItem('yamb_dukati', currentDukati);

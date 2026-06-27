@@ -12,6 +12,26 @@ const _t = (key, fallback) => {
 
 const authDelay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+function getYambDailyDayKey(date = new Date()) {
+    return window.YambDailyDate?.getDayKey
+        ? window.YambDailyDate.getDayKey(date)
+        : date.toISOString().slice(0, 10);
+}
+
+function getYambLegacyDailyDayKey(date = new Date()) {
+    return window.YambDailyDate?.getLegacyDayKey
+        ? window.YambDailyDate.getLegacyDayKey(date)
+        : date.toDateString();
+}
+
+function normalizeYambDailyDayValue(value, date = new Date()) {
+    if (!value) return "";
+    if (window.YambDailyDate?.normalize) return window.YambDailyDate.normalize(value, date);
+    return (value === getYambDailyDayKey(date) || value === getYambLegacyDailyDayKey(date))
+        ? getYambDailyDayKey(date)
+        : value;
+}
+
 // --- POMOĆNA FUNKCIJA ZA CUSTOM ALERTE ---
 async function prikaziObavestenje(tekst) {
     if (window.modalManager) {
@@ -346,6 +366,8 @@ function getFullLocalStats() {
     const musicSetting = localStorage.getItem('yamb_music');
     const musicVolumeSetting = localStorage.getItem('yamb_music_volume');
     const languageSetting = localStorage.getItem('yamb_lang');
+    const lastDaily = normalizeYambDailyDayValue(localStorage.getItem('yamb_last_daily_' + uid) || "");
+    const dailyRewardClaimed = normalizeYambDailyDayValue(localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "");
 
     return {
         games: (window.app && window.app.stats) ? (window.app.stats.games || 0) : 0,
@@ -369,8 +391,8 @@ function getFullLocalStats() {
         activeSkin: localStorage.getItem('yamb_active_skin') || null,
         activeEffect: localStorage.getItem('yamb_active_effect') || null,
         activeTheme: localStorage.getItem('yamb_theme') || null,
-        lastDaily: localStorage.getItem('yamb_last_daily_' + uid) || "",
-        dailyRewardClaimed: localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "",
+        lastDaily,
+        dailyRewardClaimed,
         dailyRewardAmount: parseInt(localStorage.getItem('yamb_daily_reward_amount_' + uid)) || 0,
         soundEnabled: soundSetting === null ? null : soundSetting !== 'false',
         vibrationEnabled: vibrationSetting === null ? null : vibrationSetting !== 'false',
