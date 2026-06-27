@@ -133,6 +133,7 @@ class YambApp {
         this.localRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
         this.isAnimating = false;
+        this.onlineRollPending = false;
         this.currentHostingRoomId = null;
         this.waitingHofPeriod = 'weekly';
         this.waitingHofInterval = null;
@@ -1892,6 +1893,20 @@ class YambApp {
         });
     }
 
+    async ensureSocketReadyForOnline(timeoutMs = 8000) {
+        this.initSocketConnection();
+
+        const ready = await this.waitForSocketConnection(timeoutMs);
+        if (!ready.ok) return ready;
+
+        const profileResult = await this.emitPlayerData(false, { timeoutMs: Math.min(timeoutMs, 5000) });
+        if (!profileResult || !profileResult.ok) {
+            return profileResult || { ok: false, reason: 'auth_failed' };
+        }
+
+        return { ok: true, uid: profileResult.uid || this.playerId };
+    }
+
     emitSocketAck(eventName, payload = {}, timeoutMs = 8000) {
         return new Promise(resolve => {
             if (!this.socket || !this.socket.connected) {
@@ -2533,6 +2548,7 @@ class YambApp {
                 this.socket.on('disconnect', () => {
                     this.socketVerifiedUid = null;
                     this.authRetryInProgress = false;
+                    this.onlineRollPending = false;
                 });
 
                 this.socket.on('auth_required', (result = {}) => {
@@ -3316,9 +3332,8 @@ class YambApp {
 
     async challengePlayer(targetId, targetName, targetUid = null) {
         if (!this.requireLogin()) return;
-        this.initSocketConnection();
 
-        const ready = await this.waitForSocketConnection(8000);
+        const ready = await this.ensureSocketReadyForOnline(8000);
         if (!ready.ok) {
             const reason = ready.reason === 'err_friend_timeout' ? 'err_duel_timeout' : ready.reason;
             this.showServerNotice(reason || 'sys_no_conn', 'err_title');
@@ -3651,6 +3666,7 @@ class YambApp {
         if (wasLocalLiveGame) this.pauseLocalGameClock();
         localStorage.removeItem('yamb_local_recovery_pending');
         this.setInviteBusyState(false);
+        this.onlineRollPending = false;
 
         if (wasSpectator) {
             if (this.spectateSyncRetryTimer) {
@@ -3952,17 +3968,18 @@ class YambApp {
         this.stopWaitingHofRotation();
 
         this.initSocketConnection();
-        this.setupSocketListeners(nickname); 
+        this.setupSocketListeners(nickname);
 
         const photoUrl = (authImg && authImg.src && authImg.src.includes('http')) ? authImg.src : '';
 
-        if (this.socket && this.socket.connected) {
-            this.socket.emit('join_private_game', { nickname, roomId, photoUrl });
-        } else {
-            this.socket.once('connect', () => {
-                this.socket.emit('join_private_game', { nickname, roomId, photoUrl });
-            });
+        const ready = await this.ensureSocketReadyForOnline(8000);
+        if (!ready.ok) {
+            this.showServerNotice(ready.reason || 'sys_no_conn', 'err_title');
+            this.cancelOnline();
+            return;
         }
+
+        this.socket.emit('join_private_game', { nickname, roomId, photoUrl });
     }
     
     async setupOnline(mode = 'random') {
@@ -4024,12 +4041,17 @@ class YambApp {
         }
         
         this.initSocketConnection();
-        this.setupSocketListeners(nickname); 
-        
-        if(this.socket) {
-            const photoUrl = (authImg && authImg.src && authImg.src.includes('http')) ? authImg.src : '';
-            this.socket.emit('find_game', { nickname: nickname, photoUrl: photoUrl }); 
+        this.setupSocketListeners(nickname);
+
+        const ready = await this.ensureSocketReadyForOnline(8000);
+        if (!ready.ok) {
+            this.showServerNotice(ready.reason || 'sys_no_conn', 'err_title');
+            this.cancelOnline();
+            return;
         }
+
+        const photoUrl = (authImg && authImg.src && authImg.src.includes('http')) ? authImg.src : '';
+        this.socket.emit('find_game', { nickname: nickname, photoUrl: photoUrl });
     }
 
     inferOnlineDuelType(roomId = this.roomId, payload = {}) {
@@ -4373,6 +4395,8 @@ class YambApp {
             if (!this.isCurrentRoomPayload(data)) return;
             if (this.isSpectator && !this.gameActive) return;
 
+            this.onlineRollPending = false;
+
             if ((this.gameActive || this.isSpectator) && this.onlineMode) {
                 console.log("📥 Stiglo osveženo stanje. Primenjujem...");
                 const previousTurnIdx = this.currentPlayerIdx;
@@ -4660,7 +4684,7 @@ class YambApp {
             } catch(e) { console.error("CRITICAL ERROR in remote_move:", e); }
         }); 
 
-        this.socket.on('remote_roll', (data) => { 
+        this.socket.on('remote_roll', async (data) => {
             if (!this.isCurrentRoomPayload(data)) return;
             if (this.isSpectator && !this.gameActive) return;
 
@@ -4673,9 +4697,40 @@ class YambApp {
             }
 
             if (data.held && Array.isArray(data.held)) { this.zadrzane = data.held; }
-            this.brojBacanja = data.bacanje; 
+            this.brojBacanja = data.bacanje;
             this.updateStatusLabel();
-            this.visualRoll(data.values); 
+            this.onlineRollPending = false;
+            await this.visualRoll(data.values);
+            this.updateTableVisuals();
+
+            if (!this.isSpectator) {
+                const btnBacaj = document.getElementById('btn-bacaj');
+                const btnNajava = document.getElementById('btn-najava');
+                const isMyTurn = this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex;
+
+                if (btnBacaj) {
+                    if (isMyTurn && this.brojBacanja < 3) {
+                        btnBacaj.disabled = false;
+                        btnBacaj.innerText = gt('game_roll') || "BACAJ";
+                    } else if (isMyTurn) {
+                        btnBacaj.disabled = true;
+                        btnBacaj.innerText = gt('game_write') || "UPIŠI";
+                    } else {
+                        btnBacaj.disabled = true;
+                        btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                    }
+                }
+
+                if (btnNajava) {
+                    if (isMyTurn && this.brojBacanja === 1 && !this.najavljenoPolje && !this.najavaAktivna) {
+                        btnNajava.disabled = false;
+                        btnNajava.classList.add('btn-highlight');
+                    } else {
+                        btnNajava.disabled = true;
+                        btnNajava.classList.remove('btn-highlight');
+                    }
+                }
+            }
         }); 
 
         this.socket.on('remote_hold', (data) => { 
@@ -5124,6 +5179,7 @@ class YambApp {
     startGame(options = {}) {
         this.clearOnlineGameOverDelay();
         this.onlineGameOverFinishInProgress = false;
+        this.onlineRollPending = false;
 
         if (this.socket && this.socket.connected && !this.isSpectator && this.playerId) {
             this.socket.emit('game_session_start', {
@@ -5340,10 +5396,11 @@ class YambApp {
         this.updateHeaderAvatar();
     }
     
-    toggleHold(i) { 
-        if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return; 
+    toggleHold(i) {
+        if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return;
         if (this.isSpectator) return;
-        if (this.brojBacanja === 0) return; 
+        if (this.brojBacanja === 0) return;
+        if (this.onlineRollPending) return;
         if (this.isAnimating) return;
 
         this.zadrzane[i] = !this.zadrzane[i]; 
@@ -5402,13 +5459,41 @@ class YambApp {
         const btnBacaj = document.getElementById('btn-bacaj'); 
         const isOnlineOpponent = (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex); 
 
-        if (this.brojBacanja >= 3 || isOnlineOpponent) return; 
+        if (this.brojBacanja >= 3 || isOnlineOpponent) return;
         if (this.najavaAktivna) { await this.modal.alert(gt('alert_announce_select'), gt('warning_title') || "UPOZORENJE"); return; }
-        if (this.isAnimating) return; 
+        if (this.onlineRollPending) return;
+        if (this.isAnimating) return;
 
-        if(btnBacaj) btnBacaj.disabled = true; 
+        if (this.onlineMode) {
+            if (!this.socket || !this.socket.connected || !this.roomId) {
+                this.showServerNotice('sys_no_conn', 'err_title');
+                return;
+            }
+            if (btnBacaj) {
+                const waitText = gt('game_wait');
+                btnBacaj.disabled = true;
+                btnBacaj.innerText = waitText === 'game_wait' ? "SAČEKAJ..." : (waitText || "SAČEKAJ...");
+            }
+            try {
+                this.onlineRollPending = true;
+                this.socket.emit('dice_roll', {
+                    roomId: this.roomId,
+                    held: this.zadrzane
+                });
+            } catch (e) {
+                this.onlineRollPending = false;
+                console.error("Greška pri slanju online bacanja:", e);
+                if (btnBacaj) {
+                    btnBacaj.disabled = false;
+                    btnBacaj.innerText = gt('game_roll') || "BACAJ";
+                }
+            }
+            return;
+        }
+
+        if(btnBacaj) btnBacaj.disabled = true;
         try {
-            this.soundMgr.roll(); 
+            this.soundMgr.roll();
             
             this.vibrate(30);
 
@@ -5417,10 +5502,10 @@ class YambApp {
             let newValues = [...this.kockiceVals]; 
             for(let i=0; i<6; i++) { if (!this.zadrzane[i]) newValues[i] = Math.floor(Math.random()*6)+1; } 
             
-            if (this.onlineMode || this.roomId) { 
-                this.socket.emit('dice_roll', { 
-                    roomId: this.roomId, 
-                    values: newValues, 
+            if (this.roomId) {
+                this.socket.emit('dice_roll', {
+                    roomId: this.roomId,
+                    values: newValues,
                     bacanje: this.brojBacanja + 1,
                     held: this.zadrzane 
                 }); 
@@ -5542,9 +5627,10 @@ class YambApp {
         return true; 
     }
     
-    async writeScore(row, col, pIdx) { 
+    async writeScore(row, col, pIdx) {
         if (this.isSpectator) return false;
-        if (pIdx !== this.currentPlayerIdx) return false; 
+        if (this.onlineRollPending) return false;
+        if (pIdx !== this.currentPlayerIdx) return false;
         
         if (this.brojBacanja === 0) { 
             this.soundMgr.error(); await this.modal.alert(gt('alert_roll_first'), gt('warning_title') || "UPOZORENJE");

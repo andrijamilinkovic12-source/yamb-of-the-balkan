@@ -30,10 +30,10 @@ const RulesData = {
                 <p>Računa se po formuli: <em>(Max - Min) * Broj jedinica</em> (iz prve sekcije). Ako je rezultat ovog obračuna ≥ 60, dobijate <strong>bonus od +40 poena</strong>.</p>
                 <h4>3. SEKCIJA (KOMBINACIJE)</h4>
                 <ul>
-                    <li><strong>TRILING (3 iste):</strong> Donosi zbir kockica + 20 poena bonusa.</li>
+                    <li><strong>TRILING (3 iste):</strong> Donosi zbir 3 iste kockice + 20 poena bonusa.</li>
                     <li><strong>FUL (3 iste + 2 iste):</strong> Donosi zbir kockica + 30 poena bonusa. <br><em>*Napomena: 5 istih kockica (Yamb) se takođe može upisati kao Ful, jer igra to automatski prepoznaje i tretira kao 3 iste i 2 iste kockice.</em></li>
-                    <li><strong>POKER (4 iste):</strong> Donosi zbir kockica + 40 poena bonusa.</li>
-                    <li><strong>YAMB (5 istih):</strong> Donosi zbir kockica + 50 poena bonusa.</li>
+                    <li><strong>POKER (4 iste):</strong> Donosi zbir 4 iste kockice + 40 poena bonusa.</li>
+                    <li><strong>YAMB (5 istih):</strong> Donosi zbir 5 istih kockica + 50 poena bonusa.</li>
                     <li><strong>KENTA (5 u nizu):</strong> Predstavlja niz od 5 uzastopnih brojeva (1, 2, 3, 4, 5 ili 2, 3, 4, 5, 6). Boduje se zavisno od toga iz kog bacanja je dobijena: iz 1. bacanja vredi 66, iz 2. bacanja 56, a iz 3. bacanja 46 poena.</li>
                 </ul>
             `
@@ -179,10 +179,10 @@ const RulesData = {
                 <p>Formula: <em>(Max - Min) * Number of 1s</em>. If the result is ≥ 60, you get a <strong>+40 point bonus</strong>.</p>
                 <h4>SECTION 3 (COMBINATIONS)</h4>
                 <ul>
-                    <li><strong>THREE OF A KIND:</strong> Sum of dice + 20 points.</li>
+                    <li><strong>THREE OF A KIND:</strong> Sum of the 3 matching dice + 20 points.</li>
                     <li><strong>FULL HOUSE:</strong> 3 of a kind + 2 of a kind. Sum of dice + 30 points. <em>*Yamb can also be entered as a Full House.</em></li>
-                    <li><strong>POKER (4 of a kind):</strong> Sum of dice + 40 points.</li>
-                    <li><strong>YAMB (5 of a kind):</strong> Sum of dice + 50 points.</li>
+                    <li><strong>POKER (4 of a kind):</strong> Sum of the 4 matching dice + 40 points.</li>
+                    <li><strong>YAMB (5 of a kind):</strong> Sum of the 5 matching dice + 50 points.</li>
                     <li><strong>STRAIGHT (5 in a row):</strong> Sequence of 5 numbers. Scores 66 (1st roll), 56 (2nd roll), 46 (3rd roll).</li>
                 </ul>
             `

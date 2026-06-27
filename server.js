@@ -560,6 +560,7 @@ const onlinePlayers = {};
 const registeredSockets = {};
 const pendingChallenges = {};
 const pendingRoomInvites = {};
+const pendingTournamentDuelInvites = {};
 
 const GLOBAL_CHAT_MIN_INTERVAL_MS = 1200;
 const GLOBAL_CHAT_SPAM_STRIKE_LIMIT = 4;
@@ -1607,6 +1608,159 @@ function createEmptyScores() {
         scores.push(sheet);
     }
     return scores;
+}
+
+function sumDice(values = []) {
+    return values.reduce((total, value) => total + (Number(value) || 0), 0);
+}
+
+function normalizeDiceValues(values, allowZero = false) {
+    if (!Array.isArray(values) || values.length !== 6) return null;
+    const min = allowZero ? 0 : 1;
+    const normalized = values.map(value => Number(value));
+    if (normalized.some(value => !Number.isInteger(value) || value < min || value > 6)) return null;
+    return normalized;
+}
+
+function normalizeHeldValues(values) {
+    if (!Array.isArray(values) || values.length !== 6) return null;
+    return values.map(Boolean);
+}
+
+function getBestDiceForRow(row, diceValues) {
+    const dice = Array.isArray(diceValues) ? [...diceValues] : [];
+    if (row === "Min") return dice.sort((a, b) => a - b).slice(0, 5);
+    if (row === "Max") return dice.sort((a, b) => b - a).slice(0, 5);
+    if (row === "Kenta") {
+        const unique = [...new Set(dice)].sort((a, b) => a - b);
+        if ([2, 3, 4, 5, 6].every(value => unique.includes(value))) return [2, 3, 4, 5, 6];
+        if ([1, 2, 3, 4, 5].every(value => unique.includes(value))) return [1, 2, 3, 4, 5];
+        return dice.sort((a, b) => b - a).slice(0, 5);
+    }
+    if (row === "Ful") {
+        const counts = {};
+        dice.forEach(value => { counts[value] = (counts[value] || 0) + 1; });
+        const keys = Object.keys(counts).map(Number);
+        if (keys.some(value => counts[value] >= 5)) return Array(5).fill(keys.find(value => counts[value] >= 5));
+        const threes = keys.filter(value => counts[value] >= 3);
+        const pairs = keys.filter(value => counts[value] >= 2);
+        const candidates = [];
+        threes.forEach(three => {
+            pairs.forEach(pair => {
+                if (three !== pair) candidates.push([...Array(3).fill(three), ...Array(2).fill(pair)]);
+            });
+        });
+        if (candidates.length > 0) return candidates.sort((a, b) => sumDice(b) - sumDice(a))[0];
+    }
+    if (["1", "2", "3", "4", "5", "6"].includes(row)) {
+        const target = parseInt(row, 10);
+        const match = dice.filter(value => value === target);
+        const rest = dice.filter(value => value !== target).sort((a, b) => b - a);
+        return [...match, ...rest].slice(0, 5);
+    }
+    const counts = {};
+    dice.forEach(value => { counts[value] = (counts[value] || 0) + 1; });
+    dice.sort((a, b) => {
+        if (counts[b] !== counts[a]) return counts[b] - counts[a];
+        return b - a;
+    });
+    return dice.slice(0, 5);
+}
+
+function calculateMovePoints(row, diceValues, rollCount = 3) {
+    const values = Array.isArray(diceValues) ? diceValues : [];
+    const total = sumDice(values);
+    if (["1", "2", "3", "4", "5", "6"].includes(row)) {
+        const target = parseInt(row, 10);
+        return values.filter(value => value === target).length * target;
+    }
+    if (row === "Max" || row === "Min") return total;
+    if (row === "Triling") {
+        const counts = {};
+        values.forEach(value => { counts[value] = (counts[value] || 0) + 1; });
+        if (Object.values(counts).some(count => count >= 3)) {
+            return (3 * Number(Object.keys(counts).find(key => counts[key] >= 3))) + 20;
+        }
+        return 0;
+    }
+    if (row === "Kenta") {
+        const unique = [...new Set(values)].sort((a, b) => a - b);
+        const kentaOne = [1, 2, 3, 4, 5].every(value => unique.includes(value));
+        const kentaTwo = [2, 3, 4, 5, 6].every(value => unique.includes(value));
+        if (kentaOne || kentaTwo) {
+            if (rollCount === 1) return 66;
+            if (rollCount === 2) return 56;
+            return 46;
+        }
+        return 0;
+    }
+    if (row === "Ful") {
+        const counts = {};
+        values.forEach(value => { counts[value] = (counts[value] || 0) + 1; });
+        if (Object.values(counts).includes(5) || (Object.values(counts).includes(3) && Object.values(counts).includes(2))) {
+            return total + 30;
+        }
+        return 0;
+    }
+    if (row === "Poker") {
+        const counts = {};
+        values.forEach(value => { counts[value] = (counts[value] || 0) + 1; });
+        if (Object.values(counts).some(count => count >= 4)) {
+            return (Number(Object.keys(counts).find(key => counts[key] >= 4)) * 4) + 40;
+        }
+        return 0;
+    }
+    if (row === "Yamb") {
+        const counts = {};
+        values.forEach(value => { counts[value] = (counts[value] || 0) + 1; });
+        if (Object.values(counts).some(count => count >= 5)) {
+            return (Number(Object.keys(counts).find(key => counts[key] >= 5)) * 5) + 50;
+        }
+        return 0;
+    }
+    return 0;
+}
+
+function calculateServerMovePoints(row, col, diceValues, rollCount) {
+    if (col === "Ručno" && rollCount > 1) return 0;
+    return calculateMovePoints(row, getBestDiceForRow(row, diceValues), rollCount);
+}
+
+function isValidColumnOrderForMove(row, col, sheet) {
+    if (!sheet || !sheet[col]) return false;
+    if (col === "Nadole") {
+        const idx = REDOVI_IGRA.indexOf(row);
+        if (idx > 0 && sheet["Nadole"][REDOVI_IGRA[idx - 1]] === null) return false;
+    }
+    if (col === "Nagore") {
+        const idx = REDOVI_IGRA.indexOf(row);
+        if (idx < REDOVI_IGRA.length - 1 && sheet["Nagore"][REDOVI_IGRA[idx + 1]] === null) return false;
+    }
+    if (col === "Sredina") {
+        const up = ["Max", "6", "5", "4", "3", "2", "1"];
+        const down = ["Min", "Triling", "Kenta", "Ful", "Poker", "Yamb"];
+        if (up.includes(row)) {
+            const idx = up.indexOf(row);
+            if (idx === 0) return true;
+            return sheet[col][up[idx - 1]] !== null;
+        }
+        if (down.includes(row)) {
+            const idx = down.indexOf(row);
+            if (idx === 0) return true;
+            return sheet[col][down[idx - 1]] !== null;
+        }
+        return false;
+    }
+    return true;
+}
+
+function rollServerDice(previousValues, heldValues) {
+    const previous = normalizeDiceValues(previousValues, true) || [0, 0, 0, 0, 0, 0];
+    const held = normalizeHeldValues(heldValues) || [false, false, false, false, false, false];
+    return previous.map((value, index) => {
+        if (held[index] && value >= 1 && value <= 6) return value;
+        return crypto.randomInt(1, 7);
+    });
 }
 
 function getCompletedDuelCell(sheet, col, row) {
@@ -3258,6 +3412,57 @@ function expirePendingRoomInvite(key) {
         roomId: invite.roomId,
         targetName: invite.targetName || 'Igrač'
     });
+}
+
+function clearPendingTournamentDuelInvite(key) {
+    const invite = key ? pendingTournamentDuelInvites[key] : null;
+    if (!invite) return null;
+    if (invite.timeoutId) clearTimeout(invite.timeoutId);
+    delete pendingTournamentDuelInvites[key];
+    return invite;
+}
+
+function findPendingTournamentDuelInvite(starterSocketId, targetSocketId, round, index) {
+    for (const key of Object.keys(pendingTournamentDuelInvites)) {
+        const invite = pendingTournamentDuelInvites[key];
+        if (!invite) continue;
+        if (invite.starterSocketId === starterSocketId &&
+            invite.targetSocketId === targetSocketId &&
+            invite.round === round &&
+            invite.index === index) {
+            return { key, invite };
+        }
+    }
+    return null;
+}
+
+function expirePendingTournamentDuelInvite(key) {
+    const invite = clearPendingTournamentDuelInvite(key);
+    if (!invite) return;
+
+    io.to(invite.starterSocketId).emit('tourney_duel_expired', {
+        matchRoomId: invite.matchRoomId,
+        opponentName: invite.targetName || 'Igrač'
+    });
+    io.to(invite.targetSocketId).emit('tourney_duel_expired', {
+        matchRoomId: invite.matchRoomId,
+        opponentName: invite.starterName || 'Igrač',
+        silent: true
+    });
+}
+
+function clearPendingTournamentDuelInvitesForSocket(socketId) {
+    for (const key of Object.keys(pendingTournamentDuelInvites)) {
+        const invite = pendingTournamentDuelInvites[key];
+        if (!invite || (invite.starterSocketId !== socketId && invite.targetSocketId !== socketId)) continue;
+        clearPendingTournamentDuelInvite(key);
+
+        const otherSocketId = invite.starterSocketId === socketId ? invite.targetSocketId : invite.starterSocketId;
+        io.to(otherSocketId).emit('tourney_duel_expired', {
+            matchRoomId: invite.matchRoomId,
+            opponentName: invite.starterSocketId === socketId ? invite.starterName : invite.targetName
+        });
+    }
 }
 
 function expirePendingChallenge(key, reason = 'timeout') {
@@ -6176,6 +6381,7 @@ io.on('connection', (socket) => {
         socket.clientBusyForInvites = false;
         socket.clientBusyReason = '';
         clearPendingRoomInvitesForSocket(socket.id);
+        clearPendingTournamentDuelInvitesForSocket(socket.id);
         const activeRoomId = playerRooms[socket.id];
 
         if (socket.isSpectator && socket.spectatingRoom) {
@@ -8014,15 +8220,26 @@ io.on('connection', (socket) => {
         }
     });
 
-    const relayEvent = (eventName, data) => {
+    const relayEvent = (eventName, data = {}) => {
         const roomId = playerRooms[socket.id];
         if (roomId) {
             const state = roomState[roomId];
-            
-            if (state && ['remote_move', 'remote_roll', 'remote_hold', 'remote_announce'].includes(eventName)) {
+            const isGameplayEvent = ['remote_move', 'remote_roll', 'remote_hold', 'remote_announce'].includes(eventName);
+            let relayData = { ...(data || {}), roomId };
+            let emitToWholeRoom = false;
+            let syncSenderAfterRelay = false;
+            let playerIndex = -1;
+
+            if (!state && isGameplayEvent && !isLocalRoomId(roomId)) {
+                console.warn(`🚨 BLOKIRAN GAMEPLAY DOGAĐAJ BEZ ROOM STATE: event=${eventName}, socket=${socket.id}, room=${roomId}`);
+                socket.emit('error_msg', 'err_invalid_room');
+                return;
+            }
+
+            if (state && isGameplayEvent) {
                 if (state.gameFinished) return;
 
-                const playerIndex = state.players.indexOf(socket.id);
+                playerIndex = state.players.indexOf(socket.id);
 
                 if (playerIndex === -1 || state.turnIndex !== playerIndex) {
                     console.warn(`🚨 BLOKIRAN LAG/POTEZ (${eventName}) - Igrač: ${socket.id}, Na potezu je: ${state.turnIndex}`);
@@ -8070,39 +8287,136 @@ io.on('connection', (socket) => {
                     }
 
                     if (!state.allScores) state.allScores = createEmptyScores();
-                    if (state.allScores[playerIndex] && state.allScores[playerIndex][moveCol]) {
-                        state.allScores[playerIndex][moveCol][moveRow] = Math.floor(movePoints);
+                    const playerSheet = state.allScores[playerIndex];
+                    const diceValues = normalizeDiceValues(state.kockiceVals);
+                    if (!playerSheet || !playerSheet[moveCol] || !diceValues || state.brojBacanja <= 0) {
+                        console.warn(`🚨 BLOKIRAN POTEZ BEZ VAŽEĆEG BACANJA: socket=${socket.id}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
                     }
+
+                    if (playerSheet[moveCol][moveRow] !== null) {
+                        console.warn(`🚨 BLOKIRAN POTEZ U POPUNJENO POLJE: socket=${socket.id}, col=${moveCol}, row=${moveRow}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
+                    }
+
+                    if (state.najavaAktivna) {
+                        console.warn(`🚨 BLOKIRAN POTEZ DOK JE NAJAVA AKTIVNA: socket=${socket.id}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
+                    }
+
+                    if (state.najavljenoPolje) {
+                        if (moveCol !== "Najava" || moveRow !== state.najavljenoPolje.row) {
+                            console.warn(`🚨 BLOKIRAN POTEZ U POGREŠNO NAJAVLJENO POLJE: socket=${socket.id}, room=${roomId}`);
+                            emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                            return;
+                        }
+                    } else if (moveCol === "Najava" && state.brojBacanja > 1) {
+                        console.warn(`🚨 BLOKIRAN POTEZ U NAJAVU BEZ NAJAVE: socket=${socket.id}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
+                    }
+
+                    if (!isValidColumnOrderForMove(moveRow, moveCol, playerSheet)) {
+                        console.warn(`🚨 BLOKIRAN POTEZ ZBOG REDOSLEDA KOLONE: socket=${socket.id}, col=${moveCol}, row=${moveRow}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
+                    }
+
+                    const serverPoints = calculateServerMovePoints(moveRow, moveCol, diceValues, state.brojBacanja);
+                    if (Math.floor(movePoints) !== serverPoints) {
+                        console.warn(`🚨 KORIGOVAN POTEZ: socket=${socket.id}, client=${movePoints}, server=${serverPoints}, room=${roomId}`);
+                        syncSenderAfterRelay = true;
+                    }
+
+                    playerSheet[moveCol][moveRow] = serverPoints;
                     state.brojBacanja = 0;
                     state.zadrzane = [false,false,false,false,false,false];
                     state.najavaAktivna = false;
                     state.najavljenoPolje = null;
+                    relayData = { roomId, row: moveRow, col: moveCol, points: serverPoints, pIdx: playerIndex };
                 }
                 else if (eventName === 'remote_roll') {
-                    state.kockiceVals = data.values;
-                    state.brojBacanja = data.bacanje;
-                    if (data.held) state.zadrzane = data.held;
+                    if (state.najavaAktivna || state.brojBacanja >= 3) {
+                        console.warn(`🚨 BLOKIRANO BACANJE: socket=${socket.id}, bacanje=${state.brojBacanja}, najava=${state.najavaAktivna}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
+                    }
+
+                    const held = normalizeHeldValues(state.zadrzane) || [false,false,false,false,false,false];
+                    const nextValues = rollServerDice(state.kockiceVals, held);
+                    const nextRollCount = state.brojBacanja + 1;
+                    state.kockiceVals = nextValues;
+                    state.brojBacanja = nextRollCount;
+                    state.zadrzane = held;
+                    relayData = {
+                        roomId,
+                        values: nextValues,
+                        bacanje: nextRollCount,
+                        held,
+                        pIdx: playerIndex
+                    };
+                    emitToWholeRoom = true;
                 }
                 else if (eventName === 'remote_hold') {
+                    const holdIndex = toSafeInt(data?.index, -1);
+                    if (holdIndex < 0 || holdIndex >= 6 || state.brojBacanja <= 0 || state.brojBacanja >= 3) {
+                        console.warn(`🚨 BLOKIRANO DRŽANJE KOCKICE: socket=${socket.id}, index=${data?.index}, bacanje=${state.brojBacanja}, room=${roomId}`);
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
+                    }
+
                     if (!state.zadrzane) state.zadrzane = [false,false,false,false,false,false];
-                    state.zadrzane[data.index] = data.status;
+                    state.zadrzane[holdIndex] = data?.status === true;
+                    relayData = { roomId, index: holdIndex, status: state.zadrzane[holdIndex], pIdx: playerIndex };
                 }
                 else if (eventName === 'remote_announce') {
-                    if (data.type === 'start') state.najavaAktivna = true;
-                    else if (data.type === 'cancel') state.najavaAktivna = false;
-                    else if (data.type === 'selected') {
+                    const announceType = data?.type || 'start';
+                    if (announceType === 'start') {
+                        if (state.brojBacanja !== 1 || state.najavljenoPolje) {
+                            console.warn(`🚨 BLOKIRAN START NAJAVE: socket=${socket.id}, bacanje=${state.brojBacanja}, room=${roomId}`);
+                            emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                            return;
+                        }
+                        state.najavaAktivna = true;
+                        state.najavljenoPolje = null;
+                        relayData = { roomId, type: 'start', pIdx: playerIndex };
+                    }
+                    else if (announceType === 'cancel') {
                         state.najavaAktivna = false;
-                        state.najavljenoPolje = { row: data.row, col: 'Najava' };
+                        state.najavljenoPolje = null;
+                        relayData = { roomId, type: 'cancel', pIdx: playerIndex };
+                    }
+                    else if (announceType === 'selected') {
+                        const announceRow = typeof data?.row === 'string' ? data.row : '';
+                        if (!state.najavaAktivna || !REDOVI_IGRA.includes(announceRow)) {
+                            console.warn(`🚨 BLOKIRAN IZBOR NAJAVE: socket=${socket.id}, row=${announceRow}, room=${roomId}`);
+                            emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                            return;
+                        }
+                        state.najavaAktivna = false;
+                        state.najavljenoPolje = { row: announceRow, col: 'Najava' };
+                        relayData = { roomId, type: 'selected', row: announceRow, pIdx: playerIndex };
+                    } else {
+                        emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                        return;
                     }
                 }
             }
 
-            socket.to(roomId).emit(eventName, data);
+            if (emitToWholeRoom) {
+                io.to(roomId).emit(eventName, relayData);
+            } else {
+                socket.to(roomId).emit(eventName, relayData);
+            }
 
             if (eventName === 'remote_move' && roomState[roomId]) {
-                roomState[roomId].moveCount = (roomState[roomId].moveCount || 0) + 1; 
+                roomState[roomId].moveCount = (roomState[roomId].moveCount || 0) + 1;
                 roomState[roomId].turnIndex = roomState[roomId].turnIndex === 0 ? 1 : 0;
-                startTurnTimer(roomId); 
+                startTurnTimer(roomId);
+                if (syncSenderAfterRelay) emitAuthoritativeRoomState(socket, roomId, playerIndex);
             }
         }
     };
@@ -8948,17 +9262,118 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            const existingInvite = findPendingTournamentDuelInvite(socket.id, opponentSocketId, String(data.round || ''), index);
+            if (existingInvite) {
+                socket.emit('tourney_duel_pending', {
+                    opponentName: sanitizeTournamentName(opponent.name || 'Igrač'),
+                    expiresAt: existingInvite.invite.expiresAt
+                });
+                return;
+            }
+
             const matchRoomId = `tourney_${data.round}_${index}_${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+            const createdAt = Date.now();
+            const expiresAt = createdAt + ROOM_INVITE_RESPONSE_WINDOW_MS;
+            pendingTournamentDuelInvites[matchRoomId] = {
+                matchRoomId,
+                starterSocketId: socket.id,
+                targetSocketId: opponentSocketId,
+                starterUid: uid,
+                targetUid: opponent.id,
+                starterName: sanitizeTournamentName(starter?.name || socket.playerName || 'Igrač'),
+                targetName: sanitizeTournamentName(opponent.name || 'Igrač'),
+                round: String(data.round || ''),
+                index,
+                createdAt,
+                expiresAt,
+                timeoutId: setTimeout(() => {
+                    expirePendingTournamentDuelInvite(matchRoomId);
+                }, ROOM_INVITE_RESPONSE_WINDOW_MS)
+            };
+
             io.to(opponentSocketId).emit('tourney_duel_ready', {
                 matchRoomId,
                 targetId: opponent.id,
-                opponentName: sanitizeTournamentName(starter?.name || socket.playerName)
+                opponentName: sanitizeTournamentName(starter?.name || socket.playerName),
+                expiresAt
             });
-            socket.emit('tourney_join_allowed', matchRoomId);
+            socket.emit('tourney_duel_pending', {
+                opponentName: sanitizeTournamentName(opponent.name || 'Igrač'),
+                expiresAt
+            });
         } else {
             queueTournamentPush(notifyTournamentDuelRequested(match, data.round, index, uid), 'duel_requested');
             socket.emit('error_msg', 'err_tourney_opp_offline');
         }
+    });
+
+    socket.on('tourney_duel_response', (data = {}) => {
+        const matchRoomId = String(data.matchRoomId || '');
+        const invite = pendingTournamentDuelInvites[matchRoomId] || null;
+        if (!invite) {
+            socket.emit('tourney_duel_expired', {
+                matchRoomId,
+                opponentName: 'Igrač'
+            });
+            return;
+        }
+
+        const responderUid = getSocketUid(socket.id);
+        if (invite.targetSocketId !== socket.id && (!responderUid || responderUid !== invite.targetUid)) {
+            return;
+        }
+
+        clearPendingTournamentDuelInvite(matchRoomId);
+
+        const starterSocket = io.sockets.sockets.get(invite.starterSocketId);
+        if (!starterSocket) {
+            socket.emit('tourney_duel_expired', {
+                matchRoomId,
+                opponentName: invite.starterName || 'Igrač'
+            });
+            return;
+        }
+
+        if (data.busy === true) {
+            starterSocket.emit('tourney_duel_busy', {
+                matchRoomId,
+                opponentName: invite.targetName || 'Igrač'
+            });
+            return;
+        }
+
+        if (data.accepted !== true) {
+            starterSocket.emit('tourney_duel_declined', {
+                matchRoomId,
+                opponentName: invite.targetName || 'Igrač'
+            });
+            return;
+        }
+
+        if (Date.now() > invite.expiresAt) {
+            socket.emit('tourney_duel_expired', {
+                matchRoomId,
+                opponentName: invite.starterName || 'Igrač'
+            });
+            starterSocket.emit('tourney_duel_expired', {
+                matchRoomId,
+                opponentName: invite.targetName || 'Igrač'
+            });
+            return;
+        }
+
+        if (isPlayerBusyForInvite(invite.starterSocketId, invite.starterUid) ||
+            isPlayerBusyForInvite(socket.id, invite.targetUid)) {
+            starterSocket.emit('tourney_duel_busy', {
+                matchRoomId,
+                opponentName: invite.targetName || 'Igrač'
+            });
+            socket.emit('error_msg', 'err_player_busy');
+            return;
+        }
+
+        starterSocket.emit('tourney_join_allowed', matchRoomId);
+        socket.emit('tourney_join_allowed', matchRoomId);
     });
 
     socket.on('tourney_submit_winner', async (data = {}) => {
@@ -9045,6 +9460,7 @@ io.on('connection', (socket) => {
         const activeRoomState = activeRoomId ? roomState[activeRoomId] : null;
         clearChallengesForSocket(socket.id);
         clearPendingRoomInvitesForSocket(socket.id);
+        clearPendingTournamentDuelInvitesForSocket(socket.id);
 
         if (pid && activeRoomId && !(activeRoomState && activeRoomState.gameFinished)) {
             console.log(`⏳ Pokrećem Grace Period od 30s za igrača: ${pid}`);

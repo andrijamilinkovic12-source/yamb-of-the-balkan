@@ -469,10 +469,36 @@ class TournamentManager {
                     }
                 });
 
+                const showTourneyDuelNotice = (message, title = tt('tourney_match_title') || 'TURNIRSKI MEČ') => {
+                    if (typeof window.showNotification === 'function') {
+                        window.showNotification(title, message);
+                    } else if (this.app && this.app.modal) {
+                        this.app.modal.alert(message, title);
+                    }
+                };
+
+                this.app.socket.off('tourney_duel_ready');
+                this.app.socket.off('tourney_duel_pending');
+                this.app.socket.off('tourney_duel_declined');
+                this.app.socket.off('tourney_duel_busy');
+                this.app.socket.off('tourney_duel_expired');
+                this.app.socket.off('tourney_join_allowed');
+
                 this.app.socket.on('tourney_duel_ready', (data) => {
                     const myId = this.app.playerId;
                     if (data.targetId === myId) {
-                        if (this.app.isDoNotDisturbActive && this.app.isDoNotDisturbActive()) return;
+                        const sendResponse = (payload = {}) => {
+                            if (!this.app.socket || !this.app.socket.connected) return;
+                            this.app.socket.emit('tourney_duel_response', {
+                                matchRoomId: data.matchRoomId,
+                                ...payload
+                            });
+                        };
+
+                        if (this.app.isDoNotDisturbActive && this.app.isDoNotDisturbActive()) {
+                            sendResponse({ accepted: false, busy: true });
+                            return;
+                        }
 
                         const opponentName = this.escape(data.opponentName || 'Protivnik');
                         let msg = tt('tourney_opponent_ready');
@@ -483,11 +509,35 @@ class TournamentManager {
                         }
 
                         this.app.modal.confirm(msg).then(acc => {
-                            if(acc) {
-                                this.app.joinPrivateGame(this.app.playerName, data.matchRoomId);
+                            if (acc && data.expiresAt && Date.now() > data.expiresAt) {
+                                showTourneyDuelNotice(tt('room_invite_expired_self') || 'Istekao je rok za odgovor na pozivnicu.');
+                                sendResponse({ accepted: false });
+                                return;
                             }
+                            sendResponse({ accepted: !!acc });
                         });
                     }
+                });
+
+                this.app.socket.on('tourney_duel_pending', (data = {}) => {
+                    const opponentName = this.escape(data.opponentName || 'Igrač');
+                    showTourneyDuelNotice(`Poziv za turnirski meč je poslat igraču ${opponentName}. Čekamo odgovor...`);
+                });
+
+                this.app.socket.on('tourney_duel_declined', (data = {}) => {
+                    const opponentName = this.escape(data.opponentName || 'Igrač');
+                    showTourneyDuelNotice(`${opponentName} je odbio turnirski meč. Dogovorite novi trenutak i pokušajte ponovo.`);
+                });
+
+                this.app.socket.on('tourney_duel_busy', (data = {}) => {
+                    const opponentName = this.escape(data.opponentName || 'Igrač');
+                    showTourneyDuelNotice(`${opponentName} je trenutno zauzet. Pokušajte ponovo kasnije.`);
+                });
+
+                this.app.socket.on('tourney_duel_expired', (data = {}) => {
+                    if (data.silent) return;
+                    const opponentName = this.escape(data.opponentName || 'Igrač');
+                    showTourneyDuelNotice(`${opponentName} nije odgovorio na vreme. Meč nije pokrenut.`);
                 });
 
                 this.app.socket.on('tourney_join_allowed', (matchRoomId) => {
