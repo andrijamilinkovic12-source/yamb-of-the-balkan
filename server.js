@@ -138,9 +138,30 @@ const zabranjeneReci = [
 
 const charMap = {
     'a': '[aA@4]', 'b': '[bB8]', 'c': '[cCčČćĆ]', 'd': '[dDđĐ]', 'e': '[eE3]',
-    'g': '[gG6]', 'i': '[iI1l!L]', 'j': '[jJyY]', 'l': '[lL1iI]', 'o': '[oO0]', 
+    'g': '[gG6]', 'i': '[iI1l!L]', 'j': '[jJyY]', 'l': '[lL1iI]', 'o': '[oO0]',
     's': '[sSšŠ5\\$]', 't': '[tT7]', 'u': '[uUvV]', 'z': '[zZžŽ]'
 };
+
+const profanityCharFoldMap = {
+    'а': 'a', 'А': 'a', 'б': 'b', 'Б': 'b', 'в': 'v', 'В': 'v',
+    'г': 'g', 'Г': 'g', 'д': 'd', 'Д': 'd', 'ђ': 'dj', 'Ђ': 'dj',
+    'е': 'e', 'Е': 'e', 'ж': 'z', 'Ж': 'z', 'з': 'z', 'З': 'z',
+    'и': 'i', 'И': 'i', 'ј': 'j', 'Ј': 'j', 'к': 'k', 'К': 'k',
+    'л': 'l', 'Л': 'l', 'љ': 'lj', 'Љ': 'lj', 'м': 'm', 'М': 'm',
+    'н': 'n', 'Н': 'n', 'њ': 'nj', 'Њ': 'nj', 'о': 'o', 'О': 'o',
+    'п': 'p', 'П': 'p', 'р': 'r', 'Р': 'r', 'с': 's', 'С': 's',
+    'т': 't', 'Т': 't', 'ћ': 'c', 'Ћ': 'c', 'у': 'u', 'У': 'u',
+    'ф': 'f', 'Ф': 'f', 'х': 'h', 'Х': 'h', 'ц': 'c', 'Ц': 'c',
+    'ч': 'c', 'Ч': 'c', 'џ': 'dz', 'Џ': 'dz', 'ш': 's', 'Ш': 's'
+};
+
+function normalizeProfanityText(value) {
+    return String(value || '')
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^\x00-\x7F]/g, char => profanityCharFoldMap[char] || char)
+        .toLowerCase();
+}
 
 function napraviPametniRegex(rec) {
     let regexStr = '';
@@ -162,14 +183,17 @@ function cenzurisiPoruku(poruka) {
     zabranjeniRegexi.forEach(regex => {
         filtriranaPoruka = filtriranaPoruka.replace(regex, '***');
     });
+    if (filtriranaPoruka === poruka && sadrziPsovku(normalizeProfanityText(poruka))) {
+        return '***';
+    }
     return filtriranaPoruka;
 }
 
 function sadrziPsovku(tekst) {
-    return zabranjeniRegexi.some(regex => {
-        const match = tekst.match(regex);
-        return match !== null;
-    });
+    const rawText = String(tekst || '');
+    const normalizedText = normalizeProfanityText(rawText);
+    return zabranjeniRegexi.some(regex => rawText.match(regex) !== null) ||
+        (normalizedText !== rawText && zabranjeniRegexi.some(regex => normalizedText.match(regex) !== null));
 }
 
 // ==================================================================
@@ -1345,6 +1369,7 @@ const THEME_UNLOCK_IDS = new Set([
 
 // NOVE PROMENLJIVE ZA ČUVANJE CHATA
 let globalChatHistory = [];
+let globalChatSaveQueue = Promise.resolve();
 const MAX_CHAT_HISTORY = 50;
 
 function createGlobalChatMessageId() {
@@ -1408,6 +1433,39 @@ async function saveChatToDb() {
     } catch (err) {
         console.error("Greška pri čuvanju chata u bazu:", err);
     }
+}
+
+async function appendGlobalChatMessageToDb(message) {
+    if (!process.env.MONGO_URI) return;
+    try {
+        const normalizedMessage = normalizeGlobalChatMessage(message, globalChatHistory.length);
+        if (!normalizedMessage) return;
+
+        const GlobalChatDb = mongoose.model('GlobalChat');
+        await GlobalChatDb.findOneAndUpdate(
+            {},
+            {
+                $push: {
+                    messages: {
+                        $each: [normalizedMessage],
+                        $slice: -MAX_CHAT_HISTORY
+                    }
+                }
+            },
+            { upsert: true }
+        );
+    } catch (err) {
+        console.error("Greška pri dodavanju chat poruke u bazu:", err);
+    }
+}
+
+function queueGlobalChatMessageSave(message) {
+    if (!process.env.MONGO_URI) return;
+    globalChatSaveQueue = globalChatSaveQueue
+        .then(() => appendGlobalChatMessageToDb(message))
+        .catch(err => {
+            console.error("Greška u redu za čuvanje chat poruka:", err);
+        });
 }
 
 // GRACE PERIOD PROMENLJIVE
@@ -4212,12 +4270,24 @@ async function verifyFirebaseTokenViaRest(token) {
 }
 
 async function verifyFirebaseSocketToken(socket, token) {
-    if (!firebaseAuth) {
-        return { ok: false, reason: 'firebase_admin_unavailable', permanent: false };
-    }
-
     if (typeof token !== 'string' || token.length < 100) {
         return { ok: false, reason: 'missing_firebase_token', permanent: false };
+    }
+
+    if (!firebaseAuth) {
+        const fallbackResult = await verifyFirebaseTokenViaRest(token);
+        if (fallbackResult.ok) {
+            bindVerifiedPlayerSocket(socket, fallbackResult.uid);
+            console.warn(`✅ Firebase token potvrđen preko REST fallback-a za uid=${fallbackResult.uid}`);
+            return fallbackResult;
+        }
+
+        return {
+            ok: false,
+            reason: fallbackResult.reason || 'firebase_admin_unavailable',
+            permanent: false,
+            firebaseAdminUnavailable: true
+        };
     }
 
     try {
@@ -8548,6 +8618,10 @@ io.on('connection', (socket) => {
     socket.on('chat_msg', (data) => relayEvent('chat_msg', data));
 
     socket.on('request_global_chat_history', () => {
+        if (!socket.playerName || !socket.verifiedUid) {
+            socket.emit('error_msg', 'err_chat_auth_required');
+            return;
+        }
         socket.emit('global_chat_history', globalChatHistory);
     });
 
@@ -8677,7 +8751,7 @@ io.on('connection', (socket) => {
             globalChatHistory.shift();
         }
 
-        saveChatToDb();
+        queueGlobalChatMessageSave(chatObj);
         io.emit('global_chat_msg', chatObj);
     });
 

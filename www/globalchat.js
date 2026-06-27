@@ -4,6 +4,8 @@ class GlobalChatManager {
     constructor(app) {
         this.app = app;
         this.lastGlobalMsg = null;
+        this.chatReadyUid = null;
+        this.chatReadyName = null;
         this.updateViewportVars = this.updateViewportVars.bind(this);
         this.initDOM();
         this.initViewportTracking();
@@ -12,6 +14,14 @@ class GlobalChatManager {
     // Pomoćna funkcija za prevode
     gt(key) {
         return typeof t === 'function' ? t(key) : key;
+    }
+
+    resizeInput(input = document.getElementById('global-chat-input')) {
+        if (!input) return;
+        input.style.height = 'auto';
+        const maxHeight = parseInt(window.getComputedStyle(input).maxHeight, 10) || 132;
+        input.style.height = `${Math.min(input.scrollHeight, maxHeight)}px`;
+        input.style.overflowY = input.scrollHeight > maxHeight ? 'auto' : 'hidden';
     }
 
     initDOM() {
@@ -24,16 +34,23 @@ class GlobalChatManager {
 
         const inputGlobalChat = document.getElementById('global-chat-input');
         if (inputGlobalChat) {
-            inputGlobalChat.addEventListener('keydown', (e) => { if (e.key === 'Enter') this.send(); });
+            inputGlobalChat.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.send();
+                }
+            });
             
             // Dinamički brojač karaktera
             inputGlobalChat.addEventListener('input', (e) => {
                 this.clearStatus();
+                this.resizeInput(e.target);
                 const charCountEl = document.getElementById('global-chat-char-count');
                 if (charCountEl) {
                     charCountEl.innerText = `${e.target.value.length}/550`;
                 }
             });
+            this.resizeInput(inputGlobalChat);
         }
     }
 
@@ -57,26 +74,105 @@ class GlobalChatManager {
         root.style.setProperty('--global-chat-top', `${Math.round(top)}px`);
     }
 
+    showReadyError(reason) {
+        const connectionErrors = new Set(['sys_no_conn', 'err_server_conn', 'err_friend_timeout', 'socket_disconnected', 'connect_error']);
+        this.showStatus(connectionErrors.has(reason) ? 'sys_no_conn' : 'err_chat_auth_required');
+    }
+
+    waitForSocketConnection(timeoutMs = 8000) {
+        if (!this.app.socket) return Promise.resolve({ ok: false, reason: 'sys_no_conn' });
+        if (this.app.socket.connected) return Promise.resolve({ ok: true });
+        if (typeof this.app.waitForSocketConnection === 'function') {
+            return this.app.waitForSocketConnection(timeoutMs);
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const finish = (payload) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                this.app.socket.off('connect', onConnect);
+                this.app.socket.off('connect_error', onError);
+                resolve(payload);
+            };
+            const onConnect = () => finish({ ok: true });
+            const onError = () => finish({ ok: false, reason: 'connect_error' });
+            const timer = setTimeout(() => finish({ ok: false, reason: 'sys_no_conn' }), timeoutMs);
+            this.app.socket.once('connect', onConnect);
+            this.app.socket.once('connect_error', onError);
+            if (this.app.socket.disconnected) this.app.socket.connect();
+        });
+    }
+
+    async ensureChatReady(timeoutMs = 8000) {
+        if (!this.app.requireLogin()) {
+            this.showStatus('err_chat_auth_required');
+            return false;
+        }
+
+        this.app.initSocketConnection();
+        if (!this.app.socket) {
+            this.showStatus('sys_no_conn');
+            return false;
+        }
+
+        const ready = await this.waitForSocketConnection(timeoutMs);
+        if (!ready || !ready.ok) {
+            this.showReadyError(ready?.reason || 'sys_no_conn');
+            return false;
+        }
+
+        const currentUid = localStorage.getItem('yamb_uid') || this.app.playerId || '';
+        const currentName = this.app.playerName || localStorage.getItem('yamb_player_name') || '';
+        if (currentUid &&
+            this.chatReadyUid === currentUid &&
+            this.chatReadyName === currentName &&
+            this.app.socketVerifiedUid === currentUid) {
+            return true;
+        }
+
+        const authTimeoutMs = Math.min(timeoutMs, 5000);
+        if (typeof this.app.emitPlayerData === 'function') {
+            const authResult = await this.app.emitPlayerData(false, { timeoutMs: authTimeoutMs });
+            if (!authResult || !authResult.ok) {
+                this.showReadyError(authResult?.reason || 'err_chat_auth_required');
+                return false;
+            }
+            this.chatReadyUid = authResult.uid || currentUid;
+            this.chatReadyName = currentName;
+            return true;
+        }
+
+        if (typeof this.app.authenticateSocketIdentity === 'function') {
+            const authResult = await this.app.authenticateSocketIdentity(false);
+            if (!authResult || !authResult.ok) {
+                this.showReadyError(authResult?.reason || 'err_chat_auth_required');
+                return false;
+            }
+            this.chatReadyUid = authResult.uid || currentUid;
+            this.chatReadyName = currentName;
+        }
+
+        return true;
+    }
+
     async open() {
         if (!this.app.requireLogin()) return;
 
         this.app.initSocketConnection();
         const accepted = localStorage.getItem('yamb_chat_rules_accepted');
 
-        const pokreniChat = () => {
+        const pokreniChat = async () => {
             const overlay = document.getElementById('global-chat-overlay');
             if (overlay) overlay.style.display = 'flex';
             this.updateViewportVars();
+            this.resizeInput();
             this.clearStatus();
-            
-            if (this.app.socket && this.app.socket.connected) {
+
+            const ready = await this.ensureChatReady();
+            if (ready && this.app.socket && this.app.socket.connected) {
                 this.app.socket.emit('request_global_chat_history');
-            } else {
-                setTimeout(() => {
-                    if (this.app.socket && this.app.socket.connected) {
-                        this.app.socket.emit('request_global_chat_history');
-                    }
-                }, 500);
             }
         };
 
@@ -84,10 +180,10 @@ class GlobalChatManager {
             const isConfirmed = await this.app.modal.confirm(this.gt('chat_rules_msg'));
             if (isConfirmed) {
                 localStorage.setItem('yamb_chat_rules_accepted', 'true');
-                pokreniChat();
+                await pokreniChat();
             }
         } else {
-            pokreniChat();
+            await pokreniChat();
         }
     }
 
@@ -128,13 +224,16 @@ class GlobalChatManager {
     }
 
     async reportMessage(messageId) {
-        if (!messageId || !this.app.socket || !this.app.socket.connected) {
+        if (!messageId) {
             this.showStatus('sys_no_conn');
             return;
         }
 
         const confirmed = await this.app.modal.confirm(this.gt('chat_report_confirm'));
         if (!confirmed) return;
+
+        const ready = await this.ensureChatReady();
+        if (!ready) return;
 
         this.app.socket.emit('report_global_chat_msg', { messageId });
     }
@@ -204,29 +303,27 @@ class GlobalChatManager {
         }
     }
 
-    send() { 
+    async send() {
         const input = document.getElementById('global-chat-input'); 
         let text = input.value.trim(); 
         if (!text) return; 
+        this.clearStatus();
+
+        const ready = await this.ensureChatReady();
+        if (!ready) return;
+
+        if (!this.app.socket || !this.app.socket.connected) {
+            this.showStatus('sys_no_conn');
+            return;
+        }
         
         input.value = ""; 
-        this.clearStatus();
+        this.resizeInput(input);
         
         const charCountEl = document.getElementById('global-chat-char-count');
         if (charCountEl) charCountEl.innerText = "0/550";
         
-        if (this.app.socket && this.app.socket.connected) { 
-            this.app.socket.emit('global_chat_msg', { msg: text }); 
-        } else {
-            this.app.initSocketConnection();
-            setTimeout(() => {
-                if (this.app.socket && this.app.socket.connected) {
-                    this.app.socket.emit('global_chat_msg', { msg: text }); 
-                } else {
-                    this.appendMessage(this.gt('sys_name') || "Sistem", this.gt('sys_no_conn') || "Niste povezani na server.", "msg-incoming");
-                }
-            }, 800);
-        }
+        this.app.socket.emit('global_chat_msg', { msg: text });
     }
 
     // Funkcija koja vezuje Socket listener-e za Globalni chat
