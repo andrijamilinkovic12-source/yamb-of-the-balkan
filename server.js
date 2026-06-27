@@ -389,6 +389,18 @@ const LeagueScoreSchema = new mongoose.Schema({
     quarter: Number,
     date: { type: Date, default: Date.now }
 });
+LeagueScoreSchema.index(
+    { playerId: 1, year: 1, quarter: 1 },
+    {
+        unique: true,
+        partialFilterExpression: {
+            playerId: { $type: 'string' },
+            year: { $type: 'number' },
+            quarter: { $type: 'number' }
+        }
+    }
+);
+LeagueScoreSchema.index({ year: 1, quarter: 1, score: -1 });
 const LeagueScore = mongoose.model('LeagueScore', LeagueScoreSchema);
 
 const LeagueHallOfFameSchema = new mongoose.Schema({
@@ -4440,6 +4452,61 @@ function mergeLeagueDataIntoUser(user, incomingRaw) {
     return mergedLeague;
 }
 
+const LEAGUE_RANK_BANDS = [
+    { min: 0, max: 4999 },
+    { min: 5000, max: 14999 },
+    { min: 15000, max: 49999 },
+    { min: 50000, max: 99999 },
+    { min: 100000, max: MAX_LEAGUE_SCORE }
+];
+
+function leagueScoreIdentity(score) {
+    return String(score?.playerId || score?._id || `${score?.playerName || 'unknown'}_${score?.year || ''}_${score?.quarter || ''}`);
+}
+
+async function fetchTopLeagueScoresForPeriod(year, quarter, limit = 50, scoreFilter = null) {
+    const match = { year, quarter };
+    if (scoreFilter) match.score = scoreFilter;
+
+    return LeagueScore.aggregate([
+        { $match: match },
+        { $sort: { score: -1, date: -1 } },
+        {
+            $group: {
+                _id: '$playerId',
+                playerId: { $first: '$playerId' },
+                playerName: { $first: '$playerName' },
+                photoUrl: { $first: '$photoUrl' },
+                score: { $max: '$score' },
+                year: { $first: '$year' },
+                quarter: { $first: '$quarter' },
+                date: { $first: '$date' }
+            }
+        },
+        { $sort: { score: -1 } },
+        { $limit: Math.max(1, Math.min(250, toSafeInt(limit, 50))) }
+    ]);
+}
+
+async function fetchLeagueHighscoresForRankBands(year, quarter) {
+    const scoresByPlayer = new Map();
+
+    for (const band of LEAGUE_RANK_BANDS) {
+        const bandScores = await fetchTopLeagueScoresForPeriod(year, quarter, 50, { $gte: band.min, $lte: band.max });
+
+        bandScores.forEach(score => {
+            const key = leagueScoreIdentity(score);
+            const current = scoresByPlayer.get(key);
+            if (!current || (Number(score.score) || 0) > (Number(current.score) || 0)) {
+                scoresByPlayer.set(key, score);
+            }
+        });
+    }
+
+    return Array.from(scoresByPlayer.values())
+        .sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+}
+
 async function applyTechnicalLeagueDelta(user, delta) {
     if (!user || !user.firebaseUid || !Number.isFinite(Number(delta)) || Number(delta) === 0) {
         return normalizeUserLeagueDataForCurrentPeriod(user);
@@ -4485,10 +4552,7 @@ async function archiveLeagueQuarter(year, quarter) {
     const existingArchive = await LeagueHallOfFame.findOne({ periodKey }).lean();
     if (existingArchive) return existingArchive;
 
-    const topScores = await LeagueScore.find({ year, quarter })
-        .sort({ score: -1 })
-        .limit(3)
-        .lean();
+    const topScores = await fetchTopLeagueScoresForPeriod(year, quarter, 3);
 
     if (!topScores.length) return null;
 
@@ -6159,8 +6223,6 @@ io.on('connection', (socket) => {
                     }
                 }
 
-                mergeLeagueDataIntoUser(user, s.leagueData);
-
                 if (s.h2hStats) {
                     const oldCloudH2H = user.h2hStats || {};
                     let cloudH2H = normalizeH2HStatsForUser(oldCloudH2H, user.firebaseUid, user.playerName);
@@ -6270,7 +6332,7 @@ io.on('connection', (socket) => {
                     unlockedEffects: initialEconomy.unlockedEffects,
                     yamb_unlocked: initialEconomy.yamb_unlocked,
                     lastDaily: s.lastDaily || "",
-                    leagueData: buildInitialLeagueData(s.leagueData),
+                    leagueData: getDefaultCurrentLeagueData(),
                     economyMigrationApplied: true,
                     economyMigratedAt: Date.now()
                 });
@@ -6668,10 +6730,7 @@ io.on('connection', (socket) => {
             const archivedQuarter = isPastLeaguePeriod(Number(year), Number(quarter))
                 ? await archiveLeagueQuarter(Number(year), Number(quarter))
                 : null;
-            const topScores = archivedQuarter?.topScores || await LeagueScore.find({ year: year, quarter: quarter })
-                .sort({ score: -1 })
-                .limit(3)
-                .lean();
+            const topScores = archivedQuarter?.topScores || await fetchTopLeagueScoresForPeriod(Number(year), Number(quarter), 3);
             
             let rank = -1;
             for (let i = 0; i < topScores.length; i++) {
@@ -6913,9 +6972,10 @@ io.on('connection', (socket) => {
             if (!MONGO_URI) return;
             const { year, quarter } = data;
             const archivedQuarter = await archiveLeagueQuarter(Number(year), Number(quarter));
-            const topScore = archivedQuarter?.champion || await LeagueScore.findOne({ year: year, quarter: quarter })
-                .sort({ score: -1 })
-                .lean();
+            const fallbackScores = archivedQuarter?.champion
+                ? []
+                : await fetchTopLeagueScoresForPeriod(Number(year), Number(quarter), 1);
+            const topScore = archivedQuarter?.champion || fallbackScores[0];
             
             if (topScore) {
                 const user = await UserProfile.findOne({ firebaseUid: topScore.playerId }).lean();
@@ -7341,14 +7401,16 @@ io.on('connection', (socket) => {
                 return;
             }
             
-            const year = reqData?.year || new Date().getFullYear();
-            const quarter = reqData?.quarter || (Math.floor(new Date().getMonth() / 3) + 1);
+            const requestedYear = Number(reqData?.year);
+            const requestedQuarter = Number(reqData?.quarter);
+            const currentPeriod = getServerQuarterInfo();
+            const year = Number.isInteger(requestedYear) ? requestedYear : currentPeriod.year;
+            const quarter = Number.isInteger(requestedQuarter) && requestedQuarter >= 1 && requestedQuarter <= 4
+                ? requestedQuarter
+                : currentPeriod.quarter;
             
-            const scores = await LeagueScore.find({ year: year, quarter: quarter })
-                                            .sort({ score: -1 })
-                                            .limit(50)
-                                            .lean();
-                                            
+            const scores = await fetchLeagueHighscoresForRankBands(year, quarter);
+
             socket.emit('league_highscores_data', scores);
         } catch (err) {
             console.error("Greška pri dohvatanju kvartalne lige:", err);
@@ -7367,11 +7429,20 @@ io.on('connection', (socket) => {
             }
             
             const allTimeScores = await LeagueScore.aggregate([
+                { $sort: { score: -1, date: -1 } },
                 {
                     $group: {
-                        _id: "$playerId",
+                        _id: { playerId: "$playerId", year: "$year", quarter: "$quarter" },
+                        playerName: { $first: "$playerName" },
+                        photoUrl: { $first: "$photoUrl" },
+                        score: { $max: "$score" }
+                    }
+                },
+                {
+                    $group: {
+                        _id: "$_id.playerId",
                         playerName: { $last: "$playerName" },
-                        photoUrl: { $last: "$photoUrl" }, 
+                        photoUrl: { $last: "$photoUrl" },
                         score: { $sum: "$score" }
                     }
                 },
@@ -7427,7 +7498,7 @@ io.on('connection', (socket) => {
             if (finalName.length === 0) finalName = "Nepoznat Igrač";
 
             const [currentDoc, profileUser] = await Promise.all([
-                LeagueScore.findOne({ playerId: uniqueId, year: submittedYear, quarter: submittedQuarter }),
+                LeagueScore.findOne({ playerId: uniqueId, year: submittedYear, quarter: submittedQuarter }).sort({ score: -1 }),
                 UserProfile.findOne({ firebaseUid: uniqueId })
             ]);
             const currentScore = currentDoc ? Number(currentDoc.score) || 0 : 0;

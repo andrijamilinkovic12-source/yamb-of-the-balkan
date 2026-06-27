@@ -666,6 +666,44 @@ class KvartalnaLigaManager {
         summaryEl.textContent = `${gt('league_all_time', 'SVA VREMENA')}: ${parseInt(score) || 0}`;
     }
 
+    escapeHtml(value) {
+        if (window.YambSecurity && typeof window.YambSecurity.escapeHtml === 'function') {
+            return window.YambSecurity.escapeHtml(value);
+        }
+
+        return String(value ?? '').replace(/[&<>"']/g, char => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[char]));
+    }
+
+    escapeAttr(value) {
+        if (window.YambSecurity && typeof window.YambSecurity.escapeAttr === 'function') {
+            return window.YambSecurity.escapeAttr(value);
+        }
+
+        return this.escapeHtml(value);
+    }
+
+    safeImageUrl(value, fallback) {
+        if (window.YambSecurity && typeof window.YambSecurity.safeUrl === 'function') {
+            return window.YambSecurity.safeUrl(value, fallback);
+        }
+
+        const raw = String(value || '').trim();
+        if (!raw) return fallback;
+
+        try {
+            const parsed = new URL(raw, window.location.origin);
+            return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : fallback;
+        } catch (err) {
+            return fallback;
+        }
+    }
+
     renderList(rankId, scores) {
         const listEl = document.getElementById(`league-list-${rankId}`);
         if (!listEl) return;
@@ -680,20 +718,26 @@ class KvartalnaLigaManager {
         listEl.innerHTML = '';
         
         scores.forEach((s, i) => {
-            let pName = s.playerName || gt('league_unknown', "Nepoznat Igrač");
-            let pScore = s.score !== undefined ? s.score : "0";
-            let isMe = (pName === (localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost")));
+            let pName = String(s.playerName || gt('league_unknown', "Nepoznat Igrač"));
+            let pScore = Math.max(0, parseInt(s.score, 10) || 0);
+            const myName = localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost");
+            const myUid = localStorage.getItem('yamb_uid') || '';
+            const scoreUid = s && (s.playerId || s._id || '');
+            let isMe = (myUid && scoreUid === myUid) || pName === myName;
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
             let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
-            let photo = s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;
+            const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;
+            let photo = this.safeImageUrl(s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : '', fallbackPhoto);
+            const safeName = this.escapeHtml(pName);
+            const safePhoto = this.escapeAttr(photo);
 
             let li = document.createElement('li');
             li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.85rem; ${bg}`;
             li.innerHTML = `
                 <div style="display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0;">
                     <div style="font-weight: bold; min-width: 20px; color: var(--gold-main); text-align: center;">${medal}</div>
-                    <img src="${photo}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
-                    <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.8rem; padding-right: 5px;">${pName}</div>
+                    <img src="${safePhoto}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
+                    <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.8rem; padding-right: 5px;">${safeName}</div>
                 </div>
                 <div style="font-weight: bold; color: #fff; margin-left: 8px; white-space: nowrap;">${pScore} PTS</div>
             `;
