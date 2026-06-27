@@ -1,11 +1,79 @@
 // onlinenumber.js - MODUL ZA UPRAVLJANJE MREŽNIM FUNKCIJAMA SA I18N PREVODIMA
 // Sadrži: Online broj igrača, Custom Notifikacije, Prikaz Rankova, Trofeja, Highscore Listenere
 
+const onlineNumberSecurityFallback = {
+    escapeHtml: (value) => String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[char])),
+    escapeAttr(value) {
+        return this.escapeHtml(value);
+    },
+    jsString: (value) => JSON.stringify(String(value ?? '')),
+    safeUrl(value, fallback = '') {
+        const raw = String(value ?? '').trim();
+        if (!raw) return fallback;
+        try {
+            const parsed = new URL(raw, window.location.origin);
+            return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : fallback;
+        } catch (err) {
+            return fallback;
+        }
+    }
+};
+
+function getOnlineNumberSecurity() {
+    return window.YambSecurity || onlineNumberSecurityFallback;
+}
+
+function setOnlineActionButtonDisabled(button, isDisabled) {
+    if (!button) return;
+    button.disabled = !!isDisabled;
+    button.style.opacity = isDisabled ? '0.4' : '1';
+    button.style.background = isDisabled ? 'rgba(255,255,255,0.05)' : 'rgba(76, 175, 80, 0.2)';
+    button.style.borderColor = isDisabled ? 'rgba(255,255,255,0.1)' : 'var(--success)';
+    button.style.cursor = isDisabled ? 'not-allowed' : 'pointer';
+}
+
+window.handleOnlinePlayerFriendRequest = async function(button, socketId, name, uid) {
+    const tr = (key, fallback) => {
+        const value = window.t ? window.t(key) : key;
+        return value && value !== key ? value : fallback;
+    };
+
+    if (!window.app || typeof window.app.sendFriendRequest !== 'function') {
+        showNotification(tr('info_title', 'INFO'), tr('err_feature_unavailable', 'Funkcija nije dostupna.'));
+        return;
+    }
+
+    setOnlineActionButtonDisabled(button, true);
+
+    try {
+        const sent = await window.app.sendFriendRequest(socketId, name, uid);
+        if (!sent) setOnlineActionButtonDisabled(button, false);
+    } catch (err) {
+        console.warn('Zahtev za prijateljstvo iz online liste nije uspeo:', err);
+        setOnlineActionButtonDisabled(button, false);
+        showNotification(tr('err_title', 'GREŠKA'), tr('err_server_conn', 'Greška pri povezivanju sa serverom.'));
+    }
+};
+
+function syncVisibleOnlineCounters(count) {
+    const safeCount = Math.max(0, Number(count) || 0);
+    ['live-online-count', 'global-chat-online-count', 'waiting-online-count'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = safeCount;
+    });
+}
+
 /**
  * Prikazuje custom toast notifikaciju iznad svih elemenata.
  */
 window.showNotification = function(title, message) {
-    const sec = window.YambSecurity;
+    const sec = getOnlineNumberSecurity();
     const containerId = 'custom-notification-container';
     let container = document.getElementById(containerId);
     if (!container) {
@@ -127,7 +195,7 @@ window.refreshOnlinePlayersModal = function() {
 
 // --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
 window.openOnlinePlayersModal = function() {
-    const sec = window.YambSecurity;
+    const sec = getOnlineNumberSecurity();
     const tr = (key, fallback) => {
         const value = window.t ? window.t(key) : key;
         return value && value !== key ? value : fallback;
@@ -194,7 +262,6 @@ window.openOnlinePlayersModal = function() {
                     const isBusy = !!p.isBusy || !!p.isPlaying || status === 'playing';
                     // Znamo sigurno sa servera da li su već prijatelji!
                     const isAlreadyFriend = p.isFriend;
-                    const infoTitleArg = sec.jsString(tr('info_title', 'INFO'));
                     const errorTitleArg = sec.jsString(tr('err_title', 'GREŠKA'));
                     const featureUnavailableArg = sec.jsString(tr('err_feature_unavailable', 'Funkcija nije dostupna.'));
                     const alreadyFriendTitle = tr('online_tooltip_already_friend', 'Već ste prijatelji');
@@ -204,9 +271,9 @@ window.openOnlinePlayersModal = function() {
                     const spectateTitleText = tr('online_tooltip_spectate', 'Gledaj partiju');
                     const playerBusyTitle = tr('online_tooltip_player_busy', 'Igrač trenutno igra');
                     const challengeTitleText = tr('online_tooltip_challenge', 'Izazovi na duel');
-                    const addFriendHandler = sec.escapeAttr(`if(window.app && window.app.sendFriendRequest) { window.app.sendFriendRequest(${socketIdArg}, ${nameArg}, ${uidArg}); this.disabled=true; this.style.opacity='0.4'; this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='rgba(255,255,255,0.1)'; this.style.cursor='not-allowed'; } else { showNotification(${infoTitleArg}, ${featureUnavailableArg}) }`);
+                    const addFriendHandler = sec.escapeAttr(`window.handleOnlinePlayerFriendRequest(this, ${socketIdArg}, ${nameArg}, ${uidArg})`);
                     const spectateHandler = sec.escapeAttr(`if(window.app && window.app.spectateGame) { window.app.spectateGame({ socketId: ${socketIdArg}, roomId: ${roomIdArg}, uid: ${uidArg} }) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}) }`);
-                    const challengeHandler = sec.escapeAttr(`window.app.challengePlayer(${socketIdArg}, ${nameArg}, ${uidArg})`);
+                    const challengeHandler = sec.escapeAttr(`if(window.app && window.app.challengePlayer) { window.app.challengePlayer(${socketIdArg}, ${nameArg}, ${uidArg}) } else { showNotification(${errorTitleArg}, ${featureUnavailableArg}) }`);
 
                     // 1. Dugme za DODAVANJE (Zatamnjeno ako su već prijatelji)
                     let addFriendBtn = '';
@@ -284,60 +351,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const t = (key) => window.t ? window.t(key) : key;
 
     // --- 1. ONLINE BROJAČ ---
-    let socket = null;
-    let isConnected = false;
-
-    const connectToSocket = (uid) => {
-        if (isConnected || socket) return; 
-
-        if (typeof io !== 'undefined') {
-            const serverUrl = (typeof SERVER_URL !== 'undefined') ? SERVER_URL : 'https://yamb-of-the-balkan.onrender.com';
-            
-            socket = io(serverUrl, {
-                query: { uid: uid },
-                reconnection: true,
-                reconnectionDelay: 2000,
-                reconnectionAttempts: 10
-            });
-
-            socket.on('connect', () => {
-                isConnected = true;
-                socket.emit('request_online_count');
-            });
-
-            socket.on('disconnect', () => {
-                isConnected = false;
-            });
-
-            socket.on('online_count', (data) => {
-                const badge = document.getElementById('online-badge');
-                if (badge && data && typeof data.count === 'number') {
-                    badge.classList.remove('hidden');
-                    const textZufix = t('online_players') || " Igrača Online";
-                    document.getElementById('online-count').innerText = data.count + textZufix;
-                }
-            });
-            
-            socket.on('tournament_invite', (data) => {
-                if (window.handleTournamentInvite) {
-                    window.handleTournamentInvite(data);
-                } else {
-                    console.log("Primljena pozivnica za turnir, ali funkcija nije definisana.", data);
-                }
-            });
-        }
-    };
-
-    const attemptConnection = () => {
-        const uid = localStorage.getItem('yamb_uid');
-        if (uid) {
-            connectToSocket(uid);
-        } else {
-            setTimeout(attemptConnection, 2000); 
-        }
-    };
-
-    attemptConnection();
+    // Broj online igrača dolazi kroz glavnu app socket konekciju (`users_count` u game.js).
+    // Ovde samo sinhronizujemo postojeće DOM elemente pri kasnom učitavanju modula.
+    if (window.app && typeof window.app.onlineUsersCount === 'number') {
+        syncVisibleOnlineCounters(window.app.onlineUsersCount);
+    }
 
     // --- 2. PRIKAZ DNEVNOG IZAZOVA I NAGRADA NA DASHBOARDU ---
     const rewardAlertContainer = document.getElementById('reward-alert-container');
