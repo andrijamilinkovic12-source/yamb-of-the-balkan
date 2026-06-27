@@ -173,7 +173,7 @@ class YambApp {
         const savedVib = localStorage.getItem('yamb_vibration');
         this.vibrationEnabled = savedVib !== 'false'; // Podrazumevano uključeno
         
-        let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
+        let freshStats = this.readLocalJson('yamb_stats', null);
         this.stats = freshStats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0 };
         
         this.diceBtns = []; 
@@ -522,6 +522,14 @@ class YambApp {
             .replace(/\s+/g, '_');
     }
 
+    isGuestH2HName(value) {
+        const key = this.normalizeH2HNameKey(value);
+        return key === 'gost' ||
+            key.startsWith('gost_') ||
+            key === 'guest' ||
+            key.startsWith('guest_');
+    }
+
     getCurrentPlayerUid() {
         return String(this.playerId || localStorage.getItem('yamb_uid') || '').trim();
     }
@@ -542,6 +550,21 @@ class YambApp {
         const count = (value) => Math.max(0, parseInt(value) || 0);
         const baseTotal = count(base.wins) + count(base.losses) + count(base.draws);
         const incomingTotal = count(incoming.wins) + count(incoming.losses) + count(incoming.draws);
+        const baseContainsIncoming = count(base.wins) >= count(incoming.wins) &&
+            count(base.losses) >= count(incoming.losses) &&
+            count(base.draws) >= count(incoming.draws) &&
+            count(base.gamesWithScore) >= count(incoming.gamesWithScore) &&
+            count(base.myTotalScore) >= count(incoming.myTotalScore);
+        const incomingContainsBase = count(incoming.wins) >= count(base.wins) &&
+            count(incoming.losses) >= count(base.losses) &&
+            count(incoming.draws) >= count(base.draws) &&
+            count(incoming.gamesWithScore) >= count(base.gamesWithScore) &&
+            count(incoming.myTotalScore) >= count(base.myTotalScore);
+        const combineCounts = !!options.combineCounts &&
+            baseTotal > 0 &&
+            incomingTotal > 0 &&
+            !baseContainsIncoming &&
+            !incomingContainsBase;
         const currentWinStreak = options.preferIncomingCurrentWinStreak
             ? count(incoming.currentWinStreak)
             : (incomingTotal > baseTotal
@@ -560,11 +583,11 @@ class YambApp {
             name: identity.name || this.normalizeH2HDisplayName(incoming.name || base.name),
             uid: identity.uid || incoming.uid || base.uid || '',
             photo: (incoming.photo && incoming.photo.length > 5) ? incoming.photo : (base.photo || ''),
-            wins: Math.max(count(base.wins), count(incoming.wins)),
-            losses: Math.max(count(base.losses), count(incoming.losses)),
-            draws: Math.max(count(base.draws), count(incoming.draws)),
-            myTotalScore: Math.max(count(base.myTotalScore), count(incoming.myTotalScore)),
-            gamesWithScore: Math.max(count(base.gamesWithScore), count(incoming.gamesWithScore)),
+            wins: combineCounts ? count(base.wins) + count(incoming.wins) : Math.max(count(base.wins), count(incoming.wins)),
+            losses: combineCounts ? count(base.losses) + count(incoming.losses) : Math.max(count(base.losses), count(incoming.losses)),
+            draws: combineCounts ? count(base.draws) + count(incoming.draws) : Math.max(count(base.draws), count(incoming.draws)),
+            myTotalScore: combineCounts ? count(base.myTotalScore) + count(incoming.myTotalScore) : Math.max(count(base.myTotalScore), count(incoming.myTotalScore)),
+            gamesWithScore: combineCounts ? count(base.gamesWithScore) + count(incoming.gamesWithScore) : Math.max(count(base.gamesWithScore), count(incoming.gamesWithScore)),
             myHighScore: Math.max(count(base.myHighScore), count(incoming.myHighScore)),
             maxWinMargin: Math.max(count(base.maxWinMargin), count(incoming.maxWinMargin)),
             maxLossMargin: Math.max(count(base.maxLossMargin), count(incoming.maxLossMargin)),
@@ -576,14 +599,15 @@ class YambApp {
 
     getH2HIdentity(oppName, oppUid = null, existingH2H = {}) {
         const name = this.normalizeH2HDisplayName(oppName);
-        if (!name || name.includes(gt('player_guest'))) return null;
-
         const rawUid = String(oppUid || '').trim();
+        if (!name || this.isGuestH2HName(name) || rawUid.startsWith('guest_') || name.includes(gt('player_guest'))) return null;
+
         const myUid = this.getCurrentPlayerUid();
         if (rawUid && myUid && rawUid === myUid) return null;
+        const myNameKey = this.normalizeH2HNameKey(this.playerName || localStorage.getItem('yamb_player_name') || '');
+        if (!rawUid && myNameKey && this.normalizeH2HNameKey(name) === myNameKey) return null;
 
         let uid = this.isUsableH2HUid(oppUid) ? String(oppUid).trim() : '';
-        const myNameKey = this.normalizeH2HNameKey(this.playerName);
         const oppNameKey = this.normalizeH2HNameKey(name);
 
         if (!uid) {
@@ -629,7 +653,7 @@ class YambApp {
                     identity.uid = identity.uid || existingUid;
                 }
 
-                normalized[targetKey] = this.mergeH2HRecord(normalized[targetKey], existingRecord, identity);
+                normalized[targetKey] = this.mergeH2HRecord(normalized[targetKey], existingRecord, identity, { combineCounts: true });
                 delete normalized[existingKey];
             }
 
@@ -638,7 +662,7 @@ class YambApp {
                 name: identity.name,
                 uid: identity.uid || rawRecord.uid || ''
             };
-            normalized[targetKey] = this.mergeH2HRecord(normalized[targetKey], cleanRecord, identity);
+            normalized[targetKey] = this.mergeH2HRecord(normalized[targetKey], cleanRecord, identity, { combineCounts: true });
         }
 
         return normalized;
@@ -647,7 +671,14 @@ class YambApp {
     updateH2HStats(oppName, oppPhoto, resultType, myScore = 0, oppScore = 0, oppUid = null) {
         if (this.isSpectator) return;
 
-        let h2h = this.normalizeH2HStats(JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}'));
+        const safeScore = (value) => {
+            const num = Number(value);
+            return Number.isFinite(num) ? Math.max(0, Math.floor(num)) : 0;
+        };
+        const safeMyScore = safeScore(myScore);
+        const safeOppScore = safeScore(oppScore);
+
+        let h2h = this.normalizeH2HStats(this.readLocalJson('yamb_h2h_stats', {}));
         const identity = this.getH2HIdentity(oppName, oppUid, h2h);
         if (!identity) return;
         const h2hKey = identity.key;
@@ -691,19 +722,19 @@ class YambApp {
             h2h[h2hKey].currentWinStreak = 0;
         }
 
-        if (myScore > 0 || oppScore > 0) {
-            h2h[h2hKey].myTotalScore = (h2h[h2hKey].myTotalScore || 0) + myScore;
+        if (safeMyScore > 0 || safeOppScore > 0) {
+            h2h[h2hKey].myTotalScore = (h2h[h2hKey].myTotalScore || 0) + safeMyScore;
             h2h[h2hKey].gamesWithScore = (h2h[h2hKey].gamesWithScore || 0) + 1;
 
-            if (myScore > (h2h[h2hKey].myHighScore || 0)) {
-                h2h[h2hKey].myHighScore = myScore;
+            if (safeMyScore > (h2h[h2hKey].myHighScore || 0)) {
+                h2h[h2hKey].myHighScore = safeMyScore;
             }
 
-            let margin = myScore - oppScore;
+            let margin = safeMyScore - safeOppScore;
             if (resultType === 'win' && margin > (h2h[h2hKey].maxWinMargin || 0)) {
                 h2h[h2hKey].maxWinMargin = margin;
-            } else if (resultType === 'loss' && (oppScore - myScore) > (h2h[h2hKey].maxLossMargin || 0)) {
-                h2h[h2hKey].maxLossMargin = (oppScore - myScore);
+            } else if (resultType === 'loss' && (safeOppScore - safeMyScore) > (h2h[h2hKey].maxLossMargin || 0)) {
+                h2h[h2hKey].maxLossMargin = (safeOppScore - safeMyScore);
             }
         }
 
@@ -714,7 +745,7 @@ class YambApp {
         const container = document.getElementById('h2h-list-container');
         if (!container) return;
 
-        const rawH2H = JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}');
+        const rawH2H = this.readLocalJson('yamb_h2h_stats', {});
         const h2h = this.normalizeH2HStats(rawH2H);
         if (JSON.stringify(rawH2H) !== JSON.stringify(h2h)) {
             localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
@@ -771,6 +802,12 @@ class YambApp {
             const safeMatchText = this.escapeHtml(this.h2hMatchText(total));
             const safeWinShort = this.escapeHtml(gt('h2h_wins_short') || 'W');
             const safeLossShort = this.escapeHtml(gt('h2h_losses_short') || 'L');
+            const safeDrawShort = this.escapeHtml(gt('h2h_draws_short') || 'D');
+            const recordParts = [
+                `<span class="w-color">${r.wins} ${safeWinShort}</span>`
+            ];
+            if (r.draws > 0) recordParts.push(`<span class="c-gold">${r.draws} ${safeDrawShort}</span>`);
+            recordParts.push(`<span class="l-color">${r.losses} ${safeLossShort}</span>`);
 
             html += `
             <button type="button" class="h2h-rival-tile" data-h2h-index="${index}" aria-label="${safeOppName}">
@@ -779,7 +816,7 @@ class YambApp {
                     <span class="h2h-rival-count">${total}</span>
                 </span>
                 <span class="h2h-rival-name">${safeOppName}</span>
-                <span class="h2h-rival-record"><span class="w-color">${r.wins} ${safeWinShort}</span> / <span class="l-color">${r.losses} ${safeLossShort}</span></span>
+                <span class="h2h-rival-record">${recordParts.join(' / ')}</span>
                 <span class="h2h-rival-matches">${safeMatchText}</span>
             </button>`;
         });
@@ -865,6 +902,8 @@ class YambApp {
         const oppName = r.name || 'Igrac';
         const total = r.wins + r.losses + r.draws;
         const winPct = total > 0 ? Math.round((r.wins / total) * 100) : 0;
+        const drawPct = total > 0 ? Math.round((r.draws / total) * 100) : 0;
+        const lossPct = total > 0 ? Math.max(0, 100 - winPct - drawPct) : 0;
         const avg = r.gamesWithScore > 0 ? Math.round((r.myTotalScore || 0) / r.gamesWithScore) : 0;
         const myAvatar = avatarFor(myName, localStorage.getItem('yamb_player_photo') || '');
         const oppAvatar = avatarFor(oppName, r.photo);
@@ -884,6 +923,8 @@ class YambApp {
             total,
             matchText: this.h2hMatchText(total),
             winPct,
+            drawPct,
+            lossPct,
             avg
         };
 
@@ -932,6 +973,7 @@ class YambApp {
             <div class="h2h-bar-wrapper h2h-detail-bar">
                 <div class="h2h-bar-bg">
                     <div class="h2h-bar-win" style="width: ${winPct}%"></div>
+                    <div class="h2h-bar-draw" style="width: ${drawPct}%"></div>
                 </div>
                 <div class="h2h-bar-text">${winPct}% ${this.escapeHtml(gt('h2h_win_pct') || 'POBEDA')}</div>
             </div>
@@ -1205,8 +1247,20 @@ class YambApp {
         const barY = 1250;
         const barW = width - 290;
         const barH = 24;
-        fillRound(barX, barY, barW, barH, 12, colors.danger);
-        fillRound(barX, barY, Math.max(0, Math.min(barW, barW * ((data.winPct || 0) / 100))), barH, 12, colors.success);
+        const safeWinPct = Math.max(0, Math.min(100, Number(data.winPct) || 0));
+        const safeDrawPct = Math.max(0, Math.min(100 - safeWinPct, Number(data.drawPct) || 0));
+        const winW = Math.max(0, Math.min(barW, barW * (safeWinPct / 100)));
+        const drawW = Math.max(0, Math.min(barW - winW, barW * (safeDrawPct / 100)));
+        ctx.save();
+        roundedRect(barX, barY, barW, barH, 12);
+        ctx.clip();
+        ctx.fillStyle = colors.danger;
+        ctx.fillRect(barX, barY, barW, barH);
+        ctx.fillStyle = colors.success;
+        ctx.fillRect(barX, barY, winW, barH);
+        ctx.fillStyle = colors.gold;
+        ctx.fillRect(barX + winW, barY, drawW, barH);
+        ctx.restore();
         fitText(`${data.winPct || 0}% ${winPctLabel}`, width / 2, 1320, 560, 28, 20, colors.muted, 900);
 
         return new Promise((resolve, reject) => {
@@ -1469,12 +1523,12 @@ class YambApp {
             window.migrateLegacyLocalProgressToUid(uid);
         }
 
-        let lsData = JSON.parse(localStorage.getItem('yamb_quarter_data_' + uid)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
+        let lsData = this.readLocalJson('yamb_quarter_data_' + uid, { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 }) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
         if (window.kvartalnaLiga) {
             lsData = window.kvartalnaLiga.getScores();
         }
 
-        const h2hStats = this.normalizeH2HStats(JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}'));
+        const h2hStats = this.normalizeH2HStats(this.readLocalJson('yamb_h2h_stats', {}));
         localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2hStats));
 
         const soundSetting = localStorage.getItem('yamb_sound');
@@ -1497,10 +1551,10 @@ class YambApp {
             currentWinStreak: this.stats.currentWinStreak || 0,
             tournamentWins: this.stats.tournamentWins || 0,
             unlockedTrophies: this.stats.unlockedTrophies || [],
-            yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
-            unlockedSkins: JSON.parse(localStorage.getItem('yamb_unlocked_skins') || '[]'),
-            unlockedEffects: JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
-            unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
+            yamb_unlocked: this.readLocalJson('yamb_unlocked', []),
+            unlockedSkins: this.readLocalJson('yamb_unlocked_skins', []),
+            unlockedEffects: this.readLocalJson('yamb_unlocked_effects', []),
+            unlockedThemes: this.readLocalJson('yamb_unlocked_themes', []),
             leagueData: lsData,
             legacyMigration: localStorage.getItem('yamb_legacy_migration_pending_' + uid) === 'true',
             activeSkin: localStorage.getItem('yamb_active_skin') || null,
@@ -1639,45 +1693,10 @@ class YambApp {
             if (!identity) continue;
 
             const localData = localH2H[identity.key] || localH2H[oppKey] || {};
-            const localWins = Math.max(0, parseInt(localData.wins) || 0);
-            const localLosses = Math.max(0, parseInt(localData.losses) || 0);
-            const localDraws = Math.max(0, parseInt(localData.draws) || 0);
-            const cloudWins = Math.max(0, parseInt(cloudData.wins) || 0);
-            const cloudLosses = Math.max(0, parseInt(cloudData.losses) || 0);
-            const cloudDraws = Math.max(0, parseInt(cloudData.draws) || 0);
-            const localTotal = localWins + localLosses + localDraws;
-            const cloudTotal = cloudWins + cloudLosses + cloudDraws;
-            const localCurrentStreak = Math.max(0, parseInt(localData.currentWinStreak) || 0);
-            const cloudCurrentStreak = Math.max(0, parseInt(cloudData.currentWinStreak) || 0);
-            const mergedCurrentWinStreak = cloudTotal > localTotal
-                ? cloudCurrentStreak
-                : (localTotal > cloudTotal
-                    ? localCurrentStreak
-                    : Math.max(localCurrentStreak, cloudCurrentStreak));
-            const mergedMaxWinStreak = Math.max(
-                localData.maxWinStreak || 0,
-                cloudData.maxWinStreak || 0,
-                mergedCurrentWinStreak
-            );
-            const merged = {
-                ...localData,
-                ...cloudData,
-                wins: Math.max(localWins, cloudWins),
-                losses: Math.max(localLosses, cloudLosses),
-                draws: Math.max(localDraws, cloudDraws),
-                myTotalScore: Math.max(localData.myTotalScore || 0, cloudData.myTotalScore || 0),
-                gamesWithScore: Math.max(localData.gamesWithScore || 0, cloudData.gamesWithScore || 0),
-                myHighScore: Math.max(localData.myHighScore || 0, cloudData.myHighScore || 0),
-                maxWinMargin: Math.max(localData.maxWinMargin || 0, cloudData.maxWinMargin || 0),
-                maxLossMargin: Math.max(localData.maxLossMargin || 0, cloudData.maxLossMargin || 0),
-                maxWinStreak: mergedMaxWinStreak,
-                currentWinStreak: mergedCurrentWinStreak
-            };
+            const merged = this.mergeH2HRecord(localData, cloudData, identity, { combineCounts: true });
 
             if (JSON.stringify(localData) !== JSON.stringify(merged)) {
-                localH2H[identity.key] = this.mergeH2HRecord(localH2H[identity.key], merged, identity, {
-                    preferIncomingCurrentWinStreak: true
-                });
+                localH2H[identity.key] = merged;
                 if (identity.key !== oppKey && localH2H[oppKey]) delete localH2H[oppKey];
                 h2hUpdated = true;
             }
@@ -3539,13 +3558,15 @@ class YambApp {
     }
 
     updateStats(score, resultType, oppScore = 0, isTechnical = false, options = {}) {
-        let freshStats = JSON.parse(localStorage.getItem('yamb_stats'));
+        let freshStats = this.readLocalJson('yamb_stats', null);
         this.stats = freshStats || this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, currentWinStreak: 0, maxWinStreak: 0 };
         const serverAppliedTechnical = !!(isTechnical && options.serverApplied);
         const safeStatNumber = (value) => {
             const num = Number(value);
             return Number.isFinite(num) ? Math.max(0, Math.floor(num)) : 0;
         };
+        const safeScore = safeStatNumber(score);
+        const safeOppScore = safeStatNumber(oppScore);
         this.stats.games = Math.max(safeStatNumber(this.stats.games), safeStatNumber(this.stats.totalGames));
         this.stats.totalGames = this.stats.games;
         this.stats.totalScoreSum = safeStatNumber(this.stats.totalScoreSum);
@@ -3558,8 +3579,12 @@ class YambApp {
         if (!isTechnical) {
             this.stats.games++;
             this.stats.totalGames = this.stats.games;
-            this.stats.totalScoreSum += score;
-            if (score > this.stats.highscore) this.stats.highscore = score;
+            this.stats.totalScoreSum += safeScore;
+            if (safeScore > this.stats.highscore) this.stats.highscore = safeScore;
+        } else if (!serverAppliedTechnical) {
+            this.stats.games++;
+            this.stats.totalGames = this.stats.games;
+            this.stats.totalScoreSum += safeScore;
         }
 
         if (this.onlineMode && !this.isSpectator && !serverAppliedTechnical) {
@@ -3582,8 +3607,8 @@ class YambApp {
                     : this.players.findIndex(p => p !== this.playerName);
                 const oppName = this.players[oppIndex];
                 if (oppIndex >= 0 && oppName) {
-                    let passMyScore = isTechnical ? 0 : score;
-                    let passOppScore = isTechnical ? 0 : oppScore;
+                    let passMyScore = isTechnical ? 0 : safeScore;
+                    let passOppScore = isTechnical ? 0 : safeOppScore;
                     this.updateH2HStats(oppName, this.currentOpponentPhoto || '', resultType, passMyScore, passOppScore, this.currentOpponentUid);
                 }
             }
@@ -3612,19 +3637,24 @@ class YambApp {
             if (highEl) highEl.innerText = this.stats.highscore;
         }).catch(err => console.warn("Nije moguće uskladiti rekord iz top liste:", err));
         document.getElementById('stat-wins').innerText = h2hRecord.wins; 
+        const drawsEl = document.getElementById('stat-draws');
+        if (drawsEl) drawsEl.innerText = h2hRecord.draws;
         document.getElementById('stat-losses').innerText = h2hRecord.losses; 
-        
-        const avg = this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 0; 
-        document.getElementById('stat-avg').innerText = avg; 
+        const avg = this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 0;
+        document.getElementById('stat-avg').innerText = avg;
 
         const totalCompetitive = h2hRecord.wins + h2hRecord.losses + h2hRecord.draws; 
-        let rate = 0; let winWidth = 50; let lossWidth = 50;
-        if (totalCompetitive > 0) { rate = Math.round((h2hRecord.wins / totalCompetitive) * 100); winWidth = rate; lossWidth = 100 - rate; } 
-        else { winWidth = 0; lossWidth = 0; }
+        let rate = 0; let winWidth = 0; let drawWidth = 0; let lossWidth = 0;
+        if (totalCompetitive > 0) {
+            rate = Math.round((h2hRecord.wins / totalCompetitive) * 100);
+            winWidth = rate;
+            drawWidth = Math.round((h2hRecord.draws / totalCompetitive) * 100);
+            lossWidth = Math.max(0, 100 - winWidth - drawWidth);
+        }
 
-        document.getElementById('stat-rate').innerText = rate + "%"; 
-        const winBar = document.getElementById('stat-bar-win'); const lossBar = document.getElementById('stat-bar-loss');
-        if(winBar) winBar.style.width = winWidth + "%"; if(lossBar) lossBar.style.width = lossWidth + "%";
+        document.getElementById('stat-rate').innerText = rate + "%";
+        const winBar = document.getElementById('stat-bar-win'); const drawBar = document.getElementById('stat-bar-draw'); const lossBar = document.getElementById('stat-bar-loss');
+        if(winBar) winBar.style.width = winWidth + "%"; if(drawBar) drawBar.style.width = drawWidth + "%"; if(lossBar) lossBar.style.width = lossWidth + "%";
 
         let powerIndex = this.calculatePowerIndex(this.getFullLocalStats(), true);
         
@@ -3664,7 +3694,7 @@ class YambApp {
         const allTimeEl = document.getElementById('stat-alltime');
         if (allTimeEl) allTimeEl.innerText = allTimePts;
 
-        let h2h = this.normalizeH2HStats(JSON.parse(localStorage.getItem('yamb_h2h_stats') || '{}'));
+        let h2h = this.normalizeH2HStats(this.readLocalJson('yamb_h2h_stats', {}));
         localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
         // Filtriramo samo ispravne rivale
         let rivals = Object.values(h2h).filter(r => r.name && String(r.name) !== 'undefined' && String(r.name) !== 'null');

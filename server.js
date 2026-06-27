@@ -2069,9 +2069,32 @@ function normalizeH2HNameKey(value) {
         .replace(/\s+/g, '_');
 }
 
-function mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
+function isGuestH2HName(value) {
+    const key = normalizeH2HNameKey(value);
+    return key === 'gost' ||
+        key.startsWith('gost_') ||
+        key === 'guest' ||
+        key.startsWith('guest_');
+}
+
+function mergeH2HRecord(base = {}, incoming = {}, identity = {}, options = {}) {
     const baseTotal = toSafeInt(base.wins) + toSafeInt(base.losses) + toSafeInt(base.draws);
     const incomingTotal = toSafeInt(incoming.wins) + toSafeInt(incoming.losses) + toSafeInt(incoming.draws);
+    const baseContainsIncoming = toSafeInt(base.wins) >= toSafeInt(incoming.wins) &&
+        toSafeInt(base.losses) >= toSafeInt(incoming.losses) &&
+        toSafeInt(base.draws) >= toSafeInt(incoming.draws) &&
+        toSafeInt(base.gamesWithScore) >= toSafeInt(incoming.gamesWithScore) &&
+        toSafeInt(base.myTotalScore) >= toSafeInt(incoming.myTotalScore);
+    const incomingContainsBase = toSafeInt(incoming.wins) >= toSafeInt(base.wins) &&
+        toSafeInt(incoming.losses) >= toSafeInt(base.losses) &&
+        toSafeInt(incoming.draws) >= toSafeInt(base.draws) &&
+        toSafeInt(incoming.gamesWithScore) >= toSafeInt(base.gamesWithScore) &&
+        toSafeInt(incoming.myTotalScore) >= toSafeInt(base.myTotalScore);
+    const combineCounts = !!options.combineCounts &&
+        baseTotal > 0 &&
+        incomingTotal > 0 &&
+        !baseContainsIncoming &&
+        !incomingContainsBase;
     const currentWinStreak = incomingTotal > baseTotal
         ? toSafeInt(incoming.currentWinStreak)
         : (baseTotal > incomingTotal
@@ -2089,11 +2112,11 @@ function mergeH2HRecord(base = {}, incoming = {}, identity = {}) {
         name: identity.name || sanitizeTournamentName(incoming.name || base.name || 'Nepoznat'),
         uid: identity.uid || incoming.uid || base.uid || '',
         photo: incoming.photo && incoming.photo.length > 5 ? incoming.photo : (base.photo || ''),
-        wins: Math.max(toSafeInt(base.wins), toSafeInt(incoming.wins)),
-        losses: Math.max(toSafeInt(base.losses), toSafeInt(incoming.losses)),
-        draws: Math.max(toSafeInt(base.draws), toSafeInt(incoming.draws)),
-        myTotalScore: Math.max(toSafeInt(base.myTotalScore), toSafeInt(incoming.myTotalScore)),
-        gamesWithScore: Math.max(toSafeInt(base.gamesWithScore), toSafeInt(incoming.gamesWithScore)),
+        wins: combineCounts ? toSafeInt(base.wins) + toSafeInt(incoming.wins) : Math.max(toSafeInt(base.wins), toSafeInt(incoming.wins)),
+        losses: combineCounts ? toSafeInt(base.losses) + toSafeInt(incoming.losses) : Math.max(toSafeInt(base.losses), toSafeInt(incoming.losses)),
+        draws: combineCounts ? toSafeInt(base.draws) + toSafeInt(incoming.draws) : Math.max(toSafeInt(base.draws), toSafeInt(incoming.draws)),
+        myTotalScore: combineCounts ? toSafeInt(base.myTotalScore) + toSafeInt(incoming.myTotalScore) : Math.max(toSafeInt(base.myTotalScore), toSafeInt(incoming.myTotalScore)),
+        gamesWithScore: combineCounts ? toSafeInt(base.gamesWithScore) + toSafeInt(incoming.gamesWithScore) : Math.max(toSafeInt(base.gamesWithScore), toSafeInt(incoming.gamesWithScore)),
         myHighScore: Math.max(toSafeInt(base.myHighScore), toSafeInt(incoming.myHighScore)),
         maxWinMargin: Math.max(toSafeInt(base.maxWinMargin), toSafeInt(incoming.maxWinMargin)),
         maxLossMargin: Math.max(toSafeInt(base.maxLossMargin), toSafeInt(incoming.maxLossMargin)),
@@ -2112,8 +2135,10 @@ function normalizeH2HStatsForUser(h2hStats = {}, selfUid = '', selfName = '') {
         if (!rawRecord || typeof rawRecord !== 'object') continue;
         const rawUid = String(rawRecord.uid || rawKey || '').trim();
         if (selfUid && rawUid === String(selfUid || '').trim()) continue;
+        if (rawUid.startsWith('guest_')) continue;
         const rawName = String(rawRecord.name || (isStableH2HUid(rawKey, selfUid) ? '' : rawKey) || '').trim();
         if (!rawName || rawName === 'undefined' || rawName === 'null' || rawName === 'Nepoznat') continue;
+        if (isGuestH2HName(rawName)) continue;
         const name = sanitizeTournamentName(rawName);
         const nameKey = normalizeH2HNameKey(name);
         if (!nameKey || name === 'Nepoznat' || name === 'undefined' || name === 'null') continue;
@@ -2138,11 +2163,11 @@ function normalizeH2HStatsForUser(h2hStats = {}, selfUid = '', selfName = '') {
                 targetKey = identity.uid;
             }
 
-            normalized[targetKey] = mergeH2HRecord(normalized[targetKey], existingRecord, identity);
+            normalized[targetKey] = mergeH2HRecord(normalized[targetKey], existingRecord, identity, { combineCounts: true });
             delete normalized[existingKey];
         }
 
-        normalized[targetKey] = mergeH2HRecord(normalized[targetKey], rawRecord, identity);
+        normalized[targetKey] = mergeH2HRecord(normalized[targetKey], rawRecord, identity, { combineCounts: true });
     }
 
     return normalized;
@@ -3199,14 +3224,20 @@ function buildProfileSyncPayload(user) {
     };
 }
 
-function buildH2HRecordSummary(h2hStats = {}) {
+function buildH2HRecordSummary(h2hStats = {}, selfUid = '', selfName = '') {
     const summary = { wins: 0, losses: 0, draws: 0, games: 0 };
     if (!h2hStats || typeof h2hStats !== 'object') return summary;
+    const sourceH2H = (selfUid || selfName)
+        ? normalizeH2HStatsForUser(h2hStats, selfUid, selfName)
+        : h2hStats;
 
-    Object.values(h2hStats).forEach(record => {
+    Object.values(sourceH2H).forEach(record => {
         if (!record || typeof record !== 'object') return;
+        const uid = String(record.uid || '').trim();
+        if (uid.startsWith('guest_')) return;
         const name = String(record.name || '').trim();
         if (!name || name === 'undefined' || name === 'null' || name === 'Nepoznat') return;
+        if (isGuestH2HName(name)) return;
 
         const wins = Math.max(0, toSafeInt(record.wins, 0));
         const losses = Math.max(0, toSafeInt(record.losses, 0));
@@ -6430,50 +6461,21 @@ io.on('connection', (socket) => {
                             isModified = true;
                         } else {
                             let cloudData = cloudH2H[oppName];
-                            
-                            const localTotal = (localData.wins || 0) + (localData.losses || 0) + (localData.draws || 0);
-                            const cloudTotal = (cloudData.wins || 0) + (cloudData.losses || 0) + (cloudData.draws || 0);
-                            
-                            if (localTotal > cloudTotal) {
-                                cloudData.wins = localData.wins;
-                                cloudData.losses = localData.losses;
-                                cloudData.draws = localData.draws || 0;
-                                cloudData.currentWinStreak = localData.currentWinStreak || 0; 
+                            const stableUid = isStableH2HUid(localData.uid || cloudData.uid || oppName, user.firebaseUid)
+                                ? String(localData.uid || cloudData.uid || oppName).trim()
+                                : '';
+                            const identity = {
+                                key: oppName,
+                                name: sanitizeTournamentName(localData.name || cloudData.name || oppName),
+                                uid: stableUid
+                            };
+                            const mergedH2H = mergeH2HRecord(cloudData, localData, identity, { combineCounts: true });
+
+                            if (JSON.stringify(cloudData) !== JSON.stringify(mergedH2H)) {
+                                cloudData = mergedH2H;
                                 isModified = true;
                             }
 
-                            if ((localData.gamesWithScore || 0) > (cloudData.gamesWithScore || 0)) {
-                                cloudData.gamesWithScore = localData.gamesWithScore;
-                                cloudData.myTotalScore = localData.myTotalScore;
-                                cloudData.currentWinStreak = localData.currentWinStreak || 0;
-                                isModified = true;
-                            }
-
-                            if ((localData.maxWinStreak || 0) > (cloudData.maxWinStreak || 0)) {
-                                cloudData.maxWinStreak = localData.maxWinStreak;
-                                isModified = true;
-                            }
-
-                            if ((localData.myHighScore || 0) > (cloudData.myHighScore || 0)) {
-                                cloudData.myHighScore = localData.myHighScore;
-                                isModified = true;
-                            }
-
-                            if ((localData.maxWinMargin || 0) > (cloudData.maxWinMargin || 0)) {
-                                cloudData.maxWinMargin = localData.maxWinMargin;
-                                isModified = true;
-                            }
-
-                            if ((localData.maxLossMargin || 0) > (cloudData.maxLossMargin || 0)) {
-                                cloudData.maxLossMargin = localData.maxLossMargin;
-                                isModified = true;
-                            }
-
-                            if (localData.photo && localData.photo.length > 5 && localData.photo !== cloudData.photo) {
-                                cloudData.photo = localData.photo; 
-                                isModified = true;
-                            }
-                            
                             cloudH2H[oppName] = cloudData;
                         }
                     }
@@ -6517,7 +6519,7 @@ io.on('connection', (socket) => {
                     musicVolume: normalizeMusicVolume(s.musicVolume, 0.4),
                     language: normalizeLanguageSetting(s.language, 'sr'),
                     penaltyPoints: Math.max(0, toSafeInt(s.penaltyPoints, 0)),
-                    h2hStats: s.h2hStats || {},
+                    h2hStats: normalizeH2HStatsForUser(s.h2hStats || {}, verifiedUid, data.name),
                     unlockedTrophies: initialEconomy.unlockedTrophies,
                     unlockedSkins: initialEconomy.unlockedSkins,
                     unlockedEffects: initialEconomy.unlockedEffects,
@@ -6547,7 +6549,7 @@ io.on('connection', (socket) => {
                 unlockedTrophies: user.unlockedTrophies,
                 leagueData: user.leagueData,
                 penaltyPoints: user.penaltyPoints || 0,
-                h2hRecord: buildH2HRecordSummary(user.h2hStats)
+                h2hRecord: buildH2HRecordSummary(user.h2hStats, user.firebaseUid, user.playerName)
             };
 
             updateOnlineCount();
@@ -8034,7 +8036,7 @@ io.on('connection', (socket) => {
                 const friendSocketId = getConnectedFriendSocketId(f.firebaseUid);
                 const isOnline = !!friendSocketId;
 
-                const h2hRecord = buildH2HRecordSummary(f.h2hStats);
+                const h2hRecord = buildH2HRecordSummary(f.h2hStats, f.firebaseUid, f.playerName);
                 const pi = sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(f));
 
                 return {
