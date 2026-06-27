@@ -256,6 +256,7 @@ class YambApp {
     initUndoManager() {
         if (typeof UndoManager !== 'undefined') {
             this.undoManager = new UndoManager(this);
+            window.undoManager = this.undoManager;
             console.log("✅ UndoManager uspešno povezan.");
         } else {
             console.warn("⚠️ UndoManager skripta nije učitana!");
@@ -1748,6 +1749,7 @@ class YambApp {
 
         if (data.undoTokens !== undefined) {
             const undoTokens = Math.max(0, toNumber(data.undoTokens, 0));
+            nextStats.undoTokens = undoTokens;
             localStorage.setItem('yamb_undo_tokens', undoTokens);
             const tokenCount = document.getElementById('undo-token-count');
             if (tokenCount) tokenCount.innerText = undoTokens;
@@ -1763,6 +1765,9 @@ class YambApp {
         if (window.statsManager) {
             window.statsManager.stats = { ...window.statsManager.stats, ...this.stats };
             window.statsManager.saveStats();
+        }
+        if (window.undoManager && typeof window.undoManager.updateMenuCounts === 'function') {
+            window.undoManager.updateMenuCounts();
         }
 
         const serverGeneralUnlocks = Array.isArray(data.yamb_unlocked) ? data.yamb_unlocked : [];

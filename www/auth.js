@@ -267,11 +267,11 @@ function migrateLegacyLocalProgressToUid(uid) {
 
     if (improvedTarget) {
         localStorage.setItem(targetKey, JSON.stringify(mergedLeagueData));
-        localStorage.setItem('yamb_legacy_migration_pending_' + uid, 'true');
         console.log(`Legacy migracija: prebačeno ${mergedLeagueData.quarterlyScore} liga poena na prijavljen nalog.`);
     }
 
-    return improvedTarget;
+    localStorage.setItem('yamb_legacy_migration_pending_' + uid, 'true');
+    return improvedTarget || mergedLeagueData.quarterlyScore > 0;
 }
 
 window.migrateLegacyLocalProgressToUid = migrateLegacyLocalProgressToUid;

@@ -82,7 +82,7 @@ const RulesData = {
                 </ul>
                 
                 <h4>🏅 KVARTALNA LIGA</h4>
-                <p>Kvartalna liga je sezonsko takmičenje koje traje 3 meseca. Svaka završena partija (solo ili online) donosi poene. Napredujete kroz rangove: Amater, Profi, Majstor, Legenda i Titan.</p>
+                <p>Kvartalna liga je sezonsko takmičenje koje traje 3 meseca. Svaka završena partija (solo, hotseat ili online) donosi poene. Napredujete kroz rangove: Amater, Profi, Majstor, Legenda i Titan.</p>
                 <p>Na kraju svakog kvartala, najbolje plasirani igrači osvajaju izuzetno vredne nagrade u dukatima i medalje, a prvoplasirani nosi prestižnu titulu Šampiona ciklusa!</p>
             `
         },
@@ -231,7 +231,7 @@ const RulesData = {
                 </ul>
                 
                 <h4>🏅 QUARTERLY LEAGUE</h4>
-                <p>A seasonal 3-month competition. Every finished match brings points. Progress through ranks: Amateur, Pro, Master, Legend, and Titan.</p>
+                <p>A seasonal 3-month competition. Every finished solo, hotseat, or online match brings points. Progress through ranks: Amateur, Pro, Master, Legend, and Titan.</p>
                 <p>At the end of each quarter, top players win medals, coins, and the 1st place claims the prestigious Champion title!</p>
             `
         },

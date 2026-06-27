@@ -4465,8 +4465,14 @@ function leagueScoreIdentity(score) {
 }
 
 async function fetchTopLeagueScoresForPeriod(year, quarter, limit = 50, scoreFilter = null) {
-    const match = { year, quarter };
-    if (scoreFilter) match.score = scoreFilter;
+    const scoreMatch = { $type: 'number' };
+    if (scoreFilter) Object.assign(scoreMatch, scoreFilter);
+    const match = {
+        year,
+        quarter,
+        playerId: { $type: 'string' },
+        score: scoreMatch
+    };
 
     return LeagueScore.aggregate([
         { $match: match },
@@ -7429,6 +7435,14 @@ io.on('connection', (socket) => {
             }
             
             const allTimeScores = await LeagueScore.aggregate([
+                {
+                    $match: {
+                        playerId: { $type: 'string' },
+                        year: { $type: 'number' },
+                        quarter: { $type: 'number' },
+                        score: { $type: 'number' }
+                    }
+                },
                 { $sort: { score: -1, date: -1 } },
                 {
                     $group: {
@@ -8472,6 +8486,22 @@ io.on('connection', (socket) => {
                         syncSenderAfterRelay = true;
                     }
 
+                    state.lastUndoMove = {
+                        socketId: socket.id,
+                        playerIndex,
+                        col: moveCol,
+                        row: moveRow,
+                        previousValue: playerSheet[moveCol][moveRow],
+                        diceValues: Array.isArray(diceValues) ? [...diceValues] : [0, 0, 0, 0, 0, 0],
+                        held: Array.isArray(state.zadrzane) ? [...state.zadrzane] : [false, false, false, false, false, false],
+                        rollCount: Math.max(0, toSafeInt(state.brojBacanja, 0)),
+                        najavaAktivna: !!state.najavaAktivna,
+                        najavljenoPolje: state.najavljenoPolje ? { ...state.najavljenoPolje } : null,
+                        turnIndex: state.turnIndex,
+                        moveCount: Math.max(0, toSafeInt(state.moveCount, 0)),
+                        createdAt: Date.now()
+                    };
+
                     playerSheet[moveCol][moveRow] = serverPoints;
                     state.brojBacanja = 0;
                     state.zadrzane = [false,false,false,false,false,false];
@@ -8480,6 +8510,10 @@ io.on('connection', (socket) => {
                     relayData = { roomId, row: moveRow, col: moveCol, points: serverPoints, pIdx: playerIndex };
                 }
                 else if (eventName === 'remote_roll') {
+                    if (state.lastUndoMove && state.lastUndoMove.playerIndex !== playerIndex) {
+                        state.lastUndoMove = null;
+                    }
+
                     if (state.najavaAktivna || state.brojBacanja >= 3) {
                         console.warn(`🚨 BLOKIRANO BACANJE: socket=${socket.id}, bacanje=${state.brojBacanja}, najava=${state.najavaAktivna}, room=${roomId}`);
                         emitAuthoritativeRoomState(socket, roomId, playerIndex);
@@ -8502,6 +8536,10 @@ io.on('connection', (socket) => {
                     emitToWholeRoom = true;
                 }
                 else if (eventName === 'remote_hold') {
+                    if (state.lastUndoMove && state.lastUndoMove.playerIndex !== playerIndex) {
+                        state.lastUndoMove = null;
+                    }
+
                     const holdIndex = toSafeInt(data?.index, -1);
                     if (holdIndex < 0 || holdIndex >= 6 || state.brojBacanja <= 0 || state.brojBacanja >= 3) {
                         console.warn(`🚨 BLOKIRANO DRŽANJE KOCKICE: socket=${socket.id}, index=${data?.index}, bacanje=${state.brojBacanja}, room=${roomId}`);
@@ -8514,6 +8552,10 @@ io.on('connection', (socket) => {
                     relayData = { roomId, index: holdIndex, status: state.zadrzane[holdIndex], pIdx: playerIndex };
                 }
                 else if (eventName === 'remote_announce') {
+                    if (state.lastUndoMove && state.lastUndoMove.playerIndex !== playerIndex) {
+                        state.lastUndoMove = null;
+                    }
+
                     const announceType = data?.type || 'start';
                     if (announceType === 'start') {
                         if (state.brojBacanja !== 1 || state.najavljenoPolje) {
@@ -8631,6 +8673,106 @@ io.on('connection', (socket) => {
         } else {
             // Ako soba više ne postoji (istekao grace period)
             socket.emit('force_cancel_online', { roomId: roomId || requestedRoomId || null }); // Izbacujemo ga nazad u meni
+        }
+    });
+
+    socket.on('undo_last_move', async (data = {}, ack) => {
+        const reply = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            socket.emit('undo_move_result', payload);
+        };
+
+        try {
+            const roomId = playerRooms[socket.id];
+            const requestedRoomId = typeof data?.roomId === 'string' ? data.roomId : '';
+
+            if (!roomId || (requestedRoomId && requestedRoomId !== roomId) || isLocalRoomId(roomId)) {
+                reply({ ok: false, reason: 'undo_unavailable', permanent: true });
+                return;
+            }
+
+            const state = roomState[roomId];
+            if (!state || state.gameFinished) {
+                reply({ ok: false, reason: 'undo_unavailable', permanent: true });
+                return;
+            }
+
+            const undoMove = state.lastUndoMove;
+            const playerIndex = state.players.indexOf(socket.id);
+            if (!undoMove || undoMove.socketId !== socket.id || undoMove.playerIndex !== playerIndex) {
+                reply({ ok: false, reason: 'undo_unavailable', permanent: true });
+                return;
+            }
+
+            const expectedNextTurn = playerIndex === 0 ? 1 : 0;
+            if (state.turnIndex !== expectedNextTurn || Math.max(0, toSafeInt(state.brojBacanja, 0)) !== 0) {
+                state.lastUndoMove = null;
+                reply({ ok: false, reason: 'undo_expired', permanent: true });
+                return;
+            }
+
+            const sheet = state.allScores?.[playerIndex];
+            if (!sheet || !sheet[undoMove.col] || !REDOVI_IGRA.includes(undoMove.row)) {
+                state.lastUndoMove = null;
+                reply({ ok: false, reason: 'undo_unavailable', permanent: true });
+                return;
+            }
+
+            let updatedUser = null;
+            if (MONGO_URI) {
+                const uid = getVerifiedUid(socket);
+                if (!uid) {
+                    socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+                    reply({ ok: false, reason: 'auth_required' });
+                    return;
+                }
+
+                updatedUser = await UserProfile.findOneAndUpdate(
+                    { firebaseUid: uid, undoTokens: { $gte: 1 } },
+                    { $inc: { undoTokens: -1 } },
+                    { new: true }
+                );
+
+                if (!updatedUser) {
+                    const currentUser = await UserProfile.findOne({ firebaseUid: uid });
+                    if (currentUser) emitProfileSync(socket, currentUser);
+                    reply({
+                        ok: false,
+                        reason: 'undo_no_tokens',
+                        undoTokens: currentUser ? Math.max(0, toSafeInt(currentUser.undoTokens, 0)) : 0,
+                        permanent: true
+                    });
+                    return;
+                }
+            }
+
+            sheet[undoMove.col][undoMove.row] = undoMove.previousValue ?? null;
+            state.kockiceVals = Array.isArray(undoMove.diceValues) ? [...undoMove.diceValues] : [0, 0, 0, 0, 0, 0];
+            state.zadrzane = Array.isArray(undoMove.held) ? [...undoMove.held] : [false, false, false, false, false, false];
+            state.brojBacanja = Math.max(0, toSafeInt(undoMove.rollCount, 0));
+            state.najavaAktivna = !!undoMove.najavaAktivna;
+            state.najavljenoPolje = undoMove.najavljenoPolje ? { ...undoMove.najavljenoPolje } : null;
+            state.turnIndex = undoMove.turnIndex;
+            state.moveCount = Math.max(0, toSafeInt(undoMove.moveCount, 0));
+            state.lastUndoMove = null;
+
+            startTurnTimer(roomId);
+
+            state.players.forEach((playerSocketId, index) => {
+                const clientSocket = io.sockets.sockets.get(playerSocketId);
+                if (clientSocket) emitAuthoritativeRoomState(clientSocket, roomId, index);
+            });
+
+            if (updatedUser) emitProfileSync(socket, updatedUser);
+
+            reply({
+                ok: true,
+                undoTokens: updatedUser ? Math.max(0, toSafeInt(updatedUser.undoTokens, 0)) : undefined,
+                localFallback: !MONGO_URI
+            });
+        } catch (err) {
+            console.error('Greška pri online undo rollback-u:', err);
+            reply({ ok: false, reason: 'err_server_conn' });
         }
     });
 
