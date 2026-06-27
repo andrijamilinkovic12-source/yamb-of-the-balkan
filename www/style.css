@@ -124,6 +124,14 @@ body {
     pointer-events: none;
 }
 
+.rules-asset-icon {
+    object-fit: contain;
+}
+
+.rules-asset-icon--png {
+    border-radius: 0.22em;
+}
+
 .balance-group { display: flex; align-items: center; gap: 10px; }
 .balance-display { background: var(--glass-bg); padding: 8px 15px; border-radius: 20px; border: 1px solid var(--gold-main); font-weight: bold; color: var(--gold-main); display: flex; align-items: center; gap: 8px; font-size: 0.9rem; box-shadow: 0 0 10px var(--gold-glow); }
 
