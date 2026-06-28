@@ -3043,15 +3043,38 @@ class ShopManager {
     }
 
     processTransaction(id, price) {
-        this.balance -= price;
-        this.unlocked.push(id);
+        const itemId = String(id || '').trim();
+        const safePrice = Math.max(0, parseInt(price, 10) || 0);
+
+        if (!itemId) return false;
+
+        if (this.unlocked.includes(itemId)) {
+            this.updateBalanceDisplay();
+            this.render();
+            return false;
+        }
+
+        if (this.balance < safePrice) {
+            if (typeof window.showNotification === 'function') {
+                window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!");
+            } else if (window.modalManager && window.modalManager.overlay) {
+                window.modalManager.alert(_safeT('msg_no_money') || "Nemate dovoljno dukata!", _safeT('modal_title_info'));
+            } else {
+                alert(_safeT('msg_no_money') || "Nemate dovoljno dukata!");
+            }
+            this.updateBalanceDisplay();
+            return false;
+        }
+
+        this.balance -= safePrice;
+        this.unlocked.push(itemId);
         
         localStorage.setItem('yamb_dukati', this.balance);
         localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
         
         let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
-        if (!opstiNiz.includes(id)) {
-            opstiNiz.push(id);
+        if (!opstiNiz.includes(itemId)) {
+            opstiNiz.push(itemId);
             localStorage.setItem('yamb_unlocked', JSON.stringify(opstiNiz));
         }
 
@@ -3074,15 +3097,15 @@ class ShopManager {
                 if (!Array.isArray(window.statsManager.stats[statsField])) {
                     window.statsManager.stats[statsField] = [];
                 }
-                if (!window.statsManager.stats[statsField].includes(id)) {
-                    window.statsManager.stats[statsField].push(id);
+                if (!window.statsManager.stats[statsField].includes(itemId)) {
+                    window.statsManager.stats[statsField].push(itemId);
                 }
             }
 
             if (storageKey) {
                 const typedUnlocked = JSON.parse(localStorage.getItem(storageKey) || '[]');
-                if (!typedUnlocked.includes(id)) {
-                    typedUnlocked.push(id);
+                if (!typedUnlocked.includes(itemId)) {
+                    typedUnlocked.push(itemId);
                     localStorage.setItem(storageKey, JSON.stringify(typedUnlocked));
                 }
             }
@@ -3192,6 +3215,8 @@ class ShopManager {
                 playerId: window.app.playerId
             });
         }
+
+        return true;
     }
 
     setServerBalance(balance) {
