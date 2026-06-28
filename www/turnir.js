@@ -967,6 +967,7 @@ class TournamentManager {
         if (qf.length === 0) qf = Array(4).fill(null);
         if (sf.length === 0) sf = Array(2).fill(null);
         if (f.length === 0) f = Array(1).fill(null);
+        const finalTitle = (tt('tourney_f') || 'FINALE').replace(/🏆/g, '').trim() || 'FINALE';
 
         container.innerHTML = `
             <div class="tourney-bracket-layout">
@@ -997,7 +998,8 @@ class TournamentManager {
                     <div class="tourney-page">
                         <div class="tourney-card">
                             <h3 class="tourney-round-title">
-                                ${tt('tourney_f') || 'FINALE'}
+                                <span>${finalTitle}</span>
+                                <img class="tourney-round-trophy" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                             </h3>
                             <div class="tourney-matches tourney-matches--f">
                                 ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
@@ -1020,7 +1022,8 @@ class TournamentManager {
                 .tourney-carousel::-webkit-scrollbar { display: none; }
                 .tourney-page { flex: 0 0 100%; width: 100%; min-height: 0; scroll-snap-align: center; padding: 0 10px; display: flex; flex-direction: column; }
                 .tourney-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
-                .tourney-round-title { color: var(--gold-main); text-align: center; margin: 0 0 10px; font-size: 1.05rem; line-height: 1.15; letter-spacing: 0; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 7px; flex: 0 0 auto; }
+                .tourney-round-title { color: var(--gold-main); text-align: center; margin: 0 0 10px; font-size: 1.05rem; line-height: 1.15; letter-spacing: 0; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 7px; flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center; gap: 7px; }
+                .tourney-round-trophy { width: 22px; height: 22px; object-fit: contain; flex: 0 0 auto; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.45)) drop-shadow(0 0 7px var(--gold-glow)); }
                 .tourney-matches { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; align-items: stretch; }
                 .tourney-matches--qf { justify-content: space-between; gap: 7px; }
                 .tourney-matches--sf { justify-content: center; gap: 28px; }
@@ -1147,7 +1150,7 @@ class TournamentManager {
             const resultHtml = resultLabel
                 ? `<div style="margin-top: 8px; color: var(--text-main); font-size: 0.95rem;">${this.tr('tourney_result', 'Rezultat')}: <strong style="color: var(--gold-main);">${resultLabel}</strong>${technicalReason ? ` <span style="color: var(--text-muted); font-size: 0.82rem;">(${technicalReason})</span>` : ''}</div>`
                 : '';
-            akcijeHtml = `<div style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> 🏆${resultHtml}</div>`;
+            akcijeHtml = `<div style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async" style="width: 22px; height: 22px; object-fit: contain; vertical-align: -5px; margin-left: 4px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.45)) drop-shadow(0 0 7px var(--gold-glow));">${resultHtml}</div>`;
         }
         else if (isMyMatch) {
             if (match.timeAccepted) {
