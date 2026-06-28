@@ -1062,7 +1062,7 @@ body {
 
     #riznica-screen .riznica-tabs {
         width: calc(100% - 8px);
-        gap: 4px;
+        gap: 2px;
     }
 
     #riznica-screen .balance-display,
@@ -1074,8 +1074,11 @@ body {
     }
 
     #riznica-screen .balance-display {
-        min-width: 62px;
-        max-width: 76px;
+        min-width: 82px;
+        max-width: 86px;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 0.64rem;
     }
 
     #riznica-screen .btn-add-coins {
@@ -1148,17 +1151,22 @@ body {
     }
 
     #riznica-screen .riznica-tabs {
-        gap: 3px;
+        gap: 2px;
     }
 
     #riznica-screen .balance-display {
-        min-width: 58px;
-        max-width: 68px;
+        min-width: 66px;
+        max-width: 70px;
+        padding-left: 2px;
+        padding-right: 2px;
+        font-size: 0.56rem;
     }
 
     #riznica-screen .btn-add-coins {
-        min-width: 78px;
-        font-size: 0.64rem;
+        min-width: 66px;
+        padding-left: 4px;
+        padding-right: 4px;
+        font-size: 0.58rem;
     }
 
     #riznica-screen .tab-btn {

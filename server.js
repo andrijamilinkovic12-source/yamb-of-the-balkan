@@ -497,8 +497,9 @@ const UserProfileSchema = new mongoose.Schema({
     undoTokens: { type: Number, default: 0 },
     currentWinStreak: { type: Number, default: 0 },
     maxWinStreak: { type: Number, default: 0 },
-    tournamentWins: { type: Number, default: 0 }, 
+    tournamentWins: { type: Number, default: 0 },
     unlockedTrophies: { type: [String], default: [] },
+    claimedTrophyRewards: { type: [String], default: undefined },
     unlockedSkins: { type: [String], default: [] },
     unlockedEffects: { type: [String], default: [] },
     yamb_unlocked: { type: [String], default: [] }, 
@@ -5495,6 +5496,36 @@ function sumTrophyRewards(trophyIds) {
     return sanitizeIdArray(trophyIds).reduce((sum, id) => sum + (TROPHY_REWARDS[id] || 0), 0);
 }
 
+function sanitizeTrophyIds(trophyIds) {
+    return sanitizeIdArray(trophyIds).filter(id => ALL_TROPHY_IDS.has(id));
+}
+
+async function ensureTrophyRewardLedger(user) {
+    if (!user) return [];
+
+    if (Array.isArray(user.claimedTrophyRewards)) {
+        return sanitizeTrophyIds(user.claimedTrophyRewards);
+    }
+
+    const initialLedger = sanitizeTrophyIds(user.unlockedTrophies);
+    user.claimedTrophyRewards = initialLedger;
+    if (typeof user.unmarkModified === 'function') {
+        user.unmarkModified('claimedTrophyRewards');
+    }
+
+    try {
+        const query = user._id
+            ? { _id: user._id, claimedTrophyRewards: { $exists: false } }
+            : { firebaseUid: user.firebaseUid, claimedTrophyRewards: { $exists: false } };
+        await UserProfile.updateOne(query, { $set: { claimedTrophyRewards: initialLedger } });
+    } catch (err) {
+        console.warn('⚠️ Trophy reward ledger inicijalizacija nije uspela:', err.message);
+        throw err;
+    }
+
+    return initialLedger;
+}
+
 function getNewTrophyRewards(clientTrophies, serverTrophies) {
     const serverSet = new Set(sanitizeIdArray(serverTrophies));
     return sanitizeIdArray(clientTrophies).reduce((sum, id) => {
@@ -5740,7 +5771,10 @@ function normalizeTrophyProof(rawProof) {
         flags: {
             hasProphet: flags.hasProphet === true,
             hasSvetiIlija: flags.hasSvetiIlija === true,
-            scoreDiff: clampSafeInt(flags.scoreDiff, -MAX_SCORE, MAX_SCORE)
+            scoreDiff: clampSafeInt(flags.scoreDiff, -MAX_SCORE, MAX_SCORE),
+            localHour: Number.isInteger(Number(flags.localHour)) && Number(flags.localHour) >= 0 && Number(flags.localHour) <= 23
+                ? Number(flags.localHour)
+                : null
         },
         stats: normalizeProfileStats({
             ...stats,
@@ -5834,13 +5868,16 @@ function isSpecialTrophyEarned(trophyId, proof) {
         case 'achilles':
             return hasOnlyYambZeros(sheet);
         case 'night_owl':
-            return isBelgradeNightOwlHour();
+            return proof.flags.localHour === null
+                ? isBelgradeNightOwlHour()
+                : proof.flags.localHour >= 3 && proof.flags.localHour <= 5;
         case 'close_call': {
+            if (!['Hotseat', 'Online', 'AI'].includes(proof.mode)) return false;
             const diff = Math.abs(proof.flags.scoreDiff);
             return diff > 0 && diff < 5;
         }
         case 'spite':
-            return proof.flags.scoreDiff >= 200;
+            return ['Hotseat', 'Online', 'AI'].includes(proof.mode) && proof.flags.scoreDiff >= 200;
         default:
             return false;
     }
@@ -6126,7 +6163,7 @@ function buildInitialEconomyState(stats, acceptedTrophies = null) {
     const requestedTrophies = acceptedTrophies ? sanitizeIdArray(acceptedTrophies) : sanitizeIdArray(stats?.unlockedTrophies);
     const requestedUnlocks = getRequestedUnlockSet(stats);
     const requestedPaidUnlockCost = getPaidUnlockCost(requestedUnlocks, new Set(requestedTrophies), requestedTrophies);
-    const economyCeiling = estimateEconomyCeiling(stats);
+    const economyCeiling = estimateEconomyCeiling({ ...stats, unlockedTrophies: requestedTrophies });
     const requestedBalance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(stats?.balance, 0)));
     const purchaseCoverage = Math.max(0, economyCeiling - requestedBalance);
     const acceptsPaidUnlocks = requestedPaidUnlockCost === 0 || purchaseCoverage >= requestedPaidUnlockCost;
@@ -6362,8 +6399,10 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const unlocked = new Set(sanitizeIdArray(user.unlockedTrophies));
-            if (unlocked.has(trophyId)) {
+            const claimedRewards = await ensureTrophyRewardLedger(user);
+            const unlocked = new Set(sanitizeTrophyIds(user.unlockedTrophies));
+            const claimed = new Set(claimedRewards);
+            if (claimed.has(trophyId)) {
                 emitProfileSync(socket, user, {
                     trophyReward: {
                         trophyId,
@@ -6387,13 +6426,20 @@ io.on('connection', (socket) => {
                 return;
             }
 
+            const claimedRewardsToPersist = Array.from(new Set([
+                ...claimedRewards,
+                trophyId
+            ]));
             const updatedUser = await UserProfile.findOneAndUpdate(
                 {
                     firebaseUid: verifiedUid,
-                    unlockedTrophies: { $ne: trophyId }
+                    claimedTrophyRewards: { $ne: trophyId }
                 },
                 {
-                    $addToSet: { unlockedTrophies: trophyId },
+                    $addToSet: {
+                        unlockedTrophies: trophyId,
+                        claimedTrophyRewards: { $each: claimedRewardsToPersist }
+                    },
                     $inc: { balance: reward }
                 },
                 { new: true }
@@ -6594,6 +6640,7 @@ io.on('connection', (socket) => {
                 user.playerName = data.name;
                 user.lastLogin = Date.now();
                 user.photoUrl = socket.photoUrl || user.photoUrl;
+                await ensureTrophyRewardLedger(user);
                 const previousActive = {
                     activeSkin: user.activeSkin,
                     activeEffect: user.activeEffect,
@@ -6843,13 +6890,14 @@ io.on('connection', (socket) => {
 
                 emitProfileSync(socket, user);
             } else {
-                const initialEconomy = buildInitialEconomyState(s);
-                const initialGames = Math.max(0, toSafeInt(s.games, 0));
-                const initialWins = Math.max(0, Math.min(initialGames, toSafeInt(s.wins, 0)));
-                const initialLosses = Math.max(0, Math.min(initialGames, toSafeInt(s.losses, 0)));
+                const initialProfile = buildInitialProfileState(s);
+                const initialEconomy = buildInitialEconomyState(s, initialProfile.unlockedTrophies);
+                const initialGames = initialProfile.stats.games;
+                const initialWins = initialProfile.stats.wins;
+                const initialLosses = initialProfile.stats.losses;
                 const scoreHistoryHighscore = await getBestSubmittedScoreForUid(verifiedUid);
-                const initialHighscore = Math.max(scoreHistoryHighscore, Math.max(0, Math.min(MAX_SCORE, toSafeInt(s.highscore, 0))));
-                const initialTotalScoreSum = Math.max(0, Math.min(toSafeInt(s.totalScoreSum, 0), initialGames * MAX_SCORE));
+                const initialHighscore = Math.max(scoreHistoryHighscore, initialProfile.stats.highscore);
+                const initialTotalScoreSum = initialProfile.stats.totalScoreSum;
 
                 user = new UserProfile({
                     firebaseUid: verifiedUid,
@@ -6857,9 +6905,9 @@ io.on('connection', (socket) => {
                     photoUrl: socket.photoUrl || '',
                     wins: initialWins, losses: initialLosses, games: initialGames,
                     highscore: initialHighscore, totalScoreSum: initialTotalScoreSum,
-                    balance: initialEconomy.balance, undoTokens: initialEconomy.undoTokens, currentWinStreak: Math.max(0, toSafeInt(s.currentWinStreak, 0)),
-                    maxWinStreak: Math.max(0, toSafeInt(s.maxWinStreak, 0)),
-                    tournamentWins: Math.max(0, toSafeInt(s.tournamentWins, 0)),
+                    balance: initialEconomy.balance, undoTokens: initialEconomy.undoTokens, currentWinStreak: initialProfile.stats.currentWinStreak,
+                    maxWinStreak: initialProfile.stats.maxWinStreak,
+                    tournamentWins: initialProfile.stats.tournamentWins,
                     activeSkin: s.activeSkin || 'default',
                     activeTheme: s.activeTheme || 'dark',
                     activeEffect: s.activeEffect || 'confetti',
@@ -6868,14 +6916,17 @@ io.on('connection', (socket) => {
                     musicEnabled: coerceBooleanSetting(s.musicEnabled) ?? true,
                     musicVolume: normalizeMusicVolume(s.musicVolume, 0.4),
                     language: normalizeLanguageSetting(s.language, 'sr'),
-                    penaltyPoints: Math.max(0, toSafeInt(s.penaltyPoints, 0)),
+                    penaltyPoints: initialProfile.stats.penaltyPoints,
                     h2hStats: normalizeH2HStatsForUser(s.h2hStats || {}, verifiedUid, data.name),
                     unlockedTrophies: initialEconomy.unlockedTrophies,
+                    claimedTrophyRewards: initialEconomy.unlockedTrophies,
                     unlockedSkins: initialEconomy.unlockedSkins,
                     unlockedEffects: initialEconomy.unlockedEffects,
                     yamb_unlocked: initialEconomy.yamb_unlocked,
                     lastDaily: normalizeDailyKeyForSync(s.lastDaily),
                     leagueData: getDefaultCurrentLeagueData(),
+                    statsMigrationApplied: true,
+                    statsMigratedAt: Date.now(),
                     economyMigrationApplied: true,
                     economyMigratedAt: Date.now()
                 });

@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node server.js",
     "check:js": "node scripts/check-js.js",
-    "test": "npm run check:js"
+    "check:trophies": "node scripts/check-trophies.js",
+    "test": "npm run check:js && npm run check:trophies"
   },
   "keywords": [],
   "author": "",

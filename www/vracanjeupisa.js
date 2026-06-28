@@ -507,6 +507,7 @@ class UndoManager {
         
         this.app.najavaAktivna = snap.najavaAktivna;
         this.app.hasSvetiIlija = snap.hasSvetiIlija;
+        this.app.hasProphet = snap.hasProphet === true;
         this.app.consecutiveNajava = snap.consecutiveNajava;
 
         this.app.effectMgr.stop();

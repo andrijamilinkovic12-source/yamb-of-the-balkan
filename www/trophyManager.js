@@ -19,6 +19,19 @@ class TrophyManager {
         };
     }
 
+    getBelgradeHour() {
+        try {
+            const hourString = new Intl.DateTimeFormat('en-US', {
+                hour: 'numeric',
+                hour12: false,
+                timeZone: 'Europe/Belgrade'
+            }).format(new Date());
+            return Number(hourString);
+        } catch (err) {
+            return new Date().getHours();
+        }
+    }
+
     buildClaimProof(score, sheet, mode, flags = {}) {
         return {
             finalScore: Number(score) || 0,
@@ -26,7 +39,7 @@ class TrophyManager {
             mode,
             flags: {
                 ...flags,
-                localHour: new Date().getHours()
+                localHour: this.getBelgradeHour()
             },
             stats: this.getProjectedStats(score)
         };
@@ -54,6 +67,126 @@ class TrophyManager {
         this.statsMgr.stats.balance = Math.max(0, balance);
         this.statsMgr.saveStats();
         this.updateBalanceDisplay();
+    }
+
+    rollbackLocalTrophy(trophyId, rewardToReverse = 0) {
+        if (!trophyId || !this.statsMgr || !this.statsMgr.stats) return;
+
+        if (Array.isArray(this.statsMgr.stats.unlockedTrophies)) {
+            this.statsMgr.stats.unlockedTrophies = this.statsMgr.stats.unlockedTrophies.filter(id => id !== trophyId);
+        }
+
+        const reward = Math.max(0, Number(rewardToReverse) || 0);
+        if (reward > 0) {
+            this.statsMgr.stats.balance = Math.max(0, (Number(this.statsMgr.stats.balance) || 0) - reward);
+        }
+
+        if (typeof this.statsMgr.saveStats === 'function') {
+            this.statsMgr.saveStats();
+        }
+
+        try {
+            const unlocked = JSON.parse(localStorage.getItem('yamb_unlocked') || '[]');
+            if (Array.isArray(unlocked)) {
+                localStorage.setItem('yamb_unlocked', JSON.stringify(unlocked.filter(id => id !== trophyId)));
+            }
+        } catch (err) {}
+
+        this.updateBalanceDisplay();
+    }
+
+    getPendingClaimStorageKey() {
+        const uid = localStorage.getItem('yamb_uid') || 'guest';
+        return `yamb_pending_trophy_claims_${uid}`;
+    }
+
+    loadPendingClaims() {
+        try {
+            const parsed = JSON.parse(localStorage.getItem(this.getPendingClaimStorageKey()) || '[]');
+            return Array.isArray(parsed) ? parsed.filter(entry => entry && typeof entry.trophyId === 'string') : [];
+        } catch (err) {
+            return [];
+        }
+    }
+
+    savePendingClaims(claims) {
+        const key = this.getPendingClaimStorageKey();
+        const normalized = Array.isArray(claims) ? claims.slice(-26) : [];
+        if (normalized.length === 0) {
+            localStorage.removeItem(key);
+            return;
+        }
+        localStorage.setItem(key, JSON.stringify(normalized));
+    }
+
+    queuePendingClaim(trophy, proof, localRewardApplied = false) {
+        if (!trophy || !trophy.id) return;
+
+        const existing = this.loadPendingClaims().find(entry => entry.trophyId === trophy.id);
+        const pending = this.loadPendingClaims().filter(entry => entry.trophyId !== trophy.id);
+        pending.push({
+            trophyId: trophy.id,
+            proof,
+            localRewardApplied: existing?.localRewardApplied === true || localRewardApplied === true,
+            queuedAt: Date.now()
+        });
+        this.savePendingClaims(pending);
+    }
+
+    removePendingClaim(trophyId) {
+        this.savePendingClaims(this.loadPendingClaims().filter(entry => entry.trophyId !== trophyId));
+    }
+
+    async retryPendingClaims() {
+        if (this.pendingClaimsRetry) return this.pendingClaimsRetry;
+
+        const app = window.app;
+        if (!app || !app.socket || !app.socket.connected) {
+            return {
+                ok: false,
+                reason: 'socket_disconnected',
+                claimed: 0,
+                remaining: this.loadPendingClaims().length
+            };
+        }
+
+        this.pendingClaimsRetry = (async () => {
+            let claimed = 0;
+            const permanentReasons = new Set(['invalid_trophy', 'trophy_not_earned']);
+
+            for (const entry of this.loadPendingClaims()) {
+                const trophy = this.trophies.find(item => item.id === entry.trophyId);
+                if (!trophy) {
+                    this.removePendingClaim(entry.trophyId);
+                    continue;
+                }
+
+                const result = await this.claimServerReward(trophy, entry.proof || {});
+                if (result && result.ok && !result.localFallback) {
+                    if (typeof result.balance === 'number') this.setServerBalance(result.balance);
+                    this.removePendingClaim(entry.trophyId);
+                    claimed++;
+                    continue;
+                }
+
+                if (result && permanentReasons.has(result.reason)) {
+                    console.warn(`Pending trofej ${entry.trophyId} trajno odbijen: ${result.reason}`);
+                    this.rollbackLocalTrophy(entry.trophyId, entry.localRewardApplied ? trophy.reward : 0);
+                    this.removePendingClaim(entry.trophyId);
+                    continue;
+                }
+
+                break;
+            }
+
+            return { ok: true, claimed, remaining: this.loadPendingClaims().length };
+        })();
+
+        try {
+            return await this.pendingClaimsRetry;
+        } finally {
+            this.pendingClaimsRetry = null;
+        }
     }
 
     async claimServerReward(trophy, proof) {
@@ -124,19 +257,19 @@ class TrophyManager {
 
                 // 2. REZULTATI
                 case 'score_1000':
-                    if (score >= 1000) conditionMet = true;
+                    if (stats.highscore >= 1000) conditionMet = true;
                     break;
                 case 'grandmaster':
-                    if (score >= 1250) conditionMet = true;
+                    if (stats.highscore >= 1250) conditionMet = true;
                     break;
                 case 'legend':
-                    if (score >= 2000) conditionMet = true;
+                    if (stats.highscore >= 2000) conditionMet = true;
                     break;
                 case 'mythic':
-                    if (score >= 2500) conditionMet = true;
+                    if (stats.highscore >= 2500) conditionMet = true;
                     break;
                 case 'godlike':
-                    if (score >= 3000) conditionMet = true;
+                    if (stats.highscore >= 3000) conditionMet = true;
                     break;
 
                 // 3. SPECIFIČNE KOLONE I REDOVI
@@ -192,7 +325,7 @@ class TrophyManager {
                 
                 case 'night_owl':
                     // Provera da li je trenutno vreme između 03:00 i 05:59
-                    const hour = new Date().getHours();
+                    const hour = this.getBelgradeHour();
                     if (hour >= 3 && hour < 6) conditionMet = true;
                     break;
 
@@ -212,7 +345,10 @@ class TrophyManager {
 
             if (conditionMet) {
                 const unlockResult = this.unlock(trophy, proof, options);
-                if (unlockResult) unlockedNow.push(trophy);
+                if (unlockResult) unlockedNow.push({
+                    ...trophy,
+                    claimPromise: unlockResult.claimPromise
+                });
             }
         });
 
@@ -303,6 +439,7 @@ class TrophyManager {
         const claimPromise = this.claimServerReward(trophy, proof)
             .then(result => {
                 if (result && result.ok && result.localFallback) {
+                    this.queuePendingClaim(trophy, proof, true);
                     this.applyLocalReward(trophy);
                     notify(trophy.reward);
                     return result;
@@ -315,11 +452,17 @@ class TrophyManager {
                 }
 
                 console.warn(`Trofej ${trophy.id} nije isplaćen na serveru: ${result?.reason || 'unknown_error'}`);
+                if (['invalid_trophy', 'trophy_not_earned'].includes(result?.reason)) {
+                    this.rollbackLocalTrophy(trophy.id);
+                } else {
+                    this.queuePendingClaim(trophy, proof);
+                }
                 notify(0);
                 return result;
             })
             .catch(err => {
                 console.warn("Greška pri server isplati trofeja, koristim lokalni fallback:", err);
+                this.queuePendingClaim(trophy, proof, true);
                 this.applyLocalReward(trophy);
                 notify(trophy.reward);
                 return { ok: true, localFallback: true, trophyId: trophy.id, reward: trophy.reward };

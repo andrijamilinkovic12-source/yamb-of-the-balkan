@@ -3049,6 +3049,23 @@ class YambApp {
             return authResult || { ok: false, reason: 'auth_failed' };
         }
 
+        if (window.trophyManager && typeof window.trophyManager.retryPendingClaims === 'function') {
+            try {
+                const pendingResult = await window.trophyManager.retryPendingClaims();
+                if (pendingResult && pendingResult.remaining > 0) {
+                    console.warn(`Odlažem profile sync dok se ne potvrdi ${pendingResult.remaining} pending trofej(a).`);
+                    return {
+                        ok: false,
+                        reason: 'pending_trophy_claims',
+                        pendingTrophies: pendingResult.remaining
+                    };
+                }
+            } catch (err) {
+                console.warn('Pending trofeji nisu potvrđeni pre profile sync-a:', err);
+                return { ok: false, reason: 'pending_trophy_claim_error' };
+            }
+        }
+
         const uid = authResult.uid;
         const syncWait = options.waitForSync ? this.waitForProfileSync(options.timeoutMs || 4000) : null;
 
@@ -3467,7 +3484,7 @@ class YambApp {
         }
     }
     
-    requestRematch() {
+    async requestRematch() {
         if (!this.socket || this.isSpectator || !this.onlineMode) return;
         
         const btnRematch = document.getElementById('btn-rematch');
@@ -3479,6 +3496,16 @@ class YambApp {
         }
         
         this.soundMgr.click();
+        const rewardReady = await this.claimPendingBaseRewardBeforeRematch();
+        if (!rewardReady) {
+            if (btnRematch) {
+                btnRematch.disabled = false;
+                btnRematch.innerHTML = `<span data-lang="go_rematch">${gt('go_rematch')}</span>`;
+                btnRematch.style.background = 'linear-gradient(45deg, #4CAF50, #2E7D32)';
+            }
+            this.modal.alert(gt('reward_claim_retry') || "Nagrada još nije potvrđena. Pokušajte ponovo za par sekundi.", gt('modal_title_info') || "INFO");
+            return;
+        }
         this.socket.emit('request_rematch');
     }
 
@@ -4970,13 +4997,19 @@ class YambApp {
             if(this.isSpectator) return;
             const accepted = await this.modal.confirm(gt('rematch_ask'));
             if (accepted) {
-                this.socket.emit('accept_rematch');
+                const rewardReady = await this.claimPendingBaseRewardBeforeRematch();
+                if (rewardReady) {
+                    this.socket.emit('accept_rematch');
+                } else {
+                    this.modal.alert(gt('reward_claim_retry') || "Nagrada još nije potvrđena. Pokušajte ponovo za par sekundi.", gt('modal_title_info') || "INFO");
+                    this.socket.emit('chat_msg', { roomId: this.roomId, msg: gt('rematch_declined') });
+                }
             } else {
                 this.socket.emit('chat_msg', { roomId: this.roomId, msg: gt('rematch_declined') });
             }
         });
 
-        this.socket.on('rematch_started', () => {
+        this.socket.on('rematch_started', async () => {
             if(this.isSpectator) {
                 this.initScores();
                 this.currentPlayerIdx = 0;
@@ -4984,6 +5017,7 @@ class YambApp {
                 this.updateDiceVisuals();
                 return;
             }
+            await this.claimPendingBaseRewardBeforeRematch();
             this.modal.alert(gt('rematch_accepted'), gt('rematch_title')).then(() => {
                 this.initScores(); 
                 this.currentPlayerIdx = 0; 
@@ -5883,7 +5917,21 @@ class YambApp {
             pts = 0; 
         } 
         
-        if (col === 'Najava') { if (pts > 0) { this.consecutiveNajava++; if (this.consecutiveNajava >= 3) this.hasProphet = true; } else { this.consecutiveNajava = 0; } }
+        const profilePlayerIndex = this.onlineMode && Number.isInteger(this.myOnlineIndex) && this.myOnlineIndex >= 0
+            ? this.myOnlineIndex
+            : this.players.findIndex(player => player === this.playerName);
+        const isProfileMove = pIdx === (profilePlayerIndex >= 0 ? profilePlayerIndex : 0);
+        const previousConsecutiveNajava = this.consecutiveNajava;
+        const previousHasProphet = this.hasProphet;
+
+        if (isProfileMove && col === 'Najava') {
+            if (pts > 0) {
+                this.consecutiveNajava++;
+                if (this.consecutiveNajava >= 3) this.hasProphet = true;
+            } else {
+                this.consecutiveNajava = 0;
+            }
+        }
         
         // Uklonjen uslov !this.onlineMode kako bi radilo i za online tokene
         this.lastMoveSnapshot = {
@@ -5896,7 +5944,8 @@ class YambApp {
             najavljenoPolje: this.najavljenoPolje ? { ...this.najavljenoPolje } : null,
             najavaAktivna: this.najavaAktivna,
             hasSvetiIlija: this.hasSvetiIlija,
-            consecutiveNajava: this.consecutiveNajava
+            hasProphet: previousHasProphet,
+            consecutiveNajava: previousConsecutiveNajava
         };
         const btnUndo = document.getElementById('btn-undo-move');
         if (btnUndo) {
@@ -5911,7 +5960,7 @@ class YambApp {
         if (row === "Yamb" && pts > 0) {
             try {
                 this.effectMgr.celebrateYamb();
-                if (this.brojBacanja === 1) { this.hasSvetiIlija = true; this.effectMgr.trigger('thunder'); }
+                if (isProfileMove && this.brojBacanja === 1) { this.hasSvetiIlija = true; this.effectMgr.trigger('thunder'); }
                 
                 this.vibrate([50, 100, 50, 100, 50]);
             } catch(e) {}
@@ -6046,6 +6095,34 @@ class YambApp {
                 overlay.remove();
                 resolve(true);
             }, 8000);
+        });
+    }
+
+    async confirmTrophyShowcaseEntries(trophies = [], timeoutMs = 9000) {
+        const entries = Array.isArray(trophies)
+            ? trophies.filter(trophy => trophy && trophy.id)
+            : [];
+        if (entries.length === 0) return [];
+
+        const permanentReasons = new Set(['invalid_trophy', 'trophy_not_earned']);
+        const timeoutResult = { pending: true };
+        const settled = await Promise.all(entries.map(async trophy => {
+            if (!trophy.claimPromise || typeof trophy.claimPromise.then !== 'function') return trophy;
+
+            const result = await Promise.race([
+                trophy.claimPromise.catch(err => ({ ok: false, reason: err?.message || 'claim_error' })),
+                new Promise(resolve => setTimeout(() => resolve(timeoutResult), timeoutMs))
+            ]);
+
+            if (result === timeoutResult) return null;
+            if (result && result.ok && !result.alreadyClaimed) return trophy;
+            if (result && permanentReasons.has(result.reason)) return null;
+            return null;
+        }));
+
+        return settled.filter(Boolean).map(trophy => {
+            const { claimPromise, ...displayTrophy } = trophy;
+            return displayTrophy;
         });
     }
 
@@ -6632,7 +6709,11 @@ class YambApp {
                  try {
                      if (window.trophyManager && typeof window.trophyManager.checkEndGameTrophies === 'function') {
                          let detectedModeForTrophies = this.onlineMode ? "Online" : (this.aiMode ? "AI" : (this.players.length > 1 ? "Hotseat" : "Solo"));
-                         const scoreDiff = winnerScore - myScoreEntry.score;
+                         const bestOpponentScore = finalResults.reduce((best, result, resultIndex) => {
+                             if (resultIndex === myIndex) return best;
+                             return best === null || result.score > best ? result.score : best;
+                         }, null);
+                         const scoreDiff = bestOpponentScore === null ? 0 : bestOpponentScore - myScoreEntry.score;
                          unlockedTrophiesNow = window.trophyManager.checkEndGameTrophies(
                              myScoreEntry.score,
                              this.allScores[myIndex],
@@ -6784,6 +6865,7 @@ class YambApp {
             if (btnRematch) btnRematch.style.display = 'none';
         }
 
+        unlockedTrophiesNow = await this.confirmTrophyShowcaseEntries(unlockedTrophiesNow);
         await this.showTrophyUnlockShowcase(unlockedTrophiesNow);
         this.navigateTo('game-over-screen');
     }
@@ -6824,6 +6906,62 @@ class YambApp {
                 stats: this.getFullLocalStats()
             }, finish);
         });
+    }
+
+    async claimPendingBaseRewardBeforeRematch() {
+        const baseScore = Math.max(0, parseInt(this.pendingScore, 10) || 0);
+        if (this.lastGameType !== 'normal' || this.rewardClaimed || baseScore <= 0) return true;
+        if (this.pendingBaseRewardClaimPromise) return this.pendingBaseRewardClaimPromise;
+        if (this.rewardClaimInProgress) return false;
+
+        this.rewardClaimInProgress = true;
+
+        this.pendingBaseRewardClaimPromise = (async () => {
+            const applyBalance = (balance) => {
+                const safeBalance = Math.max(0, parseInt(balance, 10) || 0);
+                localStorage.setItem('yamb_dukati', safeBalance);
+                if (window.statsManager) {
+                    window.statsManager.stats.balance = safeBalance;
+                    window.statsManager.saveStats();
+                }
+            };
+
+            const finishClaim = () => {
+                this.rewardClaimed = true;
+                this.rewardClaimInProgress = false;
+                this.pendingScore = 0;
+                this.pendingBaseRewardClaimPromise = null;
+            };
+
+            try {
+                const result = await this.claimServerGameReward(baseScore, false);
+
+                if (result && result.ok && typeof result.balance === 'number') {
+                    applyBalance(result.balance);
+                    finishClaim();
+                    return true;
+                }
+
+                if (result && result.localFallback) {
+                    const currentBalance = Math.max(0, parseInt(localStorage.getItem('yamb_dukati'), 10) || 0);
+                    applyBalance(currentBalance + baseScore);
+                    finishClaim();
+                    return true;
+                }
+
+                console.warn(`Nagrada pre revanša nije potvrđena: ${result?.reason || 'unknown_error'}`);
+                this.rewardClaimInProgress = false;
+                this.pendingBaseRewardClaimPromise = null;
+                return false;
+            } catch (err) {
+                console.warn("Greška pri preuzimanju nagrade pre revanša:", err);
+                this.rewardClaimInProgress = false;
+                this.pendingBaseRewardClaimPromise = null;
+                return false;
+            }
+        })();
+
+        return this.pendingBaseRewardClaimPromise;
     }
 
     async watchAdForDouble() {
@@ -7175,6 +7313,9 @@ class YambApp {
                 brojBacanja: this.brojBacanja,
                 najavaAktivna: this.najavaAktivna,
                 najavljenoPolje: this.najavljenoPolje,
+                consecutiveNajava: this.consecutiveNajava,
+                hasSvetiIlija: this.hasSvetiIlija,
+                hasProphet: this.hasProphet,
                 localGameElapsedMs: this.getLocalGameElapsedMs(),
                 aiMode: false, 
                 diff: this.aiDifficulty, 
@@ -7223,6 +7364,9 @@ class YambApp {
             this.brojBacanja = data.brojBacanja || 0;
             this.najavaAktivna = data.najavaAktivna || false;
             this.najavljenoPolje = data.najavljenoPolje || null;
+            this.consecutiveNajava = Math.max(0, parseInt(data.consecutiveNajava, 10) || 0);
+            this.hasSvetiIlija = data.hasSvetiIlija === true;
+            this.hasProphet = data.hasProphet === true;
             
             this.aiMode = false; 
             if (this.players.length > 1) this.modeTag = "Hotseat"; else this.modeTag = "Solo";

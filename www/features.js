@@ -48,6 +48,42 @@ if (typeof window.YambFeatures === 'undefined') {
             const isOnline = this.app.onlineMode;
             const is2Player = this.app.players.length > 1;
             const isVsAi = this.app.aiMode;
+            const getBelgradeHour = () => {
+                try {
+                    const hourString = new Intl.DateTimeFormat('en-US', {
+                        hour: 'numeric',
+                        hour12: false,
+                        timeZone: 'Europe/Belgrade'
+                    }).format(new Date());
+                    return Number(hourString);
+                } catch (err) {
+                    return new Date().getHours();
+                }
+            };
+            const getProfilePlayerIndex = () => {
+                if (isOnline && Number.isInteger(this.app.myOnlineIndex) && this.app.myOnlineIndex >= 0) {
+                    return this.app.myOnlineIndex;
+                }
+                return this.app.players.findIndex(p => p === this.app.playerName);
+            };
+            const getScoreDiff = () => {
+                if ((!is2Player && !isVsAi) || !this.app.players || this.app.players.length < 2) return 0;
+
+                const myIdx = getProfilePlayerIndex();
+                if (myIdx < 0 || typeof this.app.calculateTotalScore !== 'function') return 0;
+
+                const myTotal = this.app.calculateTotalScore(myIdx);
+                let bestOpponentScore = null;
+                this.app.players.forEach((_, index) => {
+                    if (index === myIdx) return;
+                    const opponentScore = this.app.calculateTotalScore(index);
+                    if (bestOpponentScore === null || opponentScore > bestOpponentScore) {
+                        bestOpponentScore = opponentScore;
+                    }
+                });
+
+                return bestOpponentScore === null ? 0 : bestOpponentScore - myTotal;
+            };
 
             // POMOĆNA FUNKCIJA ZA BEZBEDAN PREVOD
             const _safeT = (key) => (typeof t !== 'undefined' ? t(key) : key);
@@ -65,18 +101,6 @@ if (typeof window.YambFeatures === 'undefined') {
             const buildProof = () => {
                 const statsSnapshot = window.statsManager.getStats ? window.statsManager.getStats() : (window.statsManager.stats || {});
                 const playedGames = Math.max(Number(statsSnapshot.games) || 0, Number(statsSnapshot.totalGames) || 0);
-                let scoreDiff = 0;
-
-                if ((is2Player || isVsAi) && this.app.players && this.app.players.length > 1) {
-                    const myName = this.app.playerName;
-                    const myIdx = this.app.players.findIndex(p => p === myName);
-                    if (myIdx !== -1) {
-                        const oppIdx = (myIdx === 0) ? 1 : 0;
-                        const myTotal = this.app.calculateTotalScore(myIdx);
-                        const oppTotal = this.app.calculateTotalScore(oppIdx);
-                        scoreDiff = oppTotal - myTotal;
-                    }
-                }
 
                 return {
                     finalScore,
@@ -85,8 +109,8 @@ if (typeof window.YambFeatures === 'undefined') {
                     flags: {
                         hasProphet: !!this.app.hasProphet,
                         hasSvetiIlija: !!this.app.hasSvetiIlija,
-                        scoreDiff,
-                        localHour: new Date().getHours()
+                        scoreDiff: getScoreDiff(),
+                        localHour: getBelgradeHour()
                     },
                     stats: {
                         ...statsSnapshot,
@@ -203,24 +227,16 @@ if (typeof window.YambFeatures === 'undefined') {
             }
 
             if (is2Player) {
-                const scores = this.app.players.map((_, i) => this.app.calculateTotalScore(i));
-                const diff = Math.abs(scores[0] - scores[1]);
+                const diff = Math.abs(getScoreDiff());
                 if (diff < 5 && diff > 0) unlock('close_call');
             }
 
             if (is2Player || isVsAi) {
-                const myName = this.app.playerName;
-                const myIdx = this.app.players.findIndex(p => p === myName);
-                if (myIdx !== -1) {
-                    const oppIdx = (myIdx === 0) ? 1 : 0;
-                    const myTotal = this.app.calculateTotalScore(myIdx);
-                    const oppTotal = this.app.calculateTotalScore(oppIdx);
-                    if ((oppTotal - myTotal) >= 200) unlock('spite');
-                }
+                if (getScoreDiff() >= 200) unlock('spite');
             }
 
-            const hour = new Date().getHours();
-            if (hour >= 3 && hour <= 5) unlock('night_owl');
+            const hour = getBelgradeHour();
+            if (hour >= 3 && hour < 6) unlock('night_owl');
         }
     };
 }
