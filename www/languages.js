@@ -696,6 +696,7 @@ const TRANSLATIONS = {
         "spectator_count": "{0} gledalaca",
         "spectator_empty": "Nema gledalaca",
         "opp_network_issue": "⚠️ Protivnik ima problema sa mrežom...",
+        "opp_network_issue_countdown": "⚠️ Protivnik nije u igri. Čekamo povratak još {0}.",
         "opp_reconnected": "Protivnik se vratio u igru!",
         "penalty_msg": "Kazna zbog odugovlačenja: -{0} Power Index poena."
     },
@@ -1394,6 +1395,7 @@ const TRANSLATIONS = {
         "spectator_count": "{0} spectators",
         "spectator_empty": "No spectators",
         "opp_network_issue": "⚠️ Opponent is experiencing network issues...",
+        "opp_network_issue_countdown": "⚠️ Opponent is out of the game. Waiting up to {0} for return.",
         "opp_reconnected": "Opponent reconnected!",
         "penalty_msg": "Delay penalty: -{0} Power Index points."
     }

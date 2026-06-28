@@ -969,15 +969,15 @@ class TournamentManager {
         if (f.length === 0) f = Array(1).fill(null);
 
         container.innerHTML = `
-            <div style="width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden;">
+            <div class="tourney-bracket-layout">
                 <div class="tourney-carousel" id="tourney-carousel" onscroll="app.tournamentManager.updateTourneyPagination()">
 
                     <div class="tourney-page">
                         <div class="tourney-card">
-                            <h3 style="color:var(--gold-main); text-align:center; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 8px;">
+                            <h3 class="tourney-round-title">
                                 ${tt('tourney_qf') || '1/4 FINALA'}
                             </h3>
-                            <div style="display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 10px;">
+                            <div class="tourney-matches tourney-matches--qf">
                                 ${qf.map((m, i) => this.createMatchHTML(m, 'qf', i)).join('')}
                             </div>
                         </div>
@@ -985,10 +985,10 @@ class TournamentManager {
 
                     <div class="tourney-page">
                         <div class="tourney-card">
-                            <h3 style="color:var(--gold-main); text-align:center; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 8px;">
+                            <h3 class="tourney-round-title">
                                 ${tt('tourney_sf') || 'POLUFINALE'}
                             </h3>
-                            <div style="display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 10px;">
+                            <div class="tourney-matches tourney-matches--sf">
                                 ${sf.map((m, i) => this.createMatchHTML(m, 'sf', i)).join('')}
                             </div>
                         </div>
@@ -996,10 +996,10 @@ class TournamentManager {
 
                     <div class="tourney-page">
                         <div class="tourney-card">
-                            <h3 style="color:var(--gold-main); text-align:center; margin-bottom: 15px; font-size: 1.1rem; letter-spacing: 1px; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 8px;">
+                            <h3 class="tourney-round-title">
                                 ${tt('tourney_f') || 'FINALE'}
                             </h3>
-                            <div style="display: flex; flex-direction: column; justify-content: space-around; flex: 1; gap: 10px;">
+                            <div class="tourney-matches tourney-matches--f">
                                 ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
                             </div>
                         </div>
@@ -1015,16 +1015,32 @@ class TournamentManager {
             </div>
 
             <style>
-                .tourney-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; width: 100%; flex: 1; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 5px; }
+                .tourney-bracket-layout { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+                .tourney-carousel { display: flex; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; width: 100%; flex: 1 1 auto; min-height: 0; scrollbar-width: none; -ms-overflow-style: none; }
                 .tourney-carousel::-webkit-scrollbar { display: none; }
-                .tourney-page { flex: 0 0 100%; width: 100%; scroll-snap-align: center; padding: 0 15px; display: flex; flex-direction: column; }
-                .tourney-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 15px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
-                .tourney-card::-webkit-scrollbar { width: 4px; }
-                .tourney-card::-webkit-scrollbar-thumb { background: var(--gold-main); border-radius: 10px; }
+                .tourney-page { flex: 0 0 100%; width: 100%; min-height: 0; scroll-snap-align: center; padding: 0 10px; display: flex; flex-direction: column; }
+                .tourney-card { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 12px; flex: 1 1 auto; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+                .tourney-round-title { color: var(--gold-main); text-align: center; margin: 0 0 10px; font-size: 1.05rem; line-height: 1.15; letter-spacing: 0; border-bottom: 1px solid rgba(255,215,0,0.2); padding-bottom: 7px; flex: 0 0 auto; }
+                .tourney-matches { width: 100%; flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; align-items: stretch; }
+                .tourney-matches--qf { justify-content: space-between; gap: 7px; }
+                .tourney-matches--sf { justify-content: center; gap: 28px; }
+                .tourney-matches--f { justify-content: center; }
+                .tourney-match { width: 100%; min-height: var(--match-min-height, 62px); background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; display: flex; flex-direction: column; cursor: default; position: relative; overflow: hidden; transition: transform 0.1s, border-color 0.2s, box-shadow 0.2s; }
+                .tourney-match--mine { border-color: var(--gold-main); box-shadow: 0 0 10px rgba(255,215,0,0.3); }
+                .tourney-match--open { cursor: pointer; }
+                .tourney-match--open:active { transform: scale(0.99); }
+                .tourney-match--empty { justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.3); }
 
-                .tourney-pagination { display: flex; gap: 12px; justify-content: center; margin-top: 15px; margin-bottom: 15px; flex-shrink: 0; }
+                .tourney-pagination { display: flex; gap: 12px; justify-content: center; margin: 9px 0 2px; flex-shrink: 0; }
                 .tourney-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--carousel-dot-idle); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
                 .tourney-pagination .dot.active { background: var(--carousel-dot-active); transform: scale(1.4); box-shadow: 0 0 10px var(--carousel-dot-glow); }
+                @media (max-height: 700px) {
+                    .tourney-card { padding: 10px; }
+                    .tourney-round-title { margin-bottom: 8px; font-size: 1rem; padding-bottom: 6px; }
+                    .tourney-matches--qf { gap: 5px; }
+                    .tourney-matches--sf { gap: 18px; }
+                    .tourney-pagination { margin-top: 7px; }
+                }
             </style>
         `;
     }
@@ -1032,7 +1048,7 @@ class TournamentManager {
     createMatchHTML(match, round, index) {
         if (!match || (!match.p1 && !match.p2)) {
             return `
-                <div style="width: 100%; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.3); border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; min-height: 65px;">
+                <div class="tourney-match tourney-match--empty" style="--match-min-height: 62px;">
                     <span style="color: rgba(255,255,255,0.3); font-size: 0.8rem; font-weight: bold;">---</span>
                 </div>`;
         }
@@ -1068,12 +1084,12 @@ class TournamentManager {
             powerIndex = this.escape(powerIndex);
 
             return `
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
                     <div style="display: flex; align-items: center; overflow: hidden; padding-right: 5px;">
-                        <img src="${photo}" style="width: 26px; height: 26px; border-radius: 50%; object-fit: cover; border: 2px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 8px; flex-shrink: 0; box-shadow: 0 0 5px rgba(0,0,0,0.5);">
-                        <span style="font-size: 0.8rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${safeName}</span>
+                        <img src="${photo}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 2px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 8px; flex-shrink: 0; box-shadow: 0 0 5px rgba(0,0,0,0.5);">
+                        <span style="font-size: 0.78rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${safeName}</span>
                     </div>
-                    <span style="font-size: 0.65rem; color: var(--gold-main); font-weight: 900; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${powerIndex}</span>
+                    <span style="font-size: 0.62rem; color: var(--gold-main); font-weight: 900; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${powerIndex}</span>
                 </div>
             `;
         };
@@ -1087,15 +1103,20 @@ class TournamentManager {
 
         const resultLabel = this.getMatchResultLabel(match);
         const resultHtml = resultLabel
-            ? `<div style="text-align: center; padding: 3px 8px; font-size: 0.72rem; font-weight: 900; color: var(--gold-main); background: rgba(255,215,0,0.07); border-bottom: 1px solid rgba(255,215,0,0.12); text-shadow: 0 0 5px rgba(255,215,0,0.25);">${resultLabel}</div>`
+            ? `<div style="text-align: center; padding: 2px 8px; font-size: 0.7rem; line-height: 1.15; font-weight: 900; color: var(--gold-main); background: rgba(255,215,0,0.07); border-bottom: 1px solid rgba(255,215,0,0.12); text-shadow: 0 0 5px rgba(255,215,0,0.25);">${resultLabel}</div>`
             : '';
-        const cardMinHeight = resultLabel ? '82px' : '65px';
-
+        const cardMinHeight = resultLabel ? '76px' : '62px';
         const canOpenMatch = Boolean(match.p1 && match.p2 && (this.state.status === 'finished' || this.isTournamentSchedulingUnlocked()));
+        const matchClasses = [
+            'tourney-match',
+            isMyMatch ? 'tourney-match--mine' : '',
+            canOpenMatch ? 'tourney-match--open' : ''
+        ].filter(Boolean).join(' ');
+
         const clickAttr = canOpenMatch ? `onclick="app.tournamentManager.openMatchModal('${round}', ${index})"` : '';
 
         return `
-            <div ${clickAttr} style="width: 100%; background: rgba(0,0,0,0.5); border: 1px solid ${isMyMatch ? 'var(--gold-main)' : 'rgba(255,255,255,0.1)'}; border-radius: 10px; display: flex; flex-direction: column; cursor: ${canOpenMatch ? 'pointer' : 'default'}; position: relative; box-shadow: ${isMyMatch ? '0 0 10px rgba(255,215,0,0.3)' : 'none'}; transition: transform 0.1s; transform: scale(0.98); min-height: ${cardMinHeight}; overflow: hidden;">
+            <div ${clickAttr} class="${matchClasses}" style="--match-min-height: ${cardMinHeight};">
                 ${statusDot}
                 ${getPlayerHtml(match.p1, true)}
                 ${resultHtml}

@@ -1582,14 +1582,117 @@ function queueGlobalChatMessageSave(message) {
 // GRACE PERIOD PROMENLJIVE
 const disconnectTimers = {};
 const ghostSessions = {};
+const DISCONNECT_GRACE_MS = 30 * 1000;
+const TOURNAMENT_DISCONNECT_GRACE_MS = 5 * 60 * 1000;
+const RECONNECT_RESUME_MIN_TURN_MS = 15 * 1000;
+const TOURNAMENT_PRESENCE_STALE_MS = 4500;
 const SERVER_TECHNICAL_SYNC_IGNORE_WINDOW_MS = 20000;
 const recentServerTechnicalResults = new Map();
+
+function isTournamentRoomId(roomId) {
+    return !!parseTournamentRoomId(roomId);
+}
+
+function getDisconnectGraceMs(roomId) {
+    return isTournamentRoomId(roomId) ? TOURNAMENT_DISCONNECT_GRACE_MS : DISCONNECT_GRACE_MS;
+}
+
+function hasActiveDisconnectGraceForRoom(roomId) {
+    if (!roomId) return false;
+    return Object.entries(ghostSessions).some(([uid, ghost]) => (
+        ghost &&
+        ghost.roomId === roomId &&
+        !!disconnectTimers[uid]
+    ));
+}
+
+function getRoomDisconnectGraceRemainingMs(roomId) {
+    if (!roomId) return 0;
+
+    const now = Date.now();
+    return Object.entries(ghostSessions).reduce((remaining, [uid, ghost]) => {
+        if (!ghost || ghost.roomId !== roomId || !disconnectTimers[uid]) return remaining;
+
+        const graceMs = getDisconnectGraceMs(roomId);
+        const startedAt = toSafeInt(ghost.startedAt, now);
+        return Math.max(remaining, Math.max(0, graceMs - (now - startedAt)));
+    }, 0);
+}
+
+function getRoomPresenceKeys(state, socketId) {
+    const keys = [];
+    if (socketId) keys.push(socketId);
+
+    const participant = getRoomParticipantMeta(state, socketId);
+    if (participant?.uid) keys.push(`uid:${participant.uid}`);
+    return keys;
+}
+
+function rememberRoomPresence(roomId, socket) {
+    const state = roomState[roomId];
+    if (!state || state.gameFinished || !Array.isArray(state.players) || !state.players.includes(socket.id)) return false;
+
+    if (!state.playerPresenceAt || typeof state.playerPresenceAt !== 'object') {
+        state.playerPresenceAt = {};
+    }
+
+    const now = Date.now();
+    const uid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
+    state.playerPresenceAt[socket.id] = now;
+    if (uid) state.playerPresenceAt[`uid:${uid}`] = now;
+    return true;
+}
+
+function getLatestRoomPresenceAt(state, socketId) {
+    if (!state || !state.playerPresenceAt || typeof state.playerPresenceAt !== 'object') return 0;
+    return getRoomPresenceKeys(state, socketId).reduce((latest, key) => {
+        return Math.max(latest, toSafeInt(state.playerPresenceAt[key], 0));
+    }, 0);
+}
+
+function hasStaleTournamentPresence(roomId, socketId) {
+    if (!isTournamentRoomId(roomId)) return false;
+
+    const state = roomState[roomId];
+    if (!state || state.gameFinished) return false;
+
+    const lastPresenceAt = getLatestRoomPresenceAt(state, socketId);
+    return !lastPresenceAt || Date.now() - lastPresenceAt > TOURNAMENT_PRESENCE_STALE_MS;
+}
+
+function pauseRoomForDisconnectGrace(roomId) {
+    const state = roomState[roomId];
+    if (!state || state.gameFinished) return false;
+    if (state.disconnectGracePausedAt && state.pausedTurnRemainingMs) return false;
+
+    const currentDuration = Math.max(1, toSafeInt(state.turnTimeoutMs, TOTAL_TIMEOUT));
+    const elapsed = Math.max(0, Date.now() - Math.max(0, toSafeInt(state.turnStartTime, Date.now())));
+    state.pausedTurnRemainingMs = Math.max(1, currentDuration - elapsed);
+    state.disconnectGracePausedAt = Date.now();
+    stopTurnTimer(roomId);
+    return true;
+}
+
+function resumeRoomAfterDisconnectGrace(roomId) {
+    const state = roomState[roomId];
+    if (!state || state.gameFinished || hasActiveDisconnectGraceForRoom(roomId)) return false;
+
+    const remainingMs = Math.max(
+        RECONNECT_RESUME_MIN_TURN_MS + GRACE_PERIOD,
+        Math.min(TOTAL_TIMEOUT, toSafeInt(state.pausedTurnRemainingMs, TOTAL_TIMEOUT))
+    );
+    delete state.disconnectGracePausedAt;
+    delete state.pausedTurnRemainingMs;
+    startTurnTimer(roomId, remainingMs);
+    return true;
+}
 
 function clearDisconnectGraceForUid(uid, roomId = null) {
     if (!uid) return false;
 
     const ghost = ghostSessions[uid];
     if (roomId && ghost && ghost.roomId !== roomId) return false;
+    const ghostRoomId = ghost && (!roomId || ghost.roomId === roomId) ? ghost.roomId : null;
 
     let cleared = false;
     if (disconnectTimers[uid]) {
@@ -1605,9 +1708,134 @@ function clearDisconnectGraceForUid(uid, roomId = null) {
 
     if (cleared) {
         console.log(`♻️ Grace period poništen za igrača ${uid}${roomId ? ` u sobi ${roomId}` : ''}.`);
+        if (ghostRoomId) {
+            resumeRoomAfterDisconnectGrace(ghostRoomId);
+        }
     }
 
     return cleared;
+}
+
+function clearDisconnectGraceForRoom(roomId) {
+    if (!roomId) return;
+
+    Object.entries(ghostSessions).forEach(([uid, ghost]) => {
+        if (!ghost || ghost.roomId !== roomId) return;
+        if (disconnectTimers[uid]) {
+            clearTimeout(disconnectTimers[uid]);
+            delete disconnectTimers[uid];
+        }
+        delete ghostSessions[uid];
+    });
+}
+
+function beginReconnectGraceForSocket(socket, activeRoomId, source = 'disconnect') {
+    if (!socket || !activeRoomId) return false;
+
+    const pid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
+    const activeRoomState = roomState[activeRoomId];
+    if (!pid || !activeRoomState || activeRoomState.gameFinished) return false;
+    if (!Array.isArray(activeRoomState.players) || !activeRoomState.players.includes(socket.id)) return false;
+
+    const existingGhost = ghostSessions[pid];
+    if (existingGhost && existingGhost.roomId === activeRoomId) {
+        return true;
+    }
+
+    if (disconnectTimers[pid]) {
+        clearTimeout(disconnectTimers[pid]);
+        delete disconnectTimers[pid];
+    }
+
+    const graceMs = getDisconnectGraceMs(activeRoomId);
+    console.log(`⏳ Pokrećem reconnect grace od ${Math.round(graceMs / 1000)}s za igrača: ${pid} (${source})`);
+
+    ghostSessions[pid] = {
+        roomId: activeRoomId,
+        oldSocketId: socket.id,
+        source,
+        startedAt: Date.now()
+    };
+
+    pauseRoomForDisconnectGrace(activeRoomId);
+    io.to(activeRoomId).emit('opponent_connection_lost', { graceMs, remainingMs: graceMs, source });
+
+    disconnectTimers[pid] = setTimeout(async () => {
+        const ghost = ghostSessions[pid];
+        if (!ghost || ghost.roomId !== activeRoomId || ghost.oldSocketId !== socket.id) {
+            console.log(`ℹ️ Ignorišem zastareli reconnect timeout za ${pid}; sesija je već obnovljena ili promenjena.`);
+            delete disconnectTimers[pid];
+            return;
+        }
+
+        console.log(`❌ Reconnect grace istekao za ${pid}. Partija se trajno prekida.`);
+        let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
+        const stateAfterGrace = roomState[activeRoomId];
+
+        if (stateAfterGrace && stateAfterGrace.gameFinished) {
+            console.log(`ℹ️ Reconnect timeout za ${pid} preskočen; soba ${activeRoomId} je već završena.`);
+            delete ghostSessions[pid];
+            delete disconnectTimers[pid];
+            return;
+        }
+
+        if (stateAfterGrace) {
+            if (!stateAfterGrace.players.includes(ghost.oldSocketId)) {
+                console.log(`ℹ️ Ignorišem reconnect timeout za ${pid}; stari socket više nije igrač u sobi ${activeRoomId}.`);
+                delete ghostSessions[pid];
+                delete disconnectTimers[pid];
+                resumeRoomAfterDisconnectGrace(activeRoomId);
+                return;
+            }
+
+            const penaltyAmount = getDynamicPenalty(activeRoomId);
+            const oppSocketId = stateAfterGrace.players.find(id => id !== ghost.oldSocketId);
+            const winnerParticipant = getRoomParticipantMeta(stateAfterGrace, oppSocketId);
+            const loserParticipant = getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId);
+            const winnerUid = winnerParticipant.uid;
+            const h2hKey = getH2HKeyForOpponent(winnerParticipant);
+
+            technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
+                winnerOpponent: loserParticipant,
+                loserOpponent: winnerParticipant
+            });
+            await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
+        } else {
+            console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
+        }
+
+        const technicalWinnerSocketId = Array.isArray(stateAfterGrace?.players)
+            ? stateAfterGrace.players.find(id => id !== ghost.oldSocketId)
+            : '';
+        const technicalWinner = stateAfterGrace && technicalWinnerSocketId
+            ? getRoomParticipantMeta(stateAfterGrace, technicalWinnerSocketId)
+            : null;
+        const technicalLoser = stateAfterGrace
+            ? getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId)
+            : null;
+
+        io.to(activeRoomId).emit('opponent_left', {
+            winnerId: technicalWinnerSocketId || '',
+            loserId: ghost.oldSocketId,
+            duelType: getOnlineDuelType(activeRoomId),
+            winnerName: technicalWinner?.name || 'Igrac',
+            loserName: technicalLoser?.name || 'Igrac',
+            reward: technicalResult.winnerReward,
+            coinPenalty: technicalResult.loserCoinPenalty,
+            serverApplied: technicalResult.serverApplied
+        });
+
+        cleanupOnlineRoom(activeRoomId);
+
+        delete ghostSessions[pid];
+        delete disconnectTimers[pid];
+    }, graceMs);
+
+    if (disconnectTimers[pid] && typeof disconnectTimers[pid].unref === 'function') {
+        disconnectTimers[pid].unref();
+    }
+
+    return true;
 }
 
 function rememberServerTechnicalResult(uid, resultType) {
@@ -2004,10 +2232,12 @@ function getOnlineDuelType(roomId = '') {
 function emitCompletedOnlineGame(roomId) {
     const state = roomState[roomId];
     if (!state || !Array.isArray(state.players) || state.players.length < 2) return false;
+    if (state.completedGameFinishedEmitted) return false;
     if (!Array.isArray(state.allScores) || state.allScores.length < 2) return false;
 
     const totals = state.allScores.slice(0, 2).map(sheet => calculateCompletedDuelTotal(sheet));
     if (totals.some(score => score === null)) return false;
+    state.completedGameFinishedEmitted = true;
 
     const stablePlayerUids = Array.isArray(state.playerUids) ? state.playerUids : [];
     const players = state.players.slice(0, 2).map((socketId, index) => {
@@ -2353,7 +2583,7 @@ const roomTimers = {};
 const roomState = {};
 const finishedRoomCleanupTimers = {};
 
-function startTurnTimer(roomId) {
+function startTurnTimer(roomId, durationMs = TOTAL_TIMEOUT) {
     const state = roomState[roomId];
     if (!state) return;
     if (state.gameFinished) return;
@@ -2362,14 +2592,31 @@ function startTurnTimer(roomId) {
 
     stopTurnTimer(roomId);
 
+    const safeDurationMs = Math.max(1000, Math.min(TOTAL_TIMEOUT, toSafeInt(durationMs, TOTAL_TIMEOUT)));
     state.turnStartTime = Date.now();
+    state.turnTimeoutMs = safeDurationMs;
+    state.turnClientTimeLimitMs = Math.max(1000, safeDurationMs - GRACE_PERIOD);
+    if (!state.playerPresenceAt || typeof state.playerPresenceAt !== 'object') {
+        state.playerPresenceAt = {};
+    }
+    if (Array.isArray(state.players)) {
+        state.players.forEach(socketId => {
+            if (!state.playerPresenceAt[socketId]) {
+                state.playerPresenceAt[socketId] = state.turnStartTime;
+            }
+            const participant = getRoomParticipantMeta(state, socketId);
+            if (participant?.uid && !state.playerPresenceAt[`uid:${participant.uid}`]) {
+                state.playerPresenceAt[`uid:${participant.uid}`] = state.turnStartTime;
+            }
+        });
+    }
     state.turnTimerToken = (Math.max(0, toSafeInt(state.turnTimerToken, 0)) + 1);
     const timerToken = state.turnTimerToken;
 
     roomTimers[roomId] = setTimeout(() => {
         delete roomTimers[roomId];
         handleTechnicalTimeout(roomId, null, timerToken);
-    }, TOTAL_TIMEOUT);
+    }, safeDurationMs);
 }
 
 function stopTurnTimer(roomId) {
@@ -2403,6 +2650,7 @@ function markOnlineRoomGameFinished(roomId) {
     state.gameFinished = true;
     state.finishedAt = Date.now();
     stopTurnTimer(roomId);
+    clearDisconnectGraceForRoom(roomId);
     scheduleFinishedRoomCleanup(roomId);
     notifyOnlinePlayersStatusChanged();
     return true;
@@ -2412,6 +2660,7 @@ function cleanupOnlineRoom(roomId) {
     if (!roomId) return;
 
     clearFinishedRoomCleanup(roomId);
+    clearDisconnectGraceForRoom(roomId);
 
     const state = roomState[roomId];
     if (state && Array.isArray(state.players)) {
@@ -2453,6 +2702,10 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
     const state = roomState[roomId];
     if (!state) return;
     if (state.gameFinished) return;
+    if (hasActiveDisconnectGraceForRoom(roomId)) {
+        console.log(`ℹ️ Ignorišem timeout u sobi ${roomId}; aktivan je reconnect grace.`);
+        return;
+    }
 
     if (expectedTimerToken !== null && state.turnTimerToken !== expectedTimerToken) {
         console.log(`ℹ️ Ignorišem zastareli timeout u sobi ${roomId}; token ${expectedTimerToken} više nije aktivan.`);
@@ -2467,6 +2720,14 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
     if (!timedOutSocketId || currentTurnSocketId !== timedOutSocketId) {
         console.log(`ℹ️ Ignorišem timeout u sobi ${roomId}; aktivni socket je ${currentTurnSocketId}, zahtev je za ${timedOutSocketId}.`);
         return;
+    }
+
+    if (hasStaleTournamentPresence(roomId, timedOutSocketId)) {
+        const timedOutSocket = io.sockets.sockets.get(timedOutSocketId);
+        if (timedOutSocket && beginReconnectGraceForSocket(timedOutSocket, roomId, 'presence_stale_timeout')) {
+            console.log(`ℹ️ TURNIR: Timeout pretvoren u reconnect grace za ${timedOutSocketId}; foreground heartbeat je zastareo.`);
+            return;
+        }
     }
 
     state.technicalTimeoutInProgress = true;
@@ -2511,15 +2772,17 @@ function sweepTurnTimeouts() {
 
     for (const [roomId, state] of Object.entries(roomState)) {
         if (!state || state.gameFinished || state.technicalTimeoutInProgress) continue;
+        if (hasActiveDisconnectGraceForRoom(roomId)) continue;
         if (!Array.isArray(state.players) || state.players.length < 2) continue;
         if (!state.turnStartTime) continue;
 
+        const turnTimeoutMs = Math.max(1000, toSafeInt(state.turnTimeoutMs, TOTAL_TIMEOUT));
         const elapsed = now - state.turnStartTime;
-        if (elapsed < TOTAL_TIMEOUT) continue;
+        if (elapsed < turnTimeoutMs) continue;
 
         const currentTurnSocketId = state.players[state.turnIndex];
         const timerToken = state.turnTimerToken !== undefined ? state.turnTimerToken : null;
-        console.log(`🛡️ WATCHDOG: Soba ${roomId} je prešla limit (${elapsed}ms). Pokrećem tehničku pobedu.`);
+        console.log(`🛡️ WATCHDOG: Soba ${roomId} je prešla limit (${elapsed}ms/${turnTimeoutMs}ms). Pokrećem tehničku pobedu.`);
         handleTechnicalTimeout(roomId, currentTurnSocketId, timerToken);
     }
 }
@@ -3177,6 +3440,44 @@ async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'techn
     return true;
 }
 
+async function applyTournamentCompletedDuelResult(roomId) {
+    const roomInfo = parseTournamentRoomId(roomId);
+    if (!roomInfo) return false;
+
+    const matchInfo = getTournamentMatch(roomInfo.round, roomInfo.index);
+    if (!matchInfo) return false;
+
+    const { match, index } = matchInfo;
+    if (!match || match.winnerId) return false;
+
+    const regularScores = getTournamentRoomMatchScores(roomId, match);
+    if (!regularScores) return false;
+    if (regularScores.p1Score === regularScores.p2Score) return false;
+
+    const winnerId = regularScores.p1Score > regularScores.p2Score ? match.p1.id : match.p2.id;
+    if (!setTournamentMatchResult(match, 'regular', regularScores.p1Score, regularScores.p2Score)) {
+        return false;
+    }
+
+    match.winnerId = winnerId;
+    const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
+    advanceTournamentBracket(roomInfo.round, index, winnerObj);
+    io.emit('tourney_state_update', tournamentState);
+
+    if (roomInfo.round === 'f') {
+        try {
+            await settleTournamentFinalPrizes(match, winnerObj);
+            if (match.prizesAwarded) {
+                await recordTournamentChampion(match, winnerObj);
+            }
+        } catch (err) {
+            console.error("Greška pri automatskom upisu finala turnira:", err);
+        }
+    }
+
+    return true;
+}
+
 function normalizeTournamentTime(value) {
     const raw = String(value || '').trim().substring(0, 40);
     const parsedTime = parseTournamentTimeMs(raw);
@@ -3447,8 +3748,9 @@ function bindVerifiedPlayerSocket(socket, playerId) {
                     roomState[aktivnaSoba].playerUids[idx] = playerId;
                 }
             }
-            io.to(aktivnaSoba).emit('opponent_connection_restored');
+            io.to(aktivnaSoba).emit('opponent_connection_restored', { roomId: aktivnaSoba, restoredUid: playerId });
             restoredRoomId = aktivnaSoba;
+            rememberRoomPresence(aktivnaSoba, socket);
         }
 
         const oldSocket = io.sockets.sockets.get(stariSocketId);
@@ -3472,10 +3774,11 @@ function bindVerifiedPlayerSocket(socket, playerId) {
                     roomState[ghost.roomId].playerUids[idx] = playerId;
                 }
             }
-            io.to(ghost.roomId).emit('opponent_connection_restored');
+            io.to(ghost.roomId).emit('opponent_connection_restored', { roomId: ghost.roomId, restoredUid: playerId });
             delete playerRooms[ghost.oldSocketId];
         }
         restoredRoomId = ghost.roomId;
+        rememberRoomPresence(ghost.roomId, socket);
         clearDisconnectGraceForUid(playerId, ghost.roomId);
     } else if (disconnectTimers[playerId]) {
         clearDisconnectGraceForUid(playerId);
@@ -3959,10 +4262,11 @@ function reattachSocketToRoomByUid(socket, roomId) {
         if (oldSocket) oldSocket.leave(roomId);
     }
 
+    rememberRoomPresence(roomId, socket);
     clearDisconnectGraceForUid(uid, roomId);
 
     console.log(`♻️ SYNC REATTACH: Vratio sam ${socket.id} u sobu ${roomId} preko UID-a.`);
-    io.to(roomId).emit('opponent_connection_restored');
+    io.to(roomId).emit('opponent_connection_restored', { roomId, restoredUid: uid });
     return true;
 }
 
@@ -4148,7 +4452,9 @@ function emitAuthoritativeRoomState(socket, roomId, myIndex = null) {
         najavaAktivna: state.najavaAktivna || false,
         najavljenoPolje: state.najavljenoPolje || null,
         turnStartTime: state.turnStartTime || syncNow,
-        turnTimeLimitMs: TURN_TIME_LIMIT,
+        turnTimeLimitMs: state.turnClientTimeLimitMs || TURN_TIME_LIMIT,
+        turnTimerPaused: hasActiveDisconnectGraceForRoom(roomId),
+        disconnectGraceRemainingMs: getRoomDisconnectGraceRemainingMs(roomId),
         serverNow: syncNow
     });
     return true;
@@ -5911,18 +6217,20 @@ io.on('connection', (socket) => {
 
         const currentTurnPlayer = state.players[state.turnIndex];
         if (socket.id === currentTurnPlayer) return;
+        if (hasActiveDisconnectGraceForRoom(roomId)) return;
 
         const elapsed = Date.now() - (state.turnStartTime || 0);
+        const turnTimeoutMs = Math.max(1000, toSafeInt(state.turnTimeoutMs, TOTAL_TIMEOUT));
 
-        if (elapsed >= TOTAL_TIMEOUT) {
-            console.log(`🛡️ SAFETY NET: Vreme zaista isteklo (${elapsed}ms). Prekidam!`);
+        if (elapsed >= turnTimeoutMs) {
+            console.log(`🛡️ SAFETY NET: Vreme zaista isteklo (${elapsed}ms/${turnTimeoutMs}ms). Prekidam!`);
             const timerToken = state.turnTimerToken !== undefined ? state.turnTimerToken : null;
             handleTechnicalTimeout(roomId, currentTurnPlayer, timerToken);
             return;
         }
 
         if (!roomTimers[roomId]) {
-            const remaining = Math.max(1, TOTAL_TIMEOUT - elapsed);
+            const remaining = Math.max(1, turnTimeoutMs - elapsed);
             const timerToken = state.turnTimerToken;
             roomTimers[roomId] = setTimeout(() => {
                 delete roomTimers[roomId];
@@ -5930,13 +6238,55 @@ io.on('connection', (socket) => {
             }, remaining);
         }
 
-        console.log(`⏳ SAFETY NET: Klijent žuri. Još uvek teče Grace Period. Preostalo: ${TOTAL_TIMEOUT - elapsed}ms`);
+        console.log(`⏳ SAFETY NET: Klijent žuri. Još uvek teče Grace Period. Preostalo: ${turnTimeoutMs - elapsed}ms`);
     });
 
     // DODATO: Provera da li je soba još uvek živa kada se klijent vrati u igru
     socket.on('check_room_status', (data) => {
-        const isActive = roomState[data.roomId] ? true : false;
-        socket.emit('room_status_result', { active: isActive, roomId: data.roomId });
+        const roomId = String(data?.roomId || '');
+        const state = roomState[roomId];
+        const isActive = !!(state && !state.gameFinished);
+        socket.emit('room_status_result', {
+            active: isActive,
+            roomId,
+            duelType: getOnlineDuelType(roomId),
+            tournament: isTournamentRoomId(roomId),
+            turnTimerPaused: isActive ? hasActiveDisconnectGraceForRoom(roomId) : false,
+            disconnectGraceRemainingMs: isActive ? getRoomDisconnectGraceRemainingMs(roomId) : 0
+        });
+    });
+
+    socket.on('online_app_backgrounded', (data = {}) => {
+        const roomId = playerRooms[socket.id] || String(data.roomId || '');
+        if (!roomId || !isTournamentRoomId(roomId)) return;
+
+        const state = roomState[roomId];
+        if (!state || state.gameFinished || !Array.isArray(state.players) || !state.players.includes(socket.id)) return;
+
+        beginReconnectGraceForSocket(socket, roomId, 'app_backgrounded');
+    });
+
+    socket.on('online_presence_ping', (data = {}) => {
+        const roomId = playerRooms[socket.id] || String(data.roomId || '');
+        if (!roomId || !isTournamentRoomId(roomId)) return;
+        rememberRoomPresence(roomId, socket);
+    });
+
+    socket.on('online_app_resumed', (data = {}) => {
+        const roomId = playerRooms[socket.id] || String(data.roomId || '');
+        const uid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
+        if (!uid || !roomId) return;
+
+        rememberRoomPresence(roomId, socket);
+        const restored = clearDisconnectGraceForUid(uid, roomId);
+        if (restored) {
+            io.to(roomId).emit('opponent_connection_restored', { roomId, restoredUid: uid });
+        }
+
+        const state = roomState[roomId];
+        if (state && !state.gameFinished && playerRooms[socket.id] === roomId) {
+            emitAuthoritativeRoomState(socket, roomId);
+        }
     });
 
     socket.on('auth_firebase_token', async (data, ack) => {
@@ -8597,6 +8947,12 @@ io.on('connection', (socket) => {
 
                 playerIndex = state.players.indexOf(socket.id);
 
+                if (hasActiveDisconnectGraceForRoom(roomId)) {
+                    console.warn(`🚨 BLOKIRAN GAMEPLAY DOGAĐAJ TOKOM RECONNECT GRACE: event=${eventName}, socket=${socket.id}, room=${roomId}`);
+                    emitAuthoritativeRoomState(socket, roomId, playerIndex);
+                    return;
+                }
+
                 if (playerIndex === -1 || state.turnIndex !== playerIndex) {
                     console.warn(`🚨 BLOKIRAN LAG/POTEZ (${eventName}) - Igrač: ${socket.id}, Na potezu je: ${state.turnIndex}`);
                     
@@ -8619,7 +8975,9 @@ io.on('connection', (socket) => {
                         najavaAktivna: state.najavaAktivna || false,
                         najavljenoPolje: state.najavljenoPolje || null,
                         turnStartTime: state.turnStartTime || syncNow,
-                        turnTimeLimitMs: TURN_TIME_LIMIT,
+                        turnTimeLimitMs: state.turnClientTimeLimitMs || TURN_TIME_LIMIT,
+                        turnTimerPaused: hasActiveDisconnectGraceForRoom(roomId),
+                        disconnectGraceRemainingMs: getRoomDisconnectGraceRemainingMs(roomId),
                         serverNow: syncNow
                     });
                     
@@ -8859,7 +9217,9 @@ io.on('connection', (socket) => {
                 najavaAktivna: state.najavaAktivna || false,
                 najavljenoPolje: state.najavljenoPolje || null,
                 turnStartTime: state.turnStartTime || syncNow,
-                turnTimeLimitMs: TURN_TIME_LIMIT,
+                turnTimeLimitMs: state.turnClientTimeLimitMs || TURN_TIME_LIMIT,
+                turnTimerPaused: hasActiveDisconnectGraceForRoom(roomId),
+                disconnectGraceRemainingMs: getRoomDisconnectGraceRemainingMs(roomId),
                 serverNow: syncNow
             });
         } else if (roomId && socketIsRoomMember) {
@@ -9425,8 +9785,24 @@ io.on('connection', (socket) => {
             }
 
             console.log(`🏁 Igra završena u sobi: ${roomId}`);
+            const state = roomState[roomId];
+            if (!state || state.gameFinished) return;
+
+            const completedScores = Array.isArray(state.players) &&
+                state.players.length >= 2 &&
+                Array.isArray(state.allScores) &&
+                state.allScores.length >= 2 &&
+                state.allScores.slice(0, 2).every(sheet => calculateCompletedDuelTotal(sheet) !== null);
+
+            if (!completedScores) {
+                console.warn(`🚨 BLOKIRAN PRERANI GAME OVER: socket=${socket.id}, room=${roomId}`);
+                emitAuthoritativeRoomState(socket, roomId, Array.isArray(state.players) ? state.players.indexOf(socket.id) : -1);
+                return;
+            }
+
             await applyServerSideCompletedDuel(roomId, socket.id);
             emitCompletedOnlineGame(roomId);
+            await applyTournamentCompletedDuelResult(roomId);
             markOnlineRoomGameFinished(roomId);
         }
     });
@@ -9930,7 +10306,7 @@ io.on('connection', (socket) => {
     });
     
     // ==================================================================
-    // 6. DISKONEKCIJA (SA GRACE PERIOD TOLERANCIJOM OD 30 SEKUNDI I H2H KAZNOM)
+    // 6. DISKONEKCIJA (SA RECONNECT GRACE TOLERANCIJOM I H2H KAZNOM)
     // ==================================================================
     socket.on('disconnect', () => {
         console.log('⚠️ Klijent izgubio vezu:', socket.id);
@@ -9951,86 +10327,7 @@ io.on('connection', (socket) => {
         clearPendingTournamentDuelInvitesForSocket(socket.id);
 
         if (pid && activeRoomId && !(activeRoomState && activeRoomState.gameFinished)) {
-            console.log(`⏳ Pokrećem Grace Period od 30s za igrača: ${pid}`);
-            
-            ghostSessions[pid] = {
-                roomId: activeRoomId,
-                oldSocketId: socket.id
-            };
-
-            io.to(activeRoomId).emit('opponent_connection_lost');
-
-            disconnectTimers[pid] = setTimeout(async () => {
-                const ghost = ghostSessions[pid];
-                if (!ghost || ghost.roomId !== activeRoomId || ghost.oldSocketId !== socket.id) {
-                    console.log(`ℹ️ Ignorišem zastareli disconnect timeout za ${pid}; sesija je već obnovljena ili promenjena.`);
-                    delete disconnectTimers[pid];
-                    return;
-                }
-
-                console.log(`❌ Grace Period istekao za ${pid}. Partija se trajno prekida.`);
-                let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
-                const stateAfterGrace = roomState[activeRoomId];
-
-                if (stateAfterGrace && stateAfterGrace.gameFinished) {
-                    console.log(`ℹ️ Grace timeout za ${pid} preskočen; soba ${activeRoomId} je već završena.`);
-                    delete ghostSessions[pid];
-                    delete disconnectTimers[pid];
-                    return;
-                }
-
-                if (stateAfterGrace) {
-                    if (!stateAfterGrace.players.includes(ghost.oldSocketId)) {
-                        console.log(`ℹ️ Ignorišem disconnect timeout za ${pid}; stari socket više nije igrač u sobi ${activeRoomId}.`);
-                        delete ghostSessions[pid];
-                        delete disconnectTimers[pid];
-                        return;
-                    }
-
-                    const penaltyAmount = getDynamicPenalty(activeRoomId);
-
-                    const oppSocketId = stateAfterGrace.players.find(id => id !== ghost.oldSocketId);
-                    const winnerParticipant = getRoomParticipantMeta(stateAfterGrace, oppSocketId);
-                    const loserParticipant = getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId);
-                    const winnerUid = winnerParticipant.uid;
-                    const h2hKey = getH2HKeyForOpponent(winnerParticipant);
-
-                    technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
-                        winnerOpponent: loserParticipant,
-                        loserOpponent: winnerParticipant
-                    });
-                    await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
-                } else {
-                    console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
-                }
-
-                const technicalWinnerSocketId = Array.isArray(stateAfterGrace?.players)
-                    ? stateAfterGrace.players.find(id => id !== ghost.oldSocketId)
-                    : '';
-                const technicalWinner = stateAfterGrace && technicalWinnerSocketId
-                    ? getRoomParticipantMeta(stateAfterGrace, technicalWinnerSocketId)
-                    : null;
-                const technicalLoser = stateAfterGrace
-                    ? getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId)
-                    : null;
-
-                io.to(activeRoomId).emit('opponent_left', {
-                    winnerId: technicalWinnerSocketId || '',
-                    loserId: ghost.oldSocketId,
-                    duelType: getOnlineDuelType(activeRoomId),
-                    winnerName: technicalWinner?.name || 'Igrac',
-                    loserName: technicalLoser?.name || 'Igrac',
-                    reward: technicalResult.winnerReward,
-                    coinPenalty: technicalResult.loserCoinPenalty,
-                    serverApplied: technicalResult.serverApplied
-                });
-
-                cleanupOnlineRoom(activeRoomId);
-
-                delete ghostSessions[pid];
-                delete disconnectTimers[pid];
-            }, 30000); 
-
+            beginReconnectGraceForSocket(socket, activeRoomId, 'disconnect');
         } else {
             if (activeRoomId) {
                 const stateOnDisconnect = roomState[activeRoomId];

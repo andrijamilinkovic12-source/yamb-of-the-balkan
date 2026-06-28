@@ -119,7 +119,7 @@ const RulesData = {
                 <p>Dukati su glavna valuta u igri. Koriste se za prijave na turnire, kupovine u Riznici i napredovanje kroz kolekcije.</p>
                 <ul>
                     <li><strong>🎲 Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
-                    <li><strong>${rulesAssetIconHtml('assets/daily-challenge-icon.svg')} Dnevni izazov:</strong> Jednom dnevno dobijate serverom određene kockice. Prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
+                    <li><strong>${rulesAssetIconHtml('assets/daily-challenge-icon.svg')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
                     <li><strong>${rulesAssetIconHtml('assets/ad-ticket-icon.svg')} Reklame za nagradu:</strong> U meniju dukata kratka reklama donosi +200 dukata, a nagradni video +500 dukata kada je dostupan.</li>
                     <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
                 </ul>
@@ -127,7 +127,7 @@ const RulesData = {
                 <h3>${rulesAssetIconHtml('assets/undo-token-icon.svg')} Vraćanje upisa</h3>
                 <p>Dugme za ispravku postaje aktivno posle upisa u tabelu i vraća samo poslednji upis. Posle vraćanja dugme se gasi dok ne napravite novi upis.</p>
                 <ul>
-                    <li><strong>Online dueli:</strong> Vraćanje upisa troši 1 token. Zbog toga postoji zadrška od 2.5 sekunde pre protivnikovog bacanja.</li>
+                    <li><strong>Online dueli:</strong> Vraćanje upisa troši 1 token i mora se iskoristiti pre nego protivnik započne sledeći potez. Zbog toga postoji zadrška od 2.5 sekunde pre protivnikovog bacanja.</li>
                     <li><strong>Lokalna igra:</strong> U solo i igri za dva igrača vraćanje se potvrđuje gledanjem reklame kada je dostupna na uređaju.</li>
                     <li><strong>Nabavka tokena:</strong> U meniju dukata kartica za tokene nudi +1 token za kratku reklamu i +3 tokena za nagradni video.</li>
                 </ul>
@@ -282,7 +282,7 @@ const RulesData = {
                 <p>Ducats are the main in-game currency. They are used for tournament entries, Treasury purchases, and collection progress.</p>
                 <ul>
                     <li><strong>🎲 Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
-                    <li><strong>${rulesAssetIconHtml('assets/daily-challenge-icon.svg')} Daily Challenge:</strong> Once per day, the server gives you fixed dice. The first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
+                    <li><strong>${rulesAssetIconHtml('assets/daily-challenge-icon.svg')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
                     <li><strong>${rulesAssetIconHtml('assets/ad-ticket-icon.svg')} Reward ads:</strong> In the ducat menu, a short ad grants +200 ducats, and a rewarded video grants +500 ducats when available.</li>
                     <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
                 </ul>
@@ -290,7 +290,7 @@ const RulesData = {
                 <h3>${rulesAssetIconHtml('assets/undo-token-icon.svg')} Undo entry</h3>
                 <p>The undo button becomes active after an entry in the table and only restores the last entry. After undoing, the button deactivates until you make another entry.</p>
                 <ul>
-                    <li><strong>Online duels:</strong> Undoing costs 1 undo token. This is why there is a 2.5-second delay before the opponent's roll.</li>
+                    <li><strong>Online duels:</strong> Undoing costs 1 undo token and must be used before the opponent starts the next turn. This is why there is a 2.5-second delay before the opponent's roll.</li>
                     <li><strong>Local play:</strong> In solo and two-player local games, undo is confirmed by watching an ad when available on the device.</li>
                     <li><strong>Getting tokens:</strong> The token tab in the ducat menu offers +1 token for a short ad and +3 tokens for a rewarded video.</li>
                 </ul>

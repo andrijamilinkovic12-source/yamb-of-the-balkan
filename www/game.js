@@ -134,6 +134,9 @@ class YambApp {
         this.onlineUsersCount = 1; 
         this.isAnimating = false;
         this.onlineRollPending = false;
+        this.onlineTurnTimerPaused = false;
+        this.opponentReconnectGraceTimer = null;
+        this.opponentReconnectGraceDeadline = 0;
         this.currentHostingRoomId = null;
         this.waitingHofPeriod = 'weekly';
         this.waitingHofInterval = null;
@@ -242,6 +245,8 @@ class YambApp {
                 setTimeout(() => { this.handleAppResume(); }, 500);
             }
         });
+        window.addEventListener('pagehide', () => { this.handleAppPause(); });
+        window.addEventListener('beforeunload', () => { this.handleAppPause(); });
 
         setTimeout(() => { this.handleAppResume(); }, 500);
 
@@ -3224,6 +3229,13 @@ class YambApp {
     }
 
     handleAppPause() {
+        if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket && this.roomId && this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })) {
+            localStorage.setItem('yamb_active_online_room', this.roomId);
+            if (this.socket.connected) {
+                this.socket.emit('online_app_backgrounded', { roomId: this.roomId });
+            }
+        }
+
         if (this.gameActive && !this.onlineMode) {
             this.pauseLocalGameClock();
             localStorage.setItem('yamb_local_recovery_pending', 'true');
@@ -3257,7 +3269,15 @@ class YambApp {
 
         if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket) {
             const requestSync = () => {
-                this.requestOnlineStateSync(this.roomId);
+                const roomId = this.roomId;
+                if (!roomId) return;
+
+                if (this.isTournamentOnlineDuel(roomId, { duelType: this.onlineDuelType })) {
+                    this.socket.emit('online_app_resumed', { roomId });
+                    this.emitOnlinePresencePing(true);
+                }
+
+                this.requestOnlineStateSync(roomId);
             };
 
             if (this.socket.connected) {
@@ -3747,6 +3767,7 @@ class YambApp {
         localStorage.removeItem('yamb_local_recovery_pending');
         this.setInviteBusyState(false);
         this.onlineRollPending = false;
+        this.onlineTurnTimerPaused = false;
 
         if (wasSpectator) {
             if (this.spectateSyncRetryTimer) {
@@ -4148,9 +4169,75 @@ class YambApp {
         return this.inferOnlineDuelType(roomId, payload) === 'tournament';
     }
 
+    emitOnlinePresencePing(force = false) {
+        if (!this.gameActive || !this.onlineMode || this.isSpectator) return;
+        if (!this.socket || !this.socket.connected || !this.roomId) return;
+        if (!this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })) return;
+
+        const now = Date.now();
+        if (!force && this.lastOnlinePresencePingAt && now - this.lastOnlinePresencePingAt < 2000) return;
+
+        this.lastOnlinePresencePingAt = now;
+        this.socket.emit('online_presence_ping', { roomId: this.roomId });
+    }
+
+    formatReconnectGraceTime(ms) {
+        const totalSeconds = Math.max(0, Math.ceil((Number(ms) || 0) / 1000));
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    clearOpponentReconnectGraceCountdown() {
+        if (this.opponentReconnectGraceTimer) {
+            clearInterval(this.opponentReconnectGraceTimer);
+            this.opponentReconnectGraceTimer = null;
+        }
+        this.opponentReconnectGraceDeadline = 0;
+    }
+
+    showOpponentReconnectGraceCountdown(data = {}) {
+        const remainingMs = Number(data.remainingMs ?? data.disconnectGraceRemainingMs ?? data.graceMs);
+        const safeRemainingMs = Number.isFinite(remainingMs) && remainingMs > 0 ? remainingMs : 0;
+
+        this.clearOpponentReconnectGraceCountdown();
+        if (safeRemainingMs > 0) {
+            this.opponentReconnectGraceDeadline = Date.now() + safeRemainingMs;
+        }
+
+        const render = () => {
+            const timerDisplay = document.getElementById('turn-timer-display');
+            if (!timerDisplay) return;
+
+            const msLeft = this.opponentReconnectGraceDeadline
+                ? Math.max(0, this.opponentReconnectGraceDeadline - Date.now())
+                : 0;
+            const template = gt('opp_network_issue_countdown') || '⚠️ Protivnik nije u igri. Čekamo povratak još {0}.';
+            const fallbackText = gt('opp_network_issue') || '⚠️ Protivnik ima problema sa mrežom...';
+            const text = this.opponentReconnectGraceDeadline
+                ? template.replace('{0}', this.formatReconnectGraceTime(msLeft))
+                : fallbackText;
+
+            timerDisplay.style.display = 'flex';
+            timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
+            timerDisplay.style.animation = 'pulse 1s infinite';
+
+            if (this.opponentReconnectGraceDeadline && msLeft <= 0) {
+                this.clearOpponentReconnectGraceCountdown();
+            }
+        };
+
+        render();
+        if (this.opponentReconnectGraceDeadline) {
+            this.opponentReconnectGraceTimer = setInterval(render, 1000);
+        }
+    }
+
     startClientTimer(initialTimeLeft = 90) {
         if (!this.onlineMode || this.isSpectator) return;
         if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+        this.clearOpponentReconnectGraceCountdown();
+        this.onlineTurnTimerPaused = false;
 
         const parsedInitialTimeLeft = Number(initialTimeLeft);
         this.timeLeft = Number.isFinite(parsedInitialTimeLeft)
@@ -4158,11 +4245,13 @@ class YambApp {
             : 90;
         this.lastTimeoutCheckAt = 0;
         this.updateStatusLabel();
+        this.emitOnlinePresencePing(true);
 
         this.turnTimerInterval = setInterval(() => {
             this.timeLeft--;
             this.updateStatusLabel();
-            
+            this.emitOnlinePresencePing();
+
             const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
             
             // ---> FIX: ANTI-DESYNC POLLING (Popravlja Deadlock pri gubitku paketa) <---
@@ -4268,30 +4357,35 @@ class YambApp {
         });
 
         this.socket.off('opponent_connection_lost');
-        this.socket.on('opponent_connection_lost', () => {
+        this.socket.on('opponent_connection_lost', (data = {}) => {
             if (this.isSpectator) return;
-            
+
+            this.onlineTurnTimerPaused = true;
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
-            
-            const timerDisplay = document.getElementById('turn-timer-display');
-            if (timerDisplay) {
-                timerDisplay.style.display = 'flex';
-                timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">${gt('opp_network_issue') || '⚠️ Protivnik ima problema sa mrežom...'}</span>`;
-                timerDisplay.style.animation = 'pulse 1s infinite';
-            }
-            
+            this.showOpponentReconnectGraceCountdown(data);
+
             const btnBacaj = document.getElementById('btn-bacaj');
             if (btnBacaj) btnBacaj.disabled = true;
+
+            const btnNajava = document.getElementById('btn-najava');
+            if (btnNajava) btnNajava.disabled = true;
+
+            this.updateTableVisuals();
         });
 
         this.socket.off('opponent_connection_restored');
-        this.socket.on('opponent_connection_restored', () => {
+        this.socket.on('opponent_connection_restored', (data = {}) => {
             if (this.isSpectator) return;
-            
-            if (typeof window.showNotification === 'function') {
+            this.clearOpponentReconnectGraceCountdown();
+
+            const restoredUid = String(data.restoredUid || '');
+            const myUid = String(this.playerId || localStorage.getItem('yamb_uid') || '');
+            const restoredOpponent = !restoredUid || !myUid || restoredUid !== myUid;
+
+            if (restoredOpponent && typeof window.showNotification === 'function') {
                 window.showNotification(gt('info_title') || "INFO", gt('opp_reconnected') || "Protivnik se vratio u igru!");
             }
-             
+
             this.requestOnlineStateSync(this.roomId);
         });
 
@@ -4352,6 +4446,8 @@ class YambApp {
         this.socket.on('game_over_timeout', async (data) => {
             this.onlineDuelType = this.inferOnlineDuelType(this.roomId, data);
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+            this.clearOpponentReconnectGraceCountdown();
+            this.onlineTurnTimerPaused = false;
             this.gameActive = false;
             
             if (this.isSpectator) {
@@ -4517,6 +4613,8 @@ class YambApp {
                 this.najavaAktivna = data.najavaAktivna;
                 this.najavljenoPolje = data.najavljenoPolje;
 
+                const turnTimerPaused = data.turnTimerPaused === true;
+                this.onlineTurnTimerPaused = turnTimerPaused;
                 this.updateTableVisuals();
                 this.updateDiceVisuals();
                 this.highlightCurrentPlayer();
@@ -4534,13 +4632,21 @@ class YambApp {
                     ? Math.ceil((turnTimeLimitMs - Math.max(0, serverNow - turnStartTime)) / 1000)
                     : undefined;
                 const fallbackTimeLeft = this.currentPlayerIdx === previousTurnIdx ? previousTimeLeft : 90;
-                this.startClientTimer(syncedTimeLeft !== undefined ? syncedTimeLeft : fallbackTimeLeft);
+                if (turnTimerPaused) {
+                    if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
+                    this.showOpponentReconnectGraceCountdown(data);
+                } else {
+                    this.clearOpponentReconnectGraceCountdown();
+                    this.startClientTimer(syncedTimeLeft !== undefined ? syncedTimeLeft : fallbackTimeLeft);
+                }
 
                 if (!this.isSpectator) {
                     const btnBacaj = document.getElementById('btn-bacaj');
                     const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex);
                     if (btnBacaj) {
-                        if (isMyTurn && this.brojBacanja < 3) {
+                        if (turnTimerPaused) {
+                            btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                        } else if (isMyTurn && this.brojBacanja < 3) {
                             btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll') || "BACAJ";
                         } else if (isMyTurn) {
                             btnBacaj.disabled = true; btnBacaj.innerText = gt('game_write') || "UPIŠI";
@@ -4551,7 +4657,9 @@ class YambApp {
 
                     const btnNajava = document.getElementById('btn-najava');
                     if (btnNajava) {
-                        if (this.najavaAktivna) {
+                        if (turnTimerPaused) {
+                            btnNajava.disabled = true;
+                        } else if (this.najavaAktivna) {
                             btnNajava.innerText = isMyTurn ? (gt('game_announce_cancel') || "OTKAŽI") : (gt('game_opponent_choosing') || "PROTIVNIK BIRA...");
                             btnNajava.classList.add('btn-active-toggle');
                             btnNajava.disabled = !isMyTurn; // <-- EKSPLICITNO OTKLJUČAVANJE/ZAKLJUČAVANJE
@@ -4673,6 +4781,8 @@ class YambApp {
         this.socket.off('online_game_finished');
         this.socket.on('online_game_finished', async (data = {}) => {
             if (!this.isCurrentRoomPayload(data)) return;
+            this.clearOpponentReconnectGraceCountdown();
+            this.onlineTurnTimerPaused = false;
 
             if (this.isSpectator) {
                 if (!this.onlineMode || !this.gameActive) return;
@@ -4710,6 +4820,11 @@ class YambApp {
             this.lastOnlineGameResult = data;
             if (Array.isArray(data.allScores)) this.allScores = data.allScores;
             if (data.currentPlayerIdx !== undefined) this.currentPlayerIdx = data.currentPlayerIdx;
+
+            const pendingTournamentFinalCeremony = this.getTournamentFinalCeremonyData(data);
+            if (pendingTournamentFinalCeremony) {
+                this.rememberTournamentFinalCeremony(pendingTournamentFinalCeremony.role, false);
+            }
 
             this.beginOnlineFinalBoardDelay(data);
         });
@@ -4752,7 +4867,7 @@ class YambApp {
                             
                             setTimeout(() => {
                                 // Provera da li je i dalje moj potez (da se u međuvremenu nije desio Undo)
-                                if (this.gameActive && this.currentPlayerIdx === this.myOnlineIndex && this.brojBacanja < 3) {
+                                if (this.gameActive && !this.onlineTurnTimerPaused && this.currentPlayerIdx === this.myOnlineIndex && this.brojBacanja < 3) {
                                     btnBacaj.disabled = false;
                                     btnBacaj.innerText = gt('game_roll') || "BACAJ";
                                 }
@@ -4787,9 +4902,13 @@ class YambApp {
                 const btnBacaj = document.getElementById('btn-bacaj');
                 const btnNajava = document.getElementById('btn-najava');
                 const isMyTurn = this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex;
+                const isOnlineTurnPaused = this.onlineMode && this.onlineTurnTimerPaused;
 
                 if (btnBacaj) {
-                    if (isMyTurn && this.brojBacanja < 3) {
+                    if (isOnlineTurnPaused) {
+                        btnBacaj.disabled = true;
+                        btnBacaj.innerText = gt('game_opponent_turn') || "PROTIVNIK IGRA...";
+                    } else if (isMyTurn && this.brojBacanja < 3) {
                         btnBacaj.disabled = false;
                         btnBacaj.innerText = gt('game_roll') || "BACAJ";
                     } else if (isMyTurn) {
@@ -4802,7 +4921,7 @@ class YambApp {
                 }
 
                 if (btnNajava) {
-                    if (isMyTurn && this.brojBacanja === 1 && !this.najavljenoPolje && !this.najavaAktivna) {
+                    if (!isOnlineTurnPaused && isMyTurn && this.brojBacanja === 1 && !this.najavljenoPolje && !this.najavaAktivna) {
                         btnNajava.disabled = false;
                         btnNajava.classList.add('btn-highlight');
                     } else {
@@ -4875,6 +4994,7 @@ class YambApp {
         this.socket.off('opponent_left');
         this.socket.on('opponent_left', async (data = {}) => {
             this.onlineDuelType = this.inferOnlineDuelType(this.roomId, data);
+            this.clearOpponentReconnectGraceCountdown();
             localStorage.removeItem('yamb_active_online_room');
             if(this.isSpectator) {
                 this.modal.alert(gt('spectator_opp_left') || "Igrač je napustio sobu.", gt('modal_title_info') || "INFO").then(() => {
@@ -5088,6 +5208,13 @@ class YambApp {
             if (data.active) {
                 if (this.gameActive && this.onlineMode) return;
                 if (this.onlineRecoveryPromptOpen) return;
+
+                const isTournamentRecovery = data.tournament === true || this.isTournamentOnlineDuel(responseRoomId, data);
+                if (isTournamentRecovery) {
+                    localStorage.setItem('yamb_active_online_room', responseRoomId);
+                    this.resumeOnlineGame(responseRoomId, { autoTournamentRecovery: true });
+                    return;
+                }
 
                 this.onlineRecoveryPromptOpen = true;
                 try {
@@ -5435,9 +5562,10 @@ class YambApp {
         const btnBacaj = document.getElementById('btn-bacaj'); 
         const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx == this.myOnlineIndex);
         const isLocalGame = !this.onlineMode;
+        const isOnlineTurnPaused = this.onlineMode && this.onlineTurnTimerPaused;
 
-        if(btnBacaj && !this.isSpectator) { 
-            if (isMyTurnOnline || isLocalGame) { btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll'); } 
+        if(btnBacaj && !this.isSpectator) {
+            if ((isMyTurnOnline && !isOnlineTurnPaused) || isLocalGame) { btnBacaj.disabled = false; btnBacaj.innerText = gt('game_roll'); }
             else { btnBacaj.disabled = true; btnBacaj.innerText = gt('game_opponent_turn'); }
         }
         
@@ -5479,6 +5607,7 @@ class YambApp {
     toggleHold(i) {
         if (this.onlineMode && this.currentPlayerIdx !== this.myOnlineIndex) return;
         if (this.isSpectator) return;
+        if (this.onlineMode && this.onlineTurnTimerPaused) return;
         if (this.brojBacanja === 0) return;
         if (this.onlineRollPending) return;
         if (this.isAnimating) return;
@@ -5527,8 +5656,9 @@ class YambApp {
         this.isAnimating = false; 
     }
     
-    async throwDice() { 
+    async throwDice() {
         if (this.isSpectator) return;
+        if (this.onlineMode && this.onlineTurnTimerPaused) return;
         this.lastMoveSnapshot = null;
         const btnUndo = document.getElementById('btn-undo-move');
         if (btnUndo) {
@@ -5622,9 +5752,10 @@ class YambApp {
         }
     }
 
-    clickNajava() { 
+    clickNajava() {
         if (this.isSpectator) return;
-        if (this.brojBacanja !== 1) return; 
+        if (this.onlineMode && this.onlineTurnTimerPaused) return;
+        if (this.brojBacanja !== 1) return;
         
         const btn = document.getElementById('btn-najava'); 
         const btnBacaj = document.getElementById('btn-bacaj'); 
@@ -5709,6 +5840,7 @@ class YambApp {
     
     async writeScore(row, col, pIdx) {
         if (this.isSpectator) return false;
+        if (this.onlineMode && this.onlineTurnTimerPaused) return false;
         if (this.onlineRollPending) return false;
         if (pIdx !== this.currentPlayerIdx) return false;
         
@@ -6870,11 +7002,12 @@ class YambApp {
                         if (!btn.disabled) btn.disabled = true; 
                     } else { 
                         if (btn.innerText !== "") btn.innerText = ""; 
-                        if (btn.classList.contains('filled')) btn.classList.remove('filled'); 
-                        
-                        const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator; 
-                        const isLocalTurn = (!this.onlineMode && idx === this.currentPlayerIdx); 
-                        const shouldBeDisabled = !((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0);
+                        if (btn.classList.contains('filled')) btn.classList.remove('filled');
+
+                        const isMyTurnOnline = (this.onlineMode && this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
+                        const isLocalTurn = (!this.onlineMode && idx === this.currentPlayerIdx);
+                        const isOnlineTurnPaused = this.onlineMode && this.onlineTurnTimerPaused;
+                        const shouldBeDisabled = isOnlineTurnPaused || !((isMyTurnOnline || isLocalTurn) && this.brojBacanja > 0);
                         
                         if (btn.disabled !== shouldBeDisabled) btn.disabled = shouldBeDisabled; 
                         
@@ -6971,6 +7104,7 @@ class YambApp {
         this.roomId = roomId;
         this.modeTag = "Online";
         this.isSpectator = false;
+        this.onlineDuelType = this.inferOnlineDuelType(roomId, options);
         const btnBacaj = document.getElementById('btn-bacaj');
         const btnNajava = document.getElementById('btn-najava');
         if (btnBacaj) btnBacaj.style.display = '';
