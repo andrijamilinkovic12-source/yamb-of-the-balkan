@@ -67,6 +67,13 @@
         return app.authenticateSocketIdentity(forceRefresh);
     }
 
+    async function claimPendingRewardBeforeNotificationNavigation(app) {
+        if (app && typeof app.claimPendingRewardBeforeExternalNavigation === 'function') {
+            return app.claimPendingRewardBeforeExternalNavigation();
+        }
+        return true;
+    }
+
     async function createTournamentChannel() {
         const plugin = getPushPlugin();
         if (!plugin || typeof plugin.createChannel !== 'function') return;
@@ -128,9 +135,10 @@
     }
 
     function openTournamentFromNotification(data = {}) {
-        const open = () => {
+        const open = async () => {
             const app = window.app;
             if (!app) return;
+            if (!(await claimPendingRewardBeforeNotificationNavigation(app))) return;
 
             if (app.tournamentManager && typeof app.tournamentManager.open === 'function') {
                 app.tournamentManager.activeTab = 'bracket';
@@ -155,12 +163,13 @@
     }
 
     function openRecordsFromNotification(data = {}) {
-        const open = () => {
+        const open = async () => {
             const app = window.app;
             if (!app) return;
+            if (!(await claimPendingRewardBeforeNotificationNavigation(app))) return;
 
             if (typeof app.showHighscoresScreen === 'function') {
-                app.showHighscoresScreen();
+                await app.showHighscoresScreen();
             } else if (typeof app.navigateTo === 'function') {
                 app.navigateTo('highscores-screen');
             }
@@ -199,9 +208,10 @@
             }
         };
 
-        const open = () => {
+        const open = async () => {
             const app = window.app;
             const league = window.kvartalnaLiga;
+            if (app && !(await claimPendingRewardBeforeNotificationNavigation(app))) return;
 
             if (league) {
                 if (typeof league.openModal === 'function') {

@@ -219,7 +219,7 @@ class YambApp {
         this.initSocketConnection();
 
         if (window.Capacitor) {
-            window.Capacitor.Plugins.App.addListener('appUrlOpen', (data) => {
+            window.Capacitor.Plugins.App.addListener('appUrlOpen', async (data) => {
                 try {
                     const url = new URL(data.url);
                     const roomId = url.searchParams.get('room');
@@ -227,6 +227,8 @@ class YambApp {
                         if (this.isDoNotDisturbActive()) return;
                         this.inviteDetected = true;
                         if (!this.requireLogin()) return; // Gosti ne mogu prihvatiti poziv
+                        const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
+                        if (!rewardReady) return;
 
                         if (this.splashTimeout) { clearTimeout(this.splashTimeout); this.splashTimeout = null; }
                         this.navigateTo('splash-screen');
@@ -2709,18 +2711,22 @@ class YambApp {
                     }, 50);
                 });
 
-                this.socket.on('online_room_resume_available', (data = {}) => {
+                this.socket.on('online_room_resume_available', async (data = {}) => {
                     const roomId = data.roomId;
                     if (!roomId) return;
 
-                    localStorage.setItem('yamb_active_online_room', roomId);
-
                     if (this.gameActive && this.onlineMode && !this.isSpectator) {
+                        localStorage.setItem('yamb_active_online_room', roomId);
                         if (this.roomId === roomId) {
                             this.requestOnlineStateSync(roomId);
                         }
                         return;
                     }
+
+                    const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
+                    if (!rewardReady) return;
+
+                    localStorage.setItem('yamb_active_online_room', roomId);
 
                     if (typeof window.closeOnlinePlayersModal === 'function') {
                         window.closeOnlinePlayersModal();
@@ -2750,7 +2756,7 @@ class YambApp {
                             if (finalMsg.includes('Već ste preuzeli') || finalMsg.includes('dnevnu nagradu')) {
                                 const uid = localStorage.getItem('yamb_uid');
                                 localStorage.setItem('yamb_last_daily_' + uid, this.getDailyChallengeDayKey());
-                                this.navigateTo('main-menu');
+                                this.showMainMenu();
                             }
                         });
                     }
@@ -3777,12 +3783,17 @@ class YambApp {
         this.updateOnlineCounterUI();
     }
 
-    showHighscoresScreen() { 
-        this.navigateTo('highscores-screen'); 
-        this.switchHsTab('global'); 
+    async showHighscoresScreen() {
+        const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
+        if (!rewardReady) return;
+        this.navigateTo('highscores-screen');
+        this.switchHsTab('global');
     }
 
     async showMainMenu() { 
+        const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
+        if (!rewardReady) return;
+
         this.clearOnlineGameOverDelay();
         this.onlineGameOverFinishInProgress = false;
         const wasSpectator = this.isSpectator;
@@ -5017,11 +5028,15 @@ class YambApp {
                 this.updateDiceVisuals();
                 return;
             }
-            await this.claimPendingBaseRewardBeforeRematch();
+            const rewardReady = await this.claimPendingBaseRewardBeforeRematch();
+            if (!rewardReady) {
+                this.modal.alert(gt('reward_claim_retry') || "Nagrada još nije potvrđena. Pokušajte ponovo za par sekundi.", gt('modal_title_info') || "INFO");
+                return;
+            }
             this.modal.alert(gt('rematch_accepted'), gt('rematch_title')).then(() => {
-                this.initScores(); 
-                this.currentPlayerIdx = 0; 
-                this.startGame(); 
+                this.initScores();
+                this.currentPlayerIdx = 0;
+                this.startGame();
             });
         });
 
@@ -6962,6 +6977,23 @@ class YambApp {
         })();
 
         return this.pendingBaseRewardClaimPromise;
+    }
+
+    async claimPendingRewardBeforeExternalNavigation() {
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const gameOverActive = !!gameOverScreen && gameOverScreen.classList.contains('active');
+        const baseScore = Math.max(0, parseInt(this.pendingScore, 10) || 0);
+        const hasPendingNormalReward = this.lastGameType === 'normal' && !this.rewardClaimed && baseScore > 0;
+        if (!gameOverActive && !hasPendingNormalReward) return true;
+
+        const rewardReady = await this.claimPendingBaseRewardBeforeRematch();
+        if (!rewardReady && this.modal && typeof this.modal.alert === 'function') {
+            this.modal.alert(
+                gt('reward_claim_retry') || "Nagrada još nije potvrđena. Pokušajte ponovo za par sekundi.",
+                gt('modal_title_info') || "INFO"
+            );
+        }
+        return rewardReady;
     }
 
     async watchAdForDouble() {
