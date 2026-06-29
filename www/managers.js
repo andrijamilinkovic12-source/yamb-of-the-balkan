@@ -2992,22 +2992,36 @@ class ShopManager {
     }
 
     equip(id) {
-        this.activeItem = id;
-        localStorage.setItem(this.activeKey, id);
+        const itemId = String(id || '').trim();
+        const itemExists = this.items.some(item => item.id === itemId);
+        if (!itemExists || !this.unlocked.includes(itemId)) {
+            this.render();
+            return;
+        }
+
+        this.activeItem = itemId;
+        localStorage.setItem(this.activeKey, itemId);
         this.render();
         
         if(window.app && window.app.soundMgr) window.app.soundMgr.click();
 
         if (this.type === 'theme') {
             if (window.app && typeof window.app.applyTheme === 'function') {
-                window.app.applyTheme(id); 
+                window.app.applyTheme(itemId);
             } else {
                 document.body.className = ''; 
-                if (id !== 'dark') document.body.classList.add(id + '-theme'); 
+                if (itemId !== 'dark') document.body.classList.add(itemId + '-theme');
             }
             
             const themeSelect = document.getElementById('setting-theme');
-            if (themeSelect) themeSelect.value = id;
+            if (themeSelect) themeSelect.value = itemId;
+        } else if (this.type === 'skin' && window.app && window.app.features) {
+            if (typeof window.app.updateDiceVisuals === 'function') {
+                window.app.updateDiceVisuals();
+            }
+            document.querySelectorAll('.daily-glass-die.dice').forEach(el => {
+                window.app.features.applySkinToElement(el, el.classList.contains('held'));
+            });
         }
 
         if (window.app && window.app.socket && window.app.socket.connected && localStorage.getItem('yamb_uid')) {

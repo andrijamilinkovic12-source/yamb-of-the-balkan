@@ -11,11 +11,21 @@ if (typeof window.YambFeatures === 'undefined') {
          * Primenjuje CSS klase na kockice na osnovu odabranog skina.
          */
         applySkinToElement(element, isHeld = false) {
-            const activeSkin = localStorage.getItem('yamb_active_skin') || 'default';
-            
-            element.className = 'dice';
-            if (isHeld) element.classList.add('held');
-            
+            if (!element) return;
+
+            const configuredSkins = (typeof SHOP_DATA !== 'undefined' && Array.isArray(SHOP_DATA.SKINS))
+                ? SHOP_DATA.SKINS.map(item => item.id)
+                : [];
+            const savedSkin = localStorage.getItem('yamb_active_skin') || 'default';
+            const activeSkin = configuredSkins.length === 0 || configuredSkins.includes(savedSkin)
+                ? savedSkin
+                : 'default';
+
+            element.classList.add('dice');
+            Array.from(element.classList).forEach(className => {
+                if (className.startsWith('skin-')) element.classList.remove(className);
+            });
+            element.classList.toggle('held', !!isHeld);
             element.classList.add(`skin-${activeSkin}`);
         }
 
