@@ -320,38 +320,174 @@
     z-index: 1;
 }
 
-.prev-fireflies { background: radial-gradient(circle at bottom, #0f2027, #203a43, #2c5364); } 
-.prev-fireflies::before { 
-    content: "✨"; 
-    color: transparent; 
-    text-shadow: 0 0 10px rgba(220, 255, 150, 0.9), 0 0 20px rgba(150, 255, 100, 0.6); 
-    mix-blend-mode: screen; 
-    animation: floatUp 3s infinite ease-in-out; 
+.prev-fireflies {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+        radial-gradient(circle at 52% 64%, rgba(210, 255, 112, 0.28), transparent 32%),
+        linear-gradient(145deg, #09251f 0%, #16483d 58%, #071813 100%);
 }
 
-.firefly { 
-    position: fixed; 
-    bottom: -50px; 
-    font-size: 2.5rem; 
-    pointer-events: none; 
-    z-index: 99999; 
-    opacity: 0; 
-    color: transparent; 
-    text-shadow: 0 0 15px rgba(220, 255, 150, 0.9), 0 0 25px rgba(150, 255, 100, 0.6); 
-    mix-blend-mode: screen; 
-    will-change: transform, opacity; 
-    animation: fireflyFloat ease-in-out forwards; 
+.prev-fireflies::before,
+.prev-fireflies::after {
+    content: "";
+    position: absolute;
+    left: 42%;
+    top: 52%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fffbd0;
+    border: 1px solid #9dff71;
+    box-shadow:
+        0 0 5px 2px #e7ff75,
+        0 0 14px 5px rgba(117, 255, 143, 0.72),
+        27px -18px 0 -2px #fff8a6,
+        27px -18px 10px 1px rgba(255, 224, 92, 0.74),
+        -31px 16px 0 -2px #d5ffff,
+        -31px 16px 11px 1px rgba(80, 244, 223, 0.72);
+    animation: fireflyPreviewDrift 2.8s infinite ease-in-out;
 }
 
-@keyframes fireflyFloat { 
-    0% { transform: translateY(0) translateX(0) scale(0.5) rotate(0deg); opacity: 0; } 
-    20% { opacity: 0.85; } 
-    50% { 
-        transform: translateY(-50vh) translateX(var(--rnd-x, 20px)) scale(1.3) rotate(15deg); 
-        opacity: 1; 
-    } 
-    80% { opacity: 0.85; } 
-    100% { transform: translateY(-110vh) translateX(0) scale(0.5) rotate(-15deg); opacity: 0; } 
+.prev-fireflies::after {
+    width: 5px;
+    height: 5px;
+    left: 69%;
+    top: 67%;
+    animation-delay: -1.35s;
+    animation-direction: reverse;
+}
+
+.firefly-field {
+    --ff-core: #fffbd0;
+    --ff-inner: #eaff70;
+    --ff-mid: rgba(161, 255, 79, 0.92);
+    --ff-outer: rgba(85, 255, 184, 0.42);
+    --ff-edge: rgba(236, 255, 191, 0.95);
+    --ff-trail: rgba(172, 255, 114, 0.48);
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    overflow: hidden;
+    pointer-events: none;
+    isolation: isolate;
+    background:
+        radial-gradient(circle at 28% 72%, rgba(138, 255, 105, 0.055), transparent 32%),
+        radial-gradient(circle at 72% 32%, rgba(79, 255, 213, 0.045), transparent 30%);
+    animation: fireflyFieldFade 7.8s ease-out forwards;
+}
+
+.firefly-field--light {
+    --ff-core: #fffef0;
+    --ff-inner: #ffe759;
+    --ff-mid: rgba(23, 176, 151, 0.96);
+    --ff-outer: rgba(0, 93, 91, 0.34);
+    --ff-edge: rgba(0, 83, 78, 0.92);
+    --ff-trail: rgba(0, 105, 96, 0.42);
+    background:
+        radial-gradient(circle at 26% 72%, rgba(0, 104, 91, 0.075), transparent 34%),
+        radial-gradient(circle at 74% 28%, rgba(116, 77, 0, 0.06), transparent 28%);
+}
+
+.magic-firefly {
+    position: absolute;
+    left: var(--ff-x);
+    top: var(--ff-y);
+    width: var(--ff-size);
+    height: var(--ff-size);
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: magicFireflyDrift var(--ff-duration) cubic-bezier(0.34, 0.04, 0.24, 0.98) var(--ff-delay) forwards;
+}
+
+.magic-firefly__light {
+    position: absolute;
+    inset: 0;
+    display: block;
+    border-radius: 50%;
+    border: 1px solid var(--ff-edge);
+    background: radial-gradient(circle at 38% 34%, #fff 0 12%, var(--ff-core) 18% 31%, var(--ff-inner) 38% 52%, var(--ff-mid) 64%, transparent 76%);
+    box-shadow:
+        0 0 3px 1px var(--ff-core),
+        0 0 9px 4px var(--ff-mid),
+        0 0 22px 9px var(--ff-outer);
+    animation: magicFireflyPulse var(--ff-pulse) ease-in-out infinite alternate;
+}
+
+.magic-firefly__light::before,
+.magic-firefly__light::after {
+    content: "";
+    position: absolute;
+    top: 48%;
+    width: 72%;
+    height: 38%;
+    border-radius: 70% 20% 70% 20%;
+    border: 1px solid color-mix(in srgb, var(--ff-edge) 68%, transparent);
+    background: color-mix(in srgb, var(--ff-core) 38%, transparent);
+    filter: blur(0.25px);
+    opacity: 0.72;
+}
+
+.magic-firefly__light::before {
+    right: 72%;
+    transform: rotate(24deg);
+}
+
+.magic-firefly__light::after {
+    left: 72%;
+    transform: scaleX(-1) rotate(24deg);
+}
+
+.magic-firefly__trail {
+    position: absolute;
+    right: 48%;
+    top: 50%;
+    width: clamp(18px, calc(var(--ff-size) * 4), 42px);
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--ff-trail));
+    filter: blur(1px);
+    opacity: 0.58;
+    transform: translateY(-50%) rotate(-22deg);
+    transform-origin: right center;
+}
+
+.magic-firefly--1 { filter: hue-rotate(42deg); }
+.magic-firefly--2 { filter: hue-rotate(-34deg); }
+
+@keyframes fireflyPreviewDrift {
+    0%, 100% { transform: translate(-8px, 9px) scale(0.78); opacity: 0.62; }
+    50% { transform: translate(13px, -12px) scale(1.18); opacity: 1; }
+}
+
+@keyframes fireflyFieldFade {
+    0% { opacity: 0; }
+    8%, 84% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes magicFireflyDrift {
+    0% { transform: translate3d(0, 18px, 0) scale(0.38) rotate(-12deg); opacity: 0; }
+    12% { opacity: 0.94; }
+    42% { transform: translate3d(var(--ff-dx-a), var(--ff-dy-a), 0) scale(1.08) rotate(14deg); opacity: 1; }
+    72% { transform: translate3d(var(--ff-dx-b), var(--ff-dy-b), 0) scale(0.86) rotate(-9deg); opacity: 0.92; }
+    100% { transform: translate3d(var(--ff-dx-b), calc(var(--ff-dy-b) - 120px), 0) scale(0.46) rotate(12deg); opacity: 0; }
+}
+
+@keyframes magicFireflyPulse {
+    0% { transform: scale(0.72); filter: brightness(0.92); }
+    100% { transform: scale(1.24); filter: brightness(1.28); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .magic-firefly {
+        animation-timing-function: ease-out;
+    }
+
+    .magic-firefly__light {
+        animation-duration: 1.4s;
+    }
 }
 
 .prev-bubbles { 

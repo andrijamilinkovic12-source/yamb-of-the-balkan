@@ -40,8 +40,8 @@ if (typeof window.YambFeatures === 'undefined') {
             // kroz novi kod u managers.js. Ovde bi to bio duplikat.
 
             // 2. KONFETE (Za skor >= 60, kao dodatna nagrada za dobre poteze)
-            // Ovo ostavljamo jer se pali i za Poker/Ful/Kentu, ne samo za Yamb.
-            if (pts >= 60) {
+            // Yamb se slavi isključivo kroz game.js: aktivni efekat ili grom za prvo bacanje.
+            if (row !== 'Yamb' && pts >= 60) {
                 if(window.confetti) {
                     window.confetti({ particleCount: 50, spread: 40, origin: { y: 0.7 } });
                 }

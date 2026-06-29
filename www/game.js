@@ -4773,7 +4773,7 @@ class YambApp {
                 oppBox.classList.remove('is-searching');
                 const startMsgEl = document.getElementById('waiting-start-msg');
                 if (startMsgEl) startMsgEl.innerHTML = gt('ws_game_starting') || 'Protivnik je tu. Partija počinje...';
-                
+
                 oppBox.style.borderColor = 'var(--danger)';
                 oppBox.style.boxShadow = '0 5px 15px rgba(244, 67, 54, 0.2)';
                 
@@ -5974,9 +5974,14 @@ class YambApp {
 
         if (row === "Yamb" && pts > 0) {
             try {
-                this.effectMgr.celebrateYamb();
-                if (isProfileMove && this.brojBacanja === 1) { this.hasSvetiIlija = true; this.effectMgr.trigger('thunder'); }
-                
+                const isFirstRollYamb = this.brojBacanja === 1;
+                if (isFirstRollYamb) {
+                    if (isProfileMove) this.hasSvetiIlija = true;
+                    this.effectMgr.trigger('thunder');
+                } else {
+                    this.effectMgr.celebrateYamb();
+                }
+
                 this.vibrate([50, 100, 50, 100, 50]);
             } catch(e) {}
         }

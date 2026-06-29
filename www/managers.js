@@ -253,8 +253,8 @@ class EffectManager {
     trigger(type) {
         if (type === 'confetti') this.spawnConfetti();
         if (type === 'gold_rain') this.spawnGoldRain();
-        if (type === 'fireflies') this.spawnFloatingEmoji(['✨', '🌟', '💫', '🧚'], 40);
-        if (type === 'bubbles') this.spawnBubbles(35); 
+        if (type === 'fireflies') this.spawnFireflies(52, 'fireflies');
+        if (type === 'bubbles') this.spawnBubbles(35, 'bubbles');
         
         if (type === 'ice_age') {
             let targetTable = null;
@@ -833,10 +833,10 @@ class EffectManager {
                 targetTable.classList.add('anim-neon-pulse');
                 document.body.classList.add('fx-neon_pulse'); 
                 
-                setTimeout(() => { 
+                this.scheduleEffectTimeout(() => {
                     targetTable.classList.remove('anim-neon-pulse'); 
                     document.body.classList.remove('fx-neon_pulse'); 
-                }, 5000); 
+                }, 5000, 'neon_pulse');
             }
         }
 
@@ -943,10 +943,10 @@ class EffectManager {
                 window.app.vibrate([50, 50, 50, 600, 400, 150, 300, 100, 200, 100, 100]);
             }
             
-            setTimeout(() => {
+            this.scheduleEffectTimeout(() => {
                 if(flash.parentNode) flash.remove();
                 document.body.classList.remove('fx-thunder-shake');
-            }, 4500); 
+            }, 4500, 'thunder');
         }
 
         if (type === 'balkan') {
@@ -963,25 +963,25 @@ class EffectManager {
             
             document.body.appendChild(tr1); document.body.appendChild(tr2); document.body.appendChild(tr3); document.body.appendChild(tr4);
 
-            this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖', '💖', '🎵', '🍻'], 80);
+            this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖', '💖', '🎵', '🍻'], 80, 'balkan');
 
             if (window.app && window.app.soundMgr && window.app.soundMgr.balkanTrumpet) {
                 window.app.soundMgr.balkanTrumpet();
             }
 
-            setTimeout(() => { 
+            this.scheduleEffectTimeout(() => {
                 document.body.classList.remove('fx-balkan');
                 if(bg.parentNode) bg.remove(); 
                 if(tr1.parentNode) tr1.remove(); 
                 if(tr2.parentNode) tr2.remove(); 
                 if(tr3.parentNode) tr3.remove(); 
                 if(tr4.parentNode) tr4.remove(); 
-            }, 8500); 
+            }, 8500, 'balkan');
         }
         
         if (type === 'fireworks') {
              for(let i=0; i<12; i++) { 
-                 setTimeout(() => this.spawnRealFirework(), i * 500 + Math.random() * 400); 
+                 this.scheduleEffectTimeout(() => this.spawnRealFirework('fireworks'), i * 500 + Math.random() * 400, 'fireworks');
              }
         }
         
@@ -993,10 +993,10 @@ class EffectManager {
             container.innerHTML = '<div class="stardust-layer layer-1"></div><div class="stardust-layer layer-2"></div><div class="stardust-layer layer-3"></div>';
             document.body.appendChild(container);
             
-            setTimeout(() => {
+            this.scheduleEffectTimeout(() => {
                 document.body.classList.remove('fx-cosmic_dust');
                 if(container.parentNode) container.remove();
-            }, 6000); 
+            }, 6000, 'cosmic_dust');
         }
 
         if (type === 'ufo_abduction') {
@@ -1019,10 +1019,10 @@ class EffectManager {
                 window.app.vibrate([100, 150, 200, 300, 400, 200, 100]); 
             }
 
-            setTimeout(() => {
+            this.scheduleEffectTimeout(() => {
                 document.body.classList.remove('fx-dragon_fire');
                 if(container.parentNode) container.remove();
-            }, 5500); 
+            }, 5500, 'dragon_fire');
         }
 
         if (type === 'royal_yamb') {
@@ -1054,10 +1054,10 @@ class EffectManager {
                 window.app.vibrate([80, 40, 120, 60, 220, 80, 120]);
             }
 
-            setTimeout(() => {
+            this.scheduleEffectTimeout(() => {
                 document.body.classList.remove('fx-royal_yamb');
                 if (container.parentNode) container.remove();
-            }, 8000);
+            }, 8000, 'royal_yamb');
         }
     }
 
@@ -1140,18 +1140,18 @@ class EffectManager {
             window.app.vibrate([35, 45, 35, 90, 35, 45, 160]);
         }
 
-        setTimeout(() => {
+        this.scheduleEffectTimeout(() => {
             if (!container.isConnected || !document.body.classList.contains('fx-ufo_abduction')) return;
             this.abductVisibleScores(container, targetTable, ufoX, ufoY);
-        }, 1050);
+        }, 1050, 'ufo_abduction');
 
-        setTimeout(() => {
+        this.scheduleEffectTimeout(() => {
             document.body.classList.remove('fx-ufo_abduction');
             targetTable.classList.remove('anim-ufo-table');
             targetTable.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
             document.querySelectorAll('.ufo-abducted-score, .ufo-target-ray').forEach(el => el.remove());
             if (container.parentNode) container.remove();
-        }, 7500);
+        }, 7500, 'ufo_abduction');
     }
 
     abductVisibleScores(container, targetTable, ufoX, ufoY) {
@@ -1226,9 +1226,9 @@ class EffectManager {
         ray.style.animationDuration = `${duration}ms`;
         container.appendChild(ray);
 
-        setTimeout(() => {
+        this.scheduleEffectTimeout(() => {
             if (ray.parentNode) ray.remove();
-        }, delay + duration + 120);
+        }, delay + duration + 120, 'ufo_abduction');
     }
 
     playRoyalYambAccents() {
@@ -1236,12 +1236,12 @@ class EffectManager {
         if (!sound) return;
 
         [760, 1840, 3120, 4680].forEach(delay => {
-            setTimeout(() => {
+            this.scheduleEffectTimeout(() => {
                 if (typeof sound.fireworkLaunch === 'function') sound.fireworkLaunch();
-                setTimeout(() => {
+                this.scheduleEffectTimeout(() => {
                     if (typeof sound.fireworkExplode === 'function') sound.fireworkExplode();
-                }, 240);
-            }, delay);
+                }, 240, 'royal_yamb');
+            }, delay, 'royal_yamb');
         });
     }
 
@@ -1482,13 +1482,13 @@ class EffectManager {
         };
 
         rafId = requestAnimationFrame(draw);
-        setTimeout(() => {
+        this.scheduleEffectTimeout(() => {
             cancelAnimationFrame(rafId);
             window.removeEventListener('resize', resizeCanvas);
-        }, duration + 120);
+        }, duration + 120, 'royal_yamb');
     }
 
-    spawnRealFirework() {
+    spawnRealFirework(group = 'fireworks') {
         const startX = window.innerWidth * 0.1 + Math.random() * window.innerWidth * 0.8;
         const endY = window.innerHeight * 0.1 + Math.random() * window.innerHeight * 0.4;
         
@@ -1506,12 +1506,13 @@ class EffectManager {
             { transform: `translateY(100vh)`, opacity: 1 },
             { transform: `translateY(${endY}px)`, opacity: 0 }
         ], { duration: duration, easing: 'ease-out' }).onfinish = () => {
+            if (!rocket.isConnected) return;
             rocket.remove();
-            this.explodeRealFirework(startX, endY);
+            this.explodeRealFirework(startX, endY, group);
         };
     }
 
-    explodeRealFirework(x, y) {
+    explodeRealFirework(x, y, group = 'fireworks') {
         if (window.app && window.app.soundMgr && window.app.soundMgr.fireworkExplode) {
             window.app.soundMgr.fireworkExplode();
         }
@@ -1519,7 +1520,7 @@ class EffectManager {
         const flash = document.createElement('div');
         flash.className = 'fw-flash';
         document.body.appendChild(flash);
-        setTimeout(() => { if(flash.parentNode) flash.remove(); }, 250);
+        this.scheduleEffectTimeout(() => { if(flash.parentNode) flash.remove(); }, 250, group);
 
         if (window.app && typeof window.app.vibrate === 'function') {
             window.app.vibrate([40, 50, 20]);
@@ -1544,21 +1545,37 @@ class EffectManager {
             p.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
 
             document.body.appendChild(p);
-            setTimeout(() => { if(p.parentNode) p.remove(); }, 1600);
+            this.scheduleEffectTimeout(() => { if(p.parentNode) p.remove(); }, 1600, group);
         }
     }
 
-    scheduleEffectTimeout(callback, delay) {
+    scheduleEffectTimeout(callback, delay, group = 'default') {
         const timeoutId = setTimeout(() => {
-            this.effectTimeouts = this.effectTimeouts.filter(id => id !== timeoutId);
+            this.effectTimeouts = this.effectTimeouts.filter(entry => {
+                const id = typeof entry === 'object' ? entry.id : entry;
+                return id !== timeoutId;
+            });
             callback();
         }, delay);
-        this.effectTimeouts.push(timeoutId);
+        this.effectTimeouts.push({ id: timeoutId, group });
         return timeoutId;
     }
 
-    clearEffectTimeouts() {
-        this.effectTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
+    clearEffectTimeouts(group = null) {
+        if (group) {
+            this.effectTimeouts = this.effectTimeouts.filter(entry => {
+                const timeoutId = typeof entry === 'object' ? entry.id : entry;
+                const timeoutGroup = typeof entry === 'object' ? entry.group : 'default';
+                if (timeoutGroup === group) {
+                    clearTimeout(timeoutId);
+                    return false;
+                }
+                return true;
+            });
+            return;
+        }
+
+        this.effectTimeouts.forEach(entry => clearTimeout(typeof entry === 'object' ? entry.id : entry));
         this.effectTimeouts = [];
         if (this.goldRainAnimationId) {
             cancelAnimationFrame(this.goldRainAnimationId);
@@ -1731,7 +1748,15 @@ class EffectManager {
         const ease = t => t * t * (3 - 2 * t);
         const sprites = this.getGoldRainSprites();
 
-        this.clearEffectTimeouts();
+        this.clearEffectTimeouts('gold_rain');
+        if (this.goldRainAnimationId) {
+            cancelAnimationFrame(this.goldRainAnimationId);
+            this.goldRainAnimationId = null;
+        }
+        if (this.goldRainResizeHandler) {
+            window.removeEventListener('resize', this.goldRainResizeHandler);
+            this.goldRainResizeHandler = null;
+        }
         document.querySelectorAll('.gold-rain-atmosphere, .gold-rain-canvas, .falling-coin.gold-rain-coin, .gold-rain-spark').forEach(el => el.remove());
         document.body.classList.add('fx-gold-rain');
 
@@ -1751,7 +1776,7 @@ class EffectManager {
 
         const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) {
-            this.spawnEmojiRain(['dukat-icon', '🪙', '💎', '👑'], reducedMotion ? 16 : 34);
+            this.spawnEmojiRain(['dukat-icon', '🪙', '💎', '👑'], reducedMotion ? 16 : 34, 'gold_rain');
             return;
         }
 
@@ -1871,7 +1896,7 @@ class EffectManager {
         this.scheduleEffectTimeout(() => {
             if (atmosphere.parentNode) atmosphere.classList.add('closing');
             document.body.classList.remove('fx-gold-rain');
-        }, totalDuration - 650);
+        }, totalDuration - 650, 'gold_rain');
 
         this.scheduleEffectTimeout(() => {
             if (atmosphere.parentNode) atmosphere.remove();
@@ -1884,12 +1909,12 @@ class EffectManager {
                 cancelAnimationFrame(this.goldRainAnimationId);
                 this.goldRainAnimationId = null;
             }
-        }, totalDuration + 650);
+        }, totalDuration + 650, 'gold_rain');
     }
     
-    spawnEmojiRain(emojis, count) {
+    spawnEmojiRain(emojis, count, group = 'emoji_rain') {
         for (let i = 0; i < count; i++) {
-            setTimeout(() => {
+            this.scheduleEffectTimeout(() => {
                 const el = document.createElement('div');
                 const emoji = emojis[Math.floor(Math.random() * emojis.length)];
                 if (emoji === 'dukat-icon') {
@@ -1899,33 +1924,71 @@ class EffectManager {
                 }
                 el.className = 'falling-coin';
                 el.style.left = Math.random() * 100 + 'vw'; el.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                document.body.appendChild(el); setTimeout(() => el.remove(), 3000);
-            }, Math.random() * 2000);
+                document.body.appendChild(el);
+                this.scheduleEffectTimeout(() => el.remove(), 3000, group);
+            }, Math.random() * 2000, group);
         }
     }
     
-    spawnFloatingEmoji(emojis, count) {
-        for (let i = 0; i < count; i++) {
-            setTimeout(() => {
-                const el = document.createElement('div'); 
-                el.innerText = emojis[Math.floor(Math.random() * emojis.length)]; 
-                el.className = 'firefly';
-                el.style.left = Math.random() * 100 + 'vw'; 
-                el.style.setProperty('--rnd-x', (Math.random() * 200 - 100) + 'px'); 
-                
-                el.style.animationDuration = (Math.random() * 2 + 3) + 's'; 
-                
-                document.body.appendChild(el); 
-                
-                setTimeout(() => el.remove(), 5500); 
-            }, Math.random() * 2000); 
-        }
+    getEffectSurfaceTone() {
+        const styles = getComputedStyle(document.body);
+        const source = styles.getPropertyValue('--bg-base').trim() || styles.backgroundColor;
+        const probe = document.createElement('span');
+        probe.style.color = source;
+        probe.style.display = 'none';
+        document.body.appendChild(probe);
+
+        const resolved = getComputedStyle(probe).color;
+        probe.remove();
+        const channels = resolved.match(/[\d.]+/g)?.slice(0, 3).map(Number);
+        if (!channels || channels.length < 3) return 'dark';
+
+        const linear = channels.map(channel => {
+            const value = channel / 255;
+            return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+        });
+        const luminance = 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+        return luminance > 0.36 ? 'light' : 'dark';
     }
 
-    spawnBubbles(count) {
+    spawnFireflies(count = 52, group = 'fireflies') {
+        document.querySelectorAll('.firefly-field').forEach(field => field.remove());
+
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const compact = window.matchMedia?.('(max-width: 760px)').matches;
+        const particleCount = reducedMotion ? Math.min(count, 24) : (compact ? Math.min(count, 38) : count);
+        const tone = this.getEffectSurfaceTone();
+        const field = document.createElement('div');
+        field.className = `firefly-field firefly-field--${tone}`;
+        field.setAttribute('aria-hidden', 'true');
+
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < particleCount; i++) {
+            const fly = document.createElement('span');
+            fly.className = `magic-firefly magic-firefly--${i % 3}`;
+            fly.style.setProperty('--ff-x', (3 + Math.random() * 94).toFixed(2) + 'vw');
+            fly.style.setProperty('--ff-y', (10 + Math.random() * 86).toFixed(2) + 'vh');
+            fly.style.setProperty('--ff-dx-a', (-75 + Math.random() * 150).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dy-a', (-45 - Math.random() * 105).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dx-b', (-110 + Math.random() * 220).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-dy-b', (-120 - Math.random() * 190).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-size', (compact ? 5 + Math.random() * 5 : 6 + Math.random() * 7).toFixed(1) + 'px');
+            fly.style.setProperty('--ff-delay', (i < 12 ? Math.random() * 0.25 : Math.random() * 1.35).toFixed(2) + 's');
+            fly.style.setProperty('--ff-duration', (reducedMotion ? 5.6 : 4.8 + Math.random() * 2.2).toFixed(2) + 's');
+            fly.style.setProperty('--ff-pulse', (0.72 + Math.random() * 0.75).toFixed(2) + 's');
+            fly.innerHTML = '<span class="magic-firefly__trail"></span><span class="magic-firefly__light"></span>';
+            fragment.appendChild(fly);
+        }
+
+        field.appendChild(fragment);
+        document.body.appendChild(field);
+        this.scheduleEffectTimeout(() => field.remove(), reducedMotion ? 6500 : 7800, group);
+    }
+
+    spawnBubbles(count, group = 'bubbles') {
         const emojis = ['🫧', '🫧', '⚪']; 
         for (let i = 0; i < count; i++) {
-            setTimeout(() => {
+            this.scheduleEffectTimeout(() => {
                 const el = document.createElement('div');
                 el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
                 el.className = 'magic-bubble';
@@ -1939,8 +2002,8 @@ class EffectManager {
 
                 document.body.appendChild(el);
                 
-                setTimeout(() => el.remove(), 5500);
-            }, Math.random() * 2000); 
+                this.scheduleEffectTimeout(() => el.remove(), 5500, group);
+            }, Math.random() * 2000, group);
         }
     }
     
@@ -1952,7 +2015,7 @@ class EffectManager {
             el.style.color = color; el.style.left = x + 'px'; el.style.top = y + 'px';
             const angle = Math.random() * Math.PI * 2; const velocity = Math.random() * 150 + 50;
             el.style.setProperty('--dx', Math.cos(angle) * velocity + 'px'); el.style.setProperty('--dy', Math.sin(angle) * velocity + 'px');
-            document.body.appendChild(el); setTimeout(() => el.remove(), 1000);
+            document.body.appendChild(el); this.scheduleEffectTimeout(() => el.remove(), 1000, 'explosion');
         }
     }
     
@@ -2016,11 +2079,11 @@ class EffectManager {
                 });
 
                 if (Date.now() < end) {
-                    setTimeout(drift, 180);
+                    this.scheduleEffectTimeout(drift, 180, 'confetti');
                 }
             };
 
-            setTimeout(drift, 260);
+            this.scheduleEffectTimeout(drift, 260, 'confetti');
             return;
         }
 
@@ -2180,7 +2243,7 @@ class EffectManager {
     
     celebrateWin() {
         this.trigger('fireworks');
-        setTimeout(() => this.trigger('gold_rain'), 1000);
+        this.scheduleEffectTimeout(() => this.trigger('gold_rain'), 1000, 'celebrate_win');
     }
     
     stop() {
@@ -2198,7 +2261,7 @@ class EffectManager {
             if (confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
         }
         
-        document.querySelectorAll('.falling-coin, .firefly, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-spark').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-spark').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-ice-age-table').forEach(tbl => tbl.classList.remove('anim-ice-age-table'));
