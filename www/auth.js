@@ -600,6 +600,10 @@ function restoreAccountLocalSnapshot(uid) {
         window.app.playerId = uid;
         window.app.playerName = localStorage.getItem('yamb_player_name') || window.app.playerName || _t('hs_player', "Igrač");
         if (typeof window.app.refreshLocalStats === 'function') window.app.refreshLocalStats();
+        const restoredTheme = localStorage.getItem('yamb_theme');
+        if (restoredTheme && typeof window.app.applyTheme === 'function') {
+            window.app.applyTheme(restoredTheme);
+        }
     }
     if (window.statsManager && typeof window.statsManager.loadStats === 'function') {
         window.statsManager.stats = window.statsManager.loadStats() || window.statsManager.stats;
@@ -899,6 +903,7 @@ async function odjaviSe() {
 
     try {
         const logoutUid = localStorage.getItem('yamb_uid');
+        const logoutTheme = localStorage.getItem('yamb_theme') || localStorage.getItem('yamb_last_theme') || 'dark';
         if (window.app && typeof window.app.autoSaveGame === 'function') {
             await window.app.autoSaveGame(true);
         }
@@ -961,15 +966,17 @@ async function odjaviSe() {
         localStorage.removeItem('yamb_last_daily');
         localStorage.removeItem('yamb_h2h_stats'); 
         
-        // Resetovanje aktivnih skinova i tema
+        // Aktivne stavke naloga se brišu, ali poslednja tema ostaje kao pozadina splash/login ekrana.
         localStorage.removeItem('yamb_theme');
         localStorage.removeItem('yamb_active_skin');
         localStorage.removeItem('yamb_active_effect');
 
-        // Vraćanje UI teme na osnovnu (Zelenu)
-        document.body.className = '';
+        localStorage.setItem('yamb_last_theme', logoutTheme);
+        if (window.app && typeof window.app.applyTheme === 'function') {
+            window.app.applyTheme(logoutTheme);
+        }
         const themeSelect = document.getElementById('setting-theme');
-        if (themeSelect) themeSelect.value = 'dark';
+        if (themeSelect) themeSelect.value = logoutTheme;
         
         // 3. RESETOVANJE OBJEKATA U RADNOJ MEMORIJI
         if (window.app) {

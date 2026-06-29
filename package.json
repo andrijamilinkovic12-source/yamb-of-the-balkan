@@ -5,8 +5,10 @@
   "scripts": {
     "start": "node server.js",
     "check:js": "node scripts/check-js.js",
+    "check:game-rules": "node scripts/check-game-rules.js",
     "check:trophies": "node scripts/check-trophies.js",
-    "test": "npm run check:js && npm run check:trophies"
+    "check:profile-sync": "node scripts/check-profile-sync.js",
+    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync"
   },
   "keywords": [],
   "author": "",

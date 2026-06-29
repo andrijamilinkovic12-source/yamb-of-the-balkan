@@ -78,48 +78,172 @@
 .neon-line { position: absolute; width: 100%; height: 2px; background: #0f0; box-shadow: 0 0 10px #0f0, 0 0 20px #0f0; top: 50%; animation: scan 2s infinite ease-in-out; }
 
 /* =========================================================
-   SVADBA / BALKAN V.2 (KAFANA & TRUBE)
+   SVADBA / BALKAN V.3 (KAFANSKI STOLNJAK & KOLO)
    ========================================================= */
-.prev-balkan { background: linear-gradient(to right, #c31432, #240b36); } 
-.prev-balkan::before { content: "🎺"; font-size: 2.5rem; animation: shakeBalkan 0.4s infinite alternate; }
-@keyframes shakeBalkan { 0% { transform: rotate(-15deg) scale(1); } 100% { transform: rotate(15deg) scale(1.1); } }
+.prev-balkan {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+        conic-gradient(from 90deg, #9f1820 25%, #f4e5c9 0 50%, #9f1820 0 75%, #f4e5c9 0) 0 0 / 34px 34px;
+    box-shadow: inset 0 0 22px rgba(65, 7, 8, 0.62);
+}
+
+.prev-balkan::before {
+    content: "🎺";
+    position: relative;
+    z-index: 2;
+    font-size: 2.5rem;
+    filter: drop-shadow(0 3px 5px rgba(50, 8, 6, 0.62));
+    animation: shakeBalkan 0.48s infinite alternate ease-in-out;
+}
+
+.prev-balkan::after {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    border: 2px double rgba(255, 238, 193, 0.78);
+    box-shadow: inset 0 0 13px rgba(83, 7, 10, 0.55);
+}
+
+@keyframes shakeBalkan {
+    0% { transform: rotate(-13deg) scale(0.98); }
+    100% { transform: rotate(14deg) scale(1.08); }
+}
 
 .kafana-overlay {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-image: conic-gradient(rgba(200, 0, 0, 0.15) 90deg, transparent 90deg 180deg, rgba(200, 0, 0, 0.15) 180deg 270deg, transparent 270deg);
-    background-size: 60px 60px;
-    z-index: 99900; pointer-events: none;
-    animation: kafanaFade 7s forwards;
+    position: fixed;
+    inset: 0;
+    z-index: 99900;
+    overflow: hidden;
+    pointer-events: none;
+    isolation: isolate;
+    contain: layout paint style;
+    opacity: 0;
+    transform: translateZ(0) scale(1.025);
+    animation: kafanaFade 8.6s ease-in-out forwards;
 }
-@keyframes kafanaFade { 0% { opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { opacity: 0; } }
+
+.kafana-tablecloth {
+    position: absolute;
+    inset: -4%;
+    background-color: #f5e8cf;
+    background-image:
+        repeating-linear-gradient(0deg, rgba(85, 25, 18, 0.08) 0 1px, transparent 1px 5px),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 6px),
+        conic-gradient(from 90deg, #a7121d 25%, #f5e8cf 0 50%, #a7121d 0 75%, #f5e8cf 0);
+    background-size: 100% 100%, 100% 100%, clamp(68px, 10vw, 104px) clamp(68px, 10vw, 104px);
+    box-shadow: inset 0 0 110px rgba(48, 5, 6, 0.7);
+    transform: translateZ(0);
+}
+
+.kafana-tablecloth::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(110deg, transparent 0 28%, rgba(255, 249, 224, 0.15) 38%, transparent 50%),
+        radial-gradient(ellipse at 50% 44%, transparent 0 34%, rgba(57, 5, 7, 0.24) 78%, rgba(25, 2, 3, 0.46) 100%);
+}
+
+.kafana-tablecloth-frame {
+    position: absolute;
+    inset: clamp(14px, 3vw, 34px);
+    border: clamp(3px, 0.45vw, 6px) double rgba(255, 236, 187, 0.76);
+    box-shadow:
+        inset 0 0 0 1px rgba(92, 10, 13, 0.72),
+        inset 0 0 34px rgba(56, 4, 6, 0.46),
+        0 0 24px rgba(45, 3, 4, 0.36);
+}
+
+.kafana-ambient-lights {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 14% 18%, rgba(255, 204, 95, 0.28), transparent 22%),
+        radial-gradient(circle at 86% 22%, rgba(255, 225, 133, 0.24), transparent 21%),
+        radial-gradient(ellipse at 50% 92%, rgba(255, 184, 60, 0.19), transparent 36%);
+    mix-blend-mode: screen;
+}
+
+@keyframes kafanaFade {
+    0% { opacity: 0; transform: translateZ(0) scale(1.055); }
+    9% { opacity: 0.78; transform: translateZ(0) scale(1.02); }
+    18%, 82% { opacity: 0.74; transform: translateZ(0) scale(1); }
+    100% { opacity: 0; transform: translateZ(0) scale(1.015); }
+}
 
 .trumpet-icon-v2 {
     position: fixed;
-    font-size: clamp(3.5rem, 12vw, 5rem); 
-    z-index: 99999; 
+    font-size: clamp(3.3rem, 10vw, 5rem);
+    z-index: 99999;
     pointer-events: none;
-    filter: drop-shadow(0 0 15px gold) drop-shadow(0 0 30px rgba(255,215,0,0.5));
+    filter: drop-shadow(0 5px 5px rgba(62, 17, 4, 0.5)) drop-shadow(0 0 13px rgba(255, 220, 98, 0.78));
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .trumpet-left { 
     left: 6vw; 
     transform-origin: center center; 
-    animation: trumpetDanceLeft 0.4s infinite alternate ease-in-out; 
+    animation: trumpetDanceLeft 0.52s infinite alternate ease-in-out;
 }
 .trumpet-right { 
     right: 6vw; 
     transform-origin: center center; 
-    animation: trumpetDanceRight 0.4s infinite alternate ease-in-out; 
+    animation: trumpetDanceRight 0.52s infinite alternate ease-in-out;
 }
 
 @keyframes trumpetDanceLeft {
-    0% { transform: rotate(-10deg) scale(1) translateY(0); }
-    100% { transform: rotate(20deg) scale(1.15) translateY(-15px); }
+    0% { transform: translate3d(0, 0, 0) rotate(-10deg) scale(0.98); }
+    100% { transform: translate3d(0, -12px, 0) rotate(18deg) scale(1.1); }
 }
 
 @keyframes trumpetDanceRight {
-    0% { transform: scaleX(-1) rotate(-10deg) scale(1) translateY(0); }
-    100% { transform: scaleX(-1) rotate(20deg) scale(1.15) translateY(-15px); }
+    0% { transform: translate3d(0, 0, 0) scaleX(-1) rotate(-10deg) scale(0.98); }
+    100% { transform: translate3d(0, -12px, 0) scaleX(-1) rotate(18deg) scale(1.1); }
+}
+
+.wedding-rain {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    overflow: hidden;
+    pointer-events: none;
+    contain: layout paint style;
+}
+
+.wedding-particle {
+    position: absolute;
+    top: -12vh;
+    left: var(--wedding-x);
+    font-size: var(--wedding-size);
+    line-height: 1;
+    opacity: 0;
+    filter: drop-shadow(0 3px 3px rgba(49, 7, 8, 0.5));
+    will-change: transform, opacity;
+    animation: weddingParticleFall var(--wedding-duration) linear var(--wedding-delay) forwards;
+}
+
+@keyframes weddingParticleFall {
+    0% { opacity: 0; transform: translate3d(0, -8vh, 0) rotate(0deg) scale(0.72); }
+    8% { opacity: 1; }
+    86% { opacity: 0.94; }
+    100% { opacity: 0; transform: translate3d(var(--wedding-drift), 122vh, 0) rotate(var(--wedding-spin)) scale(1.04); }
+}
+
+@media (max-width: 520px) {
+    .kafana-tablecloth {
+        background-size: 100% 100%, 100% 100%, 70px 70px;
+    }
+
+    .trumpet-left { left: 2vw; }
+    .trumpet-right { right: 2vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .trumpet-icon-v2 { animation-duration: 0.9s; }
+    .wedding-particle { animation-timing-function: ease-in; }
 }
 
 /* ========================================================= */

@@ -20,6 +20,11 @@ const gt = (key) => {
     return key; 
 };
 
+function getFallbackPlayerName() {
+    const name = gt('player_guest');
+    return name && name !== 'player_guest' ? name : 'Igrač';
+}
+
 /* --- FILTER VULGARNOSTI (KLIJENT STRANA) --- */
 const zabranjeneReci = [
     "idiot", "budala", "kreten", "glupan", "majmun", "debil", "stoka",
@@ -212,8 +217,11 @@ class YambApp {
         }
         
         const savedTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const startupTheme = this.isThemeUnlocked(savedTheme) ? savedTheme : 'dark';
-        if (startupTheme !== savedTheme) localStorage.setItem('yamb_theme', startupTheme);
+        const rememberedSplashTheme = localStorage.getItem('yamb_last_theme') || savedTheme;
+        const startupTheme = this.playerId
+            ? (this.isThemeUnlocked(savedTheme) ? savedTheme : 'dark')
+            : (this.getValidThemeIds().includes(rememberedSplashTheme) ? rememberedSplashTheme : 'dark');
+        if (this.playerId && startupTheme !== savedTheme) localStorage.setItem('yamb_theme', startupTheme);
         this.applyTheme(startupTheme);
         
         this.initSocketConnection();
@@ -1377,16 +1385,17 @@ class YambApp {
     }
     
     applyTheme(theme) {
-        document.body.classList.remove('light-theme', 'medium-theme', 'winter-theme', 'neon-theme', 'amethyst-theme', 'easter-theme', 'desert-theme', 'moon-theme', 'severna-theme');
-        if (theme === 'light') document.body.classList.add('light-theme'); 
-        else if (theme === 'medium') document.body.classList.add('medium-theme');
-        else if (theme === 'winter') document.body.classList.add('winter-theme');
-        else if (theme === 'neon') document.body.classList.add('neon-theme');
-        else if (theme === 'amethyst') document.body.classList.add('amethyst-theme');
-        else if (theme === 'easter') document.body.classList.add('easter-theme');
-        else if (theme === 'desert') document.body.classList.add('desert-theme');
-        else if (theme === 'moon') document.body.classList.add('moon-theme');
-        else if (theme === 'severna') document.body.classList.add('severna-theme');
+        const validThemes = this.getValidThemeIds();
+        const safeTheme = validThemes.includes(theme) ? theme : 'dark';
+        const themeClasses = validThemes
+            .filter(themeId => themeId !== 'dark')
+            .map(themeId => `${themeId}-theme`);
+
+        document.body.classList.remove(...themeClasses);
+        if (safeTheme !== 'dark') document.body.classList.add(`${safeTheme}-theme`);
+
+        // Splash/login ekran pamti poslednju vizuelnu temu čak i kada se nalog odjavi.
+        localStorage.setItem('yamb_last_theme', safeTheme);
     }
 
     normalizeLocalStats(stats = {}) {
@@ -2071,7 +2080,7 @@ class YambApp {
             return false;
         }
 
-        const safeTargetName = this.escapeHtml(targetName || 'Igrač');
+        const safeTargetName = this.escapeHtml(targetName || getFallbackPlayerName());
         const msgKey = result.status === 'already_pending'
             ? 'friend_req_already_pending'
             : (result.targetOnline ? 'alert_friend_req_sent' : 'friend_req_success');
@@ -2101,7 +2110,7 @@ class YambApp {
 
         if (requests && requests.length > 0) {
             requests.forEach(r => {
-                const requestName = String(r.name || 'Igrač');
+                const requestName = String(r.name || getFallbackPlayerName());
                 const safeName = this.escapeHtml(requestName);
                 const safeAvatar = this.escapeHtml(this.friendAvatarUrl(requestName, r.photoUrl));
                 const safeUid = this.escapeHtml(this.escapeJsString(r.uid || ''));
@@ -2137,7 +2146,7 @@ class YambApp {
                 const btnStyle = isOnline ? 'background:var(--gold-main); color:#000; cursor:pointer;' : 'background:gray; color:#ddd; cursor:not-allowed;';
 
                 const btnText = isOnline ? (gt('btn_invite_friend') || 'POZOVI') : (gt('btn_offline') || 'OFFLINE');
-                const friendName = String(f.name || 'Igrač');
+                const friendName = String(f.name || getFallbackPlayerName());
                 const safeName = this.escapeHtml(friendName);
                 const safeAvatar = this.escapeHtml(this.friendAvatarUrl(friendName, f.photoUrl));
                 const safeSocketId = this.escapeHtml(this.escapeJsString(f.socketId || ''));
@@ -2168,7 +2177,7 @@ class YambApp {
             return false;
         }
 
-        const resolvedFriendName = (result.friend && result.friend.name) || friendName || 'Igrač';
+        const resolvedFriendName = (result.friend && result.friend.name) || friendName || getFallbackPlayerName();
         const safeFriendName = this.escapeHtml(resolvedFriendName);
         const msgKey = accepted ? 'friend_req_accept_success' : 'friend_req_decline_success';
         const fallbackMsg = accepted
@@ -2199,7 +2208,7 @@ class YambApp {
             return;
         }
 
-        const safeSearchName = this.escapeHtml(p.name || 'Igrač');
+        const safeSearchName = this.escapeHtml(p.name || getFallbackPlayerName());
         const msg = (gt('alert_search_found') || "Pronađen je igrač: {0}. Da li želiš da mu pošalješ zahtev za prijateljstvo?").replace('{0}', safeSearchName);
         const send = await this.modal.confirm(msg);
         if (send) {
@@ -2208,7 +2217,7 @@ class YambApp {
     }
 
     async showFriendResolutionNotice(type, name) {
-        const safeName = this.escapeHtml(name || 'Igrač');
+        const safeName = this.escapeHtml(name || getFallbackPlayerName());
         const accepted = type === 'accepted';
         const msg = (gt(accepted ? 'alert_friend_added' : 'alert_friend_declined') || (accepted
             ? "Igrač {0} je sada vaš prijatelj! Možete ga pozvati na partiju iz menija 'Prijatelj'."
@@ -2220,7 +2229,7 @@ class YambApp {
         if (!Array.isArray(notifications) || notifications.length === 0) return;
 
         for (const note of notifications) {
-            await this.showFriendResolutionNotice(note.type, note.fromName || note.name || 'Igrač');
+            await this.showFriendResolutionNotice(note.type, note.fromName || note.name || getFallbackPlayerName());
         }
     }
 
@@ -2341,7 +2350,7 @@ class YambApp {
         };
 
         if (!data || data.length === 0) {
-            listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">Još uvek nema rezultata za ovaj period.</div>`;
+            listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">${gt('ws_hof_no_results') || 'Još uvek nema rezultata za ovaj period.'}</div>`;
             revealHallOfFame();
             return;
         }
@@ -2354,7 +2363,7 @@ class YambApp {
         data.sort((a, b) => b.score - a.score).slice(0, 3).forEach((p, index) => {
             const medal = medals[index] || '';
             const color = colors[index] || '#fff';
-            const displayName = String(p.name || p.playerName || 'Igrač');
+            const displayName = String(p.name || p.playerName || getFallbackPlayerName());
             const avatar = p.photoUrl && p.photoUrl.length > 5 
                 ? p.photoUrl 
                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=333&color=E0C995`;
@@ -2435,7 +2444,7 @@ class YambApp {
         if (!this.requireLogin()) return;
 
         if (this.gameActive && this.onlineMode && !this.isSpectator) {
-            this.showServerNotice('Već ste u online partiji. Za gledanje tuđe partije otvorite nalog koji nije učesnik tog meča.');
+            this.showServerNotice('err_spectate_already_in_game');
             return;
         }
 
@@ -2479,7 +2488,7 @@ class YambApp {
             const timer = setTimeout(() => {
                 if (settled) return;
                 finish();
-                this.showServerNotice('Ne mogu da otvorim gledanje ove partije. Osvežite online listu i probajte ponovo.');
+                this.showServerNotice('err_spectate_open_failed');
                 reopenOnlinePlayersList();
             }, 8000);
 
@@ -2654,7 +2663,7 @@ class YambApp {
                         return;
                     }
 
-                    const safeChallengerName = this.escapeHtml(challengerName || 'Igrač');
+                    const safeChallengerName = this.escapeHtml(challengerName || getFallbackPlayerName());
                     let text = gt('duel_incoming');
                     if(text === 'duel_incoming') text = `Igrač {0} vas izaziva na duel! Prihvatate?`;
 
@@ -2677,7 +2686,7 @@ class YambApp {
                     }
 
                     if (accepted) {
-                        this.setupSocketListeners(this.playerName || "Igrač");
+                        this.setupSocketListeners(this.playerName || getFallbackPlayerName());
                     }
 
                     this.socket.emit('challenge_response', {
@@ -3452,7 +3461,7 @@ class YambApp {
             return;
         }
         const socketAtPrompt = this.socket;
-        this.setupSocketListeners(this.playerName || "Igrač");
+        this.setupSocketListeners(this.playerName || getFallbackPlayerName());
         if (!this.isDoNotDisturbActive() && this.clientInviteBusy) {
             this.setInviteBusyState(false);
         }
@@ -3460,7 +3469,7 @@ class YambApp {
         let askText = gt('duel_ask');
         if (askText === 'duel_ask') askText = `Želite li da izazovete igrača {0} na duel?`;
 
-        const safeTargetName = this.escapeHtml(targetName || 'Igrač');
+        const safeTargetName = this.escapeHtml(targetName || getFallbackPlayerName());
         const isConfirmed = await this.modal.confirm(askText.replace('{0}', safeTargetName), {
             title: gt('duel_title') || "IZAZOV",
             okText: gt('online_challenge_btn') || "IZAZOVI",
@@ -3483,7 +3492,7 @@ class YambApp {
             if (sentText === 'duel_sent') sentText = `Izazov poslat igraču {0}. Čekamo odgovor...`;
 
             if (typeof window.showNotification === 'function') {
-                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || 'Igrač'));
+                window.showNotification(gt('duel_title') || "IZAZOV", sentText.replace('{0}', targetName || getFallbackPlayerName()));
             } else {
                 this.modal.alert(sentText.replace('{0}', safeTargetName), gt('duel_title') || "IZAZOV");
             }
@@ -4518,7 +4527,7 @@ class YambApp {
                     loserName: data.loserName || data.opponent || 'Protivnik',
                     rewardAmount: winnerReward,
                     penaltyAmount: coinPenalty,
-                    message: data.message || 'Protivniku je isteklo vreme. Tehnička pobeda.'
+                    message: data.message || (gt('timeout_technical_win_msg') || 'Protivniku je isteklo vreme. Tehnička pobeda.')
                 });
             } else {
                 this.soundMgr.loss();
@@ -4617,10 +4626,10 @@ class YambApp {
                 const previousTimeLeft = this.timeLeft;
                 
                 if (data.players || (this.isSpectator && Array.isArray(data.allScores) && data.allScores.length > 0)) {
-                    const incomingPlayers = data.players || data.allScores.map((_, index) => `Igrač ${index + 1}`);
+                    const incomingPlayers = data.players || data.allScores.map((_, index) => `${getFallbackPlayerName()} ${index + 1}`);
                     this.players = incomingPlayers.map(p => {
                         if (typeof p === 'object' && p !== null) {
-                            return p.name ? decodeURIComponent(p.name) : "Igrač";
+                            return p.name ? decodeURIComponent(p.name) : getFallbackPlayerName();
                         }
                         try {
                             let decoded = decodeURIComponent(p);
@@ -4827,8 +4836,8 @@ class YambApp {
 
                 if (Array.isArray(data.players) && data.players.length > 0) {
                     this.players = data.players.map(p => {
-                        if (typeof p === 'object' && p !== null) return p.name || "Igrač";
-                        return p || "Igrač";
+                        if (typeof p === 'object' && p !== null) return p.name || getFallbackPlayerName();
+                        return p || getFallbackPlayerName();
                     });
                     this.createScoreTables();
                 }
@@ -4850,8 +4859,8 @@ class YambApp {
 
             if (Array.isArray(data.players) && data.players.length > 0) {
                 this.players = data.players.map(p => {
-                    if (typeof p === 'object' && p !== null) return p.name || "Igrač";
-                    return p || "Igrač";
+                    if (typeof p === 'object' && p !== null) return p.name || getFallbackPlayerName();
+                    return p || getFallbackPlayerName();
                 });
             }
             this.onlineDuelType = this.inferOnlineDuelType(data.roomId || this.roomId, data);
@@ -4901,7 +4910,7 @@ class YambApp {
                         const btnBacaj = document.getElementById('btn-bacaj');
                         if (btnBacaj) {
                             btnBacaj.disabled = true;
-                            btnBacaj.innerText = "SAČEKAJ..."; // ⏳ Grace period
+                            btnBacaj.innerText = gt('game_wait') || "SAČEKAJ..."; // ⏳ Grace period
                             
                             setTimeout(() => {
                                 // Provera da li je i dalje moj potez (da se u međuvremenu nije desio Undo)
@@ -5094,7 +5103,7 @@ class YambApp {
             this.requestFriendsList();
 
             const challengerUid = data.challengerUid || data.uid || '';
-            const challengerName = data.challengerName || 'Igrač';
+            const challengerName = data.challengerName || getFallbackPlayerName();
             const safeName = this.escapeHtml(challengerName);
 
             if (!challengerUid) {
@@ -5114,12 +5123,12 @@ class YambApp {
         });
 
         this.socket.on('friend_req_accepted', async (data = {}) => {
-            await this.showFriendResolutionNotice('accepted', data.name || 'Igrač');
+            await this.showFriendResolutionNotice('accepted', data.name || getFallbackPlayerName());
             this.requestFriendsList();
         });
 
         this.socket.on('friend_req_declined', async (data = {}) => {
-            await this.showFriendResolutionNotice('declined', data.name || 'Igrač');
+            await this.showFriendResolutionNotice('declined', data.name || getFallbackPlayerName());
             this.requestFriendsList();
         });
 
@@ -5151,7 +5160,7 @@ class YambApp {
         });
 
         const showRoomInviteStatus = (key, fallback, data = {}) => {
-            const safeName = this.escapeHtml(data.targetName || data.name || 'Igrač');
+            const safeName = this.escapeHtml(data.targetName || data.name || getFallbackPlayerName());
             const text = (gt(key) || fallback).replace('{0}', safeName);
             const title = gt('alert_invite_title') || "POZIVNICA";
             if (typeof window.showNotification === 'function') {
@@ -5203,7 +5212,7 @@ class YambApp {
                 return;
             }
 
-            const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', this.escapeHtml(realHostName || 'Igrač'));
+            const msg = (gt('alert_room_invite') || "Vaš prijatelj {0} vas poziva u privatnu sobu. Želite li da igrate?").replace('{0}', this.escapeHtml(realHostName || getFallbackPlayerName()));
             const accepted = await this.modal.confirm(msg);
 
             if (accepted && expiresAt && Date.now() > expiresAt) {
@@ -6163,14 +6172,14 @@ class YambApp {
     getOnlineFinalResultSnapshot(onlineResult = null) {
         const players = Array.isArray(onlineResult?.players) && onlineResult.players.length > 0
             ? onlineResult.players.map(p => {
-                if (typeof p === 'object' && p !== null) return p.name || "Igrač";
-                return p || "Igrač";
+                if (typeof p === 'object' && p !== null) return p.name || getFallbackPlayerName();
+                return p || getFallbackPlayerName();
             })
             : this.players;
 
         const serverFinalResults = onlineResult && Array.isArray(onlineResult.finalResults) && onlineResult.finalResults.length > 0
             ? onlineResult.finalResults.map((entry, index) => ({
-                name: entry && entry.name ? entry.name : (players[index] || "Igrač"),
+                name: entry && entry.name ? entry.name : (players[index] || getFallbackPlayerName()),
                 score: Math.max(0, parseInt(entry && entry.score, 10) || 0)
             }))
             : null;
@@ -6232,7 +6241,7 @@ class YambApp {
             role,
             reward,
             amIWinner,
-            winnerName: result.winner?.name || 'Igrač',
+            winnerName: result.winner?.name || getFallbackPlayerName(),
             myScore: result.myScoreEntry?.score || 0
         };
     }
@@ -6438,8 +6447,8 @@ class YambApp {
             this.lastOnlineGameResult = onlineResult;
             if (Array.isArray(onlineResult.players) && onlineResult.players.length > 0) {
                 this.players = onlineResult.players.map(p => {
-                    if (typeof p === 'object' && p !== null) return p.name || "Igrač";
-                    return p || "Igrač";
+                    if (typeof p === 'object' && p !== null) return p.name || getFallbackPlayerName();
+                    return p || getFallbackPlayerName();
                 });
             }
             if (Array.isArray(onlineResult.allScores)) this.allScores = onlineResult.allScores;
@@ -6574,8 +6583,8 @@ class YambApp {
 
         const title = iAmWinner ? (gt('go_win') || 'POBEDA!') : (gt('go_loss') || 'PORAZ');
         const fallbackMsg = iAmWinner
-            ? `Tehnička pobeda. ${loserName} je napustio partiju.`
-            : `Tehnički poraz. Pobednik je ${winnerName}.`;
+            ? (gt('technical_win_fled') || `Tehnička pobeda. {0} je napustio partiju.`).replace('{0}', loserName)
+            : (gt('technical_loss_winner') || `Tehnički poraz. Pobednik je {0}.`).replace('{0}', winnerName);
         const message = data.message || fallbackMsg;
 
         const titleEl = document.getElementById('go-title');
@@ -6638,8 +6647,8 @@ class YambApp {
             this.onlineDuelType = this.inferOnlineDuelType(onlineResult.roomId || this.roomId, onlineResult);
             if (Array.isArray(onlineResult.players) && onlineResult.players.length > 0) {
                 this.players = onlineResult.players.map(p => {
-                    if (typeof p === 'object' && p !== null) return p.name || "Igrač";
-                    return p || "Igrač";
+                    if (typeof p === 'object' && p !== null) return p.name || getFallbackPlayerName();
+                    return p || getFallbackPlayerName();
                 });
             }
             if (Array.isArray(onlineResult.allScores)) this.allScores = onlineResult.allScores;
@@ -6654,13 +6663,13 @@ class YambApp {
         }
         const serverFinalResults = onlineResult && Array.isArray(onlineResult.finalResults) && onlineResult.finalResults.length > 0
             ? onlineResult.finalResults.map((entry, index) => ({
-                name: entry && entry.name ? entry.name : (this.players[index] || "Igrač"),
+                name: entry && entry.name ? entry.name : (this.players[index] || getFallbackPlayerName()),
                 score: Math.max(0, parseInt(entry && entry.score) || 0)
             }))
             : null;
         const finalResults = serverFinalResults || this.players.map((name, i) => { return { name: name, score: this.calculateTotalScore(i) }; });
         const winnerScore = finalResults.reduce((max, r) => r.score > max ? r.score : max, 0);
-        const fallbackWinner = [...finalResults].sort((a,b) => b.score - a.score)[0] || { name: 'Igrač', score: 0 };
+        const fallbackWinner = [...finalResults].sort((a,b) => b.score - a.score)[0] || { name: getFallbackPlayerName(), score: 0 };
         const hasServerWinnerIndex = onlineResult
             && onlineResult.winnerIndex !== undefined
             && onlineResult.winnerIndex !== null
@@ -6817,7 +6826,7 @@ class YambApp {
                 title = gt('go_draw') || "NEREŠENO!";
                 message = (gt('go_msg_online_draw') || "Partija je završena bez pobednika. Oboje imate {0} poena.").replace('{0}', winner.score);
                 if (this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })) {
-                    message += " Turnirski meč se ponavlja dok neko ne pobedi.";
+                    message += ` ${gt('tourney_draw_replay') || 'Turnirski meč se ponavlja dok neko ne pobedi.'}`;
                 }
             } else {
                 title = amIWinner ? gt('go_win') : gt('go_loss');
@@ -7116,7 +7125,7 @@ class YambApp {
             const confirmed = await claimNormalGameReward(this.pendingScore, true);
             if (!confirmed) {
                 this.rewardClaimInProgress = false;
-                this.modal.alert("Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.", gt('modal_title_info') || "INFO");
+                this.modal.alert(gt('ad_confirmation_retry') || "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.", gt('modal_title_info') || "INFO");
                 return;
             }
         } else {
@@ -7301,12 +7310,12 @@ class YambApp {
         }
         
         const lblTurn = document.getElementById('lbl-turn');
-        if (lblTurn) lblTurn.innerText = "Vraćanje u igru...";
+        if (lblTurn) lblTurn.innerText = gt('game_returning') || "Vraćanje u igru...";
         
         this.initSocketConnection();
 
         // 1. DODATO: Palimo "uši" klijenta da bi mogao da čuje odgovor servera!
-        this.setupSocketListeners(this.playerName || "Igrač");
+        this.setupSocketListeners(this.playerName || getFallbackPlayerName());
         
         // 2. DODATO: Šaljemo serveru koji je roomId za slučaj da postoji mikro-delay
         const doSync = () => {

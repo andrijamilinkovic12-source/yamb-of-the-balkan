@@ -1046,7 +1046,7 @@ class DnevniIzazov {
             const message = rewardResult.reason === 'auth_required'
                 ? (t('auth_required') || t('economy_auth_required'))
                 : (rewardResult.reason === 'ad_verification_required' || rewardResult.reason === 'ad_verification_pending'
-                    ? 'Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.'
+                    ? (t('ad_confirmation_retry') || 'Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.')
                     : (t('err_server_conn') || t('dc_ads_unavailable')));
             this.app.modal.alert(message, t('info_title'));
             return;

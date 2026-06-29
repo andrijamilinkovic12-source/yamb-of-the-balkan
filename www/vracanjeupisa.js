@@ -272,7 +272,7 @@ class UndoManager {
         } else if (result.reason === 'auth_required') {
             message = gt('economy_auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
         } else if (result.reason === 'ad_verification_required' || result.reason === 'ad_verification_pending') {
-            message = "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
+            message = gt('ad_confirmation_retry') || "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
         } else if (result.reason === 'undo_tokens_max') {
             message = gt('undo_tokens_max') || "Već imate maksimalan broj tokena.";
         }
@@ -381,9 +381,9 @@ class UndoManager {
         } else if (result.reason === 'auth_required') {
             message = gt('economy_auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
         } else if (result.reason === 'undo_expired') {
-            message = "Vraćanje tog upisa više nije dostupno jer je sledeći potez započet.";
+            message = gt('undo_expired') || "Vraćanje tog upisa više nije dostupno jer je sledeći potez započet.";
         } else if (result.reason === 'undo_unavailable') {
-            message = "Vraćanje upisa trenutno nije dostupno.";
+            message = gt('undo_unavailable') || "Vraćanje upisa trenutno nije dostupno.";
         }
 
         this.app.modal.alert(message, gt('modal_title_info') || "INFO");

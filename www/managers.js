@@ -872,7 +872,7 @@ class EffectManager {
                 fullName = window.app.playerName;
             }
 
-            let firstName = fullName.trim().split(/\s+/)[0] || "IGRAČ";
+            let firstName = fullName.trim().split(/\s+/)[0] || (_safeT('hs_player') || "IGRAČ");
             firstName = firstName.substring(0, 12);
 
             const textEl = document.createElement('div');
@@ -951,19 +951,33 @@ class EffectManager {
 
         if (type === 'balkan') {
             document.body.classList.add('fx-balkan');
-            
+
             const bg = document.createElement('div');
             bg.className = 'kafana-overlay';
+            bg.innerHTML = `
+                <div class="kafana-tablecloth"></div>
+                <div class="kafana-tablecloth-frame"></div>
+                <div class="kafana-ambient-lights"></div>
+            `;
             document.body.appendChild(bg);
 
-            const tr1 = document.createElement('div'); tr1.innerText = '🎺'; tr1.className = 'trumpet-icon-v2 trumpet-left'; tr1.style.top = '15vh';
-            const tr2 = document.createElement('div'); tr2.innerText = '🎺'; tr2.className = 'trumpet-icon-v2 trumpet-left'; tr2.style.top = '55vh'; tr2.style.animationDelay = '0.2s';
-            const tr3 = document.createElement('div'); tr3.innerText = '🎺'; tr3.className = 'trumpet-icon-v2 trumpet-right'; tr3.style.top = '25vh';
-            const tr4 = document.createElement('div'); tr4.innerText = '🎺'; tr4.className = 'trumpet-icon-v2 trumpet-right'; tr4.style.top = '65vh'; tr4.style.animationDelay = '0.3s';
-            
-            document.body.appendChild(tr1); document.body.appendChild(tr2); document.body.appendChild(tr3); document.body.appendChild(tr4);
+            const trumpetData = [
+                { side: 'left', top: '15vh', delay: '0s' },
+                { side: 'left', top: '58vh', delay: '0.18s' },
+                { side: 'right', top: '24vh', delay: '0.08s' },
+                { side: 'right', top: '66vh', delay: '0.26s' }
+            ];
+            const trumpets = trumpetData.map(data => {
+                const trumpet = document.createElement('div');
+                trumpet.innerText = '🎺';
+                trumpet.className = `trumpet-icon-v2 trumpet-${data.side}`;
+                trumpet.style.top = data.top;
+                trumpet.style.animationDelay = data.delay;
+                document.body.appendChild(trumpet);
+                return trumpet;
+            });
 
-            this.spawnEmojiRain(['💶', '💵', '🥂', '🍾', '🍖', '💖', '🎵', '🍻'], 80, 'balkan');
+            this.spawnWeddingRain('balkan');
 
             if (window.app && window.app.soundMgr && window.app.soundMgr.balkanTrumpet) {
                 window.app.soundMgr.balkanTrumpet();
@@ -971,12 +985,12 @@ class EffectManager {
 
             this.scheduleEffectTimeout(() => {
                 document.body.classList.remove('fx-balkan');
-                if(bg.parentNode) bg.remove(); 
-                if(tr1.parentNode) tr1.remove(); 
-                if(tr2.parentNode) tr2.remove(); 
-                if(tr3.parentNode) tr3.remove(); 
-                if(tr4.parentNode) tr4.remove(); 
-            }, 8500, 'balkan');
+                if (bg.parentNode) bg.remove();
+                trumpets.forEach(trumpet => trumpet.remove());
+                if (window.app?.soundMgr?.stopBalkanMusic) {
+                    window.app.soundMgr.stopBalkanMusic(true);
+                }
+            }, 8600, 'balkan');
         }
         
         if (type === 'fireworks') {
@@ -1946,6 +1960,36 @@ class EffectManager {
             }, Math.random() * 2000, group);
         }
     }
+
+    spawnWeddingRain(group = 'balkan') {
+        document.querySelectorAll('.wedding-rain').forEach(layer => layer.remove());
+
+        const compact = window.matchMedia?.('(max-width: 760px)').matches;
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const count = reducedMotion ? 18 : (compact ? 28 : 40);
+        const symbols = ['💶', '💵', '🥂', '🍾', '💖', '🎵', '🍻'];
+        const layer = document.createElement('div');
+        layer.className = 'wedding-rain';
+        layer.setAttribute('aria-hidden', 'true');
+
+        const fragment = document.createDocumentFragment();
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('span');
+            particle.className = 'wedding-particle';
+            particle.innerText = symbols[i % symbols.length];
+            particle.style.setProperty('--wedding-x', (2 + Math.random() * 96).toFixed(2) + 'vw');
+            particle.style.setProperty('--wedding-drift', (-55 + Math.random() * 110).toFixed(1) + 'px');
+            particle.style.setProperty('--wedding-delay', (Math.random() * 2.5).toFixed(2) + 's');
+            particle.style.setProperty('--wedding-duration', (3.8 + Math.random() * 2.2).toFixed(2) + 's');
+            particle.style.setProperty('--wedding-size', (compact ? 1.05 + Math.random() * 0.9 : 1.2 + Math.random() * 1.05).toFixed(2) + 'rem');
+            particle.style.setProperty('--wedding-spin', (-220 + Math.random() * 440).toFixed(0) + 'deg');
+            fragment.appendChild(particle);
+        }
+
+        layer.appendChild(fragment);
+        document.body.appendChild(layer);
+        this.scheduleEffectTimeout(() => layer.remove(), 8500, group);
+    }
     
     getEffectSurfaceTone() {
         const styles = getComputedStyle(document.body);
@@ -2265,6 +2309,9 @@ class EffectManager {
     
     stop() {
         this.clearEffectTimeouts();
+        if (window.app?.soundMgr?.stopBalkanMusic) {
+            window.app.soundMgr.stopBalkanMusic(true);
+        }
         document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-ufo_abduction', 'fx-dragon_fire', 'fx-royal_yamb', 'fx-gold-rain');
 
         if (this.confettiAnimationId) {
@@ -2278,7 +2325,7 @@ class EffectManager {
             if (confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
         }
         
-        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-spark').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-spark').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-ice-age-table').forEach(tbl => tbl.classList.remove('anim-ice-age-table'));
@@ -2301,7 +2348,10 @@ class SoundManager {
         // NOVO: Učitavanje sačuvane glasnoće muzike (podrazumevano 0.4)
         this.musicVolume = parseFloat(localStorage.getItem('yamb_music_volume') ?? 0.4);
         
-        this.ctx = null; 
+        this.ctx = null;
+        this.balkanNodes = [];
+        this.balkanStopTimer = null;
+        this.balkanResumeMusic = false;
 
         // --- INICIJALIZACIJA MUZIKE ---
         this.bgMusic = new Audio('Before_the_Numbers_Settle.mp3');
@@ -2801,64 +2851,208 @@ class SoundManager {
         });
     }
 
-    // --- BALKANSKA TRUBA (V.3) - GLAVNI REFREN UŽIČKOG KOLA ---
+    stopBalkanMusic(resumeMusic = true) {
+        if (this.balkanStopTimer) {
+            clearTimeout(this.balkanStopTimer);
+            this.balkanStopTimer = null;
+        }
+
+        this.balkanNodes.forEach(node => {
+            try {
+                if (typeof node.stop === 'function') node.stop();
+            } catch (err) {}
+            try {
+                if (typeof node.disconnect === 'function') node.disconnect();
+            } catch (err) {}
+        });
+        this.balkanNodes = [];
+
+        const shouldResume = resumeMusic && this.balkanResumeMusic && this.musicEnabled && this.musicVolume > 0;
+        this.balkanResumeMusic = false;
+        if (shouldResume) this.playMusic();
+    }
+
+    // --- SVADBA V.4 - BRZO KOLO U 2/4 TAKTU ---
     balkanTrumpet() {
+        this.stopBalkanMusic(false);
+
         this.playSound(() => {
-            const now = this.ctx.currentTime;
-            
-            // PRAVI REFREN UŽIČKOG KOLA (Visoki, najluđi deo!)
+            const now = this.ctx.currentTime + 0.04;
+            const bpm = 142;
+            const beat = 60 / bpm;
+            const eighth = beat / 2;
+            const bar = beat * 2;
+            const midiToFreq = midi => 440 * Math.pow(2, (midi - 69) / 12);
+            const nodes = this.balkanNodes;
+            const register = node => {
+                nodes.push(node);
+                return node;
+            };
+            const scheduleGate = (param, start, length, level, attack = 0.012) => {
+                const releaseStart = start + Math.max(attack + 0.01, length * 0.7);
+                param.setValueAtTime(0.0001, start);
+                param.linearRampToValueAtTime(level, start + attack);
+                param.setValueAtTime(level, releaseStart);
+                param.exponentialRampToValueAtTime(0.0001, start + length);
+            };
+
+            this.balkanResumeMusic = !!(this.bgMusic && !this.bgMusic.paused);
+            if (this.balkanResumeMusic) this.bgMusic.pause();
+
+            const master = register(this.ctx.createGain());
+            const compressor = register(this.ctx.createDynamicsCompressor());
+            compressor.threshold.value = -20;
+            compressor.knee.value = 14;
+            compressor.ratio.value = 4;
+            compressor.attack.value = 0.006;
+            compressor.release.value = 0.16;
+            master.gain.setValueAtTime(0.0001, now);
+            master.gain.linearRampToValueAtTime(0.52, now + 0.08);
+            master.connect(compressor);
+            compressor.connect(this.ctx.destination);
+
+            // Deset taktova po četiri osmine: živahna, ali i dalje igriva fraza kola.
             const melody = [
-                // Prva fraza
-                { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
-                { f: 880.0, d: 0.12 }, { f: 987.8, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
-                { f: 740.0, d: 0.12 }, { f: 830.6, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
-                { f: 740.0, d: 0.12 }, { f: 659.3, d: 0.25 }, // pauza na E
-                
-                // Druga fraza
-                { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
-                { f: 880.0, d: 0.12 }, { f: 987.8, d: 0.12 }, { f: 880.0, d: 0.12 }, { f: 830.6, d: 0.12 },
-                { f: 740.0, d: 0.12 }, { f: 659.3, d: 0.12 }, { f: 740.0, d: 0.12 }, { f: 830.6, d: 0.12 },
-                { f: 880.0, d: 0.35 }  // Završni A
+                81, 81, 83, 81, 78, 79, 81, 78,
+                76, 78, 79, 81, 79, 78, 76, 78,
+                81, 83, 85, 86, 85, 83, 81, 78,
+                79, 81, 83, 79, 78, 76, 74, 76,
+                78, 79, 81, 79, 78, 76, 74, 74
             ];
 
-            let t = now;
-            
-            // Ponavljamo melodiju tačno 2 puta, što traje ukupno oko 8.3 sekunde
-            for (let k = 0; k < 2; k++) {
-                melody.forEach(note => {
-                    const osc = this.ctx.createOscillator();
-                    const filter = this.ctx.createBiquadFilter();
-                    const gain = this.ctx.createGain();
+            const leadFilter = register(this.ctx.createBiquadFilter());
+            const leadGain = register(this.ctx.createGain());
+            const leadMain = register(this.ctx.createOscillator());
+            const leadReed = register(this.ctx.createOscillator());
+            leadMain.type = 'sawtooth';
+            leadReed.type = 'square';
+            leadReed.detune.value = 7;
+            leadFilter.type = 'lowpass';
+            leadFilter.frequency.value = 3200;
+            leadFilter.Q.value = 1.4;
+            leadGain.gain.value = 0.0001;
+            leadMain.connect(leadFilter);
+            leadReed.connect(leadFilter);
+            leadFilter.connect(leadGain);
+            leadGain.connect(master);
 
-                    // 'Square' oscilator najbolje simulira prodoran zvuk trube/harmonike
-                    osc.type = 'square'; 
-                    osc.frequency.value = note.f;
+            melody.forEach((midi, index) => {
+                const noteStart = now + index * eighth;
+                const target = midiToFreq(midi);
+                const ornamented = index % 8 === 0 || index === 18 || index === 34;
+                leadMain.frequency.setValueAtTime(ornamented ? midiToFreq(midi - 1) : target, noteStart);
+                leadReed.frequency.setValueAtTime(ornamented ? midiToFreq(midi - 1) : target, noteStart);
+                if (ornamented) {
+                    leadMain.frequency.exponentialRampToValueAtTime(target, noteStart + 0.028);
+                    leadReed.frequency.exponentialRampToValueAtTime(target, noteStart + 0.028);
+                }
+                scheduleGate(leadGain.gain, noteStart, eighth * 0.88, index % 4 === 0 ? 0.13 : 0.105);
+            });
 
-                    // Lowpass filter da ton bude oštar ali da ne probija bubne opne
-                    filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(800, t);
-                    filter.frequency.linearRampToValueAtTime(3500, t + note.d * 0.3);
-                    filter.frequency.exponentialRampToValueAtTime(1000, t + note.d);
+            const chordRoots = [50, 50, 55, 57, 50, 55, 57, 50, 57, 50];
+            const chordGain = register(this.ctx.createGain());
+            const chordFilter = register(this.ctx.createBiquadFilter());
+            const chordOscillators = [0, 4, 7].map((interval, index) => {
+                const osc = register(this.ctx.createOscillator());
+                osc.type = index === 1 ? 'square' : 'sawtooth';
+                osc.detune.value = (index - 1) * 5;
+                osc.connect(chordFilter);
+                return { osc, interval };
+            });
+            chordFilter.type = 'lowpass';
+            chordFilter.frequency.value = 1700;
+            chordFilter.Q.value = 0.8;
+            chordGain.gain.value = 0.0001;
+            chordFilter.connect(chordGain);
+            chordGain.connect(master);
 
-                    // Glasnoća nota (kratki odsečni udarci tipični za kolo)
-                    gain.gain.setValueAtTime(0, t);
-                    gain.gain.linearRampToValueAtTime(0.20, t + 0.02); // Brz ulazak
-                    gain.gain.exponentialRampToValueAtTime(0.01, t + note.d - 0.02); // Brzo stišavanje
+            const bass = register(this.ctx.createOscillator());
+            const bassFilter = register(this.ctx.createBiquadFilter());
+            const bassGain = register(this.ctx.createGain());
+            bass.type = 'triangle';
+            bassFilter.type = 'lowpass';
+            bassFilter.frequency.value = 460;
+            bassGain.gain.value = 0.0001;
+            bass.connect(bassFilter);
+            bassFilter.connect(bassGain);
+            bassGain.connect(master);
 
-                    osc.connect(filter);
-                    filter.connect(gain);
-                    gain.connect(this.ctx.destination);
+            const hat = register(this.ctx.createOscillator());
+            const hatFilter = register(this.ctx.createBiquadFilter());
+            const hatGain = register(this.ctx.createGain());
+            hat.type = 'square';
+            hat.frequency.value = 5200;
+            hatFilter.type = 'highpass';
+            hatFilter.frequency.value = 3900;
+            hatGain.gain.value = 0.0001;
+            hat.connect(hatFilter);
+            hatFilter.connect(hatGain);
+            hatGain.connect(master);
 
-                    osc.start(t);
-                    osc.stop(t + note.d);
-
-                    // Razmak između nota za pravi stakato skok
-                    t += note.d + 0.02; 
-                });
-                
-                // Pauza pre ponavljanja
-                t += 0.2;
+            const noiseBuffer = this.ctx.createBuffer(1, Math.floor(this.ctx.sampleRate * 0.1), this.ctx.sampleRate);
+            const noiseData = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < noiseData.length; i++) {
+                noiseData[i] = Math.random() * 2 - 1;
             }
+
+            chordRoots.forEach((root, barIndex) => {
+                const barStart = now + barIndex * bar;
+                chordOscillators.forEach(({ osc, interval }) => {
+                    osc.frequency.setValueAtTime(midiToFreq(root + interval), barStart);
+                });
+                scheduleGate(chordGain.gain, barStart, beat * 0.46, 0.048);
+                scheduleGate(chordGain.gain, barStart + beat, beat * 0.46, 0.064);
+
+                bass.frequency.setValueAtTime(midiToFreq(root - 12), barStart);
+                scheduleGate(bassGain.gain, barStart, beat * 0.58, 0.16);
+                bass.frequency.setValueAtTime(midiToFreq(root - 5), barStart + beat);
+                scheduleGate(bassGain.gain, barStart + beat, beat * 0.58, 0.13);
+
+                const kick = register(this.ctx.createOscillator());
+                const kickGain = register(this.ctx.createGain());
+                kick.type = 'sine';
+                kick.frequency.setValueAtTime(118, barStart);
+                kick.frequency.exponentialRampToValueAtTime(48, barStart + 0.11);
+                kickGain.gain.setValueAtTime(0.18, barStart);
+                kickGain.gain.exponentialRampToValueAtTime(0.0001, barStart + 0.13);
+                kick.connect(kickGain);
+                kickGain.connect(master);
+                kick.start(barStart);
+                kick.stop(barStart + 0.14);
+
+                const snare = register(this.ctx.createBufferSource());
+                const snareFilter = register(this.ctx.createBiquadFilter());
+                const snareGain = register(this.ctx.createGain());
+                snare.buffer = noiseBuffer;
+                snareFilter.type = 'bandpass';
+                snareFilter.frequency.value = 1700;
+                snareFilter.Q.value = 0.7;
+                snareGain.gain.setValueAtTime(0.09, barStart + beat);
+                snareGain.gain.exponentialRampToValueAtTime(0.0001, barStart + beat + 0.09);
+                snare.connect(snareFilter);
+                snareFilter.connect(snareGain);
+                snareGain.connect(master);
+                snare.start(barStart + beat);
+                snare.stop(barStart + beat + 0.1);
+            });
+
+            melody.forEach((_, index) => {
+                const hitTime = now + index * eighth;
+                scheduleGate(hatGain.gain, hitTime, Math.min(0.045, eighth * 0.3), index % 2 === 0 ? 0.018 : 0.012, 0.004);
+            });
+
+            const totalDuration = melody.length * eighth;
+            master.gain.setValueAtTime(0.52, now + totalDuration - 0.28);
+            master.gain.exponentialRampToValueAtTime(0.0001, now + totalDuration + 0.04);
+
+            [leadMain, leadReed, bass, hat, ...chordOscillators.map(item => item.osc)].forEach(osc => {
+                osc.start(now);
+                osc.stop(now + totalDuration + 0.08);
+            });
+
+            this.balkanStopTimer = setTimeout(() => {
+                this.stopBalkanMusic(true);
+            }, Math.ceil((totalDuration + 0.12) * 1000));
         });
     }
     
@@ -2999,7 +3193,7 @@ class ShopManager {
                     } else {
                         // NOVO: Provera da li se otključava reklamama
                         if (item.adUnlock) {
-                            priceHtml = `<div class="price" style="color: var(--text-muted); font-size: 0.75rem;">Gledaj 📺 za otključavanje</div>`;
+                            priceHtml = `<div class="price" style="color: var(--text-muted); font-size: 0.75rem;">${_safeT('shop_watch_to_unlock') || 'Gledaj 📺 za otključavanje'}</div>`;
                         } else {
                             let price = item.price;
                             let displayPrice = `${price} ${_safeT('balance')}`;
@@ -3278,9 +3472,9 @@ class ShopManager {
                     this.syncShopStateToServer();
                     
                     if (typeof window.showNotification === 'function') {
-                        window.showNotification("USPEŠNO!", "Tema je uspešno otključana!");
+                        window.showNotification(_safeT('success_title') || "USPEŠNO!", _safeT('theme_unlock_success') || "Tema je uspešno otključana!");
                     } else if (window.modalManager && window.modalManager.overlay) {
-                        window.modalManager.alert("Tema je uspešno otključana!", "USPEŠNO!");
+                        window.modalManager.alert(_safeT('theme_unlock_success') || "Tema je uspešno otključana!", _safeT('success_title') || "USPEŠNO!");
                     }
                 } else {
                     // Samo napredak
@@ -3410,11 +3604,11 @@ class ShopManager {
                       const cooldown = Math.ceil((rewardResult.retryAfterMs || 0) / 1000);
                       let message = _safeT('err_server_conn') || "Greška pri konekciji sa serverom.";
                       if (rewardResult.reason === 'ad_reward_cooldown') {
-                          message = `Nagrada je već obrađena. Pokušajte ponovo za ${cooldown || 1}s.`;
+                          message = (_safeT('economy_reward_cooldown') || "Nagrada je već obrađena. Pokušajte ponovo za {0}s.").replace('{0}', cooldown || 1);
                       } else if (rewardResult.reason === 'auth_required') {
                           message = _safeT('auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
                       } else if (rewardResult.reason === 'ad_verification_required' || rewardResult.reason === 'ad_verification_pending') {
-                          message = "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
+                          message = _safeT('ad_confirmation_retry') || "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
                       }
                      this.showRewardMessage(message, _safeT('modal_title_info') || "INFO");
                      return;

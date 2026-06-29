@@ -192,6 +192,55 @@
         }
     }
 
+    function getLeagueChampionPeriod(data = {}) {
+        const year = Number.parseInt(data.year, 10);
+        const quarter = Number.parseInt(data.quarter, 10);
+        if (Number.isInteger(year) && Number.isInteger(quarter) && quarter >= 1 && quarter <= 4) {
+            return { year, quarter };
+        }
+
+        const periodMatch = String(data.periodKey || '').match(/^(\d{4})-Q([1-4])$/i);
+        if (periodMatch) {
+            return {
+                year: Number.parseInt(periodMatch[1], 10),
+                quarter: Number.parseInt(periodMatch[2], 10)
+            };
+        }
+
+        return { year: '', quarter: '' };
+    }
+
+    function showLeagueChampionAnimationFromNotification(app, data = {}) {
+        if (String(data.type || '') !== 'league_champion_announced') return false;
+        if (!app || typeof app.showQuarterWinnerModal !== 'function') return false;
+
+        const playerName = String(data.playerName || '').trim();
+        if (!playerName) return false;
+
+        const { year, quarter } = getLeagueChampionPeriod(data);
+        const existingModal = document.getElementById('winner-modal-overlay');
+        if (existingModal) {
+            if (app.effectMgr && typeof app.effectMgr.stop === 'function') {
+                app.effectMgr.stop();
+            }
+            existingModal.remove();
+        }
+
+        app.showQuarterWinnerModal({
+            year,
+            quarter,
+            playerName,
+            score: data.score || 0,
+            photoUrl: data.photoUrl || ''
+        });
+
+        if (year && quarter) {
+            localStorage.setItem(`yamb_winner_shown_${year}_Q${quarter}`, 'true');
+        }
+
+        return true;
+    }
+
     function openLeagueHallOfFameFromNotification(data = {}) {
         const openHallOfFameTab = (league, retries = 12) => {
             const modal = document.getElementById('league-modal-overlay');
@@ -212,6 +261,8 @@
             const app = window.app;
             const league = window.kvartalnaLiga;
             if (app && !(await claimPendingRewardBeforeNotificationNavigation(app))) return;
+
+            showLeagueChampionAnimationFromNotification(app, data);
 
             if (league) {
                 if (typeof league.openModal === 'function') {

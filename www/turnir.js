@@ -520,24 +520,28 @@ class TournamentManager {
                 });
 
                 this.app.socket.on('tourney_duel_pending', (data = {}) => {
-                    const opponentName = this.escape(data.opponentName || 'Igrač');
-                    showTourneyDuelNotice(`Poziv za turnirski meč je poslat igraču ${opponentName}. Čekamo odgovor...`);
+                    const opponentName = this.escape(data.opponentName || tt('player_guest') || 'Igrač');
+                    const msg = (tt('tourney_duel_pending_notice') || 'Poziv za turnirski meč je poslat igraču {0}. Čekamo odgovor...').replace('{0}', opponentName);
+                    showTourneyDuelNotice(msg);
                 });
 
                 this.app.socket.on('tourney_duel_declined', (data = {}) => {
-                    const opponentName = this.escape(data.opponentName || 'Igrač');
-                    showTourneyDuelNotice(`${opponentName} je odbio turnirski meč. Dogovorite novi trenutak i pokušajte ponovo.`);
+                    const opponentName = this.escape(data.opponentName || tt('player_guest') || 'Igrač');
+                    const msg = (tt('tourney_duel_declined_notice') || '{0} je odbio turnirski meč. Dogovorite novi trenutak i pokušajte ponovo.').replace('{0}', opponentName);
+                    showTourneyDuelNotice(msg);
                 });
 
                 this.app.socket.on('tourney_duel_busy', (data = {}) => {
-                    const opponentName = this.escape(data.opponentName || 'Igrač');
-                    showTourneyDuelNotice(`${opponentName} je trenutno zauzet. Pokušajte ponovo kasnije.`);
+                    const opponentName = this.escape(data.opponentName || tt('player_guest') || 'Igrač');
+                    const msg = (tt('tourney_duel_busy_notice') || '{0} je trenutno zauzet. Pokušajte ponovo kasnije.').replace('{0}', opponentName);
+                    showTourneyDuelNotice(msg);
                 });
 
                 this.app.socket.on('tourney_duel_expired', (data = {}) => {
                     if (data.silent) return;
-                    const opponentName = this.escape(data.opponentName || 'Igrač');
-                    showTourneyDuelNotice(`${opponentName} nije odgovorio na vreme. Meč nije pokrenut.`);
+                    const opponentName = this.escape(data.opponentName || tt('player_guest') || 'Igrač');
+                    const msg = (tt('tourney_duel_expired_notice') || '{0} nije odgovorio na vreme. Meč nije pokrenut.').replace('{0}', opponentName);
+                    showTourneyDuelNotice(msg);
                 });
 
                 this.app.socket.on('tourney_join_allowed', (matchRoomId) => {
@@ -700,7 +704,7 @@ class TournamentManager {
             this.tourneyLeaderboard.forEach((player, idx) => {
                 let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="color: var(--text-muted); font-size: 1.1rem; font-weight: bold;">${idx+1}.</span>`));
                 let photo = this.playerPhotoUrl({ ...player, name: player.playerName });
-                let safePlayerName = this.escape(player.playerName || 'Igrač');
+                let safePlayerName = this.escape(player.playerName || tt('player_guest') || 'Igrač');
                 let safeWins = Number.isFinite(Number(player.wins)) ? Math.max(0, Math.floor(Number(player.wins))) : 0;
 
                 let bg = idx === 0 ? 'background: linear-gradient(90deg, rgba(255,215,0,0.2) 0%, rgba(0,0,0,0.4) 100%); border: 1px solid var(--gold-main);' : 'background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);';
@@ -1071,7 +1075,7 @@ class TournamentManager {
             }
 
             let photo = this.playerPhotoUrl(p);
-            let safeName = this.escape(p.name || 'Igrač');
+            let safeName = this.escape(p.name || tt('player_guest') || 'Igrač');
             let isWinner = match.winnerId === p.id;
             let isLoser = match.winnerId && match.winnerId !== p.id;
 
@@ -1211,8 +1215,8 @@ class TournamentManager {
         }
 
         const titleFallback = tt('tourney_match_title') || 'TURNIRSKI MEČ';
-        const p1Name = this.escape(match.p1.name || 'Igrač');
-        const p2Name = this.escape(match.p2.name || 'Igrač');
+            const p1Name = this.escape(match.p1.name || tt('player_guest') || 'Igrač');
+            const p2Name = this.escape(match.p2.name || tt('player_guest') || 'Igrač');
 
         this.app.modal.alert(`
             <div style="text-align:center;">

@@ -619,7 +619,6 @@ const MAX_BALANCE = 5000000;
 const MAX_UNDO_TOKENS = 250;
 const MAX_DAILY_REWARD = 2000;
 const MAX_DAILY_BASE_REWARD = 864;
-const MAX_AD_REWARD_PER_SYNC = 1500;
 const MAX_REWARD_PER_GAME = 8000;
 const MAX_TOURNEY_REWARD = 50000;
 const TOP_SCORE_SUBMIT_GRACE_MS = 15000;
@@ -1301,7 +1300,8 @@ async function notifyQuarterlyLeagueChampionIfDue(now = new Date()) {
                 cycle: cycle || '',
                 cycleRoman: payload.romanCycle,
                 playerName: payload.playerName,
-                score: payload.score
+                score: payload.score,
+                photoUrl: claimedChampion.photoUrl || ''
             }
         })
         : { ok: true, sent: 0 };
@@ -3034,6 +3034,73 @@ async function notifyTournamentTimeAccepted(match, round, index) {
     });
 }
 
+function getTournamentFinalistNames(match) {
+    return {
+        p1Name: sanitizeTournamentName(match?.p1?.name || 'Igrac'),
+        p2Name: sanitizeTournamentName(match?.p2?.name || 'Igrac')
+    };
+}
+
+async function notifyTournamentFinalScheduled(match, round, index) {
+    if (round !== 'f') return { ok: false, reason: 'not_final' };
+    if (!match?.p1?.id || !match?.p2?.id) return { ok: false, reason: 'missing_finalists' };
+    if (!match.timeAccepted || !(match.time || match.proposedTime)) return { ok: false, reason: 'final_not_scheduled' };
+
+    const scheduledTime = String(match.time || match.proposedTime || '');
+    if (match.finalSchedulePushTime === scheduledTime) return { ok: true, skipped: true };
+    match.finalSchedulePushTime = scheduledTime;
+
+    const { p1Name, p2Name } = getTournamentFinalistNames(match);
+    const timeText = formatTournamentPushTime(scheduledTime);
+    const tagSuffix = scheduledTime.replace(/[^a-z0-9]/gi, '_').substring(0, 40) || 'time';
+
+    saveTournamentToDb();
+    return sendPushToTournamentAudienceExcluding([], {
+        type: 'tournament_final_scheduled',
+        tag: `tournament_final_scheduled_${tagSuffix}`,
+        title: 'Finale turnira je zakazano',
+        body: `U finalu turnira su ${p1Name} i ${p2Name}. Gledajte zakazan mec u ${timeText}.`,
+        data: {
+            round,
+            index,
+            matchIndex: index,
+            time: scheduledTime,
+            p1Name,
+            p2Name
+        }
+    });
+}
+
+async function notifyTournamentChampion(match, winnerObj) {
+    if (!match?.winnerId || !winnerObj?.id) return { ok: false, reason: 'missing_winner' };
+    if (match.winnerId !== winnerObj.id) return { ok: false, reason: 'winner_mismatch' };
+
+    const flagName = `champion:${winnerObj.id}`;
+    if (!markTournamentPushFlag(flagName)) return { ok: true, skipped: true };
+
+    const winnerName = sanitizeTournamentName(winnerObj.name || 'Igrac');
+    const runnerUp = getTournamentOpponent(match, winnerObj.id);
+    const runnerName = runnerUp ? sanitizeTournamentName(runnerUp.name || 'Finalista') : 'finaliste';
+    const scoreText = match.scoreLabel ? ` Rezultat: ${match.scoreLabel}.` : '';
+
+    saveTournamentToDb();
+    return sendPushToTournamentAudienceExcluding([], {
+        type: 'tournament_champion_announced',
+        tag: `tournament_champion_${String(winnerObj.id).substring(0, 40)}`,
+        title: `Osvajac turnira je ${winnerName}`,
+        body: `${winnerName} je osvojio turnir posle finala protiv ${runnerName}.${scoreText}`,
+        data: {
+            round: 'f',
+            index: 0,
+            matchIndex: 0,
+            winnerUid: winnerObj.id,
+            winnerName,
+            runnerName,
+            score: match.scoreLabel || ''
+        }
+    });
+}
+
 async function notifyTournamentDuelRequested(match, round, index, starterUid) {
     const opponent = getTournamentOpponent(match, starterUid);
     if (!opponent?.id) return { ok: false, reason: 'no_opponent' };
@@ -3432,6 +3499,7 @@ async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'techn
             await settleTournamentFinalPrizes(match, winnerObj);
             if (match.prizesAwarded) {
                 await recordTournamentChampion(match, winnerObj);
+                queueTournamentPush(notifyTournamentChampion(match, winnerObj), 'champion_announced');
             }
         } catch (err) {
             console.error("Greška pri tehničkom upisu finala turnira:", err);
@@ -3470,6 +3538,7 @@ async function applyTournamentCompletedDuelResult(roomId) {
             await settleTournamentFinalPrizes(match, winnerObj);
             if (match.prizesAwarded) {
                 await recordTournamentChampion(match, winnerObj);
+                queueTournamentPush(notifyTournamentChampion(match, winnerObj), 'champion_announced');
             }
         } catch (err) {
             console.error("Greška pri automatskom upisu finala turnira:", err);
@@ -5602,10 +5671,7 @@ function calculateAllowedBalanceIncrease(user, stats, oldUserGames, oldTournamen
         ? requestedDailyReward
         : 0;
 
-    const adSyncAllowance = REQUIRE_ADMOB_SSV ? 0 : MAX_AD_REWARD_PER_SYNC;
-
-    return adSyncAllowance +
-        (gameDelta * MAX_REWARD_PER_GAME) +
+    return (gameDelta * MAX_REWARD_PER_GAME) +
         (tournamentDelta * MAX_TOURNEY_REWARD) +
         newTrophyRewards +
         dailyAllowance;
@@ -6658,14 +6724,17 @@ io.on('connection', (socket) => {
                 const requestedVibrationEnabled = coerceBooleanSetting(s.vibrationEnabled);
                 const requestedMusicEnabled = coerceBooleanSetting(s.musicEnabled);
                 const requestedLanguage = normalizeLanguageSetting(s.language, null);
+                const canApplyClientProfileSettings = !ignoreEmptyClientSnapshot;
 
-                if (requestedSoundEnabled !== null) user.soundEnabled = requestedSoundEnabled;
-                if (requestedVibrationEnabled !== null) user.vibrationEnabled = requestedVibrationEnabled;
-                if (requestedMusicEnabled !== null) user.musicEnabled = requestedMusicEnabled;
-                if (s.musicVolume !== undefined && s.musicVolume !== null) {
-                    user.musicVolume = normalizeMusicVolume(s.musicVolume, user.musicVolume ?? 0.4);
+                if (canApplyClientProfileSettings) {
+                    if (requestedSoundEnabled !== null) user.soundEnabled = requestedSoundEnabled;
+                    if (requestedVibrationEnabled !== null) user.vibrationEnabled = requestedVibrationEnabled;
+                    if (requestedMusicEnabled !== null) user.musicEnabled = requestedMusicEnabled;
+                    if (s.musicVolume !== undefined && s.musicVolume !== null) {
+                        user.musicVolume = normalizeMusicVolume(s.musicVolume, user.musicVolume ?? 0.4);
+                    }
+                    if (requestedLanguage) user.language = requestedLanguage;
                 }
-                if (requestedLanguage) user.language = requestedLanguage;
 
                 if (s.penaltyPoints !== undefined && s.penaltyPoints > (user.penaltyPoints || 0)) {
                     user.penaltyPoints = s.penaltyPoints;
@@ -9151,7 +9220,7 @@ io.on('connection', (socket) => {
                     }
 
                     const holdIndex = toSafeInt(data?.index, -1);
-                    if (holdIndex < 0 || holdIndex >= 6 || state.brojBacanja <= 0 || state.brojBacanja >= 3) {
+                    if (holdIndex < 0 || holdIndex >= 6 || state.brojBacanja <= 0) {
                         console.warn(`🚨 BLOKIRANO DRŽANJE KOCKICE: socket=${socket.id}, index=${data?.index}, bacanje=${state.brojBacanja}, room=${roomId}`);
                         emitAuthoritativeRoomState(socket, roomId, playerIndex);
                         return;
@@ -10144,6 +10213,7 @@ io.on('connection', (socket) => {
         saveTournamentToDb();
         io.emit('tourney_state_update', tournamentState);
         queueTournamentPush(notifyTournamentTimeAccepted(match, data.round, index), 'time_accepted');
+        queueTournamentPush(notifyTournamentFinalScheduled(match, data.round, index), 'final_scheduled');
     });
 
     socket.on('tourney_start_duel', (data = {}) => {
@@ -10339,6 +10409,7 @@ io.on('connection', (socket) => {
                     await settleTournamentFinalPrizes(match, winnerObj);
                     if (match.prizesAwarded) {
                         await recordTournamentChampion(match, winnerObj);
+                        queueTournamentPush(notifyTournamentChampion(match, winnerObj), 'champion_announced');
                     }
                 } catch (err) {
                     console.error("Greška pri upisu pobednika turnira u bazu:", err);
@@ -10348,6 +10419,10 @@ io.on('connection', (socket) => {
             const winnerObj = match.p1.id === winnerId ? match.p1 : match.p2;
             try {
                 await settleTournamentFinalPrizes(match, winnerObj);
+                if (match.prizesAwarded) {
+                    await recordTournamentChampion(match, winnerObj);
+                    queueTournamentPush(notifyTournamentChampion(match, winnerObj), 'champion_announced');
+                }
             } catch (err) {
                 console.error("Greška pri ponovnom upisu finala turnira:", err);
             }
