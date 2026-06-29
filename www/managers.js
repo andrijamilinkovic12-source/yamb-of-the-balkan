@@ -1031,14 +1031,25 @@ class EffectManager {
             const container = document.createElement('div');
             container.className = 'royal-yamb-container';
             container.innerHTML = `
+                <div class="royal-yamb-light-rig">
+                    <span class="royal-yamb-lamp lamp-left"></span>
+                    <span class="royal-yamb-lamp lamp-center"></span>
+                    <span class="royal-yamb-lamp lamp-right"></span>
+                </div>
                 <div class="royal-yamb-spotlight spotlight-left"></div>
                 <div class="royal-yamb-spotlight spotlight-right"></div>
                 <div class="royal-yamb-spotlight spotlight-center"></div>
                 <div class="royal-yamb-rays"></div>
                 <div class="royal-yamb-stage-glow"></div>
+                <div class="royal-yamb-footlights"></div>
                 <canvas class="royal-yamb-canvas"></canvas>
-                <div class="royal-yamb-crown-active">&#128081;</div>
-                <div class="royal-yamb-title-active">YAMB</div>
+                <div class="royal-yamb-emblem">
+                    <img src="Logo_green.png" alt="" draggable="false">
+                </div>
+                <div class="royal-yamb-title-active" aria-label="Yamb of the Balkan">
+                    <span class="royal-yamb-title-main">YAMB</span>
+                    <span class="royal-yamb-title-sub">OF THE BALKAN</span>
+                </div>
                 <div class="royal-yamb-sparkles"></div>
             `;
             document.body.appendChild(container);
@@ -1248,7 +1259,7 @@ class EffectManager {
     runRoyalYambCanvas(canvas, duration = 8000) {
         if (!canvas || !canvas.getContext) return;
 
-        const ctx = canvas.getContext('2d', { alpha: true });
+        const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
         if (!ctx) return;
 
         const start = performance.now();
@@ -1269,23 +1280,103 @@ class EffectManager {
             width = window.innerWidth || document.documentElement.clientWidth || 1;
             height = window.innerHeight || document.documentElement.clientHeight || 1;
             const compact = width < 560 || height < 620;
-            dpr = Math.min(window.devicePixelRatio || 1, compact ? 1.15 : 1.45);
+            dpr = Math.min(window.devicePixelRatio || 1, compact ? 1 : 1.25);
             canvas.width = Math.floor(width * dpr);
             canvas.height = Math.floor(height * dpr);
             canvas.style.width = '100vw';
             canvas.style.height = '100vh';
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.imageSmoothingEnabled = true;
         };
 
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas, { passive: true });
 
         const compact = width < 560 || height < 620;
+        const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const lowPower = compact || reducedMotion;
         const golds = ['#fff7c2', '#ffd66f', '#f6b63d', '#d98b18'];
         const burstColors = ['#fff7c2', '#ffd66f', '#ffffff', '#ffb13d', '#7fffe1'];
-        const coinCount = compact ? 34 : 52;
-        const sparkleCount = compact ? 46 : 72;
-        const burstParticleCount = compact ? 24 : 36;
+        const coinCount = reducedMotion ? 16 : (compact ? 24 : 36);
+        const sparkleCount = reducedMotion ? 20 : (compact ? 28 : 42);
+        const burstParticleCount = reducedMotion ? 10 : (compact ? 14 : 20);
+
+        const createSprite = (size, paint) => {
+            const sprite = document.createElement('canvas');
+            sprite.width = size;
+            sprite.height = size;
+            const spriteCtx = sprite.getContext('2d');
+            if (spriteCtx) paint(spriteCtx, size);
+            return sprite;
+        };
+
+        const coinSprites = golds.map(color => createSprite(64, (spriteCtx, size) => {
+            const center = size / 2;
+            const radius = size * 0.31;
+            const gradient = spriteCtx.createRadialGradient(center - 8, center - 10, 3, center, center, radius);
+            gradient.addColorStop(0, '#fffde8');
+            gradient.addColorStop(0.32, color);
+            gradient.addColorStop(0.7, '#d88a16');
+            gradient.addColorStop(1, '#6d3404');
+            spriteCtx.shadowBlur = 8;
+            spriteCtx.shadowColor = 'rgba(255, 215, 104, 0.72)';
+            spriteCtx.fillStyle = gradient;
+            spriteCtx.beginPath();
+            spriteCtx.arc(center, center, radius, 0, Math.PI * 2);
+            spriteCtx.fill();
+            spriteCtx.shadowBlur = 0;
+            spriteCtx.strokeStyle = 'rgba(75, 34, 3, 0.68)';
+            spriteCtx.lineWidth = 3;
+            spriteCtx.stroke();
+            spriteCtx.strokeStyle = 'rgba(255, 255, 230, 0.58)';
+            spriteCtx.lineWidth = 2;
+            spriteCtx.beginPath();
+            spriteCtx.arc(center, center, radius * 0.56, 0, Math.PI * 2);
+            spriteCtx.stroke();
+            spriteCtx.fillStyle = 'rgba(111, 59, 5, 0.72)';
+            spriteCtx.font = 'bold 17px serif';
+            spriteCtx.textAlign = 'center';
+            spriteCtx.textBaseline = 'middle';
+            spriteCtx.fillText('Y', center, center + 1);
+        }));
+
+        const diamondSprite = createSprite(52, (spriteCtx, size) => {
+            const center = size / 2;
+            const radius = size * 0.28;
+            const gradient = spriteCtx.createLinearGradient(center, center - radius, center, center + radius);
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(0.42, '#92fff1');
+            gradient.addColorStop(1, '#168b94');
+            spriteCtx.shadowBlur = 10;
+            spriteCtx.shadowColor = 'rgba(103, 255, 229, 0.82)';
+            spriteCtx.fillStyle = gradient;
+            spriteCtx.beginPath();
+            spriteCtx.moveTo(center, center - radius);
+            spriteCtx.lineTo(center + radius * 0.9, center);
+            spriteCtx.lineTo(center, center + radius);
+            spriteCtx.lineTo(center - radius * 0.9, center);
+            spriteCtx.closePath();
+            spriteCtx.fill();
+        });
+
+        const sparkleSprites = burstColors.map(color => createSprite(40, (spriteCtx, size) => {
+            const center = size / 2;
+            const gradient = spriteCtx.createRadialGradient(center, center, 0, center, center, size * 0.46);
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(0.12, color);
+            gradient.addColorStop(0.42, color + '99');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            spriteCtx.fillStyle = gradient;
+            spriteCtx.fillRect(0, 0, size, size);
+            spriteCtx.strokeStyle = color;
+            spriteCtx.lineWidth = 1.5;
+            spriteCtx.beginPath();
+            spriteCtx.moveTo(center, 6);
+            spriteCtx.lineTo(center, size - 6);
+            spriteCtx.moveTo(6, center);
+            spriteCtx.lineTo(size - 6, center);
+            spriteCtx.stroke();
+        }));
 
         const falling = Array.from({ length: coinCount }, (_, index) => {
             const size = random(compact ? 7 : 8, compact ? 14 : 18);
@@ -1299,7 +1390,7 @@ class EffectManager {
                 life: random(2800, 4300),
                 spin: random(-5.2, 5.2),
                 wobble: random(0.8, 2.4),
-                color: golds[index % golds.length]
+                sprite: index % 7 === 0 ? diamondSprite : coinSprites[index % coinSprites.length]
             };
         });
 
@@ -1311,10 +1402,10 @@ class EffectManager {
             life: random(2100, 5200),
             drift: random(-18, 18),
             phase: random(0, Math.PI * 2),
-            color: index % 4 === 0 ? '#ffffff' : '#ffe79a'
+            sprite: sparkleSprites[index % sparkleSprites.length]
         }));
 
-        const burstTimes = [760, 1840, 3120, 4680, 5900];
+        const burstTimes = reducedMotion ? [980, 3300, 5200] : [760, 2100, 3650, 5200];
         const bursts = [];
         burstTimes.forEach((time, burstIndex) => {
             const originX = width * (0.22 + (burstIndex % 3) * 0.28) + random(-width * 0.05, width * 0.05);
@@ -1329,78 +1420,19 @@ class EffectManager {
                     angle,
                     speed: random(compact ? 68 : 92, compact ? 150 : 210),
                     size: random(1.4, compact ? 3.1 : 3.8),
-                    color: burstColors[(i + burstIndex) % burstColors.length],
+                    sprite: sparkleSprites[(i + burstIndex) % sparkleSprites.length],
                     gravity: random(54, 104)
                 });
             }
         });
 
-        const drawStar = (x, y, radius, color, alpha, rotation = 0) => {
+        const drawSprite = (sprite, x, y, radius, rotation, alpha, scaleY = 1) => {
             ctx.save();
             ctx.globalAlpha = alpha;
             ctx.translate(x, y);
             ctx.rotate(rotation);
-            ctx.strokeStyle = color;
-            ctx.lineWidth = Math.max(1, radius * 0.42);
-            ctx.shadowBlur = radius * 3.5;
-            ctx.shadowColor = color;
-            ctx.beginPath();
-            ctx.moveTo(-radius, 0);
-            ctx.lineTo(radius, 0);
-            ctx.moveTo(0, -radius);
-            ctx.lineTo(0, radius);
-            ctx.stroke();
-            ctx.restore();
-        };
-
-        const drawCoin = (x, y, radius, rotation, alpha, color) => {
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.translate(x, y);
-            ctx.rotate(rotation);
-            ctx.scale(1, 0.74);
-            const gradient = ctx.createRadialGradient(-radius * 0.28, -radius * 0.32, radius * 0.12, 0, 0, radius);
-            gradient.addColorStop(0, '#fffbe0');
-            gradient.addColorStop(0.35, color);
-            gradient.addColorStop(0.72, '#d88614');
-            gradient.addColorStop(1, '#6e3504');
-            ctx.fillStyle = gradient;
-            ctx.shadowBlur = radius * 1.4;
-            ctx.shadowColor = 'rgba(255, 216, 111, 0.55)';
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = 'rgba(92, 44, 4, 0.55)';
-            ctx.lineWidth = Math.max(1, radius * 0.14);
-            ctx.stroke();
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.42)';
-            ctx.lineWidth = Math.max(1, radius * 0.08);
-            ctx.beginPath();
-            ctx.arc(0, 0, radius * 0.58, 0, Math.PI * 2);
-            ctx.stroke();
-            ctx.restore();
-        };
-
-        const drawDiamond = (x, y, radius, rotation, alpha) => {
-            ctx.save();
-            ctx.globalAlpha = alpha;
-            ctx.translate(x, y);
-            ctx.rotate(rotation);
-            ctx.shadowBlur = radius * 2.2;
-            ctx.shadowColor = 'rgba(132, 255, 232, 0.7)';
-            const gradient = ctx.createLinearGradient(0, -radius, 0, radius);
-            gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(0.45, '#8dfff2');
-            gradient.addColorStop(1, '#168b94');
-            ctx.fillStyle = gradient;
-            ctx.beginPath();
-            ctx.moveTo(0, -radius);
-            ctx.lineTo(radius * 0.86, 0);
-            ctx.lineTo(0, radius);
-            ctx.lineTo(-radius * 0.86, 0);
-            ctx.closePath();
-            ctx.fill();
+            ctx.scale(1, scaleY);
+            ctx.drawImage(sprite, -radius, -radius, radius * 2, radius * 2);
             ctx.restore();
         };
 
@@ -1412,28 +1444,21 @@ class EffectManager {
 
             const elapsed = now - start;
             ctx.clearRect(0, 0, width, height);
-
-            const stagePulse = Math.sin(elapsed / 520);
-            const glow = ctx.createRadialGradient(width * 0.5, height * 0.43, 0, width * 0.5, height * 0.43, Math.min(width, height) * 0.42);
-            glow.addColorStop(0, `rgba(255, 255, 255, ${0.11 + stagePulse * 0.025})`);
-            glow.addColorStop(0.22, 'rgba(255, 214, 111, 0.12)');
-            glow.addColorStop(1, 'rgba(255, 214, 111, 0)');
             ctx.globalCompositeOperation = 'lighter';
-            ctx.fillStyle = glow;
-            ctx.fillRect(0, 0, width, height);
 
             sparkles.forEach(sparkle => {
                 const local = (elapsed - sparkle.delay) % sparkle.life;
                 const progress = local / sparkle.life;
                 const alpha = Math.sin(progress * Math.PI) * (0.42 + 0.38 * Math.sin(elapsed / 180 + sparkle.phase));
                 if (alpha <= 0.04) return;
-                drawStar(
-                    sparkle.x + Math.sin(elapsed / 900 + sparkle.phase) * sparkle.drift,
-                    sparkle.y - easeInOut(progress) * 46,
-                    sparkle.size,
-                    sparkle.color,
-                    alpha,
-                    elapsed / 1200 + sparkle.phase
+                const size = sparkle.size * 5;
+                ctx.globalAlpha = alpha;
+                ctx.drawImage(
+                    sparkle.sprite,
+                    sparkle.x + Math.sin(elapsed / 900 + sparkle.phase) * sparkle.drift - size,
+                    sparkle.y - easeInOut(progress) * 46 - size,
+                    size * 2,
+                    size * 2
                 );
             });
 
@@ -1445,15 +1470,10 @@ class EffectManager {
                 const x = particle.x + Math.cos(particle.angle) * particle.speed * travel;
                 const y = particle.y + Math.sin(particle.angle) * particle.speed * travel + particle.gravity * progress * progress;
                 const alpha = (1 - progress) * 0.95;
+                const size = particle.size * 4.5;
                 ctx.globalAlpha = alpha;
-                ctx.fillStyle = particle.color;
-                ctx.shadowBlur = particle.size * 5;
-                ctx.shadowColor = particle.color;
-                ctx.beginPath();
-                ctx.arc(x, y, particle.size * (1 - progress * 0.35), 0, Math.PI * 2);
-                ctx.fill();
+                ctx.drawImage(particle.sprite, x - size, y - size, size * 2, size * 2);
             });
-            ctx.shadowBlur = 0;
             ctx.globalAlpha = 1;
 
             ctx.globalCompositeOperation = 'source-over';
@@ -1466,11 +1486,8 @@ class EffectManager {
                 const x = item.x + item.drift * Math.sin(progress * Math.PI * item.wobble);
                 const y = item.y + (height + Math.abs(item.y) + item.size * 4) * eased;
                 const rotation = item.spin * progress * Math.PI * 2;
-                if (item.kind === 'diamond') {
-                    drawDiamond(x, y, item.size * 0.86, rotation, alpha);
-                } else {
-                    drawCoin(x, y, item.size, rotation, alpha, item.color);
-                }
+                const radius = item.kind === 'diamond' ? item.size * 1.28 : item.size * 1.45;
+                drawSprite(item.sprite, x, y, radius, rotation, alpha, item.kind === 'diamond' ? 1 : 0.76);
             });
 
             if (elapsed < duration) {
