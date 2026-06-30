@@ -264,6 +264,34 @@ function checkRewardedAdClientFallback() {
     assert(undoSource.includes("{ type, ssvNonce, clientRewarded: true }"), 'Undo token rewarded claim does not send clientRewarded');
     assert(dailySource.includes("{ amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled }"), 'Daily double rewarded claim does not send clientRewarded');
     assert(gameSource.includes('clientRewarded: !!doubled'), 'Game-over double rewarded claim does not send clientRewarded');
+
+    const rewardWait = extractClassMethod(managersSource, 'async waitForRewardVideoReadyFor');
+    const showRewardVideo = extractClassMethod(managersSource, 'showRewardVideo(rewardOptions = {})');
+    assert(
+        rewardWait.includes("this.triggerHighPriorityLoad('rewarded', rewardOptions)") &&
+        rewardWait.includes('this.isRewardVideoReadyFor(rewardOptions)'),
+        'AdMob controller does not load and wait for the exact rewarded context'
+    );
+    assert(
+        showRewardVideo.includes('await this.waitForRewardVideoReadyFor(rewardOptions)'),
+        'showRewardVideo can still fail immediately instead of waiting for the exact rewarded ad'
+    );
+    assert(
+        showRewardVideo.includes('const rewardItem = await this.adMobPlugin.showRewardVideoAd();') &&
+        showRewardVideo.includes('if (rewardItem && this.rewardResolve) this.settleRewardVideo(true);'),
+        'showRewardVideo does not accept the native rewarded promise result as a client reward signal'
+    );
+
+    const coinReward = extractClassMethod(undoSource, "async claimCoinAdReward(type = 'rewarded')");
+    const tokenReward = extractClassMethod(undoSource, 'async buyTokens(type)');
+    assert(
+        coinReward.includes("if (!isCoinRewardReady && typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);"),
+        'Coin reward flow can still reject before showRewardVideo waits for the ad'
+    );
+    assert(
+        tokenReward.includes("if (!isTokenRewardReady && typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);"),
+        'Undo token reward flow can still reject before showRewardVideo waits for the ad'
+    );
 }
 
 function checkUnverifiedInterstitialRewardsBlocked() {

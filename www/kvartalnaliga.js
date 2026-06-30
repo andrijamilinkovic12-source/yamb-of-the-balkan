@@ -59,21 +59,7 @@ class KvartalnaLigaManager {
     }
 
     init() {
-        let data = this.getScores();
-        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
-
-        if (data.year !== currentYear || data.quarter !== currentQuarter) {
-            localStorage.setItem('yamb_pending_quarter_check', JSON.stringify({
-                year: data.year,
-                quarter: data.quarter
-            }));
-
-            data.baselineScore += data.quarterlyScore;
-            data.quarterlyScore = 0; 
-            data.year = currentYear;
-            data.quarter = currentQuarter;
-            this.saveScores(data);
-        }
+        this.getScores();
     }
 
     getCurrentQuarterInfo() {
@@ -87,6 +73,34 @@ class KvartalnaLigaManager {
     getDynamicKey() {
         const uid = localStorage.getItem('yamb_uid') || 'guest';
         return `${this.storageKey}_${uid}`;
+    }
+
+    normalizeScoresForCurrentQuarter(rawData, key = null) {
+        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
+        const data = rawData && typeof rawData === 'object'
+            ? { ...rawData }
+            : { year: currentYear, quarter: currentQuarter, baselineScore: 0, quarterlyScore: 0 };
+
+        data.quarterlyScore = parseInt(data.quarterlyScore, 10) || 0;
+        data.baselineScore = parseInt(data.baselineScore, 10) || 0;
+        data.year = parseInt(data.year, 10) || 0;
+        data.quarter = parseInt(data.quarter, 10) || 0;
+
+        if (data.year !== currentYear || data.quarter !== currentQuarter) {
+            localStorage.setItem('yamb_pending_quarter_check', JSON.stringify({
+                year: data.year,
+                quarter: data.quarter
+            }));
+
+            data.baselineScore += data.quarterlyScore;
+            data.quarterlyScore = 0;
+            data.year = currentYear;
+            data.quarter = currentQuarter;
+
+            if (key) localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        return data;
     }
 
     getScores() {
@@ -107,15 +121,7 @@ class KvartalnaLigaManager {
 
         if (raw) {
             try { 
-                let parsed = JSON.parse(raw); 
-                parsed.quarterlyScore = parseInt(parsed.quarterlyScore) || 0;
-                parsed.baselineScore = parseInt(parsed.baselineScore) || 0;
-                
-                // Forsirano resetovanje ako fajl nema datum
-                if (!parsed.year) parsed.year = 0;
-                if (!parsed.quarter) parsed.quarter = 0;
-                
-                return parsed;
+                return this.normalizeScoresForCurrentQuarter(JSON.parse(raw), key);
             } 
             catch (e) { console.error("Greška pri parsiranju lige:", e); }
         }
@@ -154,7 +160,6 @@ class KvartalnaLigaManager {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         const data = this.getScores();
-        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
         let pName = localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost");
         let pPhoto = localStorage.getItem('yamb_player_photo') || ''; 
 
@@ -166,8 +171,8 @@ class KvartalnaLigaManager {
             playerName: pName,
             photoUrl: pPhoto, 
             score: data.quarterlyScore,
-            year: currentYear,
-            quarter: currentQuarter
+            year: data.year,
+            quarter: data.quarter
         }, (result) => {
             if (result && result.ok) {
                 if (result.leagueData) {

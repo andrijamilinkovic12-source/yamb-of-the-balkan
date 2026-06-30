@@ -60,7 +60,7 @@ function checkMatchResultWiring() {
     assert(completedDuel.includes("resultType: 'regular'"), 'Regular online duel is not written to the ledger');
     assert(completedDuel.includes('ensureMatchResult({'), 'Regular online duel bypasses the ledger');
     assert(completedDuel.includes('hasUserAppliedMatchResult(user, matchId)'), 'Regular duel lacks durable profile idempotency');
-    assert(completedDuel.includes('await applyTechnicalLeagueDelta(user, player.score)'), 'Regular online duel does not update quarterly league points server-side');
+    assert(/await applyTechnicalLeagueDelta\(user,\s*player\.score/.test(completedDuel), 'Regular online duel does not update quarterly league points server-side');
     assert(completedDuel.includes('markMatchResultStatsApplied(matchId, player.uid)'), 'Regular duel does not mark applied stats');
 
     const technical = extractFunction(serverSource, 'applyServerSideTechnicalResult');
@@ -70,7 +70,7 @@ function checkMatchResultWiring() {
 
     const reconciler = extractFunction(serverSource, 'reconcileStoredServerMatchResult');
     assert(reconciler.includes('hasUserAppliedMatchResult(user, result.matchId)'), 'Reconciler can duplicate a previously saved profile result');
-    assert(reconciler.includes('await applyTechnicalLeagueDelta(user, score)'), 'Reconciler does not restore quarterly league points for regular duel results');
+    assert(/await applyTechnicalLeagueDelta\(user,\s*score/.test(reconciler), 'Reconciler does not restore quarterly league points for regular duel results');
     assert(reconciler.includes('markMatchResultStatsApplied(result.matchId, uid)'), 'Reconciler does not close incomplete ledger entries');
     assert(serverSource.includes('reconcileIncompleteServerMatchResults'), 'Missing incomplete result reconciliation worker');
 

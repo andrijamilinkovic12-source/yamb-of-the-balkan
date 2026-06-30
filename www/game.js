@@ -1551,6 +1551,7 @@ class YambApp {
 
         let lsData = this.readLocalJson('yamb_quarter_data_' + uid, { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 }) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
         if (window.kvartalnaLiga) {
+            window.kvartalnaLiga.init();
             lsData = window.kvartalnaLiga.getScores();
         }
 
@@ -1665,6 +1666,9 @@ class YambApp {
 
         const preferIncoming = !!options.preferIncoming;
         const localLeagueKey = 'yamb_quarter_data_' + uid;
+        if (window.kvartalnaLiga && typeof window.kvartalnaLiga.init === 'function') {
+            window.kvartalnaLiga.init();
+        }
         let currentLocalLeague = this.readLocalJson(localLeagueKey, { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 });
         let leagueUpdated = false;
 
@@ -1682,11 +1686,16 @@ class YambApp {
                     quarterlyScore: incomingScore
                 };
                 leagueUpdated = true;
-            } else if ((leagueData.quarterlyScore || 0) > (currentLocalLeague.quarterlyScore || 0)) {
-                currentLocalLeague.quarterlyScore = leagueData.quarterlyScore;
-                if ((leagueData.baselineScore || 0) > (currentLocalLeague.baselineScore || 0)) {
-                    currentLocalLeague.baselineScore = leagueData.baselineScore;
-                }
+            } else if ((leagueData.quarterlyScore || 0) > (currentLocalLeague.quarterlyScore || 0) ||
+                (leagueData.baselineScore || 0) > (currentLocalLeague.baselineScore || 0)) {
+                currentLocalLeague.quarterlyScore = Math.max(
+                    Number(currentLocalLeague.quarterlyScore) || 0,
+                    Number(leagueData.quarterlyScore) || 0
+                );
+                currentLocalLeague.baselineScore = Math.max(
+                    Number(currentLocalLeague.baselineScore) || 0,
+                    Number(leagueData.baselineScore) || 0
+                );
                 leagueUpdated = true;
             }
         }

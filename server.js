@@ -470,6 +470,11 @@ if (MONGO_URI) {
         initTournamentFromDb();
         initChatFromDb();
         queueMatchResultReconciliation(1000);
+        backfillRecentLeaderboardScoresFromMatchResults(1000, 93)
+            .then(count => {
+                if (count > 0) console.log(`🏆 TOP LISTA BACKFILL: Dopisano ${count} propuštenih online skorova.`);
+            })
+            .catch(err => console.error('Greška pri backfill-u online skorova za top listu:', err));
     })
     .catch(err => {
         console.error('❌ MongoDB connection error:', err.message);
@@ -2902,6 +2907,97 @@ async function findVerifiedMatchParticipant(uid, submittedMatchId, expectedScore
     return { ok: true, result, participant, score, matchId: result.matchId };
 }
 
+async function persistLeaderboardScoreRecord(options = {}) {
+    if (!MONGO_URI) return { ok: false, reason: 'db_unavailable' };
+
+    const finalUid = String(options.uid || '').trim();
+    const matchId = String(options.matchId || '').trim().substring(0, 128);
+    const score = Math.max(0, Math.min(MAX_SCORE, toSafeInt(options.score, 0)));
+
+    if (!finalUid || finalUid.startsWith('guest_') || finalUid.length < 20) {
+        return { ok: false, reason: 'invalid_player' };
+    }
+    if (!matchId) return { ok: false, reason: 'match_result_required' };
+    if (score <= 0 || score > MAX_SCORE) return { ok: false, reason: 'score_out_of_range' };
+
+    let playerName = String(options.playerName || 'Nepoznat Igrač').trim().substring(0, MAX_NAME_LENGTH);
+    if (!playerName) playerName = 'Nepoznat Igrač';
+    const mode = String(options.mode || 'Online').trim().substring(0, 24) || 'Online';
+    const photoUrl = String(options.photoUrl || '').substring(0, 500);
+    const rawDate = options.date instanceof Date ? options.date : new Date(options.date || Date.now());
+    const recordDate = Number.isFinite(rawDate.getTime()) ? rawDate : new Date();
+
+    const existingScore = await Score.findOne({ playerId: finalUid, matchId });
+    if (existingScore) {
+        return { ok: true, duplicate: true, score: existingScore };
+    }
+
+    const leaderboardRecordSnapshots = options.notifyRecords === false
+        ? null
+        : await captureLeaderboardRecordSnapshots();
+
+    const savedScore = await Score.findOneAndUpdate(
+        { playerId: finalUid, matchId },
+        {
+            $setOnInsert: {
+                playerId: finalUid,
+                uid: finalUid,
+                matchId,
+                playerName,
+                score,
+                mode,
+                photoUrl,
+                date: recordDate
+            }
+        },
+        { upsert: true, new: true }
+    );
+
+    if (!options.silent) {
+        console.log(`✅ USPESAN UPIS: ${playerName} (UID: ${finalUid}) -> ${score} (${mode})`);
+    }
+
+    if (leaderboardRecordSnapshots) {
+        queueRecordPush(
+            notifyBrokenLeaderboardRecords(leaderboardRecordSnapshots, {
+                uid: finalUid,
+                playerName,
+                score
+            }),
+            'leaderboard_record'
+        );
+    }
+
+    return { ok: true, duplicate: false, score: savedScore };
+}
+
+async function persistLeaderboardScoresForMatchResult(result, options = {}) {
+    const source = result && result.toObject ? result.toObject() : result;
+    if (!source || source.verification !== 'server' || source.resultType !== 'regular' || source.economyEligible !== true) {
+        return 0;
+    }
+
+    const matchId = String(source.matchId || '').trim();
+    if (!matchId || !Array.isArray(source.participants)) return 0;
+
+    let insertedCount = 0;
+    for (const participant of source.participants) {
+        const leaderboardResult = await persistLeaderboardScoreRecord({
+            uid: participant?.uid,
+            playerName: participant?.name,
+            score: participant?.score,
+            mode: source.mode || 'online',
+            matchId,
+            date: source.finishedAt || source.createdAt || Date.now(),
+            notifyRecords: options.notifyRecords === true,
+            silent: options.silent === true
+        });
+        if (leaderboardResult.ok && !leaderboardResult.duplicate) insertedCount++;
+    }
+
+    return insertedCount;
+}
+
 function emitCompletedOnlineGame(roomId) {
     const state = roomState[roomId];
     if (!state || !Array.isArray(state.players) || state.players.length < 2) return false;
@@ -3254,6 +3350,25 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
         .map(player => player.uid)
         .filter(uid => appliedUids.has(uid));
 
+    for (const player of participants) {
+        try {
+            const leaderboardResult = await persistLeaderboardScoreRecord({
+                uid: player.uid,
+                playerName: player.name,
+                score: player.score,
+                mode: getOnlineDuelType(roomId),
+                photoUrl: player.photoUrl || '',
+                matchId,
+                date: ledgerWrite.result?.finishedAt || Date.now()
+            });
+            if (!leaderboardResult.ok) {
+                console.warn(`⚠️ TOP LISTA: Online duel skor nije upisan za ${player.uid}: ${leaderboardResult.reason || 'unknown'}`);
+            }
+        } catch (err) {
+            console.error(`Greska pri upisu online duela u top listu za ${player.uid}:`, err);
+        }
+    }
+
     for (let i = 0; i < participants.length; i++) {
         const player = participants[i];
         const opponent = participants[i === 0 ? 1 : 0];
@@ -3275,7 +3390,7 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
 
             applyCompletedDuelProfileStats(user, resultType, player.score);
             applyCompletedDuelH2H(user, opponent, resultType, player.score, opponent.score);
-            await applyTechnicalLeagueDelta(user, player.score);
+            await applyTechnicalLeagueDelta(user, player.score, { periodDate: ledgerWrite.result?.finishedAt || Date.now() });
             rememberUserAppliedMatchResult(user, matchId);
             await user.save();
             await markMatchResultStatsApplied(matchId, player.uid);
@@ -3299,6 +3414,26 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
     if (!state.completedDuelStatsApplied) queueMatchResultReconciliation(1000);
     console.log(`SERVER DUEL RESULT: Upisan regularan online rezultat za sobu ${roomId}: ${participants[0].score}-${participants[1].score}.`);
     return [...state.completedDuelStatsAppliedUids];
+}
+
+function hasCompletedOnlineDuelScores(state) {
+    return Array.isArray(state?.players) &&
+        state.players.length >= 2 &&
+        Array.isArray(state.allScores) &&
+        state.allScores.length >= 2 &&
+        state.allScores.slice(0, 2).every(sheet => calculateCompletedDuelTotal(sheet) !== null);
+}
+
+async function settleCompletedOnlineRoom(roomId, finisherSocketId = null) {
+    const state = roomId ? roomState[roomId] : null;
+    if (!state || state.gameFinished || !hasCompletedOnlineDuelScores(state)) return false;
+
+    await applyServerSideCompletedDuel(roomId, finisherSocketId);
+    emitCompletedOnlineGame(roomId);
+    await applyTournamentCompletedDuelResult(roomId);
+    await recordTournamentDrawReplay(roomId);
+    markOnlineRoomGameFinished(roomId);
+    return true;
 }
 
 // ==================================================================
@@ -5827,6 +5962,15 @@ function getServerQuarterInfo(now = new Date()) {
     };
 }
 
+function getLeagueQuarterInfoForTimestamp(value) {
+    if (!value) return getServerQuarterInfo();
+
+    const date = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(date.getTime())) return getServerQuarterInfo();
+
+    return getServerQuarterInfo(date);
+}
+
 function normalizeLeagueMigrationData(rawLeagueData) {
     return normalizeLeagueData(rawLeagueData, { allowZero: false });
 }
@@ -5932,6 +6076,25 @@ function normalizeUserLeagueDataForCurrentPeriod(user) {
     return coerceLeagueDataToCurrentPeriod(user?.leagueData);
 }
 
+function ensureUserLeagueDataCurrentPeriod(user) {
+    if (!user) return null;
+
+    const currentLeague = normalizeUserLeagueDataForCurrentPeriod(user);
+    const existingLeague = normalizeLeagueData(user.leagueData);
+    const changed = !existingLeague ||
+        existingLeague.year !== currentLeague.year ||
+        existingLeague.quarter !== currentLeague.quarter ||
+        existingLeague.baselineScore !== currentLeague.baselineScore ||
+        existingLeague.quarterlyScore !== currentLeague.quarterlyScore;
+
+    if (changed) {
+        user.leagueData = currentLeague;
+        if (typeof user.markModified === 'function') user.markModified('leagueData');
+    }
+
+    return currentLeague;
+}
+
 function mergeLeagueDataIntoUser(user, incomingRaw) {
     if (!user) return null;
     const mergedLeague = mergeLeagueDataValues(user.leagueData, incomingRaw);
@@ -5952,7 +6115,7 @@ function leagueScoreIdentity(score) {
 }
 
 async function fetchTopLeagueScoresForPeriod(year, quarter, limit = 50, scoreFilter = null) {
-    const scoreMatch = { $type: 'number' };
+    const scoreMatch = { $type: 'number', $gt: 0 };
     if (scoreFilter) Object.assign(scoreMatch, scoreFilter);
     const match = {
         year,
@@ -6000,15 +6163,75 @@ async function fetchLeagueHighscoresForRankBands(year, quarter) {
         .sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
 }
 
-async function applyTechnicalLeagueDelta(user, delta) {
+async function applyTechnicalLeagueDelta(user, delta, options = {}) {
     if (!user || !user.firebaseUid || !Number.isFinite(Number(delta)) || Number(delta) === 0) {
         return normalizeUserLeagueDataForCurrentPeriod(user);
     }
 
-    const leagueData = normalizeUserLeagueDataForCurrentPeriod(user);
+    const currentPeriod = getServerQuarterInfo();
+    const targetPeriod = Number.isInteger(Number(options.year)) && Number.isInteger(Number(options.quarter))
+        ? { year: Number(options.year), quarter: Number(options.quarter) }
+        : getLeagueQuarterInfoForTimestamp(options.periodDate || options.finishedAt);
+
+    if (!Number.isInteger(targetPeriod.year) || !Number.isInteger(targetPeriod.quarter) || targetPeriod.quarter < 1 || targetPeriod.quarter > 4) {
+        return normalizeUserLeagueDataForCurrentPeriod(user);
+    }
+
+    if (compareLeaguePeriod(targetPeriod, currentPeriod) > 0) {
+        targetPeriod.year = currentPeriod.year;
+        targetPeriod.quarter = currentPeriod.quarter;
+    }
+
+    const deltaValue = Math.floor(Number(delta));
+    const isCurrentPeriod = targetPeriod.year === currentPeriod.year && targetPeriod.quarter === currentPeriod.quarter;
+
+    if (!isCurrentPeriod) {
+        const currentLeague = ensureUserLeagueDataCurrentPeriod(user);
+        const existingScore = MONGO_URI
+            ? await LeagueScore.findOne({
+                playerId: user.firebaseUid,
+                year: targetPeriod.year,
+                quarter: targetPeriod.quarter
+            }).sort({ score: -1 })
+            : null;
+        const previousScore = Math.max(0, toSafeInt(existingScore?.score, 0));
+        const nextScore = Math.max(0, Math.min(MAX_LEAGUE_SCORE, previousScore + deltaValue));
+        const appliedDelta = nextScore - previousScore;
+
+        if (MONGO_URI) {
+            if (nextScore > 0) {
+                await LeagueScore.findOneAndUpdate(
+                    { playerId: user.firebaseUid, year: targetPeriod.year, quarter: targetPeriod.quarter },
+                    {
+                        $set: {
+                            playerName: sanitizeTournamentName(user.playerName || 'Igrac'),
+                            photoUrl: String(user.photoUrl || '').substring(0, 500),
+                            score: nextScore,
+                            date: Date.now()
+                        }
+                    },
+                    { upsert: true, new: true }
+                );
+            } else {
+                await LeagueScore.deleteMany({ playerId: user.firebaseUid, year: targetPeriod.year, quarter: targetPeriod.quarter });
+            }
+        }
+
+        if (appliedDelta !== 0 && compareLeaguePeriod(targetPeriod, currentPeriod) < 0) {
+            user.leagueData = {
+                ...currentLeague,
+                baselineScore: Math.max(0, Math.min(MAX_LEAGUE_SCORE, toSafeInt(currentLeague.baselineScore, 0) + appliedDelta))
+            };
+            user.markModified('leagueData');
+        }
+
+        return normalizeUserLeagueDataForCurrentPeriod(user);
+    }
+
+    const leagueData = ensureUserLeagueDataCurrentPeriod(user);
     const nextScore = Math.max(
         0,
-        Math.min(MAX_LEAGUE_SCORE, Math.floor((Number(leagueData.quarterlyScore) || 0) + Number(delta)))
+        Math.min(MAX_LEAGUE_SCORE, Math.floor((Number(leagueData.quarterlyScore) || 0) + deltaValue))
     );
 
     const nextLeagueData = {
@@ -6019,7 +6242,7 @@ async function applyTechnicalLeagueDelta(user, delta) {
     user.leagueData = nextLeagueData;
     user.markModified('leagueData');
 
-    if (MONGO_URI) {
+    if (MONGO_URI && nextScore > 0) {
         await LeagueScore.findOneAndUpdate(
             { playerId: user.firebaseUid, year: nextLeagueData.year, quarter: nextLeagueData.quarter },
             {
@@ -6032,6 +6255,8 @@ async function applyTechnicalLeagueDelta(user, delta) {
             },
             { upsert: true, new: true }
         );
+    } else if (MONGO_URI) {
+        await LeagueScore.deleteMany({ playerId: user.firebaseUid, year: nextLeagueData.year, quarter: nextLeagueData.quarter });
     }
 
     return nextLeagueData;
@@ -6041,7 +6266,13 @@ let matchResultReconcileTimer = null;
 let matchResultReconcileRunning = false;
 
 async function reconcileStoredServerMatchResult(result) {
-    if (!result || result.verification !== 'server' || result.statsComplete) return 0;
+    if (!result || result.verification !== 'server') return 0;
+
+    const leaderboardAppliedCount = await persistLeaderboardScoresForMatchResult(result, {
+        notifyRecords: false,
+        silent: true
+    });
+    if (result.statsComplete) return leaderboardAppliedCount;
 
     const participants = Array.isArray(result.participants)
         ? result.participants.map(participant => participant.toObject ? participant.toObject() : participant)
@@ -6074,7 +6305,7 @@ async function reconcileStoredServerMatchResult(result) {
                 user.currentWinStreak = Math.max(0, toSafeInt(user.currentWinStreak, 0)) + 1;
                 user.maxWinStreak = Math.max(toSafeInt(user.maxWinStreak, 0), user.currentWinStreak);
                 if (opponent) applyTechnicalDuelH2H(user, opponent, 'win');
-                await applyTechnicalLeagueDelta(user, reward);
+                await applyTechnicalLeagueDelta(user, reward, { periodDate: result.finishedAt });
             } else if (participant.result === 'loss') {
                 const coinPenalty = Math.max(0, toSafeInt(result.loserCoinPenalty, 0));
                 user.penaltyPoints = Math.max(0, toSafeInt(user.penaltyPoints, 0)) + Math.max(0, toSafeInt(result.penaltyPoints, 0));
@@ -6083,7 +6314,7 @@ async function reconcileStoredServerMatchResult(result) {
                 user.currentWinStreak = 0;
                 if (opponent) applyTechnicalDuelH2H(user, opponent, 'loss');
                 user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
-                await applyTechnicalLeagueDelta(user, -coinPenalty);
+                await applyTechnicalLeagueDelta(user, -coinPenalty, { periodDate: result.finishedAt });
             }
         } else {
             const score = Math.max(0, Math.min(MAX_SCORE, toSafeInt(participant.score, 0)));
@@ -6097,7 +6328,7 @@ async function reconcileStoredServerMatchResult(result) {
                     Math.max(0, Math.min(MAX_SCORE, toSafeInt(opponent.score, 0)))
                 );
             }
-            await applyTechnicalLeagueDelta(user, score);
+            await applyTechnicalLeagueDelta(user, score, { periodDate: result.finishedAt });
         }
 
         rememberUserAppliedMatchResult(user, result.matchId);
@@ -6123,7 +6354,29 @@ async function reconcileStoredServerMatchResult(result) {
             $inc: { reconcileAttempts: 1 }
         }
     );
-    return appliedCount;
+    return appliedCount + leaderboardAppliedCount;
+}
+
+async function backfillRecentLeaderboardScoresFromMatchResults(limit = 1000, lookbackDays = 93) {
+    if (!MONGO_URI || mongoose.connection.readyState !== 1) return 0;
+
+    const since = new Date(Date.now() - (Math.max(1, toSafeInt(lookbackDays, 93)) * 24 * 60 * 60 * 1000));
+    const results = await MatchResult.find({
+        verification: 'server',
+        resultType: 'regular',
+        economyEligible: true,
+        finishedAt: { $gte: since }
+    }).sort({ finishedAt: -1 }).limit(Math.max(1, Math.min(2000, toSafeInt(limit, 1000))));
+
+    let insertedCount = 0;
+    for (const result of results) {
+        insertedCount += await persistLeaderboardScoresForMatchResult(result, {
+            notifyRecords: false,
+            silent: true
+        });
+    }
+
+    return insertedCount;
 }
 
 async function reconcileIncompleteServerMatchResults(limit = 100) {
@@ -8138,6 +8391,7 @@ io.on('connection', (socket) => {
                     }
                 }
 
+                ensureUserLeagueDataCurrentPeriod(user);
                 await maybeApplyLegacyLeagueMigration(user, s, data.name, socket.photoUrl || '');
                 await user.save();
                 await syncCurrentLeagueScoreFromUserProfile(user, data.name, socket.photoUrl || '');
@@ -9295,7 +9549,7 @@ io.on('connection', (socket) => {
                 user.highscore = Math.max(Math.max(0, toSafeInt(user.highscore, 0)), score);
             }
 
-            await applyTechnicalLeagueDelta(user, normalized.selfParticipant.score);
+            await applyTechnicalLeagueDelta(user, normalized.selfParticipant.score, { periodDate: normalized.payload.finishedAt });
             rememberUserAppliedMatchResult(user, matchId);
             await user.save();
             await markMatchResultStatsApplied(matchId, verifiedUid);
@@ -9356,35 +9610,17 @@ io.on('connection', (socket) => {
             if (!finalName) finalName = "Nepoznat Igrač";
             let finalPhoto = (socket.photoUrl || data?.photoUrl || '').toString().substring(0, 500);
             const finalMode = String(verifiedMatch.result.mode || data?.mode || 'Solo').trim().substring(0, 24) || 'Solo';
-            const existingScore = await Score.findOne({ playerId: finalUid, matchId: verifiedMatch.matchId });
+            const persistedScore = await persistLeaderboardScoreRecord({
+                uid: finalUid,
+                playerName: finalName,
+                score: submittedScore,
+                mode: finalMode,
+                photoUrl: finalPhoto,
+                matchId: verifiedMatch.matchId
+            });
 
-            if (!existingScore) {
-                const leaderboardRecordSnapshots = await captureLeaderboardRecordSnapshots();
-                await Score.findOneAndUpdate(
-                    { playerId: finalUid, matchId: verifiedMatch.matchId },
-                    {
-                        $setOnInsert: {
-                            playerId: finalUid,
-                            uid: finalUid,
-                            matchId: verifiedMatch.matchId,
-                            playerName: finalName,
-                            score: submittedScore,
-                            mode: finalMode,
-                            photoUrl: finalPhoto,
-                            date: Date.now()
-                        }
-                    },
-                    { upsert: true, new: true }
-                );
-                console.log(`✅ USPESAN UPIS: ${finalName} (UID: ${finalUid}) -> ${submittedScore} (${finalMode})`);
-                queueRecordPush(
-                    notifyBrokenLeaderboardRecords(leaderboardRecordSnapshots, {
-                        uid: finalUid,
-                        playerName: finalName,
-                        score: submittedScore
-                    }),
-                    'leaderboard_record'
-                );
+            if (!persistedScore.ok) {
+                return replyScoreSubmit(false, persistedScore.reason || 'server_error', false);
             }
 
             const profileForRecord = await UserProfile.findOne({ firebaseUid: finalUid });
@@ -9409,7 +9645,7 @@ io.on('connection', (socket) => {
             clearScoreSession(socket.id);
             return replyScoreSubmit(true, null, false, {
                 matchId: verifiedMatch.matchId,
-                duplicate: !!existingScore,
+                duplicate: !!persistedScore.duplicate,
                 rewardClaimed: rewardClaimedInLedger || (profileForRecord ? hasUserClaimedGameReward(profileForRecord, verifiedMatch.matchId) : false)
             });
 
@@ -9592,7 +9828,7 @@ io.on('connection', (socket) => {
                         playerId: { $type: 'string' },
                         year: { $type: 'number' },
                         quarter: { $type: 'number' },
-                        score: { $type: 'number' }
+                        score: { $type: 'number', $gt: 0 }
                     }
                 },
                 { $sort: { score: -1, date: -1 } },
@@ -9682,6 +9918,39 @@ io.on('connection', (socket) => {
 
             const acceptedScore = Math.max(trustedScore, submittedScore);
             const photoUrl = (socket.photoUrl || data?.photoUrl || '').toString().substring(0, 500);
+            if (submittedScore === 0 && profileScore === 0) {
+                if (currentScore > 0) {
+                    await LeagueScore.deleteMany({ playerId: uniqueId, year: submittedYear, quarter: submittedQuarter });
+                    console.log(`🧹 LEAGUE RESET: Uklonjen preneti skor ${currentScore} za ${uniqueId} u ${submittedYear}/Q${submittedQuarter}.`);
+                }
+
+                let syncedLeagueData = {
+                    year: submittedYear,
+                    quarter: submittedQuarter,
+                    baselineScore: profileLeague?.baselineScore || 0,
+                    quarterlyScore: 0
+                };
+
+                if (profileUser) {
+                    syncedLeagueData = mergeLeagueDataIntoUser(profileUser, syncedLeagueData);
+                    profileUser.playerName = finalName;
+                    profileUser.photoUrl = photoUrl;
+                    await profileUser.save();
+                    emitProfileSync(socket, profileUser, {
+                        leagueSubmit: {
+                            score: 0,
+                            resetEmptyQuarter: currentScore > 0
+                        }
+                    });
+                }
+
+                return replyLeagueSubmit(true, null, false, {
+                    score: 0,
+                    leagueData: syncedLeagueData,
+                    resetEmptyQuarter: currentScore > 0
+                });
+            }
+
             const savedLeagueScore = await LeagueScore.findOneAndUpdate(
                 { playerId: uniqueId, year: submittedYear, quarter: submittedQuarter },
                 {
@@ -10755,7 +11024,15 @@ io.on('connection', (socket) => {
             if (eventName === 'remote_move' && roomState[roomId]) {
                 roomState[roomId].moveCount = (roomState[roomId].moveCount || 0) + 1;
                 roomState[roomId].turnIndex = roomState[roomId].turnIndex === 0 ? 1 : 0;
-                startTurnTimer(roomId);
+                const updatedState = roomState[roomId];
+                if (hasCompletedOnlineDuelScores(updatedState)) {
+                    stopTurnTimer(roomId);
+                    settleCompletedOnlineRoom(roomId, socket.id).catch(err => {
+                        console.error(`Greška pri automatskom zatvaranju završene online sobe ${roomId}:`, err);
+                    });
+                } else {
+                    startTurnTimer(roomId);
+                }
                 if (syncSenderAfterRelay) emitAuthoritativeRoomState(socket, roomId, playerIndex);
             }
         }
@@ -11388,23 +11665,13 @@ io.on('connection', (socket) => {
             const state = roomState[roomId];
             if (!state || state.gameFinished) return;
 
-            const completedScores = Array.isArray(state.players) &&
-                state.players.length >= 2 &&
-                Array.isArray(state.allScores) &&
-                state.allScores.length >= 2 &&
-                state.allScores.slice(0, 2).every(sheet => calculateCompletedDuelTotal(sheet) !== null);
-
-            if (!completedScores) {
+            if (!hasCompletedOnlineDuelScores(state)) {
                 console.warn(`🚨 BLOKIRAN PRERANI GAME OVER: socket=${socket.id}, room=${roomId}`);
                 emitAuthoritativeRoomState(socket, roomId, Array.isArray(state.players) ? state.players.indexOf(socket.id) : -1);
                 return;
             }
 
-            await applyServerSideCompletedDuel(roomId, socket.id);
-            emitCompletedOnlineGame(roomId);
-            await applyTournamentCompletedDuelResult(roomId);
-            await recordTournamentDrawReplay(roomId);
-            markOnlineRoomGameFinished(roomId);
+            await settleCompletedOnlineRoom(roomId, socket.id);
         }
     });
 

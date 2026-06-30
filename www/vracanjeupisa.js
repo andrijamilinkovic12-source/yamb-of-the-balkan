@@ -133,11 +133,7 @@ class UndoManager {
         const isCoinRewardReady = typeof adMob.isRewardVideoReadyFor === 'function'
             ? adMob.isRewardVideoReadyFor(rewardOptions)
             : adMob.ads?.rewarded?.isReady;
-        if (!isCoinRewardReady) {
-            if (typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
-            this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
-            return;
-        }
+        if (!isCoinRewardReady && typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
 
         const success = await adMob.showRewardVideo(rewardOptions);
         if (!success) return;
@@ -295,11 +291,7 @@ class UndoManager {
         const isTokenRewardReady = typeof adMob.isRewardVideoReadyFor === 'function'
             ? adMob.isRewardVideoReadyFor(rewardOptions)
             : adMob.ads?.rewarded?.isReady;
-        if (!isTokenRewardReady) {
-            if (typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
-            this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
-            return;
-        }
+        if (!isTokenRewardReady && typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
 
         const success = await adMob.showRewardVideo(rewardOptions);
         if (success) {

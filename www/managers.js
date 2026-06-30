@@ -3496,15 +3496,7 @@ class ShopManager {
                 ? adCtrl.isRewardVideoReadyFor(rewardOptions)
                 : adCtrl.ads.rewarded.isReady;
 
-            if (!isRewardReady) {
-                if (typeof window.showNotification === 'function') {
-                    window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
-                } else if (window.modalManager && window.modalManager.overlay) {
-                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
-                }
-                adCtrl.prepareReward(rewardOptions);
-                return;
-            }
+            if (!isRewardReady) adCtrl.prepareReward(rewardOptions);
 
             const success = await adCtrl.showRewardVideo(rewardOptions);
             if (success) {
@@ -3546,15 +3538,7 @@ class ShopManager {
                 ? adCtrl.isRewardVideoReadyFor(rewardOptions)
                 : adCtrl.ads.rewarded.isReady;
 
-            if (!isRewardReady) {
-                if (typeof window.showNotification === 'function') {
-                    window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
-                } else if (window.modalManager && window.modalManager.overlay) {
-                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
-                }
-                adCtrl.prepareReward(rewardOptions);
-                return;
-            }
+            if (!isRewardReady) adCtrl.prepareReward(rewardOptions);
 
             const success = await adCtrl.showRewardVideo(rewardOptions);
             if (success) {
@@ -3799,15 +3783,7 @@ class ShopManager {
              const isRewardReady = typeof adCtrl.isRewardVideoReadyFor === 'function'
                  ? adCtrl.isRewardVideoReadyFor(rewardOptions)
                  : adCtrl.ads.rewarded.isReady;
-             if (!isRewardReady) {
-                 if (typeof window.showNotification === 'function') {
-                     window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.");
-                 } else if (window.modalManager && window.modalManager.overlay) {
-                     window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna na mreži. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
-                 }
-                 adCtrl.prepareReward(rewardOptions);
-                 return;
-             }
+              if (!isRewardReady) adCtrl.prepareReward(rewardOptions);
 
               const success = await adCtrl.showRewardVideo(rewardOptions);
               if (success) {
@@ -4277,6 +4253,20 @@ class AdMobController {
     loadInterstitialAd() { this.preloadAd('interstitial'); }
     prepareReward(rewardOptions = {}) { this.triggerHighPriorityLoad('rewarded', rewardOptions); }
 
+    async waitForRewardVideoReadyFor(rewardOptions = {}, timeoutMs = 12000) {
+        const waitMs = Math.max(1000, Math.min(20000, parseInt(timeoutMs, 10) || 12000));
+        const deadline = Date.now() + waitMs;
+
+        this.triggerHighPriorityLoad('rewarded', rewardOptions);
+
+        while (Date.now() < deadline) {
+            if (this.isRewardVideoReadyFor(rewardOptions)) return true;
+            await new Promise(resolve => setTimeout(resolve, 250));
+        }
+
+        return this.isRewardVideoReadyFor(rewardOptions);
+    }
+
     setBannerSlotState(state, text = '') {
         const slotEl = this.bannerSlot || document.getElementById('economy-banner-slot');
         const overlay = document.getElementById('undo-menu-overlay');
@@ -4444,12 +4434,14 @@ class AdMobController {
     showRewardVideo(rewardOptions = {}) {
         return new Promise(async (resolve) => {
             if (!this.adMobPlugin) { resolve(false); return; }
-            if (this.ads.rewarded.isReady && this.isRewardSsvReadyForCurrentUser(rewardOptions)) {
+            const readyForReward = await this.waitForRewardVideoReadyFor(rewardOptions);
+            if (readyForReward) {
                 try {
                     this.rewardResolve = resolve;
                     this.activeRewardSsvInfo = this.rewardSsvInfo;
                     this.activeRewardEarned = false;
-                    await this.adMobPlugin.showRewardVideoAd();
+                    const rewardItem = await this.adMobPlugin.showRewardVideoAd();
+                    if (rewardItem && this.rewardResolve) this.settleRewardVideo(true);
                 } catch (e) {
                     this.settleRewardVideo(false); this.handleAdFailed('rewarded', e);
                 }

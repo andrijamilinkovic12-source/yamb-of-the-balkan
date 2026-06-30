@@ -368,6 +368,11 @@ function getFullLocalStats() {
     const languageSetting = localStorage.getItem('yamb_lang');
     const lastDaily = normalizeYambDailyDayValue(localStorage.getItem('yamb_last_daily_' + uid) || "");
     const dailyRewardClaimed = normalizeYambDailyDayValue(localStorage.getItem('yamb_daily_reward_claimed_' + uid) || "");
+    let leagueData = JSON.parse(localStorage.getItem('yamb_quarter_data_' + uid)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 };
+    if (window.kvartalnaLiga) {
+        window.kvartalnaLiga.init();
+        leagueData = window.kvartalnaLiga.getScores();
+    }
 
     return {
         games: (window.app && window.app.stats) ? (window.app.stats.games || 0) : 0,
@@ -386,7 +391,7 @@ function getFullLocalStats() {
         unlockedEffects: window.statsManager ? window.statsManager.stats.unlockedEffects : JSON.parse(localStorage.getItem('yamb_unlocked_effects') || '[]'),
         yamb_unlocked: JSON.parse(localStorage.getItem('yamb_unlocked') || '[]'),
         unlockedThemes: JSON.parse(localStorage.getItem('yamb_unlocked_themes') || '[]'),
-        leagueData: JSON.parse(localStorage.getItem('yamb_quarter_data_' + uid)) || { year: 0, quarter: 0, baselineScore: 0, quarterlyScore: 0 },
+        leagueData,
         legacyMigration: localStorage.getItem('yamb_legacy_migration_pending_' + uid) === 'true',
         activeSkin: localStorage.getItem('yamb_active_skin') || null,
         activeEffect: localStorage.getItem('yamb_active_effect') || null,
