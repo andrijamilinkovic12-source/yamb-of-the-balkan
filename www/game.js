@@ -7041,6 +7041,7 @@ class YambApp {
                 score: Math.max(0, parseInt(score) || 0),
                 doubled: !!doubled,
                 ssvNonce,
+                clientRewarded: !!doubled,
                 stats: this.getFullLocalStats()
             }, finish);
         });

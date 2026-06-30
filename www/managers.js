@@ -3684,7 +3684,7 @@ class ShopManager {
                 resolve({ ok: false, reason: 'err_server_conn' });
             }, 45000);
 
-            app.socket.emit('claim_shop_ad_reward', { ssvNonce }, (result) => {
+            app.socket.emit('claim_shop_ad_reward', { ssvNonce, clientRewarded: true }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -3714,7 +3714,7 @@ class ShopManager {
                 resolve({ ok: false, reason: 'err_server_conn' });
             }, 45000);
 
-            app.socket.emit('claim_shop_discount', { itemId, ssvNonce }, (result) => {
+            app.socket.emit('claim_shop_discount', { itemId, ssvNonce, clientRewarded: true }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -3744,7 +3744,7 @@ class ShopManager {
                 resolve({ ok: false, reason: 'err_server_conn' });
             }, 45000);
 
-            app.socket.emit('claim_shop_ad_unlock', { itemId, ssvNonce }, (result) => {
+            app.socket.emit('claim_shop_ad_unlock', { itemId, ssvNonce, clientRewarded: true }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);

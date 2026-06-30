@@ -184,7 +184,7 @@ class UndoManager {
                 resolve({ ok: false, reason: 'err_server_conn' });
             }, claimTimeoutMs);
 
-            this.app.socket.emit('claim_shop_ad_reward', { ssvNonce }, (result) => {
+            this.app.socket.emit('claim_shop_ad_reward', { ssvNonce, clientRewarded: true }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -218,7 +218,7 @@ class UndoManager {
                 resolve({ ok: false, reason: 'err_server_conn' });
             }, claimTimeoutMs);
 
-            this.app.socket.emit('claim_undo_token_reward', { type, ssvNonce }, (result) => {
+            this.app.socket.emit('claim_undo_token_reward', { type, ssvNonce, clientRewarded: true }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);

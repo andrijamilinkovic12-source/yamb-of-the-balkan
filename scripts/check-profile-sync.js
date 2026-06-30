@@ -10,6 +10,7 @@ const undoSource = fs.readFileSync(path.join(root, 'www', 'vracanjeupisa.js'), '
 const indexSource = fs.readFileSync(path.join(root, 'www', 'index.html'), 'utf8');
 const rulesSource = fs.readFileSync(path.join(root, 'www', 'pravilaigre.js'), 'utf8');
 const managersSource = fs.readFileSync(path.join(root, 'www', 'managers.js'), 'utf8');
+const dailySource = fs.readFileSync(path.join(root, 'www', 'dnevniizazov.js'), 'utf8');
 const envExampleSource = fs.readFileSync(path.join(root, '.env.example'), 'utf8');
 
 function extractFunction(source, name) {
@@ -228,15 +229,41 @@ function checkAdMobSsvDefaultsFailClosed() {
     const context = { String };
     vm.createContext(context);
     vm.runInContext(extractFunction(serverSource, 'parseRequiredAdMobSsv'), context);
+    vm.runInContext(extractFunction(serverSource, 'parseOptionalBooleanEnv'), context);
     const parseRequiredAdMobSsv = vm.runInContext('parseRequiredAdMobSsv', context);
+    const parseOptionalBooleanEnv = vm.runInContext('parseOptionalBooleanEnv', context);
 
     assert.strictEqual(parseRequiredAdMobSsv(undefined), true, 'Missing REQUIRE_ADMOB_SSV must require SSV');
     assert.strictEqual(parseRequiredAdMobSsv(''), true, 'Blank REQUIRE_ADMOB_SSV must require SSV');
     assert.strictEqual(parseRequiredAdMobSsv('true'), true, 'REQUIRE_ADMOB_SSV=true must require SSV');
     assert.strictEqual(parseRequiredAdMobSsv('false'), false, 'REQUIRE_ADMOB_SSV=false must explicitly disable SSV');
     assert.strictEqual(parseRequiredAdMobSsv('0'), false, 'REQUIRE_ADMOB_SSV=0 must explicitly disable SSV');
+    assert.strictEqual(parseOptionalBooleanEnv(undefined, false), false, 'Client rewarded fallback must default off without explicit env');
+    assert.strictEqual(parseOptionalBooleanEnv('true', false), true, 'Client rewarded fallback env true is not accepted');
+    assert.strictEqual(parseOptionalBooleanEnv('false', true), false, 'Client rewarded fallback env false is not accepted');
     assert(envExampleSource.includes('REQUIRE_ADMOB_SSV=true'), '.env.example disables AdMob SSV verification');
+    assert(envExampleSource.includes('ALLOW_ADMOB_CLIENT_REWARD_FALLBACK=true'), '.env.example omits client rewarded fallback switch');
     assert(envExampleSource.includes('LOCAL_GAME_SESSION_SECRET='), '.env.example omits the signed local session secret');
+}
+
+function checkRewardedAdClientFallback() {
+    assert(
+        serverSource.includes('const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, false);'),
+        'Server is missing explicit client rewarded fallback env guard'
+    );
+    assert(serverSource.includes('ADMOB_CLIENT_FALLBACK_GRACE_MS'), 'Server is missing a bounded fallback grace window');
+    assert(serverSource.includes('const clientFallbackAllowed = ALLOW_ADMOB_CLIENT_REWARD_FALLBACK && options.clientRewarded === true;'), 'SSV fallback is not gated by the SDK rewarded signal');
+    assert(serverSource.includes('clientFallback: true'), 'SSV fallback does not return a distinguishable fallback result');
+    assert(
+        serverSource.includes('clientRewarded: data?.clientRewarded === true'),
+        'Reward handlers do not pass the client rewarded signal into SSV verification'
+    );
+
+    assert(managersSource.includes("{ ssvNonce, clientRewarded: true }"), 'Shop coin rewarded claim does not send clientRewarded');
+    assert(managersSource.includes("{ itemId, ssvNonce, clientRewarded: true }"), 'Shop discount/ad-unlock claims do not send clientRewarded');
+    assert(undoSource.includes("{ type, ssvNonce, clientRewarded: true }"), 'Undo token rewarded claim does not send clientRewarded');
+    assert(dailySource.includes("{ amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled }"), 'Daily double rewarded claim does not send clientRewarded');
+    assert(gameSource.includes('clientRewarded: !!doubled'), 'Game-over double rewarded claim does not send clientRewarded');
 }
 
 function checkUnverifiedInterstitialRewardsBlocked() {
@@ -724,6 +751,7 @@ async function checkServerDuelIdempotency() {
 async function main() {
     checkBalanceSyncAllowance();
     checkAdMobSsvDefaultsFailClosed();
+    checkRewardedAdClientFallback();
     checkUnverifiedInterstitialRewardsBlocked();
     checkUndoRewardedTokenAmount();
     checkShopDiscountRequiresServerVerification();

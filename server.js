@@ -816,14 +816,26 @@ const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
 const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '20000', 10)));
 const ADMOB_SSV_POLL_MS = 750;
 const ADMOB_SSV_MAX_AGE_MS = Math.max(60000, Math.min(15 * 60 * 1000, parseInt(process.env.ADMOB_SSV_MAX_AGE_MS || '600000', 10)));
+const ADMOB_CLIENT_FALLBACK_GRACE_MS = Math.max(1000, Math.min(30000, parseInt(process.env.ADMOB_CLIENT_FALLBACK_GRACE_MS || '4000', 10)));
 function parseRequiredAdMobSsv(value) {
     const normalized = String(value ?? '').trim().toLowerCase();
     if (!normalized) return true;
     return !['0', 'false', 'off', 'no', 'disabled'].includes(normalized);
 }
+function parseOptionalBooleanEnv(value, defaultValue = false) {
+    const normalized = String(value ?? '').trim().toLowerCase();
+    if (!normalized) return !!defaultValue;
+    if (['1', 'true', 'on', 'yes', 'enabled'].includes(normalized)) return true;
+    if (['0', 'false', 'off', 'no', 'disabled'].includes(normalized)) return false;
+    return !!defaultValue;
+}
 const REQUIRE_ADMOB_SSV = parseRequiredAdMobSsv(process.env.REQUIRE_ADMOB_SSV);
 if (!REQUIRE_ADMOB_SSV) {
     console.warn('⚠️ REQUIRE_ADMOB_SSV je isključen. Rewarded ad ekonomija koristi bypass bez server-side verifikacije.');
+}
+const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, false);
+if (REQUIRE_ADMOB_SSV && ALLOW_ADMOB_CLIENT_REWARD_FALLBACK) {
+    console.warn('⚠️ ALLOW_ADMOB_CLIENT_REWARD_FALLBACK je uključen. Koristim SDK rewarded fallback ako SSV callback zakasni ili nije konfigurisan.');
 }
 const ADMOB_REWARDED_AD_UNIT_ID = process.env.ADMOB_REWARDED_AD_UNIT_ID || 'ca-app-pub-4319963185096437/7896891915';
 const ADMOB_REWARDED_AD_UNIT_NUMERIC_ID = ADMOB_REWARDED_AD_UNIT_ID.includes('/')
@@ -6583,7 +6595,11 @@ async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
     const allowedContexts = Array.isArray(contexts) && contexts.length > 0
         ? [...new Set(contexts.map(sanitizeAdMobContext).filter(Boolean))]
         : [];
-    const deadline = Date.now() + (options.timeoutMs || ADMOB_SSV_WAIT_TIMEOUT_MS);
+    const clientFallbackAllowed = ALLOW_ADMOB_CLIENT_REWARD_FALLBACK && options.clientRewarded === true;
+    const waitMs = clientFallbackAllowed
+        ? Math.min(options.timeoutMs || ADMOB_SSV_WAIT_TIMEOUT_MS, ADMOB_CLIENT_FALLBACK_GRACE_MS)
+        : (options.timeoutMs || ADMOB_SSV_WAIT_TIMEOUT_MS);
+    const deadline = Date.now() + waitMs;
     const minAdTimestamp = Math.max(
         0,
         Date.now() - ADMOB_SSV_MAX_AGE_MS,
@@ -6608,6 +6624,20 @@ async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
 
         if (reward) return { ok: true, reward };
         await sleep(ADMOB_SSV_POLL_MS);
+    }
+
+    if (clientFallbackAllowed) {
+        const fallbackContext = allowedContexts[0] || 'rewarded_ad';
+        console.warn(`⚠️ AdMob SSV nije stigao na vreme; prihvatam client rewarded fallback za ${cleanUid} (${fallbackContext}).`);
+        return {
+            ok: true,
+            clientFallback: true,
+            reward: {
+                uid: cleanUid,
+                nonce: cleanNonce,
+                context: fallbackContext
+            }
+        };
     }
 
     return { ok: false, reason: 'ad_verification_pending', permanent: false, retryAfterMs: 2000 };
@@ -8248,7 +8278,7 @@ io.on('connection', (socket) => {
                     uid,
                     data?.ssvNonce,
                     ['daily_double', 'generic_reward'],
-                    { claimedBy: 'daily_double' }
+                    { claimedBy: 'daily_double', clientRewarded: data?.clientRewarded === true }
                 );
                 if (!adVerification.ok) {
                     return replyDailyReward(adVerification);
@@ -8709,7 +8739,7 @@ io.on('connection', (socket) => {
                 uid,
                 data?.ssvNonce,
                 ['shop_ad_reward', 'generic_reward'],
-                { claimedBy: 'shop_ad_reward', minAdTimestamp: lastRewardAt }
+                { claimedBy: 'shop_ad_reward', minAdTimestamp: lastRewardAt, clientRewarded: data?.clientRewarded === true }
             );
             if (!adVerification.ok) {
                 reply(adVerification);
@@ -8776,7 +8806,7 @@ io.on('connection', (socket) => {
                 uid,
                 data?.ssvNonce,
                 [discountContext],
-                { claimedBy: discountContext }
+                { claimedBy: discountContext, clientRewarded: data?.clientRewarded === true }
             );
             if (!adVerification.ok) {
                 reply(adVerification);
@@ -8840,7 +8870,7 @@ io.on('connection', (socket) => {
                 uid,
                 data?.ssvNonce,
                 [adContext],
-                { claimedBy: adContext }
+                { claimedBy: adContext, clientRewarded: data?.clientRewarded === true }
             );
             if (!adVerification.ok) {
                 reply(adVerification);
@@ -8938,7 +8968,7 @@ io.on('connection', (socket) => {
                 uid,
                 data?.ssvNonce,
                 ['undo_tokens', 'generic_reward'],
-                { claimedBy: 'undo_tokens', minAdTimestamp: lastRewardAt }
+                { claimedBy: 'undo_tokens', minAdTimestamp: lastRewardAt, clientRewarded: data?.clientRewarded === true }
             );
             if (!adVerification.ok) {
                 reply(adVerification);
@@ -9470,7 +9500,7 @@ io.on('connection', (socket) => {
                     finalUid,
                     data?.ssvNonce,
                     ['game_double', 'generic_reward'],
-                    { claimedBy: 'game_double', minAdTimestamp: rewardSession.createdAt - 5000 }
+                    { claimedBy: 'game_double', minAdTimestamp: rewardSession.createdAt - 5000, clientRewarded: data?.clientRewarded === true }
                 );
                 if (!adVerification.ok) {
                     releaseRewardClaimLock();

@@ -987,7 +987,7 @@ class DnevniIzazov {
                 resolve({ ok: false, reason: 'err_server_conn' });
             }, claimTimeoutMs);
 
-            socket.emit('claim_daily_reward', { amount, doubled: !!doubled, ssvNonce }, (result) => {
+            socket.emit('claim_daily_reward', { amount, doubled: !!doubled, ssvNonce, clientRewarded: !!doubled }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
