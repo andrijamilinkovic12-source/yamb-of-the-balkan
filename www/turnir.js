@@ -734,6 +734,271 @@ class TournamentManager {
         return `${this.toRomanNumeral(number)} ${this.tr('tourney_edition_suffix', 'TURNIR')}`;
     }
 
+    getChampionSharePayload(index) {
+        const player = Array.isArray(this.tourneyLeaderboard) ? this.tourneyLeaderboard[index] : null;
+        if (!player) return null;
+
+        const championship = this.getLatestChampionship(player) || {};
+        const name = String(championship.winnerName || player.playerName || tt('player_guest') || 'Igrač').trim();
+        const wins = Number.isFinite(Number(player.wins)) ? Math.max(0, Math.floor(Number(player.wins))) : 0;
+        const edition = this.getChampionshipEditionLabel(championship, index + 1);
+        const finalScore = String(championship.scoreLabel || '-').trim();
+        const runnerUpName = String(championship.runnerUpName || tt('tourney_finalist_title') || 'Finalista').trim();
+        const wonAt = championship.wonAt ? this.formatDate(championship.wonAt) : '';
+        const path = this.getChampionPathMatches(championship).map(step => {
+            const opponent = this.getHistoryOpponent(step.match, championship.winnerId);
+            return {
+                round: this.getHistoryRoundLabel(step.round),
+                opponent: opponent?.name || tt('player_guest') || 'Igrač',
+                score: this.getMatchResultLabel(step.match) || '-',
+                drawCount: Number(step.match?.drawCount || 0)
+            };
+        });
+
+        return {
+            name,
+            wins,
+            edition,
+            finalScore,
+            runnerUpName,
+            wonAt,
+            path
+        };
+    }
+
+    async shareChampionCard(index) {
+        const data = this.getChampionSharePayload(index);
+        if (!data) return;
+
+        const shareBtn = document.querySelector(`.tourney-champion-share-btn[data-champion-index="${index}"]`);
+        const originalHtml = shareBtn ? shareBtn.innerHTML : '';
+        if (shareBtn) {
+            shareBtn.disabled = true;
+            shareBtn.innerHTML = `<span>${this.escape(tt('tourney_share_generating') || 'Priprema...')}</span>`;
+        }
+
+        try {
+            const blob = await this.createChampionShareImage(data);
+            const slug = this.slugifyShareName(data.name || 'champion');
+            const filename = `yamb-turnir-${slug}.png`;
+            const title = tt('tourney_share_title') || 'Yamb osvajač turnira';
+            const text = (tt('tourney_share_text') || 'Moja Yamb kartica osvajača turnira: {0}.').replace('{0}', data.name || 'šampion');
+            const isNativeApp = !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+            const nativeShare = window.Capacitor?.Plugins?.H2HShare || window.Capacitor?.Plugins?.ShareImage;
+
+            if (nativeShare && typeof nativeShare.shareImage === 'function') {
+                const dataUrl = await this.blobToDataUrl(blob);
+                await nativeShare.shareImage({
+                    dataUrl,
+                    filename,
+                    title,
+                    text,
+                    dialogTitle: title
+                });
+                return;
+            }
+
+            if (isNativeApp) {
+                await this.app.modal.alert(
+                    tt('tourney_share_update_required') || 'Za deljenje slike potrebno je ažurirati aplikaciju na najnoviju verziju.',
+                    title
+                );
+                return;
+            }
+
+            if (navigator.share && typeof File !== 'undefined') {
+                const file = new File([blob], filename, { type: 'image/png' });
+                const payload = { title, text, files: [file] };
+                const canShareFile = !navigator.canShare || navigator.canShare(payload);
+
+                if (canShareFile) {
+                    try {
+                        await navigator.share(payload);
+                        return;
+                    } catch (err) {
+                        if (err && err.name === 'AbortError') return;
+                        console.log('Deljenje turnirske kartice nije uspelo:', err);
+                    }
+                }
+            }
+
+            this.downloadBlob(blob, filename);
+            await this.app.modal.alert(
+                tt('tourney_share_fallback') || 'Deljenje slike nije dostupno na ovom uređaju. PNG kartica je pripremljena za preuzimanje.',
+                title
+            );
+        } catch (err) {
+            console.warn('Nije moguće pripremiti turnirsku share karticu:', err);
+            await this.app.modal.alert(
+                tt('tourney_share_error') || 'Nije moguće pripremiti sliku za deljenje.',
+                tt('err_title') || 'GREŠKA'
+            );
+        } finally {
+            if (shareBtn) {
+                shareBtn.disabled = false;
+                shareBtn.innerHTML = originalHtml;
+            }
+        }
+    }
+
+    async createChampionShareImage(data) {
+        const canvas = document.createElement('canvas');
+        const width = 1080;
+        const height = 1350;
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Canvas nije dostupan');
+
+        const colors = {
+            bgTop: '#16231D',
+            bgMid: '#15100A',
+            bgBottom: '#070A0E',
+            card: 'rgba(18, 22, 28, 0.95)',
+            line: 'rgba(224, 201, 149, 0.42)',
+            text: '#F8EFD6',
+            muted: '#B9AE92',
+            gold: '#E0C995',
+            green: '#4ADE80',
+            dark: '#090D11'
+        };
+        const clean = (value) => String(value ?? '').replace(/<[^>]*>/g, '').trim();
+        const roundedRect = (x, y, w, h, r) => {
+            const radius = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + w - radius, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+            ctx.lineTo(x + w, y + h - radius);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+            ctx.lineTo(x + radius, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        };
+        const fillRound = (x, y, w, h, r, fill, stroke = null, lineWidth = 1) => {
+            roundedRect(x, y, w, h, r);
+            ctx.fillStyle = fill;
+            ctx.fill();
+            if (stroke) {
+                ctx.strokeStyle = stroke;
+                ctx.lineWidth = lineWidth;
+                ctx.stroke();
+            }
+        };
+        const fitText = (text, x, y, maxWidth, size, minSize, color, weight = 900, align = 'center') => {
+            const cleanText = clean(text) || ' ';
+            let fontSize = size;
+            ctx.textAlign = align;
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillStyle = color;
+            do {
+                ctx.font = `${weight} ${fontSize}px Montserrat, Arial, sans-serif`;
+                if (ctx.measureText(cleanText).width <= maxWidth || fontSize <= minSize) break;
+                fontSize -= 2;
+            } while (fontSize > minSize);
+            let output = cleanText;
+            if (ctx.measureText(output).width > maxWidth) {
+                while (output.length > 3 && ctx.measureText(`${output}...`).width > maxWidth) {
+                    output = output.slice(0, -1);
+                }
+                output = `${output}...`;
+            }
+            ctx.fillText(output, x, y);
+        };
+        const initialsFor = (name) => {
+            const parts = clean(name).split(/\s+/).filter(Boolean);
+            if (parts.length >= 2) return `${parts[0][0] || ''}${parts[1][0] || ''}`.toUpperCase();
+            return (parts[0] || '?').slice(0, 2).toUpperCase();
+        };
+
+        const bg = ctx.createLinearGradient(0, 0, width, height);
+        bg.addColorStop(0, colors.bgTop);
+        bg.addColorStop(0.52, colors.bgMid);
+        bg.addColorStop(1, colors.bgBottom);
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.globalAlpha = 0.16;
+        ctx.beginPath();
+        ctx.arc(170, 150, 260, 0, Math.PI * 2);
+        ctx.fillStyle = colors.gold;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(910, 1090, 330, 0, Math.PI * 2);
+        ctx.fillStyle = colors.green;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        fillRound(58, 58, width - 116, height - 116, 48, colors.card, colors.line, 3);
+        fitText('YAMB OF THE BALKAN', width / 2, 145, 780, 34, 24, colors.gold, 900);
+        fitText(clean(tt('tourney_hall_of_fame') || 'OSVAJAČI TURNIRA'), width / 2, 207, 820, 54, 34, colors.text, 900);
+
+        fillRound(405, 255, 270, 270, 135, 'rgba(224,201,149,0.12)', colors.line, 5);
+        fitText(initialsFor(data.name), width / 2, 415, 230, 82, 52, colors.gold, 900);
+        fitText(data.edition, width / 2, 590, 520, 38, 24, colors.gold, 900);
+        fitText(data.name, width / 2, 665, 780, 58, 34, colors.text, 900);
+
+        fillRound(230, 725, 620, 108, 28, 'rgba(224,201,149,0.12)', 'rgba(224,201,149,0.24)', 2);
+        fitText(clean(tt('tourney_champion_titles') || 'Osvojeni turniri'), 380, 770, 280, 28, 20, colors.muted, 800);
+        fitText(`${data.wins || 0}`, 702, 790, 220, 72, 46, colors.gold, 900);
+
+        const finalLabel = clean(this.getHistoryRoundLabel('f'));
+        fitText(`${finalLabel}: ${data.finalScore || '-'}`, width / 2, 910, 760, 42, 28, colors.text, 900);
+        fitText(`${clean(tt('tourney_finalist_title') || 'Finalista')}: ${data.runnerUpName || '-'}`, width / 2, 968, 760, 30, 22, colors.muted, 800);
+
+        const rows = Array.isArray(data.path) && data.path.length ? data.path.slice(0, 3) : [];
+        const startY = 1040;
+        rows.forEach((step, index) => {
+            const y = startY + (index * 78);
+            fillRound(135, y, width - 270, 58, 18, index % 2 === 0 ? 'rgba(255,255,255,0.055)' : 'rgba(255,255,255,0.03)', 'rgba(255,255,255,0.075)', 1);
+            fitText(step.round, 165, y + 38, 230, 24, 18, colors.gold, 900, 'left');
+            fitText(step.opponent, width / 2, y + 38, 360, 24, 18, colors.text, 800);
+            fitText(step.score, width - 165, y + 38, 160, 26, 18, colors.gold, 900, 'right');
+        });
+
+        if (data.wonAt) {
+            fitText(data.wonAt, width / 2, 1300, 760, 26, 18, colors.muted, 800);
+        }
+
+        return new Promise((resolve, reject) => {
+            canvas.toBlob((blob) => {
+                if (blob) resolve(blob);
+                else reject(new Error('PNG nije generisan'));
+            }, 'image/png', 0.95);
+        });
+    }
+
+    slugifyShareName(value) {
+        return String(value || 'champion')
+            .toLowerCase()
+            .replace(/[^a-z0-9čćžšđ]+/gi, '-')
+            .replace(/^-+|-+$/g, '') || 'champion';
+    }
+
+    blobToDataUrl(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error || new Error('Nije moguće pročitati sliku.'));
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }
+
     getLeaderboardHTML() {
         let leaderboardHtml = `
             <div class="tourney-champions-view">
@@ -755,17 +1020,27 @@ class TournamentManager {
                 const hasJourney = savedChampionships.length > 0;
                 const cardClass = `tourney-champion-card${idx === 0 ? ' is-top' : ''}${hasJourney ? ' is-openable' : ''}`;
                 const clickAttr = hasJourney ? `onclick="app.tournamentManager.openChampionJourney(${idx})"` : '';
-                const keyAttr = hasJourney ? `onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();app.tournamentManager.openChampionJourney(${idx});}"` : '';
                 const ariaLabel = this.escapeAttr(`${safePlayerName} - ${this.getTournamentEditionLabel(player, idx)}`);
+                const journeyButton = hasJourney
+                    ? `<button type="button" class="tourney-champion-action-btn" onclick="event.stopPropagation(); app.tournamentManager.openChampionJourney(${idx})">${this.escape(tt('tourney_champion_journey_btn') || 'Put do titule')}</button>`
+                    : `<span class="tourney-champion-action-placeholder">${this.escape(tt('tourney_champion_no_path') || 'Put ovog turnira nije sačuvan.')}</span>`;
+                const shareLabel = this.escape(tt('tourney_share_card') || 'Podeli karticu');
 
                 leaderboardHtml += `
-                    <div class="${cardClass}" ${clickAttr} ${keyAttr} role="${hasJourney ? 'button' : 'listitem'}" tabindex="${hasJourney ? '0' : '-1'}" aria-label="${ariaLabel}">
+                    <div class="${cardClass}" ${clickAttr} role="group" aria-label="${ariaLabel}">
                         <div class="tourney-champion-edition">${this.getTournamentEditionLabel(player, idx)}</div>
                         <img class="tourney-champion-avatar" src="${photo}" alt="" aria-hidden="true" decoding="async">
                         <div class="tourney-champion-name">${safePlayerName}</div>
                         <div class="tourney-champion-count" aria-label="${this.escapeAttr(tt('tourney_champion_titles') || 'Osvojeni turniri')} ${safeWins}">
                             <img class="tourney-wins-trophy-icon" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                             <strong>${safeWins}</strong>
+                        </div>
+                        <div class="tourney-champion-actions">
+                            ${journeyButton}
+                            <button type="button" class="tourney-champion-action-btn tourney-champion-share-btn" data-champion-index="${idx}" aria-label="${this.escapeAttr(tt('tourney_share_aria') || 'Podeli karticu osvajača')}" onclick="event.stopPropagation(); app.tournamentManager.shareChampionCard(${idx})">
+                                <span aria-hidden="true">↗</span>
+                                <span>${shareLabel}</span>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -776,24 +1051,32 @@ class TournamentManager {
                 </div>
             </div>
             <style>
-                .tourney-champions-view { width: 100%; max-width: 360px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; padding: 0 10px 20px; }
-                .tourney-champions-title { color: var(--gold-main); text-align: center; margin: 0 0 14px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 9px; text-transform: uppercase; font-size: 1.12rem; letter-spacing: 0; width: 100%; }
+                .tourney-champions-view { width: 100%; max-width: 380px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; padding: 2px 10px max(28px, calc(env(safe-area-inset-bottom) + 18px)); color: var(--text-main); }
+                .tourney-champions-title { color: var(--gold-main); text-align: center; margin: 0 0 14px; border-bottom: var(--glass-border); padding-bottom: 9px; text-transform: uppercase; font-size: 1.12rem; letter-spacing: 0; width: 100%; text-shadow: none; }
                 .tourney-champions-list { display: grid; grid-template-columns: 1fr; gap: 10px; width: 100%; }
                 .tourney-champions-empty { text-align: center; color: var(--text-muted); font-size: 1rem; padding: 40px 0; }
-                .tourney-champion-card { width: 100%; min-height: 154px; background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 12px 14px; display: grid; grid-template-columns: 68px 1fr auto; grid-template-rows: auto 1fr auto; column-gap: 12px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.28); transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease; }
-                .tourney-champion-card.is-top { background: linear-gradient(120deg, rgba(255,215,0,0.16), rgba(0,0,0,0.45)); border-color: rgba(255,215,0,0.62); }
+                .tourney-champion-card { --tourney-card-surface: rgba(127,127,127,0.10); --tourney-card-strong: var(--text-main); --tourney-card-soft: var(--text-muted); width: 100%; min-height: 178px; background: var(--glass-bg); border: var(--glass-border); border-radius: 8px; padding: 12px 14px; display: grid; grid-template-columns: 68px minmax(0, 1fr) auto; grid-template-rows: auto minmax(52px, auto) auto auto; column-gap: 12px; row-gap: 10px; align-items: center; color: var(--tourney-card-strong); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 18px rgba(0,0,0,0.18); transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, background 0.16s ease; }
+                .tourney-champion-card.is-top { background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(127,127,127,0.08)), var(--glass-bg); border-color: var(--gold-main); box-shadow: inset 0 1px 0 rgba(255,255,255,0.10), 0 0 0 1px rgba(255,255,255,0.04), 0 10px 22px rgba(0,0,0,0.22); }
                 .tourney-champion-card.is-openable { cursor: pointer; }
                 .tourney-champion-card.is-openable:active { transform: scale(0.99); }
-                .tourney-champion-edition { grid-column: 1 / -1; justify-self: start; color: var(--gold-main); font-size: 0.76rem; line-height: 1; font-weight: 1000; letter-spacing: 0; text-transform: uppercase; border: 1px solid rgba(255,215,0,0.34); border-radius: 999px; padding: 5px 9px; background: rgba(255,215,0,0.08); }
-                .tourney-champion-avatar { grid-row: 2 / 4; width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,215,0,0.64); box-shadow: 0 0 12px rgba(0,0,0,0.5); }
-                .tourney-champion-name { min-width: 0; color: var(--text-main); font-size: 1.03rem; line-height: 1.12; font-weight: 900; word-break: break-word; }
+                .tourney-champion-edition { grid-column: 1 / -1; justify-self: start; color: var(--gold-main); font-size: 0.76rem; line-height: 1; font-weight: 1000; letter-spacing: 0; text-transform: uppercase; border: var(--glass-border); border-radius: 999px; padding: 6px 10px; background: var(--tourney-card-surface); text-shadow: none; }
+                .tourney-champion-avatar { grid-row: 2 / 4; width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); background: rgba(0,0,0,0.24); box-shadow: 0 5px 14px rgba(0,0,0,0.35), 0 0 0 4px rgba(127,127,127,0.08); }
+                .tourney-champion-name { min-width: 0; color: var(--tourney-card-strong); font-size: 1.03rem; line-height: 1.12; font-weight: 900; word-break: break-word; text-shadow: none; }
                 .tourney-champion-card.is-top .tourney-champion-name { color: var(--gold-main); }
-                .tourney-champion-count { justify-self: end; display: inline-flex; align-items: center; gap: 6px; min-width: 54px; justify-content: center; background: rgba(0,0,0,0.48); padding: 6px 9px; border-radius: 999px; border: 1px solid rgba(255,215,0,0.32); }
-                .tourney-champion-count strong { color: var(--gold-main); font-weight: 1000; font-size: 1.08rem; line-height: 1; }
+                .tourney-champion-count { justify-self: end; display: inline-flex; align-items: center; gap: 6px; min-width: 54px; justify-content: center; background: var(--tourney-card-surface); padding: 7px 10px; border-radius: 999px; border: var(--glass-border); color: var(--tourney-card-strong); }
+                .tourney-champion-count strong { color: var(--tourney-card-strong); font-weight: 1000; font-size: 1.08rem; line-height: 1; }
+                .tourney-champion-actions { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; }
+                .tourney-champion-action-btn { min-width: 0; min-height: 40px; border: var(--glass-border); border-radius: 8px; background: var(--tourney-card-surface); color: var(--tourney-card-strong); font-family: 'Montserrat', sans-serif; font-size: 0.72rem; line-height: 1.05; font-weight: 1000; text-transform: uppercase; letter-spacing: 0; padding: 8px 9px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); overflow: hidden; text-overflow: ellipsis; }
+                .tourney-champion-action-btn:hover, .tourney-champion-action-btn:focus-visible { outline: none; border-color: var(--gold-main); color: var(--gold-main); }
+                .tourney-champion-action-btn:active { transform: scale(0.985); }
+                .tourney-champion-action-btn:disabled { opacity: 0.68; cursor: wait; transform: none; }
+                .tourney-champion-share-btn { background: linear-gradient(135deg, rgba(127,127,127,0.12), rgba(127,127,127,0.06)); }
+                .tourney-champion-action-placeholder { min-height: 40px; border: var(--glass-border); border-radius: 8px; color: var(--tourney-card-soft); background: rgba(127,127,127,0.06); font-size: 0.68rem; line-height: 1.12; font-weight: 800; display: flex; align-items: center; justify-content: center; text-align: center; padding: 7px; }
                 @media (max-width: 340px) {
                     .tourney-champion-card { grid-template-columns: 58px 1fr auto; column-gap: 9px; padding: 11px; }
                     .tourney-champion-avatar { width: 52px; height: 52px; }
                     .tourney-champion-name { font-size: 0.96rem; }
+                    .tourney-champion-actions { grid-template-columns: 1fr; }
                 }
             </style>
         `;
