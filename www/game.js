@@ -146,6 +146,7 @@ class YambApp {
         this.waitingHofPeriod = 'weekly';
         this.waitingHofInterval = null;
         this.settingsSyncTimer = null;
+        this.matchResultSyncPromise = null;
         
         this.currentOpponentPhoto = '';
         this.currentOpponentUid = null;
@@ -543,6 +544,14 @@ class YambApp {
             key.startsWith('gost_') ||
             key === 'guest' ||
             key.startsWith('guest_');
+    }
+
+    formatH2HRecordLine(record = {}, fallbackStats = null) {
+        const count = (value) => Math.max(0, parseInt(value, 10) || 0);
+        const wins = record.wins !== undefined ? count(record.wins) : count(fallbackStats && fallbackStats.h2hWins);
+        const draws = record.draws !== undefined ? count(record.draws) : count(fallbackStats && fallbackStats.h2hDraws);
+        const losses = record.losses !== undefined ? count(record.losses) : count(fallbackStats && fallbackStats.h2hLosses);
+        return `${wins} / ${draws} / ${losses}`;
     }
 
     getCurrentPlayerUid() {
@@ -1698,29 +1707,10 @@ class YambApp {
     mergeCloudH2HStats(h2hStats) {
         if (!h2hStats || typeof h2hStats !== 'object') return;
 
-        const originalLocalH2H = this.readLocalJson('yamb_h2h_stats', {});
-        const localH2H = this.normalizeH2HStats(originalLocalH2H);
+        // Autentifikovani online dueli se upisuju na serveru. Cloud kopija zato
+        // mora da zameni lokalnu, inače stari ili duplirani brojači ponovo ožive.
         const cloudH2H = this.normalizeH2HStats(h2hStats);
-        let h2hUpdated = JSON.stringify(originalLocalH2H) !== JSON.stringify(localH2H);
-
-        for (const [oppKey, cloudData] of Object.entries(cloudH2H)) {
-            if (!cloudData || typeof cloudData !== 'object') continue;
-            const identity = this.getH2HIdentity(cloudData.name, cloudData.uid || oppKey, localH2H);
-            if (!identity) continue;
-
-            const localData = localH2H[identity.key] || localH2H[oppKey] || {};
-            const merged = this.mergeH2HRecord(localData, cloudData, identity, { combineCounts: true });
-
-            if (JSON.stringify(localData) !== JSON.stringify(merged)) {
-                localH2H[identity.key] = merged;
-                if (identity.key !== oppKey && localH2H[oppKey]) delete localH2H[oppKey];
-                h2hUpdated = true;
-            }
-        }
-
-        if (h2hUpdated) {
-            localStorage.setItem('yamb_h2h_stats', JSON.stringify(this.normalizeH2HStats(localH2H)));
-        }
+        localStorage.setItem('yamb_h2h_stats', JSON.stringify(cloudH2H));
     }
 
     getLocalH2HRecordSummary() {
@@ -1759,6 +1749,7 @@ class YambApp {
 
         const localStats = this.readLocalJson('yamb_stats', {}) || {};
         const nextStats = { ...localStats };
+        const statsAuthoritative = data.statsAuthoritative === true;
         const serverTechnicalResult = ['win', 'loss', 'draw'].includes(data.serverTechnicalResult)
             ? data.serverTechnicalResult
             : '';
@@ -1777,28 +1768,29 @@ class YambApp {
         const incomingGames = data.games !== undefined
             ? Math.max(0, toNumber(data.games, localGames))
             : null;
-        const cloudStatsAreStale = !trustServerTechnicalStats && incomingGames !== null && incomingGames < localGames;
+        const cloudStatsAreStale = !statsAuthoritative && !trustServerTechnicalStats && incomingGames !== null && incomingGames < localGames;
 
         monotonicNumericFields.forEach(field => {
             if (data[field] !== undefined) {
                 const localValue = Math.max(0, toNumber(nextStats[field], 0));
                 const cloudValue = Math.max(0, toNumber(data[field], localValue));
-                nextStats[field] = Math.max(localValue, cloudValue);
+                nextStats[field] = statsAuthoritative ? cloudValue : Math.max(localValue, cloudValue);
             }
         });
 
         if (data.games !== undefined) {
-            nextStats.games = Math.max(localGames, incomingGames || 0);
-            nextStats.totalGames = Math.max(
-                nextStats.games,
-                Math.max(0, toNumber(nextStats.totalGames, 0))
-            );
+            nextStats.games = statsAuthoritative ? (incomingGames || 0) : Math.max(localGames, incomingGames || 0);
+            nextStats.totalGames = statsAuthoritative
+                ? nextStats.games
+                : Math.max(nextStats.games, Math.max(0, toNumber(nextStats.totalGames, 0)));
         }
 
         if (data.currentWinStreak !== undefined) {
             const localStreak = Math.max(0, toNumber(nextStats.currentWinStreak, 0));
             const cloudStreak = Math.max(0, toNumber(data.currentWinStreak, localStreak));
-            nextStats.currentWinStreak = trustServerTechnicalStats ? cloudStreak : (cloudStatsAreStale ? localStreak : cloudStreak);
+            nextStats.currentWinStreak = (statsAuthoritative || trustServerTechnicalStats)
+                ? cloudStreak
+                : (cloudStatsAreStale ? localStreak : cloudStreak);
         }
 
         if (data.balance !== undefined) {
@@ -1933,7 +1925,9 @@ class YambApp {
             localStorage.removeItem(localClaimKey);
         }
 
-        this.mergeCloudH2HStats(data.h2hStats);
+        if (data.h2hAuthoritative === true) {
+            this.mergeCloudH2HStats(data.h2hStats);
+        }
         this.mergeCloudLeagueData(uid, data.leagueData, { preferIncoming: trustServerTechnicalStats });
 
         if (typeof updateMainMenuDashboard === 'function') {
@@ -2137,8 +2131,7 @@ class YambApp {
                     ? f.pi
                     : this.calculatePowerIndex(f.stats, false);
                 const h2hRecord = f.h2hRecord || {};
-                const w = h2hRecord.wins !== undefined ? h2hRecord.wins : (f.stats ? (f.stats.h2hWins || 0) : 0);
-                const l = h2hRecord.losses !== undefined ? h2hRecord.losses : (f.stats ? (f.stats.h2hLosses || 0) : 0);
+                const h2hLine = this.formatH2HRecordLine(h2hRecord, f.stats);
                 const isOnline = f.isOnline;
 
                 const statusColor = isOnline ? 'var(--success)' : 'var(--danger)';
@@ -2153,6 +2146,8 @@ class YambApp {
                 const safeUid = this.escapeHtml(this.escapeJsString(f.uid || ''));
                 const safeFriendNameJs = this.escapeHtml(this.escapeJsString(friendName));
                 const safePi = this.escapeHtml(pi);
+                const safeH2HLine = this.escapeHtml(h2hLine);
+                const safeWlLabel = this.escapeHtml(gt('ws_wl') || 'W/D/L');
 
                 html += `
                     <div class="friend-card">
@@ -2160,7 +2155,7 @@ class YambApp {
                         <img src="${safeAvatar}" class="friend-card-img" style="border: 2px solid ${statusColor};">
                         <span class="friend-card-name">${safeName}</span>
                         <span style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${safePi}</span>
-                        <span class="friend-card-wl">W/L: ${w} / ${l}</span>
+                        <span class="friend-card-wl">${safeWlLabel}: ${safeH2HLine}</span>
                         <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}">${this.escapeHtml(btnText)}</button>
                     </div>
                 `;
@@ -2561,6 +2556,7 @@ class YambApp {
                     if (!this.playerId) return;
 
                     await this.authenticateSocketIdentity();
+                    const pendingMatchSync = await this.syncPendingMatchResults();
                     
                     const now = new Date();
                     let currentQuarter = Math.floor(now.getMonth() / 3) + 1;
@@ -2617,6 +2613,12 @@ class YambApp {
                     }
                     
                     const authResult = await this.emitPlayerData();
+
+                    if (authResult && authResult.ok && pendingMatchSync && pendingMatchSync.remaining > 0) {
+                        await this.syncPendingMatchResults({
+                            profileMayIncludeResult: pendingMatchSync.profileNotFound === true
+                        });
+                    }
 
                     if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
                     if (authResult && authResult.ok && this.topListManager) this.topListManager.syncOfflineScores();
@@ -3122,6 +3124,132 @@ class YambApp {
         }
     }
 
+    getPendingMatchResultsKey() {
+        const uid = getPlayerId() || this.playerId;
+        return uid ? `yamb_pending_match_results_${uid}` : '';
+    }
+
+    createClientMatchResultId() {
+        if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+            return window.crypto.randomUUID().replace(/-/g, '_');
+        }
+        return `${Date.now()}_${Math.random().toString(36).slice(2)}_${Math.random().toString(36).slice(2)}`;
+    }
+
+    readPendingMatchResults() {
+        const key = this.getPendingMatchResultsKey();
+        if (!key) return [];
+        const pending = this.readLocalJson(key, []);
+        return Array.isArray(pending) ? pending : [];
+    }
+
+    writePendingMatchResults(results) {
+        const key = this.getPendingMatchResultsKey();
+        if (!key) return;
+        localStorage.setItem(key, JSON.stringify(Array.isArray(results) ? results : []));
+    }
+
+    submitPendingMatchResult(result, options = {}) {
+        return new Promise(resolve => {
+            if (!this.socket || !this.socket.connected) {
+                resolve({ ok: false, reason: 'socket_disconnected', permanent: false });
+                return;
+            }
+
+            let settled = false;
+            const finish = (response) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(response || { ok: false, reason: 'no_response', permanent: false });
+            };
+            const timer = setTimeout(() => {
+                finish({ ok: false, reason: 'match_result_timeout', permanent: false });
+            }, 8000);
+
+            this.socket.emit('submit_match_result', {
+                ...result,
+                profileMayIncludeResult: options.profileMayIncludeResult === true
+            }, finish);
+        });
+    }
+
+    async syncPendingMatchResults(options = {}) {
+        if (this.matchResultSyncPromise) return this.matchResultSyncPromise;
+
+        this.matchResultSyncPromise = (async () => {
+            if (!this.socket || !this.socket.connected || !(getPlayerId() || this.playerId)) {
+                return { ok: false, remaining: this.readPendingMatchResults().length };
+            }
+
+            const authResult = await this.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: authResult?.reason || 'auth_failed', remaining: this.readPendingMatchResults().length };
+            }
+
+            let pending = this.readPendingMatchResults();
+            let profileNotFound = false;
+
+            for (const item of [...pending]) {
+                if (!item || item.syncRejected) continue;
+                const response = await this.submitPendingMatchResult(item, options);
+
+                if (response && response.ok) {
+                    pending = pending.filter(candidate => candidate.clientResultId !== item.clientResultId);
+                    this.writePendingMatchResults(pending);
+                    continue;
+                }
+
+                if (response?.reason === 'profile_not_found') profileNotFound = true;
+                if (response && response.permanent) {
+                    pending = pending.map(candidate => candidate.clientResultId === item.clientResultId
+                        ? { ...candidate, syncRejected: response.reason || 'server_rejected' }
+                        : candidate);
+                    this.writePendingMatchResults(pending);
+                } else {
+                    break;
+                }
+            }
+
+            return {
+                ok: pending.length === 0,
+                remaining: pending.filter(item => item && !item.syncRejected).length,
+                profileNotFound
+            };
+        })();
+
+        try {
+            return await this.matchResultSyncPromise;
+        } finally {
+            this.matchResultSyncPromise = null;
+        }
+    }
+
+    async queueCompletedLocalMatchResult({ mode, participants, playerIndex }) {
+        const uid = getPlayerId() || this.playerId;
+        if (!uid || !Array.isArray(participants) || participants.length === 0) return null;
+
+        const entry = {
+            clientResultId: this.createClientMatchResultId(),
+            mode: String(mode || 'Solo').toLowerCase(),
+            participants: participants.map(participant => ({
+                name: String(participant?.name || getFallbackPlayerName()).substring(0, 24),
+                score: Math.max(0, Math.floor(Number(participant?.score) || 0))
+            })),
+            playerIndex: Math.max(0, Math.min(participants.length - 1, Number(playerIndex) || 0)),
+            profileGamesAfter: Math.max(0, Math.floor(Number(this.stats?.games) || 0)),
+            profileTotalScoreAfter: Math.max(0, Math.floor(Number(this.stats?.totalScoreSum) || 0)),
+            profileHighscoreAfter: Math.max(0, Math.floor(Number(this.stats?.highscore) || 0)),
+            finishedAt: Date.now()
+        };
+
+        const pending = this.readPendingMatchResults();
+        pending.push(entry);
+        this.writePendingMatchResults(pending);
+        await this.syncPendingMatchResults();
+        return entry.clientResultId;
+    }
+
     updateOnlineCounterUI() {
         const el = document.getElementById('live-online-count');
         if (el) {
@@ -3586,43 +3714,10 @@ class YambApp {
         }
     }
 
-    applyAbandonPenalty() {
-        if (!this.allScores || !this.allScores[this.myOnlineIndex]) return 0;
-
-        let filledBoxes = 0;
-        let totalBoxes = 0;
-
-        const mySheet = this.allScores[this.myOnlineIndex];
-        if (!mySheet || Object.keys(mySheet).length === 0) return 0;
-        
-        Object.keys(mySheet).forEach(col => {
-            Object.keys(mySheet).forEach(row => {
-                totalBoxes++;
-                if (mySheet[col][row] !== null) filledBoxes++;
-            });
-        });
-
-        let progress = totalBoxes > 0 ? (filledBoxes / totalBoxes) * 100 : 0;
-        let penalty = 0;
-
-        if (progress < 80) {
-            penalty = 20; 
-        } 
-        else if (progress >= 80 && progress < 100) {
-            penalty = 50; 
-        }
-
-        if (penalty > 0) {
-            console.log(`⚠️ OČEKIVANA KAZNA: Server će dodeliti ${penalty} kaznenih poena zbog napuštanja. Progres: ${Math.round(progress)}%`);
-        }
-
-        return penalty;
-    }
-
     updateStats(score, resultType, oppScore = 0, isTechnical = false, options = {}) {
         let freshStats = this.readLocalJson('yamb_stats', null);
         this.stats = freshStats || this.stats || { games: 0, wins: 0, losses: 0, highscore: 0, totalScoreSum: 0, penaltyPoints: 0, currentWinStreak: 0, maxWinStreak: 0 };
-        const serverAppliedTechnical = !!(isTechnical && options.serverApplied);
+        const serverAppliedResult = !!options.serverApplied;
         const safeStatNumber = (value) => {
             const num = Number(value);
             return Number.isFinite(num) ? Math.max(0, Math.floor(num)) : 0;
@@ -3638,18 +3733,18 @@ class YambApp {
         this.stats.currentWinStreak = safeStatNumber(this.stats.currentWinStreak);
         this.stats.maxWinStreak = safeStatNumber(this.stats.maxWinStreak);
 
-        if (!isTechnical) {
+        if (!serverAppliedResult && !isTechnical) {
             this.stats.games++;
             this.stats.totalGames = this.stats.games;
             this.stats.totalScoreSum += safeScore;
             if (safeScore > this.stats.highscore) this.stats.highscore = safeScore;
-        } else if (!serverAppliedTechnical) {
+        } else if (!serverAppliedResult && isTechnical) {
             this.stats.games++;
             this.stats.totalGames = this.stats.games;
             this.stats.totalScoreSum += safeScore;
         }
 
-        if (this.onlineMode && !this.isSpectator && !serverAppliedTechnical) {
+        if (this.onlineMode && !this.isSpectator && !serverAppliedResult) {
             if (resultType === 'win') {
                 this.stats.wins++; 
                 this.stats.currentWinStreak = (this.stats.currentWinStreak || 0) + 1;
@@ -3682,7 +3777,7 @@ class YambApp {
             window.statsManager.stats = this.stats;
         }
 
-        if (!serverAppliedTechnical && !options.deferServerSync && this.socket && this.socket.connected) {
+        if (!serverAppliedResult && !options.deferServerSync && this.socket && this.socket.connected) {
             this.emitPlayerData();
         }
     }
@@ -3799,7 +3894,7 @@ class YambApp {
         this.switchHsTab('global');
     }
 
-    async showMainMenu() { 
+    async showMainMenu(options = {}) {
         const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
         if (!rewardReady) return;
 
@@ -3852,7 +3947,7 @@ class YambApp {
         // ---> DODATO OVDJE: Zaustavljanje muzike kada se pređe u glavni meni <---
         if(this.soundMgr) this.soundMgr.stopMusic();
 
-        if (!wasSpectator && this.socket && this.socket.connected) {
+        if (!wasSpectator && !options.skipBackToMenu && this.socket && this.socket.connected) {
             this.socket.emit('back_to_menu');
         }
 
@@ -3909,32 +4004,22 @@ class YambApp {
 
         const confirmKey = this.isSpectator ? 'alert_spectate_quit_confirm' : 'alert_quit_confirm';
         if (await this.modal.confirm(gt(confirmKey))) { 
+            let backToMenuSent = false;
             if (this.gameActive && this.players.length > 1 && !this.isSpectator && this.onlineMode) {
-                this.applyAbandonPenalty();
-                
-                const myAvg = this.stats && this.stats.games > 0 ? Math.round(this.stats.totalScoreSum / this.stats.games) : 500;
-                
-                let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-                currentDukati = Math.max(0, currentDukati - myAvg); 
-                localStorage.setItem('yamb_dukati', currentDukati);
-                if (window.statsManager) {
-                    window.statsManager.stats.balance = currentDukati;
-                    window.statsManager.saveStats();
+                // Server jedini obračunava tehnički poraz, H2H, kaznene poene,
+                // ligu i dukate. Šaljemo odmah, pre eventualnog interstitial oglasa.
+                if (this.socket && this.socket.connected) {
+                    this.socket.emit('back_to_menu');
+                    backToMenuSent = true;
                 }
-
-                if (window.kvartalnaLiga) {
-                    window.kvartalnaLiga.addPoints(-myAvg);
-                }
-                
-                this.updateStats(0, 'loss', 0, true, { skipH2H: true });
             }
 
             if (!this.isSpectator && this.adMob && this.adMob.showInterstitial) {
                 await this.adMob.showInterstitial();
             }
 
-            this.showMainMenu(); 
-        } 
+            this.showMainMenu({ skipBackToMenu: backToMenuSent });
+        }
     }
     
     async startPrivateHosting() { 
@@ -3975,7 +4060,7 @@ class YambApp {
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
         const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = `${myH2HRecord.wins || 0} / ${myH2HRecord.losses || 0}`;
+        if (myWlEl) myWlEl.innerText = this.formatH2HRecordLine(myH2HRecord);
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');
@@ -4090,7 +4175,7 @@ class YambApp {
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
         const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = `${myH2HRecord.wins || 0} / ${myH2HRecord.losses || 0}`;
+        if (myWlEl) myWlEl.innerText = this.formatH2HRecordLine(myH2HRecord);
 
         const oppBox = document.getElementById('waiting-opp-box');
         if (oppBox) {
@@ -4160,7 +4245,7 @@ class YambApp {
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
         const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = `${myH2HRecord.wins || 0} / ${myH2HRecord.losses || 0}`;
+        if (myWlEl) myWlEl.innerText = this.formatH2HRecordLine(myH2HRecord);
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');
@@ -4800,18 +4885,17 @@ class YambApp {
                 }
                 
                 let oppPI = 0;
-                let oppW = 0, oppL = 0;
+                let oppH2HLine = this.formatH2HRecordLine();
                 if (data.oppStats) {
                     oppPI = this.calculatePowerIndex(data.oppStats, false);
                     const oppH2HRecord = data.oppStats.h2hRecord || {};
-                    oppW = oppH2HRecord.wins !== undefined ? oppH2HRecord.wins : (data.oppStats.h2hWins || 0);
-                    oppL = oppH2HRecord.losses !== undefined ? oppH2HRecord.losses : (data.oppStats.h2hLosses || 0);
+                    oppH2HLine = this.formatH2HRecordLine(oppH2HRecord, data.oppStats);
                 }
-                
-                document.getElementById('waiting-opp-power').innerText = oppPI;
-                document.getElementById('waiting-opp-wl').innerText = `${oppW} / ${oppL}`;
 
-                this.soundMgr.win(); 
+                document.getElementById('waiting-opp-power').innerText = oppPI;
+                document.getElementById('waiting-opp-wl').innerText = oppH2HLine;
+
+                this.soundMgr.win();
 
                 setTimeout(() => {
                     // ---> DODATO: Puštanje muzike na početku partije <---
@@ -6689,8 +6773,8 @@ class YambApp {
             await localforage.removeItem('yamb_saved_game_' + this.players.length); 
         }
         
-        let detectedMode = "Solo";
-        if (this.onlineMode) detectedMode = "Online"; else if (this.players.length > 1) detectedMode = "Hotseat";
+        let detectedMode = this.aiMode ? "AI" : "Solo";
+        if (this.onlineMode) detectedMode = "Online"; else if (!this.aiMode && this.players.length > 1) detectedMode = "Hotseat";
 
         let myScoreEntry = finalResults.find(r => r.name === this.playerName)
             || (this.onlineMode && finalResults[this.myOnlineIndex])
@@ -6794,11 +6878,29 @@ class YambApp {
                  }
              }
 
-             this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, { deferServerSync: true });
-             if (!this.onlineMode && this.socket && this.socket.connected) {
-                 this.emitPlayerData(false).catch(err => {
-                     console.warn("Nije moguće odmah sinhronizovati završenu lokalnu partiju:", err);
+             const myUid = this.getCurrentPlayerUid();
+             const serverStatsApplied = !!(
+                 this.onlineMode &&
+                 onlineResult &&
+                 Array.isArray(onlineResult.serverStatsAppliedUids) &&
+                 onlineResult.serverStatsAppliedUids.includes(myUid)
+             );
+             this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, {
+                 serverApplied: serverStatsApplied,
+                 skipH2H: serverStatsApplied,
+                 deferServerSync: this.onlineMode ? serverStatsApplied : true
+             });
+             if (!this.onlineMode) {
+                 await this.queueCompletedLocalMatchResult({
+                     mode: detectedMode,
+                     participants: finalResults,
+                     playerIndex: myIndex >= 0 ? myIndex : 0
                  });
+                 if (this.socket && this.socket.connected) {
+                     this.emitPlayerData(false).catch(err => {
+                         console.warn("Nije moguće odmah sinhronizovati završenu lokalnu partiju:", err);
+                     });
+                 }
              }
         }
 

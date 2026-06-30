@@ -118,21 +118,34 @@ function checkClientToggleHold() {
         return harness;
     }
 
-    let harness = makeHarness({ onlineMode: true, roomId: 'room_test', brojBacanja: 3 });
-    harness.toggleHold(2);
-    assert.strictEqual(harness.zadrzane[2], true, 'Online player cannot mark a die after the third roll');
-    assert.deepStrictEqual(harness.emitted, [{
-        event: 'dice_hold',
-        payload: { roomId: 'room_test', index: 2, status: true }
-    }], 'Online third-roll hold did not emit the visual hold update');
-    harness.toggleHold(2);
-    assert.strictEqual(harness.zadrzane[2], false, 'Online player cannot unmark a die after the third roll');
+    const activeGameModes = [
+        { label: 'Solo', onlineMode: false, modeTag: 'Solo' },
+        { label: 'Hotseat', onlineMode: false, modeTag: 'Hotseat' },
+        { label: 'Random online duel', onlineMode: true, modeTag: 'Online', onlineDuelType: 'random', roomId: 'room_test' },
+        { label: 'Direct challenge duel', onlineMode: true, modeTag: 'Online', onlineDuelType: 'challenge', roomId: 'duel_test' },
+        { label: 'Friend invite duel', onlineMode: true, modeTag: 'Online', onlineDuelType: 'friend_invite', roomId: 'yamb-test' },
+        { label: 'Tournament duel', onlineMode: true, modeTag: 'Online', onlineDuelType: 'tournament', roomId: 'tourney_test' }
+    ];
 
-    harness = makeHarness({ onlineMode: false, brojBacanja: 3 });
-    harness.toggleHold(4);
-    assert.strictEqual(harness.zadrzane[4], true, 'Local player cannot mark a die after the third roll');
+    activeGameModes.forEach(mode => {
+        const harness = makeHarness({ ...mode, brojBacanja: 3 });
+        harness.toggleHold(2);
+        assert.strictEqual(harness.zadrzane[2], true, `${mode.label} cannot mark a die after the third roll`);
 
-    harness = makeHarness({ brojBacanja: 0 });
+        harness.toggleHold(2);
+        assert.strictEqual(harness.zadrzane[2], false, `${mode.label} cannot unmark a die after the third roll`);
+
+        if (mode.onlineMode) {
+            assert.deepStrictEqual(harness.emitted, [
+                { event: 'dice_hold', payload: { roomId: mode.roomId, index: 2, status: true } },
+                { event: 'dice_hold', payload: { roomId: mode.roomId, index: 2, status: false } }
+            ], `${mode.label} did not emit both final-roll marking updates`);
+        } else {
+            assert.strictEqual(harness.saveCount, 2, `${mode.label} did not save both final-roll marking updates`);
+        }
+    });
+
+    let harness = makeHarness({ brojBacanja: 0 });
     harness.toggleHold(0);
     assert.strictEqual(harness.zadrzane[0], false, 'Hold changed before any roll');
 
@@ -177,7 +190,7 @@ function checkServerHoldAndRollGuards() {
 
     assert(
         /state\.brojBacanja\s*>=\s*3/.test(rollSection),
-        'Server roll guard must still block a fourth roll'
+        'Server roll guard must block any new roll after the third roll'
     );
     assert(
         /state\.najavaAktivna/.test(rollSection),
@@ -253,7 +266,7 @@ function checkClientThrowDiceGuards() {
     );
     assert(
         /this\.brojBacanja\s*>=\s*3\s*\|\|\s*isOnlineOpponent/.test(throwDiceSource),
-        'Client throwDice must block fourth rolls and opponent turns'
+        'Client throwDice must block new rolls after the third roll and opponent turns'
     );
     assert(
         /this\.najavaAktivna/.test(throwDiceSource),

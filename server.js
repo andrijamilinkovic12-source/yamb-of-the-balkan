@@ -352,8 +352,9 @@ if (MONGO_URI) {
     })
     .then(() => {
         console.log('✅ MongoDB connected & stable!');
-        initTournamentFromDb(); 
-        initChatFromDb();       
+        initTournamentFromDb();
+        initChatFromDb();
+        queueMatchResultReconciliation(1000);
     })
     .catch(err => {
         console.error('❌ MongoDB connection error:', err.message);
@@ -379,6 +380,43 @@ const ScoreSchema = new mongoose.Schema({
 ScoreSchema.index({ playerId: 1, score: -1 });
 ScoreSchema.index({ uid: 1, score: -1 });
 const Score = mongoose.model('Score', ScoreSchema);
+
+const MatchParticipantSchema = new mongoose.Schema({
+    uid: { type: String, default: '' },
+    name: { type: String, default: 'Nepoznat' },
+    score: { type: Number, default: null },
+    result: { type: String, enum: ['win', 'loss', 'draw', 'solo'], required: true },
+    playerIndex: { type: Number, default: -1 }
+}, { _id: false });
+
+const MatchResultSchema = new mongoose.Schema({
+    matchId: { type: String, required: true },
+    roomId: { type: String, default: '' },
+    clientResultId: { type: String, default: '' },
+    mode: { type: String, required: true },
+    resultType: { type: String, enum: ['regular', 'technical'], required: true },
+    reason: { type: String, default: '' },
+    verification: { type: String, enum: ['server', 'authenticated_client'], required: true },
+    participants: { type: [MatchParticipantSchema], default: [] },
+    winnerUid: { type: String, default: '' },
+    loserUid: { type: String, default: '' },
+    isDraw: { type: Boolean, default: false },
+    winnerReward: { type: Number, default: 0 },
+    loserCoinPenalty: { type: Number, default: 0 },
+    penaltyPoints: { type: Number, default: 0 },
+    statsAppliedUids: { type: [String], default: [] },
+    statsComplete: { type: Boolean, default: false },
+    lastReconcileAt: { type: Date, default: null },
+    reconcileAttempts: { type: Number, default: 0 },
+    startedAt: { type: Date, default: null },
+    finishedAt: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+}, { versionKey: false });
+MatchResultSchema.index({ matchId: 1 }, { unique: true });
+MatchResultSchema.index({ 'participants.uid': 1, finishedAt: -1 });
+MatchResultSchema.index({ mode: 1, resultType: 1, finishedAt: -1 });
+const MatchResult = mongoose.model('MatchResult', MatchResultSchema);
 
 const LeagueScoreSchema = new mongoose.Schema({
     playerId: String,
@@ -534,6 +572,7 @@ const UserProfileSchema = new mongoose.Schema({
     economyMigratedAt: { type: Date, default: null },
     statsMigrationApplied: { type: Boolean, default: false },
     statsMigratedAt: { type: Date, default: null },
+    recentMatchResultIds: { type: [String], default: [] },
     lastLogin: { type: Date, default: Date.now }
 });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
@@ -1798,7 +1837,9 @@ function beginReconnectGraceForSocket(socket, activeRoomId, source = 'disconnect
 
             technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
                 winnerOpponent: loserParticipant,
-                loserOpponent: winnerParticipant
+                loserOpponent: winnerParticipant,
+                roomId: activeRoomId,
+                reason: 'disconnect_grace_expired'
             });
             await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
         } else {
@@ -1816,6 +1857,7 @@ function beginReconnectGraceForSocket(socket, activeRoomId, source = 'disconnect
             : null;
 
         io.to(activeRoomId).emit('opponent_left', {
+            matchId: technicalResult.matchId || ensureRoomMatchId(activeRoomId, stateAfterGrace),
             winnerId: technicalWinnerSocketId || '',
             loserId: ghost.oldSocketId,
             duelType: getOnlineDuelType(activeRoomId),
@@ -1893,6 +1935,10 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
             const user = await UserProfile.findOne({ firebaseUid: playerId });
             if (!user) return null;
 
+            if (syncExtra.matchId && hasUserAppliedMatchResult(user, syncExtra.matchId)) {
+                return user;
+            }
+
             user.penaltyPoints = Math.max(0, toSafeInt(user.penaltyPoints, 0)) + penaltyAmount;
             user.games = Math.max(0, toSafeInt(user.games, 0)) + 1;
             user.losses = Math.max(0, toSafeInt(user.losses, 0)) + 1;
@@ -1904,6 +1950,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
                 await applyTechnicalLeagueDelta(user, -coinPenalty);
             }
 
+            if (syncExtra.matchId) rememberUserAppliedMatchResult(user, syncExtra.matchId);
             await user.save();
             rememberServerTechnicalResult(playerId, 'loss');
             emitProfileSyncToUid(playerId, user, syncExtra);
@@ -1919,12 +1966,15 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
             updateSet[`h2hStats.${h2hKey}.currentWinStreak`] = 0;
         }
 
+        const profileUpdate = {
+            $inc: updateInc,
+            $set: updateSet
+        };
+        if (syncExtra.matchId) profileUpdate.$addToSet = { recentMatchResultIds: syncExtra.matchId };
+
         const user = await UserProfile.findOneAndUpdate(
             { firebaseUid: playerId },
-            {
-                $inc: updateInc,
-                $set: updateSet
-            },
+            profileUpdate,
             { new: true }
         );
 
@@ -1944,38 +1994,122 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
 }
 
 async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount = 50, h2hKey = null, h2hContext = {}) {
-    const winnerReward = await getTechnicalCoinAmount(winnerId);
-    const loserCoinPenalty = await getTechnicalCoinAmount(loserId);
+    const calculatedWinnerReward = await getTechnicalCoinAmount(winnerId);
+    const calculatedLoserCoinPenalty = await getTechnicalCoinAmount(loserId);
 
     if (!process.env.MONGO_URI) {
-        return { winnerReward, loserCoinPenalty, serverApplied: false };
+        return {
+            winnerReward: calculatedWinnerReward,
+            loserCoinPenalty: calculatedLoserCoinPenalty,
+            serverApplied: false
+        };
     }
 
-    if (winnerId) {
-        const winner = await UserProfile.findOne({ firebaseUid: winnerId });
-        if (winner) {
-            winner.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(winner.balance, 0)) + winnerReward);
-            winner.games = Math.max(0, toSafeInt(winner.games, 0)) + 1;
-            winner.totalScoreSum = Math.max(0, toSafeInt(winner.totalScoreSum, 0)) + winnerReward;
-            winner.wins = Math.max(0, toSafeInt(winner.wins, 0)) + 1;
-            winner.currentWinStreak = Math.max(0, toSafeInt(winner.currentWinStreak, 0)) + 1;
-            winner.maxWinStreak = Math.max(
-                Math.max(0, toSafeInt(winner.maxWinStreak, 0)),
-                winner.currentWinStreak
-            );
-            const winnerOpponent = h2hContext.winnerOpponent || (loserId ? { uid: loserId, name: 'Nepoznat' } : null);
-            if (winnerOpponent) {
-                applyTechnicalDuelH2H(winner, winnerOpponent, 'win');
+    const roomId = String(h2hContext.roomId || '');
+    const room = roomId ? roomState[roomId] : null;
+    const matchId = String(h2hContext.matchId || ensureRoomMatchId(roomId, room));
+    const winnerMeta = h2hContext.loserOpponent || { uid: winnerId, name: 'Igrac' };
+    const loserMeta = h2hContext.winnerOpponent || { uid: loserId, name: 'Igrac' };
+    const ledgerWrite = await ensureMatchResult({
+        matchId,
+        roomId,
+        mode: roomId ? getOnlineDuelType(roomId) : 'online',
+        resultType: 'technical',
+        reason: h2hContext.reason || 'technical',
+        verification: 'server',
+        participants: [
+            { uid: winnerId, name: winnerMeta.name || 'Igrac', score: null, result: 'win', playerIndex: 0 },
+            { uid: loserId, name: loserMeta.name || 'Igrac', score: null, result: 'loss', playerIndex: 1 }
+        ],
+        winnerUid: winnerId,
+        loserUid: loserId,
+        winnerReward: calculatedWinnerReward,
+        loserCoinPenalty: calculatedLoserCoinPenalty,
+        penaltyPoints: penaltyAmount,
+        startedAt: room?.matchStartedAt || null,
+        finishedAt: Date.now()
+    });
+
+    const storedResult = ledgerWrite.result;
+    const winnerReward = ledgerWrite.created
+        ? calculatedWinnerReward
+        : Math.max(0, toSafeInt(storedResult?.winnerReward, calculatedWinnerReward));
+    const loserCoinPenalty = ledgerWrite.created
+        ? calculatedLoserCoinPenalty
+        : Math.max(0, toSafeInt(storedResult?.loserCoinPenalty, calculatedLoserCoinPenalty));
+    const appliedUids = new Set(Array.isArray(storedResult?.statsAppliedUids) ? storedResult.statsAppliedUids : []);
+
+    if (!ledgerWrite.ok) {
+        const expectedUids = [winnerId, loserId].filter(Boolean);
+        return {
+            matchId,
+            winnerReward,
+            loserCoinPenalty,
+            serverApplied: expectedUids.length > 0 && expectedUids.every(uid => appliedUids.has(uid)),
+            conflict: ledgerWrite.reason === 'match_result_conflict'
+        };
+    }
+
+    if (winnerId && !appliedUids.has(winnerId)) {
+        try {
+            const winner = await UserProfile.findOne({ firebaseUid: winnerId });
+            if (winner) {
+                if (hasUserAppliedMatchResult(winner, matchId)) {
+                    await markMatchResultStatsApplied(matchId, winnerId);
+                    appliedUids.add(winnerId);
+                } else {
+                    winner.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(winner.balance, 0)) + winnerReward);
+                    winner.games = Math.max(0, toSafeInt(winner.games, 0)) + 1;
+                    winner.totalScoreSum = Math.max(0, toSafeInt(winner.totalScoreSum, 0)) + winnerReward;
+                    winner.wins = Math.max(0, toSafeInt(winner.wins, 0)) + 1;
+                    winner.currentWinStreak = Math.max(0, toSafeInt(winner.currentWinStreak, 0)) + 1;
+                    winner.maxWinStreak = Math.max(
+                        Math.max(0, toSafeInt(winner.maxWinStreak, 0)),
+                        winner.currentWinStreak
+                    );
+                    const winnerOpponent = h2hContext.winnerOpponent || (loserId ? { uid: loserId, name: 'Nepoznat' } : null);
+                    if (winnerOpponent) applyTechnicalDuelH2H(winner, winnerOpponent, 'win');
+                    await applyTechnicalLeagueDelta(winner, winnerReward);
+                    rememberUserAppliedMatchResult(winner, matchId);
+                    await winner.save();
+                    await markMatchResultStatsApplied(matchId, winnerId);
+                    appliedUids.add(winnerId);
+                    rememberServerTechnicalResult(winnerId, 'win');
+                    emitProfileSyncToUid(winnerId, winner, {
+                        serverTechnicalResult: 'win',
+                        matchId
+                    });
+                }
             }
-            await applyTechnicalLeagueDelta(winner, winnerReward);
-            await winner.save();
-            rememberServerTechnicalResult(winnerId, 'win');
-            emitProfileSyncToUid(winnerId, winner, { serverTechnicalResult: 'win' });
+        } catch (err) {
+            console.error(`Greška pri upisu tehničke pobede za ${winnerId}:`, err);
         }
     }
 
-    await applyServerSidePenalty(loserId, penaltyAmount, h2hKey, loserCoinPenalty, h2hContext.loserOpponent || null, { serverTechnicalResult: 'loss' });
-    return { winnerReward, loserCoinPenalty, serverApplied: true };
+    if (loserId && !appliedUids.has(loserId)) {
+        const loser = await applyServerSidePenalty(
+            loserId,
+            penaltyAmount,
+            h2hKey,
+            loserCoinPenalty,
+            h2hContext.loserOpponent || null,
+            { serverTechnicalResult: 'loss', matchId }
+        );
+        if (loser) {
+            await markMatchResultStatsApplied(matchId, loserId);
+            appliedUids.add(loserId);
+        }
+    }
+
+    const expectedUids = [winnerId, loserId].filter(Boolean);
+    const serverApplied = expectedUids.length > 0 && expectedUids.every(uid => appliedUids.has(uid));
+    if (!serverApplied) queueMatchResultReconciliation(1000);
+    return {
+        matchId,
+        winnerReward,
+        loserCoinPenalty,
+        serverApplied
+    };
 }
 
 // --- POMOĆNA FUNKCIJA: DINAMIČKA KAZNA NA OSNOVU PROGRESA IGRE ---
@@ -2230,6 +2364,262 @@ function getOnlineDuelType(roomId = '') {
     return 'online';
 }
 
+const MATCH_RESULT_MODES = new Set([
+    'solo', 'hotseat', 'ai', 'random', 'friend_invite', 'challenge', 'tournament', 'online'
+]);
+const MATCH_PARTICIPANT_RESULTS = new Set(['win', 'loss', 'draw', 'solo']);
+
+function createServerMatchId() {
+    return `match_${crypto.randomUUID()}`;
+}
+
+function createClientMatchId(uid, clientResultId) {
+    return `local_${crypto
+        .createHash('sha256')
+        .update(`${String(uid || '')}\u0000${String(clientResultId || '')}`)
+        .digest('hex')}`;
+}
+
+function ensureRoomMatchId(roomId, state = null) {
+    const targetState = state || (roomId ? roomState[roomId] : null);
+    if (!targetState) return createServerMatchId();
+    if (!targetState.matchId) targetState.matchId = createServerMatchId();
+    if (!targetState.matchStartedAt) targetState.matchStartedAt = Date.now();
+    return targetState.matchId;
+}
+
+function normalizeMatchResultMode(value, fallback = 'online') {
+    const mode = String(value || '').trim().toLowerCase();
+    return MATCH_RESULT_MODES.has(mode) ? mode : fallback;
+}
+
+function normalizeMatchParticipant(participant = {}, index = 0) {
+    const rawScore = participant.score;
+    const score = rawScore === null || rawScore === undefined
+        ? null
+        : Math.max(0, Math.min(MAX_SCORE, toSafeInt(rawScore, 0)));
+    const result = MATCH_PARTICIPANT_RESULTS.has(participant.result) ? participant.result : 'loss';
+
+    return {
+        uid: String(participant.uid || '').trim().substring(0, 128),
+        name: sanitizeTournamentName(participant.name || 'Nepoznat'),
+        score,
+        result,
+        playerIndex: Number.isInteger(Number(participant.playerIndex))
+            ? Math.max(0, Math.min(7, Number(participant.playerIndex)))
+            : index
+    };
+}
+
+function normalizeMatchResultPayload(payload = {}) {
+    const participants = Array.isArray(payload.participants)
+        ? payload.participants.slice(0, 8).map(normalizeMatchParticipant)
+        : [];
+    const resultType = payload.resultType === 'technical' ? 'technical' : 'regular';
+    const verification = payload.verification === 'authenticated_client'
+        ? 'authenticated_client'
+        : 'server';
+
+    return {
+        matchId: String(payload.matchId || '').trim().substring(0, 128),
+        roomId: String(payload.roomId || '').trim().substring(0, 180),
+        clientResultId: String(payload.clientResultId || '').trim().substring(0, 128),
+        mode: normalizeMatchResultMode(payload.mode),
+        resultType,
+        reason: String(payload.reason || '').trim().substring(0, 80),
+        verification,
+        participants,
+        winnerUid: String(payload.winnerUid || '').trim().substring(0, 128),
+        loserUid: String(payload.loserUid || '').trim().substring(0, 128),
+        isDraw: !!payload.isDraw,
+        winnerReward: Math.max(0, toSafeInt(payload.winnerReward, 0)),
+        loserCoinPenalty: Math.max(0, toSafeInt(payload.loserCoinPenalty, 0)),
+        penaltyPoints: Math.max(0, toSafeInt(payload.penaltyPoints, 0)),
+        statsAppliedUids: sanitizeIdArray(payload.statsAppliedUids, 8),
+        startedAt: payload.startedAt ? new Date(payload.startedAt) : null,
+        finishedAt: payload.finishedAt ? new Date(payload.finishedAt) : new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+    };
+}
+
+function buildClientReportedMatchResult(uid, playerName, data = {}) {
+    const clientResultId = String(data.clientResultId || '').trim();
+    if (!/^[A-Za-z0-9_-]{8,128}$/.test(clientResultId)) {
+        return { ok: false, reason: 'invalid_match_id' };
+    }
+
+    const mode = normalizeMatchResultMode(data.mode, '');
+    if (!['solo', 'hotseat', 'ai'].includes(mode)) {
+        return { ok: false, reason: 'invalid_match_mode' };
+    }
+
+    const rawParticipants = Array.isArray(data.participants) ? data.participants.slice(0, 6) : [];
+    if (rawParticipants.length === 0 || (mode === 'solo' && rawParticipants.length !== 1)) {
+        return { ok: false, reason: 'invalid_match_participants' };
+    }
+    if (mode !== 'solo' && rawParticipants.length < 2) {
+        return { ok: false, reason: 'invalid_match_participants' };
+    }
+
+    const playerIndex = Number(data.playerIndex);
+    if (!Number.isInteger(playerIndex) || playerIndex < 0 || playerIndex >= rawParticipants.length) {
+        return { ok: false, reason: 'invalid_player_index' };
+    }
+
+    const scores = [];
+    for (const participant of rawParticipants) {
+        const score = Number(participant?.score);
+        if (!Number.isInteger(score) || score < 0 || score > MAX_SCORE) {
+            return { ok: false, reason: 'score_out_of_range' };
+        }
+        scores.push(score);
+    }
+
+    const maxScore = Math.max(...scores);
+    const winnerIndexes = scores
+        .map((score, index) => ({ score, index }))
+        .filter(entry => entry.score === maxScore)
+        .map(entry => entry.index);
+    const participants = rawParticipants.map((participant, index) => {
+        let result = 'loss';
+        if (mode === 'solo') result = 'solo';
+        else if (winnerIndexes.includes(index)) result = winnerIndexes.length === 1 ? 'win' : 'draw';
+
+        return {
+            uid: index === playerIndex ? uid : '',
+            name: index === playerIndex ? playerName : participant?.name,
+            score: scores[index],
+            result,
+            playerIndex: index
+        };
+    });
+    const uniqueWinnerIndex = winnerIndexes.length === 1 ? winnerIndexes[0] : -1;
+    const selfResult = participants[playerIndex];
+    const finishedAtMs = Number(data.finishedAt);
+    const finishedAt = Number.isFinite(finishedAtMs) && finishedAtMs > 0 && finishedAtMs <= Date.now() + (5 * 60 * 1000)
+        ? finishedAtMs
+        : Date.now();
+
+    return {
+        ok: true,
+        selfParticipant: selfResult,
+        profileGamesAfter: Math.max(0, toSafeInt(data.profileGamesAfter, 0)),
+        profileTotalScoreAfter: Math.max(0, toSafeInt(data.profileTotalScoreAfter, 0)),
+        profileHighscoreAfter: Math.max(0, toSafeInt(data.profileHighscoreAfter, 0)),
+        payload: {
+            matchId: createClientMatchId(uid, clientResultId),
+            roomId: '',
+            clientResultId,
+            mode,
+            resultType: 'regular',
+            reason: 'completed_local_game',
+            verification: 'authenticated_client',
+            participants,
+            winnerUid: uniqueWinnerIndex === playerIndex ? uid : '',
+            loserUid: selfResult.result === 'loss' ? uid : '',
+            isDraw: winnerIndexes.length > 1,
+            finishedAt
+        }
+    };
+}
+
+function getMatchResultIdentitySignature(payload = {}) {
+    const normalized = normalizeMatchResultPayload(payload);
+    return JSON.stringify({
+        matchId: normalized.matchId,
+        mode: normalized.mode,
+        resultType: normalized.resultType,
+        participants: normalized.participants.map(participant => ({
+            uid: participant.uid,
+            name: participant.uid ? '' : participant.name,
+            score: participant.score,
+            result: participant.result,
+            playerIndex: participant.playerIndex
+        }))
+    });
+}
+
+async function ensureMatchResult(payload = {}) {
+    if (!MONGO_URI) return { ok: false, reason: 'db_unavailable', created: false, result: null };
+
+    const normalized = normalizeMatchResultPayload(payload);
+    if (!normalized.matchId || normalized.participants.length === 0) {
+        return { ok: false, reason: 'invalid_match_result', created: false, result: null };
+    }
+
+    try {
+        const writeResult = await MatchResult.updateOne(
+            { matchId: normalized.matchId },
+            { $setOnInsert: normalized },
+            { upsert: true }
+        );
+        const result = await MatchResult.findOne({ matchId: normalized.matchId });
+        if (!result) return { ok: false, reason: 'match_result_not_found', created: false, result: null };
+
+        const sameIdentity = getMatchResultIdentitySignature(result.toObject ? result.toObject() : result) ===
+            getMatchResultIdentitySignature(normalized);
+        if (!sameIdentity) {
+            console.error(`MATCH RESULT CONFLICT: ${normalized.matchId} je ponovo poslat sa drugačijim ishodom.`);
+            return { ok: false, reason: 'match_result_conflict', created: false, result };
+        }
+
+        return {
+            ok: true,
+            created: writeResult.upsertedCount === 1,
+            result
+        };
+    } catch (err) {
+        if (err && err.code === 11000) {
+            const result = await MatchResult.findOne({ matchId: normalized.matchId });
+            if (result && getMatchResultIdentitySignature(result.toObject ? result.toObject() : result) === getMatchResultIdentitySignature(normalized)) {
+                return { ok: true, created: false, result };
+            }
+        }
+        console.error('Greška pri trajnom upisu rezultata partije:', err);
+        return { ok: false, reason: 'server_error', created: false, result: null };
+    }
+}
+
+async function markMatchResultStatsApplied(matchId, uid) {
+    if (!MONGO_URI || !matchId || !uid) return false;
+    const update = await MatchResult.updateOne(
+        { matchId },
+        {
+            $addToSet: { statsAppliedUids: uid },
+            $set: { updatedAt: new Date() }
+        }
+    );
+    if (update.matchedCount !== 1) return false;
+
+    const result = await MatchResult.findOne({ matchId }).select('participants statsAppliedUids');
+    if (!result) return false;
+    const expectedUids = Array.from(new Set((result.participants || [])
+        .map(participant => String(participant.uid || '').trim())
+        .filter(Boolean)));
+    const appliedUids = new Set(Array.isArray(result.statsAppliedUids) ? result.statsAppliedUids : []);
+    if (expectedUids.length > 0 && expectedUids.every(expectedUid => appliedUids.has(expectedUid))) {
+        await MatchResult.updateOne(
+            { matchId },
+            { $set: { statsComplete: true, updatedAt: new Date() } }
+        );
+    }
+    return true;
+}
+
+const RECENT_MATCH_RESULT_MEMORY = 200;
+
+function hasUserAppliedMatchResult(user, matchId) {
+    return !!user && !!matchId && Array.isArray(user.recentMatchResultIds) && user.recentMatchResultIds.includes(matchId);
+}
+
+function rememberUserAppliedMatchResult(user, matchId) {
+    if (!user || !matchId) return;
+    const ids = Array.isArray(user.recentMatchResultIds) ? user.recentMatchResultIds : [];
+    user.recentMatchResultIds = [...ids.filter(id => id !== matchId), matchId].slice(-RECENT_MATCH_RESULT_MEMORY);
+    user.markModified('recentMatchResultIds');
+}
+
 function emitCompletedOnlineGame(roomId) {
     const state = roomState[roomId];
     if (!state || !Array.isArray(state.players) || state.players.length < 2) return false;
@@ -2258,6 +2648,7 @@ function emitCompletedOnlineGame(roomId) {
     const winnerIndex = isDraw ? -1 : winnerIndexes[0];
 
     io.to(roomId).emit('online_game_finished', {
+        matchId: ensureRoomMatchId(roomId, state),
         roomId,
         duelType: getOnlineDuelType(roomId),
         players,
@@ -2267,6 +2658,9 @@ function emitCompletedOnlineGame(roomId) {
         winnerIndex,
         winnerName: winnerIndex >= 0 ? players[winnerIndex] : '',
         winnerScore,
+        serverStatsAppliedUids: Array.isArray(state.completedDuelStatsAppliedUids)
+            ? [...state.completedDuelStatsAppliedUids]
+            : [],
         allScores: state.allScores,
         currentPlayerIdx: state.turnIndex
     });
@@ -2517,16 +2911,15 @@ function applyCompletedDuelProfileStats(user, resultType, score) {
 }
 
 async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
-    if (!MONGO_URI || !roomId || !roomState[roomId]) return false;
+    if (!MONGO_URI || !roomId || !roomState[roomId]) return [];
 
     const state = roomState[roomId];
-    if (state.completedDuelStatsApplied) return false;
-    if (!Array.isArray(state.players) || state.players.length !== 2) return false;
-    if (finisherSocketId && !state.players.includes(finisherSocketId)) return false;
-    if (!Array.isArray(state.allScores) || state.allScores.length < 2) return false;
+    if (!Array.isArray(state.players) || state.players.length !== 2) return [];
+    if (finisherSocketId && !state.players.includes(finisherSocketId)) return [];
+    if (!Array.isArray(state.allScores) || state.allScores.length < 2) return [];
 
     const totals = state.allScores.slice(0, 2).map(sheet => calculateCompletedDuelTotal(sheet));
-    if (totals.some(score => score === null)) return false;
+    if (totals.some(score => score === null)) return [];
 
     const stablePlayerUids = Array.isArray(state.playerUids) ? state.playerUids : [];
     const participants = state.players.slice(0, 2).map((socketId, index) => ({
@@ -2534,41 +2927,94 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
         score: totals[index]
     }));
 
-    if (participants.some(player => !player.uid || player.uid.startsWith('guest_'))) return false;
+    if (participants.some(player => !player.uid || player.uid.startsWith('guest_'))) return [];
 
-    state.completedDuelStatsApplied = true;
+    const isDraw = participants[0].score === participants[1].score;
+    const matchId = ensureRoomMatchId(roomId, state);
+    const winner = isDraw
+        ? null
+        : (participants[0].score > participants[1].score ? participants[0] : participants[1]);
+    const ledgerWrite = await ensureMatchResult({
+        matchId,
+        roomId,
+        mode: getOnlineDuelType(roomId),
+        resultType: 'regular',
+        reason: 'completed_scores',
+        verification: 'server',
+        participants: participants.map((player, index) => ({
+            uid: player.uid,
+            name: player.name,
+            score: player.score,
+            result: isDraw ? 'draw' : (player.uid === winner.uid ? 'win' : 'loss'),
+            playerIndex: index
+        })),
+        winnerUid: winner?.uid || '',
+        loserUid: winner ? participants.find(player => player.uid !== winner.uid)?.uid || '' : '',
+        isDraw,
+        startedAt: state.matchStartedAt || null,
+        finishedAt: Date.now()
+    });
 
-    try {
-        const isDraw = participants[0].score === participants[1].score;
+    if (!ledgerWrite.ok) {
+        const existingApplied = ledgerWrite.result && Array.isArray(ledgerWrite.result.statsAppliedUids)
+            ? ledgerWrite.result.statsAppliedUids.filter(uid => participants.some(player => player.uid === uid))
+            : [];
+        state.completedDuelStatsAppliedUids = [...existingApplied];
+        state.completedDuelStatsApplied = existingApplied.length === participants.length;
+        return [...existingApplied];
+    }
 
-        for (let i = 0; i < participants.length; i++) {
-            const player = participants[i];
-            const opponent = participants[i === 0 ? 1 : 0];
-            const resultType = isDraw ? 'draw' : (player.score > opponent.score ? 'win' : 'loss');
+    const appliedUids = new Set(Array.isArray(ledgerWrite.result.statsAppliedUids)
+        ? ledgerWrite.result.statsAppliedUids
+        : []);
+    state.completedDuelStatsAppliedUids = participants
+        .map(player => player.uid)
+        .filter(uid => appliedUids.has(uid));
+
+    for (let i = 0; i < participants.length; i++) {
+        const player = participants[i];
+        const opponent = participants[i === 0 ? 1 : 0];
+        const resultType = isDraw ? 'draw' : (player.score > opponent.score ? 'win' : 'loss');
+
+        if (appliedUids.has(player.uid)) continue;
+
+        try {
             const user = await UserProfile.findOne({ firebaseUid: player.uid });
 
             if (!user) continue;
 
+            if (hasUserAppliedMatchResult(user, matchId)) {
+                await markMatchResultStatsApplied(matchId, player.uid);
+                appliedUids.add(player.uid);
+                state.completedDuelStatsAppliedUids.push(player.uid);
+                continue;
+            }
+
             applyCompletedDuelProfileStats(user, resultType, player.score);
             applyCompletedDuelH2H(user, opponent, resultType, player.score, opponent.score);
+            rememberUserAppliedMatchResult(user, matchId);
             await user.save();
+            await markMatchResultStatsApplied(matchId, player.uid);
+            appliedUids.add(player.uid);
+            state.completedDuelStatsAppliedUids.push(player.uid);
             emitProfileSyncToUid(player.uid, user, {
                 duelResult: {
+                    matchId,
                     roomId,
                     resultType,
                     score: player.score,
                     opponentScore: opponent.score
                 }
             });
+        } catch (err) {
+            console.error(`Greska pri serverskom upisu regularnog online duela za ${player.uid}:`, err);
         }
-
-        console.log(`SERVER DUEL RESULT: Upisan regularan online rezultat za sobu ${roomId}: ${participants[0].score}-${participants[1].score}.`);
-        return true;
-    } catch (err) {
-        state.completedDuelStatsApplied = false;
-        console.error("Greska pri serverskom upisu regularnog online duela:", err);
-        return false;
     }
+
+    state.completedDuelStatsApplied = state.completedDuelStatsAppliedUids.length === participants.length;
+    if (!state.completedDuelStatsApplied) queueMatchResultReconciliation(1000);
+    console.log(`SERVER DUEL RESULT: Upisan regularan online rezultat za sobu ${roomId}: ${participants[0].score}-${participants[1].score}.`);
+    return [...state.completedDuelStatsAppliedUids];
 }
 
 // ==================================================================
@@ -2745,13 +3191,16 @@ async function handleTechnicalTimeout(roomId, inactivePlayerSocketId = null, exp
         const h2hKey = getH2HKeyForOpponent(winnerParticipant);
         const technicalResult = await applyServerSideTechnicalResult(winnerUid, inactiveUid, penaltyAmount, h2hKey, {
             winnerOpponent: inactiveParticipant,
-            loserOpponent: winnerParticipant
+            loserOpponent: winnerParticipant,
+            roomId,
+            reason: 'turn_timeout'
         });
         await applyTournamentTechnicalWinner(roomId, winnerUid, 'turn_timeout');
 
         console.log(`⏱️ TIMEOUT: Isteklo vreme u sobi ${roomId}. Pobednik je ${winnerSocketId} (Tehnička pobeda)`);
 
         io.to(roomId).emit('game_over_timeout', {
+            matchId: technicalResult.matchId || ensureRoomMatchId(roomId, state),
             winnerId: winnerSocketId,
             loserId: timedOutSocketId,
             duelType: getOnlineDuelType(roomId),
@@ -3564,6 +4013,8 @@ function buildProfileSyncPayload(user) {
     const todayKey = getDailyChallengeDayKey();
     const legacyTodayKey = getLegacyDailyDayKey();
     return {
+        statsAuthoritative: true,
+        h2hAuthoritative: true,
         wins: Math.max(0, toSafeInt(user.wins)),
         losses: Math.max(0, toSafeInt(user.losses)),
         games: Math.max(0, toSafeInt(user.games)),
@@ -5056,6 +5507,135 @@ async function applyTechnicalLeagueDelta(user, delta) {
     }
 
     return nextLeagueData;
+}
+
+let matchResultReconcileTimer = null;
+let matchResultReconcileRunning = false;
+
+async function reconcileStoredServerMatchResult(result) {
+    if (!result || result.verification !== 'server' || result.statsComplete) return 0;
+
+    const participants = Array.isArray(result.participants)
+        ? result.participants.map(participant => participant.toObject ? participant.toObject() : participant)
+        : [];
+    const appliedUids = new Set(Array.isArray(result.statsAppliedUids) ? result.statsAppliedUids : []);
+    let appliedCount = 0;
+
+    for (const participant of participants) {
+        const uid = String(participant?.uid || '').trim();
+        if (!uid || appliedUids.has(uid)) continue;
+
+        const user = await UserProfile.findOne({ firebaseUid: uid });
+        if (!user) continue;
+
+        if (hasUserAppliedMatchResult(user, result.matchId)) {
+            await markMatchResultStatsApplied(result.matchId, uid);
+            appliedUids.add(uid);
+            appliedCount++;
+            continue;
+        }
+
+        const opponent = participants.find(candidate => String(candidate?.uid || '').trim() !== uid) || null;
+        if (result.resultType === 'technical') {
+            if (participant.result === 'win') {
+                const reward = Math.max(0, toSafeInt(result.winnerReward, 0));
+                user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
+                user.games = Math.max(0, toSafeInt(user.games, 0)) + 1;
+                user.totalScoreSum = Math.max(0, toSafeInt(user.totalScoreSum, 0)) + reward;
+                user.wins = Math.max(0, toSafeInt(user.wins, 0)) + 1;
+                user.currentWinStreak = Math.max(0, toSafeInt(user.currentWinStreak, 0)) + 1;
+                user.maxWinStreak = Math.max(toSafeInt(user.maxWinStreak, 0), user.currentWinStreak);
+                if (opponent) applyTechnicalDuelH2H(user, opponent, 'win');
+                await applyTechnicalLeagueDelta(user, reward);
+            } else if (participant.result === 'loss') {
+                const coinPenalty = Math.max(0, toSafeInt(result.loserCoinPenalty, 0));
+                user.penaltyPoints = Math.max(0, toSafeInt(user.penaltyPoints, 0)) + Math.max(0, toSafeInt(result.penaltyPoints, 0));
+                user.games = Math.max(0, toSafeInt(user.games, 0)) + 1;
+                user.losses = Math.max(0, toSafeInt(user.losses, 0)) + 1;
+                user.currentWinStreak = 0;
+                if (opponent) applyTechnicalDuelH2H(user, opponent, 'loss');
+                user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
+                await applyTechnicalLeagueDelta(user, -coinPenalty);
+            }
+        } else {
+            const score = Math.max(0, Math.min(MAX_SCORE, toSafeInt(participant.score, 0)));
+            applyCompletedDuelProfileStats(user, participant.result, score);
+            if (opponent) {
+                applyCompletedDuelH2H(
+                    user,
+                    opponent,
+                    participant.result,
+                    score,
+                    Math.max(0, Math.min(MAX_SCORE, toSafeInt(opponent.score, 0)))
+                );
+            }
+        }
+
+        rememberUserAppliedMatchResult(user, result.matchId);
+        await user.save();
+        await markMatchResultStatsApplied(result.matchId, uid);
+        appliedUids.add(uid);
+        appliedCount++;
+
+        if (result.resultType === 'technical') rememberServerTechnicalResult(uid, participant.result);
+        emitProfileSyncToUid(uid, user, {
+            reconciledMatchResult: {
+                matchId: result.matchId,
+                resultType: participant.result,
+                technical: result.resultType === 'technical'
+            }
+        });
+    }
+
+    await MatchResult.updateOne(
+        { matchId: result.matchId },
+        {
+            $set: { lastReconcileAt: new Date(), updatedAt: new Date() },
+            $inc: { reconcileAttempts: 1 }
+        }
+    );
+    return appliedCount;
+}
+
+async function reconcileIncompleteServerMatchResults(limit = 100) {
+    if (!MONGO_URI || matchResultReconcileRunning || mongoose.connection.readyState !== 1) return 0;
+    matchResultReconcileRunning = true;
+    let appliedCount = 0;
+
+    try {
+        const pendingResults = await MatchResult.find({
+            verification: 'server',
+            statsComplete: { $ne: true }
+        }).sort({ createdAt: 1 }).limit(Math.max(1, Math.min(500, toSafeInt(limit, 100))));
+
+        for (const result of pendingResults) {
+            try {
+                appliedCount += await reconcileStoredServerMatchResult(result);
+            } catch (err) {
+                console.error(`Greška pri usklađivanju rezultata ${result.matchId}:`, err);
+            }
+        }
+    } finally {
+        matchResultReconcileRunning = false;
+    }
+
+    return appliedCount;
+}
+
+function queueMatchResultReconciliation(delayMs = 1000) {
+    if (!MONGO_URI || matchResultReconcileTimer) return;
+    matchResultReconcileTimer = setTimeout(async () => {
+        matchResultReconcileTimer = null;
+        await reconcileIncompleteServerMatchResults();
+    }, Math.max(100, toSafeInt(delayMs, 1000)));
+    if (matchResultReconcileTimer.unref) matchResultReconcileTimer.unref();
+}
+
+if (MONGO_URI) {
+    const matchResultReconcileInterval = setInterval(() => {
+        queueMatchResultReconciliation(100);
+    }, 60 * 1000);
+    if (matchResultReconcileInterval.unref) matchResultReconcileInterval.unref();
 }
 
 async function archiveLeagueQuarter(year, quarter) {
@@ -6913,42 +7493,14 @@ io.on('connection', (socket) => {
 
                 if (s.h2hStats) {
                     const oldCloudH2H = user.h2hStats || {};
-                    let cloudH2H = normalizeH2HStatsForUser(oldCloudH2H, user.firebaseUid, user.playerName);
+                    const cloudH2H = normalizeH2HStatsForUser(oldCloudH2H, user.firebaseUid, user.playerName);
                     const localH2H = normalizeH2HStatsForUser(s.h2hStats, user.firebaseUid, user.playerName);
-                    let isModified = JSON.stringify(oldCloudH2H) !== JSON.stringify(cloudH2H);
 
-                    for (const [oppName, localData] of Object.entries(localH2H)) {
-
-                        // 🛡️ SERVER H2H FILTER: Blokiramo undefined i null stringove
-                        if (!oppName || String(oppName) === 'undefined' || String(oppName) === 'null' || oppName === 'Nepoznat') continue;
-                        
-                        if (!cloudH2H[oppName]) {
-                            cloudH2H[oppName] = localData;
-                            isModified = true;
-                        } else {
-                            let cloudData = cloudH2H[oppName];
-                            const stableUid = isStableH2HUid(localData.uid || cloudData.uid || oppName, user.firebaseUid)
-                                ? String(localData.uid || cloudData.uid || oppName).trim()
-                                : '';
-                            const identity = {
-                                key: oppName,
-                                name: sanitizeTournamentName(localData.name || cloudData.name || oppName),
-                                uid: stableUid
-                            };
-                            const mergedH2H = mergeH2HRecord(cloudData, localData, identity, { combineCounts: true });
-
-                            if (JSON.stringify(cloudData) !== JSON.stringify(mergedH2H)) {
-                                cloudData = mergedH2H;
-                                isModified = true;
-                            }
-
-                            cloudH2H[oppName] = cloudData;
-                        }
-                    }
-
-                    cloudH2H = normalizeH2HStatsForUser(cloudH2H, user.firebaseUid, user.playerName);
-                    if (isModified || Object.keys(cloudH2H).length > 0) {
-                        user.set('h2hStats', cloudH2H);
+                    // Za postojeće profile server je jedini autoritet za online H2H.
+                    // Klijentski zbir prihvatamo samo kao jednokratni legacy import kada cloud nema H2H.
+                    const authoritativeH2H = Object.keys(cloudH2H).length > 0 ? cloudH2H : localH2H;
+                    if (JSON.stringify(oldCloudH2H) !== JSON.stringify(authoritativeH2H)) {
+                        user.set('h2hStats', authoritativeH2H);
                         user.markModified('h2hStats');
                     }
                 }
@@ -7238,13 +7790,16 @@ io.on('connection', (socket) => {
 
                     technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
                         winnerOpponent: quitterParticipant,
-                        loserOpponent: winnerParticipant
+                        loserOpponent: winnerParticipant,
+                        roomId: activeRoomId,
+                        reason: 'back_to_menu'
                     });
                     await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'back_to_menu');
                 }
             }
 
             socket.to(activeRoomId).emit('opponent_left', {
+                matchId: technicalResult.matchId || ensureRoomMatchId(activeRoomId, state),
                 winnerId: technicalWinner?.socketId || '',
                 loserId: technicalLoser?.socketId || socket.id,
                 duelType: getOnlineDuelType(activeRoomId),
@@ -7867,6 +8422,86 @@ io.on('connection', (socket) => {
         } catch (err) {
             console.error("Greška pri dohvatanju skorova:", err);
             socket.emit('global_highscores_data', []); 
+        }
+    });
+
+    socket.on('submit_match_result', async (data = {}, ack) => {
+        const replyMatchResult = (ok, reason = null, permanent = !ok, extra = {}) => {
+            const result = { ok, reason, permanent, ...extra };
+            if (typeof ack === 'function') ack(result);
+            return result;
+        };
+
+        const verifiedUid = socket.verifiedUid;
+        if (!verifiedUid) {
+            const result = replyMatchResult(false, 'firebase_token_required', false);
+            socket.emit('auth_required', result);
+            return;
+        }
+        if (!MONGO_URI) return replyMatchResult(false, 'db_unavailable', false);
+
+        const normalized = buildClientReportedMatchResult(verifiedUid, socket.playerName || 'Igrac', data);
+        if (!normalized.ok) return replyMatchResult(false, normalized.reason, true);
+
+        try {
+            const ledgerWrite = await ensureMatchResult(normalized.payload);
+            if (!ledgerWrite.ok) {
+                return replyMatchResult(
+                    false,
+                    ledgerWrite.reason || 'server_error',
+                    ledgerWrite.reason === 'match_result_conflict'
+                );
+            }
+
+            const matchId = normalized.payload.matchId;
+            const appliedUids = new Set(Array.isArray(ledgerWrite.result?.statsAppliedUids)
+                ? ledgerWrite.result.statsAppliedUids
+                : []);
+            if (appliedUids.has(verifiedUid)) {
+                return replyMatchResult(true, null, false, { matchId, duplicate: true, statsApplied: true });
+            }
+
+            const user = await UserProfile.findOne({ firebaseUid: verifiedUid });
+            if (!user) return replyMatchResult(false, 'profile_not_found', false, { matchId });
+
+            if (hasUserAppliedMatchResult(user, matchId)) {
+                await markMatchResultStatsApplied(matchId, verifiedUid);
+                return replyMatchResult(true, null, false, { matchId, duplicate: true, statsApplied: true });
+            }
+
+            const profileMayIncludeResult = data.profileMayIncludeResult === true;
+            const alreadyIncludedInProfile = profileMayIncludeResult &&
+                normalized.profileGamesAfter > 0 &&
+                toSafeInt(user.games, 0) >= normalized.profileGamesAfter &&
+                toSafeInt(user.totalScoreSum, 0) >= normalized.profileTotalScoreAfter &&
+                toSafeInt(user.highscore, 0) >= normalized.profileHighscoreAfter;
+
+            if (!alreadyIncludedInProfile) {
+                const score = normalized.selfParticipant.score;
+                user.games = Math.max(0, toSafeInt(user.games, 0)) + 1;
+                user.totalScoreSum = Math.max(0, toSafeInt(user.totalScoreSum, 0)) + score;
+                user.highscore = Math.max(Math.max(0, toSafeInt(user.highscore, 0)), score);
+            }
+
+            rememberUserAppliedMatchResult(user, matchId);
+            await user.save();
+            await markMatchResultStatsApplied(matchId, verifiedUid);
+            emitProfileSyncToUid(verifiedUid, user, {
+                matchResult: {
+                    matchId,
+                    mode: normalized.payload.mode,
+                    resultType: normalized.selfParticipant.result
+                }
+            });
+
+            return replyMatchResult(true, null, false, {
+                matchId,
+                duplicate: !ledgerWrite.created || alreadyIncludedInProfile,
+                statsApplied: true
+            });
+        } catch (err) {
+            console.error('Greška pri upisu lokalnog rezultata partije:', err);
+            return replyMatchResult(false, 'server_error', false);
         }
     });
 
@@ -8933,6 +9568,8 @@ io.on('connection', (socket) => {
                 console.log(`⚔️ RANDOM MATCH: ${nickname} vs ${opponentName} (Room: ${roomId})`);
 
                 roomState[roomId] = {
+                    matchId: createServerMatchId(),
+                    matchStartedAt: Date.now(),
                     players: [opponentId, socket.id],
                     playerUids: [
                         opponentSocket.playerId || registeredSockets[opponentId] || '',
@@ -9017,6 +9654,8 @@ io.on('connection', (socket) => {
             console.log(`⚔️ PRIVATE MATCH: ${p1.name} vs ${nickname} u sobi ${roomId}`);
 
             roomState[roomId] = {
+                matchId: createServerMatchId(),
+                matchStartedAt: Date.now(),
                 players: [p1.id, socket.id],
                 playerUids: [
                     p1.uid || registeredSockets[p1.id] || '',
@@ -9823,6 +10462,8 @@ io.on('connection', (socket) => {
             console.log(`⚔️ DUEL POČINJE: ${challengerId} vs ${socket.id} u sobi ${roomName}`);
 
             roomState[roomName] = {
+                matchId: createServerMatchId(),
+                matchStartedAt: Date.now(),
                 players: [challengerId, socket.id],
                 playerUids: [challengerUid, responderUid],
                 playerNames: [challengerSocket.playerName || "Igrač 1", socket.playerName || "Igrač 2"],
@@ -9947,6 +10588,8 @@ io.on('connection', (socket) => {
                 const p2 = io.sockets.sockets.get(playersArr[1]);
                 
                 roomState[roomId] = {
+                    matchId: createServerMatchId(),
+                    matchStartedAt: Date.now(),
                     players: playersArr,
                     playerUids: playersArr.map(playerSocketId => getSocketUid(playerSocketId)),
                     playerNames: [p1 ? p1.playerName : "Igrač 1", p2 ? p2.playerName : "Igrač 2"],

@@ -8,7 +8,8 @@
     "check:game-rules": "node scripts/check-game-rules.js",
     "check:trophies": "node scripts/check-trophies.js",
     "check:profile-sync": "node scripts/check-profile-sync.js",
-    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync"
+    "check:match-results": "node scripts/check-match-results.js",
+    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results"
   },
   "keywords": [],
   "author": "",
