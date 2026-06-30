@@ -7,6 +7,7 @@ const vm = require('vm');
 const root = path.resolve(__dirname, '..');
 const serverSource = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
 const gameSource = fs.readFileSync(path.join(root, 'www', 'game.js'), 'utf8');
+const topListSource = fs.readFileSync(path.join(root, 'www', 'toplista.js'), 'utf8');
 
 function sliceBalancedBlock(source, start) {
     const signatureEnd = source.indexOf(') {', start);
@@ -59,6 +60,7 @@ function checkMatchResultWiring() {
     assert(completedDuel.includes("resultType: 'regular'"), 'Regular online duel is not written to the ledger');
     assert(completedDuel.includes('ensureMatchResult({'), 'Regular online duel bypasses the ledger');
     assert(completedDuel.includes('hasUserAppliedMatchResult(user, matchId)'), 'Regular duel lacks durable profile idempotency');
+    assert(completedDuel.includes('await applyTechnicalLeagueDelta(user, player.score)'), 'Regular online duel does not update quarterly league points server-side');
     assert(completedDuel.includes('markMatchResultStatsApplied(matchId, player.uid)'), 'Regular duel does not mark applied stats');
 
     const technical = extractFunction(serverSource, 'applyServerSideTechnicalResult');
@@ -68,6 +70,7 @@ function checkMatchResultWiring() {
 
     const reconciler = extractFunction(serverSource, 'reconcileStoredServerMatchResult');
     assert(reconciler.includes('hasUserAppliedMatchResult(user, result.matchId)'), 'Reconciler can duplicate a previously saved profile result');
+    assert(reconciler.includes('await applyTechnicalLeagueDelta(user, score)'), 'Reconciler does not restore quarterly league points for regular duel results');
     assert(reconciler.includes('markMatchResultStatsApplied(result.matchId, uid)'), 'Reconciler does not close incomplete ledger entries');
     assert(serverSource.includes('reconcileIncompleteServerMatchResults'), 'Missing incomplete result reconciliation worker');
 
@@ -114,6 +117,9 @@ function createFunctionContext(extra = {}) {
         sanitizeIdArray(value, maxItems = 150) {
             return Array.isArray(value) ? [...new Set(value.filter(item => typeof item === 'string'))].slice(0, maxItems) : [];
         },
+        calculateCompletedDuelTotal(sheet) {
+            return Number.isInteger(sheet) ? sheet : null;
+        },
         ...extra
     };
     vm.createContext(context);
@@ -140,6 +146,7 @@ function checkLocalResultValidation() {
             { name: 'Player', score: 2500 },
             { name: 'Guest', score: 2400 }
         ],
+        scoreSheets: [2500, 2400],
         profileGamesAfter: 11,
         profileTotalScoreAfter: 22000,
         profileHighscoreAfter: 2500,
@@ -160,6 +167,82 @@ function checkLocalResultValidation() {
         participants: [{ name: 'Player', score: 10001 }, { name: 'Guest', score: 0 }]
     });
     assert.strictEqual(invalid.ok, false, 'Out-of-range local score was accepted');
+
+    const mismatchedSheet = context.buildClientReportedMatchResult('firebase-user-1234567890', 'Player', {
+        ...input,
+        scoreSheets: [2499, 2400]
+    });
+    assert.strictEqual(mismatchedSheet.ok, false, 'Local score that does not match the completed sheet was accepted');
+}
+
+function checkGameRewardSessionRaceGuard() {
+    const claimStart = serverSource.indexOf("socket.on('claim_game_reward'");
+    assert.notStrictEqual(claimStart, -1, 'Missing claim_game_reward handler');
+    const claimEnd = serverSource.indexOf("socket.on('get_league_highscores'", claimStart);
+    assert.notStrictEqual(claimEnd, -1, 'Could not isolate claim_game_reward handler');
+    const claimHandler = serverSource.slice(claimStart, claimEnd);
+
+    assert(claimHandler.includes('rewardSession.claimInProgress'), 'Game reward claim is not protected by an in-memory session lock');
+    assert(claimHandler.includes("reason: 'reward_claim_in_progress'"), 'Concurrent game reward claims do not receive a retryable in-progress response');
+    assert(claimHandler.includes('rewardSession.claimInProgress = true;'), 'Game reward session is not locked before async reward writes');
+    assert(
+        claimHandler.indexOf('rewardSession.claimInProgress = true;') < claimHandler.indexOf('await UserProfile.findOne'),
+        'Game reward session lock is acquired after the first async profile read'
+    );
+    assert(claimHandler.includes('releaseRewardClaimLock();'), 'Retryable game reward failures do not release the session lock');
+    assert(claimHandler.includes('rewardSession.claimedAt = Date.now();'), 'Successful game reward claims are not marked claimed before clearing');
+
+    assert(
+        !serverSource.includes('getPendingGameRewardIncrease'),
+        'Profile sync can still bypass claim_game_reward and consume a pending game reward'
+    );
+}
+
+function checkVerifiedEconomyMatchProof() {
+    assert(serverSource.includes('function createLocalGameSessionToken(uid)'), 'Missing signed local game session tokens');
+    assert(serverSource.includes('crypto.timingSafeEqual'), 'Local game session signature is not timing-safe');
+    assert(serverSource.includes("return replyMatchResult(false, 'game_too_short', true);"), 'Local match ledger accepts sessions shorter than the minimum duration');
+    assert(serverSource.includes('normalized.payload.gameSessionId = existingResult') && serverSource.includes(': session.sessionId;'), 'Local match result is not bound to its signed session');
+    assert(serverSource.includes("reason: 'game_session_already_used'"), 'Signed local session can be reused for another result');
+    assert(serverSource.includes('economyEligible: { type: Boolean, default: false }'), 'Historical match results are implicitly eligible for a second economy reward');
+    assert(serverSource.includes('economyEligible: true,\n        participants: participants.map'), 'New server-verified online results are not marked economy eligible');
+
+    const scoreStart = serverSource.indexOf("socket.on('submit_score'");
+    const scoreEnd = serverSource.indexOf("socket.on('claim_game_reward'", scoreStart);
+    const scoreHandler = serverSource.slice(scoreStart, scoreEnd);
+    assert(scoreHandler.includes('findVerifiedMatchParticipant(finalUid, data?.matchId, submittedScore)'), 'Leaderboard score does not require a stored match result');
+    assert(extractFunction(serverSource, 'findVerifiedMatchParticipant').includes('economyEligible: true'), 'Leaderboard and rewards can monetize historical unverified match records');
+    assert(!scoreHandler.includes('getScoreSessionDuration(socket.id)'), 'Leaderboard score still trusts a client-started timer instead of match proof');
+
+    const leagueStart = serverSource.indexOf("socket.on('submit_league_score'");
+    const leagueEnd = serverSource.indexOf('// ==================================================================', leagueStart);
+    const leagueHandler = serverSource.slice(leagueStart, leagueEnd);
+    assert(leagueHandler.includes("return replyLeagueSubmit(false, 'match_result_required');"), 'Quarterly league still accepts direct client score growth');
+
+    assert(serverSource.includes('rememberUserClaimedGameReward(user, rewardSession.matchId);'), 'Game reward claim is not durably remembered with the balance');
+    assert(serverSource.includes('{ $addToSet: { rewardClaimedUids: finalUid }, $set: { updatedAt: new Date() } }'), 'Game reward claim is not persisted in the permanent match ledger');
+    assert(gameSource.includes("gameSessionToken: this.localGameSessionToken || ''"), 'Client does not preserve the signed local game session');
+    assert(gameSource.includes('matchResultRef = await this.queueCompletedLocalMatchResult({'), 'Client submits leaderboard score before storing local match proof');
+    assert(topListSource.includes("matchId: String(matchId || '')"), 'Leaderboard payload does not carry its match proof');
+
+    const sessionContext = {
+        Buffer,
+        JSON,
+        String,
+        Number,
+        Date,
+        crypto,
+        LOCAL_GAME_SESSION_SECRET: 'test-local-session-secret',
+        MAX_GAME_DURATION: 6 * 60 * 60 * 1000
+    };
+    vm.createContext(sessionContext);
+    ['encodeLocalGameSessionPart', 'signLocalGameSessionPayload', 'createLocalGameSessionToken', 'verifyLocalGameSessionToken']
+        .forEach(name => vm.runInContext(extractFunction(serverSource, name), sessionContext));
+    const token = sessionContext.createLocalGameSessionToken('verified-user');
+    assert.strictEqual(sessionContext.verifyLocalGameSessionToken(token, 'verified-user').ok, true, 'Valid signed local session was rejected');
+    assert.strictEqual(sessionContext.verifyLocalGameSessionToken(token, 'different-user').ok, false, 'Signed local session can be transferred to another user');
+    const tamperedToken = `${token.slice(0, -1)}${token.endsWith('A') ? 'B' : 'A'}`;
+    assert.strictEqual(sessionContext.verifyLocalGameSessionToken(tamperedToken, 'verified-user').ok, false, 'Tampered local session signature was accepted');
 }
 
 async function checkLedgerIdempotencyAndConflict() {
@@ -213,8 +296,10 @@ async function checkLedgerIdempotencyAndConflict() {
 async function main() {
     checkMatchResultWiring();
     checkLocalResultValidation();
+    checkGameRewardSessionRaceGuard();
+    checkVerifiedEconomyMatchProof();
     await checkLedgerIdempotencyAndConflict();
-    console.log('Match result checks passed: all modes wired, auth validated, retry queued, idempotent, and conflict-safe.');
+    console.log('Match result checks passed: all modes wired, auth validated, retry queued, idempotent, game reward locked, and conflict-safe.');
 }
 
 main().catch(error => {

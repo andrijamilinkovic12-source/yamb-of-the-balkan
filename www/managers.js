@@ -3139,6 +3139,59 @@ class ShopManager {
         if(this.balanceEl) this.balanceEl.innerText = this.balance;
     }
 
+    getItemById(id) {
+        const itemId = String(id || '').trim();
+        return this.items.find(item => item.id === itemId) || null;
+    }
+
+    getItemBasePrice(item) {
+        return Math.max(0, parseInt(item?.price, 10) || 0);
+    }
+
+    getDiscountedPrice(item, discount = null) {
+        const basePrice = this.getItemBasePrice(item);
+        const serverPrice = Math.max(0, parseInt(discount?.discountedPrice, 10) || 0);
+        if (serverPrice > 0 && serverPrice < basePrice) return serverPrice;
+        return Math.max(0, Math.floor(basePrice * 0.8));
+    }
+
+    getActiveDiscount(itemId) {
+        const id = String(itemId || '').trim();
+        const discount = this.discountedItems[id];
+        if (!discount) return null;
+
+        const expiresAt = Math.max(0, parseInt(discount.expiresAt, 10) || 0);
+        if (expiresAt > 0 && expiresAt <= Date.now()) {
+            delete this.discountedItems[id];
+            return null;
+        }
+
+        return discount;
+    }
+
+    getCurrentItemPrice(item) {
+        const discount = this.getActiveDiscount(item?.id);
+        return discount ? this.getDiscountedPrice(item, discount) : this.getItemBasePrice(item);
+    }
+
+    getShopDiscountRewardOptions(item) {
+        const itemId = String(item?.id || '').trim();
+        const basePrice = this.getItemBasePrice(item);
+        const discountedPrice = this.getDiscountedPrice(item);
+        return {
+            context: `shop_discount:${itemId}`,
+            amount: Math.max(1, basePrice - discountedPrice)
+        };
+    }
+
+    getShopAdUnlockRewardOptions(item) {
+        const itemId = String(item?.id || '').trim();
+        return {
+            context: `shop_ad_unlock:${itemId}`,
+            amount: 1
+        };
+    }
+
     groupByCategory() {
         const grouped = {};
         this.items.forEach(item => {
@@ -3197,9 +3250,10 @@ class ShopManager {
                         } else {
                             let price = item.price;
                             let displayPrice = `${price} ${_safeT('balance')}`;
+                            const activeDiscount = this.getActiveDiscount(item.id);
                             
-                            if (this.discountedItems[item.id]) {
-                                const discounted = Math.floor(price * 0.8);
+                            if (activeDiscount) {
+                                const discounted = this.getDiscountedPrice(item, activeDiscount);
                                 displayPrice = `<span class="old-price">${price}</span> ${discounted} ${_safeT('balance')}`;
                             }
                             priceHtml = `<div class="price">${displayPrice}</div>`;
@@ -3222,11 +3276,12 @@ class ShopManager {
                                 let adProgress = parseInt(localStorage.getItem(`yamb_adprogress_${item.id}`)) || 0;
                                 btnHtml = `<button class="btn-action btn-ad-state-aware" style="background: linear-gradient(45deg, #FF9800, #F57C00); color: white; border: none; border-radius: 8px; padding: 5px 10px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0px rgba(0,0,0,0.3);" onclick="shop.watchAdForUnlock('${item.id}', ${item.adUnlock})">📺 ${adProgress} / ${item.adUnlock}</button>`;
                             } else {
-                                let currentPrice = this.discountedItems[item.id] ? Math.floor(item.price * 0.8) : item.price;
+                                const activeDiscount = this.getActiveDiscount(item.id);
+                                let currentPrice = this.getCurrentItemPrice(item);
                                 const safeName = itemName.replace(/'/g, "\\'"); 
                                 
                                 let discountBtn = '';
-                                if(!this.discountedItems[item.id]) {
+                                if(!activeDiscount) {
                                     discountBtn = `<button class="btn-action btn-discount btn-ad-state-aware" onclick="shop.watchAdDiscount('${item.id}')">📺 -20%</button>`;
                                 }
 
@@ -3309,7 +3364,10 @@ class ShopManager {
     }
 
     async tryBuy(id, name, price) {
-        if (this.balance < price) {
+        const item = this.getItemById(id);
+        const currentPrice = item ? this.getCurrentItemPrice(item) : Math.max(0, parseInt(price, 10) || 0);
+
+        if (this.balance < currentPrice) {
             if (typeof window.showNotification === 'function') {
                 window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!");
             } else if (window.modalManager && window.modalManager.overlay) {
@@ -3321,20 +3379,21 @@ class ShopManager {
         }
         
         if (typeof window.openConfirmModal === 'function') {
-            window.openConfirmModal(id, name, price);
+            window.openConfirmModal(id, name, currentPrice);
         } else if (window.modalManager && window.modalManager.overlay) {
             const isConfirmed = await window.modalManager.confirm(`${_safeT('msg_confirm_buy')} ${name}?`);
             if (isConfirmed) {
-                this.processTransaction(id, price);
+                this.processTransaction(id, currentPrice);
             }
         }
     }
 
     processTransaction(id, price) {
         const itemId = String(id || '').trim();
-        const safePrice = Math.max(0, parseInt(price, 10) || 0);
+        const item = this.getItemById(itemId);
+        const safePrice = item ? this.getCurrentItemPrice(item) : Math.max(0, parseInt(price, 10) || 0);
 
-        if (!itemId) return false;
+        if (!itemId || !item) return false;
 
         if (this.unlocked.includes(itemId)) {
             this.updateBalanceDisplay();
@@ -3356,6 +3415,7 @@ class ShopManager {
 
         this.balance -= safePrice;
         this.unlocked.push(itemId);
+        delete this.discountedItems[itemId];
         
         localStorage.setItem('yamb_dukati', this.balance);
         localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
@@ -3426,46 +3486,131 @@ class ShopManager {
     }
 
     async watchAdDiscount(id) {
+        const item = this.getItemById(id);
+        if (!item || this.unlocked.includes(item.id) || this.getItemBasePrice(item) <= 0) return;
+
         const adCtrl = this.getAdController();
         if (adCtrl) {
-            const success = await adCtrl.showRewardVideo();
+            const rewardOptions = this.getShopDiscountRewardOptions(item);
+            const isRewardReady = typeof adCtrl.isRewardVideoReadyFor === 'function'
+                ? adCtrl.isRewardVideoReadyFor(rewardOptions)
+                : adCtrl.ads.rewarded.isReady;
+
+            if (!isRewardReady) {
+                if (typeof window.showNotification === 'function') {
+                    window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
+                } else if (window.modalManager && window.modalManager.overlay) {
+                    window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
+                }
+                adCtrl.prepareReward(rewardOptions);
+                return;
+            }
+
+            const success = await adCtrl.showRewardVideo(rewardOptions);
             if (success) {
-                this.discountedItems[id] = true;
+                const ssvNonce = typeof adCtrl.consumeLastRewardSsvNonce === 'function'
+                    ? adCtrl.consumeLastRewardSsvNonce()
+                    : '';
+                const discountResult = typeof adCtrl.claimRewardWithSsvRetry === 'function'
+                    ? await adCtrl.claimRewardWithSsvRetry(
+                        () => this.claimServerShopDiscount(item.id, ssvNonce),
+                        { nonce: ssvNonce, context: rewardOptions.context }
+                    )
+                    : await this.claimServerShopDiscount(item.id, ssvNonce);
+
+                if (!discountResult.ok) {
+                    this.showAdClaimError(discountResult);
+                    return;
+                }
+
+                this.discountedItems[item.id] = {
+                    discountedPrice: discountResult.discountedPrice,
+                    expiresAt: discountResult.expiresAt
+                };
                 this.render();
+                this.showRewardMessage(_safeT('msg_discount_applied') || "Popust primenjen! -20%", _safeT('modal_title_info') || "INFO");
             }
         }
     }
     
     // NOVO: Funkcija za otključavanje predmeta/teme gledanjem serije reklama
     async watchAdForUnlock(id, target) {
+        const item = this.getItemById(id);
+        const requiredTarget = Math.max(1, parseInt(item?.adUnlock || target, 10) || 0);
+        if (!item || this.unlocked.includes(item.id) || requiredTarget <= 0) return;
+
         const adCtrl = this.getAdController();
         if (adCtrl) {
-            if (!adCtrl.ads.rewarded.isReady) {
+            const rewardOptions = this.getShopAdUnlockRewardOptions(item);
+            const isRewardReady = typeof adCtrl.isRewardVideoReadyFor === 'function'
+                ? adCtrl.isRewardVideoReadyFor(rewardOptions)
+                : adCtrl.ads.rewarded.isReady;
+
+            if (!isRewardReady) {
                 if (typeof window.showNotification === 'function') {
                     window.showNotification(_safeT('modal_title_info') || "INFO", _safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.");
                 } else if (window.modalManager && window.modalManager.overlay) {
                     window.modalManager.alert(_safeT('ad_not_ready') || "Reklama se učitava. Pokušajte za par sekundi.", _safeT('modal_title_info') || "INFO");
                 }
-                adCtrl.prepareReward();
+                adCtrl.prepareReward(rewardOptions);
                 return;
             }
-            const success = await adCtrl.showRewardVideo();
+
+            const success = await adCtrl.showRewardVideo(rewardOptions);
             if (success) {
-                let progress = parseInt(localStorage.getItem(`yamb_adprogress_${id}`)) || 0;
-                progress++;
+                const ssvNonce = typeof adCtrl.consumeLastRewardSsvNonce === 'function'
+                    ? adCtrl.consumeLastRewardSsvNonce()
+                    : '';
+                const unlockResult = typeof adCtrl.claimRewardWithSsvRetry === 'function'
+                    ? await adCtrl.claimRewardWithSsvRetry(
+                        () => this.claimServerShopAdUnlock(item.id, ssvNonce),
+                        { nonce: ssvNonce, context: rewardOptions.context }
+                    )
+                    : await this.claimServerShopAdUnlock(item.id, ssvNonce);
+
+                if (!unlockResult.ok) {
+                    this.showAdClaimError(unlockResult);
+                    return;
+                }
+
+                let progress = Math.max(0, parseInt(unlockResult.progress, 10) || 0);
+                let unlocked = unlockResult.unlocked === true;
+                if (unlockResult.localFallback) {
+                    progress = (parseInt(localStorage.getItem(`yamb_adprogress_${item.id}`), 10) || 0) + 1;
+                    unlocked = progress >= requiredTarget;
+                }
+                progress = Math.min(requiredTarget, progress);
                 
-                if (progress >= target) {
+                if (unlocked) {
                     // Otključano
-                    if (!this.unlocked.includes(id)) {
-                        this.unlocked.push(id);
+                    if (!this.unlocked.includes(item.id)) {
+                        this.unlocked.push(item.id);
                     }
                     localStorage.setItem(this.unlockKey, JSON.stringify(this.unlocked));
-                    localStorage.removeItem(`yamb_adprogress_${id}`);
+                    localStorage.removeItem(`yamb_adprogress_${item.id}`);
 
                     let opstiNiz = JSON.parse(localStorage.getItem('yamb_unlocked')) || [];
-                    if (!opstiNiz.includes(id)) {
-                        opstiNiz.push(id);
+                    if (!opstiNiz.includes(item.id)) {
+                        opstiNiz.push(item.id);
                         localStorage.setItem('yamb_unlocked', JSON.stringify(opstiNiz));
+                    }
+
+                    if (window.statsManager) {
+                        const statsFieldByType = {
+                            skin: 'unlockedSkins',
+                            effect: 'unlockedEffects',
+                            theme: 'unlockedThemes'
+                        };
+                        const statsField = statsFieldByType[this.type];
+                        if (statsField) {
+                            if (!Array.isArray(window.statsManager.stats[statsField])) {
+                                window.statsManager.stats[statsField] = [];
+                            }
+                            if (!window.statsManager.stats[statsField].includes(item.id)) {
+                                window.statsManager.stats[statsField].push(item.id);
+                            }
+                            window.statsManager.saveStats();
+                        }
                     }
 
                     if(window.app && window.app.soundMgr) window.app.soundMgr.trophy();
@@ -3478,7 +3623,7 @@ class ShopManager {
                     }
                 } else {
                     // Samo napredak
-                    localStorage.setItem(`yamb_adprogress_${id}`, progress);
+                    localStorage.setItem(`yamb_adprogress_${item.id}`, progress);
                     if(window.app && window.app.soundMgr) window.app.soundMgr.win();
                 }
                 this.render();
@@ -3548,12 +3693,87 @@ class ShopManager {
         });
     }
 
+    async claimServerShopDiscount(itemId, ssvNonce = '') {
+        const app = window.app;
+        if (!app || !app.socket || !app.socket.connected) {
+            return { ok: false, reason: 'err_server_conn' };
+        }
+
+        if (typeof app.authenticateSocketIdentity === 'function') {
+            const authResult = await app.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: 'auth_required' };
+            }
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'err_server_conn' });
+            }, 45000);
+
+            app.socket.emit('claim_shop_discount', { itemId, ssvNonce }, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            });
+        });
+    }
+
+    async claimServerShopAdUnlock(itemId, ssvNonce = '') {
+        const app = window.app;
+        if (!app || !app.socket || !app.socket.connected) {
+            return { ok: false, reason: 'err_server_conn' };
+        }
+
+        if (typeof app.authenticateSocketIdentity === 'function') {
+            const authResult = await app.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: 'auth_required' };
+            }
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'err_server_conn' });
+            }, 45000);
+
+            app.socket.emit('claim_shop_ad_unlock', { itemId, ssvNonce }, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            });
+        });
+    }
+
     showRewardMessage(message, title) {
         if (typeof window.showNotification === 'function') {
             window.showNotification(title, message);
         } else if (window.modalManager && window.modalManager.overlay) {
             window.modalManager.alert(message, title);
         }
+    }
+
+    showAdClaimError(result = {}) {
+        const cooldown = Math.ceil((result.retryAfterMs || 0) / 1000);
+        let message = _safeT('err_server_conn') || "Greška pri konekciji sa serverom.";
+        if (result.reason === 'ad_reward_cooldown') {
+            message = (_safeT('economy_reward_cooldown') || "Nagrada je već obrađena. Pokušajte ponovo za {0}s.").replace('{0}', cooldown || 1);
+        } else if (result.reason === 'auth_required') {
+            message = _safeT('auth_required') || "Morate se prijaviti da biste preuzeli nagradu.";
+        } else if (result.reason === 'ad_verification_required' || result.reason === 'ad_verification_pending') {
+            message = _safeT('ad_confirmation_retry') || "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
+        } else if (result.reason === 'already_unlocked') {
+            message = _safeT('btn_bought') || "Već kupljeno.";
+        }
+        this.showRewardMessage(message, _safeT('modal_title_info') || "INFO");
     }
 
     syncShopStateToServer() {

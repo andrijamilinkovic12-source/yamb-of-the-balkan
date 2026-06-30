@@ -91,7 +91,7 @@ class UndoManager {
     }
 
     getUndoTokenRewardOptions() {
-        return { context: 'undo_tokens', amount: 3 };
+        return { context: 'undo_tokens', amount: 1 };
     }
 
     syncEconomyBanner(index) {
@@ -113,21 +113,7 @@ class UndoManager {
         const adMob = window.adMobGlobal;
 
         if (parsedType === 'interstitial') {
-            if (!adMob || !adMob.showInterstitial) {
-                this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
-                return;
-            }
-
-            const success = await adMob.showInterstitial();
-            if (!success) return;
-
-            const result = await this.claimServerCoinReward('interstitial');
-            if (!result.ok) {
-                this.showRewardError(result);
-                return;
-            }
-
-            this.applyCoinReward(result, 200);
+            this.showRewardError({ reason: 'unsupported_unverified_ad_reward' });
             return;
         }
 
@@ -174,38 +160,10 @@ class UndoManager {
     }
 
     async claimServerCoinReward(type, ssvNonce = '') {
-        if (!this.app || !this.app.socket || !this.app.socket.connected) {
-            if (type === 'rewarded') return { ok: false, reason: 'err_server_conn' };
-            return { ok: true, localFallback: true, reward: 200 };
+        if (type === 'interstitial') {
+            return { ok: false, reason: 'unsupported_unverified_ad_reward', permanent: true };
         }
 
-        if (typeof this.app.authenticateSocketIdentity === 'function') {
-            const authResult = await this.app.authenticateSocketIdentity();
-            if (!authResult || !authResult.ok) {
-                return { ok: false, reason: 'auth_required' };
-            }
-        }
-
-        return new Promise(resolve => {
-            let settled = false;
-            const claimTimeoutMs = type === 'rewarded' ? 45000 : 18000;
-            const timer = setTimeout(() => {
-                if (settled) return;
-                settled = true;
-                resolve({ ok: false, reason: 'err_server_conn' });
-            }, claimTimeoutMs);
-
-            const eventName = type === 'interstitial' ? 'claim_shop_interstitial_reward' : 'claim_shop_ad_reward';
-            this.app.socket.emit(eventName, { ssvNonce }, (result) => {
-                if (settled) return;
-                settled = true;
-                clearTimeout(timer);
-                resolve(result || { ok: false, reason: 'err_server_conn' });
-            });
-        });
-    }
-
-    async claimServerUndoTokenReward(type, ssvNonce = '') {
         if (!this.app || !this.app.socket || !this.app.socket.connected) {
             return { ok: false, reason: 'err_server_conn' };
         }
@@ -219,7 +177,41 @@ class UndoManager {
 
         return new Promise(resolve => {
             let settled = false;
-            const claimTimeoutMs = type === 'rewarded' ? 45000 : 18000;
+            const claimTimeoutMs = 45000;
+            const timer = setTimeout(() => {
+                if (settled) return;
+                settled = true;
+                resolve({ ok: false, reason: 'err_server_conn' });
+            }, claimTimeoutMs);
+
+            this.app.socket.emit('claim_shop_ad_reward', { ssvNonce }, (result) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(result || { ok: false, reason: 'err_server_conn' });
+            });
+        });
+    }
+
+    async claimServerUndoTokenReward(type, ssvNonce = '') {
+        if (type === 'interstitial') {
+            return { ok: false, reason: 'unsupported_unverified_ad_reward', permanent: true, type };
+        }
+
+        if (!this.app || !this.app.socket || !this.app.socket.connected) {
+            return { ok: false, reason: 'err_server_conn' };
+        }
+
+        if (typeof this.app.authenticateSocketIdentity === 'function') {
+            const authResult = await this.app.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: 'auth_required' };
+            }
+        }
+
+        return new Promise(resolve => {
+            let settled = false;
+            const claimTimeoutMs = 45000;
             const timer = setTimeout(() => {
                 if (settled) return;
                 settled = true;
@@ -275,6 +267,8 @@ class UndoManager {
             message = gt('ad_confirmation_retry') || "Potvrda reklame još nije stigla. Pokušajte preuzimanje nagrade za par sekundi.";
         } else if (result.reason === 'undo_tokens_max') {
             message = gt('undo_tokens_max') || "Već imate maksimalan broj tokena.";
+        } else if (result.reason === 'unsupported_unverified_ad_reward') {
+            message = gt('unsupported_unverified_ad_reward') || "Ova vrsta reklame ne može da isplati nagradu. Koristite nagradni video.";
         }
 
         this.app.modal.alert(message, gt('modal_title_info') || "INFO");
@@ -282,59 +276,47 @@ class UndoManager {
 
     // --- KUPOVINA TOKENA GLEDANJEM REKLAMA ---
     async buyTokens(type) {
-        const parsedType = parseInt(type, 10);
+        const requestedType = String(type || '').trim().toLowerCase();
         const adMob = window.adMobGlobal;
         
-        console.log("Pokrenuta nabavka tokena, tip:", parsedType);
+        console.log("Pokrenuta nabavka tokena, tip:", requestedType || 'rewarded');
 
-        if (parsedType === 1) {
-            if (!adMob || !adMob.showInterstitial) {
-                this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
+        if (requestedType === 'interstitial') {
+            this.showRewardError({ reason: 'unsupported_unverified_ad_reward' });
+            return;
+        }
+
+        if (!adMob || !adMob.showRewardVideo) {
+            this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
+            return;
+        }
+
+        const rewardOptions = this.getUndoTokenRewardOptions();
+        const isTokenRewardReady = typeof adMob.isRewardVideoReadyFor === 'function'
+            ? adMob.isRewardVideoReadyFor(rewardOptions)
+            : adMob.ads?.rewarded?.isReady;
+        if (!isTokenRewardReady) {
+            if (typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
+            this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
+            return;
+        }
+
+        const success = await adMob.showRewardVideo(rewardOptions);
+        if (success) {
+            const ssvNonce = typeof adMob.consumeLastRewardSsvNonce === 'function'
+                ? adMob.consumeLastRewardSsvNonce()
+                : '';
+            const result = typeof adMob.claimRewardWithSsvRetry === 'function'
+                ? await adMob.claimRewardWithSsvRetry(
+                    () => this.claimServerUndoTokenReward('rewarded', ssvNonce),
+                    { nonce: ssvNonce, context: 'undo_tokens' }
+                )
+                : await this.claimServerUndoTokenReward('rewarded', ssvNonce);
+            if (!result.ok) {
+                this.showRewardError(result);
                 return;
             }
-
-            const success = await adMob.showInterstitial();
-            if (success) {
-                const result = await this.claimServerUndoTokenReward('interstitial');
-                if (!result.ok) {
-                    this.showRewardError(result);
-                    return;
-                }
-                this.applyTokenReward(result, 1);
-            }
-        } else if (parsedType === 3) {
-            if (!adMob || !adMob.showRewardVideo) {
-                this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
-                return;
-            }
-
-            const rewardOptions = this.getUndoTokenRewardOptions();
-            const isTokenRewardReady = typeof adMob.isRewardVideoReadyFor === 'function'
-                ? adMob.isRewardVideoReadyFor(rewardOptions)
-                : adMob.ads?.rewarded?.isReady;
-            if (!isTokenRewardReady) {
-                if (typeof adMob.prepareReward === 'function') adMob.prepareReward(rewardOptions);
-                this.app.modal.alert(gt('ad_not_ready') || "Reklama se učitava ili trenutno nije dostupna. Pokušajte za par sekundi.", gt('modal_title_info') || "INFO");
-                return;
-            }
-
-            const success = await adMob.showRewardVideo(rewardOptions);
-            if (success) {
-                const ssvNonce = typeof adMob.consumeLastRewardSsvNonce === 'function'
-                    ? adMob.consumeLastRewardSsvNonce()
-                    : '';
-                const result = typeof adMob.claimRewardWithSsvRetry === 'function'
-                    ? await adMob.claimRewardWithSsvRetry(
-                        () => this.claimServerUndoTokenReward('rewarded', ssvNonce),
-                        { nonce: ssvNonce, context: 'undo_tokens' }
-                    )
-                    : await this.claimServerUndoTokenReward('rewarded', ssvNonce);
-                if (!result.ok) {
-                    this.showRewardError(result);
-                    return;
-                }
-                this.applyTokenReward(result, 3);
-            }
+            this.applyTokenReward(result, 1);
         }
     }
 

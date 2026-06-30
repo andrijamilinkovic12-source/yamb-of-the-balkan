@@ -129,7 +129,7 @@ const RulesData = {
                 <ul>
                     <li><strong>Online dueli:</strong> Vraćanje upisa troši 1 token i mora se iskoristiti pre nego protivnik započne sledeći potez. Zbog toga postoji zadrška od 2.5 sekunde pre protivnikovog bacanja.</li>
                     <li><strong>Lokalna igra:</strong> U solo i igri za dva igrača vraćanje se potvrđuje gledanjem reklame kada je dostupna na uređaju.</li>
-                    <li><strong>Nabavka tokena:</strong> U meniju dukata kartica za tokene nudi +1 token za kratku reklamu i +3 tokena za nagradni video.</li>
+                    <li><strong>Nabavka tokena:</strong> U meniju dukata kartica za tokene nudi +1 token za nagradni video.</li>
                 </ul>
 
                 <h3>${rulesAssetIconHtml('assets/treasury-icon.svg')} Riznica</h3>
@@ -283,7 +283,7 @@ const RulesData = {
                 <ul>
                     <li><strong>🎲 Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
                     <li><strong>${rulesAssetIconHtml('assets/daily-challenge-icon.svg')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
-                    <li><strong>${rulesAssetIconHtml('assets/ad-ticket-icon.svg')} Reward ads:</strong> In the ducat menu, a short ad grants +200 ducats, and a rewarded video grants +500 ducats when available.</li>
+                    <li><strong>${rulesAssetIconHtml('assets/ad-ticket-icon.svg')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available.</li>
                     <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
                 </ul>
 
@@ -292,7 +292,7 @@ const RulesData = {
                 <ul>
                     <li><strong>Online duels:</strong> Undoing costs 1 undo token and must be used before the opponent starts the next turn. This is why there is a 2.5-second delay before the opponent's roll.</li>
                     <li><strong>Local play:</strong> In solo and two-player local games, undo is confirmed by watching an ad when available on the device.</li>
-                    <li><strong>Getting tokens:</strong> The token tab in the ducat menu offers +1 token for a short ad and +3 tokens for a rewarded video.</li>
+                    <li><strong>Getting tokens:</strong> The token tab in the ducat menu offers +1 token for a rewarded video.</li>
                 </ul>
 
                 <h3>${rulesAssetIconHtml('assets/treasury-icon.svg')} Treasury</h3>

@@ -34,7 +34,7 @@ class TopListManager {
     /**
      * Upisuje skor (Prvo lokalno, pa pokušava na server)
      */
-    async submitScore(name, score, mode, providedPhoto = undefined) {
+    async submitScore(name, score, mode, providedPhoto = undefined, matchId = '') {
         if (!score || score <= 0) return;
 
         // OBAVEZNO: Rešavanje tuđih avatara!
@@ -52,6 +52,7 @@ class TopListManager {
         const entry = {
             localId: `${Date.now()}_${Math.random().toString(36).slice(2)}`,
             uid: currentUid, // <-- DODATO OVO POLJE
+            matchId: String(matchId || ''),
             playerName: name || this._t('player_unknown'), 
             score: parseInt(score),
             mode: mode || 'Solo',

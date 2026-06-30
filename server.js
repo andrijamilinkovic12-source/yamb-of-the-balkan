@@ -486,6 +486,7 @@ if (MONGO_URI) {
 const ScoreSchema = new mongoose.Schema({
     playerId: String,
     uid: String,
+    matchId: { type: String, default: '' },
     playerName: String,
     score: Number,
     mode: String,
@@ -494,6 +495,10 @@ const ScoreSchema = new mongoose.Schema({
 });
 ScoreSchema.index({ playerId: 1, score: -1 });
 ScoreSchema.index({ uid: 1, score: -1 });
+ScoreSchema.index(
+    { playerId: 1, matchId: 1 },
+    { unique: true, partialFilterExpression: { matchId: { $type: 'string', $gt: '' } } }
+);
 const Score = mongoose.model('Score', ScoreSchema);
 
 const MatchParticipantSchema = new mongoose.Schema({
@@ -508,10 +513,12 @@ const MatchResultSchema = new mongoose.Schema({
     matchId: { type: String, required: true },
     roomId: { type: String, default: '' },
     clientResultId: { type: String, default: '' },
+    gameSessionId: { type: String, default: '' },
     mode: { type: String, required: true },
     resultType: { type: String, enum: ['regular', 'technical'], required: true },
     reason: { type: String, default: '' },
     verification: { type: String, enum: ['server', 'authenticated_client'], required: true },
+    economyEligible: { type: Boolean, default: false },
     participants: { type: [MatchParticipantSchema], default: [] },
     winnerUid: { type: String, default: '' },
     loserUid: { type: String, default: '' },
@@ -520,6 +527,7 @@ const MatchResultSchema = new mongoose.Schema({
     loserCoinPenalty: { type: Number, default: 0 },
     penaltyPoints: { type: Number, default: 0 },
     statsAppliedUids: { type: [String], default: [] },
+    rewardClaimedUids: { type: [String], default: [] },
     statsComplete: { type: Boolean, default: false },
     lastReconcileAt: { type: Date, default: null },
     reconcileAttempts: { type: Number, default: 0 },
@@ -529,6 +537,10 @@ const MatchResultSchema = new mongoose.Schema({
     updatedAt: { type: Date, default: Date.now }
 }, { versionKey: false });
 MatchResultSchema.index({ matchId: 1 }, { unique: true });
+MatchResultSchema.index(
+    { gameSessionId: 1 },
+    { unique: true, partialFilterExpression: { gameSessionId: { $type: 'string', $gt: '' } } }
+);
 MatchResultSchema.index({ 'participants.uid': 1, finishedAt: -1 });
 MatchResultSchema.index({ mode: 1, resultType: 1, finishedAt: -1 });
 const MatchResult = mongoose.model('MatchResult', MatchResultSchema);
@@ -671,6 +683,8 @@ const UserProfileSchema = new mongoose.Schema({
     lastShopInterstitialRewardAt: { type: Number, default: 0 },
     lastUndoRewardedRewardAt: { type: Number, default: 0 },
     lastUndoInterstitialRewardAt: { type: Number, default: 0 },
+    shopDiscounts: { type: Object, default: {} },
+    shopAdUnlocks: { type: Object, default: {} },
     soundEnabled: { type: Boolean, default: true },
     vibrationEnabled: { type: Boolean, default: true },
     musicEnabled: { type: Boolean, default: true },
@@ -693,6 +707,7 @@ const UserProfileSchema = new mongoose.Schema({
     statsMigrationApplied: { type: Boolean, default: false },
     statsMigratedAt: { type: Date, default: null },
     recentMatchResultIds: { type: [String], default: [] },
+    claimedGameRewardIds: { type: [String], default: [] },
     lastLogin: { type: Date, default: Date.now }
 });
 const UserProfile = mongoose.model('UserProfile', UserProfileSchema);
@@ -801,7 +816,15 @@ const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
 const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '20000', 10)));
 const ADMOB_SSV_POLL_MS = 750;
 const ADMOB_SSV_MAX_AGE_MS = Math.max(60000, Math.min(15 * 60 * 1000, parseInt(process.env.ADMOB_SSV_MAX_AGE_MS || '600000', 10)));
-const REQUIRE_ADMOB_SSV = process.env.REQUIRE_ADMOB_SSV === 'true';
+function parseRequiredAdMobSsv(value) {
+    const normalized = String(value ?? '').trim().toLowerCase();
+    if (!normalized) return true;
+    return !['0', 'false', 'off', 'no', 'disabled'].includes(normalized);
+}
+const REQUIRE_ADMOB_SSV = parseRequiredAdMobSsv(process.env.REQUIRE_ADMOB_SSV);
+if (!REQUIRE_ADMOB_SSV) {
+    console.warn('⚠️ REQUIRE_ADMOB_SSV je isključen. Rewarded ad ekonomija koristi bypass bez server-side verifikacije.');
+}
 const ADMOB_REWARDED_AD_UNIT_ID = process.env.ADMOB_REWARDED_AD_UNIT_ID || 'ca-app-pub-4319963185096437/7896891915';
 const ADMOB_REWARDED_AD_UNIT_NUMERIC_ID = ADMOB_REWARDED_AD_UNIT_ID.includes('/')
     ? ADMOB_REWARDED_AD_UNIT_ID.split('/').pop()
@@ -1208,20 +1231,15 @@ function clearScoreSession(socketId) {
     delete gameCarriedDurations[socketId];
 }
 const SHOP_AD_REWARD_AMOUNT = 500;
-const SHOP_INTERSTITIAL_REWARD_AMOUNT = 200;
-const UNDO_REWARDED_REWARD_AMOUNT = 3;
-const UNDO_INTERSTITIAL_REWARD_AMOUNT = 1;
+const UNDO_REWARDED_REWARD_AMOUNT = 1;
 const SHOP_AD_REWARD_COOLDOWN_MS = 15000;
-const SHOP_INTERSTITIAL_REWARD_COOLDOWN_MS = 15000;
 const UNDO_REWARDED_REWARD_COOLDOWN_MS = 15000;
-const UNDO_INTERSTITIAL_REWARD_COOLDOWN_MS = 15000;
+const SHOP_DISCOUNT_MULTIPLIER = 0.8;
+const SHOP_DISCOUNT_WINDOW_MS = 10 * 60 * 1000;
 const MAX_IMPORTED_UNDO_TOKENS_BASE = 20;
 const MAX_PROFILE_GAMES = 250000;
-const MAX_PROFILE_GAME_DELTA_PER_SYNC = 50;
 const MAX_PROFILE_LEGACY_GAME_IMPORT = 5000;
 const MAX_PROFILE_COMPETITIVE_BUFFER = 250;
-const MAX_PROFILE_TOURNEY_DELTA_PER_SYNC = 3;
-const MAX_PROFILE_LEGACY_TOURNEY_IMPORT = 100;
 const MAX_PENALTY_POINTS = 100000;
 const LEADERBOARD_TIME_ZONE = 'Europe/Belgrade';
 const DAILY_CHALLENGE_TIME_ZONE = LEADERBOARD_TIME_ZONE;
@@ -1229,6 +1247,70 @@ const DAILY_CHALLENGE_SECRET = process.env.DAILY_CHALLENGE_SECRET ||
     process.env.FIREBASE_PROJECT_ID ||
     process.env.GOOGLE_CLOUD_PROJECT ||
     'yamb-daily-challenge-v1';
+const LOCAL_GAME_SESSION_SECRET = process.env.LOCAL_GAME_SESSION_SECRET ||
+    process.env.FIREBASE_SERVICE_ACCOUNT ||
+    process.env.FIREBASE_ADMIN_CREDENTIALS ||
+    process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 ||
+    process.env.MONGO_URI ||
+    crypto.randomBytes(32).toString('hex');
+if (!process.env.LOCAL_GAME_SESSION_SECRET) {
+    console.warn('⚠️ LOCAL_GAME_SESSION_SECRET nije podešen; koristi se privatna serverska konfiguracija ili privremeni ključ.');
+}
+
+function encodeLocalGameSessionPart(value) {
+    return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url');
+}
+
+function signLocalGameSessionPayload(encodedPayload) {
+    return crypto.createHmac('sha256', LOCAL_GAME_SESSION_SECRET)
+        .update(encodedPayload)
+        .digest('base64url');
+}
+
+function createLocalGameSessionToken(uid) {
+    const payload = {
+        v: 1,
+        uid: String(uid || '').trim(),
+        sessionId: crypto.randomBytes(18).toString('hex'),
+        startedAt: Date.now()
+    };
+    const encodedPayload = encodeLocalGameSessionPart(payload);
+    return `${encodedPayload}.${signLocalGameSessionPayload(encodedPayload)}`;
+}
+
+function verifyLocalGameSessionToken(token, expectedUid) {
+    const parts = String(token || '').split('.');
+    if (parts.length !== 2 || !parts[0] || !parts[1]) {
+        return { ok: false, reason: 'missing_game_session' };
+    }
+
+    const expectedSignature = signLocalGameSessionPayload(parts[0]);
+    const receivedSignature = parts[1];
+    const expectedBuffer = Buffer.from(expectedSignature);
+    const receivedBuffer = Buffer.from(receivedSignature);
+    if (expectedBuffer.length !== receivedBuffer.length || !crypto.timingSafeEqual(expectedBuffer, receivedBuffer)) {
+        return { ok: false, reason: 'invalid_game_session' };
+    }
+
+    try {
+        const payload = JSON.parse(Buffer.from(parts[0], 'base64url').toString('utf8'));
+        const uid = String(payload?.uid || '').trim();
+        const sessionId = String(payload?.sessionId || '').trim();
+        const startedAt = Number(payload?.startedAt);
+        if (payload?.v !== 1 || uid !== String(expectedUid || '').trim() || !/^[a-f0-9]{36}$/.test(sessionId) || !Number.isFinite(startedAt)) {
+            return { ok: false, reason: 'invalid_game_session' };
+        }
+
+        const duration = Date.now() - startedAt;
+        if (duration < 0 || duration > MAX_GAME_DURATION) {
+            return { ok: false, reason: 'stale_game_session' };
+        }
+
+        return { ok: true, uid, sessionId, startedAt, duration, token: String(token) };
+    } catch (err) {
+        return { ok: false, reason: 'invalid_game_session' };
+    }
+}
 
 function getTimeZoneParts(date, timeZone) {
     const parts = new Intl.DateTimeFormat('en-US', {
@@ -1619,7 +1701,15 @@ const SHOP_ITEM_PRICES = Object.freeze({
     severna: 45000
 });
 
-const FREE_UNLOCK_IDS = new Set(Object.entries(SHOP_ITEM_PRICES).filter(([, price]) => price === 0).map(([id]) => id));
+const SHOP_AD_UNLOCK_TARGETS = Object.freeze({
+    desert: 3
+});
+const SHOP_AD_UNLOCK_IDS = new Set(Object.keys(SHOP_AD_UNLOCK_TARGETS));
+const FREE_UNLOCK_IDS = new Set(
+    Object.entries(SHOP_ITEM_PRICES)
+        .filter(([id, price]) => price === 0 && !SHOP_AD_UNLOCK_IDS.has(id))
+        .map(([id]) => id)
+);
 const SKIN_UNLOCK_IDS = new Set([
     'default', 'classic_red', 'classic_blue', 'classic_black',
     'bronze_antique', 'bronze_patina', 'bronze_steampunk', 'bronze_spartan', 'bronze_rose', 'bronze_forge',
@@ -2545,10 +2635,12 @@ function normalizeMatchResultPayload(payload = {}) {
         matchId: String(payload.matchId || '').trim().substring(0, 128),
         roomId: String(payload.roomId || '').trim().substring(0, 180),
         clientResultId: String(payload.clientResultId || '').trim().substring(0, 128),
+        gameSessionId: String(payload.gameSessionId || '').trim().substring(0, 80),
         mode: normalizeMatchResultMode(payload.mode),
         resultType,
         reason: String(payload.reason || '').trim().substring(0, 80),
         verification,
+        economyEligible: payload.economyEligible === true,
         participants,
         winnerUid: String(payload.winnerUid || '').trim().substring(0, 128),
         loserUid: String(payload.loserUid || '').trim().substring(0, 128),
@@ -2595,6 +2687,17 @@ function buildClientReportedMatchResult(uid, playerName, data = {}) {
             return { ok: false, reason: 'score_out_of_range' };
         }
         scores.push(score);
+    }
+
+    const scoreSheets = Array.isArray(data.scoreSheets) ? data.scoreSheets.slice(0, 6) : [];
+    if (scoreSheets.length !== rawParticipants.length) {
+        return { ok: false, reason: 'missing_score_sheet' };
+    }
+    for (let index = 0; index < scoreSheets.length; index++) {
+        const calculatedScore = calculateCompletedDuelTotal(scoreSheets[index]);
+        if (calculatedScore === null || calculatedScore !== scores[index]) {
+            return { ok: false, reason: 'score_sheet_mismatch' };
+        }
     }
 
     const maxScore = Math.max(...scores);
@@ -2649,8 +2752,10 @@ function getMatchResultIdentitySignature(payload = {}) {
     const normalized = normalizeMatchResultPayload(payload);
     return JSON.stringify({
         matchId: normalized.matchId,
+        gameSessionId: normalized.gameSessionId,
         mode: normalized.mode,
         resultType: normalized.resultType,
+        economyEligible: normalized.economyEligible,
         participants: normalized.participants.map(participant => ({
             uid: participant.uid,
             name: participant.uid ? '' : participant.name,
@@ -2670,6 +2775,13 @@ async function ensureMatchResult(payload = {}) {
     }
 
     try {
+        if (normalized.gameSessionId) {
+            const sessionResult = await MatchResult.findOne({ gameSessionId: normalized.gameSessionId });
+            if (sessionResult && sessionResult.matchId !== normalized.matchId) {
+                return { ok: false, reason: 'game_session_already_used', created: false, result: sessionResult };
+            }
+        }
+
         const writeResult = await MatchResult.updateOne(
             { matchId: normalized.matchId },
             { $setOnInsert: normalized },
@@ -2692,9 +2804,14 @@ async function ensureMatchResult(payload = {}) {
         };
     } catch (err) {
         if (err && err.code === 11000) {
-            const result = await MatchResult.findOne({ matchId: normalized.matchId });
+            const result = await MatchResult.findOne(normalized.gameSessionId
+                ? { $or: [{ matchId: normalized.matchId }, { gameSessionId: normalized.gameSessionId }] }
+                : { matchId: normalized.matchId });
             if (result && getMatchResultIdentitySignature(result.toObject ? result.toObject() : result) === getMatchResultIdentitySignature(normalized)) {
                 return { ok: true, created: false, result };
+            }
+            if (result && result.gameSessionId === normalized.gameSessionId) {
+                return { ok: false, reason: 'game_session_already_used', created: false, result };
             }
         }
         console.error('Greška pri trajnom upisu rezultata partije:', err);
@@ -2739,6 +2856,38 @@ function rememberUserAppliedMatchResult(user, matchId) {
     const ids = Array.isArray(user.recentMatchResultIds) ? user.recentMatchResultIds : [];
     user.recentMatchResultIds = [...ids.filter(id => id !== matchId), matchId].slice(-RECENT_MATCH_RESULT_MEMORY);
     user.markModified('recentMatchResultIds');
+}
+
+function hasUserClaimedGameReward(user, matchId) {
+    return !!user && !!matchId && Array.isArray(user.claimedGameRewardIds) && user.claimedGameRewardIds.includes(matchId);
+}
+
+function rememberUserClaimedGameReward(user, matchId) {
+    if (!user || !matchId) return;
+    const ids = Array.isArray(user.claimedGameRewardIds) ? user.claimedGameRewardIds : [];
+    user.claimedGameRewardIds = [...ids.filter(id => id !== matchId), matchId].slice(-RECENT_MATCH_RESULT_MEMORY);
+    user.markModified('claimedGameRewardIds');
+}
+
+async function findVerifiedMatchParticipant(uid, submittedMatchId, expectedScore = null) {
+    const matchRef = String(submittedMatchId || '').trim().substring(0, 128);
+    if (!uid || !matchRef) return { ok: false, reason: 'match_result_required' };
+
+    const result = await MatchResult.findOne({
+        $or: [{ matchId: matchRef }, { clientResultId: matchRef }],
+        economyEligible: true,
+        participants: { $elemMatch: { uid } }
+    });
+    if (!result || result.resultType !== 'regular') {
+        return { ok: false, reason: 'match_result_not_found' };
+    }
+
+    const participant = (result.participants || []).find(item => String(item?.uid || '').trim() === uid);
+    const score = Math.max(0, Math.min(MAX_SCORE, toSafeInt(participant?.score, 0)));
+    if (!participant || score <= 0) return { ok: false, reason: 'match_result_not_found' };
+    if (expectedScore !== null && score !== expectedScore) return { ok: false, reason: 'score_mismatch' };
+
+    return { ok: true, result, participant, score, matchId: result.matchId };
 }
 
 function emitCompletedOnlineGame(roomId) {
@@ -3062,6 +3211,7 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
         resultType: 'regular',
         reason: 'completed_scores',
         verification: 'server',
+        economyEligible: true,
         participants: participants.map((player, index) => ({
             uid: player.uid,
             name: player.name,
@@ -3113,6 +3263,7 @@ async function applyServerSideCompletedDuel(roomId, finisherSocketId = null) {
 
             applyCompletedDuelProfileStats(user, resultType, player.score);
             applyCompletedDuelH2H(user, opponent, resultType, player.score, opponent.score);
+            await applyTechnicalLeagueDelta(user, player.score);
             rememberUserAppliedMatchResult(user, matchId);
             await user.save();
             await markMatchResultStatsApplied(matchId, player.uid);
@@ -3958,6 +4109,12 @@ async function calculateTournamentPi(uid, fallbackPi = 0) {
     }
 }
 
+async function getVerifiedTournamentWins(uid) {
+    if (!MONGO_URI || !uid) return 0;
+    const stats = await TourneyStats.findOne({ playerId: uid }).select('wins').lean();
+    return Math.max(0, toSafeInt(stats?.wins, 0));
+}
+
 function getTournamentMatch(round, index) {
     if (!TOURNEY_ROUNDS.has(round)) return null;
 
@@ -4202,6 +4359,7 @@ function buildProfileSyncPayload(user) {
         unlockedEffects: Array.isArray(user.unlockedEffects) ? user.unlockedEffects : [],
         yamb_unlocked: Array.isArray(user.yamb_unlocked) ? user.yamb_unlocked : [],
         unlockedThemes: filterIdsByCategory(user.yamb_unlocked, THEME_UNLOCK_IDS),
+        shopAdUnlocks: normalizeShopAdUnlocks(user.shopAdUnlocks),
         lastDaily: normalizeDailyKeyForSync(user.lastDaily, todayKey, legacyTodayKey),
         lastDailyRewardClaimed: normalizeDailyKeyForSync(user.lastDailyRewardClaimed, todayKey, legacyTodayKey),
         soundEnabled: coerceBooleanSetting(user.soundEnabled) ?? true,
@@ -5927,6 +6085,7 @@ async function reconcileStoredServerMatchResult(result) {
                     Math.max(0, Math.min(MAX_SCORE, toSafeInt(opponent.score, 0)))
                 );
             }
+            await applyTechnicalLeagueDelta(user, score);
         }
 
         rememberUserAppliedMatchResult(user, result.matchId);
@@ -6533,14 +6692,6 @@ async function ensureTrophyRewardLedger(user) {
     return initialLedger;
 }
 
-function getNewTrophyRewards(clientTrophies, serverTrophies) {
-    const serverSet = new Set(sanitizeIdArray(serverTrophies));
-    return sanitizeIdArray(clientTrophies).reduce((sum, id) => {
-        if (serverSet.has(id)) return sum;
-        return sum + (TROPHY_REWARDS[id] || 0);
-    }, 0);
-}
-
 function getRequestedUnlockSet(stats) {
     return new Set([
         ...sanitizeIdArray(stats?.unlockedSkins),
@@ -6559,38 +6710,129 @@ function getExistingUnlockSet(user) {
     ]);
 }
 
-function getPaidUnlockCost(requestedUnlocks, existingUnlocks, requestedTrophies) {
+function getShopItemDiscountedPrice(price) {
+    return Math.max(0, Math.floor(Math.max(0, toSafeInt(price, 0)) * SHOP_DISCOUNT_MULTIPLIER));
+}
+
+function getShopDiscountAdContext(itemId) {
+    return `shop_discount:${String(itemId || '').trim()}`;
+}
+
+function getShopAdUnlockAdContext(itemId) {
+    return `shop_ad_unlock:${String(itemId || '').trim()}`;
+}
+
+function getShopAdUnlockTarget(itemId) {
+    return Math.max(0, toSafeInt(SHOP_AD_UNLOCK_TARGETS[String(itemId || '').trim()], 0));
+}
+
+function isPaidShopUnlockId(id) {
+    return !SHOP_AD_UNLOCK_IDS.has(id) && Math.max(0, toSafeInt(SHOP_ITEM_PRICES[id], 0)) > 0;
+}
+
+function normalizeShopDiscounts(value, now = Date.now()) {
+    if (!value || typeof value !== 'object') return {};
+
+    const clean = {};
+    Object.entries(value).forEach(([rawId, rawEntry]) => {
+        const id = String(rawId || '').trim().substring(0, 80);
+        const price = SHOP_ITEM_PRICES[id];
+        if (typeof price !== 'number' || price <= 0) return;
+
+        const entry = rawEntry && typeof rawEntry === 'object' ? rawEntry : {};
+        const expiresAt = Math.max(0, toSafeInt(entry.expiresAt, 0));
+        if (expiresAt <= now) return;
+
+        clean[id] = {
+            claimedAt: Math.max(0, Math.min(expiresAt, toSafeInt(entry.claimedAt, now))),
+            expiresAt
+        };
+    });
+
+    return clean;
+}
+
+function normalizeShopAdUnlocks(value) {
+    if (!value || typeof value !== 'object') return {};
+
+    const clean = {};
+    Object.entries(value).forEach(([rawId, rawEntry]) => {
+        const id = String(rawId || '').trim().substring(0, 80);
+        const target = getShopAdUnlockTarget(id);
+        if (target <= 0) return;
+
+        const entry = rawEntry && typeof rawEntry === 'object' ? rawEntry : {};
+        const progress = Math.max(0, Math.min(target, toSafeInt(entry.progress, 0)));
+        clean[id] = {
+            progress,
+            target,
+            updatedAt: Math.max(0, toSafeInt(entry.updatedAt, 0))
+        };
+    });
+
+    return clean;
+}
+
+function addUnlockedShopItemToUser(user, itemId) {
+    if (!user || !itemId) return false;
+
+    let changed = false;
+    const addToField = (field) => {
+        const current = sanitizeIdArray(user[field]);
+        if (current.includes(itemId)) return;
+        current.push(itemId);
+        user[field] = current;
+        changed = true;
+    };
+
+    addToField('yamb_unlocked');
+    if (SKIN_UNLOCK_IDS.has(itemId)) addToField('unlockedSkins');
+    if (EFFECT_UNLOCK_IDS.has(itemId)) addToField('unlockedEffects');
+
+    return changed;
+}
+
+function getPaidUnlockPurchaseSummary(requestedUnlocks, existingUnlocks, requestedTrophies, pendingDiscounts = {}) {
     const trophySet = new Set(sanitizeIdArray(requestedTrophies));
+    const discountState = normalizeShopDiscounts(pendingDiscounts);
     let total = 0;
+    const paidIds = [];
+    const discountedIds = [];
 
     requestedUnlocks.forEach(id => {
         if (existingUnlocks.has(id) || FREE_UNLOCK_IDS.has(id) || trophySet.has(id)) return;
-        const price = SHOP_ITEM_PRICES[id];
-        if (typeof price !== 'number') {
+        if (!isPaidShopUnlockId(id)) {
             total += 50000;
             return;
         }
-        total += Math.floor(price * 0.8);
+        const price = SHOP_ITEM_PRICES[id];
+        paidIds.push(id);
+        if (discountState[id]) {
+            total += getShopItemDiscountedPrice(price);
+            discountedIds.push(id);
+            return;
+        }
+        total += Math.max(0, price);
     });
 
-    return total;
+    return { total, paidIds, discountedIds };
+}
+
+function getPaidUnlockCost(requestedUnlocks, existingUnlocks, requestedTrophies, pendingDiscounts = {}) {
+    return getPaidUnlockPurchaseSummary(requestedUnlocks, existingUnlocks, requestedTrophies, pendingDiscounts).total;
 }
 
 function estimateEconomyCeiling(stats) {
-    const games = Math.max(0, toSafeInt(stats?.games));
     const tournamentWins = Math.max(0, toSafeInt(stats?.tournamentWins));
     const trophyRewards = sumTrophyRewards(stats?.unlockedTrophies);
 
     return Math.min(
         MAX_BALANCE,
-        1000 + (games * MAX_REWARD_PER_GAME) + trophyRewards + (tournamentWins * MAX_TOURNEY_REWARD) + 50000
+        1000 + trophyRewards + (tournamentWins * MAX_TOURNEY_REWARD) + 50000
     );
 }
 
-function calculateAllowedBalanceIncrease(user, stats, oldUserGames, oldTournamentWins, newTrophyRewards) {
-    const newGames = Math.max(oldUserGames, toSafeInt(stats?.games));
-    const gameDelta = Math.max(0, newGames - oldUserGames);
-    const tournamentDelta = Math.max(0, toSafeInt(stats?.tournamentWins) - oldTournamentWins);
+function calculateAllowedBalanceIncrease(user, stats) {
     const todayStr = getDailyChallengeDayKey();
     const legacyTodayStr = getLegacyDailyDayKey();
     const requestedDailyReward = Math.max(0, Math.min(MAX_DAILY_REWARD, toSafeInt(stats?.dailyRewardAmount, 0)));
@@ -6609,10 +6851,7 @@ function calculateAllowedBalanceIncrease(user, stats, oldUserGames, oldTournamen
         ? requestedDailyReward
         : 0;
 
-    return (gameDelta * MAX_REWARD_PER_GAME) +
-        (tournamentDelta * MAX_TOURNEY_REWARD) +
-        newTrophyRewards +
-        dailyAllowance;
+    return dailyAllowance;
 }
 
 function clearPendingGameRewardSession(uid, rewardSession) {
@@ -6621,28 +6860,30 @@ function clearPendingGameRewardSession(uid, rewardSession) {
     if (pendingGameRewardsByUid[uid] === rewardSession) delete pendingGameRewardsByUid[uid];
 }
 
-function getPendingGameRewardIncrease(uid, requestedBalanceDelta) {
-    const rewardSession = uid ? pendingGameRewardsByUid[uid] : null;
-    if (!rewardSession || requestedBalanceDelta <= 0) {
-        return { amount: 0, session: null };
+function openPendingGameRewardSession(uid, socketId, matchId, score, mode) {
+    if (!uid || !socketId || !matchId) return null;
+
+    const rewardSession = {
+        uid,
+        socketId,
+        matchId,
+        score: Math.max(0, Math.min(MAX_SCORE, toSafeInt(score, 0))),
+        mode: String(mode || 'Solo').substring(0, 24),
+        createdAt: Date.now()
+    };
+    const previousRewardSession = pendingGameRewardsByUid[uid];
+    if (previousRewardSession && previousRewardSession.socketId) {
+        delete pendingGameRewards[previousRewardSession.socketId];
     }
+    pendingGameRewards[socketId] = rewardSession;
+    pendingGameRewardsByUid[uid] = rewardSession;
 
-    if (Date.now() - rewardSession.createdAt > GAME_REWARD_CLAIM_WINDOW_MS) {
-        clearPendingGameRewardSession(uid, rewardSession);
-        return { amount: 0, session: null };
-    }
+    setTimeout(() => {
+        if (pendingGameRewards[socketId] === rewardSession) delete pendingGameRewards[socketId];
+        if (pendingGameRewardsByUid[uid] === rewardSession) delete pendingGameRewardsByUid[uid];
+    }, GAME_REWARD_CLAIM_WINDOW_MS);
 
-    const baseReward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, toSafeInt(rewardSession.score, 0)));
-    const doubledReward = Math.max(baseReward, Math.min(MAX_REWARD_PER_GAME, baseReward * 2));
-    let amount = 0;
-
-    if (requestedBalanceDelta >= doubledReward) {
-        amount = doubledReward;
-    } else if (requestedBalanceDelta >= baseReward) {
-        amount = baseReward;
-    }
-
-    return { amount, session: amount > 0 ? rewardSession : null };
+    return rewardSession;
 }
 
 function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, acceptPaidUnlocks) {
@@ -6650,7 +6891,7 @@ function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, accep
     const trophySet = new Set(sanitizeIdArray(requestedTrophies));
 
     sanitizeIdArray(clientItems).forEach(id => {
-        if (serverSet.has(id) || FREE_UNLOCK_IDS.has(id) || trophySet.has(id) || (acceptPaidUnlocks && SHOP_ITEM_PRICES[id] !== undefined)) {
+        if (serverSet.has(id) || FREE_UNLOCK_IDS.has(id) || trophySet.has(id) || (acceptPaidUnlocks && isPaidShopUnlockId(id))) {
             serverSet.add(id);
         }
     });
@@ -6916,8 +7157,9 @@ function filterAllowedTrophies(stats, clientTrophies, serverTrophies = [], allow
     return Array.from(accepted);
 }
 
-function buildInitialProfileState(stats) {
+function buildInitialProfileState(stats, verifiedTournamentWins = 0) {
     const normalized = normalizeProfileStats(stats);
+    normalized.tournamentWins = Math.max(0, toSafeInt(verifiedTournamentWins, 0));
     const hasPayload = hasProfileStatsPayload(stats, normalized);
     const unlockedTrophies = filterAllowedTrophies(normalized, stats?.unlockedTrophies, [], hasPayload);
 
@@ -6945,7 +7187,7 @@ function applyProfileStatsGuard(user, stats) {
         penaltyPoints: Math.max(0, toSafeInt(user.penaltyPoints))
     };
 
-    const maxGameDelta = allowLegacyImport ? MAX_PROFILE_LEGACY_GAME_IMPORT : MAX_PROFILE_GAME_DELTA_PER_SYNC;
+    const maxGameDelta = allowLegacyImport ? MAX_PROFILE_LEGACY_GAME_IMPORT : 0;
     const requestedGameDelta = Math.max(0, incoming.games - oldStats.games);
     const acceptedGameDelta = Math.min(requestedGameDelta, maxGameDelta);
 
@@ -6969,7 +7211,9 @@ function applyProfileStatsGuard(user, stats) {
             (recentTechnicalResult.resultType === 'win' && requestedWinsDelta === 1 && requestedLossesDelta === 0) ||
             (recentTechnicalResult.resultType === 'loss' && requestedLossesDelta === 1 && requestedWinsDelta === 0)
         );
-    let remainingCompetitiveDelta = isServerTechnicalEcho ? 0 : acceptedGameDelta + legacyCompetitiveRoom + 1;
+    let remainingCompetitiveDelta = allowLegacyImport && !isServerTechnicalEcho
+        ? acceptedGameDelta + legacyCompetitiveRoom + 1
+        : 0;
 
     const acceptedWinsDelta = Math.min(requestedWinsDelta, remainingCompetitiveDelta);
     user.wins = oldStats.wins + acceptedWinsDelta;
@@ -6984,7 +7228,9 @@ function applyProfileStatsGuard(user, stats) {
         console.log(`🚨 STATS GUARD: Ograničen skok W/L statistike za ${user.playerName || user.firebaseUid}.`);
     }
 
-    user.highscore = Math.max(oldStats.highscore, Math.min(incoming.highscore, MAX_SCORE));
+    user.highscore = allowLegacyImport
+        ? Math.max(oldStats.highscore, Math.min(incoming.highscore, MAX_SCORE))
+        : oldStats.highscore;
 
     const maxTotalScoreSum = Math.min(
         user.games * MAX_SCORE,
@@ -6996,8 +7242,7 @@ function applyProfileStatsGuard(user, stats) {
     user.totalScoreSum = Math.max(oldStats.totalScoreSum, Math.min(incoming.totalScoreSum, maxTotalScoreSum));
 
     const requestedTournamentDelta = Math.max(0, incoming.tournamentWins - oldStats.tournamentWins);
-    const maxTournamentDelta = allowLegacyImport ? MAX_PROFILE_LEGACY_TOURNEY_IMPORT : MAX_PROFILE_TOURNEY_DELTA_PER_SYNC;
-    const acceptedTournamentDelta = Math.min(requestedTournamentDelta, maxTournamentDelta, Math.max(acceptedGameDelta, allowLegacyImport ? user.games : 0));
+    const acceptedTournamentDelta = 0;
     if (requestedTournamentDelta > acceptedTournamentDelta) {
         console.log(`🚨 STATS GUARD: Ograničen skok turnirskih pobeda sa ${oldStats.tournamentWins} na ${incoming.tournamentWins}.`);
     }
@@ -7171,7 +7416,7 @@ function buildInitialEconomyState(stats, acceptedTrophies = null) {
     const requestedBalance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(stats?.balance, 0)));
     const purchaseCoverage = Math.max(0, economyCeiling - requestedBalance);
     const acceptsPaidUnlocks = requestedPaidUnlockCost === 0 || purchaseCoverage >= requestedPaidUnlockCost;
-    const acceptedBalance = acceptsPaidUnlocks ? requestedBalance : Math.min(requestedBalance, economyCeiling);
+    const acceptedBalance = Math.min(requestedBalance, economyCeiling);
     const undoLimit = Math.min(
         MAX_UNDO_TOKENS,
         MAX_IMPORTED_UNDO_TOKENS_BASE + (Math.max(0, toSafeInt(stats?.games)) * 3)
@@ -7713,10 +7958,10 @@ io.on('connection', (socket) => {
                 const oldBalance = Math.max(0, toSafeInt(user.balance));
                 const oldUndoTokens = Math.max(0, toSafeInt(user.undoTokens));
                 const requestedTrophies = statsGuard.acceptedTrophies;
-                const newTrophyRewards = getNewTrophyRewards(requestedTrophies, user.unlockedTrophies);
                 const existingUnlocksBefore = getExistingUnlockSet(user);
                 const requestedUnlocks = getRequestedUnlockSet(s);
-                const requestedPaidUnlockCost = getPaidUnlockCost(requestedUnlocks, existingUnlocksBefore, requestedTrophies);
+                const paidUnlockSummary = getPaidUnlockPurchaseSummary(requestedUnlocks, existingUnlocksBefore, requestedTrophies, user.shopDiscounts);
+                const requestedPaidUnlockCost = paidUnlockSummary.total;
 
                 const statsForEconomy = { ...s, ...statsGuard.acceptedStats, unlockedTrophies: requestedTrophies };
                 
@@ -7740,18 +7985,12 @@ io.on('connection', (socket) => {
                 let acceptedBalance = oldBalance;
                 const requestedBalance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(s.balance, oldBalance)));
                 const requestedBalanceDelta = requestedBalance - oldBalance;
-                const pendingGameReward = getPendingGameRewardIncrease(verifiedUid, requestedBalanceDelta);
                 const legacyEconomyAllowance = !user.economyMigrationApplied
-                    ? Math.max(0, estimateEconomyCeiling(s) - oldBalance)
+                    ? Math.max(0, estimateEconomyCeiling({ ...s, tournamentWins: oldTournamentWins }) - oldBalance)
                     : 0;
-                const allowedBalanceIncrease = calculateAllowedBalanceIncrease(user, s, oldUserGames, oldTournamentWins, newTrophyRewards) +
-                    pendingGameReward.amount +
+                const allowedBalanceIncrease = calculateAllowedBalanceIncrease(user, s) +
                     legacyEconomyAllowance;
-                const earnedBalanceIncrease = (Math.max(0, statsGuard.acceptedGameDelta) * MAX_REWARD_PER_GAME) +
-                    (Math.max(0, statsGuard.acceptedTournamentDelta) * MAX_TOURNEY_REWARD) +
-                    newTrophyRewards +
-                    (shouldMarkDailyRewardClaimed ? requestedDailyReward : 0) +
-                    pendingGameReward.amount +
+                const earnedBalanceIncrease = (shouldMarkDailyRewardClaimed ? requestedDailyReward : 0) +
                     legacyEconomyAllowance;
                 const hasEarnedBalanceIncrease = requestedBalanceDelta > 0 && requestedBalanceDelta <= earnedBalanceIncrease;
                 const isDailyBalanceOverage = hasDailyClaimPayload && requestedDailyReward > 0 && requestedBalanceDelta > 0 && (
@@ -7763,7 +8002,7 @@ io.on('connection', (socket) => {
 
                 const hasAcceptedPaidPurchase = requestedPaidUnlockCost > 0 && acceptsPaidUnlocks;
 
-                if (typeof s.balance === 'number' && (isClientSynced || pendingGameReward.amount > 0)) {
+                if (typeof s.balance === 'number' && isClientSynced) {
                     if (isUsingOldBackup && requestedBalance > oldBalance && !hasEarnedBalanceIncrease) {
                         console.log(`🚨 HACK POKUŠAJ (Inventory Desync): Igrač ${user.playerName} odbijen skok dukata sa ${oldBalance} na ${requestedBalance}!`);
                     } else if (requestedBalanceDelta === 0) {
@@ -7786,9 +8025,6 @@ io.on('connection', (socket) => {
                     }
 
                     user.balance = acceptedBalance;
-                    if (pendingGameReward.session && acceptedBalance >= oldBalance + pendingGameReward.amount) {
-                        clearPendingGameRewardSession(verifiedUid, pendingGameReward.session);
-                    }
                 }
 
                 if (typeof s.undoTokens === 'number' && isClientSynced) {
@@ -7828,6 +8064,15 @@ io.on('connection', (socket) => {
 
                     if (!acceptsPaidUnlocks && requestedPaidUnlockCost > 0) {
                         console.log(`🚨 ECONOMY GUARD: Odbijeni novi unlock-i bez pokrića kupovine. Potrebno ${requestedPaidUnlockCost}, pokriće ${purchaseCoverage}.`);
+                    }
+
+                    if (hasAcceptedPaidPurchase && paidUnlockSummary.discountedIds.length > 0) {
+                        const pendingDiscounts = normalizeShopDiscounts(user.shopDiscounts);
+                        paidUnlockSummary.discountedIds.forEach(id => {
+                            delete pendingDiscounts[id];
+                        });
+                        user.shopDiscounts = pendingDiscounts;
+                        if (typeof user.markModified === 'function') user.markModified('shopDiscounts');
                     }
                 }
 
@@ -7869,8 +8114,12 @@ io.on('connection', (socket) => {
 
                 emitProfileSync(socket, user);
             } else {
-                const initialProfile = buildInitialProfileState(s);
-                const initialEconomy = buildInitialEconomyState(s, initialProfile.unlockedTrophies);
+                const verifiedTournamentWins = await getVerifiedTournamentWins(verifiedUid);
+                const initialProfile = buildInitialProfileState(s, verifiedTournamentWins);
+                const initialEconomy = buildInitialEconomyState(
+                    { ...s, tournamentWins: verifiedTournamentWins },
+                    initialProfile.unlockedTrophies
+                );
                 const initialGames = initialProfile.stats.games;
                 const initialWins = initialProfile.stats.wins;
                 const initialLosses = initialProfile.stats.losses;
@@ -8006,22 +8255,48 @@ io.on('connection', (socket) => {
                 }
             }
 
-            user.lastDaily = todayStr;
-            user.lastDailyRewardClaimed = todayStr;
-            user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
-            await user.save();
+            const updatedUser = await UserProfile.findOneAndUpdate(
+                {
+                    firebaseUid: uid,
+                    lastDailyRewardClaimed: { $nin: [todayStr, legacyTodayStr] }
+                },
+                {
+                    $set: {
+                        lastDaily: todayStr,
+                        lastDailyRewardClaimed: todayStr
+                    },
+                    $inc: { balance: reward }
+                },
+                { new: true }
+            );
 
-            emitProfileSync(socket, user, {
+            if (!updatedUser) {
+                const freshUser = await UserProfile.findOne({ firebaseUid: uid });
+                if (freshUser) emitProfileSync(socket, freshUser);
+                return replyDailyReward({
+                    ok: false,
+                    reason: 'daily_already_claimed',
+                    balance: freshUser ? Math.max(0, toSafeInt(freshUser.balance, 0)) : Math.max(0, toSafeInt(user.balance, 0)),
+                    permanent: true
+                });
+            }
+
+            if (toSafeInt(updatedUser.balance, 0) > MAX_BALANCE) {
+                updatedUser.balance = MAX_BALANCE;
+                await updatedUser.save();
+            }
+
+            emitProfileSync(socket, updatedUser, {
                 dailyReward: {
                     reward,
-                    balance: user.balance
+                    balance: updatedUser.balance
                 }
             });
 
             return replyDailyReward({
                 ok: true,
                 reward,
-                balance: user.balance
+                balance: updatedUser.balance
             });
         } catch (err) {
             console.error('❌ claim_daily_reward greška:', err);
@@ -8258,18 +8533,30 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('start_local_game', (payload) => {
+    socket.on('start_local_game', (payload, ack) => {
         const roomId = typeof payload === 'string' ? payload : payload?.roomId;
-        const carriedDurationMs = typeof payload === 'object' ? payload?.carriedDurationMs : 0;
-        if (!roomId) return;
+        const reply = (result) => {
+            if (typeof ack === 'function') ack(result);
+            return result;
+        };
+        const uid = getVerifiedUid(socket);
+        if (!uid) return reply({ ok: false, reason: 'auth_required' });
+        if (!roomId) return reply({ ok: false, reason: 'invalid_room' });
+
+        const suppliedToken = typeof payload === 'object' ? payload?.gameSessionToken : '';
+        const suppliedSession = verifyLocalGameSessionToken(suppliedToken, uid);
+        const gameSessionToken = suppliedSession.ok ? suppliedSession.token : createLocalGameSessionToken(uid);
+        const session = verifyLocalGameSessionToken(gameSessionToken, uid);
         const previousRoomId = playerRooms[socket.id];
         if (previousRoomId && previousRoomId !== roomId && isLocalRoomId(previousRoomId)) {
             socket.leave(previousRoomId);
         }
         socket.join(roomId);
         playerRooms[socket.id] = roomId;
-        startScoreSession(socket.id, carriedDurationMs);
+        gameStartTimes[socket.id] = session.startedAt;
+        gameCarriedDurations[socket.id] = 0;
         console.log(`🏠 Igrač ${socket.id} započeo lokalnu partiju u sobi: ${roomId}`);
+        return reply({ ok: true, gameSessionToken, startedAt: session.startedAt });
     });
 
     socket.on('set_player_busy', (data = {}) => {
@@ -8333,14 +8620,44 @@ io.on('connection', (socket) => {
                 else if (rank === 2) rewardAmount = 5000;
                 else if (rank === 3) rewardAmount = 2500;
 
-                if (!user.claimedLeagueRewards) user.claimedLeagueRewards = [];
-                user.claimedLeagueRewards.push(rewardKey);
-                user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + rewardAmount);
-                await user.save();
+                const updatedUser = await UserProfile.findOneAndUpdate(
+                    {
+                        firebaseUid: playerId,
+                        claimedLeagueRewards: { $ne: rewardKey }
+                    },
+                    {
+                        $addToSet: { claimedLeagueRewards: rewardKey },
+                        $inc: { balance: rewardAmount }
+                    },
+                    { new: true }
+                );
 
-                emitProfileSync(socket, user);
+                if (!updatedUser) {
+                    const freshUser = await UserProfile.findOne({ firebaseUid: playerId });
+                    if (freshUser) emitProfileSync(socket, freshUser);
+                    return replyQuarterReward({
+                        ok: true,
+                        status: 'already_claimed',
+                        periodKey: rewardKey,
+                        balance: freshUser ? Math.max(0, toSafeInt(freshUser.balance, 0)) : Math.max(0, toSafeInt(user.balance, 0))
+                    });
+                }
+
+                if (toSafeInt(updatedUser.balance, 0) > MAX_BALANCE) {
+                    updatedUser.balance = MAX_BALANCE;
+                    await updatedUser.save();
+                }
+
+                emitProfileSync(socket, updatedUser);
                 socket.emit('quarter_reward', { rank: rank, reward: rewardAmount });
-                return replyQuarterReward({ ok: true, status: 'reward_claimed', periodKey: rewardKey, rank, reward: rewardAmount });
+                return replyQuarterReward({
+                    ok: true,
+                    status: 'reward_claimed',
+                    periodKey: rewardKey,
+                    rank,
+                    reward: rewardAmount,
+                    balance: Math.max(0, toSafeInt(updatedUser.balance, 0))
+                });
             }
 
             return replyQuarterReward({ ok: true, status: 'not_qualified', periodKey: rewardKey });
@@ -8414,15 +8731,26 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('claim_shop_interstitial_reward', async (data = {}, ack) => {
+    socket.on('claim_shop_discount', async (data = {}, ack) => {
         const reply = (payload) => {
-            socket.emit('shop_interstitial_reward_result', payload);
+            socket.emit('shop_discount_result', payload);
             if (typeof ack === 'function') ack(payload);
         };
 
         try {
+            const itemId = String(data?.itemId || '').trim().substring(0, 80);
+            const price = SHOP_ITEM_PRICES[itemId];
+            if (typeof price !== 'number' || price <= 0) {
+                reply({ ok: false, reason: 'invalid_shop_item', permanent: true });
+                return;
+            }
+
+            const discountedPrice = getShopItemDiscountedPrice(price);
+            const expiresAt = Date.now() + SHOP_DISCOUNT_WINDOW_MS;
+            const discountContext = getShopDiscountAdContext(itemId);
+
             if (!MONGO_URI) {
-                reply({ ok: true, reward: SHOP_INTERSTITIAL_REWARD_AMOUNT, localFallback: true });
+                reply({ ok: true, itemId, originalPrice: price, discountedPrice, expiresAt, localFallback: true });
                 return;
             }
 
@@ -8439,32 +8767,117 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            const now = Date.now();
-            const lastRewardAt = Math.max(0, toSafeInt(user.lastShopInterstitialRewardAt, 0));
-            const elapsed = now - lastRewardAt;
-
-            if (lastRewardAt > 0 && elapsed < SHOP_INTERSTITIAL_REWARD_COOLDOWN_MS) {
-                reply({
-                    ok: false,
-                    reason: 'ad_reward_cooldown',
-                    retryAfterMs: SHOP_INTERSTITIAL_REWARD_COOLDOWN_MS - elapsed
-                });
+            if (getExistingUnlockSet(user).has(itemId)) {
+                reply({ ok: false, reason: 'already_unlocked', permanent: true });
                 return;
             }
 
-            user.lastShopInterstitialRewardAt = now;
-            user.balance = Math.min(
-                MAX_BALANCE,
-                Math.max(0, toSafeInt(user.balance, 0)) + SHOP_INTERSTITIAL_REWARD_AMOUNT
+            const adVerification = await waitForVerifiedAdMobReward(
+                uid,
+                data?.ssvNonce,
+                [discountContext],
+                { claimedBy: discountContext }
             );
+            if (!adVerification.ok) {
+                reply(adVerification);
+                return;
+            }
+
+            const pendingDiscounts = normalizeShopDiscounts(user.shopDiscounts);
+            pendingDiscounts[itemId] = { claimedAt: Date.now(), expiresAt };
+            user.shopDiscounts = pendingDiscounts;
+            if (typeof user.markModified === 'function') user.markModified('shopDiscounts');
+            await user.save();
+
+            reply({ ok: true, itemId, originalPrice: price, discountedPrice, expiresAt });
+        } catch (err) {
+            console.error("Greška pri shop popustu:", err);
+            reply({ ok: false, reason: 'err_server_conn' });
+        }
+    });
+
+    socket.on('claim_shop_ad_unlock', async (data = {}, ack) => {
+        const reply = (payload) => {
+            socket.emit('shop_ad_unlock_result', payload);
+            if (typeof ack === 'function') ack(payload);
+        };
+
+        try {
+            const itemId = String(data?.itemId || '').trim().substring(0, 80);
+            const target = getShopAdUnlockTarget(itemId);
+            if (target <= 0 || !SHOP_AD_UNLOCK_IDS.has(itemId)) {
+                reply({ ok: false, reason: 'invalid_shop_item', permanent: true });
+                return;
+            }
+
+            const adContext = getShopAdUnlockAdContext(itemId);
+
+            if (!MONGO_URI) {
+                reply({ ok: true, itemId, progress: target, target, unlocked: true, localFallback: true });
+                return;
+            }
+
+            const uid = getVerifiedUid(socket);
+            if (!uid) {
+                socket.emit('auth_required', { ok: false, reason: 'firebase_token_required' });
+                reply({ ok: false, reason: 'auth_required' });
+                return;
+            }
+
+            const user = await UserProfile.findOne({ firebaseUid: uid });
+            if (!user) {
+                reply({ ok: false, reason: 'auth_required' });
+                return;
+            }
+
+            if (getExistingUnlockSet(user).has(itemId)) {
+                const existingProgress = normalizeShopAdUnlocks(user.shopAdUnlocks)[itemId]?.progress || target;
+                reply({ ok: true, itemId, progress: Math.max(existingProgress, target), target, unlocked: true, alreadyUnlocked: true });
+                return;
+            }
+
+            const adVerification = await waitForVerifiedAdMobReward(
+                uid,
+                data?.ssvNonce,
+                [adContext],
+                { claimedBy: adContext }
+            );
+            if (!adVerification.ok) {
+                reply(adVerification);
+                return;
+            }
+
+            const unlocks = normalizeShopAdUnlocks(user.shopAdUnlocks);
+            const current = unlocks[itemId] || { progress: 0, target };
+            const progress = Math.min(target, Math.max(0, toSafeInt(current.progress, 0)) + 1);
+            const unlocked = progress >= target;
+
+            unlocks[itemId] = { progress, target, updatedAt: Date.now() };
+            user.shopAdUnlocks = unlocks;
+            if (unlocked) addUnlockedShopItemToUser(user, itemId);
+            if (typeof user.markModified === 'function') {
+                user.markModified('shopAdUnlocks');
+                user.markModified('yamb_unlocked');
+                user.markModified('unlockedSkins');
+                user.markModified('unlockedEffects');
+            }
             await user.save();
 
             emitProfileSync(socket, user);
-            reply({ ok: true, reward: SHOP_INTERSTITIAL_REWARD_AMOUNT, balance: user.balance });
+            reply({ ok: true, itemId, progress, target, unlocked });
         } catch (err) {
-            console.error("Greška pri shop interstitial nagradi:", err);
+            console.error("Greška pri shop ad unlock-u:", err);
             reply({ ok: false, reason: 'err_server_conn' });
         }
+    });
+
+    socket.on('claim_shop_interstitial_reward', async (data = {}, ack) => {
+        const reply = (payload) => {
+            socket.emit('shop_interstitial_reward_result', payload);
+            if (typeof ack === 'function') ack(payload);
+        };
+
+        reply({ ok: false, reason: 'unsupported_unverified_ad_reward', permanent: true });
     });
 
     socket.on('claim_undo_token_reward', async (data = {}, ack) => {
@@ -8475,9 +8888,11 @@ io.on('connection', (socket) => {
 
         try {
             const rewardType = String(data?.type || 'rewarded') === 'interstitial' ? 'interstitial' : 'rewarded';
-            const rewardAmount = rewardType === 'interstitial'
-                ? UNDO_INTERSTITIAL_REWARD_AMOUNT
-                : UNDO_REWARDED_REWARD_AMOUNT;
+            if (rewardType === 'interstitial') {
+                reply({ ok: false, reason: 'unsupported_unverified_ad_reward', permanent: true, type: rewardType });
+                return;
+            }
+            const rewardAmount = UNDO_REWARDED_REWARD_AMOUNT;
 
             if (!MONGO_URI) {
                 reply({ ok: true, reward: rewardAmount, localFallback: true, type: rewardType });
@@ -8505,12 +8920,8 @@ io.on('connection', (socket) => {
             }
 
             const now = Date.now();
-            const lastRewardField = rewardType === 'interstitial'
-                ? 'lastUndoInterstitialRewardAt'
-                : 'lastUndoRewardedRewardAt';
-            const cooldownMs = rewardType === 'interstitial'
-                ? UNDO_INTERSTITIAL_REWARD_COOLDOWN_MS
-                : UNDO_REWARDED_REWARD_COOLDOWN_MS;
+            const lastRewardField = 'lastUndoRewardedRewardAt';
+            const cooldownMs = UNDO_REWARDED_REWARD_COOLDOWN_MS;
             const lastRewardAt = Math.max(0, toSafeInt(user[lastRewardField], 0));
             const elapsed = now - lastRewardAt;
 
@@ -8523,17 +8934,15 @@ io.on('connection', (socket) => {
                 return;
             }
 
-            if (rewardType === 'rewarded') {
-                const adVerification = await waitForVerifiedAdMobReward(
-                    uid,
-                    data?.ssvNonce,
-                    ['undo_tokens', 'generic_reward'],
-                    { claimedBy: 'undo_tokens', minAdTimestamp: lastRewardAt }
-                );
-                if (!adVerification.ok) {
-                    reply(adVerification);
-                    return;
-                }
+            const adVerification = await waitForVerifiedAdMobReward(
+                uid,
+                data?.ssvNonce,
+                ['undo_tokens', 'generic_reward'],
+                { claimedBy: 'undo_tokens', minAdTimestamp: lastRewardAt }
+            );
+            if (!adVerification.ok) {
+                reply(adVerification);
+                return;
             }
 
             const grantedTokens = Math.min(rewardAmount, MAX_UNDO_TOKENS - currentTokens);
@@ -8802,6 +9211,21 @@ io.on('connection', (socket) => {
         if (!normalized.ok) return replyMatchResult(false, normalized.reason, true);
 
         try {
+            const session = verifyLocalGameSessionToken(data?.gameSessionToken, verifiedUid);
+            const existingResult = await MatchResult.findOne({ matchId: normalized.payload.matchId });
+            if (!session.ok && !existingResult) {
+                return replyMatchResult(false, session.reason, false);
+            }
+            if (session.ok && session.duration < MIN_GAME_DURATION && !existingResult) {
+                return replyMatchResult(false, 'game_too_short', true);
+            }
+            normalized.payload.gameSessionId = existingResult
+                ? String(existingResult.gameSessionId || '')
+                : session.sessionId;
+            normalized.payload.economyEligible = existingResult
+                ? existingResult.economyEligible === true
+                : true;
+
             const ledgerWrite = await ensureMatchResult(normalized.payload);
             if (!ledgerWrite.ok) {
                 return replyMatchResult(
@@ -8841,6 +9265,7 @@ io.on('connection', (socket) => {
                 user.highscore = Math.max(Math.max(0, toSafeInt(user.highscore, 0)), score);
             }
 
+            await applyTechnicalLeagueDelta(user, normalized.selfParticipant.score);
             rememberUserAppliedMatchResult(user, matchId);
             await user.save();
             await markMatchResultStatsApplied(matchId, verifiedUid);
@@ -8864,8 +9289,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on('submit_score', async (data, ack) => {
-        const replyScoreSubmit = (ok, reason = null, permanent = !ok) => {
-            const result = { ok, reason, permanent };
+        const replyScoreSubmit = (ok, reason = null, permanent = !ok, extra = {}) => {
+            const result = { ok, reason, permanent, ...extra };
             if (typeof ack === 'function') ack(result);
             if (!ok) socket.emit('score_submit_rejected', result);
             return result;
@@ -8888,52 +9313,53 @@ io.on('connection', (socket) => {
                 return replyScoreSubmit(false, 'score_out_of_range');
             }
 
-            const duration = getScoreSessionDuration(socket.id);
-
-            if (duration === null) {
-                console.log(`🚨 HACK POKUSAJ (No Session): ${socket.id} pokusava upis skora ${submittedScore} bez aktivne server sesije.`);
-                return replyScoreSubmit(false, 'missing_game_session');
+            if (!String(data?.matchId || '').trim()) {
+                return replyScoreSubmit(false, 'match_result_required', true);
             }
 
-            if (duration < MIN_GAME_DURATION) {
-                console.log(`🚨 HACK POKUSAJ (Speed): Trajanje ${duration}ms. Blokiram skor: ${submittedScore}`);
-                return replyScoreSubmit(false, 'game_too_short');
-            }
-
-            if (duration > MAX_GAME_DURATION) {
-                console.log(`🚨 HACK POKUSAJ (Stale Session): Trajanje ${duration}ms. Blokiram skor: ${submittedScore}`);
-                return replyScoreSubmit(false, 'stale_game_session');
+            const verifiedMatch = await findVerifiedMatchParticipant(finalUid, data?.matchId, submittedScore);
+            if (!verifiedMatch.ok) {
+                return replyScoreSubmit(false, verifiedMatch.reason, false);
             }
 
             let finalName = (socket.playerName || data?.playerName || "Nepoznat Igrač").toString().trim().substring(0, MAX_NAME_LENGTH);
             if (!finalName) finalName = "Nepoznat Igrač";
             let finalPhoto = (socket.photoUrl || data?.photoUrl || '').toString().substring(0, 500);
-            let finalMode = (data?.mode || 'Solo').toString().trim().substring(0, 24) || 'Solo';
+            const finalMode = String(verifiedMatch.result.mode || data?.mode || 'Solo').trim().substring(0, 24) || 'Solo';
+            const existingScore = await Score.findOne({ playerId: finalUid, matchId: verifiedMatch.matchId });
 
-            const leaderboardRecordSnapshots = await captureLeaderboardRecordSnapshots();
-
-            const newScore = new Score({
-                playerId: finalUid,
-                uid: finalUid,
-                playerName: finalName,
-                score: submittedScore,
-                mode: finalMode,
-                photoUrl: finalPhoto,
-                date: Date.now()
-            });
-
-            await newScore.save();
-            console.log(`✅ USPESAN UPIS: ${finalName} (UID: ${finalUid}) -> ${submittedScore} (${newScore.mode})`);
-            queueRecordPush(
-                notifyBrokenLeaderboardRecords(leaderboardRecordSnapshots, {
-                    uid: finalUid,
-                    playerName: finalName,
-                    score: submittedScore
-                }),
-                'leaderboard_record'
-            );
+            if (!existingScore) {
+                const leaderboardRecordSnapshots = await captureLeaderboardRecordSnapshots();
+                await Score.findOneAndUpdate(
+                    { playerId: finalUid, matchId: verifiedMatch.matchId },
+                    {
+                        $setOnInsert: {
+                            playerId: finalUid,
+                            uid: finalUid,
+                            matchId: verifiedMatch.matchId,
+                            playerName: finalName,
+                            score: submittedScore,
+                            mode: finalMode,
+                            photoUrl: finalPhoto,
+                            date: Date.now()
+                        }
+                    },
+                    { upsert: true, new: true }
+                );
+                console.log(`✅ USPESAN UPIS: ${finalName} (UID: ${finalUid}) -> ${submittedScore} (${finalMode})`);
+                queueRecordPush(
+                    notifyBrokenLeaderboardRecords(leaderboardRecordSnapshots, {
+                        uid: finalUid,
+                        playerName: finalName,
+                        score: submittedScore
+                    }),
+                    'leaderboard_record'
+                );
+            }
 
             const profileForRecord = await UserProfile.findOne({ firebaseUid: finalUid });
+            const rewardClaimedInLedger = Array.isArray(verifiedMatch.result.rewardClaimedUids) &&
+                verifiedMatch.result.rewardClaimedUids.includes(finalUid);
             if (profileForRecord) {
                 profileForRecord.playerName = finalName;
                 if (finalPhoto) profileForRecord.photoUrl = finalPhoto;
@@ -8944,32 +9370,18 @@ io.on('connection', (socket) => {
                 } else if (profileForRecord.isModified()) {
                     await profileForRecord.save();
                 }
-            }
 
-            const rewardSession = {
-                uid: finalUid,
-                socketId: socket.id,
-                score: submittedScore,
-                mode: finalMode,
-                createdAt: Date.now()
-            };
-            const previousRewardSession = pendingGameRewardsByUid[finalUid];
-            if (previousRewardSession && previousRewardSession.socketId) {
-                delete pendingGameRewards[previousRewardSession.socketId];
+                if (!rewardClaimedInLedger && !hasUserClaimedGameReward(profileForRecord, verifiedMatch.matchId)) {
+                    openPendingGameRewardSession(finalUid, socket.id, verifiedMatch.matchId, submittedScore, finalMode);
+                }
             }
-            pendingGameRewards[socket.id] = rewardSession;
-            pendingGameRewardsByUid[finalUid] = rewardSession;
-            setTimeout(() => {
-                if (pendingGameRewards[socket.id] === rewardSession) {
-                    delete pendingGameRewards[socket.id];
-                }
-                if (pendingGameRewardsByUid[finalUid] === rewardSession) {
-                    delete pendingGameRewardsByUid[finalUid];
-                }
-            }, GAME_REWARD_CLAIM_WINDOW_MS);
 
             clearScoreSession(socket.id);
-            return replyScoreSubmit(true);
+            return replyScoreSubmit(true, null, false, {
+                matchId: verifiedMatch.matchId,
+                duplicate: !!existingScore,
+                rewardClaimed: rewardClaimedInLedger || (profileForRecord ? hasUserClaimedGameReward(profileForRecord, verifiedMatch.matchId) : false)
+            });
 
         } catch (err) {
             console.error("❌ Greška pri upisu u MongoDB:", err);
@@ -9014,9 +9426,43 @@ io.on('connection', (socket) => {
 
             const multiplier = data?.doubled ? 2 : 1;
             const reward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, rewardSession.score * multiplier));
+
+            if (rewardSession.claimInProgress) {
+                return replyGameReward({ ok: false, reason: 'reward_claim_in_progress', permanent: false, retryAfterMs: 1000 });
+            }
+            if (rewardSession.claimedAt) {
+                clearPendingGameRewardSession(finalUid, rewardSession);
+                return replyGameReward({ ok: false, reason: 'missing_reward_session', permanent: false });
+            }
+
+            rewardSession.claimInProgress = true;
+            const releaseRewardClaimLock = () => {
+                if (rewardSession.claimInProgress && !rewardSession.claimedAt) {
+                    rewardSession.claimInProgress = false;
+                }
+            };
+
             const user = await UserProfile.findOne({ firebaseUid: finalUid });
             if (!user) {
+                releaseRewardClaimLock();
                 return replyGameReward({ ok: false, reason: 'profile_not_found', permanent: false });
+            }
+
+            const rewardClaimedInLedger = await MatchResult.exists({
+                matchId: rewardSession.matchId,
+                rewardClaimedUids: finalUid
+            });
+            if (rewardClaimedInLedger || hasUserClaimedGameReward(user, rewardSession.matchId)) {
+                rewardSession.claimedAt = Date.now();
+                clearPendingGameRewardSession(finalUid, rewardSession);
+                emitProfileSync(socket, user);
+                return replyGameReward({
+                    ok: true,
+                    reward: 0,
+                    balance: Math.max(0, toSafeInt(user.balance, 0)),
+                    alreadyClaimed: true,
+                    doubled: multiplier === 2
+                });
             }
 
             if (multiplier === 2) {
@@ -9027,6 +9473,7 @@ io.on('connection', (socket) => {
                     { claimedBy: 'game_double', minAdTimestamp: rewardSession.createdAt - 5000 }
                 );
                 if (!adVerification.ok) {
+                    releaseRewardClaimLock();
                     return replyGameReward(adVerification);
                 }
             }
@@ -9037,7 +9484,13 @@ io.on('connection', (socket) => {
             }
 
             user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
+            rememberUserClaimedGameReward(user, rewardSession.matchId);
             await user.save();
+            await MatchResult.updateOne(
+                { matchId: rewardSession.matchId, 'participants.uid': finalUid },
+                { $addToSet: { rewardClaimedUids: finalUid }, $set: { updatedAt: new Date() } }
+            );
+            rewardSession.claimedAt = Date.now();
             delete pendingGameRewards[socket.id];
             clearPendingGameRewardSession(finalUid, rewardSession);
 
@@ -9057,6 +9510,11 @@ io.on('connection', (socket) => {
             });
         } catch (err) {
             console.error("❌ claim_game_reward greška:", err);
+            const finalUid = socket.verifiedUid || socket.playerId;
+            const rewardSession = finalUid ? (pendingGameRewards[socket.id] || pendingGameRewardsByUid[finalUid]) : null;
+            if (rewardSession && rewardSession.claimInProgress && !rewardSession.claimedAt) {
+                rewardSession.claimInProgress = false;
+            }
             return replyGameReward({ ok: false, reason: 'server_error', permanent: false });
         }
     });
@@ -9187,16 +9645,9 @@ io.on('connection', (socket) => {
             const trustedScore = Math.max(currentScore, profileScore);
             const delta = submittedScore - trustedScore;
 
-            if (delta > MAX_LEAGUE_SCORE_DELTA) {
-                console.log(`🚨 LEADERBOARD SAFEGUARD: Blokiran skok lige sa ${trustedScore} na ${submittedScore}`);
-                return replyLeagueSubmit(false, 'league_jump_too_large');
-            }
-
             if (delta > 0) {
-                const duration = getScoreSessionDuration(socket.id);
-                if (duration === null || duration < MIN_LEAGUE_SESSION_DURATION || duration > MAX_GAME_DURATION) {
-                    return replyLeagueSubmit(false, 'invalid_game_session');
-                }
+                console.log(`🚨 LEADERBOARD SAFEGUARD: Odbijen klijentski rast lige sa ${trustedScore} na ${submittedScore}.`);
+                return replyLeagueSubmit(false, 'match_result_required');
             }
 
             const acceptedScore = Math.max(trustedScore, submittedScore);

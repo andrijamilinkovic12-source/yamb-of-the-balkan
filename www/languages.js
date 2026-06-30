@@ -40,6 +40,7 @@ const TRANSLATIONS = {
         "economy_reward_message": "+{0} dukata",
         "economy_reward_cooldown": "Nagrada je već obrađena. Pokušajte ponovo za {0}s.",
         "economy_auth_required": "Morate se prijaviti da biste preuzeli nagradu.",
+        "unsupported_unverified_ad_reward": "Ova vrsta reklame ne može da isplati nagradu. Koristite nagradni video.",
         "economy_ad_label": "Oglas",
         "economy_ad_loading": "Učitavanje oglasa...",
         "economy_ad_failed": "AdMob nije spreman",
@@ -391,7 +392,7 @@ const TRANSLATIONS = {
         "undo_unavailable": "Vraćanje upisa trenutno nije dostupno.",
         "undo_menu_desc": "Nabavi tokene za vraćanje poteza",
         "undo_btn_ad_1": "Gledaj reklamu (+1)",
-        "undo_btn_ad_3": "Gledaj nagradni video (+3)",
+        "undo_btn_ad_3": "Gledaj nagradni video (+1)",
         "undo_close": "Zatvori",
         
         "alert_roll_first": "Prvo baci kockice!",
@@ -810,6 +811,7 @@ const TRANSLATIONS = {
         "economy_reward_message": "+{0} ducats",
         "economy_reward_cooldown": "Reward already processed. Try again in {0}s.",
         "economy_auth_required": "You must sign in to claim this reward.",
+        "unsupported_unverified_ad_reward": "This ad type cannot grant a reward. Use a reward video.",
         "economy_ad_label": "Ad",
         "economy_ad_loading": "Loading ad...",
         "economy_ad_failed": "AdMob not ready",
@@ -1161,7 +1163,7 @@ const TRANSLATIONS = {
         "undo_unavailable": "Undo is currently unavailable.",
         "undo_menu_desc": "Get tokens to undo your moves",
         "undo_btn_ad_1": "Watch Ad (+1)",
-        "undo_btn_ad_3": "Watch Reward Video (+3)",
+        "undo_btn_ad_3": "Watch Reward Video (+1)",
         "undo_close": "Close",
 
         "alert_roll_first": "Roll the dice first!",

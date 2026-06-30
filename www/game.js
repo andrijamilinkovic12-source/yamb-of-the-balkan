@@ -110,6 +110,7 @@ class YambApp {
         this.friendsListUids = []; 
         this.localGameElapsedMs = 0;
         this.localGameActiveStartedAt = 0;
+        this.localGameSessionToken = '';
         
         this.socket = null; 
         this.socketVerifiedUid = null;
@@ -1842,13 +1843,27 @@ class YambApp {
         if (Array.isArray(data.unlockedEffects)) localStorage.setItem('yamb_unlocked_effects', JSON.stringify(data.unlockedEffects));
 
         const validThemeIds = this.getValidThemeIds();
-        const localThemes = this.readLocalJson('yamb_unlocked_themes', []);
+        const localThemes = statsAuthoritative ? [] : this.readLocalJson('yamb_unlocked_themes', []);
         const cloudThemes = Array.isArray(data.unlockedThemes) ? data.unlockedThemes : [];
         const skinThemeLeak = (Array.isArray(data.unlockedSkins) ? data.unlockedSkins : []).filter(theme => validThemeIds.includes(theme));
         const generalThemes = serverGeneralUnlocks.filter(theme => validThemeIds.includes(theme));
         const mergedThemes = [...new Set([...localThemes, ...cloudThemes, ...skinThemeLeak, ...generalThemes])]
             .filter(theme => validThemeIds.includes(theme));
         localStorage.setItem('yamb_unlocked_themes', JSON.stringify(mergedThemes));
+
+        if (data.shopAdUnlocks && typeof data.shopAdUnlocks === 'object') {
+            Object.entries(data.shopAdUnlocks).forEach(([id, entry]) => {
+                const itemId = String(id || '').trim();
+                if (!itemId) return;
+                const progress = Math.max(0, toNumber(entry?.progress, 0));
+                const target = Math.max(1, toNumber(entry?.target, 1));
+                if (progress > 0 && progress < target && !mergedUnlocked.includes(itemId)) {
+                    localStorage.setItem(`yamb_adprogress_${itemId}`, progress);
+                } else {
+                    localStorage.removeItem(`yamb_adprogress_${itemId}`);
+                }
+            });
+        }
 
         if (data.activeSkin) localStorage.setItem('yamb_active_skin', data.activeSkin);
         if (data.activeEffect) localStorage.setItem('yamb_active_effect', data.activeEffect);
@@ -3231,11 +3246,13 @@ class YambApp {
 
         const entry = {
             clientResultId: this.createClientMatchResultId(),
+            gameSessionToken: this.localGameSessionToken || '',
             mode: String(mode || 'Solo').toLowerCase(),
             participants: participants.map(participant => ({
                 name: String(participant?.name || getFallbackPlayerName()).substring(0, 24),
                 score: Math.max(0, Math.floor(Number(participant?.score) || 0))
             })),
+            scoreSheets: Array.isArray(this.allScores) ? this.allScores : [],
             playerIndex: Math.max(0, Math.min(participants.length - 1, Number(playerIndex) || 0)),
             profileGamesAfter: Math.max(0, Math.floor(Number(this.stats?.games) || 0)),
             profileTotalScoreAfter: Math.max(0, Math.floor(Number(this.stats?.totalScoreSum) || 0)),
@@ -3368,7 +3385,7 @@ class YambApp {
     buildLocalGameSessionPayload(roomId = this.roomId) {
         return {
             roomId,
-            carriedDurationMs: this.getLocalGameElapsedMs()
+            gameSessionToken: this.localGameSessionToken || ''
         };
     }
 
@@ -3376,7 +3393,10 @@ class YambApp {
         if (!this.socket || !this.roomId || this.onlineMode || this.isSpectator) return;
         const emitStart = () => {
             if (this.socket && this.socket.connected && this.roomId) {
-                this.socket.emit('start_local_game', this.buildLocalGameSessionPayload());
+                this.socket.emit('start_local_game', this.buildLocalGameSessionPayload(), (result = {}) => {
+                    if (!result.ok || !result.gameSessionToken) return;
+                    this.localGameSessionToken = result.gameSessionToken;
+                });
             }
         };
 
@@ -5502,6 +5522,7 @@ class YambApp {
         this.initScores(); this.currentPlayerIdx = 0; 
         
         this.roomId = "local_" + Math.random().toString(36).substring(2, 10);
+        this.localGameSessionToken = '';
         this.startLocalGameClock(0);
 
         this.initSocketConnection();
@@ -5530,7 +5551,7 @@ class YambApp {
         this.onlineGameOverFinishInProgress = false;
         this.onlineRollPending = false;
 
-        if (this.socket && this.socket.connected && !this.isSpectator && this.playerId) {
+        if (this.onlineMode && this.socket && this.socket.connected && !this.isSpectator && this.playerId) {
             this.socket.emit('game_session_start', {
                 roomId: this.roomId,
                 onlineMode: this.onlineMode
@@ -6780,38 +6801,15 @@ class YambApp {
             || (this.onlineMode && finalResults[this.myOnlineIndex])
             || finalResults[0];
         let unlockedTrophiesNow = [];
+        let saveMode = detectedMode;
+        let matchResultRef = this.onlineMode ? String(onlineResult?.matchId || '') : '';
 
-        try {
-            if (window.kvartalnaLiga && myScoreEntry && myScoreEntry.score > 0) {
-                window.kvartalnaLiga.addPoints(myScoreEntry.score);
-            }
-        } catch(err) {
-            console.warn("Greška pri upisu u Kvartalnu Ligu:", err);
-        }
-
-        try {
-            let saveMode = detectedMode;
-
-            if (this.onlineMode) {
-                const duelType = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType });
-                if (duelType === 'tournament') {
-                    saveMode = 'Turnir';
-                } else if (duelType === 'friend_invite') {
-                    saveMode = 'Prijatelj';
-                } else if (duelType === 'challenge') {
-                    saveMode = 'Duel';
-                } else {
-                    saveMode = 'Online';
-                }
-            }
-
-            if (myScoreEntry && myScoreEntry.score > 0) {
-                const myPhoto = localStorage.getItem('yamb_player_photo') || '';
-                await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto);
-            }
-
-        } catch (err) {
-            console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
+        if (this.onlineMode) {
+            const duelType = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType });
+            if (duelType === 'tournament') saveMode = 'Turnir';
+            else if (duelType === 'friend_invite') saveMode = 'Prijatelj';
+            else if (duelType === 'challenge') saveMode = 'Duel';
+            else saveMode = 'Online';
         }
 
         if (myScoreEntry) {
@@ -6891,7 +6889,7 @@ class YambApp {
                  deferServerSync: this.onlineMode ? serverStatsApplied : true
              });
              if (!this.onlineMode) {
-                 await this.queueCompletedLocalMatchResult({
+                 matchResultRef = await this.queueCompletedLocalMatchResult({
                      mode: detectedMode,
                      participants: finalResults,
                      playerIndex: myIndex >= 0 ? myIndex : 0
@@ -6902,6 +6900,15 @@ class YambApp {
                      });
                  }
              }
+        }
+
+        try {
+            if (myScoreEntry && myScoreEntry.score > 0) {
+                const myPhoto = localStorage.getItem('yamb_player_photo') || '';
+                await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto, matchResultRef);
+            }
+        } catch (err) {
+            console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
         }
 
         this.soundMgr.win();
@@ -7001,12 +7008,12 @@ class YambApp {
         this.navigateTo('game-over-screen');
     }
 
-    async safeSubmitScore(name, score, mode, photoUrl = undefined) {
+    async safeSubmitScore(name, score, mode, photoUrl = undefined, matchId = '') {
         try {
             let finalScore = parseInt(score); if (isNaN(finalScore)) finalScore = 0;
             this.recordSubmittedScoreAsHighscore(finalScore);
             if(this.topListManager) {
-                await this.topListManager.submitScore(name, finalScore, mode, photoUrl);
+                await this.topListManager.submitScore(name, finalScore, mode, photoUrl, matchId);
             }
         } catch(e) {
             console.warn("Nije moguće poslati rezultat u ovom trenutku:", e);
@@ -7465,6 +7472,7 @@ class YambApp {
                 hasSvetiIlija: this.hasSvetiIlija,
                 hasProphet: this.hasProphet,
                 localGameElapsedMs: this.getLocalGameElapsedMs(),
+                localGameSessionToken: this.localGameSessionToken || '',
                 aiMode: false, 
                 diff: this.aiDifficulty, 
                 date: new Date().toISOString() 
@@ -7520,6 +7528,7 @@ class YambApp {
             if (this.players.length > 1) this.modeTag = "Hotseat"; else this.modeTag = "Solo";
 
             this.roomId = "local_" + Math.random().toString(36).substring(2, 10);
+            this.localGameSessionToken = String(data.localGameSessionToken || '');
             this.startLocalGameClock(data.localGameElapsedMs || 0);
 
             this.initSocketConnection();
