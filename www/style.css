@@ -1467,7 +1467,7 @@ body {
 .btn-highlight { background: var(--gold-main) !important; color: black !important; }
 
 /* --- MODALS & SCREENS --- */
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.3s; }
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 10000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(8px); opacity: 0; visibility: hidden; transition: 0.3s; box-sizing: border-box; }
 .modal-overlay.active, .modal-overlay[style*="display: flex"] { opacity: 1; visibility: visible; }
 
 .modal-card, .custom-modal, .modal-box { background: rgba(255, 255, 255, 0.03) !important; border: 1px solid rgba(0, 0, 0, 0.2) !important; border-top: 1px solid rgba(255, 255, 255, 0.15) !important; border-left: 1px solid rgba(255, 255, 255, 0.08) !important; color: var(--text-main); box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 0 30px rgba(255, 255, 255, 0.02), inset 0 1px 1px rgba(255,255,255,0.2) !important; backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); padding: 25px; border-radius: 24px; display: flex; flex-direction: column; align-items: center; gap: 15px; width: 90%; max-width: 450px; }
@@ -1844,14 +1844,25 @@ body {
         gap: 10px;
     }
 }
-.custom-modal { position: relative; }
+#custom-modal-overlay {
+    padding: max(18px, calc(var(--safe-top) + 10px)) max(12px, var(--safe-right)) max(22px, calc(var(--safe-bottom) + 12px)) max(12px, var(--safe-left));
+    align-items: center;
+    justify-content: center;
+}
+.custom-modal {
+    position: relative;
+    width: min(450px, 100%);
+    box-sizing: border-box;
+    max-height: calc(100dvh - max(36px, calc(var(--safe-top) + 20px)) - max(44px, calc(var(--safe-bottom) + 24px)));
+    overflow: hidden;
+}
 .cm-close { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.28); color: var(--text-main); font-size: 0.85rem; font-weight: 900; line-height: 1; cursor: pointer; }
 .cm-close:active { transform: scale(0.94); }
 
 .modal-icon { font-size: 3rem; margin-bottom: 5px; }
-.modal-title, .cm-title { color: var(--gold-main); font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
-.modal-msg, .cm-msg { color: var(--text-main); font-size: 0.9rem; line-height: 1.4; }
-.modal-btn-group, .cm-btn-group { display: flex; gap: 10px; width: 100%; margin-top: 10px; }
+.modal-title, .cm-title { color: var(--gold-main); font-size: 1.2rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; text-align: center; }
+.modal-msg, .cm-msg { color: var(--text-main); font-size: 0.9rem; line-height: 1.4; min-height: 0; width: 100%; max-width: 100%; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+.modal-btn-group, .cm-btn-group { display: flex; gap: 10px; width: 100%; margin-top: 10px; flex-shrink: 0; }
 .modal-btn, .cm-btn { flex: 1; padding: 12px; border-radius: 25px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; }
 .btn-modal-cancel, .cm-btn-cancel { background: transparent; border: 1px solid var(--danger); color: var(--danger); }
 .btn-modal-confirm, .cm-btn-ok { background: var(--gold-main); color: #000; border: none; box-shadow: 0 10px 25px rgba(255, 215, 0, 0.2), inset 0 1px 2px rgba(255,255,255,0.5); transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }

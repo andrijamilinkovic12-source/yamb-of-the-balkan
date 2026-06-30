@@ -1262,42 +1262,42 @@ class TournamentManager {
                 </section>
             </div>
             <style>
-                .tourney-journey-modal { width: 100%; max-height: min(72dvh, 620px); overflow-y: auto; padding-right: 2px; text-align: center; }
-                .tourney-journey-hero { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 4px 12px; border-bottom: 1px solid rgba(255,215,0,0.18); }
-                .tourney-journey-edition { color: var(--gold-main); border: 1px solid rgba(255,215,0,0.36); border-radius: 999px; padding: 5px 10px; font-size: 0.74rem; line-height: 1; font-weight: 1000; text-transform: uppercase; background: rgba(255,215,0,0.08); }
-                .tourney-journey-avatar { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 0 14px rgba(0,0,0,0.45); }
-                .tourney-journey-hero h3 { margin: 0; color: var(--gold-main); font-size: 1.18rem; line-height: 1.12; word-break: break-word; }
-                .tourney-journey-final { display: inline-flex; align-items: center; justify-content: center; gap: 7px; color: var(--text-main); font-size: 0.92rem; line-height: 1.2; }
+                .tourney-journey-modal { --journey-surface: var(--glass-bg, rgba(127,127,127,0.12)); --journey-lift: rgba(127,127,127,0.16); --journey-border: var(--glass-border, 1px solid rgba(127,127,127,0.28)); --journey-accent: var(--gold-main, #d4af37); --journey-text: var(--text-main, #f5f5f5); --journey-muted: var(--text-muted, rgba(245,245,245,0.72)); width: 100%; max-height: min(72dvh, 620px); overflow-y: auto; padding-right: 2px; text-align: center; color: var(--journey-text); font-family: 'Montserrat', sans-serif; letter-spacing: 0; }
+                .tourney-journey-hero { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 4px 12px; border-bottom: var(--journey-border); }
+                .tourney-journey-edition { color: var(--journey-accent); border: var(--journey-border); border-radius: 999px; padding: 5px 10px; font-size: 0.74rem; line-height: 1; font-weight: 1000; text-transform: uppercase; background: var(--journey-surface); }
+                .tourney-journey-avatar { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; border: 2px solid var(--journey-accent); background: var(--journey-surface); box-shadow: 0 5px 14px rgba(0,0,0,0.24); }
+                .tourney-journey-hero h3 { margin: 0; color: var(--journey-accent); font-size: 1.18rem; line-height: 1.12; word-break: break-word; text-shadow: none; }
+                .tourney-journey-final { display: inline-flex; align-items: center; justify-content: center; gap: 7px; color: var(--journey-text); font-size: 0.92rem; line-height: 1.2; }
                 .tourney-journey-final img { width: 22px; height: 22px; object-fit: contain; filter: drop-shadow(0 0 7px var(--gold-glow)); }
-                .tourney-journey-date { color: var(--text-muted); font-size: 0.78rem; line-height: 1.2; }
+                .tourney-journey-date { color: var(--journey-muted); font-size: 0.78rem; line-height: 1.2; }
                 .tourney-journey-picker { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; padding: 11px 0 2px; }
-                .tourney-journey-picker-label { flex: 0 0 100%; color: var(--text-muted); text-align: center; font-size: 0.72rem; line-height: 1; font-weight: 900; text-transform: uppercase; }
-                .tourney-journey-pick { min-height: 32px; border: 1px solid rgba(255,215,0,0.28); border-radius: 999px; background: rgba(0,0,0,0.34); color: var(--text-main); padding: 7px 11px; font-size: 0.75rem; line-height: 1; font-weight: 1000; cursor: pointer; }
-                .tourney-journey-pick.is-active { background: rgba(255,215,0,0.16); color: var(--gold-main); border-color: var(--gold-main); box-shadow: 0 0 10px rgba(255,215,0,0.14); }
+                .tourney-journey-picker-label { flex: 0 0 100%; color: var(--journey-muted); text-align: center; font-size: 0.72rem; line-height: 1; font-weight: 900; text-transform: uppercase; }
+                .tourney-journey-pick { min-height: 32px; border: var(--journey-border); border-radius: 999px; background: var(--journey-surface); color: var(--journey-text); padding: 7px 11px; font-family: 'Montserrat', sans-serif; font-size: 0.75rem; line-height: 1; font-weight: 1000; letter-spacing: 0; cursor: pointer; }
+                .tourney-journey-pick.is-active { background: var(--journey-lift); color: var(--journey-accent); border-color: var(--journey-accent); box-shadow: 0 0 10px var(--gold-glow, rgba(255,215,0,0.18)); }
                 .tourney-journey-section { margin-top: 14px; text-align: left; }
-                .tourney-journey-section h4 { margin: 0 0 8px; color: var(--gold-main); font-size: 0.82rem; line-height: 1.1; text-transform: uppercase; letter-spacing: 0; text-align: center; }
+                .tourney-journey-section h4 { margin: 0 0 8px; color: var(--journey-accent); font-size: 0.82rem; line-height: 1.1; text-transform: uppercase; letter-spacing: 0; text-align: center; }
                 .tourney-journey-path { display: flex; flex-direction: column; gap: 8px; }
-                .tourney-journey-step { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center; background: rgba(0,0,0,0.34); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 9px; }
-                .tourney-journey-index { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,215,0,0.12); border: 1px solid rgba(255,215,0,0.32); color: var(--gold-main); display: flex; align-items: center; justify-content: center; font-weight: 1000; font-size: 0.78rem; }
+                .tourney-journey-step { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center; background: var(--journey-surface); border: var(--journey-border); border-radius: 8px; padding: 9px; }
+                .tourney-journey-index { width: 24px; height: 24px; border-radius: 50%; background: var(--journey-lift); border: var(--journey-border); color: var(--journey-accent); display: flex; align-items: center; justify-content: center; font-weight: 1000; font-size: 0.78rem; }
                 .tourney-journey-main { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
-                .tourney-journey-main strong { color: var(--text-main); font-size: 0.92rem; line-height: 1.14; word-break: break-word; }
-                .tourney-journey-round { color: var(--text-muted); font-size: 0.68rem; line-height: 1; text-transform: uppercase; font-weight: 800; }
-                .tourney-journey-score { justify-self: end; color: var(--gold-main); font-size: 0.82rem; font-weight: 1000; text-align: right; line-height: 1.1; display: flex; flex-direction: column; gap: 2px; }
-                .tourney-journey-reason { color: var(--text-muted); font-size: 0.66rem; font-weight: 700; }
-                .tourney-journey-empty { text-align: center; color: var(--text-muted); padding: 16px; background: rgba(0,0,0,0.25); border-radius: 8px; }
+                .tourney-journey-main strong { color: var(--journey-text); font-size: 0.92rem; line-height: 1.14; word-break: break-word; }
+                .tourney-journey-round { color: var(--journey-muted); font-size: 0.68rem; line-height: 1; text-transform: uppercase; font-weight: 800; }
+                .tourney-journey-score { justify-self: end; color: var(--journey-accent); font-size: 0.82rem; font-weight: 1000; text-align: right; line-height: 1.1; display: flex; flex-direction: column; gap: 2px; }
+                .tourney-journey-reason { color: var(--journey-muted); font-size: 0.66rem; font-weight: 700; }
+                .tourney-journey-empty { text-align: center; color: var(--journey-muted); padding: 16px; background: var(--journey-surface); border: var(--journey-border); border-radius: 8px; }
                 .tourney-history-browser { display: grid; grid-template-columns: 1fr; gap: 9px; }
-                .tourney-history-round { background: rgba(0,0,0,0.26); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 9px; }
+                .tourney-history-round { background: var(--journey-surface); border: var(--journey-border); border-radius: 8px; padding: 9px; }
                 .tourney-history-round h4 { margin-bottom: 7px; font-size: 0.76rem; }
                 .tourney-history-round-matches { display: flex; flex-direction: column; gap: 6px; }
-                .tourney-history-match { min-height: 38px; background: rgba(0,0,0,0.36); border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; padding: 7px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-                .tourney-history-match.is-empty { justify-content: center; color: var(--text-muted); opacity: 0.55; }
-                .tourney-history-versus { min-width: 0; display: flex; align-items: center; gap: 5px; color: var(--text-muted); font-size: 0.7rem; }
-                .tourney-history-player { color: var(--text-main); font-size: 0.78rem; line-height: 1.1; font-weight: 700; word-break: break-word; }
+                .tourney-history-match { min-height: 38px; background: var(--journey-surface); border: var(--journey-border); border-radius: 7px; padding: 7px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+                .tourney-history-match.is-empty { justify-content: center; color: var(--journey-muted); opacity: 0.7; }
+                .tourney-history-versus { min-width: 0; display: flex; align-items: center; gap: 5px; color: var(--journey-muted); font-size: 0.7rem; }
+                .tourney-history-player { color: var(--journey-text); font-size: 0.78rem; line-height: 1.1; font-weight: 700; word-break: break-word; }
                 .tourney-history-player.is-winner { color: var(--success); font-weight: 1000; }
-                .tourney-history-player.is-champion { color: var(--gold-main); }
+                .tourney-history-player.is-champion { color: var(--journey-accent); }
                 .tourney-history-scorebox { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
-                .tourney-history-score { color: var(--gold-main); font-size: 0.78rem; line-height: 1; white-space: nowrap; }
-                .tourney-history-score-note { color: var(--text-muted); font-size: 0.62rem; line-height: 1; white-space: nowrap; }
+                .tourney-history-score { color: var(--journey-accent); font-size: 0.78rem; line-height: 1; white-space: nowrap; }
+                .tourney-history-score-note { color: var(--journey-muted); font-size: 0.62rem; line-height: 1; white-space: nowrap; }
             </style>
         `, `${tt('tourney_champion_journey_title') || 'PUT DO TITULE'} - ${edition}`);
     }
