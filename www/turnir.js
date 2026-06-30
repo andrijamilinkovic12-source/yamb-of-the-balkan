@@ -36,8 +36,11 @@ class TournamentManager {
 
         this.state = {
             status: 'registration',
+            tournamentNumber: 1,
             players: [],
-            bracket: { qf: [], sf: [], f: [] }
+            bracket: { qf: [], sf: [], f: [] },
+            finishedAt: null,
+            resetAt: null
         };
 
         this.tourneyLeaderboard = [];
@@ -409,6 +412,9 @@ class TournamentManager {
                     if (oldStatus === 'registration' && newState.status !== 'registration') {
                         this.activeTab = 'bracket';
                     }
+                    else if (oldStatus !== 'registration' && newState.status === 'registration') {
+                        this.activeTab = 'info';
+                    }
 
                     this.maybeShowTournamentReminder(newState);
 
@@ -688,60 +694,354 @@ class TournamentManager {
         }
     }
 
+    getLatestChampionship(player) {
+        const championships = Array.isArray(player?.championships) ? player.championships : [];
+        return this.getSavedChampionships(player)[0] || championships.find(item => item && typeof item === 'object') || null;
+    }
+
+    getSavedChampionships(player) {
+        const championships = Array.isArray(player?.championships) ? player.championships : [];
+        return championships.filter(item => item && typeof item === 'object' && item.bracket);
+    }
+
+    toRomanNumeral(value) {
+        const num = Math.max(1, Math.min(3999, Math.floor(Number(value) || 1)));
+        const table = [
+            [1000, 'M'], [900, 'CM'], [500, 'D'], [400, 'CD'],
+            [100, 'C'], [90, 'XC'], [50, 'L'], [40, 'XL'],
+            [10, 'X'], [9, 'IX'], [5, 'V'], [4, 'IV'], [1, 'I']
+        ];
+        let remaining = num;
+        let result = '';
+        table.forEach(([arabic, roman]) => {
+            while (remaining >= arabic) {
+                result += roman;
+                remaining -= arabic;
+            }
+        });
+        return result;
+    }
+
+    getTournamentEditionLabel(player, idx) {
+        const latest = this.getLatestChampionship(player);
+        return this.getChampionshipEditionLabel(latest, idx + 1);
+    }
+
+    getChampionshipEditionLabel(championship, fallbackNumber = 1) {
+        const number = Number.isFinite(Number(championship?.tournamentNumber))
+            ? Math.max(1, Math.floor(Number(championship.tournamentNumber)))
+            : Math.max(1, Math.floor(Number(fallbackNumber) || 1));
+        return `${this.toRomanNumeral(number)} ${this.tr('tourney_edition_suffix', 'TURNIR')}`;
+    }
+
     getLeaderboardHTML() {
         let leaderboardHtml = `
-            <div style="width: 100%; max-width: 350px; display: flex; flex-direction: column; align-items: center; padding-bottom: 20px;">
+            <div class="tourney-champions-view">
                 <img class="tourney-hof-trophy" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
-                <h3 style="color: var(--gold-main); text-align: center; margin-bottom: 20px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 10px; text-transform: uppercase; font-size: 1.2rem; letter-spacing: 2px; width: 100%;">
-                    ${tt('tourney_hall_of_fame') || 'DVORANA SLAVNIH'}
+                <h3 class="tourney-champions-title">
+                    ${tt('tourney_hall_of_fame') || 'OSVAJAČI TURNIRA'}
                 </h3>
-                <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+                <div class="tourney-champions-list">
         `;
 
         if (!this.tourneyLeaderboard || this.tourneyLeaderboard.length === 0) {
-            leaderboardHtml += `<div style="text-align:center; color:var(--text-muted); font-size:1rem; padding: 40px 0;">${tt('tourney_no_champs_yet') || 'Još uvek nema osvajača turnira.'}</div>`;
+            leaderboardHtml += `<div class="tourney-champions-empty">${tt('tourney_no_champs_yet') || 'Još uvek nema osvajača turnira.'}</div>`;
         } else {
             this.tourneyLeaderboard.forEach((player, idx) => {
-                let rankTrophy = idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : `<span style="color: var(--text-muted); font-size: 1.1rem; font-weight: bold;">${idx+1}.</span>`));
-                let photo = this.playerPhotoUrl({ ...player, name: player.playerName });
-                let safePlayerName = this.escape(player.playerName || tt('player_guest') || 'Igrač');
-                let safeWins = Number.isFinite(Number(player.wins)) ? Math.max(0, Math.floor(Number(player.wins))) : 0;
-
-                let bg = idx === 0 ? 'background: linear-gradient(90deg, rgba(255,215,0,0.2) 0%, rgba(0,0,0,0.4) 100%); border: 1px solid var(--gold-main);' : 'background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1);';
-                let nameColor = idx === 0 ? 'var(--gold-main)' : 'white';
-                let nameSize = idx === 0 ? '1.1rem' : '1rem';
+                const photo = this.playerPhotoUrl({ ...player, name: player.playerName });
+                const safePlayerName = this.escape(player.playerName || tt('player_guest') || 'Igrač');
+                const safeWins = Number.isFinite(Number(player.wins)) ? Math.max(0, Math.floor(Number(player.wins))) : 0;
+                const savedChampionships = this.getSavedChampionships(player);
+                const hasJourney = savedChampionships.length > 0;
+                const cardClass = `tourney-champion-card${idx === 0 ? ' is-top' : ''}${hasJourney ? ' is-openable' : ''}`;
+                const clickAttr = hasJourney ? `onclick="app.tournamentManager.openChampionJourney(${idx})"` : '';
+                const keyAttr = hasJourney ? `onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();app.tournamentManager.openChampionJourney(${idx});}"` : '';
+                const ariaLabel = this.escapeAttr(`${safePlayerName} - ${this.getTournamentEditionLabel(player, idx)}`);
 
                 leaderboardHtml += `
-                    <div style="display: flex; justify-content: space-between; align-items: center; ${bg} padding: 10px 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: transform 0.2s;">
-                        <div style="display: flex; align-items: center; gap: 15px; overflow: hidden; flex: 1;">
-                            <div style="font-size: 1.4rem; min-width: 30px; text-align: center; flex-shrink: 0;">${rankTrophy}</div>
-                            <img src="${photo}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid ${idx === 0 ? 'var(--gold-main)' : 'rgba(255,255,255,0.3)'}; flex-shrink: 0; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
-                            <span style="color: ${nameColor}; font-weight: 800; font-size: ${nameSize}; white-space: normal; word-break: break-word; line-height: 1.2;">${safePlayerName}</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 5px; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 20px; border: 1px solid rgba(255,215,0,0.3);">
-                            <span style="color: var(--gold-main); font-weight: 900; font-size: 1.1rem; flex-shrink: 0;">${safeWins}</span>
+                    <div class="${cardClass}" ${clickAttr} ${keyAttr} role="${hasJourney ? 'button' : 'listitem'}" tabindex="${hasJourney ? '0' : '-1'}" aria-label="${ariaLabel}">
+                        <div class="tourney-champion-edition">${this.getTournamentEditionLabel(player, idx)}</div>
+                        <img class="tourney-champion-avatar" src="${photo}" alt="" aria-hidden="true" decoding="async">
+                        <div class="tourney-champion-name">${safePlayerName}</div>
+                        <div class="tourney-champion-count" aria-label="${this.escapeAttr(tt('tourney_champion_titles') || 'Osvojeni turniri')} ${safeWins}">
                             <img class="tourney-wins-trophy-icon" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
+                            <strong>${safeWins}</strong>
                         </div>
                     </div>
                 `;
             });
         }
-        leaderboardHtml += `</div></div>`;
+
+        leaderboardHtml += `
+                </div>
+            </div>
+            <style>
+                .tourney-champions-view { width: 100%; max-width: 360px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; padding: 0 10px 20px; }
+                .tourney-champions-title { color: var(--gold-main); text-align: center; margin: 0 0 14px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 9px; text-transform: uppercase; font-size: 1.12rem; letter-spacing: 0; width: 100%; }
+                .tourney-champions-list { display: grid; grid-template-columns: 1fr; gap: 10px; width: 100%; }
+                .tourney-champions-empty { text-align: center; color: var(--text-muted); font-size: 1rem; padding: 40px 0; }
+                .tourney-champion-card { width: 100%; min-height: 154px; background: rgba(0,0,0,0.42); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 12px 14px; display: grid; grid-template-columns: 68px 1fr auto; grid-template-rows: auto 1fr auto; column-gap: 12px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.28); transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease; }
+                .tourney-champion-card.is-top { background: linear-gradient(120deg, rgba(255,215,0,0.16), rgba(0,0,0,0.45)); border-color: rgba(255,215,0,0.62); }
+                .tourney-champion-card.is-openable { cursor: pointer; }
+                .tourney-champion-card.is-openable:active { transform: scale(0.99); }
+                .tourney-champion-edition { grid-column: 1 / -1; justify-self: start; color: var(--gold-main); font-size: 0.76rem; line-height: 1; font-weight: 1000; letter-spacing: 0; text-transform: uppercase; border: 1px solid rgba(255,215,0,0.34); border-radius: 999px; padding: 5px 9px; background: rgba(255,215,0,0.08); }
+                .tourney-champion-avatar { grid-row: 2 / 4; width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(255,215,0,0.64); box-shadow: 0 0 12px rgba(0,0,0,0.5); }
+                .tourney-champion-name { min-width: 0; color: var(--text-main); font-size: 1.03rem; line-height: 1.12; font-weight: 900; word-break: break-word; }
+                .tourney-champion-card.is-top .tourney-champion-name { color: var(--gold-main); }
+                .tourney-champion-count { justify-self: end; display: inline-flex; align-items: center; gap: 6px; min-width: 54px; justify-content: center; background: rgba(0,0,0,0.48); padding: 6px 9px; border-radius: 999px; border: 1px solid rgba(255,215,0,0.32); }
+                .tourney-champion-count strong { color: var(--gold-main); font-weight: 1000; font-size: 1.08rem; line-height: 1; }
+                @media (max-width: 340px) {
+                    .tourney-champion-card { grid-template-columns: 58px 1fr auto; column-gap: 9px; padding: 11px; }
+                    .tourney-champion-avatar { width: 52px; height: 52px; }
+                    .tourney-champion-name { font-size: 0.96rem; }
+                }
+            </style>
+        `;
         return leaderboardHtml;
+    }
+
+    getHistoryRoundLabel(round) {
+        if (round === 'qf') return tt('tourney_qf') || 'ČETVRTFINALE';
+        if (round === 'sf') return tt('tourney_sf') || 'POLUFINALE';
+        return (tt('tourney_f') || 'FINALE').replace(/🏆/g, '').trim() || 'FINALE';
+    }
+
+    getHistoryOpponent(match, championId) {
+        if (!match) return null;
+        if (match.p1 && match.p1.id === championId) return match.p2 || null;
+        if (match.p2 && match.p2.id === championId) return match.p1 || null;
+        return null;
+    }
+
+    getChampionPathMatches(championship) {
+        const championId = championship?.winnerId;
+        const bracket = championship?.bracket || {};
+        if (!championId) return [];
+
+        return ['qf', 'sf', 'f'].map(round => {
+            const matches = Array.isArray(bracket[round]) ? bracket[round] : [];
+            const match = matches.find(item => {
+                return item && (
+                    (item.p1 && item.p1.id === championId) ||
+                    (item.p2 && item.p2.id === championId)
+                );
+            });
+            return match ? { round, match } : null;
+        }).filter(Boolean);
+    }
+
+    createChampionPathHTML(championship) {
+        const path = this.getChampionPathMatches(championship);
+        if (!path.length) {
+            return `<div class="tourney-journey-empty">${tt('tourney_champion_no_path') || 'Put ovog turnira nije sačuvan.'}</div>`;
+        }
+
+        return path.map((step, index) => {
+            const opponent = this.getHistoryOpponent(step.match, championship.winnerId);
+            const opponentName = this.escape(opponent?.name || tt('player_guest') || 'Igrač');
+            const resultLabel = this.getMatchResultLabel(step.match) || '-';
+            const technicalReason = this.isTechnicalMatchResult(step.match)
+                ? `<span class="tourney-journey-reason">${this.escape(this.getTechnicalReasonLabel(step.match.technicalWinReason))}</span>`
+                : '';
+            const drawCountLabel = this.getMatchDrawCountLabel(step.match);
+            const drawCountHtml = drawCountLabel
+                ? `<span class="tourney-journey-reason">${this.escape(drawCountLabel)}</span>`
+                : '';
+
+            return `
+                <div class="tourney-journey-step">
+                    <div class="tourney-journey-index">${index + 1}</div>
+                    <div class="tourney-journey-main">
+                        <span class="tourney-journey-round">${this.getHistoryRoundLabel(step.round)}</span>
+                        <strong>${opponentName}</strong>
+                    </div>
+                    <div class="tourney-journey-score">
+                        <span>${resultLabel}</span>
+                        ${technicalReason}
+                        ${drawCountHtml}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    createHistoryBracketMatchHTML(match, championId) {
+        if (!match || (!match.p1 && !match.p2)) {
+            return `<div class="tourney-history-match is-empty">---</div>`;
+        }
+
+        const playerHtml = (player) => {
+            if (!player) return `<span class="tourney-history-player is-empty">---</span>`;
+            const isWinner = match.winnerId === player.id;
+            const isChampion = championId === player.id;
+            return `
+                <span class="tourney-history-player${isWinner ? ' is-winner' : ''}${isChampion ? ' is-champion' : ''}">
+                    ${this.escape(player.name || tt('player_guest') || 'Igrač')}
+                </span>
+            `;
+        };
+
+        const resultLabel = this.getMatchResultLabel(match);
+        const drawCountLabel = this.getMatchDrawCountLabel(match);
+        return `
+            <div class="tourney-history-match">
+                <div class="tourney-history-versus">
+                    ${playerHtml(match.p1)}
+                    <span>vs</span>
+                    ${playerHtml(match.p2)}
+                </div>
+                ${resultLabel ? `<div class="tourney-history-scorebox"><strong class="tourney-history-score">${resultLabel}</strong>${drawCountLabel ? `<span class="tourney-history-score-note">${this.escape(drawCountLabel)}</span>` : ''}</div>` : ''}
+            </div>
+        `;
+    }
+
+    createHistoryBracketHTML(championship) {
+        const bracket = championship?.bracket || {};
+        return ['qf', 'sf', 'f'].map(round => {
+            const matches = Array.isArray(bracket[round]) ? bracket[round] : [];
+            return `
+                <div class="tourney-history-round">
+                    <h4>${this.getHistoryRoundLabel(round)}</h4>
+                    <div class="tourney-history-round-matches">
+                        ${matches.map(match => this.createHistoryBracketMatchHTML(match, championship.winnerId)).join('')}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    openChampionJourney(index, championshipIndex = 0) {
+        const player = Array.isArray(this.tourneyLeaderboard) ? this.tourneyLeaderboard[index] : null;
+        const savedChampionships = this.getSavedChampionships(player);
+        const selectedIndex = Math.max(0, Math.min(savedChampionships.length - 1, Math.floor(Number(championshipIndex) || 0)));
+        const championship = savedChampionships[selectedIndex] || this.getLatestChampionship(player);
+        if (!player || !championship || !championship.bracket) {
+            this.app.modal.alert(
+                tt('tourney_champion_no_path') || 'Put ovog turnira nije sačuvan.',
+                tt('modal_title_info') || 'INFO'
+            );
+            return;
+        }
+
+        if (this.app.soundMgr) this.app.soundMgr.click();
+
+        const safeName = this.escape(championship.winnerName || player.playerName || tt('player_guest') || 'Igrač');
+        const photo = this.playerPhotoUrl({
+            name: championship.winnerName || player.playerName,
+            playerName: championship.winnerName || player.playerName,
+            photoUrl: championship.winnerPhotoUrl || player.photoUrl
+        });
+        const editionLabel = this.getChampionshipEditionLabel(championship, selectedIndex + 1);
+        const edition = this.escape(editionLabel);
+        const finalScore = this.escape(championship.scoreLabel || '-');
+        const wonAt = championship.wonAt ? this.escape(this.formatDate(championship.wonAt)) : '';
+        const finalLabel = this.escape(this.getHistoryRoundLabel('f'));
+        const selectorHtml = savedChampionships.length > 1
+            ? `
+                <div class="tourney-journey-picker" aria-label="${this.escapeAttr(tt('tourney_champion_pick_title') || 'Izaberi titulu')}">
+                    <span class="tourney-journey-picker-label">${tt('tourney_champion_pick_title') || 'Izaberi titulu'}</span>
+                    ${savedChampionships.map((item, itemIndex) => {
+                        const itemLabel = this.escape(this.getChampionshipEditionLabel(item, itemIndex + 1));
+                        const activeClass = itemIndex === selectedIndex ? ' is-active' : '';
+                        return `<button type="button" class="tourney-journey-pick${activeClass}" onclick="app.tournamentManager.openChampionJourney(${index}, ${itemIndex})">${itemLabel}</button>`;
+                    }).join('')}
+                </div>
+            `
+            : '';
+
+        this.app.modal.alert(`
+            <div class="tourney-journey-modal">
+                <div class="tourney-journey-hero">
+                    <div class="tourney-journey-edition">${edition}</div>
+                    <img class="tourney-journey-avatar" src="${photo}" alt="" aria-hidden="true" decoding="async">
+                    <h3>${safeName}</h3>
+                    <div class="tourney-journey-final">
+                        <img src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
+                        <span>${finalLabel}: <strong>${finalScore}</strong></span>
+                    </div>
+                    ${wonAt ? `<div class="tourney-journey-date">${wonAt}</div>` : ''}
+                </div>
+
+                ${selectorHtml}
+
+                <section class="tourney-journey-section">
+                    <h4>${tt('tourney_champion_journey_title') || 'PUT DO TITULE'}</h4>
+                    <div class="tourney-journey-path">
+                        ${this.createChampionPathHTML(championship)}
+                    </div>
+                </section>
+
+                <section class="tourney-journey-section">
+                    <h4>${tt('tourney_champion_all_matches') || 'Bracket turnira'}</h4>
+                    <div class="tourney-history-browser">
+                        ${this.createHistoryBracketHTML(championship)}
+                    </div>
+                </section>
+            </div>
+            <style>
+                .tourney-journey-modal { width: 100%; max-height: min(72dvh, 620px); overflow-y: auto; padding-right: 2px; text-align: center; }
+                .tourney-journey-hero { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 4px 12px; border-bottom: 1px solid rgba(255,215,0,0.18); }
+                .tourney-journey-edition { color: var(--gold-main); border: 1px solid rgba(255,215,0,0.36); border-radius: 999px; padding: 5px 10px; font-size: 0.74rem; line-height: 1; font-weight: 1000; text-transform: uppercase; background: rgba(255,215,0,0.08); }
+                .tourney-journey-avatar { width: 68px; height: 68px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); box-shadow: 0 0 14px rgba(0,0,0,0.45); }
+                .tourney-journey-hero h3 { margin: 0; color: var(--gold-main); font-size: 1.18rem; line-height: 1.12; word-break: break-word; }
+                .tourney-journey-final { display: inline-flex; align-items: center; justify-content: center; gap: 7px; color: var(--text-main); font-size: 0.92rem; line-height: 1.2; }
+                .tourney-journey-final img { width: 22px; height: 22px; object-fit: contain; filter: drop-shadow(0 0 7px var(--gold-glow)); }
+                .tourney-journey-date { color: var(--text-muted); font-size: 0.78rem; line-height: 1.2; }
+                .tourney-journey-picker { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; padding: 11px 0 2px; }
+                .tourney-journey-picker-label { flex: 0 0 100%; color: var(--text-muted); text-align: center; font-size: 0.72rem; line-height: 1; font-weight: 900; text-transform: uppercase; }
+                .tourney-journey-pick { min-height: 32px; border: 1px solid rgba(255,215,0,0.28); border-radius: 999px; background: rgba(0,0,0,0.34); color: var(--text-main); padding: 7px 11px; font-size: 0.75rem; line-height: 1; font-weight: 1000; cursor: pointer; }
+                .tourney-journey-pick.is-active { background: rgba(255,215,0,0.16); color: var(--gold-main); border-color: var(--gold-main); box-shadow: 0 0 10px rgba(255,215,0,0.14); }
+                .tourney-journey-section { margin-top: 14px; text-align: left; }
+                .tourney-journey-section h4 { margin: 0 0 8px; color: var(--gold-main); font-size: 0.82rem; line-height: 1.1; text-transform: uppercase; letter-spacing: 0; text-align: center; }
+                .tourney-journey-path { display: flex; flex-direction: column; gap: 8px; }
+                .tourney-journey-step { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center; background: rgba(0,0,0,0.34); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 9px; }
+                .tourney-journey-index { width: 24px; height: 24px; border-radius: 50%; background: rgba(255,215,0,0.12); border: 1px solid rgba(255,215,0,0.32); color: var(--gold-main); display: flex; align-items: center; justify-content: center; font-weight: 1000; font-size: 0.78rem; }
+                .tourney-journey-main { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+                .tourney-journey-main strong { color: var(--text-main); font-size: 0.92rem; line-height: 1.14; word-break: break-word; }
+                .tourney-journey-round { color: var(--text-muted); font-size: 0.68rem; line-height: 1; text-transform: uppercase; font-weight: 800; }
+                .tourney-journey-score { justify-self: end; color: var(--gold-main); font-size: 0.82rem; font-weight: 1000; text-align: right; line-height: 1.1; display: flex; flex-direction: column; gap: 2px; }
+                .tourney-journey-reason { color: var(--text-muted); font-size: 0.66rem; font-weight: 700; }
+                .tourney-journey-empty { text-align: center; color: var(--text-muted); padding: 16px; background: rgba(0,0,0,0.25); border-radius: 8px; }
+                .tourney-history-browser { display: grid; grid-template-columns: 1fr; gap: 9px; }
+                .tourney-history-round { background: rgba(0,0,0,0.26); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 9px; }
+                .tourney-history-round h4 { margin-bottom: 7px; font-size: 0.76rem; }
+                .tourney-history-round-matches { display: flex; flex-direction: column; gap: 6px; }
+                .tourney-history-match { min-height: 38px; background: rgba(0,0,0,0.36); border: 1px solid rgba(255,255,255,0.08); border-radius: 7px; padding: 7px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+                .tourney-history-match.is-empty { justify-content: center; color: var(--text-muted); opacity: 0.55; }
+                .tourney-history-versus { min-width: 0; display: flex; align-items: center; gap: 5px; color: var(--text-muted); font-size: 0.7rem; }
+                .tourney-history-player { color: var(--text-main); font-size: 0.78rem; line-height: 1.1; font-weight: 700; word-break: break-word; }
+                .tourney-history-player.is-winner { color: var(--success); font-weight: 1000; }
+                .tourney-history-player.is-champion { color: var(--gold-main); }
+                .tourney-history-scorebox { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; text-align: right; }
+                .tourney-history-score { color: var(--gold-main); font-size: 0.78rem; line-height: 1; white-space: nowrap; }
+                .tourney-history-score-note { color: var(--text-muted); font-size: 0.62rem; line-height: 1; white-space: nowrap; }
+            </style>
+        `, `${tt('tourney_champion_journey_title') || 'PUT DO TITULE'} - ${edition}`);
     }
 
     renderRegistration(container) {
         const myId = this.app.playerId;
         const isRegistered = this.state.players.some(p => p.id === myId);
         const isRegistrationOpen = this.state.status === 'registration';
+        const isFinished = this.state.status === 'finished';
         const spotsLeft = 8 - this.state.players.length;
+        const currentEdition = this.getCurrentTournamentEditionLabel();
+        const nextEdition = this.getNextTournamentEditionLabel();
+        const resetCountdown = this.formatTournamentResetCountdown(this.state.resetAt);
+        const registrationDesc = isFinished
+            ? (tt('tourney_finished_desc') || 'Turnir je završen. Rezultati i put do titule ostaju sačuvani.')
+            : (tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.');
 
         let buttonHtml = '';
         if (!isRegistrationOpen) {
-            const labelPrimary = isRegistered
-                ? (tt('tourney_reg_active_title') || 'Prijavljeni ste')
-                : (tt('tourney_reg_started') || 'Turnir je već počeo');
-            const labelSecondary = isRegistered ? (tt('tourney_reg_active_subtitle') || 'Turnir u toku') : '';
+            const labelPrimary = isFinished
+                ? (tt('tourney_finished_title') || 'Turnir je završen')
+                : (isRegistered
+                    ? (tt('tourney_reg_active_title') || 'Prijavljeni ste')
+                    : (tt('tourney_reg_started') || 'Turnir je već počeo'));
+            const labelSecondary = isFinished
+                ? `${tt('tourney_next_registration_in') || 'Nove prijave'}: ${nextEdition}${resetCountdown ? ` (${resetCountdown})` : ''}`
+                : (isRegistered ? (tt('tourney_reg_active_subtitle') || 'Turnir u toku') : '');
             buttonHtml = `
                 <button class="btn-menu btn-secondary tourney-action-button tourney-action-button--locked" disabled>
                     <span class="tourney-action-icon" aria-hidden="true">🏁</span>
@@ -786,8 +1086,8 @@ class TournamentManager {
         container.innerHTML = `
             <div class="tourney-registration-panel">
                 <div class="tourney-icon-large tourney-registration-icon">🏆</div>
-                <h3 class="tourney-registration-title">${tt('tourney_weekly') || 'Nedeljni Turnir'}</h3>
-                <p class="tourney-registration-desc">${tt('tourney_desc') || 'Prijavite se za nedeljni turnir! 8 igrača se bori za prestiž i veliku nagradu.'}</p>
+                <h3 class="tourney-registration-title">${currentEdition}</h3>
+                <p class="tourney-registration-desc">${registrationDesc}</p>
 
                 <div class="tourney-register-status">
                     <span class="tourney-register-label">${tt('tourney_registered') || 'Prijavljeno igrača'}</span>
@@ -888,6 +1188,37 @@ class TournamentManager {
         return d.toLocaleDateString(locale) + ` ${atStr} ` + d.toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'});
     }
 
+    getSafeTournamentNumber(value = this.state.tournamentNumber) {
+        const num = Number(value);
+        if (!Number.isFinite(num)) return 1;
+        return Math.max(1, Math.floor(num));
+    }
+
+    getTournamentEditionByNumber(value) {
+        return `${this.toRomanNumeral(this.getSafeTournamentNumber(value))} ${this.tr('tourney_edition_suffix', 'TURNIR')}`;
+    }
+
+    getCurrentTournamentEditionLabel() {
+        return this.getTournamentEditionByNumber(this.state.tournamentNumber);
+    }
+
+    getNextTournamentEditionLabel() {
+        return this.getTournamentEditionByNumber(this.getSafeTournamentNumber(this.state.tournamentNumber) + 1);
+    }
+
+    formatTournamentResetCountdown(resetAt) {
+        const target = resetAt ? new Date(resetAt).getTime() : 0;
+        if (!Number.isFinite(target) || target <= 0) return '';
+        const remainingMs = Math.max(0, target - Date.now());
+        if (remainingMs <= 0) return this.tr('tourney_next_registration_soon', 'uskoro');
+
+        const totalMinutes = Math.ceil(remainingMs / 60000);
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+        if (hours <= 0) return `${minutes}m`;
+        return `${hours}h ${minutes}m`;
+    }
+
     normalizeMatchScore(value) {
         const num = Number(value);
         if (!Number.isFinite(num)) return null;
@@ -914,6 +1245,44 @@ class TournamentManager {
         }
 
         return '';
+    }
+
+    getMatchDrawReplayLabel(match) {
+        if (!match || match.winnerId || !match.rematchRequired) return '';
+        const label = this.escape(tt('tourney_draw_replay_short') || 'NEREŠENO - PONAVLJANJE');
+        const score = match.lastDrawScoreLabel ? this.escape(match.lastDrawScoreLabel) : '';
+        return score ? `${label}: ${score}` : label;
+    }
+
+    getMatchDrawCountLabel(match) {
+        const drawCount = Number(match?.drawCount || 0);
+        if (!Number.isFinite(drawCount) || drawCount <= 0) return '';
+        const safeCount = Math.max(0, Math.floor(drawCount));
+        return `${tt('tourney_draws_before_win') || 'Remija pre pobede'}: ${safeCount}`;
+    }
+
+    getMatchDrawReplayNoticeHTML(match) {
+        if (!match || match.winnerId || !match.rematchRequired) return '';
+
+        const title = this.escape(tt('tourney_draw_replay_short') || 'NEREŠENO - PONAVLJANJE');
+        const text = this.escape(tt('tourney_draw_replay_modal') || 'Partija je završena nerešeno. Meč se ponavlja dok neko ne pobedi.');
+        const score = match.lastDrawScoreLabel ? this.escape(match.lastDrawScoreLabel) : '';
+        const scoreHtml = score
+            ? `<p style="margin-top: 8px; color: var(--text-main); font-size: 0.88rem;">${this.escape(tt('tourney_draw_score') || 'Skor remija')}: <strong style="color: var(--gold-main);">${score}</strong></p>`
+            : '';
+        const countLabel = this.getMatchDrawCountLabel(match);
+        const countHtml = countLabel
+            ? `<p style="margin-top: 4px; color: var(--text-muted); font-size: 0.8rem;">${this.escape(countLabel)}</p>`
+            : '';
+
+        return `
+            <div style="background: rgba(255, 152, 0, 0.12); padding: 13px; border-radius: 8px; margin-bottom: 15px; border: 1px solid rgba(255, 152, 0, 0.75); text-align: left;">
+                <p style="color: #ffb74d; font-weight: 1000; margin-bottom: 6px; text-transform: uppercase; font-size: 0.86rem; line-height: 1.1;">${title}</p>
+                <p style="color: var(--text-main); font-size: 0.88rem; line-height: 1.35; margin: 0;">${text}</p>
+                ${scoreHtml}
+                ${countHtml}
+            </div>
+        `;
     }
 
     getTechnicalReasonLabel(reason) {
@@ -1102,17 +1471,20 @@ class TournamentManager {
         };
 
         let statusDot = '';
-        if (match.timeAccepted && match.time) {
+        if (match.rematchRequired && !match.winnerId) {
+            statusDot = `<div style="position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: #ff9800; border-radius: 50%; box-shadow: 0 0 8px #ff9800;"></div>`;
+        } else if (match.timeAccepted && match.time) {
             statusDot = `<div style="position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: var(--success); border-radius: 50%; box-shadow: 0 0 8px var(--success);"></div>`;
         } else if (match.proposedTime) {
             statusDot = `<div style="position: absolute; top: -5px; right: -5px; width: 12px; height: 12px; background: #ff9800; border-radius: 50%; box-shadow: 0 0 8px #ff9800;"></div>`;
         }
 
         const resultLabel = this.getMatchResultLabel(match);
+        const drawReplayLabel = this.getMatchDrawReplayLabel(match);
         const resultHtml = resultLabel
             ? `<div style="text-align: center; padding: 2px 8px; font-size: 0.7rem; line-height: 1.15; font-weight: 900; color: var(--gold-main); background: rgba(255,215,0,0.07); border-bottom: 1px solid rgba(255,215,0,0.12); text-shadow: 0 0 5px rgba(255,215,0,0.25);">${resultLabel}</div>`
-            : '';
-        const cardMinHeight = resultLabel ? '76px' : '62px';
+            : (drawReplayLabel ? `<div style="text-align: center; padding: 2px 8px; font-size: 0.66rem; line-height: 1.15; font-weight: 1000; color: #ffb74d; background: rgba(255,152,0,0.1); border-bottom: 1px solid rgba(255,152,0,0.18); text-shadow: 0 0 5px rgba(255,152,0,0.2);">${drawReplayLabel}</div>` : '');
+        const cardMinHeight = (resultLabel || drawReplayLabel) ? '76px' : '62px';
         const canOpenMatch = Boolean(match.p1 && match.p2 && (this.state.status === 'finished' || this.isTournamentSchedulingUnlocked()));
         const matchClasses = [
             'tourney-match',
@@ -1143,6 +1515,7 @@ class TournamentManager {
 
         const myId = this.app.playerId;
         const isMyMatch = match.p1.id === myId || match.p2.id === myId;
+        const rematchNoticeHtml = this.getMatchDrawReplayNoticeHTML(match);
         let akcijeHtml = '';
 
         if (match.winnerId) {
@@ -1154,21 +1527,36 @@ class TournamentManager {
             const resultHtml = resultLabel
                 ? `<div style="margin-top: 8px; color: var(--text-main); font-size: 0.95rem;">${this.tr('tourney_result', 'Rezultat')}: <strong style="color: var(--gold-main);">${resultLabel}</strong>${technicalReason ? ` <span style="color: var(--text-muted); font-size: 0.82rem;">(${technicalReason})</span>` : ''}</div>`
                 : '';
-            akcijeHtml = `<div style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async" style="width: 22px; height: 22px; object-fit: contain; vertical-align: -5px; margin-left: 4px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.45)) drop-shadow(0 0 7px var(--gold-glow));">${resultHtml}</div>`;
+            const drawCountLabel = this.getMatchDrawCountLabel(match);
+            const drawCountHtml = drawCountLabel
+                ? `<div style="margin-top: 5px; color: var(--text-muted); font-size: 0.82rem;">${this.escape(drawCountLabel)}</div>`
+                : '';
+            akcijeHtml = `<div style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async" style="width: 22px; height: 22px; object-fit: contain; vertical-align: -5px; margin-left: 4px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.45)) drop-shadow(0 0 7px var(--gold-glow));">${resultHtml}${drawCountHtml}</div>`;
         }
         else if (isMyMatch) {
             if (match.timeAccepted) {
+                const replayScheduleHtml = match.rematchRequired ? `
+                    <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 15px 0;">
+                    <div style="text-align: left; margin-bottom: 10px;">
+                        <label style="font-size: 0.75rem; color: var(--text-muted);">${tt('tourney_want_to_change_time') || 'Želite da promenite termin?'}</label>
+                        <input type="datetime-local" id="tourney-time-input" class="modal-input" style="margin-top: 5px; font-size: 1rem;">
+                    </div>
+                    <button class="btn-menu btn-secondary" style="width: 100%;" onclick="app.tournamentManager.proposeTime('${round}', ${index})">${tt('tourney_schedule_new_time') || 'Zakaži novi termin'}</button>
+                ` : '';
                 akcijeHtml = `
+                    ${rematchNoticeHtml}
                     <div style="background: rgba(76, 175, 80, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--success);">
                         <p style="color: var(--success); font-weight: bold; margin-bottom: 5px;">${tt('tourney_time_agreed') || 'Vreme meča je dogovoreno!'}</p>
                         <p style="font-size: 1.1rem;">${this.formatDate(match.time)}</p>
                     </div>
-                    <button class="btn-menu btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.startDuel('${round}', ${index})">▶ ${tt('tourney_start_match') || 'POKRENI MEČ'}</button>
+                    <button class="btn-menu btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.startDuel('${round}', ${index})">${match.rematchRequired ? (tt('tourney_replay_match') || 'POKRENI PONAVLJANJE') : `▶ ${tt('tourney_start_match') || 'POKRENI MEČ'}`}</button>
+                    ${replayScheduleHtml}
                 `;
             }
             else if (match.proposedTime) {
                 if (match.proposedById === myId) {
                     akcijeHtml = `
+                        ${rematchNoticeHtml}
                         <div style="background: rgba(255, 152, 0, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ff9800;">
                             <p style="color: #ff9800; font-weight: bold; margin-bottom: 5px;">${tt('tourney_waiting_opp_response') || 'Čeka se odgovor protivnika'}</p>
                             <p style="font-size: 0.9rem; color: var(--text-main);">${tt('tourney_you_proposed') || 'Predložili ste:'} <strong>${this.formatDate(match.proposedTime)}</strong></p>
@@ -1181,6 +1569,7 @@ class TournamentManager {
                     `;
                 } else {
                     akcijeHtml = `
+                        ${rematchNoticeHtml}
                         <div style="background: rgba(33, 150, 243, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #2196F3;">
                             <p style="color: #2196F3; font-weight: bold; margin-bottom: 5px;">${tt('tourney_opp_proposes_time') || 'Protivnik predlaže vreme:'}</p>
                             <p style="font-size: 1.1rem; color: var(--text-main); font-weight: bold;">${this.formatDate(match.proposedTime)}</p>
@@ -1199,6 +1588,7 @@ class TournamentManager {
             }
             else {
                 akcijeHtml = `
+                    ${rematchNoticeHtml}
                     <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--glass-border);">
                         <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">${tt('tourney_time_not_scheduled') || 'Vreme odigravanja meča još uvek nije zakazano.'}</p>
                         <div style="text-align: left;">
@@ -1211,7 +1601,9 @@ class TournamentManager {
             }
         }
         else {
-            akcijeHtml = `<p style="color: var(--text-muted); font-size:0.85rem; padding: 20px 0; background: rgba(0,0,0,0.2); border-radius: 8px;">${tt('tourney_not_your_match') || 'Ovo nije Vaš meč. Čekamo ishod ovog duela.'}</p>`;
+            akcijeHtml = match.rematchRequired
+                ? `${rematchNoticeHtml}<p style="color: var(--text-muted); font-size:0.85rem; padding: 14px 10px; background: rgba(0,0,0,0.2); border-radius: 8px;">${tt('tourney_draw_waiting_replay') || 'Meč čeka ponavljanje.'}</p>`
+                : `<p style="color: var(--text-muted); font-size:0.85rem; padding: 20px 0; background: rgba(0,0,0,0.2); border-radius: 8px;">${tt('tourney_not_your_match') || 'Ovo nije Vaš meč. Čekamo ishod ovog duela.'}</p>`;
         }
 
         const titleFallback = tt('tourney_match_title') || 'TURNIRSKI MEČ';

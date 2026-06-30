@@ -301,9 +301,12 @@ app.use(express.static(path.join(__dirname, 'www')));
 // ==================================================================
 let tournamentState = {
     status: 'registration',
+    tournamentNumber: 1,
     players: [],
     bracket: { qf: [null, null, null, null], sf: [null, null], f: [null] },
-    pushFlags: {}
+    pushFlags: {},
+    finishedAt: null,
+    resetAt: null
 };
 
 // Funkcija za učitavanje turnira iz baze na startu
@@ -314,13 +317,21 @@ async function initTournamentFromDb() {
         let dbState = await TournamentStateDb.findOne();
         if (dbState) {
             tournamentState.status = dbState.status;
+            tournamentState.tournamentNumber = dbState.tournamentNumber || 1;
             tournamentState.players = dbState.players || [];
             tournamentState.bracket = dbState.bracket || { qf: [null, null, null, null], sf: [null, null], f: [null] };
             tournamentState.pushFlags = dbState.pushFlags || {};
+            tournamentState.finishedAt = dbState.finishedAt || null;
+            tournamentState.resetAt = dbState.resetAt || null;
+            normalizeTournamentLifecycleState();
+            await saveTournamentToDb();
+            await persistCurrentFinishedTournamentHistoryIfNeeded();
+            scheduleTournamentAutoReset();
             console.log("🏆 Turnir uspešno učitan iz MongoDB baze.");
         } else {
             let newState = new TournamentStateDb(tournamentState);
             await newState.save();
+            scheduleTournamentAutoReset();
             console.log("🏆 Kreiran novi čist turnir u MongoDB bazi.");
         }
     } catch (err) {
@@ -337,6 +348,110 @@ async function saveTournamentToDb() {
     } catch (err) {
         console.error("Greška pri čuvanju turnira u bazu:", err);
     }
+}
+
+let tournamentAutoResetTimer = null;
+
+function safeTournamentNumber(value) {
+    const num = Number(value);
+    if (!Number.isFinite(num)) return 1;
+    return Math.max(1, Math.floor(num));
+}
+
+function getTournamentFinishedAtFallback() {
+    const finalMatch = tournamentState?.bracket?.f?.[0];
+    const recordedAt = finalMatch?.resultRecordedAt ? new Date(finalMatch.resultRecordedAt).getTime() : NaN;
+    return Number.isFinite(recordedAt) && recordedAt > 0 ? new Date(recordedAt) : new Date();
+}
+
+function createFreshTournamentState(tournamentNumber = 1) {
+    return {
+        status: 'registration',
+        tournamentNumber: safeTournamentNumber(tournamentNumber),
+        players: [],
+        bracket: { qf: [null, null, null, null], sf: [null, null], f: [null] },
+        pushFlags: {},
+        finishedAt: null,
+        resetAt: null
+    };
+}
+
+function normalizeTournamentLifecycleState() {
+    tournamentState.tournamentNumber = safeTournamentNumber(tournamentState.tournamentNumber);
+    if (!tournamentState.pushFlags || typeof tournamentState.pushFlags !== 'object') {
+        tournamentState.pushFlags = {};
+    }
+
+    if (tournamentState.status === 'finished') {
+        const finishedAt = tournamentState.finishedAt
+            ? new Date(tournamentState.finishedAt)
+            : getTournamentFinishedAtFallback();
+        const safeFinishedAt = Number.isFinite(finishedAt.getTime()) ? finishedAt : new Date();
+        tournamentState.finishedAt = safeFinishedAt;
+
+        const resetAt = tournamentState.resetAt
+            ? new Date(tournamentState.resetAt)
+            : new Date(safeFinishedAt.getTime() + TOURNEY_FINISHED_RESET_DELAY_MS);
+        const safeResetAt = Number.isFinite(resetAt.getTime())
+            ? resetAt
+            : new Date(safeFinishedAt.getTime() + TOURNEY_FINISHED_RESET_DELAY_MS);
+        tournamentState.resetAt = safeResetAt;
+    } else {
+        tournamentState.finishedAt = null;
+        tournamentState.resetAt = null;
+    }
+}
+
+function markTournamentFinishedForReset() {
+    const finishedAt = tournamentState.finishedAt ? new Date(tournamentState.finishedAt) : new Date();
+    const safeFinishedAt = Number.isFinite(finishedAt.getTime()) ? finishedAt : new Date();
+    tournamentState.status = 'finished';
+    tournamentState.finishedAt = safeFinishedAt;
+    tournamentState.resetAt = new Date(safeFinishedAt.getTime() + TOURNEY_FINISHED_RESET_DELAY_MS);
+}
+
+function emitTournamentStateUpdate() {
+    if (io && io.emit) io.emit('tourney_state_update', tournamentState);
+}
+
+async function resetTournamentForNextCycle(reason = 'auto') {
+    clearTournamentAutoResetTimer();
+    await persistCurrentFinishedTournamentHistoryIfNeeded();
+    const nextNumber = safeTournamentNumber(tournamentState.tournamentNumber) + 1;
+    tournamentState = createFreshTournamentState(nextNumber);
+    console.log(`🏆 Turnir resetovan za ${nextNumber}. turnir (${reason}).`);
+    await saveTournamentToDb();
+    emitTournamentStateUpdate();
+}
+
+function clearTournamentAutoResetTimer() {
+    if (tournamentAutoResetTimer) {
+        clearTimeout(tournamentAutoResetTimer);
+        tournamentAutoResetTimer = null;
+    }
+}
+
+function scheduleTournamentAutoReset() {
+    clearTournamentAutoResetTimer();
+    if (tournamentState.status !== 'finished' || !tournamentState.resetAt) return;
+
+    const remainingMs = new Date(tournamentState.resetAt).getTime() - Date.now();
+    if (remainingMs <= 0) {
+        resetTournamentForNextCycle('auto_due').catch(err => console.error('Greška pri automatskom resetu turnira:', err));
+        return;
+    }
+
+    const delay = Math.min(remainingMs, 2147483647);
+    tournamentAutoResetTimer = setTimeout(() => {
+        tournamentAutoResetTimer = null;
+        normalizeTournamentLifecycleState();
+        if (tournamentState.status === 'finished' && tournamentState.resetAt && new Date(tournamentState.resetAt).getTime() <= Date.now()) {
+            resetTournamentForNextCycle('auto_24h').catch(err => console.error('Greška pri automatskom resetu turnira:', err));
+        } else {
+            scheduleTournamentAutoReset();
+        }
+    }, delay);
+    if (typeof tournamentAutoResetTimer.unref === 'function') tournamentAutoResetTimer.unref();
 }
 
 
@@ -456,16 +571,21 @@ const LeagueHallOfFame = mongoose.model('LeagueHallOfFame', LeagueHallOfFameSche
 const TourneyStatsSchema = new mongoose.Schema({
     playerId: String,
     playerName: String,
+    photoUrl: { type: String, default: '' },
     wins: { type: Number, default: 0 },
-    lastWinDate: { type: Date, default: Date.now }
+    lastWinDate: { type: Date, default: Date.now },
+    championships: { type: Array, default: [] }
 });
 const TourneyStats = mongoose.model('TourneyStats', TourneyStatsSchema);
 
 const TournamentStateSchema = new mongoose.Schema({
     status: { type: String, default: 'registration' },
+    tournamentNumber: { type: Number, default: 1 },
     players: { type: Array, default: [] },
     bracket: { type: Object, default: { qf: [null, null, null, null], sf: [null, null], f: [null] } },
-    pushFlags: { type: Object, default: {} }
+    pushFlags: { type: Object, default: {} },
+    finishedAt: { type: Date, default: null },
+    resetAt: { type: Date, default: null }
 });
 mongoose.model('TournamentState', TournamentStateSchema);
 
@@ -665,6 +785,7 @@ const GAME_REWARD_CLAIM_WINDOW_MS = 5 * 60 * 1000;
 const TOURNEY_ENTRY_FEE = 5500;
 const TOURNEY_WINNER_REWARD = 44000;
 const TOURNEY_RUNNER_UP_REWARD = 5500;
+const TOURNEY_FINISHED_RESET_DELAY_MS = 24 * 60 * 60 * 1000;
 const PUSH_TOKEN_STALE_DAYS = Number.isFinite(parseInt(process.env.PUSH_TOKEN_STALE_DAYS || '90', 10))
     ? parseInt(process.env.PUSH_TOKEN_STALE_DAYS || '90', 10)
     : 90;
@@ -3243,12 +3364,18 @@ setInterval(sweepTurnTimeouts, TURN_TIMEOUT_WATCHDOG_MS);
 function generateTournamentBracket() {
     if (!hasFullTournamentRoster()) {
         tournamentState.status = 'registration';
+        tournamentState.finishedAt = null;
+        tournamentState.resetAt = null;
         ensureTournamentRegistrationBracket();
         saveTournamentToDb();
+        scheduleTournamentAutoReset();
         return false;
     }
 
     tournamentState.status = 'active';
+    tournamentState.finishedAt = null;
+    tournamentState.resetAt = null;
+    scheduleTournamentAutoReset();
     ensureTournamentRegistrationBracket();
 
     const registrationSlots = tournamentState.bracket.qf
@@ -3293,7 +3420,12 @@ function createTournamentMatch(p1 = null, p2 = null) {
         time: null,
         proposedTime: null,
         proposedById: null,
-        timeAccepted: false
+        timeAccepted: false,
+        rematchRequired: false,
+        drawCount: 0,
+        lastDrawScoreLabel: '',
+        lastDrawAt: null,
+        lastDrawRoomId: ''
     };
 }
 
@@ -3730,22 +3862,23 @@ function advanceTournamentBracket(round, index, winnerObj) {
     if (round === 'qf') {
         const sfIndex = Math.floor(index / 2);
         if (!tournamentState.bracket.sf[sfIndex]) {
-            tournamentState.bracket.sf[sfIndex] = { p1: null, p2: null, winnerId: null, time: null, proposedTime: null, proposedById: null, timeAccepted: false };
+            tournamentState.bracket.sf[sfIndex] = createTournamentMatch();
         }
         if (index % 2 === 0) tournamentState.bracket.sf[sfIndex].p1 = winnerObj;
         else tournamentState.bracket.sf[sfIndex].p2 = winnerObj;
-    } 
+    }
     else if (round === 'sf') {
         if (!tournamentState.bracket.f[0]) {
-            tournamentState.bracket.f[0] = { p1: null, p2: null, winnerId: null, time: null, proposedTime: null, proposedById: null, timeAccepted: false };
+            tournamentState.bracket.f[0] = createTournamentMatch();
         }
         if (index % 2 === 0) tournamentState.bracket.f[0].p1 = winnerObj;
         else tournamentState.bracket.f[0].p2 = winnerObj;
-    } 
+    }
     else if (round === 'f') {
-        tournamentState.status = 'finished';
+        markTournamentFinishedForReset();
     }
     saveTournamentToDb();
+    scheduleTournamentAutoReset();
 }
 
 // ==================================================================
@@ -3873,6 +4006,14 @@ function sanitizeTournamentMatchScore(value) {
     return Math.max(0, Math.min(MAX_SCORE, Math.floor(num)));
 }
 
+function resolveTournamentReplayState(match) {
+    if (!match) return;
+    if (match.rematchRequired) {
+        match.rematchResolvedAt = Date.now();
+    }
+    match.rematchRequired = false;
+}
+
 function setTournamentMatchResult(match, resultType, p1Score, p2Score, options = {}) {
     if (!match) return false;
 
@@ -3886,6 +4027,7 @@ function setTournamentMatchResult(match, resultType, p1Score, p2Score, options =
     match.p2Score = safeP2Score;
     match.scoreLabel = `${safeP1Score}-${safeP2Score}${isTechnical ? ' TP' : ''}`;
     match.resultRecordedAt = Date.now();
+    resolveTournamentReplayState(match);
 
     if (isTechnical) {
         match.technicalWinReason = String(options.reason || 'technical').substring(0, 60);
@@ -3922,6 +4064,33 @@ function getTournamentRoomMatchScores(roomId, match) {
         p1Score: scoreByUid.get(match.p1.id),
         p2Score: scoreByUid.get(match.p2.id)
     };
+}
+
+async function recordTournamentDrawReplay(roomId) {
+    const roomInfo = parseTournamentRoomId(roomId);
+    if (!roomInfo) return false;
+
+    const matchInfo = getTournamentMatch(roomInfo.round, roomInfo.index);
+    if (!matchInfo) return false;
+
+    const { match } = matchInfo;
+    if (!match || match.winnerId) return false;
+
+    const regularScores = getTournamentRoomMatchScores(roomId, match);
+    if (!regularScores || regularScores.p1Score !== regularScores.p2Score) return false;
+
+    if (match.lastDrawRoomId === roomId) return false;
+
+    const scoreLabel = `${regularScores.p1Score}-${regularScores.p2Score}`;
+    match.rematchRequired = true;
+    match.drawCount = Math.max(0, toSafeInt(match.drawCount)) + 1;
+    match.lastDrawScoreLabel = scoreLabel;
+    match.lastDrawAt = Date.now();
+    match.lastDrawRoomId = roomId;
+
+    await saveTournamentToDb();
+    io.emit('tourney_state_update', tournamentState);
+    return true;
 }
 
 async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'technical') {
@@ -4156,6 +4325,67 @@ async function applyTournamentPrize(uid, amount, role, incrementTournamentWins =
     return { ok: true, user };
 }
 
+function sanitizeTournamentHistoryText(value, maxLength = 120) {
+    return String(value || '').trim().substring(0, maxLength);
+}
+
+function sanitizeTournamentHistoryPlayer(player) {
+    if (!player || !player.id) return null;
+    return {
+        id: sanitizeTournamentHistoryText(player.id, 160),
+        name: sanitizeTournamentName(player.name || 'Igrac'),
+        photoUrl: sanitizeTournamentHistoryText(player.photoUrl || '', 500),
+        pi: sanitizeTournamentHistoryText(player.pi || player.powerIndex || '', 20)
+    };
+}
+
+function sanitizeTournamentHistoryMatch(match) {
+    if (!match || (!match.p1 && !match.p2)) return null;
+    const resultType = match.resultType === 'technical' ? 'technical' : (match.resultType === 'regular' ? 'regular' : '');
+    const drawCount = Number.isFinite(Number(match.drawCount)) ? Math.max(0, Math.floor(Number(match.drawCount))) : 0;
+    return {
+        p1: sanitizeTournamentHistoryPlayer(match.p1),
+        p2: sanitizeTournamentHistoryPlayer(match.p2),
+        winnerId: sanitizeTournamentHistoryText(match.winnerId || '', 160),
+        resultType,
+        scoreLabel: sanitizeTournamentHistoryText(match.scoreLabel || '', 40),
+        p1Score: Number.isFinite(Number(match.p1Score)) ? Math.max(0, Math.floor(Number(match.p1Score))) : null,
+        p2Score: Number.isFinite(Number(match.p2Score)) ? Math.max(0, Math.floor(Number(match.p2Score))) : null,
+        technicalWinReason: sanitizeTournamentHistoryText(match.technicalWinReason || '', 60),
+        drawCount,
+        lastDrawScoreLabel: sanitizeTournamentHistoryText(match.lastDrawScoreLabel || '', 40)
+    };
+}
+
+function sanitizeTournamentHistoryBracket(bracket) {
+    const safeRound = (round, size) => {
+        const matches = Array.isArray(bracket && bracket[round]) ? bracket[round] : [];
+        return Array(size).fill(null).map((_, index) => sanitizeTournamentHistoryMatch(matches[index]));
+    };
+    return {
+        qf: safeRound('qf', 4),
+        sf: safeRound('sf', 2),
+        f: safeRound('f', 1)
+    };
+}
+
+async function buildTournamentChampionshipRecord(match, winnerObj) {
+    const runnerUpObj = getTournamentOpponent(match, winnerObj.id);
+    const wonAt = new Date();
+    return {
+        tournamentNumber: safeTournamentNumber(tournamentState.tournamentNumber),
+        wonAt,
+        winnerId: sanitizeTournamentHistoryText(winnerObj.id, 160),
+        winnerName: sanitizeTournamentName(winnerObj.name || 'Igrac'),
+        winnerPhotoUrl: sanitizeTournamentHistoryText(winnerObj.photoUrl || '', 500),
+        runnerUpId: sanitizeTournamentHistoryText(runnerUpObj?.id || '', 160),
+        runnerUpName: sanitizeTournamentName(runnerUpObj?.name || 'Finalista'),
+        scoreLabel: sanitizeTournamentHistoryText(match.scoreLabel || '', 40),
+        resultType: match.resultType === 'technical' ? 'technical' : 'regular',
+        bracket: sanitizeTournamentHistoryBracket(tournamentState.bracket)
+    };
+}
+
 async function awardTournamentFinalPrizes(match, winnerObj) {
     if (!match || !winnerObj || !winnerObj.id) return;
 
@@ -4208,9 +4438,24 @@ async function recordTournamentChampion(match, winnerObj) {
     match.statsRecordInProgress = true;
 
     try {
+        const championshipRecord = await buildTournamentChampionshipRecord(match, winnerObj);
         await TourneyStats.findOneAndUpdate(
             { playerId: winnerObj.id },
-            { $set: { playerName: winnerObj.name, lastWinDate: Date.now() }, $inc: { wins: 1 } },
+            {
+                $set: {
+                    playerName: winnerObj.name,
+                    photoUrl: winnerObj.photoUrl || '',
+                    lastWinDate: championshipRecord.wonAt
+                },
+                $inc: { wins: 1 },
+                $push: {
+                    championships: {
+                        $each: [championshipRecord],
+                        $position: 0,
+                        $slice: 20
+                    }
+                }
+            },
             { upsert: true, new: true }
         );
 
@@ -4222,6 +4467,119 @@ async function recordTournamentChampion(match, winnerObj) {
         delete match.statsRecordInProgress;
         saveTournamentToDb();
     }
+}
+
+function hasChampionshipRecordForFinal(championships, record) {
+    if (!record || !Array.isArray(championships)) return false;
+    return championships.some(item => {
+        if (!item || typeof item !== 'object') return false;
+        return item.winnerId === record.winnerId &&
+            item.runnerUpId === record.runnerUpId &&
+            String(item.scoreLabel || '') === String(record.scoreLabel || '');
+    });
+}
+
+function buildCurrentFinishedChampionshipFallback(statsItem) {
+    const finalMatch = tournamentState?.bracket?.f?.[0];
+    if (tournamentState.status !== 'finished' || !finalMatch?.winnerId || !statsItem?.playerId) return null;
+    if (finalMatch.winnerId !== statsItem.playerId) return null;
+
+    const winnerObj = finalMatch.p1?.id === finalMatch.winnerId ? finalMatch.p1 : finalMatch.p2;
+    if (!winnerObj) return null;
+
+    const runnerUpObj = getTournamentOpponent(finalMatch, winnerObj.id);
+    const tournamentNumber = safeTournamentNumber(tournamentState.tournamentNumber);
+    return {
+        tournamentNumber,
+        wonAt: statsItem.lastWinDate || new Date(),
+        winnerId: sanitizeTournamentHistoryText(winnerObj.id, 160),
+        winnerName: sanitizeTournamentName(winnerObj.name || statsItem.playerName || 'Igrac'),
+        winnerPhotoUrl: sanitizeTournamentHistoryText(winnerObj.photoUrl || statsItem.photoUrl || '', 500),
+        runnerUpId: sanitizeTournamentHistoryText(runnerUpObj?.id || '', 160),
+        runnerUpName: sanitizeTournamentName(runnerUpObj?.name || 'Finalista'),
+        scoreLabel: sanitizeTournamentHistoryText(finalMatch.scoreLabel || '', 40),
+        resultType: finalMatch.resultType === 'technical' ? 'technical' : 'regular',
+        bracket: sanitizeTournamentHistoryBracket(tournamentState.bracket),
+        currentStateFallback: true
+    };
+}
+
+async function persistCurrentFinishedTournamentHistoryIfNeeded() {
+    if (!MONGO_URI || tournamentState.status !== 'finished') return;
+
+    const finalMatch = tournamentState?.bracket?.f?.[0];
+    if (!finalMatch?.winnerId) return;
+
+    const winnerObj = finalMatch.p1?.id === finalMatch.winnerId ? finalMatch.p1 : finalMatch.p2;
+    if (!winnerObj?.id) return;
+
+    let statsItem = await TourneyStats.findOne({ playerId: winnerObj.id }).lean();
+    if (!statsItem) {
+        statsItem = {
+            playerId: winnerObj.id,
+            playerName: winnerObj.name || 'Igrac',
+            photoUrl: winnerObj.photoUrl || '',
+            wins: 1,
+            lastWinDate: tournamentState.finishedAt || finalMatch.resultRecordedAt || Date.now(),
+            championships: []
+        };
+    }
+
+    const fallbackRecord = buildCurrentFinishedChampionshipFallback(statsItem);
+    if (!fallbackRecord) return;
+
+    const existingChampionships = Array.isArray(statsItem.championships) ? statsItem.championships : [];
+    if (hasChampionshipRecordForFinal(existingChampionships, fallbackRecord)) return;
+
+    await TourneyStats.findOneAndUpdate(
+        { playerId: winnerObj.id },
+        {
+            $set: {
+                playerName: winnerObj.name || statsItem.playerName || 'Igrac',
+                photoUrl: winnerObj.photoUrl || statsItem.photoUrl || '',
+                lastWinDate: fallbackRecord.wonAt
+            },
+            $max: { wins: 1 },
+            $push: {
+                championships: {
+                    $each: [fallbackRecord],
+                    $position: 0,
+                    $slice: 20
+                }
+            }
+        },
+        { upsert: true, new: true }
+    );
+}
+
+async function buildTourneyStatsPayload(limit = 20) {
+    const stats = await TourneyStats.find().sort({ wins: -1, lastWinDate: -1 }).limit(limit).lean();
+    const ids = stats.map(item => item.playerId).filter(Boolean);
+    const users = ids.length
+        ? await UserProfile.find({ firebaseUid: { $in: ids } }).select('firebaseUid playerName photoUrl').lean()
+        : [];
+    const usersByUid = new Map(users.map(user => [user.firebaseUid, user]));
+
+    return stats.map(item => {
+        const user = usersByUid.get(item.playerId) || {};
+        const championships = Array.isArray(item.championships)
+            ? item.championships.filter(history => history && typeof history === 'object')
+            : [];
+        const payload = {
+            ...item,
+            playerName: item.playerName || user.playerName || 'Igrac',
+            photoUrl: item.photoUrl || user.photoUrl || '',
+            championships
+        };
+
+        const currentFallback = buildCurrentFinishedChampionshipFallback(payload);
+        if (currentFallback && !hasChampionshipRecordForFinal(championships, currentFallback)) {
+            payload.championships = [currentFallback, ...championships].slice(0, 20);
+            payload.photoUrl = payload.photoUrl || currentFallback.winnerPhotoUrl || '';
+        }
+
+        return payload;
+    });
 }
 
 // ==================================================================
@@ -10564,6 +10922,7 @@ io.on('connection', (socket) => {
             await applyServerSideCompletedDuel(roomId, socket.id);
             emitCompletedOnlineGame(roomId);
             await applyTournamentCompletedDuelResult(roomId);
+            await recordTournamentDrawReplay(roomId);
             markOnlineRoomGameFinished(roomId);
         }
     });
@@ -10610,7 +10969,7 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on('tourney_reset', () => {
+    socket.on('tourney_reset', async () => {
         if (!requireTournamentAuth(socket)) return;
         if (!isTournamentAdmin(socket)) {
             console.warn(`⚠️ Odbijen pokušaj resetovanja turnira od ${socket.verifiedUid}.`);
@@ -10619,14 +10978,7 @@ io.on('connection', (socket) => {
         }
 
         console.log("⚠️ TURNIR JE RESETOVAN OD STRANE KORISNIKA!");
-        tournamentState = {
-            status: 'registration',
-            players: [],
-            bracket: { qf: [null, null, null, null], sf: [null, null], f: [null] },
-            pushFlags: {}
-        };
-        saveTournamentToDb(); 
-        io.emit('tourney_state_update', tournamentState);
+        await resetTournamentForNextCycle('admin');
     });
 
     socket.on('tourney_get_state', () => { socket.emit('tourney_state_update', tournamentState); });
@@ -10634,10 +10986,10 @@ io.on('connection', (socket) => {
     socket.on('get_tourney_stats', async () => {
         try {
             if (!MONGO_URI) {
-                socket.emit('tourney_stats_data', [{ playerName: "Mock Šampion", wins: 5 }]);
+                socket.emit('tourney_stats_data', [{ playerName: "Mock Šampion", wins: 5, championships: [] }]);
                 return;
             }
-            const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20).lean();
+            const stats = await buildTourneyStatsPayload(20);
             socket.emit('tourney_stats_data', stats);
         } catch (err) {
             console.error("Greška pri dohvatanju turnirske statistike:", err);
@@ -11028,6 +11380,7 @@ io.on('connection', (socket) => {
 
             if (regularScores) {
                 if (regularScores.p1Score === regularScores.p2Score) {
+                    await recordTournamentDrawReplay(activeRoomId);
                     return rejectTournamentAction(socket, 'err_invalid_room');
                 }
 
