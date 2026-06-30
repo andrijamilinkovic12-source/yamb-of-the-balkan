@@ -4766,7 +4766,7 @@ async function recordTournamentChampion(match, winnerObj) {
 
         match.statsRecorded = true;
 
-        const stats = await TourneyStats.find().sort({ wins: -1 }).limit(20).lean();
+        const stats = await buildTourneyStatsPayload(20);
         io.emit('tourney_stats_data', stats);
     } finally {
         delete match.statsRecordInProgress;
@@ -4807,6 +4807,26 @@ function buildCurrentFinishedChampionshipFallback(statsItem) {
         bracket: sanitizeTournamentHistoryBracket(tournamentState.bracket),
         currentStateFallback: true
     };
+}
+
+function getCurrentFinishedChampionStatsFallback() {
+    const finalMatch = tournamentState?.bracket?.f?.[0];
+    if (tournamentState.status !== 'finished' || !finalMatch?.winnerId) return null;
+
+    const winnerObj = finalMatch.p1?.id === finalMatch.winnerId ? finalMatch.p1 : finalMatch.p2;
+    if (!winnerObj?.id) return null;
+
+    const statsItem = {
+        playerId: winnerObj.id,
+        playerName: winnerObj.name || 'Igrac',
+        photoUrl: winnerObj.photoUrl || '',
+        wins: 1,
+        lastWinDate: tournamentState.finishedAt || finalMatch.resultRecordedAt || Date.now(),
+        championships: []
+    };
+    const fallbackRecord = buildCurrentFinishedChampionshipFallback(statsItem);
+    if (fallbackRecord) statsItem.championships = [fallbackRecord];
+    return statsItem;
 }
 
 async function persistCurrentFinishedTournamentHistoryIfNeeded() {
@@ -4859,6 +4879,12 @@ async function persistCurrentFinishedTournamentHistoryIfNeeded() {
 
 async function buildTourneyStatsPayload(limit = 20) {
     const stats = await TourneyStats.find().sort({ wins: -1, lastWinDate: -1 }).limit(limit).lean();
+    const currentChampionFallback = getCurrentFinishedChampionStatsFallback();
+    if (currentChampionFallback && !stats.some(item => item.playerId === currentChampionFallback.playerId)) {
+        const storedCurrentChampion = await TourneyStats.findOne({ playerId: currentChampionFallback.playerId }).lean();
+        stats.push(storedCurrentChampion || currentChampionFallback);
+    }
+
     const ids = stats.map(item => item.playerId).filter(Boolean);
     const users = ids.length
         ? await UserProfile.find({ firebaseUid: { $in: ids } }).select('firebaseUid playerName photoUrl').lean()

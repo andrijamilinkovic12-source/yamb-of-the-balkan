@@ -131,7 +131,9 @@ class TournamentManager {
         let leaguePts;
         if (window.kvartalnaLiga && typeof window.kvartalnaLiga.getScores === 'function') {
             let ls = window.kvartalnaLiga.getScores();
-            leaguePts = parseInt(ls.quarterlyScore) || 0;
+            leaguePts = typeof window.powerIndexCore.calculateLeaguePowerPoints === 'function'
+                ? window.powerIndexCore.calculateLeaguePowerPoints(ls)
+                : ((parseInt(ls.baselineScore, 10) || 0) + (parseInt(ls.quarterlyScore, 10) || 0));
         }
 
         let unlocked = s.unlockedTrophies || [];

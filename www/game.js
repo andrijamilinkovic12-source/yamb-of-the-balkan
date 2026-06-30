@@ -1965,7 +1965,10 @@ class YambApp {
         if (!statsObj || !window.powerIndexCore) return 0;
         let leaguePts;
         if (isLocal && window.kvartalnaLiga) {
-            leaguePts = parseInt(window.kvartalnaLiga.getScores().quarterlyScore) || 0;
+            const leagueData = window.kvartalnaLiga.getScores();
+            leaguePts = typeof window.powerIndexCore.calculateLeaguePowerPoints === 'function'
+                ? window.powerIndexCore.calculateLeaguePowerPoints(leagueData)
+                : ((parseInt(leagueData.baselineScore, 10) || 0) + (parseInt(leagueData.quarterlyScore, 10) || 0));
         }
 
         return window.powerIndexCore.calculatePowerIndex(statsObj, { leaguePts });

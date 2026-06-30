@@ -11,7 +11,9 @@ const indexSource = fs.readFileSync(path.join(root, 'www', 'index.html'), 'utf8'
 const rulesSource = fs.readFileSync(path.join(root, 'www', 'pravilaigre.js'), 'utf8');
 const managersSource = fs.readFileSync(path.join(root, 'www', 'managers.js'), 'utf8');
 const dailySource = fs.readFileSync(path.join(root, 'www', 'dnevniizazov.js'), 'utf8');
+const turnirSource = fs.readFileSync(path.join(root, 'www', 'turnir.js'), 'utf8');
 const envExampleSource = fs.readFileSync(path.join(root, '.env.example'), 'utf8');
+const powerIndexCore = require(path.join(root, 'www', 'powerIndexCore.js'));
 
 function extractFunction(source, name) {
     const start = source.indexOf(`function ${name}`);
@@ -388,6 +390,75 @@ function checkAdUnlockItemsAreNotFreeUnlocks() {
     assert(
         gameSource.includes("const localThemes = statsAuthoritative ? [] : this.readLocalJson('yamb_unlocked_themes', []);"),
         'Authoritative profile sync still preserves local unlockedThemes'
+    );
+}
+
+function checkPowerIndexUsesRolledLeagueScore() {
+    assert.strictEqual(
+        powerIndexCore.calculateLeaguePowerPoints({ baselineScore: 120000, quarterlyScore: 3000 }),
+        123000,
+        'Power Index league helper must include both archived baseline and current quarter score'
+    );
+
+    const baseStats = {
+        games: 10,
+        wins: 7,
+        losses: 3,
+        draws: 0,
+        highscore: 2500,
+        totalScoreSum: 21000,
+        maxWinStreak: 4,
+        tournamentWins: 1,
+        unlockedTrophies: ['first_play', 'legend'],
+        penaltyPoints: 0
+    };
+    const beforeQuarterRoll = powerIndexCore.calculatePowerIndex({
+        ...baseStats,
+        leagueData: { year: 2026, quarter: 2, baselineScore: 0, quarterlyScore: 200000 }
+    });
+    const afterQuarterRoll = powerIndexCore.calculatePowerIndex({
+        ...baseStats,
+        leagueData: { year: 2026, quarter: 3, baselineScore: 200000, quarterlyScore: 0 }
+    });
+
+    assert.strictEqual(
+        afterQuarterRoll,
+        beforeQuarterRoll,
+        'Power Index dropped after quarterly league score rolled into baselineScore'
+    );
+
+    const clientPowerIndexMethod = extractClassMethod(gameSource, 'calculatePowerIndex(statsObj, isLocal = false)');
+    assert(
+        clientPowerIndexMethod.includes('calculateLeaguePowerPoints(leagueData)'),
+        'Client local Power Index still sends only current quarterly league points'
+    );
+
+    const tournamentPiMethod = extractClassMethod(turnirSource, 'calculateMyPI()');
+    assert(
+        tournamentPiMethod.includes('calculateLeaguePowerPoints(ls)'),
+        'Tournament PI fallback still sends only current quarterly league points'
+    );
+}
+
+function checkTournamentChampionFallbackPayload() {
+    const fallbackFn = extractFunction(serverSource, 'getCurrentFinishedChampionStatsFallback');
+    assert(
+        fallbackFn.includes("tournamentState.status !== 'finished'") &&
+        fallbackFn.includes('buildCurrentFinishedChampionshipFallback(statsItem)'),
+        'Missing finished tournament champion fallback stats builder'
+    );
+
+    const payloadFn = extractAsyncFunction(serverSource, 'buildTourneyStatsPayload');
+    assert(
+        payloadFn.includes('const currentChampionFallback = getCurrentFinishedChampionStatsFallback();') &&
+        payloadFn.includes('stats.push(storedCurrentChampion || currentChampionFallback);'),
+        'Tournament champions payload does not include the current finished champion when absent from the limited stats query'
+    );
+
+    const recordFn = extractAsyncFunction(serverSource, 'recordTournamentChampion');
+    assert(
+        recordFn.includes('const stats = await buildTourneyStatsPayload(20);'),
+        'Tournament champion live update bypasses the resilient champions payload builder'
     );
 }
 
@@ -784,6 +855,8 @@ async function main() {
     checkUndoRewardedTokenAmount();
     checkShopDiscountRequiresServerVerification();
     checkAdUnlockItemsAreNotFreeUnlocks();
+    checkPowerIndexUsesRolledLeagueScore();
+    checkTournamentChampionFallbackPayload();
     checkQuarterRewardAtomicClaim();
     checkDailyRewardAtomicClaim();
     checkEmptySnapshotSettingsGuard();
@@ -792,7 +865,7 @@ async function main() {
     checkClientDuelStatsBehavior();
     await checkServerDuelIdempotency();
 
-    console.log('Profile sync checks passed: auth boundary, profile guards, balance allowance, authoritative duel stats, fallback, and idempotency.');
+    console.log('Profile sync checks passed: auth boundary, profile guards, balance allowance, authoritative duel stats, Power Index, tournament champions fallback, and idempotency.');
 }
 
 main().catch(error => {

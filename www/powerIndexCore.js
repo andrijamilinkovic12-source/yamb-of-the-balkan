@@ -42,6 +42,11 @@
         return unlockedTrophies.reduce((count, trophyId) => count + (TROPHY_ID_SET.has(trophyId) ? 1 : 0), 0);
     }
 
+    function calculateLeaguePowerPoints(leagueData) {
+        if (!leagueData || typeof leagueData !== 'object') return 0;
+        return toSafeNumber(leagueData.baselineScore) + toSafeNumber(leagueData.quarterlyScore);
+    }
+
     function calculatePowerIndex(statsObj, options = {}) {
         if (!statsObj) return 0;
 
@@ -58,7 +63,7 @@
         const tourneyWins = toSafeNumber(statsObj.tournamentWins);
         const leaguePts = options.leaguePts !== undefined
             ? toSafeNumber(options.leaguePts)
-            : toSafeNumber(statsObj.leagueData && statsObj.leagueData.quarterlyScore);
+            : calculateLeaguePowerPoints(statsObj.leagueData);
         const trophyCount = countPowerIndexTrophies(statsObj.unlockedTrophies);
         const penalty = toSafeNumber(statsObj.penaltyPoints);
 
@@ -73,6 +78,7 @@
     return {
         TROPHY_IDS,
         calculatePowerIndex,
+        calculateLeaguePowerPoints,
         countPowerIndexTrophies,
         summarizeH2H
     };
