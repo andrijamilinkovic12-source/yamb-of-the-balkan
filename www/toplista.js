@@ -383,7 +383,8 @@ class TopListManager {
             });
         }
 
-        validData = this._sortScores(validData).slice(0, this.maxEntries);
+        validData = this._sortScores(validData);
+        if (isGlobalList) validData = validData.slice(0, this.maxEntries);
 
         // Ako nakon filtriranja nema rezultata
         if (validData.length === 0) {

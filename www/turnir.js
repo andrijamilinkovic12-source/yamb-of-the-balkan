@@ -666,7 +666,7 @@ class TournamentManager {
         container.style.paddingBottom = "";
 
         container.innerHTML = `
-            <div class="tourney-tabs" role="tablist" aria-label="Turnir sekcije">
+            <div class="tourney-tabs" role="tablist" aria-label="${tt('tourney_tabs_aria') || 'Sekcije turnira'}">
                 <button class="tourney-tab-btn ${this.activeTab === 'info' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'info'}" aria-label="${tt('tourney_tab_info') || 'Info'}" title="${tt('tourney_tab_info') || 'Info'}" onclick="app.tournamentManager.switchTab('info')">
                     <img class="tourney-tab-icon tourney-tab-icon--info" src="assets/tournament-info-icon.svg" alt="" aria-hidden="true" decoding="async">
                 </button>

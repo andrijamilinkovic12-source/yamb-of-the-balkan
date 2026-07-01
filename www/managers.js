@@ -1808,6 +1808,11 @@ class EffectManager {
         const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) {
             this.spawnEmojiRain(['dukat-icon', '🪙', '💎', '👑'], reducedMotion ? 16 : 34, 'gold_rain');
+            this.scheduleEffectTimeout(() => {
+                document.body.classList.remove('fx-gold-rain');
+                if (atmosphere.parentNode) atmosphere.remove();
+                if (canvas.parentNode) canvas.remove();
+            }, totalDuration, 'gold_rain');
             return;
         }
 
@@ -2317,6 +2322,15 @@ class EffectManager {
         if (this.confettiAnimationId) {
             cancelAnimationFrame(this.confettiAnimationId);
             this.confettiAnimationId = null;
+        }
+
+        if (this.goldRainAnimationId) {
+            cancelAnimationFrame(this.goldRainAnimationId);
+            this.goldRainAnimationId = null;
+        }
+        if (this.goldRainResizeHandler) {
+            window.removeEventListener('resize', this.goldRainResizeHandler);
+            this.goldRainResizeHandler = null;
         }
 
         const confettiCanvas = document.getElementById('confetti-canvas');

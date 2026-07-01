@@ -19,7 +19,9 @@ function extractFunction(source, name) {
     const start = source.indexOf(`function ${name}`);
     assert.notStrictEqual(start, -1, `Missing server function: ${name}`);
 
-    const bodyStart = source.indexOf('{', start);
+    const methodBodyMarker = source.indexOf(') {', start);
+    assert.notStrictEqual(methodBodyMarker, -1, `Missing server function body: ${name}`);
+    const bodyStart = methodBodyMarker + 2;
     let depth = 0;
     let quote = null;
     let escaped = false;
@@ -677,7 +679,10 @@ function checkAuthoritativeOnlineDuelStats() {
     assert.notStrictEqual(h2hSyncStart, -1, 'Missing server H2H profile sync block');
     const h2hSync = serverSource.slice(h2hSyncStart, h2hSyncStart + 1300);
     assert(
-        h2hSync.includes('const authoritativeH2H =') && !h2hSync.includes('mergeH2HRecord('),
+        serverSource.includes('const allowLegacyH2HImport = !user.h2hMigrationApplied && !user.statsMigrationApplied;') &&
+        h2hSync.includes('|| !allowLegacyH2HImport') &&
+        h2hSync.includes('user.h2hMigrationApplied = true;') &&
+        !h2hSync.includes('mergeH2HRecord('),
         'Existing server H2H can still add untrusted client counters'
     );
 
@@ -703,6 +708,51 @@ function checkAuthoritativeOnlineDuelStats() {
     assert(
         showMainMenu.includes('!options.skipBackToMenu') && showMainMenu.includes("this.socket.emit('back_to_menu')"),
         'Main menu navigation can resend an already reported online quit'
+    );
+}
+
+function checkDistinctH2HRivalsStaySeparate() {
+    assert(
+        serverSource.includes('h2hMigrationApplied: { type: Boolean, default: false }') &&
+        serverSource.includes('h2hMigrationApplied: true'),
+        'H2H legacy import is not tracked independently for existing and new profiles'
+    );
+
+    const context = {
+        Math,
+        Number,
+        Object,
+        String,
+        toSafeInt,
+        sanitizeTournamentName(value) { return String(value || '').trim().substring(0, 24); }
+    };
+    vm.createContext(context);
+    vm.runInContext(extractFunction(serverSource, 'isStableH2HUid'), context);
+    vm.runInContext(extractFunction(serverSource, 'normalizeH2HNameKey'), context);
+    vm.runInContext(extractFunction(serverSource, 'isGuestH2HName'), context);
+    vm.runInContext(extractFunction(serverSource, 'mergeH2HRecord'), context);
+    vm.runInContext(extractFunction(serverSource, 'normalizeH2HStatsForUser'), context);
+
+    const normalizeServerH2H = vm.runInContext('normalizeH2HStatsForUser', context);
+    const firstUid = 'firebase-user-one-1234567890';
+    const secondUid = 'firebase-user-two-1234567890';
+    const normalized = normalizeServerH2H({
+        [firstUid]: { uid: firstUid, name: 'Isto Ime', wins: 3, losses: 1, draws: 0 },
+        [secondUid]: { uid: secondUid, name: 'Isto Ime', wins: 1, losses: 4, draws: 2 }
+    }, 'firebase-self-user-1234567890', 'Moj Profil');
+
+    assert.deepStrictEqual(
+        Object.keys(normalized).sort(),
+        [firstUid, secondUid].sort(),
+        'Server merged two distinct H2H rivals that share the same display name'
+    );
+    assert.strictEqual(normalized[firstUid].wins, 3, 'First same-name rival received another rival\'s results');
+    assert.strictEqual(normalized[secondUid].losses, 4, 'Second same-name rival received another rival\'s results');
+
+    const clientNormalize = extractClassMethod(gameSource, 'normalizeH2HStats(h2hStats = {})');
+    assert(
+        clientNormalize.includes('identity.uid !== existingUid) continue;'),
+        'Client can still merge distinct stable UIDs into one same-name H2H card'
     );
 }
 
@@ -928,6 +978,7 @@ async function main() {
     checkEmptySnapshotSettingsGuard();
     checkAuthWriteBoundary();
     checkAuthoritativeOnlineDuelStats();
+    checkDistinctH2HRivalsStaySeparate();
     checkClientDuelStatsBehavior();
     await checkServerDuelIdempotency();
 

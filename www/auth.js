@@ -1081,7 +1081,9 @@ async function checkLoginStatus() {
                         return;
                     }
                 }
-                if (window.app && !window.app.inviteDetected) {
+                const activeScreen = document.querySelector('.screen.active');
+                const stillOnSplash = !activeScreen || activeScreen.id === 'splash-screen';
+                if (window.app && !window.app.inviteDetected && stillOnSplash) {
                     window.app.navigateTo('main-menu'); 
                 }
             }, 4000);

@@ -37,7 +37,7 @@ class VatreniNizManager {
 
                 <div class="chat-header global-chat-header streak-modal-header">
                     <span class="streak-modal-title">${this.gt('streak_top_title', '🔥 TOP VATRENI NIZ')}</span>
-                    <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="Zatvori Vatreni niz listu">×</button>
+                    <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="${this.gt('aria_close_streak', 'Zatvori Vatreni niz listu')}">×</button>
                 </div>
 
                 <div id="streak-body" class="chat-body global-chat-body streak-list-container">

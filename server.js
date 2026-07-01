@@ -711,6 +711,8 @@ const UserProfileSchema = new mongoose.Schema({
     economyMigratedAt: { type: Date, default: null },
     statsMigrationApplied: { type: Boolean, default: false },
     statsMigratedAt: { type: Date, default: null },
+    h2hMigrationApplied: { type: Boolean, default: false },
+    h2hMigratedAt: { type: Date, default: null },
     recentMatchResultIds: { type: [String], default: [] },
     claimedGameRewardIds: { type: [String], default: [] },
     lastLogin: { type: Date, default: Date.now }
@@ -733,6 +735,7 @@ const PushTokenSchema = new mongoose.Schema({
     token: { type: String, required: true, unique: true },
     platform: { type: String, default: 'unknown' },
     appId: { type: String, default: 'com.yamb.balkan' },
+    language: { type: String, enum: ['sr', 'en'], default: 'sr' },
     categories: {
         tournament: { type: Boolean, default: true },
         records: { type: Boolean, default: true },
@@ -872,6 +875,10 @@ function sanitizePushPlatform(platform) {
     return ['android', 'ios', 'web'].includes(value) ? value : 'unknown';
 }
 
+function normalizePushLanguage(language) {
+    return String(language || '').trim().toLowerCase() === 'en' ? 'en' : 'sr';
+}
+
 function normalizePushCategories(categories = {}) {
     return {
         tournament: categories.tournament !== false,
@@ -905,6 +912,7 @@ async function registerPushToken(uid, data = {}) {
                     token,
                     platform: sanitizePushPlatform(data.platform),
                     appId: typeof data.appId === 'string' ? data.appId.substring(0, 80) : 'com.yamb.balkan',
+                    language: normalizePushLanguage(data.language),
                     categories: normalizePushCategories(data.categories),
                     enabled: true,
                     lastSeenAt: Date.now()
@@ -961,7 +969,7 @@ async function getPushTokenDocsForUids(uids, category = 'tournament') {
     };
     query[`categories.${category}`] = { $ne: false };
 
-    return PushToken.find(query).select('uid token').lean();
+    return PushToken.find(query).select('uid token language').lean();
 }
 
 async function removeInvalidPushTokens(tokens) {
@@ -1006,37 +1014,52 @@ function buildPushMessage(baseMessage, tokens) {
     };
 }
 
+function getLocalizedPushMessage(baseMessage, language) {
+    const localized = baseMessage.localizations?.[normalizePushLanguage(language)];
+    return localized ? { ...baseMessage, ...localized } : baseMessage;
+}
+
 async function sendPushToUids(uids, baseMessage = {}) {
     if (!firebaseMessaging) return { ok: false, reason: 'firebase_messaging_unavailable' };
 
     try {
         const docs = await getPushTokenDocsForUids(uids, baseMessage.category || 'tournament');
-        const tokens = Array.from(new Set(docs.map(doc => doc.token).filter(Boolean)));
-        if (tokens.length === 0) return { ok: true, sent: 0 };
+        const tokenGroups = new Map();
+        docs.forEach(doc => {
+            if (!doc.token) return;
+            const language = normalizePushLanguage(doc.language);
+            if (!tokenGroups.has(language)) tokenGroups.set(language, new Set());
+            tokenGroups.get(language).add(doc.token);
+        });
+        if (tokenGroups.size === 0) return { ok: true, sent: 0 };
 
         let successCount = 0;
         const invalidTokens = [];
 
-        for (let i = 0; i < tokens.length; i += 500) {
-            const batch = tokens.slice(i, i + 500);
-            const message = buildPushMessage(baseMessage, batch);
+        for (const [language, group] of tokenGroups) {
+            const tokens = Array.from(group);
+            const localizedMessage = getLocalizedPushMessage(baseMessage, language);
+            for (let i = 0; i < tokens.length; i += 500) {
+                const batch = tokens.slice(i, i + 500);
+                const message = buildPushMessage(localizedMessage, batch);
 
-            if (typeof firebaseMessaging.sendEachForMulticast === 'function') {
-                const response = await firebaseMessaging.sendEachForMulticast(message);
-                successCount += response.successCount || 0;
-                response.responses.forEach((item, index) => {
-                    if (!item.success && isInvalidFcmTokenError(item.error)) invalidTokens.push(batch[index]);
-                });
-            } else {
-                await Promise.all(batch.map(async token => {
-                    try {
-                        const { tokens: _tokens, ...singleMessage } = message;
-                        await firebaseMessaging.send({ ...singleMessage, token });
-                        successCount += 1;
-                    } catch (error) {
-                        if (isInvalidFcmTokenError(error)) invalidTokens.push(token);
-                    }
-                }));
+                if (typeof firebaseMessaging.sendEachForMulticast === 'function') {
+                    const response = await firebaseMessaging.sendEachForMulticast(message);
+                    successCount += response.successCount || 0;
+                    response.responses.forEach((item, index) => {
+                        if (!item.success && isInvalidFcmTokenError(item.error)) invalidTokens.push(batch[index]);
+                    });
+                } else {
+                    await Promise.all(batch.map(async token => {
+                        try {
+                            const { tokens: _tokens, ...singleMessage } = message;
+                            await firebaseMessaging.send({ ...singleMessage, token });
+                            successCount += 1;
+                        } catch (error) {
+                            if (isInvalidFcmTokenError(error)) invalidTokens.push(token);
+                        }
+                    }));
+                }
             }
         }
 
@@ -1060,13 +1083,23 @@ async function getPushEnabledUids(category = 'records') {
     return PushToken.distinct('uid', query);
 }
 
-function getLeaderboardPeriodLabel(period) {
+function getLeaderboardPeriodLabel(period, language = 'sr') {
+    if (language === 'en') {
+        if (period === 'weekly') return 'Weekly';
+        if (period === 'monthly') return 'Monthly';
+        return 'All-time';
+    }
     if (period === 'weekly') return 'Nedeljni';
     if (period === 'monthly') return 'Mesečni';
     return 'Rekord svih vremena';
 }
 
-function getLeaderboardRecordTag(period) {
+function getLeaderboardRecordTag(period, language = 'sr') {
+    if (language === 'en') {
+        if (period === 'weekly') return 'weekly record';
+        if (period === 'monthly') return 'monthly record';
+        return 'all-time record';
+    }
     if (period === 'weekly') return 'nedeljni rekord';
     if (period === 'monthly') return 'mesečni rekord';
     return 'rekord svih vremena';
@@ -1172,9 +1205,9 @@ async function captureLeaderboardRecordSnapshots() {
     return snapshots;
 }
 
-function formatRecordScore(score) {
+function formatRecordScore(score, language = 'sr') {
     try {
-        return Number(score || 0).toLocaleString('sr-RS');
+        return Number(score || 0).toLocaleString(language === 'en' ? 'en-US' : 'sr-RS');
     } catch (_err) {
         return String(score || 0);
     }
@@ -1200,6 +1233,8 @@ async function notifyBrokenLeaderboardRecords(previousRecords, newEntry) {
     const jobs = changedPeriods.map(period => {
         const title = `${getLeaderboardPeriodLabel(period)} rekord je oboren`;
         const body = `${playerName} sada drži ${getLeaderboardRecordTag(period)}: ${formatRecordScore(newScore)} poena.`;
+        const titleEn = `${getLeaderboardPeriodLabel(period, 'en')} record broken`;
+        const bodyEn = `${playerName} now holds the ${getLeaderboardRecordTag(period, 'en')}: ${formatRecordScore(newScore, 'en')} points.`;
 
         return sendPushToUids(uids, {
             category: 'records',
@@ -1208,6 +1243,10 @@ async function notifyBrokenLeaderboardRecords(previousRecords, newEntry) {
             tag: `record_broken_${period}`,
             title,
             body,
+            localizations: {
+                sr: { title, body },
+                en: { title: titleEn, body: bodyEn }
+            },
             data: {
                 period,
                 score: newScore,
@@ -1506,10 +1545,19 @@ function buildLeagueChampionPushPayload(champion, cycle) {
     const score = Math.max(0, toSafeInt(champion?.score, 0));
     const romanCycle = toRomanCycle(cycle);
     const cycleText = romanCycle ? `${romanCycle} ciklusa` : 'prethodnog ciklusa';
+    const cycleTextEn = romanCycle ? `cycle ${romanCycle}` : 'the previous cycle';
+    const title = 'Pobednik Kvartalne lige';
+    const body = `Pobednik ${cycleText} Kvartalne lige je ${playerName} sa ${formatRecordScore(score)} poena.`;
+    const titleEn = 'Quarterly League winner';
+    const bodyEn = `The winner of Quarterly League ${cycleTextEn} is ${playerName} with ${formatRecordScore(score, 'en')} points.`;
 
     return {
-        title: 'Pobednik Kvartalne lige',
-        body: `Pobednik ${cycleText} Kvartalne lige je ${playerName} sa ${formatRecordScore(score)} poena.`,
+        title,
+        body,
+        localizations: {
+            sr: { title, body },
+            en: { title: titleEn, body: bodyEn }
+        },
         playerName,
         score,
         romanCycle
@@ -1556,6 +1604,7 @@ async function notifyQuarterlyLeagueChampionIfDue(now = new Date()) {
             tag: `league_champion_${target.periodKey}`,
             title: payload.title,
             body: payload.body,
+            localizations: payload.localizations,
             data: {
                 year: target.year,
                 quarter: target.quarter,
@@ -3168,6 +3217,7 @@ function normalizeH2HStatsForUser(h2hStats = {}, selfUid = '', selfName = '') {
             const existingUid = isStableH2HUid(existingRecord.uid, selfUid)
                 ? String(existingRecord.uid).trim()
                 : (isStableH2HUid(existingKey, selfUid) ? existingKey : '');
+            if (uid && existingUid && uid !== existingUid) continue;
             if (uid || existingUid) {
                 identity.uid = uid || existingUid;
                 targetKey = identity.uid;
@@ -3435,12 +3485,27 @@ async function settleCompletedOnlineRoom(roomId, finisherSocketId = null) {
     const state = roomId ? roomState[roomId] : null;
     if (!state || state.gameFinished || !hasCompletedOnlineDuelScores(state)) return false;
 
-    await applyServerSideCompletedDuel(roomId, finisherSocketId);
-    emitCompletedOnlineGame(roomId);
-    await applyTournamentCompletedDuelResult(roomId);
-    await recordTournamentDrawReplay(roomId);
-    markOnlineRoomGameFinished(roomId);
-    return true;
+    if (state.completionSettlementPromise) {
+        return state.completionSettlementPromise;
+    }
+
+    const settlementPromise = (async () => {
+        await applyServerSideCompletedDuel(roomId, finisherSocketId);
+        emitCompletedOnlineGame(roomId);
+        await applyTournamentCompletedDuelResult(roomId);
+        await recordTournamentDrawReplay(roomId);
+        markOnlineRoomGameFinished(roomId);
+        return true;
+    })();
+
+    state.completionSettlementPromise = settlementPromise;
+    try {
+        return await settlementPromise;
+    } finally {
+        if (state.completionSettlementPromise === settlementPromise) {
+            delete state.completionSettlementPromise;
+        }
+    }
 }
 
 // ==================================================================
@@ -3752,6 +3817,33 @@ function markTournamentPushFlag(flagName) {
     return true;
 }
 
+function clearTournamentPushFlag(flagName, expectedValue) {
+    const flags = ensureTournamentPushFlags();
+    if (flags[flagName] !== expectedValue) return false;
+    delete flags[flagName];
+    return true;
+}
+
+async function sendTournamentPushOnce(flagName, sendTask) {
+    if (!markTournamentPushFlag(flagName)) return { ok: true, skipped: true };
+
+    const flagValue = ensureTournamentPushFlags()[flagName];
+    await saveTournamentToDb();
+
+    try {
+        const result = await sendTask();
+        if (!result?.ok && clearTournamentPushFlag(flagName, flagValue)) {
+            await saveTournamentToDb();
+        }
+        return result;
+    } catch (error) {
+        if (clearTournamentPushFlag(flagName, flagValue)) {
+            await saveTournamentToDb();
+        }
+        throw error;
+    }
+}
+
 function getTournamentParticipantUids() {
     return (tournamentState.players || [])
         .map(player => String(player?.id || '').trim())
@@ -3772,7 +3864,13 @@ function getTournamentMatchParticipantUids(match) {
         .filter(Boolean);
 }
 
-function getTournamentRoundLabel(round) {
+function getTournamentRoundLabel(round, language = 'sr') {
+    if (language === 'en') {
+        if (round === 'qf') return 'Quarterfinal';
+        if (round === 'sf') return 'Semifinal';
+        if (round === 'f') return 'Final';
+        return 'Tournament match';
+    }
     if (round === 'qf') return 'četvrtfinale';
     if (round === 'sf') return 'polufinale';
     if (round === 'f') return 'finale';
@@ -3812,13 +3910,13 @@ function parseTournamentTimeMs(value) {
     return Date.parse(raw);
 }
 
-function formatTournamentPushTime(value) {
+function formatTournamentPushTime(value, language = 'sr') {
     const timestamp = parseTournamentTimeMs(value);
-    if (!Number.isFinite(timestamp)) return 'zakazano vreme';
+    if (!Number.isFinite(timestamp)) return language === 'en' ? 'the scheduled time' : 'zakazano vreme';
     const date = new Date(timestamp);
 
     try {
-        return date.toLocaleString('sr-RS', {
+        return date.toLocaleString(language === 'en' ? 'en-GB' : 'sr-RS', {
             timeZone: 'Europe/Belgrade',
             day: '2-digit',
             month: '2-digit',
@@ -3830,9 +3928,56 @@ function formatTournamentPushTime(value) {
     }
 }
 
-function queueTournamentPush(promise, label) {
-    Promise.resolve(promise).catch(err => {
-        console.error(`Greška pri turnirskoj push notifikaciji (${label}):`, err);
+function buildLocalizedPushContent(srTitle, srBody, enTitle, enBody) {
+    return {
+        title: srTitle,
+        body: srBody,
+        localizations: {
+            sr: { title: srTitle, body: srBody },
+            en: { title: enTitle, body: enBody }
+        }
+    };
+}
+
+const TOURNAMENT_PUSH_RETRY_DELAYS_MS = [2000, 10000];
+const RETRYABLE_TOURNAMENT_PUSH_REASONS = new Set([
+    'push_unavailable',
+    'firebase_messaging_unavailable',
+    'push_send_failed'
+]);
+
+function waitForTournamentPushRetry(delayMs) {
+    return new Promise(resolve => {
+        const timer = setTimeout(resolve, delayMs);
+        if (timer && typeof timer.unref === 'function') timer.unref();
+    });
+}
+
+function queueTournamentPush(task, label, options = {}) {
+    const run = async () => {
+        const retryDelays = options.retry ? TOURNAMENT_PUSH_RETRY_DELAYS_MS : [];
+        for (let attempt = 0; attempt <= retryDelays.length; attempt += 1) {
+            try {
+                const result = await task();
+                if (result?.ok || !RETRYABLE_TOURNAMENT_PUSH_REASONS.has(result?.reason)) return;
+
+                if (attempt === retryDelays.length) {
+                    console.error(`Greška pri turnirskoj push notifikaciji (${label}): ${result.reason}`);
+                    return;
+                }
+            } catch (error) {
+                if (attempt === retryDelays.length) {
+                    console.error(`Greška pri turnirskoj push notifikaciji (${label}):`, error);
+                    return;
+                }
+            }
+
+            await waitForTournamentPushRetry(retryDelays[attempt]);
+        }
+    };
+
+    run().catch(error => {
+        console.error(`Greška pri turnirskoj push notifikaciji (${label}):`, error);
     });
 }
 
@@ -3858,33 +4003,41 @@ async function sendPushToTournamentAudienceExcluding(excludedUids = [], baseMess
 async function notifyTournamentOneSpotLeft() {
     if (tournamentState.status !== 'registration') return { ok: false, reason: 'not_registration' };
     if ((tournamentState.players || []).length !== 7) return { ok: false, reason: 'not_one_spot_left' };
-    if (!markTournamentPushFlag('oneSpotLeft')) return { ok: true, skipped: true };
 
-    saveTournamentToDb();
-    return sendPushToTournamentAudienceExcluding(getTournamentParticipantUids(), {
-        type: 'tournament_one_spot_left',
-        tag: 'tournament_one_spot_left',
-        title: 'Turnir se puni',
-        body: 'Ostalo je još jedno mesto za turnir. Uđi u igru i prijavi se.',
-        data: { status: 'registration' }
-    });
+    return sendTournamentPushOnce('oneSpotLeft', () =>
+        sendPushToTournamentAudienceExcluding(getTournamentParticipantUids(), {
+            type: 'tournament_one_spot_left',
+            tag: 'tournament_one_spot_left',
+            ...buildLocalizedPushContent(
+                'Turnir se puni',
+                'Ostalo je još jedno mesto za turnir. Uđi u igru i prijavi se.',
+                'Tournament is almost full',
+                'Only one tournament spot remains. Open the game and register.'
+            ),
+            data: { status: 'registration' }
+        })
+    );
 }
 
 async function notifyTournamentStarted() {
     const participantUids = getTournamentParticipantUids();
     if (participantUids.length === 0) return { ok: false, reason: 'no_participants' };
-    if (!markTournamentPushFlag('started')) return { ok: true, skipped: true };
 
-    saveTournamentToDb();
-    return sendPushToUids(participantUids, {
-        category: 'tournament',
-        scope: 'tournament',
-        type: 'tournament_started',
-        tag: 'tournament_started',
-        title: 'Turnir počinje',
-        body: 'Kostur je spreman. Pogledaj protivnika i zakaži svoj meč.',
-        data: { status: 'active' }
-    });
+    return sendTournamentPushOnce('started', () =>
+        sendPushToUids(participantUids, {
+            category: 'tournament',
+            scope: 'tournament',
+            type: 'tournament_started',
+            tag: 'tournament_started',
+            ...buildLocalizedPushContent(
+                'Turnir počinje',
+                'Kostur je spreman. Pogledaj protivnika i zakaži svoj meč.',
+                'Tournament started',
+                'The bracket is ready. Check your opponent and schedule your match.'
+            ),
+            data: { status: 'active' }
+        })
+    );
 }
 
 async function notifyTournamentTimeProposed(match, round, index, proposerUid) {
@@ -3892,14 +4045,20 @@ async function notifyTournamentTimeProposed(match, round, index, proposerUid) {
     if (!opponent?.id) return { ok: false, reason: 'no_opponent' };
 
     const proposer = getTournamentPlayer(match, proposerUid);
+    const proposerName = sanitizeTournamentName(proposer?.name || 'Protivnik');
     const timeText = formatTournamentPushTime(match.proposedTime);
+    const timeTextEn = formatTournamentPushTime(match.proposedTime, 'en');
     return sendPushToUids([opponent.id], {
         category: 'tournament',
         scope: 'tournament',
         type: 'tournament_time_proposed',
         tag: `tournament_time_${round}_${index}`,
-        title: 'Predložen termin meča',
-        body: `${sanitizeTournamentName(proposer?.name || 'Protivnik')} predlaže ${timeText}.`,
+        ...buildLocalizedPushContent(
+            'Predložen termin meča',
+            `${proposerName} predlaže ${timeText}.`,
+            'Match time proposed',
+            `${proposerName} proposes ${timeTextEn}.`
+        ),
         data: { round, index, matchIndex: index, proposedTime: match.proposedTime || '' }
     });
 }
@@ -3909,13 +4068,18 @@ async function notifyTournamentTimeAccepted(match, round, index) {
     if (uids.length === 0) return { ok: false, reason: 'no_participants' };
 
     const timeText = formatTournamentPushTime(match.time || match.proposedTime);
+    const timeTextEn = formatTournamentPushTime(match.time || match.proposedTime, 'en');
     return sendPushToUids(uids, {
         category: 'tournament',
         scope: 'tournament',
         type: 'tournament_time_accepted',
         tag: `tournament_time_${round}_${index}`,
-        title: 'Termin je potvrđen',
-        body: `Turnirski meč je zakazan za ${timeText}.`,
+        ...buildLocalizedPushContent(
+            'Termin je potvrđen',
+            `Turnirski meč je zakazan za ${timeText}.`,
+            'Match time confirmed',
+            `The tournament match is scheduled for ${timeTextEn}.`
+        ),
         data: { round, index, matchIndex: index, time: match.time || '' }
     });
 }
@@ -3938,53 +4102,76 @@ async function notifyTournamentFinalScheduled(match, round, index) {
 
     const { p1Name, p2Name } = getTournamentFinalistNames(match);
     const timeText = formatTournamentPushTime(scheduledTime);
+    const timeTextEn = formatTournamentPushTime(scheduledTime, 'en');
     const tagSuffix = scheduledTime.replace(/[^a-z0-9]/gi, '_').substring(0, 40) || 'time';
 
-    saveTournamentToDb();
-    return sendPushToTournamentAudienceExcluding([], {
-        type: 'tournament_final_scheduled',
-        tag: `tournament_final_scheduled_${tagSuffix}`,
-        title: 'Finale turnira je zakazano',
-        body: `U finalu turnira su ${p1Name} i ${p2Name}. Gledajte zakazan mec u ${timeText}.`,
-        data: {
-            round,
-            index,
-            matchIndex: index,
-            time: scheduledTime,
-            p1Name,
-            p2Name
+    await saveTournamentToDb();
+
+    try {
+        const result = await sendPushToTournamentAudienceExcluding([], {
+            type: 'tournament_final_scheduled',
+            tag: `tournament_final_scheduled_${tagSuffix}`,
+            ...buildLocalizedPushContent(
+                'Finale turnira je zakazano',
+                `U finalu turnira su ${p1Name} i ${p2Name}. Gledajte zakazan meč u ${timeText}.`,
+                'Tournament final scheduled',
+                `${p1Name} and ${p2Name} are in the tournament final. Watch the scheduled match at ${timeTextEn}.`
+            ),
+            data: {
+                round,
+                index,
+                matchIndex: index,
+                time: scheduledTime,
+                p1Name,
+                p2Name
+            }
+        });
+
+        if (!result?.ok && match.finalSchedulePushTime === scheduledTime) {
+            match.finalSchedulePushTime = '';
+            await saveTournamentToDb();
         }
-    });
+        return result;
+    } catch (error) {
+        if (match.finalSchedulePushTime === scheduledTime) {
+            match.finalSchedulePushTime = '';
+            await saveTournamentToDb();
+        }
+        throw error;
+    }
 }
 
 async function notifyTournamentChampion(match, winnerObj) {
     if (!match?.winnerId || !winnerObj?.id) return { ok: false, reason: 'missing_winner' };
     if (match.winnerId !== winnerObj.id) return { ok: false, reason: 'winner_mismatch' };
 
-    const flagName = `champion:${winnerObj.id}`;
-    if (!markTournamentPushFlag(flagName)) return { ok: true, skipped: true };
-
     const winnerName = sanitizeTournamentName(winnerObj.name || 'Igrac');
     const runnerUp = getTournamentOpponent(match, winnerObj.id);
     const runnerName = runnerUp ? sanitizeTournamentName(runnerUp.name || 'Finalista') : 'finaliste';
     const scoreText = match.scoreLabel ? ` Rezultat: ${match.scoreLabel}.` : '';
+    const scoreTextEn = match.scoreLabel ? ` Score: ${match.scoreLabel}.` : '';
 
-    saveTournamentToDb();
-    return sendPushToTournamentAudienceExcluding([], {
-        type: 'tournament_champion_announced',
-        tag: `tournament_champion_${String(winnerObj.id).substring(0, 40)}`,
-        title: `Osvajac turnira je ${winnerName}`,
-        body: `${winnerName} je osvojio turnir posle finala protiv ${runnerName}.${scoreText}`,
-        data: {
-            round: 'f',
-            index: 0,
-            matchIndex: 0,
-            winnerUid: winnerObj.id,
-            winnerName,
-            runnerName,
-            score: match.scoreLabel || ''
-        }
-    });
+    return sendTournamentPushOnce(`champion:${winnerObj.id}`, () =>
+        sendPushToTournamentAudienceExcluding([], {
+            type: 'tournament_champion_announced',
+            tag: `tournament_champion_${String(winnerObj.id).substring(0, 40)}`,
+            ...buildLocalizedPushContent(
+                `Osvajač turnira je ${winnerName}`,
+                `${winnerName} je osvojio turnir posle finala protiv ${runnerName}.${scoreText}`,
+                `${winnerName} wins the tournament`,
+                `${winnerName} won the tournament after the final against ${runnerName}.${scoreTextEn}`
+            ),
+            data: {
+                round: 'f',
+                index: 0,
+                matchIndex: 0,
+                winnerUid: winnerObj.id,
+                winnerName,
+                runnerName,
+                score: match.scoreLabel || ''
+            }
+        })
+    );
 }
 
 async function notifyTournamentDuelRequested(match, round, index, starterUid) {
@@ -3992,20 +4179,25 @@ async function notifyTournamentDuelRequested(match, round, index, starterUid) {
     if (!opponent?.id) return { ok: false, reason: 'no_opponent' };
 
     const starter = getTournamentPlayer(match, starterUid);
+    const starterName = sanitizeTournamentName(starter?.name || 'Protivnik');
     return sendPushToUids([opponent.id], {
         category: 'tournament',
         scope: 'tournament',
         type: 'tournament_duel_requested',
         tag: `tournament_duel_${round}_${index}`,
-        title: 'Protivnik pokreće meč',
-        body: `${sanitizeTournamentName(starter?.name || 'Protivnik')} je spreman za turnirski meč.`,
+        ...buildLocalizedPushContent(
+            'Protivnik pokreće meč',
+            `${starterName} je spreman za turnirski meč.`,
+            'Opponent is starting the match',
+            `${starterName} is ready for the tournament match.`
+        ),
         data: { round, index, matchIndex: index }
     });
 }
 
 const TOURNAMENT_REMINDER_WINDOWS = [
-    { key: 'reminder30', beforeMs: 30 * 60 * 1000, minDiffMs: 5 * 60 * 1000, label: '30 minuta' },
-    { key: 'reminder5', beforeMs: 5 * 60 * 1000, minDiffMs: -2 * 60 * 1000, label: '5 minuta' }
+    { key: 'reminder30', beforeMs: 30 * 60 * 1000, minDiffMs: 5 * 60 * 1000, minutes: 30 },
+    { key: 'reminder5', beforeMs: 5 * 60 * 1000, minDiffMs: -2 * 60 * 1000, minutes: 5 }
 ];
 
 async function checkTournamentMatchReminders() {
@@ -4046,8 +4238,12 @@ async function checkTournamentMatchReminders() {
                         scope: 'tournament',
                         type: 'tournament_match_reminder',
                         tag: `tournament_reminder_${round}_${index}_${windowInfo.key}`,
-                        title: 'Podsetnik za turnirski meč',
-                        body: `${getTournamentRoundLabel(round)} počinje za ${windowInfo.label}.`,
+                        ...buildLocalizedPushContent(
+                            'Podsetnik za turnirski meč',
+                            `${getTournamentRoundLabel(round)} počinje za ${windowInfo.minutes} minuta.`,
+                            'Tournament match reminder',
+                            `${getTournamentRoundLabel(round, 'en')} starts in ${windowInfo.minutes} minutes.`
+                        ),
                         data: { round, index, matchIndex: index, time: match.time || '', reminder: windowInfo.key }
                     })
                 });
@@ -4428,7 +4624,7 @@ async function applyTournamentTechnicalWinner(roomId, winnerUid, reason = 'techn
             await settleTournamentFinalPrizes(match, winnerObj);
             if (match.prizesAwarded) {
                 await recordTournamentChampion(match, winnerObj);
-                queueTournamentPush(notifyTournamentChampion(match, winnerObj), 'champion_announced');
+                queueTournamentPush(() => notifyTournamentChampion(match, winnerObj), 'champion_announced', { retry: true });
             }
         } catch (err) {
             console.error("Greška pri tehničkom upisu finala turnira:", err);
@@ -4467,7 +4663,7 @@ async function applyTournamentCompletedDuelResult(roomId) {
             await settleTournamentFinalPrizes(match, winnerObj);
             if (match.prizesAwarded) {
                 await recordTournamentChampion(match, winnerObj);
-                queueTournamentPush(notifyTournamentChampion(match, winnerObj), 'champion_announced');
+                queueTournamentPush(() => notifyTournamentChampion(match, winnerObj), 'champion_announced', { retry: true });
             }
         } catch (err) {
             console.error("Greška pri automatskom upisu finala turnira:", err);
@@ -8220,6 +8416,7 @@ io.on('connection', (socket) => {
             const s = data.stats || {}; 
 
             if (user) {
+                const allowLegacyH2HImport = !user.h2hMigrationApplied && !user.statsMigrationApplied;
                 const emptyClientSnapshot = isEmptyClientProfileSnapshot(s);
                 const storedProfileHasProgress = hasMeaningfulStoredProfile(user);
                 if (emptyClientSnapshot && storedProfileHasProgress) {
@@ -8441,10 +8638,16 @@ io.on('connection', (socket) => {
 
                     // Za postojeće profile server je jedini autoritet za online H2H.
                     // Klijentski zbir prihvatamo samo kao jednokratni legacy import kada cloud nema H2H.
-                    const authoritativeH2H = Object.keys(cloudH2H).length > 0 ? cloudH2H : localH2H;
+                    const authoritativeH2H = Object.keys(cloudH2H).length > 0 || !allowLegacyH2HImport
+                        ? cloudH2H
+                        : localH2H;
                     if (JSON.stringify(oldCloudH2H) !== JSON.stringify(authoritativeH2H)) {
                         user.set('h2hStats', authoritativeH2H);
                         user.markModified('h2hStats');
+                    }
+                    if (allowLegacyH2HImport) {
+                        user.h2hMigrationApplied = true;
+                        user.h2hMigratedAt = Date.now();
                     }
                 }
 
@@ -8496,6 +8699,8 @@ io.on('connection', (socket) => {
                     leagueData: getDefaultCurrentLeagueData(),
                     statsMigrationApplied: true,
                     statsMigratedAt: Date.now(),
+                    h2hMigrationApplied: true,
+                    h2hMigratedAt: Date.now(),
                     economyMigrationApplied: true,
                     economyMigratedAt: Date.now()
                 });
@@ -11900,9 +12105,9 @@ io.on('connection', (socket) => {
             });
             io.emit('tourney_state_update', tournamentState);
             if (tournamentStartedByRegistration) {
-                queueTournamentPush(notifyTournamentStarted(), 'started');
+                queueTournamentPush(() => notifyTournamentStarted(), 'started', { retry: true });
             } else if (tournamentState.players.length === 7) {
-                queueTournamentPush(notifyTournamentOneSpotLeft(), 'one_spot_left');
+                queueTournamentPush(() => notifyTournamentOneSpotLeft(), 'one_spot_left', { retry: true });
             }
         } catch (err) {
             console.error("Greška pri turnirskoj prijavi:", err);
@@ -12016,7 +12221,7 @@ io.on('connection', (socket) => {
         match.time = null;
         saveTournamentToDb();
         io.emit('tourney_state_update', tournamentState);
-        queueTournamentPush(notifyTournamentTimeProposed(match, data.round, index, uid), 'time_proposed');
+        queueTournamentPush(() => notifyTournamentTimeProposed(match, data.round, index, uid), 'time_proposed');
     });
 
     socket.on('tourney_accept_time', (data = {}) => {
@@ -12040,8 +12245,8 @@ io.on('connection', (socket) => {
         match.pushRemindersSent = {};
         saveTournamentToDb();
         io.emit('tourney_state_update', tournamentState);
-        queueTournamentPush(notifyTournamentTimeAccepted(match, data.round, index), 'time_accepted');
-        queueTournamentPush(notifyTournamentFinalScheduled(match, data.round, index), 'final_scheduled');
+        queueTournamentPush(() => notifyTournamentTimeAccepted(match, data.round, index), 'time_accepted');
+        queueTournamentPush(() => notifyTournamentFinalScheduled(match, data.round, index), 'final_scheduled', { retry: true });
     });
 
     socket.on('tourney_start_duel', (data = {}) => {
@@ -12115,7 +12320,7 @@ io.on('connection', (socket) => {
                 expiresAt
             });
         } else {
-            queueTournamentPush(notifyTournamentDuelRequested(match, data.round, index, uid), 'duel_requested');
+            queueTournamentPush(() => notifyTournamentDuelRequested(match, data.round, index, uid), 'duel_requested');
             socket.emit('error_msg', 'err_tourney_opp_offline');
         }
     });
@@ -12238,7 +12443,7 @@ io.on('connection', (socket) => {
                     await settleTournamentFinalPrizes(match, winnerObj);
                     if (match.prizesAwarded) {
                         await recordTournamentChampion(match, winnerObj);
-                        queueTournamentPush(notifyTournamentChampion(match, winnerObj), 'champion_announced');
+                        queueTournamentPush(() => notifyTournamentChampion(match, winnerObj), 'champion_announced', { retry: true });
                     }
                 } catch (err) {
                     console.error("Greška pri upisu pobednika turnira u bazu:", err);
@@ -12250,7 +12455,7 @@ io.on('connection', (socket) => {
                 await settleTournamentFinalPrizes(match, winnerObj);
                 if (match.prizesAwarded) {
                     await recordTournamentChampion(match, winnerObj);
-                    queueTournamentPush(notifyTournamentChampion(match, winnerObj), 'champion_announced');
+                    queueTournamentPush(() => notifyTournamentChampion(match, winnerObj), 'champion_announced', { retry: true });
                 }
             } catch (err) {
                 console.error("Greška pri ponovnom upisu finala turnira:", err);

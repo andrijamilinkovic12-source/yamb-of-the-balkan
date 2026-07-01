@@ -673,6 +673,7 @@ class YambApp {
                 if (!sameName) continue;
 
                 const existingUid = this.isUsableH2HUid(existingRecord.uid) ? existingRecord.uid : (this.isUsableH2HUid(existingKey) ? existingKey : '');
+                if (identity.uid && existingUid && identity.uid !== existingUid) continue;
                 if (identity.uid || existingUid) {
                     targetKey = identity.uid || existingUid;
                     identity.uid = identity.uid || existingUid;
@@ -863,9 +864,9 @@ class YambApp {
             modal.className = 'h2h-detail-modal';
             modal.setAttribute('aria-hidden', 'true');
             modal.innerHTML = `
-                <button type="button" class="h2h-detail-backdrop" aria-label="Zatvori H2H statistiku"></button>
+                <button type="button" class="h2h-detail-backdrop" aria-label="${this.escapeHtml(gt('aria_close_h2h') || 'Zatvori H2H statistiku')}"></button>
                 <div class="h2h-detail-card" role="dialog" aria-modal="true" aria-labelledby="h2h-detail-title">
-                    <button type="button" class="h2h-detail-close" aria-label="Zatvori H2H statistiku">×</button>
+                    <button type="button" class="h2h-detail-close" aria-label="${this.escapeHtml(gt('aria_close_h2h') || 'Zatvori H2H statistiku')}">×</button>
                     <div id="h2h-detail-content"></div>
                 </div>`;
             document.body.appendChild(modal);
@@ -7481,7 +7482,7 @@ class YambApp {
         if (btnNajava) btnNajava.style.display = '';
 
         // Privremena imena dok ne stignu prava sa servera
-        this.players = [this.playerName, "Protivnik"];
+        this.players = [this.playerName, gt('player_opponent') || "Protivnik"];
         this.initScores();
         
         // ---> FIX: Iscrtavanje table unapred kako ne bi bila prazna <---

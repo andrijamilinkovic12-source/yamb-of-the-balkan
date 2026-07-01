@@ -32,6 +32,14 @@
         return 'unknown';
     }
 
+    function getLanguage() {
+        return localStorage.getItem('yamb_lang') === 'en' ? 'en' : 'sr';
+    }
+
+    function getText(key, fallback) {
+        return typeof t === 'function' ? t(key) : fallback;
+    }
+
     function escapeHtml(value) {
         return String(value || '').replace(/[&<>"']/g, char => ({
             '&': '&amp;',
@@ -81,8 +89,8 @@
         try {
             await plugin.createChannel({
                 id: CHANNEL_ID,
-                name: 'Yamb obavestenja',
-                description: 'Obavestenja za turnire, rekorde i kvartalnu ligu',
+                name: getText('push_channel_name', 'Yamb obaveštenja'),
+                description: getText('push_channel_desc', 'Obaveštenja za turnire, rekorde i Kvartalnu ligu'),
                 importance: 4,
                 visibility: 1,
                 vibration: true
@@ -92,17 +100,17 @@
         }
     }
 
-    function rememberSync(uid, token) {
+    function rememberSync(uid, token, language) {
         if (!uid || !token) return;
-        localStorage.setItem(SYNC_PREFIX + uid, JSON.stringify({ token, at: Date.now() }));
+        localStorage.setItem(SYNC_PREFIX + uid, JSON.stringify({ token, language, at: Date.now() }));
     }
 
-    function isRecentlySynced(uid, token) {
+    function isRecentlySynced(uid, token, language) {
         try {
             const raw = localStorage.getItem(SYNC_PREFIX + uid);
             if (!raw) return false;
             const parsed = JSON.parse(raw);
-            return parsed?.token === token && Date.now() - (parsed.at || 0) < SYNC_TTL_MS;
+            return parsed?.token === token && parsed?.language === language && Date.now() - (parsed.at || 0) < SYNC_TTL_MS;
         } catch (_error) {
             return false;
         }
@@ -110,9 +118,10 @@
 
     async function sendTokenToServer(app, token, options = {}) {
         const uid = getUid(app);
+        const language = getLanguage();
         if (!uid || !token || !app?.socket?.connected) return { ok: false, reason: 'not_ready' };
 
-        if (!options.force && isRecentlySynced(uid, token)) {
+        if (!options.force && isRecentlySynced(uid, token, language)) {
             return { ok: true, cached: true };
         }
 
@@ -125,12 +134,13 @@
         const payload = {
             token,
             platform: getPlatform(),
+            language,
             categories: { tournament: true, records: true, league: true },
             appId: 'com.yamb.balkan'
         };
 
         const result = await emitWithAck(app.socket, 'push_register_token', payload);
-        if (result && result.ok) rememberSync(uid, token);
+        if (result && result.ok) rememberSync(uid, token, language);
         return result;
     }
 
@@ -308,11 +318,11 @@
         }
 
         if (modal && canOpen && typeof modal.confirm === 'function') {
-            const message = `${body || title}<br><br>Otvori obavestenje?`;
+            const message = `${body || title}<br><br>${getText('push_open_prompt', 'Otvori obaveštenje?')}`;
             modal.confirm(message, {
                 title,
-                okText: 'Otvori',
-                cancelText: 'Kasnije'
+                okText: getText('push_open', 'Otvori'),
+                cancelText: getText('push_later', 'Kasnije')
             }).then(open => {
                 if (open) handleNotificationAction(data);
             });

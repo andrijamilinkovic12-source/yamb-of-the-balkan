@@ -72,7 +72,7 @@ class PowerIndexLeaderboard {
                     <h2 class="pi-modal-title">
                         <span style="font-size: 1.5rem;">⚡</span> ${this.gt('pi_title', 'TOP IGRAČI')}
                     </h2>
-                    <button type="button" class="global-chat-close" onclick="document.getElementById('pi-modal-overlay').remove()" aria-label="Zatvori Power index listu">×</button>
+                    <button type="button" class="global-chat-close" onclick="document.getElementById('pi-modal-overlay').remove()" aria-label="${this.gt('aria_close_power_index', 'Zatvori Power index listu')}">×</button>
                 </div>
 
                 <div class="chat-body global-chat-body pi-list-container" id="pi-list-container">

@@ -243,10 +243,10 @@
                     <svg id="economy-header-undo-icon" class="economy-header-icon hidden" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg>
                     <span id="economy-menu-title" class="global-chat-title" data-lang="menu_ducats">DUKATI</span>
                 </div>
-                <button type="button" class="global-chat-close" onclick="app.closeUndoMenu()" aria-label="Zatvori">×</button>
+                <button type="button" class="global-chat-close" onclick="app.closeUndoMenu()" aria-label="Zatvori" data-lang-aria="undo_close">×</button>
             </div>
 
-            <div class="nav-tabs economy-tabs" aria-label="Dukati opcije">
+            <div class="nav-tabs economy-tabs" aria-label="Opcije dukata" data-lang-aria="economy_tabs_aria">
                 <button id="economy-tab-ducats" class="tab-btn active" type="button" onclick="if(window.undoManager) window.undoManager.switchMenuTab(0)" aria-label="Dukati" data-lang-aria="menu_ducats" title="Dukati" data-lang-title="menu_ducats">
                     <svg class="dukat-icon-inline" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
                         <circle cx="48" cy="48" r="39" fill="rgba(255,214,111,0.18)"/>
@@ -331,7 +331,7 @@
 
     <div id="custom-modal-overlay" class="modal-overlay" style="z-index: 999999;">
         <div class="custom-modal">
-            <button id="cm-close" class="cm-close hidden" type="button" aria-label="Zatvori">X</button>
+            <button id="cm-close" class="cm-close hidden" type="button" aria-label="Zatvori" data-lang-aria="undo_close">X</button>
             <div id="cm-title" class="cm-title" data-lang="modal_title_info">OBAVEŠTENJE</div>
             <div id="cm-msg" class="cm-msg">Poruka ide ovde...</div>
             <input type="text" id="cm-input" class="cm-input hidden" autocomplete="off">
@@ -396,7 +396,7 @@
             
             <div class="splash-legal-copy">
                 <span data-lang="splash_terms_pre">Prihvatam </span>
-                <span onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="splash-legal-link" data-lang="splash_terms_link">Uslove korišćenja</span> i
+                <span onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="splash-legal-link" data-lang="splash_terms_link">Uslove korišćenja</span> <span data-lang="splash_terms_and">i</span>
                 <span onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="splash-legal-link" data-lang="splash_privacy_link">Politiku privatnosti</span>.
             </div>
             
@@ -679,8 +679,8 @@
                         <div class="stat-item compact-grid-item">
                             <span class="stat-lbl-mini" data-lang="stat_fav_opp" style="margin-bottom:2px;">Rival</span>
                             <img id="stat-fav-opp-img" src="" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gold-main); object-fit: cover; display: none;">
-                            <span id="stat-fav-opp-name" style="font-size: 0.7rem; color: var(--text-main); font-weight: bold; line-height: 1.1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 90%; text-align: center;">Nema</span>
-                            <span id="stat-fav-opp-games" style="font-size: 0.6rem; color: var(--gold-main); font-weight: bold; margin-top:2px;">0 mečeva</span>
+                            <span id="stat-fav-opp-name" style="font-size: 0.7rem; color: var(--text-main); font-weight: bold; line-height: 1.1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 90%; text-align: center;" data-lang="stat_none">Nema</span>
+                            <span id="stat-fav-opp-games" style="font-size: 0.6rem; color: var(--gold-main); font-weight: bold; margin-top:2px;" data-lang="stat_no_matches">0 mečeva</span>
                         </div>
                     </div>
                 </div>
@@ -835,7 +835,7 @@
             <button type="button" class="global-chat-close riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
         </div>
 
-        <div class="nav-tabs riznica-tabs" aria-label="Kategorije riznice">
+        <div class="nav-tabs riznica-tabs" aria-label="Kategorije riznice" data-lang-aria="treasury_tabs_aria">
             <div class="balance-display riznica-balance-pill"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
             <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" aria-label="Trofeji" data-lang-aria="tab_trophies" title="Trofeji" data-lang-title="tab_trophies">🏆</button>
             <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" aria-label="Kockice" data-lang-aria="tab_dice" title="Kockice" data-lang-title="tab_dice">🎲</button>
@@ -1055,7 +1055,7 @@
             
             <div class="ws-glass-card">
                 <img id="waiting-my-img" src="https://ui-avatars.com/api/?name=Ja&background=333&color=E0C995" class="ws-glass-avatar" style="border-color: var(--gold-main);">
-                <span id="waiting-my-name" class="ws-glass-name">Igrač</span>
+                <span id="waiting-my-name" class="ws-glass-name" data-lang="player_label">Igrač</span>
                 <div class="ws-glass-stats">
                     <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-my-power" class="val" style="color: var(--gold-main);">0</span></div>
                     <div class="ws-g-stat"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-my-wl" class="val">0 / 0 / 0</span></div>
@@ -1075,7 +1075,7 @@
 
                 <div id="waiting-opp-found" style="display: none; flex-direction: column; align-items: center; width: 100%;">
                     <img id="waiting-opp-img" src="https://ui-avatars.com/api/?name=?&background=333&color=E0C995" class="ws-glass-avatar" style="border-color: var(--danger);">
-                    <span id="waiting-opp-name" class="ws-glass-name">Protivnik</span>
+                    <span id="waiting-opp-name" class="ws-glass-name" data-lang="player_opponent">Protivnik</span>
                     <span id="waiting-start-msg" class="waiting-start-msg" data-lang="ws_game_starting">Protivnik je tu. Partija počinje...</span>
                     <div class="ws-glass-stats">
                         <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-opp-power" class="val" style="color: var(--gold-main);">0</span></div>

@@ -84,7 +84,7 @@ const RulesData = {
                     <li><strong>${rulesAssetIconHtml('assets/tournament-icon.svg')} Sistem:</strong> Nedeljni turnir prima 8 igrača i igra se na ispadanje: četvrtfinale, polufinale i finale. Svaki duel je jedna partija.</li>
                     <li><strong>${dukatIconHtml()} Prijava:</strong> Kotizacija je 5500 dukata. Odjava i povraćaj mogući su samo dok traje faza prijave, pre početka turnira.</li>
                     <li><strong>📅 Zakazivanje:</strong> Kada se prijavi svih 8 igrača, protivnici u kosturu predlažu i prihvataju termin meča. Meč se pokreće kada je termin potvrđen.</li>
-                    <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
+                    <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i ${rulesAssetIconHtml('assets/tournament-hall-icon.svg')} upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
                     <li><strong>🏁 Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
                 </ul>
                 
@@ -121,7 +121,7 @@ const RulesData = {
                 <ul>
                     <li><strong>🎲 Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
                     <li><strong>${rulesAssetIconHtml('assets/daily-challenge-icon.svg')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
-                    <li><strong>${rulesAssetIconHtml('assets/ad-ticket-icon.svg')} Reklame za nagradu:</strong> U meniju dukata kratka reklama donosi +200 dukata, a nagradni video +500 dukata kada je dostupan.</li>
+                    <li><strong>${rulesAssetIconHtml('assets/ad-ticket-icon.svg')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
                     <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
                 </ul>
 
@@ -169,8 +169,8 @@ const RulesData = {
                 <h3>📺 Reklame (AdMob)</h3>
                 <p>Reklame omogućavaju da igra ostane besplatna i da se nagrade potvrde na serveru.</p>
                 <ul>
-                    <li><strong>⏳ Kratke reklame:</strong> Koriste se za manje nagrade, povraćaje i pojedine akcije.</li>
-                    <li><strong>🎁 Nagradne reklame:</strong> Koriste se za dupliranje nagrade, Dnevni izazov, dukate, tokene i popust u Riznici.</li>
+                    <li><strong>⏳ Kratke reklame:</strong> Koriste se za pojedine akcije, povratak u meni, lokalno vraćanje upisa ili odjavu sa turnira. Ne isplaćuju direktno dukate ni tokene.</li>
+                    <li><strong>🎁 Nagradne reklame:</strong> Koriste se za dupliranje nagrade, Dnevni izazov, dukate, tokene i popust u Riznici, uz potvrdu na serveru.</li>
                 </ul>
             `
         }
@@ -248,7 +248,7 @@ const RulesData = {
                     <li><strong>${rulesAssetIconHtml('assets/tournament-icon.svg')} Format:</strong> The weekly tournament accepts 8 players and is played as a knockout bracket: quarterfinals, semifinals, and final. Each duel is one game.</li>
                     <li><strong>${dukatIconHtml()} Entry:</strong> The entry fee is 5500 ducats. Unregistering and refunds are possible only during registration, before the tournament starts.</li>
                     <li><strong>📅 Scheduling:</strong> Once all 8 players register, opponents in the bracket propose and accept match times. A match starts after the time is confirmed.</li>
-                    <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
+                    <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a ${rulesAssetIconHtml('assets/tournament-hall-icon.svg')} Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
                     <li><strong>🏁 Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
                 </ul>
                 
@@ -285,7 +285,7 @@ const RulesData = {
                 <ul>
                     <li><strong>🎲 Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
                     <li><strong>${rulesAssetIconHtml('assets/daily-challenge-icon.svg')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
-                    <li><strong>${rulesAssetIconHtml('assets/ad-ticket-icon.svg')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available.</li>
+                    <li><strong>${rulesAssetIconHtml('assets/ad-ticket-icon.svg')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
                     <li><strong>${rulesAssetIconHtml('assets/tournament-trophy-yotb.svg')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
                 </ul>
 
@@ -333,8 +333,8 @@ const RulesData = {
                 <h3>📺 Ads (AdMob)</h3>
                 <p>Ads help keep the game free and allow rewards to be verified by the server.</p>
                 <ul>
-                    <li><strong>⏳ Short ads:</strong> Used for smaller rewards, refunds, and some actions.</li>
-                    <li><strong>🎁 Rewarded ads:</strong> Used for reward doubling, Daily Challenge, ducats, undo tokens, and Treasury discounts.</li>
+                    <li><strong>⏳ Short ads:</strong> Used for some actions, returning to the menu, local undo, or tournament unregistering. They do not directly pay ducats or undo tokens.</li>
+                    <li><strong>🎁 Rewarded ads:</strong> Used for reward doubling, Daily Challenge, ducats, undo tokens, and Treasury discounts, with server verification.</li>
                 </ul>
             `
         }

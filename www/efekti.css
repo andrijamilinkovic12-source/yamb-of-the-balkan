@@ -798,6 +798,7 @@ body.fx-glass .game-scene { animation: chromatic-aberration 0.2s infinite; }
 
 .fx-thunder-shake {
     animation: thunderRumble 4.5s ease-out forwards;
+    overflow: hidden;
 }
 
 @keyframes thunderRumble {
@@ -3332,6 +3333,14 @@ body.fx-dragon_fire .game-scene {
 
 body.fx-royal_yamb .game-scene {
     animation: royalBoardPulse 8s ease-in-out forwards;
+}
+
+body.fx-royal_yamb {
+    overflow: hidden;
+}
+
+body.fx-dragon_fire {
+    overflow: hidden;
 }
 
 @media (max-width: 520px) {

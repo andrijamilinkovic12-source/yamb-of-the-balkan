@@ -90,6 +90,14 @@ function checkMatchResultWiring() {
     assert(gameSource.includes("this.socket.emit('submit_match_result'"), 'Client never sends queued results to the cloud');
     assert(gameSource.includes('await this.queueCompletedLocalMatchResult({'), 'Completed local game is not added to the queue');
 
+    const completedRoomSettlement = extractFunction(serverSource, 'settleCompletedOnlineRoom');
+    assert(completedRoomSettlement.includes('state.completionSettlementPromise'), 'Completed online room can be settled concurrently');
+    assert(
+        completedRoomSettlement.indexOf('state.completionSettlementPromise = settlementPromise;') <
+            completedRoomSettlement.indexOf('return await settlementPromise;'),
+        'Completed online room is not locked before awaiting settlement'
+    );
+
     const connectStart = gameSource.indexOf("this.socket.on('connect', async () => {");
     const connectEnd = gameSource.indexOf("this.socket.on('users_count'", connectStart);
     const connectHandler = gameSource.slice(connectStart, connectEnd);
@@ -173,6 +181,92 @@ function checkLocalResultValidation() {
         scoreSheets: [2499, 2400]
     });
     assert.strictEqual(mismatchedSheet.ok, false, 'Local score that does not match the completed sheet was accepted');
+}
+
+async function checkLeaderboardSemantics() {
+    const storage = new Map();
+    const localforage = {
+        async getItem(key) {
+            return storage.has(key) ? storage.get(key) : null;
+        },
+        async setItem(key, value) {
+            storage.set(key, JSON.parse(JSON.stringify(value)));
+        }
+    };
+    const localStorage = {
+        getItem(key) {
+            return storage.has(`local:${key}`) ? storage.get(`local:${key}`) : null;
+        },
+        setItem(key, value) {
+            storage.set(`local:${key}`, String(value));
+        }
+    };
+    const context = {
+        console: { log() {}, warn() {}, error() {} },
+        Date,
+        Intl,
+        Math,
+        Number,
+        JSON,
+        localforage,
+        localStorage,
+        window: { localforage },
+        setTimeout() { return 1; },
+        document: { getElementById() { return null; } }
+    };
+    vm.createContext(context);
+    vm.runInContext(`${topListSource}\nglobalThis.TopListManager = TopListManager;`, context);
+
+    const manager = new context.TopListManager({ socket: { connected: false } });
+    const now = new Date('2026-07-01T12:00:00.000Z');
+    assert.strictEqual(manager._getPeriodStart('weekly', now).toISOString(), '2026-06-28T22:00:00.000Z', 'Weekly leaderboard does not start Monday in Belgrade');
+    assert.strictEqual(manager._getPeriodStart('monthly', now).toISOString(), '2026-06-30T22:00:00.000Z', 'Monthly leaderboard does not start at Belgrade month boundary');
+
+    const entries = [
+        { uid: 'firebase-user-a-1234567890', score: 100, date: '2026-06-28T21:59:59.000Z' },
+        { uid: 'firebase-user-a-1234567890', score: 200, date: '2026-06-28T22:00:00.000Z' },
+        { uid: 'firebase-user-b-1234567890', score: 300, date: '2026-06-30T22:00:00.000Z' }
+    ];
+    const originalGetPeriodStart = manager._getPeriodStart.bind(manager);
+    manager._getPeriodStart = period => originalGetPeriodStart(period, now);
+    assert.deepStrictEqual(
+        Array.from(manager._filterScoresForPeriod(entries, 'weekly'), entry => entry.score),
+        [200, 300],
+        'Local weekly leaderboard includes scores before Monday or loses valid scores'
+    );
+    assert.deepStrictEqual(
+        Array.from(manager._filterScoresForPeriod(entries, 'monthly'), entry => entry.score),
+        [300],
+        'Local monthly leaderboard uses the wrong month boundary'
+    );
+    assert.strictEqual(manager._filterScoresForPeriod(entries, 'all_time').length, 3, 'Local all-time leaderboard does not retain every score');
+
+    await manager._saveLocal({ localId: 'a1', uid: entries[0].uid, score: 500, date: now.toISOString() });
+    await manager._saveLocal({ localId: 'a2', uid: entries[0].uid, score: 400, date: now.toISOString() });
+    await manager._saveLocal({ localId: 'b1', uid: entries[2].uid, score: 450, date: now.toISOString() });
+    const storedScores = await manager._readLocalScores();
+    assert.strictEqual(storedScores.length, 3, 'Local leaderboard deduplicates scores or accounts on the same phone');
+    assert.deepStrictEqual(
+        Array.from(storedScores, entry => entry.score),
+        [500, 450, 400],
+        'Local leaderboard does not retain and sort every phone score'
+    );
+    assert(
+        topListSource.includes('if (isGlobalList) validData = validData.slice(0, this.maxEntries);'),
+        'Local leaderboard display is still limited to the global TOP 100'
+    );
+
+    const globalHandlerStart = serverSource.indexOf("socket.on('get_global_highscores'");
+    const globalHandlerEnd = serverSource.indexOf('// ==================================================================', globalHandlerStart + 50);
+    const globalHandler = serverSource.slice(globalHandlerStart, globalHandlerEnd);
+    assert(globalHandler.includes('_id: "$stableUid"'), 'Global leaderboard is not grouped by stable profile UID');
+    assert(globalHandler.includes("getLeaderboardPeriodStart('weekly')"), 'Global weekly leaderboard is not period-filtered');
+    assert(globalHandler.includes("getLeaderboardPeriodStart('monthly')"), 'Global monthly leaderboard is not period-filtered');
+    assert(globalHandler.includes('bestEntry: { $first: "$$ROOT" }'), 'Global leaderboard does not keep one best score per profile');
+
+    const completedDuel = extractFunction(serverSource, 'applyServerSideCompletedDuel');
+    assert(completedDuel.includes('persistLeaderboardScoreRecord({'), 'Completed online duel does not write both authoritative scores to the leaderboard');
+    assert(serverSource.includes('persistLeaderboardScoresForMatchResult(result'), 'Stored online results cannot repair missing leaderboard rows');
 }
 
 function checkGameRewardSessionRaceGuard() {
@@ -295,6 +389,7 @@ async function checkLedgerIdempotencyAndConflict() {
 
 async function main() {
     checkMatchResultWiring();
+    await checkLeaderboardSemantics();
     checkLocalResultValidation();
     checkGameRewardSessionRaceGuard();
     checkVerifiedEconomyMatchProof();
