@@ -56,7 +56,9 @@ function extractAsyncFunction(source, name) {
     const start = source.indexOf(`async function ${name}`);
     assert.notStrictEqual(start, -1, `Missing async server function: ${name}`);
 
-    const bodyStart = source.indexOf('{', start);
+    const methodBodyMarker = source.indexOf(') {', start);
+    assert.notStrictEqual(methodBodyMarker, -1, `Missing async server function body: ${name}`);
+    const bodyStart = methodBodyMarker + 2;
     let depth = 0;
     let quote = null;
     let escaped = false;
@@ -218,7 +220,7 @@ function checkBalanceSyncAllowance() {
     );
 }
 
-function checkAdMobSsvDefaultsFailClosed() {
+function checkAdMobRewardVerificationDefaults() {
     assert(
         !serverSource.includes("process.env.REQUIRE_ADMOB_SSV === 'true'"),
         'AdMob SSV regressed to default-off verification'
@@ -240,7 +242,7 @@ function checkAdMobSsvDefaultsFailClosed() {
     assert.strictEqual(parseRequiredAdMobSsv('true'), true, 'REQUIRE_ADMOB_SSV=true must require SSV');
     assert.strictEqual(parseRequiredAdMobSsv('false'), false, 'REQUIRE_ADMOB_SSV=false must explicitly disable SSV');
     assert.strictEqual(parseRequiredAdMobSsv('0'), false, 'REQUIRE_ADMOB_SSV=0 must explicitly disable SSV');
-    assert.strictEqual(parseOptionalBooleanEnv(undefined, false), false, 'Client rewarded fallback must default off without explicit env');
+    assert.strictEqual(parseOptionalBooleanEnv(undefined, true), true, 'Client rewarded fallback must keep completed rewarded ads payable by default');
     assert.strictEqual(parseOptionalBooleanEnv('true', false), true, 'Client rewarded fallback env true is not accepted');
     assert.strictEqual(parseOptionalBooleanEnv('false', true), false, 'Client rewarded fallback env false is not accepted');
     assert(envExampleSource.includes('REQUIRE_ADMOB_SSV=true'), '.env.example disables AdMob SSV verification');
@@ -248,10 +250,10 @@ function checkAdMobSsvDefaultsFailClosed() {
     assert(envExampleSource.includes('LOCAL_GAME_SESSION_SECRET='), '.env.example omits the signed local session secret');
 }
 
-function checkRewardedAdClientFallback() {
+async function checkRewardedAdClientFallback() {
     assert(
-        serverSource.includes('const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, false);'),
-        'Server is missing explicit client rewarded fallback env guard'
+        serverSource.includes('const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, true);'),
+        'Server can silently reject completed rewarded ads when the deployment omits the fallback env switch'
     );
     assert(serverSource.includes('ADMOB_CLIENT_FALLBACK_GRACE_MS'), 'Server is missing a bounded fallback grace window');
     assert(serverSource.includes('const clientFallbackAllowed = ALLOW_ADMOB_CLIENT_REWARD_FALLBACK && options.clientRewarded === true;'), 'SSV fallback is not gated by the SDK rewarded signal');
@@ -283,6 +285,70 @@ function checkRewardedAdClientFallback() {
         showRewardVideo.includes('if (rewardItem && this.rewardResolve) this.settleRewardVideo(true);'),
         'showRewardVideo does not accept the native rewarded promise result as a client reward signal'
     );
+
+    let now = 100000;
+    class TestDate extends Date {
+        static now() {
+            now += 1000;
+            return now;
+        }
+    }
+
+    const verificationContext = {
+        Array,
+        Date: TestDate,
+        Math,
+        Set,
+        REQUIRE_ADMOB_SSV: true,
+        ALLOW_ADMOB_CLIENT_REWARD_FALLBACK: true,
+        ADMOB_SSV_WAIT_TIMEOUT_MS: 2000,
+        ADMOB_CLIENT_FALLBACK_GRACE_MS: 2000,
+        ADMOB_SSV_MAX_AGE_MS: 600000,
+        ADMOB_SSV_POLL_MS: 750,
+        toSafeInt,
+        sleep: async () => {},
+        AdMobRewardVerification: {
+            findOneAndUpdate: async () => null
+        },
+        console
+    };
+    vm.createContext(verificationContext);
+    ['sanitizeAdMobNonce', 'sanitizeAdMobContext', 'sanitizeAdMobUid']
+        .forEach(name => vm.runInContext(extractFunction(serverSource, name), verificationContext));
+    vm.runInContext(extractAsyncFunction(serverSource, 'waitForVerifiedAdMobReward'), verificationContext);
+    const waitForVerifiedAdMobReward = vm.runInContext('waitForVerifiedAdMobReward', verificationContext);
+
+    const sdkFallback = await waitForVerifiedAdMobReward(
+        'firebase-user-1234567890',
+        'reward-nonce-123456',
+        ['shop_ad_reward'],
+        { claimedBy: 'shop_ad_reward', clientRewarded: true }
+    );
+    assert.strictEqual(sdkFallback.ok, true, 'Completed native rewarded ad was not accepted when SSV was unavailable');
+    assert.strictEqual(sdkFallback.clientFallback, true, 'Completed native rewarded ad did not use the bounded SDK fallback');
+
+    const missingSdkReward = await waitForVerifiedAdMobReward(
+        'firebase-user-1234567890',
+        'reward-nonce-654321',
+        ['shop_ad_reward'],
+        { claimedBy: 'shop_ad_reward', clientRewarded: false }
+    );
+    assert.strictEqual(missingSdkReward.ok, false, 'Reward was accepted without SSV or the native rewarded signal');
+    assert.strictEqual(missingSdkReward.reason, 'ad_verification_pending', 'Missing native reward returned the wrong verification state');
+
+    verificationContext.AdMobRewardVerification.findOneAndUpdate = async () => ({
+        uid: 'firebase-user-1234567890',
+        nonce: 'reward-nonce-ssv',
+        context: 'daily_double'
+    });
+    const ssvReward = await waitForVerifiedAdMobReward(
+        'firebase-user-1234567890',
+        'reward-nonce-ssv',
+        ['daily_double'],
+        { claimedBy: 'daily_double', clientRewarded: true }
+    );
+    assert.strictEqual(ssvReward.ok, true, 'Verified AdMob SSV reward was rejected');
+    assert.strictEqual(ssvReward.clientFallback, undefined, 'SSV reward incorrectly used the client fallback');
 
     const coinReward = extractClassMethod(undoSource, "async claimCoinAdReward(type = 'rewarded')");
     const tokenReward = extractClassMethod(undoSource, 'async buyTokens(type)');
@@ -849,8 +915,8 @@ async function checkServerDuelIdempotency() {
 
 async function main() {
     checkBalanceSyncAllowance();
-    checkAdMobSsvDefaultsFailClosed();
-    checkRewardedAdClientFallback();
+    checkAdMobRewardVerificationDefaults();
+    await checkRewardedAdClientFallback();
     checkUnverifiedInterstitialRewardsBlocked();
     checkUndoRewardedTokenAmount();
     checkShopDiscountRequiresServerVerification();

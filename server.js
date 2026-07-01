@@ -821,7 +821,7 @@ const ADMOB_REWARD_KEYS_CACHE_MS = 23 * 60 * 60 * 1000;
 const ADMOB_SSV_WAIT_TIMEOUT_MS = Math.max(3000, Math.min(30000, parseInt(process.env.ADMOB_SSV_WAIT_TIMEOUT_MS || '20000', 10)));
 const ADMOB_SSV_POLL_MS = 750;
 const ADMOB_SSV_MAX_AGE_MS = Math.max(60000, Math.min(15 * 60 * 1000, parseInt(process.env.ADMOB_SSV_MAX_AGE_MS || '600000', 10)));
-const ADMOB_CLIENT_FALLBACK_GRACE_MS = Math.max(1000, Math.min(30000, parseInt(process.env.ADMOB_CLIENT_FALLBACK_GRACE_MS || '4000', 10)));
+const ADMOB_CLIENT_FALLBACK_GRACE_MS = Math.max(1000, Math.min(30000, parseInt(process.env.ADMOB_CLIENT_FALLBACK_GRACE_MS || '2000', 10)));
 function parseRequiredAdMobSsv(value) {
     const normalized = String(value ?? '').trim().toLowerCase();
     if (!normalized) return true;
@@ -838,7 +838,9 @@ const REQUIRE_ADMOB_SSV = parseRequiredAdMobSsv(process.env.REQUIRE_ADMOB_SSV);
 if (!REQUIRE_ADMOB_SSV) {
     console.warn('⚠️ REQUIRE_ADMOB_SSV je isključen. Rewarded ad ekonomija koristi bypass bez server-side verifikacije.');
 }
-const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, false);
+// Native SDK reward mora ostati funkcionalan i kada AdMob SSV callback nije podešen
+// na deployment-u. SSV i dalje ima prednost tokom kratkog grace perioda.
+const ALLOW_ADMOB_CLIENT_REWARD_FALLBACK = parseOptionalBooleanEnv(process.env.ALLOW_ADMOB_CLIENT_REWARD_FALLBACK, true);
 if (REQUIRE_ADMOB_SSV && ALLOW_ADMOB_CLIENT_REWARD_FALLBACK) {
     console.warn('⚠️ ALLOW_ADMOB_CLIENT_REWARD_FALLBACK je uključen. Koristim SDK rewarded fallback ako SSV callback zakasni ili nije konfigurisan.');
 }
