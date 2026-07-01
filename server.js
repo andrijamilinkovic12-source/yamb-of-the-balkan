@@ -792,6 +792,8 @@ const MAX_NAME_LENGTH = 24;
 const MIN_GAME_DURATION = 120000;
 const MAX_GAME_DURATION = 6 * 60 * 60 * 1000;
 const MAX_LEAGUE_SCORE = 1000000;
+const MAX_LEAGUE_ALL_TIME_SCORE = 1000000000;
+const LEAGUE_SETTLEMENT_GRACE_MS = MAX_GAME_DURATION + (5 * 60 * 1000);
 const MAX_LEAGUE_SCORE_DELTA = MAX_SCORE + 500;
 const MIN_LEAGUE_SESSION_DURATION = 30000;
 const MAX_BALANCE = 5000000;
@@ -2160,6 +2162,9 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
     if (!process.env.MONGO_URI || !playerId) return null;
     try {
         const UserProfile = mongoose.model('UserProfile');
+        const leaguePeriodDate = syncExtra.periodDate;
+        const publicSyncExtra = { ...syncExtra };
+        delete publicSyncExtra.periodDate;
 
         if (opponentMeta) {
             const user = await UserProfile.findOne({ firebaseUid: playerId });
@@ -2177,13 +2182,13 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
 
             if (coinPenalty > 0) {
                 user.balance = Math.max(0, Math.min(MAX_BALANCE, toSafeInt(user.balance, 0)) - coinPenalty);
-                await applyTechnicalLeagueDelta(user, -coinPenalty);
+                await applyTechnicalLeagueDelta(user, -coinPenalty, { periodDate: leaguePeriodDate });
             }
 
             if (syncExtra.matchId) rememberUserAppliedMatchResult(user, syncExtra.matchId);
             await user.save();
             rememberServerTechnicalResult(playerId, 'loss');
-            emitProfileSyncToUid(playerId, user, syncExtra);
+            emitProfileSyncToUid(playerId, user, publicSyncExtra);
             console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ${opponentMeta.uid || opponentMeta.name || h2hKey || 'nepoznatog'}.`);
             return user;
         }
@@ -2214,7 +2219,7 @@ async function applyServerSidePenalty(playerId, penaltyAmount = 50, h2hKey = nul
         }
 
         if (user) rememberServerTechnicalResult(playerId, 'loss');
-        emitProfileSyncToUid(playerId, user, syncExtra);
+        emitProfileSyncToUid(playerId, user, publicSyncExtra);
         console.log(`⚖️ SERVER KAZNA: Dodato ${penaltyAmount} kaznenih poena i resetovan H2H igraču ${playerId} protiv ključa ${h2hKey || 'nepoznatog'}.`);
         return user;
     } catch (err) {
@@ -2299,7 +2304,7 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
                     );
                     const winnerOpponent = h2hContext.winnerOpponent || (loserId ? { uid: loserId, name: 'Nepoznat' } : null);
                     if (winnerOpponent) applyTechnicalDuelH2H(winner, winnerOpponent, 'win');
-                    await applyTechnicalLeagueDelta(winner, winnerReward);
+                    await applyTechnicalLeagueDelta(winner, winnerReward, { periodDate: storedResult?.finishedAt });
                     rememberUserAppliedMatchResult(winner, matchId);
                     await winner.save();
                     await markMatchResultStatsApplied(matchId, winnerId);
@@ -2323,7 +2328,7 @@ async function applyServerSideTechnicalResult(winnerId, loserId, penaltyAmount =
             h2hKey,
             loserCoinPenalty,
             h2hContext.loserOpponent || null,
-            { serverTechnicalResult: 'loss', matchId }
+            { serverTechnicalResult: 'loss', matchId, periodDate: storedResult?.finishedAt }
         );
         if (loser) {
             await markMatchResultStatsApplied(matchId, loserId);
@@ -5999,6 +6004,27 @@ function getLeagueQuarterInfoForTimestamp(value) {
     return getServerQuarterInfo(date);
 }
 
+function getLeaguePeriodEnd(year, quarter) {
+    if (!Number.isInteger(year) || !Number.isInteger(quarter) || quarter < 1 || quarter > 4) return null;
+
+    const nextYear = quarter === 4 ? year + 1 : year;
+    const nextMonth = quarter === 4 ? 1 : (quarter * 3) + 1;
+    return zonedLocalMidnightToUtc(nextYear, nextMonth, 1, LEADERBOARD_TIME_ZONE);
+}
+
+function getLeagueSettlementInfo(year, quarter, now = new Date()) {
+    const periodEnd = getLeaguePeriodEnd(year, quarter);
+    if (!periodEnd) return { settled: false, retryAfterMs: 0 };
+
+    const settlesAt = new Date(periodEnd.getTime() + LEAGUE_SETTLEMENT_GRACE_MS);
+    return {
+        settled: now.getTime() >= settlesAt.getTime(),
+        periodEnd,
+        settlesAt,
+        retryAfterMs: Math.max(0, settlesAt.getTime() - now.getTime())
+    };
+}
+
 function normalizeLeagueMigrationData(rawLeagueData) {
     return normalizeLeagueData(rawLeagueData, { allowZero: false });
 }
@@ -6019,7 +6045,7 @@ function normalizeLeagueData(rawLeagueData, options = {}) {
     return {
         year,
         quarter,
-        baselineScore: Math.max(0, Math.min(MAX_LEAGUE_SCORE, Math.floor(baselineScore))),
+        baselineScore: Math.max(0, Math.min(MAX_LEAGUE_ALL_TIME_SCORE, Math.floor(baselineScore))),
         quarterlyScore: Math.max(0, Math.floor(quarterlyScore))
     };
 }
@@ -6070,7 +6096,7 @@ function coerceLeagueDataToCurrentPeriod(rawLeagueData) {
     const rolledBaseline = normalized.baselineScore + (isPastPeriod ? normalized.quarterlyScore : 0);
     return {
         ...currentLeague,
-        baselineScore: Math.max(0, Math.min(MAX_LEAGUE_SCORE, Math.floor(rolledBaseline))),
+        baselineScore: Math.max(0, Math.min(MAX_LEAGUE_ALL_TIME_SCORE, Math.floor(rolledBaseline))),
         quarterlyScore: 0
     };
 }
@@ -6091,7 +6117,7 @@ function mergeLeagueDataValues(currentRaw, incomingRaw) {
         next.baselineScore = Math.max(next.baselineScore, incomingBaseline);
     }
 
-    next.baselineScore = Math.max(0, Math.min(MAX_LEAGUE_SCORE, Math.floor(next.baselineScore)));
+    next.baselineScore = Math.max(0, Math.min(MAX_LEAGUE_ALL_TIME_SCORE, Math.floor(next.baselineScore)));
     next.quarterlyScore = Math.max(0, Math.min(MAX_LEAGUE_SCORE, Math.floor(next.quarterlyScore)));
     return next;
 }
@@ -6154,7 +6180,7 @@ async function fetchTopLeagueScoresForPeriod(year, quarter, limit = 50, scoreFil
 
     return LeagueScore.aggregate([
         { $match: match },
-        { $sort: { score: -1, date: -1 } },
+        { $sort: { score: -1, date: 1, playerId: 1 } },
         {
             $group: {
                 _id: '$playerId',
@@ -6167,7 +6193,7 @@ async function fetchTopLeagueScoresForPeriod(year, quarter, limit = 50, scoreFil
                 date: { $first: '$date' }
             }
         },
-        { $sort: { score: -1 } },
+        { $sort: { score: -1, date: 1, playerId: 1 } },
         { $limit: Math.max(1, Math.min(250, toSafeInt(limit, 50))) }
     ]);
 }
@@ -6248,7 +6274,7 @@ async function applyTechnicalLeagueDelta(user, delta, options = {}) {
         if (appliedDelta !== 0 && compareLeaguePeriod(targetPeriod, currentPeriod) < 0) {
             user.leagueData = {
                 ...currentLeague,
-                baselineScore: Math.max(0, Math.min(MAX_LEAGUE_SCORE, toSafeInt(currentLeague.baselineScore, 0) + appliedDelta))
+                baselineScore: Math.max(0, Math.min(MAX_LEAGUE_ALL_TIME_SCORE, toSafeInt(currentLeague.baselineScore, 0) + appliedDelta))
             };
             user.markModified('leagueData');
         }
@@ -6451,10 +6477,13 @@ if (MONGO_URI) {
 async function archiveLeagueQuarter(year, quarter) {
     if (!Number.isInteger(year) || !Number.isInteger(quarter) || quarter < 1 || quarter > 4) return null;
     if (!isPastLeaguePeriod(year, quarter)) return null;
+    const settlement = getLeagueSettlementInfo(year, quarter);
+    if (!settlement.settled) return null;
 
     const periodKey = getLeaguePeriodKey(year, quarter);
     const existingArchive = await LeagueHallOfFame.findOne({ periodKey }).lean();
-    if (existingArchive) return existingArchive;
+    const archivedAtMs = existingArchive?.archivedAt ? new Date(existingArchive.archivedAt).getTime() : 0;
+    if (existingArchive && archivedAtMs >= settlement.settlesAt.getTime()) return existingArchive;
 
     const topScores = await fetchTopLeagueScoresForPeriod(year, quarter, 3);
 
@@ -8894,14 +8923,28 @@ io.on('connection', (socket) => {
 
         try {
             if (!MONGO_URI) return replyQuarterReward({ ok: false, reason: 'db_unavailable', permanent: false });
-            const { year, quarter } = data || {};
+            const year = Number(data?.year);
+            const quarter = Number(data?.quarter);
             const playerId = socket.verifiedUid;
 
-            if (!year || !quarter) {
+            if (!Number.isInteger(year) || !Number.isInteger(quarter) || quarter < 1 || quarter > 4) {
                 return replyQuarterReward({ ok: false, reason: 'invalid_request', permanent: true });
             }
             if (!playerId) {
                 return replyQuarterReward({ ok: false, reason: 'auth_required', permanent: false });
+            }
+            if (!isPastLeaguePeriod(year, quarter)) {
+                return replyQuarterReward({ ok: false, reason: 'quarter_not_finished', permanent: true });
+            }
+
+            const settlement = getLeagueSettlementInfo(year, quarter);
+            if (!settlement.settled) {
+                return replyQuarterReward({
+                    ok: false,
+                    reason: 'quarter_settling',
+                    permanent: false,
+                    retryAfterMs: settlement.retryAfterMs
+                });
             }
 
             const rewardKey = getLeaguePeriodKey(year, quarter);
@@ -8913,10 +8956,8 @@ io.on('connection', (socket) => {
                 return replyQuarterReward({ ok: true, status: 'already_claimed', periodKey: rewardKey });
             }
 
-            const archivedQuarter = isPastLeaguePeriod(Number(year), Number(quarter))
-                ? await archiveLeagueQuarter(Number(year), Number(quarter))
-                : null;
-            const topScores = archivedQuarter?.topScores || await fetchTopLeagueScoresForPeriod(Number(year), Number(quarter), 3);
+            const archivedQuarter = await archiveLeagueQuarter(year, quarter);
+            const topScores = archivedQuarter?.topScores || [];
             
             let rank = -1;
             for (let i = 0; i < topScores.length; i++) {
@@ -9278,12 +9319,21 @@ io.on('connection', (socket) => {
     socket.on('get_previous_quarter_winner', async (data) => {
         try {
             if (!MONGO_URI) return;
-            const { year, quarter } = data;
-            const archivedQuarter = await archiveLeagueQuarter(Number(year), Number(quarter));
-            const fallbackScores = archivedQuarter?.champion
-                ? []
-                : await fetchTopLeagueScoresForPeriod(Number(year), Number(quarter), 1);
-            const topScore = archivedQuarter?.champion || fallbackScores[0];
+            const year = Number(data?.year);
+            const quarter = Number(data?.quarter);
+            if (!Number.isInteger(year) || !Number.isInteger(quarter) || quarter < 1 || quarter > 4 || !isPastLeaguePeriod(year, quarter)) {
+                socket.emit('previous_quarter_winner_data', null);
+                return;
+            }
+
+            const settlement = getLeagueSettlementInfo(year, quarter);
+            if (!settlement.settled) {
+                socket.emit('previous_quarter_winner_data', { settling: true, year, quarter, retryAfterMs: settlement.retryAfterMs });
+                return;
+            }
+
+            const archivedQuarter = await archiveLeagueQuarter(year, quarter);
+            const topScore = archivedQuarter?.champion;
             
             if (topScore) {
                 const user = await UserProfile.findOne({ firebaseUid: topScore.playerId }).lean();
@@ -9530,6 +9580,13 @@ io.on('connection', (socket) => {
             }
             if (session.ok && session.duration < MIN_GAME_DURATION && !existingResult) {
                 return replyMatchResult(false, 'game_too_short', true);
+            }
+            const reportedFinishedAt = new Date(normalized.payload.finishedAt).getTime();
+            if (session.ok && !existingResult && (
+                reportedFinishedAt < session.startedAt - (5 * 60 * 1000) ||
+                reportedFinishedAt > session.startedAt + MAX_GAME_DURATION + (5 * 60 * 1000)
+            )) {
+                return replyMatchResult(false, 'invalid_finished_at', true);
             }
             normalized.payload.gameSessionId = existingResult
                 ? String(existingResult.gameSessionId || '')

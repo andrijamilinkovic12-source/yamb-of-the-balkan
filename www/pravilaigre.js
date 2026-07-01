@@ -89,8 +89,9 @@ const RulesData = {
                 </ul>
                 
                 <h3>${rulesAssetIconHtml('assets/quarterly-league-icon.svg')} Kvartalna liga</h3>
-                <p>Kvartalna liga traje 3 meseca. Svaka završena partija donosi ligaške poene, a napredak ide kroz rangove: Amater, Profi, Majstor, Legenda i Titan.</p>
-                <p>${rulesAssetIconHtml('assets/quarterly-league-watermark.png', 'rules-asset-icon--png')} Na kraju kvartala najbolji igrači dobijaju nagrade u dukatima i medalje, prvoplasirani postaje Šampion ciklusa, poeni prelaze u Sva vremena, a novi kvartal kreće od nule.</p>
+                <p>Kvartalna liga traje 3 kalendarska meseca po vremenu Beograda. U svakoj regularno završenoj solo, AI, lokalnoj ili online partiji Vaš konačni rezultat se dodaje ligaškom zbiru. Kod tehničkog ishoda pobedniku se dodaje izračunata nagrada, a poraženom se isti obračunati iznos oduzima do najmanje 0 poena.</p>
+                <p>Rangovi su: Amater 0-4.999, Profi 5.000-14.999, Majstor 15.000-49.999, Legenda 50.000-99.999 i Titan od 100.000 poena.</p>
+                <p>${rulesAssetIconHtml('assets/quarterly-league-watermark.png', 'rules-asset-icon--png')} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
             `
         },
         {
@@ -252,8 +253,9 @@ const RulesData = {
                 </ul>
                 
                 <h3>${rulesAssetIconHtml('assets/quarterly-league-icon.svg')} Quarterly League</h3>
-                <p>The Quarterly League lasts 3 months. Every finished game grants league points, and progress moves through the ranks: Amateur, Pro, Master, Legend, and Titan.</p>
-                <p>${rulesAssetIconHtml('assets/quarterly-league-watermark.png', 'rules-asset-icon--png')} At the end of the quarter, top players receive ducat rewards and medals, first place becomes the Cycle Champion, points move to All-Time, and the new quarter starts from zero.</p>
+                <p>The Quarterly League lasts 3 calendar months in Belgrade time. In every regularly completed solo, AI, local, or online game, your final score is added to your league total. For a technical result, the calculated reward is added to the winner and the same calculated amount is deducted from the loser, down to a minimum of 0 points.</p>
+                <p>The ranks are: Amateur 0-4,999, Pro 5,000-14,999, Master 15,000-49,999, Legend 50,000-99,999, and Titan from 100,000 points.</p>
+                <p>${rulesAssetIconHtml('assets/quarterly-league-watermark.png', 'rules-asset-icon--png')} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
             `
         },
         {

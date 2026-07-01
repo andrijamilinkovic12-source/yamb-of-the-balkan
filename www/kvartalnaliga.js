@@ -64,8 +64,21 @@ class KvartalnaLigaManager {
 
     getCurrentQuarterInfo() {
         const now = new Date();
-        const year = now.getFullYear();
-        const month = now.getMonth(); 
+        let year = now.getFullYear();
+        let month = now.getMonth();
+
+        try {
+            const parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Europe/Belgrade',
+                year: 'numeric',
+                month: 'numeric'
+            }).formatToParts(now);
+            year = Number(parts.find(part => part.type === 'year')?.value) || year;
+            month = (Number(parts.find(part => part.type === 'month')?.value) || (month + 1)) - 1;
+        } catch (_err) {
+            // Lokalno vreme ostaje rezervna opcija na starijim WebView verzijama.
+        }
+
         const quarter = Math.floor(month / 3) + 1;
         return { currentYear: year, currentQuarter: quarter };
     }
@@ -81,8 +94,8 @@ class KvartalnaLigaManager {
             ? { ...rawData }
             : { year: currentYear, quarter: currentQuarter, baselineScore: 0, quarterlyScore: 0 };
 
-        data.quarterlyScore = parseInt(data.quarterlyScore, 10) || 0;
-        data.baselineScore = parseInt(data.baselineScore, 10) || 0;
+        data.quarterlyScore = Math.max(0, parseInt(data.quarterlyScore, 10) || 0);
+        data.baselineScore = Math.max(0, parseInt(data.baselineScore, 10) || 0);
         data.year = parseInt(data.year, 10) || 0;
         data.quarter = parseInt(data.quarter, 10) || 0;
 
@@ -134,13 +147,13 @@ class KvartalnaLigaManager {
     }
 
     addPoints(points) {
-        // Uklonili smo proveru points <= 0 kako bismo dozvolili oduzimanje poena
-        if (!points && points !== 0) return; 
+        const safePoints = Number(points);
+        if (!Number.isFinite(safePoints)) return;
         
         this.init(); 
         let data = this.getScores();
         
-        data.quarterlyScore += points;
+        data.quarterlyScore += Math.floor(safePoints);
         
         // Sprečavamo odlazak lige u minus
         if (data.quarterlyScore < 0) {
@@ -635,7 +648,7 @@ class KvartalnaLigaManager {
         const myUid = localStorage.getItem('yamb_uid') || '';
         const isMyScore = (score) => {
             const scoreUid = score && (score.playerId || score._id || '');
-            return (myUid && scoreUid === myUid) || score?.playerName === myName;
+            return myUid ? scoreUid === myUid : score?.playerName === myName;
         };
 
         if (myScore > 0) {
@@ -728,7 +741,7 @@ class KvartalnaLigaManager {
             const myName = localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost");
             const myUid = localStorage.getItem('yamb_uid') || '';
             const scoreUid = s && (s.playerId || s._id || '');
-            let isMe = (myUid && scoreUid === myUid) || pName === myName;
+            let isMe = myUid ? scoreUid === myUid : pName === myName;
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
             let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
             const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;

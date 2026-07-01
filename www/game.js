@@ -1682,7 +1682,7 @@ class YambApp {
                 currentLocalLeague = {
                     ...currentLocalLeague,
                     ...leagueData,
-                    baselineScore: Math.max(Number(currentLocalLeague.baselineScore) || 0, Number(leagueData.baselineScore) || 0),
+                    baselineScore: Math.max(0, Math.floor(Number(leagueData.baselineScore) || 0)),
                     quarterlyScore: incomingScore
                 };
                 leagueUpdated = true;
@@ -1952,7 +1952,7 @@ class YambApp {
         if (data.h2hAuthoritative === true) {
             this.mergeCloudH2HStats(data.h2hStats);
         }
-        this.mergeCloudLeagueData(uid, data.leagueData, { preferIncoming: trustServerTechnicalStats });
+        this.mergeCloudLeagueData(uid, data.leagueData, { preferIncoming: true });
 
         if (typeof updateMainMenuDashboard === 'function') {
             updateMainMenuDashboard();
@@ -2586,9 +2586,12 @@ class YambApp {
                     const pendingMatchSync = await this.syncPendingMatchResults();
                     
                     const now = new Date();
-                    let currentQuarter = Math.floor(now.getMonth() / 3) + 1;
+                    const leaguePeriod = window.kvartalnaLiga && typeof window.kvartalnaLiga.getCurrentQuarterInfo === 'function'
+                        ? window.kvartalnaLiga.getCurrentQuarterInfo()
+                        : { currentYear: now.getFullYear(), currentQuarter: Math.floor(now.getMonth() / 3) + 1 };
+                    let currentQuarter = leaguePeriod.currentQuarter;
                     let prevQuarter = currentQuarter - 1;
-                    let prevYear = now.getFullYear();
+                    let prevYear = leaguePeriod.currentYear;
                     
                     if (prevQuarter === 0) {
                         prevQuarter = 4;
@@ -2596,8 +2599,19 @@ class YambApp {
                     }
 
                     // FIX: Prikazujemo samo u prva 3 dana prvog meseca u kvartalu (Januar, April, Jul, Oktobar)
-                    const isFirstMonthOfQuarter = (now.getMonth() % 3 === 0);
-                    const isWithinFirstThreeDays = (now.getDate() <= 3);
+                    let belgradeMonth = now.getMonth();
+                    let belgradeDay = now.getDate();
+                    try {
+                        const periodParts = new Intl.DateTimeFormat('en-US', {
+                            timeZone: 'Europe/Belgrade',
+                            month: 'numeric',
+                            day: 'numeric'
+                        }).formatToParts(now);
+                        belgradeMonth = (Number(periodParts.find(part => part.type === 'month')?.value) || (belgradeMonth + 1)) - 1;
+                        belgradeDay = Number(periodParts.find(part => part.type === 'day')?.value) || belgradeDay;
+                    } catch (_err) {}
+                    const isFirstMonthOfQuarter = (belgradeMonth % 3 === 0);
+                    const isWithinFirstThreeDays = (belgradeDay <= 3);
 
                     const shownWinnerKey = `yamb_winner_shown_${prevYear}_Q${prevQuarter}`;
                     
@@ -2627,11 +2641,48 @@ class YambApp {
                                     localStorage.removeItem('yamb_pending_quarter_check');
                                 } else {
                                     console.warn("Kvartalna nagrada nije potvrđena, pokušaću ponovo pri sledećoj konekciji:", result.reason || 'unknown');
+                                    if (result.reason === 'quarter_settling' && Number(result.retryAfterMs) > 0) {
+                                        clearTimeout(this.quarterRewardRetryTimer);
+                                        this.quarterRewardRetryTimer = setTimeout(() => {
+                                            if (this.socket && this.socket.connected) {
+                                                this.socket.emit('check_quarter_reward', {
+                                                    year: parsedReward.year,
+                                                    quarter: parsedReward.quarter,
+                                                    playerId: this.playerId
+                                                });
+                                            }
+                                        }, Math.min(Number(result.retryAfterMs) + 1000, 24 * 60 * 60 * 1000));
+                                    }
                                 }
                             });
                         } catch(e) { console.error("Greška pri čitanju pending nagrade:", e); }
                     }
-                    
+
+                    const automaticRewardKey = `yamb_quarter_reward_checked_${this.playerId}_${prevYear}_Q${prevQuarter}`;
+                    if (!localStorage.getItem(automaticRewardKey)) {
+                        const checkPreviousQuarterReward = () => {
+                            if (!this.socket || !this.socket.connected) return;
+                            this.socket.emit('check_quarter_reward', {
+                                year: prevYear,
+                                quarter: prevQuarter,
+                                playerId: this.playerId
+                            }, (result = {}) => {
+                                if (result.ok || result.permanent) {
+                                    localStorage.setItem(automaticRewardKey, 'true');
+                                    return;
+                                }
+                                if (result.reason === 'quarter_settling' && Number(result.retryAfterMs) > 0) {
+                                    clearTimeout(this.automaticQuarterRewardRetryTimer);
+                                    this.automaticQuarterRewardRetryTimer = setTimeout(
+                                        checkPreviousQuarterReward,
+                                        Math.min(Number(result.retryAfterMs) + 1000, 24 * 60 * 60 * 1000)
+                                    );
+                                }
+                            });
+                        };
+                        checkPreviousQuarterReward();
+                    }
+
                     if (this.gameActive && this.onlineMode && !this.isSpectator) {
                         console.log("🔄 Rekonekcija detektovana, tražim stanje table od protivnika...");
                         this.socket.emit('request_state_sync', { roomId: this.roomId });
@@ -4560,10 +4611,23 @@ class YambApp {
 
         this.socket.off('previous_quarter_winner_data');
         this.socket.on('previous_quarter_winner_data', (data) => {
+            if (data?.settling) {
+                clearTimeout(this.quarterWinnerRetryTimer);
+                this.quarterWinnerRetryTimer = setTimeout(() => {
+                    if (this.socket && this.socket.connected) {
+                        this.socket.emit('get_previous_quarter_winner', { year: data.year, quarter: data.quarter });
+                    }
+                }, Math.min(Math.max(1000, Number(data.retryAfterMs) + 1000), 24 * 60 * 60 * 1000));
+                return;
+            }
+
             if (!data) {
                 const now = new Date();
-                let prevQ = Math.floor(now.getMonth() / 3);
-                let prevY = now.getFullYear();
+                const leaguePeriod = window.kvartalnaLiga && typeof window.kvartalnaLiga.getCurrentQuarterInfo === 'function'
+                    ? window.kvartalnaLiga.getCurrentQuarterInfo()
+                    : { currentYear: now.getFullYear(), currentQuarter: Math.floor(now.getMonth() / 3) + 1 };
+                let prevQ = leaguePeriod.currentQuarter - 1;
+                let prevY = leaguePeriod.currentYear;
                 if(prevQ === 0) { prevQ = 4; prevY -= 1; }
                 localStorage.setItem(`yamb_winner_shown_${prevY}_Q${prevQ}`, 'true');
                 return;
