@@ -7693,7 +7693,7 @@ class YambApp {
         const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.playerName)}&background=333&color=FFD700`;
         const photo = data.photoUrl && data.photoUrl.length > 5 ? data.photoUrl : defaultAvatar;
         
-        let title = gt('league_champion_title') || "🏆 ŠAMPION LIGE 🏆";
+        let title = gt('league_champion_title') || "ŠAMPION KVARTALNE LIGE";
         let subText = (gt('league_winner_q') || "Pobednik za Q{0} / {1}.").replace('{0}', data.quarter).replace('{1}', data.year);
         let congratsText = gt('league_congrats') || "Čestitamo na osvajanju Kvartalne lige!<br>Nova sezona je počela, srećno svima!";
         let btnText = gt('btn_continue') || "NASTAVI";
@@ -7704,7 +7704,10 @@ class YambApp {
         let modalHtml = `
         <div id="winner-modal-overlay" class="modal-overlay" style="z-index: 9999999; display: flex;">
             <div class="modal-box" style="text-align: center; padding: 30px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); max-width: 400px; width: 90%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-                <h2 style="color: var(--gold-main); font-size: 1.8rem; margin-top: 0; margin-bottom: 5px; text-transform: uppercase;">${title}</h2>
+                <div style="width: 96px; height: 96px; margin: 0 auto 12px auto; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,214,76,0.18), rgba(0,0,0,0.12) 70%); box-shadow: 0 0 22px rgba(255,214,76,0.24); animation: popIn 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                    <img src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
+                </div>
+                <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
                 
                 <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
