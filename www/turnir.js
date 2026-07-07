@@ -1578,6 +1578,8 @@ class TournamentManager {
                 return this.tr('tourney_technical_timeout', 'istek vremena');
             case 'disconnect_grace_expired':
                 return this.tr('tourney_technical_disconnect', 'prekid veze');
+            case 'opponent_disqualified':
+                return this.tr('tourney_technical_opponent_dq', 'diskvalifikacija protivnika');
             default:
                 return this.tr('tourney_technical_default', 'tehnički');
         }
