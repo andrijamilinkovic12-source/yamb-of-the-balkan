@@ -1371,6 +1371,24 @@ body {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
 }
+
+/* Online opponent state must stay legible over every theme, including light gold. */
+#turn-timer-display.timer-turn--opponent,
+#turn-timer-display.timer-turn--urgent {
+    background: linear-gradient(135deg, rgba(7, 12, 20, 0.96), rgba(16, 24, 38, 0.95)) !important;
+    border-color: rgba(255, 255, 255, 0.68) !important;
+    border-top-color: rgba(255, 255, 255, 0.88) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 5px 14px rgba(0, 0, 0, 0.42) !important;
+}
+
+#turn-timer-display.timer-turn--opponent {
+    border-color: rgba(255, 255, 255, 0.72) !important;
+}
+
+#turn-timer-display.timer-turn--urgent {
+    border-color: rgba(255, 96, 96, 0.92) !important;
+    border-top-color: rgba(255, 158, 158, 0.96) !important;
+}
 .game-content { display: flex; width: 100%; flex: 1; overflow: hidden; position: relative; padding-bottom: 0; }
 .left-panel { flex: 1; display: flex; flex-direction: column; width: 100%; height: 100%; overflow: hidden; }
 .tables-wrapper { flex: 1; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 2px; -webkit-overflow-scrolling: touch; width: 100%; }

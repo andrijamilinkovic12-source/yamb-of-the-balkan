@@ -4105,8 +4105,23 @@ class YambApp {
             this.showMainMenu({ skipBackToMenu: backToMenuSent });
         }
     }
-    
-    async startPrivateHosting() { 
+
+    normalizeWaitingPlayerName(name) {
+        const normalizedName = String(name || '').replace(/\s+/g, ' ').trim();
+        return normalizedName || getFallbackPlayerName();
+    }
+
+    renderWaitingPlayerName(elementId, name) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        const displayName = this.normalizeWaitingPlayerName(name);
+        element.textContent = displayName;
+        element.title = displayName;
+        element.style.removeProperty('font-size');
+    }
+
+    async startPrivateHosting() {
         if (!this.requireLogin()) return; 
         
         const nickname = this.playerName; 
@@ -4132,11 +4147,7 @@ class YambApp {
         if (myImg && authImg && authImg.src && authImg.src.includes('http')) myImg.src = authImg.src;
         else if (myImg) myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         
-        const myNameEl = document.getElementById('waiting-my-name');
-        if (myNameEl) {
-            myNameEl.innerText = nickname;
-            myNameEl.style.fontSize = nickname.length > 14 ? 'clamp(0.65rem, 2.5vw, 0.85rem)' : '';
-        }
+        this.renderWaitingPlayerName('waiting-my-name', nickname);
         
         const myStats = this.getFullLocalStats();
         const myH2HRecord = this.getLocalH2HRecordSummary();
@@ -4247,11 +4258,7 @@ class YambApp {
             myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         }
         
-        const myNameEl = document.getElementById('waiting-my-name');
-        if (myNameEl) {
-            myNameEl.innerText = nickname;
-            myNameEl.style.fontSize = nickname.length > 14 ? 'clamp(0.65rem, 2.5vw, 0.85rem)' : '';
-        }
+        this.renderWaitingPlayerName('waiting-my-name', nickname);
         
         const myStats = this.getFullLocalStats();
         const myH2HRecord = this.getLocalH2HRecordSummary();
@@ -4262,6 +4269,7 @@ class YambApp {
         if (myWlEl) myWlEl.innerText = this.formatH2HRecordLine(myH2HRecord);
 
         const oppBox = document.getElementById('waiting-opp-box');
+        const vsBadge = document.getElementById('waiting-vs-badge');
         if (oppBox) {
             if (isHost) {
                 oppBox.style.display = 'none'; 
@@ -4276,6 +4284,7 @@ class YambApp {
                 oppBox.style.boxShadow = 'var(--glass-shadow)';
             }
         }
+        if (vsBadge) vsBadge.style.display = isHost ? 'none' : 'grid';
 
         const friendsContainer = document.getElementById('friends-list-container');
         if (friendsContainer && !isHost) friendsContainer.classList.add('hidden');
@@ -4317,11 +4326,7 @@ class YambApp {
         if (myImg && authImg && authImg.src && authImg.src.includes('http')) myImg.src = authImg.src;
         else if (myImg) myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
         
-        const myNameEl = document.getElementById('waiting-my-name');
-        if (myNameEl) {
-            myNameEl.innerText = nickname;
-            myNameEl.style.fontSize = nickname.length > 14 ? 'clamp(0.65rem, 2.5vw, 0.85rem)' : '';
-        }
+        this.renderWaitingPlayerName('waiting-my-name', nickname);
         
         const myStats = this.getFullLocalStats();
         const myH2HRecord = this.getLocalH2HRecordSummary();
@@ -4343,7 +4348,7 @@ class YambApp {
             oppBox.classList.add('is-searching');
             this.refreshWaitingOpponentSearchText();
         }
-        if (vsBadge) vsBadge.style.display = 'block';
+        if (vsBadge) vsBadge.style.display = 'grid';
 
         const friendsContainer = document.getElementById('friends-list-container');
         if (friendsContainer) friendsContainer.classList.add('hidden');
@@ -4500,14 +4505,20 @@ class YambApp {
         const timerDisplay = document.getElementById('turn-timer-display');
         if (timerDisplay) {
             if (this.isSpectator) {
+                timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
                 timerDisplay.style.display = 'flex';
                 timerDisplay.innerHTML = `<span style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);">👁️ ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
             } else if (this.onlineMode && this.gameActive) {
                 timerDisplay.style.display = 'flex';
                 const isMyTurn = (this.currentPlayerIdx === this.myOnlineIndex) && !this.isSpectator;
-                
-                const color = this.timeLeft <= 10 ? '#ff4c4c' : (isMyTurn ? 'var(--gold-main)' : '#aaaaaa');
+
+                const isUrgent = this.timeLeft <= 10;
+                timerDisplay.classList.toggle('timer-turn--opponent', !isMyTurn && !isUrgent);
+                timerDisplay.classList.toggle('timer-turn--urgent', isUrgent);
+
+                // Opponent's timer needs a universal high-contrast color: some themes use a light background.
+                const color = isUrgent ? '#ff4c4c' : (isMyTurn ? 'var(--gold-main)' : '#ffffff');
                 
                 if (this.timeLeft <= 0) {
                     timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">⏳ ${gt('timeout_grace') || 'Ističe...'}</span>`;
@@ -4522,6 +4533,7 @@ class YambApp {
                 }
                 
             } else {
+                timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
                 timerDisplay.style.display = 'none';
                 timerDisplay.style.animation = 'none';
             }
@@ -4943,7 +4955,8 @@ class YambApp {
             this.roomId = data.roomId;
             this.onlineDuelType = this.inferOnlineDuelType(data.roomId, data);
             this.lastOnlineGameResult = null;
-            this.players = this.myOnlineIndex === 0 ? [nickname, data.opponent] : [data.opponent, nickname];
+            const opponentName = this.normalizeWaitingPlayerName(data.opponent);
+            this.players = this.myOnlineIndex === 0 ? [nickname, opponentName] : [opponentName, nickname];
             this.initScores();
             this.currentPlayerIdx = 0;
             const btnBacajActive = document.getElementById('btn-bacaj');
@@ -4976,10 +4989,7 @@ class YambApp {
                 }
                 
                 const oppNameEl = document.getElementById('waiting-opp-name');
-                if (oppNameEl) {
-                    oppNameEl.innerText = data.opponent;
-                    oppNameEl.style.fontSize = data.opponent.length > 14 ? 'clamp(0.65rem, 2.5vw, 0.85rem)' : '';
-                }
+                if (oppNameEl) this.renderWaitingPlayerName('waiting-opp-name', opponentName);
                 
                 let oppPI = 0;
                 let oppH2HLine = this.formatH2HRecordLine();
