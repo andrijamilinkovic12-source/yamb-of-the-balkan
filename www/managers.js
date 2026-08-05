@@ -2513,7 +2513,119 @@ class SoundManager {
         }
     }
 
+    isEasterThemeActive() {
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        return activeTheme === 'easter' || !!document.body?.classList.contains('easter-theme');
+    }
+
+    scheduleEasterTone(freq, start, duration, options = {}) {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+        const attack = options.attack ?? 0.018;
+        const level = options.gain ?? 0.055;
+        const safeDuration = Math.max(duration, attack + 0.025);
+
+        osc.type = options.type || 'sine';
+        osc.frequency.setValueAtTime(freq, start);
+        if (options.to) {
+            osc.frequency.exponentialRampToValueAtTime(Math.max(1, options.to), start + safeDuration * 0.92);
+        }
+
+        filter.type = options.filterType || 'lowpass';
+        filter.frequency.setValueAtTime(options.filter ?? 4200, start);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.linearRampToValueAtTime(level, start + attack);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + safeDuration);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(start);
+        osc.stop(start + safeDuration + 0.03);
+    }
+
+    easterClick() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            this.scheduleEasterTone(659.25, t, 0.11, { type: 'triangle', gain: 0.045, filter: 3600 });
+            this.scheduleEasterTone(987.77, t + 0.035, 0.14, { type: 'sine', gain: 0.030, filter: 5200 });
+        });
+    }
+
+    easterAnnounce() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            [587.33, 739.99, 987.77, 1174.66].forEach((freq, i) => {
+                this.scheduleEasterTone(freq, t + i * 0.055, 0.42, { type: 'sine', gain: 0.045, filter: 5200 });
+            });
+        });
+    }
+
+    easterRoll() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+            const notes = [261.63, 329.63, 392.00, 493.88, 587.33, 659.25];
+            notes.forEach((base, i) => {
+                const offset = i * 0.052 + Math.random() * 0.018;
+                const freq = base + Math.random() * 38;
+                this.scheduleEasterTone(freq, now + offset, 0.13, {
+                    type: i % 2 ? 'triangle' : 'sine',
+                    gain: 0.040,
+                    filter: 2800,
+                    to: Math.max(80, freq * 0.62)
+                });
+            });
+        });
+    }
+
+    easterScore() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            [523.25, 659.25, 783.99].forEach((freq, i) => {
+                this.scheduleEasterTone(freq, t + i * 0.06, 0.28, { type: 'triangle', gain: 0.045, filter: 4600 });
+            });
+        });
+    }
+
+    easterWin() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            [523.25, 659.25, 783.99, 1046.50, 1174.66, 1318.51].forEach((freq, i) => {
+                this.scheduleEasterTone(freq, t + i * 0.11, i > 3 ? 0.74 : 0.28, {
+                    type: i % 2 ? 'sine' : 'triangle',
+                    gain: i > 3 ? 0.060 : 0.050,
+                    filter: 5600
+                });
+            });
+        });
+    }
+
+    easterError() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            this.scheduleEasterTone(392.00, t, 0.18, { type: 'triangle', gain: 0.040, filter: 2200, to: 329.63 });
+            this.scheduleEasterTone(293.66, t + 0.075, 0.22, { type: 'sine', gain: 0.032, filter: 1800, to: 246.94 });
+        });
+    }
+
+    easterTrophy() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            [523.25, 659.25, 783.99].forEach((freq) => {
+                this.scheduleEasterTone(freq, t, 1.15, { type: 'sine', gain: 0.060, filter: 5400 });
+            });
+            [1046.50, 1318.51, 1567.98].forEach((freq, i) => {
+                this.scheduleEasterTone(freq, t + 0.18 + i * 0.085, 0.50, { type: 'triangle', gain: 0.040, filter: 6200 });
+            });
+        });
+    }
+
     click() { 
+        if (this.isEasterThemeActive()) {
+            this.easterClick();
+            return;
+        }
         this.playSound(() => {
             const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
             osc.type = 'sine'; osc.frequency.setValueAtTime(800, t); osc.frequency.exponentialRampToValueAtTime(300, t + 0.1);
@@ -2523,6 +2635,10 @@ class SoundManager {
     }
 
     announce() {
+        if (this.isEasterThemeActive()) {
+            this.easterAnnounce();
+            return;
+        }
         this.playSound(() => {
             const t = this.ctx.currentTime; const freqs = [523.25, 659.25, 783.99, 1046.50]; 
             freqs.forEach((f, i) => {
@@ -2536,6 +2652,10 @@ class SoundManager {
     }
 
     roll() {
+        if (this.isEasterThemeActive()) {
+            this.easterRoll();
+            return;
+        }
         this.playSound(() => {
             const count = 6; const now = this.ctx.currentTime;
             for (let i = 0; i < count; i++) {
@@ -2551,6 +2671,10 @@ class SoundManager {
     }
 
     score() { 
+        if (this.isEasterThemeActive()) {
+            this.easterScore();
+            return;
+        }
         this.playSound(() => {
             const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
             osc.type = 'triangle'; osc.frequency.setValueAtTime(440, t); osc.frequency.linearRampToValueAtTime(880, t + 0.1); 
@@ -2560,6 +2684,10 @@ class SoundManager {
     }
 
     win() {
+        if (this.isEasterThemeActive()) {
+            this.easterWin();
+            return;
+        }
         this.playSound(() => {
             const t = this.ctx.currentTime; const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
             notes.forEach((freq, i) => {
@@ -2573,6 +2701,10 @@ class SoundManager {
     }
 
     error() { 
+        if (this.isEasterThemeActive()) {
+            this.easterError();
+            return;
+        }
         this.playSound(() => {
             const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
             osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, t); osc.frequency.linearRampToValueAtTime(100, t + 0.15);
@@ -2582,6 +2714,10 @@ class SoundManager {
     }
 
     trophy() {
+        if (this.isEasterThemeActive()) {
+            this.easterTrophy();
+            return;
+        }
         this.playSound(() => {
             const t = this.ctx.currentTime;
             [440, 554.37].forEach(f => {

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="sr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Vaskr Theme QA Preview</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #f4eadb;
+        }
+
+        #qa-frame {
+            width: 100vw;
+            height: 100dvh;
+            border: 0;
+            display: block;
+            background: #f4eadb;
+        }
+    </style>
+</head>
+<body>
+    <iframe id="qa-frame" title="Vaskr Theme QA Preview"></iframe>
+
+    <script>
+        const frame = document.getElementById('qa-frame');
+        const themeClasses = ['light-theme', 'medium-theme', 'winter-theme', 'neon-theme', 'amethyst-theme', 'easter-theme', 'desert-theme', 'moon-theme', 'severna-theme'];
+        const qaSeed = Date.now();
+
+        function getState() {
+            return (location.hash || '#splash').replace('#', '').trim() || 'splash';
+        }
+
+        function safeDoc() {
+            try {
+                return frame.contentDocument;
+            } catch (err) {
+                return null;
+            }
+        }
+
+        function showOnly(doc, screenId) {
+            doc.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.toggle('active', screen.id === screenId);
+            });
+        }
+
+        function applyTheme(doc) {
+            doc.body.classList.remove(...themeClasses);
+            doc.body.classList.add('easter-theme');
+        }
+
+        function fillBoard(doc) {
+            const app = frame.contentWindow && frame.contentWindow.app;
+            if (app && typeof app.initScores === 'function' && typeof app.startGame === 'function' && !doc.body.dataset.qaBoardReady) {
+                app.playerName = 'Vaskr Igrač';
+                app.players = ['Vaskr Igrač'];
+                app.modeTag = 'Solo';
+                app.onlineMode = false;
+                app.isSpectator = false;
+                app.currentPlayerIdx = 0;
+                app.initScores();
+                app.startGame({ skipQuote: true });
+
+                const samples = [
+                    ['Nadole', '1', 5],
+                    ['Nadole', '2', 10],
+                    ['Nadole', '3', 12],
+                    ['Slobodna', '4', 16],
+                    ['Slobodna', '5', 20],
+                    ['Slobodna', '6', 24],
+                    ['Sredina', 'Max', 30],
+                    ['Sredina', 'Min', 8],
+                    ['Nagore', 'Triling', 28],
+                    ['Ručno', 'Kenta', 46],
+                    ['Ručno', 'Ful', 35],
+                    ['Najava', 'Poker', 44],
+                    ['Najava', 'Yamb', 60]
+                ];
+
+                samples.forEach(([col, row, value]) => {
+                    if (app.allScores && app.allScores[0] && app.allScores[0][col]) {
+                        app.allScores[0][col][row] = value;
+                    }
+                });
+
+                app.brojBacanja = 2;
+                app.kockiceVals = [1, 2, 3, 4, 5, 6];
+                app.zadrzane = [false, false, true, false, true, false];
+                if (typeof app.updateTableVisuals === 'function') app.updateTableVisuals();
+                if (typeof app.updateDiceVisuals === 'function') app.updateDiceVisuals();
+                if (typeof app.updateStatusLabel === 'function') app.updateStatusLabel();
+                if (typeof app.highlightCurrentPlayer === 'function') app.highlightCurrentPlayer();
+                doc.body.dataset.qaBoardReady = 'true';
+                applyTheme(doc);
+                showOnly(doc, 'game-scene');
+                return;
+            }
+
+            const tablesContainer = doc.getElementById('tables-container');
+            if (tablesContainer && !tablesContainer.querySelector('.player-table')) {
+                const cols = ['Nadole', 'Slobodna', 'Sredina', 'Nagore', 'Ručno', 'Najava'];
+                const rows = ['1', '2', '3', '4', '5', '6', 'ZBIR 1', 'Max', 'Min', 'ZBIR 2', 'Triling', 'Kenta', 'Ful', 'Poker', 'Yamb', 'ZBIR 3'];
+                const values = [5, 10, 12, 16, 20, 24, 87, 30, 8, 66, 28, 46, 35, 44, 60, 366];
+                tablesContainer.innerHTML = `
+                    <table class="player-table" style="opacity:1;">
+                        <thead>
+                            <tr>
+                                <th>🎲</th>
+                                ${cols.map(col => `<th>${col}</th>`).join('')}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rows.map((row, rowIndex) => `
+                                <tr>
+                                    <td class="row-header">${row}</td>
+                                    ${cols.map((col, colIndex) => {
+                                        const filled = rowIndex < 9 || colIndex < 2;
+                                        const value = filled ? values[(rowIndex + colIndex) % values.length] : '';
+                                        const sumClass = row.includes('ZBIR') ? ' sum-cell' : '';
+                                        return `<td class="${sumClass}"><button class="score-btn${filled ? ' filled' : ''}">${value}</button></td>`;
+                                    }).join('')}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            const dice = doc.getElementById('dice-container');
+            if (dice) {
+                dice.innerHTML = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'].map((die, index) => `<div class="dice${index === 2 || index === 4 ? ' held' : ''}">${die}</div>`).join('');
+            }
+
+            const turn = doc.getElementById('lbl-turn');
+            if (turn) turn.textContent = 'Tvoj potez';
+
+            const status = doc.getElementById('lbl-status');
+            if (status) status.textContent = 'Bacanje 2 / 3';
+        }
+
+        function fillHighscores(doc) {
+            const list = doc.getElementById('global-hs-list');
+            if (!list) return;
+            const rows = [
+                ['Ana', 1864, 'Danas'],
+                ['Miloš', 1740, 'Juče'],
+                ['Vuk', 1698, 'Nedelja'],
+                ['Lena', 1588, 'Mesec']
+            ];
+            list.innerHTML = rows.map((row, index) => `
+                <li class="highscore-item">
+                    <div class="rank-circle rank-${index + 1}"><span style="position: relative; z-index: 2;">${index === 0 ? '' : index + 1}</span></div>
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(row[0])}&background=f6b7ca&color=4a3158" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(139,69,190,0.26); box-shadow: 0 2px 5px rgba(0,0,0,0.16);">
+                    <div class="hs-info">
+                        <div class="hs-name" style="font-size: 0.85rem; line-height: 1.2; font-weight: 800; color: var(--text-main); white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; padding-bottom: 2px; margin-bottom: 2px;">${row[0]}</div>
+                        <div class="hs-meta" style="font-size: 0.65rem; color: var(--text-muted); display: flex; gap: 5px;"><span>Solo</span><span>• ${row[2]}</span></div>
+                    </div>
+                    <div class="hs-score-pill" style="justify-self: center;">${row[1].toLocaleString('sr-RS')}</div>
+                </li>
+            `).join('');
+        }
+
+        function fillChat(doc) {
+            const overlay = doc.getElementById('global-chat-overlay');
+            if (!overlay) return;
+            overlay.style.display = 'flex';
+            overlay.classList.add('active');
+
+            const body = doc.getElementById('global-chat-body');
+            if (body) {
+                body.innerHTML = `
+                    <div class="global-chat-welcome">🐇 Vaskr tema aktivna — poruke ostaju čitljive.</div>
+                    <div class="chat-msg msg-incoming"><strong>Ana:</strong> Srećno bacanje!</div>
+                    <div class="chat-msg msg-outgoing"><strong>Ti:</strong> Idemo na Yamb.</div>
+                `;
+            }
+        }
+
+        function fillOnlinePlayers(doc) {
+            const overlay = doc.getElementById('online-players-overlay');
+            if (!overlay) return;
+            overlay.style.display = 'flex';
+            overlay.classList.add('active');
+
+            const body = doc.getElementById('online-players-body');
+            if (body) {
+                body.innerHTML = `
+                    <div>
+                        <img src="https://ui-avatars.com/api/?name=Ana&background=f6b7ca&color=4a3158" alt="">
+                        <span class="ws-name">Ana</span>
+                        <button class="btn-menu btn-secondary">Pozovi</button>
+                    </div>
+                    <div>
+                        <img src="https://ui-avatars.com/api/?name=Vuk&background=d9b8ff&color=4a3158" alt="">
+                        <span class="ws-name">Vuk</span>
+                        <button class="btn-menu btn-secondary">Pozovi</button>
+                    </div>
+                `;
+            }
+        }
+
+        function fillWaiting(doc) {
+            const title = doc.getElementById('waiting-title');
+            if (title) title.textContent = 'TRAŽENJE PROTIVNIKA...';
+
+            const count = doc.getElementById('waiting-online-count');
+            if (count) count.textContent = '27';
+
+            const myName = doc.getElementById('waiting-my-name');
+            if (myName) myName.textContent = 'Vaskr Igrač';
+
+            const power = doc.getElementById('waiting-my-power');
+            if (power) power.textContent = '1280';
+        }
+
+        function fillGameOver(doc) {
+            const title = doc.getElementById('go-title');
+            if (title) title.textContent = 'POBEDA!';
+
+            const msg = doc.getElementById('go-msg');
+            if (msg) msg.textContent = 'Vaskr neumorphic paket čuva kontrast i čitljivost završnog ekrana.';
+
+            const score = doc.getElementById('go-score');
+            if (score) score.textContent = '1864';
+        }
+
+        function fillQuote(doc) {
+            const container = doc.getElementById('quote-anim-container');
+            if (container) container.style.opacity = '1';
+
+            const text = doc.getElementById('quote-text');
+            if (text) text.textContent = 'Sreća voli mirnu ruku i hrabro bacanje.';
+
+            const author = doc.getElementById('quote-author');
+            if (author) author.textContent = 'YAMB OF THE BALKAN';
+        }
+
+        function fillSplash(doc) {
+            const login = doc.getElementById('splash-login-container');
+            if (login) login.style.display = 'flex';
+        }
+
+        function fillStats(doc) {
+            const empty = doc.querySelector('.h2h-empty-state');
+            if (empty) empty.textContent = 'Nema odigranih duela — prazno stanje u Vaskr stilu.';
+        }
+
+        function fillTournament(doc) {
+            const content = doc.getElementById('tourney-content');
+            if (!content) return;
+            content.innerHTML = `
+                <div class="tourney-stats-box">
+                    <div class="tourney-stats-label">Status turnira</div>
+                    <div class="tourney-stats-value">Vaskr Preview</div>
+                </div>
+                <div class="tourney-match tourney-match--empty" style="--match-min-height: 62px;">Čeka se prvi par...</div>
+            `;
+        }
+
+        function prepareState(state) {
+            const doc = safeDoc();
+            if (!doc || !doc.body) return;
+
+            applyTheme(doc);
+            doc.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.classList.remove('active');
+                overlay.style.display = 'none';
+            });
+
+            switch (state) {
+                case 'quote':
+                    showOnly(doc, 'quote-screen');
+                    fillQuote(doc);
+                    break;
+                case 'main':
+                    showOnly(doc, 'main-menu');
+                    break;
+                case 'board':
+                    showOnly(doc, 'game-scene');
+                    fillBoard(doc);
+                    break;
+                case 'highscores':
+                    showOnly(doc, 'highscores-screen');
+                    fillHighscores(doc);
+                    break;
+                case 'settings':
+                    showOnly(doc, 'settings-screen');
+                    const themeSelect = doc.getElementById('setting-theme');
+                    if (themeSelect) themeSelect.value = 'easter';
+                    break;
+                case 'stats':
+                    showOnly(doc, 'stats-screen');
+                    fillStats(doc);
+                    break;
+                case 'treasury':
+                    showOnly(doc, 'riznica-screen');
+                    break;
+                case 'chat':
+                    showOnly(doc, 'main-menu');
+                    fillChat(doc);
+                    break;
+                case 'online':
+                    showOnly(doc, 'main-menu');
+                    fillOnlinePlayers(doc);
+                    break;
+                case 'waiting':
+                    showOnly(doc, 'waiting-screen');
+                    fillWaiting(doc);
+                    break;
+                case 'gameover':
+                    showOnly(doc, 'game-over-screen');
+                    fillGameOver(doc);
+                    break;
+                case 'tournament':
+                    showOnly(doc, 'tournament-screen');
+                    fillTournament(doc);
+                    break;
+                case 'splash':
+                default:
+                    showOnly(doc, 'splash-screen');
+                    fillSplash(doc);
+                    break;
+            }
+        }
+
+        function schedulePrepare() {
+            setTimeout(() => prepareState(getState()), 750);
+            setTimeout(() => prepareState(getState()), 1400);
+        }
+
+        frame.addEventListener('load', schedulePrepare);
+        window.addEventListener('hashchange', () => prepareState(getState()));
+        frame.src = '/index.html?easter-qa-preview=' + qaSeed;
+    </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+{
+  "id": "easter",
+  "name": {
+    "sr": "Vaskr Neumorphic UI Theme Pack",
+    "en": "Joyful Easter Neumorphic UI Theme Pack"
+  },
+  "version": "1.0.0",
+  "updated": "2026-08-04",
+  "bodyClass": "easter-theme",
+  "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
+  "entrypoints": {
+    "css": "www/teme.css",
+    "audio": "www/managers.js",
+    "shopConfig": "www/config.js",
+    "backgroundAsset": "www/assets/easter-neumorphic-bg-v1.png",
+    "qaPreview": "www/themes/easter/qa-preview.html",
+    "qaSplashPreview": "www/themes/easter/qa-splash.html"
+  },
+  "packs": [
+    {
+      "id": "background",
+      "status": "complete",
+      "description": "Pastel spring illustrated background with soft neumorphic overlays."
+    },
+    {
+      "id": "main-menu-icons",
+      "status": "complete",
+      "description": "Theme-only neumorphic badges and pills icon pack for rooms, special actions and bottom menu buttons."
+    },
+    {
+      "id": "game-board",
+      "status": "complete",
+      "description": "Neumorphic board, dice, score cells and game HUD without changing board dimensions."
+    },
+    {
+      "id": "ui-components",
+      "status": "complete",
+      "description": "Cards, typography, inputs, modals, notifications, chat, treasury, stats, rules and leaderboard contrast."
+    },
+    {
+      "id": "cinematic-screens",
+      "status": "complete",
+      "description": "Splash, quote, waiting and game-over screens with Easter neumorphic visual treatment."
+    },
+    {
+      "id": "motion",
+      "status": "complete",
+      "description": "Soft Easter-specific motion for panel entrance, shimmer, hover and waiting pulse, with reduced-motion fallback."
+    },
+    {
+      "id": "empty-loading-error",
+      "status": "complete",
+      "description": "Easter-styled loading, empty and fallback states using soft pills and symbolic icons."
+    },
+    {
+      "id": "audio",
+      "status": "complete",
+      "description": "Procedural Web Audio cues for Easter theme only: click, roll, score, announce, win, error and trophy."
+    },
+    {
+      "id": "qa-screenshots",
+      "status": "ready-to-generate",
+      "description": "Final screenshot set should cover splash, quote, main menu, board, leaderboard, settings, stats, treasury, chat, waiting and game-over."
+    }
+  ],
+  "designTokens": {
+    "surface": "warm porcelain / soft paper",
+    "ink": "deep plum",
+    "mutedText": "soft garden green",
+    "accent": "lilac, blush, mint, gold",
+    "shapeLanguage": "rounded badges, pills, inset surfaces",
+    "shadowLanguage": "soft raised and inset neumorphism"
+  },
+  "rules": [
+    "Do not change global theme icons as the base game style.",
+    "Keep Easter-specific styling isolated under body.easter-theme.",
+    "Do not change game board/card dimensions unless explicitly requested.",
+    "For future themes, create equivalent isolated packs instead of reusing Easter selectors globally."
+  ]
+}
