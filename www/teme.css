@@ -2729,6 +2729,7 @@ body.easter-theme #game-over-screen::after {
 
 body.easter-theme #splash-login-container {
     /* Zadržava se originalni splash tok; Vaskr menja samo boje i pozadinu. */
+    position: static !important;
     background: transparent !important;
     border: 0 !important;
     border-radius: 0 !important;
@@ -2764,6 +2765,16 @@ body.easter-theme #splash-screen #splash-login-container {
     width: auto !important;
     max-height: none !important;
     gap: 15px !important;
+    transform: none !important;
+}
+
+/* Zastavice ostaju na originalnoj splash poziciji, kao i u drugim temama. */
+body.easter-theme .splash-language-switcher {
+    position: absolute !important;
+    top: max(30px, env(safe-area-inset-top)) !important;
+    right: 20px !important;
+    left: auto !important;
+    z-index: 100 !important;
     transform: none !important;
 }
 
@@ -3129,6 +3140,71 @@ body.easter-theme #game-over-screen.screen.active > .modal-box {
     overflow-y: auto !important;
     transform: translateX(-50%) !important;
     animation: none !important;
+}
+
+/* Vaskr: bez sivih/tamnih dinamičkih kartica u Kvartalnoj ligi i Turniru. */
+body.easter-theme #league-modal-overlay .modal-box,
+body.easter-theme #tournament-screen .tourney-card,
+body.easter-theme #tournament-screen .tourney-match,
+body.easter-theme #tournament-screen .tourney-match--empty {
+    background:
+        radial-gradient(circle at 24% 16%, rgba(255,255,255,0.84), transparent 40%),
+        linear-gradient(145deg, rgba(255, 248, 239, 0.97), rgba(245, 232, 246, 0.92)) !important;
+    border-color: rgba(139, 69, 190, 0.22) !important;
+    box-shadow:
+        7px 7px 16px rgba(184,148,111,0.18),
+        -7px -7px 16px rgba(255,255,255,0.72),
+        inset 1px 1px 2px rgba(255,255,255,0.82) !important;
+    color: var(--easter-ui-ink, #4a3158) !important;
+}
+
+body.easter-theme #league-modal-overlay .modal-box > div:first-child,
+body.easter-theme #league-modal-overlay .league-slide > div[style*="overflow-y"],
+body.easter-theme #league-modal-overlay #hof-main-content > div:last-child,
+body.easter-theme #league-modal-overlay #league-main-content > div > div,
+body.easter-theme #league-modal-overlay [style*="background: rgba(0,0,0"],
+body.easter-theme #tournament-screen [style*="background: rgba(0,0,0"] {
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,0.78), transparent 40%),
+        linear-gradient(145deg, rgba(255, 250, 244, 0.94), rgba(235, 243, 224, 0.84)) !important;
+    border-color: rgba(95, 189, 115, 0.24) !important;
+}
+
+body.easter-theme #league-modal-overlay [id^="league-list-"] > li,
+body.easter-theme #league-modal-overlay #hof-list > li {
+    background:
+        radial-gradient(circle at 22% 18%, rgba(255,255,255,0.82), transparent 42%),
+        linear-gradient(145deg, rgba(255, 246, 238, 0.94), rgba(244, 232, 250, 0.88)) !important;
+    border-color: rgba(139, 69, 190, 0.20) !important;
+    box-shadow:
+        3px 3px 8px rgba(184,148,111,0.14),
+        -3px -3px 8px rgba(255,255,255,0.62) !important;
+    color: var(--easter-ui-ink, #4a3158) !important;
+}
+
+body.easter-theme #league-modal-overlay h2,
+body.easter-theme #league-modal-overlay h3,
+body.easter-theme #tournament-screen .tourney-round-title,
+body.easter-theme #tournament-screen .bracket-header {
+    color: var(--easter-ui-title, #6b2c8f) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.88) !important;
+}
+
+body.easter-theme #league-modal-overlay [style*="color: #fff"],
+body.easter-theme #tournament-screen [style*="color: #fff"] {
+    color: var(--easter-ui-ink-strong, #36213f) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.82) !important;
+}
+
+body.easter-theme #league-modal-overlay [style*="color: #aaa"],
+body.easter-theme #league-modal-overlay [style*="color: #C0C0C0"],
+body.easter-theme #tournament-screen [style*="color: rgba(255,255,255,0.3)"] {
+    color: var(--easter-ui-muted, #587d4f) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.76) !important;
+}
+
+body.easter-theme #league-modal-overlay [style*="border: 2px solid #666"] {
+    border-color: rgba(139, 69, 190, 0.42) !important;
 }
 
 @keyframes easterPanelLift {
