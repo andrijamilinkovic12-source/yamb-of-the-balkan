@@ -2728,38 +2728,14 @@ body.easter-theme #game-over-screen::after {
 }
 
 body.easter-theme #splash-login-container {
-    border-radius: 34px !important;
-    padding: 20px 18px !important;
-    background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,0.92), transparent 38%),
-        linear-gradient(145deg, rgba(255, 248, 239, 0.92), rgba(235, 222, 205, 0.84)) !important;
-    border: 1px solid rgba(255,255,255,0.68) !important;
-    box-shadow: var(--easter-cinematic-glow) !important;
-    backdrop-filter: blur(18px) saturate(128%) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(128%) !important;
-}
-
-body.easter-theme #splash-login-container > img {
-    border-radius: 28px !important;
-    padding: 10px;
-    background:
-        radial-gradient(circle at 26% 18%, rgba(255,255,255,0.84), transparent 44%),
-        linear-gradient(145deg, rgba(255, 250, 244, 0.94), rgba(239, 226, 210, 0.86));
-    border: 1px solid rgba(255,255,255,0.74);
-    box-shadow:
-        7px 7px 15px rgba(184,148,111,0.20),
-        -7px -7px 15px rgba(255,255,255,0.68),
-        inset 1px 1px 2px rgba(255,255,255,0.92);
-}
-
-body.easter-theme .splash-copy-panel {
-    border-radius: 24px !important;
-    background: var(--easter-ui-surface-soft, rgba(255,248,239,0.88)) !important;
-    border: 1px solid rgba(255,255,255,0.68) !important;
-    box-shadow:
-        inset 3px 3px 8px rgba(184,148,111,0.12),
-        inset -3px -3px 8px rgba(255,255,255,0.70),
-        0 0 0 1px rgba(255,255,255,0.28) !important;
+    /* Zadržava se originalni splash tok; Vaskr menja samo boje i pozadinu. */
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 body.easter-theme .splash-quote-text {
@@ -2785,85 +2761,33 @@ body.easter-theme #dugmeGooglePrijava {
 }
 
 body.easter-theme #splash-screen #splash-login-container {
-    width: min(348px, calc(100vw - 38px)) !important;
+    width: auto !important;
     max-height: none !important;
-    gap: 10px !important;
-    box-sizing: border-box;
-    overflow: visible !important;
-    transform: translateY(-6px) scale(0.94);
-    transform-origin: center center;
-}
-
-body.easter-theme #splash-screen {
-    justify-content: center !important;
-    padding-top: max(12px, env(safe-area-inset-top)) !important;
-    padding-bottom: max(12px, env(safe-area-inset-bottom)) !important;
+    gap: 15px !important;
+    transform: none !important;
 }
 
 body.easter-theme #splash-screen > .logo-anim {
-    display: none !important;
+    display: block !important;
 }
 
 body.easter-theme #splash-screen #splash-login-container > img {
-    width: 124px !important;
-    margin-bottom: 6px !important;
-}
-
-body.easter-theme #splash-screen .splash-copy-panel {
-    padding: 12px 14px !important;
-    margin-bottom: 0 !important;
-}
-
-body.easter-theme #splash-screen .splash-quote-text {
-    font-size: 1.02rem !important;
-    line-height: 1.35 !important;
-    margin-bottom: 8px !important;
-}
-
-body.easter-theme #splash-screen .splash-quote-author {
-    font-size: 0.78rem !important;
-    letter-spacing: 1.8px !important;
-}
-
-body.easter-theme #splash-screen #splash-login-container > p[style*="letter-spacing"] {
-    font-size: 0.78rem !important;
-    letter-spacing: 1.7px !important;
-    line-height: 1.28 !important;
-    margin: 0 !important;
+    width: 180px !important;
+    margin-bottom: 20px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 body.easter-theme #splash-screen #dugmeGooglePrijava {
-    padding: 12px 24px !important;
-    font-size: 0.92rem !important;
-    margin-top: 0 !important;
+    padding: 15px 30px !important;
+    font-size: 1rem !important;
+    margin-top: 5px !important;
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
-}
-
-body.easter-theme #splash-screen .splash-legal-copy {
-    font-size: 0.66rem !important;
-    line-height: 1.25 !important;
-    padding: 9px 14px !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-}
-
-@media (max-height: 760px) {
-    body.easter-theme #splash-screen #splash-login-container {
-        gap: 8px !important;
-        padding: 10px 12px !important;
-    }
-
-    body.easter-theme #splash-screen #splash-login-container > img {
-        width: 116px !important;
-        padding: 7px;
-    }
-
-    body.easter-theme #splash-screen .splash-copy-panel {
-        padding: 10px 12px !important;
-    }
 }
 
 body.easter-theme #quote-anim-container {
