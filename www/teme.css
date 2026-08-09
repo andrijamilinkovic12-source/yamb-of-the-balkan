@@ -807,10 +807,11 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > div [style*="fon
 }
 
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] img[src*="quarterly-league-icon"] {
-    width: 60px !important;
-    height: 60px !important;
-    opacity: 0.08 !important;
-    filter: drop-shadow(0 8px 16px rgba(107,44,143,0.12)) saturate(0.92) !important;
+    /* Jedini znak lige u kartici: veći i vidljiviji watermark, bez dodatnog bedža. */
+    width: 126px !important;
+    height: 126px !important;
+    opacity: 0.22 !important;
+    filter: drop-shadow(0 10px 18px rgba(107,44,143,0.16)) saturate(1.04) !important;
 }
 
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] span[style*="font-size: 1.3rem"] {
@@ -1245,7 +1246,6 @@ body.easter-theme #main-menu {
     --easter-icon-rose: linear-gradient(145deg, #e86fa5 0%, #a43d78 100%);
     --easter-mask-chat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M14 14h36a8 8 0 0 1 8 8v19a8 8 0 0 1-8 8H30L18 58v-9h-4a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Zm7 14h22v6H21v-6Zm0 10h14v6H21v-6Z'/%3E%3C/svg%3E");
     --easter-mask-online: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='19' cy='43' r='8' fill='black'/%3E%3Cpath d='M32 31c8 8 8 18 0 26M43 20c14 14 14 31 0 44' fill='none' stroke='black' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E");
-    --easter-mask-league: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M16 22l13 13 11-21 11 21 13-13-5 35H21L16 22Zm10 42h28v8H26v-8Z'/%3E%3C/svg%3E");
     --easter-mask-coin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='black' stroke-width='7'/%3E%3Cpath fill='black' d='m32 19 4 8 9 1-6.5 6 1.8 9L32 38.8 23.7 43l1.8-9-6.5-6 9-1 4-8Z'/%3E%3C/svg%3E");
     --easter-mask-undo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M23 20 12 31l11 11M14 31h24a14 14 0 1 1-10 24' fill='none' stroke='black' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     --easter-mask-diamond: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M22 12h36l16 19-34 39L6 31 22 12Zm7 8-7 11h14l-7-11Zm11 0-7 11h14l-7-11Zm11 0-7 11h14l-7-11ZM20 38l14 17-6-17h-8Zm20 21 8-21H32l8 21Zm20-21h-8l-6 17 14-17Z'/%3E%3C/svg%3E");
@@ -1284,37 +1284,6 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] span[style*="font-
     background: var(--easter-icon-blue);
     -webkit-mask: var(--easter-mask-online) center / contain no-repeat;
     mask: var(--easter-mask-online) center / contain no-repeat;
-}
-
-body.easter-theme #main-menu > div[style*="margin-top: 50px"] > div:nth-child(2)::after {
-    content: "";
-    position: absolute;
-    top: 7px;
-    right: 8px;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background:
-        radial-gradient(circle at 30% 24%, #ffffff, #fff7ee 58%, #ffe4a8);
-    box-shadow:
-        3px 3px 7px rgba(184,148,111,0.16),
-        -3px -3px 7px rgba(255,255,255,0.78),
-        inset 1px 1px 1px rgba(255,255,255,0.86);
-    pointer-events: none;
-}
-
-body.easter-theme #main-menu > div[style*="margin-top: 50px"] > div:nth-child(2)::before {
-    content: "";
-    position: absolute;
-    top: 11px;
-    right: 12px;
-    width: 12px;
-    height: 12px;
-    z-index: 1;
-    background: var(--easter-icon-gold);
-    -webkit-mask: var(--easter-mask-league) center / contain no-repeat;
-    mask: var(--easter-mask-league) center / contain no-repeat;
-    pointer-events: none;
 }
 
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4px"] {
