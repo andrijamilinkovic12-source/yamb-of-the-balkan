@@ -4132,10 +4132,12 @@ class YambApp {
         let baseUrl = window.location.origin;
         if (typeof SERVER_URL !== 'undefined' && SERVER_URL.startsWith('http')) baseUrl = SERVER_URL;
         if (baseUrl.endsWith('/')) baseUrl = baseUrl.slice(0, -1);
-        const shareUrl = baseUrl + "/?room=" + roomId; 
-        
-        this.navigateTo('waiting-screen'); 
-        
+        const shareUrl = baseUrl + "/?room=" + roomId;
+
+        this.navigateTo('waiting-screen');
+        const waitingScreen = document.getElementById('waiting-screen');
+        if (waitingScreen) waitingScreen.classList.add('is-hosting-invite');
+
         const titleEl = document.getElementById('waiting-title');
         if (titleEl) titleEl.innerText = gt('ws_title_invite') || "POZOVI PRIJATELJA";
         
@@ -4245,11 +4247,13 @@ class YambApp {
         }
     }
     
-    async joinPrivateGame(nickname, roomId, isHost = false) { 
-        if (!this.requireLogin()) return; 
-        
-        this.navigateTo('waiting-screen'); 
-        
+    async joinPrivateGame(nickname, roomId, isHost = false) {
+        if (!this.requireLogin()) return;
+
+        this.navigateTo('waiting-screen');
+        const waitingScreen = document.getElementById('waiting-screen');
+        if (waitingScreen) waitingScreen.classList.toggle('is-hosting-invite', Boolean(isHost));
+
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
         if (myImg && authImg && authImg.src && authImg.src.includes('http')) {
@@ -4311,10 +4315,12 @@ class YambApp {
     async setupOnline(mode = 'random') {
         if (!this.requireLogin()) return;
         
-        const nickname = this.playerName; 
-        if (!nickname) return; 
-        this.navigateTo('waiting-screen'); 
-        
+        const nickname = this.playerName;
+        if (!nickname) return;
+        this.navigateTo('waiting-screen');
+        const waitingScreen = document.getElementById('waiting-screen');
+        if (waitingScreen) waitingScreen.classList.remove('is-hosting-invite');
+
         const titleEl = document.getElementById('waiting-title');
         if (titleEl) titleEl.innerText = gt('ws_searching') || "TRAŽENJE PROTIVNIKA...";
         
@@ -5589,7 +5595,17 @@ class YambApp {
         if (isAi) { console.log("AI is disabled."); return; }
         localStorage.removeItem('yamb_active_online_room');
         localStorage.removeItem('yamb_local_recovery_pending');
-        this.onlineMode = false; this.players = []; this.allScores = [];
+        const wasSpectator = this.isSpectator;
+        if (wasSpectator && this.socket) this.socket.emit('stop_spectating');
+
+        this.onlineMode = false;
+        this.isSpectator = false;
+        this.myOnlineIndex = 0;
+        this.onlineTurnTimerPaused = false;
+        this.players = [];
+        this.allScores = [];
+        const gameScene = document.getElementById('game-scene');
+        if (gameScene) gameScene.classList.remove('easter-spectator-view');
         const p1Name = this.playerName; 
         
         if (numPlayers === 1) { this.modeTag = "Solo"; this.players.push(p1Name); } 
@@ -5831,10 +5847,17 @@ class YambApp {
         this.updateTableVisuals(); 
     }
 
-    highlightCurrentPlayer() { 
-        document.querySelectorAll('.player-table').forEach(el => { el.style.border = "var(--glass-border)"; el.style.boxShadow="none"; el.style.opacity = "0.7"; }); 
-        const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`); 
-        if(activeTbl) { 
+    highlightCurrentPlayer() {
+        const playerTables = document.querySelectorAll('.player-table');
+        playerTables.forEach(el => { el.style.border = "var(--glass-border)"; el.style.boxShadow="none"; el.style.opacity = "0.7"; });
+        const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`);
+        const gameScene = document.getElementById('game-scene');
+        const useEasterSpectatorFocus = this.isSpectator && this.players.length > 1 && document.body.classList.contains('easter-theme');
+
+        if (gameScene) gameScene.classList.toggle('easter-spectator-view', useEasterSpectatorFocus);
+        playerTables.forEach(el => el.classList.toggle('easter-spectator-active', useEasterSpectatorFocus && el === activeTbl));
+
+        if(activeTbl) {
             activeTbl.style.border = "2px solid var(--gold-main)"; activeTbl.style.boxShadow = "0 0 15px rgba(224, 201, 149, 0.2)"; activeTbl.style.opacity = "1"; 
             if(this.players.length > 1) setTimeout(() => { activeTbl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }); }, 100); 
         } 

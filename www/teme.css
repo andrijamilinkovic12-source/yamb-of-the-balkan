@@ -829,6 +829,21 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] span[style*="font-
         inset 1px 1px 1px rgba(255,255,255,0.82) !important;
 }
 
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] span[style*="font-size: 1.3rem"] {
+    background:
+        radial-gradient(circle at 30% 24%, #ffffff, #ebfffb 56%, #caefe8) !important;
+    border-color: rgba(94, 189, 169, 0.22) !important;
+    box-shadow:
+        3px 3px 7px rgba(77, 154, 138, 0.16),
+        -3px -3px 7px rgba(255,255,255,0.82),
+        inset 1px 1px 1px rgba(255,255,255,0.90) !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] span[style*="font-size: 1.3rem"]::before {
+    background: linear-gradient(145deg, #40c5ad 0%, #237f7f 100%) !important;
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.78)) drop-shadow(0 3px 5px rgba(35,127,127,0.16));
+}
+
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] svg[style*="position: absolute"] {
     width: 50px !important;
     height: 50px !important;
@@ -869,11 +884,11 @@ body.easter-theme #league-progress-bar {
 body.easter-theme #main-menu .mode-btn {
     border-radius: 28px !important;
     background:
-        radial-gradient(circle at 28% 18%, #ffffff, transparent 36%),
-        linear-gradient(145deg, #fff7ef, #f2e8ff) !important;
-    border: 1px solid rgba(255,255,255,0.66) !important;
-    border-top-color: rgba(255,255,255,0.86) !important;
-    border-left-color: rgba(255,255,255,0.76) !important;
+        radial-gradient(circle at 28% 18%, rgba(255,255,255,0.32), transparent 38%),
+        linear-gradient(145deg, rgba(255,248,239,0.18), rgba(232,221,255,0.07)) !important;
+    border: 1px solid rgba(255,255,255,0.54) !important;
+    border-top-color: rgba(255,255,255,0.72) !important;
+    border-left-color: rgba(255,255,255,0.64) !important;
     color: #6b2c8f !important;
     box-shadow:
         10px 10px 22px rgba(184, 148, 111, 0.22),
@@ -881,15 +896,16 @@ body.easter-theme #main-menu .mode-btn {
         inset 1px 1px 2px rgba(255,255,255,0.82),
         inset -2px -2px 5px rgba(107,44,143,0.08) !important;
     text-shadow: none !important;
-    backdrop-filter: blur(18px) saturate(132%) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(132%) !important;
+    /* Čist providni glass: pozadina ostaje vidljiva, bez blur efekta. */
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 body.easter-theme #main-menu .mode-solo {
     background:
-        radial-gradient(circle at 28% 18%, #ffffff, transparent 36%),
-        linear-gradient(145deg, #ffe2ed, #fae8ff 62%, #ffe7ad) !important;
-    border-color: rgba(255, 177, 207, 0.68) !important;
+        radial-gradient(circle at 28% 18%, rgba(255,255,255,0.32), transparent 38%),
+        linear-gradient(145deg, rgba(255,237,245,0.18), rgba(255,232,173,0.07)) !important;
+    border-color: rgba(255,255,255,0.54) !important;
 }
 
 body.easter-theme #main-menu .mode-btn::before {
@@ -899,9 +915,9 @@ body.easter-theme #main-menu .mode-btn::before {
     z-index: 0;
     border-radius: 22px;
     background:
-        linear-gradient(145deg, rgba(255,255,255,0.44), rgba(255,250,244,0.18));
-    border: 1px solid rgba(255,255,255,0.18);
-    opacity: 0.60;
+        linear-gradient(145deg, rgba(255,255,255,0.20), rgba(255,250,244,0.035));
+    border: 1px solid rgba(255,255,255,0.20);
+    opacity: 1;
     pointer-events: none;
 }
 
@@ -964,7 +980,7 @@ body.easter-theme #main-menu .mode-random {
 }
 
 body.easter-theme #main-menu .mode-invite {
-    --easter-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M29 51l-7 7c-6 6-6 15 0 21s15 6 21 0l9-9M51 29l9-9c6-6 15-6 21 0s6 15 0 21l-7 7M30 50l28-28' fill='none' stroke='black' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    --easter-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='28' cy='27' r='11' fill='black'/%3E%3Cpath fill='black' d='M8 68c0-14 8-23 20-23s20 9 20 23H8Z'/%3E%3Cpath d='M59 34v22M48 45h22' fill='none' stroke='black' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
 body.easter-theme #main-menu .mode-dual .mode-icon,
@@ -997,6 +1013,55 @@ body.easter-theme #main-menu .mode-text {
 
 body.easter-theme #main-menu .mode-random .mode-text {
     color: #2279a6 !important;
+}
+
+/* Donji modovi već imaju centralni Vaskr bedž; emoji iz prevoda se ne duplira u oznaci. */
+body.easter-theme #main-menu .mode-solo .mode-text,
+body.easter-theme #main-menu .mode-dual .mode-text,
+body.easter-theme #main-menu .mode-random .mode-text,
+body.easter-theme #main-menu .mode-invite .mode-text {
+    font-size: 0 !important;
+}
+
+body.easter-theme #main-menu .mode-solo .mode-text::after,
+body.easter-theme #main-menu .mode-dual .mode-text::after,
+body.easter-theme #main-menu .mode-random .mode-text::after,
+body.easter-theme #main-menu .mode-invite .mode-text::after {
+    font-size: 0.68rem;
+    line-height: 1.2;
+    letter-spacing: 0.75px;
+}
+
+html[lang="sr"] body.easter-theme #main-menu .mode-solo .mode-text::after {
+    content: attr(data-easter-label-sr);
+}
+
+html[lang="en"] body.easter-theme #main-menu .mode-solo .mode-text::after {
+    content: attr(data-easter-label-en);
+}
+
+html[lang="sr"] body.easter-theme #main-menu .mode-dual .mode-text::after {
+    content: attr(data-easter-label-sr);
+}
+
+html[lang="en"] body.easter-theme #main-menu .mode-dual .mode-text::after {
+    content: attr(data-easter-label-en);
+}
+
+html[lang="sr"] body.easter-theme #main-menu .mode-random .mode-text::after {
+    content: attr(data-easter-label-sr);
+}
+
+html[lang="en"] body.easter-theme #main-menu .mode-random .mode-text::after {
+    content: attr(data-easter-label-en);
+}
+
+html[lang="sr"] body.easter-theme #main-menu .mode-invite .mode-text::after {
+    content: attr(data-easter-label-sr);
+}
+
+html[lang="en"] body.easter-theme #main-menu .mode-invite .mode-text::after {
+    content: attr(data-easter-label-en);
 }
 
 body.easter-theme #main-menu .mode-btn:active {
@@ -1158,16 +1223,16 @@ body.easter-theme #main-menu {
     --easter-icon-gold: linear-gradient(145deg, #ffc451 0%, #c9821f 100%);
     --easter-icon-rose: linear-gradient(145deg, #e86fa5 0%, #a43d78 100%);
     --easter-mask-chat: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M14 14h36a8 8 0 0 1 8 8v19a8 8 0 0 1-8 8H30L18 58v-9h-4a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Zm7 14h22v6H21v-6Zm0 10h14v6H21v-6Z'/%3E%3C/svg%3E");
-    --easter-mask-online: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='none' stroke='black' stroke-width='7'/%3E%3Cpath d='M7 32h50M32 7c9 8 9 42 0 50M32 7c-9 8-9 42 0 50' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E");
+    --easter-mask-online: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='19' cy='43' r='8' fill='black'/%3E%3Cpath d='M32 31c8 8 8 18 0 26M43 20c14 14 14 31 0 44' fill='none' stroke='black' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E");
     --easter-mask-league: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M16 22l13 13 11-21 11 21 13-13-5 35H21L16 22Zm10 42h28v8H26v-8Z'/%3E%3C/svg%3E");
-    --easter-mask-coin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='black'/%3E%3Cpath d='M21 41h22M24 38V27m8 11V23m8 15V27' fill='none' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
-    --easter-mask-undo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M24 19 12 31l12 12' fill='none' stroke='black' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M14 31h27a13 13 0 1 1 0 26H28' fill='none' stroke='black' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E");
+    --easter-mask-coin: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='23' fill='none' stroke='black' stroke-width='7'/%3E%3Cpath fill='black' d='m32 19 4 8 9 1-6.5 6 1.8 9L32 38.8 23.7 43l1.8-9-6.5-6 9-1 4-8Z'/%3E%3C/svg%3E");
+    --easter-mask-undo: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M23 20 12 31l11 11M14 31h24a14 14 0 1 1-10 24' fill='none' stroke='black' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     --easter-mask-diamond: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M22 12h36l16 19-34 39L6 31 22 12Zm7 8-7 11h14l-7-11Zm11 0-7 11h14l-7-11Zm11 0-7 11h14l-7-11ZM20 38l14 17-6-17h-8Zm20 21 8-21H32l8 21Zm20-21h-8l-6 17 14-17Z'/%3E%3C/svg%3E");
     --easter-mask-trophy: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M24 12h32v10h10c4 0 7 3 7 7v4c0 13-9 22-22 24v7h11v8H18v-8h11v-7C16 55 7 46 7 33v-4c0-4 3-7 7-7h10V12Zm0 18h-8v4c0 6 3 11 9 13-1-4-1-8-1-13v-4Zm32 0v4c0 5 0 9-1 13 6-2 9-7 9-13v-4h-8Z'/%3E%3C/svg%3E");
     --easter-mask-calendar: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M18 14h44a8 8 0 0 1 8 8v42a8 8 0 0 1-8 8H18a8 8 0 0 1-8-8V22a8 8 0 0 1 8-8Zm0 18v31h44V32H18Zm10-24h8v14h-8V8Zm16 0h8v14h-8V8ZM26 42h8v8h-8v-8Zm14 0h8v8h-8v-8Zm14 0h8v8h-8v-8ZM26 55h8v8h-8v-8Zm14 0h8v8h-8v-8Z'/%3E%3C/svg%3E");
     --easter-mask-medal: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M22 8h14l4 17 4-17h14l-9 25a23 23 0 1 1-18 0L22 8Zm18 31a13 13 0 1 0 0 26 13 13 0 0 0 0-26Zm-3 8 3-6 3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1Z'/%3E%3C/svg%3E");
     --easter-mask-stats: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M12 66h56v7H12v-7Zm7-22h12v18H19V44Zm18-16h12v34H37V28Zm18-12h12v46H55V16Z'/%3E%3Cpath d='M18 35l15-10 13 8 17-19' fill='none' stroke='black' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    --easter-mask-palette: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M40 8c18 0 32 12 32 28 0 10-7 16-16 16h-6c-5 0-8 3-8 8 0 7-5 12-13 12C16 72 8 60 8 46 8 25 22 8 40 8Zm-15 29a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm15-9a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm16 11a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm-25 21a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z'/%3E%3C/svg%3E");
+    --easter-mask-settings: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M14 21h52M14 40h52M14 59h52' fill='none' stroke='black' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='31' cy='21' r='9' fill='black'/%3E%3Ccircle cx='53' cy='40' r='9' fill='black'/%3E%3Ccircle cx='37' cy='59' r='9' fill='black'/%3E%3C/svg%3E");
     --easter-mask-book: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M10 14h24c6 0 11 5 11 11v45c0-6-5-11-11-11H10V14Zm60 0H46c-6 0-11 5-11 11v45c0-6 5-11 11-11h24V14Z'/%3E%3Cpath d='M20 28h14M20 40h14M50 28h10M50 40h10' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
 }
 
@@ -1236,6 +1301,17 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4
     width: 46px;
     height: 24px;
     gap: 0 !important;
+    box-sizing: border-box;
+    border-radius: 999px;
+    background:
+        radial-gradient(circle at 25% 24%, rgba(255,255,255,0.92), transparent 44%),
+        linear-gradient(145deg, #fffaf1, #f1e7ff) !important;
+    border: 1px solid rgba(255,255,255,0.72) !important;
+    box-shadow:
+        3px 3px 7px rgba(184,148,111,0.15),
+        -3px -3px 7px rgba(255,255,255,0.76),
+        inset 1px 1px 1px rgba(255,255,255,0.88),
+        inset -1px -1px 2px rgba(107,44,143,0.06) !important;
 }
 
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4px"] .dukat-icon-inline,
@@ -1259,14 +1335,14 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4
 
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4px"]::before {
     left: 1px;
-    background: var(--easter-icon-gold);
+    background: linear-gradient(145deg, #ffd86f 0%, #c9821f 100%);
     -webkit-mask: var(--easter-mask-coin) center / contain no-repeat;
     mask: var(--easter-mask-coin) center / contain no-repeat;
 }
 
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4px"]::after {
     right: 1px;
-    background: var(--easter-icon-plum);
+    background: linear-gradient(145deg, #aa8cdc 0%, #6c4e9d 100%);
     -webkit-mask: var(--easter-mask-undo) center / contain no-repeat;
     mask: var(--easter-mask-undo) center / contain no-repeat;
 }
@@ -1303,7 +1379,7 @@ body.easter-theme #main-menu .icon-menu-grid .btn-square[data-lang-aria="menu_st
 }
 
 body.easter-theme #main-menu .icon-menu-grid .btn-square[data-lang-aria="menu_settings"] {
-    --easter-pack-icon-mask: var(--easter-mask-palette);
+    --easter-pack-icon-mask: var(--easter-mask-settings);
     --easter-pack-icon-bg: var(--easter-icon-rose);
 }
 
@@ -2077,16 +2153,33 @@ body.easter-theme .player-table {
         inset -1px -1px 2px rgba(160, 118, 82, 0.10) !important;
 }
 
+/* Posmatrač vidi celu aktivnu tablu; promena poteza automatski prikazuje drugog igrača. */
+body.easter-theme #game-scene.easter-spectator-view .tables-wrapper {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+}
+
+body.easter-theme #game-scene.easter-spectator-view .player-table {
+    display: none !important;
+}
+
+body.easter-theme #game-scene.easter-spectator-view .player-table.easter-spectator-active {
+    display: flex !important;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
 /* Vaskr UI paket: kartice, tekst, modali, obavestenja i pills - samo za ovu temu. */
 body.easter-theme {
     --easter-ui-ink: #4a3158;
     --easter-ui-ink-strong: #36213f;
     --easter-ui-title: #6b2c8f;
     --easter-ui-title-soft: #8b45be;
-    --easter-ui-muted: #587d4f;
-    --easter-ui-success: #2f7f55;
+    /* Tamniji akcenti zadržavaju pastelnu paletu, ali prolaze čitljivost sitnog teksta. */
+    --easter-ui-muted: #466d42;
+    --easter-ui-success: #287246;
     --easter-ui-danger: #b83c65;
-    --easter-ui-gold: #b87924;
+    --easter-ui-gold: #895718;
     --easter-ui-paper: #f4eadb;
     --easter-ui-paper-light: #fff8ef;
     --easter-ui-surface:
@@ -2117,6 +2210,18 @@ body.easter-theme {
     --easter-ui-inset-deep:
         inset 4px 4px 9px rgba(184,148,111,0.22),
         inset -4px -4px 9px rgba(255,255,255,0.74);
+    /* Nasleđeni tokeni: dinamičke kartice ih koriste direktno, zato su upareni sa Vaskr paletom. */
+    --gold-main: #8b45be;
+    --gold-dark: #6b2c8f;
+    --gold-highlight: #f0deff;
+    --gold-glow: rgba(139, 69, 190, 0.28);
+    --text-main: var(--easter-ui-ink);
+    --text-filled: var(--easter-ui-ink-strong);
+    --text-sum: #b83c65;
+    --text-sum-label: #9a3157;
+    --text-muted: var(--easter-ui-muted);
+    --success: var(--easter-ui-success);
+    --danger: var(--easter-ui-danger);
     --glass-bg: rgba(246, 238, 225, 0.82);
     --glass-panel: var(--easter-ui-surface);
     --glass-border: var(--easter-ui-border);
@@ -2803,36 +2908,33 @@ body.easter-theme #splash-screen #dugmeGooglePrijava {
 
 body.easter-theme #quote-anim-container {
     height: auto !important;
-    min-height: min(440px, calc(100dvh - 72px));
-    width: min(560px, calc(100vw - 34px)) !important;
-    border-radius: 36px;
-    background:
-        radial-gradient(circle at 28% 16%, rgba(255,255,255,0.88), transparent 38%),
-        linear-gradient(145deg, rgba(255, 248, 239, 0.92), rgba(235, 222, 205, 0.84));
-    border: 1px solid rgba(255,255,255,0.70);
-    box-shadow: var(--easter-cinematic-glow);
-    backdrop-filter: blur(18px) saturate(128%);
-    -webkit-backdrop-filter: blur(18px) saturate(128%);
-    animation: easterPanelLift 0.62s ease both;
+    min-height: 0;
+    width: min(520px, calc(100vw - 42px)) !important;
+    padding: 28px 12px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 body.easter-theme #quote-anim-container > div:first-child {
-    width: 72px;
-    height: 72px;
-    display: grid;
-    place-items: center;
-    border-radius: 24px;
-    background:
-        radial-gradient(circle at 26% 20%, #ffffff, #fff8ef 58%, #f1e4ff);
-    box-shadow:
-        8px 8px 16px rgba(184,148,111,0.22),
-        -8px -8px 16px rgba(255,255,255,0.72),
-        inset 1px 1px 2px rgba(255,255,255,0.92);
+    width: auto;
+    height: auto;
+    display: block;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    filter: drop-shadow(0 5px 10px rgba(196, 144, 43, 0.24));
 }
 
 body.easter-theme #quote-text {
     color: var(--easter-ui-ink-strong, #36213f) !important;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.92) !important;
+    text-shadow:
+        0 1px 0 rgba(255,255,255,0.94),
+        0 5px 16px rgba(107,44,143,0.14) !important;
 }
 
 body.easter-theme #quote-author {
@@ -3010,8 +3112,8 @@ body.easter-theme #game-over-screen .modal-box > .btn-secondary {
 body.easter-theme #btn-rematch {
     background:
         radial-gradient(circle at 24% 18%, rgba(255,255,255,0.80), transparent 36%),
-        linear-gradient(145deg, #7ed28c, #2f7f55) !important;
-    color: #fffdf8 !important;
+        linear-gradient(145deg, #b5edbd, #79c98c) !important;
+    color: #17482c !important;
 }
 
 body.easter-theme #btn-ad-double {
@@ -3125,6 +3227,79 @@ body.easter-theme .daily-glass-overlay .daily-glass-score-lbl {
     color: var(--easter-ui-muted, #587d4f) !important;
 }
 
+/* Dnevni izazov ubacuje svoj CSS tokom rada; ovde dobija isti svetli Vaskr paket bez tamnih kartica. */
+body.easter-theme .daily-glass-overlay {
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,0.48), transparent 38%),
+        linear-gradient(180deg, rgba(255,248,239,0.76), rgba(244,234,219,0.88)),
+        var(--easter-theme-bg-image) center / cover no-repeat !important;
+    backdrop-filter: blur(14px) saturate(118%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(118%) !important;
+}
+
+body.easter-theme .daily-glass-overlay::before {
+    opacity: 0.18 !important;
+    background:
+        radial-gradient(circle, rgba(139,69,190,0.18) 0 2px, transparent 3px) 14% 18% / 78px 78px,
+        radial-gradient(circle, rgba(47,114,70,0.16) 0 2px, transparent 3px) 86% 74% / 88px 88px !important;
+}
+
+body.easter-theme .daily-glass-overlay .daily-glass-card {
+    background: var(--easter-ui-surface) !important;
+    border: var(--easter-ui-border) !important;
+    border-top-color: rgba(255,255,255,0.88) !important;
+    border-left-color: rgba(255,255,255,0.82) !important;
+    box-shadow:
+        var(--easter-ui-shadow),
+        var(--easter-ui-shadow-inset) !important;
+    color: var(--easter-ui-ink) !important;
+    backdrop-filter: blur(24px) saturate(132%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(132%) !important;
+}
+
+body.easter-theme .daily-glass-overlay .daily-glass-card::before {
+    background:
+        linear-gradient(180deg, rgba(255,255,255,0.32), transparent 42%),
+        repeating-linear-gradient(135deg, rgba(139,69,190,0.035) 0 1px, transparent 1px 18px) !important;
+}
+
+body.easter-theme .daily-glass-overlay .daily-glass-card::after {
+    border-color: rgba(255,255,255,0.46) !important;
+}
+
+body.easter-theme .daily-glass-overlay .daily-glass-dice-grid,
+body.easter-theme .daily-glass-overlay .daily-glass-score-box {
+    background: var(--easter-ui-surface-inset) !important;
+    border-color: rgba(139,69,190,0.18) !important;
+    box-shadow:
+        var(--easter-ui-inset-deep),
+        0 6px 13px rgba(184,148,111,0.12) !important;
+}
+
+body.easter-theme .daily-glass-overlay .daily-glass-die {
+    color: var(--easter-ui-title) !important;
+}
+
+body.easter-theme .daily-glass-overlay .daily-glass-die.rolling {
+    color: var(--easter-ui-gold) !important;
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,0.88), transparent 38%),
+        linear-gradient(145deg, #fff8ef, #f5dfa9) !important;
+    border-color: rgba(137,87,24,0.42) !important;
+}
+
+body.easter-theme .daily-glass-overlay .daily-glass-btn-claim {
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,0.78), transparent 38%),
+        linear-gradient(145deg, #b5edbd, #79c98c) !important;
+    border-color: rgba(255,255,255,0.70) !important;
+    color: #17482c !important;
+    box-shadow:
+        6px 6px 13px rgba(184,148,111,0.20),
+        -5px -5px 13px rgba(255,255,255,0.64),
+        inset 1px 1px 2px rgba(255,255,255,0.76) !important;
+}
+
 body.easter-theme #game-over-screen.screen.active .logo-anim {
     display: none !important;
 }
@@ -3205,6 +3380,136 @@ body.easter-theme #tournament-screen [style*="color: rgba(255,255,255,0.3)"] {
 
 body.easter-theme #league-modal-overlay [style*="border: 2px solid #666"] {
     border-color: rgba(139, 69, 190, 0.42) !important;
+}
+
+/* Kvartalna liga: osnovni stil je ovde vraćao tamne trake iznad i ispod sadržaja. */
+body.easter-theme #league-modal-overlay .modal-box > div:nth-child(2),
+body.easter-theme #league-modal-overlay #league-main-content > div:last-child {
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,0.82), transparent 42%),
+        linear-gradient(145deg, rgba(255, 250, 244, 0.96), rgba(239, 229, 250, 0.90)) !important;
+    border-color: rgba(139, 69, 190, 0.18) !important;
+    box-shadow:
+        inset 1px 1px 2px rgba(255,255,255,0.84),
+        inset -2px -2px 4px rgba(107,44,143,0.05) !important;
+}
+
+/* Vatreni niz: lista je dinamički generisana sa tamnim inline karticama. */
+body.easter-theme #streak-overlay .streak-modal-shell,
+body.easter-theme #streak-overlay #streak-body {
+    background:
+        radial-gradient(circle at 24% 16%, rgba(255,255,255,0.86), transparent 40%),
+        linear-gradient(145deg, rgba(255, 248, 239, 0.97), rgba(247, 235, 246, 0.90)) !important;
+    color: var(--easter-ui-ink, #4a3158) !important;
+}
+
+body.easter-theme #streak-overlay #streak-body [style*="border-radius: 10px"][style*="padding: 12px 15px"] {
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,0.84), transparent 40%),
+        linear-gradient(145deg, rgba(255, 251, 246, 0.96), rgba(237, 229, 247, 0.88)) !important;
+    border-color: rgba(139, 69, 190, 0.20) !important;
+    box-shadow:
+        4px 4px 10px rgba(184,148,111,0.14),
+        -4px -4px 10px rgba(255,255,255,0.66),
+        inset 1px 1px 2px rgba(255,255,255,0.84) !important;
+}
+
+body.easter-theme #streak-overlay #streak-body [style*="border: 1px solid #FF5722"],
+body.easter-theme #streak-overlay #streak-body [style*="border: 1px dashed #FF5722"] {
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,0.84), transparent 40%),
+        linear-gradient(145deg, rgba(255, 241, 232, 0.96), rgba(255, 220, 231, 0.88)) !important;
+    border-color: rgba(184, 60, 101, 0.46) !important;
+}
+
+body.easter-theme #streak-overlay #streak-body [style*="background: rgba(0,0,0"],
+body.easter-theme #streak-overlay #streak-body [style*="background:rgba(0,0,0"] {
+    background: linear-gradient(145deg, rgba(255,250,244,0.88), rgba(235,226,244,0.80)) !important;
+    border-color: rgba(139,69,190,0.16) !important;
+}
+
+body.easter-theme #streak-overlay .streak-modal-title,
+body.easter-theme #streak-overlay #streak-body [style*="color: #FF5722"],
+body.easter-theme #streak-overlay #streak-body [style*="color: #FF8A50"] {
+    color: #b44745 !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.86) !important;
+}
+
+body.easter-theme #streak-overlay #streak-body [style*="color: #888"] {
+    color: var(--easter-ui-muted, #587d4f) !important;
+}
+
+/* Vaskr waiting: invite kartice ostaju iznad safe zone, a online statistika unutar kartice. */
+body.easter-theme #waiting-screen.is-hosting-invite {
+    padding-bottom: max(30px, calc(var(--safe-bottom) + 18px)) !important;
+    scroll-padding-bottom: max(30px, calc(var(--safe-bottom) + 18px));
+}
+
+body.easter-theme #waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+    margin-top: 8px !important;
+    margin-bottom: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+body.easter-theme #waiting-screen.is-hosting-invite #friends-list-container {
+    margin-top: 10px !important;
+    padding-bottom: max(24px, calc(var(--safe-bottom) + 14px)) !important;
+    flex-shrink: 0 !important;
+}
+
+body.easter-theme #waiting-screen .ws-glass-card {
+    padding: 10px 8px 9px !important;
+}
+
+body.easter-theme #waiting-screen .ws-glass-avatar {
+    width: 54px !important;
+    height: 54px !important;
+    margin-bottom: 5px !important;
+}
+
+body.easter-theme #waiting-screen .ws-glass-name {
+    min-height: 1.2em !important;
+    max-height: 2.4em !important;
+    margin-bottom: 4px !important;
+}
+
+body.easter-theme #waiting-screen .ws-glass-stats {
+    min-height: 0 !important;
+    padding: 5px 6px !important;
+    gap: 3px !important;
+}
+
+body.easter-theme #waiting-screen .ws-g-stat {
+    min-width: 0 !important;
+    gap: 4px;
+    font-size: clamp(0.58rem, 2.6vw, 0.65rem) !important;
+    line-height: 1.15 !important;
+}
+
+body.easter-theme #waiting-screen .ws-g-stat .lbl,
+body.easter-theme #waiting-screen .ws-g-stat .val {
+    min-width: 0;
+    white-space: nowrap;
+}
+
+body.easter-theme #waiting-screen .ws-g-stat .lbl {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+body.easter-theme #waiting-screen .ws-g-stat .val {
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+
+body.easter-theme #waiting-screen #waiting-opp-found {
+    justify-content: flex-start !important;
+}
+
+body.easter-theme #waiting-screen .waiting-start-msg {
+    min-height: 0 !important;
+    margin: 2px 0 4px !important;
+    font-size: 0.62rem !important;
 }
 
 @keyframes easterPanelLift {
