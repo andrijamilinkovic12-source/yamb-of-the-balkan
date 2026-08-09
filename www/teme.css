@@ -1064,6 +1064,27 @@ html[lang="en"] body.easter-theme #main-menu .mode-invite .mode-text::after {
     content: attr(data-easter-label-en);
 }
 
+/* Posle uklanjanja duplih emoji oznaka, tri duža naziva ostaju precizno u centru kartice. */
+body.easter-theme #main-menu .mode-dual > #mode-content-2,
+body.easter-theme #main-menu .mode-random > div[style*="display: flex"],
+body.easter-theme #main-menu .mode-invite > div[style*="display: flex"] {
+    width: 100% !important;
+    align-self: stretch;
+    align-items: center !important;
+    text-align: center !important;
+}
+
+body.easter-theme #main-menu .mode-dual .mode-text,
+body.easter-theme #main-menu .mode-random .mode-text,
+body.easter-theme #main-menu .mode-invite .mode-text,
+body.easter-theme #main-menu .mode-dual .mode-text::after,
+body.easter-theme #main-menu .mode-random .mode-text::after,
+body.easter-theme #main-menu .mode-invite .mode-text::after {
+    display: block;
+    width: 100%;
+    text-align: center !important;
+}
+
 body.easter-theme #main-menu .mode-btn:active {
     transform: translateY(4px) scale(0.99) !important;
     box-shadow:
