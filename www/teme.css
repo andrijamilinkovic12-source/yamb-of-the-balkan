@@ -618,6 +618,26 @@ body.easter-theme .player-table > * {
     z-index: 1;
 }
 
+/* Gledanje online duela: dve pune table se slobodno pomeraju kao u ostalim temama.
+   Ovo ne menja dimenzije table, već samo sprečava flex sabijanje u prostor kontrola. */
+body.easter-theme #game-scene.easter-spectator-view .tables-wrapper {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+    scroll-padding-block: 8px;
+}
+
+body.easter-theme #game-scene.easter-spectator-view .player-table {
+    flex: 0 0 auto !important;
+    min-height: max-content;
+    scroll-snap-align: center;
+    scroll-snap-stop: normal;
+}
+
 /* Polja - meka udubljenja i citljiv kontrast */
 body.easter-theme .grid-cell { 
     border-color: rgba(255, 255, 255, 0.42);
