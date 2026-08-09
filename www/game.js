@@ -5852,10 +5852,9 @@ class YambApp {
         playerTables.forEach(el => { el.style.border = "var(--glass-border)"; el.style.boxShadow="none"; el.style.opacity = "0.7"; });
         const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`);
         const gameScene = document.getElementById('game-scene');
-        const useEasterSpectatorFocus = this.isSpectator && this.players.length > 1 && document.body.classList.contains('easter-theme');
-
-        if (gameScene) gameScene.classList.toggle('easter-spectator-view', useEasterSpectatorFocus);
-        playerTables.forEach(el => el.classList.toggle('easter-spectator-active', useEasterSpectatorFocus && el === activeTbl));
+        // Vaskr koristi isti spectator tok kao ostale teme: obe table su dostupne za ručno skrolovanje.
+        if (gameScene) gameScene.classList.remove('easter-spectator-view');
+        playerTables.forEach(el => el.classList.remove('easter-spectator-active'));
 
         if(activeTbl) {
             activeTbl.style.border = "2px solid var(--gold-main)"; activeTbl.style.boxShadow = "0 0 15px rgba(224, 201, 149, 0.2)"; activeTbl.style.opacity = "1"; 
