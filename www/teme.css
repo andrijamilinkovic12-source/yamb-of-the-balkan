@@ -3735,6 +3735,40 @@ body.desert-theme #main-menu > div[style*="margin-top: 50px"] > div {
     -webkit-backdrop-filter: none !important;
 }
 
+/* Četiri glavna moda prate potvrđene Vaskrs mere: manje sobe, bez promene rasporeda. */
+body.desert-theme #main-menu .modes-grid {
+    max-width: 292px !important;
+    gap: 12px !important;
+    margin-top: 2px !important;
+    margin-bottom: 12px !important;
+}
+
+/* Čist providni glass bez blur-a — samo za Solo, Hotseat, Random i Pozovi prijatelja. */
+body.desert-theme #main-menu .mode-btn {
+    min-height: 0 !important;
+    padding: 8px !important;
+    border-radius: 24px !important;
+    background:
+        radial-gradient(circle at 28% 18%, rgba(255,255,255,0.30), transparent 38%),
+        linear-gradient(145deg, rgba(255,248,228,0.20), rgba(190,119,55,0.07)) !important;
+    border: 1px solid rgba(255,255,255,0.54) !important;
+    border-top-color: rgba(255,255,255,0.72) !important;
+    border-left-color: rgba(255,255,255,0.64) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme #main-menu .mode-btn::before {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    z-index: 0;
+    border-radius: 19px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,246,222,0.03));
+    border: 1px solid rgba(255,255,255,0.20);
+    pointer-events: none;
+}
+
 body.desert-theme #main-menu .mode-btn:hover,
 body.desert-theme #main-menu .btn-special-square:hover,
 body.desert-theme #main-menu .btn-square:hover { transform: translateY(-1px); filter: saturate(1.04) brightness(1.015); }
@@ -3749,6 +3783,9 @@ body.desert-theme #main-menu .mode-icon {
     width: 40px !important;
     height: 40px !important;
     flex: 0 0 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     border-radius: 50%;
     font-size: 0 !important;
     color: transparent !important;
@@ -3776,8 +3813,20 @@ body.desert-theme #main-menu .mode-invite { --desert-mode-icon-mask: url("data:i
 body.desert-theme #main-menu .mode-random .mode-icon::before { background: linear-gradient(145deg, #2e928c, #175c5a); }
 body.desert-theme #main-menu .mode-invite .mode-icon::before { background: linear-gradient(145deg, #b45a2a, #82401f); }
 
+body.desert-theme #main-menu .mode-solo > #mode-content-1,
+body.desert-theme #main-menu .mode-dual > #mode-content-2,
+body.desert-theme #main-menu .mode-random > div[style*="display: flex"],
+body.desert-theme #main-menu .mode-invite > div[style*="display: flex"] {
+    width: 100% !important;
+    align-self: stretch;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    text-align: center !important;
+}
+
 body.desert-theme #main-menu .mode-text { font-size: 0 !important; color: var(--desert-ui-ink-strong) !important; text-align: center !important; width: 100%; }
-body.desert-theme #main-menu .mode-text::after { display: block; font-size: 0.68rem; line-height: 1.2; letter-spacing: 0.75px; font-weight: 900; }
+body.desert-theme #main-menu .mode-text::after { display: block; width: 100%; font-size: 0.68rem; line-height: 1.2; letter-spacing: 0.75px; font-weight: 900; text-align: center !important; }
 html[lang="sr"] body.desert-theme #main-menu .mode-text::after { content: attr(data-desert-label-sr); }
 html[lang="en"] body.desert-theme #main-menu .mode-text::after { content: attr(data-desert-label-en); }
 
