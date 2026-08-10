@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pustinjsko staklo Pack — Splash QA</title>
+  <link rel="stylesheet" href="../../style.css?v=5.6">
+  <link rel="stylesheet" href="../../teme.css?v=5.0">
+  <style>
+    body { margin:0; min-height:100vh; font-family:Montserrat,Arial,sans-serif; }
+    #splash-screen { position:relative !important; inset:auto !important; min-height:100vh; display:flex !important; flex-direction:column; align-items:center; justify-content:center; padding:28px; text-align:center; }
+    .logo-anim { font-size:clamp(2.25rem,10vw,4rem); font-weight:900; line-height:1.05; letter-spacing:2px; color:var(--desert-ui-ink-strong); }
+    .splash-copy-panel { width:min(100%,380px); margin:20px 0 16px; padding:16px 20px; border-radius:20px; }
+    .splash-quote-text { margin:0; color:var(--desert-ui-ink); font-family:Georgia,serif; font-style:italic; line-height:1.48; }
+    .splash-author { margin:10px 0 0; color:var(--desert-ui-title); font-size:.76rem; font-weight:900; letter-spacing:1.4px; }
+    .qa-language { position:absolute; top:18px; right:18px; display:flex; gap:8px; }
+    .qa-language button, #dugmeGooglePrijava { border-radius:999px; min-height:42px; padding:0 18px; font-weight:900; }
+    .qa-language button { border:var(--desert-ui-border); background:var(--desert-ui-surface); color:var(--desert-ui-ink-strong); }
+    .qa-legal { margin-top:14px; font-size:.67rem; color:var(--desert-ui-muted); max-width:320px; line-height:1.5; }
+  </style>
+</head>
+<body class="desert-theme">
+  <section id="splash-screen" class="screen active">
+    <div class="qa-language"><button>SRB</button><button>ENG</button></div>
+    <div class="logo-anim">YAMB OF THE<br><span>BALKAN</span></div>
+    <div class="splash-copy-panel"><p class="splash-quote-text">„Ko misli da je srećan, on je zaista srećan.”</p><p class="splash-author">— Jovan Dučić</p></div>
+    <button id="dugmeGooglePrijava">PRIJAVI SE</button>
+    <p class="qa-legal">Nastavkom prihvatate naše Uslove korišćenja i Politiku privatnosti.</p>
+  </section>
+</body>
+</html>

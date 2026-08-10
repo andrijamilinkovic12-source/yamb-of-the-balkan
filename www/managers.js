@@ -2518,6 +2518,11 @@ class SoundManager {
         return activeTheme === 'easter' || !!document.body?.classList.contains('easter-theme');
     }
 
+    isDesertThemeActive() {
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        return activeTheme === 'desert' || !!document.body?.classList.contains('desert-theme');
+    }
+
     scheduleEasterTone(freq, start, duration, options = {}) {
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
@@ -2621,9 +2626,92 @@ class SoundManager {
         });
     }
 
+    scheduleDesertTone(freq, start, duration, options = {}) {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+        const attack = options.attack ?? 0.022;
+        const level = options.gain ?? 0.048;
+        const safeDuration = Math.max(0.04, duration || 0.14);
+        osc.type = options.type || 'triangle';
+        osc.frequency.setValueAtTime(Math.max(45, freq), start);
+        if (options.to) osc.frequency.exponentialRampToValueAtTime(Math.max(45, options.to), start + safeDuration);
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(options.filter ?? 2500, start);
+        filter.Q.setValueAtTime(options.q ?? 0.7, start);
+        gain.gain.setValueAtTime(0.0001, start);
+        gain.gain.exponentialRampToValueAtTime(level, start + attack);
+        gain.gain.exponentialRampToValueAtTime(0.0001, start + safeDuration);
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(start);
+        osc.stop(start + safeDuration + 0.03);
+    }
+
+    desertClick() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            this.scheduleDesertTone(392.00, t, 0.14, { type: 'triangle', gain: 0.040, filter: 2400, to: 349.23 });
+            this.scheduleDesertTone(523.25, t + 0.035, 0.17, { type: 'sine', gain: 0.025, filter: 3300 });
+        });
+    }
+
+    desertAnnounce() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            [293.66, 369.99, 440.00, 587.33].forEach((freq, i) => this.scheduleDesertTone(freq, t + i * 0.065, 0.40, { type: 'sine', gain: 0.042, filter: 3000 }));
+        });
+    }
+
+    desertRoll() {
+        this.playSound(() => {
+            const now = this.ctx.currentTime;
+            [174.61, 196.00, 220.00, 246.94, 261.63, 293.66].forEach((base, i) => {
+                const offset = i * 0.048 + Math.random() * 0.014;
+                const freq = base + Math.random() * 18;
+                this.scheduleDesertTone(freq, now + offset, 0.12, { type: i % 2 ? 'sine' : 'triangle', gain: 0.036, filter: 1800, to: Math.max(70, freq * 0.72) });
+            });
+        });
+    }
+
+    desertScore() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            [329.63, 440.00, 523.25].forEach((freq, i) => this.scheduleDesertTone(freq, t + i * 0.065, 0.30, { type: 'triangle', gain: 0.044, filter: 3100 }));
+        });
+    }
+
+    desertWin() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            [329.63, 392.00, 493.88, 659.25, 783.99].forEach((freq, i) => this.scheduleDesertTone(freq, t + i * 0.105, i > 2 ? 0.66 : 0.26, { type: i % 2 ? 'sine' : 'triangle', gain: i > 2 ? 0.055 : 0.046, filter: 3800 }));
+        });
+    }
+
+    desertError() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            this.scheduleDesertTone(261.63, t, 0.19, { type: 'triangle', gain: 0.038, filter: 1500, to: 220.00 });
+            this.scheduleDesertTone(196.00, t + 0.075, 0.24, { type: 'sine', gain: 0.028, filter: 1200, to: 164.81 });
+        });
+    }
+
+    desertTrophy() {
+        this.playSound(() => {
+            const t = this.ctx.currentTime;
+            [392.00, 493.88, 587.33].forEach(freq => this.scheduleDesertTone(freq, t, 0.92, { type: 'sine', gain: 0.052, filter: 3600 }));
+            [783.99, 987.77].forEach((freq, i) => this.scheduleDesertTone(freq, t + 0.18 + i * 0.10, 0.46, { type: 'triangle', gain: 0.036, filter: 4200 }));
+        });
+    }
+
     click() { 
         if (this.isEasterThemeActive()) {
             this.easterClick();
+            return;
+        }
+        if (this.isDesertThemeActive()) {
+            this.desertClick();
             return;
         }
         this.playSound(() => {
@@ -2637,6 +2725,10 @@ class SoundManager {
     announce() {
         if (this.isEasterThemeActive()) {
             this.easterAnnounce();
+            return;
+        }
+        if (this.isDesertThemeActive()) {
+            this.desertAnnounce();
             return;
         }
         this.playSound(() => {
@@ -2654,6 +2746,10 @@ class SoundManager {
     roll() {
         if (this.isEasterThemeActive()) {
             this.easterRoll();
+            return;
+        }
+        if (this.isDesertThemeActive()) {
+            this.desertRoll();
             return;
         }
         this.playSound(() => {
@@ -2675,6 +2771,10 @@ class SoundManager {
             this.easterScore();
             return;
         }
+        if (this.isDesertThemeActive()) {
+            this.desertScore();
+            return;
+        }
         this.playSound(() => {
             const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
             osc.type = 'triangle'; osc.frequency.setValueAtTime(440, t); osc.frequency.linearRampToValueAtTime(880, t + 0.1); 
@@ -2686,6 +2786,10 @@ class SoundManager {
     win() {
         if (this.isEasterThemeActive()) {
             this.easterWin();
+            return;
+        }
+        if (this.isDesertThemeActive()) {
+            this.desertWin();
             return;
         }
         this.playSound(() => {
@@ -2705,6 +2809,10 @@ class SoundManager {
             this.easterError();
             return;
         }
+        if (this.isDesertThemeActive()) {
+            this.desertError();
+            return;
+        }
         this.playSound(() => {
             const t = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
             osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, t); osc.frequency.linearRampToValueAtTime(100, t + 0.15);
@@ -2716,6 +2824,10 @@ class SoundManager {
     trophy() {
         if (this.isEasterThemeActive()) {
             this.easterTrophy();
+            return;
+        }
+        if (this.isDesertThemeActive()) {
+            this.desertTrophy();
             return;
         }
         this.playSound(() => {

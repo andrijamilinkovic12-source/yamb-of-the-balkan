@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pustinjsko staklo Pack — QA</title>
+  <link rel="stylesheet" href="../../style.css?v=5.6">
+  <link rel="stylesheet" href="../../teme.css?v=5.0">
+  <link rel="stylesheet" href="../../kockice.css?v=1.0">
+  <style>
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; padding: 28px 14px 42px; font-family: Montserrat, Arial, sans-serif; }
+    .qa-shell { position: relative; z-index: 1; width: min(100%, 460px); margin: 0 auto; display: grid; gap: 18px; }
+    .qa-label { margin: 0 0 -8px; color: var(--desert-ui-title); font-size: .72rem; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; }
+    .qa-panel { padding: 14px; border-radius: 18px; }
+    #main-menu { display: flex; flex-direction: column; align-items: center; width: 100%; padding: 16px 12px; border-radius: 22px; background: var(--desert-ui-surface-soft); border: var(--desert-ui-border); box-shadow: var(--desert-ui-raised); }
+    #main-menu .menu-title { margin: 0 0 12px; font-size: 1.2rem; }
+    .modes-grid { width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    #main-menu .mode-btn { min-height: 126px; display: flex; align-items: center; justify-content: center; border-radius: 18px; padding: 12px; position: relative; cursor: default; }
+    #main-menu .mode-btn > div { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 9px; width: 100%; }
+    .special-actions-row, .icon-menu-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; margin-top: 12px; }
+    .special-actions-row { grid-template-columns: repeat(2, 1fr); max-width: 180px; }
+    #main-menu .btn-special-square, #main-menu .btn-square { min-height: 52px; border-radius: 16px; position: relative; display: grid; place-items: center; }
+    #main-menu .special-svg-icon { width: 30px; height: 30px; }
+    #main-menu .menu-svg-icon { width: 27px; height: 27px; }
+    .game-sample { display: grid; gap: 10px; }
+    .player-table { width: 100%; padding: 8px !important; }
+    .player-name { margin: 0 0 6px; }
+    .grid-container { display: grid; grid-template-columns: 1.25fr repeat(6, 1fr); gap: 2px; }
+    .grid-cell { min-height: 27px; padding: 2px; font-size: .72rem; }
+    .row-header { font-size: .61rem; }
+    .dice-container { display: flex; justify-content: center; gap: 12px; padding: 5px; }
+    .dice { width: 48px; height: 48px; font-size: 28px; display: grid; place-items: center; border-radius: 12px; }
+    .qa-actions { display: flex; gap: 8px; justify-content: center; }
+    .qa-actions button { min-height: 42px; border-radius: 999px; padding: 0 18px; font-weight: 900; }
+    .hs-card { width: 100%; padding: 0 !important; overflow: hidden; }
+    .global-chat-header { padding: 13px 15px; display: flex; justify-content: space-between; align-items: center; }
+    .global-chat-close { width: 30px; height: 30px; border-radius: 50%; border: var(--desert-ui-border); background: var(--desert-ui-surface-inset); color: var(--desert-ui-ink-strong); font-size: 1.2rem; }
+    .hs-card-toolbar { display: flex; gap: 8px; padding: 10px 12px; }
+    .hs-tab-btn { flex: 1; min-height: 34px; border-radius: 999px; font-size: .66rem; font-weight: 900; }
+    .qa-rankings { display: grid; gap: 7px; padding: 0 12px 14px; }
+    .qa-rank { display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 9px; padding: 9px; border-radius: 12px; background: rgba(255,247,229,.72); border: 1px solid rgba(151,84,35,.18); color: var(--desert-ui-ink); font-size: .78rem; }
+    .qa-rank strong { color: var(--desert-ui-gold); }
+    #waiting-screen { position: relative !important; inset: auto !important; width: 100%; min-height: 0 !important; padding: 0 0 12px !important; border-radius: 20px; overflow: hidden; display: block !important; }
+    #waiting-screen .waiting-header { padding: 13px 15px; display: flex; justify-content: space-between; align-items: center; }
+    .ws-vs-area-horizontal { padding: 14px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+    .ws-glass-card { min-height: 150px; padding: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; border-radius: 16px; }
+    .ws-glass-avatar { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; background: #e7b66f; }
+    .ws-glass-name { font-weight: 900; font-size: .73rem; color: var(--desert-ui-ink-strong); text-align: center; }
+    .ws-glass-stats { width: 100%; padding: 6px; border-radius: 10px; font-size: .6rem; }
+    .ws-g-stat { display: flex; justify-content: space-between; gap: 4px; }
+    .ws-glass-vs { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; }
+    .qa-note { margin: 0; text-align: center; font-size: .67rem; color: var(--desert-ui-muted); line-height: 1.45; }
+  </style>
+</head>
+<body class="desert-theme">
+  <main class="qa-shell">
+    <p class="qa-label">Pustinjsko staklo Pack · Glavni meni i ikonice</p>
+    <section id="main-menu">
+      <h1 class="menu-title">YAMB OF THE BALKAN</h1>
+      <div class="modes-grid">
+        <div class="mode-btn mode-solo"><div><span class="mode-icon">👤</span><span class="mode-text" data-desert-label-sr="Solo igra">Solo igra</span></div></div>
+        <div class="mode-btn mode-dual"><div><span class="mode-icon">👥</span><span class="mode-text" data-desert-label-sr="Dva igrača (Hotseat)">Dva igrača</span></div></div>
+        <div class="mode-btn mode-random"><div><span class="mode-icon">🌐</span><span class="mode-text" data-desert-label-sr="Nađi protivnika (Random)">Nađi protivnika</span></div></div>
+        <div class="mode-btn mode-invite"><div><span class="mode-icon">🔗</span><span class="mode-text" data-desert-label-sr="Pozovi prijatelja">Pozovi prijatelja</span></div></div>
+      </div>
+      <div class="special-actions-row">
+        <button class="btn-special-square spec-riznica" aria-label="Riznica">◆</button>
+        <button class="btn-special-square spec-turnir" aria-label="Turnir">♜</button>
+      </div>
+      <div class="icon-menu-grid">
+        <button class="btn-square" aria-label="Dnevni izazov">◫</button><button class="btn-square" aria-label="Top lista">♛</button><button class="btn-square" aria-label="Statistika">▥</button><button class="btn-square" aria-label="Podešavanja">☷</button><button class="btn-square" aria-label="Pravila">▤</button>
+      </div>
+    </section>
+
+    <p class="qa-label">Tabla, kockice i kontrole</p>
+    <section class="game-sample qa-panel">
+      <div class="player-table">
+        <div class="player-name">IGRAČ</div>
+        <div class="grid-container">
+          <div class="grid-cell row-header">POLJE</div><div class="grid-cell col-header">↓</div><div class="grid-cell col-header">↑</div><div class="grid-cell col-header">R</div><div class="grid-cell col-header">N</div><div class="grid-cell col-header">S</div><div class="grid-cell col-header">SL</div>
+          <div class="grid-cell row-header">JEDINICE</div><div class="grid-cell">1</div><div class="grid-cell">2</div><div class="grid-cell">—</div><div class="grid-cell">1</div><div class="grid-cell">—</div><div class="grid-cell">6</div>
+          <div class="grid-cell row-header">KENTA</div><div class="grid-cell score-btn filled">66</div><div class="grid-cell">—</div><div class="grid-cell">—</div><div class="grid-cell">—</div><div class="grid-cell">—</div><div class="grid-cell">—</div>
+          <div class="grid-cell row-header sum">ZBIR</div><div class="grid-cell cell-sum">67</div><div class="grid-cell cell-sum">2</div><div class="grid-cell cell-sum">0</div><div class="grid-cell cell-sum">1</div><div class="grid-cell cell-sum">0</div><div class="grid-cell cell-sum">6</div>
+        </div>
+      </div>
+      <div class="dice-container"><div class="dice">⚄</div><div class="dice">⚂</div><div class="dice">⚀</div></div>
+      <div class="qa-actions"><button class="btn-secondary">NAJAVA</button><button class="btn-throw">BACAJ</button></div>
+    </section>
+
+    <p class="qa-label">Top lista i kontrast</p>
+    <section class="hs-card modal-box">
+      <div class="global-chat-header"><span class="global-chat-title">TOP LISTA</span><button class="global-chat-close">×</button></div>
+      <div class="hs-card-toolbar"><button class="hs-tab-btn active">NEDELJNI</button><button class="hs-tab-btn">MESEČNI</button><button class="hs-tab-btn">SVA VREMENA</button></div>
+      <div class="qa-rankings"><div class="qa-rank"><strong>1</strong><span>DesertMaster</span><b>2.486</b></div><div class="qa-rank"><strong>2</strong><span>Yamb Igrač</span><b>2.104</b></div><div class="qa-rank"><strong>3</strong><span>Online Rival</span><b>1.998</b></div></div>
+    </section>
+
+    <p class="qa-label">Waiting / online kartice</p>
+    <section id="waiting-screen" class="screen active">
+      <div class="waiting-header"><span class="global-chat-title">TRAŽENJE PROTIVNIKA</span><button class="global-chat-close">×</button></div>
+      <div class="ws-vs-area-horizontal">
+        <div class="ws-glass-card"><div class="ws-glass-avatar"></div><span class="ws-glass-name">Tvoj profil</span><div class="ws-glass-stats"><div class="ws-g-stat"><span>Moć</span><b>520</b></div><div class="ws-g-stat"><span>Pob/Ner/Por</span><b>15 / 2 / 8</b></div></div></div>
+        <div class="ws-glass-vs">VS</div>
+        <div class="ws-glass-card opp-card"><div class="ws-glass-avatar"></div><span class="ws-glass-name">Protivnik</span><div class="ws-glass-stats"><div class="ws-g-stat"><span>Moć</span><b>507</b></div><div class="ws-g-stat"><span>Pob/Ner/Por</span><b>11 / 1 / 9</b></div></div></div>
+      </div>
+    </section>
+    <p class="qa-note">QA primer je statičan: ne menja nalog, rezultate, server ni izabranu temu igrača.</p>
+  </main>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{
+  "id": "desert",
+  "name": {
+    "sr": "Pustinjsko staklo Pack",
+    "en": "Desert Glass Theme Pack"
+  },
+  "version": "1.0.0",
+  "updated": "2026-08-09",
+  "bodyClass": "desert-theme",
+  "scope": "Only active when body has desert-theme class or localStorage yamb_theme is desert.",
+  "entrypoints": {
+    "css": "www/teme.css",
+    "audio": "www/managers.js",
+    "shopConfig": "www/config.js",
+    "backgroundAsset": "www/assets/desert-neumorphic-bg-v1.png",
+    "qaPreview": "www/themes/desert/qa-preview.html",
+    "qaSplashPreview": "www/themes/desert/qa-splash.html",
+    "qaGameOverPreview": "www/themes/desert/qa-gameover.html"
+  },
+  "packs": [
+    { "id": "background", "status": "complete", "description": "Original sculpted desert background with dunes, wind-carved sand, sun and sandstone relief." },
+    { "id": "main-menu-icons", "status": "complete", "description": "Theme-only desert glass badges and pills for game modes, special actions and bottom menu icons." },
+    { "id": "game-board", "status": "complete", "description": "Sandstone-and-glass board, dice, score cells, HUD and controls without changing board dimensions." },
+    { "id": "ui-components", "status": "complete", "description": "Cards, typography, inputs, modals, notifications, chat, treasury, stats, rules and leaderboard contrast." },
+    { "id": "cinematic-screens", "status": "complete", "description": "Splash, quote, waiting and game-over screens with the same desert visual language." },
+    { "id": "motion", "status": "complete", "description": "Soft dune-rise, glass-glint, hover and waiting motion with reduced-motion fallback." },
+    { "id": "empty-loading-error", "status": "complete", "description": "Desert-styled loading, empty and fallback states." },
+    { "id": "audio", "status": "complete", "description": "Procedural warm desert-glass cues for click, roll, score, announce, win, error and trophy." },
+    { "id": "qa-screenshots", "status": "ready-to-generate", "description": "Final screenshot set: splash, quote, main menu, board, leaderboard, settings, stats, treasury, chat, waiting and game-over." }
+  ],
+  "designTokens": {
+    "surface": "translucent warm sand glass",
+    "ink": "deep umber",
+    "mutedText": "desert brown",
+    "accent": "terracotta, amber, turquoise and ivory",
+    "shapeLanguage": "rounded glass badges, pills and inset sandstone surfaces",
+    "shadowLanguage": "soft raised and inset desert neumorphism"
+  },
+  "rules": [
+    "Do not change global theme icons as the base game style.",
+    "Keep all Desert Glass styling isolated under body.desert-theme.",
+    "Do not change game board/card dimensions or layout unless explicitly requested.",
+    "Desert background is separate from translucent glass treatments used only on UI elements.",
+    "Keep contrast readable on all light sand and glass surfaces."
+  ]
+}

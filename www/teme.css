@@ -620,7 +620,8 @@ body.easter-theme .player-table > * {
 
 /* Gledanje online duela: dve pune table se slobodno pomeraju kao u ostalim temama.
    Ovo ne menja dimenzije table, već samo sprečava flex sabijanje u prostor kontrola. */
-body.easter-theme #game-scene.easter-spectator-view .tables-wrapper {
+body.easter-theme #game-scene.theme-spectator-view .tables-wrapper,
+body.desert-theme #game-scene.theme-spectator-view .tables-wrapper {
     overflow-y: auto !important;
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
@@ -631,7 +632,8 @@ body.easter-theme #game-scene.easter-spectator-view .tables-wrapper {
     scroll-padding-block: 8px;
 }
 
-body.easter-theme #game-scene.easter-spectator-view .player-table {
+body.easter-theme #game-scene.theme-spectator-view .player-table,
+body.desert-theme #game-scene.theme-spectator-view .player-table {
     flex: 0 0 auto !important;
     min-height: max-content;
     scroll-snap-align: center;
@@ -3433,19 +3435,22 @@ body.easter-theme #streak-overlay #streak-body [style*="color: #888"] {
     color: var(--easter-ui-muted, #587d4f) !important;
 }
 
-/* Vaskr waiting: invite kartice ostaju iznad safe zone, a online statistika unutar kartice. */
-body.easter-theme #waiting-screen.is-hosting-invite {
+/* Vaskr i Pustinjsko staklo: invite kartice ostaju iznad safe zone, a online statistika unutar kartice. */
+body.easter-theme #waiting-screen.is-hosting-invite,
+body.desert-theme #waiting-screen.is-hosting-invite {
     padding-bottom: max(30px, calc(var(--safe-bottom) + 18px)) !important;
     scroll-padding-bottom: max(30px, calc(var(--safe-bottom) + 18px));
 }
 
-body.easter-theme #waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+body.easter-theme #waiting-screen.is-hosting-invite .ws-vs-area-horizontal,
+body.desert-theme #waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
     margin-top: 8px !important;
     margin-bottom: 0 !important;
     flex-shrink: 0 !important;
 }
 
-body.easter-theme #waiting-screen.is-hosting-invite #friends-list-container {
+body.easter-theme #waiting-screen.is-hosting-invite #friends-list-container,
+body.desert-theme #waiting-screen.is-hosting-invite #friends-list-container {
     margin-top: 10px !important;
     padding-bottom: max(24px, calc(var(--safe-bottom) + 14px)) !important;
     flex-shrink: 0 !important;
@@ -3584,4 +3589,357 @@ body.easter-theme #waiting-screen .waiting-start-msg {
     body.easter-theme .screen.active:not(#game-scene) .reward-card {
         animation: none !important;
     }
+}
+
+/* ========================================================================== */
+/* PUSTINJSKO STAKLO PACK — izolovan kompletan neumorphic UI paket            */
+/* ========================================================================== */
+body.desert-theme {
+    --desert-theme-bg-image: url("assets/desert-neumorphic-bg-v1.png");
+    --desert-ui-ink: #5a351d;
+    --desert-ui-ink-strong: #39200f;
+    --desert-ui-muted: #725039;
+    --desert-ui-title: #8a461f;
+    --desert-ui-accent: #b45a2a;
+    --desert-ui-turquoise: #1d706e;
+    --desert-ui-success: #236c61;
+    --desert-ui-danger: #a33e2b;
+    --desert-ui-gold: #87501d;
+    --desert-ui-surface: linear-gradient(145deg, rgba(255, 247, 226, 0.90), rgba(239, 205, 151, 0.82));
+    --desert-ui-surface-soft: linear-gradient(145deg, rgba(255, 249, 233, 0.78), rgba(239, 202, 145, 0.64));
+    --desert-ui-surface-inset: linear-gradient(145deg, rgba(232, 190, 130, 0.42), rgba(255, 246, 223, 0.66));
+    --desert-ui-border: 1px solid rgba(255, 250, 234, 0.72);
+    --desert-ui-border-strong: 1px solid rgba(168, 93, 43, 0.34);
+    --desert-ui-raised: 9px 9px 20px rgba(128, 74, 38, 0.25), -9px -9px 20px rgba(255, 249, 231, 0.70), inset 1px 1px 2px rgba(255,255,255,0.82);
+    --desert-ui-inset: inset 4px 4px 9px rgba(161, 102, 55, 0.24), inset -4px -4px 9px rgba(255, 249, 231, 0.78);
+    --bg-base: #f3d7a6;
+    --bg-gradient-1: #fff0cf;
+    --bg-gradient-2: #d78f45;
+    --gold-main: #87501d;
+    --gold-dark: #633713;
+    --gold-highlight: #fff0c5;
+    --gold-glow: rgba(184, 106, 43, 0.30);
+    --text-main: #5a351d;
+    --text-filled: #39200f;
+    --text-sum: #7a351d;
+    --text-sum-label: #6a4227;
+    --text-muted: #725039;
+    --success: #236c61;
+    --danger: #a33e2b;
+    --glass-bg: rgba(255, 244, 216, 0.54);
+    --glass-panel: rgba(255, 247, 228, 0.68);
+    --glass-border: 1px solid rgba(255, 250, 234, 0.72);
+    --glass-shadow: var(--desert-ui-raised);
+    --modal-bg: #f8dba9;
+    --input-bg: rgba(236, 196, 139, 0.46);
+    --input-border: 1px solid rgba(139, 78, 32, 0.24);
+    --dice-bg: #fff2d8;
+    --dice-border: 1px solid rgba(255,255,255,0.78);
+    --dice-color: #4b2a17;
+    --carousel-dot-idle: rgba(122, 74, 38, 0.24);
+    --carousel-dot-active: #b45a2a;
+    --carousel-dot-glow: rgba(180, 90, 42, 0.34);
+    --menu-icon-face-light: #fff2d5;
+    --menu-icon-face-main: #d4914b;
+    --menu-icon-face-dark: #87501d;
+    --menu-icon-warm-light: #ffe0b5;
+    --menu-icon-warm-main: #b75b2b;
+    --menu-icon-accent-light: #cae7df;
+    --menu-icon-accent-main: #347d78;
+    --menu-icon-core: #60391d;
+    --menu-icon-detail: #3e2411;
+    --menu-icon-glow: #d68b43;
+    --menu-icon-css-glow: rgba(193, 109, 44, 0.24);
+    color: var(--desert-ui-ink);
+    background: #f3d7a6;
+}
+
+body.desert-theme::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(180deg, rgba(255, 243, 211, 0.12), rgba(141, 75, 31, 0.09)),
+        var(--desert-theme-bg-image) center / cover no-repeat;
+    pointer-events: none;
+}
+
+body.desert-theme::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 50% 46%, rgba(255, 249, 229, 0.34), transparent 52%), linear-gradient(90deg, rgba(255,249,230,0.16), transparent 22%, transparent 78%, rgba(180,96,39,0.10));
+    pointer-events: none;
+}
+
+/* Zajedničke staklene površine — staklo je samo na UI elementima, ne na pozadini. */
+body.desert-theme .card,
+body.desert-theme .modal-box,
+body.desert-theme .custom-modal,
+body.desert-theme .custom-toast,
+body.desert-theme .settings-section,
+body.desert-theme .rules-card,
+body.desert-theme .stats-shell,
+body.desert-theme .hs-card,
+body.desert-theme .trophy-card,
+body.desert-theme .reward-card {
+    background: var(--desert-ui-surface) !important;
+    border: var(--desert-ui-border) !important;
+    border-top-color: rgba(255,255,255,0.90) !important;
+    border-left-color: rgba(255,255,255,0.84) !important;
+    box-shadow: var(--desert-ui-raised) !important;
+    color: var(--desert-ui-ink) !important;
+}
+
+body.desert-theme .modal-input,
+body.desert-theme input,
+body.desert-theme select,
+body.desert-theme textarea {
+    background: var(--desert-ui-surface-inset) !important;
+    border: var(--input-border) !important;
+    color: var(--desert-ui-ink-strong) !important;
+    box-shadow: var(--desert-ui-inset) !important;
+}
+
+body.desert-theme input::placeholder,
+body.desert-theme textarea::placeholder { color: #85634a !important; opacity: 1; }
+
+body.desert-theme h1,
+body.desert-theme h2,
+body.desert-theme h3,
+body.desert-theme .menu-title,
+body.desert-theme .global-chat-title,
+body.desert-theme .hs-panel-title,
+body.desert-theme .daily-title { color: var(--desert-ui-title) !important; text-shadow: 0 1px 0 rgba(255,255,255,0.86); }
+
+body.desert-theme .loading-text,
+body.desert-theme .h2h-empty-state,
+body.desert-theme .tourney-champions-empty,
+body.desert-theme .tourney-journey-empty,
+body.desert-theme .empty-state,
+body.desert-theme .hs-meta { color: var(--desert-ui-muted) !important; }
+
+/* Glavni meni, mode kartice i stakleni badges. */
+body.desert-theme #main-menu .mode-btn,
+body.desert-theme #main-menu .btn-special-square,
+body.desert-theme #main-menu .btn-square,
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > div {
+    background: linear-gradient(145deg, rgba(255,250,235,0.64), rgba(231,182,112,0.44)) !important;
+    border: var(--desert-ui-border) !important;
+    border-top-color: rgba(255,255,255,0.84) !important;
+    border-left-color: rgba(255,255,255,0.72) !important;
+    box-shadow: 7px 7px 17px rgba(130,73,35,0.22), -7px -7px 17px rgba(255,249,230,0.62), inset 1px 1px 1px rgba(255,255,255,0.68) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme #main-menu .mode-btn:hover,
+body.desert-theme #main-menu .btn-special-square:hover,
+body.desert-theme #main-menu .btn-square:hover { transform: translateY(-1px); filter: saturate(1.04) brightness(1.015); }
+
+body.desert-theme #main-menu .mode-btn:active,
+body.desert-theme #main-menu .btn-special-square:active,
+body.desert-theme #main-menu .btn-square:active { box-shadow: var(--desert-ui-inset) !important; transform: translateY(1px); }
+
+body.desert-theme #main-menu .mode-btn > div[style*="font-size: 6.5rem"] { display: none !important; }
+
+body.desert-theme #main-menu .mode-icon {
+    width: 40px !important;
+    height: 40px !important;
+    flex: 0 0 40px !important;
+    border-radius: 50%;
+    font-size: 0 !important;
+    color: transparent !important;
+    background: radial-gradient(circle at 32% 24%, rgba(255,255,255,0.92), rgba(247,211,157,0.92) 57%, rgba(208,143,78,0.90)) !important;
+    border: 1px solid rgba(255,255,255,0.76);
+    box-shadow: 5px 5px 11px rgba(135,76,36,0.22), -5px -5px 11px rgba(255,250,232,0.76), inset 1px 1px 2px rgba(255,255,255,0.88);
+}
+
+body.desert-theme #main-menu .mode-icon::before {
+    content: "";
+    display: block;
+    width: 19px;
+    height: 19px;
+    background: linear-gradient(145deg, #b45a2a, #6c3518);
+    -webkit-mask: var(--desert-mode-icon-mask) center / contain no-repeat;
+    mask: var(--desert-mode-icon-mask) center / contain no-repeat;
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.72)) drop-shadow(0 3px 4px rgba(96,49,20,0.24));
+}
+
+body.desert-theme #main-menu .mode-solo { --desert-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='black' d='M32 32c7.7 0 14-6.3 14-14S39.7 4 32 4 18 10.3 18 18s6.3 14 14 14Zm0 6c-13.8 0-24 7.6-24 18v4h48v-4c0-10.4-10.2-18-24-18Z'/%3E%3C/svg%3E"); }
+body.desert-theme #main-menu .mode-dual { --desert-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 64'%3E%3Cpath fill='black' d='M30 31c7.5 0 13.5-6 13.5-13.5S37.5 4 30 4 16.5 10 16.5 17.5 22.5 31 30 31Zm0 6C16.8 37 7 44 7 54v6h46v-6c0-10-9.8-17-23-17Zm24-8c6.3 0 11.5-5.2 11.5-11.5S60.3 6 54 6c-3 0-5.8 1.2-7.8 3.1a19 19 0 0 1 0 16.8A11.4 11.4 0 0 0 54 29Zm0 7c-3 0-5.9.4-8.5 1.2 6.6 3.5 10.8 9.1 10.8 16.8v6H73v-5c0-11-8.5-19-19-19Z'/%3E%3C/svg%3E"); }
+body.desert-theme #main-menu .mode-random { --desert-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='25' fill='none' stroke='black' stroke-width='7'/%3E%3Cpath d='M7 32h50M32 7c9 8 9 42 0 50M32 7c-9 8-9 42 0 50' fill='none' stroke='black' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E"); }
+body.desert-theme #main-menu .mode-invite { --desert-mode-icon-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Ccircle cx='28' cy='27' r='11' fill='black'/%3E%3Cpath fill='black' d='M8 68c0-14 8-23 20-23s20 9 20 23H8Z'/%3E%3Cpath d='M59 34v22M48 45h22' fill='none' stroke='black' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E"); }
+
+body.desert-theme #main-menu .mode-random .mode-icon::before { background: linear-gradient(145deg, #2e928c, #175c5a); }
+body.desert-theme #main-menu .mode-invite .mode-icon::before { background: linear-gradient(145deg, #b45a2a, #82401f); }
+
+body.desert-theme #main-menu .mode-text { font-size: 0 !important; color: var(--desert-ui-ink-strong) !important; text-align: center !important; width: 100%; }
+body.desert-theme #main-menu .mode-text::after { display: block; font-size: 0.68rem; line-height: 1.2; letter-spacing: 0.75px; font-weight: 900; }
+html[lang="sr"] body.desert-theme #main-menu .mode-text::after { content: attr(data-desert-label-sr); }
+html[lang="en"] body.desert-theme #main-menu .mode-text::after { content: attr(data-desert-label-en); }
+
+body.desert-theme #main-menu .special-svg-icon,
+body.desert-theme #main-menu .menu-svg-icon { filter: drop-shadow(0 2px 3px rgba(91,49,21,0.22)); }
+body.desert-theme #main-menu .special-svg-icon--treasury { filter: sepia(0.88) saturate(1.40) hue-rotate(335deg) drop-shadow(0 3px 4px rgba(91,49,21,0.22)); }
+body.desert-theme #main-menu .special-svg-icon--tournament { filter: sepia(0.96) saturate(1.22) hue-rotate(344deg) drop-shadow(0 3px 4px rgba(91,49,21,0.22)); }
+body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(2) .menu-svg-icon { filter: sepia(1) saturate(1.25) hue-rotate(342deg) drop-shadow(0 2px 3px rgba(91,49,21,0.22)); }
+body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(3) .menu-svg-icon { filter: sepia(.72) saturate(1.25) hue-rotate(130deg) drop-shadow(0 2px 3px rgba(91,49,21,0.22)); }
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] img[src*="quarterly-league-icon"] { opacity: 0.20 !important; width: 118px !important; height: 118px !important; filter: sepia(.72) saturate(1.16) drop-shadow(0 8px 14px rgba(109,56,22,.18)) !important; }
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] [style*="color: #fff"] { color: var(--desert-ui-ink-strong) !important; text-shadow: 0 1px 0 rgba(255,255,255,0.82) !important; }
+
+/* Tabla, kockice, HUD i kontrole — mere ostaju postojeće. */
+body.desert-theme .player-table {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px !important;
+    background: linear-gradient(145deg, rgba(255,247,227,0.94), rgba(230,183,119,0.86)) !important;
+    border: var(--desert-ui-border) !important;
+    box-shadow: 10px 10px 22px rgba(126,70,34,.28), -10px -10px 22px rgba(255,249,230,.72), inset 1px 1px 2px rgba(255,255,255,.90) !important;
+}
+body.desert-theme .player-table::before { content:""; position:absolute; inset:0; z-index:0; opacity:.16; pointer-events:none; background: var(--desert-theme-bg-image) center / cover no-repeat; }
+body.desert-theme .player-table > * { position:relative; z-index:1; }
+body.desert-theme .grid-cell { background: rgba(255,246,224,.62) !important; border-color: rgba(255,255,255,.46) !important; color: var(--desert-ui-muted); box-shadow: inset 3px 3px 6px rgba(156,94,47,.20), inset -3px -3px 6px rgba(255,255,255,.70); }
+body.desert-theme .col-header,
+body.desert-theme .row-header { background: linear-gradient(145deg, rgba(255,248,230,.88), rgba(232,189,128,.78)) !important; color: var(--desert-ui-ink-strong) !important; border-color: rgba(255,255,255,.50) !important; box-shadow: 2px 2px 5px rgba(139,79,36,.20), -2px -2px 5px rgba(255,255,255,.66), inset 1px 1px 0 rgba(255,255,255,.86); }
+body.desert-theme .row-header.sum,
+body.desert-theme .cell-sum { background: linear-gradient(145deg, #ffe4ad, #df9c54) !important; color: #6f3016 !important; border-color: rgba(255,245,217,.70) !important; box-shadow: var(--desert-ui-inset) !important; }
+body.desert-theme .score-btn.filled { color: var(--desert-ui-ink-strong) !important; text-shadow: 0 1px 0 rgba(255,255,255,.72); }
+body.desert-theme .dice { background: linear-gradient(145deg, #fff7e5, #e8b96f) !important; border: var(--desert-ui-border) !important; color: var(--dice-color) !important; box-shadow: 5px 5px 11px rgba(124,68,31,.27), -5px -5px 11px rgba(255,250,234,.72), inset 1px 1px 2px rgba(255,255,255,.82) !important; }
+body.desert-theme .controls-area,
+body.desert-theme .game-header { background: rgba(255,240,210,.72) !important; border-color: rgba(151,84,35,.20) !important; box-shadow: 0 8px 18px rgba(120,66,30,.16), inset 0 1px 0 rgba(255,255,255,.72); backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+body.desert-theme .status-label,
+body.desert-theme #lbl-turn { color: var(--desert-ui-ink-strong) !important; text-shadow: 0 1px 0 rgba(255,255,255,.78); }
+
+body.desert-theme .btn-primary,
+body.desert-theme .btn-throw { background: linear-gradient(145deg, #e9904e, #a94924) !important; color: #fff7e8 !important; border-color: rgba(255,237,202,.72) !important; box-shadow: 0 6px 0 #80391d, 0 13px 23px rgba(126,61,25,.28), inset 0 2px 0 rgba(255,255,255,.38) !important; text-shadow: 0 1px 1px rgba(72,33,13,.42); }
+body.desert-theme .btn-secondary,
+body.desert-theme #btn-najava,
+body.desert-theme .tab-btn,
+body.desert-theme .hs-tab-btn,
+body.desert-theme .mini-btn { background: linear-gradient(145deg, rgba(255,249,233,.92), rgba(232,190,129,.84)) !important; color: var(--desert-ui-ink-strong) !important; border: var(--desert-ui-border) !important; box-shadow: 4px 4px 10px rgba(127,70,32,.22), -4px -4px 10px rgba(255,250,234,.72), inset 1px 1px 1px rgba(255,255,255,.82) !important; }
+body.desert-theme .btn-secondary:active,
+body.desert-theme #btn-najava:active,
+body.desert-theme .tab-btn:active,
+body.desert-theme .hs-tab-btn:active,
+body.desert-theme .mini-btn:active { box-shadow: var(--desert-ui-inset) !important; }
+body.desert-theme .tab-btn.active,
+body.desert-theme .hs-tab-btn.active { background: linear-gradient(145deg, #d9773c, #99451f) !important; color: #fff4d7 !important; border-color: rgba(255,237,202,.66) !important; }
+
+/* Ekrani, kartice i dinamički sadržaj bez sivih ili tamnih površina. */
+body.desert-theme #highscores-screen .hs-card,
+body.desert-theme #settings-screen .settings-shell,
+body.desert-theme #stats-screen .stats-shell,
+body.desert-theme #tournament-screen .tourney-shell,
+body.desert-theme #global-chat-overlay .global-chat-shell,
+body.desert-theme #online-players-overlay .online-players-shell,
+body.desert-theme #riznica-screen .riznica-content { background: var(--desert-ui-surface) !important; color: var(--desert-ui-ink) !important; }
+body.desert-theme .global-chat-header,
+body.desert-theme .stats-card-header,
+body.desert-theme .hs-card-header,
+body.desert-theme .settings-card-header,
+body.desert-theme .tourney-card-header,
+body.desert-theme .riznica-header { background: rgba(255,246,222,.62) !important; border-color: rgba(151,84,35,.18) !important; }
+body.desert-theme .chat-body,
+body.desert-theme .chat-footer,
+body.desert-theme .hs-card-toolbar,
+body.desert-theme .stats-page-panel,
+body.desert-theme .h2h-stats-area,
+body.desert-theme .h2h-rival-tile,
+body.desert-theme .stat-item { background: rgba(255,247,229,.48) !important; border-color: rgba(151,84,35,.16) !important; color: var(--desert-ui-ink) !important; box-shadow: inset 2px 2px 5px rgba(154,93,46,.13), inset -2px -2px 5px rgba(255,255,255,.60); }
+body.desert-theme .hs-entry,
+body.desert-theme .hs-list li,
+body.desert-theme .friend-card-wl,
+body.desert-theme .trophy-card,
+body.desert-theme .store-item { background: linear-gradient(145deg, rgba(255,249,233,.88), rgba(235,195,137,.70)) !important; border-color: rgba(151,84,35,.20) !important; color: var(--desert-ui-ink) !important; }
+body.desert-theme .hs-rank,
+body.desert-theme .hs-score,
+body.desert-theme .daily-value,
+body.desert-theme .stat-val-mini,
+body.desert-theme .balance-display { color: var(--desert-ui-gold) !important; text-shadow: 0 1px 0 rgba(255,255,255,.78); }
+
+body.desert-theme #league-modal-overlay .modal-box,
+body.desert-theme #tournament-screen .tourney-card,
+body.desert-theme #tournament-screen .tourney-match,
+body.desert-theme #tournament-screen .tourney-match--empty,
+body.desert-theme #streak-overlay .streak-modal-shell,
+body.desert-theme #streak-overlay #streak-body,
+body.desert-theme #league-modal-overlay [style*="background: rgba(0,0,0"],
+body.desert-theme #tournament-screen [style*="background: rgba(0,0,0"],
+body.desert-theme #streak-overlay #streak-body [style*="background: rgba(0,0,0"] { background: linear-gradient(145deg, rgba(255,249,233,.94), rgba(235,194,133,.82)) !important; color: var(--desert-ui-ink) !important; border-color: rgba(151,84,35,.20) !important; box-shadow: var(--desert-ui-raised) !important; }
+body.desert-theme #league-modal-overlay [id^="league-list-"] > li,
+body.desert-theme #league-modal-overlay #hof-list > li { background: rgba(255,247,229,.76) !important; color: var(--desert-ui-ink) !important; border-color: rgba(151,84,35,.20) !important; }
+body.desert-theme #league-modal-overlay [style*="color: #fff"],
+body.desert-theme #tournament-screen [style*="color: #fff"] { color: var(--desert-ui-ink-strong) !important; text-shadow: 0 1px 0 rgba(255,255,255,.76) !important; }
+body.desert-theme #league-modal-overlay [style*="color: #aaa"],
+body.desert-theme #league-modal-overlay [style*="color: #C0C0C0"],
+body.desert-theme #tournament-screen [style*="color: rgba(255,255,255,0.3)"] { color: var(--desert-ui-muted) !important; }
+
+/* Dnevni izazov, waiting, quote i kraj igre. */
+body.desert-theme .daily-glass-overlay { background: linear-gradient(180deg, rgba(255,242,210,.76), rgba(222,159,88,.54)), var(--desert-theme-bg-image) center / cover no-repeat !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+body.desert-theme .daily-glass-overlay .daily-glass-card,
+body.desert-theme #daily-intro .daily-intro-mark-wrap,
+body.desert-theme .daily-glass-overlay .daily-glass-die,
+body.desert-theme .daily-glass-overlay .daily-glass-score-box { background: var(--desert-ui-surface) !important; border: var(--desert-ui-border) !important; box-shadow: var(--desert-ui-raised) !important; color: var(--desert-ui-ink) !important; }
+body.desert-theme .daily-glass-overlay .daily-glass-dice-grid { background: var(--desert-ui-surface-inset) !important; border-color: rgba(151,84,35,.20) !important; box-shadow: var(--desert-ui-inset) !important; }
+body.desert-theme .daily-glass-overlay .daily-glass-title,
+body.desert-theme .daily-glass-overlay .daily-glass-score-val { color: var(--desert-ui-title) !important; }
+body.desert-theme .daily-glass-overlay .daily-glass-btn-claim { background: linear-gradient(145deg, #4eaaa0, #236c61) !important; color: #fff8e8 !important; border-color: rgba(255,255,255,.72) !important; }
+
+body.desert-theme #splash-screen,
+body.desert-theme #quote-screen,
+body.desert-theme #waiting-screen,
+body.desert-theme #game-over-screen { background: linear-gradient(180deg, rgba(255,242,210,.24), rgba(151,80,31,.12)), var(--desert-theme-bg-image) center / cover no-repeat !important; }
+body.desert-theme #splash-screen .logo-anim,
+body.desert-theme #splash-screen > img { filter: sepia(.72) saturate(1.18) hue-rotate(340deg) drop-shadow(0 10px 18px rgba(106,54,20,.28)) !important; }
+body.desert-theme #splash-screen .splash-copy-panel { background: rgba(255,246,224,.48) !important; border-color: rgba(255,255,255,.62) !important; box-shadow: var(--desert-ui-raised) !important; }
+body.desert-theme #splash-screen #dugmeGooglePrijava { background: linear-gradient(145deg, rgba(255,250,235,.92), rgba(234,191,129,.84)) !important; color: var(--desert-ui-ink-strong) !important; border: var(--desert-ui-border) !important; box-shadow: var(--desert-ui-raised) !important; }
+body.desert-theme #quote-anim-container > div:first-child { display: none !important; }
+body.desert-theme #quote-text { color: var(--desert-ui-ink-strong) !important; text-shadow: 0 2px 10px rgba(255,247,227,.84), 0 1px 0 rgba(255,255,255,.72) !important; }
+body.desert-theme #quote-author { color: var(--desert-ui-title) !important; text-shadow: 0 1px 0 rgba(255,255,255,.84) !important; }
+body.desert-theme #waiting-screen .waiting-header,
+body.desert-theme #waiting-screen .waiting-status-panel,
+body.desert-theme #waiting-screen .ws-glass-card,
+body.desert-theme #waiting-screen .ws-glass-vs,
+body.desert-theme #game-over-screen .modal-box { background: var(--desert-ui-surface) !important; border: var(--desert-ui-border) !important; box-shadow: var(--desert-ui-raised) !important; color: var(--desert-ui-ink) !important; }
+body.desert-theme #waiting-screen .ws-glass-stats { background: var(--desert-ui-surface-inset) !important; border-color: rgba(151,84,35,.18) !important; box-shadow: var(--desert-ui-inset) !important; }
+body.desert-theme #waiting-screen .ws-glass-card.opp-card { background: linear-gradient(145deg, rgba(255,248,229,.84), rgba(226,177,114,.72)) !important; border-color: rgba(151,84,35,.20) !important; }
+body.desert-theme #waiting-screen .ws-glass-vs { color: var(--desert-ui-title) !important; }
+body.desert-theme #waiting-screen .opponent-scan span { background: linear-gradient(145deg, #e9934e, #a84b22) !important; box-shadow: 0 0 12px rgba(190,99,42,.28) !important; }
+
+/* Prazna, loading i error stanja. */
+body.desert-theme .loading-text::before { content: "☀"; display: inline-block; margin-right: 8px; color: var(--desert-ui-gold); animation: desertSunPulse 2.2s ease-in-out infinite; }
+body.desert-theme .h2h-empty-state::before,
+body.desert-theme .tourney-champions-empty::before,
+body.desert-theme .tourney-journey-empty::before { content: "✦"; display: block; color: var(--desert-ui-accent); font-size: 1.6rem; margin-bottom: 6px; }
+body.desert-theme .error-state,
+body.desert-theme .error-message { color: var(--desert-ui-danger) !important; background: rgba(255,231,209,.64); border-color: rgba(163,62,43,.28); }
+body.desert-theme .custom-toast { animation: desertToastIn .30s cubic-bezier(.22,1,.36,1) both; }
+
+/* Motion pack. */
+@keyframes desertPanelLift { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes desertSunPulse { 0%,100% { transform: translateY(0) rotate(0deg); filter: saturate(1); } 50% { transform: translateY(-2px) rotate(7deg); filter: saturate(1.15); } }
+@keyframes desertGlassGlint { 0%,100% { box-shadow: 7px 7px 17px rgba(130,73,35,.22), -7px -7px 17px rgba(255,249,230,.62), inset 1px 1px 1px rgba(255,255,255,.68); } 50% { box-shadow: 8px 8px 19px rgba(130,73,35,.25), -8px -8px 19px rgba(255,250,234,.74), inset 1px 1px 3px rgba(255,255,255,.82); } }
+@keyframes desertToastIn { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+body.desert-theme .screen.active:not(#game-scene) .modal-box,
+body.desert-theme .screen.active:not(#game-scene) .card,
+body.desert-theme .screen.active:not(#game-scene) .stats-shell,
+body.desert-theme .screen.active:not(#game-scene) .rules-card,
+body.desert-theme .screen.active:not(#game-scene) .settings-card,
+body.desert-theme .screen.active:not(#game-scene) .reward-card { animation: desertPanelLift .42s cubic-bezier(.22,1,.36,1) both; }
+body.desert-theme #main-menu .mode-icon { animation: desertGlassGlint 5.6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+    body.desert-theme .loading-text::before,
+    body.desert-theme .custom-toast,
+    body.desert-theme #main-menu .mode-icon,
+    body.desert-theme .screen.active:not(#game-scene) .modal-box,
+    body.desert-theme .screen.active:not(#game-scene) .card,
+    body.desert-theme .screen.active:not(#game-scene) .stats-shell,
+    body.desert-theme .screen.active:not(#game-scene) .rules-card,
+    body.desert-theme .screen.active:not(#game-scene) .settings-card,
+    body.desert-theme .screen.active:not(#game-scene) .reward-card { animation: none !important; }
 }

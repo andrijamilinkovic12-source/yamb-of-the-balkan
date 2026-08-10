@@ -4768,7 +4768,7 @@ class YambApp {
         this.socket.on('spectate_started', (data) => {
             this.onlineMode = true;
             this.isSpectator = true;
-            // Vaskr spectator prikaz prati aktivnog igrača samo pri promeni poteza,
+            // Tematski spectator prikaz prati aktivnog igrača samo pri promeni poteza,
             // kako ručno pomeranje između dve pune table ne bi bilo vraćano unazad.
             this.spectatorLastFollowedPlayerIdx = null;
             this.gameActive = true;
@@ -5609,7 +5609,7 @@ class YambApp {
         this.allScores = [];
         this.spectatorLastFollowedPlayerIdx = null;
         const gameScene = document.getElementById('game-scene');
-        if (gameScene) gameScene.classList.remove('easter-spectator-view');
+        if (gameScene) gameScene.classList.remove('theme-spectator-view', 'easter-spectator-view');
         const p1Name = this.playerName; 
         
         if (numPlayers === 1) { this.modeTag = "Solo"; this.players.push(p1Name); } 
@@ -5856,18 +5856,19 @@ class YambApp {
         playerTables.forEach(el => { el.style.border = "var(--glass-border)"; el.style.boxShadow="none"; el.style.opacity = "0.7"; });
         const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`);
         const gameScene = document.getElementById('game-scene');
-        const isEasterSpectatorDuel = document.body.classList.contains('easter-theme') &&
+        const isThemedSpectatorDuel =
+            (document.body.classList.contains('easter-theme') || document.body.classList.contains('desert-theme')) &&
             this.isSpectator && this.players.length === 2;
-        // Samo Vaskr dobija klasu za nesabijene tabele; ponašanje ostalih tema se ne menja.
-        if (gameScene) gameScene.classList.toggle('easter-spectator-view', isEasterSpectatorDuel);
-        playerTables.forEach(el => el.classList.remove('easter-spectator-active'));
+        // Vaskr i Pustinjsko staklo prikazuju dve pune table koje gledalac može slobodno da pomera.
+        if (gameScene) gameScene.classList.toggle('theme-spectator-view', isThemedSpectatorDuel);
+        playerTables.forEach(el => el.classList.remove('theme-spectator-active'));
 
         if(activeTbl) {
             activeTbl.style.border = "2px solid var(--gold-main)"; activeTbl.style.boxShadow = "0 0 15px rgba(224, 201, 149, 0.2)"; activeTbl.style.opacity = "1";
             const shouldFollowActiveTable = this.players.length > 1 &&
-                (!isEasterSpectatorDuel || this.spectatorLastFollowedPlayerIdx !== this.currentPlayerIdx);
+                (!isThemedSpectatorDuel || this.spectatorLastFollowedPlayerIdx !== this.currentPlayerIdx);
             if (shouldFollowActiveTable) {
-                if (isEasterSpectatorDuel) this.spectatorLastFollowedPlayerIdx = this.currentPlayerIdx;
+                if (isThemedSpectatorDuel) this.spectatorLastFollowedPlayerIdx = this.currentPlayerIdx;
                 setTimeout(() => {
                     // Ne vraćaj gledaoca na staru tablu ako je novi potez stigao dok traje animacija.
                     if (document.getElementById(`ptable-${this.currentPlayerIdx}`) !== activeTbl) return;
