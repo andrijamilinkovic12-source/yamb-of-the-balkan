@@ -3467,7 +3467,7 @@ body.easter-theme #waiting-screen .ws-glass-avatar {
 }
 
 body.easter-theme #waiting-screen .ws-glass-name {
-    min-height: 1.2em !important;
+    min-height: 2.4em !important;
     max-height: 2.4em !important;
     margin-bottom: 4px !important;
 }
@@ -4064,7 +4064,32 @@ body.desert-theme #splash-screen .logo-anim,
 body.desert-theme #splash-screen > img { filter: sepia(.72) saturate(1.18) hue-rotate(340deg) drop-shadow(0 10px 18px rgba(106,54,20,.28)) !important; }
 body.desert-theme #splash-screen .splash-copy-panel { background: rgba(255,246,224,.48) !important; border-color: rgba(255,255,255,.62) !important; box-shadow: var(--desert-ui-raised) !important; }
 body.desert-theme #splash-screen #dugmeGooglePrijava { background: linear-gradient(145deg, rgba(255,250,235,.92), rgba(234,191,129,.84)) !important; color: var(--desert-ui-ink-strong) !important; border: var(--desert-ui-border) !important; box-shadow: var(--desert-ui-raised) !important; }
-body.desert-theme #quote-anim-container > div:first-child { display: none !important; }
+
+/* Citat i sijalica prate Vaskrs raspored, sa Desert osvetljenjem. */
+body.desert-theme #quote-anim-container {
+    height: auto !important;
+    min-height: 0;
+    width: min(520px, calc(100vw - 42px)) !important;
+    padding: 28px 12px !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme #quote-anim-container > div:first-child {
+    width: auto;
+    height: auto;
+    display: block !important;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    filter: drop-shadow(0 5px 10px rgba(180,90,42,.24));
+}
+
 body.desert-theme #quote-text { color: var(--desert-ui-ink-strong) !important; text-shadow: 0 2px 10px rgba(255,247,227,.84), 0 1px 0 rgba(255,255,255,.72) !important; }
 body.desert-theme #quote-author { color: var(--desert-ui-title) !important; text-shadow: 0 1px 0 rgba(255,255,255,.84) !important; }
 body.desert-theme #waiting-screen .waiting-header,
@@ -4072,6 +4097,16 @@ body.desert-theme #waiting-screen .waiting-status-panel,
 body.desert-theme #waiting-screen .ws-glass-card,
 body.desert-theme #waiting-screen .ws-glass-vs,
 body.desert-theme #game-over-screen .modal-box { background: var(--desert-ui-surface) !important; border: var(--desert-ui-border) !important; box-shadow: var(--desert-ui-raised) !important; color: var(--desert-ui-ink) !important; }
+
+/* Pozovi prijatelja: status "Online igrača" prati vertikalni ritam Vaskrs teme. */
+body.desert-theme #waiting-screen .waiting-header { border-radius: 0 0 26px 26px !important; }
+body.desert-theme #waiting-screen .waiting-status-panel {
+    border-radius: 26px !important;
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
 body.desert-theme #waiting-screen .ws-glass-stats { background: var(--desert-ui-surface-inset) !important; border-color: rgba(151,84,35,.18) !important; box-shadow: var(--desert-ui-inset) !important; }
 body.desert-theme #waiting-screen .ws-glass-card.opp-card { background: linear-gradient(145deg, rgba(255,248,229,.84), rgba(226,177,114,.72)) !important; border-color: rgba(151,84,35,.20) !important; }
 body.desert-theme #waiting-screen .ws-glass-vs { color: var(--desert-ui-title) !important; }
