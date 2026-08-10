@@ -1599,8 +1599,28 @@ function t(key) {
 
 function setLanguage(lang) {
     if (lang !== 'sr' && lang !== 'en') return;
+    const previousLang = localStorage.getItem('yamb_lang') || 'sr';
     localStorage.setItem('yamb_lang', lang);
-    location.reload(); 
+    localStorage.setItem('yamb_lang_changed_at', String(Date.now()));
+    localStorage.setItem('yamb_lang_pending_sync', lang);
+    document.documentElement.lang = lang;
+
+    if (typeof applyTranslations === 'function') applyTranslations();
+
+    if (window.app && typeof window.app.saveSettingAuto === 'function') {
+        window.app.saveSettingAuto('language', lang);
+    } else if (window.app && typeof window.app.emitPlayerData === 'function' && window.app.socket && window.app.socket.connected) {
+        window.app.emitPlayerData();
+    }
+
+    if (window.yambPushNotifications && typeof window.yambPushNotifications.syncCurrentDevice === 'function' && previousLang !== lang) {
+        const pushSync = window.yambPushNotifications.syncCurrentDevice(window.app, { force: true });
+        if (pushSync && typeof pushSync.catch === 'function') pushSync.catch(() => {});
+    }
+
+    try {
+        window.dispatchEvent(new CustomEvent('yamb:languageChanged', { detail: { lang, previousLang } }));
+    } catch (err) {}
 }
 
 function applyTranslations() {

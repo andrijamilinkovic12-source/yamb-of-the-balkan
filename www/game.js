@@ -1910,9 +1910,24 @@ class YambApp {
         }
 
         if (data.language === 'sr' || data.language === 'en') {
-            localStorage.setItem('yamb_lang', data.language);
-            document.documentElement.lang = data.language;
-            if (typeof applyTranslations === 'function') applyTranslations();
+            const currentLanguage = localStorage.getItem('yamb_lang');
+            const pendingLanguageSync = localStorage.getItem('yamb_lang_pending_sync');
+            const languageChangedAt = parseInt(localStorage.getItem('yamb_lang_changed_at'), 10) || 0;
+            const hasRecentLocalLanguageChange = currentLanguage &&
+                currentLanguage !== data.language &&
+                Date.now() - languageChangedAt < 15000;
+            const hasPendingLocalLanguageSync = pendingLanguageSync &&
+                pendingLanguageSync === currentLanguage &&
+                currentLanguage !== data.language;
+
+            if (!hasRecentLocalLanguageChange && !hasPendingLocalLanguageSync) {
+                localStorage.setItem('yamb_lang', data.language);
+                if (pendingLanguageSync === data.language) localStorage.removeItem('yamb_lang_pending_sync');
+                document.documentElement.lang = data.language;
+                if (typeof applyTranslations === 'function') applyTranslations();
+            } else if (currentLanguage === data.language) {
+                localStorage.removeItem('yamb_lang_pending_sync');
+            }
         }
 
         this.updateQuickMenuIcons();
@@ -3791,6 +3806,15 @@ class YambApp {
             this.applyTheme(nextTheme);
             const themeSelect = document.getElementById('setting-theme');
             if (themeSelect) themeSelect.value = nextTheme;
+        }
+        else if (type === 'language') {
+            const nextLanguage = value === 'en' ? 'en' : (value === 'sr' ? 'sr' : null);
+            if (!nextLanguage) return;
+            localStorage.setItem('yamb_lang', nextLanguage);
+            localStorage.setItem('yamb_lang_changed_at', String(Date.now()));
+            localStorage.setItem('yamb_lang_pending_sync', nextLanguage);
+            document.documentElement.lang = nextLanguage;
+            if (typeof applyTranslations === 'function') applyTranslations();
         }
 
         if (this.socket && this.socket.connected) {

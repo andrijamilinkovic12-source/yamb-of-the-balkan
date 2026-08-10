@@ -3832,12 +3832,130 @@ html[lang="en"] body.desert-theme #main-menu .mode-text::after { content: attr(d
 
 body.desert-theme #main-menu .special-svg-icon,
 body.desert-theme #main-menu .menu-svg-icon { filter: drop-shadow(0 2px 3px rgba(91,49,21,0.22)); }
+
+/* Riznica i Turnir: ista pozicija i mere kao u Vaskrs glavnom meniju.
+   Desert crtež, boje i filteri ikonica ostaju neizmenjeni. */
+body.desert-theme #main-menu .special-actions-row {
+    max-width: 292px !important;
+    gap: 16px !important;
+    margin: 3px auto 8px auto !important;
+}
+
+body.desert-theme #main-menu .btn-special-square {
+    width: 62px !important;
+    height: 62px !important;
+    border-radius: 16px !important;
+}
+
+body.desert-theme #main-menu .special-svg-icon {
+    width: 36px !important;
+    height: 36px !important;
+}
+
 body.desert-theme #main-menu .special-svg-icon--treasury { filter: sepia(0.88) saturate(1.40) hue-rotate(335deg) drop-shadow(0 3px 4px rgba(91,49,21,0.22)); }
 body.desert-theme #main-menu .special-svg-icon--tournament { filter: sepia(0.96) saturate(1.22) hue-rotate(344deg) drop-shadow(0 3px 4px rgba(91,49,21,0.22)); }
+
+/* Donji red (Dnevni izazov do Podešavanja/Pravila): Vaskrs mere, Desert ikonice. */
+body.desert-theme #main-menu .icon-menu-grid {
+    max-width: 300px !important;
+    gap: 10px !important;
+    margin-top: 8px !important;
+}
+
+body.desert-theme #main-menu .btn-square {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 12px !important;
+}
+
+body.desert-theme #main-menu .menu-svg-icon {
+    width: 24px !important;
+    height: 24px !important;
+}
+
+body.desert-theme #main-menu .menu-svg-icon--daily {
+    width: 25px !important;
+    height: 25px !important;
+}
+
 body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(2) .menu-svg-icon { filter: sepia(1) saturate(1.25) hue-rotate(342deg) drop-shadow(0 2px 3px rgba(91,49,21,0.22)); }
 body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(3) .menu-svg-icon { filter: sepia(.72) saturate(1.25) hue-rotate(130deg) drop-shadow(0 2px 3px rgba(91,49,21,0.22)); }
 
-body.desert-theme #main-menu > div[style*="margin-top: 50px"] img[src*="quarterly-league-icon"] { opacity: 0.20 !important; width: 118px !important; height: 118px !important; filter: sepia(.72) saturate(1.16) drop-shadow(0 8px 14px rgba(109,56,22,.18)) !important; }
+/* Gornje tri stavke: Vaskrs geometrija, uz postojeće Desert vizuelne oznake. */
+body.desert-theme #main-menu > div[onclick="app.openGlobalChat()"] {
+    width: 36px !important;
+    height: 36px !important;
+    top: 30px !important;
+    left: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1rem !important;
+    line-height: 1 !important;
+    border-radius: 50% !important;
+    background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.88), rgba(255,239,204,0.68) 58%, rgba(211,145,78,0.44)) !important;
+    border: 1px solid rgba(255,255,255,0.66) !important;
+    box-shadow:
+        6px 6px 14px rgba(128,74,38,0.22),
+        -6px -6px 14px rgba(255,249,231,0.70),
+        inset 1px 1px 2px rgba(255,255,255,0.86) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] {
+    max-width: 380px !important;
+    gap: 10px !important;
+    margin: 50px auto 15px auto !important;
+    padding: 0 10px !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > div [style*="font-size: 4.5rem"] {
+    font-size: 2.35rem !important;
+    opacity: 0.030 !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] img[src*="quarterly-league-icon"] {
+    /* Samo watermark lige: ista veličina i položaj kao u Vaskrs temi, bez novog bedža. */
+    opacity: 0.22 !important;
+    width: 126px !important;
+    height: 126px !important;
+    filter: sepia(.72) saturate(1.16) drop-shadow(0 8px 14px rgba(109,56,22,.18)) !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] span[style*="font-size: 1.3rem"] {
+    width: 23px !important;
+    height: 23px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.76rem !important;
+    line-height: 1 !important;
+    border-radius: 50% !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] svg[style*="position: absolute"] {
+    width: 50px !important;
+    height: 50px !important;
+    opacity: 0.036 !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4px"] {
+    width: 46px;
+    height: 24px;
+    gap: 4px !important;
+    box-sizing: border-box;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4px"] .dukat-icon-inline,
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] div[style*="gap: 4px"] .token-icon-inline {
+    width: 14px !important;
+    height: 14px !important;
+    padding: 3px;
+    border-radius: 50%;
+}
+
 body.desert-theme #main-menu > div[style*="margin-top: 50px"] [style*="color: #fff"] { color: var(--desert-ui-ink-strong) !important; text-shadow: 0 1px 0 rgba(255,255,255,0.82) !important; }
 
 /* Tabla, kockice, HUD i kontrole — mere ostaju postojeće. */
