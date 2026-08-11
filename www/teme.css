@@ -3456,6 +3456,34 @@ body.desert-theme #waiting-screen.is-hosting-invite #friends-list-container {
     flex-shrink: 0 !important;
 }
 
+/* Pozovi prijatelja: sažeta statistika ostaje vodoravna, u kontrastnoj tematskoj podkartici. */
+body.easter-theme #waiting-screen.is-hosting-invite .friend-card .friend-card-stats {
+    padding: 3px 6px;
+    border: 1px solid rgba(139,69,190,0.25);
+    border-radius: 10px;
+    background: linear-gradient(145deg, rgba(238,228,255,0.96), rgba(215,242,224,0.90));
+    box-shadow: inset 2px 2px 4px rgba(107,44,143,0.07), inset -2px -2px 4px rgba(255,255,255,0.72);
+}
+
+body.easter-theme #waiting-screen.is-hosting-invite .friend-card-power {
+    color: var(--easter-ui-title, #6b2c8f) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.88) !important;
+}
+
+body.desert-theme #waiting-screen.is-hosting-invite .friend-card .friend-card-stats {
+    padding: 3px 6px;
+    border: 1px solid rgba(151,84,35,0.28);
+    border-radius: 10px;
+    background: linear-gradient(145deg, rgba(255,229,180,0.96), rgba(227,164,92,0.86));
+    box-shadow: inset 2px 2px 4px rgba(120,65,31,0.10), inset -2px -2px 4px rgba(255,249,229,0.72);
+}
+
+body.desert-theme #waiting-screen.is-hosting-invite .friend-card-power,
+body.desert-theme #waiting-screen.is-hosting-invite .friend-card-wl {
+    color: var(--desert-ui-ink-strong) !important;
+    text-shadow: 0 1px 0 rgba(255,247,227,0.78) !important;
+}
+
 body.easter-theme #waiting-screen .ws-glass-card {
     padding: 10px 8px 9px !important;
 }
@@ -3476,6 +3504,18 @@ body.easter-theme #waiting-screen .ws-glass-stats {
     min-height: 0 !important;
     padding: 5px 6px !important;
     gap: 3px !important;
+}
+
+body.easter-theme #waiting-screen.is-random-online .ws-glass-stats,
+body.desert-theme #waiting-screen.is-random-online .ws-glass-stats {
+    padding: 4px 6px !important;
+    gap: 2px !important;
+}
+
+body.easter-theme #waiting-screen.is-random-online .ws-g-stat,
+body.desert-theme #waiting-screen.is-random-online .ws-g-stat {
+    font-size: clamp(0.55rem, 2.45vw, 0.61rem) !important;
+    line-height: 1.05 !important;
 }
 
 body.easter-theme #waiting-screen .ws-g-stat {

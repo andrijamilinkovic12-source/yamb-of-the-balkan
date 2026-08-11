@@ -547,12 +547,31 @@ class YambApp {
             key.startsWith('guest_');
     }
 
-    formatH2HRecordLine(record = {}, fallbackStats = null) {
+    getH2HRecordParts(record = {}, fallbackStats = null) {
         const count = (value) => Math.max(0, parseInt(value, 10) || 0);
-        const wins = record.wins !== undefined ? count(record.wins) : count(fallbackStats && fallbackStats.h2hWins);
-        const draws = record.draws !== undefined ? count(record.draws) : count(fallbackStats && fallbackStats.h2hDraws);
-        const losses = record.losses !== undefined ? count(record.losses) : count(fallbackStats && fallbackStats.h2hLosses);
+        return {
+            wins: record.wins !== undefined ? count(record.wins) : count(fallbackStats && fallbackStats.h2hWins),
+            draws: record.draws !== undefined ? count(record.draws) : count(fallbackStats && fallbackStats.h2hDraws),
+            losses: record.losses !== undefined ? count(record.losses) : count(fallbackStats && fallbackStats.h2hLosses)
+        };
+    }
+
+    formatH2HRecordLine(record = {}, fallbackStats = null) {
+        const { wins, draws, losses } = this.getH2HRecordParts(record, fallbackStats);
         return `${wins} / ${draws} / ${losses}`;
+    }
+
+    renderWaitingH2HRecord(player, record = {}, fallbackStats = null) {
+        const { wins, draws, losses } = this.getH2HRecordParts(record, fallbackStats);
+        const summary = document.getElementById(`waiting-${player}-wl`);
+        const winsEl = document.getElementById(`waiting-${player}-wins`);
+        const drawsEl = document.getElementById(`waiting-${player}-draws`);
+        const lossesEl = document.getElementById(`waiting-${player}-losses`);
+
+        if (summary) summary.textContent = `${wins} / ${draws} / ${losses}`;
+        if (winsEl) winsEl.textContent = wins;
+        if (drawsEl) drawsEl.textContent = draws;
+        if (lossesEl) lossesEl.textContent = losses;
     }
 
     getCurrentPlayerUid() {
@@ -2197,8 +2216,10 @@ class YambApp {
                         <div style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 8px ${statusColor};"></div>
                         <img src="${safeAvatar}" class="friend-card-img" style="border: 2px solid ${statusColor};">
                         <span class="friend-card-name">${safeName}</span>
-                        <span style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${safePi}</span>
-                        <span class="friend-card-wl">${safeWlLabel}: ${safeH2HLine}</span>
+                        <div class="friend-card-stats">
+                            <span class="friend-card-power" style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${safePi}</span>
+                            <span class="friend-card-wl">${safeWlLabel}: ${safeH2HLine}</span>
+                        </div>
                         <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}">${this.escapeHtml(btnText)}</button>
                     </div>
                 `;
@@ -4135,6 +4156,31 @@ class YambApp {
         return normalizedName || getFallbackPlayerName();
     }
 
+    getCurrentOnlinePlayerName(candidateName = '') {
+        const authUser = window.yambAuthState?.user || null;
+        const normalizeName = (value) => String(value || '').replace(/\s+/g, ' ').trim();
+        const fallbackName = normalizeName(getFallbackPlayerName());
+        const fallbackKey = fallbackName.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        const isPlaceholderName = (value) => {
+            const key = normalizeName(value).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+            return !key || key === fallbackKey || key === 'igrac' || key === 'player';
+        };
+
+        const names = [
+            authUser?.displayName,
+            authUser?.name,
+            candidateName,
+            this.playerName,
+            localStorage.getItem('yamb_player_name')
+        ].map(normalizeName).filter(Boolean);
+
+        const displayName = names.find(name => !isPlaceholderName(name)) || names[0] || fallbackName;
+
+        this.playerName = displayName;
+        localStorage.setItem('yamb_player_name', displayName);
+        return displayName;
+    }
+
     renderWaitingPlayerName(elementId, name) {
         const element = document.getElementById(elementId);
         if (!element) return;
@@ -4146,9 +4192,9 @@ class YambApp {
     }
 
     async startPrivateHosting() {
-        if (!this.requireLogin()) return; 
-        
-        const nickname = this.playerName; 
+        if (!this.requireLogin()) return;
+
+        const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return; 
         const roomId = "yamb-" + Math.random().toString(36).substring(2, 8); 
         this.currentHostingRoomId = roomId; 
@@ -4160,7 +4206,10 @@ class YambApp {
 
         this.navigateTo('waiting-screen');
         const waitingScreen = document.getElementById('waiting-screen');
-        if (waitingScreen) waitingScreen.classList.add('is-hosting-invite');
+        if (waitingScreen) {
+            waitingScreen.classList.add('is-hosting-invite');
+            waitingScreen.classList.remove('is-random-online');
+        }
 
         const titleEl = document.getElementById('waiting-title');
         if (titleEl) titleEl.innerText = gt('ws_title_invite') || "POZOVI PRIJATELJA";
@@ -4180,8 +4229,7 @@ class YambApp {
         const myPowerEl = document.getElementById('waiting-my-power');
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
-        const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = this.formatH2HRecordLine(myH2HRecord);
+        this.renderWaitingH2HRecord('my', myH2HRecord);
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');
@@ -4215,7 +4263,7 @@ class YambApp {
         const hofContainer = document.getElementById('ws-hall-of-fame');
         if (hofContainer) hofContainer.classList.add('hidden');
         this.stopWaitingHofRotation();
-        
+
         this.joinPrivateGame(nickname, roomId, true); 
     }
 
@@ -4274,27 +4322,31 @@ class YambApp {
     async joinPrivateGame(nickname, roomId, isHost = false) {
         if (!this.requireLogin()) return;
 
+        const resolvedNickname = this.getCurrentOnlinePlayerName(nickname);
+
         this.navigateTo('waiting-screen');
         const waitingScreen = document.getElementById('waiting-screen');
-        if (waitingScreen) waitingScreen.classList.toggle('is-hosting-invite', Boolean(isHost));
+        if (waitingScreen) {
+            waitingScreen.classList.toggle('is-hosting-invite', Boolean(isHost));
+            waitingScreen.classList.remove('is-random-online');
+        }
 
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
         if (myImg && authImg && authImg.src && authImg.src.includes('http')) {
             myImg.src = authImg.src;
         } else if (myImg) {
-            myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nickname)}&background=333&color=E0C995`;
+            myImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(resolvedNickname)}&background=333&color=E0C995`;
         }
-        
-        this.renderWaitingPlayerName('waiting-my-name', nickname);
+
+        this.renderWaitingPlayerName('waiting-my-name', resolvedNickname);
         
         const myStats = this.getFullLocalStats();
         const myH2HRecord = this.getLocalH2HRecordSummary();
         const myPowerEl = document.getElementById('waiting-my-power');
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
-        const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = this.formatH2HRecordLine(myH2HRecord);
+        this.renderWaitingH2HRecord('my', myH2HRecord);
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');
@@ -4322,7 +4374,7 @@ class YambApp {
         this.stopWaitingHofRotation();
 
         this.initSocketConnection();
-        this.setupSocketListeners(nickname);
+        this.setupSocketListeners(resolvedNickname);
 
         const photoUrl = (authImg && authImg.src && authImg.src.includes('http')) ? authImg.src : '';
 
@@ -4333,17 +4385,20 @@ class YambApp {
             return;
         }
 
-        this.socket.emit('join_private_game', { nickname, roomId, photoUrl });
+        this.socket.emit('join_private_game', { nickname: resolvedNickname, roomId, photoUrl });
     }
     
     async setupOnline(mode = 'random') {
         if (!this.requireLogin()) return;
-        
-        const nickname = this.playerName;
+
+        const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return;
         this.navigateTo('waiting-screen');
         const waitingScreen = document.getElementById('waiting-screen');
-        if (waitingScreen) waitingScreen.classList.remove('is-hosting-invite');
+        if (waitingScreen) {
+            waitingScreen.classList.remove('is-hosting-invite');
+            waitingScreen.classList.add('is-random-online');
+        }
 
         const titleEl = document.getElementById('waiting-title');
         if (titleEl) titleEl.innerText = gt('ws_searching') || "TRAŽENJE PROTIVNIKA...";
@@ -4363,8 +4418,7 @@ class YambApp {
         const myPowerEl = document.getElementById('waiting-my-power');
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
-        const myWlEl = document.getElementById('waiting-my-wl');
-        if (myWlEl) myWlEl.innerText = this.formatH2HRecordLine(myH2HRecord);
+        this.renderWaitingH2HRecord('my', myH2HRecord);
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');
@@ -5025,15 +5079,14 @@ class YambApp {
                 if (oppNameEl) this.renderWaitingPlayerName('waiting-opp-name', opponentName);
                 
                 let oppPI = 0;
-                let oppH2HLine = this.formatH2HRecordLine();
+                let oppH2HRecord = {};
                 if (data.oppStats) {
                     oppPI = this.calculatePowerIndex(data.oppStats, false);
-                    const oppH2HRecord = data.oppStats.h2hRecord || {};
-                    oppH2HLine = this.formatH2HRecordLine(oppH2HRecord, data.oppStats);
+                    oppH2HRecord = data.oppStats.h2hRecord || {};
                 }
 
                 document.getElementById('waiting-opp-power').innerText = oppPI;
-                document.getElementById('waiting-opp-wl').innerText = oppH2HLine;
+                this.renderWaitingH2HRecord('opp', oppH2HRecord, data.oppStats || null);
 
                 this.soundMgr.win();
 

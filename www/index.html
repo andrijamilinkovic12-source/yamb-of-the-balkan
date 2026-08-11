@@ -6,8 +6,8 @@
     <title>Yamb of the Balkan - Divine Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.6">
-    <link rel="stylesheet" href="teme.css?v=5.9">
+    <link rel="stylesheet" href="style.css?v=5.8">
+    <link rel="stylesheet" href="teme.css?v=5.11">
     <link rel="stylesheet" href="kockice.css?v=1.0">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -1058,7 +1058,12 @@
                 <span id="waiting-my-name" class="ws-glass-name" data-lang="player_label">Igrač</span>
                 <div class="ws-glass-stats">
                     <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-my-power" class="val" style="color: var(--gold-main);">0</span></div>
-                    <div class="ws-g-stat"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-my-wl" class="val">0 / 0 / 0</span></div>
+                    <div class="ws-g-stat ws-record-summary"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-my-wl" class="val">0 / 0 / 0</span></div>
+                    <div class="ws-random-records" aria-label="Online rekord">
+                        <div class="ws-g-stat"><span class="lbl">POB</span><span id="waiting-my-wins" class="val">0</span></div>
+                        <div class="ws-g-stat"><span class="lbl">NER</span><span id="waiting-my-draws" class="val">0</span></div>
+                        <div class="ws-g-stat"><span class="lbl">POR</span><span id="waiting-my-losses" class="val">0</span></div>
+                    </div>
                 </div>
             </div>
 
@@ -1079,7 +1084,12 @@
                     <span id="waiting-start-msg" class="waiting-start-msg" data-lang="ws_game_starting">Protivnik je tu. Partija počinje...</span>
                     <div class="ws-glass-stats">
                         <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-opp-power" class="val" style="color: var(--gold-main);">0</span></div>
-                        <div class="ws-g-stat"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-opp-wl" class="val">0 / 0 / 0</span></div>
+                        <div class="ws-g-stat ws-record-summary"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-opp-wl" class="val">0 / 0 / 0</span></div>
+                        <div class="ws-random-records" aria-label="Online rekord">
+                            <div class="ws-g-stat"><span class="lbl">POB</span><span id="waiting-opp-wins" class="val">0</span></div>
+                            <div class="ws-g-stat"><span class="lbl">NER</span><span id="waiting-opp-draws" class="val">0</span></div>
+                            <div class="ws-g-stat"><span class="lbl">POR</span><span id="waiting-opp-losses" class="val">0</span></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1222,6 +1232,30 @@
                 line-height: 1.1;
                 text-align: right;
                 white-space: nowrap;
+            }
+
+            .ws-random-records {
+                display: none;
+            }
+
+            #waiting-screen.is-random-online .ws-record-summary {
+                display: none;
+            }
+
+            #waiting-screen.is-random-online .ws-random-records {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+            }
+
+            #waiting-screen.is-random-online .ws-glass-stats {
+                padding: 4px 6px;
+                gap: 2px;
+            }
+
+            #waiting-screen.is-random-online .ws-g-stat {
+                font-size: clamp(0.55rem, 2.45vw, 0.61rem);
+                line-height: 1.05;
             }
             
             .ws-glass-vs {
@@ -1427,7 +1461,7 @@
     <script src="globalchat.js?v=1.0"></script>
     <script src="auth.js?v=1010"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=4.19"></script>
+    <script src="game.js?v=4.22"></script>
     <script src="kvartalnaliga.js?v=1002"></script>
     <script src="onlinenumber.js?v=1001"></script>
     <script src="vatreniniz.js?v=999"></script>
