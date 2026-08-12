@@ -3587,6 +3587,36 @@ body.easter-theme #waiting-screen .waiting-start-msg {
     }
 }
 
+/* Vaskrs — talasasti odskok pet donjih Soft Clay ikona.
+   Dugmad i njihov raspored ostaju mirni; animira se samo vidljivi asset. */
+@keyframes easterBottomIconWave {
+    0%, 4%, 13%, 100% { transform: translate(-50%, -50%); }
+    7% { transform: translate(-50%, calc(-50% - 4px)) scale(1.025); }
+    10% { transform: translate(-50%, calc(-50% + 1px)) scale(.99); }
+}
+
+body.easter-theme #main-menu .icon-menu-grid .btn-square .easter-soft-clay-icon {
+    animation: easterBottomIconWave 8.4s cubic-bezier(.34, 1.56, .64, 1) infinite;
+    will-change: transform;
+}
+
+body.easter-theme #main-menu .icon-menu-grid .btn-square:nth-child(1) .easter-soft-clay-icon { animation-delay: 1.2s; }
+body.easter-theme #main-menu .icon-menu-grid .btn-square:nth-child(2) .easter-soft-clay-icon { animation-delay: 1.38s; }
+body.easter-theme #main-menu .icon-menu-grid .btn-square:nth-child(3) .easter-soft-clay-icon { animation-delay: 1.56s; }
+body.easter-theme #main-menu .icon-menu-grid .btn-square:nth-child(4) .easter-soft-clay-icon { animation-delay: 1.74s; }
+body.easter-theme #main-menu .icon-menu-grid .btn-square:nth-child(5) .easter-soft-clay-icon { animation-delay: 1.92s; }
+
+body.easter-theme #main-menu .icon-menu-grid .btn-square:active .easter-soft-clay-icon {
+    animation: none !important;
+    transform: translate(-50%, -47%) scale(.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.easter-theme #main-menu .icon-menu-grid .btn-square .easter-soft-clay-icon {
+        animation: none !important;
+    }
+}
+
 /* ========================================================================== */
 /* PUSTINJSKO STAKLO PACK — izolovan kompletan neumorphic UI paket            */
 /* ========================================================================== */
@@ -4723,4 +4753,154 @@ body.easter-theme #main-menu .mode-random .mode-icon .easter-opponent-soft-clay-
 
 body.easter-theme #main-menu .mode-random:active .mode-icon .easter-opponent-soft-clay-icon {
     transform: translateY(1px) scale(.96);
+}
+
+/* Vaskrs — odobrena Soft Clay Relief 3D ikona za Pozovi prijatelja.
+   Kartica, naslov, položaj i funkcija ostaju nepromenjeni. */
+#main-menu .easter-invite-soft-clay-icon {
+    display: none;
+}
+
+body.easter-theme #main-menu .mode-invite .mode-icon {
+    width: 54px !important;
+    height: 54px !important;
+    flex: 0 0 54px !important;
+    padding: 0 !important;
+    position: relative;
+    overflow: visible !important;
+    color: transparent !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+}
+
+body.easter-theme #main-menu .mode-invite .mode-icon::before,
+body.easter-theme #main-menu .mode-invite .mode-icon::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.easter-theme #main-menu .mode-invite .mode-icon .easter-invite-soft-clay-icon {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 54px !important;
+    height: 54px !important;
+    max-width: none !important;
+    object-fit: contain;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: none;
+}
+
+body.easter-theme #main-menu .mode-invite:active .mode-icon .easter-invite-soft-clay-icon {
+    transform: translateY(1px) scale(.96);
+}
+
+/* Vaskrs — standardizacija četiri glavna moda.
+   Nađi protivnika je referentni vizuelni gabarit; kartice ostaju nepromenjene. */
+body.easter-theme #main-menu .mode-solo > #mode-content-1,
+body.easter-theme #main-menu .mode-dual > #mode-content-2,
+body.easter-theme #main-menu .mode-random > div[style*="display: flex"],
+body.easter-theme #main-menu .mode-invite > div[style*="display: flex"] {
+    display: grid !important;
+    grid-template-rows: 60px 1.64rem;
+    align-content: center;
+    justify-items: center;
+    gap: 6px !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+body.easter-theme #main-menu .mode-solo .mode-icon,
+body.easter-theme #main-menu .mode-dual .mode-icon,
+body.easter-theme #main-menu .mode-random .mode-icon,
+body.easter-theme #main-menu .mode-invite .mode-icon {
+    width: 60px !important;
+    height: 60px !important;
+    flex-basis: 60px !important;
+    align-self: center;
+}
+
+body.easter-theme #main-menu .mode-solo .easter-solo-soft-clay-icon {
+    inset: 50% auto auto 50% !important;
+    width: 66px !important;
+    height: 66px !important;
+    transform: translate(-50%, -50%);
+}
+
+body.easter-theme #main-menu .mode-dual .easter-hotseat-soft-clay-icon {
+    inset: 50% auto auto 50% !important;
+    width: 66px !important;
+    height: 66px !important;
+    transform: translate(-50%, -50%);
+}
+
+body.easter-theme #main-menu .mode-random .easter-opponent-soft-clay-icon {
+    inset: 50% auto auto 50% !important;
+    width: 55px !important;
+    height: 55px !important;
+    transform: translate(-50%, -50%);
+}
+
+body.easter-theme #main-menu .mode-invite .easter-invite-soft-clay-icon {
+    inset: 50% auto auto 50% !important;
+    width: 63px !important;
+    height: 63px !important;
+    transform: translate(-50%, -50%);
+}
+
+body.easter-theme #main-menu .mode-solo .mode-text,
+body.easter-theme #main-menu .mode-dual .mode-text,
+body.easter-theme #main-menu .mode-random .mode-text,
+body.easter-theme #main-menu .mode-invite .mode-text {
+    width: 100% !important;
+    height: 1.64rem;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center !important;
+}
+
+body.easter-theme #main-menu .mode-solo .mode-text::after,
+body.easter-theme #main-menu .mode-dual .mode-text::after,
+body.easter-theme #main-menu .mode-random .mode-text::after,
+body.easter-theme #main-menu .mode-invite .mode-text::after {
+    display: block;
+    width: 100%;
+    text-align: center !important;
+}
+
+@keyframes easterMainModeFloat {
+    0%, 100% { transform: translate(-50%, -50%); }
+    50% { transform: translate(-50%, calc(-50% - 3px)) scale(1.02); }
+}
+
+body.easter-theme #main-menu .easter-solo-soft-clay-icon,
+body.easter-theme #main-menu .easter-hotseat-soft-clay-icon,
+body.easter-theme #main-menu .easter-opponent-soft-clay-icon,
+body.easter-theme #main-menu .easter-invite-soft-clay-icon {
+    animation: easterMainModeFloat 4.6s ease-in-out infinite !important;
+    will-change: transform;
+}
+
+body.easter-theme #main-menu .mode-solo:active .easter-solo-soft-clay-icon,
+body.easter-theme #main-menu .mode-dual:active .easter-hotseat-soft-clay-icon,
+body.easter-theme #main-menu .mode-random:active .easter-opponent-soft-clay-icon,
+body.easter-theme #main-menu .mode-invite:active .easter-invite-soft-clay-icon {
+    animation: none !important;
+    transform: translate(-50%, calc(-50% + 1px)) scale(.96) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.easter-theme #main-menu .easter-solo-soft-clay-icon,
+    body.easter-theme #main-menu .easter-hotseat-soft-clay-icon,
+    body.easter-theme #main-menu .easter-opponent-soft-clay-icon,
+    body.easter-theme #main-menu .easter-invite-soft-clay-icon {
+        animation: none !important;
+    }
 }
