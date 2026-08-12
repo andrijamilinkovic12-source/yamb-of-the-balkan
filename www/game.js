@@ -224,7 +224,7 @@ class YambApp {
             ? (this.isThemeUnlocked(savedTheme) ? savedTheme : 'dark')
             : (this.getValidThemeIds().includes(rememberedSplashTheme) ? rememberedSplashTheme : 'dark');
         if (this.playerId && startupTheme !== savedTheme) localStorage.setItem('yamb_theme', startupTheme);
-        this.applyTheme(startupTheme);
+        this.applyTheme(startupTheme, { initialLoad: true });
         
         this.initSocketConnection();
 
@@ -1414,7 +1414,58 @@ class YambApp {
         if(this.stats) this.stats.balance = realBalance;
     }
     
-    applyTheme(theme) {
+    getThemeDiceDefaultMarkerKey(themeId) {
+        const safeThemeId = String(themeId || 'theme')
+            .trim()
+            .replace(/[^a-zA-Z0-9_-]/g, '_');
+        const uid = String(this.playerId || localStorage.getItem('yamb_uid') || 'guest')
+            .trim()
+            .replace(/[^a-zA-Z0-9_-]/g, '_');
+        return `yamb_${safeThemeId || 'theme'}_default_skin_initialized_${uid || 'guest'}`;
+    }
+
+    ensureThemeDiceSkin(themeId, skinId, { activateAsDefault = false } = {}) {
+        const safeSkinId = String(skinId || '').trim();
+        if (!safeSkinId) return;
+
+        const markerKey = this.getThemeDiceDefaultMarkerKey(themeId);
+        const isFirstThemeSelection = localStorage.getItem(markerKey) !== 'true';
+        const addSkinToStorage = (storageKey) => {
+            const storedSkins = this.readLocalJson(storageKey, []);
+            const skins = Array.isArray(storedSkins) ? storedSkins : [];
+            if (!skins.includes(safeSkinId)) {
+                skins.push(safeSkinId);
+                localStorage.setItem(storageKey, JSON.stringify(skins));
+            }
+        };
+
+        // Stari opšti niz služi kompatibilnosti, a typed niz se čuva uz nalog.
+        addSkinToStorage('yamb_unlocked');
+        addSkinToStorage('yamb_unlocked_skins');
+
+        const inventories = [this.stats, window.statsManager && window.statsManager.stats]
+            .filter((inventory, index, list) => inventory && list.indexOf(inventory) === index);
+        inventories.forEach(inventory => {
+            if (!Array.isArray(inventory.unlockedSkins)) inventory.unlockedSkins = [];
+            if (!inventory.unlockedSkins.includes(safeSkinId)) inventory.unlockedSkins.push(safeSkinId);
+        });
+        if (window.statsManager && typeof window.statsManager.saveStats === 'function') {
+            window.statsManager.saveStats();
+        }
+
+        if (isFirstThemeSelection) {
+            localStorage.setItem(markerKey, 'true');
+            if (activateAsDefault) {
+                localStorage.setItem('yamb_active_skin', safeSkinId);
+                if (typeof this.updateDiceVisuals === 'function' && this.features) this.updateDiceVisuals();
+                document.querySelectorAll('.daily-glass-die.dice').forEach(element => {
+                    this.features?.applySkinToElement(element, element.classList.contains('held'));
+                });
+            }
+        }
+    }
+
+    applyTheme(theme, { initialLoad = false, skipThemeDiceDefault = false } = {}) {
         const validThemes = this.getValidThemeIds();
         const safeTheme = validThemes.includes(theme) ? theme : 'dark';
         const themeClasses = validThemes
@@ -1426,6 +1477,17 @@ class YambApp {
 
         // Splash/login ekran pamti poslednju vizuelnu temu čak i kada se nalog odjavi.
         localStorage.setItem('yamb_last_theme', safeTheme);
+
+        const themeDefaultSkins = {
+            desert: 'desert_glass',
+            easter: 'easter_neumorphic'
+        };
+        const defaultSkin = themeDefaultSkins[safeTheme];
+        if (defaultSkin && !skipThemeDiceDefault) {
+            // Pri pravom prvom izboru teme skin postaje aktivan. Pri učitavanju postojećeg
+            // naloga samo ga obezbeđujemo, bez menjanja već odabranog skina igrača.
+            this.ensureThemeDiceSkin(safeTheme, defaultSkin, { activateAsDefault: !initialLoad });
+        }
     }
 
     normalizeLocalStats(stats = {}) {
@@ -1898,7 +1960,7 @@ class YambApp {
         if (data.activeEffect) localStorage.setItem('yamb_active_effect', data.activeEffect);
         if (data.activeTheme) {
             localStorage.setItem('yamb_theme', data.activeTheme);
-            this.applyTheme(data.activeTheme);
+            this.applyTheme(data.activeTheme, { initialLoad: true });
             const themeSelect = document.getElementById('setting-theme');
             if (themeSelect) themeSelect.value = data.activeTheme;
         }

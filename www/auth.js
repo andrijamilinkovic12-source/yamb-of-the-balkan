@@ -607,7 +607,7 @@ function restoreAccountLocalSnapshot(uid) {
         if (typeof window.app.refreshLocalStats === 'function') window.app.refreshLocalStats();
         const restoredTheme = localStorage.getItem('yamb_theme');
         if (restoredTheme && typeof window.app.applyTheme === 'function') {
-            window.app.applyTheme(restoredTheme);
+            window.app.applyTheme(restoredTheme, { initialLoad: true });
         }
     }
     if (window.statsManager && typeof window.statsManager.loadStats === 'function') {
@@ -978,7 +978,7 @@ async function odjaviSe() {
 
         localStorage.setItem('yamb_last_theme', logoutTheme);
         if (window.app && typeof window.app.applyTheme === 'function') {
-            window.app.applyTheme(logoutTheme);
+            window.app.applyTheme(logoutTheme, { initialLoad: true, skipThemeDiceDefault: true });
         }
         const themeSelect = document.getElementById('setting-theme');
         if (themeSelect) themeSelect.value = logoutTheme;
