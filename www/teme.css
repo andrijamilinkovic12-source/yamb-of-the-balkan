@@ -785,28 +785,6 @@ body.easter-theme .btn-special-square:active {
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.10), 0 0 0 #b889c4, 0 2px 4px rgba(0,0,0,0.10);
 }
 
-/* Vaskrsnji glavni meni - neumorphic badges & pills, bez promene rasporeda. */
-body.easter-theme #main-menu > div[onclick="app.openGlobalChat()"] {
-    width: 36px !important;
-    height: 36px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    font-size: 1rem !important;
-    border-radius: 50% !important;
-    background:
-        radial-gradient(circle at 30% 25%, #ffffff, #fff9f3 58%, #f1e4ff),
-        linear-gradient(145deg, #fffaf3, #f1e7ff) !important;
-    border: 1px solid rgba(255, 255, 255, 0.62) !important;
-    box-shadow:
-        6px 6px 14px rgba(184, 148, 111, 0.22),
-        -6px -6px 14px rgba(255, 255, 255, 0.70),
-        inset 1px 1px 2px rgba(255,255,255,0.86),
-        inset -2px -2px 4px rgba(156,77,204,0.08) !important;
-    backdrop-filter: blur(16px) saturate(132%) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(132%) !important;
-}
-
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] > div {
     background:
         radial-gradient(circle at 28% 18%, #ffffff, transparent 34%),
@@ -1278,21 +1256,6 @@ body.easter-theme #main-menu {
     --easter-mask-settings: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M14 21h52M14 40h52M14 59h52' fill='none' stroke='black' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='31' cy='21' r='9' fill='black'/%3E%3Ccircle cx='53' cy='40' r='9' fill='black'/%3E%3Ccircle cx='37' cy='59' r='9' fill='black'/%3E%3C/svg%3E");
     --easter-mask-settings-clay: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cpath fill='black' d='M45 16H51L53.6 26.1C55.6 26.6 57.5 27.4 59.2 28.4L68.2 23.1L72.5 27.5L67.3 36.5C68.3 38.2 69.1 40.1 69.6 42.1L80 45V51L69.6 53.9C69.1 55.9 68.3 57.8 67.3 59.5L72.5 68.5L68.2 72.9L59.2 67.6C57.5 68.6 55.6 69.4 53.6 69.9L51 80H45L42.4 69.9C40.4 69.4 38.5 68.6 36.8 67.6L27.8 72.9L23.5 68.5L28.7 59.5C27.7 57.8 26.9 55.9 26.4 53.9L16 51V45L26.4 42.1C26.9 40.1 27.7 38.2 28.7 36.5L23.5 27.5L27.8 23.1L36.8 28.4C38.5 27.4 40.4 26.6 42.4 26.1L45 16Z'/%3E%3C/svg%3E");
     --easter-mask-book: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath fill='black' d='M10 14h24c6 0 11 5 11 11v45c0-6-5-11-11-11H10V14Zm60 0H46c-6 0-11 5-11 11v45c0-6 5-11 11-11h24V14Z'/%3E%3Cpath d='M20 28h14M20 40h14M50 28h10M50 40h10' stroke='white' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E");
-}
-
-body.easter-theme #main-menu > div[onclick="app.openGlobalChat()"] {
-    font-size: 0 !important;
-    color: transparent !important;
-}
-
-body.easter-theme #main-menu > div[onclick="app.openGlobalChat()"]::after {
-    content: "";
-    width: 18px;
-    height: 18px;
-    background: var(--easter-icon-plum);
-    -webkit-mask: var(--easter-mask-chat) center / contain no-repeat;
-    mask: var(--easter-mask-chat) center / contain no-repeat;
-    filter: drop-shadow(0 2px 3px rgba(107,44,143,0.18));
 }
 
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] span[style*="font-size: 1.3rem"] {
@@ -4714,5 +4677,50 @@ body.easter-theme #main-menu .mode-dual .mode-icon .easter-hotseat-soft-clay-ico
 }
 
 body.easter-theme #main-menu .mode-dual:active .mode-icon .easter-hotseat-soft-clay-icon {
+    transform: translateY(1px) scale(.96);
+}
+
+/* Vaskrs — odobrena Soft Clay Relief 3D ikona za Nađi protivnika.
+   Kartica, naslov, položaj i funkcija ostaju nepromenjeni. */
+#main-menu .easter-opponent-soft-clay-icon {
+    display: none;
+}
+
+body.easter-theme #main-menu .mode-random .mode-icon {
+    width: 54px !important;
+    height: 54px !important;
+    flex: 0 0 54px !important;
+    padding: 0 !important;
+    position: relative;
+    overflow: visible !important;
+    color: transparent !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+}
+
+body.easter-theme #main-menu .mode-random .mode-icon::before,
+body.easter-theme #main-menu .mode-random .mode-icon::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.easter-theme #main-menu .mode-random .mode-icon .easter-opponent-soft-clay-icon {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 54px !important;
+    height: 54px !important;
+    max-width: none !important;
+    object-fit: contain;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: none;
+}
+
+body.easter-theme #main-menu .mode-random:active .mode-icon .easter-opponent-soft-clay-icon {
     transform: translateY(1px) scale(.96);
 }
