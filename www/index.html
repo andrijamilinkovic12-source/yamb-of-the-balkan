@@ -6,8 +6,8 @@
     <title>Yamb of the Balkan - Divine Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.8">
-    <link rel="stylesheet" href="teme.css?v=5.20">
+    <link rel="stylesheet" href="style.css?v=5.9">
+    <link rel="stylesheet" href="teme.css?v=5.21">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -416,9 +416,9 @@
             <div onclick="openOnlinePlayersModal()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="position: absolute; bottom: -15px; left: -10px; font-size: 4.5rem; opacity: 0.05; pointer-events: none;">🌍</div>
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                    <div style="position: relative;">
-                        <span style="font-size: 1.3rem;">🌍</span>
-                        <div style="position: absolute; top: 0; right: -5px; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 5px var(--success); animation: pulse 2s infinite;"></div>
+                    <div class="main-online-icon-wrap">
+                        <img class="main-online-soft-clay-icon" src="assets/soft-clay-online-players.svg" alt="" aria-hidden="true" decoding="async">
+                        <div class="main-online-presence-dot" aria-hidden="true"></div>
                     </div>
                     <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
                     <span style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;" data-lang="ui_online_short">Online</span>

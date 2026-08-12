@@ -1401,8 +1401,8 @@ body.easter-theme #main-menu .icon-menu-grid .btn-square[data-lang-aria="menu_ru
     --easter-pack-icon-bg: var(--easter-icon-blue);
 }
 
-body.easter-theme #main-menu .spec-riznica > img,
-body.easter-theme #main-menu .spec-turnir > img,
+body.easter-theme #main-menu .spec-riznica > .special-svg-icon,
+body.easter-theme #main-menu .spec-turnir > .special-svg-icon,
 body.easter-theme #main-menu .icon-menu-grid .menu-svg-icon {
     opacity: 0 !important;
     filter: none !important;
@@ -4345,13 +4345,15 @@ body.easter-theme #main-menu .special-actions-row .btn-special-square::before {
 }
 
 body.easter-theme #main-menu .special-actions-row .easter-soft-clay-special-icon {
-    display: block;
+    display: block !important;
     position: absolute;
     left: 50%;
     top: 50%;
     z-index: 2;
     width: 46px;
     height: 46px;
+    opacity: 1 !important;
+    visibility: visible !important;
     object-fit: contain;
     pointer-events: none;
     transform: translate(-50%, -50%);
@@ -4362,10 +4364,21 @@ body.easter-theme #main-menu .special-actions-row .btn-special-square:active .ea
 }
 
 body.easter-theme #main-menu .special-actions-row #tourney-status-badge {
-    z-index: 10 !important;
+    top: -5px !important;
+    right: -5px !important;
+    z-index: 20 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    clip-path: none !important;
+    border-color: #fff8ef !important;
+    box-shadow:
+        0 0 0 2px rgba(96, 47, 116, .58),
+        0 4px 9px rgba(72, 34, 91, .34);
 }
 
 /* Statusni bedž Turnira izlazi preko ivice dugmeta i mora ostati potpuno vidljiv. */
 body.easter-theme #main-menu .special-actions-row .spec-turnir {
+    z-index: 2;
+    isolation: isolate;
     overflow: visible !important;
 }

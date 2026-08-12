@@ -3958,6 +3958,45 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
     overflow: hidden;
 }
 
+/* Univerzalni Soft Clay Relief asset za Online igrače.
+   Primenjuje se u svim temama; kartica, broj i njene mere ostaju nepromenjeni. */
+#main-menu .main-online-icon-wrap {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 34px;
+}
+
+#main-menu .main-online-soft-clay-icon {
+    display: block;
+    width: 34px;
+    height: 34px;
+    max-width: none;
+    object-fit: contain;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: none;
+}
+
+#main-menu .main-online-presence-dot {
+    position: absolute;
+    top: 1px;
+    right: -2px;
+    z-index: 2;
+    width: 8px;
+    height: 8px;
+    box-sizing: border-box;
+    border: 1.5px solid rgba(247, 255, 252, .96);
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 5px var(--success);
+    animation: pulse 2s infinite;
+    pointer-events: none;
+}
+
 /* =========================================================
    TROPHY NOTIFICATION POPUP (TOAST)
    ========================================================= */
