@@ -3962,18 +3962,39 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
    Primenjuje se u svim temama; kartica, broj i njene mere ostaju nepromenjeni. */
 #main-menu .main-online-icon-wrap {
     position: relative;
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 0 0 34px;
+    flex: 0 0 38px;
 }
 
 #main-menu .main-online-soft-clay-icon {
     display: block;
-    width: 34px;
-    height: 34px;
+    width: 38px;
+    height: 38px;
+    max-width: none;
+    object-fit: contain;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: none;
+}
+
+#main-menu .main-economy-icon-wrap {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+}
+
+#main-menu .main-economy-soft-clay-icon {
+    display: block;
+    width: 42px;
+    height: 42px;
     max-width: none;
     object-fit: contain;
     opacity: 1;

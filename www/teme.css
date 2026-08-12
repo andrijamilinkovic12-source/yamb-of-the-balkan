@@ -4413,3 +4413,92 @@ body.easter-theme #main-menu .special-actions-row .easter-soft-clay-special-icon
     width: 62px !important;
     height: 62px !important;
 }
+
+/* Vaskrs — funkcionalna Soft Clay Relief kartica Kvartalne lige.
+   Dimenzije i živi podaci ostaju postojeći; menja se samo vizuelni tretman. */
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card {
+    background:
+        radial-gradient(circle at 18% 16%, rgba(255,255,255,.92), transparent 36%),
+        linear-gradient(145deg, #fffaf0 0%, #f1e7f7 100%) !important;
+    border: 1px solid rgba(255,255,255,.86) !important;
+    border-top-color: rgba(255,255,255,.96) !important;
+    border-left-color: rgba(255,255,255,.92) !important;
+    box-shadow:
+        6px 7px 14px rgba(137,99,122,.20),
+        -5px -5px 12px rgba(255,255,255,.76),
+        inset 2px 2px 3px rgba(255,255,255,.92),
+        inset -2px -2px 5px rgba(104,68,122,.10) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-watermark-zone {
+    position: absolute;
+    top: 50%;
+    right: -10px;
+    z-index: 0;
+    width: 60px;
+    height: 60px;
+    transform: translateY(-50%);
+    border: 5px solid rgba(121,88,135,.11);
+    border-radius: 50%;
+    box-shadow:
+        inset 2px 2px 3px rgba(108,76,122,.10),
+        inset -2px -2px 3px rgba(255,255,255,.48);
+    pointer-events: none;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-watermark-zone::before {
+    content: "♛";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(121,88,135,.13);
+    font-family: Georgia, serif;
+    font-size: 32px;
+    line-height: 1;
+    text-shadow:
+        1px 1px 1px rgba(106,72,119,.11),
+        -1px -1px 1px rgba(255,255,255,.68);
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-content {
+    padding-right: 24px;
+    box-sizing: border-box;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-title {
+    color: #735283 !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.94) !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card #league-rank-name {
+    color: #795887 !important;
+    text-shadow:
+        0 1px 0 rgba(255,255,255,.96),
+        1px 2px 3px rgba(83,52,100,.18) !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-progress {
+    height: 7px !important;
+    background: #e5dce5 !important;
+    border: 1px solid rgba(117,79,132,.16) !important;
+    box-shadow:
+        inset 2px 2px 4px rgba(99,68,110,.18),
+        inset -2px -2px 4px rgba(255,255,255,.90) !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-progress #league-progress-bar {
+    border-radius: inherit;
+    background: linear-gradient(90deg, #d6a84d 0%, #f1d37b 52%, #b98ade 100%) !important;
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.72),
+        0 0 5px rgba(197,155,76,.30) !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card #league-pts-text {
+    color: #694e75 !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.86) !important;
+}

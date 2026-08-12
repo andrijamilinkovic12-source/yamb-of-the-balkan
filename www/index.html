@@ -6,8 +6,8 @@
     <title>Yamb of the Balkan - Divine Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.9">
-    <link rel="stylesheet" href="teme.css?v=5.23">
+    <link rel="stylesheet" href="style.css?v=5.10">
+    <link rel="stylesheet" href="teme.css?v=5.24">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -414,10 +414,9 @@
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
             
             <div onclick="openOnlinePlayersModal()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <div style="position: absolute; bottom: -15px; left: -10px; font-size: 4.5rem; opacity: 0.05; pointer-events: none;">🌍</div>
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div class="main-online-icon-wrap">
-                        <img class="main-online-soft-clay-icon" src="assets/soft-clay-online-players.svg" alt="" aria-hidden="true" decoding="async">
+                        <img class="main-online-soft-clay-icon" src="assets/soft-clay-online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <div class="main-online-presence-dot" aria-hidden="true"></div>
                     </div>
                     <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
@@ -425,13 +424,13 @@
                 </div>
             </div>
 
-            <div onclick="if(window.kvartalnaLiga) window.kvartalnaLiga.openModal()" style="flex: 1.8; cursor: pointer; background: rgba(255, 215, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 215, 0, 0.25); border-left: 1px solid rgba(255, 215, 0, 0.15); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); position: relative; overflow: hidden; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
-                <img src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="position: absolute; top: -22px; right: -20px; width: 104px; height: 104px; opacity: 0.28; pointer-events: none; object-fit: contain; filter: var(--league-logo-watermark-filter);">
-                <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                    <span data-lang="menu_league" style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
+            <div class="main-league-card" onclick="if(window.kvartalnaLiga) window.kvartalnaLiga.openModal()" style="flex: 1.8; cursor: pointer; background: rgba(255, 215, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 215, 0, 0.25); border-left: 1px solid rgba(255, 215, 0, 0.15); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 10px; box-shadow: 0 20px 40px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); position: relative; overflow: hidden; transition: transform 0.1s;" onmousedown="this.style.transform='scale(0.98)'" onmouseup="this.style.transform='scale(1)'">
+                <div class="main-league-watermark-zone" aria-hidden="true"></div>
+                <div class="main-league-content" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
+                    <span class="main-league-title" data-lang="menu_league" style="font-size: 0.65rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 1px; font-weight: 800; margin-bottom: 2px;">Kvartalna Liga</span>
                     <span id="league-rank-name" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 2px 5px rgba(0,0,0,0.8); letter-spacing: 1px;">AMATER</span>
                     
-                    <div style="width: 90%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);">
+                    <div class="main-league-progress" style="width: 90%; height: 6px; background: rgba(0,0,0,0.3); border-radius: 4px; margin-top: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);">
                         <div id="league-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #E0C995, #FFD700); box-shadow: 0 0 5px #FFD700; transition: width 0.5s;"></div>
                     </div>
                     <span id="league-pts-text" style="font-size: 0.6rem; color: var(--text-main); margin-top: 5px; font-weight: 600;">0 / 5000 PTS</span>
@@ -439,11 +438,9 @@
             </div>
 
             <div onclick="app.openUndoMenu()" title="Dukati i vraćanje upisa" data-lang-title="tooltip_undo_menu" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                <svg class="dukat-icon-inline" aria-hidden="true" focusable="false" style="position: absolute; bottom: -18px; right: -14px; width: 74px; height: 74px; opacity: 0.08; pointer-events: none;"><use href="#app-icon-dukat"></use></svg>
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                        <svg class="dukat-icon-inline" aria-hidden="true" focusable="false" style="width: 24px; height: 24px;"><use href="#app-icon-dukat"></use></svg>
-                        <svg class="token-icon-inline" aria-hidden="true" focusable="false" style="width: 21px; height: 21px; opacity: 0.95;"><use href="#app-icon-undo-token"></use></svg>
+                    <div class="main-economy-icon-wrap">
+                        <img class="main-economy-soft-clay-icon" src="assets/soft-clay-ducats-undo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </div>
                     <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
                     <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
@@ -1424,15 +1421,19 @@
             if (dukatiEl) dukatiEl.innerText = dukati;
             
             let rankKey = "rank_amater";
+            let currentLevelPts = 0;
             let nextLevelPts = 5000;
             
-            if (pts < 5000) { rankKey = "rank_amater"; nextLevelPts = 5000; }
-            else if (pts < 15000) { rankKey = "rank_profi"; nextLevelPts = 15000; }
-            else if (pts < 50000) { rankKey = "rank_majstor"; nextLevelPts = 50000; }
-            else if (pts < 100000) { rankKey = "rank_legenda"; nextLevelPts = 100000; }
-            else { rankKey = "rank_titan"; nextLevelPts = pts; } 
+            if (pts < 5000) { rankKey = "rank_amater"; currentLevelPts = 0; nextLevelPts = 5000; }
+            else if (pts < 15000) { rankKey = "rank_profi"; currentLevelPts = 5000; nextLevelPts = 15000; }
+            else if (pts < 50000) { rankKey = "rank_majstor"; currentLevelPts = 15000; nextLevelPts = 50000; }
+            else if (pts < 100000) { rankKey = "rank_legenda"; currentLevelPts = 50000; nextLevelPts = 100000; }
+            else { rankKey = "rank_titan"; currentLevelPts = 100000; nextLevelPts = null; }
 
-            let percent = nextLevelPts === pts ? 100 : Math.min(100, Math.round((pts / nextLevelPts) * 100));
+            const levelSpan = nextLevelPts === null ? 0 : nextLevelPts - currentLevelPts;
+            const percent = nextLevelPts === null
+                ? 100
+                : Math.max(0, Math.min(100, Math.round(((pts - currentLevelPts) / levelSpan) * 100)));
 
             const rankEl = document.getElementById('league-rank-name');
             const barEl = document.getElementById('league-progress-bar');
