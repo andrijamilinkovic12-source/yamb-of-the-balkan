@@ -4382,3 +4382,34 @@ body.easter-theme #main-menu .special-actions-row .spec-turnir {
     isolation: isolate;
     overflow: visible !important;
 }
+
+/* Vaskrs — čiste profesionalne 3D ikonice, bez duple kartice i podmetača.
+   Klik-zone i raspored ostaju 44x44 px (donji red) i 62x62 px (Riznica/Turnir). */
+body.easter-theme #main-menu .icon-menu-grid .btn-square,
+body.easter-theme #main-menu .special-actions-row .btn-special-square {
+    padding: 0 !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.easter-theme #main-menu .icon-menu-grid .btn-square::before,
+body.easter-theme #main-menu .icon-menu-grid .btn-square::after,
+body.easter-theme #main-menu .special-actions-row .btn-special-square::before,
+body.easter-theme #main-menu .special-actions-row .btn-special-square::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon,
+body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon--daily {
+    width: 44px !important;
+    height: 44px !important;
+}
+
+body.easter-theme #main-menu .special-actions-row .easter-soft-clay-special-icon {
+    width: 62px !important;
+    height: 62px !important;
+}
