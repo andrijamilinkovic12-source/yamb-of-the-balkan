@@ -4231,22 +4231,28 @@ body.easter-theme #main-menu .icon-menu-grid .btn-square::after {
     content: none !important;
 }
 
+body.easter-theme #main-menu .icon-menu-grid .menu-svg-icon {
+    display: none !important;
+}
+
 body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon {
     display: block;
-    position: relative;
+    position: absolute;
+    left: 50%;
+    top: 50%;
     z-index: 2;
-    width: 22px;
-    height: 22px;
-    flex: 0 0 auto;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
     pointer-events: none;
+    transform: translate(-50%, -50%);
 }
 
 body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon--daily {
-    width: 24px;
-    height: 24px;
+    width: 30px;
+    height: 30px;
 }
 
 body.easter-theme #main-menu .icon-menu-grid .btn-square:active .easter-soft-clay-icon {
-    transform: translateY(1px) scale(.94);
+    transform: translate(-50%, -47%) scale(.94);
 }
