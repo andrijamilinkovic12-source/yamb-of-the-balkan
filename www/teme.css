@@ -4195,7 +4195,8 @@ body.easter-theme #main-menu .icon-menu-grid .btn-square {
 }
 
 body.easter-theme #main-menu .icon-menu-grid .btn-square::before {
-    inset: 9px !important;
+    /* Unutrašnji clay podmetač prati uvećanu ikonicu, bez menjanja spoljnog dugmeta. */
+    inset: 5px !important;
     z-index: 1 !important;
     border-radius: 9px !important;
     background:
