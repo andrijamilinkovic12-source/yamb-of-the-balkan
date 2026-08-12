@@ -4475,6 +4475,18 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
 }
 
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card #league-rank-name {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box;
+    overflow: visible !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: .92rem !important;
+    font-weight: 800 !important;
+    line-height: 1.12 !important;
+    letter-spacing: .55px !important;
     color: #795887 !important;
     text-shadow:
         0 1px 0 rgba(255,255,255,.96),
@@ -4501,4 +4513,206 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
 body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card #league-pts-text {
     color: #694e75 !important;
     text-shadow: 0 1px 0 rgba(255,255,255,.86) !important;
+}
+
+/* Vaskrs — tri informacione kartice prate boje svojih 3D ikonica.
+   Mere, raspored i živi podaci ostaju nepromenjeni. */
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-online-card {
+    background:
+        radial-gradient(circle at 22% 15%, rgba(255,255,255,.64), transparent 34%),
+        linear-gradient(145deg, #d7f2ed 0%, #c8e5e5 48%, #d9cae8 100%) !important;
+    border: 1px solid rgba(255,255,255,.70) !important;
+    border-top-color: rgba(255,255,255,.88) !important;
+    border-left-color: rgba(255,255,255,.82) !important;
+    box-shadow:
+        5px 6px 13px rgba(68,117,120,.22),
+        -4px -4px 10px rgba(255,255,255,.58),
+        inset 2px 2px 3px rgba(255,255,255,.72),
+        inset -2px -2px 4px rgba(79,85,132,.12) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-online-card #live-online-count {
+    color: #287f74 !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.72) !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-online-card span[data-lang="ui_online_short"] {
+    color: #486e70 !important;
+    opacity: 1 !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card {
+    background:
+        radial-gradient(circle at 16% 14%, rgba(255,255,255,.78), transparent 34%),
+        linear-gradient(145deg, #f5e6c7 0%, #e9d5df 49%, #d8c4e8 100%) !important;
+    border-color: rgba(255,246,225,.78) !important;
+    box-shadow:
+        6px 7px 14px rgba(126,88,111,.23),
+        -5px -5px 11px rgba(255,255,255,.58),
+        inset 2px 2px 3px rgba(255,255,255,.74),
+        inset -2px -2px 5px rgba(104,68,122,.13) !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-economy-card {
+    background:
+        radial-gradient(circle at 24% 15%, rgba(255,255,255,.64), transparent 34%),
+        linear-gradient(145deg, #f4dfaa 0%, #e7c887 48%, #d7b6df 100%) !important;
+    border: 1px solid rgba(255,244,205,.78) !important;
+    border-top-color: rgba(255,250,226,.90) !important;
+    border-left-color: rgba(255,247,218,.86) !important;
+    box-shadow:
+        5px 6px 13px rgba(137,94,48,.24),
+        -4px -4px 10px rgba(255,255,255,.52),
+        inset 2px 2px 3px rgba(255,255,255,.68),
+        inset -2px -2px 4px rgba(103,65,114,.13) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-economy-card #menu-dukati-count {
+    color: #8b591d !important;
+    text-shadow: 0 1px 0 rgba(255,250,224,.80) !important;
+}
+
+body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-economy-card span[data-lang="menu_ducats"] {
+    color: #71502e !important;
+    opacity: 1 !important;
+}
+
+/* Vaskrs — Global Chat prati pravilo čistih Soft Clay Relief ikonica.
+   Postojeća 36x36 klik-zona i položaj ostaju isti; nema kartice ni podmetača. */
+#main-menu .easter-global-chat-icon {
+    display: none;
+}
+
+body.easter-theme #main-menu > .main-global-chat-btn {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    overflow: visible !important;
+    color: transparent !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.easter-theme #main-menu > .main-global-chat-btn::before,
+body.easter-theme #main-menu > .main-global-chat-btn::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.easter-theme #main-menu > .main-global-chat-btn .main-global-chat-fallback {
+    display: none !important;
+}
+
+body.easter-theme #main-menu > .main-global-chat-btn .easter-global-chat-icon {
+    display: block !important;
+    width: 36px !important;
+    height: 36px !important;
+    max-width: none !important;
+    object-fit: contain;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: none;
+}
+
+/* Vaskrs — odobrena Soft Clay Relief 3D ikona samo za Solo igru.
+   Ostala tri moda zadržavaju prethodne standardne ikonice. */
+#main-menu .easter-solo-soft-clay-icon {
+    display: none;
+}
+
+body.easter-theme #main-menu .mode-solo .mode-icon {
+    width: 54px !important;
+    height: 54px !important;
+    flex: 0 0 54px !important;
+    padding: 0 !important;
+    position: relative;
+    overflow: visible !important;
+    color: transparent !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+}
+
+body.easter-theme #main-menu .mode-solo .mode-icon::before,
+body.easter-theme #main-menu .mode-solo .mode-icon::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.easter-theme #main-menu .mode-solo .mode-icon .easter-solo-soft-clay-icon {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 54px !important;
+    height: 54px !important;
+    max-width: none !important;
+    object-fit: contain;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: none;
+}
+
+body.easter-theme #main-menu .mode-solo:active .mode-icon .easter-solo-soft-clay-icon {
+    transform: translateY(1px) scale(.96);
+}
+
+/* Vaskrs — Hotseat Soft Clay Relief 3D ikona na proveri.
+   Kartica, naslov, položaj i funkcija ostaju nepromenjeni. */
+#main-menu .easter-hotseat-soft-clay-icon {
+    display: none;
+}
+
+body.easter-theme #main-menu .mode-dual .mode-icon {
+    width: 54px !important;
+    height: 54px !important;
+    flex: 0 0 54px !important;
+    padding: 0 !important;
+    position: relative;
+    overflow: visible !important;
+    color: transparent !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+}
+
+body.easter-theme #main-menu .mode-dual .mode-icon::before,
+body.easter-theme #main-menu .mode-dual .mode-icon::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.easter-theme #main-menu .mode-dual .mode-icon .easter-hotseat-soft-clay-icon {
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    width: 54px !important;
+    height: 54px !important;
+    max-width: none !important;
+    object-fit: contain;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: none;
+}
+
+body.easter-theme #main-menu .mode-dual:active .mode-icon .easter-hotseat-soft-clay-icon {
+    transform: translateY(1px) scale(.96);
 }

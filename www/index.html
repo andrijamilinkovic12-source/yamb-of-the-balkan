@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.10">
-    <link rel="stylesheet" href="teme.css?v=5.24">
+    <link rel="stylesheet" href="teme.css?v=5.31">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -404,16 +404,17 @@
     </div>
 
     <div id="main-menu" class="screen">
-        <div onclick="app.openGlobalChat()" 
+        <div class="main-global-chat-btn" onclick="app.openGlobalChat()"
              style="position: absolute; top: 30px; left: 20px; z-index: 100; cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); font-size: 2rem;" 
              onmousedown="this.style.transform='scale(0.9)'" 
              onmouseup="this.style.transform='scale(1)'">
-            💬
+            <span class="main-global-chat-fallback" aria-hidden="true">💬</span>
+            <img class="easter-global-chat-icon" src="assets/easter-soft-clay/global-chat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
         </div>
 
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
             
-            <div onclick="openOnlinePlayersModal()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+            <div class="main-online-card" onclick="openOnlinePlayersModal()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div class="main-online-icon-wrap">
                         <img class="main-online-soft-clay-icon" src="assets/soft-clay-online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
@@ -437,7 +438,7 @@
                 </div>
             </div>
 
-            <div onclick="app.openUndoMenu()" title="Dukati i vraćanje upisa" data-lang-title="tooltip_undo_menu" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+            <div class="main-economy-card" onclick="app.openUndoMenu()" title="Dukati i vraćanje upisa" data-lang-title="tooltip_undo_menu" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div class="main-economy-icon-wrap">
                         <img class="main-economy-soft-clay-icon" src="assets/soft-clay-ducats-undo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
@@ -455,7 +456,10 @@
                 <div style="position: absolute; bottom: -20px; right: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">👤</div>
                 
                 <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
-                    <span class="mode-icon">👤</span>
+                    <span class="mode-icon">
+                        👤
+                        <img class="easter-solo-soft-clay-icon" src="assets/easter-soft-clay/mode-solo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    </span>
                     <span class="mode-text" data-lang="menu_solo" data-easter-label-sr="Solo igra" data-easter-label-en="Solo game" data-desert-label-sr="Solo igra" data-desert-label-en="Solo game">Solo Igra</span>
                 </div>
                 <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
@@ -468,7 +472,10 @@
                 <div style="position: absolute; bottom: -20px; left: -15px; font-size: 6.5rem; opacity: 0.04; pointer-events: none;">👥</div>
                 
                 <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
-                    <span class="mode-icon">👥</span>
+                    <span class="mode-icon">
+                        👥
+                        <img class="easter-hotseat-soft-clay-icon" src="assets/easter-soft-clay/mode-hotseat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    </span>
                     <span class="mode-text" data-lang="menu_dual" data-easter-label-sr="Dva igrača (Hotseat)" data-easter-label-en="Two players (Hotseat)" data-desert-label-sr="Dva igrača (Hotseat)" data-desert-label-en="Two players (Hotseat)">Dva Igrača</span>
                 </div>
                 <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
