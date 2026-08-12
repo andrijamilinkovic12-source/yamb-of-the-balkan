@@ -4364,3 +4364,8 @@ body.easter-theme #main-menu .special-actions-row .btn-special-square:active .ea
 body.easter-theme #main-menu .special-actions-row #tourney-status-badge {
     z-index: 10 !important;
 }
+
+/* Statusni bedž Turnira izlazi preko ivice dugmeta i mora ostati potpuno vidljiv. */
+body.easter-theme #main-menu .special-actions-row .spec-turnir {
+    overflow: visible !important;
+}
