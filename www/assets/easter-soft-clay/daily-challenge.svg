@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Dnevni izazov">
+  <defs>
+    <linearGradient id="base" x1="16" y1="12" x2="78" y2="86" gradientUnits="userSpaceOnUse"><stop stop-color="#61D1E9"/><stop offset="1" stop-color="#277FAE"/></linearGradient>
+    <linearGradient id="face" x1="24" y1="29" x2="70" y2="75" gradientUnits="userSpaceOnUse"><stop stop-color="#F6FDFF"/><stop offset="1" stop-color="#BDEAF4"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#15516F" flood-opacity=".34"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <rect x="17" y="19" width="62" height="61" rx="15" fill="url(#base)"/>
+    <rect x="22" y="28" width="52" height="47" rx="10" fill="url(#face)"/>
+    <path d="M22 39h52" stroke="#328BB5" stroke-width="6" stroke-linecap="round"/>
+    <rect x="29" y="13" width="9" height="23" rx="4.5" fill="#2A78A1"/><rect x="58" y="13" width="9" height="23" rx="4.5" fill="#2A78A1"/>
+    <path d="M31 50h7v7h-7zm14 0h7v7h-7zm14 0h7v7h-7zM31 63h7v7h-7zm14 0h7v7h-7z" fill="#3798BE"/>
+    <path d="M28 23c10-7 30-7 42 0" fill="none" stroke="#D6FAFF" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+  </g>
+</svg>

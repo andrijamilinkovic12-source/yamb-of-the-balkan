@@ -4222,3 +4222,31 @@ body.easter-theme #main-menu .icon-menu-grid .btn-square:active::after {
         drop-shadow(0 1px 1px rgba(107,44,143,.18))
         drop-shadow(-1px -1px 1px rgba(255,255,255,.66)) !important;
 }
+
+/* Pravi Soft Clay Relief assets se prikazuju samo u Vaskrs temi.
+   Globalni SVG ostaje aktivan u svim ostalim temama. */
+#main-menu .easter-soft-clay-icon { display: none; }
+
+body.easter-theme #main-menu .icon-menu-grid .btn-square::after {
+    content: none !important;
+}
+
+body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon {
+    display: block;
+    position: relative;
+    z-index: 2;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 auto;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon--daily {
+    width: 24px;
+    height: 24px;
+}
+
+body.easter-theme #main-menu .icon-menu-grid .btn-square:active .easter-soft-clay-icon {
+    transform: translateY(1px) scale(.94);
+}
