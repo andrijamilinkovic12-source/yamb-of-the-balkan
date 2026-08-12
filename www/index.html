@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.9">
-    <link rel="stylesheet" href="teme.css?v=5.21">
+    <link rel="stylesheet" href="teme.css?v=5.22">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -505,11 +505,11 @@
         <div class="special-actions-row" style="max-width: 380px;">
             <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()" aria-label="Riznica" data-lang-aria="menu_shop">
                 <img class="special-svg-icon special-svg-icon--treasury" src="assets/treasury-icon.svg" alt="" aria-hidden="true" decoding="async">
-                <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/treasury.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/treasury-pro.png" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert(typeof t === 'function' ? t('tourney_coming_soon') : 'Turniri stižu uskoro!'); }" aria-label="Turnir" data-lang-aria="tourney_title">
                 <img class="special-svg-icon special-svg-icon--tournament" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
-                <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/tournament.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/tournament-pro.png" alt="" aria-hidden="true" decoding="async">
                 <div id="tourney-status-badge" style="position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; display: none; z-index: 10;"></div>
             </button>
         </div>
@@ -517,27 +517,27 @@
         <div class="icon-menu-grid">
             <button class="btn-square" onclick="if(window.dnevniIzazov) { dnevniIzazov.open(); } else { app.dailyManager.open(); }" aria-label="Dnevni izazov" data-lang-aria="daily_challenge_title">
                 <svg class="menu-svg-icon menu-svg-icon--daily" aria-hidden="true" focusable="false"><use href="#menu-icon-daily"></use></svg>
-                <img class="easter-soft-clay-icon easter-soft-clay-icon--daily" src="assets/easter-soft-clay/daily-challenge.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-icon easter-soft-clay-icon--daily" src="assets/easter-soft-clay/daily-challenge-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon desert-soft-clay-icon--daily" src="assets/desert-soft-clay/daily-challenge.svg" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showHighscoresScreen()" aria-label="Top lista" data-lang-aria="menu_hs">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-leaderboard"></use></svg>
-                <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/leaderboard.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/leaderboard-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/leaderboard.svg" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showStats()" aria-label="Statistika" data-lang-aria="menu_stats">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-stats"></use></svg>
-                <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/statistics.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/statistics-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/statistics.svg" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showSettings()" aria-label="Podešavanja" data-lang-aria="menu_settings">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-settings"></use></svg>
-                <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/settings.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/settings-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/settings.svg" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showRules()" aria-label="Pravila igre" data-lang-aria="menu_rules">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-rules"></use></svg>
-                <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/rules.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/rules-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/rules.svg" alt="" aria-hidden="true" decoding="async">
             </button>
         </div>

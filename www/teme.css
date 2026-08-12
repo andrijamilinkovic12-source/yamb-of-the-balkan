@@ -4242,16 +4242,16 @@ body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon {
     left: 50%;
     top: 50%;
     z-index: 2;
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     object-fit: contain;
     pointer-events: none;
     transform: translate(-50%, -50%);
 }
 
 body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon--daily {
-    width: 30px;
-    height: 30px;
+    width: 37px;
+    height: 37px;
 }
 
 body.easter-theme #main-menu .icon-menu-grid .btn-square:active .easter-soft-clay-icon {
