@@ -4257,3 +4257,64 @@ body.easter-theme #main-menu .icon-menu-grid .easter-soft-clay-icon--daily {
 body.easter-theme #main-menu .icon-menu-grid .btn-square:active .easter-soft-clay-icon {
     transform: translate(-50%, -47%) scale(.94);
 }
+
+/* Pustinjsko staklo — ista Soft Clay geometrija i mere, posebna Desert paleta. */
+#main-menu .desert-soft-clay-icon { display: none; }
+
+body.desert-theme #main-menu .icon-menu-grid .btn-square {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 30% 23%, rgba(255,255,255,.72), transparent 34%),
+        linear-gradient(145deg, #fff3d9 0%, #e4b974 100%) !important;
+    border: 1px solid rgba(255,246,220,.74) !important;
+    box-shadow:
+        4px 4px 8px rgba(116,64,28,.27),
+        -4px -4px 8px rgba(255,246,218,.65),
+        inset 1px 1px 2px rgba(255,255,255,.72),
+        inset -1px -1px 2px rgba(111,56,24,.09) !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+
+body.desert-theme #main-menu .icon-menu-grid .btn-square::before {
+    content: "";
+    position: absolute;
+    inset: 5px;
+    z-index: 1;
+    border-radius: 9px;
+    background:
+        radial-gradient(circle at 31% 24%, rgba(255,255,255,.56), transparent 43%),
+        linear-gradient(145deg, rgba(255,241,211,.80), rgba(213,157,91,.54));
+    border: 1px solid rgba(255,245,218,.54);
+    box-shadow:
+        inset 2px 2px 4px rgba(112,61,27,.16),
+        inset -2px -2px 4px rgba(255,244,214,.62);
+    pointer-events: none;
+}
+
+body.desert-theme #main-menu .icon-menu-grid .menu-svg-icon {
+    display: none !important;
+}
+
+body.desert-theme #main-menu .icon-menu-grid .desert-soft-clay-icon {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+}
+
+body.desert-theme #main-menu .icon-menu-grid .desert-soft-clay-icon--daily {
+    width: 30px;
+    height: 30px;
+}
+
+body.desert-theme #main-menu .icon-menu-grid .btn-square:active .desert-soft-clay-icon {
+    transform: translate(-50%, -47%) scale(.94);
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Pravila igre">
+  <defs>
+    <linearGradient id="teal" x1="18" y1="18" x2="77" y2="81" gradientUnits="userSpaceOnUse"><stop stop-color="#66BEBB"/><stop offset="1" stop-color="#245F68"/></linearGradient>
+    <linearGradient id="page" x1="19" y1="24" x2="77" y2="75" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF9E8"/><stop offset="1" stop-color="#D8E7D9"/></linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="#1D4F54" flood-opacity=".4"/></filter>
+  </defs>
+  <g filter="url(#shadow)">
+    <path d="M14 22c0-6 5-10 11-10h20c5 0 9 3 11 7 2-4 6-7 11-7h4c6 0 11 4 11 10v52c-16-4-27-4-34 3-7-7-18-7-34-3V22Z" fill="url(#teal)"/>
+    <path d="M20 25c0-4 3-7 7-7h18c5 0 9 4 9 9v42c-7-5-17-5-34-1V25Zm56 0c0-4-3-7-7-7H61c-5 0-9 4-9 9v42c7-5 15-5 24-1V25Z" fill="url(#page)"/>
+    <path d="M27 34h17M27 44h17M27 54h12M62 34h8M62 44h8M62 54h8" stroke="#2E7378" stroke-width="4" stroke-linecap="round"/>
+    <path d="M22 21c7-4 17-4 24 0" fill="none" stroke="#E8FFF7" stroke-width="3" stroke-linecap="round" opacity=".84"/>
+  </g>
+</svg>
