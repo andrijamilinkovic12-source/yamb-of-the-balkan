@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.8">
-    <link rel="stylesheet" href="teme.css?v=5.18">
+    <link rel="stylesheet" href="teme.css?v=5.19">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -505,9 +505,11 @@
         <div class="special-actions-row" style="max-width: 380px;">
             <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()" aria-label="Riznica" data-lang-aria="menu_shop">
                 <img class="special-svg-icon special-svg-icon--treasury" src="assets/treasury-icon.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/treasury.svg" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert(typeof t === 'function' ? t('tourney_coming_soon') : 'Turniri stižu uskoro!'); }" aria-label="Turnir" data-lang-aria="tourney_title">
                 <img class="special-svg-icon special-svg-icon--tournament" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/tournament.svg" alt="" aria-hidden="true" decoding="async">
                 <div id="tourney-status-badge" style="position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; display: none; z-index: 10;"></div>
             </button>
         </div>

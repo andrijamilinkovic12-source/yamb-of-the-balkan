@@ -4318,3 +4318,49 @@ body.desert-theme #main-menu .icon-menu-grid .desert-soft-clay-icon--daily {
 body.desert-theme #main-menu .icon-menu-grid .btn-square:active .desert-soft-clay-icon {
     transform: translate(-50%, -47%) scale(.94);
 }
+
+/* Vaskrs — prave Soft Clay Relief ikonice za Riznicu i Turnir.
+   Dugmad ostaju 62x62 px; unutrašnji podmetač i centar prate novi asset. */
+#main-menu .easter-soft-clay-special-icon { display: none; }
+
+body.easter-theme #main-menu .special-actions-row .btn-special-square::after {
+    content: none !important;
+}
+
+body.easter-theme #main-menu .special-actions-row .special-svg-icon {
+    display: none !important;
+}
+
+body.easter-theme #main-menu .special-actions-row .btn-special-square::before {
+    inset: 7px !important;
+    z-index: 1 !important;
+    border-radius: 13px !important;
+    background:
+        radial-gradient(circle at 31% 24%, rgba(255,255,255,.82), transparent 42%),
+        linear-gradient(145deg, rgba(255,255,255,.72), rgba(222,205,229,.48)) !important;
+    border: 1px solid rgba(255,255,255,.68) !important;
+    box-shadow:
+        inset 3px 3px 6px rgba(184,148,111,.16),
+        inset -3px -3px 6px rgba(255,255,255,.82) !important;
+}
+
+body.easter-theme #main-menu .special-actions-row .easter-soft-clay-special-icon {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+}
+
+body.easter-theme #main-menu .special-actions-row .btn-special-square:active .easter-soft-clay-special-icon {
+    transform: translate(-50%, -47%) scale(.95);
+}
+
+body.easter-theme #main-menu .special-actions-row #tourney-status-badge {
+    z-index: 10 !important;
+}
