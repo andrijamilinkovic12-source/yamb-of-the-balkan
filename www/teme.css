@@ -3889,6 +3889,239 @@ body.easter-theme #daily-intro.theme-easter .daily-intro-mark-wrap::after {
     }
 }
 
+/* Vaskrs — Riznica i Turnir prate isti 4,6 s Soft Clay uvod kao donji red. */
+.riznica-intro-gem-easter,
+.tournament-intro-mark-easter,
+.tournament-intro-champions {
+    display: none;
+}
+
+#riznica-intro.theme-easter,
+#tournament-intro.theme-easter {
+    z-index: 1000002;
+    gap: 0;
+    overflow: hidden;
+    padding: max(18px, var(--safe-top)) max(14px, var(--safe-right)) max(18px, var(--safe-bottom)) max(14px, var(--safe-left));
+    background:
+        linear-gradient(180deg, rgba(255,248,239,.18), rgba(236,219,255,.10)),
+        var(--easter-theme-bg-image) center / cover no-repeat;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    animation: easterRoomIntroFade 4.6s ease forwards;
+}
+
+#riznica-intro.theme-easter .riznica-intro-gem,
+#tournament-intro.theme-easter .tournament-intro-mark {
+    display: none;
+}
+
+#riznica-intro.theme-easter .riznica-intro-gem-easter,
+#tournament-intro.theme-easter .tournament-intro-mark-easter {
+    display: block;
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    object-fit: contain;
+    filter: drop-shadow(0 14px 18px rgba(107,44,143,.18));
+    animation: none;
+}
+
+#tournament-intro.theme-easter .tournament-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    display: grid;
+    place-items: center;
+    border-radius: 0;
+    background: transparent;
+    filter: none;
+    animation: none;
+}
+
+#riznica-intro.theme-easter .riznica-intro-line,
+#tournament-intro.theme-easter .tournament-intro-title {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(94vw, 720px);
+    min-height: clamp(52px, 8vh, 72px);
+    padding: 0;
+    margin: 0;
+    color: #6b2c8f;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1.75rem, 7.6vw, 3rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: clamp(.7px, .35vw, 2px);
+    white-space: nowrap;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow:
+        0 2px 0 rgba(255,255,255,.94),
+        0 7px 17px rgba(107,44,143,.18);
+    animation: none;
+}
+
+#tournament-intro.theme-easter::before,
+#tournament-intro.theme-easter::after {
+    display: none;
+}
+
+#tournament-intro.theme-easter .tournament-intro-champions {
+    position: relative;
+    z-index: 2;
+    display: block;
+    width: min(92vw, 390px);
+    margin-top: clamp(12px, 2.2vh, 20px);
+    padding: 9px 10px 10px;
+    border: 1px solid rgba(255,255,255,.82);
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(255,247,251,.88), rgba(229,215,250,.78));
+    box-shadow:
+        8px 8px 18px rgba(105,71,130,.20),
+        -7px -7px 16px rgba(255,255,255,.72),
+        inset 1px 1px 2px rgba(255,255,255,.82);
+    color: #4f2d63;
+    animation: easterTournamentChampionsReveal .68s cubic-bezier(.2,.85,.25,1.15) .48s both;
+}
+
+.tournament-intro-champions-label {
+    margin: 0 0 6px;
+    color: #6b2c8f;
+    font-size: clamp(.62rem, 2.5vw, .76rem);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: .45px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.tournament-intro-champions-list {
+    display: grid;
+    gap: 5px;
+}
+
+.tournament-intro-champion-row {
+    display: grid;
+    grid-template-columns: 24px 36px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 7px;
+    min-height: 42px;
+    padding: 3px 7px 3px 4px;
+    border: 1px solid rgba(126,79,151,.17);
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(255,255,255,.62), rgba(210,239,221,.48));
+    box-shadow: inset 2px 2px 5px rgba(117,80,139,.08), inset -2px -2px 5px rgba(255,255,255,.72);
+}
+
+.tournament-intro-champion-rank {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #f7c96f, #d9a441);
+    color: #563617;
+    font-size: .72rem;
+    font-weight: 950;
+    box-shadow: 2px 3px 6px rgba(116,69,31,.20), inset 1px 1px 2px rgba(255,246,203,.78);
+}
+
+.tournament-intro-champion-avatar {
+    width: 36px;
+    height: 36px;
+    display: block;
+    border: 2px solid rgba(255,255,255,.92);
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 2px 4px 8px rgba(88,50,108,.22);
+}
+
+.tournament-intro-champion-name {
+    min-width: 0;
+    color: #452456;
+    font-size: clamp(.69rem, 2.75vw, .84rem);
+    font-weight: 850;
+    line-height: 1.08;
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.tournament-intro-champion-wins {
+    min-width: 43px;
+    min-height: 30px;
+    padding: 3px 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border: 1px solid rgba(167,110,37,.18);
+    border-radius: 999px;
+    background: linear-gradient(145deg, rgba(255,236,185,.92), rgba(241,194,105,.82));
+    color: #674015;
+    box-shadow: 3px 4px 8px rgba(116,69,31,.14), inset 1px 1px 2px rgba(255,255,255,.65);
+}
+
+.tournament-intro-champion-wins img {
+    width: 17px;
+    height: 17px;
+    object-fit: contain;
+}
+
+.tournament-intro-champion-wins strong {
+    font-size: .79rem;
+    font-weight: 950;
+}
+
+.tournament-intro-champions-state {
+    min-height: 58px;
+    display: grid;
+    place-items: center;
+    color: #52705b;
+    font-size: .76rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+@keyframes easterTournamentChampionsReveal {
+    from { opacity: 0; transform: translateY(10px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-height: 700px) {
+    #tournament-intro.theme-easter .tournament-intro-mark-wrap,
+    #tournament-intro.theme-easter .tournament-intro-mark-easter {
+        width: clamp(174px, 29vmin, 224px);
+        height: clamp(174px, 29vmin, 224px);
+    }
+
+    #tournament-intro.theme-easter .tournament-intro-champions {
+        margin-top: 8px;
+        padding-top: 7px;
+        padding-bottom: 8px;
+    }
+
+    .tournament-intro-champion-row {
+        min-height: 38px;
+    }
+
+    .tournament-intro-champion-avatar {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #riznica-intro.theme-easter .easter-room-intro-wave-letter,
+    #tournament-intro.theme-easter .easter-room-intro-wave-letter {
+        animation: none !important;
+    }
+
+    #tournament-intro.theme-easter .tournament-intro-champions {
+        animation: none !important;
+    }
+}
+
 /* ========================================================================== */
 /* PUSTINJSKO STAKLO PACK — izolovan kompletan neumorphic UI paket            */
 /* ========================================================================== */

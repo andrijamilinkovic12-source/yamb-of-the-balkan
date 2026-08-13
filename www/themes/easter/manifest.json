@@ -4,7 +4,7 @@
     "sr": "Vaskr Neumorphic UI Theme Pack",
     "en": "Joyful Easter Neumorphic UI Theme Pack"
   },
-  "version": "1.3.0",
+  "version": "1.4.0",
   "updated": "2026-08-13",
   "bodyClass": "easter-theme",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
@@ -40,7 +40,7 @@
     {
       "id": "cinematic-screens",
       "status": "complete",
-      "description": "Splash, quote, waiting and game-over screens plus matching 4.6-second Daily Challenge, Leaderboard, Statistics, Settings and Rules room intros with immediately visible Soft Clay icons and left-to-right title waves."
+      "description": "Splash, quote, waiting and game-over screens plus matching 4.6-second Daily Challenge, Leaderboard, Statistics, Settings, Rules, Treasury and Tournament room intros with immediately visible Soft Clay icons and left-to-right title waves. The Tournament intro includes a live Easter-styled top-three panel with avatar, full player name and all-time tournament wins."
     },
     {
       "id": "motion",
@@ -76,6 +76,8 @@
     "Keep Easter-specific styling isolated under body.easter-theme.",
     "Do not change game board/card dimensions unless explicitly requested.",
     "For future themes, create equivalent isolated packs instead of reusing Easter selectors globally.",
-    "Every two-player Easter game (online random, invite duel, spectator and Hotseat) uses the same freely swipeable vertical board pager and follows the active player only when the turn changes."
+    "Every two-player Easter game (online random, invite duel, spectator and Hotseat) uses the same freely swipeable vertical board pager and follows the active player only when the turn changes.",
+    "Treasury and Tournament use the same 4.6-second large-icon, fixed icon-to-title spacing and left-to-right title-wave intro rules as the Easter bottom-menu rooms.",
+    "The Easter Tournament intro displays the real server-provided top three all-time tournament winners with avatar, full name and number of wins; it must never use fabricated ranking data."
   ]
 }

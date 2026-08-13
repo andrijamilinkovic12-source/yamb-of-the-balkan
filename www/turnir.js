@@ -44,6 +44,7 @@ class TournamentManager {
         };
 
         this.tourneyLeaderboard = [];
+        this.tourneyLeaderboardLoaded = false;
 
         this.activeTab = 'info';
         this.pendingRegistration = false;
@@ -471,7 +472,9 @@ class TournamentManager {
                 });
 
                 this.app.socket.on('tourney_stats_data', (data) => {
-                    this.tourneyLeaderboard = data;
+                    this.tourneyLeaderboard = Array.isArray(data) ? data : [];
+                    this.tourneyLeaderboardLoaded = true;
+                    this.renderEasterIntroChampions();
                     if(document.getElementById('tournament-screen').classList.contains('active')) {
                         this.render();
                     }
@@ -584,7 +587,20 @@ class TournamentManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
-        this.setIntroTitle(title);
+        const isEasterIntro = overlay.classList.contains('theme-easter');
+
+        if (isEasterIntro) {
+            this.setEasterIntroTitle(title, this.tr('tourney_intro_title', 'TURNIR'));
+            this.renderEasterIntroChampions();
+            this.requestTournamentStats();
+            setTimeout(() => {
+                if (this.isIntroPlaying && !this.tourneyLeaderboardLoaded) {
+                    this.requestTournamentStats();
+                }
+            }, 1200);
+        } else {
+            this.setIntroTitle(title);
+        }
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
 
@@ -621,6 +637,92 @@ class TournamentManager {
     setIntroTitle(title) {
         if (!title) return;
         title.textContent = this.tr('tourney_intro_title', 'TURNIR');
+    }
+
+    setEasterIntroTitle(container, label) {
+        if (!container) return;
+        container.textContent = '';
+        Array.from(String(label || '').toUpperCase()).forEach((character, index) => {
+            const span = document.createElement('span');
+            span.className = character === ' '
+                ? 'easter-room-intro-wave-space'
+                : 'easter-room-intro-wave-letter';
+            span.style.setProperty('--wave-index', index);
+            span.textContent = character === ' ' ? '\u00a0' : character;
+            container.appendChild(span);
+        });
+    }
+
+    requestTournamentStats() {
+        if (this.app?.socket?.connected) {
+            this.app.socket.emit('get_tourney_stats');
+            return;
+        }
+
+        if (this.app && typeof this.app.initSocketConnection === 'function') {
+            this.app.initSocketConnection();
+            setTimeout(() => {
+                if (this.app?.socket?.connected) {
+                    this.app.socket.emit('get_tourney_stats');
+                }
+            }, 500);
+        }
+    }
+
+    renderEasterIntroChampions() {
+        const overlay = document.getElementById('tournament-intro');
+        const container = overlay?.querySelector('.tournament-intro-champions');
+        if (!container || !overlay.classList.contains('theme-easter')) return;
+
+        const lang = localStorage.getItem('yamb_lang') || 'sr';
+        const isEnglish = lang === 'en' || lang === 'en-GB';
+        const safeLabel = this.escape(isEnglish ? 'MOST TOURNAMENT WINS' : 'NAJVIŠE OSVOJENIH TURNIRA');
+
+        if (!this.tourneyLeaderboardLoaded) {
+            container.innerHTML = `
+                <div class="tournament-intro-champions-label">${safeLabel}</div>
+                <div class="tournament-intro-champions-state">${this.escape(isEnglish ? 'Loading results…' : 'Učitavanje rezultata…')}</div>
+            `;
+            return;
+        }
+
+        const champions = [...this.tourneyLeaderboard]
+            .sort((a, b) => Number(b?.wins || 0) - Number(a?.wins || 0))
+            .slice(0, 3);
+
+        if (champions.length === 0) {
+            container.innerHTML = `
+                <div class="tournament-intro-champions-label">${safeLabel}</div>
+                <div class="tournament-intro-champions-state">${this.escape(isEnglish ? 'No tournament winners yet.' : 'Još nema osvajača turnira.')}</div>
+            `;
+            return;
+        }
+
+        const winsLabel = isEnglish ? 'tournament wins' : 'osvojenih turnira';
+        container.innerHTML = `
+            <div class="tournament-intro-champions-label">${safeLabel}</div>
+            <div class="tournament-intro-champions-list">
+                ${champions.map((player, index) => {
+                    const name = String(player?.playerName || player?.name || this.tr('player_guest', 'Igrač'));
+                    const safeName = this.escape(name);
+                    const photo = this.playerPhotoUrl({ ...player, name });
+                    const wins = Number.isFinite(Number(player?.wins))
+                        ? Math.max(0, Math.floor(Number(player.wins)))
+                        : 0;
+                    return `
+                        <div class="tournament-intro-champion-row">
+                            <span class="tournament-intro-champion-rank" aria-hidden="true">${index + 1}</span>
+                            <img class="tournament-intro-champion-avatar" src="${photo}" alt="" aria-hidden="true" decoding="async">
+                            <span class="tournament-intro-champion-name">${safeName}</span>
+                            <span class="tournament-intro-champion-wins" aria-label="${this.escapeAttr(`${wins} ${winsLabel}`)}">
+                                <img src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
+                                <strong>${wins}</strong>
+                            </span>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
     }
 
     openScreen() {

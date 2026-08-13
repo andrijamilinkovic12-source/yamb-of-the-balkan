@@ -41,6 +41,34 @@ class RiznicaManager {
         introText.textContent = '';
 
         const lang = localStorage.getItem('yamb_lang') || 'sr';
+        const isEasterIntro = overlay.classList.contains('theme-easter');
+
+        if (isEasterIntro) {
+            const introLabel = lang === 'en' || lang === 'en-GB' ? 'TREASURY' : 'RIZNICA';
+            this.setEasterIntroTitle(introText, introLabel);
+
+            let completed = false;
+            const openBehindOverlayAt = 3650;
+            const introDuration = 4600;
+
+            setTimeout(() => {
+                if (completed) return;
+                completed = true;
+                onComplete();
+            }, openBehindOverlayAt);
+
+            setTimeout(() => {
+                if (!completed) {
+                    completed = true;
+                    onComplete();
+                }
+                overlay.classList.add('hidden');
+                overlay.setAttribute('aria-hidden', 'true');
+                this.isIntroPlaying = false;
+            }, introDuration);
+            return;
+        }
+
         const introLabel = lang === 'en' ? 'T R E A S U R Y' : 'R I Z N I C A';
         const typeDuration = 2600;
         const openBehindOverlayAt = 3700;
@@ -77,6 +105,19 @@ class RiznicaManager {
             overlay.setAttribute('aria-hidden', 'true');
             this.isIntroPlaying = false;
         }, introDuration);
+    }
+
+    setEasterIntroTitle(container, label) {
+        container.textContent = '';
+        Array.from(String(label || '').toUpperCase()).forEach((character, index) => {
+            const span = document.createElement('span');
+            span.className = character === ' '
+                ? 'easter-room-intro-wave-space'
+                : 'easter-room-intro-wave-letter';
+            span.style.setProperty('--wave-index', index);
+            span.textContent = character === ' ' ? '\u00a0' : character;
+            container.appendChild(span);
+        });
     }
 
     applyIntroTheme(overlay) {
