@@ -4248,9 +4248,36 @@ class YambApp {
         if (!element) return;
 
         const displayName = this.normalizeWaitingPlayerName(name);
+        // Nakon prijave ovo je stvarno ime, a ne prevodiva generička oznaka.
+        // Uklanjanje data-lang sprečava da promena jezika vrati tekst "Igrač".
+        element.removeAttribute('data-lang');
         element.textContent = displayName;
         element.title = displayName;
         element.style.removeProperty('font-size');
+
+        const fitNameToCard = () => {
+            if (!element.isConnected) return;
+
+            const maxHeight = element.clientHeight;
+            const maxWidth = element.clientWidth;
+            if (!maxHeight || !maxWidth) return;
+
+            let fontSize = parseFloat(window.getComputedStyle(element).fontSize) || 14;
+            const minimumFontSize = 9.5;
+
+            while (
+                fontSize > minimumFontSize &&
+                (element.scrollHeight > maxHeight + 1 || element.scrollWidth > maxWidth + 1)
+            ) {
+                fontSize -= 0.5;
+                element.style.fontSize = `${fontSize}px`;
+            }
+        };
+
+        window.requestAnimationFrame(fitNameToCard);
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(fitNameToCard).catch(() => {});
+        }
     }
 
     async startPrivateHosting() {
@@ -4518,6 +4545,9 @@ class YambApp {
             return;
         }
 
+        // Random soba nije poziv prijatelju: stari status zauzetosti za
+        // pozivnice ne sme da blokira ulazak u red za prvog slobodnog igrača.
+        if (this.clientInviteBusy) this.setInviteBusyState(false);
         const photoUrl = (authImg && authImg.src && authImg.src.includes('http')) ? authImg.src : '';
         this.socket.emit('find_game', { nickname: nickname, photoUrl: photoUrl });
     }
@@ -5124,8 +5154,6 @@ class YambApp {
                 searchingUI.style.display = 'none';
                 foundUI.style.display = 'flex';
                 oppBox.classList.remove('is-searching');
-                const startMsgEl = document.getElementById('waiting-start-msg');
-                if (startMsgEl) startMsgEl.innerHTML = gt('ws_game_starting') || 'Protivnik je tu. Partija počinje...';
 
                 oppBox.style.borderColor = 'var(--danger)';
                 oppBox.style.boxShadow = '0 5px 15px rgba(244, 67, 54, 0.2)';

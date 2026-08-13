@@ -5594,7 +5594,7 @@ function getActiveGameStateForSocket(socketId, uid = '', options = {}) {
         }
     }
 
-    return getWaitingBusyState(socketId, uid, options) || getClientBusyState(socketId);
+    return getWaitingBusyState(socketId, uid, options) || (options.ignoreClientBusy ? null : getClientBusyState(socketId));
 }
 
 function getActiveGameStateForUid(uid = '', options = {}) {
@@ -10932,8 +10932,21 @@ io.on('connection', (socket) => {
 
         if (waitingPlayer && waitingPlayer.id === socket.id) return;
 
-        if (isPlayerBusyForInvite(socket.id, requesterUid)) {
+        const matchmakingBusyState = getPlayerBusyState(socket.id, requesterUid, {
+            ignoreWaitingSocketId: socket.id,
+            ignoreWaitingUid: requesterUid,
+            ignoreClientBusy: true
+        });
+        if (matchmakingBusyState) {
             socket.emit('error_msg', 'err_player_busy');
+            return;
+        }
+
+        // Random matchmaking nije direktna pozivnica. Ako se isti nalog ponovo
+        // povezao dok je samo čekao, nova konekcija preuzima njegovo mesto u redu.
+        if (waitingPlayer && requesterUid && waitingPlayer.uid === requesterUid) {
+            waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+            socket.emit('waiting_for_opponent');
             return;
         }
 
@@ -10947,7 +10960,12 @@ io.on('connection', (socket) => {
 
             if (opponentSocket) {
                 const opponentUid = getSocketUid(opponentId);
-                if (isPlayerBusyForInvite(opponentId, opponentUid, { ignoreWaitingSocketId: opponentId, ignoreWaitingUid: opponentUid })) {
+                const opponentMatchmakingBusyState = getPlayerBusyState(opponentId, opponentUid, {
+                    ignoreWaitingSocketId: opponentId,
+                    ignoreWaitingUid: opponentUid,
+                    ignoreClientBusy: true
+                });
+                if (opponentMatchmakingBusyState) {
                     waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
                     socket.emit('waiting_for_opponent');
                     return;

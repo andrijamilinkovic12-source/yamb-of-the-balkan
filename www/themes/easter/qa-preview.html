@@ -216,6 +216,24 @@
 
             const power = doc.getElementById('waiting-my-power');
             if (power) power.textContent = '1280';
+
+            const searching = doc.getElementById('waiting-opp-searching');
+            const found = doc.getElementById('waiting-opp-found');
+            const opponentBox = doc.getElementById('waiting-opp-box');
+            if (searching) searching.style.display = 'none';
+            if (found) found.style.display = 'flex';
+            if (opponentBox) opponentBox.classList.remove('is-searching');
+
+            const opponentName = doc.getElementById('waiting-opp-name');
+            if (opponentName) opponentName.textContent = 'Aleksandar Petrović';
+            const opponentPower = doc.getElementById('waiting-opp-power');
+            if (opponentPower) opponentPower.textContent = '1435';
+            const opponentWins = doc.getElementById('waiting-opp-wins');
+            const opponentDraws = doc.getElementById('waiting-opp-draws');
+            const opponentLosses = doc.getElementById('waiting-opp-losses');
+            if (opponentWins) opponentWins.textContent = '18';
+            if (opponentDraws) opponentDraws.textContent = '4';
+            if (opponentLosses) opponentLosses.textContent = '9';
         }
 
         function fillGameOver(doc) {
@@ -310,6 +328,7 @@
                     break;
                 case 'waiting':
                     showOnly(doc, 'waiting-screen');
+                    doc.getElementById('waiting-screen')?.classList.add('is-random-online');
                     fillWaiting(doc);
                     break;
                 case 'gameover':

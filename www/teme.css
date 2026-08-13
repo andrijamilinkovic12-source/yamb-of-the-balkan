@@ -3617,6 +3617,51 @@ body.easter-theme #main-menu .icon-menu-grid .btn-square:active .easter-soft-cla
     }
 }
 
+/* Vaskrs — fleksibilna podkartica statistike u sobi Nađi protivnika.
+   Počinje odmah ispod stvarne visine imena, a donja ivica ostaje na mestu. */
+body.easter-theme #waiting-screen.is-random-online .ws-glass-name {
+    min-height: 1.2em !important;
+    max-height: 2.4em !important;
+    margin: 0 !important;
+    flex: 0 0 auto;
+}
+
+body.easter-theme #waiting-screen.is-random-online #waiting-opp-found {
+    height: 100% !important;
+    flex: 1 1 100% !important;
+}
+
+body.easter-theme #waiting-screen.is-random-online .waiting-start-msg {
+    display: none !important;
+}
+
+body.easter-theme #waiting-screen.is-random-online .ws-glass-card > .ws-glass-stats,
+body.easter-theme #waiting-screen.is-random-online #waiting-opp-found > .ws-glass-stats {
+    margin-top: 5px !important;
+    margin-bottom: 0 !important;
+    min-height: 0 !important;
+    flex: 1 1 auto;
+    justify-content: center;
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.82), transparent 42%),
+        linear-gradient(145deg, rgba(241,228,255,.97), rgba(219,244,226,.95)) !important;
+    border: 1px solid rgba(139,69,190,.24) !important;
+    border-radius: 11px !important;
+    box-shadow:
+        inset 2px 2px 5px rgba(107,44,143,.08),
+        inset -2px -2px 5px rgba(255,255,255,.76),
+        0 2px 5px rgba(107,44,143,.08) !important;
+}
+
+body.easter-theme #waiting-screen.is-random-online .ws-glass-stats .lbl {
+    color: #4f7654 !important;
+}
+
+body.easter-theme #waiting-screen.is-random-online .ws-glass-stats .val {
+    color: #6b2c8f !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.86) !important;
+}
+
 /* ========================================================================== */
 /* PUSTINJSKO STAKLO PACK — izolovan kompletan neumorphic UI paket            */
 /* ========================================================================== */
