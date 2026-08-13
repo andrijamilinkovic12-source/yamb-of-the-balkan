@@ -3910,6 +3910,13 @@ body.easter-theme #daily-intro.theme-easter .daily-intro-mark-wrap::after {
     animation: easterRoomIntroFade 4.6s ease forwards;
 }
 
+/* Turnirski sadržaj je niži zbog top-3 kartice: kartica završava 2 mm iznad
+   donje safe zone, dok ikona i naslov zadržavaju iste dimenzije i razmak. */
+#tournament-intro.theme-easter {
+    justify-content: flex-end;
+    padding-bottom: calc(var(--safe-bottom) + 2mm);
+}
+
 #riznica-intro.theme-easter .riznica-intro-gem,
 #tournament-intro.theme-easter .tournament-intro-mark {
     display: none;

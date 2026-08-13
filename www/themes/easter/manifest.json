@@ -4,7 +4,7 @@
     "sr": "Vaskr Neumorphic UI Theme Pack",
     "en": "Joyful Easter Neumorphic UI Theme Pack"
   },
-  "version": "1.4.0",
+  "version": "1.4.1",
   "updated": "2026-08-13",
   "bodyClass": "easter-theme",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
@@ -78,6 +78,7 @@
     "For future themes, create equivalent isolated packs instead of reusing Easter selectors globally.",
     "Every two-player Easter game (online random, invite duel, spectator and Hotseat) uses the same freely swipeable vertical board pager and follows the active player only when the turn changes.",
     "Treasury and Tournament use the same 4.6-second large-icon, fixed icon-to-title spacing and left-to-right title-wave intro rules as the Easter bottom-menu rooms.",
+    "The Tournament top-three card is anchored 2 mm above the bottom safe zone; the icon and title move with the tournament composition without changing their dimensions or standard spacing.",
     "The Easter Tournament intro displays the real server-provided top three all-time tournament winners with avatar, full name and number of wins; it must never use fabricated ranking data."
   ]
 }
