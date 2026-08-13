@@ -3654,12 +3654,146 @@ body.easter-theme #waiting-screen.is-random-online #waiting-opp-found > .ws-glas
 }
 
 body.easter-theme #waiting-screen.is-random-online .ws-glass-stats .lbl {
-    color: #4f7654 !important;
+    color: #356847 !important;
+    font-weight: 850 !important;
+    letter-spacing: .28px;
+    text-shadow: 0 1px 0 rgba(255,255,255,.92) !important;
 }
 
 body.easter-theme #waiting-screen.is-random-online .ws-glass-stats .val {
+    color: #702b94 !important;
+    font-weight: 950 !important;
+    letter-spacing: .12px;
+    text-shadow:
+        0 1px 0 rgba(255,255,255,.94),
+        0 1px 3px rgba(107,44,143,.12) !important;
+}
+
+body.easter-theme #waiting-screen.is-random-online .ws-glass-stats .ws-g-stat {
+    font-size: clamp(.66rem, 2.85vw, .74rem) !important;
+    line-height: 1.08 !important;
+    column-gap: 7px !important;
+}
+
+body.easter-theme #waiting-screen.is-random-online .ws-glass-stats > .ws-g-stat:first-child {
+    margin-bottom: 5px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(139,69,190,.16);
+}
+
+body.easter-theme #waiting-screen.is-random-online .ws-random-records {
+    gap: 2px !important;
+}
+
+/* Vaskrs — poseban 4,6 s uvod Dnevnog izazova.
+   Ikona i natpis su odmah prisutni; samo slova prolaze kroz talas sleva nadesno. */
+.daily-intro-mark-easter,
+.daily-intro-easter-wave {
+    display: none;
+}
+
+#daily-intro.theme-easter {
+    --daily-intro-text: #6b2c8f;
+    --daily-intro-glow: rgba(139,69,190,.26);
+    gap: clamp(14px, 3vh, 24px);
+    background:
+        linear-gradient(180deg, rgba(255,248,239,.18), rgba(236,219,255,.10)),
+        var(--easter-theme-bg-image) center / cover no-repeat !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+#daily-intro.theme-easter::before,
+#daily-intro.theme-easter::after {
+    animation: none !important;
+    opacity: .42;
+    filter: blur(10px);
+}
+
+#daily-intro.theme-easter .daily-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    padding: 0;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    filter: drop-shadow(0 14px 18px rgba(107,44,143,.18));
+    animation: none !important;
+}
+
+#daily-intro.theme-easter .daily-intro-mark {
+    display: none !important;
+}
+
+#daily-intro.theme-easter .daily-intro-mark-easter {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#daily-intro.theme-easter .daily-intro-word {
+    display: none !important;
+}
+
+#daily-intro.theme-easter .daily-intro-title {
+    min-height: clamp(52px, 8vh, 72px);
+    width: min(94vw, 720px);
+    font-size: clamp(1.75rem, 7.6vw, 3rem);
+    line-height: 1;
+    letter-spacing: clamp(.7px, .35vw, 2px);
     color: #6b2c8f !important;
-    text-shadow: 0 1px 0 rgba(255,255,255,.86) !important;
+    text-shadow:
+        0 2px 0 rgba(255,255,255,.94),
+        0 7px 17px rgba(107,44,143,.18) !important;
+}
+
+#daily-intro.theme-easter .daily-intro-easter-wave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+#daily-intro.theme-easter .daily-intro-wave-letter,
+#daily-intro.theme-easter .daily-intro-wave-space {
+    display: inline-block;
+}
+
+#daily-intro.theme-easter .daily-intro-wave-letter {
+    animation: easterDailyTitleWave 1.05s cubic-bezier(.34, 1.56, .64, 1) both;
+    animation-delay: calc(350ms + (var(--wave-index) * 75ms));
+    transform-origin: 50% 75%;
+}
+
+#daily-intro.theme-easter .daily-intro-wave-space {
+    width: .34em;
+}
+
+@keyframes easterDailyTitleWave {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        color: #6b2c8f;
+        filter: none;
+    }
+    45% {
+        transform: translateY(-9px) scale(1.08);
+        color: #9b4fb7;
+        filter: drop-shadow(0 5px 6px rgba(139,69,190,.22));
+    }
+    72% {
+        transform: translateY(2px) scale(.985);
+        color: #3f7955;
+        filter: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #daily-intro.theme-easter .daily-intro-wave-letter {
+        animation: none !important;
+    }
 }
 
 /* ========================================================================== */

@@ -633,6 +633,7 @@ class DnevniIzazov {
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
         this.setIntroTitle(leftWord, rightWord);
+        this.setEasterIntroWaveTitle(overlay);
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
 
@@ -709,6 +710,26 @@ class DnevniIzazov {
 
         leftWord.textContent = gt('dc_intro_left', label[0] || 'DNEVNI');
         rightWord.textContent = gt('dc_intro_right', label.slice(1).join(' ') || 'IZAZOV');
+    }
+
+    setEasterIntroWaveTitle(overlay) {
+        if (!overlay) return;
+
+        const waveTitle = overlay.querySelector('.daily-intro-easter-wave');
+        if (!waveTitle) return;
+
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        const title = gt('dc_title', 'DNEVNI IZAZOV').trim().toUpperCase();
+
+        waveTitle.replaceChildren(...Array.from(title).map((character, index) => {
+            const letter = document.createElement('span');
+            letter.className = character === ' ' ? 'daily-intro-wave-space' : 'daily-intro-wave-letter';
+            letter.textContent = character === ' ' ? '\u00A0' : character;
+            letter.style.setProperty('--wave-index', index);
+            return letter;
+        }));
+        waveTitle.setAttribute('aria-label', title);
+        waveTitle.removeAttribute('aria-hidden');
     }
 
     markDailyAttempt(uid, today) {

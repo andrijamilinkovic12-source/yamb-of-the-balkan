@@ -339,6 +339,22 @@
                     showOnly(doc, 'tournament-screen');
                     fillTournament(doc);
                     break;
+                case 'dailyintro': {
+                    const dailyIntro = doc.getElementById('daily-intro');
+                    const dailyManager = frame.contentWindow && frame.contentWindow.dnevniIzazov;
+                    if (dailyIntro && dailyManager) {
+                        dailyIntro.classList.remove('theme-dark', 'theme-light', 'theme-medium', 'theme-winter', 'theme-neon', 'theme-amethyst', 'theme-desert', 'theme-moon', 'theme-severna');
+                        dailyIntro.classList.add('theme-easter');
+                        dailyManager.setIntroTitle(
+                            dailyIntro.querySelector('.daily-intro-word-left'),
+                            dailyIntro.querySelector('.daily-intro-word-right')
+                        );
+                        dailyManager.setEasterIntroWaveTitle(dailyIntro);
+                        dailyIntro.classList.remove('hidden');
+                        dailyIntro.setAttribute('aria-hidden', 'false');
+                    }
+                    break;
+                }
                 case 'splash':
                 default:
                     showOnly(doc, 'splash-screen');
