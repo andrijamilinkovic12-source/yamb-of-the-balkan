@@ -4,7 +4,7 @@
     "sr": "Vaskr Neumorphic UI Theme Pack",
     "en": "Joyful Easter Neumorphic UI Theme Pack"
   },
-  "version": "1.2.0",
+  "version": "1.3.0",
   "updated": "2026-08-13",
   "bodyClass": "easter-theme",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
@@ -75,6 +75,7 @@
     "Do not change global theme icons as the base game style.",
     "Keep Easter-specific styling isolated under body.easter-theme.",
     "Do not change game board/card dimensions unless explicitly requested.",
-    "For future themes, create equivalent isolated packs instead of reusing Easter selectors globally."
+    "For future themes, create equivalent isolated packs instead of reusing Easter selectors globally.",
+    "Every two-player Easter game (online random, invite duel, spectator and Hotseat) uses the same freely swipeable vertical board pager and follows the active player only when the turn changes."
   ]
 }

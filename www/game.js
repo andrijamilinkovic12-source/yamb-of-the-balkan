@@ -140,6 +140,7 @@ class YambApp {
         this.onlineUsersCount = 1; 
         this.isAnimating = false;
         this.easterRoomIntroPlaying = false;
+        this.dualBoardLastFollowedPlayerIdx = null;
         this.onlineRollPending = false;
         this.onlineTurnTimerPaused = false;
         this.opponentReconnectGraceTimer = null;
@@ -4115,18 +4116,22 @@ class YambApp {
         const rooms = {
             leaderboard: {
                 icon: 'assets/easter-soft-clay/leaderboard-pro.png?v=1',
+                scale: 1.16,
                 label: () => gt('hs_title') || 'TOP LISTA'
             },
             statistics: {
                 icon: 'assets/easter-soft-clay/statistics-pro.png?v=1',
+                scale: 1.06,
                 label: () => gt('menu_stats') || 'STATISTIKA'
             },
             settings: {
                 icon: 'assets/easter-soft-clay/settings-pro.png?v=1',
+                scale: 1,
                 label: () => gt('menu_settings') || 'PODEŠAVANJA'
             },
             rules: {
                 icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
+                scale: 1.16,
                 label: () => gt('menu_rules') || 'PRAVILA'
             }
         };
@@ -4144,7 +4149,10 @@ class YambApp {
             return;
         }
 
-        if (iconElement) iconElement.src = room.icon;
+        if (iconElement) {
+            iconElement.src = room.icon;
+            iconElement.style.setProperty('--easter-room-icon-scale', room.scale || 1);
+        }
         const title = String(room.label()).replace(/^[^\p{L}\p{N}]+/u, '').trim().toUpperCase();
         titleElement.replaceChildren(...Array.from(title).map((character, index) => {
             const letter = document.createElement('span');
@@ -5033,7 +5041,7 @@ class YambApp {
             this.isSpectator = true;
             // Tematski spectator prikaz prati aktivnog igrača samo pri promeni poteza,
             // kako ručno pomeranje između dve pune table ne bi bilo vraćano unazad.
-            this.spectatorLastFollowedPlayerIdx = null;
+            this.dualBoardLastFollowedPlayerIdx = null;
             this.gameActive = true;
             this.roomId = data.roomId;
             this.modeTag = "Spectator";
@@ -5227,6 +5235,7 @@ class YambApp {
             this.roomId = data.roomId;
             this.onlineDuelType = this.inferOnlineDuelType(data.roomId, data);
             this.lastOnlineGameResult = null;
+            this.dualBoardLastFollowedPlayerIdx = null;
             const opponentName = this.normalizeWaitingPlayerName(data.opponent);
             this.players = this.myOnlineIndex === 0 ? [nickname, opponentName] : [opponentName, nickname];
             this.initScores();
@@ -5867,9 +5876,9 @@ class YambApp {
         this.onlineTurnTimerPaused = false;
         this.players = [];
         this.allScores = [];
-        this.spectatorLastFollowedPlayerIdx = null;
+        this.dualBoardLastFollowedPlayerIdx = null;
         const gameScene = document.getElementById('game-scene');
-        if (gameScene) gameScene.classList.remove('theme-spectator-view', 'easter-spectator-view');
+        if (gameScene) gameScene.classList.remove('theme-dual-board-view', 'theme-spectator-view', 'easter-spectator-view');
         const p1Name = this.playerName; 
         
         if (numPlayers === 1) { this.modeTag = "Solo"; this.players.push(p1Name); } 
@@ -5917,6 +5926,7 @@ class YambApp {
         this.clearOnlineGameOverDelay();
         this.onlineGameOverFinishInProgress = false;
         this.onlineRollPending = false;
+        this.dualBoardLastFollowedPlayerIdx = null;
 
         if (this.onlineMode && this.socket && this.socket.connected && !this.isSpectator && this.playerId) {
             this.socket.emit('game_session_start', {
@@ -6116,23 +6126,34 @@ class YambApp {
         playerTables.forEach(el => { el.style.border = "var(--glass-border)"; el.style.boxShadow="none"; el.style.opacity = "0.7"; });
         const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`);
         const gameScene = document.getElementById('game-scene');
-        const isThemedSpectatorDuel =
-            (document.body.classList.contains('easter-theme') || document.body.classList.contains('desert-theme')) &&
-            this.isSpectator && this.players.length === 2;
-        // Vaskr i Pustinjsko staklo prikazuju dve pune table koje gledalac može slobodno da pomera.
-        if (gameScene) gameScene.classList.toggle('theme-spectator-view', isThemedSpectatorDuel);
+        const isEasterTwoPlayerGame = document.body.classList.contains('easter-theme') && this.players.length === 2;
+        const isDesertSpectatorDuel = document.body.classList.contains('desert-theme') && this.isSpectator && this.players.length === 2;
+        // Vaskr koristi isti slobodan vertikalni pager za svaki režim sa dva igrača.
+        if (gameScene) {
+            gameScene.classList.toggle('theme-dual-board-view', isEasterTwoPlayerGame);
+            gameScene.classList.toggle('theme-spectator-view', isDesertSpectatorDuel);
+        }
         playerTables.forEach(el => el.classList.remove('theme-spectator-active'));
 
         if(activeTbl) {
             activeTbl.style.border = "2px solid var(--gold-main)"; activeTbl.style.boxShadow = "0 0 15px rgba(224, 201, 149, 0.2)"; activeTbl.style.opacity = "1";
+            const usesThemedDualPager = isEasterTwoPlayerGame || isDesertSpectatorDuel;
             const shouldFollowActiveTable = this.players.length > 1 &&
-                (!isThemedSpectatorDuel || this.spectatorLastFollowedPlayerIdx !== this.currentPlayerIdx);
+                (!usesThemedDualPager || this.dualBoardLastFollowedPlayerIdx !== this.currentPlayerIdx);
             if (shouldFollowActiveTable) {
-                if (isThemedSpectatorDuel) this.spectatorLastFollowedPlayerIdx = this.currentPlayerIdx;
+                if (usesThemedDualPager) this.dualBoardLastFollowedPlayerIdx = this.currentPlayerIdx;
                 setTimeout(() => {
-                    // Ne vraćaj gledaoca na staru tablu ako je novi potez stigao dok traje animacija.
+                    // Ne vraćaj ručno pomeren prikaz ako je u međuvremenu počeo novi potez.
                     if (document.getElementById(`ptable-${this.currentPlayerIdx}`) !== activeTbl) return;
-                    activeTbl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+                    const tablesWrapper = document.getElementById('tables-container');
+                    if (usesThemedDualPager && tablesWrapper) {
+                        const wrapperRect = tablesWrapper.getBoundingClientRect();
+                        const tableRect = activeTbl.getBoundingClientRect();
+                        const targetTop = Math.max(0, tablesWrapper.scrollTop + tableRect.top - wrapperRect.top - 4);
+                        tablesWrapper.scrollTo({ top: targetTop, behavior: 'smooth' });
+                    } else {
+                        activeTbl.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'center' });
+                    }
                 }, 100);
             }
         }
@@ -7783,6 +7804,7 @@ class YambApp {
         this.roomId = roomId;
         this.modeTag = "Online";
         this.isSpectator = false;
+        this.dualBoardLastFollowedPlayerIdx = null;
         this.onlineDuelType = this.inferOnlineDuelType(roomId, options);
         const btnBacaj = document.getElementById('btn-bacaj');
         const btnNajava = document.getElementById('btn-najava');

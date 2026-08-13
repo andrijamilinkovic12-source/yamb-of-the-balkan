@@ -618,10 +618,16 @@ body.easter-theme .player-table > * {
     z-index: 1;
 }
 
-/* Gledanje online duela: dve pune table se slobodno pomeraju kao u ostalim temama.
-   Ovo ne menja dimenzije table, već samo sprečava flex sabijanje u prostor kontrola. */
-body.easter-theme #game-scene.theme-spectator-view .tables-wrapper,
+/* Vaskr: isti vertikalni pager za svaki duel sa dva igrača (online, spectator i Hotseat).
+   Dimenzije tabela ostaju iste; sprečava se flex sabijanje i spoj dve polovine u kadru. */
+body.easter-theme #game-scene.theme-dual-board-view .tables-wrapper,
 body.desert-theme #game-scene.theme-spectator-view .tables-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    min-height: 0;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     -webkit-overflow-scrolling: touch;
@@ -629,14 +635,14 @@ body.desert-theme #game-scene.theme-spectator-view .tables-wrapper {
     touch-action: pan-y;
     scroll-behavior: smooth;
     scroll-snap-type: y proximity;
-    scroll-padding-block: 8px;
+    scroll-padding-block: 4px;
 }
 
-body.easter-theme #game-scene.theme-spectator-view .player-table,
+body.easter-theme #game-scene.theme-dual-board-view .player-table,
 body.desert-theme #game-scene.theme-spectator-view .player-table {
     flex: 0 0 auto !important;
     min-height: max-content;
-    scroll-snap-align: center;
+    scroll-snap-align: start;
     scroll-snap-stop: normal;
 }
 
@@ -3695,7 +3701,7 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
 #daily-intro.theme-easter {
     --daily-intro-text: #6b2c8f;
     --daily-intro-glow: rgba(139,69,190,.26);
-    gap: clamp(14px, 3vh, 24px);
+    gap: 0;
     background:
         linear-gradient(180deg, rgba(255,248,239,.18), rgba(236,219,255,.10)),
         var(--easter-theme-bg-image) center / cover no-repeat !important;
@@ -3710,7 +3716,7 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
     filter: blur(10px);
 }
 
-#daily-intro.theme-easter .daily-intro-mark-wrap {
+body.easter-theme #daily-intro.theme-easter .daily-intro-mark-wrap {
     width: clamp(210px, 34vmin, 290px);
     height: clamp(210px, 34vmin, 290px);
     padding: 0;
@@ -3718,8 +3724,14 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
     border-radius: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
-    filter: drop-shadow(0 14px 18px rgba(107,44,143,.18));
+    filter: none !important;
     animation: none !important;
+}
+
+body.easter-theme #daily-intro.theme-easter .daily-intro-mark-wrap::before,
+body.easter-theme #daily-intro.theme-easter .daily-intro-mark-wrap::after {
+    content: none !important;
+    display: none !important;
 }
 
 #daily-intro.theme-easter .daily-intro-mark {
@@ -3731,6 +3743,7 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    filter: none !important;
 }
 
 #daily-intro.theme-easter .daily-intro-word {
@@ -3747,6 +3760,7 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
     text-shadow:
         0 2px 0 rgba(255,255,255,.94),
         0 7px 17px rgba(107,44,143,.18) !important;
+    margin-top: 0;
 }
 
 #daily-intro.theme-easter .daily-intro-easter-wave {
@@ -3805,7 +3819,7 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(14px, 3vh, 24px);
+    gap: 0;
     overflow: hidden;
     background:
         linear-gradient(180deg, rgba(255,248,239,.18), rgba(236,219,255,.10)),
@@ -3824,6 +3838,8 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    transform: scale(var(--easter-room-icon-scale, 1));
+    transform-origin: center;
 }
 
 .easter-room-intro-title {
@@ -3843,6 +3859,7 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
     text-shadow:
         0 2px 0 rgba(255,255,255,.94),
         0 7px 17px rgba(107,44,143,.18);
+    margin-top: 0;
 }
 
 .easter-room-intro-wave-letter,
