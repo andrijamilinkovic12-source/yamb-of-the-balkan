@@ -139,6 +139,7 @@ class YambApp {
         this.localRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
         this.isAnimating = false;
+        this.easterRoomIntroPlaying = false;
         this.onlineRollPending = false;
         this.onlineTurnTimerPaused = false;
         this.opponentReconnectGraceTimer = null;
@@ -3834,8 +3835,13 @@ class YambApp {
         this.socket.emit('request_rematch');
     }
 
-    showSettings() { 
-        this.navigateTo('settings-screen'); 
+    showSettings(options = {}) {
+        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('settings', () => this.showSettings({ skipRoomIntro: true }));
+            return;
+        }
+
+        this.navigateTo('settings-screen');
         const nameEl = document.getElementById('setting-name');
         if (nameEl) nameEl.value = this.playerName; 
         
@@ -3973,7 +3979,12 @@ class YambApp {
         }
     }
 
-    showStats() { 
+    showStats(options = {}) {
+        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('statistics', () => this.showStats({ skipRoomIntro: true }));
+            return;
+        }
+
         this.refreshLocalStats();
         this.navigateTo('stats-screen'); 
         const h2hRecord = this.getLocalH2HRecordSummary();
@@ -4081,8 +4092,87 @@ class YambApp {
     async showHighscoresScreen() {
         const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
         if (!rewardReady) return;
+
+        if (this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('leaderboard', () => {
+                this.navigateTo('highscores-screen');
+                this.switchHsTab('global');
+            });
+            return;
+        }
+
         this.navigateTo('highscores-screen');
         this.switchHsTab('global');
+    }
+
+    shouldPlayEasterRoomIntro() {
+        return (localStorage.getItem('yamb_theme') || 'dark') === 'easter';
+    }
+
+    playEasterRoomIntro(roomId, onComplete) {
+        if (this.easterRoomIntroPlaying) return;
+
+        const rooms = {
+            leaderboard: {
+                icon: 'assets/easter-soft-clay/leaderboard-pro.png?v=1',
+                label: () => gt('hs_title') || 'TOP LISTA'
+            },
+            statistics: {
+                icon: 'assets/easter-soft-clay/statistics-pro.png?v=1',
+                label: () => gt('menu_stats') || 'STATISTIKA'
+            },
+            settings: {
+                icon: 'assets/easter-soft-clay/settings-pro.png?v=1',
+                label: () => gt('menu_settings') || 'PODEŠAVANJA'
+            },
+            rules: {
+                icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
+                label: () => gt('menu_rules') || 'PRAVILA'
+            }
+        };
+        const room = rooms[roomId];
+        const overlay = document.getElementById('easter-room-intro');
+        const iconElement = overlay?.querySelector('.easter-room-intro-mark');
+        const titleElement = overlay?.querySelector('.easter-room-intro-title');
+        if (!overlay || !titleElement) {
+            onComplete();
+            return;
+        }
+
+        if (!room) {
+            onComplete();
+            return;
+        }
+
+        if (iconElement) iconElement.src = room.icon;
+        const title = String(room.label()).replace(/^[^\p{L}\p{N}]+/u, '').trim().toUpperCase();
+        titleElement.replaceChildren(...Array.from(title).map((character, index) => {
+            const letter = document.createElement('span');
+            letter.className = character === ' '
+                ? 'easter-room-intro-wave-space'
+                : 'easter-room-intro-wave-letter';
+            letter.textContent = character === ' ' ? '\u00A0' : character;
+            letter.style.setProperty('--wave-index', index);
+            return letter;
+        }));
+        titleElement.setAttribute('aria-label', title);
+
+        this.easterRoomIntroPlaying = true;
+        overlay.classList.add('theme-easter');
+        overlay.classList.add('hidden');
+        void overlay.offsetWidth;
+        overlay.classList.remove('hidden');
+        overlay.setAttribute('aria-hidden', 'false');
+
+        setTimeout(() => {
+            onComplete();
+        }, 3650);
+
+        setTimeout(() => {
+            overlay.classList.add('hidden');
+            overlay.setAttribute('aria-hidden', 'true');
+            this.easterRoomIntroPlaying = false;
+        }, 4600);
     }
 
     async showMainMenu(options = {}) {
@@ -4182,10 +4272,13 @@ class YambApp {
         });
     }
     
-    showRules() { 
-        if (typeof window.showGameRules === 'function') {
-            window.showGameRules(); 
-        } 
+    showRules(options = {}) {
+        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('rules', () => this.showRules({ skipRoomIntro: true }));
+            return;
+        }
+
+        if (typeof window.showGameRules === 'function') window.showGameRules();
     }
     
     async quitToMenu() { 

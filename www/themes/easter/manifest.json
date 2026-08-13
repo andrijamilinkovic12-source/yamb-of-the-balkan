@@ -4,8 +4,8 @@
     "sr": "Vaskr Neumorphic UI Theme Pack",
     "en": "Joyful Easter Neumorphic UI Theme Pack"
   },
-  "version": "1.0.0",
-  "updated": "2026-08-04",
+  "version": "1.2.0",
+  "updated": "2026-08-13",
   "bodyClass": "easter-theme",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
   "entrypoints": {
@@ -40,7 +40,7 @@
     {
       "id": "cinematic-screens",
       "status": "complete",
-      "description": "Splash, quote, waiting and game-over screens with Easter neumorphic visual treatment."
+      "description": "Splash, quote, waiting and game-over screens plus matching 4.6-second Daily Challenge, Leaderboard, Statistics, Settings and Rules room intros with immediately visible Soft Clay icons and left-to-right title waves."
     },
     {
       "id": "motion",

@@ -3796,6 +3796,82 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
     }
 }
 
+/* Vaskrs — zajednički 4,6 s uvod za Top listu, Statistiku, Podešavanja i Pravila. */
+.easter-room-intro {
+    position: fixed;
+    inset: 0;
+    z-index: 1000002;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(14px, 3vh, 24px);
+    overflow: hidden;
+    background:
+        linear-gradient(180deg, rgba(255,248,239,.18), rgba(236,219,255,.10)),
+        var(--easter-theme-bg-image) center / cover no-repeat;
+    animation: easterRoomIntroFade 4.6s ease forwards;
+}
+
+.easter-room-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    filter: drop-shadow(0 14px 18px rgba(107,44,143,.18));
+}
+
+.easter-room-intro-mark {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.easter-room-intro-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(94vw, 720px);
+    min-height: clamp(52px, 8vh, 72px);
+    color: #6b2c8f;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1.75rem, 7.6vw, 3rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: clamp(.7px, .35vw, 2px);
+    white-space: nowrap;
+    text-align: center;
+    text-shadow:
+        0 2px 0 rgba(255,255,255,.94),
+        0 7px 17px rgba(107,44,143,.18);
+}
+
+.easter-room-intro-wave-letter,
+.easter-room-intro-wave-space {
+    display: inline-block;
+}
+
+.easter-room-intro-wave-letter {
+    animation: easterDailyTitleWave 1.05s cubic-bezier(.34, 1.56, .64, 1) both;
+    animation-delay: calc(350ms + (var(--wave-index) * 75ms));
+    transform-origin: 50% 75%;
+}
+
+.easter-room-intro-wave-space {
+    width: .34em;
+}
+
+@keyframes easterRoomIntroFade {
+    0% { opacity: 1; }
+    82% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .easter-room-intro-wave-letter {
+        animation: none !important;
+    }
+}
+
 /* ========================================================================== */
 /* PUSTINJSKO STAKLO PACK — izolovan kompletan neumorphic UI paket            */
 /* ========================================================================== */
