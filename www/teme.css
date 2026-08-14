@@ -5919,6 +5919,8 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-economy-ca
 body.easter-theme #main-menu > .main-global-chat-btn {
     width: 36px !important;
     height: 36px !important;
+    left: max(10px, calc((100% - 380px) / 2 + 10px)) !important;
+    top: 34px !important;
     padding: 0 !important;
     display: flex !important;
     align-items: center !important;
@@ -5993,10 +5995,11 @@ body.easter-theme #global-chat-overlay .global-chat-send-fallback {
 
 body.easter-theme #global-chat-overlay .global-chat-send-soft-clay-icon {
     display: block;
-    width: 38px;
-    height: 38px;
+    width: 32px;
+    height: 32px;
     object-fit: contain;
     pointer-events: none;
+    transform: translate(-1px, 1px);
     filter: drop-shadow(0 4px 7px rgba(107,44,143,.17));
 }
 

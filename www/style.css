@@ -2830,6 +2830,25 @@ body {
 .online-players-title {
     color: var(--success);
 }
+.online-player-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    color: var(--text-main);
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.2;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+.online-player-name--long {
+    font-size: 0.84rem;
+    line-height: 1.18;
+}
+.online-player-name--very-long {
+    font-size: 0.74rem;
+    line-height: 1.16;
+}
 #online-players-body.online-players-body {
     flex: 1 1 auto !important;
     min-height: 0;

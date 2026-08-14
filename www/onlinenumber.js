@@ -262,6 +262,10 @@ window.openOnlinePlayersModal = function() {
                 const youText = tr('online_you', '(Vi)');
                 const rawName = String(p.name || 'Igrac');
                 const safeNameHtml = sec.escapeHtml(rawName);
+                const playerNameLength = Array.from(rawName.trim()).length;
+                const playerNameLengthClass = playerNameLength > 26
+                    ? ' online-player-name--very-long'
+                    : (playerNameLength > 18 ? ' online-player-name--long' : '');
                 const socketIdArg = sec.jsString(p.socketId || '');
                 const nameArg = sec.jsString(rawName);
                 const uidArg = sec.jsString(playerUid);
@@ -327,7 +331,7 @@ window.openOnlinePlayersModal = function() {
                 <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
                     <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
                         <img src="${photoSrc}" style="width:45px; height:45px; border-radius:50%; border: 2px solid ${p.isPlaying ? '#2196F3' : (p.isBusy ? '#FF9800' : 'var(--success)')}; object-fit: cover; flex-shrink: 0;">
-                        <span style="color: var(--text-main); font-weight: bold; font-size: 0.95rem; word-break: break-word; line-height: 1.2; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        <span class="online-player-name${playerNameLengthClass}" title="${sec.escapeAttr(rawName)}">
                             ${safeNameHtml} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${sec.escapeHtml(youText)}</span>` : ''}
                         </span>
                     </div>
