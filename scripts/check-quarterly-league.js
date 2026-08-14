@@ -121,9 +121,27 @@ function checkTotalsAndPresentation() {
     assert(rulesSource.includes('10.000, 5.000 i 2.500'), 'Displayed rules omit exact quarter rewards');
 }
 
+function checkUnboundedRankPagination() {
+    assert(serverSource.includes("socket.on('get_league_rank_page'"), 'Quarterly league has no paginated server endpoint');
+    assert(serverSource.includes("const LEAGUE_RANK_IDS = ['amater', 'profi', 'majstor', 'legenda', 'titan'];"), 'Not every quarterly rank is pageable');
+    assert(serverSource.includes('async function fetchLeagueAllTimePage'), 'All-Time standings are not pageable');
+    assert(serverSource.includes('{ $skip: safeOffset }'), 'League pagination does not advance through the full standings');
+    assert(serverSource.includes('{ $limit: safeLimit + 1 }'), 'League pagination cannot reliably detect the next page');
+    assert(!serverSource.includes('LEAGUE_MAX_PAGE_OFFSET'), 'Quarterly league still has a hidden total-entry ceiling');
+
+    assert(leagueSource.includes('this.leaderboardPageSize = 50;'), 'Quarterly league does not use bounded page batches');
+    assert(leagueSource.includes('setupLeaderboardInfiniteScroll()'), 'Quarterly league does not initialize infinite scrolling');
+    assert(leagueSource.includes("window.app.socket.emit('get_league_rank_page'"), 'Quarterly league client does not request additional pages');
+    assert(leagueSource.includes('if (remaining <= 180) this.loadLeaguePage'), 'Quarterly league does not continue near the bottom of the list');
+    assert(leagueSource.includes('state.hasMore = response.hasMore === true;'), 'Quarterly league does not stop only after the final page');
+    assert(leagueSource.includes('_leaguePosition: responseOffset + index + 1'), 'Positions do not continue correctly after the first 50 entries');
+    assert(leagueSource.includes("if (rankId === 'alltime')"), 'Paginated All-Time data no longer refreshes the player summary');
+}
+
 checkQuarterClockAndSettlement();
 checkRanksAndModes();
 checkRewardsAndArchiveSafety();
 checkTotalsAndPresentation();
+checkUnboundedRankPagination();
 
 console.log('Quarterly league checks passed.');

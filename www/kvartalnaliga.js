@@ -5,9 +5,16 @@ class KvartalnaLigaManager {
         this.currentSlide = 0;
         this.hofData = null; 
         this.isIntroPlaying = false;
+        this.isOpenPending = false;
+        this.rankBadgePreloadPromise = null;
+        this.rankBadgeImageCache = new Map();
+        this.leaderboardPageSize = 50;
+        this.leaderboardPages = new Map();
+        this.leaderboardRequestSerial = 0;
         
         this.selfHeal(); // <-- Pametna funkcija za čišćenje
         this.init();
+        this.preloadRankBadges();
     }
 
     get ranks() {
@@ -18,7 +25,7 @@ class KvartalnaLigaManager {
             { id: 'majstor', name: `${gt('rank_majstor', 'MAJSTOR')} (15k - 49.9k)`, min: 15000, max: 49999 },
             { id: 'legenda', name: `${gt('rank_legenda', 'LEGENDA')} (50k - 99.9k)`, min: 50000, max: 99999 },
             { id: 'titan', name: `${gt('rank_titan', 'TITAN')} (100k+)`, min: 100000, max: Infinity },
-            { id: 'alltime', name: gt('league_all_time', 'SVA VREMENA 👑'), min: 0, max: Infinity }
+            { id: 'alltime', name: String(gt('league_all_time', 'SVA VREMENA')).replace(/👑/gu, '').trim(), min: 0, max: Infinity }
         ];
     }
 
@@ -213,6 +220,67 @@ class KvartalnaLigaManager {
         return gt('rank_titan', "TITAN");
     }
 
+    getRankBadgeSource(rankId, retryToken = '') {
+        const retrySuffix = retryToken ? `&retry=${encodeURIComponent(retryToken)}` : '';
+        return `assets/easter-soft-clay/ql/rank-${rankId}.png?v=2${retrySuffix}`;
+    }
+
+    preloadRankBadge(rankId, attempt = 0) {
+        return new Promise((resolve) => {
+            const image = new Image();
+            let settled = false;
+            const finish = (loaded) => {
+                if (settled) return;
+                settled = true;
+                resolve(loaded);
+            };
+
+            image.onload = () => {
+                const decodeResult = typeof image.decode === 'function'
+                    ? image.decode().catch(() => undefined)
+                    : Promise.resolve();
+                decodeResult.finally(() => finish(true));
+            };
+            image.onerror = () => {
+                if (attempt < 1) {
+                    setTimeout(() => {
+                        this.preloadRankBadge(rankId, attempt + 1).then(finish);
+                    }, 120);
+                    return;
+                }
+                finish(false);
+            };
+
+            this.rankBadgeImageCache.set(rankId, image);
+            image.src = this.getRankBadgeSource(rankId, attempt ? Date.now() : '');
+        });
+    }
+
+    preloadRankBadges() {
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const isEaster = activeTheme === 'easter' || document.body.classList.contains('easter-theme');
+        if (!isEaster) return Promise.resolve([]);
+        if (this.rankBadgePreloadPromise) return this.rankBadgePreloadPromise;
+
+        const rankIds = ['amater', 'profi', 'majstor', 'legenda', 'titan', 'alltime'];
+        this.rankBadgePreloadPromise = Promise.all(rankIds.map(rankId => this.preloadRankBadge(rankId)))
+            .then((results) => {
+                if (!results.every(Boolean)) this.rankBadgePreloadPromise = null;
+                return results;
+            });
+        return this.rankBadgePreloadPromise;
+    }
+
+    retryRankBadgeElement(image, rankId) {
+        if (!image) return;
+        const retryCount = Number(image.dataset.rankBadgeRetry || 0);
+        if (retryCount >= 2) return;
+        image.dataset.rankBadgeRetry = String(retryCount + 1);
+        setTimeout(() => {
+            image.src = this.getRankBadgeSource(rankId, `${Date.now()}-${retryCount + 1}`);
+        }, 120 * (retryCount + 1));
+    }
+
     toRoman(num) {
         const lookup = {M:1000,CM:900,D:500,CD:400,C:100,XC:90,L:50,XL:40,X:10,IX:9,V:5,IV:4,I:1};
         let roman = '';
@@ -225,9 +293,15 @@ class KvartalnaLigaManager {
         return roman;
     }
 
-    openModal() {
+    async openModal() {
+        if (this.isIntroPlaying || this.isOpenPending) return;
+        this.isOpenPending = true;
+        try {
+            await this.preloadRankBadges();
+        } finally {
+            this.isOpenPending = false;
+        }
         if (this.isIntroPlaying) return;
-
         this.playIntro(() => this.showModal());
     }
 
@@ -351,8 +425,8 @@ class KvartalnaLigaManager {
 
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 15px; display: flex; flex-direction: column; height: 100%; min-height: 0;">
-                <h3 class="league-rank-heading" style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;">${r.id !== 'alltime' ? `<img class="league-rank-soft-clay-badge" src="assets/easter-soft-clay/ql/rank-${r.id}.png?v=1" alt="" aria-hidden="true" decoding="async">` : ''}<span>${r.name}</span></h3>
-                <div style="flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
+                <h3 class="league-rank-heading" style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;"><img class="league-rank-soft-clay-badge" src="${this.getRankBadgeSource(r.id)}" alt="" aria-hidden="true" decoding="sync" loading="eager" onerror="window.kvartalnaLiga && window.kvartalnaLiga.retryRankBadgeElement(this, '${r.id}')"><span>${r.name}</span></h3>
+                <div class="league-rank-scroll" data-league-rank="${r.id}" style="flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                     <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0;">
                         <li style="text-align: center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_loading', 'Učitavanje podataka... ⏳')}</li>
                     </ul>
@@ -387,7 +461,7 @@ class KvartalnaLigaManager {
                         <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(224, 201, 149, 0.08); padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(224, 201, 149, 0.2);">
                             <div style="text-align: left;">
                                 <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">${gt('league_your_rank', 'Vaš rang')}</div>
-                                <div class="league-current-rank" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px var(--gold-main);"><img class="league-current-rank-soft-clay-badge" src="assets/easter-soft-clay/ql/rank-${currentRankData.id}.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${rank}</span></div>
+                                <div class="league-current-rank" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px var(--gold-main);"><img class="league-current-rank-soft-clay-badge" src="${this.getRankBadgeSource(currentRankData.id)}" alt="" aria-hidden="true" decoding="sync" loading="eager" onerror="window.kvartalnaLiga && window.kvartalnaLiga.retryRankBadgeElement(this, '${currentRankData.id}')"><span>${rank}</span></div>
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 1.1rem; color: var(--gold-main); font-weight: bold;">${pts} PTS</div>
@@ -409,8 +483,8 @@ class KvartalnaLigaManager {
 
                 <div id="hof-main-content" style="display: none; flex-direction: column; flex: 1; overflow: hidden; width: 100%; padding: 10px 15px 15px 15px; min-height: 0;">
                     <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0;">
-                        <button id="hof-tab-medals" class="league-hof-tab-button" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="assets/easter-soft-clay/ql/tab-medals.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏅</span></button>
-                        <button id="hof-tab-champions" class="league-hof-tab-button" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="assets/easter-soft-clay/ql/tab-champions.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏆</span></button>
+                        <button id="hof-tab-medals" class="league-hof-tab-button is-active" aria-selected="true" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="assets/easter-soft-clay/ql/tab-medals.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏅</span></button>
+                        <button id="hof-tab-champions" class="league-hof-tab-button" aria-selected="false" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="assets/easter-soft-clay/ql/tab-champions.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏆</span></button>
                     </div>
                     
                     <div style="flex: 1; min-height: 0; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
@@ -429,6 +503,7 @@ class KvartalnaLigaManager {
         document.body.insertAdjacentHTML('beforeend', modalHtml);
 
         this.setupTouch();
+        this.setupLeaderboardInfiniteScroll();
         this.syncWithServer(); 
         
         setTimeout(() => {
@@ -463,8 +538,13 @@ class KvartalnaLigaManager {
 
         const btnM = document.getElementById('hof-tab-medals');
         const btnC = document.getElementById('hof-tab-champions');
+        const medalsActive = tab === 'medals';
+        btnM.classList.toggle('is-active', medalsActive);
+        btnC.classList.toggle('is-active', !medalsActive);
+        btnM.setAttribute('aria-selected', String(medalsActive));
+        btnC.setAttribute('aria-selected', String(!medalsActive));
         
-        if (tab === 'medals') {
+        if (medalsActive) {
             btnM.style.background = 'var(--gold-main)'; btnM.style.color = '#000';
             btnM.style.border = 'none';
             btnC.style.background = 'rgba(255,255,255,0.1)'; btnC.style.color = '#fff';
@@ -637,10 +717,142 @@ class KvartalnaLigaManager {
         });
     }
 
+    resetLeaderboardPagination() {
+        this.leaderboardPages = new Map(this.ranks.map(rank => [rank.id, {
+            offset: 0,
+            hasMore: true,
+            loading: false,
+            requestSerial: 0,
+            seenPlayers: new Set()
+        }]));
+    }
+
+    getLeaderboardPageState(rankId) {
+        if (!this.leaderboardPages.has(rankId)) {
+            this.leaderboardPages.set(rankId, {
+                offset: 0,
+                hasMore: true,
+                loading: false,
+                requestSerial: 0,
+                seenPlayers: new Set()
+            });
+        }
+        return this.leaderboardPages.get(rankId);
+    }
+
+    setupLeaderboardInfiniteScroll() {
+        document.querySelectorAll('#league-modal-overlay .league-rank-scroll').forEach(container => {
+            container.addEventListener('scroll', () => {
+                const remaining = container.scrollHeight - container.scrollTop - container.clientHeight;
+                if (remaining <= 180) this.loadLeaguePage(container.dataset.leagueRank);
+            }, { passive: true });
+        });
+    }
+
+    setLeaguePageStatus(rankId, status) {
+        const listEl = document.getElementById(`league-list-${rankId}`);
+        if (!listEl) return;
+        listEl.querySelectorAll('.league-page-status').forEach(element => element.remove());
+        if (!status) return;
+
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        const item = document.createElement('li');
+        item.className = `league-page-status league-page-status--${status}`;
+        item.style.cssText = 'text-align:center; color:var(--text-muted); font-size:0.78rem; padding:12px 8px; list-style:none;';
+        if (status === 'loading') {
+            item.textContent = gt('league_loading', 'Učitavanje podataka...');
+        } else {
+            const label = gt('league_no_conn', 'Učitavanje nije uspelo.');
+            const retryLabel = gt('btn_retry', 'Pokušaj ponovo');
+            item.innerHTML = `<span>${this.escapeHtml(label)}</span><br><button type="button" style="margin-top:7px; padding:6px 10px; border-radius:8px; cursor:pointer;" onclick="window.kvartalnaLiga.loadLeaguePage('${rankId}')">${this.escapeHtml(retryLabel)}</button>`;
+        }
+        listEl.appendChild(item);
+    }
+
+    loadLeaguePage(rankId, options = {}) {
+        const rank = this.ranks.find(item => item.id === rankId);
+        if (!rank) return;
+
+        if (options.reset) {
+            this.leaderboardPages.delete(rankId);
+            const listEl = document.getElementById(`league-list-${rankId}`);
+            if (listEl) listEl.innerHTML = '';
+        }
+
+        const state = this.getLeaderboardPageState(rankId);
+        if (state.loading || !state.hasMore) return;
+        if (!window.app || !window.app.socket || !window.app.socket.connected) {
+            this.setLeaguePageStatus(rankId, 'error');
+            return;
+        }
+
+        state.loading = true;
+        state.requestSerial = ++this.leaderboardRequestSerial;
+        const requestSerial = state.requestSerial;
+        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
+        this.setLeaguePageStatus(rankId, 'loading');
+
+        let completed = false;
+        const finish = (response) => {
+            if (completed || requestSerial !== state.requestSerial) return;
+            completed = true;
+            clearTimeout(timeoutId);
+            state.loading = false;
+
+            if (!response || response.ok !== true || response.rankId !== rankId) {
+                this.setLeaguePageStatus(rankId, 'error');
+                return;
+            }
+
+            const responseOffset = Math.max(0, Number(response.offset) || 0);
+            const rows = Array.isArray(response.items) ? response.items : [];
+            const uniqueRows = [];
+            rows.forEach((row, index) => {
+                const identity = String(row?.playerId || row?._id || `${row?.playerName || 'unknown'}_${responseOffset + index}`);
+                if (state.seenPlayers.has(identity)) return;
+                state.seenPlayers.add(identity);
+                uniqueRows.push({ ...row, _leaguePosition: responseOffset + index + 1 });
+            });
+
+            if (rankId === 'alltime') {
+                const myUid = localStorage.getItem('yamb_uid') || '';
+                const myName = localStorage.getItem('yamb_player_name') || '';
+                const myEntry = rows.find(row => {
+                    const rowUid = String(row?.playerId || row?._id || '');
+                    return myUid ? rowUid === myUid : (myName && row?.playerName === myName);
+                });
+                if (myEntry) this.updateAllTimeSummary(myEntry.score);
+            }
+
+            this.setLeaguePageStatus(rankId, null);
+            this.renderList(rankId, uniqueRows, {
+                append: responseOffset > 0,
+                preserveOrder: true,
+                startIndex: responseOffset
+            });
+            state.offset = Math.max(responseOffset + rows.length, Number(response.nextOffset) || 0);
+            state.hasMore = response.hasMore === true;
+
+            const container = document.querySelector(`#league-modal-overlay .league-rank-scroll[data-league-rank="${rankId}"]`);
+            if (state.hasMore && container && container.scrollHeight <= container.clientHeight + 4) {
+                setTimeout(() => this.loadLeaguePage(rankId), 0);
+            }
+        };
+        const timeoutId = setTimeout(() => finish(null), 8000);
+
+        window.app.socket.emit('get_league_rank_page', {
+            rankId,
+            year: currentYear,
+            quarter: currentQuarter,
+            offset: state.offset,
+            limit: this.leaderboardPageSize
+        }, finish);
+    }
+
     fetchLeaderboard() {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
-        if (!window.app || !window.app.socket) {
+        if (!window.app || !window.app.socket || !window.app.socket.connected) {
             this.ranks.forEach(r => {
                 const listEl = document.getElementById(`league-list-${r.id}`);
                 if(listEl) listEl.innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
@@ -648,20 +860,8 @@ class KvartalnaLigaManager {
             return;
         }
 
-        const { currentYear, currentQuarter } = this.getCurrentQuarterInfo();
-
-        window.app.socket.off('league_highscores_data');
-        window.app.socket.on('league_highscores_data', (scores) => {
-            this.populateRanks(scores, false);
-        });
-
-        window.app.socket.off('league_alltime_data');
-        window.app.socket.on('league_alltime_data', (scores) => {
-            this.populateRanks(scores, true);
-        });
-
-        window.app.socket.emit('get_league_highscores', { year: currentYear, quarter: currentQuarter });
-        window.app.socket.emit('get_league_alltime_highscores'); 
+        this.resetLeaderboardPagination();
+        this.ranks.forEach(rank => this.loadLeaguePage(rank.id, { reset: true }));
     }
 
     populateRanks(scores, isAllTime) {
@@ -749,20 +949,27 @@ class KvartalnaLigaManager {
         }
     }
 
-    renderList(rankId, scores) {
+    renderList(rankId, scores, options = {}) {
         const listEl = document.getElementById(`league-list-${rankId}`);
         if (!listEl) return;
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        const append = options.append === true;
+        const preserveOrder = options.preserveOrder === true;
+        const startIndex = Math.max(0, Number(options.startIndex) || 0);
 
         if (!scores || scores.length === 0) {
-            listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi prvi!')}</li>`;
+            if (!append && listEl.children.length === 0) {
+                listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi prvi!')}</li>`;
+            }
             return;
         }
 
-        scores.sort((a,b) => (Number(b.score) || 0) - (Number(a.score) || 0));
-        listEl.innerHTML = '';
+        if (!preserveOrder) scores.sort((a,b) => (Number(b.score) || 0) - (Number(a.score) || 0));
+        if (!append) listEl.innerHTML = '';
         
         scores.forEach((s, i) => {
+            const position = Math.max(1, Number(s._leaguePosition) || (startIndex + i + 1));
+            const placementIndex = position - 1;
             let pName = String(s.playerName || gt('league_unknown', "Nepoznat Igrač"));
             let pScore = Math.max(0, parseInt(s.score, 10) || 0);
             const myName = localStorage.getItem('yamb_player_name') || gt('player_guest', "Gost");
@@ -770,9 +977,9 @@ class KvartalnaLigaManager {
             const scoreUid = s && (s.playerId || s._id || '');
             let isMe = myUid ? scoreUid === myUid : pName === myName;
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
-            let medal = i < 3
-                ? `<img class="ql-placement-medal ql-placement-medal--rank" src="assets/easter-soft-clay/ql/medal-${['gold', 'silver', 'bronze'][i]}.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${['🥇', '🥈', '🥉'][i]}</span>`
-                : `${i + 1}.`;
+            let medal = placementIndex < 3
+                ? `<img class="ql-placement-medal ql-placement-medal--rank" src="assets/easter-soft-clay/ql/medal-${['gold', 'silver', 'bronze'][placementIndex]}.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${['🥇', '🥈', '🥉'][placementIndex]}</span>`
+                : `${position}.`;
             const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;
             let photo = this.safeImageUrl(s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : '', fallbackPhoto);
             const safeName = this.escapeHtml(pName);
@@ -782,7 +989,7 @@ class KvartalnaLigaManager {
             li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.85rem; ${bg}`;
             li.innerHTML = `
                 <div style="display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0;">
-                    <div class="ql-list-placement ${i < 3 ? 'ql-list-placement--medal' : ''}" style="font-weight: bold; min-width: 20px; color: var(--gold-main); text-align: center;">${medal}</div>
+                    <div class="ql-list-placement ${placementIndex < 3 ? 'ql-list-placement--medal' : ''}" style="font-weight: bold; min-width: 20px; color: var(--gold-main); text-align: center;">${medal}</div>
                     <img src="${safePhoto}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
                     <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.8rem; padding-right: 5px;">${safeName}</div>
                 </div>

@@ -6361,14 +6361,19 @@ const LEAGUE_RANK_BANDS = [
     { min: 50000, max: 99999 },
     { min: 100000, max: MAX_LEAGUE_SCORE }
 ];
+const LEAGUE_RANK_IDS = ['amater', 'profi', 'majstor', 'legenda', 'titan'];
+const LEAGUE_PAGE_SIZE = 50;
+const LEAGUE_MAX_PAGE_SIZE = 100;
 
 function leagueScoreIdentity(score) {
     return String(score?.playerId || score?._id || `${score?.playerName || 'unknown'}_${score?.year || ''}_${score?.quarter || ''}`);
 }
 
-async function fetchTopLeagueScoresForPeriod(year, quarter, limit = 50, scoreFilter = null) {
+async function fetchTopLeagueScoresForPeriod(year, quarter, limit = 50, scoreFilter = null, offset = 0) {
     const scoreMatch = { $type: 'number', $gt: 0 };
     if (scoreFilter) Object.assign(scoreMatch, scoreFilter);
+    const safeLimit = Math.max(1, Math.min(250, toSafeInt(limit, 50)));
+    const safeOffset = Math.max(0, toSafeInt(offset, 0));
     const match = {
         year,
         quarter,
@@ -6392,8 +6397,77 @@ async function fetchTopLeagueScoresForPeriod(year, quarter, limit = 50, scoreFil
             }
         },
         { $sort: { score: -1, date: 1, playerId: 1 } },
-        { $limit: Math.max(1, Math.min(250, toSafeInt(limit, 50))) }
+        { $skip: safeOffset },
+        { $limit: safeLimit }
     ]);
+}
+
+async function fetchLeagueRankPage(year, quarter, rankId, offset = 0, limit = LEAGUE_PAGE_SIZE) {
+    const bandIndex = LEAGUE_RANK_IDS.indexOf(rankId);
+    if (bandIndex < 0) return null;
+
+    const band = LEAGUE_RANK_BANDS[bandIndex];
+    const safeLimit = Math.max(1, Math.min(LEAGUE_MAX_PAGE_SIZE, toSafeInt(limit, LEAGUE_PAGE_SIZE)));
+    const safeOffset = Math.max(0, toSafeInt(offset, 0));
+    const rows = await fetchTopLeagueScoresForPeriod(
+        year,
+        quarter,
+        safeLimit + 1,
+        { $gte: band.min, $lte: band.max },
+        safeOffset
+    );
+    const hasMore = rows.length > safeLimit;
+
+    return {
+        items: rows.slice(0, safeLimit),
+        offset: safeOffset,
+        nextOffset: safeOffset + Math.min(rows.length, safeLimit),
+        hasMore
+    };
+}
+
+async function fetchLeagueAllTimePage(offset = 0, limit = LEAGUE_PAGE_SIZE) {
+    const safeLimit = Math.max(1, Math.min(LEAGUE_MAX_PAGE_SIZE, toSafeInt(limit, LEAGUE_PAGE_SIZE)));
+    const safeOffset = Math.max(0, toSafeInt(offset, 0));
+    const rows = await LeagueScore.aggregate([
+        {
+            $match: {
+                playerId: { $type: 'string' },
+                year: { $type: 'number' },
+                quarter: { $type: 'number' },
+                score: { $type: 'number', $gt: 0 }
+            }
+        },
+        { $sort: { score: -1, date: -1 } },
+        {
+            $group: {
+                _id: { playerId: "$playerId", year: "$year", quarter: "$quarter" },
+                playerName: { $first: "$playerName" },
+                photoUrl: { $first: "$photoUrl" },
+                score: { $max: "$score" }
+            }
+        },
+        {
+            $group: {
+                _id: "$_id.playerId",
+                playerId: { $first: "$_id.playerId" },
+                playerName: { $last: "$playerName" },
+                photoUrl: { $last: "$photoUrl" },
+                score: { $sum: "$score" }
+            }
+        },
+        { $sort: { score: -1, _id: 1 } },
+        { $skip: safeOffset },
+        { $limit: safeLimit + 1 }
+    ]);
+    const hasMore = rows.length > safeLimit;
+
+    return {
+        items: rows.slice(0, safeLimit),
+        offset: safeOffset,
+        nextOffset: safeOffset + Math.min(rows.length, safeLimit),
+        hasMore
+    };
 }
 
 async function fetchLeagueHighscoresForRankBands(year, quarter) {
@@ -10074,6 +10148,53 @@ io.on('connection', (socket) => {
                 rewardSession.claimInProgress = false;
             }
             return replyGameReward({ ok: false, reason: 'server_error', permanent: false });
+        }
+    });
+
+    socket.on('get_league_rank_page', async (reqData = {}, ack) => {
+        const replyLeaguePage = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+            else socket.emit('league_rank_page_data', payload);
+            return payload;
+        };
+
+        try {
+            const rankId = String(reqData.rankId || '').trim().toLowerCase();
+            if (![...LEAGUE_RANK_IDS, 'alltime'].includes(rankId)) {
+                return replyLeaguePage({ ok: false, reason: 'invalid_rank', rankId });
+            }
+
+            const requestedYear = Number(reqData.year);
+            const requestedQuarter = Number(reqData.quarter);
+            const currentPeriod = getServerQuarterInfo();
+            const year = Number.isInteger(requestedYear) ? requestedYear : currentPeriod.year;
+            const quarter = Number.isInteger(requestedQuarter) && requestedQuarter >= 1 && requestedQuarter <= 4
+                ? requestedQuarter
+                : currentPeriod.quarter;
+            const offset = Math.max(0, toSafeInt(reqData.offset, 0));
+            const limit = Math.max(1, Math.min(LEAGUE_MAX_PAGE_SIZE, toSafeInt(reqData.limit, LEAGUE_PAGE_SIZE)));
+            const page = rankId === 'alltime'
+                ? await fetchLeagueAllTimePage(offset, limit)
+                : await fetchLeagueRankPage(year, quarter, rankId, offset, limit);
+
+            if (!page) return replyLeaguePage({ ok: false, reason: 'invalid_rank', rankId });
+            return replyLeaguePage({
+                ok: true,
+                rankId,
+                year,
+                quarter,
+                items: page.items,
+                offset: page.offset,
+                nextOffset: page.nextOffset,
+                hasMore: page.hasMore
+            });
+        } catch (err) {
+            console.error('Greška pri straničenju Kvartalne lige:', err);
+            return replyLeaguePage({
+                ok: false,
+                reason: 'server_error',
+                rankId: String(reqData.rankId || '').trim().toLowerCase()
+            });
         }
     });
 

@@ -5917,9 +5917,9 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-economy-ca
 }
 
 body.easter-theme #main-menu > .main-global-chat-btn {
-    width: 36px !important;
-    height: 36px !important;
-    left: max(10px, calc((100% - 380px) / 2 + 10px)) !important;
+    width: 40px !important;
+    height: 40px !important;
+    left: max(20px, calc((100% - 380px) / 2 + 10px)) !important;
     top: 34px !important;
     padding: 0 !important;
     display: flex !important;
@@ -5949,8 +5949,8 @@ body.easter-theme #main-menu > .main-global-chat-btn .main-global-chat-fallback 
 
 body.easter-theme #main-menu > .main-global-chat-btn .easter-global-chat-icon {
     display: block !important;
-    width: 36px !important;
-    height: 36px !important;
+    width: 40px !important;
+    height: 40px !important;
     max-width: none !important;
     object-fit: contain;
     opacity: 1 !important;
@@ -6194,6 +6194,48 @@ body.easter-theme #league-modal-overlay .league-hof-tab-button {
     align-items: center;
     justify-content: center;
     gap: 7px;
+}
+
+/* QL tabovi zadržavaju postojeće mere, ali ne nasleđuju globalni 3D button reljef. */
+body.easter-theme #league-modal-overlay .league-tab-button,
+body.easter-theme #league-modal-overlay .league-tab-button:hover,
+body.easter-theme #league-modal-overlay .league-tab-button:active {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+body.easter-theme #league-modal-overlay .league-tab-button.btn-primary {
+    background: #f4d9ed !important;
+    color: #742d63 !important;
+    border: 1px solid #d79abd !important;
+}
+
+body.easter-theme #league-modal-overlay .league-tab-button.btn-secondary {
+    background: #e3f6ff !important;
+    color: #166b9a !important;
+    border: 1px solid #a9dbf2 !important;
+}
+
+body.easter-theme #league-modal-overlay .league-hof-tab-button,
+body.easter-theme #league-modal-overlay .league-hof-tab-button:hover,
+body.easter-theme #league-modal-overlay .league-hof-tab-button:active {
+    background: #ddf2ee !important;
+    color: #326c69 !important;
+    border: 1px solid #9bcfc8 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+body.easter-theme #league-modal-overlay .league-hof-tab-button.is-active,
+body.easter-theme #league-modal-overlay .league-hof-tab-button.is-active:hover,
+body.easter-theme #league-modal-overlay .league-hof-tab-button.is-active:active {
+    background: #ead5f3 !important;
+    color: #69317d !important;
+    border: 1px solid #b98ade !important;
 }
 
 body.easter-theme #league-modal-overlay .league-hof-tab-fallback { display: none; }
