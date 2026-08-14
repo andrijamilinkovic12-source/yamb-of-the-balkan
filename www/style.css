@@ -249,6 +249,16 @@ body {
     filter: drop-shadow(0 6px 10px rgba(0,0,0,0.48)) drop-shadow(0 0 12px var(--gold-glow));
 }
 
+.riznica-header-logo-easter,
+.riznica-tab-soft-clay-icon,
+.riznica-reward-video-soft-clay-icon,
+.riznica-item-reward-video-soft-clay-icon,
+.riznica-status-soft-clay-icon,
+.riznica-category-soft-clay-icon,
+.custom-toast.treasury-insufficient-toast .custom-toast-soft-clay-icon {
+    display: none;
+}
+
 #riznica-screen .balance-display {
     min-height: 40px;
     min-width: 82px;
@@ -1999,6 +2009,31 @@ body {
     flex: 0 0 30px;
     object-fit: contain;
     filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 8px rgba(255,214,111,0.24));
+}
+.tourney-header-icon-easter,
+.tourney-tab-soft-clay-icon,
+.tourney-hof-trophy-easter,
+.tourney-wins-trophy-icon-easter,
+.tourney-action-soft-clay-icon,
+.tourney-registration-soft-clay-icon,
+.tourney-round-trophy-easter,
+.tourney-match-state-soft-clay-icon,
+.tourney-inline-match-state,
+.tourney-inline-active-match-icon,
+.tourney-podium-medal,
+.tourney-match-result-icon-easter,
+.tourney-finalist-result,
+.tourney-prize-result-icon {
+    display: none;
+}
+
+.tourney-match-result-icon-default {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: -5px;
+    margin-left: 4px;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.45)) drop-shadow(0 0 7px var(--gold-glow));
 }
 #tournament-screen .tourney-card-body {
     flex: 1 1 auto;

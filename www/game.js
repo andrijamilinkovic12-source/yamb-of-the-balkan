@@ -2223,7 +2223,8 @@ class YambApp {
 
         let html = `
             <div class="friend-card add-new" onclick="app.searchAndAddFriend()">
-                <div style="font-size: 2.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 5px; font-weight: 300;">+</div>
+                <img class="easter-invite-add-icon" src="assets/easter-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <div class="friend-card-add-fallback" style="font-size: 2.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 5px; font-weight: 300;">+</div>
                 <span style="color:var(--text-main); font-weight:800; font-size:0.75rem; text-align:center; line-height: 1.2;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
             </div>
         `;
@@ -2284,10 +2285,18 @@ class YambApp {
                             <span class="friend-card-power" style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${safePi}</span>
                             <span class="friend-card-wl">${safeWlLabel}: ${safeH2HLine}</span>
                         </div>
-                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}">${this.escapeHtml(btnText)}</button>
+                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
                     </div>
                 `;
             });
+        }
+        if ((!friends || friends.length === 0) && (!requests || requests.length === 0)) {
+            html += `
+                <div class="easter-invite-empty-state" role="status">
+                    <img src="assets/easter-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <span>${gt('friends_empty') || 'Još nema prijatelja.'}</span>
+                </div>
+            `;
         }
         list.innerHTML = html;
     }
@@ -2377,7 +2386,10 @@ class YambApp {
             let titleText = gt('alert_invite_title') || "POZIVNICA";
 
             if (typeof window.showNotification === 'function') {
-                window.showNotification(titleText, sentText);
+                window.showNotification(titleText, sentText, {
+                    icon: 'assets/easter-soft-clay/invite/sent.png?v=1',
+                    className: 'invite-sent-toast'
+                });
             } else {
                 this.modal.alert(sentText, titleText);
             }
@@ -2645,8 +2657,28 @@ class YambApp {
     }
 
     // --- PROXY ZA GLOBAL CHAT ---
-    async openGlobalChat() {
+    async openGlobalChat(options = {}) {
+        if (!this.requireLogin()) return;
+
+        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('globalChat', () => this.openGlobalChat({ skipRoomIntro: true }));
+            return;
+        }
+
         if (this.globalChat) await this.globalChat.open();
+    }
+
+    openOnlinePlayers(options = {}) {
+        if (!this.requireLogin()) return;
+
+        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('onlinePlayers', () => this.openOnlinePlayers({ skipRoomIntro: true }));
+            return;
+        }
+
+        if (typeof window.openOnlinePlayersModal === 'function') {
+            window.openOnlinePlayersModal();
+        }
     }
 
     async closeGlobalChat(skipAd = false) {
@@ -2970,13 +3002,15 @@ class YambApp {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         this.modal.alert(
-                            gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`,
-                            gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆"
+                            `<img class="tourney-prize-result-icon" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
+                            gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆",
+                            { contextClass: 'tourney-winner' }
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`,
-                            gt('tourney_finalist_title') || "FINALISTA 🥈"
+                            `<img class="tourney-prize-result-icon" src="assets/easter-soft-clay/tournament/finalist-silver.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
+                            gt('tourney_finalist_title') || "FINALISTA 🥈",
+                            { contextClass: 'tourney-finalist' }
                         );
                     }
 
@@ -4133,6 +4167,46 @@ class YambApp {
                 icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
                 scale: 1.16,
                 label: () => gt('menu_rules') || 'PRAVILA'
+            },
+            hotseat: {
+                icon: 'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
+                scale: 1,
+                label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
+                    ? 'TWO PLAYERS HOTSEAT'
+                    : 'DVA IGRAČA HOTSEAT'
+            },
+            opponent: {
+                icon: 'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
+                scale: 1.2,
+                label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
+                    ? 'FIND OPPONENT'
+                    : 'NAĐI PROTIVNIKA'
+            },
+            invite: {
+                icon: 'assets/easter-soft-clay/mode-invite-pro.png?v=1',
+                scale: 1.05,
+                label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
+                    ? 'INVITE FRIEND'
+                    : 'POZOVI PRIJATELJA'
+            },
+            globalChat: {
+                icon: 'assets/easter-soft-clay/global-chat-pro.png?v=1',
+                scale: 1,
+                label: () => 'GLOBAL CHAT'
+            },
+            onlinePlayers: {
+                icon: 'assets/soft-clay-online-players-pro.png?v=1',
+                scale: 1,
+                label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
+                    ? 'ONLINE PLAYERS'
+                    : 'ONLINE IGRAČI'
+            },
+            economy: {
+                icon: 'assets/soft-clay-ducats-undo-pro.png?v=1',
+                scale: 1,
+                label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
+                    ? 'DUCATS AND UNDO TOKENS'
+                    : 'DUKATI I VRAĆANJE UPISA'
             }
         };
         const room = rooms[roomId];
@@ -4381,12 +4455,18 @@ class YambApp {
         }
     }
 
-    async startPrivateHosting() {
+    async startPrivateHosting(options = {}) {
         if (!this.requireLogin()) return;
 
         const nickname = this.getCurrentOnlinePlayerName();
-        if (!nickname) return; 
-        const roomId = "yamb-" + Math.random().toString(36).substring(2, 8); 
+        if (!nickname) return;
+
+        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('invite', () => this.startPrivateHosting({ skipRoomIntro: true }));
+            return;
+        }
+
+        const roomId = "yamb-" + Math.random().toString(36).substring(2, 8);
         this.currentHostingRoomId = roomId; 
         
         let baseUrl = window.location.origin;
@@ -4578,11 +4658,17 @@ class YambApp {
         this.socket.emit('join_private_game', { nickname: resolvedNickname, roomId, photoUrl });
     }
     
-    async setupOnline(mode = 'random') {
+    async setupOnline(mode = 'random', options = {}) {
         if (!this.requireLogin()) return;
 
         const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return;
+
+        if (mode === 'random' && !options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('opponent', () => this.setupOnline('random', { skipRoomIntro: true }));
+            return;
+        }
+
         this.navigateTo('waiting-screen');
         const waitingScreen = document.getElementById('waiting-screen');
         if (waitingScreen) {
@@ -4692,6 +4778,8 @@ class YambApp {
             this.opponentReconnectGraceTimer = null;
         }
         this.opponentReconnectGraceDeadline = 0;
+        const gameScene = document.getElementById('game-scene');
+        if (gameScene) gameScene.classList.remove('opponent-reconnecting');
     }
 
     showOpponentReconnectGraceCountdown(data = {}) {
@@ -4702,6 +4790,9 @@ class YambApp {
         if (safeRemainingMs > 0) {
             this.opponentReconnectGraceDeadline = Date.now() + safeRemainingMs;
         }
+        const gameScene = document.getElementById('game-scene');
+        const isRandomOpponentRoom = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
+        if (gameScene) gameScene.classList.toggle('opponent-reconnecting', isRandomOpponentRoom);
 
         const render = () => {
             const timerDisplay = document.getElementById('turn-timer-display');
@@ -4717,7 +4808,7 @@ class YambApp {
                 : fallbackText;
 
             timerDisplay.style.display = 'flex';
-            timerDisplay.innerHTML = `<span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
+            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
             timerDisplay.style.animation = 'pulse 1s infinite';
 
             if (this.opponentReconnectGraceDeadline && msLeft <= 0) {
@@ -4784,7 +4875,7 @@ class YambApp {
             if (this.isSpectator) {
                 timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
                 timerDisplay.style.display = 'flex';
-                timerDisplay.innerHTML = `<span style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);">👁️ ${gt('live_badge') || 'UŽIVO'}</span>`;
+                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
             } else if (this.onlineMode && this.gameActive) {
                 timerDisplay.style.display = 'flex';
@@ -4886,9 +4977,18 @@ class YambApp {
             const restoredUid = String(data.restoredUid || '');
             const myUid = String(this.playerId || localStorage.getItem('yamb_uid') || '');
             const restoredOpponent = !restoredUid || !myUid || restoredUid !== myUid;
+            const isRandomOpponentRoom = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
+            const gameScene = document.getElementById('game-scene');
+            if (gameScene) gameScene.classList.remove('opponent-reconnecting');
 
             if (restoredOpponent && typeof window.showNotification === 'function') {
-                window.showNotification(gt('info_title') || "INFO", gt('opp_reconnected') || "Protivnik se vratio u igru!");
+                window.showNotification(
+                    gt('info_title') || "INFO",
+                    gt('opp_reconnected') || "Protivnik se vratio u igru!",
+                    isRandomOpponentRoom
+                        ? { icon: 'assets/easter-soft-clay/opponent/reconnected.png?v=1', className: 'opponent-reconnected-toast' }
+                        : {}
+                );
             }
 
             this.requestOnlineStateSync(this.roomId);
@@ -4953,7 +5053,9 @@ class YambApp {
             this.soundMgr.win();
             this.effectMgr.trigger('gold_rain');
             
-            let medalja = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
+            const medalType = rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze';
+            const medalEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
+            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="assets/easter-soft-clay/ql/medal-${medalType}.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
             let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
             
@@ -5628,19 +5730,22 @@ class YambApp {
             await this.handleFriendSearchResults(results);
         });
 
-        const showRoomInviteStatus = (key, fallback, data = {}) => {
+        const showRoomInviteStatus = (key, fallback, data = {}, options = {}) => {
             const safeName = this.escapeHtml(data.targetName || data.name || getFallbackPlayerName());
             const text = (gt(key) || fallback).replace('{0}', safeName);
             const title = gt('alert_invite_title') || "POZIVNICA";
             if (typeof window.showNotification === 'function') {
-                window.showNotification(title, text);
+                window.showNotification(title, text, options);
             } else {
                 this.modal.alert(text, title);
             }
         };
 
         this.socket.on('room_invite_accepted', (data = {}) => {
-            showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data);
+            showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data, {
+                icon: 'assets/easter-soft-clay/invite/accepted.png?v=1',
+                className: 'invite-accepted-toast'
+            });
         });
 
         this.socket.on('room_invite_declined', (data = {}) => {
@@ -5802,13 +5907,21 @@ class YambApp {
         window.history.pushState({}, document.title, window.location.pathname); 
     }
 
-    async handleModeClick(numPlayers) {
-        if (!this.requireLogin()) return; 
-        
+    async handleModeClick(numPlayers, options = {}) {
+        if (!this.requireLogin()) return;
+
         if(this.soundMgr) this.soundMgr.click();
-        
-        if (!window.localforage) {
+
+        const openMode = () => {
+            if (numPlayers === 2 && !options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+                this.playEasterRoomIntro('hotseat', () => this.setupGame(2));
+                return;
+            }
             this.setupGame(numPlayers);
+        };
+
+        if (!window.localforage) {
+            openMode();
             return;
         }
         
@@ -5836,11 +5949,11 @@ class YambApp {
                     otherResume.style.display = 'none';
                 }
             } else {
-                this.setupGame(numPlayers);
+                openMode();
             }
         } catch (e) {
             console.error("Greška pri učitavanju state-a igre:", e);
-            this.setupGame(numPlayers);
+            openMode();
         }
     }
 
@@ -5855,11 +5968,19 @@ class YambApp {
         }
 
         if (wantResume) {
-            this.loadSavedGame(numPlayers);
+            if (numPlayers === 2 && this.shouldPlayEasterRoomIntro()) {
+                this.playEasterRoomIntro('hotseat', () => this.loadSavedGame(2));
+            } else {
+                this.loadSavedGame(numPlayers);
+            }
         } else {
             const uid = localStorage.getItem('yamb_uid') || 'guest';
             if (window.localforage) await localforage.removeItem(`yamb_saved_game_${uid}_${numPlayers}`);
-            this.setupGame(numPlayers);
+            if (numPlayers === 2 && this.shouldPlayEasterRoomIntro()) {
+                this.playEasterRoomIntro('hotseat', () => this.setupGame(2));
+            } else {
+                this.setupGame(numPlayers);
+            }
         }
     }
     
@@ -5878,7 +5999,7 @@ class YambApp {
         this.allScores = [];
         this.dualBoardLastFollowedPlayerIdx = null;
         const gameScene = document.getElementById('game-scene');
-        if (gameScene) gameScene.classList.remove('theme-dual-board-view', 'theme-spectator-view', 'easter-spectator-view');
+        if (gameScene) gameScene.classList.remove('theme-dual-board-view', 'theme-spectator-view', 'easter-spectator-view', 'online-duel-room', 'random-online-duel-room', 'opponent-reconnecting');
         const p1Name = this.playerName; 
         
         if (numPlayers === 1) { this.modeTag = "Solo"; this.players.push(p1Name); } 
@@ -6127,10 +6248,15 @@ class YambApp {
         const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`);
         const gameScene = document.getElementById('game-scene');
         const isEasterTwoPlayerGame = document.body.classList.contains('easter-theme') && this.players.length === 2;
+        const isEasterOnlineDuel = isEasterTwoPlayerGame && this.onlineMode;
+        const isEasterRandomDuel = isEasterOnlineDuel
+            && this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
         const isDesertSpectatorDuel = document.body.classList.contains('desert-theme') && this.isSpectator && this.players.length === 2;
         // Vaskr koristi isti slobodan vertikalni pager za svaki režim sa dva igrača.
         if (gameScene) {
             gameScene.classList.toggle('theme-dual-board-view', isEasterTwoPlayerGame);
+            gameScene.classList.toggle('online-duel-room', isEasterOnlineDuel);
+            gameScene.classList.toggle('random-online-duel-room', isEasterRandomDuel);
             gameScene.classList.toggle('theme-spectator-view', isDesertSpectatorDuel);
         }
         playerTables.forEach(el => el.classList.remove('theme-spectator-active'));
@@ -7098,6 +7224,11 @@ class YambApp {
             : (gt('technical_loss_winner') || `Tehnički poraz. Pobednik je {0}.`).replace('{0}', winnerName);
         const message = data.message || fallbackMsg;
 
+        const gameOverScreen = document.getElementById('game-over-screen');
+        if (gameOverScreen) gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner');
+        const personalBestBadge = document.getElementById('solo-personal-best-badge');
+        if (personalBestBadge) personalBestBadge.hidden = true;
+
         const titleEl = document.getElementById('go-title');
         const msgEl = document.getElementById('go-msg');
         const scoreEl = document.getElementById('go-score');
@@ -7209,6 +7340,9 @@ class YambApp {
         let unlockedTrophiesNow = [];
         let saveMode = detectedMode;
         let matchResultRef = this.onlineMode ? String(onlineResult?.matchId || '') : '';
+        this.refreshLocalStats();
+        const soloHighscoreBeforeGame = Math.max(0, Number(this.stats && this.stats.highscore) || 0);
+        let isNewSoloPersonalBest = false;
 
         if (this.onlineMode) {
             const duelType = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType });
@@ -7289,6 +7423,8 @@ class YambApp {
                  Array.isArray(onlineResult.serverStatsAppliedUids) &&
                  onlineResult.serverStatsAppliedUids.includes(myUid)
              );
+             isNewSoloPersonalBest = this.players.length === 1
+                 && Number(myScoreEntry.score) > soloHighscoreBeforeGame;
              this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, {
                  serverApplied: serverStatsApplied,
                  skipH2H: serverStatsApplied,
@@ -7359,6 +7495,15 @@ class YambApp {
         document.getElementById('go-title').innerText = title;
         document.getElementById('go-msg').innerText = message;
         document.getElementById('go-score').innerText = myScoreEntry ? myScoreEntry.score : winner.score;
+        const gameOverScreen = document.getElementById('game-over-screen');
+        if (gameOverScreen) {
+            const isHotseatResult = detectedMode === 'Hotseat';
+            gameOverScreen.classList.toggle('is-solo-result', this.players.length === 1);
+            gameOverScreen.classList.toggle('is-hotseat-result', isHotseatResult);
+            gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);
+        }
+        const personalBestBadge = document.getElementById('solo-personal-best-badge');
+        if (personalBestBadge) personalBestBadge.hidden = !isNewSoloPersonalBest;
         const goScoreLabel = document.querySelector('#game-over-screen [data-lang="go_msg_solo"]');
         if (goScoreLabel) goScoreLabel.innerText = scoreLabel;
         
@@ -7995,7 +8140,12 @@ class YambApp {
 
     // --- UNDO MENU & TOKENS (Delegati za vracanjeupisa.js) ---
     
-    openUndoMenu() {
+    openUndoMenu(options = {}) {
+        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            this.playEasterRoomIntro('economy', () => this.openUndoMenu({ skipRoomIntro: true }));
+            return;
+        }
+
         if (this.undoManager) this.undoManager.openMenu();
     }
 
@@ -8035,11 +8185,13 @@ class YambApp {
         <div id="winner-modal-overlay" class="modal-overlay" style="z-index: 9999999; display: flex;">
             <div class="modal-box" style="text-align: center; padding: 30px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); max-width: 400px; width: 90%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                 <div style="width: 96px; height: 96px; margin: 0 auto 12px auto; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,214,76,0.18), rgba(0,0,0,0.12) 70%); box-shadow: 0 0 22px rgba(255,214,76,0.24); animation: popIn 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-                    <img src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
+                    <img class="quarter-winner-logo quarter-winner-logo-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
+                    <img class="quarter-winner-logo quarter-winner-logo-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </div>
                 <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
-                
+                <img class="ql-quarter-champion-medal" src="assets/easter-soft-clay/ql/medal-gold.png?v=1" alt="" aria-hidden="true" decoding="async">
+
                 <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
                     <img src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">
                     <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); background: var(--gold-main); color: #000; padding: 2px 10px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MVP</div>

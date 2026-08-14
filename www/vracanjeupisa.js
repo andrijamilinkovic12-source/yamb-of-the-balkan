@@ -69,8 +69,12 @@ class UndoManager {
 
         const ducatsIcon = document.getElementById('economy-header-ducats-icon');
         const undoIcon = document.getElementById('economy-header-undo-icon');
+        const ducatsSoftClayIcon = document.getElementById('economy-header-ducats-soft-clay-icon');
+        const undoSoftClayIcon = document.getElementById('economy-header-undo-soft-clay-icon');
         if (ducatsIcon) ducatsIcon.classList.toggle('hidden', normalizedIndex === 1);
         if (undoIcon) undoIcon.classList.toggle('hidden', normalizedIndex === 0);
+        if (ducatsSoftClayIcon) ducatsSoftClayIcon.classList.toggle('hidden', normalizedIndex === 1);
+        if (undoSoftClayIcon) undoSoftClayIcon.classList.toggle('hidden', normalizedIndex === 0);
 
         if (normalizedIndex !== this.currentMenuPage) {
             this.currentMenuPage = normalizedIndex;

@@ -79,6 +79,25 @@ class GlobalChatManager {
         this.showStatus(connectionErrors.has(reason) ? 'sys_no_conn' : 'err_chat_auth_required');
     }
 
+    renderHistoryState(state = 'empty') {
+        const body = document.getElementById('global-chat-body');
+        if (!body) return;
+        const isLoading = state === 'loading';
+        const key = isLoading ? 'global_chat_loading' : 'global_chat_empty';
+        const fallback = isLoading ? 'Učitavam poruke...' : 'Još nema poruka. Započnite razgovor.';
+        body.innerHTML = `
+            <div class="global-chat-welcome global-chat-state${isLoading ? ' is-loading' : ''}" data-chat-state="${isLoading ? 'loading' : 'empty'}">
+                <img class="global-chat-state-soft-clay-icon" src="assets/easter-soft-clay/global-chat-empty-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <span>${this.gt(key) || fallback}</span>
+            </div>`;
+    }
+
+    renderWelcome() {
+        const body = document.getElementById('global-chat-body');
+        if (!body) return;
+        body.innerHTML = `<div class="global-chat-welcome" data-lang="global_chat_welcome">${this.gt('global_chat_welcome') || 'Dobrodošli u Globalni Chat! Budite pristojni.'}</div>`;
+    }
+
     waitForSocketConnection(timeoutMs = 8000) {
         if (!this.app.socket) return Promise.resolve({ ok: false, reason: 'sys_no_conn' });
         if (this.app.socket.connected) return Promise.resolve({ ok: true });
@@ -169,10 +188,13 @@ class GlobalChatManager {
             this.updateViewportVars();
             this.resizeInput();
             this.clearStatus();
+            this.renderHistoryState('loading');
 
             const ready = await this.ensureChatReady();
             if (ready && this.app.socket && this.app.socket.connected) {
                 this.app.socket.emit('request_global_chat_history');
+            } else {
+                this.renderHistoryState('empty');
             }
         };
 
@@ -253,10 +275,8 @@ class GlobalChatManager {
         }
         this.lastGlobalMsg = { text, sender, time: sada };
 
-        const infoMsg = body.querySelector('div[style*="text-align: center"]');
-        if (infoMsg && body.children.length === 1) {
-            infoMsg.style.display = 'none';
-        }
+        const stateMessage = body.querySelector('[data-chat-state]');
+        if (stateMessage) stateMessage.remove();
 
         const msgDiv = document.createElement('div'); 
         msgDiv.className = `msg-bubble ${type}`; 
@@ -341,10 +361,15 @@ class GlobalChatManager {
         socket.on('global_chat_history', (history) => {
             const body = document.getElementById('global-chat-body');
             if (!body) return;
-            
-            body.innerHTML = `<div style="text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;" data-lang="global_chat_welcome">${this.gt('global_chat_welcome') || "Dobrodošli u Globalni Chat! Budite pristojni."}</div>`;
-            
-            history.forEach(data => {
+
+            const messages = Array.isArray(history) ? history : [];
+            if (messages.length === 0) {
+                this.renderHistoryState('empty');
+                return;
+            }
+
+            this.renderWelcome();
+            messages.forEach(data => {
                 const myUid = localStorage.getItem('yamb_uid');
                 const isMe = (data.senderId === socket.id) || (data.senderUid && data.senderUid === myUid);
                 this.appendMessage(data.sender, data.msg, isMe ? "msg-outgoing" : "msg-incoming", data.senderId, true, data.senderUid, data.createdAt, data.id);

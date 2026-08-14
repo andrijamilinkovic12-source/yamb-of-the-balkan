@@ -72,7 +72,7 @@ function syncVisibleOnlineCounters(count) {
 /**
  * Prikazuje custom toast notifikaciju iznad svih elemenata.
  */
-window.showNotification = function(title, message) {
+window.showNotification = function(title, message, options = {}) {
     const sec = getOnlineNumberSecurity();
     const containerId = 'custom-notification-container';
     let container = document.getElementById(containerId);
@@ -94,10 +94,17 @@ window.showNotification = function(title, message) {
     }
 
     const toast = document.createElement('div');
-    toast.className = 'custom-toast';
+    const safeClassName = String(options.className || '').replace(/[^a-zA-Z0-9_-]/g, '');
+    toast.className = `custom-toast ${safeClassName}`.trim();
+    const optionalIcon = options.icon
+        ? `<img class="custom-toast-soft-clay-icon" src="${sec.escapeAttr(options.icon)}" alt="" aria-hidden="true" decoding="async">`
+        : '';
     toast.innerHTML = `
-        <div class="toast-title">${sec.escapeHtml(title)}</div>
-        <div class="toast-msg">${sec.escapeHtml(message)}</div>
+        ${optionalIcon}
+        <div class="custom-toast-copy">
+            <div class="toast-title">${sec.escapeHtml(title)}</div>
+            <div class="toast-msg">${sec.escapeHtml(message)}</div>
+        </div>
     `;
     
     toast.style.background = 'var(--glass-panel)';
@@ -207,6 +214,14 @@ window.openOnlinePlayersModal = function() {
     }
 
     const body = document.getElementById('online-players-body');
+    const renderPlayersState = (state, text) => {
+        if (!body) return;
+        body.innerHTML = `
+            <div class="online-players-state ${state === 'loading' ? 'is-loading' : ''}" data-online-state="${sec.escapeAttr(state)}">
+                <img class="online-players-state-soft-clay-icon" src="assets/easter-soft-clay/online-players-state-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <span>${sec.escapeHtml(text)}</span>
+            </div>`;
+    };
     if (body) {
         body.style.flex = '1';
         body.style.overflowY = 'auto';
@@ -216,8 +231,8 @@ window.openOnlinePlayersModal = function() {
         body.style.flexDirection = 'column';
         body.style.gap = '12px';
 
-        const loadingText = tr('online_loading', 'Učitavam igrače... ⏳');
-        body.innerHTML = `<div style="text-align: center; font-size: 0.9rem; color: var(--text-muted); padding-top: 20px;">${sec.escapeHtml(loadingText)}</div>`;
+        const loadingText = tr('online_loading', 'Učitavam igrače...');
+        renderPlayersState('loading', loadingText);
     }
 
     if (window.app && typeof window.app.initSocketConnection === 'function') {
@@ -233,7 +248,7 @@ window.openOnlinePlayersModal = function() {
 
             if (!players || players.length === 0) {
                 const noPlayers = tr('online_no_players', 'Trenutno nema igrača.');
-                body.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding-top: 20px;">${sec.escapeHtml(noPlayers)}</div>`;
+                renderPlayersState('empty', noPlayers);
                 return;
             }
 
@@ -278,26 +293,26 @@ window.openOnlinePlayersModal = function() {
                     // 1. Dugme za DODAVANJE (Zatamnjeno ako su već prijatelji)
                     let addFriendBtn = '';
                     if (isAlreadyFriend) {
-                        addFriendBtn = `<button disabled title="${sec.escapeAttr(alreadyFriendTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">➕</button>`;
+                        addFriendBtn = `<button class="online-player-action online-player-action--friend is-disabled" disabled title="${sec.escapeAttr(alreadyFriendTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;"><span class="online-player-action-fallback" aria-hidden="true">➕</span><img class="online-player-action-soft-clay-icon" src="assets/easter-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async"></button>`;
                     } else {
                         // Dodata logika da se dugme "ugasi" čim se klikne da bi se izbegao spam
-                        addFriendBtn = `<button onclick="${addFriendHandler}" title="${sec.escapeAttr(addFriendTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">➕</button>`;
+                        addFriendBtn = `<button class="online-player-action online-player-action--friend" onclick="${addFriendHandler}" title="${sec.escapeAttr(addFriendTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(76, 175, 80, 0.2); border: 1px solid var(--success); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'"><span class="online-player-action-fallback" aria-hidden="true">➕</span><img class="online-player-action-soft-clay-icon" src="assets/easter-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async"></button>`;
                     }
 
                     // 2. Dugme za GLEDANJE (Zatamnjeno ako igrač ne igra)
                     let spectateBtn = '';
                     if (!canSpectate) {
                         const spectateTitle = alreadyPlayingOnline ? spectateBusySelfTitle : spectateNotPlayingTitle;
-                        spectateBtn = `<button disabled title="${sec.escapeAttr(spectateTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">👁️</button>`;
+                        spectateBtn = `<button class="online-player-action online-player-action--spectate is-disabled" disabled title="${sec.escapeAttr(spectateTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255,0.1); color: gray; cursor: not-allowed; opacity: 0.4;"><span class="online-player-action-fallback" aria-hidden="true">👁️</span><img class="online-player-action-soft-clay-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"></button>`;
                     } else {
-                        spectateBtn = `<button onclick="${spectateHandler}" title="${sec.escapeAttr(spectateTitleText)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">👁️</button>`;
+                        spectateBtn = `<button class="online-player-action online-player-action--spectate" onclick="${spectateHandler}" title="${sec.escapeAttr(spectateTitleText)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(33, 150, 243, 0.2); border: 1px solid #2196F3; color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'"><span class="online-player-action-fallback" aria-hidden="true">👁️</span><img class="online-player-action-soft-clay-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"></button>`;
                     }
 
                     let challengeBtn = '';
                     if (isBusy) {
-                        challengeBtn = `<button disabled title="${sec.escapeAttr(playerBusyTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;">⚔️</button>`;
+                        challengeBtn = `<button class="online-player-action online-player-action--duel is-disabled" disabled title="${sec.escapeAttr(playerBusyTitle)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: gray; cursor: not-allowed; opacity: 0.4;"><span class="online-player-action-fallback" aria-hidden="true">⚔️</span><img class="online-player-action-soft-clay-icon" src="assets/easter-soft-clay/online-duel-pro.png?v=1" alt="" aria-hidden="true" decoding="async"></button>`;
                     } else {
-                        challengeBtn = `<button onclick="${challengeHandler}" title="${sec.escapeAttr(challengeTitleText)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">⚔️</button>`;
+                        challengeBtn = `<button class="online-player-action online-player-action--duel" onclick="${challengeHandler}" title="${sec.escapeAttr(challengeTitleText)}" style="width: 38px; height: 38px; border-radius: 8px; font-size: 1.3rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.1s; background: rgba(244, 67, 54, 0.2); border: 1px solid var(--danger); color: white;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'"><span class="online-player-action-fallback" aria-hidden="true">⚔️</span><img class="online-player-action-soft-clay-icon" src="assets/easter-soft-clay/online-duel-pro.png?v=1" alt="" aria-hidden="true" decoding="async"></button>`;
                     }
 
                     actionButtons = `

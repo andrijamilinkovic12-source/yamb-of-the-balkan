@@ -4,8 +4,8 @@
     "sr": "Vaskr Neumorphic UI Theme Pack",
     "en": "Joyful Easter Neumorphic UI Theme Pack"
   },
-  "version": "1.4.1",
-  "updated": "2026-08-13",
+  "version": "2.7.0",
+  "updated": "2026-08-14",
   "bodyClass": "easter-theme",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
   "entrypoints": {
@@ -38,9 +38,19 @@
       "description": "Cards, typography, inputs, modals, notifications, chat, treasury, stats, rules and leaderboard contrast."
     },
     {
+      "id": "treasury-inner-icons",
+      "status": "complete",
+      "description": "Easter-only Soft Clay header, four tabs, rewarded-video actions, store-state marks and bronze/silver/gold collection emblems; individual collectible trophies remain reserved for a separate Trophy Pack."
+    },
+    {
+      "id": "tournament-inner-icons",
+      "status": "complete",
+      "description": "Easter-only professional Soft Clay tournament identity: header trophy, Information/Bracket/Hall of Fame tabs, registration and match-state symbols, all-time podium medals, champion trophy and finalist silver badge. Bracket geometry, rounds, names, avatars, scores, scheduling, rewards and swipe remain unchanged."
+    },
+    {
       "id": "cinematic-screens",
       "status": "complete",
-      "description": "Splash, quote, waiting and game-over screens plus matching 4.6-second Daily Challenge, Leaderboard, Statistics, Settings, Rules, Treasury and Tournament room intros with immediately visible Soft Clay icons and left-to-right title waves. The Tournament intro includes a live Easter-styled top-three panel with avatar, full player name and all-time tournament wins."
+      "description": "Splash, quote, waiting and game-over screens plus matching 4.6-second Daily Challenge, Leaderboard, Statistics, Settings, Rules, Treasury, Tournament, Two Players Hotseat, Find Opponent, Invite Friend, Global Chat, Online Players, Quarterly League and Ducats & Undo room intros with immediately visible Soft Clay icons and left-to-right title waves. Quarterly League uses the selected full-colour YotB QL logo. The Tournament intro includes a live Easter-styled top-three panel with avatar, full player name and all-time tournament wins."
     },
     {
       "id": "motion",
@@ -78,6 +88,19 @@
     "For future themes, create equivalent isolated packs instead of reusing Easter selectors globally.",
     "Every two-player Easter game (online random, invite duel, spectator and Hotseat) uses the same freely swipeable vertical board pager and follows the active player only when the turn changes.",
     "Treasury and Tournament use the same 4.6-second large-icon, fixed icon-to-title spacing and left-to-right title-wave intro rules as the Easter bottom-menu rooms.",
+    "Two Players Hotseat, Find Opponent and Invite Friend use the same 4.6-second large Soft Clay icon, fixed Riznica icon-to-title spacing and left-to-right uppercase title wave; Solo has no room intro until explicitly added later.",
+    "Global Chat, Online Players and Ducats & Undo use the same 4.6-second large Soft Clay icon, fixed Riznica icon-to-title spacing and left-to-right uppercase title wave.",
+    "Quarterly League uses the selected YotB QL rounded-diamond Soft Clay logo: theme-coloured as the only main-menu watermark and full-colour in the standard 4.6-second Easter room intro with fixed icon-to-title spacing and left-to-right uppercase title wave; the former circular crown watermark is removed.",
+    "Global Chat uses an Easter-only inner Soft Clay mini-pack: the approved chat mark in the header, a full 3D send icon and a discreet empty/loading-state illustration; close, report, character count, online status and player avatars remain unchanged.",
+    "Online Players uses an Easter-only inner Soft Clay mini-pack: room icon in the header, Add Friend, Watch Game and Challenge to Duel action icons, plus a shared empty/loading illustration. Unavailable actions use dimmed versions of the same icons; player status colours, avatars, names, data and close control remain unchanged.",
+    "Quarterly League uses an Easter-only complete inner Soft Clay pack: the YotB QL header mark; League, Hall of Fame, Medals and Champions tab icons; standardized Amateur, Pro, Master, Legend and Titan badges; and one shared gold, silver and bronze QL medal set across standings, Hall of Fame and quarter-end notifications. Progress calculation and fill, points, rank names, avatars, player names, pagination/swipe and reward logic remain unchanged.",
+    "Ducats and Undo uses an Easter-only inner Soft Clay mini-pack: separate Ducat and Undo Token icons in their tabs and active header, a matching rewarded-video icon and a dedicated unavailable-ad icon. Ducat/token balances, prices, ad availability state, button text, plus signs, quantities and close control remain unchanged.",
+    "Solo uses an Easter-only end-screen identity: the approved Solo icon marks the Solo result, and a discreet Personal Best Soft Clay badge appears only when the new Solo score is strictly higher than the previous personal record. Solo has no gold, silver or bronze placement medals. The board, dimensions, fields, selected dice skin, roll button, score and undo controls, formulas and gameplay icons remain unchanged; no extra table-intro label is added because it is not needed for clarity.",
+    "Two Players Hotseat keeps its existing 4.6-second Easter room intro and needs no duplicate table-header mark. Its existing themed two-player presentation remains unchanged, while the shared end screen shows one Easter Soft Clay winner symbol only when there is a winner; draws show no winner symbol. No placement-medal set is used. Avatars, dual-board switching, swipe, automatic active-player following, active-player marker, board controls and scoring remain unchanged.",
+    "Find Opponent uses an Easter-only inner Soft Clay state pack across searching, opponent found, online duel and spectating: the approved globe in the waiting header, radar search, themed VS badge, opponent-found mark, existing approved spectate eye, and distinct disconnected/reconnected connection marks. Player cards, avatars, names, Power/POB/NER/POR, automatic and manual board paging, connection status colours and close control remain unchanged. Individual duels use no placement medals.",
+    "Invite Friend uses an Easter-only inner Soft Clay mini-pack across My Card, Friends List, Add Friend, Send Invitation, Invitation Sent and Invitation Accepted states: the approved invite mark in the waiting header, approved Add Friend mark, dedicated send/sent/accepted marks and a dedicated empty-list illustration. Avatars, names, friend cards, POB/NER/POR, room code, close control, safe-zone layout and invitation logic remain unchanged.",
+    "Treasury uses an Easter-only inner Soft Clay pack: the approved Treasury header mark; dedicated Trophies, Dice Skins, Effects and Themes tab icons; the shared rewarded-video mark; purchased, active, locked and insufficient-ducats state icons; and bronze, silver and gold collection marks. Real dice-skin, theme and effect previews, prices, purchase logic and individual collectible trophies remain unchanged. Individual trophy replacement is deferred to a separate Treasury Trophy Pack.",
+    "Tournament uses an Easter-only professional inner Soft Clay pack: the approved trophy identity replaces the old header and Hall of Fame trophy only in Easter; Information, Bracket and Hall of Fame tabs have dedicated icons; registration, refund, locked registration, tournament start, active match and completed match have distinct state symbols; the all-time leaderboard alone uses gold, silver and bronze podium medals. A specific tournament result uses only the champion trophy and runner-up silver finalist badge, never an invented third-place award. Bracket lines and geometry, quarterfinal/semifinal/final layout, avatars, names, scores, match times, reward logic and phase swipe remain unchanged.",
     "The Tournament top-three card is anchored 2 mm above the bottom safe zone; the icon and title move with the tournament composition without changing their dimensions or standard spacing.",
     "The Easter Tournament intro displays the real server-provided top three all-time tournament winners with avatar, full name and number of wins; it must never use fabricated ranking data."
   ]

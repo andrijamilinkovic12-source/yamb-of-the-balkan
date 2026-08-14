@@ -156,7 +156,7 @@ class ModalManager {
         };
     }
 
-    alert(text, title) {
+    alert(text, title, options = {}) {
         const safeTitle = title || _safeT('modal_title_info') || "OBAVEŠTENJE";
         return new Promise(resolve => {
             const els = this.elements;
@@ -174,7 +174,7 @@ class ModalManager {
             const els = this.elements;
             if(!els.overlay) { console.warn("Modal overlay missing! Confirm:", text); resolve(false); return; }
             
-            this.setup(safeTitle, text, false);
+            this.setup(safeTitle, text, false, options);
             els.btnCancel.classList.remove('hidden');
             if (options.okText && els.btnOk) els.btnOk.innerText = options.okText;
             if (options.cancelText && els.btnCancel) els.btnCancel.innerText = options.cancelText;
@@ -211,6 +211,12 @@ class ModalManager {
     setup(title, msg, hasInput, options = {}) {
         const els = this.elements;
         if(!els.overlay) return;
+
+        [...els.overlay.classList]
+            .filter(className => className.startsWith('modal-context-'))
+            .forEach(className => els.overlay.classList.remove(className));
+        const contextClass = String(options.contextClass || '').replace(/[^a-zA-Z0-9_-]/g, '');
+        if (contextClass) els.overlay.classList.add(`modal-context-${contextClass}`);
 
         if(els.title) els.title.innerText = title;
         if(els.msg) els.msg.innerHTML = msg; 
@@ -3464,6 +3470,23 @@ class ShopManager {
         return grouped;
     }
 
+    getEasterTreasuryCategoryMeta(categoryName) {
+        if (this.type !== 'skin') return null;
+        const name = String(categoryName || '').toLowerCase();
+        if (name.includes('bronza') || name.includes('bronze')) return { type: 'bronze', label: categoryName.replace('🥉', '').trim() };
+        if (name.includes('srebr') || name.includes('silver')) return { type: 'silver', label: categoryName.replace('🥈', '').trim() };
+        if (name.includes('zlat') || name.includes('gold')) return { type: 'gold', label: categoryName.replace('🥇', '').trim() };
+        return null;
+    }
+
+    getEasterTreasuryStatusIcon(iconName, className = '') {
+        return `<img class="riznica-status-soft-clay-icon ${className}" src="assets/easter-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+    }
+
+    getTreasuryRewardVideoIcon() {
+        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">';
+    }
+
     render() {
         if (!this.container) return;
         this.container.innerHTML = '';
@@ -3472,7 +3495,11 @@ class ShopManager {
         for (const [categoryName, items] of Object.entries(groupedItems)) {
             const section = document.createElement('div');
             section.className = 'category-section';
-            section.innerHTML = `<div class="category-header">${categoryName}</div>`;
+            const categoryMeta = this.getEasterTreasuryCategoryMeta(categoryName);
+            const categoryHtml = categoryMeta
+                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
+                : categoryName;
+            section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''}>${categoryHtml}</div>`;
             
             const grid = document.createElement('div');
             grid.className = 'category-grid'; 
@@ -3501,14 +3528,17 @@ class ShopManager {
 
                 let priceHtml = '';
                 if (this.type === 'trophy') {
-                    priceHtml = `<div class="status ${isUnlocked ? 'status-unlocked' : 'status-locked'}">${isUnlocked ? _safeT('btn_won') : `${dukatIconHtml()} ${item.reward}`}</div>`;
+                    const lockedStatusIcon = isUnlocked ? '' : this.getEasterTreasuryStatusIcon('status-locked');
+                    priceHtml = `<div class="status ${isUnlocked ? 'status-unlocked' : 'status-locked'} ${isUnlocked ? '' : 'riznica-item-status riznica-item-status--locked'}">${lockedStatusIcon}<span>${isUnlocked ? _safeT('btn_won') : `${dukatIconHtml()} ${item.reward}`}</span></div>`;
                 } else {
                     if (isUnlocked) {
-                        priceHtml = `<div class="price">${_safeT('btn_bought')}</div>`;
+                        priceHtml = `<div class="price riznica-item-status riznica-item-status--owned">${this.getEasterTreasuryStatusIcon('status-owned')}<span>${_safeT('btn_bought')}</span></div>`;
                     } else {
                         // NOVO: Provera da li se otključava reklamama
                         if (item.adUnlock) {
-                            priceHtml = `<div class="price" style="color: var(--text-muted); font-size: 0.75rem;">${_safeT('shop_watch_to_unlock') || 'Gledaj 📺 za otključavanje'}</div>`;
+                            const watchToUnlockText = String(_safeT('shop_watch_to_unlock') || 'Gledaj 📺 za otključavanje')
+                                .replace('📺', this.getTreasuryRewardVideoIcon());
+                            priceHtml = `<div class="price riznica-reward-video-copy" style="color: var(--text-muted); font-size: 0.75rem;">${watchToUnlockText}</div>`;
                         } else {
                             let price = item.price;
                             let displayPrice = `${price} ${_safeT('balance')}`;
@@ -3526,7 +3556,7 @@ class ShopManager {
                 let btnHtml = '';
                 if (this.type !== 'trophy') {
                     if (isActive) {
-                        btnHtml = `<button class="btn-action btn-active">${_safeT('btn_active')}</button>`;
+                        btnHtml = `<button class="btn-action btn-active riznica-item-status riznica-item-status--active">${this.getEasterTreasuryStatusIcon('status-active')}<span>${_safeT('btn_active')}</span></button>`;
                     } else if (isUnlocked) {
                         btnHtml = `<button class="btn-action btn-equip" onclick="shop.equip('${item.id}')">${_safeT('btn_equip')}</button>`;
                     } else {
@@ -3536,7 +3566,7 @@ class ShopManager {
                             // NOVO: Logika za dugme koje otključava reklamama
                             if (item.adUnlock) {
                                 let adProgress = parseInt(localStorage.getItem(`yamb_adprogress_${item.id}`)) || 0;
-                                btnHtml = `<button class="btn-action btn-ad-state-aware" style="background: linear-gradient(45deg, #FF9800, #F57C00); color: white; border: none; border-radius: 8px; padding: 5px 10px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0px rgba(0,0,0,0.3);" onclick="shop.watchAdForUnlock('${item.id}', ${item.adUnlock})">📺 ${adProgress} / ${item.adUnlock}</button>`;
+                                btnHtml = `<button class="btn-action btn-ad-state-aware riznica-reward-video-action" style="background: linear-gradient(45deg, #FF9800, #F57C00); color: white; border: none; border-radius: 8px; padding: 5px 10px; font-weight: bold; cursor: pointer; text-shadow: 1px 1px 0px rgba(0,0,0,0.3);" onclick="shop.watchAdForUnlock('${item.id}', ${item.adUnlock})">${this.getTreasuryRewardVideoIcon()}<span>${adProgress} / ${item.adUnlock}</span></button>`;
                             } else {
                                 const activeDiscount = this.getActiveDiscount(item.id);
                                 let currentPrice = this.getCurrentItemPrice(item);
@@ -3544,7 +3574,7 @@ class ShopManager {
                                 
                                 let discountBtn = '';
                                 if(!activeDiscount) {
-                                    discountBtn = `<button class="btn-action btn-discount btn-ad-state-aware" onclick="shop.watchAdDiscount('${item.id}')">📺 -20%</button>`;
+                                    discountBtn = `<button class="btn-action btn-discount btn-ad-state-aware riznica-reward-video-action" onclick="shop.watchAdDiscount('${item.id}')">${this.getTreasuryRewardVideoIcon()}<span>-20%</span></button>`;
                                 }
 
                                 btnHtml = `
@@ -3554,7 +3584,7 @@ class ShopManager {
                                     </div>`;
                             }
                         } else {
-                            btnHtml = `<div class="req-text">${_safeT('shop_unlock')} ${resolveText(item.reqName)}</div>`;
+                            btnHtml = `<div class="req-text riznica-item-status riznica-item-status--locked">${this.getEasterTreasuryStatusIcon('status-locked')}<span>${_safeT('shop_unlock')} ${resolveText(item.reqName)}</span></div>`;
                         }
                     }
                 } else {
@@ -3631,7 +3661,10 @@ class ShopManager {
 
         if (this.balance < currentPrice) {
             if (typeof window.showNotification === 'function') {
-                window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!");
+                window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!", {
+                    icon: 'assets/easter-soft-clay/treasury/status-insufficient.png?v=1',
+                    className: 'treasury-insufficient-toast'
+                });
             } else if (window.modalManager && window.modalManager.overlay) {
                 window.modalManager.alert(_safeT('msg_no_money') || "Nemate dovoljno dukata!", _safeT('modal_title_info'));
             } else {
@@ -3665,7 +3698,10 @@ class ShopManager {
 
         if (this.balance < safePrice) {
             if (typeof window.showNotification === 'function') {
-                window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!");
+                window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!", {
+                    icon: 'assets/easter-soft-clay/treasury/status-insufficient.png?v=1',
+                    className: 'treasury-insufficient-toast'
+                });
             } else if (window.modalManager && window.modalManager.overlay) {
                 window.modalManager.alert(_safeT('msg_no_money') || "Nemate dovoljno dukata!", _safeT('modal_title_info'));
             } else {

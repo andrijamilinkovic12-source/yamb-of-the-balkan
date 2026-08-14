@@ -162,6 +162,8 @@ class RiznicaManager {
             balanceId: 'riznica-balance'
         });
 
+        document.getElementById('riznica-screen')?.setAttribute('data-riznica-tab', type);
+
         // Poveži globalnu referencu da bi HTML onclick='shop.tryBuy()' radili nesmetano
         window.shop = this.shop;
 

@@ -7,11 +7,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.10">
-    <link rel="stylesheet" href="teme.css?v=5.47">
+    <link rel="stylesheet" href="teme.css?v=5.60">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
-    <script src="languages.js?v=4.6"></script>
+    <script src="languages.js?v=4.8"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -241,6 +241,8 @@
                 <div class="global-chat-title-group">
                     <svg id="economy-header-ducats-icon" class="economy-header-icon" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
                     <svg id="economy-header-undo-icon" class="economy-header-icon hidden" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg>
+                    <img id="economy-header-ducats-soft-clay-icon" class="economy-header-soft-clay-icon" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img id="economy-header-undo-soft-clay-icon" class="economy-header-soft-clay-icon hidden" src="assets/easter-soft-clay/economy/undo-token.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span id="economy-menu-title" class="global-chat-title" data-lang="menu_ducats">DUKATI</span>
                 </div>
                 <button type="button" class="global-chat-close" onclick="app.closeUndoMenu()" aria-label="Zatvori" data-lang-aria="undo_close">×</button>
@@ -256,6 +258,7 @@
                         <path d="M36 38c5-5 13-7 20-3 4 2 6 6 6 11 0 6-3 10-8 13-6 3-14 2-18-3" fill="none" stroke="#FFF5BA" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
                         <path d="M48 24v44M30 43h36" stroke="#FFF5BA" stroke-opacity="0.48" stroke-width="3" stroke-linecap="round"/>
                     </svg>
+                    <img class="economy-tab-soft-clay-icon" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </button>
                 <button id="economy-tab-undo" class="tab-btn" type="button" onclick="if(window.undoManager) window.undoManager.switchMenuTab(1)" aria-label="Vraćanje upisa" data-lang-aria="undo_title" title="Vraćanje upisa" data-lang-title="undo_title">
                     <svg class="token-icon-inline" viewBox="0 0 96 96" aria-hidden="true" focusable="false">
@@ -266,6 +269,7 @@
                         <path d="M62 35l1-12 10 7" fill="none" stroke="#132727" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M58 37c-4-3-9-5-14-4-7 2-12 9-10 16 1 7 8 12 15 12 5 0 10-3 13-7" fill="none" stroke="#FFF5BA" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
                     </svg>
+                    <img class="economy-tab-soft-clay-icon" src="assets/easter-soft-clay/economy/undo-token.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </button>
             </div>
 
@@ -283,7 +287,8 @@
                         <div class="economy-ad-grid">
                             <button class="economy-reward-card economy-reward-card-green btn-ad-state-aware" type="button" onclick="app.claimCoinAdReward('rewarded')">
                                 <span class="economy-reward-top">
-                                    <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
+                                    <img class="economy-reward-video-icon-default" src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
+                                    <img class="economy-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
                                     <span data-lang="economy_reward_video">Nagradni video</span>
                                 </span>
                                 <strong>+500 <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg></strong>
@@ -291,6 +296,7 @@
                         </div>
 
                         <div id="economy-banner-slot" class="economy-banner-slot" aria-label="Oglas" data-lang-aria="economy_ad_label">
+                            <img class="economy-ad-unavailable-soft-clay-icon" src="assets/easter-soft-clay/economy/ad-unavailable.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <span data-lang="economy_ad_label">Oglas</span>
                         </div>
                     </div>
@@ -313,7 +319,8 @@
                         <div class="economy-ad-grid">
                             <button class="economy-reward-card economy-reward-card-green btn-ad-state-aware" type="button" onclick="app.buyUndoTokens(1)">
                                 <span class="economy-reward-top">
-                                    <img src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
+                                    <img class="economy-reward-video-icon-default" src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
+                                    <img class="economy-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
                                     <span data-lang="economy_reward_video">Nagradni video</span>
                                 </span>
                                 <strong>+1 <svg class="token-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg></strong>
@@ -321,6 +328,7 @@
                         </div>
 
                         <div id="economy-undo-banner-slot" class="economy-banner-slot" aria-label="Oglas" data-lang-aria="economy_ad_label">
+                            <img class="economy-ad-unavailable-soft-clay-icon" src="assets/easter-soft-clay/economy/ad-unavailable.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <span data-lang="economy_ad_label">Oglas</span>
                         </div>
                     </div>
@@ -414,7 +422,7 @@
 
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
             
-            <div class="main-online-card" onclick="openOnlinePlayersModal()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+            <div class="main-online-card" onclick="app.openOnlinePlayers()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div class="main-online-icon-wrap">
                         <img class="main-online-soft-clay-icon" src="assets/soft-clay-online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
@@ -571,7 +579,7 @@
 
                 <img id="gh-current-avatar" src="" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; display: none; box-shadow: 0 0 5px rgba(255,215,0,0.5);">
 
-                <span id="gh-spectator-icon" class="game-header-icon gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci" data-lang-title="tooltip_spectators">👁️</span>
+                <span id="gh-spectator-icon" class="game-header-icon gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci" data-lang-title="tooltip_spectators"><span class="gh-spectator-fallback" aria-hidden="true">👁️</span><img class="easter-spectator-soft-clay-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"></span>
 
                 <button id="btn-undo-move" class="btn-secondary game-header-icon gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; font-size:1.1rem; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza" data-lang-title="tooltip_undo_move">↩️</button>
                 
@@ -851,7 +859,8 @@
     <div id="riznica-screen" class="screen">
         <div class="chat-header global-chat-header riznica-header">
             <div class="global-chat-title-group riznica-title-group">
-                <img class="riznica-header-logo" src="assets/treasury-icon.svg" alt="Riznica" decoding="async">
+                <img class="riznica-header-logo riznica-header-logo-default" src="assets/treasury-icon.svg" alt="Riznica" decoding="async">
+                <img class="riznica-header-logo-easter" src="assets/easter-soft-clay/treasury-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <span class="global-chat-title riznica-header-title" data-lang="treasury_title">RIZNICA</span>
             </div>
             <button type="button" class="global-chat-close riznica-close-btn" onclick="riznicaManager.close()" aria-label="Zatvori riznicu" data-lang-aria="aria_close_treasury" title="Zatvori" data-lang-title="undo_close">×</button>
@@ -859,11 +868,11 @@
 
         <div class="nav-tabs riznica-tabs" aria-label="Kategorije riznice" data-lang-aria="treasury_tabs_aria">
             <div class="balance-display riznica-balance-pill"><span id="riznica-balance">0</span> <span data-lang="balance">dukata</span></div>
-            <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" aria-label="Trofeji" data-lang-aria="tab_trophies" title="Trofeji" data-lang-title="tab_trophies">🏆</button>
-            <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" aria-label="Kockice" data-lang-aria="tab_dice" title="Kockice" data-lang-title="tab_dice">🎲</button>
-            <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" aria-label="Efekti" data-lang-aria="tab_effects" title="Efekti" data-lang-title="tab_effects">✨</button>
-            <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" aria-label="Teme" data-lang-aria="tab_themes" title="Teme" data-lang-title="tab_themes">🎨</button>
-            <button type="button" class="btn-add-coins riznica-ad-btn" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()">+ 500 <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg> 🎬</button>
+            <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" aria-label="Trofeji" data-lang-aria="tab_trophies" title="Trofeji" data-lang-title="tab_trophies"><span class="riznica-tab-fallback" aria-hidden="true">🏆</span><img class="riznica-tab-soft-clay-icon" src="assets/easter-soft-clay/treasury/tab-trophies.png?v=1" alt="" aria-hidden="true" decoding="async"></button>
+            <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" aria-label="Kockice" data-lang-aria="tab_dice" title="Kockice" data-lang-title="tab_dice"><span class="riznica-tab-fallback" aria-hidden="true">🎲</span><img class="riznica-tab-soft-clay-icon" src="assets/easter-soft-clay/treasury/tab-skins.png?v=1" alt="" aria-hidden="true" decoding="async"></button>
+            <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" aria-label="Efekti" data-lang-aria="tab_effects" title="Efekti" data-lang-title="tab_effects"><span class="riznica-tab-fallback" aria-hidden="true">✨</span><img class="riznica-tab-soft-clay-icon" src="assets/easter-soft-clay/treasury/tab-effects.png?v=1" alt="" aria-hidden="true" decoding="async"></button>
+            <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" aria-label="Teme" data-lang-aria="tab_themes" title="Teme" data-lang-title="tab_themes"><span class="riznica-tab-fallback" aria-hidden="true">🎨</span><img class="riznica-tab-soft-clay-icon" src="assets/easter-soft-clay/treasury/tab-themes.png?v=1" alt="" aria-hidden="true" decoding="async"></button>
+            <button type="button" class="btn-add-coins riznica-ad-btn" data-lang="btn_free_coins" onclick="shop.watchAdForCoins()"><img class="riznica-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><span>+ 500</span> <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><span class="riznica-ad-fallback" aria-hidden="true">🎬</span></button>
         </div>
 
         <div id="riznica-shop-container" class="content-area"></div>
@@ -878,6 +887,7 @@
     <div id="league-intro" class="league-intro hidden" aria-hidden="true">
         <div class="league-intro-mark-wrap">
             <img class="league-intro-mark" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async">
+            <img class="league-intro-mark-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
         </div>
         <div class="league-intro-title" aria-live="polite">
             <span class="league-intro-word league-intro-word-left"></span>
@@ -1050,7 +1060,13 @@
         <div class="modal-box" style="width: 90%; max-width: 400px; text-align: center;">
             <h2 id="go-title" style="color: var(--gold-main); margin-bottom: 10px;">POBEDA!</h2>
             <p id="go-msg" style="color: var(--text-main); font-size: 0.9rem; margin-bottom: 20px;">Tekst poruke...</p>
-            <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: var(--glass-border);">
+            <div class="game-over-score-card" style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: var(--glass-border);">
+                <img class="easter-solo-result-mark" src="assets/easter-soft-clay/mode-solo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-hotseat-winner-mark" src="assets/easter-soft-clay/hotseat/winner.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <div id="solo-personal-best-badge" class="easter-solo-personal-best" hidden>
+                    <img src="assets/easter-soft-clay/solo/personal-best.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <span data-lang="go_personal_best">LIČNI REKORD</span>
+                </div>
                 <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="go_msg_solo">Osvojeni Poeni</div>
                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
                     <svg class="dukat-icon-inline dukat-icon-large" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
@@ -1073,6 +1089,8 @@
         
         <div class="chat-header global-chat-header waiting-header">
             <div class="global-chat-title-group">
+                <img class="easter-opponent-header-icon" src="assets/easter-soft-clay/mode-opponent-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-invite-header-icon" src="assets/easter-soft-clay/mode-invite-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <span id="waiting-title" class="global-chat-title" data-lang="ws_searching">TRAŽENJE PROTIVNIKA...</span>
             </div>
             <button type="button" class="global-chat-close" onclick="app.cancelOnline()" aria-label="Zatvori traženje protivnika" data-lang-aria="ws_close_search">×</button>
@@ -1101,11 +1119,12 @@
                 </div>
             </div>
 
-            <div id="waiting-vs-badge" class="ws-glass-vs">VS</div>
+            <div id="waiting-vs-badge" class="ws-glass-vs"><span>VS</span></div>
 
             <div id="waiting-opp-box" class="ws-glass-card opp-card is-searching">
                 
                 <div id="waiting-opp-searching" class="waiting-opp-searching" style="display: flex;">
+                    <img class="easter-opponent-scan-icon" src="assets/easter-soft-clay/opponent/scanning.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <div class="opponent-scan" aria-hidden="true">
                         <span></span><span></span><span></span>
                     </div>
@@ -1113,6 +1132,7 @@
                 </div>
 
                 <div id="waiting-opp-found" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+                    <img class="easter-opponent-found-icon" src="assets/easter-soft-clay/opponent/found.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img id="waiting-opp-img" src="https://ui-avatars.com/api/?name=?&background=333&color=E0C995" class="ws-glass-avatar" style="border-color: var(--danger);">
                     <span id="waiting-opp-name" class="ws-glass-name" data-lang="player_opponent">Protivnik</span>
                     <span id="waiting-start-msg" class="waiting-start-msg" data-lang="ws_game_starting">Protivnik je tu. Partija počinje...</span>
@@ -1369,7 +1389,10 @@
             
             <div class="chat-header global-chat-header">
                 <div class="global-chat-title-group">
-                    <span class="global-chat-title" data-lang="ui_global_chat_title">GLOBAL CHAT</span>
+                    <span class="global-chat-title global-chat-room-title">
+                        <img class="global-chat-header-soft-clay-icon" src="assets/easter-soft-clay/global-chat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <span data-lang="ui_global_chat_title">GLOBAL CHAT</span>
+                    </span>
                     <span class="global-chat-online-pill" title="Trenutno igrača na serveru" data-lang-title="tooltip_global_chat_online">
                         <span class="global-chat-online-dot"></span><span id="global-chat-online-count">1</span>
                     </span>
@@ -1378,15 +1401,19 @@
             </div>
 
             <div id="global-chat-body" class="chat-body global-chat-body">
-                <div class="global-chat-welcome" data-lang="global_chat_welcome">
-                    Dobrodošli u Globalni Chat! Budite pristojni.
+                <div class="global-chat-welcome global-chat-state" data-chat-state="empty">
+                    <img class="global-chat-state-soft-clay-icon" src="assets/easter-soft-clay/global-chat-empty-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <span data-lang="global_chat_empty">Još nema poruka. Započnite razgovor.</span>
                 </div>
             </div>
 
             <div class="chat-footer global-chat-footer">
                 <div class="global-chat-compose">
                     <textarea id="global-chat-input" class="modal-input global-chat-input" maxlength="550" rows="1" placeholder="Napiši poruku..." data-lang-placeholder="global_chat_placeholder" autocomplete="off" enterkeyhint="send"></textarea>
-                    <button id="btn-global-send" class="btn-chat-send global-chat-send" aria-label="Pošalji poruku" data-lang-aria="aria_send_message">➤</button>
+                    <button id="btn-global-send" class="btn-chat-send global-chat-send" aria-label="Pošalji poruku" data-lang-aria="aria_send_message">
+                        <span class="global-chat-send-fallback" aria-hidden="true">➤</span>
+                        <img class="global-chat-send-soft-clay-icon" src="assets/easter-soft-clay/global-chat-send-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    </button>
                 </div>
                 <div class="global-chat-hint-row">
                     <span id="global-chat-char-count" class="global-chat-char-count">0/550</span>
@@ -1401,13 +1428,20 @@
             
             <div class="chat-header global-chat-header online-players-header">
                 <div class="global-chat-title-group">
-                    <span class="global-chat-title online-players-title" data-lang="online_players_title">🟢 ONLINE IGRAČI</span>
+                    <span class="global-chat-title online-players-title">
+                        <img class="online-players-header-soft-clay-icon" src="assets/soft-clay-online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <span class="online-players-title-fallback" aria-hidden="true">🟢</span>
+                        <span data-lang="online_players_title">ONLINE IGRAČI</span>
+                    </span>
                 </div>
                 <button type="button" class="global-chat-close" onclick="if(window.closeOnlinePlayersModal) window.closeOnlinePlayersModal(); else document.getElementById('online-players-overlay').style.display='none'" aria-label="Zatvori online igrače" data-lang-aria="aria_close_online_players">×</button>
             </div>
 
             <div id="online-players-body" class="chat-body global-chat-body online-players-body">
-                <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);" data-lang="online_loading">Učitavam igrače... ⏳</div>
+                <div class="online-players-state is-loading" data-online-state="loading">
+                    <img class="online-players-state-soft-clay-icon" src="assets/easter-soft-clay/online-players-state-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <span data-lang="online_loading">Učitavam igrače...</span>
+                </div>
             </div>
 
         </div>
@@ -1418,7 +1452,8 @@
             <div class="chat-header global-chat-header tourney-card-header">
                 <div class="global-chat-title-group">
                     <span class="global-chat-title tourney-header-title">
-                        <img class="tourney-header-icon" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
+                        <img class="tourney-header-icon tourney-header-icon-default" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
+                        <img class="tourney-header-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="tourney_title">TURNIR</span>
                     </span>
                 </div>
@@ -1486,22 +1521,22 @@
     </script>
 
     <script src="config.js?v=4.5"></script>
-    <script src="managers.js?v=5.2"></script>
+    <script src="managers.js?v=5.5"></script>
     <script src="dnevniizazov.js?v=1.7"></script>
-    <script src="riznica.js?v=1.3"></script>
+    <script src="riznica.js?v=1.4"></script>
     <script src="trophyManager.js?v=4.2"></script>
     <script src="features.js?v=3.8"></script>
     <script src="toplista.js?v=4.0"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
-    <script src="turnir.js?v=1000"></script>
+    <script src="turnir.js?v=1001"></script>
     <script src="pravilaigre.js?v=1.0"></script> 
-    <script src="vracanjeupisa.js?v=1.3"></script>
-    <script src="globalchat.js?v=1.0"></script>
+    <script src="vracanjeupisa.js?v=1.4"></script>
+    <script src="globalchat.js?v=1.1"></script>
     <script src="auth.js?v=1012"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=4.31"></script>
-    <script src="kvartalnaliga.js?v=1002"></script>
-    <script src="onlinenumber.js?v=1001"></script>
+    <script src="game.js?v=4.39"></script>
+    <script src="kvartalnaliga.js?v=1004"></script>
+    <script src="onlinenumber.js?v=1003"></script>
     <script src="vatreniniz.js?v=999"></script>
     <script src="powerindex.js?v=1.0"></script>
 

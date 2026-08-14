@@ -233,8 +233,7 @@ class KvartalnaLigaManager {
 
     playIntro(onComplete) {
         const overlay = document.getElementById('league-intro');
-        const leftWord = overlay?.querySelector('.league-intro-word-left');
-        const rightWord = overlay?.querySelector('.league-intro-word-right');
+        const titleElement = overlay?.querySelector('.league-intro-title');
 
         if (!overlay) {
             onComplete();
@@ -243,7 +242,7 @@ class KvartalnaLigaManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
-        this.setIntroTitle(leftWord, rightWord);
+        this.setIntroTitle(titleElement, overlay.classList.contains('theme-easter'));
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
 
@@ -277,20 +276,44 @@ class KvartalnaLigaManager {
         overlay.classList.add(`theme-${introTheme}`);
     }
 
-    setIntroTitle(leftWord, rightWord) {
-        if (!leftWord || !rightWord) return;
-
+    setIntroTitle(titleElement, isEaster = false) {
+        if (!titleElement) return;
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const label = gt('menu_league', 'Kvartalna Liga');
-        const parts = label.trim().split(/\s+/);
+        const normalizedLabel = label.trim().toUpperCase();
 
+        if (isEaster) {
+            titleElement.replaceChildren(...Array.from(normalizedLabel).map((character, index) => {
+                const letter = document.createElement('span');
+                letter.className = character === ' '
+                    ? 'league-intro-easter-wave-space'
+                    : 'league-intro-easter-wave-letter';
+                letter.textContent = character === ' ' ? '\u00A0' : character;
+                letter.style.setProperty('--wave-index', index);
+                return letter;
+            }));
+            titleElement.setAttribute('aria-label', normalizedLabel);
+            return;
+        }
+
+        const parts = label.trim().split(/\s+/);
+        const leftWord = document.createElement('span');
+        const rightWord = document.createElement('span');
+        leftWord.className = 'league-intro-word league-intro-word-left';
+        rightWord.className = 'league-intro-word league-intro-word-right';
         leftWord.textContent = parts[0] || 'Kvartalna';
         rightWord.textContent = parts.slice(1).join(' ') || 'Liga';
+        titleElement.replaceChildren(leftWord, rightWord);
+        titleElement.removeAttribute('aria-label');
     }
 
     getMainTabIcon(icon) {
+        const softClaySource = icon === 'hof'
+            ? 'assets/easter-soft-clay/ql/tab-hall-of-fame.png?v=1'
+            : 'assets/easter-soft-clay/ql/tab-league.png?v=1';
+        const softClayIcon = `<img class="league-tab-soft-clay-icon" src="${softClaySource}" alt="" aria-hidden="true" decoding="async">`;
         if (icon === 'hof') {
-            return `
+            return `${softClayIcon}
                 <svg class="league-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                     <path d="M4 9.3L12 4.8L20 9.3H4Z" fill="currentColor" opacity="0.22"/>
                     <path d="M4 9.3L12 4.8L20 9.3M6 19H18M7.5 16.7H16.5M8 10.5V16.5M12 10.5V16.5M16 10.5V16.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -299,7 +322,7 @@ class KvartalnaLigaManager {
             `;
         }
 
-        return `
+        return `${softClayIcon}
             <svg class="league-tab-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M6.5 18.5V12.5H10V18.5H6.5ZM10.7 18.5V8.5H14.3V18.5H10.7ZM15 18.5V10.8H18.5V18.5H15Z" fill="currentColor" opacity="0.22"/>
                 <path d="M5 19H19M8.2 18.5V12.5M12.5 18.5V8.5M16.8 18.5V10.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -317,15 +340,18 @@ class KvartalnaLigaManager {
         const rank = this.getRank(pts);
         
         const currentRanks = this.ranks; 
+        const currentRankData = currentRanks.find(r => r.name.startsWith(rank)) || currentRanks[0];
 
         this.currentSlide = currentRanks.findIndex(r => r.name.startsWith(rank));
         if (this.currentSlide === -1) this.currentSlide = 0;
         const leagueTabLabel = gt('hof_tab_league', 'LIGA');
         const hofTabLabel = gt('hof_tab_main', 'DVORANA SLAVNIH');
+        const medalsTabLabel = String(gt('hof_tab_medals', 'MEDALJE 🏅')).replace(/🏅/gu, '').trim();
+        const championsTabLabel = String(gt('hof_tab_champs', 'ŠAMPIONI 🏆')).replace(/🏆/gu, '').trim();
 
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 15px; display: flex; flex-direction: column; height: 100%; min-height: 0;">
-                <h3 style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;">${r.name}</h3>
+                <h3 class="league-rank-heading" style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;">${r.id !== 'alltime' ? `<img class="league-rank-soft-clay-badge" src="assets/easter-soft-clay/ql/rank-${r.id}.png?v=1" alt="" aria-hidden="true" decoding="async">` : ''}<span>${r.name}</span></h3>
                 <div style="flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                     <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0;">
                         <li style="text-align: center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_loading', 'Učitavanje podataka... ⏳')}</li>
@@ -344,7 +370,8 @@ class KvartalnaLigaManager {
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,215,0,0.2); background: rgba(0,0,0,0.3); flex-shrink: 0;">
                     <div class="league-modal-title-group">
-                        <img class="league-modal-header-icon" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async">
+                        <img class="league-modal-header-icon league-modal-header-icon-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async">
+                        <img class="league-modal-header-icon league-modal-header-icon-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <h2 style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
                     </div>
                     <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold; line-height: 1;" onclick="document.getElementById('league-modal-overlay').remove()">✖</span>
@@ -360,7 +387,7 @@ class KvartalnaLigaManager {
                         <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(224, 201, 149, 0.08); padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(224, 201, 149, 0.2);">
                             <div style="text-align: left;">
                                 <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">${gt('league_your_rank', 'Vaš rang')}</div>
-                                <div style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px var(--gold-main);">${rank}</div>
+                                <div class="league-current-rank" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px var(--gold-main);"><img class="league-current-rank-soft-clay-badge" src="assets/easter-soft-clay/ql/rank-${currentRankData.id}.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${rank}</span></div>
                             </div>
                             <div style="text-align: right;">
                                 <div style="font-size: 1.1rem; color: var(--gold-main); font-weight: bold;">${pts} PTS</div>
@@ -382,8 +409,8 @@ class KvartalnaLigaManager {
 
                 <div id="hof-main-content" style="display: none; flex-direction: column; flex: 1; overflow: hidden; width: 100%; padding: 10px 15px 15px 15px; min-height: 0;">
                     <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0;">
-                        <button id="hof-tab-medals" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')">${gt('hof_tab_medals', 'MEDALJE 🏅')}</button>
-                        <button id="hof-tab-champions" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')">${gt('hof_tab_champs', 'ŠAMPIONI 🏆')}</button>
+                        <button id="hof-tab-medals" class="league-hof-tab-button" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="assets/easter-soft-clay/ql/tab-medals.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏅</span></button>
+                        <button id="hof-tab-champions" class="league-hof-tab-button" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="assets/easter-soft-clay/ql/tab-champions.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏆</span></button>
                     </div>
                     
                     <div style="flex: 1; min-height: 0; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
@@ -490,9 +517,9 @@ class KvartalnaLigaManager {
                 <div style="flex: 1;">
                     <div style="color: #fff; font-weight: bold; font-size: 0.85rem;">${m.playerName}</div>
                     <div style="display: flex; gap: 10px; margin-top: 4px; font-size: 0.8rem; font-weight: bold;">
-                        <span style="color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5);">🥇 ${m.gold}</span>
-                        <span style="color: #C0C0C0;">🥈 ${m.silver}</span>
-                        <span style="color: #CD7F32;">🥉 ${m.bronze}</span>
+                        <span class="ql-medal-count ql-medal-count--gold" style="color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5);"><img class="ql-placement-medal" src="assets/easter-soft-clay/ql/medal-gold.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥇</span> ${m.gold}</span>
+                        <span class="ql-medal-count ql-medal-count--silver" style="color: #C0C0C0;"><img class="ql-placement-medal" src="assets/easter-soft-clay/ql/medal-silver.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥈</span> ${m.silver}</span>
+                        <span class="ql-medal-count ql-medal-count--bronze" style="color: #CD7F32;"><img class="ql-placement-medal" src="assets/easter-soft-clay/ql/medal-bronze.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥉</span> ${m.bronze}</span>
                     </div>
                 </div>
             </li>`;
@@ -519,7 +546,7 @@ class KvartalnaLigaManager {
             <li style="display: flex; align-items: center; background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid rgba(224, 201, 149, 0.3);">
                 <div style="position: relative; margin-right: 15px;">
                     <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; box-shadow: 0 0 10px rgba(224,201,149,0.5);">
-                    <div style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;">👑</div>
+                    <div class="ql-champion-marker" style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;"><img class="ql-champion-soft-clay-icon" src="assets/easter-soft-clay/ql/tab-champions.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-champion-fallback" aria-hidden="true">👑</span></div>
                 </div>
                 <div style="flex: 1;">
                     <div style="color: var(--gold-main); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">${gt('hof_winner_prefix', 'POBEDNIK')} ${romanCycle} ${gt('hof_winner_suffix', 'CIKLUSA')}</div>
@@ -743,7 +770,9 @@ class KvartalnaLigaManager {
             const scoreUid = s && (s.playerId || s._id || '');
             let isMe = myUid ? scoreUid === myUid : pName === myName;
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
-            let medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
+            let medal = i < 3
+                ? `<img class="ql-placement-medal ql-placement-medal--rank" src="assets/easter-soft-clay/ql/medal-${['gold', 'silver', 'bronze'][i]}.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${['🥇', '🥈', '🥉'][i]}</span>`
+                : `${i + 1}.`;
             const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;
             let photo = this.safeImageUrl(s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : '', fallbackPhoto);
             const safeName = this.escapeHtml(pName);
@@ -753,7 +782,7 @@ class KvartalnaLigaManager {
             li.style.cssText = `display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; margin-bottom: 5px; border-radius: 8px; font-size: 0.85rem; ${bg}`;
             li.innerHTML = `
                 <div style="display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0;">
-                    <div style="font-weight: bold; min-width: 20px; color: var(--gold-main); text-align: center;">${medal}</div>
+                    <div class="ql-list-placement ${i < 3 ? 'ql-list-placement--medal' : ''}" style="font-weight: bold; min-width: 20px; color: var(--gold-main); text-align: center;">${medal}</div>
                     <img src="${safePhoto}" style="width: 30px; height: 30px; border-radius: 50%; border: 2px solid ${isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
                     <div style="color: ${isMe ? 'var(--gold-main)' : '#fff'}; font-weight: ${isMe ? 'bold' : 'normal'}; word-break: break-word; white-space: normal; line-height: 1.2; font-size: 0.8rem; padding-right: 5px;">${safeName}</div>
                 </div>
