@@ -200,8 +200,13 @@ class PowerIndexLeaderboard {
         const isMe = !!p.isMe || (!!p.uid && p.uid === myUid) || (!p.uid && p.playerName === myName);
         const isPinned = !!options.pinned;
 
-        // Prvo mesto Grom, drugo Srebro, treće Bronza, ostali brojevi
-        let rankTrophy = rank === 1 ? '⚡' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span style="color: var(--text-muted);">${rank}.</span>`;
+        // Vaskrs koristi jedinstveni Power Index podium pack; ostale teme zadržavaju postojeći fallback.
+        const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+        const legacyRank = rank === 1 ? '⚡' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span style="color: var(--text-muted);">${rank}.</span>`;
+        const podiumRank = podiumTone
+            ? `<img class="power-index-podium-medal" src="assets/easter-soft-clay/statistics/power-index/${podiumTone}.png?v=1" alt="" aria-hidden="true">`
+            : '';
+        const rankTrophy = `<span class="power-index-rank-legacy">${legacyRank}</span>${podiumRank}`;
 
         const rawName = p.playerName || this.gt('player_unknown', 'Igrač');
         const displayName = this.escapeHtml(rawName);
@@ -246,7 +251,7 @@ class PowerIndexLeaderboard {
                 ${pinnedLabel}
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                     <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1; padding-right: 5px;">
-                        <div style="font-size: 1.1rem; min-width: 32px; text-align: center; font-weight: 900; text-shadow: 0 0 5px rgba(255,215,0,0.5);">${rankTrophy}</div>
+                        <div class="power-index-rank-mark${podiumTone ? ' has-podium' : ''}" aria-label="${rank}." style="font-size: 1.1rem; min-width: 32px; text-align: center; font-weight: 900; text-shadow: 0 0 5px rgba(255,215,0,0.5);">${rankTrophy}</div>
 
                         <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid ${rank === 1 || isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; flex-shrink: 0;">
 

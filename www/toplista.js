@@ -31,6 +31,26 @@ class TopListManager {
         return fallback[key] || key;
     }
 
+    _stateMarkup(message, state = 'empty', fallbackIcon = '📜') {
+        return `
+            <div class="hs-list-state hs-list-state-${state}">
+                <span class="hs-state-fallback" aria-hidden="true">${fallbackIcon}</span>
+                <img class="hs-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <span class="hs-list-state-text">${message}</span>
+            </div>
+        `;
+    }
+
+    _podiumMarkup(index) {
+        const medal = ['gold', 'silver', 'bronze'][index];
+        if (!medal) return '';
+
+        return `
+            <img class="hs-podium-medal" src="assets/yotb-podium/leaderboard/${medal}.png?v=1" alt="" aria-hidden="true" decoding="async">
+            <span class="hs-podium-rank-number">${index + 1}</span>
+        `;
+    }
+
     /**
      * Upisuje skor (Prvo lokalno, pa pokušava na server)
      */
@@ -345,7 +365,7 @@ class TopListManager {
         const listEl = document.getElementById('global-hs-list');
         if (!listEl) return;
 
-        listEl.innerHTML = `<div class="loading-text" style="color:var(--text-muted); font-size:0.9rem; margin-top:20px;">${this._t('msg_connecting')} ⏳</div>`;
+        listEl.innerHTML = this._stateMarkup(this._t('msg_connecting'), 'loading', '⏳');
         
         if (this.app.socket && this.app.socket.connected) {
             this.app.socket.emit('get_global_highscores', this.currentGlobalFilter);
@@ -353,10 +373,7 @@ class TopListManager {
             this.app.initSocketConnection();
             setTimeout(() => {
                 if (!this.app.socket || !this.app.socket.connected) {
-                     listEl.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted);">
-                        <div style="font-size:2rem; margin-bottom:10px; opacity:0.5;">📡</div>
-                        ${this._t('msg_no_connection')}
-                    </div>`;
+                    listEl.innerHTML = this._stateMarkup(this._t('msg_no_connection'), 'offline', '📡');
                 }
             }, 3000);
         }
@@ -388,9 +405,7 @@ class TopListManager {
 
         // Ako nakon filtriranja nema rezultata
         if (validData.length === 0) {
-            list.innerHTML = `<div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-style:italic;">
-                ${this._t('msg_no_results')}
-            </div>`;
+            list.innerHTML = this._stateMarkup(this._t('msg_no_results'), 'empty', '');
             return;
         }
 
@@ -441,7 +456,10 @@ class TopListManager {
             
             // NAPOMENA: U HTML-u imamo grid postavljen na 4 kolone (Rang, Slika, Info, Skor)
             li.innerHTML = `
-                <div class="${rankClass}"><span style="position: relative; z-index: 2;">${rankText}</span></div>
+                <div class="${rankClass}">
+                    <span class="hs-rank-legacy" style="position: relative; z-index: 2;">${rankText}</span>
+                    ${this._podiumMarkup(index)}
+                </div>
                 <img src="${safePhotoUrl}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
                 <div class="hs-info">
                     <div class="hs-name" style="${nameStyle} font-weight: 800; color: var(--text-main); white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; padding-bottom: 2px; margin-bottom: 2px;">${safeDisplayName}</div>

@@ -806,7 +806,7 @@ class YambApp {
         ));
 
         if (rivals.length === 0) {
-            container.innerHTML = `<div class="h2h-empty-state">${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</div>`;
+            container.innerHTML = `<div class="h2h-empty-state"><img class="h2h-empty-soft-clay-icon" src="assets/easter-soft-clay/statistics/h2h-empty.png?v=1" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
             return;
         }
 
@@ -2399,7 +2399,12 @@ class YambApp {
     loadHallOfFame() {
         const listEl = document.getElementById('ws-hof-list');
         if (listEl) {
-            listEl.innerHTML = `<div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>`;
+            listEl.innerHTML = `
+                <div class="waiting-hof-loading-state">
+                    <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>
+                </div>
+            `;
         }
         this.waitingHofPeriod = 'weekly';
         this.updateWaitingHofTitle();
@@ -2485,7 +2490,12 @@ class YambApp {
         };
 
         if (!data || data.length === 0) {
-            listEl.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">${gt('ws_hof_no_results') || 'Još uvek nema rezultata za ovaj period.'}</div>`;
+            listEl.innerHTML = `
+                <div class="waiting-hof-empty-state" style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">
+                    <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <span>${gt('ws_hof_no_results') || 'Još uvek nema rezultata za ovaj period.'}</span>
+                </div>
+            `;
             revealHallOfFame();
             return;
         }
@@ -2497,6 +2507,7 @@ class YambApp {
 
         data.sort((a, b) => b.score - a.score).slice(0, 3).forEach((p, index) => {
             const medal = medals[index] || '';
+            const medalAsset = ['gold', 'silver', 'bronze'][index] || '';
             const color = colors[index] || '#fff';
             const displayName = String(p.name || p.playerName || getFallbackPlayerName());
             const avatar = p.photoUrl && p.photoUrl.length > 5 
@@ -2508,9 +2519,13 @@ class YambApp {
             const safeScore = Number(p.score || 0).toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
 
             html += `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px;">
+                <div class="waiting-hof-entry" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.2rem; font-weight: 900; width: 25px; text-align: center;">${medal}</span>
+                        <span class="waiting-podium-mark" style="font-size: 1.2rem; font-weight: 900; width: 25px; text-align: center;">
+                            <span class="waiting-podium-legacy">${medal}</span>
+                            <img class="waiting-podium-medal" src="assets/yotb-podium/leaderboard/${medalAsset}.png?v=1" alt="" aria-hidden="true" decoding="async">
+                            <span class="waiting-podium-rank-number">${index + 1}</span>
+                        </span>
                         <img src="${safeAvatar}" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid ${color}; object-fit: cover;">
                         <span style="color: var(--text-main); font-weight: 800; font-size: 0.85rem; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${safeName}</span>
                     </div>

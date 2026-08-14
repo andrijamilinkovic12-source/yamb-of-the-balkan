@@ -207,8 +207,13 @@ class VatreniNizManager {
         const maxWinStreak = Math.max(0, parseInt(player.maxWinStreak, 10) || 0);
         const currentWinStreak = Math.max(0, parseInt(player.currentWinStreak, 10) || 0);
 
-        // Rangiranje: Vatra za prvo mesto, medalje za drugo i treće
-        const rankTrophy = rank === 1 ? '🔥' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : `${rank}.`));
+        // Vaskrs koristi jedinstveni Vatreni niz podium pack; ostale teme zadržavaju postojeći fallback.
+        const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+        const legacyRank = rank === 1 ? '🔥' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : `${rank}.`));
+        const podiumRank = podiumTone
+            ? `<img class="fire-streak-podium-medal" src="assets/easter-soft-clay/statistics/fire-streak/${podiumTone}.png?v=1" alt="" aria-hidden="true">`
+            : '';
+        const rankTrophy = `<span class="fire-streak-rank-legacy">${legacyRank}</span>${podiumRank}`;
 
         // Stilovi kartice zavisno od toga da li si ti u pitanju
         let bgStyle = isMe
@@ -243,7 +248,7 @@ class VatreniNizManager {
             <div style="display: flex; flex-direction: column; gap: 4px; padding: 12px 15px; border-radius: 10px; ${bgStyle} transition: transform 0.2s;">
                 ${pinnedLabel}
                 <div style="display: flex; align-items: center;">
-                    <div style="font-size: 1.3rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted); flex-shrink: 0; text-shadow: ${rank === 1 ? '0 0 10px rgba(255,87,34,0.5)' : 'none'};">${rankTrophy}</div>
+                    <div class="fire-streak-rank-mark${podiumTone ? ' has-podium' : ''}" aria-label="${rank}." style="font-size: 1.3rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted); flex-shrink: 0; text-shadow: ${rank === 1 ? '0 0 10px rgba(255,87,34,0.5)' : 'none'};">${rankTrophy}</div>
 
                     <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; margin: 0 12px; border: 2px solid ${rank === 1 || isMe ? '#FF5722' : 'rgba(255,255,255,0.2)'}; object-fit: cover; flex-shrink: 0;">
 

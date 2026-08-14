@@ -4,7 +4,7 @@
     "sr": "Vaskr Neumorphic UI Theme Pack",
     "en": "Joyful Easter Neumorphic UI Theme Pack"
   },
-  "version": "2.7.0",
+  "version": "3.2.0",
   "updated": "2026-08-14",
   "bodyClass": "easter-theme",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
@@ -46,6 +46,31 @@
       "id": "tournament-inner-icons",
       "status": "complete",
       "description": "Easter-only professional Soft Clay tournament identity: header trophy, Information/Bracket/Hall of Fame tabs, registration and match-state symbols, all-time podium medals, champion trophy and finalist silver badge. Bracket geometry, rounds, names, avatars, scores, scheduling, rewards and swipe remain unchanged."
+    },
+    {
+      "id": "daily-challenge-inner-icons",
+      "status": "complete",
+      "description": "Easter-only professional Soft Clay Daily Challenge identity: inner room mark, task symbol, completed-result seal, shared rewarded-video mark for doubling and already-played-today state. Dice arrangement, scoring rules, timer, result, reward amount and functional controls remain unchanged; no placement medals are used."
+    },
+    {
+      "id": "leaderboard-inner-icons",
+      "status": "complete",
+      "description": "Easter-only professional Soft Clay Leaderboard identity: room header mark, dedicated Global and Local list tab icons and a shared empty/loading illustration. A neutral reusable YotB gold, silver and bronze podium set is used for the first three places in both Leaderboard lists and the waiting-screen Top 3 panel. Period filters, avatars, player names, scores, data sources and ranking order remain unchanged."
+    },
+    {
+      "id": "statistics-inner-icons",
+      "status": "complete",
+      "description": "Easter-only professional Soft Clay Statistics identity: room header, category marks for record, total games, wins, draws, losses, average, trophies, ducats and H2H, plus a dedicated empty-H2H illustration. Power Index and Fire Streak each use their own internally consistent gold, silver and bronze podium set with lightning and flame identities. Charts, progress bars, avatars, values, POB/NER/POR colours, swipe and H2H card dimensions remain unchanged."
+    },
+    {
+      "id": "settings-inner-icons",
+      "status": "complete",
+      "description": "Easter-only professional Soft Clay Settings identity: room header and dedicated profile/account, sound effects, music, vibration, display/theme, language, terms and privacy mini-icons. SRB/ENG flags, switches, theme select, name field, Google avatar/account data, legal links and close control remain unchanged. No medals are used."
+    },
+    {
+      "id": "rules-inner-icons",
+      "status": "complete",
+      "description": "Easter-only professional Soft Clay Rules identity: room header and five dedicated page marks for Rules & Scoring, Statistics & Leaderboards, Multiplayer & Competitions, Ducats/Tokens/Treasury and Account/Privacy/Server. Existing approved room icons replace legacy Tournament, Quarterly League, Daily Challenge, Treasury, Ducat, Undo Token, Statistics and Leaderboard symbols inside the text. Quarterly League rewards use the shared QL gold, silver and bronze medal set. Text, numbering, lists, navigation, swipe, close control and functional dice illustrations remain unchanged; the existing Communication page is preserved unchanged."
     },
     {
       "id": "cinematic-screens",
@@ -102,6 +127,11 @@
     "Treasury uses an Easter-only inner Soft Clay pack: the approved Treasury header mark; dedicated Trophies, Dice Skins, Effects and Themes tab icons; the shared rewarded-video mark; purchased, active, locked and insufficient-ducats state icons; and bronze, silver and gold collection marks. Real dice-skin, theme and effect previews, prices, purchase logic and individual collectible trophies remain unchanged. Individual trophy replacement is deferred to a separate Treasury Trophy Pack.",
     "Tournament uses an Easter-only professional inner Soft Clay pack: the approved trophy identity replaces the old header and Hall of Fame trophy only in Easter; Information, Bracket and Hall of Fame tabs have dedicated icons; registration, refund, locked registration, tournament start, active match and completed match have distinct state symbols; the all-time leaderboard alone uses gold, silver and bronze podium medals. A specific tournament result uses only the champion trophy and runner-up silver finalist badge, never an invented third-place award. Bracket lines and geometry, quarterfinal/semifinal/final layout, avatars, names, scores, match times, reward logic and phase swipe remain unchanged.",
     "The Tournament top-three card is anchored 2 mm above the bottom safe zone; the icon and title move with the tournament composition without changing their dimensions or standard spacing.",
-    "The Easter Tournament intro displays the real server-provided top three all-time tournament winners with avatar, full name and number of wins; it must never use fabricated ranking data."
+    "The Easter Tournament intro displays the real server-provided top three all-time tournament winners with avatar, full name and number of wins; it must never use fabricated ranking data.",
+    "Daily Challenge uses an Easter-only inner Soft Clay mini-pack: the approved room identity in the inner header, a dedicated task icon, a completed-challenge seal, the shared rewarded-video icon for doubling and a dedicated already-played-today state. Dice and their correct face arrangement, scoring rules, timer, result, reward amount and all functional controls remain unchanged. No placement medals are used until Daily Challenge has its own leaderboard.",
+    "Leaderboard uses an Easter-only Soft Clay header and dedicated Global and Local list tab icons, while Week, Month and All Time filters remain textual. Its first three positions and the waiting-screen Top 3 panel share one neutral reusable YotB podium pack with gold, silver and bronze medals. Empty and loading states use the dedicated Easter illustration. Avatars, player names, scores, global/local data separation and ranking order remain unchanged; future themes may reuse the neutral podium assets with theme-specific palette treatment.",
+    "Statistics uses an Easter-only Soft Clay header, category icons for record, total games, wins, draws, losses, average, trophies, ducats and H2H, and a dedicated empty-H2H illustration. Power Index uses one matching lightning gold/silver/bronze podium set; Fire Streak uses one matching flame gold/silver/bronze podium set. Charts and progress bars, opponent avatars, statistical values, POB/NER/POR colours, page swipe and detailed H2H card dimensions remain unchanged.",
+    "Settings uses an Easter-only Soft Clay header and dedicated profile/account, sound effects, music, vibration, display/theme, language, terms and privacy mini-icons. SRB and ENG flags, switches, theme selection, name field, Google avatar and account data, legal link targets and close control remain unchanged. Settings uses no placement medals.",
+    "Rules uses an Easter-only Soft Clay header and five dedicated page icons for Rules & Scoring, Statistics & Leaderboards, Multiplayer & Competitions, Ducats/Tokens/Treasury and Account/Privacy/Server. Approved room icons are reused inside the text for Tournament, Quarterly League, Daily Challenge, Treasury, Ducats, Undo Token, Statistics and Leaderboard; legacy QL and Tournament SVG marks are hidden only in Easter. Quarterly League reward medals use the same QL gold/silver/bronze pack. Rule text, numbering, lists, navigation arrows, swipe, close control and functional dice illustrations remain unchanged; the existing Communication page remains intact."
   ]
 }

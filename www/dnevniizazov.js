@@ -162,6 +162,46 @@ class DnevniIzazov {
                 text-align: center;
                 margin-bottom: 18px;
                 padding: 0 10px;
+                position: relative;
+            }
+
+            .daily-glass-room-mark-easter,
+            .daily-glass-task-mark-easter,
+            .daily-glass-complete-mark-easter,
+            .daily-glass-reward-video-mark-easter {
+                display: none;
+            }
+
+            body.easter-theme .daily-glass-room-mark-easter,
+            body.easter-theme .daily-glass-task-mark-easter,
+            body.easter-theme .daily-glass-complete-mark-easter,
+            body.easter-theme .daily-glass-reward-video-mark-easter {
+                display: block;
+                object-fit: contain;
+                pointer-events: none;
+                user-select: none;
+            }
+
+            body.easter-theme .daily-glass-room-mark-easter {
+                position: absolute;
+                top: -7px;
+                left: 2px;
+                width: 54px;
+                height: 54px;
+                filter: drop-shadow(0 7px 8px rgba(92, 58, 94, 0.22));
+            }
+
+            body.easter-theme .daily-glass-task-mark-easter {
+                position: absolute;
+                top: -2px;
+                right: 6px;
+                width: 44px;
+                height: 44px;
+                filter: drop-shadow(0 6px 7px rgba(92, 58, 94, 0.19));
+            }
+
+            body.easter-theme .daily-glass-title {
+                padding-inline: 52px;
             }
 
             .daily-glass-title {
@@ -368,6 +408,48 @@ class DnevniIzazov {
                 flex-direction: column;
                 gap: 10px;
                 margin-top: 2px;
+                position: relative;
+            }
+
+            body.easter-theme .daily-glass-complete-mark-easter {
+                position: absolute;
+                width: 58px;
+                height: 58px;
+                left: 50%;
+                top: -66px;
+                transform: translateX(-50%);
+                filter: drop-shadow(0 8px 10px rgba(92, 58, 94, 0.22));
+            }
+
+            .daily-glass-reward-video-fallback {
+                display: inline;
+            }
+
+            body.easter-theme .daily-glass-reward-video-fallback {
+                display: none;
+            }
+
+            body.easter-theme .daily-glass-reward-video-mark-easter {
+                width: 28px;
+                height: 28px;
+                flex: 0 0 28px;
+                margin-right: 2px;
+                filter: drop-shadow(0 4px 5px rgba(92, 58, 94, 0.2));
+            }
+
+            .daily-already-easter {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .daily-already-easter-icon {
+                width: 104px;
+                height: 104px;
+                object-fit: contain;
+                filter: drop-shadow(0 9px 12px rgba(92, 58, 94, 0.22));
             }
 
             .daily-glass-btn-double {
@@ -422,6 +504,8 @@ class DnevniIzazov {
         overlay.innerHTML = `
             <div class="daily-glass-card" id="glass-daily-card">
                 <div class="daily-glass-header">
+                    <img class="daily-glass-room-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-easter" src="assets/easter-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <h2 class="daily-glass-title">${txtTitle}</h2>
                     <div class="daily-glass-subtitle">${txtSub}</div>
                 </div>
@@ -686,8 +770,11 @@ class DnevniIzazov {
     }
 
     showAlreadyPlayedInfo() {
+        const message = document.body.classList.contains('easter-theme')
+            ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" src="assets/easter-soft-clay/daily/already-played.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+            : t('dc_done');
         const alertPromise = this.app?.modal?.alert
-            ? this.app.modal.alert(t('dc_done'), t('info_title'))
+            ? this.app.modal.alert(message, t('info_title'))
             : Promise.resolve(window.alert(t('dc_done')));
 
         Promise.resolve(alertPromise).finally(() => this.hideIntroBackdrop());
@@ -912,8 +999,11 @@ class DnevniIzazov {
         resDiv.className = 'glass-daily-result';
 
         resDiv.innerHTML = `
+            <img class="daily-glass-complete-mark-easter" src="assets/easter-soft-clay/daily/complete.png?v=1" alt="" aria-hidden="true" decoding="async">
             <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
-                🎥 ${t('btn_double_short')} ${dukatIconHtml()} (x2)
+                <span class="daily-glass-reward-video-fallback" aria-hidden="true">🎥</span>
+                <img class="daily-glass-reward-video-mark-easter" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
+                ${t('btn_double_short')} ${dukatIconHtml()} (x2)
             </button>
             <button class="daily-glass-btn daily-glass-btn-claim" onclick="dnevniIzazov.claim(false)">
                 ${t('btn_claim_short')}
@@ -1056,7 +1146,7 @@ class DnevniIzazov {
                 const serverBalance = Math.max(0, parseInt(rewardResult.balance) || parseInt(localStorage.getItem('yamb_dukati')) || 0);
                 this.setLocalRewardState(uid, today, 0, serverBalance);
                 this.close();
-                this.app.modal.alert(t('dc_done'), t('info_title'));
+                this.showAlreadyPlayedInfo();
                 return;
             }
 

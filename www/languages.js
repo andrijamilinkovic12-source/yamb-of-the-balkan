@@ -270,6 +270,8 @@ const TRANSLATIONS = {
         "hs_title": "TOP LISTA",
         "hs_local": "LOKALNA",
         "hs_global": "GLOBALNA 🌍",
+        "hs_global_plain": "GLOBALNA",
+        "hs_local_list": "LOKALNA LISTA",
         "hs_weekly": "NEDELJA",   
         "hs_monthly": "MESEC",    
         "hs_all_time": "SVE",     
@@ -475,6 +477,8 @@ const TRANSLATIONS = {
         "settings_display_lang": "Prikaz i Jezik",
         "settings_terms_short": "📜 Uslovi",
         "settings_privacy_short": "🔒 Privatnost",
+        "settings_terms_label": "Uslovi",
+        "settings_privacy_label": "Privatnost",
 
         // --- PRAVILA (SR) ---
         "rules_header_title": "PRAVILA I UPUTSTVO",
@@ -1061,6 +1065,8 @@ const TRANSLATIONS = {
         "hs_title": "HIGH SCORES",
         "hs_local": "LOCAL",
         "hs_global": "GLOBAL 🌍",
+        "hs_global_plain": "GLOBAL",
+        "hs_local_list": "LOCAL LIST",
         "hs_weekly": "WEEKLY",      
         "hs_monthly": "MONTHLY",    
         "hs_all_time": "ALL TIME",  
@@ -1266,6 +1272,8 @@ const TRANSLATIONS = {
         "settings_display_lang": "Display & Language",
         "settings_terms_short": "📜 Terms",
         "settings_privacy_short": "🔒 Privacy",
+        "settings_terms_label": "Terms",
+        "settings_privacy_label": "Privacy",
 
         // --- RULES (EN) ---
         "rules_header_title": "RULES & GUIDE",
