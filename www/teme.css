@@ -5911,15 +5911,15 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-economy-ca
 }
 
 /* Vaskrs — Global Chat prati pravilo čistih Soft Clay Relief ikonica.
-   Postojeća 36x36 klik-zona i položaj ostaju isti; nema kartice ni podmetača. */
+   Ikona je bez kartice i podmetača i prati levu ivicu Online igrači kartice. */
 #main-menu .easter-global-chat-icon {
     display: none;
 }
 
 body.easter-theme #main-menu > .main-global-chat-btn {
-    width: 40px !important;
-    height: 40px !important;
-    left: max(20px, calc((100% - 380px) / 2 + 10px)) !important;
+    width: 44px !important;
+    height: 44px !important;
+    left: max(10px, calc((100% - 380px) / 2 + 10px)) !important;
     top: 34px !important;
     padding: 0 !important;
     display: flex !important;
@@ -5949,8 +5949,8 @@ body.easter-theme #main-menu > .main-global-chat-btn .main-global-chat-fallback 
 
 body.easter-theme #main-menu > .main-global-chat-btn .easter-global-chat-icon {
     display: block !important;
-    width: 40px !important;
-    height: 40px !important;
+    width: 44px !important;
+    height: 44px !important;
     max-width: none !important;
     object-fit: contain;
     opacity: 1 !important;
@@ -7194,4 +7194,235 @@ body.easter-theme #rules-overlay-ui .rules-podium-pack img {
     height: 25px;
     object-fit: contain;
     filter: drop-shadow(0 2px 3px rgba(107, 44, 143, 0.14));
+}
+
+/* Vaskrs Theme Pack — završni kontrastni sloj.
+   Ljubičaste akcije uvek koriste svetli krem tekst, dok završne informacije
+   koriste svetle porcelain/clay površine sa tamnim plum tekstom. */
+body.easter-theme .online-final-hold-overlay {
+    background:
+        radial-gradient(circle at 18% 12%, rgba(255,255,255,.92), transparent 42%),
+        linear-gradient(145deg, rgba(255,248,239,.97), rgba(238,222,244,.95)) !important;
+    border: 1px solid rgba(139,69,190,.28) !important;
+    box-shadow:
+        7px 7px 17px rgba(116,76,126,.24),
+        -5px -5px 15px rgba(255,255,255,.72),
+        inset 1px 1px 2px rgba(255,255,255,.88) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.easter-theme .online-final-hold-text strong {
+    color: var(--easter-ui-title, #6b2c8f) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.94) !important;
+}
+
+body.easter-theme .online-final-hold-text span {
+    color: var(--easter-ui-ink-strong, #36213f) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.82) !important;
+}
+
+body.easter-theme .online-final-hold-next,
+body.easter-theme .tournament-final-ceremony-next {
+    background: var(--easter-ui-pill-active) !important;
+    color: var(--easter-ui-pill-ink, #fffaf3) !important;
+    border: 1px solid rgba(255,255,255,.58) !important;
+    box-shadow:
+        5px 6px 13px rgba(107,44,143,.28),
+        -3px -3px 9px rgba(255,255,255,.46),
+        inset 1px 1px 2px rgba(255,255,255,.30) !important;
+    text-shadow: 0 1px 2px rgba(54,33,63,.48) !important;
+}
+
+body.easter-theme .online-final-hold-next:disabled,
+body.easter-theme .tournament-final-ceremony-next:disabled {
+    color: var(--easter-ui-pill-ink, #fffaf3) !important;
+    opacity: .62;
+}
+
+body.easter-theme .tournament-final-ceremony {
+    background:
+        radial-gradient(circle at 50% 24%, rgba(217,184,255,.26), transparent 36%),
+        linear-gradient(180deg, rgba(67,39,76,.64), rgba(35,24,41,.72)) !important;
+}
+
+body.easter-theme .tournament-final-ceremony-panel {
+    background:
+        radial-gradient(circle at 24% 12%, rgba(255,255,255,.92), transparent 38%),
+        linear-gradient(145deg, rgba(255,248,239,.98), rgba(235,222,205,.96)) !important;
+    border: 1px solid rgba(139,69,190,.30) !important;
+    box-shadow:
+        12px 14px 34px rgba(48,28,56,.34),
+        -7px -7px 20px rgba(255,255,255,.34),
+        inset 1px 1px 3px rgba(255,255,255,.90) !important;
+}
+
+body.easter-theme .tournament-final-ceremony-rays {
+    background: conic-gradient(from 0deg, transparent 0 8%, rgba(184,121,220,.16) 9% 10%, transparent 11% 20%) !important;
+    opacity: .34;
+}
+
+body.easter-theme .tournament-final-ceremony-kicker {
+    color: var(--easter-ui-title, #6b2c8f) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.92) !important;
+}
+
+body.easter-theme .tournament-final-ceremony-title,
+body.easter-theme .tournament-final-ceremony-message,
+body.easter-theme .tournament-final-ceremony-meta,
+body.easter-theme .tournament-final-ceremony-meta strong {
+    color: var(--easter-ui-ink-strong, #36213f) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.86) !important;
+}
+
+body.easter-theme .tournament-final-ceremony-reward {
+    background:
+        radial-gradient(circle at 22% 16%, rgba(255,255,255,.80), transparent 40%),
+        linear-gradient(145deg, #fff0bd, #e7bd62) !important;
+    color: #5a390c !important;
+    border-color: rgba(137,87,24,.34) !important;
+    box-shadow:
+        5px 6px 13px rgba(137,87,24,.20),
+        -4px -4px 11px rgba(255,255,255,.58),
+        inset 1px 1px 2px rgba(255,255,255,.74) !important;
+    text-shadow: 0 1px 0 rgba(255,248,218,.84) !important;
+}
+
+body.easter-theme .tournament-final-ceremony.is-runnerup .tournament-final-ceremony-panel {
+    border-color: rgba(73,143,174,.30) !important;
+}
+
+body.easter-theme .tournament-final-ceremony.is-runnerup .tournament-final-ceremony-kicker {
+    color: #286f8d !important;
+}
+
+body.easter-theme .tournament-final-ceremony.is-runnerup .tournament-final-ceremony-reward {
+    background:
+        radial-gradient(circle at 22% 16%, rgba(255,255,255,.84), transparent 40%),
+        linear-gradient(145deg, #e5f7ff, #a9d7e9) !important;
+    color: #214f64 !important;
+    border-color: rgba(40,111,141,.30) !important;
+}
+
+/* Najava: dostupna, aktivna i vraćena stanja ostaju čitljiva na svakoj tabli. */
+body.easter-theme #btn-najava.btn-highlight {
+    background: var(--easter-ui-pill-active) !important;
+    color: var(--easter-ui-pill-ink, #fffaf3) !important;
+    border: 1px solid rgba(255,255,255,.60) !important;
+    box-shadow:
+        0 5px 0 #54236f,
+        0 11px 20px rgba(107,44,143,.24),
+        inset 0 2px 0 rgba(255,255,255,.34) !important;
+    text-shadow: 0 1px 2px rgba(54,33,63,.48) !important;
+}
+
+body.easter-theme #btn-najava.btn-active-toggle {
+    background: linear-gradient(145deg, #d95886, #a92f60) !important;
+    color: #fffaf3 !important;
+    border: 1px solid rgba(255,238,246,.66) !important;
+    box-shadow:
+        0 5px 0 #7f2148,
+        0 11px 20px rgba(169,47,96,.22),
+        inset 0 2px 0 rgba(255,255,255,.30) !important;
+    text-shadow: 0 1px 2px rgba(83,23,50,.46) !important;
+}
+
+/* Riznica: kupovina je ljubičasta akcija, ali nikada sa crnim tekstom. */
+body.easter-theme #riznica-screen .btn-buy {
+    background: var(--easter-ui-pill-active) !important;
+    color: var(--easter-ui-pill-ink, #fffaf3) !important;
+    border: 1px solid rgba(255,255,255,.58) !important;
+    box-shadow:
+        5px 6px 13px rgba(107,44,143,.24),
+        -3px -3px 9px rgba(255,255,255,.50),
+        inset 1px 1px 2px rgba(255,255,255,.28) !important;
+    text-shadow: 0 1px 2px rgba(54,33,63,.44) !important;
+}
+
+/* Chat tokom partije: simboli na ljubičastoj podlozi ostaju svetli. */
+body.easter-theme .chat-float-btn,
+body.easter-theme .chat-window .btn-chat-send {
+    background: var(--easter-ui-pill-active) !important;
+    color: var(--easter-ui-pill-ink, #fffaf3) !important;
+    border-color: rgba(255,255,255,.56) !important;
+    text-shadow: 0 1px 2px rgba(54,33,63,.46) !important;
+}
+
+/* Vaskrs online tajmer: isti vizuelni pill kao oznaka UŽIVO u spectator režimu.
+   Odbrojavanje, urgent pulse i serverska logika ostaju nepromenjeni. */
+body.easter-theme #game-scene.online-duel-room:not(.opponent-reconnecting) #turn-timer-display {
+    flex: 0 0 min(112px, 28vw) !important;
+    width: min(112px, 28vw) !important;
+    min-width: min(112px, 28vw) !important;
+    max-width: min(112px, 28vw) !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    margin: 0 2px !important;
+    padding: 4px 10px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid rgba(255,255,255,.68) !important;
+    border-top-color: rgba(255,255,255,.86) !important;
+    border-radius: 12px !important;
+    background: var(--danger) !important;
+    color: #fffaf3 !important;
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.24),
+        0 0 10px rgba(244,67,54,.60) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    font-size: .8rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: 1px !important;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 1px 2px rgba(91,20,34,.54) !important;
+    text-overflow: clip !important;
+}
+
+body.easter-theme #game-scene.online-duel-room:not(.opponent-reconnecting) #turn-timer-display.timer-turn--opponent,
+body.easter-theme #game-scene.online-duel-room:not(.opponent-reconnecting) #turn-timer-display.timer-turn--urgent {
+    background: var(--danger) !important;
+    border-color: rgba(255,255,255,.68) !important;
+    border-top-color: rgba(255,255,255,.86) !important;
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.24),
+        0 0 10px rgba(244,67,54,.60) !important;
+}
+
+body.easter-theme #game-scene.online-duel-room:not(.opponent-reconnecting) #turn-timer-display > span {
+    display: inline-flex !important;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 0 !important;
+    border-radius: inherit !important;
+    background: transparent !important;
+    color: #fffaf3 !important;
+    box-shadow: none !important;
+    font-size: .8rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    letter-spacing: 1px !important;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(91,20,34,.54) !important;
+}
+
+body.easter-theme #game-scene.online-duel-room:not(.opponent-reconnecting) #turn-timer-display .spectator-live-pill {
+    height: 100%;
+}
+
+/* Statistika / Međusobni dueli: broj partija na avataru ostaje u istom slotu,
+   ali koristi čitljiv Vaskrs Soft Clay kontrast. */
+body.easter-theme #stats-screen .h2h-rival-count {
+    background: var(--easter-ui-pill-active) !important;
+    color: var(--easter-ui-pill-ink, #fffaf3) !important;
+    border-color: rgba(255,250,243,.92) !important;
+    box-shadow:
+        0 0 0 2px rgba(107,44,143,.34),
+        0 4px 9px rgba(72,34,91,.30),
+        inset 1px 1px 2px rgba(255,255,255,.30) !important;
+    text-shadow: 0 1px 2px rgba(54,33,63,.52) !important;
 }

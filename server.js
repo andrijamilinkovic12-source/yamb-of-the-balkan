@@ -616,7 +616,9 @@ const GlobalChatMessageSchema = new mongoose.Schema({
 }, { _id: false });
 
 const GlobalChatSchema = new mongoose.Schema({
-    messages: { type: [GlobalChatMessageSchema], default: [] }
+    messages: { type: [GlobalChatMessageSchema], default: [] },
+    lastResetWeekKey: { type: String, default: '' },
+    lastResetAt: { type: Number, default: 0 }
 });
 mongoose.model('GlobalChat', GlobalChatSchema);
 
@@ -1804,7 +1806,11 @@ const THEME_UNLOCK_IDS = new Set([
 // NOVE PROMENLJIVE ZA ČUVANJE CHATA
 let globalChatHistory = [];
 let globalChatSaveQueue = Promise.resolve();
+let globalChatWeeklyResetTimer = null;
+let globalChatLastResetWeekKey = '';
+let globalChatLastResetAt = 0;
 const MAX_CHAT_HISTORY = 50;
+const GLOBAL_CHAT_RESET_TIME_ZONE = LEADERBOARD_TIME_ZONE;
 
 function createGlobalChatMessageId() {
     return crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
@@ -1828,6 +1834,86 @@ function normalizeGlobalChatMessage(raw, index = 0) {
     };
 }
 
+function getGlobalChatWeekKey(now = new Date()) {
+    const weekStart = getLeaderboardPeriodStart('weekly', now, GLOBAL_CHAT_RESET_TIME_ZONE);
+    if (!weekStart) return '';
+    const parts = getTimeZoneParts(weekStart, GLOBAL_CHAT_RESET_TIME_ZONE);
+    return `${parts.year}-${padDatePart(parts.month)}-${padDatePart(parts.day)}`;
+}
+
+function getNextGlobalChatResetAt(now = new Date()) {
+    const currentWeekStart = getLeaderboardPeriodStart('weekly', now, GLOBAL_CHAT_RESET_TIME_ZONE);
+    const startParts = getTimeZoneParts(currentWeekStart || now, GLOBAL_CHAT_RESET_TIME_ZONE);
+    const nextWeekStartCalendar = new Date(Date.UTC(startParts.year, startParts.month - 1, startParts.day + 7));
+
+    return zonedLocalMidnightToUtc(
+        nextWeekStartCalendar.getUTCFullYear(),
+        nextWeekStartCalendar.getUTCMonth() + 1,
+        nextWeekStartCalendar.getUTCDate(),
+        GLOBAL_CHAT_RESET_TIME_ZONE
+    );
+}
+
+function clearGlobalChatWeeklyResetTimer() {
+    if (globalChatWeeklyResetTimer) {
+        clearTimeout(globalChatWeeklyResetTimer);
+        globalChatWeeklyResetTimer = null;
+    }
+}
+
+async function resetGlobalChatHistory(reason = 'weekly') {
+    const weekKey = getGlobalChatWeekKey();
+    const resetAt = Date.now();
+
+    globalChatHistory = [];
+    globalChatLastResetWeekKey = weekKey;
+    globalChatLastResetAt = resetAt;
+
+    if (MONGO_URI) {
+        globalChatSaveQueue = globalChatSaveQueue
+            .then(async () => {
+                const GlobalChatDb = mongoose.model('GlobalChat');
+                await GlobalChatDb.findOneAndUpdate(
+                    {},
+                    {
+                        $set: {
+                            messages: [],
+                            lastResetWeekKey: weekKey,
+                            lastResetAt: resetAt
+                        }
+                    },
+                    { upsert: true }
+                );
+            })
+            .catch(err => {
+                console.error("Greška pri nedeljnom resetu Global chat-a:", err);
+            });
+        await globalChatSaveQueue;
+    }
+
+    if (io && typeof io.emit === 'function') {
+        io.emit('global_chat_history', globalChatHistory);
+    }
+    console.log(`💬 Global chat istorija resetovana (${reason}, week=${weekKey}).`);
+}
+
+function scheduleGlobalChatWeeklyReset() {
+    clearGlobalChatWeeklyResetTimer();
+    const resetAt = getNextGlobalChatResetAt();
+    const remainingMs = resetAt.getTime() - Date.now();
+    const delay = Math.min(Math.max(1000, remainingMs), 2147483647);
+
+    globalChatWeeklyResetTimer = setTimeout(() => {
+        globalChatWeeklyResetTimer = null;
+        resetGlobalChatHistory('weekly_timer')
+            .catch(err => console.error('Greška pri automatskom nedeljnom resetu Global chat-a:', err))
+            .finally(() => scheduleGlobalChatWeeklyReset());
+    }, delay);
+    if (typeof globalChatWeeklyResetTimer.unref === 'function') globalChatWeeklyResetTimer.unref();
+
+    console.log(`💬 Sledeći Global chat reset zakazan za ${resetAt.toISOString()} (${GLOBAL_CHAT_RESET_TIME_ZONE}).`);
+}
+
 // Funkcije za manipulaciju chatom
 async function initChatFromDb() {
     if (!process.env.MONGO_URI) return;
@@ -1836,16 +1922,33 @@ async function initChatFromDb() {
         let dbChat = await GlobalChatDb.findOne();
         if (dbChat) {
             const rawMessages = Array.isArray(dbChat.messages) ? dbChat.messages : [];
+            const currentWeekKey = getGlobalChatWeekKey();
+            const storedWeekKey = String(dbChat.lastResetWeekKey || '');
+            globalChatLastResetWeekKey = storedWeekKey || currentWeekKey;
+            globalChatLastResetAt = Math.max(0, toSafeInt(dbChat.lastResetAt, 0));
+            if (!storedWeekKey && !globalChatLastResetAt) {
+                globalChatLastResetAt = Date.now();
+            }
             globalChatHistory = rawMessages
                 .map((message, index) => normalizeGlobalChatMessage(message, index))
                 .filter(Boolean)
                 .slice(-MAX_CHAT_HISTORY);
-            if (globalChatHistory.length !== rawMessages.length || globalChatHistory.some((message, index) => message.id !== rawMessages[index]?.id)) {
+
+            if (storedWeekKey && storedWeekKey !== currentWeekKey) {
+                await resetGlobalChatHistory('weekly_startup');
+            } else if (!storedWeekKey || globalChatHistory.length !== rawMessages.length || globalChatHistory.some((message, index) => message.id !== rawMessages[index]?.id)) {
                 await saveChatToDb();
             }
             console.log("💬 Globalni chat uspešno učitan iz baze.");
         } else {
-            let newChat = new GlobalChatDb({ messages: [] });
+            const currentWeekKey = getGlobalChatWeekKey();
+            globalChatLastResetWeekKey = currentWeekKey;
+            globalChatLastResetAt = Date.now();
+            let newChat = new GlobalChatDb({
+                messages: [],
+                lastResetWeekKey: globalChatLastResetWeekKey,
+                lastResetAt: globalChatLastResetAt
+            });
             await newChat.save();
             console.log("💬 Kreiran novi čist globalni chat u bazi.");
         }
@@ -1863,7 +1966,18 @@ async function saveChatToDb() {
             .filter(Boolean)
             .slice(-MAX_CHAT_HISTORY);
         globalChatHistory = messages;
-        await GlobalChatDb.findOneAndUpdate({}, { messages }, { upsert: true });
+        if (!globalChatLastResetWeekKey) {
+            globalChatLastResetWeekKey = getGlobalChatWeekKey();
+        }
+        await GlobalChatDb.findOneAndUpdate(
+            {},
+            {
+                messages,
+                lastResetWeekKey: globalChatLastResetWeekKey,
+                lastResetAt: globalChatLastResetAt
+            },
+            { upsert: true }
+        );
     } catch (err) {
         console.error("Greška pri čuvanju chata u bazu:", err);
     }
@@ -12699,7 +12813,9 @@ setInterval(() => {
     if (obrisano > 0) {
         console.log(`🧹 Očišćeno ${obrisano} isteklih banova iz memorije.`);
     }
-}, 60 * 60 * 1000); 
+}, 60 * 60 * 1000);
+
+scheduleGlobalChatWeeklyReset();
 
 // ==================================================================
 // ANTI-SLEEP (SELF-PING) MEHANIZAM

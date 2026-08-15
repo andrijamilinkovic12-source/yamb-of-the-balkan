@@ -2838,8 +2838,10 @@ body {
     font-weight: 700;
     line-height: 1.2;
     overflow: visible;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
     word-break: normal;
+    white-space: normal;
+    hyphens: none;
 }
 .online-player-name--long {
     font-size: 0.84rem;
@@ -2848,6 +2850,21 @@ body {
 .online-player-name--very-long {
     font-size: 0.74rem;
     line-height: 1.16;
+}
+.online-player-name--emergency-break {
+    overflow-wrap: anywhere;
+}
+@media (max-width: 420px) {
+    #online-players-body .online-player-card {
+        padding-inline: 10px !important;
+        gap: 7px !important;
+    }
+    #online-players-body .online-player-identity {
+        gap: 8px !important;
+    }
+    #online-players-body .online-player-actions {
+        gap: 5px !important;
+    }
 }
 #online-players-body.online-players-body {
     flex: 1 1 auto !important;

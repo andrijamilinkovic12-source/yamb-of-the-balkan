@@ -146,6 +146,41 @@ window.showNotification = function(title, message, options = {}) {
 
 let onlinePlayersRefreshTimer = null;
 
+function fitOnlinePlayerNames(root = document) {
+    const nameElements = root.querySelectorAll('.online-player-name[data-player-name]');
+    if (!nameElements.length) return;
+
+    requestAnimationFrame(() => {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        if (!context) return;
+
+        nameElements.forEach(element => {
+            element.style.fontSize = '';
+            element.classList.remove('online-player-name--emergency-break');
+
+            const availableWidth = Math.floor(element.getBoundingClientRect().width);
+            const words = String(element.dataset.playerName || '').trim().split(/\s+/u).filter(Boolean);
+            if (availableWidth <= 0 || words.length === 0) return;
+
+            const computed = window.getComputedStyle(element);
+            const baseFontSize = parseFloat(computed.fontSize) || 15;
+            const minFontSize = 10;
+            context.font = `${computed.fontWeight || 700} ${baseFontSize}px ${computed.fontFamily || 'sans-serif'}`;
+            const widestWord = Math.max(...words.map(word => context.measureText(word).width));
+
+            if (widestWord <= availableWidth - 2) return;
+
+            const fittedSize = Math.max(minFontSize, Math.floor((baseFontSize * (availableWidth - 2) / widestWord) * 10) / 10);
+            element.style.fontSize = `${fittedSize}px`;
+
+            context.font = `${computed.fontWeight || 700} ${fittedSize}px ${computed.fontFamily || 'sans-serif'}`;
+            const stillTooWide = words.some(word => context.measureText(word).width > availableWidth);
+            element.classList.toggle('online-player-name--emergency-break', stillTooWide);
+        });
+    });
+}
+
 function isOnlinePlayersModalOpen() {
     const overlay = document.getElementById('online-players-overlay');
     return !!(overlay && overlay.style.display !== 'none');
@@ -320,7 +355,7 @@ window.openOnlinePlayersModal = function() {
                     }
 
                     actionButtons = `
-                    <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                    <div class="online-player-actions" style="display: flex; gap: 8px; flex-shrink: 0;">
                         ${addFriendBtn}
                         ${spectateBtn}
                         ${challengeBtn}
@@ -328,10 +363,10 @@ window.openOnlinePlayersModal = function() {
                 }
 
                 html += `
-                <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
-                    <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                <div class="online-player-card" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.2); padding: 12px 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); gap: 10px;">
+                    <div class="online-player-identity" style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
                         <img src="${photoSrc}" style="width:45px; height:45px; border-radius:50%; border: 2px solid ${p.isPlaying ? '#2196F3' : (p.isBusy ? '#FF9800' : 'var(--success)')}; object-fit: cover; flex-shrink: 0;">
-                        <span class="online-player-name${playerNameLengthClass}" title="${sec.escapeAttr(rawName)}">
+                        <span class="online-player-name${playerNameLengthClass}" data-player-name="${sec.escapeAttr(rawName)}" title="${sec.escapeAttr(rawName)}">
                             ${safeNameHtml} ${isMe ? `<span style="font-size:0.75rem; color:var(--text-muted); display: block; margin-top: 4px;">${sec.escapeHtml(youText)}</span>` : ''}
                         </span>
                     </div>
@@ -339,6 +374,7 @@ window.openOnlinePlayersModal = function() {
                 </div>`;
             });
             body.innerHTML = html;
+            fitOnlinePlayerNames(body);
         });
 
             window.app.socket.off('online_players_status_changed');

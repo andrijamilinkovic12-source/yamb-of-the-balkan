@@ -4205,7 +4205,7 @@ class YambApp {
                     : 'POZOVI PRIJATELJA'
             },
             globalChat: {
-                icon: 'assets/easter-soft-clay/global-chat-pro.png?v=3',
+                icon: 'assets/easter-soft-clay/global-chat-pro-v4.png',
                 scale: 1,
                 label: () => 'GLOBAL CHAT'
             },
