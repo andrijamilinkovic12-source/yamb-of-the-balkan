@@ -175,6 +175,7 @@ const TRANSLATIONS = {
         "tourney_tabs_aria": "Sekcije turnira",
         "player_label": "Igrač",
         "player_opponent": "Protivnik",
+        "invite_top_rival": "NAJVEĆI RIVAL",
         "stat_no_matches": "0 mečeva",
         "err_server_conn": "Greška pri konekciji sa serverom.",
         "err_title": "GREŠKA",
@@ -339,6 +340,10 @@ const TRANSLATIONS = {
         "online_loading": "Učitavam igrače...",
         "online_no_conn": "Niste povezani na server.",
         "online_no_players": "Trenutno nema drugih igrača.",
+        "online_search_placeholder": "Pretraži igrača po imenu...",
+        "online_search_aria": "Pretraži online igrače",
+        "online_search_empty": "Nema online igrača sa tim imenom.",
+        "online_loading_more": "Učitavam još igrača...",
         "online_you": "(Vi)",
         "online_challenge_btn": "⚔️ IZAZOVI",
         "online_playing": "⚔️ IGRA U TOKU",
@@ -758,6 +763,7 @@ const TRANSLATIONS = {
 
         // --- VATRENI NIZ ---
         "streak_top_title": "🔥 TOP VATRENI NIZ",
+        "streak_top_title_plain": "TOP VATRENI NIZ",
         "streak_loading": "Učitavam listu... ⏳",
         "streak_searching": "Tražim najvatrenije igrače...",
         "streak_no_conn": "Niste povezani na server.",
@@ -970,6 +976,7 @@ const TRANSLATIONS = {
         "tourney_tabs_aria": "Tournament sections",
         "player_label": "Player",
         "player_opponent": "Opponent",
+        "invite_top_rival": "TOP RIVAL",
         "stat_no_matches": "0 matches",
         "err_server_conn": "Error connecting to the server.",
         "err_title": "ERROR",
@@ -1134,6 +1141,10 @@ const TRANSLATIONS = {
         "online_loading": "Loading players...",
         "online_no_conn": "You are not connected to the server.",
         "online_no_players": "There are no other players at the moment.",
+        "online_search_placeholder": "Search players by name...",
+        "online_search_aria": "Search online players",
+        "online_search_empty": "No online players match that name.",
+        "online_loading_more": "Loading more players...",
         "online_you": "(You)",
         "online_challenge_btn": "⚔️ CHALLENGE",
         "online_playing": "⚔️ IN GAME",
@@ -1553,6 +1564,7 @@ const TRANSLATIONS = {
 
         // --- VATRENI NIZ ---
         "streak_top_title": "🔥 TOP WIN STREAK",
+        "streak_top_title_plain": "TOP WIN STREAK",
         "streak_loading": "Loading list... ⏳",
         "streak_searching": "Looking for the hottest players...",
         "streak_no_conn": "Not connected to the server.",

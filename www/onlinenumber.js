@@ -145,6 +145,21 @@ window.showNotification = function(title, message, options = {}) {
 };
 
 let onlinePlayersRefreshTimer = null;
+const ONLINE_PLAYERS_PAGE_SIZE = 30;
+let onlinePlayersSnapshot = [];
+let onlinePlayersVisibleCount = ONLINE_PLAYERS_PAGE_SIZE;
+let onlinePlayersFilteredCount = 0;
+let onlinePlayersSearchQuery = '';
+let onlinePlayersRenderCurrent = null;
+let onlinePlayersSearchTimer = null;
+
+function normalizeOnlinePlayerSearch(value) {
+    return String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLocaleLowerCase()
+        .trim();
+}
 
 function fitOnlinePlayerNames(root = document) {
     const nameElements = root.querySelectorAll('.online-player-name[data-player-name]');
@@ -228,6 +243,15 @@ window.closeOnlinePlayersModal = function(options = {}) {
 
     stopOnlinePlayersAutoRefresh();
     cleanupOnlinePlayersSocketListeners();
+    if (onlinePlayersSearchTimer) {
+        clearTimeout(onlinePlayersSearchTimer);
+        onlinePlayersSearchTimer = null;
+    }
+    const body = document.getElementById('online-players-body');
+    const searchInput = document.getElementById('online-players-search');
+    if (body) body.onscroll = null;
+    if (searchInput) searchInput.oninput = null;
+    onlinePlayersRenderCurrent = null;
 };
 
 window.refreshOnlinePlayersModal = function() {
@@ -249,6 +273,12 @@ window.openOnlinePlayersModal = function() {
     }
 
     const body = document.getElementById('online-players-body');
+    const searchInput = document.getElementById('online-players-search');
+    onlinePlayersSnapshot = [];
+    onlinePlayersVisibleCount = ONLINE_PLAYERS_PAGE_SIZE;
+    onlinePlayersFilteredCount = 0;
+    onlinePlayersSearchQuery = '';
+    if (searchInput) searchInput.value = '';
     const renderPlayersState = (state, text) => {
         if (!body) return;
         body.innerHTML = `
@@ -268,6 +298,29 @@ window.openOnlinePlayersModal = function() {
 
         const loadingText = tr('online_loading', 'Učitavam igrače...');
         renderPlayersState('loading', loadingText);
+
+        body.onscroll = () => {
+            const remaining = body.scrollHeight - body.scrollTop - body.clientHeight;
+            if (remaining > 140 || onlinePlayersVisibleCount >= onlinePlayersFilteredCount) return;
+            onlinePlayersVisibleCount += ONLINE_PLAYERS_PAGE_SIZE;
+            if (typeof onlinePlayersRenderCurrent === 'function') {
+                onlinePlayersRenderCurrent({ preserveScroll: true });
+            }
+        };
+    }
+
+    if (searchInput) {
+        searchInput.oninput = () => {
+            if (onlinePlayersSearchTimer) clearTimeout(onlinePlayersSearchTimer);
+            onlinePlayersSearchTimer = setTimeout(() => {
+                onlinePlayersSearchQuery = normalizeOnlinePlayerSearch(searchInput.value);
+                onlinePlayersVisibleCount = ONLINE_PLAYERS_PAGE_SIZE;
+                if (body) body.scrollTop = 0;
+                if (typeof onlinePlayersRenderCurrent === 'function') {
+                    onlinePlayersRenderCurrent({ preserveScroll: false });
+                }
+            }, 140);
+        };
     }
 
     if (window.app && typeof window.app.initSocketConnection === 'function') {
@@ -277,18 +330,38 @@ window.openOnlinePlayersModal = function() {
     if (window.app && window.app.socket) {
         const bindOnlinePlayersList = () => {
             if (!isOnlinePlayersModalOpen()) return;
-            window.app.socket.off('online_players_list_data'); 
-            window.app.socket.on('online_players_list_data', (players) => {
+            const renderOnlinePlayers = (players, options = {}) => {
             if (!body) return;
 
-            if (!players || players.length === 0) {
+            if (Array.isArray(players)) {
+                onlinePlayersSnapshot = players;
+            }
+
+            const allPlayers = onlinePlayersSnapshot;
+            const previousScrollTop = body.scrollTop;
+
+            if (allPlayers.length === 0) {
+                onlinePlayersFilteredCount = 0;
                 const noPlayers = tr('online_no_players', 'Trenutno nema igrača.');
                 renderPlayersState('empty', noPlayers);
                 return;
             }
 
+            const filteredPlayers = onlinePlayersSearchQuery
+                ? allPlayers.filter(player => normalizeOnlinePlayerSearch(player && player.name).includes(onlinePlayersSearchQuery))
+                : allPlayers;
+            onlinePlayersFilteredCount = filteredPlayers.length;
+
+            if (filteredPlayers.length === 0) {
+                const noMatches = tr('online_search_empty', 'Nema online igrača sa tim imenom.');
+                renderPlayersState('empty', noMatches);
+                return;
+            }
+
+            const visiblePlayers = filteredPlayers.slice(0, onlinePlayersVisibleCount);
+
             let html = '';
-            players.forEach(p => {
+            visiblePlayers.forEach(p => {
                 const myUid = String(window.app.playerId || localStorage.getItem('yamb_uid') || '');
                 const playerUid = String(p.uid || p.playerId || '');
                 const roomId = String(p.roomId || '');
@@ -373,9 +446,22 @@ window.openOnlinePlayersModal = function() {
                     ${actionButtons}
                 </div>`;
             });
+
+            if (visiblePlayers.length < filteredPlayers.length) {
+                html += `
+                    <div class="online-players-load-more" role="status">
+                        ${sec.escapeHtml(tr('online_loading_more', 'Učitavam još igrača...'))}
+                    </div>`;
+            }
+
             body.innerHTML = html;
+            if (options.preserveScroll) body.scrollTop = previousScrollTop;
             fitOnlinePlayerNames(body);
-        });
+        };
+
+            onlinePlayersRenderCurrent = (options = {}) => renderOnlinePlayers(null, options);
+            window.app.socket.off('online_players_list_data');
+            window.app.socket.on('online_players_list_data', renderOnlinePlayers);
 
             window.app.socket.off('online_players_status_changed');
             window.app.socket.on('online_players_status_changed', () => {

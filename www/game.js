@@ -107,7 +107,10 @@ class YambApp {
         this.lastGameType = 'normal';
         this.lastMoveSnapshot = null; 
         this.pendingNewGamePlayers = 1;
-        this.friendsListUids = []; 
+        this.friendsListUids = [];
+        this.friendProfilesByUid = new Map();
+        this.publicPlayerPowerCache = new Map();
+        this.pendingPublicPlayerPower = new Set();
         this.localGameElapsedMs = 0;
         this.localGameActiveStartedAt = 0;
         this.localGameSessionToken = '';
@@ -1826,6 +1829,141 @@ class YambApp {
         return summary;
     }
 
+    getTopH2HRival() {
+        const rawH2H = this.readLocalJson('yamb_h2h_stats', {});
+        const h2h = this.normalizeH2HStats(rawH2H);
+        if (JSON.stringify(rawH2H) !== JSON.stringify(h2h)) {
+            localStorage.setItem('yamb_h2h_stats', JSON.stringify(h2h));
+        }
+
+        const count = (value) => Math.max(0, parseInt(value, 10) || 0);
+        const rivals = Object.values(h2h)
+            .filter(record => {
+                if (!record || typeof record !== 'object') return false;
+                const name = String(record.name || '').trim();
+                return !!name && name !== 'undefined' && name !== 'null' && name !== 'Nepoznat' && !this.isGuestH2HName(name);
+            })
+            .map(record => {
+                const wins = count(record.wins);
+                const draws = count(record.draws);
+                const losses = count(record.losses);
+                return { ...record, wins, draws, losses, games: wins + draws + losses };
+            })
+            .filter(record => record.games > 0)
+            .sort((a, b) => b.games - a.games || b.wins - a.wins || String(a.name).localeCompare(String(b.name)));
+
+        return rivals[0] || null;
+    }
+
+    renderInviteOwnerRival() {
+        const card = document.getElementById('easter-invite-top-rival');
+        const image = document.getElementById('easter-invite-rival-img');
+        const name = document.getElementById('easter-invite-rival-name');
+        const record = document.getElementById('easter-invite-rival-record');
+        const power = document.getElementById('easter-invite-rival-power');
+        const wins = document.getElementById('easter-invite-rival-wins');
+        const draws = document.getElementById('easter-invite-rival-draws');
+        const losses = document.getElementById('easter-invite-rival-losses');
+        if (!card || !image || !name || !record || !power || !wins || !draws || !losses) return;
+
+        const topRival = this.getTopH2HRival();
+        if (!topRival) {
+            card.classList.add('is-empty');
+            image.src = 'assets/easter-soft-clay/statistics/h2h-empty.png?v=1';
+            name.setAttribute('data-lang', 'stat_h2h_empty');
+            name.textContent = gt('stat_h2h_empty') || 'Nema odigranih duela...';
+            name.removeAttribute('title');
+            power.textContent = '—';
+            wins.textContent = '0';
+            draws.textContent = '0';
+            losses.textContent = '0';
+            return;
+        }
+
+        card.classList.remove('is-empty');
+        name.removeAttribute('data-lang');
+        const rivalName = String(topRival.name || getFallbackPlayerName()).trim();
+        const fallbackAvatar = this.friendAvatarUrl(rivalName, '');
+        const rawAvatar = this.friendAvatarUrl(rivalName, topRival.photo);
+        const security = window.YambSecurity;
+        image.src = security && typeof security.safeUrl === 'function'
+            ? security.safeUrl(rawAvatar, fallbackAvatar)
+            : rawAvatar;
+        name.textContent = rivalName;
+        name.title = rivalName;
+        wins.textContent = String(topRival.wins);
+        draws.textContent = String(topRival.draws);
+        losses.textContent = String(topRival.losses);
+
+        const storedRivalUid = String(topRival.uid || '').trim();
+        const rivalNameKey = this.normalizeH2HNameKey(rivalName);
+        const friendProfile = (storedRivalUid ? this.friendProfilesByUid.get(storedRivalUid) : null) ||
+            Array.from(this.friendProfilesByUid.values()).find(friend => (
+                this.normalizeH2HNameKey(friend?.name) === rivalNameKey
+            )) || null;
+        const rivalUid = storedRivalUid || String(friendProfile?.uid || '').trim();
+        const powerCacheKey = rivalUid ? `uid:${rivalUid}` : (rivalNameKey ? `name:${rivalNameKey}` : '');
+        const cachedEntry = powerCacheKey ? this.publicPlayerPowerCache.get(powerCacheKey) : undefined;
+        const cachedPower = cachedEntry && typeof cachedEntry === 'object'
+            ? cachedEntry.value
+            : cachedEntry;
+        const leaderboardPlayer = window.powerIndexLeaderboard && Array.isArray(window.powerIndexLeaderboard.data)
+            ? window.powerIndexLeaderboard.data.find(player => (
+                (rivalUid && String(player.uid || '').trim() === rivalUid) ||
+                (!rivalUid && this.normalizeH2HNameKey(player.name) === rivalNameKey)
+            ))
+            : null;
+        const powerValue = friendProfile && friendProfile.pi !== undefined && friendProfile.pi !== null
+            ? friendProfile.pi
+            : (cachedPower !== undefined ? cachedPower : leaderboardPlayer?.powerIndex);
+        const numericPower = Number(powerValue);
+        power.textContent = Number.isFinite(numericPower) ? String(Math.max(0, Math.floor(numericPower))) : '—';
+
+        if (rivalUid || rivalNameKey) {
+            this.requestPublicPlayerPower(rivalUid, rivalName);
+        }
+    }
+
+    requestPublicPlayerPower(uid, playerName = '') {
+        const targetUid = String(uid || '').trim();
+        const targetName = String(playerName || '').trim();
+        const targetNameKey = this.normalizeH2HNameKey(targetName);
+        const cacheKey = targetUid ? `uid:${targetUid}` : (targetNameKey ? `name:${targetNameKey}` : '');
+        if (!cacheKey || this.pendingPublicPlayerPower.has(cacheKey)) return;
+        if (!this.socket || !this.socket.connected) return;
+
+        const cachedEntry = this.publicPlayerPowerCache.get(cacheKey);
+        const fetchedAt = cachedEntry && typeof cachedEntry === 'object'
+            ? Number(cachedEntry.fetchedAt) || 0
+            : 0;
+        if (fetchedAt && Date.now() - fetchedAt < 4500) return;
+
+        this.pendingPublicPlayerPower.add(cacheKey);
+        const releaseTimer = setTimeout(() => this.pendingPublicPlayerPower.delete(cacheKey), 8000);
+        this.socket.emit('get_public_player_summary', { uid: targetUid, name: targetName }, (payload = {}) => {
+            clearTimeout(releaseTimer);
+            this.pendingPublicPlayerPower.delete(cacheKey);
+            if (!payload || payload.ok !== true) return;
+            const resolvedUid = String(payload.uid || '').trim();
+            if (targetUid && resolvedUid !== targetUid) return;
+
+            const numericPower = Number(payload.powerIndex);
+            if (!Number.isFinite(numericPower)) return;
+            const cacheEntry = {
+                value: Math.max(0, Math.floor(numericPower)),
+                fetchedAt: Date.now()
+            };
+            this.publicPlayerPowerCache.set(cacheKey, cacheEntry);
+            if (resolvedUid) this.publicPlayerPowerCache.set(`uid:${resolvedUid}`, cacheEntry);
+            if (targetNameKey) this.publicPlayerPowerCache.set(`name:${targetNameKey}`, cacheEntry);
+
+            const waitingScreen = document.getElementById('waiting-screen');
+            if (waitingScreen?.classList.contains('active') && waitingScreen.classList.contains('is-hosting-invite')) {
+                this.renderInviteOwnerRival();
+            }
+        });
+    }
+
     applyCloudProfileSync(data = {}) {
         const uid = localStorage.getItem('yamb_uid');
 
@@ -2050,6 +2188,10 @@ class YambApp {
 
         if (data.h2hAuthoritative === true) {
             this.mergeCloudH2HStats(data.h2hStats);
+            const waitingScreen = document.getElementById('waiting-screen');
+            if (waitingScreen?.classList.contains('active') && waitingScreen.classList.contains('is-hosting-invite')) {
+                this.renderInviteOwnerRival();
+            }
         }
         this.mergeCloudLeagueData(uid, data.leagueData, { preferIncoming: true });
 
@@ -2218,6 +2360,13 @@ class YambApp {
     renderFriendsList(friends, requests = []) {
         const list = document.getElementById('friends-list');
         if (!list) return;
+
+        const safeFriends = Array.isArray(friends) ? friends : [];
+        this.friendProfilesByUid = new Map(
+            safeFriends
+                .filter(friend => friend && friend.uid)
+                .map(friend => [String(friend.uid).trim(), friend])
+        );
         
         list.className = 'ws-friends-list';
 
@@ -2259,6 +2408,7 @@ class YambApp {
                     : this.calculatePowerIndex(f.stats, false);
                 const h2hRecord = f.h2hRecord || {};
                 const h2hLine = this.formatH2HRecordLine(h2hRecord, f.stats);
+                const h2hParts = this.getH2HRecordParts(h2hRecord, f.stats);
                 const isOnline = f.isOnline;
 
                 const statusColor = isOnline ? 'var(--success)' : 'var(--danger)';
@@ -2275,15 +2425,25 @@ class YambApp {
                 const safePi = this.escapeHtml(pi);
                 const safeH2HLine = this.escapeHtml(h2hLine);
                 const safeWlLabel = this.escapeHtml(gt('ws_wl') || 'W/D/L');
+                const safePowerLabel = this.escapeHtml(gt('ws_power') || 'Moć');
+                const safeWins = this.escapeHtml(h2hParts.wins);
+                const safeDraws = this.escapeHtml(h2hParts.draws);
+                const safeLosses = this.escapeHtml(h2hParts.losses);
 
                 html += `
-                    <div class="friend-card">
+                    <div class="friend-card friend-player-card">
                         <div style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 8px ${statusColor};"></div>
                         <img src="${safeAvatar}" class="friend-card-img" style="border: 2px solid ${statusColor};">
                         <span class="friend-card-name">${safeName}</span>
                         <div class="friend-card-stats">
                             <span class="friend-card-power" style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${safePi}</span>
                             <span class="friend-card-wl">${safeWlLabel}: ${safeH2HLine}</span>
+                            <div class="easter-friend-records" aria-label="${safeWlLabel}">
+                                <div class="easter-friend-record-row easter-friend-power"><span>${safePowerLabel}</span><strong>${safePi}</strong></div>
+                                <div class="easter-friend-record-row easter-friend-win"><span>POB</span><strong>${safeWins}</strong></div>
+                                <div class="easter-friend-record-row easter-friend-draw"><span>NER</span><strong>${safeDraws}</strong></div>
+                                <div class="easter-friend-record-row easter-friend-loss"><span>POR</span><strong>${safeLosses}</strong></div>
+                            </div>
                         </div>
                         <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
                     </div>
@@ -2299,6 +2459,11 @@ class YambApp {
             `;
         }
         list.innerHTML = html;
+
+        const waitingScreen = document.getElementById('waiting-screen');
+        if (waitingScreen?.classList.contains('active') && waitingScreen.classList.contains('is-hosting-invite')) {
+            this.renderInviteOwnerRival();
+        }
     }
 
     async resolveFriendRequest(uid, accepted, friendName = '') {
@@ -4219,9 +4384,10 @@ class YambApp {
             economy: {
                 icon: 'assets/soft-clay-ducats-undo-pro.png?v=1',
                 scale: 1,
-                label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
-                    ? 'DUCATS AND UNDO TOKENS'
-                    : 'DUKATI I VRAĆANJE UPISA'
+                lines: () => [
+                    gt('menu_ducats') || 'DUKATI',
+                    gt('undo_title') || 'ISPRAVI ZADNJI UPIS'
+                ]
             }
         };
         const room = rooms[roomId];
@@ -4242,17 +4408,33 @@ class YambApp {
             iconElement.src = room.icon;
             iconElement.style.setProperty('--easter-room-icon-scale', room.scale || 1);
         }
-        const title = String(room.label()).replace(/^[^\p{L}\p{N}]+/u, '').trim().toUpperCase();
-        titleElement.replaceChildren(...Array.from(title).map((character, index) => {
+        const titleLines = (room.lines ? room.lines() : [room.label()])
+            .map(line => String(line).replace(/^[^\p{L}\p{N}]+/u, '').trim().toUpperCase())
+            .filter(Boolean);
+        let waveIndex = 0;
+        const createWaveLetters = (line) => Array.from(line).map(character => {
             const letter = document.createElement('span');
             letter.className = character === ' '
                 ? 'easter-room-intro-wave-space'
                 : 'easter-room-intro-wave-letter';
             letter.textContent = character === ' ' ? '\u00A0' : character;
-            letter.style.setProperty('--wave-index', index);
+            letter.style.setProperty('--wave-index', waveIndex++);
             return letter;
-        }));
-        titleElement.setAttribute('aria-label', title);
+        });
+
+        titleElement.classList.toggle('easter-room-intro-title--stacked', titleLines.length > 1);
+        if (titleLines.length > 1) {
+            titleElement.replaceChildren(...titleLines.map((line, lineIndex) => {
+                const lineElement = document.createElement('span');
+                lineElement.className = `easter-room-intro-title-line easter-room-intro-title-line--${lineIndex + 1}`;
+                lineElement.append(...createWaveLetters(line));
+                return lineElement;
+            }));
+        } else {
+            const title = titleLines[0] || '';
+            titleElement.replaceChildren(...createWaveLetters(title));
+        }
+        titleElement.setAttribute('aria-label', titleLines.join(' – '));
 
         this.easterRoomIntroPlaying = true;
         overlay.classList.add('theme-easter');
@@ -4515,6 +4697,7 @@ class YambApp {
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
         this.renderWaitingH2HRecord('my', myH2HRecord);
+        this.renderInviteOwnerRival();
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');
@@ -4632,6 +4815,7 @@ class YambApp {
         if (myPowerEl) myPowerEl.innerText = this.calculatePowerIndex(myStats, true);
         
         this.renderWaitingH2HRecord('my', myH2HRecord);
+        if (isHost) this.renderInviteOwnerRival();
 
         const oppBox = document.getElementById('waiting-opp-box');
         const vsBadge = document.getElementById('waiting-vs-badge');

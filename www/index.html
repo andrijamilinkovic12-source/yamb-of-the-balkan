@@ -6,12 +6,12 @@
     <title>Yamb of the Balkan - Divine Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.12">
-    <link rel="stylesheet" href="teme.css?v=5.71">
+    <link rel="stylesheet" href="style.css?v=5.16">
+    <link rel="stylesheet" href="teme.css?v=5.90">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
-    <script src="languages.js?v=5.0"></script>
+    <script src="languages.js?v=5.1"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -277,7 +277,8 @@
                 <section id="economy-panel-ducats" class="economy-tab-panel active">
                     <div class="economy-page-panel">
                         <div class="economy-hero">
-                            <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
+                            <svg class="dukat-icon-inline economy-hero-ducat-icon-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
+                            <img class="economy-hero-ducat-icon-easter" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <div>
                                 <span class="economy-kicker" data-lang="stat_balance">Stanje</span>
                                 <strong><span id="economy-dukati-count-large">0</span></strong>
@@ -291,7 +292,7 @@
                                     <img class="economy-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
                                     <span data-lang="economy_reward_video">Nagradni video</span>
                                 </span>
-                                <strong>+500 <svg class="dukat-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg></strong>
+                                <strong>+500 <svg class="dukat-icon-inline economy-reward-ducat-icon-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="economy-reward-ducat-icon-easter" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async"></strong>
                             </button>
                         </div>
 
@@ -311,7 +312,8 @@
                         <div class="economy-token-box">
                             <span data-lang="economy_your_tokens">Vaši tokeni</span>
                             <strong>
-                                <svg class="token-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg>
+                                <svg class="token-icon-inline economy-inline-token-icon-default" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg>
+                                <img class="economy-inline-token-soft-clay-icon" src="assets/easter-soft-clay/economy/undo-token.png?v=1" alt="" aria-hidden="true" decoding="async">
                                 <span id="undo-token-count">0</span>
                             </strong>
                         </div>
@@ -323,7 +325,7 @@
                                     <img class="economy-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
                                     <span data-lang="economy_reward_video">Nagradni video</span>
                                 </span>
-                                <strong>+1 <svg class="token-icon-inline" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg></strong>
+                                <strong>+1 <svg class="token-icon-inline economy-inline-token-icon-default" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg><img class="economy-inline-token-soft-clay-icon" src="assets/easter-soft-clay/economy/undo-token.png?v=1" alt="" aria-hidden="true" decoding="async"></strong>
                             </button>
                         </div>
 
@@ -679,7 +681,8 @@
                         
                         <div class="stat-item compact-grid-item" onclick="if(window.vatreniNiz) window.vatreniNiz.openModal()">
                             <div style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
-                            <span style="font-size: 1.1rem;">🔥</span>
+                            <span class="stats-category-legacy" style="font-size: 1.1rem;">🔥</span>
+                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true">
                             <span class="stat-lbl-mini" data-lang="stat_streak">Vatreni Niz</span>
                             <span id="stat-streak" class="stat-val-mini" style="color: #FF5722;">0</span>
                         </div>
@@ -694,7 +697,7 @@
                         <div class="stat-item compact-grid-item" onclick="riznicaManager.open()">
                             <div style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
                             <span class="stats-category-legacy" style="font-size: 1.1rem;">🏆</span>
-                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/trophies.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/trophies-v2.png?v=1" alt="" aria-hidden="true">
                             <span class="stat-lbl-mini" data-lang="stat_trophies">Trofeji</span>
                             <span id="stat-trophies" class="stat-val-mini c-gold">0 / 26</span>
                         </div>
@@ -706,7 +709,8 @@
                             <span id="stat-balance" class="stat-val-mini c-gold">0</span>
                         </div>
                         <div class="stat-item compact-grid-item">
-                            <span style="font-size: 1.1rem;">🌟</span>
+                            <span class="stats-category-legacy" style="font-size: 1.1rem;">🌟</span>
+                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/all-time-points.png?v=1" alt="" aria-hidden="true">
                             <span class="stat-lbl-mini" data-lang="stat_alltime">All-Time PTS</span>
                             <span id="stat-alltime" class="stat-val-mini c-gold">0</span>
                         </div>
@@ -957,7 +961,11 @@
 
             <div class="chat-body global-chat-body hs-card-body">
                 <section class="hs-panel active" data-hs-panel="global">
-                    <h3 class="hs-panel-title" data-lang="hs_global">GLOBALNA 🌍</h3>
+                    <h3 class="hs-panel-title">
+                        <img class="hs-panel-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/global.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <span class="hs-panel-title-legacy" data-lang="hs_global">GLOBALNA 🌍</span>
+                        <span class="hs-panel-title-easter" data-lang="hs_global_plain">GLOBALNA</span>
+                    </h3>
                     <div id="global-filters" class="hs-filters">
                         <button class="filter-btn active" onclick="app.topListManager.filterGlobal('weekly')" data-lang="hs_weekly">NEDELJA</button>
                         <button class="filter-btn" onclick="app.topListManager.filterGlobal('monthly')" data-lang="hs_monthly">MESEC</button>
@@ -970,7 +978,11 @@
                 </section>
 
                 <section class="hs-panel" data-hs-panel="local">
-                    <h3 class="hs-panel-title" data-lang="hs_local">LOKALNA LISTA</h3>
+                    <h3 class="hs-panel-title">
+                        <img class="hs-panel-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/local.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <span class="hs-panel-title-legacy" data-lang="hs_local">LOKALNA LISTA</span>
+                        <span class="hs-panel-title-easter" data-lang="hs_local_list">LOKALNA LISTA</span>
+                    </h3>
                     <div id="local-filters" class="hs-filters">
                         <button class="filter-btn active" onclick="app.topListManager.filterLocal('weekly')" data-lang="hs_weekly">NEDELJA</button>
                         <button class="filter-btn" onclick="app.topListManager.filterLocal('monthly')" data-lang="hs_monthly">MESEC</button>
@@ -1130,6 +1142,19 @@
                         <div class="ws-g-stat"><span class="lbl">NER</span><span id="waiting-my-draws" class="val">0</span></div>
                         <div class="ws-g-stat"><span class="lbl">POR</span><span id="waiting-my-losses" class="val">0</span></div>
                     </div>
+                </div>
+                <div id="easter-invite-top-rival" class="easter-invite-rival-card" aria-live="polite">
+                    <div class="easter-invite-rival-body">
+                        <img id="easter-invite-rival-img" class="easter-invite-rival-img" src="assets/easter-soft-clay/statistics/h2h-empty.png?v=1" alt="" aria-hidden="true">
+                        <span id="easter-invite-rival-name" class="easter-invite-rival-name" data-lang="stat_none">Nema</span>
+                    </div>
+                    <div id="easter-invite-rival-record" class="easter-invite-rival-stats" aria-label="Podaci najvećeg rivala">
+                        <div class="easter-invite-rival-stat easter-invite-rival-power"><span data-lang="ws_power">Moć ⚡</span><strong id="easter-invite-rival-power">—</strong></div>
+                        <div class="easter-invite-rival-stat"><span>POB</span><strong id="easter-invite-rival-wins">0</strong></div>
+                        <div class="easter-invite-rival-stat"><span>NER</span><strong id="easter-invite-rival-draws">0</strong></div>
+                        <div class="easter-invite-rival-stat"><span>POR</span><strong id="easter-invite-rival-losses">0</strong></div>
+                    </div>
+                    <span class="easter-invite-rival-title" data-lang="invite_top_rival">NAJVEĆI RIVAL</span>
                 </div>
             </div>
 
@@ -1452,6 +1477,11 @@
                 <button type="button" class="global-chat-close" onclick="if(window.closeOnlinePlayersModal) window.closeOnlinePlayersModal(); else document.getElementById('online-players-overlay').style.display='none'" aria-label="Zatvori online igrače" data-lang-aria="aria_close_online_players">×</button>
             </div>
 
+            <label class="online-players-search-wrap" for="online-players-search">
+                <span class="online-players-search-icon" aria-hidden="true"></span>
+                <input id="online-players-search" class="online-players-search" type="search" maxlength="60" autocomplete="off" autocapitalize="words" spellcheck="false" placeholder="Pretraži igrača po imenu..." data-lang-placeholder="online_search_placeholder" aria-label="Pretraži online igrače" data-lang-aria="online_search_aria">
+            </label>
+
             <div id="online-players-body" class="chat-body global-chat-body online-players-body">
                 <div class="online-players-state is-loading" data-online-state="loading">
                     <img class="online-players-state-soft-clay-icon" src="assets/easter-soft-clay/online-players-state-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
@@ -1549,10 +1579,10 @@
     <script src="globalchat.js?v=1.1"></script>
     <script src="auth.js?v=1012"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=4.44"></script>
+    <script src="game.js?v=4.50"></script>
     <script src="kvartalnaliga.js?v=1008"></script>
-    <script src="onlinenumber.js?v=1005"></script>
-    <script src="vatreniniz.js?v=1000"></script>
+    <script src="onlinenumber.js?v=1006"></script>
+    <script src="vatreniniz.js?v=1001"></script>
     <script src="powerindex.js?v=1.1"></script>
 
 </body>

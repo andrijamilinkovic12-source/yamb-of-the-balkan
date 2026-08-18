@@ -10757,6 +10757,61 @@ io.on('connection', (socket) => {
         return null;
     };
 
+    socket.on('get_public_player_summary', async (options = {}, ack) => {
+        const reply = (payload) => {
+            if (typeof ack === 'function') ack(payload);
+        };
+
+        if (!MONGO_URI) {
+            reply({ ok: false, reason: 'err_friends_unavailable' });
+            return;
+        }
+
+        const requesterUid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId || '';
+        const targetUid = String(options.uid || '').trim().substring(0, 200);
+        const targetName = String(options.name || '').trim().substring(0, 120);
+        if (!requesterUid) {
+            reply({ ok: false, reason: 'err_friend_auth_required' });
+            return;
+        }
+        if (!targetUid && !targetName) {
+            reply({ ok: false, reason: 'err_friend_target_missing' });
+            return;
+        }
+
+        try {
+            let profile = targetUid
+                ? await UserProfile.findOne({ firebaseUid: targetUid }).lean()
+                : null;
+            if (!profile && targetName) {
+                const escapedName = targetName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const exactMatches = await UserProfile.find({
+                    playerName: new RegExp('^' + escapedName + '$', 'i')
+                }).limit(2).lean();
+                if (exactMatches.length === 1) profile = exactMatches[0];
+                if (exactMatches.length > 1) {
+                    reply({ ok: false, reason: 'err_friend_target_ambiguous' });
+                    return;
+                }
+            }
+            if (!profile) {
+                reply({ ok: false, reason: 'err_friend_target_missing' });
+                return;
+            }
+
+            reply({
+                ok: true,
+                uid: profile.firebaseUid,
+                name: sanitizeTournamentName(profile.playerName || 'Igrac'),
+                photoUrl: sanitizeTournamentPhotoUrl(profile.photoUrl || ''),
+                powerIndex: sanitizeTournamentPi(powerIndexCore.calculatePowerIndex(profile))
+            });
+        } catch (err) {
+            console.error('Greška pri dohvatanju javnog profila rivala:', err);
+            reply({ ok: false, reason: 'err_server_conn' });
+        }
+    });
+
     const buildFriendsListPayload = async (profile) => {
         let friendsData = [];
         let requestsData = [];

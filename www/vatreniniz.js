@@ -36,7 +36,11 @@ class VatreniNizManager {
             <div class="modal-box global-chat-shell streak-modal-shell">
 
                 <div class="chat-header global-chat-header streak-modal-header">
-                    <span class="streak-modal-title">${this.gt('streak_top_title', '🔥 TOP VATRENI NIZ')}</span>
+                    <span class="streak-modal-title">
+                        <span class="fire-streak-title-legacy">${this.gt('streak_top_title', '🔥 TOP VATRENI NIZ')}</span>
+                        <img class="fire-streak-title-soft-clay-icon" src="assets/easter-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <span class="fire-streak-title-easter">${this.gt('streak_top_title_plain', 'TOP VATRENI NIZ')}</span>
+                    </span>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="${this.gt('aria_close_streak', 'Zatvori Vatreni niz listu')}">×</button>
                 </div>
 

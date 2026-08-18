@@ -2854,6 +2854,26 @@ body {
 .online-player-name--emergency-break {
     overflow-wrap: anywhere;
 }
+.online-players-search-wrap {
+    display: none;
+    flex: 0 0 auto;
+}
+.online-players-search {
+    min-width: 0;
+    width: 100%;
+    font: 700 0.84rem/1.2 'Montserrat', sans-serif;
+}
+.online-players-load-more {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    color: var(--text-muted);
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-align: center;
+}
 @media (max-width: 420px) {
     #online-players-body .online-player-card {
         padding-inline: 10px !important;
@@ -3150,6 +3170,13 @@ body {
     vertical-align: 0;
     filter: drop-shadow(0 12px 20px rgba(0,0,0,0.34)) drop-shadow(0 0 12px rgba(255,214,111,0.18));
 }
+.economy-hero-ducat-icon-easter {
+    display: none;
+    width: 68px;
+    height: 68px;
+    flex: 0 0 68px;
+    object-fit: contain;
+}
 .economy-hero strong {
     display: block;
     color: var(--gold-main);
@@ -3262,6 +3289,27 @@ body {
     width: 1.05em;
     height: 1.05em;
     vertical-align: 0;
+}
+.economy-reward-ducat-icon-easter {
+    display: none;
+    width: 1.05em;
+    height: 1.05em;
+    flex: 0 0 1.05em;
+    object-fit: contain;
+}
+.economy-inline-token-soft-clay-icon {
+    display: none;
+    object-fit: contain;
+}
+.economy-token-box .economy-inline-token-soft-clay-icon {
+    width: 1.25em;
+    height: 1.25em;
+    flex: 0 0 1.25em;
+}
+.economy-reward-card strong .economy-inline-token-soft-clay-icon {
+    width: 1.05em;
+    height: 1.05em;
+    flex: 0 0 1.05em;
 }
 .economy-reward-card strong .token-icon-inline {
     width: 1.05em;
@@ -4670,6 +4718,8 @@ select#setting-theme option { background-color: #1a1a1a; color: #ffffff; font-we
 
 .friend-card-wl { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 8px; }
 .friend-card-stats { width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.easter-friend-records { display: none; }
+.easter-invite-rival-card { display: none; }
 .friend-card-btn { border: none; padding: 10px 0; width: 100%; border-radius: 8px; font-weight: 900; font-size: 0.75rem; transition: transform 0.1s; margin-top: auto; }
 
 /* --- PRAVNI TEKSTOVI U MODALU --- */
