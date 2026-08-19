@@ -4,9 +4,13 @@ class TopListManager {
     constructor(appContext) {
         this.app = appContext;
         this.storageKey = 'yamb_ultimate_scores';
-        this.maxEntries = 100; // Ograničenje je sada 100
         this.validPeriods = ['weekly', 'monthly', 'all_time'];
         this.leaderboardTimeZone = 'Europe/Belgrade';
+        this.globalPageSize = 50;
+        this.globalRequestSerial = 0;
+        this.globalPages = new Map();
+        this.globalScrollContainer = null;
+        this.globalScrollHandler = null;
         
         // Default filteri za top liste
         this.currentGlobalFilter = 'weekly';
@@ -36,6 +40,7 @@ class TopListManager {
             <div class="hs-list-state hs-list-state-${state}">
                 <span class="hs-state-fallback" aria-hidden="true">${fallbackIcon}</span>
                 <img class="hs-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="hs-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <span class="hs-list-state-text">${message}</span>
             </div>
         `;
@@ -49,6 +54,60 @@ class TopListManager {
             <img class="hs-podium-medal" src="assets/yotb-podium/leaderboard/${medal}.png?v=1" alt="" aria-hidden="true" decoding="async">
             <span class="hs-podium-rank-number">${index + 1}</span>
         `;
+    }
+
+    _getGlobalPageState(period = this.currentGlobalFilter) {
+        const safePeriod = this._normalizePeriod(period);
+        if (!this.globalPages.has(safePeriod)) {
+            this.globalPages.set(safePeriod, {
+                items: [],
+                keys: new Set(),
+                nextOffset: 0,
+                hasMore: true,
+                loading: false,
+                requestId: 0
+            });
+        }
+        return this.globalPages.get(safePeriod);
+    }
+
+    _globalEntryKey(entry) {
+        const uid = String(entry?.stableUid || entry?.uid || entry?.playerId || '');
+        if (uid) return `uid:${uid}`;
+        return `score:${entry?.playerName || entry?.name || ''}:${entry?.score || 0}:${entry?.date || ''}`;
+    }
+
+    _ensureGlobalScrollListener() {
+        const list = document.getElementById('global-hs-list');
+        const container = list?.closest('.hs-list-container');
+        if (!container || this.globalScrollContainer === container) return;
+
+        if (this.globalScrollContainer && this.globalScrollHandler) {
+            this.globalScrollContainer.removeEventListener('scroll', this.globalScrollHandler);
+        }
+
+        this.globalScrollContainer = container;
+        this.globalScrollHandler = () => {
+            const remaining = container.scrollHeight - container.scrollTop - container.clientHeight;
+            if (remaining <= 180) this.loadMoreGlobal();
+        };
+        container.addEventListener('scroll', this.globalScrollHandler, { passive: true });
+    }
+
+    _removeGlobalLoadMoreState() {
+        document.getElementById('global-hs-load-more')?.remove();
+    }
+
+    _showGlobalLoadMoreState() {
+        const list = document.getElementById('global-hs-list');
+        if (!list || document.getElementById('global-hs-load-more')) return;
+
+        const row = document.createElement('li');
+        row.id = 'global-hs-load-more';
+        row.className = 'hs-load-more-state';
+        row.setAttribute('aria-live', 'polite');
+        row.innerHTML = `<span class="hs-load-more-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>${this._t('msg_connecting')}</span>`;
+        list.appendChild(row);
     }
 
     /**
@@ -299,9 +358,6 @@ class TopListManager {
     }
 
     switchTab(tab) {
-        this._loadLocal();
-        this._loadGlobal();
-
         const activeTab = tab === 'local' ? 'local' : 'global';
         document.querySelectorAll('.hs-tab-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.hsTab === activeTab);
@@ -310,6 +366,9 @@ class TopListManager {
         document.querySelectorAll('.hs-panel').forEach(panel => {
             panel.classList.toggle('active', panel.dataset.hsPanel === activeTab);
         });
+
+        if (activeTab === 'global') this._loadGlobal({ reset: true });
+        else this._loadLocal();
     }
 
     filterGlobal(period) {
@@ -361,31 +420,108 @@ class TopListManager {
         }
     }
 
-    _loadGlobal() {
+    _loadGlobal({ reset = true } = {}) {
         const listEl = document.getElementById('global-hs-list');
         if (!listEl) return;
 
-        listEl.innerHTML = this._stateMarkup(this._t('msg_connecting'), 'loading', '⏳');
-        
+        this._ensureGlobalScrollListener();
+        const period = this.currentGlobalFilter;
+        const state = this._getGlobalPageState(period);
+
+        if (reset) {
+            state.items = [];
+            state.keys = new Set();
+            state.nextOffset = 0;
+            state.hasMore = true;
+            state.loading = false;
+            state.requestId = ++this.globalRequestSerial;
+            listEl.innerHTML = this._stateMarkup(this._t('msg_connecting'), 'loading', '⏳');
+            if (this.globalScrollContainer) this.globalScrollContainer.scrollTop = 0;
+        }
+
+        if (state.loading || !state.hasMore) return;
+        state.loading = true;
+
+        if (!reset) this._showGlobalLoadMoreState();
+
         if (this.app.socket && this.app.socket.connected) {
-            this.app.socket.emit('get_global_highscores', this.currentGlobalFilter);
+            this.app.socket.emit('get_global_highscores', {
+                period,
+                offset: state.nextOffset,
+                limit: this.globalPageSize,
+                requestId: state.requestId
+            });
         } else {
+            state.loading = false;
+            this._removeGlobalLoadMoreState();
             this.app.initSocketConnection();
             setTimeout(() => {
-                if (!this.app.socket || !this.app.socket.connected) {
+                if ((!this.app.socket || !this.app.socket.connected) && state.requestId === this._getGlobalPageState(period).requestId) {
                     listEl.innerHTML = this._stateMarkup(this._t('msg_no_connection'), 'offline', '📡');
                 }
             }, 3000);
         }
     }
 
-    renderList(data, elementId) {
+    loadMoreGlobal() {
+        this._loadGlobal({ reset: false });
+    }
+
+    handleGlobalPage(payload) {
+        if (Array.isArray(payload)) {
+            this.renderList(payload, 'global-hs-list');
+            return;
+        }
+
+        if (!payload || typeof payload !== 'object') return;
+        const period = this._normalizePeriod(payload.period);
+        const state = this._getGlobalPageState(period);
+        if (payload.requestId !== state.requestId || period !== this.currentGlobalFilter) return;
+
+        state.loading = false;
+        this._removeGlobalLoadMoreState();
+
+        const offset = Math.max(0, Number(payload.offset) || 0);
+        const page = Array.isArray(payload.data) ? payload.data : [];
+        if (offset === 0) {
+            state.items = [];
+            state.keys = new Set();
+        } else if (offset !== state.nextOffset) {
+            return;
+        }
+
+        const rankOffset = state.items.length;
+        const uniquePage = page.filter(entry => {
+            const key = this._globalEntryKey(entry);
+            if (state.keys.has(key)) return false;
+            state.keys.add(key);
+            return true;
+        });
+
+        state.items.push(...uniquePage);
+        state.nextOffset = offset + page.length;
+        state.hasMore = Boolean(payload.hasMore) && page.length > 0;
+
+        this.renderList(uniquePage, 'global-hs-list', {
+            append: offset > 0,
+            rankOffset
+        });
+
+        if (state.hasMore && this.globalScrollContainer &&
+            this.globalScrollContainer.scrollHeight <= this.globalScrollContainer.clientHeight + 40) {
+            requestAnimationFrame(() => this.loadMoreGlobal());
+        }
+    }
+
+    renderList(data, elementId, options = {}) {
         const list = document.getElementById(elementId);
         if (!list) return;
 
-        list.innerHTML = "";
-
         const isGlobalList = elementId === 'global-hs-list';
+        const append = isGlobalList && Boolean(options.append);
+        const rankOffset = isGlobalList ? Math.max(0, Number(options.rankOffset) || 0) : 0;
+
+        if (!append) list.innerHTML = "";
 
         let validData = [];
         if (data && Array.isArray(data)) {
@@ -401,10 +537,9 @@ class TopListManager {
         }
 
         validData = this._sortScores(validData);
-        if (isGlobalList) validData = validData.slice(0, this.maxEntries);
 
         // Ako nakon filtriranja nema rezultata
-        if (validData.length === 0) {
+        if (validData.length === 0 && !append) {
             list.innerHTML = this._stateMarkup(this._t('msg_no_results'), 'empty', '');
             return;
         }
@@ -413,13 +548,14 @@ class TopListManager {
         const sec = window.YambSecurity;
 
         validData.forEach((entry, index) => {
+            const absoluteIndex = rankOffset + index;
             const li = document.createElement('li');
             li.className = 'highscore-item'; 
 
             let rankClass = 'rank-circle';
-            if (index === 0) rankClass += ' rank-1';
-            else if (index === 1) rankClass += ' rank-2';
-            else if (index === 2) rankClass += ' rank-3';
+            if (absoluteIndex === 0) rankClass += ' rank-1';
+            else if (absoluteIndex === 1) rankClass += ' rank-2';
+            else if (absoluteIndex === 2) rankClass += ' rank-3';
 
             let dateDisplay = "";
             if (entry.date) {
@@ -443,7 +579,7 @@ class TopListManager {
             }
             
             // LOGIKA ZA KRUNU: Sakrivamo broj 1 da bi se lepo video watermark krune
-            const rankText = index === 0 ? '' : (index + 1);
+            const rankText = absoluteIndex === 0 ? '' : (absoluteIndex + 1);
 
             // LOGIKA ZA AVATAR
             const photoUrl = (entry.photoUrl && entry.photoUrl.length > 5) 
@@ -458,7 +594,7 @@ class TopListManager {
             li.innerHTML = `
                 <div class="${rankClass}">
                     <span class="hs-rank-legacy" style="position: relative; z-index: 2;">${rankText}</span>
-                    ${this._podiumMarkup(index)}
+                    ${this._podiumMarkup(absoluteIndex)}
                 </div>
                 <img src="${safePhotoUrl}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,215,0,0.3); box-shadow: 0 2px 5px rgba(0,0,0,0.5);">
                 <div class="hs-info">

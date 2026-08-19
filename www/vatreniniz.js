@@ -38,7 +38,8 @@ class VatreniNizManager {
                 <div class="chat-header global-chat-header streak-modal-header">
                     <span class="streak-modal-title">
                         <span class="fire-streak-title-legacy">${this.gt('streak_top_title', '🔥 TOP VATRENI NIZ')}</span>
-                        <img class="fire-streak-title-soft-clay-icon" src="assets/easter-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span class="fire-streak-title-easter">${this.gt('streak_top_title_plain', 'TOP VATRENI NIZ')}</span>
                     </span>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="${this.gt('aria_close_streak', 'Zatvori Vatreni niz listu')}">×</button>
@@ -213,9 +214,10 @@ class VatreniNizManager {
 
         // Vaskrs koristi jedinstveni Vatreni niz podium pack; ostale teme zadržavaju postojeći fallback.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+        const podiumTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'desert' ? 'desert' : 'easter';
         const legacyRank = rank === 1 ? '🔥' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : `${rank}.`));
         const podiumRank = podiumTone
-            ? `<img class="fire-streak-podium-medal" src="assets/easter-soft-clay/statistics/fire-streak/${podiumTone}.png?v=1" alt="" aria-hidden="true">`
+            ? `<img class="fire-streak-podium-medal" src="assets/${podiumTheme}-soft-clay/statistics/fire-streak/${podiumTone}.png?v=1" alt="" aria-hidden="true">`
             : '';
         const rankTrophy = `<span class="fire-streak-rank-legacy">${legacyRank}</span>${podiumRank}`;
 
@@ -259,8 +261,10 @@ class VatreniNizManager {
                     <div style="flex: 1; min-width: 0; overflow: hidden; font-weight: bold; color: ${nameColor}; ${nameStyle} word-break: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${displayName}</div>
 
                     <div style="text-align: right; line-height: 1.2; min-width: 80px; display: flex; flex-direction: column; align-items: flex-end;">
-                        <div style="color: #FF5722; font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 5px rgba(255, 87, 34, 0.4);">
-                            🔥 ${maxWinStreak}
+                        <div class="fire-streak-value" style="color: #FF5722; font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 5px rgba(255, 87, 34, 0.4);">
+                            <span class="fire-streak-value-legacy">🔥</span>
+                            <img class="fire-streak-value-soft-clay-icon" src="assets/desert-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
+                            <span>${maxWinStreak}</span>
                         </div>
                         <div style="font-size: 0.65rem; font-weight: bold; margin-top: 4px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">
                             <span style="color: ${currentStreakColor};">${this.escapeHtml(currentStreakText)}</span>

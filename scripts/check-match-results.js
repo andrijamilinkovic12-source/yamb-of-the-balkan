@@ -251,10 +251,9 @@ async function checkLeaderboardSemantics() {
         [500, 450, 400],
         'Local leaderboard does not retain and sort every phone score'
     );
-    assert(
-        topListSource.includes('if (isGlobalList) validData = validData.slice(0, this.maxEntries);'),
-        'Local leaderboard display is still limited to the global TOP 100'
-    );
+    assert(!topListSource.includes('validData.slice(0, this.maxEntries)'), 'Global leaderboard still has the old TOP 100 client cap');
+    assert(topListSource.includes('this.globalPageSize = 50;'), 'Global leaderboard does not use bounded incremental pages');
+    assert(topListSource.includes('loadMoreGlobal()'), 'Global leaderboard cannot request the next page');
 
     const globalHandlerStart = serverSource.indexOf("socket.on('get_global_highscores'");
     const globalHandlerEnd = serverSource.indexOf('// ==================================================================', globalHandlerStart + 50);
@@ -263,6 +262,9 @@ async function checkLeaderboardSemantics() {
     assert(globalHandler.includes("getLeaderboardPeriodStart('weekly')"), 'Global weekly leaderboard is not period-filtered');
     assert(globalHandler.includes("getLeaderboardPeriodStart('monthly')"), 'Global monthly leaderboard is not period-filtered');
     assert(globalHandler.includes('bestEntry: { $first: "$$ROOT" }'), 'Global leaderboard does not keep one best score per profile');
+    assert(globalHandler.includes('{ $skip: offset }'), 'Global leaderboard pagination does not advance beyond the first page');
+    assert(globalHandler.includes('{ $limit: limit + (legacyRequest ? 0 : 1) }'), 'Global leaderboard cannot detect whether another page exists');
+    assert(globalHandler.includes('hasMore'), 'Global leaderboard response does not advertise additional pages');
 
     const completedDuel = extractFunction(serverSource, 'applyServerSideCompletedDuel');
     assert(completedDuel.includes('persistLeaderboardScoreRecord({'), 'Completed online duel does not write both authoritative scores to the leaderboard');

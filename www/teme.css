@@ -2477,16 +2477,21 @@ body.easter-theme .chat-notification {
 
 /* Top-list assets are opt-in: legacy presentation stays active outside Easter. */
 .hs-header-icon-easter,
+.hs-header-icon-desert,
 .hs-tab-soft-clay-icon,
+.hs-tab-soft-clay-icon-desert,
 .hs-tab-label-easter,
 .hs-panel-soft-clay-icon,
+.hs-panel-soft-clay-icon-desert,
 .hs-panel-title-easter,
 .hs-podium-medal,
 .hs-podium-rank-number,
 .hs-state-soft-clay-icon,
+.hs-state-soft-clay-icon-desert,
 .waiting-podium-medal,
 .waiting-podium-rank-number,
-.waiting-hof-state-soft-clay-icon {
+.waiting-hof-state-soft-clay-icon,
+.waiting-hof-state-soft-clay-icon-desert {
     display: none;
 }
 
@@ -2780,6 +2785,361 @@ body.easter-theme #highscores-screen .hs-score-pill {
         -5px -5px 12px rgba(255,255,255,0.68),
         inset 1px 1px 2px rgba(255,255,255,0.88) !important;
     text-shadow: 0 1px 0 rgba(255,255,255,0.92) !important;
+}
+
+/* Pustinjsko staklo — Top lista zadržava Vaskrs mere i funkcionalni raspored,
+   sa zasebnim Desert Soft Clay oznakama i toplim kontrastnim površinama. */
+body.desert-theme #highscores-screen {
+    padding-top: max(42px, calc(env(safe-area-inset-top) + 8px)) !important;
+}
+
+body.desert-theme #highscores-screen .hs-card {
+    --hs-contrast-surface: #985026;
+    --hs-contrast-ink: #fff8e8;
+    background: linear-gradient(145deg, rgba(255,249,233,.96), rgba(235,195,137,.90)) !important;
+    border: var(--desert-ui-border) !important;
+    box-shadow: var(--desert-ui-raised) !important;
+    color: var(--desert-ui-ink) !important;
+}
+
+body.desert-theme #highscores-screen .hs-card-header {
+    background: linear-gradient(145deg, rgba(255,250,236,.94), rgba(238,201,148,.86)) !important;
+    border-bottom: 1px solid rgba(151,84,35,.20) !important;
+}
+
+body.desert-theme #highscores-screen .hs-header-title {
+    color: var(--desert-ui-title) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.82) !important;
+}
+
+body.desert-theme #highscores-screen .hs-card-toolbar {
+    background: linear-gradient(145deg, rgba(243,211,163,.54), rgba(255,248,228,.72)) !important;
+    border-bottom-color: rgba(151,84,35,.18) !important;
+}
+
+body.desert-theme #highscores-screen .hs-header-icon-default,
+body.desert-theme #highscores-screen .hs-header-icon-easter,
+body.desert-theme #highscores-screen .hs-tab-soft-clay-icon,
+body.desert-theme #highscores-screen .hs-panel-soft-clay-icon {
+    display: none !important;
+}
+
+body.desert-theme #highscores-screen .hs-header-icon-desert {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(93,57,33,.20));
+}
+
+body.desert-theme #highscores-screen .hs-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px !important;
+    font-size: .66rem !important;
+    background: linear-gradient(145deg, rgba(255,249,233,.84), rgba(236,196,139,.72)) !important;
+    border: 1px solid rgba(255,250,234,.72) !important;
+    color: var(--desert-ui-ink-strong) !important;
+    box-shadow:
+        4px 4px 10px rgba(119,67,34,.14),
+        -4px -4px 10px rgba(255,251,237,.58),
+        inset 1px 1px 1px rgba(255,255,255,.76) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.72) !important;
+}
+
+body.desert-theme #highscores-screen .hs-tab-btn.active {
+    background: linear-gradient(145deg, #d57842, #a94e27) !important;
+    border-color: rgba(255,242,216,.68) !important;
+    color: #fff8e8 !important;
+    box-shadow:
+        0 7px 14px rgba(112,55,26,.24),
+        inset 1px 1px 1px rgba(255,255,255,.30) !important;
+    text-shadow: 0 1px 2px rgba(86,40,19,.32) !important;
+}
+
+body.desert-theme #highscores-screen .hs-tab-btn > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+body.desert-theme #highscores-screen .hs-tab-label-legacy,
+body.desert-theme #highscores-screen .hs-panel-title-legacy {
+    display: none;
+}
+
+body.desert-theme #highscores-screen .hs-tab-label-easter,
+body.desert-theme #highscores-screen .hs-panel-title-easter {
+    display: inline;
+}
+
+body.desert-theme #highscores-screen .hs-tab-soft-clay-icon-desert {
+    display: block;
+    width: 21px;
+    height: 21px;
+    flex: 0 0 21px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.16));
+}
+
+body.desert-theme #highscores-screen .hs-panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    color: var(--desert-ui-ink-strong) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.76) !important;
+}
+
+body.desert-theme #highscores-screen .hs-card-body,
+body.desert-theme #highscores-screen .hs-panel {
+    background: rgba(255,247,229,.36) !important;
+}
+
+body.desert-theme #highscores-screen .filter-btn {
+    background: linear-gradient(145deg, rgba(255,249,233,.86), rgba(234,194,136,.70)) !important;
+    border: 1px solid rgba(151,84,35,.18) !important;
+    color: var(--desert-ui-ink) !important;
+    box-shadow:
+        3px 3px 7px rgba(119,67,34,.12),
+        -3px -3px 7px rgba(255,251,237,.52) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.72) !important;
+}
+
+body.desert-theme #highscores-screen .filter-btn.active {
+    background: linear-gradient(145deg, #70401f, #4f2c18) !important;
+    border-color: rgba(244,191,112,.54) !important;
+    color: #fff0d0 !important;
+    box-shadow: 0 5px 11px rgba(82,42,20,.24), inset 0 1px 1px rgba(255,255,255,.14) !important;
+    text-shadow: 0 1px 2px rgba(40,20,10,.44) !important;
+}
+
+body.desert-theme #highscores-screen .filter-btn:hover:not(.active) {
+    background: linear-gradient(145deg, rgba(255,251,239,.92), rgba(226,178,112,.74)) !important;
+    border-color: rgba(151,84,35,.32) !important;
+    color: var(--desert-ui-ink-strong) !important;
+}
+
+body.desert-theme #highscores-screen .hs-panel-soft-clay-icon-desert {
+    display: block;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.16));
+}
+
+body.desert-theme #highscores-screen .hs-header-row {
+    background: var(--desert-ui-surface-inset) !important;
+    color: var(--desert-ui-title) !important;
+    border-bottom-color: rgba(151,84,35,.20) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.76) !important;
+}
+
+body.desert-theme #highscores-screen .highscore-item {
+    background: rgba(255,247,229,.54) !important;
+    border-bottom-color: rgba(151,84,35,.14) !important;
+}
+
+body.desert-theme #highscores-screen .highscore-item > img {
+    border-color: rgba(44,123,119,.44) !important;
+    box-shadow: 0 3px 8px rgba(93,57,33,.20) !important;
+}
+
+body.desert-theme #highscores-screen .highscore-item:nth-child(even) {
+    background: rgba(235,195,137,.38) !important;
+}
+
+body.desert-theme #highscores-screen .rank-circle {
+    background: linear-gradient(145deg, rgba(255,249,233,.90), rgba(224,181,120,.76)) !important;
+    border-color: rgba(255,250,234,.76) !important;
+    color: var(--desert-ui-ink-strong) !important;
+    box-shadow: 3px 3px 7px rgba(119,67,34,.15), -3px -3px 7px rgba(255,251,237,.56) !important;
+    overflow: visible;
+}
+
+body.desert-theme #highscores-screen .rank-1,
+body.desert-theme #highscores-screen .rank-2,
+body.desert-theme #highscores-screen .rank-3 {
+    background: transparent !important;
+    border-color: transparent !important;
+    color: transparent !important;
+    box-shadow: none !important;
+    transform: none;
+}
+
+body.desert-theme #highscores-screen .rank-1::before,
+body.desert-theme #highscores-screen .rank-1 .hs-rank-legacy,
+body.desert-theme #highscores-screen .rank-2 .hs-rank-legacy,
+body.desert-theme #highscores-screen .rank-3 .hs-rank-legacy {
+    display: none;
+}
+
+body.desert-theme #highscores-screen .hs-podium-medal {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    max-width: none;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 4px 5px rgba(93,57,33,.20));
+}
+
+body.desert-theme #highscores-screen .hs-podium-rank-number {
+    display: flex;
+    position: absolute;
+    right: -7px;
+    bottom: -6px;
+    z-index: 3;
+    width: 17px;
+    height: 17px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,248,230,.82);
+    border-radius: 50%;
+    background: #985026;
+    color: #fff8e8;
+    box-shadow: 0 3px 6px rgba(93,57,33,.24);
+    font-size: .64rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+body.desert-theme #highscores-screen .hs-list-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--desert-ui-ink-strong);
+    font-style: normal;
+}
+
+body.desert-theme #highscores-screen .hs-state-fallback,
+body.desert-theme #highscores-screen .hs-state-soft-clay-icon {
+    display: none;
+}
+
+body.desert-theme #highscores-screen .hs-state-soft-clay-icon-desert {
+    display: block;
+    width: 86px;
+    height: 86px;
+    object-fit: contain;
+    filter: drop-shadow(0 7px 10px rgba(93,57,33,.18));
+    animation: desertLeaderboardStateFloat 2.4s ease-in-out infinite;
+}
+
+body.desert-theme #highscores-screen .hs-list-state-loading .hs-state-soft-clay-icon-desert {
+    width: 68px;
+    height: 68px;
+}
+
+body.desert-theme #highscores-screen .hs-name {
+    color: var(--desert-ui-ink-strong) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.54) !important;
+}
+
+body.desert-theme #highscores-screen .hs-meta {
+    color: var(--desert-ui-muted) !important;
+}
+
+body.desert-theme #highscores-screen .hs-score-pill {
+    background: linear-gradient(145deg, #fff7df, #e7b774) !important;
+    border: 1px solid rgba(125,67,31,.34) !important;
+    color: #6b351c !important;
+    box-shadow: 4px 4px 10px rgba(119,67,34,.18), -4px -4px 10px rgba(255,251,237,.72), inset 1px 1px 2px rgba(255,255,255,.84) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.82) !important;
+}
+
+body.desert-theme .waiting-hof-entry {
+    background: rgba(255,247,229,.62) !important;
+    border-color: rgba(151,84,35,.20) !important;
+    box-shadow: 4px 4px 10px rgba(119,67,34,.16), -4px -4px 10px rgba(255,251,237,.60), inset 1px 1px 2px rgba(255,255,255,.68) !important;
+}
+
+body.desert-theme .waiting-podium-mark {
+    position: relative;
+    display: inline-flex !important;
+    flex: 0 0 25px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+body.desert-theme .waiting-podium-legacy,
+body.desert-theme .waiting-hof-state-soft-clay-icon {
+    display: none;
+}
+
+body.desert-theme .waiting-podium-medal {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 35px;
+    height: 35px;
+    max-width: none;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 3px 4px rgba(93,57,33,.18));
+}
+
+body.desert-theme .waiting-podium-rank-number {
+    display: flex;
+    position: absolute;
+    right: -7px;
+    bottom: -4px;
+    z-index: 2;
+    width: 14px;
+    height: 14px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255,248,230,.82);
+    border-radius: 50%;
+    background: #985026;
+    color: #fff8e8;
+    font-size: .52rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+body.desert-theme .waiting-hof-loading-state,
+body.desert-theme .waiting-hof-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--desert-ui-ink-strong) !important;
+}
+
+body.desert-theme .waiting-hof-state-soft-clay-icon-desert {
+    display: block;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 7px rgba(93,57,33,.16));
+    animation: desertLeaderboardStateFloat 2.4s ease-in-out infinite;
+}
+
+@keyframes desertLeaderboardStateFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.desert-theme #highscores-screen .hs-state-soft-clay-icon-desert,
+    body.desert-theme .waiting-hof-state-soft-clay-icon-desert {
+        animation: none !important;
+    }
 }
 
 body.easter-theme .msg-incoming,
@@ -4503,9 +4863,14 @@ body.desert-theme #waiting-screen.is-hosting-invite #friends-list-container {
     flex-shrink: 0 !important;
 }
 
+body.easter-theme #waiting-screen.is-hosting-invite .ws-friends-list {
+    transform: translateY(-1.5mm);
+}
+
 /* Pozovi prijatelja: Vaskrs kartica raste samo nadole, a statistika prati vertikalni duel raspored. */
 body.easter-theme #waiting-screen.is-hosting-invite .friend-card.friend-player-card {
-    padding-bottom: calc(18px + 1.5mm) !important;
+    justify-content: flex-start;
+    padding-bottom: 18px !important;
 }
 
 body.easter-theme #waiting-screen.is-hosting-invite .friend-card .friend-card-stats {
@@ -4526,6 +4891,21 @@ body.easter-theme #waiting-screen.is-hosting-invite .easter-friend-records {
     width: 100%;
     flex-direction: column;
     gap: 2px;
+}
+
+body.easter-theme #waiting-screen.is-hosting-invite .friend-player-card .friend-card-btn {
+    min-height: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    margin-top: 1.5mm !important;
+    padding: 2px 6px !important;
+    line-height: 1;
+}
+
+body.easter-theme #waiting-screen.is-hosting-invite .friend-player-card .easter-invite-send-icon {
+    width: 18px;
+    height: 18px;
+    flex-basis: 18px;
 }
 
 body.easter-theme #waiting-screen.is-hosting-invite .easter-friend-record-row {
@@ -4829,7 +5209,9 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
 /* Vaskrs — poseban 4,6 s uvod Dnevnog izazova.
    Ikona i natpis su odmah prisutni; samo slova prolaze kroz talas sleva nadesno. */
 .daily-intro-mark-easter,
-.daily-intro-easter-wave {
+.daily-intro-easter-wave,
+.daily-intro-mark-desert,
+.daily-intro-desert-wave {
     display: none;
 }
 
@@ -4945,6 +5327,121 @@ body.easter-theme #daily-intro.theme-easter .daily-intro-mark-wrap::after {
     }
 }
 
+/* Pustinjsko staklo — isti provereni 4,6 s raspored Dnevnog izazova kao Vaskrs,
+   sa zasebnim Desert Soft Clay znakom, paletom i talasom naslova. */
+#daily-intro.theme-desert {
+    --daily-intro-text: #5e3924;
+    --daily-intro-glow: rgba(176, 99, 56, .22);
+    gap: 0;
+    background:
+        linear-gradient(180deg, rgba(255,244,219,.08), rgba(72,139,139,.06)),
+        var(--desert-theme-bg-image) center / cover no-repeat !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+#daily-intro.theme-desert::before,
+#daily-intro.theme-desert::after {
+    animation: none !important;
+    opacity: .34;
+    filter: blur(10px);
+}
+
+body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    padding: 0;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    filter: none !important;
+    animation: none !important;
+}
+
+body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::before,
+body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
+    content: none !important;
+    display: none !important;
+}
+
+#daily-intro.theme-desert .daily-intro-mark,
+#daily-intro.theme-desert .daily-intro-mark-easter {
+    display: none !important;
+}
+
+#daily-intro.theme-desert .daily-intro-mark-desert {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: none !important;
+}
+
+#daily-intro.theme-desert .daily-intro-word {
+    display: none !important;
+}
+
+#daily-intro.theme-desert .daily-intro-title {
+    min-height: clamp(52px, 8vh, 72px);
+    width: min(94vw, 720px);
+    font-size: clamp(1.75rem, 7.6vw, 3rem);
+    line-height: 1;
+    letter-spacing: clamp(.7px, .35vw, 2px);
+    color: #5e3924 !important;
+    text-shadow:
+        0 2px 0 rgba(255,247,225,.78),
+        0 7px 17px rgba(93,57,36,.18) !important;
+    margin-top: 0;
+}
+
+#daily-intro.theme-desert .daily-intro-desert-wave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+#daily-intro.theme-desert .daily-intro-wave-letter,
+#daily-intro.theme-desert .daily-intro-wave-space {
+    display: inline-block;
+}
+
+#daily-intro.theme-desert .daily-intro-wave-letter {
+    animation: desertDailyTitleWave 1.05s cubic-bezier(.34, 1.56, .64, 1) both;
+    animation-delay: calc(350ms + (var(--wave-index) * 75ms));
+    transform-origin: 50% 75%;
+}
+
+#daily-intro.theme-desert .daily-intro-wave-space {
+    width: .34em;
+}
+
+@keyframes desertDailyTitleWave {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        color: #5e3924;
+        filter: none;
+    }
+    45% {
+        transform: translateY(-9px) scale(1.08);
+        color: #b45f35;
+        filter: drop-shadow(0 5px 6px rgba(151,81,45,.22));
+    }
+    72% {
+        transform: translateY(2px) scale(.985);
+        color: #397f80;
+        filter: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #daily-intro.theme-desert .daily-intro-wave-letter {
+        animation: none !important;
+    }
+}
+
 /* Vaskrs — zajednički 4,6 s uvod za Top listu, Statistiku, Podešavanja i Pravila. */
 .easter-room-intro {
     position: fixed;
@@ -4960,6 +5457,27 @@ body.easter-theme #daily-intro.theme-easter .daily-intro-mark-wrap::after {
         linear-gradient(180deg, rgba(255,248,239,.18), rgba(236,219,255,.10)),
         var(--easter-theme-bg-image) center / cover no-repeat;
     animation: easterRoomIntroFade 4.6s ease forwards;
+}
+
+.easter-room-intro.theme-desert {
+    background:
+        linear-gradient(180deg, rgba(255,244,219,.08), rgba(72,139,139,.06)),
+        var(--desert-theme-bg-image) center / cover no-repeat;
+}
+
+.easter-room-intro.theme-desert .easter-room-intro-mark-wrap {
+    filter: drop-shadow(0 14px 18px rgba(93,57,33,.18));
+}
+
+.easter-room-intro.theme-desert .easter-room-intro-title {
+    color: #5e3924;
+    text-shadow:
+        0 2px 0 rgba(255,247,225,.78),
+        0 7px 17px rgba(93,57,36,.18);
+}
+
+.easter-room-intro.theme-desert .easter-room-intro-wave-letter {
+    animation-name: desertDailyTitleWave;
 }
 
 .easter-room-intro-mark-wrap {
@@ -5773,6 +6291,12 @@ body.desert-theme .daily-glass-overlay .daily-glass-score-box { background: var(
 body.desert-theme .daily-glass-overlay .daily-glass-dice-grid { background: var(--desert-ui-surface-inset) !important; border-color: rgba(151,84,35,.20) !important; box-shadow: var(--desert-ui-inset) !important; }
 body.desert-theme .daily-glass-overlay .daily-glass-title,
 body.desert-theme .daily-glass-overlay .daily-glass-score-val { color: var(--desert-ui-title) !important; }
+body.desert-theme .daily-glass-overlay .daily-glass-subtitle,
+body.desert-theme .daily-glass-overlay .daily-glass-score-lbl { color: var(--desert-ui-muted) !important; text-shadow: 0 1px 0 rgba(255,255,255,.7); }
+body.desert-theme .daily-glass-overlay .daily-glass-die { color: #704126 !important; text-shadow: 0 1px 0 rgba(255,255,255,.72) !important; }
+body.desert-theme .daily-glass-overlay .daily-glass-die.rolling { color: #2d7474 !important; border-color: rgba(64,131,130,.42) !important; box-shadow: 0 12px 24px rgba(91,51,27,.18), 0 0 18px rgba(72,143,140,.2), inset 0 2px 0 rgba(255,255,255,.64) !important; }
+body.desert-theme .daily-glass-overlay .daily-glass-btn-stop { background: linear-gradient(145deg, #ca7548, #984725) !important; color: #fff8e8 !important; border-color: rgba(255,244,218,.64) !important; box-shadow: 0 10px 22px rgba(105,50,25,.24), inset 0 2px 0 rgba(255,255,255,.24) !important; }
+body.desert-theme .daily-glass-overlay .daily-glass-btn-double { background: linear-gradient(145deg, #f1c27c, #c4773f) !important; color: #4f2d1b !important; border-color: rgba(255,248,230,.68) !important; box-shadow: 0 10px 22px rgba(105,50,25,.2), inset 0 2px 0 rgba(255,255,255,.32) !important; }
 body.desert-theme .daily-glass-overlay .daily-glass-btn-claim { background: linear-gradient(145deg, #4eaaa0, #236c61) !important; color: #fff8e8 !important; border-color: rgba(255,255,255,.72) !important; }
 
 body.desert-theme #splash-screen,
@@ -6004,6 +6528,52 @@ body.desert-theme #main-menu .icon-menu-grid .desert-soft-clay-icon--daily {
 
 body.desert-theme #main-menu .icon-menu-grid .btn-square:active .desert-soft-clay-icon {
     transform: translate(-50%, -47%) scale(.94);
+}
+
+/* Pustinjsko staklo — profesionalni, svedeni Soft Clay 3D donji icon pack.
+   Raspored, 44x44 klik-zona i veličina asseta identični su Vaskrs paketu. */
+body.desert-theme #main-menu .icon-menu-grid .btn-square {
+    padding: 0 !important;
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme #main-menu .icon-menu-grid .btn-square::before,
+body.desert-theme #main-menu .icon-menu-grid .btn-square::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.desert-theme #main-menu .icon-menu-grid .desert-soft-clay-icon,
+body.desert-theme #main-menu .icon-menu-grid .desert-soft-clay-icon--daily {
+    width: 44px !important;
+    height: 44px !important;
+}
+
+/* Isti sekvencijalni talas kao u Vaskrs donjem redu; dugmad ostaju nepomična. */
+body.desert-theme #main-menu .icon-menu-grid .btn-square .desert-soft-clay-icon {
+    animation: easterBottomIconWave 8.4s cubic-bezier(.34, 1.56, .64, 1) infinite;
+    will-change: transform;
+}
+
+body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(1) .desert-soft-clay-icon { animation-delay: 1.2s; }
+body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(2) .desert-soft-clay-icon { animation-delay: 1.38s; }
+body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(3) .desert-soft-clay-icon { animation-delay: 1.56s; }
+body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(4) .desert-soft-clay-icon { animation-delay: 1.74s; }
+body.desert-theme #main-menu .icon-menu-grid .btn-square:nth-child(5) .desert-soft-clay-icon { animation-delay: 1.92s; }
+
+body.desert-theme #main-menu .icon-menu-grid .btn-square:active .desert-soft-clay-icon {
+    animation: none !important;
+    transform: translate(-50%, -47%) scale(.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.desert-theme #main-menu .icon-menu-grid .btn-square .desert-soft-clay-icon {
+        animation: none !important;
+    }
 }
 
 /* Vaskrs — prave Soft Clay Relief ikonice za Riznicu i Turnir.
@@ -6340,11 +6910,13 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-economy-ca
 
 /* Vaskrs — Global Chat prati pravilo čistih Soft Clay Relief ikonica.
    Ikona je bez kartice i podmetača i prati levu ivicu Online igrači kartice. */
-#main-menu .easter-global-chat-icon {
+#main-menu .easter-global-chat-icon,
+#main-menu .desert-global-chat-icon {
     display: none;
 }
 
-body.easter-theme #main-menu > .main-global-chat-btn {
+body.easter-theme #main-menu > .main-global-chat-btn,
+body.desert-theme #main-menu > .main-global-chat-btn {
     width: 44px !important;
     height: 44px !important;
     left: max(20px, calc((100% - 380px) / 2 + 10px)) !important;
@@ -6366,16 +6938,20 @@ body.easter-theme #main-menu > .main-global-chat-btn {
 }
 
 body.easter-theme #main-menu > .main-global-chat-btn::before,
-body.easter-theme #main-menu > .main-global-chat-btn::after {
+body.easter-theme #main-menu > .main-global-chat-btn::after,
+body.desert-theme #main-menu > .main-global-chat-btn::before,
+body.desert-theme #main-menu > .main-global-chat-btn::after {
     content: none !important;
     display: none !important;
 }
 
-body.easter-theme #main-menu > .main-global-chat-btn .main-global-chat-fallback {
+body.easter-theme #main-menu > .main-global-chat-btn .main-global-chat-fallback,
+body.desert-theme #main-menu > .main-global-chat-btn .main-global-chat-fallback {
     display: none !important;
 }
 
-body.easter-theme #main-menu > .main-global-chat-btn .easter-global-chat-icon {
+body.easter-theme #main-menu > .main-global-chat-btn .easter-global-chat-icon,
+body.desert-theme #main-menu > .main-global-chat-btn .desert-global-chat-icon {
     display: block !important;
     width: 44px !important;
     height: 44px !important;
@@ -6389,8 +6965,11 @@ body.easter-theme #main-menu > .main-global-chat-btn .easter-global-chat-icon {
 /* Vaskrs — unutrašnji Global Chat Soft Clay mini-pack. Funkcionalne dimenzije,
    X, prijava poruke, online indikator, brojač i avatari ostaju nepromenjeni. */
 .global-chat-header-soft-clay-icon,
+.global-chat-header-soft-clay-icon-desert,
 .global-chat-send-soft-clay-icon,
-.global-chat-state-soft-clay-icon {
+.global-chat-send-soft-clay-icon-desert,
+.global-chat-state-soft-clay-icon,
+.global-chat-state-soft-clay-icon-desert {
     display: none;
 }
 
@@ -6467,11 +7046,110 @@ body.easter-theme #global-chat-overlay .global-chat-state.is-loading .global-cha
     }
 }
 
+/* Pustinjsko staklo — Global Chat koristi iste proverene slotove i funkcionalni
+   raspored kao Vaskrs, sa zasebnim mat Desert Soft Clay assets-ima. */
+body.desert-theme #global-chat-overlay .global-chat-room-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.desert-theme #global-chat-overlay .global-chat-header-soft-clay-icon-desert {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(93,57,33,.18));
+}
+
+body.desert-theme #global-chat-overlay .global-chat-send {
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+body.desert-theme #global-chat-overlay .global-chat-send-fallback {
+    display: none;
+}
+
+body.desert-theme #global-chat-overlay .global-chat-send-soft-clay-icon-desert {
+    display: block;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    pointer-events: none;
+    transform: translate(-1px, 1px);
+    filter: drop-shadow(0 4px 7px rgba(93,57,33,.17));
+}
+
+body.desert-theme #global-chat-overlay .global-chat-state {
+    width: min(300px, 84%);
+    min-height: 146px;
+    margin: auto;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    color: var(--desert-ui-muted);
+}
+
+body.desert-theme #global-chat-overlay .global-chat-state-soft-clay-icon-desert {
+    display: block;
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    opacity: .78;
+    filter: drop-shadow(0 7px 11px rgba(93,57,33,.16));
+}
+
+body.desert-theme #global-chat-overlay .global-chat-state.is-loading .global-chat-state-soft-clay-icon-desert {
+    animation: easterGlobalChatStatePulse 1.55s ease-in-out infinite;
+}
+
+/* Pustinjsko staklo — kontrast razgovora na svetloj Desert površini. */
+body.desert-theme #global-chat-overlay .msg-incoming {
+    background: rgba(255, 249, 233, .78) !important;
+    color: var(--desert-ui-ink-strong) !important;
+    border: 1px solid rgba(151, 84, 35, .16);
+}
+
+body.desert-theme #global-chat-overlay .msg-outgoing {
+    background: linear-gradient(145deg, #2f8581, #1d6664) !important;
+    color: #fffaf0 !important;
+    border: 1px solid rgba(255, 248, 229, .42);
+    box-shadow: 0 7px 16px rgba(74, 43, 25, .15), inset 0 1px 0 rgba(255, 255, 255, .24);
+}
+
+body.desert-theme #global-chat-overlay .global-chat-meta,
+body.desert-theme #global-chat-overlay .global-chat-char-count {
+    color: var(--desert-ui-muted) !important;
+    opacity: 1;
+}
+
+body.desert-theme #global-chat-overlay .global-chat-status {
+    color: var(--desert-ui-danger) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.desert-theme #global-chat-overlay .global-chat-state.is-loading .global-chat-state-soft-clay-icon-desert {
+        animation: none !important;
+    }
+}
+
 /* Vaskrs — unutrašnji Online igrači Soft Clay mini-pack. Klik-zona akcija
    ostaje 38×38; statusne boje, avatari, imena, podaci i X se ne menjaju. */
 .online-players-header-soft-clay-icon,
+.online-players-header-soft-clay-icon-desert,
 .online-player-action-soft-clay-icon,
-.online-players-state-soft-clay-icon {
+.online-player-action-soft-clay-icon-desert,
+.online-players-state-soft-clay-icon,
+.online-players-state-soft-clay-icon-desert,
+#main-menu .main-online-soft-clay-icon-desert {
     display: none;
 }
 
@@ -6579,9 +7257,215 @@ body.easter-theme #online-players-overlay .online-players-state.is-loading .onli
     }
 }
 
+/* Pustinjsko staklo — Online igrači prati Vaskrs mere i ponašanje, uz
+   zaseban, mirniji Desert Soft Clay pack. Statusne boje avatara ostaju žive. */
+body.desert-theme #main-menu .main-online-soft-clay-icon {
+    display: none !important;
+}
+
+body.desert-theme #main-menu .main-online-soft-clay-icon-desert {
+    display: block !important;
+    width: 38px;
+    height: 38px;
+    max-width: none;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.17));
+}
+
+body.desert-theme #online-players-overlay .online-players-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--desert-ui-title) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.82) !important;
+}
+
+body.desert-theme #online-players-overlay .online-players-header-soft-clay-icon,
+body.desert-theme #online-players-overlay .online-players-title-fallback,
+body.desert-theme #online-players-overlay .online-player-action-soft-clay-icon,
+body.desert-theme #online-players-overlay .online-players-state-soft-clay-icon {
+    display: none !important;
+}
+
+body.desert-theme #online-players-overlay .online-players-header-soft-clay-icon-desert {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(93,57,33,.18));
+}
+
+body.desert-theme #online-players-overlay .online-players-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 14px 2px;
+    min-height: 42px;
+    padding: 0 14px;
+    border: 1px solid rgba(151,84,35,.24);
+    border-radius: 999px;
+    background: rgba(255,248,228,.70);
+    box-shadow:
+        inset 3px 3px 7px rgba(154,93,46,.15),
+        inset -3px -3px 7px rgba(255,255,255,.72),
+        0 4px 10px rgba(93,57,33,.09);
+}
+
+body.desert-theme #online-players-overlay .online-players-search-icon {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+}
+
+body.desert-theme #online-players-overlay .online-players-search-icon::before {
+    content: "";
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    width: 10px;
+    height: 10px;
+    border: 2px solid var(--desert-ui-title);
+    border-radius: 50%;
+}
+
+body.desert-theme #online-players-overlay .online-players-search-icon::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    width: 7px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--desert-ui-title);
+    transform: rotate(45deg);
+    transform-origin: left center;
+}
+
+body.desert-theme #online-players-overlay .online-players-search {
+    height: 40px;
+    padding: 0 !important;
+    border: 0 !important;
+    outline: 0;
+    background: transparent !important;
+    color: var(--desert-ui-ink-strong) !important;
+    caret-color: var(--desert-ui-turquoise);
+    box-shadow: none !important;
+}
+
+body.desert-theme #online-players-overlay .online-players-search::placeholder {
+    color: var(--desert-ui-muted) !important;
+    opacity: .82;
+}
+
+body.desert-theme #online-players-body > .online-player-card {
+    background: linear-gradient(145deg, rgba(255,249,233,.86), rgba(235,195,137,.70)) !important;
+    border: 1px solid rgba(151,84,35,.18) !important;
+    border-radius: 18px !important;
+    color: var(--desert-ui-ink) !important;
+    box-shadow:
+        4px 4px 10px rgba(119,67,34,.13),
+        -4px -4px 10px rgba(255,251,237,.56),
+        inset 1px 1px 1px rgba(255,255,255,.72) !important;
+}
+
+body.desert-theme #online-players-overlay .online-player-name {
+    color: var(--desert-ui-ink-strong) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.72);
+}
+
+body.desert-theme #online-players-overlay .online-player-name > span {
+    color: var(--desert-ui-muted) !important;
+}
+
+body.desert-theme #online-players-overlay .online-player-action {
+    position: relative;
+    padding: 0 !important;
+    overflow: visible;
+    opacity: 1 !important;
+    background: rgba(255,248,229,.62) !important;
+    border: 1px solid rgba(151,84,35,.20) !important;
+    border-radius: 12px !important;
+    box-shadow:
+        4px 4px 9px rgba(119,67,34,.14),
+        -3px -3px 8px rgba(255,255,255,.66) !important;
+}
+
+body.desert-theme #online-players-overlay .online-player-action-fallback {
+    display: none !important;
+}
+
+body.desert-theme #online-players-overlay .online-player-action-soft-clay-icon-desert {
+    display: block;
+    width: 40px;
+    height: 40px;
+    max-width: none;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.14));
+}
+
+body.desert-theme #online-players-overlay .online-player-action:disabled,
+body.desert-theme #online-players-overlay .online-player-action.is-disabled {
+    opacity: .42 !important;
+    cursor: not-allowed !important;
+    box-shadow:
+        inset 2px 2px 5px rgba(119,67,34,.12),
+        inset -2px -2px 5px rgba(255,255,255,.52) !important;
+}
+
+body.desert-theme #online-players-overlay .online-player-action:disabled .online-player-action-soft-clay-icon-desert,
+body.desert-theme #online-players-overlay .online-player-action.is-disabled .online-player-action-soft-clay-icon-desert {
+    filter: grayscale(.76) saturate(.38) drop-shadow(0 2px 3px rgba(93,57,33,.10));
+}
+
+body.desert-theme #online-players-overlay .online-players-state {
+    width: min(300px, 84%);
+    min-height: 152px;
+    margin: auto;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    color: var(--desert-ui-muted) !important;
+    font-size: .9rem;
+}
+
+body.desert-theme #online-players-overlay .online-players-state-soft-clay-icon-desert {
+    display: block;
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    opacity: .84;
+    filter: drop-shadow(0 7px 11px rgba(93,57,33,.15));
+}
+
+body.desert-theme #online-players-overlay .online-players-state.is-loading .online-players-state-soft-clay-icon-desert {
+    animation: easterOnlinePlayersStatePulse 1.55s ease-in-out infinite;
+}
+
+body.desert-theme #online-players-overlay .online-players-load-more {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    color: var(--desert-ui-title) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.desert-theme #online-players-overlay .online-players-state.is-loading .online-players-state-soft-clay-icon-desert {
+        animation: none !important;
+    }
+}
+
 /* Vaskrs — kompletan unutrašnji Kvartalna liga Soft Clay icon/medal pack.
    Progress, PTS, nazivi, avatari, swipe/pagination i nagrade ostaju funkcionalno isti. */
 .league-modal-header-icon-easter,
+.league-modal-header-icon-desert,
 .league-tab-soft-clay-icon,
 .league-hof-tab-soft-clay-icon,
 .league-rank-soft-clay-badge,
@@ -6589,7 +7473,8 @@ body.easter-theme #online-players-overlay .online-players-state.is-loading .onli
 .ql-placement-medal,
 .ql-champion-soft-clay-icon,
 .ql-quarter-champion-medal,
-.quarter-winner-logo-easter {
+.quarter-winner-logo-easter,
+.quarter-winner-logo-desert {
     display: none;
 }
 
@@ -6773,6 +7658,400 @@ body.easter-theme .quarter-winner-logo-easter {
     height: 96px;
     object-fit: contain;
     filter: drop-shadow(0 7px 11px rgba(107,44,143,.18));
+}
+
+/* Pustinjsko staklo — kompletna Kvartalna liga koristi iste mere, swipe,
+   progres i liste kao Vaskrs, ali zaseban mirniji Desert QL paket. */
+.league-intro-mark-desert {
+    display: none;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card {
+    background:
+        radial-gradient(circle at 18% 16%, rgba(255,255,255,.76), transparent 36%),
+        linear-gradient(145deg, rgba(255,249,233,.92), rgba(231,187,128,.82)) !important;
+    border: 1px solid rgba(255,249,232,.76) !important;
+    border-top-color: rgba(255,255,255,.90) !important;
+    border-left-color: rgba(255,255,255,.84) !important;
+    box-shadow:
+        6px 7px 14px rgba(119,67,34,.19),
+        -5px -5px 12px rgba(255,251,237,.66),
+        inset 2px 2px 3px rgba(255,255,255,.78),
+        inset -2px -2px 5px rgba(119,67,34,.10) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-watermark-zone {
+    position: absolute;
+    top: 50%;
+    right: -4px;
+    z-index: 0;
+    width: 82px;
+    height: 82px;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 0;
+    background: url("assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=1") center / contain no-repeat;
+    opacity: .20;
+    filter: sepia(.18) saturate(.72) brightness(.82) contrast(1.04);
+    pointer-events: none;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-watermark-zone::before {
+    content: none;
+    display: none;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-content {
+    padding-right: 32px;
+    box-sizing: border-box;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-title {
+    color: var(--desert-ui-muted) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.82) !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card #league-rank-name {
+    width: 100% !important;
+    max-width: none !important;
+    box-sizing: border-box;
+    overflow: visible !important;
+    white-space: nowrap !important;
+    text-overflow: clip !important;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif !important;
+    font-size: .92rem !important;
+    font-weight: 800 !important;
+    line-height: 1.12 !important;
+    letter-spacing: .55px !important;
+    color: var(--desert-ui-title) !important;
+    text-shadow:
+        0 1px 0 rgba(255,255,255,.88),
+        1px 2px 3px rgba(93,57,33,.16) !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-progress {
+    height: 7px !important;
+    background: #dcc49e !important;
+    border: 1px solid rgba(119,67,34,.16) !important;
+    box-shadow:
+        inset 2px 2px 4px rgba(119,67,34,.18),
+        inset -2px -2px 4px rgba(255,255,255,.72) !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card .main-league-progress #league-progress-bar {
+    border-radius: inherit;
+    background: linear-gradient(90deg, #c96f3f 0%, #dd9b56 52%, #4f9793 100%) !important;
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.48),
+        0 0 5px rgba(119,67,34,.24) !important;
+}
+
+body.desert-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-card #league-pts-text {
+    color: var(--desert-ui-ink) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.76) !important;
+}
+
+#league-intro.theme-desert {
+    z-index: 1000002;
+    gap: 0;
+    background:
+        linear-gradient(180deg, rgba(255,244,217,.14), rgba(190,112,57,.08)),
+        var(--desert-theme-bg-image) center / cover no-repeat;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    animation: easterRoomIntroFade 4.6s ease forwards;
+}
+
+#league-intro.theme-desert::before,
+#league-intro.theme-desert::after {
+    content: none;
+    display: none;
+}
+
+#league-intro.theme-desert .league-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    border-radius: 0;
+    background: transparent;
+    filter: drop-shadow(0 14px 18px rgba(93,57,33,.18));
+    animation: none;
+}
+
+#league-intro.theme-desert .league-intro-mark,
+#league-intro.theme-desert .league-intro-mark-easter {
+    display: none;
+}
+
+#league-intro.theme-desert .league-intro-mark-desert {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#league-intro.theme-desert .league-intro-title {
+    gap: 0;
+    width: min(94vw, 720px);
+    min-height: clamp(52px, 8vh, 72px);
+    margin-top: 0;
+    color: var(--desert-ui-title);
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1.45rem, 6.2vw, 2.55rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: clamp(.4px, .25vw, 1.5px);
+    white-space: nowrap;
+    text-shadow:
+        0 2px 0 rgba(255,255,255,.82),
+        0 7px 17px rgba(93,57,33,.18);
+}
+
+body.desert-theme #league-modal-overlay .modal-box {
+    background: linear-gradient(145deg, rgba(255,249,233,.97), rgba(231,187,128,.88)) !important;
+    border: 1px solid rgba(151,84,35,.24) !important;
+    box-shadow: var(--desert-ui-raised) !important;
+    color: var(--desert-ui-ink) !important;
+}
+
+body.desert-theme #league-modal-overlay .modal-box > div:first-child {
+    background: rgba(255,246,222,.70) !important;
+    border-bottom-color: rgba(151,84,35,.18) !important;
+}
+
+body.desert-theme #league-modal-overlay .league-modal-title-group h2 {
+    color: var(--desert-ui-title) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.82) !important;
+}
+
+body.desert-theme #league-modal-overlay .league-modal-header-icon-default,
+body.desert-theme #league-modal-overlay .league-modal-header-icon-easter {
+    display: none !important;
+}
+
+body.desert-theme #league-modal-overlay .league-modal-header-icon-desert {
+    display: block;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(93,57,33,.18));
+}
+
+body.desert-theme #league-modal-overlay .league-tab-icon {
+    display: none;
+}
+
+body.desert-theme #league-modal-overlay .league-tab-soft-clay-icon,
+body.desert-theme #league-modal-overlay .league-hof-tab-soft-clay-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.14));
+}
+
+body.desert-theme #league-modal-overlay .league-tab-button,
+body.desert-theme #league-modal-overlay .league-tab-button:hover,
+body.desert-theme #league-modal-overlay .league-tab-button:active {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+body.desert-theme #league-modal-overlay .league-tab-button.btn-primary {
+    background: #d99a72 !important;
+    color: #4b2715 !important;
+    border: 1px solid #bd7147 !important;
+}
+
+body.desert-theme #league-modal-overlay .league-tab-button.btn-secondary {
+    background: #d8ece8 !important;
+    color: #235c59 !important;
+    border: 1px solid #91c6c1 !important;
+}
+
+body.desert-theme #league-modal-overlay .league-hof-tab-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+body.desert-theme #league-modal-overlay .league-hof-tab-button,
+body.desert-theme #league-modal-overlay .league-hof-tab-button:hover,
+body.desert-theme #league-modal-overlay .league-hof-tab-button:active {
+    background: #d8ece8 !important;
+    color: #235c59 !important;
+    border: 1px solid #91c6c1 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+body.desert-theme #league-modal-overlay .league-hof-tab-button.is-active,
+body.desert-theme #league-modal-overlay .league-hof-tab-button.is-active:hover,
+body.desert-theme #league-modal-overlay .league-hof-tab-button.is-active:active {
+    background: #d99a72 !important;
+    color: #4b2715 !important;
+    border: 1px solid #bd7147 !important;
+}
+
+body.desert-theme #league-modal-overlay .league-hof-tab-fallback {
+    display: none;
+}
+
+body.desert-theme #league-modal-overlay .league-rank-heading {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--desert-ui-title) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.78);
+}
+
+body.desert-theme #league-modal-overlay .league-rank-soft-clay-badge {
+    display: block;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(93,57,33,.16));
+}
+
+body.desert-theme #league-modal-overlay .league-current-rank {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--desert-ui-title) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.82) !important;
+}
+
+body.desert-theme #league-modal-overlay .league-current-rank-soft-clay-badge {
+    display: block;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.15));
+}
+
+body.desert-theme #league-modal-overlay .league-rank-scroll,
+body.desert-theme #league-modal-overlay #hof-main-content > div:last-child {
+    background: rgba(255,247,229,.58) !important;
+    border-color: rgba(151,84,35,.16) !important;
+    box-shadow:
+        inset 3px 3px 7px rgba(154,93,46,.12),
+        inset -3px -3px 7px rgba(255,255,255,.55) !important;
+}
+
+body.desert-theme #league-modal-overlay [id^="league-list-"] > li,
+body.desert-theme #league-modal-overlay #hof-list > li {
+    background: rgba(255,249,234,.72) !important;
+    border-color: rgba(151,84,35,.18) !important;
+    color: var(--desert-ui-ink) !important;
+}
+
+body.desert-theme #league-modal-overlay [style*="color: #fff"],
+body.desert-theme #league-modal-overlay [style*="color:#fff"] {
+    color: var(--desert-ui-ink-strong) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.72) !important;
+}
+
+body.desert-theme #league-modal-overlay [style*="color: #aaa"] {
+    color: var(--desert-ui-muted) !important;
+}
+
+body.desert-theme #league-modal-overlay .ql-placement-medal {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 3px rgba(93,57,33,.15));
+}
+
+body.desert-theme #league-modal-overlay .ql-placement-medal--rank {
+    width: 28px;
+    height: 28px;
+}
+
+body.desert-theme #league-modal-overlay .ql-list-placement--medal {
+    min-width: 30px !important;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.desert-theme #league-modal-overlay .ql-medal-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+body.desert-theme #league-modal-overlay .ql-medal-count--gold { color: #87501d !important; text-shadow: none !important; }
+body.desert-theme #league-modal-overlay .ql-medal-count--silver { color: #62605b !important; }
+body.desert-theme #league-modal-overlay .ql-medal-count--bronze { color: #9a4d2f !important; }
+
+body.desert-theme #league-modal-overlay .ql-medal-fallback,
+body.desert-theme .ql-champion-fallback,
+body.desert-theme .ql-placement-medal--reward + .ql-medal-fallback {
+    display: none;
+}
+
+body.desert-theme #league-modal-overlay .ql-champion-marker {
+    width: 26px;
+    height: 26px;
+}
+
+body.desert-theme #league-modal-overlay .ql-champion-soft-clay-icon {
+    display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.16));
+}
+
+body.desert-theme .ql-placement-medal--reward {
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    vertical-align: middle;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.16));
+}
+
+body.desert-theme .ql-quarter-reward-medal .ql-medal-fallback {
+    display: none;
+}
+
+body.desert-theme .ql-quarter-champion-medal {
+    display: block;
+    width: 54px;
+    height: 54px;
+    margin: -13px auto 7px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(93,57,33,.17));
+}
+
+body.desert-theme .quarter-winner-logo-default,
+body.desert-theme .quarter-winner-logo-easter {
+    display: none;
+}
+
+body.desert-theme .quarter-winner-logo-desert {
+    display: block;
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    filter: drop-shadow(0 7px 11px rgba(93,57,33,.18));
 }
 
 /* Vaskrs — unutrašnji Dukati i vraćanje upisa Soft Clay mini-pack.
@@ -7422,12 +8701,14 @@ body.easter-theme .modal-context-tourney-finalist .tourney-prize-result-icon {
 }
 /* Vaskrs Statistics inner Soft Clay pack. Hidden globally so other themes keep their original UI. */
 .stats-header-icon-easter,
+.stats-header-icon-desert,
 .stats-category-soft-clay-icon,
 .stats-result-soft-clay-icon,
 .stats-grid-soft-clay-icon,
 .stats-h2h-title-soft-clay-icon,
 .h2h-empty-soft-clay-icon,
 .fire-streak-title-soft-clay-icon,
+.fire-streak-title-soft-clay-icon-desert,
 .fire-streak-title-easter,
 .power-index-podium-medal,
 .fire-streak-podium-medal {
@@ -7465,7 +8746,7 @@ body.easter-theme .stats-result-label {
     white-space: nowrap;
 }
 
-body.easter-theme .stats-category-soft-clay-icon {
+body.easter-theme .stats-category-soft-clay-icon-easter {
     display: block;
     width: 19px;
     height: 19px;
@@ -7473,7 +8754,7 @@ body.easter-theme .stats-category-soft-clay-icon {
     flex: 0 0 19px;
 }
 
-body.easter-theme .stats-result-soft-clay-icon {
+body.easter-theme .stats-result-soft-clay-icon-easter {
     display: block;
     width: 14px;
     height: 14px;
@@ -7481,7 +8762,7 @@ body.easter-theme .stats-result-soft-clay-icon {
     flex: 0 0 14px;
 }
 
-body.easter-theme .stats-grid-soft-clay-icon {
+body.easter-theme .stats-grid-soft-clay-icon-easter {
     display: block;
     width: 24px;
     height: 24px;
@@ -7499,7 +8780,7 @@ body.easter-theme #streak-overlay .fire-streak-title-legacy {
     display: none;
 }
 
-body.easter-theme #streak-overlay .fire-streak-title-soft-clay-icon {
+body.easter-theme #streak-overlay .fire-streak-title-soft-clay-icon-easter {
     display: block;
     width: 32px;
     height: 32px;
@@ -7537,7 +8818,7 @@ body.easter-theme .stats-h2h-title-legacy {
     display: none;
 }
 
-body.easter-theme .stats-h2h-title-soft-clay-icon {
+body.easter-theme .stats-h2h-title-soft-clay-icon-easter {
     display: block;
     width: 29px;
     height: 29px;
@@ -7594,11 +8875,280 @@ body.easter-theme .fire-streak-podium-medal {
     flex: 0 0 42px;
 }
 
+/* Pustinjsko staklo Statistics pack: iste mere i funkcionalna pravila kao Vaskrs, uz mirniju pustinjsku paletu. */
+body.desert-theme .stats-header-icon-default {
+    display: none;
+}
+
+body.desert-theme .stats-header-icon-desert {
+    display: block;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    flex: 0 0 34px;
+}
+
+body.desert-theme .stats-category-label,
+body.desert-theme .stats-result-label,
+body.desert-theme .stats-rival-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+body.desert-theme .stats-category-label {
+    gap: 3px;
+    line-height: 1;
+}
+
+body.desert-theme .stats-result-label {
+    gap: 2px;
+    white-space: nowrap;
+}
+
+body.desert-theme .stats-category-soft-clay-icon-desert {
+    display: block;
+    width: 19px;
+    height: 19px;
+    object-fit: contain;
+    flex: 0 0 19px;
+}
+
+body.desert-theme .stats-result-soft-clay-icon-desert {
+    display: block;
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    flex: 0 0 14px;
+}
+
+body.desert-theme .stats-grid-soft-clay-icon-desert {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex: 0 0 24px;
+}
+
+body.desert-theme .stats-category-legacy {
+    display: none !important;
+}
+
+body.desert-theme .stats-rival-label {
+    gap: 2px;
+}
+
+body.desert-theme .stats-rival-soft-clay-icon {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+}
+
+body.desert-theme .stats-h2h-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--desert-ui-title) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.72) !important;
+}
+
+body.desert-theme .stats-h2h-title-legacy {
+    display: none;
+}
+
+body.desert-theme .stats-h2h-title-soft-clay-icon-desert {
+    display: block;
+    width: 29px;
+    height: 29px;
+    object-fit: contain;
+    flex: 0 0 29px;
+}
+
+body.desert-theme .h2h-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    color: var(--desert-ui-muted) !important;
+}
+
+body.desert-theme .h2h-empty-soft-clay-icon {
+    display: block;
+    width: 92px;
+    height: 92px;
+    object-fit: contain;
+}
+
+body.desert-theme #streak-overlay .streak-modal-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+body.desert-theme #streak-overlay .fire-streak-title-legacy {
+    display: none;
+}
+
+body.desert-theme #streak-overlay .fire-streak-title-soft-clay-icon-desert {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 6px rgba(121,64,29,.18));
+}
+
+body.desert-theme #streak-overlay .fire-streak-title-easter {
+    display: inline;
+    color: var(--desert-ui-title) !important;
+}
+
+body.desert-theme .power-index-rank-mark,
+body.desert-theme .fire-streak-rank-mark {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    line-height: 1;
+}
+
+body.desert-theme .power-index-rank-mark.has-podium .power-index-rank-legacy,
+body.desert-theme .fire-streak-rank-mark.has-podium .fire-streak-rank-legacy {
+    display: none;
+}
+
+body.desert-theme .power-index-podium-medal {
+    display: block;
+    width: 38px;
+    height: 38px;
+    max-width: none;
+    object-fit: contain;
+    flex: 0 0 38px;
+}
+
+body.desert-theme .fire-streak-podium-medal {
+    display: block;
+    width: 42px;
+    height: 42px;
+    max-width: none;
+    object-fit: contain;
+    flex: 0 0 42px;
+}
+
+body.desert-theme .stats-overview-panel > div:first-child {
+    background: linear-gradient(135deg, #d47a42 0%, #2f7f7a 100%) !important;
+    box-shadow: 0 5px 14px rgba(121,64,29,.24) !important;
+}
+
+body.desert-theme .stats-overview-panel > div:nth-child(3) {
+    background: rgba(255,247,229,.58) !important;
+    border-color: rgba(151,84,35,.18) !important;
+    box-shadow: inset 2px 2px 5px rgba(154,93,46,.12), inset -2px -2px 5px rgba(255,255,255,.65) !important;
+}
+
+body.desert-theme .stats-h2h-desc,
+body.desert-theme #stats-screen .stat-lbl-mini {
+    color: var(--desert-ui-muted) !important;
+}
+
+body.desert-theme #pi-modal-overlay .pi-modal-shell,
+body.desert-theme #pi-modal-overlay .pi-list-container {
+    background: linear-gradient(145deg, rgba(255,249,233,.96), rgba(235,194,133,.86)) !important;
+    color: var(--desert-ui-ink) !important;
+    border-color: rgba(151,84,35,.20) !important;
+}
+
+body.desert-theme #pi-modal-overlay .pi-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--desert-ui-title) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.72) !important;
+}
+
+/* Power Index: ime prvoplasiranog mora ostati čitljivo u svakoj temi. */
+#pi-modal-overlay .power-index-player-row.is-first .power-index-player-name {
+    color: var(--text-main, #f7f2e8) !important;
+    text-shadow: none !important;
+}
+
+body.easter-theme #pi-modal-overlay .power-index-player-row.is-first .power-index-player-name {
+    color: var(--easter-ui-ink-strong, #36213f) !important;
+}
+
+body.desert-theme #pi-modal-overlay .power-index-player-row.is-first .power-index-player-name {
+    color: var(--desert-ui-ink-strong, #39200f) !important;
+}
+
+/* Pustinjsko staklo: poslednji legacy emoji simboli u Statistici. */
+.power-index-soft-clay-bolt,
+.fire-streak-value-soft-clay-icon {
+    display: none;
+}
+
+body.desert-theme .power-index-title-legacy,
+body.desert-theme .power-index-value-legacy,
+body.desert-theme .power-index-watermark-legacy,
+body.desert-theme .fire-streak-value-legacy {
+    display: none !important;
+}
+
+body.desert-theme .power-index-soft-clay-bolt,
+body.desert-theme .fire-streak-value-soft-clay-icon {
+    display: block;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+body.desert-theme .power-index-title-bolt {
+    width: 27px;
+    height: 27px;
+    filter: drop-shadow(0 3px 5px rgba(121, 64, 29, 0.22));
+}
+
+body.desert-theme .power-index-watermark-bolt {
+    position: absolute;
+    top: -7px;
+    right: 20%;
+    width: 55px;
+    height: 55px;
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+body.desert-theme .power-index-value-bolt {
+    width: 16px;
+    height: 16px;
+    filter: drop-shadow(0 2px 3px rgba(121, 64, 29, 0.24));
+}
+
+.fire-streak-value {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+body.desert-theme .fire-streak-value-soft-clay-icon {
+    width: 23px;
+    height: 23px;
+    filter: drop-shadow(0 2px 4px rgba(121, 64, 29, 0.22));
+}
+
 /* Vaskrs Settings inner Soft Clay pack. Other themes retain the original controls and icons. */
 .settings-header-icon-easter,
+.settings-header-icon-desert,
 .settings-section-soft-clay-icon,
+.settings-section-soft-clay-icon-desert,
 .settings-row-soft-clay-icon,
-.settings-legal-soft-clay-icon {
+.settings-row-soft-clay-icon-desert,
+.settings-legal-soft-clay-icon,
+.settings-legal-soft-clay-icon-desert {
     display: none;
 }
 
@@ -7627,7 +9177,7 @@ body.easter-theme .settings-section-title-with-icons {
     min-height: 20px;
 }
 
-body.easter-theme .settings-section-soft-clay-icon {
+body.easter-theme .settings-section-soft-clay-icon-easter {
     display: block;
     width: 20px;
     height: 20px;
@@ -7649,7 +9199,7 @@ body.easter-theme .settings-legal-icon-legacy {
     display: none;
 }
 
-body.easter-theme .settings-row-soft-clay-icon {
+body.easter-theme .settings-row-soft-clay-icon-easter {
     display: block;
     width: 25px;
     height: 25px;
@@ -7661,12 +9211,84 @@ body.easter-theme .settings-legal-link {
     gap: 4px;
 }
 
-body.easter-theme .settings-legal-soft-clay-icon {
+body.easter-theme .settings-legal-soft-clay-icon-easter {
     display: block;
     width: 18px;
     height: 18px;
     flex: 0 0 18px;
     object-fit: contain;
+}
+
+/* Pustinjsko staklo Settings inner Soft Clay pack: iste mere i raspored kao
+   Vaskrs, uz mat peščanu, terakota i prigušenu tirkiznu paletu. */
+body.desert-theme .settings-header-icon-default {
+    display: none;
+}
+
+body.desert-theme .settings-header-icon-desert {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(93,57,33,.20));
+}
+
+body.desert-theme .settings-section-title-with-icons,
+body.desert-theme .settings-row-label-with-icon,
+body.desert-theme .settings-legal-link {
+    display: inline-flex;
+    align-items: center;
+}
+
+body.desert-theme .settings-section-title-with-icons {
+    gap: 5px;
+    min-height: 20px;
+}
+
+body.desert-theme .settings-section-soft-clay-icon-desert {
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(93,57,33,.16));
+}
+
+body.desert-theme .settings-language-soft-clay-icon-desert {
+    margin-left: 1px;
+}
+
+body.desert-theme .settings-row-label-with-icon {
+    gap: 7px;
+    min-width: 0;
+}
+
+body.desert-theme .settings-row-icon-legacy,
+body.desert-theme .settings-legal-icon-legacy {
+    display: none;
+}
+
+body.desert-theme .settings-row-soft-clay-icon-desert {
+    display: block;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(93,57,33,.17));
+}
+
+body.desert-theme .settings-legal-link {
+    gap: 4px;
+}
+
+body.desert-theme .settings-legal-soft-clay-icon-desert {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(93,57,33,.15));
 }
 
 /* Vaskrs Rules inner Soft Clay pack. Text, lists, navigation and dice diagrams are untouched. */
@@ -7677,9 +9299,16 @@ body.easter-theme .settings-legal-soft-clay-icon {
     display: none;
 }
 
+.rules-theme-glyph-default,
+.rules-page-glyph-default {
+    display: inline;
+}
+
 body.easter-theme #rules-overlay-ui .rules-header-icon-default,
 body.easter-theme #rules-overlay-ui .rules-page-icon-default,
-body.easter-theme #rules-overlay-ui .rules-theme-icon-default {
+body.easter-theme #rules-overlay-ui .rules-theme-icon-default,
+body.easter-theme #rules-overlay-ui .rules-theme-glyph-default,
+body.easter-theme #rules-overlay-ui .rules-page-glyph-default {
     display: none !important;
 }
 
@@ -7710,6 +9339,20 @@ body.easter-theme #rules-overlay-ui .rules-theme-icon-easter {
     object-fit: contain;
     vertical-align: -0.34em;
     filter: drop-shadow(0 2px 3px rgba(107, 44, 143, 0.14));
+}
+
+/* Male ikonice u tekstu prate veličinu reda; naslovi zadržavaju nešto jači znak. */
+body.easter-theme #rules-overlay-ui .rules-slide-content li .rules-theme-icon-easter {
+    width: 1.22em;
+    height: 1.22em;
+    margin-right: 0.24em;
+    vertical-align: -0.28em;
+}
+
+body.easter-theme #rules-overlay-ui .rules-slide-content h4 .rules-theme-icon-easter {
+    width: 1.3em;
+    height: 1.3em;
+    vertical-align: -0.31em;
 }
 
 body.easter-theme #rules-overlay-ui .rules-theme-icon-easter.rules-asset-icon--png {
@@ -7964,4 +9607,17 @@ body.easter-theme #stats-screen .h2h-rival-count {
         0 4px 9px rgba(72,34,91,.30),
         inset 1px 1px 2px rgba(255,255,255,.30) !important;
     text-shadow: 0 1px 2px rgba(54,33,63,.52) !important;
+}
+
+/* Pustinjsko staklo / Međusobni dueli: isti slot i mere, bez crnog teksta
+   na toploj akcentnoj podlozi. */
+body.desert-theme #stats-screen .h2h-rival-count {
+    background: linear-gradient(145deg, #a9562e, #713318) !important;
+    color: #fff8e8 !important;
+    border-color: rgba(255,248,232,.94) !important;
+    box-shadow:
+        0 0 0 2px rgba(44,123,119,.30),
+        0 4px 9px rgba(93,57,33,.30),
+        inset 1px 1px 2px rgba(255,255,255,.30) !important;
+    text-shadow: 0 1px 2px rgba(72,32,15,.62) !important;
 }

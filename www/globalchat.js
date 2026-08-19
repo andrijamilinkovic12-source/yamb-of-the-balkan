@@ -87,7 +87,8 @@ class GlobalChatManager {
         const fallback = isLoading ? 'Učitavam poruke...' : 'Još nema poruka. Započnite razgovor.';
         body.innerHTML = `
             <div class="global-chat-welcome global-chat-state${isLoading ? ' is-loading' : ''}" data-chat-state="${isLoading ? 'loading' : 'empty'}">
-                <img class="global-chat-state-soft-clay-icon" src="assets/easter-soft-clay/global-chat-empty-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="global-chat-state-soft-clay-icon global-chat-state-soft-clay-icon-easter" src="assets/easter-soft-clay/global-chat-empty-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="global-chat-state-soft-clay-icon-desert" src="assets/desert-soft-clay/global-chat-empty-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <span>${this.gt(key) || fallback}</span>
             </div>`;
     }

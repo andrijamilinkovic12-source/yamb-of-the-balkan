@@ -9904,9 +9904,37 @@ io.on('connection', (socket) => {
     // ==================================================================
     // GLOBALNA TOP LISTA (AGGREGATE FIX)
     // ==================================================================
-    socket.on('get_global_highscores', async (period) => {
+    socket.on('get_global_highscores', async (requestData) => {
+        const legacyRequest = typeof requestData === 'string';
+        const requestedPeriod = legacyRequest ? requestData : requestData?.period;
+        const period = ['weekly', 'monthly', 'all_time'].includes(requestedPeriod)
+            ? requestedPeriod
+            : 'weekly';
+        const offset = legacyRequest ? 0 : Math.max(0, Math.min(1000000, toSafeInt(requestData?.offset, 0)));
+        const limit = legacyRequest ? 100 : Math.max(10, Math.min(100, toSafeInt(requestData?.limit, 50)));
+        const requestId = legacyRequest ? undefined : requestData?.requestId;
+
+        const emitResult = (data, hasMore = false) => {
+            if (legacyRequest) {
+                socket.emit('global_highscores_data', data);
+                return;
+            }
+
+            socket.emit('global_highscores_data', {
+                period,
+                offset,
+                limit,
+                hasMore,
+                requestId,
+                data
+            });
+        };
+
         try {
-            if (!MONGO_URI) return; 
+            if (!MONGO_URI) {
+                emitResult([]);
+                return;
+            }
 
             let matchFilter = {
                 $or: [
@@ -9933,19 +9961,22 @@ io.on('connection', (socket) => {
                     }
                 },
                 { $replaceRoot: { newRoot: "$bestEntry" } },
-                { $sort: { numScore: -1, date: 1 } }, 
-                { $limit: 100 }
+                { $sort: { numScore: -1, date: 1, stableUid: 1 } },
+                { $skip: offset },
+                { $limit: limit + (legacyRequest ? 0 : 1) }
             ]);
-            
-            const formattedScores = scores.map(s => ({
+
+            const hasMore = !legacyRequest && scores.length > limit;
+            const pageScores = hasMore ? scores.slice(0, limit) : scores;
+            const formattedScores = pageScores.map(s => ({
                 ...s,
                 uid: s.stableUid || s.playerId || s.uid 
             }));
 
-            socket.emit('global_highscores_data', formattedScores);
+            emitResult(formattedScores, hasMore);
         } catch (err) {
             console.error("Greška pri dohvatanju skorova:", err);
-            socket.emit('global_highscores_data', []); 
+            emitResult([]);
         }
     });
 

@@ -168,7 +168,11 @@ class DnevniIzazov {
             .daily-glass-room-mark-easter,
             .daily-glass-task-mark-easter,
             .daily-glass-complete-mark-easter,
-            .daily-glass-reward-video-mark-easter {
+            .daily-glass-reward-video-mark-easter,
+            .daily-glass-room-mark-desert,
+            .daily-glass-task-mark-desert,
+            .daily-glass-complete-mark-desert,
+            .daily-glass-reward-video-mark-desert {
                 display: none;
             }
 
@@ -176,6 +180,16 @@ class DnevniIzazov {
             body.easter-theme .daily-glass-task-mark-easter,
             body.easter-theme .daily-glass-complete-mark-easter,
             body.easter-theme .daily-glass-reward-video-mark-easter {
+                display: block;
+                object-fit: contain;
+                pointer-events: none;
+                user-select: none;
+            }
+
+            body.desert-theme .daily-glass-room-mark-desert,
+            body.desert-theme .daily-glass-task-mark-desert,
+            body.desert-theme .daily-glass-complete-mark-desert,
+            body.desert-theme .daily-glass-reward-video-mark-desert {
                 display: block;
                 object-fit: contain;
                 pointer-events: none;
@@ -191,6 +205,15 @@ class DnevniIzazov {
                 filter: drop-shadow(0 7px 8px rgba(92, 58, 94, 0.22));
             }
 
+            body.desert-theme .daily-glass-room-mark-desert {
+                position: absolute;
+                top: -7px;
+                left: 2px;
+                width: 54px;
+                height: 54px;
+                filter: drop-shadow(0 7px 8px rgba(93, 57, 33, 0.2));
+            }
+
             body.easter-theme .daily-glass-task-mark-easter {
                 position: absolute;
                 top: -2px;
@@ -200,7 +223,17 @@ class DnevniIzazov {
                 filter: drop-shadow(0 6px 7px rgba(92, 58, 94, 0.19));
             }
 
-            body.easter-theme .daily-glass-title {
+            body.desert-theme .daily-glass-task-mark-desert {
+                position: absolute;
+                top: -2px;
+                right: 6px;
+                width: 44px;
+                height: 44px;
+                filter: drop-shadow(0 6px 7px rgba(93, 57, 33, 0.18));
+            }
+
+            body.easter-theme .daily-glass-title,
+            body.desert-theme .daily-glass-title {
                 padding-inline: 52px;
             }
 
@@ -421,11 +454,22 @@ class DnevniIzazov {
                 filter: drop-shadow(0 8px 10px rgba(92, 58, 94, 0.22));
             }
 
+            body.desert-theme .daily-glass-complete-mark-desert {
+                position: absolute;
+                width: 58px;
+                height: 58px;
+                left: 50%;
+                top: -66px;
+                transform: translateX(-50%);
+                filter: drop-shadow(0 8px 10px rgba(93, 57, 33, 0.2));
+            }
+
             .daily-glass-reward-video-fallback {
                 display: inline;
             }
 
-            body.easter-theme .daily-glass-reward-video-fallback {
+            body.easter-theme .daily-glass-reward-video-fallback,
+            body.desert-theme .daily-glass-reward-video-fallback {
                 display: none;
             }
 
@@ -437,7 +481,16 @@ class DnevniIzazov {
                 filter: drop-shadow(0 4px 5px rgba(92, 58, 94, 0.2));
             }
 
-            .daily-already-easter {
+            body.desert-theme .daily-glass-reward-video-mark-desert {
+                width: 28px;
+                height: 28px;
+                flex: 0 0 28px;
+                margin-right: 2px;
+                filter: drop-shadow(0 4px 5px rgba(93, 57, 33, 0.18));
+            }
+
+            .daily-already-easter,
+            .daily-already-desert {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -445,11 +498,16 @@ class DnevniIzazov {
                 text-align: center;
             }
 
-            .daily-already-easter-icon {
+            .daily-already-easter-icon,
+            .daily-already-desert-icon {
                 width: 104px;
                 height: 104px;
                 object-fit: contain;
                 filter: drop-shadow(0 9px 12px rgba(92, 58, 94, 0.22));
+            }
+
+            .daily-already-desert-icon {
+                filter: drop-shadow(0 9px 12px rgba(93, 57, 33, 0.2));
             }
 
             .daily-glass-btn-double {
@@ -506,6 +564,8 @@ class DnevniIzazov {
                 <div class="daily-glass-header">
                     <img class="daily-glass-room-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-task-mark-easter" src="assets/easter-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-desert" src="assets/desert-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-desert" src="assets/desert-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <h2 class="daily-glass-title">${txtTitle}</h2>
                     <div class="daily-glass-subtitle">${txtSub}</div>
                 </div>
@@ -772,7 +832,9 @@ class DnevniIzazov {
     showAlreadyPlayedInfo() {
         const message = document.body.classList.contains('easter-theme')
             ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" src="assets/easter-soft-clay/daily/already-played.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
-            : t('dc_done');
+            : document.body.classList.contains('desert-theme')
+                ? `<div class="daily-already-desert"><img class="daily-already-desert-icon" src="assets/desert-soft-clay/daily/already-played.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+                : t('dc_done');
         const alertPromise = this.app?.modal?.alert
             ? this.app.modal.alert(message, t('info_title'))
             : Promise.resolve(window.alert(t('dc_done')));
@@ -802,21 +864,23 @@ class DnevniIzazov {
     setEasterIntroWaveTitle(overlay) {
         if (!overlay) return;
 
-        const waveTitle = overlay.querySelector('.daily-intro-easter-wave');
-        if (!waveTitle) return;
+        const waveTitles = overlay.querySelectorAll('.daily-intro-easter-wave, .daily-intro-desert-wave');
+        if (!waveTitles.length) return;
 
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const title = gt('dc_title', 'DNEVNI IZAZOV').trim().toUpperCase();
 
-        waveTitle.replaceChildren(...Array.from(title).map((character, index) => {
-            const letter = document.createElement('span');
-            letter.className = character === ' ' ? 'daily-intro-wave-space' : 'daily-intro-wave-letter';
-            letter.textContent = character === ' ' ? '\u00A0' : character;
-            letter.style.setProperty('--wave-index', index);
-            return letter;
-        }));
-        waveTitle.setAttribute('aria-label', title);
-        waveTitle.removeAttribute('aria-hidden');
+        waveTitles.forEach(waveTitle => {
+            waveTitle.replaceChildren(...Array.from(title).map((character, index) => {
+                const letter = document.createElement('span');
+                letter.className = character === ' ' ? 'daily-intro-wave-space' : 'daily-intro-wave-letter';
+                letter.textContent = character === ' ' ? '\u00A0' : character;
+                letter.style.setProperty('--wave-index', index);
+                return letter;
+            }));
+            waveTitle.setAttribute('aria-label', title);
+            waveTitle.removeAttribute('aria-hidden');
+        });
     }
 
     markDailyAttempt(uid, today) {
@@ -1000,9 +1064,11 @@ class DnevniIzazov {
 
         resDiv.innerHTML = `
             <img class="daily-glass-complete-mark-easter" src="assets/easter-soft-clay/daily/complete.png?v=1" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-desert" src="assets/desert-soft-clay/daily/complete.png?v=1" alt="" aria-hidden="true" decoding="async">
             <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 <span class="daily-glass-reward-video-fallback" aria-hidden="true">🎥</span>
                 <img class="daily-glass-reward-video-mark-easter" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-desert" src="assets/desert-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
                 ${t('btn_double_short')} ${dukatIconHtml()} (x2)
             </button>
             <button class="daily-glass-btn daily-glass-btn-claim" onclick="dnevniIzazov.claim(false)">

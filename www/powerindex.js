@@ -70,7 +70,9 @@ class PowerIndexLeaderboard {
 
                 <div class="chat-header global-chat-header pi-modal-header">
                     <h2 class="pi-modal-title">
-                        <span style="font-size: 1.5rem;">⚡</span> ${this.gt('pi_title', 'TOP IGRAČI')}
+                        <span class="power-index-title-legacy" style="font-size: 1.5rem;">⚡</span>
+                        <img class="power-index-soft-clay-bolt power-index-title-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        ${this.gt('pi_title', 'TOP IGRAČI')}
                     </h2>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('pi-modal-overlay').remove()" aria-label="${this.gt('aria_close_power_index', 'Zatvori Power index listu')}">×</button>
                 </div>
@@ -202,9 +204,10 @@ class PowerIndexLeaderboard {
 
         // Vaskrs koristi jedinstveni Power Index podium pack; ostale teme zadržavaju postojeći fallback.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+        const podiumTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'desert' ? 'desert' : 'easter';
         const legacyRank = rank === 1 ? '⚡' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span style="color: var(--text-muted);">${rank}.</span>`;
         const podiumRank = podiumTone
-            ? `<img class="power-index-podium-medal" src="assets/easter-soft-clay/statistics/power-index/${podiumTone}.png?v=1" alt="" aria-hidden="true">`
+            ? `<img class="power-index-podium-medal" src="assets/${podiumTheme}-soft-clay/statistics/power-index/${podiumTone}.png?v=1" alt="" aria-hidden="true">`
             : '';
         const rankTrophy = `<span class="power-index-rank-legacy">${legacyRank}</span>${podiumRank}`;
 
@@ -247,7 +250,7 @@ class PowerIndexLeaderboard {
             : '';
 
         return `
-            <div style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; ${bg} ${glow} transition: transform 0.2s;">
+            <div class="power-index-player-row${rank === 1 ? ' is-first' : ''}${isMe ? ' is-me' : ''}" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; ${bg} ${glow} transition: transform 0.2s;">
                 ${pinnedLabel}
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                     <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1; padding-right: 5px;">
@@ -255,12 +258,13 @@ class PowerIndexLeaderboard {
 
                         <img src="${photo}" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid ${rank === 1 || isMe ? 'var(--gold-main)' : 'rgba(255,255,255,0.2)'}; flex-shrink: 0;">
 
-                        <span style="color: ${nameColor}; font-weight: 700; ${nameStyle} white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${displayName}</span>
+                        <span class="power-index-player-name" style="color: ${nameColor}; font-weight: 700; ${nameStyle} white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${displayName}</span>
                     </div>
 
                     <div style="display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 15px; border: 1px solid rgba(255,140,0,0.3); flex-shrink: 0;">
                         <span style="color: #FFD700; font-weight: 900; font-size: 1rem; text-shadow: 0 0 5px rgba(255,140,0,0.5);">${powerIndex}</span>
-                        <span style="font-size: 0.8rem;">⚡</span>
+                        <span class="power-index-value-legacy" style="font-size: 0.8rem;">⚡</span>
+                        <img class="power-index-soft-clay-bolt power-index-value-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </div>
                 </div>
             </div>`;

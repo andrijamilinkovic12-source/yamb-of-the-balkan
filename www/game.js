@@ -809,7 +809,8 @@ class YambApp {
         ));
 
         if (rivals.length === 0) {
-            container.innerHTML = `<div class="h2h-empty-state"><img class="h2h-empty-soft-clay-icon" src="assets/easter-soft-clay/statistics/h2h-empty.png?v=1" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
+            const statsTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'desert' ? 'desert' : 'easter';
+            container.innerHTML = `<div class="h2h-empty-state"><img class="h2h-empty-soft-clay-icon" src="assets/${statsTheme}-soft-clay/statistics/h2h-empty.png?v=1" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
             return;
         }
 
@@ -1869,7 +1870,8 @@ class YambApp {
         const topRival = this.getTopH2HRival();
         if (!topRival) {
             card.classList.add('is-empty');
-            image.src = 'assets/easter-soft-clay/statistics/h2h-empty.png?v=1';
+            const inviteStatsTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'desert' ? 'desert' : 'easter';
+            image.src = `assets/${inviteStatsTheme}-soft-clay/statistics/h2h-empty.png?v=1`;
             name.setAttribute('data-lang', 'stat_h2h_empty');
             name.textContent = gt('stat_h2h_empty') || 'Nema odigranih duela...';
             name.removeAttribute('title');
@@ -2567,6 +2569,7 @@ class YambApp {
             listEl.innerHTML = `
                 <div class="waiting-hof-loading-state">
                     <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="waiting-hof-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>
                 </div>
             `;
@@ -2658,6 +2661,7 @@ class YambApp {
             listEl.innerHTML = `
                 <div class="waiting-hof-empty-state" style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">
                     <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="waiting-hof-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span>${gt('ws_hof_no_results') || 'Još uvek nema rezultata za ovaj period.'}</span>
                 </div>
             `;
@@ -2840,7 +2844,7 @@ class YambApp {
     async openGlobalChat(options = {}) {
         if (!this.requireLogin()) return;
 
-        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('globalChat'))) {
             this.playEasterRoomIntro('globalChat', () => this.openGlobalChat({ skipRoomIntro: true }));
             return;
         }
@@ -2851,7 +2855,7 @@ class YambApp {
     openOnlinePlayers(options = {}) {
         if (!this.requireLogin()) return;
 
-        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('onlinePlayers'))) {
             this.playEasterRoomIntro('onlinePlayers', () => this.openOnlinePlayers({ skipRoomIntro: true }));
             return;
         }
@@ -3141,7 +3145,7 @@ class YambApp {
                 });
 
                 this.socket.on('global_highscores_data', (data) => {
-                    if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list');
+                    if (this.topListManager) this.topListManager.handleGlobalPage(data);
                 });
                 
                 this.socket.on('error_msg', (msgKey) => {
@@ -4051,7 +4055,7 @@ class YambApp {
     }
 
     showSettings(options = {}) {
-        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('settings'))) {
             this.playEasterRoomIntro('settings', () => this.showSettings({ skipRoomIntro: true }));
             return;
         }
@@ -4195,7 +4199,7 @@ class YambApp {
     }
 
     showStats(options = {}) {
-        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('statistics'))) {
             this.playEasterRoomIntro('statistics', () => this.showStats({ skipRoomIntro: true }));
             return;
         }
@@ -4308,7 +4312,7 @@ class YambApp {
         const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
         if (!rewardReady) return;
 
-        if (this.shouldPlayEasterRoomIntro()) {
+        if (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('leaderboard')) {
             this.playEasterRoomIntro('leaderboard', () => {
                 this.navigateTo('highscores-screen');
                 this.switchHsTab('global');
@@ -4324,22 +4328,30 @@ class YambApp {
         return (localStorage.getItem('yamb_theme') || 'dark') === 'easter';
     }
 
+    shouldPlayDesertRoomIntro(roomId) {
+        return (localStorage.getItem('yamb_theme') || 'dark') === 'desert'
+            && ['leaderboard', 'statistics', 'settings', 'globalChat', 'onlinePlayers'].includes(roomId);
+    }
+
     playEasterRoomIntro(roomId, onComplete) {
         if (this.easterRoomIntroPlaying) return;
 
         const rooms = {
             leaderboard: {
                 icon: 'assets/easter-soft-clay/leaderboard-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/leaderboard-pro.png?v=1',
                 scale: 1.16,
                 label: () => gt('hs_title') || 'TOP LISTA'
             },
             statistics: {
                 icon: 'assets/easter-soft-clay/statistics-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/statistics-pro.png?v=1',
                 scale: 1.06,
                 label: () => gt('menu_stats') || 'STATISTIKA'
             },
             settings: {
                 icon: 'assets/easter-soft-clay/settings-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/settings-pro.png?v=1',
                 scale: 1,
                 label: () => gt('menu_settings') || 'PODEŠAVANJA'
             },
@@ -4371,11 +4383,13 @@ class YambApp {
             },
             globalChat: {
                 icon: 'assets/easter-soft-clay/global-chat-pro-v4.png',
+                desertIcon: 'assets/desert-soft-clay/global-chat-pro.png?v=1',
                 scale: 1,
                 label: () => 'GLOBAL CHAT'
             },
             onlinePlayers: {
                 icon: 'assets/soft-clay-online-players-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/online-players-pro.png?v=1',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'ONLINE PLAYERS'
@@ -4404,8 +4418,11 @@ class YambApp {
             return;
         }
 
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const introTheme = activeTheme === 'desert' && room.desertIcon ? 'desert' : 'easter';
+
         if (iconElement) {
-            iconElement.src = room.icon;
+            iconElement.src = introTheme === 'desert' ? room.desertIcon : room.icon;
             iconElement.style.setProperty('--easter-room-icon-scale', room.scale || 1);
         }
         const titleLines = (room.lines ? room.lines() : [room.label()])
@@ -4437,7 +4454,8 @@ class YambApp {
         titleElement.setAttribute('aria-label', titleLines.join(' – '));
 
         this.easterRoomIntroPlaying = true;
-        overlay.classList.add('theme-easter');
+        overlay.classList.remove('theme-easter', 'theme-desert');
+        overlay.classList.add(`theme-${introTheme}`);
         overlay.classList.add('hidden');
         void overlay.offsetWidth;
         overlay.classList.remove('hidden');
@@ -5138,7 +5156,7 @@ class YambApp {
 
         this.socket.off('global_highscores_data');
         this.socket.on('global_highscores_data', (data) => {
-            if(this.topListManager) this.topListManager.renderList(data, 'global-hs-list');
+            if (this.topListManager) this.topListManager.handleGlobalPage(data);
         });
 
         this.socket.off('weekly_top3_data');
@@ -5254,7 +5272,10 @@ class YambApp {
             
             const medalType = rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze';
             const medalEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
-            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="assets/easter-soft-clay/ql/medal-${medalType}.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
+            const qlAssetRoot = (localStorage.getItem('yamb_theme') || 'dark') === 'desert'
+                ? 'assets/desert-soft-clay/ql'
+                : 'assets/easter-soft-clay/ql';
+            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlAssetRoot}/medal-${medalType}.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
             let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
             
@@ -8371,6 +8392,9 @@ class YambApp {
     showQuarterWinnerModal(data) {
         const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.playerName)}&background=333&color=FFD700`;
         const photo = data.photoUrl && data.photoUrl.length > 5 ? data.photoUrl : defaultAvatar;
+        const qlAssetRoot = (localStorage.getItem('yamb_theme') || 'dark') === 'desert'
+            ? 'assets/desert-soft-clay/ql'
+            : 'assets/easter-soft-clay/ql';
         
         let title = gt('league_champion_title') || "ŠAMPION KVARTALNE LIGE";
         let subText = (gt('league_winner_q') || "Pobednik za Q{0} / {1}.").replace('{0}', data.quarter).replace('{1}', data.year);
@@ -8386,10 +8410,11 @@ class YambApp {
                 <div style="width: 96px; height: 96px; margin: 0 auto 12px auto; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,214,76,0.18), rgba(0,0,0,0.12) 70%); box-shadow: 0 0 22px rgba(255,214,76,0.24); animation: popIn 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                     <img class="quarter-winner-logo quarter-winner-logo-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
                     <img class="quarter-winner-logo quarter-winner-logo-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="quarter-winner-logo quarter-winner-logo-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </div>
                 <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
-                <img class="ql-quarter-champion-medal" src="assets/easter-soft-clay/ql/medal-gold.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="ql-quarter-champion-medal" src="${qlAssetRoot}/medal-gold.png?v=1" alt="" aria-hidden="true" decoding="async">
 
                 <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
                     <img src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">

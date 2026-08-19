@@ -6,8 +6,8 @@
     <title>Yamb of the Balkan - Divine Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.16">
-    <link rel="stylesheet" href="teme.css?v=5.90">
+    <link rel="stylesheet" href="style.css?v=5.17">
+    <link rel="stylesheet" href="teme.css?v=6.07">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -420,6 +420,7 @@
              onmouseup="this.style.transform='scale(1)'">
             <span class="main-global-chat-fallback" aria-hidden="true">💬</span>
             <img class="easter-global-chat-icon" src="assets/easter-soft-clay/global-chat-pro-v4.png" alt="" aria-hidden="true" decoding="async">
+            <img class="desert-global-chat-icon" src="assets/desert-soft-clay/global-chat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
         </div>
 
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
@@ -428,6 +429,7 @@
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div class="main-online-icon-wrap">
                         <img class="main-online-soft-clay-icon" src="assets/soft-clay-online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="main-online-soft-clay-icon-desert" src="assets/desert-soft-clay/online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <div class="main-online-presence-dot" aria-hidden="true"></div>
                     </div>
                     <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
@@ -538,27 +540,27 @@
             <button class="btn-square" onclick="if(window.dnevniIzazov) { dnevniIzazov.open(); } else { app.dailyManager.open(); }" aria-label="Dnevni izazov" data-lang-aria="daily_challenge_title">
                 <svg class="menu-svg-icon menu-svg-icon--daily" aria-hidden="true" focusable="false"><use href="#menu-icon-daily"></use></svg>
                 <img class="easter-soft-clay-icon easter-soft-clay-icon--daily" src="assets/easter-soft-clay/daily-challenge-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
-                <img class="desert-soft-clay-icon desert-soft-clay-icon--daily" src="assets/desert-soft-clay/daily-challenge.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="desert-soft-clay-icon desert-soft-clay-icon--daily" src="assets/desert-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showHighscoresScreen()" aria-label="Top lista" data-lang-aria="menu_hs">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-leaderboard"></use></svg>
                 <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/leaderboard-pro.png" alt="" aria-hidden="true" decoding="async">
-                <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/leaderboard.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/leaderboard-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showStats()" aria-label="Statistika" data-lang-aria="menu_stats">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-stats"></use></svg>
                 <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/statistics-pro.png" alt="" aria-hidden="true" decoding="async">
-                <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/statistics.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/statistics-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showSettings()" aria-label="Podešavanja" data-lang-aria="menu_settings">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-settings"></use></svg>
                 <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/settings-pro.png" alt="" aria-hidden="true" decoding="async">
-                <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/settings.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/settings-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showRules()" aria-label="Pravila igre" data-lang-aria="menu_rules">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-rules"></use></svg>
                 <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/rules-pro.png" alt="" aria-hidden="true" decoding="async">
-                <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/rules.svg" alt="" aria-hidden="true" decoding="async">
+                <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
         </div>
     </div>
@@ -627,6 +629,7 @@
                     <span class="global-chat-title stats-header-title">
                         <img class="stats-header-icon stats-header-icon-default" src="assets/stats-icon.svg" alt="" aria-hidden="true" decoding="async">
                         <img class="stats-header-icon stats-header-icon-easter" src="assets/easter-soft-clay/statistics-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="stats-header-icon stats-header-icon-desert" src="assets/desert-soft-clay/statistics-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="stats_title">STATISTIKA</span>
                     </span>
                 </div>
@@ -640,7 +643,8 @@
                 <div class="stats-page-panel stats-overview-panel">
 
                     <div style="background: linear-gradient(135deg, var(--gold-main) 0%, var(--text-sum) 100%); padding: 8px 15px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 12px var(--gold-glow); position: relative; overflow: hidden; cursor: pointer; flex-shrink: 0; width: 100%;" onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()">
-                        <div style="position: absolute; top: -10px; right: 20%; font-size: 3.5rem; opacity: 0.15; pointer-events: none;">⚡</div>
+                        <div class="power-index-watermark-legacy" style="position: absolute; top: -10px; right: 20%; font-size: 3.5rem; opacity: 0.15; pointer-events: none;">⚡</div>
+                        <img class="power-index-soft-clay-bolt power-index-watermark-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <div style="position: absolute; top: 4px; right: 8px; font-size: 0.8rem; color: #fff; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">↗</div>
 
                         <div style="display: flex; flex-direction: column; align-items: flex-start; z-index: 1;">
@@ -652,20 +656,20 @@
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; flex-shrink: 0;">
                         <div class="stat-item compact-stat" style="border-color: var(--gold-main); background: rgba(224, 201, 149, 0.05);">
-                            <span class="stats-category-label" style="font-size: 0.65rem; color: var(--gold-main); letter-spacing:0.5px; font-weight:bold;"><img class="stats-category-soft-clay-icon" src="assets/easter-soft-clay/statistics/record.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_record">REKORD</span></span>
+                            <span class="stats-category-label" style="font-size: 0.65rem; color: var(--gold-main); letter-spacing:0.5px; font-weight:bold;"><img class="stats-category-soft-clay-icon stats-category-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/record.png?v=1" alt="" aria-hidden="true"><img class="stats-category-soft-clay-icon stats-category-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/record.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_record">REKORD</span></span>
                             <span id="stat-high" class="stat-val c-gold" style="font-size: 1.25rem !important;">0</span>
                         </div>
                         <div class="stat-item compact-stat">
-                            <span class="stats-category-label" style="font-size: 0.65rem; color: var(--text-muted);"><img class="stats-category-soft-clay-icon" src="assets/easter-soft-clay/statistics/games.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_total">UKUPNO PARTIJA</span></span>
+                            <span class="stats-category-label" style="font-size: 0.65rem; color: var(--text-muted);"><img class="stats-category-soft-clay-icon stats-category-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/games.png?v=1" alt="" aria-hidden="true"><img class="stats-category-soft-clay-icon stats-category-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/games.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_total">UKUPNO PARTIJA</span></span>
                             <span id="stat-games" class="stat-val" style="font-size: 1.25rem !important;">0</span>
                         </div>
                     </div>
 
                     <div style="width: 100%; background: var(--glass-bg); padding: 8px 12px; border-radius: 10px; border: var(--glass-border); flex-shrink: 0;">
                         <div style="display:flex; justify-content:space-between; gap:8px; margin-bottom:4px; font-size:0.75rem; font-weight:bold;">
-                            <span class="c-win stats-result-label"><img class="stats-result-soft-clay-icon" src="assets/easter-soft-clay/statistics/wins.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_wins">POBEDE</span>: <span id="stat-wins">0</span></span>
-                            <span class="c-gold stats-result-label"><img class="stats-result-soft-clay-icon" src="assets/easter-soft-clay/statistics/draws.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_draws">NEREŠENO</span>: <span id="stat-draws">0</span></span>
-                            <span class="c-loss stats-result-label"><img class="stats-result-soft-clay-icon" src="assets/easter-soft-clay/statistics/losses.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_losses">PORAZI</span>: <span id="stat-losses">0</span></span>
+                            <span class="c-win stats-result-label"><img class="stats-result-soft-clay-icon stats-result-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/wins.png?v=1" alt="" aria-hidden="true"><img class="stats-result-soft-clay-icon stats-result-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/wins.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_wins">POBEDE</span>: <span id="stat-wins">0</span></span>
+                            <span class="c-gold stats-result-label"><img class="stats-result-soft-clay-icon stats-result-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/draws.png?v=1" alt="" aria-hidden="true"><img class="stats-result-soft-clay-icon stats-result-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/draws.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_draws">NEREŠENO</span>: <span id="stat-draws">0</span></span>
+                            <span class="c-loss stats-result-label"><img class="stats-result-soft-clay-icon stats-result-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/losses.png?v=1" alt="" aria-hidden="true"><img class="stats-result-soft-clay-icon stats-result-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/losses.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_losses">PORAZI</span>: <span id="stat-losses">0</span></span>
                         </div>
                         <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.3); border-radius: 4px; overflow: hidden; display: flex;">
                             <div id="stat-bar-win" style="width: 50%; background: var(--success); height: 100%;"></div>
@@ -682,14 +686,16 @@
                         <div class="stat-item compact-grid-item" onclick="if(window.vatreniNiz) window.vatreniNiz.openModal()">
                             <div style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
                             <span class="stats-category-legacy" style="font-size: 1.1rem;">🔥</span>
-                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true">
                             <span class="stat-lbl-mini" data-lang="stat_streak">Vatreni Niz</span>
                             <span id="stat-streak" class="stat-val-mini" style="color: #FF5722;">0</span>
                         </div>
                         
                         <div class="stat-item compact-grid-item">
                             <span class="stats-category-legacy" style="font-size: 1.1rem;">📈</span>
-                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/average.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/average.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/average.png?v=1" alt="" aria-hidden="true">
                             <span class="stat-lbl-mini" data-lang="stat_avg">Prosek</span>
                             <span id="stat-avg" class="stat-val-mini">0</span>
                         </div>
@@ -697,25 +703,28 @@
                         <div class="stat-item compact-grid-item" onclick="riznicaManager.open()">
                             <div style="position: absolute; top: 4px; right: 6px; font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: bold;">↗</div>
                             <span class="stats-category-legacy" style="font-size: 1.1rem;">🏆</span>
-                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/trophies-v2.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/trophies-v2.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/trophies-v2.png?v=1" alt="" aria-hidden="true">
                             <span class="stat-lbl-mini" data-lang="stat_trophies">Trofeji</span>
                             <span id="stat-trophies" class="stat-val-mini c-gold">0 / 26</span>
                         </div>
                         
                         <div class="stat-item compact-grid-item">
                             <svg class="dukat-icon-inline stats-category-legacy" aria-hidden="true" focusable="false" style="width: 1.35rem; height: 1.35rem;"><use href="#app-icon-dukat"></use></svg>
-                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/ducats.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/ducats.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/ducats.png?v=1" alt="" aria-hidden="true">
                             <span class="stat-lbl-mini" data-lang="stat_balance">Stanje</span>
                             <span id="stat-balance" class="stat-val-mini c-gold">0</span>
                         </div>
                         <div class="stat-item compact-grid-item">
                             <span class="stats-category-legacy" style="font-size: 1.1rem;">🌟</span>
-                            <img class="stats-grid-soft-clay-icon" src="assets/easter-soft-clay/statistics/all-time-points.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/all-time-points.png?v=1" alt="" aria-hidden="true">
+                            <img class="stats-grid-soft-clay-icon stats-grid-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/all-time-points.png?v=1" alt="" aria-hidden="true">
                             <span class="stat-lbl-mini" data-lang="stat_alltime">All-Time PTS</span>
                             <span id="stat-alltime" class="stat-val-mini c-gold">0</span>
                         </div>
                         <div class="stat-item compact-grid-item">
-                            <span class="stat-lbl-mini stats-rival-label" style="margin-bottom:2px;"><img class="stats-grid-soft-clay-icon stats-rival-soft-clay-icon" src="assets/easter-soft-clay/statistics/h2h.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_fav_opp">Rival</span></span>
+                            <span class="stat-lbl-mini stats-rival-label" style="margin-bottom:2px;"><img class="stats-grid-soft-clay-icon stats-rival-soft-clay-icon stats-grid-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/h2h.png?v=1" alt="" aria-hidden="true"><img class="stats-grid-soft-clay-icon stats-rival-soft-clay-icon stats-grid-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/h2h.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_fav_opp">Rival</span></span>
                             <img id="stat-fav-opp-img" src="" style="width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--gold-main); object-fit: cover; display: none;">
                             <span id="stat-fav-opp-name" style="font-size: 0.7rem; color: var(--text-main); font-weight: bold; line-height: 1.1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 90%; text-align: center;" data-lang="stat_none">Nema</span>
                             <span id="stat-fav-opp-games" style="font-size: 0.6rem; color: var(--gold-main); font-weight: bold; margin-top:2px;" data-lang="stat_no_matches">0 mečeva</span>
@@ -726,7 +735,7 @@
 
             <div class="stats-page">
                 <div class="stats-page-panel stats-h2h-panel">
-                    <h3 class="stats-h2h-title"><img class="stats-h2h-title-soft-clay-icon" src="assets/easter-soft-clay/statistics/h2h.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_h2h_title">MEĐUSOBNI DUELI</span><span class="stats-h2h-title-legacy">⚔️</span></h3>
+                    <h3 class="stats-h2h-title"><img class="stats-h2h-title-soft-clay-icon stats-h2h-title-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/h2h.png?v=1" alt="" aria-hidden="true"><img class="stats-h2h-title-soft-clay-icon stats-h2h-title-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/h2h.png?v=1" alt="" aria-hidden="true"><span data-lang="stat_h2h_title">MEĐUSOBNI DUELI</span><span class="stats-h2h-title-legacy">⚔️</span></h3>
                     
                     <div class="stats-h2h-desc" data-lang="stat_h2h_desc">
                         Rivali sa najviše odigranih partija su prvi.
@@ -896,6 +905,7 @@
         <div class="league-intro-mark-wrap">
             <img class="league-intro-mark" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async">
             <img class="league-intro-mark-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+            <img class="league-intro-mark-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
         </div>
         <div class="league-intro-title" aria-live="polite">
             <span class="league-intro-word league-intro-word-left"></span>
@@ -907,11 +917,13 @@
         <div class="daily-intro-mark-wrap">
             <img class="daily-intro-mark" src="assets/daily-challenge-icon.svg" alt="" aria-hidden="true" decoding="async">
             <img class="daily-intro-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-intro-mark-desert" src="assets/desert-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
         </div>
         <div class="daily-intro-title" aria-live="polite">
             <span class="daily-intro-word daily-intro-word-left"></span>
             <span class="daily-intro-word daily-intro-word-right"></span>
             <span class="daily-intro-easter-wave" aria-hidden="true"></span>
+            <span class="daily-intro-desert-wave" aria-hidden="true"></span>
         </div>
     </div>
 
@@ -938,6 +950,7 @@
                     <span class="global-chat-title hs-header-title">
                         <img class="hs-header-icon hs-header-icon-default" src="assets/leaderboard-icon.svg" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-header-icon hs-header-icon-easter" src="assets/easter-soft-clay/leaderboard-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-header-icon hs-header-icon-desert" src="assets/desert-soft-clay/leaderboard-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="hs_title">TOP LISTA</span>
                     </span>
                 </div>
@@ -948,11 +961,13 @@
                 <div class="hs-tabs">
                     <button class="hs-tab-btn active" data-hs-tab="global" onclick="app.switchHsTab('global')">
                         <img class="hs-tab-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/global.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-tab-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/global.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span class="hs-tab-label-legacy" data-lang="hs_global">GLOBALNA 🌍</span>
                         <span class="hs-tab-label-easter" data-lang="hs_global_plain">GLOBALNA</span>
                     </button>
                     <button class="hs-tab-btn" data-hs-tab="local" onclick="app.switchHsTab('local')">
                         <img class="hs-tab-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/local.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-tab-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/local.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span class="hs-tab-label-legacy" data-lang="hs_local">LOKALNA</span>
                         <span class="hs-tab-label-easter" data-lang="hs_local_list">LOKALNA LISTA</span>
                     </button>
@@ -963,6 +978,7 @@
                 <section class="hs-panel active" data-hs-panel="global">
                     <h3 class="hs-panel-title">
                         <img class="hs-panel-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/global.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-panel-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/global.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span class="hs-panel-title-legacy" data-lang="hs_global">GLOBALNA 🌍</span>
                         <span class="hs-panel-title-easter" data-lang="hs_global_plain">GLOBALNA</span>
                     </h3>
@@ -980,6 +996,7 @@
                 <section class="hs-panel" data-hs-panel="local">
                     <h3 class="hs-panel-title">
                         <img class="hs-panel-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/local.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-panel-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/local.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span class="hs-panel-title-legacy" data-lang="hs_local">LOKALNA LISTA</span>
                         <span class="hs-panel-title-easter" data-lang="hs_local_list">LOKALNA LISTA</span>
                     </h3>
@@ -1007,6 +1024,7 @@
                     <span class="global-chat-title settings-header-title">
                         <img class="settings-header-icon settings-header-icon-default" src="assets/settings-icon.svg" alt="" aria-hidden="true" decoding="async">
                         <img class="settings-header-icon settings-header-icon-easter" src="assets/easter-soft-clay/settings-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="settings-header-icon settings-header-icon-desert" src="assets/desert-soft-clay/settings-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="settings_title">PODEŠAVANJA</span>
                     </span>
                 </div>
@@ -1016,7 +1034,7 @@
             <div class="chat-body global-chat-body settings-card-body">
             
             <div class="settings-section">
-                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-section-soft-clay-icon" src="assets/easter-soft-clay/settings/profile.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_profile_acc">Profil i Nalog</span></span>
+                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter" src="assets/easter-soft-clay/settings/profile.png?v=1" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert" src="assets/desert-soft-clay/settings/profile.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_profile_acc">Profil i Nalog</span></span>
                 
                 <input type="text" id="setting-name" class="modal-input settings-input" placeholder="Igrač" data-lang-placeholder="settings_name_placeholder" onchange="app.saveSettingAuto('name', this.value)">
                 
@@ -1035,23 +1053,23 @@
                 <span class="settings-section-title" data-lang="settings_sound_haptics">Zvuk i Haptika</span>
                 
                 <div class="settings-row">
-                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">🎵</span><img class="settings-row-soft-clay-icon" src="assets/easter-soft-clay/settings/sound.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_sound">Zvučni efekti</span></span>
+                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">🎵</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" src="assets/easter-soft-clay/settings/sound.png?v=1" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" src="assets/desert-soft-clay/settings/sound.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_sound">Zvučni efekti</span></span>
                     <input type="checkbox" id="setting-sound" class="settings-checkbox" onchange="app.saveSettingAuto('sound', this.checked)">
                 </div>
 
                 <div class="settings-row">
-                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">🎧</span><img class="settings-row-soft-clay-icon" src="assets/easter-soft-clay/settings/music.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_music">Muzika</span></span>
+                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">🎧</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" src="assets/easter-soft-clay/settings/music.png?v=1" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" src="assets/desert-soft-clay/settings/music.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_music">Muzika</span></span>
                     <input type="checkbox" id="setting-music" class="settings-checkbox" onchange="app.saveSettingAuto('music', this.checked)">
                 </div>
 
                 <div class="settings-row">
-                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">📳</span><img class="settings-row-soft-clay-icon" src="assets/easter-soft-clay/settings/vibration.png?v=1" alt="" aria-hidden="true"><span data-lang="set_vibration">Vibracija</span></span>
+                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">📳</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" src="assets/easter-soft-clay/settings/vibration.png?v=1" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" src="assets/desert-soft-clay/settings/vibration.png?v=1" alt="" aria-hidden="true"><span data-lang="set_vibration">Vibracija</span></span>
                     <input type="checkbox" id="setting-vibration" class="settings-checkbox" onchange="app.saveSettingAuto('vibration', this.checked)">
                 </div>
             </div>
 
             <div class="settings-section settings-section-last">
-                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-section-soft-clay-icon" src="assets/easter-soft-clay/settings/display-theme.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_display_lang">Prikaz i Jezik</span><img class="settings-section-soft-clay-icon settings-language-soft-clay-icon" src="assets/easter-soft-clay/settings/language.png?v=1" alt="" aria-hidden="true"></span>
+                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter" src="assets/easter-soft-clay/settings/display-theme.png?v=1" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert" src="assets/desert-soft-clay/settings/display-theme.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_display_lang">Prikaz i Jezik</span><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter settings-language-soft-clay-icon" src="assets/easter-soft-clay/settings/language.png?v=1" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert settings-language-soft-clay-icon-desert" src="assets/desert-soft-clay/settings/language.png?v=1" alt="" aria-hidden="true"></span>
                 
                 <select id="setting-theme" class="modal-input settings-input settings-select" onchange="app.saveSettingAuto('theme', this.value)">
                     <option value="dark" data-lang="theme_dark">Zelena</option>
@@ -1073,9 +1091,9 @@
             </div>
 
             <div class="settings-legal-row">
-                <span onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">📜</span><img class="settings-legal-soft-clay-icon" src="assets/easter-soft-clay/settings/terms.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_terms_label">Uslovi</span></span>
+                <span onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">📜</span><img class="settings-legal-soft-clay-icon settings-legal-soft-clay-icon-easter" src="assets/easter-soft-clay/settings/terms.png?v=1" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-desert" src="assets/desert-soft-clay/settings/terms.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_terms_label">Uslovi</span></span>
                 <span class="settings-legal-divider">|</span>
-                <span onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">🔒</span><img class="settings-legal-soft-clay-icon" src="assets/easter-soft-clay/settings/privacy.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_privacy_label">Privatnost</span></span>
+                <span onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">🔒</span><img class="settings-legal-soft-clay-icon settings-legal-soft-clay-icon-easter" src="assets/easter-soft-clay/settings/privacy.png?v=1" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-desert" src="assets/desert-soft-clay/settings/privacy.png?v=1" alt="" aria-hidden="true"><span data-lang="settings_privacy_label">Privatnost</span></span>
             </div>
             </div>
         </div>
@@ -1200,6 +1218,7 @@
             </h3>
             <div id="ws-hof-list" class="waiting-hof-list" style="display: flex; flex-direction: column; gap: 6px;">
                 <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="waiting-hof-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>
             </div>
         </div>
@@ -1430,7 +1449,8 @@
             <div class="chat-header global-chat-header">
                 <div class="global-chat-title-group">
                     <span class="global-chat-title global-chat-room-title">
-                        <img class="global-chat-header-soft-clay-icon" src="assets/easter-soft-clay/global-chat-pro-v4.png" alt="" aria-hidden="true" decoding="async">
+                        <img class="global-chat-header-soft-clay-icon global-chat-header-soft-clay-icon-easter" src="assets/easter-soft-clay/global-chat-pro-v4.png" alt="" aria-hidden="true" decoding="async">
+                        <img class="global-chat-header-soft-clay-icon-desert" src="assets/desert-soft-clay/global-chat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="ui_global_chat_title">GLOBAL CHAT</span>
                     </span>
                     <span class="global-chat-online-pill" title="Trenutno igrača na serveru" data-lang-title="tooltip_global_chat_online">
@@ -1442,7 +1462,8 @@
 
             <div id="global-chat-body" class="chat-body global-chat-body">
                 <div class="global-chat-welcome global-chat-state" data-chat-state="empty">
-                    <img class="global-chat-state-soft-clay-icon" src="assets/easter-soft-clay/global-chat-empty-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="global-chat-state-soft-clay-icon global-chat-state-soft-clay-icon-easter" src="assets/easter-soft-clay/global-chat-empty-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="global-chat-state-soft-clay-icon-desert" src="assets/desert-soft-clay/global-chat-empty-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span data-lang="global_chat_empty">Još nema poruka. Započnite razgovor.</span>
                 </div>
             </div>
@@ -1452,7 +1473,8 @@
                     <textarea id="global-chat-input" class="modal-input global-chat-input" maxlength="550" rows="1" placeholder="Napiši poruku..." data-lang-placeholder="global_chat_placeholder" autocomplete="off" enterkeyhint="send"></textarea>
                     <button id="btn-global-send" class="btn-chat-send global-chat-send" aria-label="Pošalji poruku" data-lang-aria="aria_send_message">
                         <span class="global-chat-send-fallback" aria-hidden="true">➤</span>
-                        <img class="global-chat-send-soft-clay-icon" src="assets/easter-soft-clay/global-chat-send-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="global-chat-send-soft-clay-icon global-chat-send-soft-clay-icon-easter" src="assets/easter-soft-clay/global-chat-send-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="global-chat-send-soft-clay-icon-desert" src="assets/desert-soft-clay/global-chat-send-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </button>
                 </div>
                 <div class="global-chat-hint-row">
@@ -1470,6 +1492,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title online-players-title">
                         <img class="online-players-header-soft-clay-icon" src="assets/soft-clay-online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="online-players-header-soft-clay-icon-desert" src="assets/desert-soft-clay/online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span class="online-players-title-fallback" aria-hidden="true">🟢</span>
                         <span data-lang="online_players_title">ONLINE IGRAČI</span>
                     </span>
@@ -1485,6 +1508,7 @@
             <div id="online-players-body" class="chat-body global-chat-body online-players-body">
                 <div class="online-players-state is-loading" data-online-state="loading">
                     <img class="online-players-state-soft-clay-icon" src="assets/easter-soft-clay/online-players-state-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="online-players-state-soft-clay-icon-desert" src="assets/desert-soft-clay/online-players-state-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span data-lang="online_loading">Učitavam igrače...</span>
                 </div>
             </div>
@@ -1567,23 +1591,23 @@
 
     <script src="config.js?v=4.5"></script>
     <script src="managers.js?v=5.5"></script>
-    <script src="dnevniizazov.js?v=1.8"></script>
+    <script src="dnevniizazov.js?v=1.9"></script>
     <script src="riznica.js?v=1.4"></script>
     <script src="trophyManager.js?v=4.2"></script>
     <script src="features.js?v=3.8"></script>
-    <script src="toplista.js?v=4.1"></script>
+    <script src="toplista.js?v=4.3"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
     <script src="turnir.js?v=1001"></script>
-    <script src="pravilaigre.js?v=1.1"></script>
+    <script src="pravilaigre.js?v=1.2"></script>
     <script src="vracanjeupisa.js?v=1.4"></script>
-    <script src="globalchat.js?v=1.1"></script>
+    <script src="globalchat.js?v=1.2"></script>
     <script src="auth.js?v=1012"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=4.50"></script>
-    <script src="kvartalnaliga.js?v=1008"></script>
-    <script src="onlinenumber.js?v=1006"></script>
-    <script src="vatreniniz.js?v=1001"></script>
-    <script src="powerindex.js?v=1.1"></script>
+    <script src="game.js?v=4.57"></script>
+    <script src="kvartalnaliga.js?v=1009"></script>
+    <script src="onlinenumber.js?v=1007"></script>
+    <script src="vatreniniz.js?v=1003"></script>
+    <script src="powerindex.js?v=1.4"></script>
 
 </body>
 </html>
