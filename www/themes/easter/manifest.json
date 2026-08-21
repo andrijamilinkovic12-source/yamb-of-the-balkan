@@ -4,8 +4,8 @@
     "sr": "Vaskr Neumorphic UI Theme Pack",
     "en": "Joyful Easter Neumorphic UI Theme Pack"
   },
-  "version": "3.3.27",
-  "updated": "2026-08-18",
+  "version": "3.3.45",
+  "updated": "2026-08-21",
   "bodyClass": "easter-theme",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
   "entrypoints": {
@@ -45,7 +45,7 @@
     {
       "id": "treasury-inner-icons",
       "status": "complete",
-      "description": "Easter-only Soft Clay header, four tabs, rewarded-video actions, store-state marks and bronze/silver/gold collection emblems; individual collectible trophies remain reserved for a separate Trophy Pack."
+      "description": "Easter-only Soft Clay header, four tabs, rewarded-video actions, themed Ducat marks beside the balance and +500 reward, store-state marks and bronze/silver/gold collection emblems; individual collectible trophies remain reserved for a separate Trophy Pack."
     },
     {
       "id": "tournament-inner-icons",
@@ -65,7 +65,7 @@
     {
       "id": "statistics-inner-icons",
       "status": "complete",
-      "description": "Easter-only professional Soft Clay Statistics identity: room header, category marks for record, total games, wins, draws, losses, average, trophies, all-time points, ducats and H2H, plus a dedicated empty-H2H illustration. Fire Streak has its own full Soft Clay room icon in both the Statistics card and leaderboard header; Trophies uses a distinct achievement cup and All-Time PTS uses a gold-star infinity mark. Power Index and Fire Streak each use their own internally consistent gold, silver and bronze podium set with lightning and flame identities. Charts, progress bars, avatars, values, POB/NER/POR colours, swipe and H2H card dimensions remain unchanged."
+      "description": "Easter-only professional Soft Clay Statistics identity: room header, category marks for record, total games, wins, draws, losses, average, trophies, all-time points, ducats and H2H, plus a dedicated empty-H2H illustration. The H2H title uses one themed swords icon on the left without a duplicate legacy symbol on the right. Fire Streak has its own full Soft Clay room icon in both the Statistics card and leaderboard header; Trophies uses a distinct achievement cup and All-Time PTS uses a gold-star infinity mark. Power Index and Fire Streak each use their own internally consistent gold, silver and bronze podium set with lightning and flame identities. Charts, progress bars, avatars, values, POB/NER/POR colours, swipe and H2H card dimensions remain unchanged."
     },
     {
       "id": "settings-inner-icons",
@@ -85,7 +85,7 @@
     {
       "id": "motion",
       "status": "complete",
-      "description": "Soft Easter-specific motion for panel entrance, shimmer, hover and waiting pulse, with reduced-motion fallback."
+      "description": "Soft Easter-specific motion for panel entrance, shimmer, hover and waiting pulse. Treasury and Tournament are complete purpose-built Blender models with no PNG front plane or alpha-shell shortcut. Every visible component is real geometry: the Treasury barrel lid, arches, layered structural frame, recessed panels, four-layer lock, faceted gem, ornate side ring, shaped floral relief and embossed coin; and the Tournament open cup, layered scroll handles, jewels, multi-ring medallion, star, dense shaped laurel, rounded petal band, stem, collars and decorated multi-tier pedestal. Soft Clay materials use matched cream, purple, turquoise and gold with AgX studio rendering. Each rotation pivot passes through the object's own vertical centre. Treasury follows 0/-18/0/+18/0 degrees and Tournament the exact opposite 0/+18/0/-18/0 path. Every one of the 61 transparent frames is supersampled at 768 px and reduced with a premultiplied-alpha pipeline before lossless WebP encoding at approximately 13 fps and 4.7 seconds, preventing dirty bands and colour halos around the moving silhouette. The same Blender animations are used at the original large size in the 4.6-second Treasury and Tournament room-entry sequences and restart from frame one on every entry; title spacing, title wave and Tournament top-three panel remain unchanged. No scale animation, narrowing compensation, lateral orbit or raster deformation is used. Main-menu icons retain the original 62 px visual slot; click targets, card dimensions and the Tournament notification badge remain fixed. The original static Soft Clay assets remain the prefers-reduced-motion fallback."
     },
     {
       "id": "empty-loading-error",
@@ -131,7 +131,7 @@
     "Two Players Hotseat keeps its existing 4.6-second Easter room intro and needs no duplicate table-header mark. When a saved Hotseat game exists, the unchanged mode card replaces its normal icon/title content with fully visible, centred Easter Continue and New Game controls; the normal content never remains underneath them. Its existing themed two-player presentation remains unchanged, while the shared end screen shows one Easter Soft Clay winner symbol only when there is a winner; draws show no winner symbol. No placement-medal set is used. Avatars, dual-board switching, swipe, automatic active-player following, active-player marker, board controls and scoring remain unchanged.",
     "Find Opponent uses an Easter-only inner Soft Clay state pack across searching, opponent found, online duel and spectating: the approved globe in the waiting header, radar search, themed VS badge, opponent-found mark, existing approved spectate eye, and distinct disconnected/reconnected connection marks. Player cards, avatars, names, Power/POB/NER/POR, automatic and manual board paging, connection status colours and close control remain unchanged. Individual duels use no placement medals.",
     "Invite Friend uses an Easter-only inner Soft Clay mini-pack across My Card, Friends List, Add Friend, Send Invitation, Invitation Sent and Invitation Accepted states: the approved invite mark in the waiting header, approved Add Friend mark, dedicated send/sent/accepted marks and a dedicated empty-list illustration. The unchanged full-size owner card uses two balanced contrasting panels. Both panels share exact horizontal baselines for avatar, fitted full name, Power, POB, NER and POR. The right panel resolves the real most-played H2H rival and refreshes that player's real public Power Index approximately every five seconds while the room remains open, using the live friends payload as an immediate source and a dedicated authenticated public-profile lookup for non-friends; no value is fabricated. It uses only the remaining lower space for a divider followed by the Greatest Rival label, without shifting any aligned data row. A truthful empty state is used when no duel exists. Every real friend card uses one contrasting Easter subcard with Power, POB, NER and POR in separate vertical rows. The complete friends row is lifted 1.5 mm above the phone safe zone, while Invite or Offline uses a compact 32 px action with a fixed 1.5 mm gap below the statistics subcard. Room code, close control, safe-zone protection and invitation logic remain unchanged.",
-    "Treasury uses an Easter-only inner Soft Clay pack: the approved Treasury header mark; dedicated Trophies, Dice Skins, Effects and Themes tab icons; the shared rewarded-video mark; purchased, active, locked and insufficient-ducats state icons; and bronze, silver and gold collection marks. Real dice-skin, theme and effect previews, prices, purchase logic and individual collectible trophies remain unchanged. Individual trophy replacement is deferred to a separate Treasury Trophy Pack.",
+    "Treasury uses an Easter-only inner Soft Clay pack: the approved Treasury header mark; dedicated Trophies, Dice Skins, Effects and Themes tab icons; the shared rewarded-video mark; the Easter Ducat mark beside both the live balance and +500 reward; purchased, active, locked and insufficient-ducats state icons; and bronze, silver and gold collection marks. Real dice-skin, theme and effect previews, prices, purchase logic and individual collectible trophies remain unchanged. Individual trophy replacement is deferred to a separate Treasury Trophy Pack.",
     "Tournament uses an Easter-only professional inner Soft Clay pack: the approved trophy identity replaces the old header and Hall of Fame trophy only in Easter; Information, Bracket and Hall of Fame tabs have dedicated icons; registration, refund, locked registration, tournament start, active match and completed match have distinct state symbols; the all-time leaderboard alone uses gold, silver and bronze podium medals. A specific tournament result uses only the champion trophy and runner-up silver finalist badge, never an invented third-place award. Bracket lines and geometry, quarterfinal/semifinal/final layout, avatars, names, scores, match times, reward logic and phase swipe remain unchanged.",
     "The Tournament top-three card is anchored 2 mm above the bottom safe zone; the icon and title move with the tournament composition without changing their dimensions or standard spacing.",
     "The Easter Tournament intro displays the real server-provided top three all-time tournament winners with avatar, full name and number of wins; it must never use fabricated ranking data.",

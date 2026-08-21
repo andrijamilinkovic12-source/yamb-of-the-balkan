@@ -4,6 +4,9 @@ firebase-service-account*.json
 service-account*.json
 *.service-account.json
 
+# Local render, emulator, QA and downloaded tool workspace
+tmp/
+
 # Local/editor files
 .vscode/*
 !.vscode/extensions.json

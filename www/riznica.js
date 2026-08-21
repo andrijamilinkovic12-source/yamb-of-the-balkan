@@ -36,14 +36,22 @@ class RiznicaManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
+        if (overlay.classList.contains('theme-easter')) {
+            const motionIcon = overlay.querySelector('.riznica-intro-gem-easter-motion');
+            if (motionIcon && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                const restartedIcon = motionIcon.cloneNode(true);
+                restartedIcon.src = restartedIcon.dataset.motionSrc;
+                motionIcon.replaceWith(restartedIcon);
+            }
+        }
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
         introText.textContent = '';
 
         const lang = localStorage.getItem('yamb_lang') || 'sr';
-        const isEasterIntro = overlay.classList.contains('theme-easter');
+        const isSoftClayIntro = overlay.classList.contains('theme-easter') || overlay.classList.contains('theme-desert');
 
-        if (isEasterIntro) {
+        if (isSoftClayIntro) {
             const introLabel = lang === 'en' || lang === 'en-GB' ? 'TREASURY' : 'RIZNICA';
             this.setEasterIntroTitle(introText, introLabel);
 
@@ -64,6 +72,7 @@ class RiznicaManager {
                 }
                 overlay.classList.add('hidden');
                 overlay.setAttribute('aria-hidden', 'true');
+                overlay.querySelector('.riznica-intro-gem-easter-motion')?.removeAttribute('src');
                 this.isIntroPlaying = false;
             }, introDuration);
             return;

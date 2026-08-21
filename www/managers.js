@@ -3480,11 +3480,18 @@ class ShopManager {
     }
 
     getEasterTreasuryStatusIcon(iconName, className = '') {
-        return `<img class="riznica-status-soft-clay-icon ${className}" src="assets/easter-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+        return `<img class="riznica-status-soft-clay-icon ${className}" src="assets/easter-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" alt="" aria-hidden="true" decoding="async">`;
     }
 
     getTreasuryRewardVideoIcon() {
-        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">';
+        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" src="assets/desert-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">';
+    }
+
+    getTreasuryInsufficientIconPath() {
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        return activeTheme === 'desert'
+            ? 'assets/desert-soft-clay/treasury/status-insufficient.png?v=3'
+            : 'assets/easter-soft-clay/treasury/status-insufficient.png?v=1';
     }
 
     render() {
@@ -3497,7 +3504,7 @@ class ShopManager {
             section.className = 'category-section';
             const categoryMeta = this.getEasterTreasuryCategoryMeta(categoryName);
             const categoryHtml = categoryMeta
-                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
+                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
                 : categoryName;
             section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''}>${categoryHtml}</div>`;
             
@@ -3662,7 +3669,7 @@ class ShopManager {
         if (this.balance < currentPrice) {
             if (typeof window.showNotification === 'function') {
                 window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!", {
-                    icon: 'assets/easter-soft-clay/treasury/status-insufficient.png?v=1',
+                    icon: this.getTreasuryInsufficientIconPath(),
                     className: 'treasury-insufficient-toast'
                 });
             } else if (window.modalManager && window.modalManager.overlay) {
@@ -3699,7 +3706,7 @@ class ShopManager {
         if (this.balance < safePrice) {
             if (typeof window.showNotification === 'function') {
                 window.showNotification(_safeT('modal_title_info'), _safeT('msg_no_money') || "Nemate dovoljno dukata!", {
-                    icon: 'assets/easter-soft-clay/treasury/status-insufficient.png?v=1',
+                    icon: this.getTreasuryInsufficientIconPath(),
                     className: 'treasury-insufficient-toast'
                 });
             } else if (window.modalManager && window.modalManager.overlay) {

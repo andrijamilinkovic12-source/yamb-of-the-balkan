@@ -71,10 +71,14 @@ class UndoManager {
         const undoIcon = document.getElementById('economy-header-undo-icon');
         const ducatsSoftClayIcon = document.getElementById('economy-header-ducats-soft-clay-icon');
         const undoSoftClayIcon = document.getElementById('economy-header-undo-soft-clay-icon');
+        const ducatsDesertIcon = document.getElementById('economy-header-ducats-desert-icon');
+        const undoDesertIcon = document.getElementById('economy-header-undo-desert-icon');
         if (ducatsIcon) ducatsIcon.classList.toggle('hidden', normalizedIndex === 1);
         if (undoIcon) undoIcon.classList.toggle('hidden', normalizedIndex === 0);
         if (ducatsSoftClayIcon) ducatsSoftClayIcon.classList.toggle('hidden', normalizedIndex === 1);
         if (undoSoftClayIcon) undoSoftClayIcon.classList.toggle('hidden', normalizedIndex === 0);
+        if (ducatsDesertIcon) ducatsDesertIcon.classList.toggle('hidden', normalizedIndex === 1);
+        if (undoDesertIcon) undoDesertIcon.classList.toggle('hidden', normalizedIndex === 0);
 
         if (normalizedIndex !== this.currentMenuPage) {
             this.currentMenuPage = normalizedIndex;

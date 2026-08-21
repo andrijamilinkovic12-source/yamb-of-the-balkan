@@ -255,6 +255,10 @@ body {
 .riznica-item-reward-video-soft-clay-icon,
 .riznica-status-soft-clay-icon,
 .riznica-category-soft-clay-icon,
+.riznica-balance-ducat-icon-easter,
+.riznica-balance-ducat-icon-desert,
+.riznica-ad-ducat-icon-easter,
+.riznica-ad-ducat-icon-desert,
 .custom-toast.treasury-insufficient-toast .custom-toast-soft-clay-icon {
     display: none;
 }
@@ -2018,19 +2022,35 @@ body {
     filter: drop-shadow(0 2px 5px rgba(0,0,0,0.42)) drop-shadow(0 0 8px rgba(255,214,111,0.24));
 }
 .tourney-header-icon-easter,
+.tourney-header-icon-desert,
 .tourney-tab-soft-clay-icon,
+.tourney-tab-desert-soft-clay-icon,
 .tourney-hof-trophy-easter,
+.tourney-hof-trophy-desert,
 .tourney-wins-trophy-icon-easter,
+.tourney-wins-trophy-icon-desert,
 .tourney-action-soft-clay-icon,
+.tourney-action-desert-soft-clay-icon,
 .tourney-registration-soft-clay-icon,
+.tourney-registration-desert-soft-clay-icon,
 .tourney-round-trophy-easter,
+.tourney-round-trophy-desert,
 .tourney-match-state-soft-clay-icon,
 .tourney-inline-match-state,
+.tourney-inline-match-state-desert,
 .tourney-inline-active-match-icon,
+.tourney-inline-active-match-icon-desert,
 .tourney-podium-medal,
+.tourney-podium-medal-desert,
 .tourney-match-result-icon-easter,
+.tourney-match-result-icon-desert,
+.tourney-finalist-result-icon-easter,
+.tourney-finalist-result-icon-desert,
 .tourney-finalist-result,
-.tourney-prize-result-icon {
+.tourney-prize-result-icon,
+.tourney-prize-result-icon-desert,
+.tournament-intro-wins-icon-easter,
+.tournament-intro-wins-icon-desert {
     display: none;
 }
 

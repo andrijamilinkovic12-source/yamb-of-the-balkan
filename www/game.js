@@ -2375,6 +2375,7 @@ class YambApp {
         let html = `
             <div class="friend-card add-new" onclick="app.searchAndAddFriend()">
                 <img class="easter-invite-add-icon" src="assets/easter-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="desert-invite-add-icon" src="assets/desert-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <div class="friend-card-add-fallback" style="font-size: 2.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 5px; font-weight: 300;">+</div>
                 <span style="color:var(--text-main); font-weight:800; font-size:0.75rem; text-align:center; line-height: 1.2;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
             </div>
@@ -2447,7 +2448,7 @@ class YambApp {
                                 <div class="easter-friend-record-row easter-friend-loss"><span>POR</span><strong>${safeLosses}</strong></div>
                             </div>
                         </div>
-                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
+                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-invite-send-icon" src="assets/desert-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
                     </div>
                 `;
             });
@@ -2456,6 +2457,7 @@ class YambApp {
             html += `
                 <div class="easter-invite-empty-state" role="status">
                     <img src="assets/easter-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="desert-invite-empty-icon" src="assets/desert-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span>${gt('friends_empty') || 'Još nema prijatelja.'}</span>
                 </div>
             `;
@@ -2554,7 +2556,9 @@ class YambApp {
 
             if (typeof window.showNotification === 'function') {
                 window.showNotification(titleText, sentText, {
-                    icon: 'assets/easter-soft-clay/invite/sent.png?v=1',
+                    icon: document.body.classList.contains('desert-theme')
+                        ? 'assets/desert-soft-clay/invite/sent.png?v=1'
+                        : 'assets/easter-soft-clay/invite/sent.png?v=1',
                     className: 'invite-sent-toast'
                 });
             } else {
@@ -3186,13 +3190,13 @@ class YambApp {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
                             gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆",
                             { contextClass: 'tourney-winner' }
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon" src="assets/easter-soft-clay/tournament/finalist-silver.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver.png?v=3" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
                             gt('tourney_finalist_title') || "FINALISTA 🥈",
                             { contextClass: 'tourney-finalist' }
                         );
@@ -4031,7 +4035,7 @@ class YambApp {
     
     async requestRematch() {
         if (!this.socket || this.isSpectator || !this.onlineMode) return;
-        
+
         const btnRematch = document.getElementById('btn-rematch');
         if (btnRematch) {
             btnRematch.disabled = true;
@@ -4039,7 +4043,7 @@ class YambApp {
             btnRematch.style.background = 'linear-gradient(45deg, #FF9800, #F57C00)';
             btnRematch.style.boxShadow = 'none';
         }
-        
+
         this.soundMgr.click();
         const rewardReady = await this.claimPendingBaseRewardBeforeRematch();
         if (!rewardReady) {
@@ -4330,7 +4334,7 @@ class YambApp {
 
     shouldPlayDesertRoomIntro(roomId) {
         return (localStorage.getItem('yamb_theme') || 'dark') === 'desert'
-            && ['leaderboard', 'statistics', 'settings', 'globalChat', 'onlinePlayers'].includes(roomId);
+            && ['leaderboard', 'statistics', 'settings', 'globalChat', 'onlinePlayers', 'economy'].includes(roomId);
     }
 
     playEasterRoomIntro(roomId, onComplete) {
@@ -4362,6 +4366,7 @@ class YambApp {
             },
             hotseat: {
                 icon: 'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'TWO PLAYERS HOTSEAT'
@@ -4369,6 +4374,7 @@ class YambApp {
             },
             opponent: {
                 icon: 'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
                 scale: 1.2,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'FIND OPPONENT'
@@ -4376,6 +4382,7 @@ class YambApp {
             },
             invite: {
                 icon: 'assets/easter-soft-clay/mode-invite-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
                 scale: 1.05,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'INVITE FRIEND'
@@ -4383,13 +4390,13 @@ class YambApp {
             },
             globalChat: {
                 icon: 'assets/easter-soft-clay/global-chat-pro-v4.png',
-                desertIcon: 'assets/desert-soft-clay/global-chat-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/global-chat-pro.png?v=2',
                 scale: 1,
                 label: () => 'GLOBAL CHAT'
             },
             onlinePlayers: {
                 icon: 'assets/soft-clay-online-players-pro.png?v=1',
-                desertIcon: 'assets/desert-soft-clay/online-players-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/online-players-pro.png?v=3',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'ONLINE PLAYERS'
@@ -4397,6 +4404,7 @@ class YambApp {
             },
             economy: {
                 icon: 'assets/soft-clay-ducats-undo-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
                 scale: 1,
                 lines: () => [
                     gt('menu_ducats') || 'DUKATI',
@@ -4697,10 +4705,16 @@ class YambApp {
         }
 
         const titleEl = document.getElementById('waiting-title');
-        if (titleEl) titleEl.innerText = gt('ws_title_invite') || "POZOVI PRIJATELJA";
-        
+        if (titleEl) {
+            titleEl.setAttribute('data-lang', 'ws_title_invite');
+            titleEl.innerText = gt('ws_title_invite') || "POZOVI PRIJATELJA";
+        }
+
         const msgEl = document.getElementById('wait-msg');
-        if (msgEl) msgEl.innerText = gt('ws_msg_invite') || "Pošaljite link, odaberite prijatelja iz list ili dodajte novog!";
+        if (msgEl) {
+            msgEl.setAttribute('data-lang', 'ws_msg_invite');
+            msgEl.innerText = gt('ws_msg_invite') || "Pošaljite link, odaberite prijatelja iz liste ili dodajte novog!";
+        }
         
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
@@ -4894,10 +4908,16 @@ class YambApp {
         }
 
         const titleEl = document.getElementById('waiting-title');
-        if (titleEl) titleEl.innerText = gt('ws_searching') || "TRAŽENJE PROTIVNIKA...";
-        
+        if (titleEl) {
+            titleEl.setAttribute('data-lang', 'ws_searching');
+            titleEl.innerText = gt('ws_searching') || "TRAŽENJE PROTIVNIKA...";
+        }
+
         const msgEl = document.getElementById('wait-msg');
-        if (msgEl) msgEl.innerText = gt('ws_wait_msg') || "Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.";
+        if (msgEl) {
+            msgEl.setAttribute('data-lang', 'ws_wait_msg');
+            msgEl.innerText = gt('ws_wait_msg') || "Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.";
+        }
 
         const myImg = document.getElementById('waiting-my-img');
         const authImg = document.getElementById('auth-user-photo');
@@ -5025,7 +5045,7 @@ class YambApp {
                 : fallbackText;
 
             timerDisplay.style.display = 'flex';
-            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
+            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" src="assets/desert-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
             timerDisplay.style.animation = 'pulse 1s infinite';
 
             if (this.opponentReconnectGraceDeadline && msLeft <= 0) {
@@ -5092,7 +5112,7 @@ class YambApp {
             if (this.isSpectator) {
                 timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
                 timerDisplay.style.display = 'flex';
-                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
+                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectating-live-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
             } else if (this.onlineMode && this.gameActive) {
                 timerDisplay.style.display = 'flex';
@@ -5203,7 +5223,12 @@ class YambApp {
                     gt('info_title') || "INFO",
                     gt('opp_reconnected') || "Protivnik se vratio u igru!",
                     isRandomOpponentRoom
-                        ? { icon: 'assets/easter-soft-clay/opponent/reconnected.png?v=1', className: 'opponent-reconnected-toast' }
+                        ? {
+                            icon: document.body.classList.contains('desert-theme')
+                                ? 'assets/desert-soft-clay/opponent/reconnected.png?v=1'
+                                : 'assets/easter-soft-clay/opponent/reconnected.png?v=1',
+                            className: 'opponent-reconnected-toast'
+                        }
                         : {}
                 );
             }
@@ -5275,7 +5300,7 @@ class YambApp {
             const qlAssetRoot = (localStorage.getItem('yamb_theme') || 'dark') === 'desert'
                 ? 'assets/desert-soft-clay/ql'
                 : 'assets/easter-soft-clay/ql';
-            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlAssetRoot}/medal-${medalType}.png?v=1" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
+            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlAssetRoot}/medal-${medalType}.png?v=2" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
             let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
             
@@ -5963,7 +5988,9 @@ class YambApp {
 
         this.socket.on('room_invite_accepted', (data = {}) => {
             showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data, {
-                icon: 'assets/easter-soft-clay/invite/accepted.png?v=1',
+                icon: document.body.classList.contains('desert-theme')
+                    ? 'assets/desert-soft-clay/invite/accepted.png?v=1'
+                    : 'assets/easter-soft-clay/invite/accepted.png?v=1',
                 className: 'invite-accepted-toast'
             });
         });
@@ -8361,7 +8388,7 @@ class YambApp {
     // --- UNDO MENU & TOKENS (Delegati za vracanjeupisa.js) ---
     
     openUndoMenu(options = {}) {
-        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('economy'))) {
             this.playEasterRoomIntro('economy', () => this.openUndoMenu({ skipRoomIntro: true }));
             return;
         }
@@ -8410,11 +8437,11 @@ class YambApp {
                 <div style="width: 96px; height: 96px; margin: 0 auto 12px auto; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,214,76,0.18), rgba(0,0,0,0.12) 70%); box-shadow: 0 0 22px rgba(255,214,76,0.24); animation: popIn 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                     <img class="quarter-winner-logo quarter-winner-logo-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
                     <img class="quarter-winner-logo quarter-winner-logo-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="quarter-winner-logo quarter-winner-logo-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="quarter-winner-logo quarter-winner-logo-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
                 </div>
                 <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
-                <img class="ql-quarter-champion-medal" src="${qlAssetRoot}/medal-gold.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="ql-quarter-champion-medal" src="${qlAssetRoot}/medal-gold.png?v=2" alt="" aria-hidden="true" decoding="async">
 
                 <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
                     <img src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">
