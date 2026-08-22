@@ -5610,6 +5610,32 @@ function isSpectatableLocalRoom(roomId, socketId = '', uid = '') {
     return false;
 }
 
+function releaseLocalRoomForSocket(socketOrId) {
+    const socketId = typeof socketOrId === 'string' ? socketOrId : socketOrId?.id;
+    if (!socketId) return false;
+
+    const roomId = playerRooms[socketId];
+    if (!isLocalRoomId(roomId)) return false;
+
+    const clientSocket = typeof socketOrId === 'string'
+        ? io.sockets.sockets.get(socketId)
+        : socketOrId;
+
+    if (clientSocket) {
+        clientSocket.leave(roomId);
+        if (clientSocket.spectatingRoom === roomId) {
+            clientSocket.isSpectator = false;
+            clientSocket.spectatingRoom = null;
+        }
+    }
+
+    if (playerRooms[socketId] === roomId) delete playerRooms[socketId];
+    delete gameStartTimes[socketId];
+    delete gameCarriedDurations[socketId];
+    updateRoomSpectators(roomId);
+    return true;
+}
+
 function getLiveLocalRoomForSocket(socketId, uid = '') {
     const candidateSocketIds = new Set();
     if (socketId) candidateSocketIds.add(socketId);
@@ -5670,26 +5696,30 @@ function getActiveGameStateForSocket(socketId, uid = '', options = {}) {
     const directRoom = playerRooms[socketId];
     if (directRoom) {
         if (isLocalRoomId(directRoom)) {
-            return makeBusyState('local_game', directRoom);
-        }
-
-        const state = roomState[directRoom];
-        if (state) {
-            if (!state.gameFinished && Array.isArray(state.players) && state.players.includes(socketId)) {
-                return makeBusyState('online_game', directRoom);
+            if (isSpectatableLocalRoom(directRoom, socketId, uid)) {
+                return makeBusyState('local_game', directRoom);
             }
 
-            if (state.gameFinished) return null;
-        }
+            releaseLocalRoomForSocket(socketId);
+        } else {
+            const state = roomState[directRoom];
+            if (state) {
+                if (!state.gameFinished && Array.isArray(state.players) && state.players.includes(socketId)) {
+                    return makeBusyState('online_game', directRoom);
+                }
 
-        if (privateRooms[directRoom]) {
-            if (options.ignoreWaitingPrivateRoom && isWaitingPrivateRoomParticipant(directRoom, socketId, uid)) {
-                return null;
+                if (state.gameFinished) return null;
             }
-            return makeBusyState('private_room', directRoom);
-        }
 
-        if (!state) delete playerRooms[socketId];
+            if (privateRooms[directRoom]) {
+                if (options.ignoreWaitingPrivateRoom && isWaitingPrivateRoomParticipant(directRoom, socketId, uid)) {
+                    return null;
+                }
+                return makeBusyState('private_room', directRoom);
+            }
+
+            if (!state) delete playerRooms[socketId];
+        }
     }
 
     for (const [roomId, state] of Object.entries(roomState)) {
@@ -11253,13 +11283,16 @@ io.on('connection', (socket) => {
 
         if (waitingPlayer && waitingPlayer.id === socket.id) return;
 
+        releaseLocalRoomForSocket(socket);
+
         const matchmakingBusyState = getPlayerBusyState(socket.id, requesterUid, {
             ignoreWaitingSocketId: socket.id,
             ignoreWaitingUid: requesterUid,
             ignoreClientBusy: true
         });
         if (matchmakingBusyState) {
-            socket.emit('error_msg', 'err_player_busy');
+            console.warn(`Random matchmaking blocked for ${socket.id}: ${matchmakingBusyState.reason || 'busy'} ${matchmakingBusyState.roomId || ''}`);
+            socket.emit('error_msg', 'err_matchmaking_busy');
             return;
         }
 
@@ -11280,6 +11313,7 @@ io.on('connection', (socket) => {
             const opponentSocket = io.sockets.sockets.get(opponentId);
 
             if (opponentSocket) {
+                releaseLocalRoomForSocket(opponentSocket);
                 const opponentUid = getSocketUid(opponentId);
                 const opponentMatchmakingBusyState = getPlayerBusyState(opponentId, opponentUid, {
                     ignoreWaitingSocketId: opponentId,
@@ -11287,6 +11321,7 @@ io.on('connection', (socket) => {
                     ignoreClientBusy: true
                 });
                 if (opponentMatchmakingBusyState) {
+                    console.warn(`Random waiting player skipped for ${opponentId}: ${opponentMatchmakingBusyState.reason || 'busy'} ${opponentMatchmakingBusyState.roomId || ''}`);
                     waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
                     socket.emit('waiting_for_opponent');
                     return;

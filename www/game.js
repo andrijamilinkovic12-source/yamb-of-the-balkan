@@ -3161,14 +3161,24 @@ class YambApp {
                     if (typeof t === 'function' && t(msgKey) !== msgKey) {
                         finalMsg = gt(msgKey);
                     }
+                    const waitingScreen = document.getElementById('waiting-screen');
+                    const shouldExitRandomWaiting = waitingScreen
+                        && waitingScreen.classList.contains('active')
+                        && waitingScreen.classList.contains('is-random-online')
+                        && ['err_matchmaking_busy', 'err_player_busy'].includes(String(msgKey || ''));
+                    const finishErrorNotice = () => {
+                        if (finalMsg.includes('Već ste preuzeli') || finalMsg.includes('dnevnu nagradu')) {
+                            const uid = localStorage.getItem('yamb_uid');
+                            localStorage.setItem('yamb_last_daily_' + uid, this.getDailyChallengeDayKey());
+                            this.showMainMenu();
+                            return;
+                        }
+                        if (shouldExitRandomWaiting) this.cancelOnline();
+                    };
                     if (this.modal) {
-                        this.modal.alert(finalMsg, gt('err_title') || gt('modal_title_info') || "INFO").then(() => {
-                            if (finalMsg.includes('Već ste preuzeli') || finalMsg.includes('dnevnu nagradu')) {
-                                const uid = localStorage.getItem('yamb_uid');
-                                localStorage.setItem('yamb_last_daily_' + uid, this.getDailyChallengeDayKey());
-                                this.showMainMenu();
-                            }
-                        });
+                        this.modal.alert(finalMsg, gt('err_title') || gt('modal_title_info') || "INFO").then(finishErrorNotice);
+                    } else {
+                        finishErrorNotice();
                     }
                 });
 
