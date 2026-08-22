@@ -4344,7 +4344,7 @@ class YambApp {
 
     shouldPlayDesertRoomIntro(roomId) {
         return (localStorage.getItem('yamb_theme') || 'dark') === 'desert'
-            && ['leaderboard', 'statistics', 'settings', 'globalChat', 'onlinePlayers', 'economy'].includes(roomId);
+            && ['leaderboard', 'statistics', 'settings', 'rules', 'globalChat', 'onlinePlayers', 'economy', 'hotseat', 'opponent', 'invite'].includes(roomId);
     }
 
     playEasterRoomIntro(roomId, onComplete) {
@@ -4371,6 +4371,7 @@ class YambApp {
             },
             rules: {
                 icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/rules-pro.png?v=1',
                 scale: 1.16,
                 label: () => gt('menu_rules') || 'PRAVILA'
             },
@@ -4588,7 +4589,7 @@ class YambApp {
     }
     
     showRules(options = {}) {
-        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('rules'))) {
             this.playEasterRoomIntro('rules', () => this.showRules({ skipRoomIntro: true }));
             return;
         }
@@ -4694,7 +4695,7 @@ class YambApp {
         const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return;
 
-        if (!options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('invite'))) {
             this.playEasterRoomIntro('invite', () => this.startPrivateHosting({ skipRoomIntro: true }));
             return;
         }
@@ -4905,7 +4906,7 @@ class YambApp {
         const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return;
 
-        if (mode === 'random' && !options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+        if (mode === 'random' && !options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('opponent'))) {
             this.playEasterRoomIntro('opponent', () => this.setupOnline('random', { skipRoomIntro: true }));
             return;
         }
@@ -6170,7 +6171,7 @@ class YambApp {
         if(this.soundMgr) this.soundMgr.click();
 
         const openMode = () => {
-            if (numPlayers === 2 && !options.skipRoomIntro && this.shouldPlayEasterRoomIntro()) {
+            if (numPlayers === 2 && !options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('hotseat'))) {
                 this.playEasterRoomIntro('hotseat', () => this.setupGame(2));
                 return;
             }
@@ -6225,7 +6226,7 @@ class YambApp {
         }
 
         if (wantResume) {
-            if (numPlayers === 2 && this.shouldPlayEasterRoomIntro()) {
+            if (numPlayers === 2 && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('hotseat'))) {
                 this.playEasterRoomIntro('hotseat', () => this.loadSavedGame(2));
             } else {
                 this.loadSavedGame(numPlayers);
@@ -6233,7 +6234,7 @@ class YambApp {
         } else {
             const uid = localStorage.getItem('yamb_uid') || 'guest';
             if (window.localforage) await localforage.removeItem(`yamb_saved_game_${uid}_${numPlayers}`);
-            if (numPlayers === 2 && this.shouldPlayEasterRoomIntro()) {
+            if (numPlayers === 2 && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('hotseat'))) {
                 this.playEasterRoomIntro('hotseat', () => this.setupGame(2));
             } else {
                 this.setupGame(numPlayers);

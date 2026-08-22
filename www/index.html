@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.19">
-    <link rel="stylesheet" href="teme.css?v=6.14">
+    <link rel="stylesheet" href="teme.css?v=6.18">
     <link rel="stylesheet" href="kockice.css?v=1.2">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -433,6 +433,7 @@
             <span class="main-global-chat-fallback" aria-hidden="true">💬</span>
             <img class="easter-global-chat-icon" src="assets/easter-soft-clay/global-chat-pro-v4.png" alt="" aria-hidden="true" decoding="async">
             <img class="desert-global-chat-icon" src="assets/desert-soft-clay/global-chat-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
+            <img class="nebula-global-chat-icon" src="assets/severna-soft-clay/global-chat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
         </div>
 
         <div style="display: flex; align-items: stretch; justify-content: center; gap: 10px; width: 100%; max-width: 380px; margin: 20px auto 15px auto; padding: 0 10px; z-index: 10; margin-top: 50px;">
@@ -442,6 +443,7 @@
                     <div class="main-online-icon-wrap">
                         <img class="main-online-soft-clay-icon" src="assets/soft-clay-online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="main-online-soft-clay-icon-desert" src="assets/desert-soft-clay/online-players-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
+                        <img class="main-online-soft-clay-icon-nebula" src="assets/severna-soft-clay/online-players-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <div class="main-online-presence-dot" aria-hidden="true"></div>
                     </div>
                     <span id="live-online-count" style="font-size: 1.2rem; font-weight: 900; color: var(--success); margin-top: 3px;">1</span>
@@ -467,6 +469,7 @@
                     <div class="main-economy-icon-wrap">
                         <img class="main-economy-soft-clay-icon" src="assets/soft-clay-ducats-undo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="main-economy-soft-clay-icon-desert" src="assets/desert-soft-clay/ducats-undo-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
+                        <img class="main-economy-soft-clay-icon-nebula" src="assets/severna-soft-clay/ducats-undo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </div>
                     <span id="menu-dukati-count" style="font-size: 1.15rem; font-weight: 900; color: var(--gold-main); margin-top: 3px; text-shadow: 0 1px 3px rgba(0,0,0,0.5);">0</span>
                     <span data-lang="menu_ducats" style="font-size: 0.55rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Dukati</span>
@@ -485,8 +488,9 @@
                         👤
                         <img class="easter-solo-soft-clay-icon" src="assets/easter-soft-clay/mode-solo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="desert-solo-soft-clay-icon" src="assets/desert-soft-clay/mode-solo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="nebula-solo-soft-clay-icon" src="assets/severna-soft-clay/mode-solo-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </span>
-                    <span class="mode-text" data-lang="menu_solo" data-easter-label-sr="Solo igra" data-easter-label-en="Solo game" data-desert-label-sr="Solo igra" data-desert-label-en="Solo game">Solo Igra</span>
+                    <span class="mode-text" data-lang="menu_solo" data-easter-label-sr="Solo igra" data-easter-label-en="Solo game" data-desert-label-sr="Solo igra" data-desert-label-en="Solo game" data-nebula-label-sr="Solo igra" data-nebula-label-en="Solo game">Solo Igra</span>
                 </div>
                 <div id="mode-resume-1" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
                     <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 1)" data-lang="menu_resume_inline">▶ NASTAVI</button>
@@ -502,8 +506,9 @@
                         👥
                         <img class="easter-hotseat-soft-clay-icon" src="assets/easter-soft-clay/mode-hotseat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="desert-hotseat-soft-clay-icon" src="assets/desert-soft-clay/mode-hotseat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="nebula-hotseat-soft-clay-icon" src="assets/severna-soft-clay/mode-hotseat-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </span>
-                    <span class="mode-text" data-lang="menu_dual" data-easter-label-sr="Dva igrača (Hotseat)" data-easter-label-en="Two players (Hotseat)" data-desert-label-sr="Dva igrača (Hotseat)" data-desert-label-en="Two players (Hotseat)">Dva Igrača</span>
+                    <span class="mode-text" data-lang="menu_dual" data-easter-label-sr="Dva igrača (Hotseat)" data-easter-label-en="Two players (Hotseat)" data-desert-label-sr="Dva igrača (Hotseat)" data-desert-label-en="Two players (Hotseat)" data-nebula-label-sr="Dva igrača (Hotseat)" data-nebula-label-en="Two players (Hotseat)">Dva Igrača</span>
                 </div>
                 <div id="mode-resume-2" style="display: none; flex-direction: column; gap: 8px; width: 100%; height: 100%; justify-content: center; position: relative; z-index: 1;">
                     <button class="mini-btn btn-resume-inline" onclick="event.stopPropagation(); app.confirmResumeInline(true, 2)" data-lang="menu_resume_inline">▶ NASTAVI</button>
@@ -519,8 +524,9 @@
                         🌐
                         <img class="easter-opponent-soft-clay-icon" src="assets/easter-soft-clay/mode-opponent-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="desert-opponent-soft-clay-icon" src="assets/desert-soft-clay/mode-opponent-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="nebula-opponent-soft-clay-icon" src="assets/severna-soft-clay/mode-opponent-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </span>
-                    <span class="mode-text" data-lang="menu_online" data-easter-label-sr="Nađi protivnika (Random)" data-easter-label-en="Find opponent (Random)" data-desert-label-sr="Nađi protivnika (Random)" data-desert-label-en="Find opponent (Random)">Random Igrač</span>
+                    <span class="mode-text" data-lang="menu_online" data-easter-label-sr="Nađi protivnika (Random)" data-easter-label-en="Find opponent (Random)" data-desert-label-sr="Nađi protivnika (Random)" data-desert-label-en="Find opponent (Random)" data-nebula-label-sr="Nađi protivnika (Random)" data-nebula-label-en="Find opponent (Random)">Random Igrač</span>
                 </div>
             </button>
             
@@ -532,8 +538,9 @@
                         🔗
                         <img class="easter-invite-soft-clay-icon" src="assets/easter-soft-clay/mode-invite-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="desert-invite-soft-clay-icon" src="assets/desert-soft-clay/mode-invite-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="nebula-invite-soft-clay-icon" src="assets/severna-soft-clay/mode-invite-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </span>
-                    <span class="mode-text" data-lang="menu_invite" data-easter-label-sr="Pozovi prijatelja" data-easter-label-en="Invite friend" data-desert-label-sr="Pozovi prijatelja" data-desert-label-en="Invite friend">Prijatelj</span>
+                    <span class="mode-text" data-lang="menu_invite" data-easter-label-sr="Pozovi prijatelja" data-easter-label-en="Invite friend" data-desert-label-sr="Pozovi prijatelja" data-desert-label-en="Invite friend" data-nebula-label-sr="Pozovi prijatelja" data-nebula-label-en="Invite friend">Prijatelj</span>
                 </div>
             </button>
             
@@ -547,12 +554,14 @@
                 <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/treasury-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="easter-soft-clay-special-motion-icon" src="assets/easter-soft-clay/treasury-motion-3d.webp?v=7" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-special-icon" src="assets/desert-soft-clay/treasury-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
+                <img class="nebula-soft-clay-special-icon" src="assets/severna-soft-clay/treasury-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert(typeof t === 'function' ? t('tourney_coming_soon') : 'Turniri stižu uskoro!'); }" aria-label="Turnir" data-lang-aria="tourney_title">
                 <img class="special-svg-icon special-svg-icon--tournament" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
                 <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/tournament-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="easter-soft-clay-special-motion-icon" src="assets/easter-soft-clay/tournament-motion-3d.webp?v=7" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-special-icon" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
+                <img class="nebula-soft-clay-special-icon" src="assets/severna-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <div id="tourney-status-badge" style="position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; display: none; z-index: 10;"></div>
             </button>
         </div>
@@ -562,26 +571,31 @@
                 <svg class="menu-svg-icon menu-svg-icon--daily" aria-hidden="true" focusable="false"><use href="#menu-icon-daily"></use></svg>
                 <img class="easter-soft-clay-icon easter-soft-clay-icon--daily" src="assets/easter-soft-clay/daily-challenge-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon desert-soft-clay-icon--daily" src="assets/desert-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="nebula-soft-clay-icon nebula-soft-clay-icon--daily" src="assets/severna-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showHighscoresScreen()" aria-label="Top lista" data-lang-aria="menu_hs">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-leaderboard"></use></svg>
                 <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/leaderboard-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/leaderboard-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="nebula-soft-clay-icon" src="assets/severna-soft-clay/leaderboard-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showStats()" aria-label="Statistika" data-lang-aria="menu_stats">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-stats"></use></svg>
                 <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/statistics-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/statistics-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="nebula-soft-clay-icon" src="assets/severna-soft-clay/statistics-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showSettings()" aria-label="Podešavanja" data-lang-aria="menu_settings">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-settings"></use></svg>
                 <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/settings-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/settings-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="nebula-soft-clay-icon" src="assets/severna-soft-clay/settings-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showRules()" aria-label="Pravila igre" data-lang-aria="menu_rules">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-rules"></use></svg>
                 <img class="easter-soft-clay-icon" src="assets/easter-soft-clay/rules-pro.png" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" src="assets/desert-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="nebula-soft-clay-icon" src="assets/severna-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
             </button>
         </div>
     </div>
@@ -1632,12 +1646,12 @@
     <script src="toplista.js?v=4.3"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
     <script src="turnir.js?v=1005"></script>
-    <script src="pravilaigre.js?v=1.2"></script>
+    <script src="pravilaigre.js?v=1.4"></script>
     <script src="vracanjeupisa.js?v=1.5"></script>
     <script src="globalchat.js?v=1.2"></script>
     <script src="auth.js?v=1012"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=4.62"></script>
+    <script src="game.js?v=4.64"></script>
     <script src="kvartalnaliga.js?v=1009"></script>
     <script src="onlinenumber.js?v=1007"></script>
     <script src="vatreniniz.js?v=1003"></script>

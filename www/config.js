@@ -160,7 +160,7 @@ const SHOP_DATA = {
         { id: 'desert', name: { sr: 'Pustinjsko Staklo', en: 'Desert Glass' }, price: 0, adUnlock: 3, desc: { sr: 'Kompletan Pustinjsko staklo Pack: reljefna pustinja, stakleni badges & pills, tabla, UI, motion i topli audio efekti.', en: 'Complete Desert Glass Theme Pack: sculpted desert, glass badges & pills, board, UI, motion and warm audio cues.' }, icon: '🏜️', category: { sr: '💎 PREMIUM TEME', en: '💎 PREMIUM THEMES' } },
         // --- DODATO: Mesečev Sjaj ---
         { id: 'moon', name: { sr: 'Mesečev Sjaj', en: 'Moonlight' }, price: 25000, desc: { sr: 'Profesionalna lunarna tema sa realističnim kraterima, zvezdanim nebom i srebrnim UI sjajem.', en: 'Professional lunar theme with realistic craters, starfield depth, and silver UI glow.' }, icon: '🌕', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
-        { id: 'severna', name: { sr: 'Severna Maglina', en: 'Northern Nebula' }, price: 45000, desc: { sr: 'Premium tema sa dubokom noći, mlečnom maglinom i zlatno-tirkiznim staklom.', en: 'Premium theme with deep night, soft nebula, and gold-teal glass.' }, icon: '🌌', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } }
+        { id: 'severna', name: { sr: 'Severna Maglina', en: 'Northern Nebula' }, price: 45000, desc: { sr: 'Premium neuphorism tema sa ledenom maglinom, soft clay reljefom, frost glass pozadinom i hladnim cyan-violet ikonama.', en: 'Premium neuphorism theme with icy nebula, soft clay relief, frosted glass background and cool cyan-violet icons.' }, icon: '🌌', category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } }
     ],
 
     TROPHIES: [

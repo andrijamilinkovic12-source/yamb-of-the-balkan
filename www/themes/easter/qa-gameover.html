@@ -3,29 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pustinjsko staklo Pack — Game-over QA</title>
+  <title>Vaskr Theme Pack — Game-over QA</title>
   <link rel="stylesheet" href="../../style.css?v=5.6">
   <link rel="stylesheet" href="../../teme.css?v=6.17">
   <style>
     body { margin:0; min-height:100vh; font-family:Montserrat,Arial,sans-serif; }
     #game-over-screen { position:relative !important; inset:auto !important; min-height:100vh; padding:26px 18px; display:flex !important; gap:18px; overflow:visible !important; }
-    #game-over-screen .logo-anim { position:static !important; display:block !important; margin:0 !important; font-size:1.7rem !important; color:var(--desert-ui-title) !important; animation:none !important; }
+    #game-over-screen .logo-anim { position:static !important; display:block !important; margin:0 !important; font-size:1.7rem !important; color:var(--easter-ui-title) !important; animation:none !important; }
     #game-over-screen .modal-box { width:min(100%,400px) !important; max-height:none !important; padding:22px !important; text-align:center; }
-    #game-over-screen h2 { margin:0 0 9px; color:var(--desert-ui-title) !important; }
-    #game-over-screen p { margin:0 0 16px; color:var(--desert-ui-ink); font-size:.86rem; line-height:1.45; }
-    .qa-score-box { width:100%; padding:14px; margin-bottom:16px; border-radius:14px; background:var(--desert-ui-surface-inset); border:1px solid rgba(151,84,35,.20); box-shadow:var(--desert-ui-inset); }
-    .qa-score-label { color:var(--desert-ui-muted); font-size:.7rem; font-weight:800; letter-spacing:.7px; text-transform:uppercase; }
-    .qa-score { margin-top:5px; color:var(--desert-ui-gold); font-size:2.15rem; font-weight:900; }
+    #game-over-screen h2 { margin:0 0 9px; color:var(--easter-ui-title) !important; }
+    #game-over-screen p { margin:0 0 16px; color:var(--easter-ui-ink); font-size:.86rem; line-height:1.45; }
+    .qa-score-box { width:100%; padding:14px; margin-bottom:16px; border-radius:14px; background:var(--easter-ui-surface-inset); border:1px solid rgba(156,77,204,.22); box-shadow:var(--easter-ui-inset-deep); }
+    .qa-score-label { color:var(--easter-ui-muted); font-size:.7rem; font-weight:800; letter-spacing:.7px; text-transform:uppercase; }
+    .qa-score { margin-top:5px; color:var(--easter-ui-title); font-size:2.15rem; font-weight:900; }
     .qa-actions { width:100%; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
     .qa-actions button { min-height:43px; border-radius:999px; font-weight:900; }
   </style>
 </head>
-<body class="desert-theme">
+<body class="easter-theme">
   <section id="game-over-screen" class="screen active">
     <div class="logo-anim">KRAJ IGRE</div>
     <div class="modal-box">
       <h2>POBEDA!</h2>
-      <p>Odigrali ste odličnu partiju. Rezultat i nagrade ostaju čitljivi na svetloj pustinjskog staklo površini.</p>
+      <p>Vaskr završni ekran čuva svetao kontrast: ljubičaste akcije koriste krem tekst, a rezultat ostaje pregledan.</p>
       <div class="qa-score-box"><div class="qa-score-label">Osvojeni poeni</div><div class="qa-score">2.486</div></div>
       <div class="qa-actions"><button class="btn-secondary">MENI</button><button class="btn-primary">REVAŠ</button></div>
     </div>

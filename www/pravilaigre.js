@@ -10,26 +10,57 @@ function rulesAssetIconHtml(src, extraClass = '') {
     return `<img class="${className}" src="${src}" alt="" aria-hidden="true" decoding="async">`;
 }
 
+function rulesDesertAssetSrc(easterSrc = '') {
+    const source = String(easterSrc || '');
+    const [path, query = ''] = source.split('?');
+    const normalizedPath = path.replace(/\\/g, '/');
+    const cacheSuffix = query ? `?${query}` : '';
+    const desertOverrides = {
+        'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/desert-soft-clay/rules/pages/rules-scoring.png?v=1',
+        'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/desert-soft-clay/rules/pages/stats-leaderboards.png?v=1',
+        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/desert-soft-clay/rules/pages/multiplayer-competitions.png?v=1',
+        'assets/easter-soft-clay/rules/pages/communication.png': 'assets/desert-soft-clay/rules/pages/communication.png?v=1',
+        'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/desert-soft-clay/rules/pages/economy-treasury.png?v=1',
+        'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/desert-soft-clay/rules/pages/account-server.png?v=1',
+        'assets/easter-soft-clay/global-chat-pro-v4.png': 'assets/desert-soft-clay/global-chat-pro.png?v=1',
+        'assets/soft-clay-online-players-pro.png': 'assets/desert-soft-clay/online-players-pro.png?v=1'
+    };
+
+    if (desertOverrides[normalizedPath]) return desertOverrides[normalizedPath];
+    if (normalizedPath.includes('/easter-soft-clay/')) {
+        return normalizedPath.replace('/easter-soft-clay/', '/desert-soft-clay/') + cacheSuffix;
+    }
+    return '';
+}
+
 function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
     const suffix = extraClass ? ` ${extraClass}` : '';
-    return `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-default${suffix}" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" src="${easterSrc}" alt="" aria-hidden="true" decoding="async">`;
+    const desertSrc = rulesDesertAssetSrc(easterSrc);
+    const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-desert${suffix}" src="${desertSrc}" alt="" aria-hidden="true" decoding="async">` : '';
+    return `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-default${suffix}" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" src="${easterSrc}" alt="" aria-hidden="true" decoding="async">${desertIcon}`;
 }
 
 function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
     const suffix = extraClass ? ` ${extraClass}` : '';
-    return `<span class="rules-theme-glyph-default${suffix}" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" src="${easterSrc}" alt="" aria-hidden="true" decoding="async">`;
+    const desertSrc = rulesDesertAssetSrc(easterSrc);
+    const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-desert${suffix}" src="${desertSrc}" alt="" aria-hidden="true" decoding="async">` : '';
+    return `<span class="rules-theme-glyph-default${suffix}" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" src="${easterSrc}" alt="" aria-hidden="true" decoding="async">${desertIcon}`;
 }
 
 function rulesPageTitleIconHtml(defaultSrc, easterSrc) {
-    return `<img class="rules-inline-icon rules-asset-icon rules-page-icon-default" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-page-icon-easter" src="${easterSrc}" alt="" aria-hidden="true" decoding="async">`;
+    const desertSrc = rulesDesertAssetSrc(easterSrc);
+    const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-desert" src="${desertSrc}" alt="" aria-hidden="true" decoding="async">` : '';
+    return `<img class="rules-inline-icon rules-asset-icon rules-page-icon-default" src="${defaultSrc}" alt="" aria-hidden="true" decoding="async"><img class="rules-inline-icon rules-asset-icon rules-page-icon-easter" src="${easterSrc}" alt="" aria-hidden="true" decoding="async">${desertIcon}`;
 }
 
 function rulesPageTitleGlyphIconHtml(defaultGlyph, easterSrc) {
-    return `<span class="rules-page-glyph-default" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-page-icon-easter" src="${easterSrc}" alt="" aria-hidden="true" decoding="async">`;
+    const desertSrc = rulesDesertAssetSrc(easterSrc);
+    const desertIcon = desertSrc ? `<img class="rules-inline-icon rules-asset-icon rules-page-icon-desert" src="${desertSrc}" alt="" aria-hidden="true" decoding="async">` : '';
+    return `<span class="rules-page-glyph-default" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-page-icon-easter" src="${easterSrc}" alt="" aria-hidden="true" decoding="async">${desertIcon}`;
 }
 
 function rulesQlPodiumPackHtml() {
-    return `<span class="rules-podium-pack rules-ql-podium-pack" aria-hidden="true"><img src="assets/easter-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-bronze.png?v=1" alt=""></span>`;
+    return `<span class="rules-podium-pack rules-podium-pack-easter rules-ql-podium-pack" aria-hidden="true"><img src="assets/easter-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-bronze.png?v=1" alt=""></span><span class="rules-podium-pack rules-podium-pack-desert rules-ql-podium-pack" aria-hidden="true"><img src="assets/desert-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-bronze.png?v=1" alt=""></span>`;
 }
 
 const RulesData = {
@@ -117,7 +148,7 @@ const RulesData = {
             `
         },
         {
-            title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/soft-clay-online-players-pro.png?v=1')} Komunikacija`,
+            title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/easter-soft-clay/rules/pages/communication.png?v=1')} Komunikacija`,
             content: `
                 <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/soft-clay-online-players-pro.png?v=1')} Online igrači i interakcija</h3>
                 <p>Aplikacija prikazuje broj igrača koji su trenutno na mreži i listu dostupnih igrača.</p>
@@ -281,7 +312,7 @@ const RulesData = {
             `
         },
         {
-            title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/soft-clay-online-players-pro.png?v=1')} Communication`,
+            title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/easter-soft-clay/rules/pages/communication.png?v=1')} Communication`,
             content: `
                 <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/soft-clay-online-players-pro.png?v=1')} Online Players & Interaction</h3>
                 <p>The app shows how many players are currently online and lists available players.</p>
@@ -390,6 +421,7 @@ class RulesUI {
                         <span id="rules-main-title" class="global-chat-title rules-header-title">
                             <img class="rules-header-icon rules-header-icon-default" src="assets/rules-icon.svg" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-easter" src="assets/easter-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                            <img class="rules-header-icon rules-header-icon-desert" src="assets/desert-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <span>${typeof t === 'function' ? t('rules_header_title') : (this.currentLang === 'sr' ? 'PRAVILA I UPUTSTVO' : 'RULES & GUIDE')}</span>
                         </span>
                     </div>

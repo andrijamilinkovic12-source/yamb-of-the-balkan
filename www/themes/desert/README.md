@@ -8,6 +8,8 @@ Kompletan vizuelni paket za temu Pustinjsko staklo. Aktivira se samo kroz `body.
 - desert glass badges & pills ikonice za modove, specijalne akcije i donji meni
 - neumorfna tabla, kockice, polja, HUD i kontrolna zona bez promene dimenzija table
 - kartice, fontovi, kontrast, inputi, modali, obaveštenja, chat, riznica, statistika, pravila i top lista
+- posebne pustinjske ikonice unutar sobe Pravila: ulazna animacija, header, namenski `rules/pages` naslovi strana, inline ikonice soba/akcija/stanja i QL medalje
+- online duel tajmer u pustinjskoj fiksnoj pill formi, usklađen sa UŽIVO oznakom bez promene odbrojavanja
 - splash, početni citat, čekanje protivnika i game-over ekran
 - blage pustinjskie animacije uz podršku za reduced motion
 - loading, prazna i error stanja

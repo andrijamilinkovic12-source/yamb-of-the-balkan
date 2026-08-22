@@ -14,6 +14,7 @@ Ovo je kompletan paket za Vaskršnju temu. Tema se aktivira samo kroz `body.east
 - audio pack: proceduralni Vaskr zvukovi u `SoundManager`, aktivni samo za Vaskr temu
 - QA preview: `www/themes/easter/qa-preview.html` za lokalne screenshotove bez logovanja
 - QA splash preview: `www/themes/easter/qa-splash.html` za izolovanu proveru login/citat ekrana
+- QA game-over preview: `www/themes/easter/qa-gameover.html` za proveru završnog ekrana i kontrasta akcija
 
 ## Pravila za dalje izmene
 

@@ -1,0 +1,53 @@
+{
+  "id": "severna",
+  "name": {
+    "sr": "Severna Maglina Pack",
+    "en": "Northern Nebula Theme Pack"
+  },
+  "version": "0.1.0",
+  "updated": "2026-08-22",
+  "bodyClass": "severna-theme",
+  "scope": "Only active when body has severna-theme class or localStorage yamb_theme is severna.",
+  "entrypoints": {
+    "css": "www/teme.css",
+    "shopConfig": "www/config.js",
+    "backgroundAsset": "www/assets/severna-maglina-bg-v3-neuphoric.png"
+  },
+  "packs": [
+    {
+      "id": "background",
+      "status": "complete",
+      "description": "Original portrait 941x1672 Northern Nebula neumorphic soft clay / soft glass background with icy cyan, midnight navy, muted violet and frosted glow."
+    },
+    {
+      "id": "main-menu-icons",
+      "status": "initial",
+      "description": "First Severna Soft Clay icon pack for main menu: Global Chat, Online Players, Quarterly League watermark, Dukati/Undo, four game modes, Treasury, Tournament and bottom-row Daily Challenge through Rules. It follows the proven Easter/Desert geometry while using a colder frost-nebula palette."
+    },
+    {
+      "id": "game-board",
+      "status": "initial",
+      "description": "Base board colors and surfaces are adjusted to the Northern Nebula background without changing table dimensions, dice logic, cells or controls."
+    }
+  ],
+  "designTokens": {
+    "surface": "deep frosted navy glass",
+    "ink": "icy white-cyan",
+    "mutedText": "cool blue-gray",
+    "accent": "arctic cyan, frosted teal, muted violet and lavender",
+    "shapeLanguage": "neumorphic soft clay and soft glass",
+    "shadowLanguage": "cool raised and inset depth with restrained cyan glow"
+  },
+  "rules": [
+    "Keep all Severna styling isolated under body.severna-theme.",
+    "Use the same layout, positions and dimensions as Easter and Desert unless explicitly requested otherwise.",
+    "Use Northern Nebula assets from www/assets/severna-soft-clay for the theme-specific icon layer.",
+    "Do not change global theme icons as the base game style.",
+    "Do not change game board/card dimensions or gameplay logic.",
+    "Bottom-row icons use the same 44x44 visual size and staggered wave motion as the Easter/Desert system.",
+    "The four main game mode cards keep the existing geometry and centered labels.",
+    "Solo keeps direct entry until a separate intro decision is made.",
+    "Avoid Easter motifs, desert motifs, ornate gold, noisy neon and sci-fi dashboard panels.",
+    "Keep contrast readable on dark navy, cyan and violet surfaces."
+  ]
+}
