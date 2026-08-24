@@ -4,8 +4,8 @@
     "sr": "Severna Maglina Pack",
     "en": "Northern Nebula Theme Pack"
   },
-  "version": "0.4.0",
-  "updated": "2026-08-22",
+  "version": "0.4.5",
+  "updated": "2026-08-24",
   "bodyClass": "severna-theme",
   "scope": "Only active when body has severna-theme class or localStorage yamb_theme is severna.",
   "entrypoints": {
@@ -22,12 +22,12 @@
     {
       "id": "main-menu-icons",
       "status": "in-progress",
-      "description": "Severna Soft Clay icon pack for main menu: Global Chat, Online Players, Quarterly League watermark, Dukati/Undo, four game modes, Treasury, Tournament and bottom-row Daily Challenge through Rules. It follows the proven Easter/Desert geometry while using a colder frost-nebula palette."
+      "description": "Severna Soft Clay icon pack for main menu: Global Chat, Online Players, Quarterly League watermark, Dukati/Undo, four game modes, Treasury, Tournament and bottom-row Daily Challenge through Rules. The four game-mode icons are dedicated clean Northern Nebula 3D assets, no longer recolored Desert icons. Treasury and Tournament use dedicated clean Northern Nebula 3D icons with a calmer bottom-row palette; Tournament intentionally has no dice/cube motif. Special icons are crop-normalized to the same 62px visual placement system used by Easter/Desert."
     },
     {
       "id": "bottom-room-icons",
       "status": "complete",
-      "description": "The five bottom-row room icons — Daily Challenge, Leaderboard, Statistics, Settings and Rules — are now premium generated Northern Nebula soft-clay 3D icons, not recolored Desert assets. CSS dimensions and menu positions stay identical to Easter/Desert."
+      "description": "The five bottom-row room icons — Daily Challenge, Leaderboard, Statistics, Settings and Rules — use a cleaner Northern Nebula soft-clay 3D set with cold cyan, moon-silver and muted violet tones. CSS dimensions and menu positions stay identical to Easter/Desert."
     },
     {
       "id": "game-board",
