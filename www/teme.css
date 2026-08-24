@@ -621,6 +621,7 @@ body.easter-theme .player-table > * {
 /* Vaskr: isti vertikalni pager za svaki duel sa dva igrača (online, spectator i Hotseat).
    Dimenzije tabela ostaju iste; sprečava se flex sabijanje i spoj dve polovine u kadru. */
 body.easter-theme #game-scene.theme-dual-board-view .tables-wrapper,
+body.severna-theme #game-scene.theme-dual-board-view .tables-wrapper,
 body.desert-theme #game-scene.theme-spectator-view .tables-wrapper {
     display: flex !important;
     flex-direction: column !important;
@@ -639,6 +640,7 @@ body.desert-theme #game-scene.theme-spectator-view .tables-wrapper {
 }
 
 body.easter-theme #game-scene.theme-dual-board-view .player-table,
+body.severna-theme #game-scene.theme-dual-board-view .player-table,
 body.desert-theme #game-scene.theme-spectator-view .player-table {
     flex: 0 0 auto !important;
     min-height: max-content;
@@ -12292,4 +12294,50 @@ body.severna-theme #main-menu .spec-turnir:active > .nebula-soft-clay-special-ic
     body.severna-theme #main-menu .icon-menu-grid .btn-square .nebula-soft-clay-icon {
         animation: none !important;
     }
+}
+
+/* Kvartalna liga — single-logo guard.
+   Samo Vaskrs i Pustinjsko staklo koriste svoje QL znakove; sve ostale teme
+   ostaju na standardnom znaku. Sprečava dupliranje/tripliranje logo slojeva. */
+#league-intro .league-intro-mark-easter,
+#league-intro .league-intro-mark-desert,
+#league-modal-overlay .league-modal-header-icon-easter,
+#league-modal-overlay .league-modal-header-icon-desert {
+    display: none !important;
+}
+
+#league-intro:not(.theme-easter):not(.theme-desert) .league-intro-mark,
+body:not(.easter-theme):not(.desert-theme) #league-modal-overlay .league-modal-header-icon-default {
+    display: block !important;
+}
+
+#league-intro:not(.theme-easter):not(.theme-desert) .league-intro-mark-easter,
+#league-intro:not(.theme-easter):not(.theme-desert) .league-intro-mark-desert,
+body:not(.easter-theme):not(.desert-theme) #league-modal-overlay .league-modal-header-icon-easter,
+body:not(.easter-theme):not(.desert-theme) #league-modal-overlay .league-modal-header-icon-desert {
+    display: none !important;
+}
+
+#league-intro.theme-easter .league-intro-mark,
+#league-intro.theme-easter .league-intro-mark-desert,
+body.easter-theme #league-modal-overlay .league-modal-header-icon-default,
+body.easter-theme #league-modal-overlay .league-modal-header-icon-desert {
+    display: none !important;
+}
+
+#league-intro.theme-easter .league-intro-mark-easter,
+body.easter-theme #league-modal-overlay .league-modal-header-icon-easter {
+    display: block !important;
+}
+
+#league-intro.theme-desert .league-intro-mark,
+#league-intro.theme-desert .league-intro-mark-easter,
+body.desert-theme #league-modal-overlay .league-modal-header-icon-default,
+body.desert-theme #league-modal-overlay .league-modal-header-icon-easter {
+    display: none !important;
+}
+
+#league-intro.theme-desert .league-intro-mark-desert,
+body.desert-theme #league-modal-overlay .league-modal-header-icon-desert {
+    display: block !important;
 }

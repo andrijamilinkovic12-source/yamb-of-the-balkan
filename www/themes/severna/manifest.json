@@ -4,7 +4,7 @@
     "sr": "Severna Maglina Pack",
     "en": "Northern Nebula Theme Pack"
   },
-  "version": "0.1.0",
+  "version": "0.4.0",
   "updated": "2026-08-22",
   "bodyClass": "severna-theme",
   "scope": "Only active when body has severna-theme class or localStorage yamb_theme is severna.",
@@ -21,13 +21,28 @@
     },
     {
       "id": "main-menu-icons",
-      "status": "initial",
-      "description": "First Severna Soft Clay icon pack for main menu: Global Chat, Online Players, Quarterly League watermark, Dukati/Undo, four game modes, Treasury, Tournament and bottom-row Daily Challenge through Rules. It follows the proven Easter/Desert geometry while using a colder frost-nebula palette."
+      "status": "in-progress",
+      "description": "Severna Soft Clay icon pack for main menu: Global Chat, Online Players, Quarterly League watermark, Dukati/Undo, four game modes, Treasury, Tournament and bottom-row Daily Challenge through Rules. It follows the proven Easter/Desert geometry while using a colder frost-nebula palette."
+    },
+    {
+      "id": "bottom-room-icons",
+      "status": "complete",
+      "description": "The five bottom-row room icons — Daily Challenge, Leaderboard, Statistics, Settings and Rules — are now premium generated Northern Nebula soft-clay 3D icons, not recolored Desert assets. CSS dimensions and menu positions stay identical to Easter/Desert."
     },
     {
       "id": "game-board",
       "status": "initial",
       "description": "Base board colors and surfaces are adjusted to the Northern Nebula background without changing table dimensions, dice logic, cells or controls."
+    },
+    {
+      "id": "dice-skin",
+      "status": "initial",
+      "description": "Northern Nebula dice skin is available as a free theme skin. On the first real selection of the theme it becomes the default active skin; after that the player can freely choose any other unlocked skin."
+    },
+    {
+      "id": "two-player-board-pager",
+      "status": "initial",
+      "description": "Two-player Severna games use the same vertical board pager rule as Easter: full tables stay scrollable and the active player can be followed without fixed half-table overlap."
     }
   ],
   "designTokens": {
@@ -44,6 +59,8 @@
     "Use Northern Nebula assets from www/assets/severna-soft-clay for the theme-specific icon layer.",
     "Do not change global theme icons as the base game style.",
     "Do not change game board/card dimensions or gameplay logic.",
+    "Severna theme default dice skin is severna_nebula only on first theme selection; later player skin choice is respected.",
+    "Two-player Severna modes must keep the same manual/automatic vertical table viewing model used by Easter.",
     "Bottom-row icons use the same 44x44 visual size and staggered wave motion as the Easter/Desert system.",
     "The four main game mode cards keep the existing geometry and centered labels.",
     "Solo keeps direct entry until a separate intro decision is made.",

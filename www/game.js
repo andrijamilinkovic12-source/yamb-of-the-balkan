@@ -1459,15 +1459,13 @@ class YambApp {
             window.statsManager.saveStats();
         }
 
-        if (isFirstThemeSelection) {
+        if (isFirstThemeSelection && activateAsDefault) {
             localStorage.setItem(markerKey, 'true');
-            if (activateAsDefault) {
-                localStorage.setItem('yamb_active_skin', safeSkinId);
-                if (typeof this.updateDiceVisuals === 'function' && this.features) this.updateDiceVisuals();
-                document.querySelectorAll('.daily-glass-die.dice').forEach(element => {
-                    this.features?.applySkinToElement(element, element.classList.contains('held'));
-                });
-            }
+            localStorage.setItem('yamb_active_skin', safeSkinId);
+            if (typeof this.updateDiceVisuals === 'function' && this.features) this.updateDiceVisuals();
+            document.querySelectorAll('.daily-glass-die.dice').forEach(element => {
+                this.features?.applySkinToElement(element, element.classList.contains('held'));
+            });
         }
     }
 
@@ -1486,7 +1484,8 @@ class YambApp {
 
         const themeDefaultSkins = {
             desert: 'desert_glass',
-            easter: 'easter_neumorphic'
+            easter: 'easter_neumorphic',
+            severna: 'severna_nebula'
         };
         const defaultSkin = themeDefaultSkins[safeTheme];
         if (defaultSkin && !skipThemeDiceDefault) {
@@ -6506,22 +6505,24 @@ class YambApp {
         const activeTbl = document.getElementById(`ptable-${this.currentPlayerIdx}`);
         const gameScene = document.getElementById('game-scene');
         const isEasterTwoPlayerGame = document.body.classList.contains('easter-theme') && this.players.length === 2;
-        const isEasterOnlineDuel = isEasterTwoPlayerGame && this.onlineMode;
-        const isEasterRandomDuel = isEasterOnlineDuel
+        const isSevernaTwoPlayerGame = document.body.classList.contains('severna-theme') && this.players.length === 2;
+        const usesTwoPlayerThemePager = isEasterTwoPlayerGame || isSevernaTwoPlayerGame;
+        const isThemeOnlineDuel = usesTwoPlayerThemePager && this.onlineMode;
+        const isThemeRandomDuel = isThemeOnlineDuel
             && this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
         const isDesertSpectatorDuel = document.body.classList.contains('desert-theme') && this.isSpectator && this.players.length === 2;
-        // Vaskr koristi isti slobodan vertikalni pager za svaki režim sa dva igrača.
+        // Neuphorism teme koriste isti slobodan vertikalni pager za svaki režim sa dva igrača.
         if (gameScene) {
-            gameScene.classList.toggle('theme-dual-board-view', isEasterTwoPlayerGame);
-            gameScene.classList.toggle('online-duel-room', isEasterOnlineDuel);
-            gameScene.classList.toggle('random-online-duel-room', isEasterRandomDuel);
+            gameScene.classList.toggle('theme-dual-board-view', usesTwoPlayerThemePager);
+            gameScene.classList.toggle('online-duel-room', isThemeOnlineDuel);
+            gameScene.classList.toggle('random-online-duel-room', isThemeRandomDuel);
             gameScene.classList.toggle('theme-spectator-view', isDesertSpectatorDuel);
         }
         playerTables.forEach(el => el.classList.remove('theme-spectator-active'));
 
         if(activeTbl) {
             activeTbl.style.border = "2px solid var(--gold-main)"; activeTbl.style.boxShadow = "0 0 15px rgba(224, 201, 149, 0.2)"; activeTbl.style.opacity = "1";
-            const usesThemedDualPager = isEasterTwoPlayerGame || isDesertSpectatorDuel;
+            const usesThemedDualPager = usesTwoPlayerThemePager || isDesertSpectatorDuel;
             const shouldFollowActiveTable = this.players.length > 1 &&
                 (!usesThemedDualPager || this.dualBoardLastFollowedPlayerIdx !== this.currentPlayerIdx);
             if (shouldFollowActiveTable) {

@@ -121,6 +121,7 @@ const SHOP_DATA = {
         { id: 'glass_sapphire', name: { sr: 'Safir', en: 'Sapphire' }, price: 50000, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
         { id: 'desert_glass', name: { sr: 'Pustinjsko Staklo', en: 'Desert Glass' }, price: 0, desc: { sr: 'Besplatan skin koji se dobija pri prvom izboru teme Pustinjsko staklo.', en: 'A free skin granted when Desert Glass is selected for the first time.' }, category: { sr: '💎 STAKLO & DRAGULJI', en: '💎 GLASS & GEMS' } },
         { id: 'easter_neumorphic', name: { sr: 'Vaskršnja Pastela', en: 'Easter Pastel' }, price: 0, desc: { sr: 'Besplatan skin koji se dobija pri prvom izboru Vaskršnje teme.', en: 'A free skin granted when the Easter theme is selected for the first time.' }, category: { sr: '🐣 VASKRŠNJI PACK', en: '🐣 EASTER PACK' } },
+        { id: 'severna_nebula', name: { sr: 'Severna Maglina', en: 'Northern Nebula' }, price: 0, desc: { sr: 'Besplatan skin koji se dobija pri prvom izboru teme Severna Maglina.', en: 'A free skin granted when the Northern Nebula theme is selected for the first time.' }, category: { sr: '🌌 SEVERNA MAGLINA PACK', en: '🌌 NORTHERN NEBULA PACK' } },
         
         { id: 'magma', name: { sr: 'Magma Core', en: 'Magma Core' }, price: 75000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
         { id: 'galaxy', name: { sr: 'Galaksija', en: 'Galaxy' }, price: 85000, category: { sr: '🌌 KOSMOS & MISTIKA', en: '🌌 COSMOS & MYSTIC' } },
