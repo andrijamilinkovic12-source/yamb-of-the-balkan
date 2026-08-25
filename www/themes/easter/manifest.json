@@ -4,8 +4,8 @@
     "sr": "Vaskr Neumorphic UI Theme Pack",
     "en": "Joyful Easter Neumorphic UI Theme Pack"
   },
-  "version": "3.3.47",
-  "updated": "2026-08-22",
+  "version": "3.3.48",
+  "updated": "2026-08-24",
   "bodyClass": "easter-theme",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
   "entrypoints": {
@@ -81,12 +81,12 @@
     {
       "id": "cinematic-screens",
       "status": "complete",
-      "description": "Splash, quote, waiting and game-over screens plus matching 4.6-second Daily Challenge, Leaderboard, Statistics, Settings, Rules, Treasury, Tournament, Two Players Hotseat, Find Opponent, Invite Friend, Global Chat, Online Players, Quarterly League and Ducats & Undo room intros with immediately visible Soft Clay icons and left-to-right title waves. Quarterly League uses the selected full-colour YotB QL logo. The Tournament intro includes a live Easter-styled top-three panel with avatar, full player name and all-time tournament wins."
+      "description": "Splash, quote, waiting and game-over screens plus matching 4.6-second Daily Challenge, Leaderboard, Statistics, Settings, Rules, Treasury, Tournament, Two Players Hotseat, Find Opponent, Invite Friend, Global Chat, Online Players, Quarterly League and Ducats & Undo room intros with immediately visible Soft Clay icons and left-to-right title waves. Treasury and Tournament intentionally use the approved static Easter Soft Clay PNG icons in their main-menu buttons and room-entry intros. Quarterly League uses the selected full-colour YotB QL logo. The Tournament intro includes a live Easter-styled top-three panel with avatar, full player name and all-time tournament wins."
     },
     {
       "id": "motion",
       "status": "complete",
-      "description": "Soft Easter-specific motion for panel entrance, shimmer, hover and waiting pulse. Treasury and Tournament are complete purpose-built Blender models with no PNG front plane or alpha-shell shortcut. Every visible component is real geometry: the Treasury barrel lid, arches, layered structural frame, recessed panels, four-layer lock, faceted gem, ornate side ring, shaped floral relief and embossed coin; and the Tournament open cup, layered scroll handles, jewels, multi-ring medallion, star, dense shaped laurel, rounded petal band, stem, collars and decorated multi-tier pedestal. Soft Clay materials use matched cream, purple, turquoise and gold with AgX studio rendering. Each rotation pivot passes through the object's own vertical centre. Treasury follows 0/-18/0/+18/0 degrees and Tournament the exact opposite 0/+18/0/-18/0 path. Every one of the 61 transparent frames is supersampled at 768 px and reduced with a premultiplied-alpha pipeline before lossless WebP encoding at approximately 13 fps and 4.7 seconds, preventing dirty bands and colour halos around the moving silhouette. The same Blender animations are used at the original large size in the 4.6-second Treasury and Tournament room-entry sequences and restart from frame one on every entry; title spacing, title wave and Tournament top-three panel remain unchanged. No scale animation, narrowing compensation, lateral orbit or raster deformation is used. Main-menu icons retain the original 62 px visual slot; click targets, card dimensions and the Tournament notification badge remain fixed. The original static Soft Clay assets remain the prefers-reduced-motion fallback."
+      "description": "Soft Easter-specific motion remains for panel entrance, shimmer, hover and waiting pulse. Treasury and Tournament no longer use the experimental Blender/WebP rotating motion in the live Easter theme: both rooms use the approved static Soft Clay PNG icons in the 62 px main-menu slots and in the 4.6-second room-entry intros. Title spacing, title wave, click targets, card dimensions and the Tournament notification badge remain fixed. The unused 3D/WebP files stay in assets only as archived material for possible future redesign."
     },
     {
       "id": "empty-loading-error",
@@ -118,7 +118,7 @@
     "Do not change game board/card dimensions unless explicitly requested.",
     "For future themes, create equivalent isolated packs instead of reusing Easter selectors globally.",
     "Every two-player Easter game (online random, invite duel, spectator and Hotseat) uses the same freely swipeable vertical board pager and follows the active player only when the turn changes.",
-    "Treasury and Tournament use the same 4.6-second large-icon, fixed icon-to-title spacing and left-to-right title-wave intro rules as the Easter bottom-menu rooms.",
+    "Treasury and Tournament use approved static Soft Clay PNG icons with the same 4.6-second large-icon, fixed icon-to-title spacing and left-to-right title-wave intro rules as the Easter bottom-menu rooms.",
     "Two Players Hotseat, Find Opponent and Invite Friend use the same 4.6-second large Soft Clay icon, fixed Riznica icon-to-title spacing and left-to-right uppercase title wave; Solo has no room intro until explicitly added later.",
     "Global Chat, Online Players and Ducats & Undo use the same 4.6-second large Soft Clay icon, fixed Riznica icon-to-title spacing and left-to-right uppercase title wave.",
     "The Easter Ducats & Undo intro keeps DUCATS centred on its original baseline, removes the conjunction, and renders UNDO LAST MOVE as a separate centred second line beneath it; the wave continues from the first line through the second without changing the 4.6-second duration, icon, icon scale or original first-line spacing.",

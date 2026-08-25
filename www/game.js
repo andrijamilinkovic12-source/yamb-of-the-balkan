@@ -143,6 +143,10 @@ class YambApp {
         this.onlineUsersCount = 1; 
         this.isAnimating = false;
         this.easterRoomIntroPlaying = false;
+        this.themeLoadingToken = 0;
+        this.themeLoadingHideTimer = null;
+        this.themeManualSwitchUntil = 0;
+        this.skinManualSwitchUntil = 0;
         this.dualBoardLastFollowedPlayerIdx = null;
         this.onlineRollPending = false;
         this.onlineTurnTimerPaused = false;
@@ -809,7 +813,8 @@ class YambApp {
         ));
 
         if (rivals.length === 0) {
-            const statsTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'desert' ? 'desert' : 'easter';
+            const activeStatsTheme = localStorage.getItem('yamb_theme') || 'dark';
+            const statsTheme = activeStatsTheme === 'severna' ? 'severna' : (activeStatsTheme === 'desert' ? 'desert' : 'easter');
             container.innerHTML = `<div class="h2h-empty-state"><img class="h2h-empty-soft-clay-icon" src="assets/${statsTheme}-soft-clay/statistics/h2h-empty.png?v=1" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
             return;
         }
@@ -1430,7 +1435,7 @@ class YambApp {
         return `yamb_${safeThemeId || 'theme'}_default_skin_initialized_${uid || 'guest'}`;
     }
 
-    ensureThemeDiceSkin(themeId, skinId, { activateAsDefault = false } = {}) {
+    ensureThemeDiceSkin(themeId, skinId, { activateAsDefault = false, refreshActiveSkin = false } = {}) {
         const safeSkinId = String(skinId || '').trim();
         if (!safeSkinId) return;
 
@@ -1459,9 +1464,11 @@ class YambApp {
             window.statsManager.saveStats();
         }
 
-        if (isFirstThemeSelection && activateAsDefault) {
+        if (activateAsDefault && (isFirstThemeSelection || refreshActiveSkin)) {
             localStorage.setItem(markerKey, 'true');
             localStorage.setItem('yamb_active_skin', safeSkinId);
+            localStorage.removeItem('yamb_manual_active_skin');
+            localStorage.removeItem('yamb_manual_active_skin_at');
             if (typeof this.updateDiceVisuals === 'function' && this.features) this.updateDiceVisuals();
             document.querySelectorAll('.daily-glass-die.dice').forEach(element => {
                 this.features?.applySkinToElement(element, element.classList.contains('held'));
@@ -1469,7 +1476,234 @@ class YambApp {
         }
     }
 
-    applyTheme(theme, { initialLoad = false, skipThemeDiceDefault = false } = {}) {
+    getThemeLoadingPack(theme) {
+        const lang = (localStorage.getItem('yamb_lang') || 'sr').startsWith('en') ? 'en' : 'sr';
+        const text = lang === 'en'
+            ? {
+                kicker: 'Preparing theme environment',
+                copy: 'Aligning background, icons and interface details',
+                status: 'Theme is ready',
+                pills: ['background', 'icons', 'UI pack']
+            }
+            : {
+                kicker: 'Pripremamo tematsko okruženje',
+                copy: 'Usklađujemo pozadinu, ikonice i detalje interfejsa',
+                status: 'Tema je spremna',
+                pills: ['pozadina', 'ikonice', 'UI paket']
+            };
+
+        const packs = {
+            easter: {
+                title: lang === 'en' ? 'Easter Theme' : 'Vaskrs tema',
+                background: 'assets/easter-neumorphic-bg-v1.png',
+                icons: [
+                    'assets/easter-soft-clay/mode-solo-pro.png?v=1',
+                    'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
+                    'assets/easter-soft-clay/treasury-pro.png',
+                    'assets/easter-soft-clay/tournament-pro.png',
+                    'assets/easter-soft-clay/leaderboard-pro.png'
+                ],
+                assets: [
+                    'assets/easter-soft-clay/global-chat-pro-v4.png',
+                    'assets/soft-clay-online-players-pro.png?v=1',
+                    'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1',
+                    'assets/soft-clay-ducats-undo-pro.png?v=1',
+                    'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
+                    'assets/easter-soft-clay/mode-invite-pro.png?v=1',
+                    'assets/easter-soft-clay/daily-challenge-pro.png?v=3',
+                    'assets/easter-soft-clay/statistics-pro.png',
+                    'assets/easter-soft-clay/settings-pro.png',
+                    'assets/easter-soft-clay/rules-pro.png'
+                ]
+            },
+            desert: {
+                title: lang === 'en' ? 'Desert Glass' : 'Pustinjsko staklo',
+                background: 'assets/desert-neumorphic-bg-v1.png',
+                icons: [
+                    'assets/desert-soft-clay/mode-solo-pro.png?v=1',
+                    'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
+                    'assets/desert-soft-clay/treasury-pro.png?v=4',
+                    'assets/desert-soft-clay/tournament-pro.png?v=4',
+                    'assets/desert-soft-clay/leaderboard-pro.png?v=1'
+                ],
+                assets: [
+                    'assets/desert-soft-clay/global-chat-pro.png?v=2',
+                    'assets/desert-soft-clay/online-players-pro.png?v=3',
+                    'assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2',
+                    'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
+                    'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
+                    'assets/desert-soft-clay/mode-invite-pro.png?v=1',
+                    'assets/desert-soft-clay/daily-challenge-pro.png?v=1',
+                    'assets/desert-soft-clay/statistics-pro.png?v=1',
+                    'assets/desert-soft-clay/settings-pro.png?v=1',
+                    'assets/desert-soft-clay/rules-pro.png?v=1'
+                ]
+            },
+            severna: {
+                title: lang === 'en' ? 'Northern Nebula' : 'Severna maglina',
+                background: 'assets/severna-maglina-bg-v3-neuphoric.png',
+                icons: [
+                    'assets/severna-soft-clay/mode-solo-pro.png?v=2',
+                    'assets/severna-soft-clay/mode-opponent-pro.png?v=2',
+                    'assets/severna-soft-clay/treasury-pro.png?v=4',
+                    'assets/severna-soft-clay/tournament-pro.png?v=4',
+                    'assets/severna-soft-clay/leaderboard-pro.png?v=4'
+                ],
+                assets: [
+                    'assets/severna-soft-clay/global-chat-pro.png?v=2',
+                    'assets/severna-soft-clay/online-players-pro.png?v=2',
+                    'assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=2',
+                    'assets/severna-soft-clay/ducats-undo-pro.png?v=2',
+                    'assets/severna-soft-clay/mode-hotseat-pro.png?v=2',
+                    'assets/severna-soft-clay/mode-invite-pro.png?v=2',
+                    'assets/severna-soft-clay/daily-challenge-pro.png?v=4',
+                    'assets/severna-soft-clay/statistics-pro.png?v=4',
+                    'assets/severna-soft-clay/settings-pro.png?v=4',
+                    'assets/severna-soft-clay/rules-pro.png?v=5'
+                ]
+            }
+        };
+
+        const pack = packs[theme];
+        if (!pack) return null;
+        return {
+            ...text,
+            ...pack,
+            assets: [...new Set([pack.background, ...pack.icons, ...pack.assets])]
+        };
+    }
+
+    preloadThemeImage(src, timeoutMs = 2200) {
+        if (!src) return Promise.resolve(false);
+
+        return new Promise(resolve => {
+            let settled = false;
+            const img = new Image();
+            const finish = success => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                resolve(success);
+            };
+            const timer = setTimeout(() => finish(false), timeoutMs);
+
+            img.decoding = 'async';
+            img.onload = async () => {
+                try {
+                    if (typeof img.decode === 'function') await img.decode();
+                } catch (_) {
+                    // Učitana slika je dovoljna; decode greška ne sme blokirati temu.
+                }
+                finish(true);
+            };
+            img.onerror = () => finish(false);
+            img.src = src;
+
+            if (img.complete && img.naturalWidth > 0) finish(true);
+        });
+    }
+
+    hideThemeLoadingGate({ immediate = false } = {}) {
+        const gate = document.getElementById('theme-loading-gate');
+        if (!gate) return;
+
+        clearTimeout(this.themeLoadingHideTimer);
+        if (immediate) {
+            this.themeLoadingToken += 1;
+            gate.className = 'theme-loading-gate';
+            gate.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('theme-loading-active');
+            return;
+        }
+
+        gate.classList.add('is-hiding');
+        setTimeout(() => {
+            if (!gate.classList.contains('is-hiding')) return;
+            gate.className = 'theme-loading-gate';
+            gate.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('theme-loading-active');
+        }, 300);
+    }
+
+    prepareThemeLoadingGate(theme, { initialLoad = false, manualSwitch = false } = {}) {
+        const gate = document.getElementById('theme-loading-gate');
+        if (!gate) return Promise.resolve(false);
+
+        const pack = this.getThemeLoadingPack(theme);
+        if (!pack) {
+            this.hideThemeLoadingGate({ immediate: true });
+            return Promise.resolve(false);
+        }
+
+        const token = ++this.themeLoadingToken;
+        clearTimeout(this.themeLoadingHideTimer);
+
+        const titleEl = document.getElementById('theme-loading-title');
+        const kickerEl = document.getElementById('theme-loading-kicker');
+        const copyEl = document.getElementById('theme-loading-copy');
+        const statusEl = document.getElementById('theme-loading-status');
+        const progressEl = document.getElementById('theme-loading-progress');
+        const iconsEl = document.getElementById('theme-loading-icons');
+        const pillsEl = document.getElementById('theme-loading-pills');
+
+        if (titleEl) titleEl.textContent = pack.title;
+        if (kickerEl) kickerEl.textContent = pack.kicker;
+        if (copyEl) copyEl.textContent = pack.copy;
+        if (statusEl) statusEl.textContent = '';
+        if (progressEl) progressEl.style.width = '12%';
+
+        if (iconsEl) {
+            iconsEl.replaceChildren();
+            pack.icons.forEach(src => {
+                const icon = document.createElement('img');
+                icon.src = src;
+                icon.alt = '';
+                icon.setAttribute('aria-hidden', 'true');
+                icon.decoding = 'async';
+                iconsEl.appendChild(icon);
+            });
+        }
+
+        if (pillsEl) {
+            pillsEl.replaceChildren();
+            pack.pills.forEach(label => {
+                const pill = document.createElement('span');
+                pill.textContent = label;
+                pillsEl.appendChild(pill);
+            });
+        }
+
+        gate.className = `theme-loading-gate theme-${theme} is-active`;
+        gate.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('theme-loading-active');
+
+        requestAnimationFrame(() => {
+            if (token === this.themeLoadingToken && progressEl) progressEl.style.width = '78%';
+        });
+
+        const startedAt = Date.now();
+        const minimumVisibleMs = manualSwitch ? 1900 : (initialLoad ? 820 : 640);
+        const preloadPromise = Promise.allSettled(pack.assets.map(src => this.preloadThemeImage(src)));
+
+        preloadPromise.then(() => {
+            if (token !== this.themeLoadingToken) return;
+
+            const remaining = Math.max(0, minimumVisibleMs - (Date.now() - startedAt));
+            this.themeLoadingHideTimer = setTimeout(() => {
+                if (token !== this.themeLoadingToken) return;
+                if (progressEl) progressEl.style.width = '100%';
+                if (statusEl) statusEl.textContent = pack.status;
+
+                setTimeout(() => {
+                    if (token === this.themeLoadingToken) this.hideThemeLoadingGate();
+                }, 210);
+            }, remaining);
+        });
+
+        return preloadPromise;
+    }
+
+    applyTheme(theme, { initialLoad = false, skipThemeDiceDefault = false, manualSwitch = false, loadingDelayMs = 0 } = {}) {
         const validThemes = this.getValidThemeIds();
         const safeTheme = validThemes.includes(theme) ? theme : 'dark';
         const themeClasses = validThemes
@@ -1489,9 +1723,27 @@ class YambApp {
         };
         const defaultSkin = themeDefaultSkins[safeTheme];
         if (defaultSkin && !skipThemeDiceDefault) {
+            const themeDefaultSkinIds = Object.values(themeDefaultSkins);
+            const activeSkin = localStorage.getItem('yamb_active_skin') || 'default';
+            const manualSkinChoice = localStorage.getItem('yamb_manual_active_skin');
+            const hasManualSkinChoice = !!manualSkinChoice && manualSkinChoice === activeSkin;
+            const hasRecentManualSkinSwitch = Date.now() < this.skinManualSwitchUntil;
+            const shouldRefreshThemeDefaultSkin = !hasManualSkinChoice
+                && !hasRecentManualSkinSwitch
+                && (activeSkin === 'default' || themeDefaultSkinIds.includes(activeSkin));
             // Pri pravom prvom izboru teme skin postaje aktivan. Pri učitavanju postojećeg
             // naloga samo ga obezbeđujemo, bez menjanja već odabranog skina igrača.
-            this.ensureThemeDiceSkin(safeTheme, defaultSkin, { activateAsDefault: !initialLoad });
+            this.ensureThemeDiceSkin(safeTheme, defaultSkin, {
+                activateAsDefault: !initialLoad || shouldRefreshThemeDefaultSkin,
+                refreshActiveSkin: shouldRefreshThemeDefaultSkin
+            });
+        }
+
+        const showLoadingGate = () => this.prepareThemeLoadingGate(safeTheme, { initialLoad, manualSwitch });
+        if (loadingDelayMs > 0) {
+            setTimeout(showLoadingGate, loadingDelayMs);
+        } else {
+            showLoadingGate();
         }
     }
 
@@ -1869,7 +2121,8 @@ class YambApp {
         const topRival = this.getTopH2HRival();
         if (!topRival) {
             card.classList.add('is-empty');
-            const inviteStatsTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'desert' ? 'desert' : 'easter';
+            const activeInviteTheme = localStorage.getItem('yamb_theme') || 'dark';
+            const inviteStatsTheme = activeInviteTheme === 'severna' ? 'severna' : (activeInviteTheme === 'desert' ? 'desert' : 'easter');
             image.src = `assets/${inviteStatsTheme}-soft-clay/statistics/h2h-empty.png?v=1`;
             name.setAttribute('data-lang', 'stat_h2h_empty');
             name.textContent = gt('stat_h2h_empty') || 'Nema odigranih duela...';
@@ -2097,13 +2350,29 @@ class YambApp {
             });
         }
 
-        if (data.activeSkin) localStorage.setItem('yamb_active_skin', data.activeSkin);
+        if (data.activeSkin) {
+            const localSkin = localStorage.getItem('yamb_active_skin');
+            const hasRecentManualSkinSwitch = Date.now() < this.skinManualSwitchUntil;
+            if (!hasRecentManualSkinSwitch || data.activeSkin === localSkin) {
+                localStorage.setItem('yamb_active_skin', data.activeSkin);
+            }
+            if (typeof this.updateDiceVisuals === 'function' && this.features) {
+                this.updateDiceVisuals();
+            }
+            document.querySelectorAll('.daily-glass-die.dice').forEach(element => {
+                this.features?.applySkinToElement(element, element.classList.contains('held'));
+            });
+        }
         if (data.activeEffect) localStorage.setItem('yamb_active_effect', data.activeEffect);
         if (data.activeTheme) {
-            localStorage.setItem('yamb_theme', data.activeTheme);
-            this.applyTheme(data.activeTheme, { initialLoad: true });
+            const localTheme = localStorage.getItem('yamb_theme');
+            const hasRecentManualThemeSwitch = Date.now() < this.themeManualSwitchUntil;
+            if (!hasRecentManualThemeSwitch || data.activeTheme === localTheme) {
+                localStorage.setItem('yamb_theme', data.activeTheme);
+                this.applyTheme(data.activeTheme, { initialLoad: true });
+            }
             const themeSelect = document.getElementById('setting-theme');
-            if (themeSelect) themeSelect.value = data.activeTheme;
+            if (themeSelect) themeSelect.value = localStorage.getItem('yamb_theme') || data.activeTheme;
         }
 
         if (data.soundEnabled !== undefined) {
@@ -2573,6 +2842,7 @@ class YambApp {
                 <div class="waiting-hof-loading-state">
                     <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="waiting-hof-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="waiting-hof-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>
                 </div>
             `;
@@ -2665,6 +2935,7 @@ class YambApp {
                 <div class="waiting-hof-empty-state" style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">
                     <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="waiting-hof-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="waiting-hof-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span>${gt('ws_hof_no_results') || 'Još uvek nema rezultata za ovaj period.'}</span>
                 </div>
             `;
@@ -2689,13 +2960,17 @@ class YambApp {
             const safeAvatar = sec ? sec.escapeAttr(sec.safeUrl(avatar, fallbackAvatar)) : avatar;
             const safeName = sec ? sec.escapeHtml(displayName) : displayName;
             const safeScore = Number(p.score || 0).toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
+            const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+            const podiumSrc = activeTheme === 'severna'
+                ? `assets/severna-soft-clay/leaderboard/medal-${medalAsset}.png?v=1`
+                : `assets/yotb-podium/leaderboard/${medalAsset}.png?v=1`;
 
             html += `
                 <div class="waiting-hof-entry" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span class="waiting-podium-mark" style="font-size: 1.2rem; font-weight: 900; width: 25px; text-align: center;">
                             <span class="waiting-podium-legacy">${medal}</span>
-                            <img class="waiting-podium-medal" src="assets/yotb-podium/leaderboard/${medalAsset}.png?v=1" alt="" aria-hidden="true" decoding="async">
+                            <img class="waiting-podium-medal" src="${podiumSrc}" alt="" aria-hidden="true" decoding="async">
                             <span class="waiting-podium-rank-number">${index + 1}</span>
                         </span>
                         <img src="${safeAvatar}" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid ${color}; object-fit: cover;">
@@ -2847,7 +3122,7 @@ class YambApp {
     async openGlobalChat(options = {}) {
         if (!this.requireLogin()) return;
 
-        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('globalChat'))) {
+        if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('globalChat')) {
             this.playEasterRoomIntro('globalChat', () => this.openGlobalChat({ skipRoomIntro: true }));
             return;
         }
@@ -2858,7 +3133,7 @@ class YambApp {
     openOnlinePlayers(options = {}) {
         if (!this.requireLogin()) return;
 
-        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('onlinePlayers'))) {
+        if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('onlinePlayers')) {
             this.playEasterRoomIntro('onlinePlayers', () => this.openOnlinePlayers({ skipRoomIntro: true }));
             return;
         }
@@ -3199,13 +3474,13 @@ class YambApp {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
                             gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆",
                             { contextClass: 'tourney-winner' }
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver.png?v=3" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament/finalist-silver.png?v=2" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
                             gt('tourney_finalist_title') || "FINALISTA 🥈",
                             { contextClass: 'tourney-finalist' }
                         );
@@ -4068,7 +4343,7 @@ class YambApp {
     }
 
     showSettings(options = {}) {
-        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('settings'))) {
+        if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('settings')) {
             this.playEasterRoomIntro('settings', () => this.showSettings({ skipRoomIntro: true }));
             return;
         }
@@ -4123,9 +4398,11 @@ class YambApp {
         }
         else if (type === 'theme') {
             const nextTheme = this.isThemeUnlocked(value) ? value : 'dark';
+            this.themeManualSwitchUntil = Date.now() + 2500;
             localStorage.setItem('yamb_theme', nextTheme);
-            this.applyTheme(nextTheme);
             const themeSelect = document.getElementById('setting-theme');
+            if (themeSelect) themeSelect.blur();
+            this.applyTheme(nextTheme, { manualSwitch: true, loadingDelayMs: 260 });
             if (themeSelect) themeSelect.value = nextTheme;
         }
         else if (type === 'language') {
@@ -4212,7 +4489,7 @@ class YambApp {
     }
 
     showStats(options = {}) {
-        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('statistics'))) {
+        if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('statistics')) {
             this.playEasterRoomIntro('statistics', () => this.showStats({ skipRoomIntro: true }));
             return;
         }
@@ -4325,7 +4602,7 @@ class YambApp {
         const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
         if (!rewardReady) return;
 
-        if (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('leaderboard')) {
+        if (this.shouldPlayThemedRoomIntro('leaderboard')) {
             this.playEasterRoomIntro('leaderboard', () => {
                 this.navigateTo('highscores-screen');
                 this.switchHsTab('global');
@@ -4346,6 +4623,17 @@ class YambApp {
             && ['leaderboard', 'statistics', 'settings', 'rules', 'globalChat', 'onlinePlayers', 'economy', 'hotseat', 'opponent', 'invite'].includes(roomId);
     }
 
+    shouldPlaySevernaRoomIntro(roomId) {
+        return (localStorage.getItem('yamb_theme') || 'dark') === 'severna'
+            && ['leaderboard', 'statistics', 'settings', 'rules', 'globalChat', 'onlinePlayers', 'economy', 'hotseat', 'opponent', 'invite', 'solo'].includes(roomId);
+    }
+
+    shouldPlayThemedRoomIntro(roomId) {
+        return this.shouldPlayEasterRoomIntro()
+            || this.shouldPlayDesertRoomIntro(roomId)
+            || this.shouldPlaySevernaRoomIntro(roomId);
+    }
+
     playEasterRoomIntro(roomId, onComplete) {
         if (this.easterRoomIntroPlaying) return;
 
@@ -4353,30 +4641,42 @@ class YambApp {
             leaderboard: {
                 icon: 'assets/easter-soft-clay/leaderboard-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/leaderboard-pro.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/leaderboard-pro.png?v=1',
                 scale: 1.16,
                 label: () => gt('hs_title') || 'TOP LISTA'
             },
             statistics: {
                 icon: 'assets/easter-soft-clay/statistics-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/statistics-pro.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/statistics-pro.png?v=1',
                 scale: 1.06,
                 label: () => gt('menu_stats') || 'STATISTIKA'
             },
             settings: {
                 icon: 'assets/easter-soft-clay/settings-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/settings-pro.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/settings-pro.png?v=1',
                 scale: 1,
                 label: () => gt('menu_settings') || 'PODEŠAVANJA'
             },
             rules: {
                 icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/rules-pro.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/rules-pro.png?v=5',
                 scale: 1.16,
                 label: () => gt('menu_rules') || 'PRAVILA'
+            },
+            solo: {
+                icon: 'assets/easter-soft-clay/mode-solo-pro.png?v=1',
+                desertIcon: 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/mode-solo-pro.png?v=1',
+                scale: 1,
+                label: () => gt('menu_solo') || ((localStorage.getItem('yamb_lang') || 'sr').startsWith('en') ? 'SOLO GAME' : 'SOLO IGRA')
             },
             hotseat: {
                 icon: 'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/mode-hotseat-pro.png?v=1',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'TWO PLAYERS HOTSEAT'
@@ -4385,6 +4685,7 @@ class YambApp {
             opponent: {
                 icon: 'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro.png?v=1',
                 scale: 1.2,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'FIND OPPONENT'
@@ -4393,6 +4694,7 @@ class YambApp {
             invite: {
                 icon: 'assets/easter-soft-clay/mode-invite-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/mode-invite-pro.png?v=1',
                 scale: 1.05,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'INVITE FRIEND'
@@ -4401,12 +4703,14 @@ class YambApp {
             globalChat: {
                 icon: 'assets/easter-soft-clay/global-chat-pro-v4.png',
                 desertIcon: 'assets/desert-soft-clay/global-chat-pro.png?v=2',
+                severnaIcon: 'assets/severna-soft-clay/global-chat-pro.png?v=1',
                 scale: 1,
                 label: () => 'GLOBAL CHAT'
             },
             onlinePlayers: {
                 icon: 'assets/soft-clay-online-players-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/online-players-pro.png?v=3',
+                severnaIcon: 'assets/severna-soft-clay/online-players-pro.png?v=1',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'ONLINE PLAYERS'
@@ -4415,6 +4719,7 @@ class YambApp {
             economy: {
                 icon: 'assets/soft-clay-ducats-undo-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
+                severnaIcon: 'assets/severna-soft-clay/ducats-undo-pro.png?v=1',
                 scale: 1,
                 lines: () => [
                     gt('menu_ducats') || 'DUKATI',
@@ -4437,10 +4742,14 @@ class YambApp {
         }
 
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const introTheme = activeTheme === 'desert' && room.desertIcon ? 'desert' : 'easter';
+        const introTheme = activeTheme === 'severna' && room.severnaIcon
+            ? 'severna'
+            : (activeTheme === 'desert' && room.desertIcon ? 'desert' : 'easter');
 
         if (iconElement) {
-            iconElement.src = introTheme === 'desert' ? room.desertIcon : room.icon;
+            iconElement.src = introTheme === 'severna'
+                ? room.severnaIcon
+                : (introTheme === 'desert' ? room.desertIcon : room.icon);
             iconElement.style.setProperty('--easter-room-icon-scale', room.scale || 1);
         }
         const titleLines = (room.lines ? room.lines() : [room.label()])
@@ -4472,7 +4781,7 @@ class YambApp {
         titleElement.setAttribute('aria-label', titleLines.join(' – '));
 
         this.easterRoomIntroPlaying = true;
-        overlay.classList.remove('theme-easter', 'theme-desert');
+        overlay.classList.remove('theme-easter', 'theme-desert', 'theme-severna');
         overlay.classList.add(`theme-${introTheme}`);
         overlay.classList.add('hidden');
         void overlay.offsetWidth;
@@ -4588,7 +4897,7 @@ class YambApp {
     }
     
     showRules(options = {}) {
-        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('rules'))) {
+        if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('rules')) {
             this.playEasterRoomIntro('rules', () => this.showRules({ skipRoomIntro: true }));
             return;
         }
@@ -4694,7 +5003,7 @@ class YambApp {
         const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return;
 
-        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('invite'))) {
+        if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('invite')) {
             this.playEasterRoomIntro('invite', () => this.startPrivateHosting({ skipRoomIntro: true }));
             return;
         }
@@ -4905,7 +5214,7 @@ class YambApp {
         const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return;
 
-        if (mode === 'random' && !options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('opponent'))) {
+        if (mode === 'random' && !options.skipRoomIntro && this.shouldPlayThemedRoomIntro('opponent')) {
             this.playEasterRoomIntro('opponent', () => this.setupOnline('random', { skipRoomIntro: true }));
             return;
         }
@@ -5055,7 +5364,7 @@ class YambApp {
                 : fallbackText;
 
             timerDisplay.style.display = 'flex';
-            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" src="assets/desert-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
+            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" src="assets/desert-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-opponent-connection-icon" src="assets/severna-soft-clay/opponent/disconnected.png?v=2" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
             timerDisplay.style.animation = 'pulse 1s infinite';
 
             if (this.opponentReconnectGraceDeadline && msLeft <= 0) {
@@ -5122,7 +5431,7 @@ class YambApp {
             if (this.isSpectator) {
                 timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
                 timerDisplay.style.display = 'flex';
-                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectating-live-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
+                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectating-live-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-spectating-live-icon" src="assets/severna-soft-clay/online-spectate-pro.png?v=2" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
             } else if (this.onlineMode && this.gameActive) {
                 timerDisplay.style.display = 'flex';
@@ -5234,9 +5543,11 @@ class YambApp {
                     gt('opp_reconnected') || "Protivnik se vratio u igru!",
                     isRandomOpponentRoom
                         ? {
-                            icon: document.body.classList.contains('desert-theme')
-                                ? 'assets/desert-soft-clay/opponent/reconnected.png?v=1'
-                                : 'assets/easter-soft-clay/opponent/reconnected.png?v=1',
+                            icon: document.body.classList.contains('severna-theme')
+                                ? 'assets/severna-soft-clay/opponent/reconnected.png?v=2'
+                                : (document.body.classList.contains('desert-theme')
+                                    ? 'assets/desert-soft-clay/opponent/reconnected.png?v=1'
+                                    : 'assets/easter-soft-clay/opponent/reconnected.png?v=1'),
                             className: 'opponent-reconnected-toast'
                         }
                         : {}
@@ -5307,9 +5618,10 @@ class YambApp {
             
             const medalType = rank === 1 ? 'gold' : rank === 2 ? 'silver' : 'bronze';
             const medalEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : '🥉';
-            const qlAssetRoot = (localStorage.getItem('yamb_theme') || 'dark') === 'desert'
-                ? 'assets/desert-soft-clay/ql'
-                : 'assets/easter-soft-clay/ql';
+            const activeQlRewardTheme = localStorage.getItem('yamb_theme') || 'dark';
+            const qlAssetRoot = activeQlRewardTheme === 'severna'
+                ? 'assets/severna-soft-clay/ql'
+                : (activeQlRewardTheme === 'desert' ? 'assets/desert-soft-clay/ql' : 'assets/easter-soft-clay/ql');
             let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlAssetRoot}/medal-${medalType}.png?v=2" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
             let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
@@ -6170,8 +6482,12 @@ class YambApp {
         if(this.soundMgr) this.soundMgr.click();
 
         const openMode = () => {
-            if (numPlayers === 2 && !options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('hotseat'))) {
-                this.playEasterRoomIntro('hotseat', () => this.setupGame(2));
+            const roomIntroId = numPlayers === 1 ? 'solo' : 'hotseat';
+            const shouldPlayModeIntro = numPlayers === 1
+                ? this.shouldPlaySevernaRoomIntro('solo')
+                : this.shouldPlayThemedRoomIntro('hotseat');
+            if (!options.skipRoomIntro && shouldPlayModeIntro) {
+                this.playEasterRoomIntro(roomIntroId, () => this.setupGame(numPlayers));
                 return;
             }
             this.setupGame(numPlayers);
@@ -6225,16 +6541,24 @@ class YambApp {
         }
 
         if (wantResume) {
-            if (numPlayers === 2 && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('hotseat'))) {
-                this.playEasterRoomIntro('hotseat', () => this.loadSavedGame(2));
+            const roomIntroId = numPlayers === 1 ? 'solo' : 'hotseat';
+            const shouldPlayModeIntro = numPlayers === 1
+                ? this.shouldPlaySevernaRoomIntro('solo')
+                : this.shouldPlayThemedRoomIntro('hotseat');
+            if (shouldPlayModeIntro) {
+                this.playEasterRoomIntro(roomIntroId, () => this.loadSavedGame(numPlayers));
             } else {
                 this.loadSavedGame(numPlayers);
             }
         } else {
             const uid = localStorage.getItem('yamb_uid') || 'guest';
             if (window.localforage) await localforage.removeItem(`yamb_saved_game_${uid}_${numPlayers}`);
-            if (numPlayers === 2 && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('hotseat'))) {
-                this.playEasterRoomIntro('hotseat', () => this.setupGame(2));
+            const roomIntroId = numPlayers === 1 ? 'solo' : 'hotseat';
+            const shouldPlayModeIntro = numPlayers === 1
+                ? this.shouldPlaySevernaRoomIntro('solo')
+                : this.shouldPlayThemedRoomIntro('hotseat');
+            if (shouldPlayModeIntro) {
+                this.playEasterRoomIntro(roomIntroId, () => this.setupGame(numPlayers));
             } else {
                 this.setupGame(numPlayers);
             }
@@ -6521,7 +6845,9 @@ class YambApp {
         playerTables.forEach(el => el.classList.remove('theme-spectator-active'));
 
         if(activeTbl) {
-            activeTbl.style.border = "2px solid var(--gold-main)"; activeTbl.style.boxShadow = "0 0 15px rgba(224, 201, 149, 0.2)"; activeTbl.style.opacity = "1";
+            activeTbl.style.border = "2px solid var(--gold-main)";
+            activeTbl.style.boxShadow = "var(--theme-active-table-shadow, 0 0 15px rgba(224, 201, 149, 0.2))";
+            activeTbl.style.opacity = "1";
             const usesThemedDualPager = usesTwoPlayerThemePager || isDesertSpectatorDuel;
             const shouldFollowActiveTable = this.players.length > 1 &&
                 (!usesThemedDualPager || this.dualBoardLastFollowedPlayerIdx !== this.currentPlayerIdx);
@@ -8400,7 +8726,7 @@ class YambApp {
     // --- UNDO MENU & TOKENS (Delegati za vracanjeupisa.js) ---
     
     openUndoMenu(options = {}) {
-        if (!options.skipRoomIntro && (this.shouldPlayEasterRoomIntro() || this.shouldPlayDesertRoomIntro('economy'))) {
+        if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('economy')) {
             this.playEasterRoomIntro('economy', () => this.openUndoMenu({ skipRoomIntro: true }));
             return;
         }
@@ -8431,9 +8757,10 @@ class YambApp {
     showQuarterWinnerModal(data) {
         const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.playerName)}&background=333&color=FFD700`;
         const photo = data.photoUrl && data.photoUrl.length > 5 ? data.photoUrl : defaultAvatar;
-        const qlAssetRoot = (localStorage.getItem('yamb_theme') || 'dark') === 'desert'
-            ? 'assets/desert-soft-clay/ql'
-            : 'assets/easter-soft-clay/ql';
+        const activeQlWinnerTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const qlAssetRoot = activeQlWinnerTheme === 'severna'
+            ? 'assets/severna-soft-clay/ql'
+            : (activeQlWinnerTheme === 'desert' ? 'assets/desert-soft-clay/ql' : 'assets/easter-soft-clay/ql');
         
         let title = gt('league_champion_title') || "ŠAMPION KVARTALNE LIGE";
         let subText = (gt('league_winner_q') || "Pobednik za Q{0} / {1}.").replace('{0}', data.quarter).replace('{1}', data.year);
@@ -8450,6 +8777,7 @@ class YambApp {
                     <img class="quarter-winner-logo quarter-winner-logo-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
                     <img class="quarter-winner-logo quarter-winner-logo-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
+                    <img class="quarter-winner-logo quarter-winner-logo-nebula" src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
                 </div>
                 <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>

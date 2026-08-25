@@ -3629,6 +3629,11 @@ class ShopManager {
 
         this.activeItem = itemId;
         localStorage.setItem(this.activeKey, itemId);
+        if (this.type === 'skin' && window.app) {
+            window.app.skinManualSwitchUntil = Date.now() + 3500;
+            localStorage.setItem('yamb_manual_active_skin', itemId);
+            localStorage.setItem('yamb_manual_active_skin_at', String(Date.now()));
+        }
         this.render();
         
         if(window.app && window.app.soundMgr) window.app.soundMgr.click();

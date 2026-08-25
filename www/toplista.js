@@ -41,6 +41,7 @@ class TopListManager {
                 <span class="hs-state-fallback" aria-hidden="true">${fallbackIcon}</span>
                 <img class="hs-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="hs-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="hs-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <span class="hs-list-state-text">${message}</span>
             </div>
         `;
@@ -49,9 +50,13 @@ class TopListManager {
     _podiumMarkup(index) {
         const medal = ['gold', 'silver', 'bronze'][index];
         if (!medal) return '';
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const medalSrc = activeTheme === 'severna'
+            ? `assets/severna-soft-clay/leaderboard/medal-${medal}.png?v=1`
+            : `assets/yotb-podium/leaderboard/${medal}.png?v=1`;
 
         return `
-            <img class="hs-podium-medal" src="assets/yotb-podium/leaderboard/${medal}.png?v=1" alt="" aria-hidden="true" decoding="async">
+            <img class="hs-podium-medal" src="${medalSrc}" alt="" aria-hidden="true" decoding="async">
             <span class="hs-podium-rank-number">${index + 1}</span>
         `;
     }

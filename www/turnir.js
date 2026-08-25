@@ -587,15 +587,9 @@ class TournamentManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
-        if (overlay.classList.contains('theme-easter')) {
-            const motionIcon = overlay.querySelector('.tournament-intro-mark-easter-motion');
-            if (motionIcon && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                const restartedIcon = motionIcon.cloneNode(true);
-                restartedIcon.src = restartedIcon.dataset.motionSrc;
-                motionIcon.replaceWith(restartedIcon);
-            }
-        }
-        const isSoftClayIntro = overlay.classList.contains('theme-easter') || overlay.classList.contains('theme-desert');
+        const isSoftClayIntro = overlay.classList.contains('theme-easter')
+            || overlay.classList.contains('theme-desert')
+            || overlay.classList.contains('theme-severna');
 
         if (isSoftClayIntro) {
             this.setEasterIntroTitle(title, this.tr('tourney_intro_title', 'TURNIR'));
@@ -629,7 +623,6 @@ class TournamentManager {
             }
             overlay.classList.add('hidden');
             overlay.setAttribute('aria-hidden', 'true');
-            overlay.querySelector('.tournament-intro-mark-easter-motion')?.removeAttribute('src');
             this.isIntroPlaying = false;
         }, introDuration);
     }
@@ -681,7 +674,11 @@ class TournamentManager {
     renderEasterIntroChampions() {
         const overlay = document.getElementById('tournament-intro');
         const container = overlay?.querySelector('.tournament-intro-champions');
-        if (!container || (!overlay.classList.contains('theme-easter') && !overlay.classList.contains('theme-desert'))) return;
+        if (!container || (
+            !overlay.classList.contains('theme-easter')
+            && !overlay.classList.contains('theme-desert')
+            && !overlay.classList.contains('theme-severna')
+        )) return;
 
         const lang = localStorage.getItem('yamb_lang') || 'sr';
         const isEnglish = lang === 'en' || lang === 'en-GB';
@@ -727,6 +724,7 @@ class TournamentManager {
                                 <img class="tournament-intro-wins-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                                 <img class="tournament-intro-wins-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                                 <img class="tournament-intro-wins-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
+                                <img class="tournament-intro-wins-icon-nebula" src="assets/severna-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                                 <strong>${wins}</strong>
                             </span>
                         </div>
@@ -784,16 +782,19 @@ class TournamentManager {
                     <img class="tourney-tab-icon tourney-tab-icon--info tourney-tab-icon-default" src="assets/tournament-info-icon.svg" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-soft-clay-icon" src="assets/easter-soft-clay/tournament/tab-info.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament/tab-info.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-tab-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament/tab-info.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </button>
                 <button class="tourney-tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'bracket'}" aria-label="${tt('tourney_tab_bracket') || 'Kostur'}" title="${tt('tourney_tab_bracket') || 'Kostur'}" onclick="app.tournamentManager.switchTab('bracket')">
                     <img class="tourney-tab-icon tourney-tab-icon--tournament tourney-tab-icon-default" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-soft-clay-icon" src="assets/easter-soft-clay/tournament/tab-bracket.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament/tab-bracket.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-tab-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament/tab-bracket.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </button>
                 <button class="tourney-tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'leaderboard'}" aria-label="${tt('tourney_tab_fame') || 'Slavni'}" title="${tt('tourney_tab_fame') || 'Slavni'}" onclick="app.tournamentManager.switchTab('leaderboard')">
                     <img class="tourney-tab-icon tourney-tab-icon--fame tourney-tab-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-soft-clay-icon" src="assets/easter-soft-clay/tournament/tab-hall-of-fame.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament/tab-hall-of-fame.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-tab-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament/tab-hall-of-fame.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </button>
             </div>
 
@@ -1126,6 +1127,7 @@ class TournamentManager {
                 <img class="tourney-hof-trophy tourney-trophy-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                 <img class="tourney-hof-trophy-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="tourney-hof-trophy-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
+                <img class="tourney-hof-trophy-nebula" src="assets/severna-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <h3 class="tourney-champions-title">
                     ${tt('tourney_hall_of_fame') || 'OSVAJAČI TURNIRA'}
                 </h3>
@@ -1150,7 +1152,7 @@ class TournamentManager {
                 const shareLabel = this.escape(tt('tourney_share_card') || 'Podeli karticu');
                 const podiumType = idx === 0 ? 'gold' : (idx === 1 ? 'silver' : (idx === 2 ? 'bronze' : ''));
                 const podiumHtml = podiumType
-                    ? `<img class="tourney-podium-medal tourney-podium-medal-easter tourney-podium-medal--${podiumType}" src="assets/easter-soft-clay/tournament/podium-${podiumType}.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-desert tourney-podium-medal--${podiumType}" src="assets/desert-soft-clay/tournament/podium-${podiumType}.png?v=3" alt="" aria-hidden="true" decoding="async">`
+                    ? `<img class="tourney-podium-medal tourney-podium-medal-easter tourney-podium-medal--${podiumType}" src="assets/easter-soft-clay/tournament/podium-${podiumType}.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-desert tourney-podium-medal--${podiumType}" src="assets/desert-soft-clay/tournament/podium-${podiumType}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-nebula tourney-podium-medal--${podiumType}" src="assets/severna-soft-clay/tournament/podium-${podiumType}.png?v=1" alt="" aria-hidden="true" decoding="async">`
                     : '';
 
                 leaderboardHtml += `
@@ -1163,6 +1165,7 @@ class TournamentManager {
                             <img class="tourney-wins-trophy-icon tourney-trophy-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                             <img class="tourney-wins-trophy-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <img class="tourney-wins-trophy-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
+                            <img class="tourney-wins-trophy-icon-nebula" src="assets/severna-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <strong>${safeWins}</strong>
                         </div>
                         <div class="tourney-champion-actions">
@@ -1460,6 +1463,7 @@ class TournamentManager {
                     <span class="tourney-action-icon tourney-action-icon-fallback" aria-hidden="true">🏁</span>
                     <img class="tourney-action-soft-clay-icon" src="assets/easter-soft-clay/tournament/${isFinished ? 'state-match-complete' : (isRegistered ? 'state-start' : 'state-registration-locked')}.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-action-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament/${isFinished ? 'state-match-complete' : (isRegistered ? 'state-start' : 'state-registration-locked')}.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-action-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament/${isFinished ? 'state-match-complete' : (isRegistered ? 'state-start' : 'state-registration-locked')}.png?v=2" alt="" aria-hidden="true" decoding="async">
                     <span class="tourney-action-label">
                         <span class="tourney-action-primary">${labelPrimary}</span>
                         ${labelSecondary ? `<span class="tourney-action-secondary">${labelSecondary}</span>` : ''}
@@ -1477,6 +1481,7 @@ class TournamentManager {
                     <span class="tourney-action-icon tourney-action-icon-fallback" aria-hidden="true">${this.pendingUnregister ? '⏳' : '↩️'}</span>
                     <img class="tourney-action-soft-clay-icon${this.pendingUnregister ? ' is-pending' : ''}" src="assets/easter-soft-clay/tournament/state-unregister.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-action-desert-soft-clay-icon${this.pendingUnregister ? ' is-pending' : ''}" src="assets/desert-soft-clay/tournament/state-unregister.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-action-nebula-soft-clay-icon${this.pendingUnregister ? ' is-pending' : ''}" src="assets/severna-soft-clay/tournament/state-unregister.png?v=2" alt="" aria-hidden="true" decoding="async">
                     <span class="tourney-action-label">
                         <span class="tourney-action-primary">${labelPrimary}</span>
                         ${labelSecondary ? `<span class="tourney-action-secondary">${labelSecondary}</span>` : ''}
@@ -1494,6 +1499,7 @@ class TournamentManager {
                     <span class="tourney-action-icon tourney-action-icon-fallback" aria-hidden="true">${this.pendingRegistration ? '⏳' : '🎟️'}</span>
                     <img class="tourney-action-soft-clay-icon${this.pendingRegistration ? ' is-pending' : ''}" src="assets/easter-soft-clay/tournament/state-register.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-action-desert-soft-clay-icon${this.pendingRegistration ? ' is-pending' : ''}" src="assets/desert-soft-clay/tournament/state-register.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-action-nebula-soft-clay-icon${this.pendingRegistration ? ' is-pending' : ''}" src="assets/severna-soft-clay/tournament/state-register.png?v=2" alt="" aria-hidden="true" decoding="async">
                     <span class="tourney-action-label">
                         <span class="tourney-action-primary">${labelPrimary}</span>
                         ${labelSecondary ? `<span class="tourney-action-secondary">${labelSecondary}</span>` : ''}
@@ -1504,7 +1510,7 @@ class TournamentManager {
 
         container.innerHTML = `
             <div class="tourney-registration-panel">
-                <div class="tourney-icon-large tourney-registration-icon"><span class="tourney-registration-icon-fallback" aria-hidden="true">🏆</span><img class="tourney-registration-soft-clay-icon" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"></div>
+                <div class="tourney-icon-large tourney-registration-icon"><span class="tourney-registration-icon-fallback" aria-hidden="true">🏆</span><img class="tourney-registration-soft-clay-icon" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"></div>
                 <h3 class="tourney-registration-title">${currentEdition}</h3>
                 <p class="tourney-registration-desc">${registrationDesc}</p>
 
@@ -1796,6 +1802,7 @@ class TournamentManager {
                                 <img class="tourney-round-trophy tourney-trophy-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
                                 <img class="tourney-round-trophy-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                                 <img class="tourney-round-trophy-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
+                                <img class="tourney-round-trophy-nebula" src="assets/severna-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                             </h3>
                             <div class="tourney-matches tourney-matches--f">
                                 ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
@@ -1905,7 +1912,7 @@ class TournamentManager {
         const resultLabel = this.getMatchResultLabel(match);
         const drawReplayLabel = this.getMatchDrawReplayLabel(match);
         const resultHtml = resultLabel
-            ? `<div class="tourney-completed-match-result" style="text-align: center; padding: 2px 8px; font-size: 0.7rem; line-height: 1.15; font-weight: 900; color: var(--gold-main); background: rgba(255,215,0,0.07); border-bottom: 1px solid rgba(255,215,0,0.12); text-shadow: 0 0 5px rgba(255,215,0,0.25);"><img class="tourney-inline-match-state" src="assets/easter-soft-clay/tournament/state-match-complete.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-match-state-desert" src="assets/desert-soft-clay/tournament/state-match-complete.png?v=3" alt="" aria-hidden="true" decoding="async"><span>${resultLabel}</span></div>`
+            ? `<div class="tourney-completed-match-result" style="text-align: center; padding: 2px 8px; font-size: 0.7rem; line-height: 1.15; font-weight: 900; color: var(--gold-main); background: rgba(255,215,0,0.07); border-bottom: 1px solid rgba(255,215,0,0.12); text-shadow: 0 0 5px rgba(255,215,0,0.25);"><img class="tourney-inline-match-state" src="assets/easter-soft-clay/tournament/state-match-complete.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-match-state-desert" src="assets/desert-soft-clay/tournament/state-match-complete.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-match-state-nebula" src="assets/severna-soft-clay/tournament/state-match-complete.png?v=2" alt="" aria-hidden="true" decoding="async"><span>${resultLabel}</span></div>`
             : (drawReplayLabel ? `<div style="text-align: center; padding: 2px 8px; font-size: 0.66rem; line-height: 1.15; font-weight: 1000; color: #ffb74d; background: rgba(255,152,0,0.1); border-bottom: 1px solid rgba(255,152,0,0.18); text-shadow: 0 0 5px rgba(255,152,0,0.2);">${drawReplayLabel}</div>` : '');
         const cardMinHeight = (resultLabel || drawReplayLabel) ? '76px' : '62px';
         const canOpenMatch = Boolean(match.p1 && match.p2 && (this.state.status === 'finished' || this.isTournamentSchedulingUnlocked()));
@@ -1957,9 +1964,9 @@ class TournamentManager {
                 : '';
             const resultIcon = round === 'f' ? 'tournament-pro.png' : 'tournament/state-match-complete.png';
             const finalistHtml = round === 'f'
-                ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver.png?v=3" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
+                ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-nebula" src="assets/severna-soft-clay/tournament/finalist-silver.png?v=2" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
                 : '';
-            akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-easter" src="assets/easter-soft-clay/${resultIcon}?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-desert" src="assets/desert-soft-clay/${resultIcon}?v=1" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
+            akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-easter" src="assets/easter-soft-clay/${resultIcon}?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-desert" src="assets/desert-soft-clay/${resultIcon}?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-nebula" src="assets/severna-soft-clay/${resultIcon}?v=2" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
         }
         else if (isMyMatch) {
             if (match.timeAccepted) {
@@ -1977,7 +1984,7 @@ class TournamentManager {
                         <p style="color: var(--success); font-weight: bold; margin-bottom: 5px;">${tt('tourney_time_agreed') || 'Vreme meča je dogovoreno!'}</p>
                         <p style="font-size: 1.1rem;">${this.formatDate(match.time)}</p>
                     </div>
-                    <button class="btn-menu btn-primary tourney-start-match-button" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.startDuel('${round}', ${index})"><img class="tourney-inline-active-match-icon" src="assets/easter-soft-clay/tournament/state-match-active.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-active-match-icon-desert" src="assets/desert-soft-clay/tournament/state-match-active.png?v=3" alt="" aria-hidden="true" decoding="async"><span>${match.rematchRequired ? (tt('tourney_replay_match') || 'POKRENI PONAVLJANJE') : `▶ ${tt('tourney_start_match') || 'POKRENI MEČ'}`}</span></button>
+                    <button class="btn-menu btn-primary tourney-start-match-button" style="width: 100%; font-size: 1.1rem; padding: 15px;" onclick="app.tournamentManager.startDuel('${round}', ${index})"><img class="tourney-inline-active-match-icon" src="assets/easter-soft-clay/tournament/state-match-active.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-active-match-icon-desert" src="assets/desert-soft-clay/tournament/state-match-active.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-active-match-icon-nebula" src="assets/severna-soft-clay/tournament/state-match-active.png?v=2" alt="" aria-hidden="true" decoding="async"><span>${match.rematchRequired ? (tt('tourney_replay_match') || 'POKRENI PONAVLJANJE') : `▶ ${tt('tourney_start_match') || 'POKRENI MEČ'}`}</span></button>
                     ${replayScheduleHtml}
                 `;
             }

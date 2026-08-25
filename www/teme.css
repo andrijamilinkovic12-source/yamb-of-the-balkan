@@ -5233,7 +5233,9 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
 .daily-intro-mark-easter,
 .daily-intro-easter-wave,
 .daily-intro-mark-desert,
-.daily-intro-desert-wave {
+.daily-intro-desert-wave,
+.daily-intro-mark-nebula,
+.daily-intro-nebula-wave {
     display: none;
 }
 
@@ -5614,8 +5616,13 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
 /* Vaskrs — Riznica i Turnir prate isti 4,6 s Soft Clay uvod kao donji red. */
 .riznica-intro-gem-easter,
 .riznica-intro-gem-easter-motion,
+.riznica-intro-gem-nebula,
 .tournament-intro-mark-easter,
 .tournament-intro-mark-easter-motion,
+.tournament-intro-mark-nebula,
+.tournament-intro-wins-icon-easter,
+.tournament-intro-wins-icon-desert,
+.tournament-intro-wins-icon-nebula,
 .tournament-intro-champions {
     display: none;
 }
@@ -5646,8 +5653,8 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
     display: none;
 }
 
-#riznica-intro.theme-easter .riznica-intro-gem-easter-motion,
-#tournament-intro.theme-easter .tournament-intro-mark-easter-motion {
+#riznica-intro.theme-easter .riznica-intro-gem-easter,
+#tournament-intro.theme-easter .tournament-intro-mark-easter {
     display: block;
     width: clamp(210px, 34vmin, 290px);
     height: clamp(210px, 34vmin, 290px);
@@ -5656,9 +5663,9 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
     animation: none;
 }
 
-#riznica-intro.theme-easter .riznica-intro-gem-easter,
-#tournament-intro.theme-easter .tournament-intro-mark-easter {
-    display: none;
+#riznica-intro.theme-easter .riznica-intro-gem-easter-motion,
+#tournament-intro.theme-easter .tournament-intro-mark-easter-motion {
+    display: none !important;
 }
 
 #tournament-intro.theme-easter .tournament-intro-mark-wrap {
@@ -6991,10 +6998,13 @@ body.desert-theme #main-menu > .main-global-chat-btn .desert-global-chat-icon {
    X, prijava poruke, online indikator, brojač i avatari ostaju nepromenjeni. */
 .global-chat-header-soft-clay-icon,
 .global-chat-header-soft-clay-icon-desert,
+.global-chat-header-soft-clay-icon-nebula,
 .global-chat-send-soft-clay-icon,
 .global-chat-send-soft-clay-icon-desert,
+.global-chat-send-soft-clay-icon-nebula,
 .global-chat-state-soft-clay-icon,
-.global-chat-state-soft-clay-icon-desert {
+.global-chat-state-soft-clay-icon-desert,
+.global-chat-state-soft-clay-icon-nebula {
     display: none;
 }
 
@@ -7136,6 +7146,70 @@ body.desert-theme #global-chat-overlay .global-chat-state.is-loading .global-cha
     animation: easterGlobalChatStatePulse 1.55s ease-in-out infinite;
 }
 
+/* Severna Maglina — Global Chat koristi čist hladni Soft Clay set. */
+body.severna-theme #global-chat-overlay .global-chat-room-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+body.severna-theme #global-chat-overlay .global-chat-header-soft-clay-icon-nebula {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(0, 3, 16, .24)) drop-shadow(0 0 7px rgba(134, 247, 255, .16));
+}
+
+body.severna-theme #global-chat-overlay .global-chat-send {
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+body.severna-theme #global-chat-overlay .global-chat-send-fallback {
+    display: none;
+}
+
+body.severna-theme #global-chat-overlay .global-chat-send-soft-clay-icon-nebula {
+    display: block;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    pointer-events: none;
+    transform: translate(-1px, 1px);
+    filter: drop-shadow(0 4px 7px rgba(0, 3, 16, .24)) drop-shadow(0 0 7px rgba(134, 247, 255, .16));
+}
+
+body.severna-theme #global-chat-overlay .global-chat-state {
+    width: min(300px, 84%);
+    min-height: 146px;
+    margin: auto;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    color: var(--nebula-ui-muted);
+}
+
+body.severna-theme #global-chat-overlay .global-chat-state-soft-clay-icon-nebula {
+    display: block;
+    width: 76px;
+    height: 76px;
+    object-fit: contain;
+    opacity: .82;
+    filter: drop-shadow(0 7px 11px rgba(0, 3, 16, .22)) drop-shadow(0 0 10px rgba(134, 247, 255, .14));
+}
+
+body.severna-theme #global-chat-overlay .global-chat-state.is-loading .global-chat-state-soft-clay-icon-nebula {
+    animation: easterGlobalChatStatePulse 1.55s ease-in-out infinite;
+}
+
 /* Pustinjsko staklo — kontrast razgovora na svetloj Desert površini. */
 body.desert-theme #global-chat-overlay .msg-incoming {
     background: rgba(255, 249, 233, .78) !important;
@@ -7170,10 +7244,13 @@ body.desert-theme #global-chat-overlay .global-chat-status {
    ostaje 38×38; statusne boje, avatari, imena, podaci i X se ne menjaju. */
 .online-players-header-soft-clay-icon,
 .online-players-header-soft-clay-icon-desert,
+.online-players-header-soft-clay-icon-nebula,
 .online-player-action-soft-clay-icon,
 .online-player-action-soft-clay-icon-desert,
+.online-player-action-soft-clay-icon-nebula,
 .online-players-state-soft-clay-icon,
 .online-players-state-soft-clay-icon-desert,
+.online-players-state-soft-clay-icon-nebula,
 #main-menu .main-online-soft-clay-icon-desert {
     display: none;
 }
@@ -7493,6 +7570,7 @@ body.desert-theme #online-players-overlay .online-players-load-more {
    Progress, PTS, nazivi, avatari, swipe/pagination i nagrade ostaju funkcionalno isti. */
 .league-modal-header-icon-easter,
 .league-modal-header-icon-desert,
+.league-modal-header-icon-nebula,
 .league-tab-soft-clay-icon,
 .league-hof-tab-soft-clay-icon,
 .league-rank-soft-clay-badge,
@@ -8113,6 +8191,14 @@ body.desert-theme .quarter-winner-logo-desert {
 .economy-inline-token-desert-soft-clay-icon,
 .economy-reward-video-desert-soft-clay-icon,
 .economy-ad-unavailable-desert-soft-clay-icon,
+.economy-header-nebula-soft-clay-icon,
+.economy-tab-nebula-soft-clay-icon,
+.economy-hero-ducat-icon-nebula,
+.economy-reward-ducat-icon-nebula,
+.economy-inline-token-nebula-soft-clay-icon,
+.economy-reward-video-nebula-soft-clay-icon,
+.economy-ad-unavailable-nebula-soft-clay-icon,
+.economy-reward-unavailable-nebula-soft-clay-icon,
 #main-menu .main-economy-soft-clay-icon-desert {
     display: none;
 }
@@ -11652,21 +11738,21 @@ body.desert-theme #game-over-screen .desert-solo-personal-best-icon {
     }
 }
 
-/* Vaskrs — samo Riznica i Turnir koriste unapred renderovan volumetrijski
-   WebP motion. CSS više ne deformiše ravni PNG; kartice i bedž miruju. */
+/* Vaskrs — Riznica i Turnir vraćeni na odobrene statične Soft Clay PNG ikone.
+   3D/WebP motion ostaje neaktivan; kartice, bedž i dimenzije miruju. */
 #main-menu .easter-soft-clay-special-motion-icon {
-    display: none;
+    display: none !important;
 }
 
-body.easter-theme #main-menu .spec-riznica > .easter-soft-clay-special-icon,
-body.easter-theme #main-menu .spec-turnir > .easter-soft-clay-special-icon {
+body.easter-theme #main-menu .spec-riznica > .easter-soft-clay-special-motion-icon,
+body.easter-theme #main-menu .spec-turnir > .easter-soft-clay-special-motion-icon {
     display: none !important;
     animation: none !important;
     transform: translate(-50%, -50%);
 }
 
-body.easter-theme #main-menu .spec-riznica > .easter-soft-clay-special-motion-icon,
-body.easter-theme #main-menu .spec-turnir > .easter-soft-clay-special-motion-icon {
+body.easter-theme #main-menu .spec-riznica > .easter-soft-clay-special-icon,
+body.easter-theme #main-menu .spec-turnir > .easter-soft-clay-special-icon {
     display: block !important;
     position: absolute;
     left: 50%;
@@ -11679,8 +11765,8 @@ body.easter-theme #main-menu .spec-turnir > .easter-soft-clay-special-motion-ico
     transform: translate(-50%, -50%);
 }
 
-body.easter-theme #main-menu .spec-riznica:active > .easter-soft-clay-special-motion-icon,
-body.easter-theme #main-menu .spec-turnir:active > .easter-soft-clay-special-motion-icon {
+body.easter-theme #main-menu .spec-riznica:active > .easter-soft-clay-special-icon,
+body.easter-theme #main-menu .spec-turnir:active > .easter-soft-clay-special-icon {
     transform: translate(-50%, -47%) scale(.95);
 }
 
@@ -11721,14 +11807,23 @@ body.severna-theme {
     --nebula-ui-muted: #a9c8da;
     --nebula-ui-title: #86f7ff;
     --nebula-ui-violet: #b9a0ff;
+    --nebula-ui-cyan: #86f7ff;
+    --nebula-ui-cyan-soft: rgba(134, 247, 255, 0.24);
+    --nebula-ui-violet-soft: rgba(185, 160, 255, 0.24);
     --nebula-ui-surface: linear-gradient(145deg, rgba(15, 35, 59, 0.78), rgba(5, 12, 29, 0.76));
     --nebula-ui-surface-light: linear-gradient(145deg, rgba(38, 89, 123, 0.72), rgba(11, 28, 55, 0.74));
+    --nebula-ui-surface-inset: linear-gradient(145deg, rgba(3, 11, 27, 0.88), rgba(13, 35, 64, 0.70));
     --nebula-ui-border: 1px solid rgba(149, 246, 255, 0.30);
     --nebula-ui-raised:
         8px 8px 18px rgba(0, 3, 16, 0.42),
         -5px -5px 16px rgba(120, 222, 255, 0.10),
         inset 1px 1px 2px rgba(236, 254, 255, 0.22),
         inset -2px -2px 5px rgba(2, 7, 20, 0.42);
+    --theme-active-table-shadow:
+        0 0 0 1px rgba(236,254,255,0.26),
+        0 0 18px rgba(134,247,255,0.34),
+        0 10px 24px rgba(0,3,16,0.34),
+        inset 0 1px 2px rgba(236,254,255,0.18);
     --bg-base: #020714;
     --bg-gradient-1: #102f51;
     --bg-gradient-2: #050b1f;
@@ -11754,6 +11849,26 @@ body.severna-theme {
     --dice-border: rgba(236,254,255,0.78);
     --dice-color: #061526;
     --dice-active: #b9a0ff;
+    --carousel-dot-idle: rgba(134, 247, 255, 0.28);
+    --carousel-dot-active: #86f7ff;
+    --carousel-dot-glow: rgba(134, 247, 255, 0.58);
+    --menu-icon-face-light: #ecfeff;
+    --menu-icon-face-main: #86f7ff;
+    --menu-icon-face-dark: #23758a;
+    --menu-icon-warm-light: #f2feff;
+    --menu-icon-warm-main: #b9a0ff;
+    --menu-icon-accent-light: #d8d1ff;
+    --menu-icon-accent-main: #8f83ef;
+    --menu-icon-core: #061526;
+    --menu-icon-detail: #020714;
+    --menu-icon-glow: #86f7ff;
+    --menu-icon-css-glow: rgba(134, 247, 255, 0.30);
+    --col-nadole: #86f7ff;
+    --col-nagore: #b9a0ff;
+    --col-sredina: #d9fbff;
+    --col-rucno: #d8d1ff;
+    --col-najava: #93edff;
+    --col-slobodna: #a9c8da;
 }
 
 body.severna-theme::before {
@@ -11787,9 +11902,12 @@ body.severna-theme::after {
 body.severna-theme .header,
 body.severna-theme .game-header,
 body.severna-theme .controls-area {
-    background: rgba(6, 16, 36, 0.78);
+    background:
+        radial-gradient(circle at 20% 18%, rgba(134,247,255,0.10), transparent 36%),
+        rgba(6, 16, 36, 0.80);
     border-color: rgba(149, 246, 255, 0.26);
     box-shadow: var(--nebula-ui-raised) !important;
+    color: var(--nebula-ui-ink-strong);
 }
 
 body.severna-theme .player-table {
@@ -11830,6 +11948,7 @@ body.severna-theme .player-table > * {
 body.severna-theme .grid-cell {
     border-color: rgba(149, 246, 255, 0.12);
     background: rgba(7, 19, 38, 0.70);
+    color: rgba(217,251,255,0.70);
     box-shadow:
         inset 3px 3px 7px rgba(0,0,0,0.54),
         inset -2px -2px 5px rgba(139, 220, 255, 0.08) !important;
@@ -11852,6 +11971,46 @@ body.severna-theme .cell-sum {
     background: linear-gradient(145deg, rgba(72, 66, 119, 0.76), rgba(8, 21, 42, 0.88)) !important;
     border-color: rgba(185, 160, 255, 0.28) !important;
     color: #e3d8ff !important;
+}
+
+body.severna-theme .score-btn {
+    color: rgba(217,251,255,0.66) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.54);
+}
+
+body.severna-theme .score-btn.filled {
+    color: #f2feff !important;
+    font-weight: 900;
+    background:
+        radial-gradient(circle at 50% 44%, rgba(134,247,255,0.24) 0%, rgba(185,160,255,0.13) 42%, transparent 74%),
+        linear-gradient(145deg, rgba(22, 57, 88, 0.28), rgba(6, 16, 36, 0.10)) !important;
+    text-shadow:
+        0 0 9px rgba(134,247,255,0.46),
+        0 1px 2px rgba(0,0,0,0.78) !important;
+}
+
+body.severna-theme .cell-sum .score-btn,
+body.severna-theme .row-header.sum .score-btn {
+    color: #e9ddff !important;
+}
+
+body.severna-theme .cell-sum .score-btn.filled {
+    color: #fbf8ff !important;
+    background:
+        radial-gradient(circle at 50% 44%, rgba(185,160,255,0.32) 0%, rgba(134,247,255,0.12) 50%, transparent 76%),
+        linear-gradient(145deg, rgba(76, 66, 121, 0.38), rgba(7, 20, 43, 0.16)) !important;
+    text-shadow:
+        0 0 10px rgba(185,160,255,0.48),
+        0 1px 2px rgba(0,0,0,0.78) !important;
+}
+
+body.severna-theme .player-table h3,
+body.severna-theme .player-table .player-name,
+body.severna-theme .turn-indicator,
+body.severna-theme #turn-info,
+body.severna-theme #current-player-name {
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,0.24), 0 1px 2px rgba(0,0,0,0.58) !important;
 }
 
 body.severna-theme .btn-menu,
@@ -11880,6 +12039,52 @@ body.severna-theme .daily-btn-main {
         0 14px 24px rgba(0, 3, 16, 0.42),
         0 0 22px rgba(134,247,255,0.22),
         inset 0 2px 4px rgba(255,255,255,0.62) !important;
+}
+
+body.severna-theme .btn-primary:active,
+body.severna-theme .btn-throw:active,
+body.severna-theme .daily-btn-main:active {
+    box-shadow:
+        0 2px 0 #1f647f,
+        0 8px 18px rgba(0, 3, 16, 0.42),
+        inset 0 3px 7px rgba(5,18,40,0.24) !important;
+    filter: saturate(1.04) brightness(.98);
+}
+
+body.severna-theme .btn-primary:disabled,
+body.severna-theme .btn-throw:disabled,
+body.severna-theme .btn-secondary:disabled,
+body.severna-theme #btn-najava:disabled {
+    opacity: .72;
+    filter: saturate(.88) brightness(.82);
+}
+
+body.severna-theme #btn-najava.btn-active-toggle,
+body.severna-theme #btn-najava.btn-highlight {
+    background:
+        radial-gradient(circle at 30% 22%, rgba(255,255,255,0.50), transparent 38%),
+        linear-gradient(145deg, #dffcff 0%, #78e9f4 46%, #a993ff 100%) !important;
+    color: #061526 !important;
+    border-color: rgba(236,254,255,0.76) !important;
+    text-shadow: 0 1px 0 rgba(236,254,255,0.48) !important;
+    box-shadow:
+        0 5px 0 #1f647f,
+        0 12px 22px rgba(0,3,16,0.36),
+        0 0 20px rgba(134,247,255,0.26),
+        inset 0 2px 4px rgba(255,255,255,0.62) !important;
+}
+
+body.severna-theme .dice.held,
+body.severna-theme .dice.skin-severna_nebula.held {
+    border-color: rgba(185,160,255,0.86) !important;
+    filter: brightness(.96) saturate(1.08) !important;
+    box-shadow:
+        0 0 0 3px rgba(185,160,255,0.23),
+        0 0 22px rgba(134,247,255,0.28),
+        5px 5px 12px rgba(0,3,16,.42),
+        -4px -4px 10px rgba(142,238,255,.18),
+        inset 1px 1px 3px rgba(255,255,255,.70),
+        inset -2px -2px 5px rgba(6,18,46,.34) !important;
 }
 
 body.severna-theme .modal-box,
@@ -11917,7 +12122,7 @@ body.severna-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-ca
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=1") center / contain no-repeat;
+    background: url("assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=2") center / contain no-repeat;
     opacity: .20;
     filter: drop-shadow(0 8px 12px rgba(0,0,0,.20)) saturate(1.06);
     pointer-events: none;
@@ -12002,6 +12207,335 @@ body.severna-theme #main-menu .main-online-presence-dot {
     box-shadow: 0 0 12px rgba(134,247,255,.70);
 }
 
+/* Severna — unutrašnji Online igrači icon pack.
+   Klik zone, statusne boje, avatari, imena, X i logika ostaju nepromenjeni. */
+body.severna-theme #online-players-overlay .online-players-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.26), 0 1px 2px rgba(0,0,0,.58) !important;
+}
+
+body.severna-theme #online-players-overlay .online-players-header-soft-clay-icon,
+body.severna-theme #online-players-overlay .online-players-header-soft-clay-icon-desert,
+body.severna-theme #online-players-overlay .online-players-title-fallback,
+body.severna-theme #online-players-overlay .online-player-action-soft-clay-icon,
+body.severna-theme #online-players-overlay .online-player-action-soft-clay-icon-desert,
+body.severna-theme #online-players-overlay .online-players-state-soft-clay-icon,
+body.severna-theme #online-players-overlay .online-players-state-soft-clay-icon-desert {
+    display: none !important;
+}
+
+body.severna-theme #online-players-overlay .online-players-header-soft-clay-icon-nebula {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(0,3,16,.24)) drop-shadow(0 0 8px rgba(134,247,255,.12));
+}
+
+body.severna-theme #online-players-overlay .online-player-action {
+    position: relative;
+    padding: 0 !important;
+    overflow: visible;
+    opacity: 1 !important;
+    background: rgba(10, 28, 54, .58) !important;
+    border: 1px solid rgba(149,246,255,.22) !important;
+    border-radius: 12px !important;
+    box-shadow:
+        4px 4px 9px rgba(0,3,16,.28),
+        -3px -3px 8px rgba(120,222,255,.08),
+        inset 1px 1px 1px rgba(236,254,255,.12) !important;
+}
+
+body.severna-theme #online-players-overlay .online-player-action-fallback {
+    display: none !important;
+}
+
+body.severna-theme #online-players-overlay .online-player-action-soft-clay-icon-nebula {
+    display: block;
+    width: 36px;
+    height: 36px;
+    max-width: 36px;
+    flex: 0 0 36px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #online-players-overlay .online-player-action:disabled,
+body.severna-theme #online-players-overlay .online-player-action.is-disabled {
+    opacity: .44 !important;
+    cursor: not-allowed !important;
+    box-shadow:
+        inset 2px 2px 5px rgba(0,3,16,.34),
+        inset -2px -2px 5px rgba(134,247,255,.08) !important;
+}
+
+body.severna-theme #online-players-overlay .online-player-action:disabled .online-player-action-soft-clay-icon-nebula,
+body.severna-theme #online-players-overlay .online-player-action.is-disabled .online-player-action-soft-clay-icon-nebula {
+    filter: grayscale(.72) saturate(.42) drop-shadow(0 2px 3px rgba(0,3,16,.18));
+}
+
+body.severna-theme #online-players-overlay .online-players-state {
+    width: min(300px, 84%);
+    min-height: 152px;
+    margin: auto;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    color: var(--nebula-ui-muted) !important;
+    font-size: .9rem;
+}
+
+body.severna-theme #online-players-overlay .online-players-state-soft-clay-icon-nebula {
+    display: block;
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    opacity: .84;
+    filter: drop-shadow(0 7px 11px rgba(0,3,16,.24)) drop-shadow(0 0 10px rgba(134,247,255,.10));
+}
+
+body.severna-theme #online-players-overlay .online-players-state.is-loading .online-players-state-soft-clay-icon-nebula {
+    animation: easterOnlinePlayersStatePulse 1.55s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.severna-theme #online-players-overlay .online-players-state.is-loading .online-players-state-soft-clay-icon-nebula {
+        animation: none !important;
+    }
+}
+
+/* Severna — Dukati / Ispravi zadnji upis icon pack.
+   Brojači, cene, ad-status, tekst, +, količine, X i logika se ne menjaju. */
+body.severna-theme #undo-menu-overlay .economy-card-header {
+    background: var(--nebula-ui-surface) !important;
+    border: var(--nebula-ui-border) !important;
+    box-shadow: var(--nebula-ui-raised) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-card-header .global-chat-title {
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.26), 0 1px 2px rgba(0,0,0,.58) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-header-icon,
+body.severna-theme #undo-menu-overlay .economy-header-soft-clay-icon,
+body.severna-theme #undo-menu-overlay .economy-header-desert-soft-clay-icon {
+    display: none !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-header-nebula-soft-clay-icon {
+    display: block;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 8px rgba(0,3,16,.28)) drop-shadow(0 0 8px rgba(134,247,255,.12));
+}
+
+body.severna-theme #undo-menu-overlay .economy-header-nebula-soft-clay-icon.hidden {
+    display: none !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-tabs .dukat-icon-inline,
+body.severna-theme #undo-menu-overlay .economy-tabs .token-icon-inline {
+    display: none;
+}
+
+body.severna-theme #undo-menu-overlay .economy-tabs .tab-btn {
+    background: var(--nebula-ui-surface-light) !important;
+    border-color: rgba(149,246,255,.22) !important;
+    box-shadow:
+        4px 4px 9px rgba(0,3,16,.28),
+        -4px -4px 9px rgba(120,222,255,.08),
+        inset 1px 1px 1px rgba(236,254,255,.12) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-tabs .tab-btn.active {
+    background: var(--nebula-ui-surface-inset) !important;
+    border-color: rgba(149,246,255,.36) !important;
+    box-shadow:
+        inset 4px 4px 9px rgba(0,3,16,.42),
+        inset -3px -3px 8px rgba(134,247,255,.08) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-tab-nebula-soft-clay-icon {
+    display: block;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.10));
+}
+
+body.severna-theme #undo-menu-overlay .economy-hero-ducat-icon-default,
+body.severna-theme #undo-menu-overlay .economy-hero-ducat-icon-easter,
+body.severna-theme #undo-menu-overlay .economy-hero-ducat-icon-desert {
+    display: none !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-hero-ducat-icon-nebula {
+    display: block;
+    width: 68px;
+    height: 68px;
+    flex: 0 0 68px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 12px rgba(0,3,16,.28)) drop-shadow(0 0 10px rgba(134,247,255,.10));
+}
+
+body.severna-theme #undo-menu-overlay .economy-hero strong {
+    color: var(--nebula-ui-title) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.30), 0 1px 2px rgba(0,0,0,.54) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-kicker,
+body.severna-theme #undo-menu-overlay .economy-undo-panel p,
+body.severna-theme #undo-menu-overlay .economy-token-box > span {
+    color: var(--nebula-ui-muted) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-ad-grid,
+body.severna-theme #undo-menu-overlay .economy-token-box {
+    border-color: rgba(149,246,255,.20) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-card {
+    border-bottom-color: rgba(149,246,255,.20) !important;
+    color: var(--nebula-ui-ink-strong) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled {
+    opacity: 1 !important;
+    filter: none !important;
+    background: linear-gradient(145deg, rgba(18,42,72,.72), rgba(7,18,38,.62)) !important;
+    border-color: rgba(149,246,255,.20) !important;
+    color: var(--nebula-ui-muted) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(236,254,255,.12),
+        0 5px 12px rgba(0,3,16,.20) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled .economy-reward-top,
+body.severna-theme #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled strong {
+    color: var(--nebula-ui-muted) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,.48) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-top {
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,.48) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-token-box strong {
+    color: var(--nebula-ui-title) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.26), 0 1px 2px rgba(0,0,0,.50) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-ducat-icon-default,
+body.severna-theme #undo-menu-overlay .economy-reward-ducat-icon-easter,
+body.severna-theme #undo-menu-overlay .economy-reward-ducat-icon-desert,
+body.severna-theme #undo-menu-overlay .economy-inline-token-icon-default,
+body.severna-theme #undo-menu-overlay .economy-inline-token-soft-clay-icon,
+body.severna-theme #undo-menu-overlay .economy-inline-token-desert-soft-clay-icon,
+body.severna-theme #undo-menu-overlay .economy-reward-video-icon-default,
+body.severna-theme #undo-menu-overlay .economy-reward-video-soft-clay-icon,
+body.severna-theme #undo-menu-overlay .economy-reward-video-desert-soft-clay-icon,
+body.severna-theme #undo-menu-overlay .economy-ad-unavailable-soft-clay-icon,
+body.severna-theme #undo-menu-overlay .economy-ad-unavailable-desert-soft-clay-icon,
+body.severna-theme #undo-menu-overlay .economy-reward-unavailable-desert-soft-clay-icon {
+    display: none !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-ducat-icon-nebula {
+    display: block;
+    width: 1.05em;
+    height: 1.05em;
+    flex: 0 0 1.05em;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.22));
+}
+
+body.severna-theme #undo-menu-overlay .economy-inline-token-nebula-soft-clay-icon {
+    display: block;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.22));
+}
+
+body.severna-theme #undo-menu-overlay .economy-token-box .economy-inline-token-nebula-soft-clay-icon {
+    width: 1.25em;
+    height: 1.25em;
+    flex: 0 0 1.25em;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-card strong .economy-inline-token-nebula-soft-clay-icon {
+    width: 1.05em;
+    height: 1.05em;
+    flex: 0 0 1.05em;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-video-nebula-soft-clay-icon {
+    display: block;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24));
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-unavailable-nebula-soft-clay-icon {
+    display: none;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    object-fit: contain;
+    filter: grayscale(.18) saturate(.72) drop-shadow(0 3px 5px rgba(0,3,16,.22));
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled .economy-reward-video-nebula-soft-clay-icon {
+    display: none !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-reward-card.btn-ad-state-aware.disabled .economy-reward-unavailable-nebula-soft-clay-icon {
+    display: block !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-banner-slot[data-ad-state="loading"],
+body.severna-theme #undo-menu-overlay .economy-banner-slot[data-ad-state="failed"] {
+    color: var(--nebula-ui-muted) !important;
+}
+
+body.severna-theme #undo-menu-overlay .economy-banner-slot[data-ad-state="failed"] .economy-ad-unavailable-nebula-soft-clay-icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    margin-right: 7px;
+    object-fit: contain;
+    opacity: .72;
+    filter: grayscale(.18) saturate(.72);
+}
+
+/* Severna — četiri glavna moda prate potvrđene Vaskrs/Desert mere. */
+body.severna-theme #main-menu .modes-grid {
+    max-width: 292px !important;
+    gap: 12px !important;
+    margin-top: 2px !important;
+    margin-bottom: 12px !important;
+}
+
 body.severna-theme #main-menu .mode-solo > #mode-content-1,
 body.severna-theme #main-menu .mode-dual > #mode-content-2,
 body.severna-theme #main-menu .mode-random > div[style*="display: flex"],
@@ -12016,7 +12550,9 @@ body.severna-theme #main-menu .mode-invite > div[style*="display: flex"] {
 }
 
 body.severna-theme #main-menu .mode-btn {
-    border-radius: 28px !important;
+    min-height: 0 !important;
+    padding: 8px !important;
+    border-radius: 24px !important;
     background:
         radial-gradient(circle at 28% 18%, rgba(236,254,255,0.22), transparent 38%),
         linear-gradient(145deg, rgba(21,52,83,0.24), rgba(6,16,36,0.12)) !important;
@@ -12030,6 +12566,97 @@ body.severna-theme #main-menu .mode-btn {
     text-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+}
+
+body.severna-theme #main-menu .mode-btn::before {
+    content: "";
+    position: absolute;
+    inset: 7px;
+    z-index: 0;
+    border-radius: 19px;
+    background: linear-gradient(145deg, rgba(236,254,255,0.13), rgba(7,18,38,0.025));
+    border: 1px solid rgba(149,246,255,0.16);
+    pointer-events: none;
+}
+
+body.severna-theme #main-menu .mode-btn > div[style*="font-size: 6.5rem"] {
+    display: none !important;
+}
+
+/* --- THEME LOADING GATE: Vaskrs / Pustinjsko staklo / Severna maglina --- */
+.theme-loading-gate.theme-easter {
+    --theme-loading-base: #ffeaf7;
+    --theme-loading-bg-image: url("assets/easter-neumorphic-bg-v1.png");
+    --theme-loading-veil-top: rgba(255, 246, 252, 0.18);
+    --theme-loading-veil-bottom: rgba(62, 29, 85, 0.42);
+    --theme-loading-glow: rgba(255, 217, 244, 0.30);
+    --theme-loading-panel: rgba(255, 239, 249, 0.68);
+    --theme-loading-panel-light: rgba(255, 255, 255, 0.72);
+    --theme-loading-panel-dark: rgba(191, 132, 210, 0.20);
+    --theme-loading-line: rgba(255, 255, 255, 0.58);
+    --theme-loading-shadow: rgba(86, 48, 115, 0.30);
+    --theme-loading-ink: #43234f;
+    --theme-loading-title: #522a62;
+    --theme-loading-title-shadow: rgba(255, 255, 255, 0.60);
+    --theme-loading-muted: rgba(71, 41, 86, 0.78);
+    --theme-loading-accent: #9e4fb8;
+    --theme-loading-accent-2: #f2a7cf;
+    --theme-loading-accent-glow: rgba(212, 111, 204, 0.38);
+    --theme-loading-bar-track: rgba(109, 58, 125, 0.18);
+    --theme-loading-pill-bg: rgba(255, 244, 250, 0.64);
+    --theme-loading-pill-line: rgba(158, 79, 184, 0.24);
+    --theme-loading-pill-ink: #65316e;
+    --theme-loading-status: #6f397e;
+}
+
+.theme-loading-gate.theme-desert {
+    --theme-loading-base: #c9894d;
+    --theme-loading-bg-image: url("assets/desert-neumorphic-bg-v1.png");
+    --theme-loading-veil-top: rgba(255, 233, 190, 0.12);
+    --theme-loading-veil-bottom: rgba(83, 42, 21, 0.46);
+    --theme-loading-glow: rgba(255, 195, 111, 0.24);
+    --theme-loading-panel: rgba(255, 223, 172, 0.58);
+    --theme-loading-panel-light: rgba(255, 246, 220, 0.54);
+    --theme-loading-panel-dark: rgba(142, 76, 34, 0.22);
+    --theme-loading-line: rgba(255, 232, 190, 0.42);
+    --theme-loading-shadow: rgba(78, 42, 20, 0.34);
+    --theme-loading-ink: #4d2819;
+    --theme-loading-title: #5b2f1c;
+    --theme-loading-title-shadow: rgba(255, 232, 188, 0.38);
+    --theme-loading-muted: rgba(78, 42, 22, 0.80);
+    --theme-loading-accent: #c8732a;
+    --theme-loading-accent-2: #f0b66b;
+    --theme-loading-accent-glow: rgba(239, 169, 88, 0.34);
+    --theme-loading-bar-track: rgba(83, 42, 21, 0.20);
+    --theme-loading-pill-bg: rgba(255, 225, 177, 0.48);
+    --theme-loading-pill-line: rgba(131, 72, 34, 0.24);
+    --theme-loading-pill-ink: #6a351c;
+    --theme-loading-status: #6b361f;
+}
+
+.theme-loading-gate.theme-severna {
+    --theme-loading-base: #0a1326;
+    --theme-loading-bg-image: url("assets/severna-maglina-bg-v3-neuphoric.png");
+    --theme-loading-veil-top: rgba(19, 43, 74, 0.08);
+    --theme-loading-veil-bottom: rgba(4, 7, 18, 0.58);
+    --theme-loading-glow: rgba(118, 224, 255, 0.18);
+    --theme-loading-panel: rgba(14, 31, 55, 0.56);
+    --theme-loading-panel-light: rgba(174, 231, 255, 0.22);
+    --theme-loading-panel-dark: rgba(10, 15, 32, 0.34);
+    --theme-loading-line: rgba(157, 225, 255, 0.30);
+    --theme-loading-shadow: rgba(0, 0, 0, 0.42);
+    --theme-loading-ink: #e9f8ff;
+    --theme-loading-title: #e8fbff;
+    --theme-loading-title-shadow: rgba(68, 210, 255, 0.36);
+    --theme-loading-muted: rgba(214, 240, 255, 0.80);
+    --theme-loading-accent: #93edff;
+    --theme-loading-accent-2: #b7a7ff;
+    --theme-loading-accent-glow: rgba(116, 226, 255, 0.42);
+    --theme-loading-bar-track: rgba(6, 12, 28, 0.48);
+    --theme-loading-pill-bg: rgba(28, 58, 91, 0.52);
+    --theme-loading-pill-line: rgba(145, 226, 255, 0.28);
+    --theme-loading-pill-ink: #eaf9ff;
+    --theme-loading-status: #c8f4ff;
 }
 
 body.severna-theme #main-menu .mode-icon {
@@ -12137,6 +12764,51 @@ html[lang="sr"] body.severna-theme #main-menu .mode-random .mode-text::after { c
 html[lang="en"] body.severna-theme #main-menu .mode-random .mode-text::after { content: attr(data-nebula-label-en); }
 html[lang="sr"] body.severna-theme #main-menu .mode-invite .mode-text::after { content: attr(data-nebula-label-sr); }
 html[lang="en"] body.severna-theme #main-menu .mode-invite .mode-text::after { content: attr(data-nebula-label-en); }
+
+/* Severna — završno poravnanje tekstova u četiri centralne kartice.
+   Geometrija kartica/ikona ostaje ista kao Vaskrs/Pustinjsko staklo. */
+body.severna-theme #main-menu .mode-solo > #mode-content-1,
+body.severna-theme #main-menu .mode-dual > #mode-content-2,
+body.severna-theme #main-menu .mode-random > div[style*="display: flex"],
+body.severna-theme #main-menu .mode-invite > div[style*="display: flex"] {
+    grid-template-rows: 60px 1.64rem !important;
+    place-items: center !important;
+    align-content: center !important;
+    justify-content: center !important;
+}
+
+body.severna-theme #main-menu .mode-solo .mode-text,
+body.severna-theme #main-menu .mode-dual .mode-text,
+body.severna-theme #main-menu .mode-random .mode-text,
+body.severna-theme #main-menu .mode-invite .mode-text {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 1.64rem !important;
+    margin: 0 auto !important;
+    padding: 0 1px !important;
+    box-sizing: border-box !important;
+    display: grid !important;
+    place-items: start center !important;
+    text-align: center !important;
+}
+
+body.severna-theme #main-menu .mode-solo .mode-text::after,
+body.severna-theme #main-menu .mode-dual .mode-text::after,
+body.severna-theme #main-menu .mode-random .mode-text::after,
+body.severna-theme #main-menu .mode-invite .mode-text::after {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    display: block !important;
+    text-align: center !important;
+    line-height: 1.16 !important;
+    font-weight: 900 !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    text-wrap: balance;
+}
 
 body.severna-theme #main-menu .mode-solo:active .nebula-solo-soft-clay-icon,
 body.severna-theme #main-menu .mode-dual:active .nebula-hotseat-soft-clay-icon,
@@ -12296,32 +12968,768 @@ body.severna-theme #main-menu .spec-turnir:active > .nebula-soft-clay-special-ic
     }
 }
 
-/* Kvartalna liga — single-logo guard.
-   Samo Vaskrs i Pustinjsko staklo koriste svoje QL znakove; sve ostale teme
-   ostaju na standardnom znaku. Sprečava dupliranje/tripliranje logo slojeva. */
-#league-intro .league-intro-mark-easter,
-#league-intro .league-intro-mark-desert,
-#league-modal-overlay .league-modal-header-icon-easter,
-#league-modal-overlay .league-modal-header-icon-desert {
+/* Severna — Nađi protivnika / gledanje partije inner state pack.
+   Logika konekcije, tajmer, swipe i kartice igrača ostaju nepromenjeni. */
+.severna-opponent-header-icon,
+.severna-invite-header-icon,
+.severna-opponent-scan-icon,
+.severna-opponent-found-icon,
+.severna-opponent-connection-icon,
+.severna-spectator-soft-clay-icon,
+.severna-spectating-live-icon {
+    display: none;
+}
+
+body.severna-theme #waiting-screen.is-random-online .severna-opponent-header-icon,
+body.severna-theme #waiting-screen.is-hosting-invite .severna-invite-header-icon {
+    display: block;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(0,3,16,.25)) drop-shadow(0 0 8px rgba(134,247,255,.12));
+}
+
+body.severna-theme #waiting-screen.is-random-online #waiting-opp-searching {
+    gap: 5px;
+}
+
+body.severna-theme #waiting-screen.is-random-online .opponent-scan {
     display: none !important;
 }
 
-#league-intro:not(.theme-easter):not(.theme-desert) .league-intro-mark,
-body:not(.easter-theme):not(.desert-theme) #league-modal-overlay .league-modal-header-icon-default {
+body.severna-theme #waiting-screen.is-random-online .severna-opponent-scan-icon {
+    display: block;
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 8px rgba(0,3,16,.26)) drop-shadow(0 0 10px rgba(134,247,255,.14));
+    animation: severnaOpponentRadar 1.65s ease-in-out infinite;
+}
+
+body.severna-theme #waiting-screen.is-random-online #waiting-opp-found {
+    position: relative;
+    height: 100% !important;
+    flex: 1 1 100% !important;
+}
+
+body.severna-theme #waiting-screen.is-random-online .severna-opponent-found-icon {
+    display: block;
+    position: absolute;
+    top: -8px;
+    right: 1px;
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 6px rgba(0,3,16,.24)) drop-shadow(0 0 7px rgba(134,247,255,.12));
+    animation: severnaOpponentFoundPop .55s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+body.severna-theme #game-scene.online-duel-room #gh-spectator-icon .gh-spectator-fallback,
+body.severna-theme #game-scene.theme-dual-board-view #gh-spectator-icon .gh-spectator-fallback {
+    display: none;
+}
+
+body.severna-theme #game-scene.online-duel-room #gh-spectator-icon .severna-spectator-soft-clay-icon,
+body.severna-theme #game-scene.theme-dual-board-view #gh-spectator-icon .severna-spectator-soft-clay-icon {
+    display: block;
+    width: 31px;
+    height: 31px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #game-scene.random-online-duel-room.opponent-reconnecting #turn-timer-display {
+    gap: 5px;
+}
+
+body.severna-theme #game-scene.random-online-duel-room.opponent-reconnecting .severna-opponent-connection-icon {
+    display: block;
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #game-scene.theme-spectator-view .spectator-live-pill,
+body.severna-theme #game-scene.theme-dual-board-view .spectator-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+body.severna-theme #game-scene.theme-spectator-view .spectator-live-fallback,
+body.severna-theme #game-scene.theme-dual-board-view .spectator-live-fallback {
+    display: none;
+}
+
+body.severna-theme #game-scene.theme-spectator-view .severna-spectating-live-icon,
+body.severna-theme #game-scene.theme-dual-board-view .severna-spectating-live-icon {
+    display: block;
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.22)) drop-shadow(0 0 5px rgba(134,247,255,.12));
+}
+
+body.severna-theme .custom-toast.opponent-reconnected-toast {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: center;
+    gap: 9px;
+}
+
+body.severna-theme .opponent-reconnected-toast .custom-toast-soft-clay-icon {
+    display: block;
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0,3,16,.22)) drop-shadow(0 0 7px rgba(134,247,255,.12));
+}
+
+@keyframes severnaOpponentRadar {
+    0%, 100% { transform: rotate(-3deg) scale(.98); opacity: .86; }
+    50% { transform: rotate(3deg) scale(1.035); opacity: 1; }
+}
+
+@keyframes severnaOpponentFoundPop {
+    from { opacity: 0; transform: scale(.72) rotate(-8deg); }
+    to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* Severna — Turnir inner icon pack.
+   Kostur, linije, faze, rezultati, vreme mečeva i logika nagrada ostaju nepromenjeni. */
+body.severna-theme #tournament-screen .tourney-tab-icon-default,
+body.severna-theme #tournament-screen .tourney-trophy-default,
+body.severna-theme #tournament-screen .tourney-action-icon-fallback,
+body.severna-theme #tournament-screen .tourney-registration-icon-fallback,
+body.severna-theme #tournament-screen .tourney-match-result-icon-default {
+    display: none !important;
+}
+
+body.severna-theme #tournament-screen .tourney-tabs {
+    background: rgba(10,28,54,.42) !important;
+    border-color: rgba(149,246,255,.22) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.severna-theme #tournament-screen .tourney-tab-btn {
+    background: var(--nebula-ui-surface-light) !important;
+    border: var(--nebula-ui-border) !important;
+    box-shadow: var(--nebula-ui-raised) !important;
+    overflow: visible;
+}
+
+body.severna-theme #tournament-screen .tourney-tab-btn.active {
+    background: var(--nebula-ui-surface-inset) !important;
+    border-color: rgba(149,246,255,.40) !important;
+    box-shadow: var(--nebula-ui-inset), 0 0 0 2px rgba(134,247,255,.16) !important;
+}
+
+body.severna-theme #tournament-screen .tourney-tab-nebula-soft-clay-icon {
+    display: block;
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+    transition: transform .18s ease, filter .18s ease;
+}
+
+body.severna-theme #tournament-screen .tourney-tab-btn.active .tourney-tab-nebula-soft-clay-icon {
+    transform: translateY(-1px) scale(1.06);
+    filter: drop-shadow(0 1px 0 rgba(236,254,255,.62)) drop-shadow(0 4px 6px rgba(0,3,16,.26)) drop-shadow(0 0 9px rgba(134,247,255,.16));
+}
+
+body.severna-theme #tournament-screen .tourney-hof-trophy-nebula {
+    display: block;
+    width: 104px;
+    height: 104px;
+    margin-bottom: 12px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 13px rgba(0,3,16,.26)) drop-shadow(0 0 10px rgba(134,247,255,.12));
+}
+
+body.severna-theme #tournament-screen .tourney-wins-trophy-icon-nebula {
+    display: block;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,3,16,.22));
+}
+
+body.severna-theme #tournament-screen .tourney-champion-card {
+    position: relative;
+}
+
+body.severna-theme #tournament-screen .tourney-podium-medal-nebula {
+    display: block;
+    position: absolute;
+    top: 7px;
+    right: 8px;
+    width: 43px;
+    height: 43px;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 2;
+    filter: drop-shadow(0 4px 6px rgba(0,3,16,.24)) drop-shadow(0 0 7px rgba(134,247,255,.12));
+}
+
+body.severna-theme #tournament-screen .tourney-action-nebula-soft-clay-icon {
+    display: block;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #tournament-screen .tourney-action-nebula-soft-clay-icon.is-pending {
+    animation: easterTournamentPending 1.15s ease-in-out infinite;
+}
+
+body.severna-theme #tournament-screen .tourney-registration-icon {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 10px;
+    display: grid;
+    place-items: center;
+    font-size: 0;
+    text-shadow: none;
+}
+
+body.severna-theme #tournament-screen .tourney-registration-nebula-soft-clay-icon {
+    display: block;
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    filter: drop-shadow(0 7px 11px rgba(0,3,16,.26)) drop-shadow(0 0 9px rgba(134,247,255,.12));
+}
+
+body.severna-theme #tournament-screen .tourney-round-trophy-nebula {
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #tournament-screen .tourney-completed-match-result {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+body.severna-theme #tournament-screen .tourney-inline-match-state-nebula {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.22));
+}
+
+body.severna-theme #tournament-screen .tourney-start-match-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+body.severna-theme #tournament-screen .tourney-inline-active-match-icon-nebula {
+    display: block;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #tournament-screen .tourney-match-result-icon-nebula {
+    display: inline-block;
+    width: 36px;
+    height: 36px;
+    margin-left: 5px;
+    object-fit: contain;
+    vertical-align: -11px;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 7px rgba(134,247,255,.12));
+}
+
+body.severna-theme #tournament-screen .tourney-finalist-result {
+    margin-top: 10px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(149,246,255,.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--nebula-ui-muted);
+    font-size: .86rem;
+}
+
+body.severna-theme #tournament-screen .tourney-finalist-result-icon-nebula {
+    display: block;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.22)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme .modal-context-tourney-winner .tourney-prize-result-icon-nebula,
+body.severna-theme .modal-context-tourney-finalist .tourney-prize-result-icon-nebula {
+    display: block;
+    width: 104px;
+    height: 104px;
+    margin: 0 auto 10px;
+    object-fit: contain;
+    filter: drop-shadow(0 7px 11px rgba(0,3,16,.26)) drop-shadow(0 0 9px rgba(134,247,255,.12));
+}
+
+body.severna-theme .modal-context-tourney-finalist .tourney-prize-result-icon-nebula {
+    width: 92px;
+    height: 92px;
+}
+
+/* Severna — Kvartalna liga intro/header koristi jedan YotB QL znak u temi. */
+#league-intro.theme-severna {
+    z-index: 1000002;
+    gap: 0;
+    background:
+        linear-gradient(180deg, rgba(10, 28, 54, .16), rgba(3, 8, 22, .24)),
+        var(--severna-theme-bg-image) center / cover no-repeat;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    animation: easterRoomIntroFade 4.6s ease forwards;
+}
+
+#league-intro.theme-severna::before,
+#league-intro.theme-severna::after {
+    content: none;
+    display: none;
+}
+
+#league-intro.theme-severna .league-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    border-radius: 0;
+    background: transparent;
+    filter: drop-shadow(0 14px 18px rgba(0,3,16,.28)) drop-shadow(0 0 16px rgba(134,247,255,.12));
+    animation: none;
+}
+
+#league-intro.theme-severna .league-intro-mark,
+#league-intro.theme-severna .league-intro-mark-easter,
+#league-intro.theme-severna .league-intro-mark-desert {
+    display: none;
+}
+
+#league-intro.theme-severna .league-intro-mark-nebula {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#league-intro.theme-severna .league-intro-title {
+    gap: 0;
+    width: min(94vw, 720px);
+    min-height: clamp(52px, 8vh, 72px);
+    margin-top: 0;
+    color: var(--nebula-ui-ink-strong);
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1.45rem, 6.2vw, 2.55rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: clamp(.4px, .25vw, 1.5px);
+    white-space: nowrap;
+    text-shadow:
+        0 0 14px rgba(134,247,255,.32),
+        0 7px 17px rgba(0,3,16,.32);
+}
+
+#league-intro.theme-severna .league-intro-easter-wave-letter {
+    animation: severnaDailyTitleWave 1.05s cubic-bezier(.34, 1.56, .64, 1) both;
+    animation-delay: calc(350ms + (var(--wave-index) * 75ms));
+}
+
+@keyframes severnaDailyTitleWave {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        color: #e9fbff;
+        filter: none;
+    }
+    45% {
+        transform: translateY(-9px) scale(1.08);
+        color: #86f7ff;
+        filter: drop-shadow(0 5px 7px rgba(134,247,255,.24));
+    }
+    72% {
+        transform: translateY(2px) scale(.985);
+        color: #b9a0ff;
+        filter: none;
+    }
+}
+
+/* Severna Maglina — isti 4,6 s intro standard kao Vaskrs/Desert,
+   ali sa hladnim soft-clay/glass bojama i posebnim Severna ikonama. */
+#daily-intro.theme-severna {
+    --daily-intro-text: var(--nebula-ui-ink-strong, #f2feff);
+    --daily-intro-glow: rgba(134, 247, 255, .24);
+    gap: 0;
+    background:
+        linear-gradient(180deg, rgba(10, 28, 54, .16), rgba(3, 8, 22, .24)),
+        var(--severna-theme-bg-image) center / cover no-repeat !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+#daily-intro.theme-severna::before,
+#daily-intro.theme-severna::after {
+    content: none !important;
+    display: none !important;
+}
+
+body.severna-theme #daily-intro.theme-severna .daily-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    padding: 0;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    filter: drop-shadow(0 14px 18px rgba(0,3,16,.28)) drop-shadow(0 0 16px rgba(134,247,255,.12)) !important;
+    animation: none !important;
+}
+
+body.severna-theme #daily-intro.theme-severna .daily-intro-mark-wrap::before,
+body.severna-theme #daily-intro.theme-severna .daily-intro-mark-wrap::after {
+    content: none !important;
+    display: none !important;
+}
+
+#daily-intro.theme-severna .daily-intro-mark,
+#daily-intro.theme-severna .daily-intro-mark-easter,
+#daily-intro.theme-severna .daily-intro-mark-desert {
+    display: none !important;
+}
+
+#daily-intro.theme-severna .daily-intro-mark-nebula {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: none !important;
+}
+
+#daily-intro.theme-severna .daily-intro-word {
+    display: none !important;
+}
+
+#daily-intro.theme-severna .daily-intro-title {
+    min-height: clamp(52px, 8vh, 72px);
+    width: min(94vw, 720px);
+    font-size: clamp(1.75rem, 7.6vw, 3rem);
+    line-height: 1;
+    letter-spacing: clamp(.7px, .35vw, 2px);
+    color: var(--nebula-ui-ink-strong, #f2feff) !important;
+    text-shadow:
+        0 0 14px rgba(134,247,255,.32),
+        0 7px 17px rgba(0,3,16,.32) !important;
+    margin-top: 0;
+}
+
+#daily-intro.theme-severna .daily-intro-nebula-wave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+#daily-intro.theme-severna .daily-intro-wave-letter,
+#daily-intro.theme-severna .daily-intro-wave-space {
+    display: inline-block;
+}
+
+#daily-intro.theme-severna .daily-intro-wave-letter {
+    animation: severnaDailyTitleWave 1.05s cubic-bezier(.34, 1.56, .64, 1) both;
+    animation-delay: calc(350ms + (var(--wave-index) * 75ms));
+    transform-origin: 50% 75%;
+}
+
+#daily-intro.theme-severna .daily-intro-wave-space {
+    width: .34em;
+}
+
+.easter-room-intro.theme-severna {
+    background:
+        linear-gradient(180deg, rgba(10, 28, 54, .16), rgba(3, 8, 22, .24)),
+        var(--severna-theme-bg-image) center / cover no-repeat;
+}
+
+.easter-room-intro.theme-severna .easter-room-intro-mark-wrap {
+    filter: drop-shadow(0 14px 18px rgba(0,3,16,.28)) drop-shadow(0 0 16px rgba(134,247,255,.12));
+}
+
+.easter-room-intro.theme-severna .easter-room-intro-title {
+    color: var(--nebula-ui-ink-strong, #f2feff);
+    text-shadow:
+        0 0 14px rgba(134,247,255,.32),
+        0 7px 17px rgba(0,3,16,.32);
+}
+
+.easter-room-intro.theme-severna .easter-room-intro-wave-letter {
+    animation-name: severnaDailyTitleWave;
+}
+
+#riznica-intro.theme-severna,
+#tournament-intro.theme-severna {
+    z-index: 1000002;
+    gap: 0;
+    overflow: hidden;
+    padding: max(18px, var(--safe-top)) max(14px, var(--safe-right)) max(18px, var(--safe-bottom)) max(14px, var(--safe-left));
+    background:
+        linear-gradient(180deg, rgba(10, 28, 54, .16), rgba(3, 8, 22, .24)),
+        var(--severna-theme-bg-image) center / cover no-repeat;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    animation: easterRoomIntroFade 4.6s ease forwards;
+}
+
+#tournament-intro.theme-severna {
+    justify-content: center;
+    padding-bottom: calc(var(--safe-bottom) + 2mm);
+}
+
+#riznica-intro.theme-severna .riznica-intro-gem,
+#riznica-intro.theme-severna .riznica-intro-gem-easter,
+#riznica-intro.theme-severna .riznica-intro-gem-easter-motion,
+#riznica-intro.theme-severna .riznica-intro-gem-desert,
+#tournament-intro.theme-severna .tournament-intro-mark,
+#tournament-intro.theme-severna .tournament-intro-mark-easter,
+#tournament-intro.theme-severna .tournament-intro-mark-easter-motion,
+#tournament-intro.theme-severna .tournament-intro-mark-desert,
+#tournament-intro.theme-severna::before,
+#tournament-intro.theme-severna::after {
+    display: none !important;
+}
+
+#riznica-intro.theme-severna .riznica-intro-gem-nebula,
+#tournament-intro.theme-severna .tournament-intro-mark-nebula {
+    display: block;
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    object-fit: contain;
+    filter: drop-shadow(0 14px 18px rgba(0,3,16,.28)) drop-shadow(0 0 16px rgba(134,247,255,.12));
+    animation: none;
+}
+
+#tournament-intro.theme-severna .tournament-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px);
+    height: clamp(210px, 34vmin, 290px);
+    display: grid;
+    place-items: center;
+    border-radius: 0;
+    background: transparent;
+    filter: none;
+    animation: none;
+}
+
+#riznica-intro.theme-severna .riznica-intro-line,
+#tournament-intro.theme-severna .tournament-intro-title {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: min(94vw, 720px);
+    min-height: clamp(52px, 8vh, 72px);
+    padding: 0;
+    margin: 0;
+    color: var(--nebula-ui-ink-strong, #f2feff);
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1.75rem, 7.6vw, 3rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: clamp(.7px, .35vw, 2px);
+    white-space: nowrap;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 14px rgba(134,247,255,.32),
+        0 7px 17px rgba(0,3,16,.32);
+    animation: none;
+}
+
+#riznica-intro.theme-severna .easter-room-intro-wave-letter,
+#tournament-intro.theme-severna .easter-room-intro-wave-letter {
+    animation-name: severnaDailyTitleWave;
+}
+
+#tournament-intro.theme-severna .tournament-intro-champions {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--safe-bottom) + 2mm);
+    transform: translateX(-50%);
+    z-index: 2;
+    display: block;
+    width: min(92vw, 390px);
+    margin-top: 0;
+    padding: 9px 10px 10px;
+    border: 1px solid rgba(149,246,255,.30);
+    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(15,35,59,.84), rgba(5,12,29,.82));
+    box-shadow:
+        8px 8px 18px rgba(0,3,16,.42),
+        -5px -5px 16px rgba(120,222,255,.10),
+        inset 1px 1px 2px rgba(236,254,255,.22),
+        inset -2px -2px 5px rgba(2,7,20,.42);
+    color: var(--nebula-ui-ink, #d9fbff);
+    animation: easterTournamentChampionsReveal .68s cubic-bezier(.2,.85,.25,1.15) .48s both;
+}
+
+#tournament-intro.theme-severna .tournament-intro-champions-label {
+    color: var(--nebula-ui-title, #86f7ff);
+    text-shadow: 0 0 10px rgba(134,247,255,.18);
+}
+
+#tournament-intro.theme-severna .tournament-intro-champion-row {
+    border-color: rgba(149,246,255,.20);
+    background: linear-gradient(145deg, rgba(22,53,85,.66), rgba(7,18,39,.70));
+    box-shadow:
+        inset 2px 2px 5px rgba(0,3,16,.28),
+        inset -2px -2px 5px rgba(134,247,255,.08);
+}
+
+#tournament-intro.theme-severna .tournament-intro-champion-rank {
+    background: linear-gradient(145deg, #dffcff, #86f7ff 45%, #9f8fff);
+    color: #06172a;
+    box-shadow:
+        2px 3px 6px rgba(0,3,16,.32),
+        inset 1px 1px 2px rgba(255,255,255,.70);
+}
+
+#tournament-intro.theme-severna .tournament-intro-champion-avatar {
+    border-color: rgba(236,254,255,.82);
+    box-shadow: 2px 4px 8px rgba(0,3,16,.34), 0 0 8px rgba(134,247,255,.13);
+}
+
+#tournament-intro.theme-severna .tournament-intro-champion-name {
+    color: var(--nebula-ui-ink-strong, #f2feff);
+}
+
+#tournament-intro.theme-severna .tournament-intro-champion-wins {
+    border-color: rgba(134,247,255,.24);
+    background: linear-gradient(145deg, rgba(36,88,120,.86), rgba(16,37,68,.84));
+    color: var(--nebula-ui-ink-strong, #f2feff);
+    box-shadow:
+        3px 4px 8px rgba(0,3,16,.28),
+        inset 1px 1px 2px rgba(236,254,255,.18);
+}
+
+#tournament-intro.theme-severna .tournament-intro-champions-state {
+    color: var(--nebula-ui-muted, #a9c8da);
+}
+
+#tournament-intro.theme-severna .tournament-intro-wins-icon-default,
+#tournament-intro.theme-severna .tournament-intro-wins-icon-easter,
+#tournament-intro.theme-severna .tournament-intro-wins-icon-desert {
+    display: none;
+}
+
+#tournament-intro.theme-easter .tournament-intro-wins-icon-desert,
+#tournament-intro.theme-easter .tournament-intro-wins-icon-nebula,
+#tournament-intro.theme-desert .tournament-intro-wins-icon-easter,
+#tournament-intro.theme-desert .tournament-intro-wins-icon-nebula {
+    display: none;
+}
+
+#tournament-intro.theme-severna .tournament-intro-wins-icon-nebula {
+    display: block;
+}
+
+@media (max-height: 700px) {
+    #tournament-intro.theme-severna .tournament-intro-mark-wrap,
+    #tournament-intro.theme-severna .tournament-intro-mark-nebula {
+        width: clamp(174px, 29vmin, 224px);
+        height: clamp(174px, 29vmin, 224px);
+    }
+
+    #tournament-intro.theme-severna .tournament-intro-champions {
+        padding-top: 7px;
+        padding-bottom: 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #daily-intro.theme-severna .daily-intro-wave-letter,
+    .easter-room-intro.theme-severna .easter-room-intro-wave-letter,
+    #riznica-intro.theme-severna .easter-room-intro-wave-letter,
+    #tournament-intro.theme-severna .easter-room-intro-wave-letter,
+    #tournament-intro.theme-severna .tournament-intro-champions {
+        animation: none !important;
+    }
+}
+
+body.severna-theme #league-modal-overlay .league-modal-title-group h2 {
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.26), 0 1px 2px rgba(0,0,0,.58) !important;
+}
+
+body.severna-theme #league-modal-overlay .league-modal-header-icon-default,
+body.severna-theme #league-modal-overlay .league-modal-header-icon-easter,
+body.severna-theme #league-modal-overlay .league-modal-header-icon-desert {
+    display: none !important;
+}
+
+body.severna-theme #league-modal-overlay .league-modal-header-icon-nebula {
+    display: block;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(0,3,16,.26)) drop-shadow(0 0 8px rgba(134,247,255,.12));
+}
+
+/* Kvartalna liga — single-logo guard.
+   Teme koje imaju svoj QL znak prikazuju samo taj jedan sloj. Sve ostale
+   ostaju na standardnom znaku. Sprečava dupliranje/tripliranje logo slojeva. */
+#league-intro .league-intro-mark-easter,
+#league-intro .league-intro-mark-desert,
+#league-intro .league-intro-mark-nebula,
+#league-modal-overlay .league-modal-header-icon-easter,
+#league-modal-overlay .league-modal-header-icon-desert,
+#league-modal-overlay .league-modal-header-icon-nebula {
+    display: none !important;
+}
+
+#league-intro:not(.theme-easter):not(.theme-desert):not(.theme-severna) .league-intro-mark,
+body:not(.easter-theme):not(.desert-theme):not(.severna-theme) #league-modal-overlay .league-modal-header-icon-default {
     display: block !important;
 }
 
-#league-intro:not(.theme-easter):not(.theme-desert) .league-intro-mark-easter,
-#league-intro:not(.theme-easter):not(.theme-desert) .league-intro-mark-desert,
-body:not(.easter-theme):not(.desert-theme) #league-modal-overlay .league-modal-header-icon-easter,
-body:not(.easter-theme):not(.desert-theme) #league-modal-overlay .league-modal-header-icon-desert {
+#league-intro:not(.theme-easter):not(.theme-desert):not(.theme-severna) .league-intro-mark-easter,
+#league-intro:not(.theme-easter):not(.theme-desert):not(.theme-severna) .league-intro-mark-desert,
+#league-intro:not(.theme-easter):not(.theme-desert):not(.theme-severna) .league-intro-mark-nebula,
+body:not(.easter-theme):not(.desert-theme):not(.severna-theme) #league-modal-overlay .league-modal-header-icon-easter,
+body:not(.easter-theme):not(.desert-theme):not(.severna-theme) #league-modal-overlay .league-modal-header-icon-desert,
+body:not(.easter-theme):not(.desert-theme):not(.severna-theme) #league-modal-overlay .league-modal-header-icon-nebula {
     display: none !important;
 }
 
 #league-intro.theme-easter .league-intro-mark,
 #league-intro.theme-easter .league-intro-mark-desert,
+#league-intro.theme-easter .league-intro-mark-nebula,
 body.easter-theme #league-modal-overlay .league-modal-header-icon-default,
-body.easter-theme #league-modal-overlay .league-modal-header-icon-desert {
+body.easter-theme #league-modal-overlay .league-modal-header-icon-desert,
+body.easter-theme #league-modal-overlay .league-modal-header-icon-nebula {
     display: none !important;
 }
 
@@ -12332,12 +13740,945 @@ body.easter-theme #league-modal-overlay .league-modal-header-icon-easter {
 
 #league-intro.theme-desert .league-intro-mark,
 #league-intro.theme-desert .league-intro-mark-easter,
+#league-intro.theme-desert .league-intro-mark-nebula,
 body.desert-theme #league-modal-overlay .league-modal-header-icon-default,
-body.desert-theme #league-modal-overlay .league-modal-header-icon-easter {
+body.desert-theme #league-modal-overlay .league-modal-header-icon-easter,
+body.desert-theme #league-modal-overlay .league-modal-header-icon-nebula {
     display: none !important;
 }
 
 #league-intro.theme-desert .league-intro-mark-desert,
 body.desert-theme #league-modal-overlay .league-modal-header-icon-desert {
     display: block !important;
+}
+
+#league-intro.theme-severna .league-intro-mark,
+#league-intro.theme-severna .league-intro-mark-easter,
+#league-intro.theme-severna .league-intro-mark-desert,
+body.severna-theme #league-modal-overlay .league-modal-header-icon-default,
+body.severna-theme #league-modal-overlay .league-modal-header-icon-easter,
+body.severna-theme #league-modal-overlay .league-modal-header-icon-desert {
+    display: none !important;
+}
+
+#league-intro.theme-severna .league-intro-mark-nebula,
+body.severna-theme #league-modal-overlay .league-modal-header-icon-nebula {
+    display: block !important;
+}
+
+/* Severna Maglina — unutrašnji icon/medal pack za sobe Dnevni izazov, Top lista,
+   Statistika, Podešavanja, Pravila i očigledne QL elemente koje te sobe pozivaju.
+   Raspored, dimenzije kartica, liste, swipe, progress i logika ostaju netaknuti. */
+.hs-header-icon-nebula,
+.hs-tab-soft-clay-icon-nebula,
+.hs-panel-soft-clay-icon-nebula,
+.hs-state-soft-clay-icon-nebula,
+.waiting-hof-state-soft-clay-icon-nebula,
+.settings-header-icon-nebula,
+.settings-section-soft-clay-icon-nebula,
+.settings-row-soft-clay-icon-nebula,
+.settings-legal-soft-clay-icon-nebula,
+.rules-header-icon-nebula,
+.rules-page-icon-nebula,
+.rules-theme-icon-nebula,
+.rules-podium-pack-nebula,
+.power-index-title-bolt-nebula,
+.power-index-watermark-bolt-nebula,
+.power-index-value-bolt-nebula,
+.fire-streak-title-soft-clay-icon-nebula,
+.fire-streak-value-soft-clay-icon-nebula,
+.quarter-winner-logo-nebula {
+    display: none;
+}
+
+body.severna-theme #highscores-screen .hs-card {
+    --hs-contrast-surface: #19365f;
+    --hs-contrast-ink: #f2feff;
+    background: var(--nebula-ui-surface) !important;
+    border: var(--nebula-ui-border) !important;
+    box-shadow: var(--nebula-ui-raised) !important;
+    color: var(--nebula-ui-ink) !important;
+}
+
+body.severna-theme #highscores-screen .hs-card-header,
+body.severna-theme #highscores-screen .hs-card-toolbar {
+    background: linear-gradient(145deg, rgba(22,53,85,.74), rgba(7,18,39,.70)) !important;
+    border-color: rgba(149,246,255,.20) !important;
+}
+
+body.severna-theme #highscores-screen .hs-header-title,
+body.severna-theme #highscores-screen .hs-panel-title {
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.24), 0 1px 2px rgba(0,0,0,.58) !important;
+}
+
+body.severna-theme #highscores-screen .hs-header-icon-default,
+body.severna-theme #highscores-screen .hs-header-icon-easter,
+body.severna-theme #highscores-screen .hs-header-icon-desert,
+body.severna-theme #highscores-screen .hs-tab-soft-clay-icon,
+body.severna-theme #highscores-screen .hs-tab-soft-clay-icon-desert,
+body.severna-theme #highscores-screen .hs-panel-soft-clay-icon,
+body.severna-theme #highscores-screen .hs-panel-soft-clay-icon-desert {
+    display: none !important;
+}
+
+body.severna-theme #highscores-screen .hs-header-icon-nebula {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(0,3,16,.26)) drop-shadow(0 0 7px rgba(134,247,255,.13));
+}
+
+body.severna-theme #highscores-screen .hs-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px !important;
+    font-size: .66rem !important;
+    background: var(--nebula-ui-surface-light) !important;
+    border: 1px solid rgba(149,246,255,.22) !important;
+    color: var(--nebula-ui-ink-strong) !important;
+    box-shadow:
+        4px 4px 9px rgba(0,3,16,.28),
+        -4px -4px 9px rgba(120,222,255,.08),
+        inset 1px 1px 1px rgba(236,254,255,.12) !important;
+    text-shadow: 0 0 8px rgba(134,247,255,.18) !important;
+}
+
+body.severna-theme #highscores-screen .hs-tab-btn.active,
+body.severna-theme #highscores-screen .filter-btn.active {
+    background: linear-gradient(145deg, #dffcff 0%, #78e9f4 46%, #a993ff 100%) !important;
+    border-color: rgba(236,254,255,.68) !important;
+    color: #061526 !important;
+    text-shadow: 0 1px 0 rgba(236,254,255,.48) !important;
+}
+
+body.severna-theme #highscores-screen .hs-tab-label-legacy,
+body.severna-theme #highscores-screen .hs-panel-title-legacy {
+    display: none;
+}
+
+body.severna-theme #highscores-screen .hs-tab-label-easter,
+body.severna-theme #highscores-screen .hs-panel-title-easter {
+    display: inline;
+}
+
+body.severna-theme #highscores-screen .hs-tab-soft-clay-icon-nebula {
+    display: block;
+    width: 21px;
+    height: 21px;
+    flex: 0 0 21px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 5px rgba(134,247,255,.11));
+}
+
+body.severna-theme #highscores-screen .hs-panel-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+body.severna-theme #highscores-screen .hs-panel-soft-clay-icon-nebula {
+    display: block;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 5px rgba(134,247,255,.11));
+}
+
+body.severna-theme #highscores-screen .filter-btn {
+    background: rgba(10,28,54,.58) !important;
+    border-color: rgba(149,246,255,.20) !important;
+    color: var(--nebula-ui-ink) !important;
+    box-shadow: inset 1px 1px 1px rgba(236,254,255,.10), 0 4px 8px rgba(0,3,16,.22) !important;
+    text-shadow: 0 0 8px rgba(134,247,255,.16) !important;
+}
+
+body.severna-theme #highscores-screen .hs-header-row {
+    background: var(--nebula-ui-surface-inset) !important;
+    color: var(--nebula-ui-title) !important;
+    border-bottom-color: rgba(149,246,255,.20) !important;
+}
+
+body.severna-theme #highscores-screen .highscore-item {
+    background: rgba(10,28,54,.52) !important;
+    border-bottom-color: rgba(149,246,255,.13) !important;
+}
+
+body.severna-theme #highscores-screen .highscore-item:nth-child(even) {
+    background: rgba(18,42,72,.46) !important;
+}
+
+body.severna-theme #highscores-screen .hs-name,
+body.severna-theme #highscores-screen .hs-meta {
+    color: var(--nebula-ui-ink-strong) !important;
+}
+
+body.severna-theme #highscores-screen .hs-score-pill {
+    background: linear-gradient(145deg, rgba(223,252,255,.94), rgba(169,147,255,.82)) !important;
+    border: 1px solid rgba(236,254,255,.70) !important;
+    color: #061526 !important;
+    box-shadow: 3px 4px 8px rgba(0,3,16,.28), inset 1px 1px 2px rgba(255,255,255,.64) !important;
+    text-shadow: 0 1px 0 rgba(236,254,255,.52) !important;
+}
+
+body.severna-theme #highscores-screen .rank-circle {
+    overflow: visible;
+}
+
+body.severna-theme #highscores-screen .rank-1,
+body.severna-theme #highscores-screen .rank-2,
+body.severna-theme #highscores-screen .rank-3 {
+    background: transparent !important;
+    border-color: transparent !important;
+    color: transparent !important;
+    box-shadow: none !important;
+    transform: none;
+}
+
+body.severna-theme #highscores-screen .rank-1::before,
+body.severna-theme #highscores-screen .rank-1 .hs-rank-legacy,
+body.severna-theme #highscores-screen .rank-2 .hs-rank-legacy,
+body.severna-theme #highscores-screen .rank-3 .hs-rank-legacy {
+    display: none;
+}
+
+body.severna-theme #highscores-screen .hs-podium-medal {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 44px;
+    height: 44px;
+    max-width: none;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 4px 6px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #highscores-screen .hs-podium-rank-number {
+    display: flex;
+    position: absolute;
+    right: -7px;
+    bottom: -6px;
+    z-index: 3;
+    width: 17px;
+    height: 17px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(236,254,255,.78);
+    border-radius: 50%;
+    background: #19365f;
+    color: #f2feff;
+    box-shadow: 0 3px 6px rgba(0,3,16,.30);
+    font-size: .64rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+body.severna-theme #highscores-screen .hs-list-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--nebula-ui-ink-strong) !important;
+    font-style: normal;
+}
+
+body.severna-theme #highscores-screen .hs-state-fallback {
+    display: none;
+}
+
+body.severna-theme #highscores-screen .hs-state-soft-clay-icon-nebula {
+    display: block;
+    width: 86px;
+    height: 86px;
+    object-fit: contain;
+    filter: drop-shadow(0 7px 10px rgba(0,3,16,.28)) drop-shadow(0 0 8px rgba(134,247,255,.13));
+    animation: easterLeaderboardStateFloat 2.4s ease-in-out infinite;
+}
+
+body.severna-theme #highscores-screen .hs-list-state-loading .hs-state-soft-clay-icon-nebula {
+    width: 68px;
+    height: 68px;
+}
+
+body.severna-theme .waiting-hof-entry {
+    background: rgba(10,28,54,.58) !important;
+    border-color: rgba(149,246,255,.20) !important;
+    box-shadow:
+        4px 4px 10px rgba(0,3,16,.28),
+        -3px -3px 8px rgba(120,222,255,.08),
+        inset 1px 1px 1px rgba(236,254,255,.12) !important;
+}
+
+body.severna-theme .waiting-podium-mark {
+    position: relative;
+    display: inline-flex !important;
+    flex: 0 0 25px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+body.severna-theme .waiting-podium-legacy {
+    display: none;
+}
+
+body.severna-theme .waiting-podium-medal {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 35px;
+    height: 35px;
+    max-width: none;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.25)) drop-shadow(0 0 5px rgba(134,247,255,.12));
+}
+
+body.severna-theme .waiting-podium-rank-number {
+    display: flex;
+    position: absolute;
+    right: -7px;
+    bottom: -4px;
+    z-index: 2;
+    width: 14px;
+    height: 14px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(236,254,255,.78);
+    border-radius: 50%;
+    background: #19365f;
+    color: #f2feff;
+    font-size: .52rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+body.severna-theme .waiting-hof-loading-state,
+body.severna-theme .waiting-hof-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: var(--nebula-ui-ink-strong) !important;
+}
+
+body.severna-theme .waiting-hof-state-soft-clay-icon,
+body.severna-theme .waiting-hof-state-soft-clay-icon-desert {
+    display: none !important;
+}
+
+body.severna-theme .waiting-hof-state-soft-clay-icon-nebula {
+    display: block;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 7px rgba(0,3,16,.24)) drop-shadow(0 0 7px rgba(134,247,255,.12));
+    animation: easterLeaderboardStateFloat 2.4s ease-in-out infinite;
+}
+
+body.severna-theme .stats-header-icon-default,
+body.severna-theme .stats-header-icon-easter,
+body.severna-theme .stats-header-icon-desert,
+body.severna-theme .stats-category-soft-clay-icon-easter,
+body.severna-theme .stats-category-soft-clay-icon-desert,
+body.severna-theme .stats-result-soft-clay-icon-easter,
+body.severna-theme .stats-result-soft-clay-icon-desert,
+body.severna-theme .stats-grid-soft-clay-icon-easter,
+body.severna-theme .stats-grid-soft-clay-icon-desert,
+body.severna-theme .stats-h2h-title-soft-clay-icon-easter,
+body.severna-theme .stats-h2h-title-soft-clay-icon-desert,
+body.severna-theme .stats-category-legacy,
+body.severna-theme .stats-h2h-title-legacy {
+    display: none !important;
+}
+
+body.severna-theme .stats-header-icon-nebula {
+    display: block;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    flex: 0 0 34px;
+    filter: drop-shadow(0 4px 7px rgba(0,3,16,.26)) drop-shadow(0 0 7px rgba(134,247,255,.13));
+}
+
+body.severna-theme .stats-category-label,
+body.severna-theme .stats-result-label,
+body.severna-theme .stats-rival-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+body.severna-theme .stats-category-label {
+    gap: 3px;
+    line-height: 1;
+}
+
+body.severna-theme .stats-result-label {
+    gap: 2px;
+    white-space: nowrap;
+}
+
+body.severna-theme .stats-category-soft-clay-icon-nebula {
+    display: block;
+    width: 19px;
+    height: 19px;
+    object-fit: contain;
+    flex: 0 0 19px;
+}
+
+body.severna-theme .stats-result-soft-clay-icon-nebula {
+    display: block;
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    flex: 0 0 14px;
+}
+
+body.severna-theme .stats-grid-soft-clay-icon-nebula {
+    display: block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    flex: 0 0 24px;
+}
+
+body.severna-theme .stats-rival-label {
+    gap: 2px;
+}
+
+body.severna-theme .stats-rival-soft-clay-icon {
+    width: 16px;
+    height: 16px;
+    flex-basis: 16px;
+}
+
+body.severna-theme .stats-h2h-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.24), 0 1px 2px rgba(0,0,0,.58) !important;
+}
+
+body.severna-theme .stats-h2h-title-soft-clay-icon-nebula {
+    display: block;
+    width: 29px;
+    height: 29px;
+    object-fit: contain;
+    flex: 0 0 29px;
+}
+
+body.severna-theme .h2h-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    color: var(--nebula-ui-muted) !important;
+}
+
+body.severna-theme .h2h-empty-soft-clay-icon {
+    display: block;
+    width: 92px;
+    height: 92px;
+    object-fit: contain;
+}
+
+body.severna-theme .stats-overview-panel > div:first-child {
+    background: linear-gradient(135deg, #12345d 0%, #78e9f4 58%, #a993ff 100%) !important;
+    box-shadow: 0 6px 16px rgba(0,3,16,.30), 0 0 18px rgba(134,247,255,.14) !important;
+}
+
+body.severna-theme .stats-overview-panel > div:nth-child(3) {
+    background: rgba(10,28,54,.56) !important;
+    border-color: rgba(149,246,255,.18) !important;
+    box-shadow: inset 2px 2px 5px rgba(0,3,16,.30), inset -2px -2px 5px rgba(134,247,255,.08) !important;
+}
+
+body.severna-theme .stats-h2h-desc,
+body.severna-theme #stats-screen .stat-lbl-mini {
+    color: var(--nebula-ui-muted) !important;
+}
+
+body.severna-theme #pi-modal-overlay .pi-modal-shell,
+body.severna-theme #pi-modal-overlay .pi-list-container,
+body.severna-theme #streak-overlay .streak-modal-shell,
+body.severna-theme #streak-overlay .streak-list-container {
+    background: var(--nebula-ui-surface) !important;
+    color: var(--nebula-ui-ink) !important;
+    border-color: rgba(149,246,255,.22) !important;
+}
+
+body.severna-theme #pi-modal-overlay .pi-modal-title,
+body.severna-theme #streak-overlay .streak-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.24), 0 1px 2px rgba(0,0,0,.58) !important;
+}
+
+body.severna-theme #pi-modal-overlay .power-index-player-row.is-first .power-index-player-name {
+    color: var(--nebula-ui-ink-strong, #f2feff) !important;
+}
+
+body.severna-theme .power-index-title-legacy,
+body.severna-theme .power-index-value-legacy,
+body.severna-theme .power-index-watermark-legacy,
+body.severna-theme .power-index-title-bolt,
+body.severna-theme .power-index-value-bolt,
+body.severna-theme .power-index-watermark-bolt,
+body.severna-theme .fire-streak-title-legacy,
+body.severna-theme .fire-streak-value-legacy,
+body.severna-theme .fire-streak-title-soft-clay-icon-easter,
+body.severna-theme .fire-streak-title-soft-clay-icon-desert,
+body.severna-theme .fire-streak-value-soft-clay-icon {
+    display: none !important;
+}
+
+body.severna-theme .power-index-title-bolt-nebula,
+body.severna-theme .power-index-value-bolt-nebula,
+body.severna-theme .power-index-watermark-bolt-nebula,
+body.severna-theme .fire-streak-title-soft-clay-icon-nebula,
+body.severna-theme .fire-streak-value-soft-clay-icon-nebula {
+    display: block;
+    object-fit: contain;
+    flex: 0 0 auto;
+}
+
+body.severna-theme .power-index-title-bolt-nebula {
+    width: 27px;
+    height: 27px;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.13));
+}
+
+body.severna-theme .power-index-watermark-bolt-nebula {
+    position: absolute;
+    top: -7px;
+    right: 20%;
+    width: 55px;
+    height: 55px;
+    opacity: .18;
+    pointer-events: none;
+}
+
+body.severna-theme .power-index-value-bolt-nebula {
+    width: 16px;
+    height: 16px;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.24));
+}
+
+body.severna-theme #streak-overlay .fire-streak-title-soft-clay-icon-nebula {
+    width: 32px;
+    height: 32px;
+    filter: drop-shadow(0 3px 6px rgba(0,3,16,.24)) drop-shadow(0 0 7px rgba(134,247,255,.13));
+}
+
+body.severna-theme #streak-overlay .fire-streak-title-easter {
+    display: inline;
+    color: var(--nebula-ui-ink-strong) !important;
+}
+
+body.severna-theme .fire-streak-value-soft-clay-icon-nebula {
+    width: 23px;
+    height: 23px;
+    filter: drop-shadow(0 2px 4px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme .power-index-rank-mark,
+body.severna-theme .fire-streak-rank-mark {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    line-height: 1;
+}
+
+body.severna-theme .power-index-rank-mark.has-podium .power-index-rank-legacy,
+body.severna-theme .fire-streak-rank-mark.has-podium .fire-streak-rank-legacy {
+    display: none;
+}
+
+body.severna-theme .power-index-podium-medal {
+    display: block;
+    width: 38px;
+    height: 38px;
+    max-width: none;
+    object-fit: contain;
+    flex: 0 0 38px;
+}
+
+body.severna-theme .fire-streak-podium-medal {
+    display: block;
+    width: 42px;
+    height: 42px;
+    max-width: none;
+    object-fit: contain;
+    flex: 0 0 42px;
+}
+
+body.severna-theme .settings-header-icon-default,
+body.severna-theme .settings-header-icon-easter,
+body.severna-theme .settings-header-icon-desert,
+body.severna-theme .settings-section-soft-clay-icon-easter,
+body.severna-theme .settings-section-soft-clay-icon-desert,
+body.severna-theme .settings-row-soft-clay-icon-easter,
+body.severna-theme .settings-row-soft-clay-icon-desert,
+body.severna-theme .settings-legal-soft-clay-icon-easter,
+body.severna-theme .settings-legal-soft-clay-icon-desert,
+body.severna-theme .settings-row-icon-legacy,
+body.severna-theme .settings-legal-icon-legacy {
+    display: none !important;
+}
+
+body.severna-theme .settings-header-icon-nebula {
+    display: block;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.13));
+}
+
+body.severna-theme .settings-section-title-with-icons,
+body.severna-theme .settings-row-label-with-icon,
+body.severna-theme .settings-legal-link {
+    display: inline-flex;
+    align-items: center;
+}
+
+body.severna-theme .settings-section-title-with-icons {
+    gap: 5px;
+    min-height: 20px;
+}
+
+body.severna-theme .settings-section-soft-clay-icon-nebula {
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.22));
+}
+
+body.severna-theme .settings-language-soft-clay-icon-nebula {
+    margin-left: 1px;
+}
+
+body.severna-theme .settings-row-label-with-icon {
+    gap: 7px;
+    min-width: 0;
+}
+
+body.severna-theme .settings-row-soft-clay-icon-nebula {
+    display: block;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0,3,16,.22));
+}
+
+body.severna-theme .settings-legal-link {
+    gap: 4px;
+}
+
+body.severna-theme .settings-legal-soft-clay-icon-nebula {
+    display: block;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.20));
+}
+
+body.severna-theme #rules-overlay-ui .rules-header-icon-default,
+body.severna-theme #rules-overlay-ui .rules-header-icon-easter,
+body.severna-theme #rules-overlay-ui .rules-header-icon-desert,
+body.severna-theme #rules-overlay-ui .rules-page-icon-default,
+body.severna-theme #rules-overlay-ui .rules-page-icon-easter,
+body.severna-theme #rules-overlay-ui .rules-page-icon-desert,
+body.severna-theme #rules-overlay-ui .rules-theme-icon-default,
+body.severna-theme #rules-overlay-ui .rules-theme-icon-easter,
+body.severna-theme #rules-overlay-ui .rules-theme-icon-desert,
+body.severna-theme #rules-overlay-ui .rules-theme-glyph-default,
+body.severna-theme #rules-overlay-ui .rules-page-glyph-default {
+    display: none !important;
+}
+
+body.severna-theme #rules-overlay-ui .rules-header-icon-nebula {
+    display: block;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 7px rgba(134,247,255,.13));
+}
+
+body.severna-theme #rules-overlay-ui .rules-page-icon-nebula {
+    display: inline-block;
+    width: 38px;
+    height: 38px;
+    margin-right: 7px;
+    object-fit: contain;
+    vertical-align: -12px;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #rules-overlay-ui .rules-theme-icon-nebula {
+    display: inline-block;
+    width: 1.42em;
+    height: 1.42em;
+    margin-right: .3em;
+    object-fit: contain;
+    vertical-align: -.34em;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.22)) drop-shadow(0 0 5px rgba(134,247,255,.10));
+}
+
+body.severna-theme #rules-overlay-ui .rules-slide-content li .rules-theme-icon-nebula {
+    width: 1.22em;
+    height: 1.22em;
+    margin-right: .24em;
+    vertical-align: -.28em;
+}
+
+body.severna-theme #rules-overlay-ui .rules-slide-content h4 .rules-theme-icon-nebula {
+    width: 1.3em;
+    height: 1.3em;
+    vertical-align: -.31em;
+}
+
+body.severna-theme #rules-overlay-ui .rules-theme-icon-nebula.rules-asset-icon--png {
+    width: 1.62em;
+    height: 1.62em;
+    vertical-align: -.44em;
+    border-radius: 0;
+}
+
+body.severna-theme #rules-overlay-ui .rules-podium-pack-nebula {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    margin: 0 4px 0 1px;
+    vertical-align: -8px;
+}
+
+body.severna-theme #rules-overlay-ui .rules-podium-pack img {
+    display: block;
+    width: 25px;
+    height: 25px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.22)) drop-shadow(0 0 5px rgba(134,247,255,.10));
+}
+
+body.severna-theme #league-modal-overlay .league-tab-icon,
+body.severna-theme #league-modal-overlay .league-hof-tab-fallback {
+    display: none !important;
+}
+
+body.severna-theme #league-modal-overlay .league-tab-soft-clay-icon,
+body.severna-theme #league-modal-overlay .league-hof-tab-soft-clay-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #league-modal-overlay .league-tab-button,
+body.severna-theme #league-modal-overlay .league-tab-button:hover,
+body.severna-theme #league-modal-overlay .league-tab-button:active {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+}
+
+body.severna-theme #league-modal-overlay .league-tab-button.btn-primary,
+body.severna-theme #league-modal-overlay .league-hof-tab-button.is-active,
+body.severna-theme #league-modal-overlay .league-hof-tab-button.is-active:hover,
+body.severna-theme #league-modal-overlay .league-hof-tab-button.is-active:active {
+    background: #dffcff !important;
+    color: #061526 !important;
+    border: 1px solid rgba(236,254,255,.70) !important;
+}
+
+body.severna-theme #league-modal-overlay .league-tab-button.btn-secondary,
+body.severna-theme #league-modal-overlay .league-hof-tab-button,
+body.severna-theme #league-modal-overlay .league-hof-tab-button:hover,
+body.severna-theme #league-modal-overlay .league-hof-tab-button:active {
+    background: rgba(10,28,54,.58) !important;
+    color: var(--nebula-ui-ink-strong) !important;
+    border: 1px solid rgba(149,246,255,.24) !important;
+}
+
+body.severna-theme #league-modal-overlay .league-hof-tab-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+body.severna-theme #league-modal-overlay .league-rank-heading {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 12px rgba(134,247,255,.22), 0 1px 2px rgba(0,0,0,.54) !important;
+}
+
+body.severna-theme #league-modal-overlay .league-rank-soft-clay-badge {
+    display: block;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #league-modal-overlay .league-current-rank {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--nebula-ui-ink-strong) !important;
+}
+
+body.severna-theme #league-modal-overlay .league-current-rank-soft-clay-badge {
+    display: block;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme #league-modal-overlay .league-rank-scroll,
+body.severna-theme #league-modal-overlay #hof-main-content > div:last-child {
+    background: rgba(10,28,54,.56) !important;
+    border-color: rgba(149,246,255,.18) !important;
+    box-shadow: inset 3px 3px 7px rgba(0,3,16,.34), inset -3px -3px 7px rgba(134,247,255,.08) !important;
+}
+
+body.severna-theme #league-modal-overlay [id^="league-list-"] > li,
+body.severna-theme #league-modal-overlay #hof-list > li {
+    background: rgba(12,32,62,.60) !important;
+    border-color: rgba(149,246,255,.18) !important;
+    color: var(--nebula-ui-ink) !important;
+}
+
+body.severna-theme #league-modal-overlay .ql-placement-medal {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.22)) drop-shadow(0 0 5px rgba(134,247,255,.10));
+}
+
+body.severna-theme #league-modal-overlay .ql-placement-medal--rank {
+    width: 28px;
+    height: 28px;
+}
+
+body.severna-theme #league-modal-overlay .ql-list-placement--medal {
+    min-width: 30px !important;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.severna-theme #league-modal-overlay .ql-medal-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+
+body.severna-theme #league-modal-overlay .ql-medal-count--gold,
+body.severna-theme #league-modal-overlay .ql-medal-count--silver,
+body.severna-theme #league-modal-overlay .ql-medal-count--bronze {
+    color: var(--nebula-ui-ink-strong) !important;
+    text-shadow: 0 0 8px rgba(134,247,255,.18) !important;
+}
+
+body.severna-theme #league-modal-overlay .ql-medal-fallback,
+body.severna-theme .ql-champion-fallback,
+body.severna-theme .ql-placement-medal--reward + .ql-medal-fallback {
+    display: none;
+}
+
+body.severna-theme #league-modal-overlay .ql-champion-marker {
+    width: 26px;
+    height: 26px;
+}
+
+body.severna-theme #league-modal-overlay .ql-champion-soft-clay-icon {
+    display: block;
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme .ql-placement-medal--reward {
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    vertical-align: middle;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.24)) drop-shadow(0 0 6px rgba(134,247,255,.12));
+}
+
+body.severna-theme .ql-quarter-reward-medal .ql-medal-fallback {
+    display: none;
+}
+
+body.severna-theme .ql-quarter-champion-medal {
+    display: block;
+    width: 54px;
+    height: 54px;
+    margin: -13px auto 7px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(0,3,16,.24)) drop-shadow(0 0 7px rgba(134,247,255,.12));
+}
+
+body.severna-theme .quarter-winner-logo-default,
+body.severna-theme .quarter-winner-logo-easter,
+body.severna-theme .quarter-winner-logo-desert {
+    display: none;
+}
+
+body.severna-theme .quarter-winner-logo-nebula {
+    display: block;
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    filter: drop-shadow(0 7px 11px rgba(0,3,16,.24)) drop-shadow(0 0 8px rgba(134,247,255,.12));
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.severna-theme #highscores-screen .hs-state-soft-clay-icon-nebula,
+    body.severna-theme .waiting-hof-state-soft-clay-icon-nebula {
+        animation: none !important;
+    }
 }
