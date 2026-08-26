@@ -45,11 +45,11 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/severna-soft-clay/rules/pages/communication.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/severna-soft-clay/rules/pages/economy-treasury.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/severna-soft-clay/rules/pages/account-server.png?v=1',
-        'assets/easter-soft-clay/daily-challenge-pro.png': 'assets/severna-soft-clay/daily-challenge-pro.png?v=7',
-        'assets/easter-soft-clay/leaderboard-pro.png': 'assets/severna-soft-clay/leaderboard-pro.png?v=5',
-        'assets/easter-soft-clay/statistics-pro.png': 'assets/severna-soft-clay/statistics-pro.png?v=5',
-        'assets/easter-soft-clay/settings-pro.png': 'assets/severna-soft-clay/settings-pro.png?v=5',
-        'assets/easter-soft-clay/rules-pro.png': 'assets/severna-soft-clay/rules-pro.png?v=6',
+        'assets/easter-soft-clay/daily-challenge-pro.png': 'assets/severna-soft-clay/daily-challenge-pro.png?v=8',
+        'assets/easter-soft-clay/leaderboard-pro.png': 'assets/severna-soft-clay/leaderboard-pro.png?v=6',
+        'assets/easter-soft-clay/statistics-pro.png': 'assets/severna-soft-clay/statistics-pro.png?v=6',
+        'assets/easter-soft-clay/settings-pro.png': 'assets/severna-soft-clay/settings-pro.png?v=6',
+        'assets/easter-soft-clay/rules-pro.png': 'assets/severna-soft-clay/rules-pro.png?v=7',
         'assets/easter-soft-clay/treasury-pro.png': 'assets/severna-soft-clay/treasury-pro.png?v=5',
         'assets/easter-soft-clay/tournament-pro.png': 'assets/severna-soft-clay/tournament-pro.png?v=5',
         'assets/easter-soft-clay/global-chat-pro-v4.png': 'assets/severna-soft-clay/global-chat-pro.png?v=3',
@@ -465,7 +465,7 @@ class RulesUI {
                             <img class="rules-header-icon rules-header-icon-default" src="assets/rules-icon.svg" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-easter" src="assets/easter-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-desert" src="assets/desert-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
-                            <img class="rules-header-icon rules-header-icon-nebula" src="assets/severna-soft-clay/rules-pro.png?v=6" alt="" aria-hidden="true" decoding="async">
+                            <img class="rules-header-icon rules-header-icon-nebula" src="assets/severna-soft-clay/rules-pro.png?v=7" alt="" aria-hidden="true" decoding="async">
                             <span>${typeof t === 'function' ? t('rules_header_title') : (this.currentLang === 'sr' ? 'PRAVILA I UPUTSTVO' : 'RULES & GUIDE')}</span>
                         </span>
                     </div>

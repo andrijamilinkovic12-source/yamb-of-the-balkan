@@ -1547,7 +1547,7 @@ class YambApp {
                     'assets/severna-soft-clay/mode-opponent-pro.png?v=3',
                     'assets/severna-soft-clay/treasury-pro.png?v=5',
                     'assets/severna-soft-clay/tournament-pro.png?v=5',
-                    'assets/severna-soft-clay/leaderboard-pro.png?v=5'
+                    'assets/severna-soft-clay/leaderboard-pro.png?v=6'
                 ],
                 assets: [
                     'assets/severna-soft-clay/global-chat-pro.png?v=3',
@@ -1556,10 +1556,10 @@ class YambApp {
                     'assets/severna-soft-clay/ducats-undo-pro.png?v=3',
                     'assets/severna-soft-clay/mode-hotseat-pro.png?v=3',
                     'assets/severna-soft-clay/mode-invite-pro.png?v=3',
-                    'assets/severna-soft-clay/daily-challenge-pro.png?v=7',
-                    'assets/severna-soft-clay/statistics-pro.png?v=5',
-                    'assets/severna-soft-clay/settings-pro.png?v=5',
-                    'assets/severna-soft-clay/rules-pro.png?v=6'
+                    'assets/severna-soft-clay/daily-challenge-pro.png?v=8',
+                    'assets/severna-soft-clay/statistics-pro.png?v=6',
+                    'assets/severna-soft-clay/settings-pro.png?v=6',
+                    'assets/severna-soft-clay/rules-pro.png?v=7'
                 ]
             }
         };
@@ -4641,28 +4641,28 @@ class YambApp {
             leaderboard: {
                 icon: 'assets/easter-soft-clay/leaderboard-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/leaderboard-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/leaderboard-pro.png?v=5',
+                severnaIcon: 'assets/severna-soft-clay/leaderboard-pro.png?v=6',
                 scale: 1.16,
                 label: () => gt('hs_title') || 'TOP LISTA'
             },
             statistics: {
                 icon: 'assets/easter-soft-clay/statistics-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/statistics-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/statistics-pro.png?v=5',
+                severnaIcon: 'assets/severna-soft-clay/statistics-pro.png?v=6',
                 scale: 1.06,
                 label: () => gt('menu_stats') || 'STATISTIKA'
             },
             settings: {
                 icon: 'assets/easter-soft-clay/settings-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/settings-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/settings-pro.png?v=5',
+                severnaIcon: 'assets/severna-soft-clay/settings-pro.png?v=6',
                 scale: 1,
                 label: () => gt('menu_settings') || 'PODEŠAVANJA'
             },
             rules: {
                 icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/rules-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/rules-pro.png?v=6',
+                severnaIcon: 'assets/severna-soft-clay/rules-pro.png?v=7',
                 scale: 1.16,
                 label: () => gt('menu_rules') || 'PRAVILA'
             },

@@ -4,7 +4,7 @@
     "sr": "Severna Maglina Pack",
     "en": "Northern Nebula Theme Pack"
   },
-  "version": "0.4.28",
+  "version": "0.4.30",
   "updated": "2026-08-26",
   "bodyClass": "severna-theme",
   "scope": "Only active when body has severna-theme class or localStorage yamb_theme is severna.",
@@ -27,7 +27,7 @@
     {
       "id": "bottom-room-icons",
       "status": "complete",
-      "description": "The five bottom-row room icons — Daily Challenge, Leaderboard, Statistics, Settings and Rules — use a newly rendered Northern Nebula PNG icon pack in true neuphorism soft-clay 3D style: calm icy cyan, moon-silver, frosted blue and muted violet, without Easter ornament, Desert material or recolor/procedural drawing fallback. CSS dimensions and menu positions stay identical to Easter/Desert."
+      "description": "The five bottom-row room icons — Daily Challenge, Leaderboard, Statistics, Settings and Rules — use a newly rendered Northern Nebula PNG icon pack in true neuphorism soft-clay 3D style: calm icy cyan, moon-silver, frosted blue and muted violet, without Easter ornament, Desert material or recolor/procedural drawing fallback. Daily Challenge, Leaderboard, Statistics, Settings and Rules are crop/padding-normalized inside their PNG canvases so their visible weight matches Easter/Desert more closely, especially Statistics which no longer visually dominates. CSS dimensions, 44x44 display size, menu positions and wave motion stay identical to Easter/Desert."
     },
     {
       "id": "global-chat-icon",
@@ -101,7 +101,7 @@
     "Settings inner icons use normalized 352x352 transparent Severna soft-clay PNGs for profile, sound, music, vibration, display/theme, language, terms and privacy; language flags, toggles, select controls, Google account data and legal links must not be replaced by decorative icons.",
     "Quarterly League rank/tab assets and quarter reward/champion medal assets use www/assets/severna-soft-clay/ql under Severna.",
     "Quarterly League rank/tab assets, opponent connection states and tournament-state/finalist assets must be original Northern Nebula soft-clay/glass PNGs, not recolored Desert assets.",
-    "Bottom-row icons use real rendered PNG assets, not Python-drawn/procedural icons and not recolored Easter/Desert assets; use the same 44x44 visual size and staggered wave motion as the Easter/Desert system.",
+    "Bottom-row icons use real rendered PNG assets, not Python-drawn/procedural icons and not recolored Easter/Desert assets; use the same 44x44 CSS display size, centered position and staggered wave motion as the Easter/Desert system. If a Severna icon looks visually heavier or lighter, correct only its PNG crop/padding/scale, not CSS layout or button position.",
     "Treasury and Tournament special icons use real rendered Northern Nebula PNG assets, not Python-drawn/procedural icons and not recolored Easter/Desert assets.",
     "Global Chat main/header/rules icon uses a real rendered Northern Nebula PNG asset, not Python-drawn/procedural artwork and not a recolored old chat icon.",
     "Online Players, Quarterly League and Dukati/Undo main top icons use real rendered Northern Nebula PNG assets with transparent RGBA cutouts, not Python-drawn/procedural artwork and not recolored Easter/Desert assets.",
