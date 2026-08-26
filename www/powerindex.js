@@ -72,7 +72,7 @@ class PowerIndexLeaderboard {
                     <h2 class="pi-modal-title">
                         <span class="power-index-title-legacy" style="font-size: 1.5rem;">⚡</span>
                         <img class="power-index-soft-clay-bolt power-index-title-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt-nebula" src="assets/severna-soft-clay/statistics/power-index-bolt.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-title-bolt-nebula" src="assets/severna-soft-clay/statistics/power-index-bolt.png?v=3" alt="" aria-hidden="true" decoding="async">
                         ${this.gt('pi_title', 'TOP IGRAČI')}
                     </h2>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('pi-modal-overlay').remove()" aria-label="${this.gt('aria_close_power_index', 'Zatvori Power index listu')}">×</button>
@@ -203,13 +203,14 @@ class PowerIndexLeaderboard {
         const isMe = !!p.isMe || (!!p.uid && p.uid === myUid) || (!p.uid && p.playerName === myName);
         const isPinned = !!options.pinned;
 
-        // Vaskrs koristi jedinstveni Power Index podium pack; ostale teme zadržavaju postojeći fallback.
+        // Tema bira svoj Power Index podium pack; cache verzija se podiže samo za Severnu.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         const podiumTheme = activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter');
+        const podiumAssetVersion = podiumTheme === 'severna' ? '3' : '2';
         const legacyRank = rank === 1 ? '⚡' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span style="color: var(--text-muted);">${rank}.</span>`;
         const podiumRank = podiumTone
-            ? `<img class="power-index-podium-medal" src="assets/${podiumTheme}-soft-clay/statistics/power-index/${podiumTone}.png?v=1" alt="" aria-hidden="true">`
+            ? `<img class="power-index-podium-medal" src="assets/${podiumTheme}-soft-clay/statistics/power-index/${podiumTone}.png?v=${podiumAssetVersion}" alt="" aria-hidden="true">`
             : '';
         const rankTrophy = `<span class="power-index-rank-legacy">${legacyRank}</span>${podiumRank}`;
 
@@ -267,7 +268,7 @@ class PowerIndexLeaderboard {
                         <span style="color: #FFD700; font-weight: 900; font-size: 1rem; text-shadow: 0 0 5px rgba(255,140,0,0.5);">${powerIndex}</span>
                         <span class="power-index-value-legacy" style="font-size: 0.8rem;">⚡</span>
                         <img class="power-index-soft-clay-bolt power-index-value-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt-nebula" src="assets/severna-soft-clay/statistics/power-index-bolt.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-value-bolt-nebula" src="assets/severna-soft-clay/statistics/power-index-bolt.png?v=3" alt="" aria-hidden="true" decoding="async">
                     </div>
                 </div>
             </div>`;

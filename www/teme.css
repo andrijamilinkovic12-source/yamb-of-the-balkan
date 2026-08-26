@@ -12122,7 +12122,7 @@ body.severna-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-ca
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=2") center / contain no-repeat;
+    background: url("assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=3") center / contain no-repeat;
     opacity: .20;
     filter: drop-shadow(0 8px 12px rgba(0,0,0,.20)) saturate(1.06);
     pointer-events: none;
