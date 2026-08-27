@@ -624,8 +624,8 @@ class DnevniIzazov {
                     <img class="daily-glass-task-mark-easter" src="assets/easter-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-room-mark-desert" src="assets/desert-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-task-mark-desert" src="assets/desert-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-room-mark-nebula" src="assets/severna-soft-clay/daily-challenge-pro.png?v=7" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-task-mark-nebula" src="assets/severna-soft-clay/daily/task.png?v=4" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-nebula" src="assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-nebula" src="assets/severna-soft-clay/daily/task-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <h2 class="daily-glass-title">${txtTitle}</h2>
                     <div class="daily-glass-subtitle">${txtSub}</div>
                 </div>
@@ -890,12 +890,13 @@ class DnevniIzazov {
     }
 
     showAlreadyPlayedInfo() {
-        const message = document.body.classList.contains('easter-theme')
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const message = activeTheme === 'easter'
             ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" src="assets/easter-soft-clay/daily/already-played.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
-            : document.body.classList.contains('desert-theme')
+            : activeTheme === 'desert'
                 ? `<div class="daily-already-desert"><img class="daily-already-desert-icon" src="assets/desert-soft-clay/daily/already-played.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
-                : document.body.classList.contains('severna-theme')
-                    ? `<div class="daily-already-nebula"><img class="daily-already-nebula-icon" src="assets/severna-soft-clay/daily/already-played.png?v=3" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+                : activeTheme === 'severna'
+                    ? `<div class="daily-already-nebula"><img class="daily-already-nebula-icon" src="assets/severna-soft-clay/daily/already-played-v10.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
                     : t('dc_done');
         const alertPromise = this.app?.modal?.alert
             ? this.app.modal.alert(message, t('info_title'))
@@ -1127,12 +1128,12 @@ class DnevniIzazov {
         resDiv.innerHTML = `
             <img class="daily-glass-complete-mark-easter" src="assets/easter-soft-clay/daily/complete.png?v=1" alt="" aria-hidden="true" decoding="async">
             <img class="daily-glass-complete-mark-desert" src="assets/desert-soft-clay/daily/complete.png?v=1" alt="" aria-hidden="true" decoding="async">
-            <img class="daily-glass-complete-mark-nebula" src="assets/severna-soft-clay/daily/complete.png?v=3" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-nebula" src="assets/severna-soft-clay/daily/complete-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
             <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 <span class="daily-glass-reward-video-fallback" aria-hidden="true">🎥</span>
                 <img class="daily-glass-reward-video-mark-easter" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-desert" src="assets/desert-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="daily-glass-reward-video-mark-nebula" src="assets/severna-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-nebula" src="assets/severna-soft-clay/daily/reward-video-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
                 ${t('btn_double_short')} ${dukatIconHtml()} (x2)
             </button>
             <button class="daily-glass-btn daily-glass-btn-claim" onclick="dnevniIzazov.claim(false)">

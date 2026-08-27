@@ -4,7 +4,7 @@
     "sr": "Severna Maglina Pack",
     "en": "Northern Nebula Theme Pack"
   },
-  "version": "0.4.30",
+  "version": "0.4.38",
   "updated": "2026-08-26",
   "bodyClass": "severna-theme",
   "scope": "Only active when body has severna-theme class or localStorage yamb_theme is severna.",
@@ -22,32 +22,32 @@
     {
       "id": "main-menu-icons",
       "status": "complete",
-      "description": "Severna Soft Clay icon pack for main menu: Global Chat, Online Players, Quarterly League watermark, Dukati/Undo, four game modes, Treasury, Tournament and bottom-row Daily Challenge through Rules. The top-row Online Players, Quarterly League and Dukati/Undo icons are newly rendered Northern Nebula PNG assets with transparent RGBA cutouts, icy pearl/cyan/violet depth, corrected cache versions and no recolored Desert fallback. Quarterly League uses a readable YotB / QL diamond badge in the Severna palette. The four game-mode icons are newly rendered Northern Nebula 3D assets for Solo, Hotseat, Find Opponent and Invite Friend: abstract soft-clay tokens and the same centered label slot as Easter/Desert, without Easter ornament, Desert material or recolor/procedural fallback. Treasury and Tournament use newly rendered Northern Nebula PNG icons: a frosted nebula treasure chest and calm moon-silver trophy. Special icons are crop-normalized to the same 62px visual placement system used by Easter/Desert."
+      "description": "Severna Soft Clay icon pack for main menu: Global Chat, Online Players, Quarterly League watermark, Dukati/Undo, four game modes, Treasury, Tournament and bottom-row Daily Challenge through Rules. The top-row Online Players, Quarterly League and Dukati/Undo icons are newly rendered Northern Nebula PNG assets with transparent RGBA cutouts, icy pearl/cyan/violet depth, corrected cache versions and no recolored Desert fallback. Quarterly League uses a readable YotB / QL diamond badge in the Severna palette. The four game-mode icons are newly rendered Northern Nebula 3D assets for Solo, Hotseat, Find Opponent and Invite Friend: a single player, two players with an alternating arrow, a globe with search and a player with invite envelope. They use matte icy pearl, midnight-blue inset depth and restrained lavender/cyan accents, transparent RGBA cutouts and the same centered label slot as Easter/Desert, without Easter ornament, Desert material, dice clutter or recolor/procedural fallback. Treasury and Tournament use refined Northern Nebula PNG icons: one closed frosted chest with a midnight keyhole and one quiet moon-silver trophy with a dark-blue inset and muted-lavender base. No gems, stars, coins, dice, medals or fantasy decoration. Special icons retain the same placement system and do not change card CSS, button size, position or layout."
     },
     {
       "id": "bottom-room-icons",
       "status": "complete",
-      "description": "The five bottom-row room icons — Daily Challenge, Leaderboard, Statistics, Settings and Rules — use a newly rendered Northern Nebula PNG icon pack in true neuphorism soft-clay 3D style: calm icy cyan, moon-silver, frosted blue and muted violet, without Easter ornament, Desert material or recolor/procedural drawing fallback. Daily Challenge, Leaderboard, Statistics, Settings and Rules are crop/padding-normalized inside their PNG canvases so their visible weight matches Easter/Desert more closely, especially Statistics which no longer visually dominates. CSS dimensions, 44x44 display size, menu positions and wave motion stay identical to Easter/Desert."
+      "description": "The five bottom-row room icons — Daily Challenge, Leaderboard, Statistics, Settings and Rules — were recreated from zero in the same quiet Northern Nebula language as the refined single Global Chat bubble and YotB/QL diamond: matte icy pearl, deep blue inset depth and restrained lavender/cyan accents. Their concepts are a calendar/check, podium, chart, one gear and rulebook, with no dice, crowns, stars, planets, scenes, Easter ornament, Desert material or recolor/procedural fallback. CSS dimensions, 44x44 display size, menu positions and wave motion stay identical to Easter/Desert."
     },
     {
       "id": "global-chat-icon",
       "status": "complete",
-      "description": "Global Chat uses a newly rendered Northern Nebula soft-clay 3D speech-bubble icon with three raised message dots, transparent RGBA cutout, icy pearl body, cyan/violet rim depth and matching main-menu/header/rules integration. X, online status, report button, send icon, empty-state icon, message logic and layout remain unchanged."
+      "description": "Global Chat uses a refined Northern Nebula soft-clay 3D single speech-bubble icon with a restrained three-dot inset: transparent RGBA cutout, matte icy pearl body and cool blue depth. The same asset is used in the menu, intro and room header. X, online status, report button, send icon, empty-state icon, message logic and layout remain unchanged."
     },
     {
       "id": "online-players-icon-pack",
       "status": "complete",
-      "description": "Online Players uses a dedicated Northern Nebula main/header/loading icon plus matching Add Friend, Spectate and Duel mini-icons. Action hit areas, status colors, avatars, names, X button and online list logic remain unchanged."
+      "description": "Online Players uses a refined Northern Nebula three-player soft-clay icon with a small cyan availability dot, plus matching Add Friend, Spectate and Duel mini-icons. Action hit areas, status colors, avatars, names, X button and online list logic remain unchanged."
     },
     {
       "id": "quarterly-league-icon-pack",
       "status": "complete",
-      "description": "Quarterly League uses a dedicated Northern Nebula YotB QL mark in the main-menu watermark, intro and modal header with a single-logo guard so the standard, Easter, Desert and Severna logos cannot duplicate/triplicate."
+      "description": "Quarterly League uses the same one rounded-diamond YotB / QL emblem concept as Easter and Desert, rendered in the calm icy-blue and muted-violet Northern Nebula material. It is used in the main-menu watermark, intro and modal header with a single-logo guard so the standard, Easter, Desert and Severna logos cannot duplicate/triplicate."
     },
     {
       "id": "economy-icon-pack",
       "status": "complete",
-      "description": "Dukati / Ispravi zadnji upis uses a dedicated Northern Nebula combined main icon, separate ducat and undo-token icons for header/tabs/balances/rewards, and matching rewarded-video/unavailable-ad icons. Counters, prices, reward status, plus signs, quantities, X button and economy logic remain unchanged."
+      "description": "Dukati / Ispravi zadnji upis uses a refined Northern Nebula combined icon: an icy token with a muted-violet inset mark and one compact undo arrow. Separate ducat and undo-token icons remain for header/tabs/balances/rewards, with matching rewarded-video/unavailable-ad icons. Counters, prices, reward status, plus signs, quantities, X button and economy logic remain unchanged."
     },
     {
       "id": "game-board",
@@ -72,7 +72,7 @@
     {
       "id": "inner-bottom-room-icon-pack",
       "status": "complete",
-      "description": "Daily Challenge, Leaderboard, Statistics, Settings and Rules now use Northern Nebula internal icons: Daily task/completion/already-played/reward video; Top-list global/local/loading and Severna podium medals; Statistics category/result/H2H/Power Index/Vatreni niz icons and podium packs; Settings profile/audio/display/legal mini-icons; Rules header/page/inline icons and QL podium references. Daily Challenge task state uses a restrained original Severna soft-clay checklist/target PNG without dice or decorative scene elements, keeping dice reserved for true game/skin context. Top Lista now uses a restrained Severna inner pack: cleaner global-list icon, retained clean local-list icon, neutral empty/loading list icon and calm gold/silver/bronze podium medaljons without dice, crowns, stars, gemstones or fantasy frames. Statistics now uses clean original Severna PNG replacements for Record, Ukupno partija, All-Time PTS and Power Index bolt, plus restrained Power Index and Vatreni niz podium mini-packs derived from the neutral Severna medaljon system; no card/dice clutter, crystal shards, crowns, stars, gems or ornate fantasy medal frames. Settings now uses a normalized Severna mini-pack for Profile/Account, Sound Effects, Music, Vibration, Display/Theme, Language, Terms and Privacy with 352x352 transparent PNG assets, clean soft-clay forms and no recolored Easter/Desert fallback. Settings flags, toggles, select controls, Google avatar/account fields, external links, close button and layout remain unchanged. UI dimensions, filters, list order, scores, waiting Top 3 logic, H2H data and controls remain unchanged."
+      "description": "Daily Challenge, Leaderboard, Statistics, Settings and Rules now use Northern Nebula internal icons: Daily task/completion/already-played/reward video; Top-list global/local/loading and Severna podium medals; Statistics category/result/H2H/Power Index/Vatreni niz icons and podium packs; Settings profile/audio/display/legal mini-icons; Rules header/page/inline icons and QL podium references. Daily Challenge task state uses a restrained original Severna soft-clay checklist/target PNG without dice or decorative scene elements, keeping dice reserved for true game/skin context. Top Lista now uses a restrained Severna inner pack: cleaner global-list icon, retained clean local-list icon, neutral empty/loading list icon and calm gold/silver/bronze podium medaljons without dice, crowns, stars, gemstones or fantasy frames. Statistics now uses clean original Severna PNG replacements for Record, Ukupno partija, All-Time PTS and Power Index bolt, plus a refined Vatreni niz aurora-streak soft-clay icon and restrained Power Index/Vatreni niz podium mini-packs derived from the neutral Severna medaljon system; no card/dice clutter, hot orange emoji flame, crystal shards, crowns, stars, gems or ornate fantasy medal frames. Settings now uses a normalized Severna mini-pack for Profile/Account, Sound Effects, Music, Vibration, Display/Theme, Language, Terms and Privacy with 352x352 transparent PNG assets, clean soft-clay forms and no recolored Easter/Desert fallback. Settings flags, toggles, select controls, Google avatar/account fields, external links, close button and layout remain unchanged. UI dimensions, filters, list order, scores, waiting Top 3 logic, H2H data and controls remain unchanged."
     }
   ],
   "designTokens": {
@@ -98,11 +98,12 @@
     "Daily Challenge Severna assets must be original 1024x1024 transparent soft-clay 3D icons for room identity, task, completion and already-played states; no Easter/Desert recolor fallback is allowed.",
     "Top-list and waiting Top 3 podium medals use the restrained Severna leaderboard medaljons when yamb_theme is severna; no emoji, crown, star, dice or fantasy medal art should appear under body.severna-theme.",
     "Statistics Power Index and Vatreni niz use restrained Severna podium mini-packs and Severna title/value icons when yamb_theme is severna; no gem, crown, star, crystal-shard or fantasy medal styling is allowed.",
+    "Statistics Vatreni niz icon must stay in the cold Northern Nebula aurora-streak direction: icy cyan, moon-silver and muted violet soft-clay/glass, no hot orange emoji fire and no decorative kitsch.",
     "Settings inner icons use normalized 352x352 transparent Severna soft-clay PNGs for profile, sound, music, vibration, display/theme, language, terms and privacy; language flags, toggles, select controls, Google account data and legal links must not be replaced by decorative icons.",
     "Quarterly League rank/tab assets and quarter reward/champion medal assets use www/assets/severna-soft-clay/ql under Severna.",
     "Quarterly League rank/tab assets, opponent connection states and tournament-state/finalist assets must be original Northern Nebula soft-clay/glass PNGs, not recolored Desert assets.",
     "Bottom-row icons use real rendered PNG assets, not Python-drawn/procedural icons and not recolored Easter/Desert assets; use the same 44x44 CSS display size, centered position and staggered wave motion as the Easter/Desert system. If a Severna icon looks visually heavier or lighter, correct only its PNG crop/padding/scale, not CSS layout or button position.",
-    "Treasury and Tournament special icons use real rendered Northern Nebula PNG assets, not Python-drawn/procedural icons and not recolored Easter/Desert assets.",
+    "Treasury and Tournament special icons use real rendered Northern Nebula PNG assets, not Python-drawn/procedural icons and not recolored Easter/Desert assets. If their visible weight differs, correct only PNG crop/padding/scale, not special-card CSS, button size, position or layout.",
     "Global Chat main/header/rules icon uses a real rendered Northern Nebula PNG asset, not Python-drawn/procedural artwork and not a recolored old chat icon.",
     "Online Players, Quarterly League and Dukati/Undo main top icons use real rendered Northern Nebula PNG assets with transparent RGBA cutouts, not Python-drawn/procedural artwork and not recolored Easter/Desert assets.",
     "The four main game mode cards keep the existing geometry and centered labels.",

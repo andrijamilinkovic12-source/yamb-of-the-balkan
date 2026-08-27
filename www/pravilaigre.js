@@ -45,13 +45,23 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/severna-soft-clay/rules/pages/communication.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/severna-soft-clay/rules/pages/economy-treasury.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/severna-soft-clay/rules/pages/account-server.png?v=1',
-        'assets/easter-soft-clay/daily-challenge-pro.png': 'assets/severna-soft-clay/daily-challenge-pro.png?v=8',
-        'assets/easter-soft-clay/leaderboard-pro.png': 'assets/severna-soft-clay/leaderboard-pro.png?v=6',
-        'assets/easter-soft-clay/statistics-pro.png': 'assets/severna-soft-clay/statistics-pro.png?v=6',
-        'assets/easter-soft-clay/settings-pro.png': 'assets/severna-soft-clay/settings-pro.png?v=6',
-        'assets/easter-soft-clay/rules-pro.png': 'assets/severna-soft-clay/rules-pro.png?v=7',
-        'assets/easter-soft-clay/treasury-pro.png': 'assets/severna-soft-clay/treasury-pro.png?v=5',
-        'assets/easter-soft-clay/tournament-pro.png': 'assets/severna-soft-clay/tournament-pro.png?v=5',
+        'assets/easter-soft-clay/daily-challenge-pro.png': 'assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1',
+        'assets/easter-soft-clay/leaderboard-pro.png': 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
+        'assets/easter-soft-clay/statistics-pro.png': 'assets/severna-soft-clay/statistics-pro-v8.png?v=1',
+        'assets/easter-soft-clay/settings-pro.png': 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
+        'assets/easter-soft-clay/statistics/record.png': 'assets/severna-soft-clay/statistics/record-v10.png?v=1',
+        'assets/easter-soft-clay/statistics/power-index-bolt.png': 'assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1',
+        'assets/easter-soft-clay/statistics/wins.png': 'assets/severna-soft-clay/statistics/wins-v10.png?v=1',
+        'assets/easter-soft-clay/statistics/fire-streak.png': 'assets/severna-soft-clay/statistics/fire-streak-v10.png?v=1',
+        'assets/easter-soft-clay/statistics/all-time-points.png': 'assets/severna-soft-clay/statistics/all-time-points-v10.png?v=1',
+        'assets/easter-soft-clay/statistics/h2h.png': 'assets/severna-soft-clay/statistics/h2h-v10.png?v=1',
+        'assets/easter-soft-clay/rules-pro.png': 'assets/severna-soft-clay/rules-pro-v8.png?v=1',
+        'assets/easter-soft-clay/treasury-pro.png': 'assets/severna-soft-clay/treasury-pro.png?v=6',
+        'assets/easter-soft-clay/tournament-pro.png': 'assets/severna-soft-clay/tournament-pro.png?v=6',
+        'assets/easter-soft-clay/mode-solo-pro.png': 'assets/severna-soft-clay/mode-solo-pro.png?v=4',
+        'assets/easter-soft-clay/mode-hotseat-pro.png': 'assets/severna-soft-clay/mode-hotseat-pro.png?v=4',
+        'assets/easter-soft-clay/mode-opponent-pro.png': 'assets/severna-soft-clay/mode-opponent-pro.png?v=4',
+        'assets/easter-soft-clay/mode-invite-pro.png': 'assets/severna-soft-clay/mode-invite-pro.png?v=4',
         'assets/easter-soft-clay/global-chat-pro-v4.png': 'assets/severna-soft-clay/global-chat-pro.png?v=3',
         'assets/soft-clay-online-players-pro.png': 'assets/severna-soft-clay/online-players-pro.png?v=3',
         'assets/easter-soft-clay/tournament/state-start.png': 'assets/severna-soft-clay/tournament/state-start.png?v=2',
@@ -146,7 +156,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/stats-icon.svg', 'assets/easter-soft-clay/statistics-pro.png?v=1')} Praćenje statistike</h3>
                 <p>Yamb of the Balkan čuva važne rezultate i pokazatelje napretka:</p>
                 <ul>
-                    <li><strong>⚡ Indeks moći (Power Index):</strong> Glavni pokazatelj uspeha koji spaja rezultate, pobede, trofeje i ligaški učinak.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt.png?v=1')} Indeks moći (Power Index):</strong> Glavni pokazatelj uspeha koji spaja rezultate, pobede, trofeje i ligaški učinak.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏅', 'assets/easter-soft-clay/statistics/record.png?v=1')} Rekord:</strong> Vaš najbolji lični rezultat.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins.png?v=1')} Odnos pobeda/poraza (W/L):</strong> Prikazuje efikasnost u direktnim online duelima i turnirima.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak.png?v=1')} Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u duelima i turnirima.</li>
@@ -310,7 +320,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/stats-icon.svg', 'assets/easter-soft-clay/statistics-pro.png?v=1')} Stat tracking</h3>
                 <p>Yamb of the Balkan saves the most important results and progress indicators:</p>
                 <ul>
-                    <li><strong>⚡ Power Index:</strong> The main success indicator, combining results, wins, trophies, and league performance.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt.png?v=1')} Power Index:</strong> The main success indicator, combining results, wins, trophies, and league performance.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏅', 'assets/easter-soft-clay/statistics/record.png?v=1')} High score:</strong> Your personal best score.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins.png?v=1')} W/L Ratio:</strong> Shows your efficiency in direct online duels and tournaments.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak.png?v=1')} Win Streak:</strong> Number of consecutive wins in duels and tournaments.</li>
@@ -465,7 +475,7 @@ class RulesUI {
                             <img class="rules-header-icon rules-header-icon-default" src="assets/rules-icon.svg" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-easter" src="assets/easter-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-desert" src="assets/desert-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
-                            <img class="rules-header-icon rules-header-icon-nebula" src="assets/severna-soft-clay/rules-pro.png?v=7" alt="" aria-hidden="true" decoding="async">
+                            <img class="rules-header-icon rules-header-icon-nebula" src="assets/severna-soft-clay/rules-pro-v8.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <span>${typeof t === 'function' ? t('rules_header_title') : (this.currentLang === 'sr' ? 'PRAVILA I UPUTSTVO' : 'RULES & GUIDE')}</span>
                         </span>
                     </div>

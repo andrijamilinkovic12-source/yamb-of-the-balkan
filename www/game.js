@@ -815,7 +815,10 @@ class YambApp {
         if (rivals.length === 0) {
             const activeStatsTheme = localStorage.getItem('yamb_theme') || 'dark';
             const statsTheme = activeStatsTheme === 'severna' ? 'severna' : (activeStatsTheme === 'desert' ? 'desert' : 'easter');
-            container.innerHTML = `<div class="h2h-empty-state"><img class="h2h-empty-soft-clay-icon" src="assets/${statsTheme}-soft-clay/statistics/h2h-empty.png?v=2" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
+            const h2hEmptyIcon = statsTheme === 'severna'
+                ? 'assets/severna-soft-clay/statistics/h2h-empty-v10.png?v=1'
+                : `assets/${statsTheme}-soft-clay/statistics/h2h-empty.png?v=2`;
+            container.innerHTML = `<div class="h2h-empty-state"><img class="h2h-empty-soft-clay-icon" src="${h2hEmptyIcon}" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
             return;
         }
 
@@ -1543,23 +1546,23 @@ class YambApp {
                 title: lang === 'en' ? 'Northern Nebula' : 'Severna maglina',
                 background: 'assets/severna-maglina-bg-v3-neuphoric.png',
                 icons: [
-                    'assets/severna-soft-clay/mode-solo-pro.png?v=3',
-                    'assets/severna-soft-clay/mode-opponent-pro.png?v=3',
-                    'assets/severna-soft-clay/treasury-pro.png?v=5',
-                    'assets/severna-soft-clay/tournament-pro.png?v=5',
-                    'assets/severna-soft-clay/leaderboard-pro.png?v=6'
+                    'assets/severna-soft-clay/mode-solo-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/mode-opponent-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
+                    'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
+                    'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1'
                 ],
                 assets: [
-                    'assets/severna-soft-clay/global-chat-pro.png?v=3',
-                    'assets/severna-soft-clay/online-players-pro.png?v=3',
-                    'assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=3',
-                    'assets/severna-soft-clay/ducats-undo-pro.png?v=3',
-                    'assets/severna-soft-clay/mode-hotseat-pro.png?v=3',
-                    'assets/severna-soft-clay/mode-invite-pro.png?v=3',
-                    'assets/severna-soft-clay/daily-challenge-pro.png?v=8',
-                    'assets/severna-soft-clay/statistics-pro.png?v=6',
-                    'assets/severna-soft-clay/settings-pro.png?v=6',
-                    'assets/severna-soft-clay/rules-pro.png?v=7'
+                    'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
+                    'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1',
+                    'assets/severna-soft-clay/ducats-undo-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/mode-hotseat-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/mode-invite-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1',
+                    'assets/severna-soft-clay/statistics-pro-v8.png?v=1',
+                    'assets/severna-soft-clay/settings-pro-v9.png?v=1',
+                    'assets/severna-soft-clay/rules-pro-v8.png?v=1'
                 ]
             }
         };
@@ -1953,6 +1956,14 @@ class YambApp {
         return ['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
     }
 
+    getSoftClayThemeAsset(relativePath) {
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const assetRoot = activeTheme === 'severna'
+            ? 'assets/severna-soft-clay'
+            : (activeTheme === 'desert' ? 'assets/desert-soft-clay' : 'assets/easter-soft-clay');
+        return `${assetRoot}/${String(relativePath || '').replace(/^\/+/, '')}`;
+    }
+
     getFreeThemeIds() {
         return ['dark', 'light', 'medium', 'winter'];
     }
@@ -2123,7 +2134,9 @@ class YambApp {
             card.classList.add('is-empty');
             const activeInviteTheme = localStorage.getItem('yamb_theme') || 'dark';
             const inviteStatsTheme = activeInviteTheme === 'severna' ? 'severna' : (activeInviteTheme === 'desert' ? 'desert' : 'easter');
-            image.src = `assets/${inviteStatsTheme}-soft-clay/statistics/h2h-empty.png?v=2`;
+            image.src = inviteStatsTheme === 'severna'
+                ? 'assets/severna-soft-clay/statistics/h2h-empty-v10.png?v=1'
+                : `assets/${inviteStatsTheme}-soft-clay/statistics/h2h-empty.png?v=2`;
             name.setAttribute('data-lang', 'stat_h2h_empty');
             name.textContent = gt('stat_h2h_empty') || 'Nema odigranih duela...';
             name.removeAttribute('title');
@@ -2644,6 +2657,7 @@ class YambApp {
             <div class="friend-card add-new" onclick="app.searchAndAddFriend()">
                 <img class="easter-invite-add-icon" src="assets/easter-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-invite-add-icon" src="assets/desert-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="severna-invite-add-icon" src="assets/severna-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <div class="friend-card-add-fallback" style="font-size: 2.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 5px; font-weight: 300;">+</div>
                 <span style="color:var(--text-main); font-weight:800; font-size:0.75rem; text-align:center; line-height: 1.2;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
             </div>
@@ -2716,7 +2730,7 @@ class YambApp {
                                 <div class="easter-friend-record-row easter-friend-loss"><span>POR</span><strong>${safeLosses}</strong></div>
                             </div>
                         </div>
-                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-invite-send-icon" src="assets/desert-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
+                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-invite-send-icon" src="assets/desert-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-invite-send-icon" src="assets/severna-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
                     </div>
                 `;
             });
@@ -2724,8 +2738,9 @@ class YambApp {
         if ((!friends || friends.length === 0) && (!requests || requests.length === 0)) {
             html += `
                 <div class="easter-invite-empty-state" role="status">
-                    <img src="assets/easter-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="easter-invite-empty-icon" src="assets/easter-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="desert-invite-empty-icon" src="assets/desert-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="severna-invite-empty-icon" src="assets/severna-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span>${gt('friends_empty') || 'Još nema prijatelja.'}</span>
                 </div>
             `;
@@ -2824,9 +2839,7 @@ class YambApp {
 
             if (typeof window.showNotification === 'function') {
                 window.showNotification(titleText, sentText, {
-                    icon: document.body.classList.contains('desert-theme')
-                        ? 'assets/desert-soft-clay/invite/sent.png?v=1'
-                        : 'assets/easter-soft-clay/invite/sent.png?v=1',
+                    icon: this.getSoftClayThemeAsset('invite/sent.png?v=1'),
                     className: 'invite-sent-toast'
                 });
             } else {
@@ -2842,7 +2855,7 @@ class YambApp {
                 <div class="waiting-hof-loading-state">
                     <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="waiting-hof-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="waiting-hof-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="waiting-hof-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>
                 </div>
             `;
@@ -2935,7 +2948,7 @@ class YambApp {
                 <div class="waiting-hof-empty-state" style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 10px;">
                     <img class="waiting-hof-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="waiting-hof-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="waiting-hof-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="waiting-hof-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span>${gt('ws_hof_no_results') || 'Još uvek nema rezultata za ovaj period.'}</span>
                 </div>
             `;
@@ -2962,7 +2975,7 @@ class YambApp {
             const safeScore = Number(p.score || 0).toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
             const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
             const podiumSrc = activeTheme === 'severna'
-                ? `assets/severna-soft-clay/leaderboard/medal-${medalAsset}.png?v=3`
+                ? `assets/severna-soft-clay/leaderboard/medal-${medalAsset}-v9.png?v=1`
                 : `assets/yotb-podium/leaderboard/${medalAsset}.png?v=1`;
 
             html += `
@@ -3474,7 +3487,7 @@ class YambApp {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament-pro.png?v=5" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
                             gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆",
                             { contextClass: 'tourney-winner' }
                         );
@@ -4641,42 +4654,42 @@ class YambApp {
             leaderboard: {
                 icon: 'assets/easter-soft-clay/leaderboard-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/leaderboard-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/leaderboard-pro.png?v=6',
+                severnaIcon: 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
                 scale: 1.16,
                 label: () => gt('hs_title') || 'TOP LISTA'
             },
             statistics: {
                 icon: 'assets/easter-soft-clay/statistics-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/statistics-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/statistics-pro.png?v=6',
+                severnaIcon: 'assets/severna-soft-clay/statistics-pro-v8.png?v=1',
                 scale: 1.06,
                 label: () => gt('menu_stats') || 'STATISTIKA'
             },
             settings: {
                 icon: 'assets/easter-soft-clay/settings-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/settings-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/settings-pro.png?v=6',
+                severnaIcon: 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
                 scale: 1,
                 label: () => gt('menu_settings') || 'PODEŠAVANJA'
             },
             rules: {
                 icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/rules-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/rules-pro.png?v=7',
+                severnaIcon: 'assets/severna-soft-clay/rules-pro-v8.png?v=1',
                 scale: 1.16,
                 label: () => gt('menu_rules') || 'PRAVILA'
             },
             solo: {
                 icon: 'assets/easter-soft-clay/mode-solo-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-solo-pro.png?v=3',
+                severnaIcon: 'assets/severna-soft-clay/mode-solo-pro-v5.png?v=1',
                 scale: 1,
                 label: () => gt('menu_solo') || ((localStorage.getItem('yamb_lang') || 'sr').startsWith('en') ? 'SOLO GAME' : 'SOLO IGRA')
             },
             hotseat: {
                 icon: 'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-hotseat-pro.png?v=3',
+                severnaIcon: 'assets/severna-soft-clay/mode-hotseat-pro-v5.png?v=1',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'TWO PLAYERS HOTSEAT'
@@ -4685,7 +4698,7 @@ class YambApp {
             opponent: {
                 icon: 'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro.png?v=3',
+                severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro-v5.png?v=1',
                 scale: 1.2,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'FIND OPPONENT'
@@ -4694,7 +4707,7 @@ class YambApp {
             invite: {
                 icon: 'assets/easter-soft-clay/mode-invite-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-invite-pro.png?v=3',
+                severnaIcon: 'assets/severna-soft-clay/mode-invite-pro-v5.png?v=1',
                 scale: 1.05,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'INVITE FRIEND'
@@ -4703,14 +4716,14 @@ class YambApp {
             globalChat: {
                 icon: 'assets/easter-soft-clay/global-chat-pro-v4.png',
                 desertIcon: 'assets/desert-soft-clay/global-chat-pro.png?v=2',
-                severnaIcon: 'assets/severna-soft-clay/global-chat-pro.png?v=3',
+                severnaIcon: 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
                 scale: 1,
                 label: () => 'GLOBAL CHAT'
             },
             onlinePlayers: {
                 icon: 'assets/soft-clay-online-players-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/online-players-pro.png?v=3',
-                severnaIcon: 'assets/severna-soft-clay/online-players-pro.png?v=3',
+                severnaIcon: 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'ONLINE PLAYERS'
@@ -4719,7 +4732,7 @@ class YambApp {
             economy: {
                 icon: 'assets/soft-clay-ducats-undo-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
-                severnaIcon: 'assets/severna-soft-clay/ducats-undo-pro.png?v=3',
+                severnaIcon: 'assets/severna-soft-clay/ducats-undo-pro-v5.png?v=1',
                 scale: 1,
                 lines: () => [
                     gt('menu_ducats') || 'DUKATI',
@@ -5543,11 +5556,7 @@ class YambApp {
                     gt('opp_reconnected') || "Protivnik se vratio u igru!",
                     isRandomOpponentRoom
                         ? {
-                            icon: document.body.classList.contains('severna-theme')
-                                ? 'assets/severna-soft-clay/opponent/reconnected.png?v=2'
-                                : (document.body.classList.contains('desert-theme')
-                                    ? 'assets/desert-soft-clay/opponent/reconnected.png?v=1'
-                                    : 'assets/easter-soft-clay/opponent/reconnected.png?v=1'),
+                            icon: this.getSoftClayThemeAsset('opponent/reconnected.png?v=2'),
                             className: 'opponent-reconnected-toast'
                         }
                         : {}
@@ -6310,9 +6319,7 @@ class YambApp {
 
         this.socket.on('room_invite_accepted', (data = {}) => {
             showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data, {
-                icon: document.body.classList.contains('desert-theme')
-                    ? 'assets/desert-soft-clay/invite/accepted.png?v=1'
-                    : 'assets/easter-soft-clay/invite/accepted.png?v=1',
+                icon: this.getSoftClayThemeAsset('invite/accepted.png?v=1'),
                 className: 'invite-accepted-toast'
             });
         });
@@ -8777,7 +8784,7 @@ class YambApp {
                     <img class="quarter-winner-logo quarter-winner-logo-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
                     <img class="quarter-winner-logo quarter-winner-logo-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
-                    <img class="quarter-winner-logo quarter-winner-logo-nebula" src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="quarter-winner-logo quarter-winner-logo-nebula" src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </div>
                 <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>

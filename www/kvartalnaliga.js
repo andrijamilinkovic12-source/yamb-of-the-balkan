@@ -223,9 +223,15 @@ class KvartalnaLigaManager {
 
     getQlVisualTheme() {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        if (activeTheme === 'severna' || document.body.classList.contains('severna-theme')) return 'severna';
-        if (activeTheme === 'desert' || document.body.classList.contains('desert-theme')) return 'desert';
-        if (activeTheme === 'easter' || document.body.classList.contains('easter-theme')) return 'easter';
+        // Izvor istine je sačuvana aktivna tema. Ne oslanjamo se prvo na body
+        // klasu, jer zaostala klasa tokom promene teme ne sme izabrati asset
+        // druge teme niti napraviti dupli QL logo.
+        if (activeTheme === 'severna') return 'severna';
+        if (activeTheme === 'desert') return 'desert';
+        if (activeTheme === 'easter') return 'easter';
+        if (document.body.classList.contains('severna-theme')) return 'severna';
+        if (document.body.classList.contains('desert-theme')) return 'desert';
+        if (document.body.classList.contains('easter-theme')) return 'easter';
         return 'default';
     }
 

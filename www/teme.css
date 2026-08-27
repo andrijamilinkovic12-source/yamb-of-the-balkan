@@ -12122,7 +12122,7 @@ body.severna-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-ca
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=3") center / contain no-repeat;
+    background: url("assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1") center / contain no-repeat;
     opacity: .20;
     filter: drop-shadow(0 8px 12px rgba(0,0,0,.20)) saturate(1.06);
     pointer-events: none;
@@ -14009,6 +14009,19 @@ body.severna-theme #highscores-screen .hs-list-state-loading .hs-state-soft-clay
     height: 68px;
 }
 
+/* Top lista — ista empty/loading ikona mora imati istu vidljivu meru
+   na Globalnoj i Lokalnoj strani. Ne diramo liste, filtere ni waiting Top 3. */
+body.easter-theme #highscores-screen .hs-list-state .hs-state-soft-clay-icon,
+body.desert-theme #highscores-screen .hs-list-state .hs-state-soft-clay-icon-desert,
+body.severna-theme #highscores-screen .hs-list-state .hs-state-soft-clay-icon-nebula {
+    width: 86px !important;
+    height: 86px !important;
+    flex: 0 0 86px !important;
+    max-width: 86px !important;
+    max-height: 86px !important;
+    object-fit: contain;
+}
+
 body.severna-theme .waiting-hof-entry {
     background: rgba(10,28,54,.58) !important;
     border-color: rgba(149,246,255,.20) !important;
@@ -14674,6 +14687,245 @@ body.severna-theme .quarter-winner-logo-nebula {
     height: 96px;
     object-fit: contain;
     filter: drop-shadow(0 7px 11px rgba(0,3,16,.24)) drop-shadow(0 0 8px rgba(134,247,255,.12));
+}
+
+/* ========================================================================== */
+/* Theme asset isolation firewall                                               */
+/* Svaka od tri soft-clay teme ima strogo svoj direktorijum asset-a.           */
+/* Ako komponenta u DOM-u nosi više unapred pripremljenih slojeva, CSS nikada   */
+/* ne sme dozvoliti da se asset druge teme prikaže. Ovo je poslednja zaštita    */
+/* pored pojedinačnih pravila za svaku sobu (Statistika, QL, Riznica itd.).     */
+/* ========================================================================== */
+body.easter-theme img[src*="assets/desert-soft-clay/"],
+body.easter-theme img[src*="assets/severna-soft-clay/"] {
+    display: none !important;
+}
+
+body.desert-theme img[src*="assets/easter-soft-clay/"],
+body.desert-theme img[src*="assets/severna-soft-clay/"] {
+    display: none !important;
+}
+
+body.severna-theme img[src*="assets/easter-soft-clay/"],
+body.severna-theme img[src*="assets/desert-soft-clay/"] {
+    display: none !important;
+}
+
+/* ========================================================================== */
+/* SEVERNA MAGLINA — RIZNICA: isolated, restrained soft-clay asset pack.       */
+/* No Easter/Desert fallback is allowed to remain visible in this room.         */
+/* ========================================================================== */
+body.severna-theme #riznica-screen .riznica-header-logo-default,
+body.severna-theme #riznica-screen .riznica-tab-fallback,
+body.severna-theme #riznica-screen .riznica-ad-fallback,
+body.severna-theme #riznica-screen .riznica-category-fallback,
+body.severna-theme #riznica-screen .riznica-balance-ducat-default,
+body.severna-theme #riznica-screen .riznica-ad-ducat-default,
+body.severna-theme #riznica-screen .riznica-item-reward-video-fallback {
+    display: none !important;
+}
+
+body.severna-theme #riznica-screen .riznica-header,
+body.severna-theme #riznica-screen .tab-btn,
+body.severna-theme #riznica-screen .card,
+body.severna-theme .custom-toast.treasury-insufficient-toast {
+    background: var(--nebula-ui-surface) !important;
+    border: var(--nebula-ui-border) !important;
+    box-shadow: var(--nebula-ui-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.severna-theme #riznica-screen .riznica-header-title,
+body.severna-theme #riznica-screen .category-header[data-treasury-collection],
+body.severna-theme #riznica-screen .card .title,
+body.severna-theme #riznica-screen .card .price,
+body.severna-theme #riznica-screen .riznica-ad-btn {
+    color: var(--nebula-ui-ink-strong) !important;
+}
+
+body.severna-theme #riznica-screen .card .desc,
+body.severna-theme #riznica-screen .card .duration {
+    color: var(--nebula-ui-muted) !important;
+}
+
+body.severna-theme #riznica-screen .riznica-header-logo-nebula {
+    display: block;
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 10px rgba(0,3,16,.30));
+}
+
+body.severna-theme #riznica-screen .riznica-tab-nebula-soft-clay-icon {
+    display: block;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 3px 4px rgba(0,3,16,.28));
+    transition: transform 180ms ease, filter 180ms ease;
+}
+
+body.severna-theme #riznica-screen .tab-btn {
+    overflow: visible;
+    color: var(--nebula-ui-ink) !important;
+}
+
+body.severna-theme #riznica-screen .tab-btn.active,
+body.severna-theme #riznica-screen .riznica-balance-pill {
+    background: var(--nebula-ui-surface-inset) !important;
+    border-color: rgba(134,247,255,.38) !important;
+    box-shadow: inset 3px 3px 7px rgba(0,3,16,.38), inset -2px -2px 5px rgba(134,247,255,.10), 0 0 0 2px rgba(134,247,255,.10) !important;
+}
+
+body.severna-theme #riznica-screen .tab-btn.active .riznica-tab-nebula-soft-clay-icon {
+    transform: translateY(-1px) scale(1.05);
+    filter: drop-shadow(0 4px 6px rgba(0,3,16,.32));
+}
+
+body.severna-theme #riznica-screen .riznica-balance-pill {
+    color: var(--nebula-ui-cyan) !important;
+    gap: 4px;
+}
+
+body.severna-theme #riznica-screen .riznica-balance-ducat-icon-nebula,
+body.severna-theme #riznica-screen .riznica-ad-ducat-icon-nebula {
+    display: block;
+    width: 19px;
+    height: 19px;
+    flex: 0 0 19px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.25));
+}
+
+body.severna-theme #riznica-screen .riznica-reward-video-nebula-soft-clay-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 3px 4px rgba(0,3,16,.25));
+}
+
+body.severna-theme #riznica-screen .riznica-item-reward-video-nebula-soft-clay-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    object-fit: contain;
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.25));
+}
+
+body.severna-theme #riznica-screen .riznica-reward-video-copy,
+body.severna-theme #riznica-screen .riznica-reward-video-action,
+body.severna-theme #riznica-screen .riznica-item-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+body.severna-theme #riznica-screen .riznica-ad-btn {
+    gap: 3px;
+}
+
+body.severna-theme #riznica-screen .category-header[data-treasury-collection] {
+    min-height: 38px;
+    gap: 9px;
+    opacity: 1;
+}
+
+body.severna-theme #riznica-screen .riznica-category-nebula-soft-clay-icon {
+    display: block;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+    filter: drop-shadow(0 3px 5px rgba(0,3,16,.28));
+}
+
+body.severna-theme #riznica-screen .riznica-status-nebula-soft-clay-icon {
+    display: block;
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(0,3,16,.26));
+}
+
+body.severna-theme #riznica-screen .riznica-item-status--owned {
+    min-height: 28px;
+    color: var(--nebula-ui-ink-strong) !important;
+    font-weight: 800;
+}
+
+body.severna-theme #riznica-screen .riznica-item-status--active {
+    color: #071426 !important;
+    background: linear-gradient(145deg, #9df4ff, #9eb7ff) !important;
+    border-color: rgba(236,254,255,.68) !important;
+    box-shadow: inset 1px 1px 2px rgba(255,255,255,.45), 0 5px 10px rgba(0,3,16,.24) !important;
+}
+
+body.severna-theme #riznica-screen .riznica-item-status--locked {
+    color: var(--nebula-ui-muted) !important;
+    background: rgba(19,45,79,.76) !important;
+    border-color: rgba(134,247,255,.20) !important;
+}
+
+body.severna-theme #riznica-screen .btn-buy,
+body.severna-theme #riznica-screen .btn-equip {
+    background: linear-gradient(145deg, #3297af, #172f63) !important;
+    color: var(--nebula-ui-ink-strong) !important;
+    border-color: rgba(236,254,255,.48) !important;
+}
+
+body.severna-theme .custom-toast.treasury-insufficient-toast {
+    display: grid !important;
+    grid-template-columns: 50px minmax(0, 1fr);
+    align-items: center;
+    column-gap: 10px;
+    color: var(--nebula-ui-ink) !important;
+}
+
+body.severna-theme .custom-toast.treasury-insufficient-toast .custom-toast-soft-clay-icon {
+    display: block;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(0,3,16,.28));
+}
+
+@media (max-width: 480px) {
+    body.severna-theme #riznica-screen .riznica-header-logo-nebula {
+        width: 42px;
+        height: 42px;
+        flex-basis: 42px;
+    }
+
+    body.severna-theme #riznica-screen .riznica-tab-nebula-soft-clay-icon {
+        width: 31px;
+        height: 31px;
+    }
+
+    body.severna-theme #riznica-screen .riznica-reward-video-nebula-soft-clay-icon {
+        width: 25px;
+        height: 25px;
+        flex-basis: 25px;
+    }
+}
+
+@media (max-width: 390px) {
+    body.severna-theme #riznica-screen .riznica-balance-ducat-icon-nebula,
+    body.severna-theme #riznica-screen .riznica-ad-ducat-icon-nebula {
+        width: 17px;
+        height: 17px;
+        flex-basis: 17px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
