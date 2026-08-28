@@ -722,7 +722,7 @@ class TournamentManager {
                             <span class="tournament-intro-champion-name">${safeName}</span>
                             <span class="tournament-intro-champion-wins" aria-label="${this.escapeAttr(`${wins} ${winsLabel}`)}">
                                 <img class="tournament-intro-wins-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
-                                <img class="tournament-intro-wins-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                                <img class="tournament-intro-wins-icon-easter" src="assets/easter-soft-clay/tournament-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                                 <img class="tournament-intro-wins-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
                                 <img class="tournament-intro-wins-icon-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">
                                 <strong>${wins}</strong>
@@ -1125,7 +1125,7 @@ class TournamentManager {
         let leaderboardHtml = `
             <div class="tourney-champions-view">
                 <img class="tourney-hof-trophy tourney-trophy-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
-                <img class="tourney-hof-trophy-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="tourney-hof-trophy-easter" src="assets/easter-soft-clay/tournament-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="tourney-hof-trophy-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
                 <img class="tourney-hof-trophy-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <h3 class="tourney-champions-title">
@@ -1163,7 +1163,7 @@ class TournamentManager {
                         <div class="tourney-champion-name">${safePlayerName}</div>
                         <div class="tourney-champion-count" aria-label="${this.escapeAttr(tt('tourney_champion_titles') || 'Osvojeni turniri')} ${safeWins}">
                             <img class="tourney-wins-trophy-icon tourney-trophy-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
-                            <img class="tourney-wins-trophy-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                            <img class="tourney-wins-trophy-icon-easter" src="assets/easter-soft-clay/tournament-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <img class="tourney-wins-trophy-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
                             <img class="tourney-wins-trophy-icon-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <strong>${safeWins}</strong>
@@ -1510,7 +1510,7 @@ class TournamentManager {
 
         container.innerHTML = `
             <div class="tourney-registration-panel">
-                <div class="tourney-icon-large tourney-registration-icon"><span class="tourney-registration-icon-fallback" aria-hidden="true">🏆</span><img class="tourney-registration-soft-clay-icon" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async"></div>
+                <div class="tourney-icon-large tourney-registration-icon"><span class="tourney-registration-icon-fallback" aria-hidden="true">🏆</span><img class="tourney-registration-soft-clay-icon" src="assets/easter-soft-clay/tournament-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async"></div>
                 <h3 class="tourney-registration-title">${currentEdition}</h3>
                 <p class="tourney-registration-desc">${registrationDesc}</p>
 
@@ -1800,7 +1800,7 @@ class TournamentManager {
                             <h3 class="tourney-round-title">
                                 <span>${finalTitle}</span>
                                 <img class="tourney-round-trophy tourney-trophy-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
-                                <img class="tourney-round-trophy-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                                <img class="tourney-round-trophy-easter" src="assets/easter-soft-clay/tournament-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                                 <img class="tourney-round-trophy-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
                                 <img class="tourney-round-trophy-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">
                             </h3>

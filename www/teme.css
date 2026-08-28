@@ -482,7 +482,7 @@ body.winter-theme .btn-square:active { box-shadow: 0 0 0 #001122, inset 0 2px 8p
 
 /* --- TEMA 7: VASKRŠNJA (EASTER) V5.0 - PASTEL NEUMORPHISM --- */
 body.easter-theme {
-    --easter-theme-bg-image: url("assets/easter-neumorphic-bg-v1.png");
+    --easter-theme-bg-image: url("assets/easter-neumorphic-bg-v2.png");
     --bg-base: #f4eadb;
     --bg-gradient-1: #fff7ec;
     --bg-gradient-2: #dfeecf;
@@ -12594,7 +12594,7 @@ body.severna-theme #main-menu .mode-btn > div[style*="font-size: 6.5rem"] {
 /* --- THEME LOADING GATE: Vaskrs / Pustinjsko staklo / Severna maglina --- */
 .theme-loading-gate.theme-easter {
     --theme-loading-base: #ffeaf7;
-    --theme-loading-bg-image: url("assets/easter-neumorphic-bg-v1.png");
+    --theme-loading-bg-image: url("assets/easter-neumorphic-bg-v2.png");
     --theme-loading-veil-top: rgba(255, 246, 252, 0.18);
     --theme-loading-veil-bottom: rgba(62, 29, 85, 0.42);
     --theme-loading-glow: rgba(255, 217, 244, 0.30);

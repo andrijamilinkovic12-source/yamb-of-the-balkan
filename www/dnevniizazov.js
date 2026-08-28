@@ -620,7 +620,7 @@ class DnevniIzazov {
         overlay.innerHTML = `
             <div class="daily-glass-card" id="glass-daily-card">
                 <div class="daily-glass-header">
-                    <img class="daily-glass-room-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-task-mark-easter" src="assets/easter-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-room-mark-desert" src="assets/desert-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-task-mark-desert" src="assets/desert-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">

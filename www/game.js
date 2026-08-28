@@ -1498,13 +1498,13 @@ class YambApp {
         const packs = {
             easter: {
                 title: lang === 'en' ? 'Easter Theme' : 'Vaskrs tema',
-                background: 'assets/easter-neumorphic-bg-v1.png',
+                background: 'assets/easter-neumorphic-bg-v2.png',
                 icons: [
                     'assets/easter-soft-clay/mode-solo-pro.png?v=1',
                     'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
-                    'assets/easter-soft-clay/treasury-pro.png',
-                    'assets/easter-soft-clay/tournament-pro.png',
-                    'assets/easter-soft-clay/leaderboard-pro.png'
+                    'assets/easter-soft-clay/treasury-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/tournament-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1'
                 ],
                 assets: [
                     'assets/easter-soft-clay/global-chat-pro-v4.png',
@@ -1513,10 +1513,10 @@ class YambApp {
                     'assets/easter-soft-clay/ducats-undo-pro-v2.png?v=1',
                     'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
                     'assets/easter-soft-clay/mode-invite-pro.png?v=1',
-                    'assets/easter-soft-clay/daily-challenge-pro.png?v=3',
-                    'assets/easter-soft-clay/statistics-pro.png',
-                    'assets/easter-soft-clay/settings-pro.png',
-                    'assets/easter-soft-clay/rules-pro.png',
+                    'assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1',
+                    'assets/easter-soft-clay/statistics-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/settings-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/rules-pro-v2.png?v=1',
                     'assets/easter-soft-clay/statistics/power-index-bolt-v2.png?v=1',
                     'assets/easter-soft-clay/daily/reward-video-v2.png?v=1',
                     'assets/easter-soft-clay/leaderboard/medal-gold-v2.png?v=1',
@@ -3569,7 +3569,7 @@ class YambApp {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
                             gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆",
                             { contextClass: 'tourney-winner' }
                         );
@@ -4734,28 +4734,28 @@ class YambApp {
 
         const rooms = {
             leaderboard: {
-                icon: 'assets/easter-soft-clay/leaderboard-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/leaderboard-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
                 scale: 1.16,
                 label: () => gt('hs_title') || 'TOP LISTA'
             },
             statistics: {
-                icon: 'assets/easter-soft-clay/statistics-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/statistics-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/statistics-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
                 scale: 1.06,
                 label: () => gt('menu_stats') || 'STATISTIKA'
             },
             settings: {
-                icon: 'assets/easter-soft-clay/settings-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/settings-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/settings-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
                 scale: 1,
                 label: () => gt('menu_settings') || 'PODEŠAVANJA'
             },
             rules: {
-                icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/rules-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/rules-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
                 scale: 1.16,
