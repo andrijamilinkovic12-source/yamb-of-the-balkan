@@ -40,7 +40,7 @@ class VatreniNizManager {
                         <span class="fire-streak-title-legacy">${this.gt('streak_top_title', '🔥 TOP VATRENI NIZ')}</span>
                         <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-nebula" src="assets/severna-soft-clay/statistics/fire-streak-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-nebula" src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span class="fire-streak-title-easter">${this.gt('streak_top_title_plain', 'TOP VATRENI NIZ')}</span>
                     </span>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="${this.gt('aria_close_streak', 'Zatvori Vatreni niz listu')}">×</button>
@@ -269,7 +269,7 @@ class VatreniNizManager {
                         <div class="fire-streak-value" style="color: #FF5722; font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 5px rgba(255, 87, 34, 0.4);">
                             <span class="fire-streak-value-legacy">🔥</span>
                             <img class="fire-streak-value-soft-clay-icon" src="assets/desert-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
-                            <img class="fire-streak-value-soft-clay-icon-nebula" src="assets/severna-soft-clay/statistics/fire-streak-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
+                            <img class="fire-streak-value-soft-clay-icon-nebula" src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <span>${maxWinStreak}</span>
                         </div>
                         <div style="font-size: 0.65rem; font-weight: bold; margin-top: 4px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">

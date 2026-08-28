@@ -1508,15 +1508,25 @@ class YambApp {
                 ],
                 assets: [
                     'assets/easter-soft-clay/global-chat-pro-v4.png',
-                    'assets/soft-clay-online-players-pro.png?v=1',
+                    'assets/easter-soft-clay/online-players-pro-v2.png?v=1',
                     'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1',
-                    'assets/soft-clay-ducats-undo-pro.png?v=1',
+                    'assets/easter-soft-clay/ducats-undo-pro-v2.png?v=1',
                     'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
                     'assets/easter-soft-clay/mode-invite-pro.png?v=1',
                     'assets/easter-soft-clay/daily-challenge-pro.png?v=3',
                     'assets/easter-soft-clay/statistics-pro.png',
                     'assets/easter-soft-clay/settings-pro.png',
-                    'assets/easter-soft-clay/rules-pro.png'
+                    'assets/easter-soft-clay/rules-pro.png',
+                    'assets/easter-soft-clay/statistics/power-index-bolt-v2.png?v=1',
+                    'assets/easter-soft-clay/daily/reward-video-v2.png?v=1',
+                    'assets/easter-soft-clay/leaderboard/medal-gold-v2.png?v=1',
+                    'assets/easter-soft-clay/leaderboard/medal-silver-v2.png?v=1',
+                    'assets/easter-soft-clay/leaderboard/medal-bronze-v2.png?v=1',
+                    'assets/easter-soft-clay/opponent/vs-v2.png?v=1',
+                    'assets/easter-soft-clay/ql/medal-gold-v2.png?v=1',
+                    'assets/easter-soft-clay/ql/medal-silver-v2.png?v=1',
+                    'assets/easter-soft-clay/ql/medal-bronze-v2.png?v=1',
+                    'assets/easter-soft-clay/tournament/finalist-silver-v2.png?v=1'
                 ]
             },
             desert: {
@@ -1539,15 +1549,24 @@ class YambApp {
                     'assets/desert-soft-clay/daily-challenge-pro.png?v=1',
                     'assets/desert-soft-clay/statistics-pro.png?v=1',
                     'assets/desert-soft-clay/settings-pro.png?v=1',
-                    'assets/desert-soft-clay/rules-pro.png?v=1'
+                    'assets/desert-soft-clay/rules-pro.png?v=1',
+                    'assets/desert-soft-clay/daily/reward-video-v2.png?v=1',
+                    'assets/desert-soft-clay/leaderboard/medal-gold-v2.png?v=1',
+                    'assets/desert-soft-clay/leaderboard/medal-silver-v2.png?v=1',
+                    'assets/desert-soft-clay/leaderboard/medal-bronze-v2.png?v=1',
+                    'assets/desert-soft-clay/opponent/vs-v2.png?v=1',
+                    'assets/desert-soft-clay/online-players-state-pro-v2.png?v=1',
+                    'assets/desert-soft-clay/online-duel-pro-v2.png?v=1',
+                    'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=1',
+                    'assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=1'
                 ]
             },
             severna: {
                 title: lang === 'en' ? 'Northern Nebula' : 'Severna maglina',
                 background: 'assets/severna-maglina-bg-v3-neuphoric.png',
                 icons: [
-                    'assets/severna-soft-clay/mode-solo-pro-v5.png?v=1',
-                    'assets/severna-soft-clay/mode-opponent-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
+                    'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
                     'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
                     'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
                     'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1'
@@ -1555,14 +1574,71 @@ class YambApp {
                 assets: [
                     'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
                     'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/global-chat-send-pro-v2.png?v=1',
+                    'assets/severna-soft-clay/global-chat-empty-pro-v2.png?v=1',
+                    'assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1',
+                    'assets/severna-soft-clay/online-spectate-pro-v2.png?v=1',
+                    'assets/severna-soft-clay/online-duel-pro-v2.png?v=1',
+                    'assets/severna-soft-clay/online-players-state-pro-v2.png?v=1',
+                    'assets/severna-soft-clay/opponent/scanning-v3.png?v=1',
+                    'assets/severna-soft-clay/opponent/found-v3.png?v=1',
+                    'assets/severna-soft-clay/opponent/vs-v3.png?v=1',
+                    'assets/severna-soft-clay/opponent/disconnected-v3.png?v=1',
+                    'assets/severna-soft-clay/opponent/reconnected-v3.png?v=1',
+                    'assets/severna-soft-clay/invite/send-v2.png?v=1',
+                    'assets/severna-soft-clay/invite/empty-v2.png?v=1',
+                    'assets/severna-soft-clay/invite/sent-v2.png?v=1',
+                    'assets/severna-soft-clay/invite/accepted-v2.png?v=1',
                     'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1',
-                    'assets/severna-soft-clay/ducats-undo-pro-v5.png?v=1',
-                    'assets/severna-soft-clay/mode-hotseat-pro-v5.png?v=1',
-                    'assets/severna-soft-clay/mode-invite-pro-v5.png?v=1',
+                    'assets/severna-soft-clay/ql/tab-league-v4.png?v=1',
+                    'assets/severna-soft-clay/ql/tab-hall-of-fame-v4.png?v=1',
+                    'assets/severna-soft-clay/ql/tab-medals-v4.png?v=1',
+                    'assets/severna-soft-clay/ql/tab-champions-v4.png?v=1',
+                    'assets/severna-soft-clay/ql/rank-amater-v5.png?v=1',
+                    'assets/severna-soft-clay/ql/rank-profi-v5.png?v=1',
+                    'assets/severna-soft-clay/ql/rank-majstor-v5.png?v=1',
+                    'assets/severna-soft-clay/ql/rank-legenda-v5.png?v=1',
+                    'assets/severna-soft-clay/ql/rank-titan-v5.png?v=1',
+                    'assets/severna-soft-clay/ql/rank-alltime-v5.png?v=1',
+                    'assets/severna-soft-clay/ql/medal-gold-v3.png?v=1',
+                    'assets/severna-soft-clay/ql/medal-silver-v3.png?v=1',
+                    'assets/severna-soft-clay/ql/medal-bronze-v3.png?v=1',
+                    'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
+                    'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
+                    'assets/severna-soft-clay/solo/personal-best-v2.png?v=1',
+                    'assets/severna-soft-clay/hotseat/winner-v2.png?v=1',
+                    'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
                     'assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1',
-                    'assets/severna-soft-clay/statistics-pro-v8.png?v=1',
+                    'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
                     'assets/severna-soft-clay/settings-pro-v9.png?v=1',
-                    'assets/severna-soft-clay/rules-pro-v8.png?v=1'
+                    'assets/severna-soft-clay/rules-pro-v10.png?v=1',
+                    'assets/severna-soft-clay/rules/pages/rules-scoring-v2.png?v=1',
+                    'assets/severna-soft-clay/rules/pages/stats-leaderboards-v2.png?v=1',
+                    'assets/severna-soft-clay/rules/pages/multiplayer-competitions-v2.png?v=1',
+                    'assets/severna-soft-clay/rules/pages/communication-v2.png?v=1',
+                    'assets/severna-soft-clay/rules/pages/economy-treasury-v2.png?v=1',
+                    'assets/severna-soft-clay/rules/pages/account-server-v2.png?v=1',
+                    'assets/severna-soft-clay/treasury/tab-trophies-v2.png?v=1',
+                    'assets/severna-soft-clay/treasury/tab-skins-v2.png?v=1',
+                    'assets/severna-soft-clay/treasury/tab-effects-v2.png?v=1',
+                    'assets/severna-soft-clay/treasury/tab-themes-v2.png?v=1',
+                    'assets/severna-soft-clay/economy/ducat-v3.png?v=1',
+                    'assets/severna-soft-clay/economy/undo-token-v3.png?v=1',
+                    'assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1',
+                    'assets/severna-soft-clay/economy/ad-unavailable-v3.png?v=1',
+                    'assets/severna-soft-clay/tournament/tab-info-v2.png?v=1',
+                    'assets/severna-soft-clay/tournament/tab-bracket-v2.png?v=1',
+                    'assets/severna-soft-clay/tournament/tab-hall-of-fame-v2.png?v=1',
+                    'assets/severna-soft-clay/tournament/state-register-v3.png?v=1',
+                    'assets/severna-soft-clay/tournament/state-unregister-v3.png?v=1',
+                    'assets/severna-soft-clay/tournament/state-registration-locked-v3.png?v=1',
+                    'assets/severna-soft-clay/tournament/state-start-v3.png?v=1',
+                    'assets/severna-soft-clay/tournament/state-match-active-v3.png?v=1',
+                    'assets/severna-soft-clay/tournament/state-match-complete-v3.png?v=1',
+                    'assets/severna-soft-clay/tournament/podium-gold-v2.png?v=1',
+                    'assets/severna-soft-clay/tournament/podium-silver-v2.png?v=1',
+                    'assets/severna-soft-clay/tournament/podium-bronze-v2.png?v=1',
+                    'assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1'
                 ]
             }
         };
@@ -2657,7 +2733,7 @@ class YambApp {
             <div class="friend-card add-new" onclick="app.searchAndAddFriend()">
                 <img class="easter-invite-add-icon" src="assets/easter-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-invite-add-icon" src="assets/desert-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="severna-invite-add-icon" src="assets/severna-soft-clay/online-add-friend-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="severna-invite-add-icon" src="assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <div class="friend-card-add-fallback" style="font-size: 2.5rem; color: var(--gold-main); line-height: 1; margin-bottom: 5px; font-weight: 300;">+</div>
                 <span style="color:var(--text-main); font-weight:800; font-size:0.75rem; text-align:center; line-height: 1.2;">${gt('btn_add_friend') || 'DODAJ<br>PRIJATELJA'}</span>
             </div>
@@ -2730,7 +2806,7 @@ class YambApp {
                                 <div class="easter-friend-record-row easter-friend-loss"><span>POR</span><strong>${safeLosses}</strong></div>
                             </div>
                         </div>
-                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-invite-send-icon" src="assets/desert-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-invite-send-icon" src="assets/severna-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
+                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-invite-send-icon" src="assets/desert-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-invite-send-icon" src="assets/severna-soft-clay/invite/send-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
                     </div>
                 `;
             });
@@ -2740,7 +2816,7 @@ class YambApp {
                 <div class="easter-invite-empty-state" role="status">
                     <img class="easter-invite-empty-icon" src="assets/easter-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="desert-invite-empty-icon" src="assets/desert-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="severna-invite-empty-icon" src="assets/severna-soft-clay/invite/empty.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="severna-invite-empty-icon" src="assets/severna-soft-clay/invite/empty-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span>${gt('friends_empty') || 'Još nema prijatelja.'}</span>
                 </div>
             `;
@@ -2839,7 +2915,9 @@ class YambApp {
 
             if (typeof window.showNotification === 'function') {
                 window.showNotification(titleText, sentText, {
-                    icon: this.getSoftClayThemeAsset('invite/sent.png?v=1'),
+                    icon: (localStorage.getItem('yamb_theme') || 'dark') === 'severna'
+                        ? 'assets/severna-soft-clay/invite/sent-v2.png?v=1'
+                        : this.getSoftClayThemeAsset('invite/sent.png?v=1'),
                     className: 'invite-sent-toast'
                 });
             } else {
@@ -2974,9 +3052,13 @@ class YambApp {
             const safeName = sec ? sec.escapeHtml(displayName) : displayName;
             const safeScore = Number(p.score || 0).toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
             const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-            const podiumSrc = activeTheme === 'severna'
-                ? `assets/severna-soft-clay/leaderboard/medal-${medalAsset}-v9.png?v=1`
-                : `assets/yotb-podium/leaderboard/${medalAsset}.png?v=1`;
+            const podiumSrc = activeTheme === 'easter'
+                ? `assets/easter-soft-clay/leaderboard/medal-${medalAsset}-v2.png?v=1`
+                : activeTheme === 'desert'
+                    ? `assets/desert-soft-clay/leaderboard/medal-${medalAsset}-v2.png?v=1`
+                    : activeTheme === 'severna'
+                        ? `assets/severna-soft-clay/leaderboard/medal-${medalAsset}-v9.png?v=1`
+                        : `assets/yotb-podium/leaderboard/${medalAsset}.png?v=1`;
 
             html += `
                 <div class="waiting-hof-entry" style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 10px;">
@@ -3493,7 +3575,7 @@ class YambApp {
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament/finalist-silver.png?v=2" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
                             gt('tourney_finalist_title') || "FINALISTA 🥈",
                             { contextClass: 'tourney-finalist' }
                         );
@@ -4661,7 +4743,7 @@ class YambApp {
             statistics: {
                 icon: 'assets/easter-soft-clay/statistics-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/statistics-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/statistics-pro-v8.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
                 scale: 1.06,
                 label: () => gt('menu_stats') || 'STATISTIKA'
             },
@@ -4675,21 +4757,21 @@ class YambApp {
             rules: {
                 icon: 'assets/easter-soft-clay/rules-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/rules-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/rules-pro-v8.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
                 scale: 1.16,
                 label: () => gt('menu_rules') || 'PRAVILA'
             },
             solo: {
                 icon: 'assets/easter-soft-clay/mode-solo-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-solo-pro-v5.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
                 scale: 1,
                 label: () => gt('menu_solo') || ((localStorage.getItem('yamb_lang') || 'sr').startsWith('en') ? 'SOLO GAME' : 'SOLO IGRA')
             },
             hotseat: {
                 icon: 'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-hotseat-pro-v5.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
                 scale: 1,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'TWO PLAYERS HOTSEAT'
@@ -4698,7 +4780,7 @@ class YambApp {
             opponent: {
                 icon: 'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro-v5.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
                 scale: 1.2,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'FIND OPPONENT'
@@ -4707,7 +4789,7 @@ class YambApp {
             invite: {
                 icon: 'assets/easter-soft-clay/mode-invite-pro.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
-                severnaIcon: 'assets/severna-soft-clay/mode-invite-pro-v5.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
                 scale: 1.05,
                 label: () => (localStorage.getItem('yamb_lang') || 'sr').startsWith('en')
                     ? 'INVITE FRIEND'
@@ -4721,7 +4803,7 @@ class YambApp {
                 label: () => 'GLOBAL CHAT'
             },
             onlinePlayers: {
-                icon: 'assets/soft-clay-online-players-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/online-players-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/online-players-pro.png?v=3',
                 severnaIcon: 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
                 scale: 1,
@@ -4730,9 +4812,9 @@ class YambApp {
                     : 'ONLINE IGRAČI'
             },
             economy: {
-                icon: 'assets/soft-clay-ducats-undo-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/ducats-undo-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
-                severnaIcon: 'assets/severna-soft-clay/ducats-undo-pro-v5.png?v=1',
+                severnaIcon: 'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
                 scale: 1,
                 lines: () => [
                     gt('menu_ducats') || 'DUKATI',
@@ -5377,7 +5459,7 @@ class YambApp {
                 : fallbackText;
 
             timerDisplay.style.display = 'flex';
-            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" src="assets/desert-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-opponent-connection-icon" src="assets/severna-soft-clay/opponent/disconnected.png?v=2" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
+            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" src="assets/desert-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-opponent-connection-icon" src="assets/severna-soft-clay/opponent/disconnected-v3.png?v=1" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
             timerDisplay.style.animation = 'pulse 1s infinite';
 
             if (this.opponentReconnectGraceDeadline && msLeft <= 0) {
@@ -5444,7 +5526,7 @@ class YambApp {
             if (this.isSpectator) {
                 timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
                 timerDisplay.style.display = 'flex';
-                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectating-live-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-spectating-live-icon" src="assets/severna-soft-clay/online-spectate-pro.png?v=2" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
+                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectating-live-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-spectating-live-icon" src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
             } else if (this.onlineMode && this.gameActive) {
                 timerDisplay.style.display = 'flex';
@@ -5556,7 +5638,9 @@ class YambApp {
                     gt('opp_reconnected') || "Protivnik se vratio u igru!",
                     isRandomOpponentRoom
                         ? {
-                            icon: this.getSoftClayThemeAsset('opponent/reconnected.png?v=2'),
+                            icon: (localStorage.getItem('yamb_theme') || 'dark') === 'severna'
+                                ? 'assets/severna-soft-clay/opponent/reconnected-v3.png?v=1'
+                                : this.getSoftClayThemeAsset('opponent/reconnected.png?v=2'),
                             className: 'opponent-reconnected-toast'
                         }
                         : {}
@@ -5631,7 +5715,10 @@ class YambApp {
             const qlAssetRoot = activeQlRewardTheme === 'severna'
                 ? 'assets/severna-soft-clay/ql'
                 : (activeQlRewardTheme === 'desert' ? 'assets/desert-soft-clay/ql' : 'assets/easter-soft-clay/ql');
-            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlAssetRoot}/medal-${medalType}.png?v=2" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
+            const qlMedalFile = activeQlRewardTheme === 'severna'
+                ? `medal-${medalType}-v3.png?v=1`
+                : `medal-${medalType}.png?v=2`;
+            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlAssetRoot}/${qlMedalFile}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
             let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
             
@@ -6319,7 +6406,9 @@ class YambApp {
 
         this.socket.on('room_invite_accepted', (data = {}) => {
             showRoomInviteStatus('room_invite_accepted', 'Igrač {0} je prihvatio pozivnicu.', data, {
-                icon: this.getSoftClayThemeAsset('invite/accepted.png?v=1'),
+                icon: (localStorage.getItem('yamb_theme') || 'dark') === 'severna'
+                    ? 'assets/severna-soft-clay/invite/accepted-v2.png?v=1'
+                    : this.getSoftClayThemeAsset('invite/accepted.png?v=1'),
                 className: 'invite-accepted-toast'
             });
         });
@@ -8768,6 +8857,9 @@ class YambApp {
         const qlAssetRoot = activeQlWinnerTheme === 'severna'
             ? 'assets/severna-soft-clay/ql'
             : (activeQlWinnerTheme === 'desert' ? 'assets/desert-soft-clay/ql' : 'assets/easter-soft-clay/ql');
+        const qlChampionMedalFile = activeQlWinnerTheme === 'severna'
+            ? 'medal-gold-v3.png?v=1'
+            : (activeQlWinnerTheme === 'easter' ? 'medal-gold-v2.png?v=1' : 'medal-gold.png?v=2');
         
         let title = gt('league_champion_title') || "ŠAMPION KVARTALNE LIGE";
         let subText = (gt('league_winner_q') || "Pobednik za Q{0} / {1}.").replace('{0}', data.quarter).replace('{1}', data.year);
@@ -8788,7 +8880,7 @@ class YambApp {
                 </div>
                 <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
-                <img class="ql-quarter-champion-medal" src="${qlAssetRoot}/medal-gold.png?v=2" alt="" aria-hidden="true" decoding="async">
+                <img class="ql-quarter-champion-medal" src="${qlAssetRoot}/${qlChampionMedalFile}" alt="" aria-hidden="true" decoding="async">
 
                 <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
                     <img src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">

@@ -3484,7 +3484,7 @@ class ShopManager {
     }
 
     getTreasuryRewardVideoIcon() {
-        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" src="assets/desert-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" src="assets/severna-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async">';
+        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" src="assets/desert-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">';
     }
 
     getTreasuryInsufficientIconPath() {

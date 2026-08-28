@@ -23,7 +23,8 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/desert-soft-clay/rules/pages/economy-treasury.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/desert-soft-clay/rules/pages/account-server.png?v=1',
         'assets/easter-soft-clay/global-chat-pro-v4.png': 'assets/desert-soft-clay/global-chat-pro.png?v=1',
-        'assets/soft-clay-online-players-pro.png': 'assets/desert-soft-clay/online-players-pro.png?v=1'
+        'assets/easter-soft-clay/online-players-pro-v2.png': 'assets/desert-soft-clay/online-players-pro.png?v=1',
+        'assets/easter-soft-clay/statistics/power-index-bolt-v2.png': 'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=1'
     };
 
     if (desertOverrides[normalizedPath]) return desertOverrides[normalizedPath];
@@ -39,36 +40,57 @@ function rulesSevernaAssetSrc(easterSrc = '') {
     const normalizedPath = path.replace(/\\/g, '/');
     const cacheSuffix = query ? `?${query}` : '';
     const severnaOverrides = {
-        'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/severna-soft-clay/rules/pages/rules-scoring.png?v=1',
-        'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/severna-soft-clay/rules/pages/stats-leaderboards.png?v=1',
-        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/severna-soft-clay/rules/pages/multiplayer-competitions.png?v=1',
-        'assets/easter-soft-clay/rules/pages/communication.png': 'assets/severna-soft-clay/rules/pages/communication.png?v=1',
-        'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/severna-soft-clay/rules/pages/economy-treasury.png?v=1',
-        'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/severna-soft-clay/rules/pages/account-server.png?v=1',
+        'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/severna-soft-clay/rules/pages/rules-scoring-v2.png?v=1',
+        'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/severna-soft-clay/rules/pages/stats-leaderboards-v2.png?v=1',
+        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/severna-soft-clay/rules/pages/multiplayer-competitions-v2.png?v=1',
+        'assets/easter-soft-clay/rules/pages/communication.png': 'assets/severna-soft-clay/rules/pages/communication-v2.png?v=1',
+        'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/severna-soft-clay/rules/pages/economy-treasury-v2.png?v=1',
+        'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/severna-soft-clay/rules/pages/account-server-v2.png?v=1',
         'assets/easter-soft-clay/daily-challenge-pro.png': 'assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1',
         'assets/easter-soft-clay/leaderboard-pro.png': 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
-        'assets/easter-soft-clay/statistics-pro.png': 'assets/severna-soft-clay/statistics-pro-v8.png?v=1',
+        'assets/easter-soft-clay/statistics-pro.png': 'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
         'assets/easter-soft-clay/settings-pro.png': 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
         'assets/easter-soft-clay/statistics/record.png': 'assets/severna-soft-clay/statistics/record-v10.png?v=1',
-        'assets/easter-soft-clay/statistics/power-index-bolt.png': 'assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1',
+        'assets/easter-soft-clay/statistics/power-index-bolt-v2.png': 'assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1',
         'assets/easter-soft-clay/statistics/wins.png': 'assets/severna-soft-clay/statistics/wins-v10.png?v=1',
-        'assets/easter-soft-clay/statistics/fire-streak.png': 'assets/severna-soft-clay/statistics/fire-streak-v10.png?v=1',
-        'assets/easter-soft-clay/statistics/all-time-points.png': 'assets/severna-soft-clay/statistics/all-time-points-v10.png?v=1',
+        'assets/easter-soft-clay/statistics/fire-streak.png': 'assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1',
+        'assets/easter-soft-clay/statistics/all-time-points.png': 'assets/severna-soft-clay/statistics/all-time-points-v11.png?v=1',
         'assets/easter-soft-clay/statistics/h2h.png': 'assets/severna-soft-clay/statistics/h2h-v10.png?v=1',
-        'assets/easter-soft-clay/rules-pro.png': 'assets/severna-soft-clay/rules-pro-v8.png?v=1',
-        'assets/easter-soft-clay/treasury-pro.png': 'assets/severna-soft-clay/treasury-pro.png?v=6',
-        'assets/easter-soft-clay/tournament-pro.png': 'assets/severna-soft-clay/tournament-pro.png?v=6',
-        'assets/easter-soft-clay/mode-solo-pro.png': 'assets/severna-soft-clay/mode-solo-pro.png?v=4',
-        'assets/easter-soft-clay/mode-hotseat-pro.png': 'assets/severna-soft-clay/mode-hotseat-pro.png?v=4',
-        'assets/easter-soft-clay/mode-opponent-pro.png': 'assets/severna-soft-clay/mode-opponent-pro.png?v=4',
-        'assets/easter-soft-clay/mode-invite-pro.png': 'assets/severna-soft-clay/mode-invite-pro.png?v=4',
-        'assets/easter-soft-clay/global-chat-pro-v4.png': 'assets/severna-soft-clay/global-chat-pro.png?v=3',
-        'assets/soft-clay-online-players-pro.png': 'assets/severna-soft-clay/online-players-pro.png?v=3',
-        'assets/easter-soft-clay/tournament/state-start.png': 'assets/severna-soft-clay/tournament/state-start.png?v=2',
-        'assets/easter-soft-clay/tournament/state-match-complete.png': 'assets/severna-soft-clay/tournament/state-match-complete.png?v=2',
-        'assets/easter-soft-clay/tournament/finalist-silver.png': 'assets/severna-soft-clay/tournament/finalist-silver.png?v=2',
-        'assets/easter-soft-clay/opponent/disconnected.png': 'assets/severna-soft-clay/opponent/disconnected.png?v=2',
-        'assets/easter-soft-clay/opponent/reconnected.png': 'assets/severna-soft-clay/opponent/reconnected.png?v=2'
+        'assets/easter-soft-clay/economy/ducat.png': 'assets/severna-soft-clay/economy/ducat-v3.png?v=1',
+        'assets/easter-soft-clay/economy/undo-token.png': 'assets/severna-soft-clay/economy/undo-token-v3.png?v=1',
+        'assets/easter-soft-clay/economy/rewarded-video.png': 'assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1',
+        'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/severna-soft-clay/economy/ad-unavailable-v3.png?v=1',
+        'assets/easter-soft-clay/rules-pro.png': 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
+        'assets/easter-soft-clay/treasury-pro.png': 'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
+        'assets/easter-soft-clay/tournament-pro.png': 'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
+        'assets/easter-soft-clay/mode-solo-pro.png': 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
+        'assets/easter-soft-clay/mode-hotseat-pro.png': 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
+        'assets/easter-soft-clay/mode-opponent-pro.png': 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
+        'assets/easter-soft-clay/mode-invite-pro.png': 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
+        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png': 'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1',
+        'assets/easter-soft-clay/global-chat-pro-v4.png': 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
+        'assets/easter-soft-clay/online-players-pro-v2.png': 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
+        'assets/easter-soft-clay/online-add-friend-pro.png': 'assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1',
+        'assets/easter-soft-clay/online-spectate-pro.png': 'assets/severna-soft-clay/online-spectate-pro-v2.png?v=1',
+        'assets/easter-soft-clay/online-duel-pro.png': 'assets/severna-soft-clay/online-duel-pro-v2.png?v=1',
+        'assets/easter-soft-clay/tournament/state-start.png': 'assets/severna-soft-clay/tournament/state-start-v3.png?v=1',
+        'assets/easter-soft-clay/tournament/state-match-complete.png': 'assets/severna-soft-clay/tournament/state-match-complete-v3.png?v=1',
+        'assets/easter-soft-clay/tournament/finalist-silver-v2.png': 'assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1',
+        'assets/easter-soft-clay/opponent/scanning.png': 'assets/severna-soft-clay/opponent/scanning-v3.png?v=1',
+        'assets/easter-soft-clay/opponent/found.png': 'assets/severna-soft-clay/opponent/found-v3.png?v=1',
+        'assets/easter-soft-clay/opponent/disconnected.png': 'assets/severna-soft-clay/opponent/disconnected-v3.png?v=1',
+        'assets/easter-soft-clay/opponent/reconnected.png': 'assets/severna-soft-clay/opponent/reconnected-v3.png?v=1',
+        'assets/easter-soft-clay/invite/send.png': 'assets/severna-soft-clay/invite/send-v2.png?v=1',
+        'assets/easter-soft-clay/invite/empty.png': 'assets/severna-soft-clay/invite/empty-v2.png?v=1',
+        'assets/easter-soft-clay/invite/sent.png': 'assets/severna-soft-clay/invite/sent-v2.png?v=1',
+        'assets/easter-soft-clay/invite/accepted.png': 'assets/severna-soft-clay/invite/accepted-v2.png?v=1',
+        'assets/easter-soft-clay/settings/profile.png': 'assets/severna-soft-clay/settings/profile-v2.png?v=1',
+        'assets/easter-soft-clay/settings/privacy.png': 'assets/severna-soft-clay/settings/privacy-v2.png?v=1',
+        'assets/easter-soft-clay/treasury/tab-trophies.png': 'assets/severna-soft-clay/treasury/tab-trophies-v2.png?v=1',
+        'assets/easter-soft-clay/treasury/tab-skins.png': 'assets/severna-soft-clay/treasury/tab-skins-v2.png?v=1',
+        'assets/easter-soft-clay/treasury/tab-effects.png': 'assets/severna-soft-clay/treasury/tab-effects-v2.png?v=1',
+        'assets/easter-soft-clay/treasury/tab-themes.png': 'assets/severna-soft-clay/treasury/tab-themes-v2.png?v=1',
+        'assets/easter-soft-clay/tournament/tab-hall-of-fame.png': 'assets/severna-soft-clay/tournament/tab-hall-of-fame-v2.png?v=1'
     };
 
     if (severnaOverrides[normalizedPath]) return severnaOverrides[normalizedPath];
@@ -113,7 +135,7 @@ function rulesPageTitleGlyphIconHtml(defaultGlyph, easterSrc) {
 }
 
 function rulesQlPodiumPackHtml() {
-    return `<span class="rules-podium-pack rules-podium-pack-easter rules-ql-podium-pack" aria-hidden="true"><img src="assets/easter-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-bronze.png?v=1" alt=""></span><span class="rules-podium-pack rules-podium-pack-desert rules-ql-podium-pack" aria-hidden="true"><img src="assets/desert-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-bronze.png?v=1" alt=""></span><span class="rules-podium-pack rules-podium-pack-nebula rules-ql-podium-pack" aria-hidden="true"><img src="assets/severna-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/severna-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/severna-soft-clay/ql/medal-bronze.png?v=1" alt=""></span>`;
+    return `<span class="rules-podium-pack rules-podium-pack-easter rules-ql-podium-pack" aria-hidden="true"><img src="assets/easter-soft-clay/ql/medal-gold-v2.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-silver-v2.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-bronze-v2.png?v=1" alt=""></span><span class="rules-podium-pack rules-podium-pack-desert rules-ql-podium-pack" aria-hidden="true"><img src="assets/desert-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-bronze.png?v=1" alt=""></span><span class="rules-podium-pack rules-podium-pack-nebula rules-ql-podium-pack" aria-hidden="true"><img src="assets/severna-soft-clay/ql/medal-gold-v3.png?v=1" alt=""><img src="assets/severna-soft-clay/ql/medal-silver-v3.png?v=1" alt=""><img src="assets/severna-soft-clay/ql/medal-bronze-v3.png?v=1" alt=""></span>`;
 }
 
 const RulesData = {
@@ -156,7 +178,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/stats-icon.svg', 'assets/easter-soft-clay/statistics-pro.png?v=1')} Praćenje statistike</h3>
                 <p>Yamb of the Balkan čuva važne rezultate i pokazatelje napretka:</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt.png?v=1')} Indeks moći (Power Index):</strong> Glavni pokazatelj uspeha koji spaja rezultate, pobede, trofeje i ligaški učinak.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt-v2.png?v=1')} Indeks moći (Power Index):</strong> Glavni pokazatelj uspeha koji spaja rezultate, pobede, trofeje i ligaški učinak.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏅', 'assets/easter-soft-clay/statistics/record.png?v=1')} Rekord:</strong> Vaš najbolji lični rezultat.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins.png?v=1')} Odnos pobeda/poraza (W/L):</strong> Prikazuje efikasnost u direktnim online duelima i turnirima.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak.png?v=1')} Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u duelima i turnirima.</li>
@@ -203,7 +225,7 @@ const RulesData = {
         {
             title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/easter-soft-clay/rules/pages/communication.png?v=1')} Komunikacija`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/soft-clay-online-players-pro.png?v=1')} Online igrači i interakcija</h3>
+                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/easter-soft-clay/online-players-pro-v2.png?v=1')} Online igrači i interakcija</h3>
                 <p>Aplikacija prikazuje broj igrača koji su trenutno na mreži i listu dostupnih igrača.</p>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('➕', 'assets/easter-soft-clay/online-add-friend-pro.png?v=1')} Dodaj prijatelja:</strong> Pošaljite zahtev željenom igraču u realnom vremenu.</li>
@@ -320,7 +342,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/stats-icon.svg', 'assets/easter-soft-clay/statistics-pro.png?v=1')} Stat tracking</h3>
                 <p>Yamb of the Balkan saves the most important results and progress indicators:</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt.png?v=1')} Power Index:</strong> The main success indicator, combining results, wins, trophies, and league performance.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt-v2.png?v=1')} Power Index:</strong> The main success indicator, combining results, wins, trophies, and league performance.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏅', 'assets/easter-soft-clay/statistics/record.png?v=1')} High score:</strong> Your personal best score.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins.png?v=1')} W/L Ratio:</strong> Shows your efficiency in direct online duels and tournaments.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak.png?v=1')} Win Streak:</strong> Number of consecutive wins in duels and tournaments.</li>
@@ -367,7 +389,7 @@ const RulesData = {
         {
             title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/easter-soft-clay/rules/pages/communication.png?v=1')} Communication`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/soft-clay-online-players-pro.png?v=1')} Online Players & Interaction</h3>
+                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/easter-soft-clay/online-players-pro-v2.png?v=1')} Online Players & Interaction</h3>
                 <p>The app shows how many players are currently online and lists available players.</p>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('➕', 'assets/easter-soft-clay/online-add-friend-pro.png?v=1')} Add Friend:</strong> Send a real-time friend request.</li>
@@ -475,7 +497,7 @@ class RulesUI {
                             <img class="rules-header-icon rules-header-icon-default" src="assets/rules-icon.svg" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-easter" src="assets/easter-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-desert" src="assets/desert-soft-clay/rules-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
-                            <img class="rules-header-icon rules-header-icon-nebula" src="assets/severna-soft-clay/rules-pro-v8.png?v=1" alt="" aria-hidden="true" decoding="async">
+                            <img class="rules-header-icon rules-header-icon-nebula" src="assets/severna-soft-clay/rules-pro-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <span>${typeof t === 'function' ? t('rules_header_title') : (this.currentLang === 'sr' ? 'PRAVILA I UPUTSTVO' : 'RULES & GUIDE')}</span>
                         </span>
                     </div>

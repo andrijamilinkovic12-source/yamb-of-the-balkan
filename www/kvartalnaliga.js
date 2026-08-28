@@ -242,10 +242,37 @@ class KvartalnaLigaManager {
         return 'assets/easter-soft-clay/ql';
     }
 
-    getRankBadgeSource(rankId, retryToken = '') {
+    getQlAssetSource(assetName, retryToken = '') {
+        const visualTheme = this.getQlVisualTheme();
+        const severnaVersions = {
+            'tab-league': '-v4',
+            'tab-hall-of-fame': '-v4',
+            'tab-medals': '-v4',
+            'tab-champions': '-v4',
+            'rank-amater': '-v5',
+            'rank-profi': '-v5',
+            'rank-majstor': '-v5',
+            'rank-legenda': '-v5',
+            'rank-titan': '-v5',
+            'rank-alltime': '-v5',
+            'medal-gold': '-v3',
+            'medal-silver': '-v3',
+            'medal-bronze': '-v3'
+        };
+        const easterVersions = {
+            'medal-gold': '-v2',
+            'medal-silver': '-v2',
+            'medal-bronze': '-v2'
+        };
+        const fileSuffix = visualTheme === 'severna'
+            ? (severnaVersions[assetName] || '')
+            : (visualTheme === 'easter' ? (easterVersions[assetName] || '') : '');
         const retrySuffix = retryToken ? `&retry=${encodeURIComponent(retryToken)}` : '';
-        const badgeVersion = this.getQlVisualTheme() === 'severna' ? 4 : 3;
-        return `${this.getQlAssetRoot()}/rank-${rankId}.png?v=${badgeVersion}${retrySuffix}`;
+        return `${this.getQlAssetRoot()}/${assetName}${fileSuffix}.png?v=1${retrySuffix}`;
+    }
+
+    getRankBadgeSource(rankId, retryToken = '') {
+        return this.getQlAssetSource(`rank-${rankId}`, retryToken);
     }
 
     preloadRankBadge(rankId, attempt = 0) {
@@ -409,11 +436,9 @@ class KvartalnaLigaManager {
     }
 
     getMainTabIcon(icon) {
-        const assetRoot = this.getQlAssetRoot();
-        const tabVersion = this.getQlVisualTheme() === 'severna' ? 3 : 2;
         const softClaySource = icon === 'hof'
-            ? `${assetRoot}/tab-hall-of-fame.png?v=${tabVersion}`
-            : `${assetRoot}/tab-league.png?v=${tabVersion}`;
+            ? this.getQlAssetSource('tab-hall-of-fame')
+            : this.getQlAssetSource('tab-league');
         const softClayIcon = `<img class="league-tab-soft-clay-icon" src="${softClaySource}" alt="" aria-hidden="true" decoding="async">`;
         if (icon === 'hof') {
             return `${softClayIcon}
@@ -451,8 +476,8 @@ class KvartalnaLigaManager {
         const hofTabLabel = gt('hof_tab_main', 'DVORANA SLAVNIH');
         const medalsTabLabel = String(gt('hof_tab_medals', 'MEDALJE 🏅')).replace(/🏅/gu, '').trim();
         const championsTabLabel = String(gt('hof_tab_champs', 'ŠAMPIONI 🏆')).replace(/🏆/gu, '').trim();
-        const qlAssetRoot = this.getQlAssetRoot();
-        const qlTabVersion = this.getQlVisualTheme() === 'severna' ? 3 : 2;
+        const medalsTabIcon = this.getQlAssetSource('tab-medals');
+        const championsTabIcon = this.getQlAssetSource('tab-champions');
 
         let slidesHtml = currentRanks.map((r) => `
             <div class="league-slide" style="min-width: 100%; box-sizing: border-box; padding: 0 15px; display: flex; flex-direction: column; height: 100%; min-height: 0;">
@@ -478,7 +503,7 @@ class KvartalnaLigaManager {
                         <img class="league-modal-header-icon league-modal-header-icon-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async">
                         <img class="league-modal-header-icon league-modal-header-icon-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="league-modal-header-icon league-modal-header-icon-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-nebula" src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro.png?v=3" alt="" aria-hidden="true" decoding="async">
+                        <img class="league-modal-header-icon league-modal-header-icon-nebula" src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <h2 style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
                     </div>
                     <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold; line-height: 1;" onclick="document.getElementById('league-modal-overlay').remove()">✖</span>
@@ -516,8 +541,8 @@ class KvartalnaLigaManager {
 
                 <div id="hof-main-content" style="display: none; flex-direction: column; flex: 1; overflow: hidden; width: 100%; padding: 10px 15px 15px 15px; min-height: 0;">
                     <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0;">
-                        <button id="hof-tab-medals" class="league-hof-tab-button is-active" aria-selected="true" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="${qlAssetRoot}/tab-medals.png?v=${qlTabVersion}" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏅</span></button>
-                        <button id="hof-tab-champions" class="league-hof-tab-button" aria-selected="false" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="${qlAssetRoot}/tab-champions.png?v=${qlTabVersion}" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏆</span></button>
+                        <button id="hof-tab-medals" class="league-hof-tab-button is-active" aria-selected="true" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="${medalsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏅</span></button>
+                        <button id="hof-tab-champions" class="league-hof-tab-button" aria-selected="false" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏆</span></button>
                     </div>
                     
                     <div style="flex: 1; min-height: 0; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
@@ -612,8 +637,9 @@ class KvartalnaLigaManager {
         const list = document.getElementById('hof-list');
         if (!list) return;
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
-        const qlAssetRoot = this.getQlAssetRoot();
-        const qlTabVersion = this.getQlVisualTheme() === 'severna' ? 3 : 2;
+        const medalGoldIcon = this.getQlAssetSource('medal-gold');
+        const medalSilverIcon = this.getQlAssetSource('medal-silver');
+        const medalBronzeIcon = this.getQlAssetSource('medal-bronze');
 
         if (!this.hofData || !this.hofData.medals || this.hofData.medals.length === 0) {
             list.innerHTML = `<li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_no_medals', 'Još uvek nema osvajača medalja.')}</li>`;
@@ -632,9 +658,9 @@ class KvartalnaLigaManager {
                 <div style="flex: 1;">
                     <div style="color: #fff; font-weight: bold; font-size: 0.85rem;">${m.playerName}</div>
                     <div style="display: flex; gap: 10px; margin-top: 4px; font-size: 0.8rem; font-weight: bold;">
-                        <span class="ql-medal-count ql-medal-count--gold" style="color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5);"><img class="ql-placement-medal" src="${qlAssetRoot}/medal-gold.png?v=2" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥇</span> ${m.gold}</span>
-                        <span class="ql-medal-count ql-medal-count--silver" style="color: #C0C0C0;"><img class="ql-placement-medal" src="${qlAssetRoot}/medal-silver.png?v=2" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥈</span> ${m.silver}</span>
-                        <span class="ql-medal-count ql-medal-count--bronze" style="color: #CD7F32;"><img class="ql-placement-medal" src="${qlAssetRoot}/medal-bronze.png?v=2" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥉</span> ${m.bronze}</span>
+                        <span class="ql-medal-count ql-medal-count--gold" style="color: #FFD700; text-shadow: 0 0 5px rgba(255,215,0,0.5);"><img class="ql-placement-medal" src="${medalGoldIcon}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥇</span> ${m.gold}</span>
+                        <span class="ql-medal-count ql-medal-count--silver" style="color: #C0C0C0;"><img class="ql-placement-medal" src="${medalSilverIcon}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥈</span> ${m.silver}</span>
+                        <span class="ql-medal-count ql-medal-count--bronze" style="color: #CD7F32;"><img class="ql-placement-medal" src="${medalBronzeIcon}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">🥉</span> ${m.bronze}</span>
                     </div>
                 </div>
             </li>`;
@@ -646,7 +672,7 @@ class KvartalnaLigaManager {
         const list = document.getElementById('hof-list');
         if (!list) return;
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
-        const qlAssetRoot = this.getQlAssetRoot();
+        const championsTabIcon = this.getQlAssetSource('tab-champions');
 
         if (!this.hofData || !this.hofData.champions || this.hofData.champions.length === 0) {
             list.innerHTML = `<li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_no_champs', 'Još uvek nema završenih ciklusa.')}</li>`;
@@ -662,7 +688,7 @@ class KvartalnaLigaManager {
             <li style="display: flex; align-items: center; background: linear-gradient(90deg, rgba(224, 201, 149, 0.15) 0%, rgba(0,0,0,0) 100%); padding: 10px; margin-bottom: 8px; border-radius: 8px; border: 1px solid rgba(224, 201, 149, 0.3);">
                 <div style="position: relative; margin-right: 15px;">
                     <img src="${photo}" style="width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; box-shadow: 0 0 10px rgba(224,201,149,0.5);">
-                    <div class="ql-champion-marker" style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;"><img class="ql-champion-soft-clay-icon" src="${qlAssetRoot}/tab-champions.png?v=${qlTabVersion}" alt="" aria-hidden="true" decoding="async"><span class="ql-champion-fallback" aria-hidden="true">👑</span></div>
+                    <div class="ql-champion-marker" style="position: absolute; bottom: -5px; right: -5px; font-size: 1.1rem;"><img class="ql-champion-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"><span class="ql-champion-fallback" aria-hidden="true">👑</span></div>
                 </div>
                 <div style="flex: 1;">
                     <div style="color: var(--gold-main); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; margin-bottom: 2px;">${gt('hof_winner_prefix', 'POBEDNIK')} ${romanCycle} ${gt('hof_winner_suffix', 'CIKLUSA')}</div>
@@ -992,7 +1018,6 @@ class KvartalnaLigaManager {
         const append = options.append === true;
         const preserveOrder = options.preserveOrder === true;
         const startIndex = Math.max(0, Number(options.startIndex) || 0);
-        const qlAssetRoot = this.getQlAssetRoot();
 
         if (!scores || scores.length === 0) {
             if (!append && listEl.children.length === 0) {
@@ -1015,7 +1040,7 @@ class KvartalnaLigaManager {
             let isMe = myUid ? scoreUid === myUid : pName === myName;
             let bg = isMe ? 'background: rgba(224, 201, 149, 0.15); border: 1px solid var(--gold-main);' : 'background: rgba(255,255,255,0.05);';
             let medal = placementIndex < 3
-                ? `<img class="ql-placement-medal ql-placement-medal--rank" src="${qlAssetRoot}/medal-${['gold', 'silver', 'bronze'][placementIndex]}.png?v=2" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${['🥇', '🥈', '🥉'][placementIndex]}</span>`
+                ? `<img class="ql-placement-medal ql-placement-medal--rank" src="${this.getQlAssetSource(`medal-${['gold', 'silver', 'bronze'][placementIndex]}`)}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${['🥇', '🥈', '🥉'][placementIndex]}</span>`
                 : `${position}.`;
             const fallbackPhoto = `https://ui-avatars.com/api/?name=${encodeURIComponent(pName)}&background=333&color=E0C995`;
             let photo = this.safeImageUrl(s.photoUrl && s.photoUrl.length > 5 ? s.photoUrl : '', fallbackPhoto);
