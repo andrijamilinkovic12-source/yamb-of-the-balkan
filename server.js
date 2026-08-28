@@ -294,6 +294,32 @@ app.get('/api/google-certs-status', async (req, res) => {
 // ==================================================================
 // 2. SERVIRANJE STATIČKIH FAJLOVA (IGRA)
 // ==================================================================
+// Asseti su veliki i aplikacija ih učitava kroz udaljeni Capacitor WebView.
+// Verzije u imenu fajla ili URL-u (`-v2`, `?v=2`) garantuju da nova verzija
+// dobija novi URL, pa takve assete možemo bezbedno čuvati godinu dana.
+// Neversionisani asseti imaju kraći cache kako bi naknadna zamena istog fajla
+// ipak stigla do postojećih instalacija bez Play Store ažuriranja.
+const themeAssetCacheControl = (req, res, next) => {
+    const assetUrl = String(req.originalUrl || req.url || '');
+    const immutableAsset = /(?:[?&](?:v|rev|hash)=[^&]+|-[vV]\d+\.(?:png|webp|jpg|jpeg|svg|glb)(?:[?&#]|$))/i.test(assetUrl);
+    res.setHeader(
+        'Cache-Control',
+        immutableAsset
+            ? 'public, max-age=31536000, immutable'
+            : 'public, max-age=86400, stale-while-revalidate=604800'
+    );
+    next();
+};
+
+app.use(
+    '/assets',
+    themeAssetCacheControl,
+    express.static(path.join(__dirname, 'www', 'assets'), {
+        cacheControl: false,
+        etag: true,
+        lastModified: true
+    })
+);
 app.use(express.static(path.join(__dirname, 'www')));
 
 // ==================================================================

@@ -1500,19 +1500,19 @@ class YambApp {
                 title: lang === 'en' ? 'Easter Theme' : 'Vaskrs tema',
                 background: 'assets/easter-neumorphic-bg-v2.png',
                 icons: [
-                    'assets/easter-soft-clay/mode-solo-pro.png?v=1',
-                    'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
+                    'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1',
                     'assets/easter-soft-clay/treasury-pro-v2.png?v=1',
                     'assets/easter-soft-clay/tournament-pro-v2.png?v=1',
                     'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1'
                 ],
                 assets: [
-                    'assets/easter-soft-clay/global-chat-pro-v4.png',
-                    'assets/easter-soft-clay/online-players-pro-v2.png?v=1',
-                    'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1',
-                    'assets/easter-soft-clay/ducats-undo-pro-v2.png?v=1',
-                    'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
-                    'assets/easter-soft-clay/mode-invite-pro.png?v=1',
+                    'assets/easter-soft-clay/global-chat-pro-v5.png?v=1',
+                    'assets/easter-soft-clay/online-players-pro-v3.png?v=1',
+                    'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/ducats-undo-pro-v3.png?v=1',
+                    'assets/easter-soft-clay/mode-hotseat-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1',
                     'assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1',
                     'assets/easter-soft-clay/statistics-pro-v2.png?v=1',
                     'assets/easter-soft-clay/settings-pro-v2.png?v=1',
@@ -1687,6 +1687,7 @@ class YambApp {
         if (!gate) return;
 
         clearTimeout(this.themeLoadingHideTimer);
+        clearTimeout(this.themeLoadingRevealTimer);
         if (immediate) {
             this.themeLoadingToken += 1;
             gate.className = 'theme-loading-gate';
@@ -1716,6 +1717,10 @@ class YambApp {
 
         const token = ++this.themeLoadingToken;
         clearTimeout(this.themeLoadingHideTimer);
+        clearTimeout(this.themeLoadingRevealTimer);
+        gate.className = 'theme-loading-gate';
+        gate.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('theme-loading-active');
 
         const titleEl = document.getElementById('theme-loading-title');
         const kickerEl = document.getElementById('theme-loading-kicker');
@@ -1725,49 +1730,59 @@ class YambApp {
         const iconsEl = document.getElementById('theme-loading-icons');
         const pillsEl = document.getElementById('theme-loading-pills');
 
-        if (titleEl) titleEl.textContent = pack.title;
-        if (kickerEl) kickerEl.textContent = pack.kicker;
-        if (copyEl) copyEl.textContent = pack.copy;
-        if (statusEl) statusEl.textContent = '';
-        if (progressEl) progressEl.style.width = '12%';
+        let gateShownAt = 0;
+        let gateVisible = false;
+        const minimumVisibleMs = manualSwitch ? 560 : (initialLoad ? 420 : 340);
+        const revealGate = () => {
+            if (token !== this.themeLoadingToken || gateVisible) return;
+            gateVisible = true;
+            gateShownAt = Date.now();
+            if (titleEl) titleEl.textContent = pack.title;
+            if (kickerEl) kickerEl.textContent = pack.kicker;
+            if (copyEl) copyEl.textContent = pack.copy;
+            if (statusEl) statusEl.textContent = '';
+            if (progressEl) progressEl.style.width = '12%';
 
-        if (iconsEl) {
-            iconsEl.replaceChildren();
-            pack.icons.forEach(src => {
-                const icon = document.createElement('img');
-                icon.src = src;
-                icon.alt = '';
-                icon.setAttribute('aria-hidden', 'true');
-                icon.decoding = 'async';
-                iconsEl.appendChild(icon);
+            if (iconsEl) {
+                iconsEl.replaceChildren();
+                pack.icons.forEach(src => {
+                    const icon = document.createElement('img');
+                    icon.src = src;
+                    icon.alt = '';
+                    icon.setAttribute('aria-hidden', 'true');
+                    icon.decoding = 'async';
+                    iconsEl.appendChild(icon);
+                });
+            }
+
+            if (pillsEl) {
+                pillsEl.replaceChildren();
+                pack.pills.forEach(label => {
+                    const pill = document.createElement('span');
+                    pill.textContent = label;
+                    pillsEl.appendChild(pill);
+                });
+            }
+
+            gate.className = `theme-loading-gate theme-${theme} is-active`;
+            gate.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('theme-loading-active');
+            requestAnimationFrame(() => {
+                if (token === this.themeLoadingToken && progressEl) progressEl.style.width = '78%';
             });
-        }
+        };
 
-        if (pillsEl) {
-            pillsEl.replaceChildren();
-            pack.pills.forEach(label => {
-                const pill = document.createElement('span');
-                pill.textContent = label;
-                pillsEl.appendChild(pill);
-            });
-        }
-
-        gate.className = `theme-loading-gate theme-${theme} is-active`;
-        gate.setAttribute('aria-hidden', 'false');
-        document.body.classList.add('theme-loading-active');
-
-        requestAnimationFrame(() => {
-            if (token === this.themeLoadingToken && progressEl) progressEl.style.width = '78%';
-        });
-
-        const startedAt = Date.now();
-        const minimumVisibleMs = manualSwitch ? 1900 : (initialLoad ? 820 : 640);
+        this.themeLoadingRevealTimer = setTimeout(revealGate, 220);
         const preloadPromise = Promise.allSettled(pack.assets.map(src => this.preloadThemeImage(src)));
 
         preloadPromise.then(() => {
             if (token !== this.themeLoadingToken) return;
+            clearTimeout(this.themeLoadingRevealTimer);
 
-            const remaining = Math.max(0, minimumVisibleMs - (Date.now() - startedAt));
+            // Učitan pack iz cache-a ne sme praviti nepotrebnu loading animaciju.
+            if (!gateVisible) return;
+
+            const remaining = Math.max(0, minimumVisibleMs - (Date.now() - gateShownAt));
             this.themeLoadingHideTimer = setTimeout(() => {
                 if (token !== this.themeLoadingToken) return;
                 if (progressEl) progressEl.style.width = '100%';
@@ -4497,7 +4512,7 @@ class YambApp {
             localStorage.setItem('yamb_theme', nextTheme);
             const themeSelect = document.getElementById('setting-theme');
             if (themeSelect) themeSelect.blur();
-            this.applyTheme(nextTheme, { manualSwitch: true, loadingDelayMs: 260 });
+            this.applyTheme(nextTheme, { manualSwitch: true });
             if (themeSelect) themeSelect.value = nextTheme;
         }
         else if (type === 'language') {
@@ -4762,14 +4777,14 @@ class YambApp {
                 label: () => gt('menu_rules') || 'PRAVILA'
             },
             solo: {
-                icon: 'assets/easter-soft-clay/mode-solo-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
                 scale: 1,
                 label: () => gt('menu_solo') || ((localStorage.getItem('yamb_lang') || 'sr').startsWith('en') ? 'SOLO GAME' : 'SOLO IGRA')
             },
             hotseat: {
-                icon: 'assets/easter-soft-clay/mode-hotseat-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/mode-hotseat-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
                 scale: 1,
@@ -4778,7 +4793,7 @@ class YambApp {
                     : 'DVA IGRAČA HOTSEAT'
             },
             opponent: {
-                icon: 'assets/easter-soft-clay/mode-opponent-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
                 scale: 1.2,
@@ -4787,7 +4802,7 @@ class YambApp {
                     : 'NAĐI PROTIVNIKA'
             },
             invite: {
-                icon: 'assets/easter-soft-clay/mode-invite-pro.png?v=1',
+                icon: 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
                 scale: 1.05,
@@ -4796,14 +4811,14 @@ class YambApp {
                     : 'POZOVI PRIJATELJA'
             },
             globalChat: {
-                icon: 'assets/easter-soft-clay/global-chat-pro-v4.png',
+                icon: 'assets/easter-soft-clay/global-chat-pro-v5.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/global-chat-pro.png?v=2',
                 severnaIcon: 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
                 scale: 1,
                 label: () => 'GLOBAL CHAT'
             },
             onlinePlayers: {
-                icon: 'assets/easter-soft-clay/online-players-pro-v2.png?v=1',
+                icon: 'assets/easter-soft-clay/online-players-pro-v3.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/online-players-pro.png?v=3',
                 severnaIcon: 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
                 scale: 1,
@@ -4812,7 +4827,7 @@ class YambApp {
                     : 'ONLINE IGRAČI'
             },
             economy: {
-                icon: 'assets/easter-soft-clay/ducats-undo-pro-v2.png?v=1',
+                icon: 'assets/easter-soft-clay/ducats-undo-pro-v3.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
                 severnaIcon: 'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
                 scale: 1,
@@ -8874,7 +8889,7 @@ class YambApp {
             <div class="modal-box" style="text-align: center; padding: 30px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); max-width: 400px; width: 90%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                 <div style="width: 96px; height: 96px; margin: 0 auto 12px auto; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,214,76,0.18), rgba(0,0,0,0.12) 70%); box-shadow: 0 0 22px rgba(255,214,76,0.24); animation: popIn 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                     <img class="quarter-winner-logo quarter-winner-logo-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
-                    <img class="quarter-winner-logo quarter-winner-logo-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="quarter-winner-logo quarter-winner-logo-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-nebula" src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </div>

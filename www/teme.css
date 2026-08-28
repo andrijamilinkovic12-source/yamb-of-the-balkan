@@ -6736,7 +6736,7 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1") center / contain no-repeat;
+    background: url("assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1") center / contain no-repeat;
     opacity: .16;
     filter: grayscale(1) sepia(.26) saturate(1.35) hue-rotate(236deg) brightness(.72) contrast(1.08);
     pointer-events: none;

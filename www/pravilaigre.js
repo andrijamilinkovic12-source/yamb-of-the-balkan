@@ -29,8 +29,14 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules-pro-v2.png': 'assets/desert-soft-clay/rules-pro.png?v=1',
         'assets/easter-soft-clay/treasury-pro-v2.png': 'assets/desert-soft-clay/treasury-pro.png?v=1',
         'assets/easter-soft-clay/tournament-pro-v2.png': 'assets/desert-soft-clay/tournament-pro.png?v=4',
-        'assets/easter-soft-clay/global-chat-pro-v4.png': 'assets/desert-soft-clay/global-chat-pro.png?v=1',
-        'assets/easter-soft-clay/online-players-pro-v2.png': 'assets/desert-soft-clay/online-players-pro.png?v=1',
+        'assets/easter-soft-clay/mode-solo-pro-v2.png': 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
+        'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
+        'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
+        'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
+        'assets/easter-soft-clay/global-chat-pro-v5.png': 'assets/desert-soft-clay/global-chat-pro.png?v=1',
+        'assets/easter-soft-clay/online-players-pro-v3.png': 'assets/desert-soft-clay/online-players-pro.png?v=1',
+        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png': 'assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2',
+        'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
         'assets/easter-soft-clay/statistics/power-index-bolt-v2.png': 'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=1'
     };
 
@@ -70,13 +76,14 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules-pro-v2.png': 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
         'assets/easter-soft-clay/treasury-pro-v2.png': 'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
         'assets/easter-soft-clay/tournament-pro-v2.png': 'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
-        'assets/easter-soft-clay/mode-solo-pro.png': 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
-        'assets/easter-soft-clay/mode-hotseat-pro.png': 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
-        'assets/easter-soft-clay/mode-opponent-pro.png': 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
-        'assets/easter-soft-clay/mode-invite-pro.png': 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
-        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png': 'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1',
-        'assets/easter-soft-clay/global-chat-pro-v4.png': 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
-        'assets/easter-soft-clay/online-players-pro-v2.png': 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
+        'assets/easter-soft-clay/mode-solo-pro-v2.png': 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
+        'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
+        'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
+        'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
+        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png': 'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1',
+        'assets/easter-soft-clay/global-chat-pro-v5.png': 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
+        'assets/easter-soft-clay/online-players-pro-v3.png': 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
+        'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
         'assets/easter-soft-clay/online-add-friend-pro.png': 'assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1',
         'assets/easter-soft-clay/online-spectate-pro.png': 'assets/severna-soft-clay/online-spectate-pro-v2.png?v=1',
         'assets/easter-soft-clay/online-duel-pro.png': 'assets/severna-soft-clay/online-duel-pro-v2.png?v=1',
@@ -208,10 +215,10 @@ const RulesData = {
         {
             title: `${rulesPageTitleIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png?v=1')} Multiplayer i takmičenja`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro.png?v=1')} Multiplayer i dueli</h3>
-                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro.png?v=1')} Klasični Multiplayer</h4>
+                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1')} Multiplayer i dueli</h3>
+                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1')} Klasični Multiplayer</h4>
                 <p>Online igra vas spaja sa protivnikom koji je trenutno na mreži. Direktni dueli sa prijateljima čuvaju H2H istoriju i utiču na pobede, poraze i vatreni niz.</p>
-                <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro.png?v=1')} Privatni dueli</h4>
+                <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1')} Privatni dueli</h4>
                 <p>Prijatelja možete dodati preko liste aktivnih igrača ili pozivnice. Kada protivnik prihvati izazov, otvara se privatni duel.</p>
 
                 <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v2.png?v=1')} Turniri</h3>
@@ -223,16 +230,16 @@ const RulesData = {
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=1')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
                 </ul>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1')} Kvartalna liga</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1')} Kvartalna liga</h3>
                 <p>Kvartalna liga traje 3 kalendarska meseca po vremenu Beograda. U svakoj regularno završenoj solo, AI, lokalnoj ili online partiji Vaš konačni rezultat se dodaje ligaškom zbiru. Kod tehničkog ishoda pobedniku se dodaje izračunata nagrada, a poraženom se isti obračunati iznos oduzima do najmanje 0 poena.</p>
                 <p>Rangovi su: Amater 0-4.999, Profi 5.000-14.999, Majstor 15.000-49.999, Legenda 50.000-99.999 i Titan od 100.000 poena.</p>
-                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
+                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
             `
         },
         {
             title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/easter-soft-clay/rules/pages/communication.png?v=1')} Komunikacija`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/easter-soft-clay/online-players-pro-v2.png?v=1')} Online igrači i interakcija</h3>
+                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/easter-soft-clay/online-players-pro-v3.png?v=1')} Online igrači i interakcija</h3>
                 <p>Aplikacija prikazuje broj igrača koji su trenutno na mreži i listu dostupnih igrača.</p>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('➕', 'assets/easter-soft-clay/online-add-friend-pro.png?v=1')} Dodaj prijatelja:</strong> Pošaljite zahtev željenom igraču u realnom vremenu.</li>
@@ -240,9 +247,9 @@ const RulesData = {
                     <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro.png?v=1')} Izazov:</strong> Klikom na ikonicu možete direktno izazvati igrača na duel.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('💬', 'assets/easter-soft-clay/global-chat-pro-v4.png')} Chat i komunikacija</h3>
+                <h3>${rulesThemeGlyphIconHtml('💬', 'assets/easter-soft-clay/global-chat-pro-v5.png?v=1')} Chat i komunikacija</h3>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/global-chat-pro-v4.png')} Globalni chat:</strong> Povezuje igrače na serveru. Zabranjeni su uvrede po rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i vulgarnost. Kršenja pravila vode do suspenzije chata.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/global-chat-pro-v5.png?v=1')} Globalni chat:</strong> Povezuje igrače na serveru. Zabranjeni su uvrede po rasnoj, verskoj, nacionalnoj ili polnoj osnovi, kao i vulgarnost. Kršenja pravila vode do suspenzije chata.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🎮', 'assets/easter-soft-clay/online-duel-pro.png?v=1')} Duel chat:</strong> Privatni chat tokom meča sa protivnikom. I ovde važe ista pravila fer i kulturnog ponašanja.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro.png?v=1')} Izazov iz chata:</strong> Klikom na ime igrača u globalnom chatu možete ga direktno izazvati.</li>
                 </ul>
@@ -372,10 +379,10 @@ const RulesData = {
         {
             title: `${rulesPageTitleIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png?v=1')} Multiplayer & competitions`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro.png?v=1')} Multiplayer & Duels</h3>
-                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro.png?v=1')} Classic Multiplayer</h4>
+                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1')} Multiplayer & Duels</h3>
+                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1')} Classic Multiplayer</h4>
                 <p>Online play matches you with an opponent who is currently online. Direct friend duels save H2H history and affect wins, losses, and win streaks.</p>
-                <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro.png?v=1')} Friend Duels</h4>
+                <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1')} Friend Duels</h4>
                 <p>You can add friends from the active player list or by invite. Once the opponent accepts, a private duel opens.</p>
 
                 <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v2.png?v=1')} Tournaments</h3>
@@ -387,16 +394,16 @@ const RulesData = {
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=1')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
                 </ul>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1')} Quarterly League</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1')} Quarterly League</h3>
                 <p>The Quarterly League lasts 3 calendar months in Belgrade time. In every regularly completed solo, AI, local, or online game, your final score is added to your league total. For a technical result, the calculated reward is added to the winner and the same calculated amount is deducted from the loser, down to a minimum of 0 points.</p>
                 <p>The ranks are: Amateur 0-4,999, Pro 5,000-14,999, Master 15,000-49,999, Legend 50,000-99,999, and Titan from 100,000 points.</p>
-                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro.png?v=1', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
+                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
             `
         },
         {
             title: `${rulesPageTitleGlyphIconHtml('🟢', 'assets/easter-soft-clay/rules/pages/communication.png?v=1')} Communication`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/easter-soft-clay/online-players-pro-v2.png?v=1')} Online Players & Interaction</h3>
+                <h3>${rulesThemeGlyphIconHtml('🟢', 'assets/easter-soft-clay/online-players-pro-v3.png?v=1')} Online Players & Interaction</h3>
                 <p>The app shows how many players are currently online and lists available players.</p>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('➕', 'assets/easter-soft-clay/online-add-friend-pro.png?v=1')} Add Friend:</strong> Send a real-time friend request.</li>
@@ -404,9 +411,9 @@ const RulesData = {
                     <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro.png?v=1')} Challenge:</strong> Use the challenge icon to invite a player directly to a duel.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('💬', 'assets/easter-soft-clay/global-chat-pro-v4.png')} Chat & Communication</h3>
+                <h3>${rulesThemeGlyphIconHtml('💬', 'assets/easter-soft-clay/global-chat-pro-v5.png?v=1')} Chat & Communication</h3>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/global-chat-pro-v4.png')} Global Chat:</strong> Connects players on the server. Insults based on race, religion, nationality, or gender are forbidden, as is profanity. Violations lead to chat suspension.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/global-chat-pro-v5.png?v=1')} Global Chat:</strong> Connects players on the server. Insults based on race, religion, nationality, or gender are forbidden, as is profanity. Violations lead to chat suspension.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🎮', 'assets/easter-soft-clay/online-duel-pro.png?v=1')} Duel Chat:</strong> Private chat during a match with your opponent. The same fair-play rules apply.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro.png?v=1')} Chat challenge:</strong> Clicking a player's name in global chat can challenge that player directly.</li>
                 </ul>
