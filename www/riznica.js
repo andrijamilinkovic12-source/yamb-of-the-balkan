@@ -10,6 +10,7 @@ class RiznicaManager {
 
     open() {
         if (this.isIntroPlaying) return;
+        if (window.app && typeof window.app.reportMonitorRoomVisit === 'function') window.app.reportMonitorRoomVisit('treasury');
 
         if (!document.getElementById('riznica-screen')?.classList.contains('active')) {
             this.playIntro(() => this.showRiznica());

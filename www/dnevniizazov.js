@@ -766,6 +766,7 @@ class DnevniIzazov {
 
     async open() {
         if (!this.app.requireLogin()) return;
+        if (typeof this.app.reportMonitorRoomVisit === 'function') this.app.reportMonitorRoomVisit('daily');
         if (this.isIntroPlaying || this.isActive || this.loadingChallenge) return;
 
         const uid = this.getCurrentUid();

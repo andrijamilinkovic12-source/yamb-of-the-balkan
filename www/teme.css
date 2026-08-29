@@ -482,7 +482,7 @@ body.winter-theme .btn-square:active { box-shadow: 0 0 0 #001122, inset 0 2px 8p
 
 /* --- TEMA 7: VASKRŠNJA (EASTER) V5.0 - PASTEL NEUMORPHISM --- */
 body.easter-theme {
-    --easter-theme-bg-image: url("assets/easter-neumorphic-bg-v2.png");
+    --easter-theme-bg-image: url("assets/easter-neumorphic-bg-v3.png");
     --bg-base: #f4eadb;
     --bg-gradient-1: #fff7ec;
     --bg-gradient-2: #dfeecf;
@@ -3821,10 +3821,10 @@ body.easter-theme #game-scene.theme-dual-board-view #gh-spectator-icon .gh-spect
 body.easter-theme #game-scene.online-duel-room #gh-spectator-icon .easter-spectator-soft-clay-icon,
 body.easter-theme #game-scene.theme-dual-board-view #gh-spectator-icon .easter-spectator-soft-clay-icon {
     display: block;
-    width: 31px;
-    height: 31px;
+    width: 27px;
+    height: 27px;
     object-fit: contain;
-    filter: drop-shadow(0 3px 5px rgba(107,44,143,.15));
+    filter: none;
 }
 
 body.easter-theme #game-scene.random-online-duel-room.opponent-reconnecting #turn-timer-display {
@@ -3858,10 +3858,20 @@ body.easter-theme #game-scene.theme-spectator-view .easter-spectating-live-icon,
 body.easter-theme #game-scene.easter-spectator-view .easter-spectating-live-icon,
 body.easter-theme #game-scene.theme-dual-board-view .easter-spectating-live-icon {
     display: block;
-    width: 22px;
-    height: 22px;
+    width: 19px;
+    height: 19px;
     object-fit: contain;
-    filter: drop-shadow(0 2px 3px rgba(54,22,70,.18));
+    filter: none;
+}
+
+/* Samo oko za gledanje partije: dugme ostaje 38×38, a nova mirna ikona
+   je optički centrirana i manja od drugih akcijskih simbola. */
+body.easter-theme #online-players-overlay .online-player-action--spectate .online-player-action-soft-clay-icon {
+    width: 27px;
+    height: 27px;
+    max-width: 27px;
+    flex-basis: 27px;
+    filter: none;
 }
 
 body.easter-theme .custom-toast.opponent-reconnected-toast {
@@ -4274,7 +4284,7 @@ body.easter-theme #go-score {
 }
 
 /* Vaskrs Solo Finish / Reward pack: novi asseti su vidljivi samo u ovoj temi. */
-.easter-solo-finish-ducat,
+.easter-solo-finish-score-mark,
 .easter-solo-finish-action-icon {
     display: none;
 }
@@ -4283,27 +4293,130 @@ body.easter-theme #game-over-screen.is-solo-result .game-over-ducat-legacy {
     display: none !important;
 }
 
-body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-ducat {
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-score-mark {
     display: block;
-    width: 34px;
-    height: 34px;
+    width: 42px;
+    height: 42px;
     object-fit: contain;
     filter: drop-shadow(0 4px 6px rgba(107, 44, 143, 0.14));
 }
 
 body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-action-icon {
     display: block;
-    width: 28px;
-    height: 28px;
-    flex: 0 0 28px;
+    width: 29px;
+    height: 29px;
+    flex: 0 0 29px;
     object-fit: contain;
+}
+
+/* Solo završetak je jedna čista scena; stari znak Solo moda ne ide pored rezultata. */
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-result-mark,
+body.easter-theme #game-over-screen.is-solo-result .game-over-ducat-legacy,
+body.easter-theme #game-over-screen.is-solo-result #go-double-label .dukat-icon-inline {
+    display: none !important;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .game-over-score-card {
+    min-height: 166px;
+    margin: 3px 0 10px !important;
+    padding: 20px 18px 18px !important;
+    border-radius: 26px !important;
+    background:
+        radial-gradient(circle at 50% 8%, rgba(255,255,255,0.96), transparent 34%),
+        linear-gradient(145deg, rgba(250, 241, 248, 0.98), rgba(228, 216, 235, 0.92)) !important;
+    border: 1px solid rgba(255,255,255,0.84) !important;
+    box-shadow:
+        10px 10px 22px rgba(151, 108, 150, 0.17),
+        -9px -9px 20px rgba(255,255,255,0.74),
+        inset 1px 1px 3px rgba(255,255,255,0.92) !important;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .game-over-score-card [data-lang="go_msg_solo"] {
+    color: var(--easter-ui-muted, #587d4f) !important;
+    font-size: 0.74rem !important;
+    font-weight: 900;
+    letter-spacing: 0.11em;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .game-over-score-total {
+    gap: 12px !important;
+    margin-top: 10px !important;
+}
+
+body.easter-theme #game-over-screen.is-solo-result #go-score {
+    font-size: clamp(2.65rem, 12vw, 3.35rem) !important;
+    line-height: 1 !important;
+    letter-spacing: -0.045em;
+}
+
+.easter-solo-finish-tier,
+.easter-solo-finish-stats {
+    display: none;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-tier:not([hidden]) {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    width: min(236px, 82%);
+    margin: 14px auto 0;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-tier-step {
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(112, 83, 128, 0.16);
+    box-shadow: inset 1px 1px 2px rgba(112, 83, 128, 0.14), inset -1px -1px 2px rgba(255,255,255,0.74);
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-tier-step.is-reached {
+    background: linear-gradient(90deg, #bdb0d8, #d8c6e7);
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-tier-step.is-current {
+    background: linear-gradient(90deg, #9b79b9, #d0b0df);
+    box-shadow: 0 2px 6px rgba(107,44,143,0.24), inset 1px 1px 1px rgba(255,255,255,0.74);
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-stats:not([hidden]) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+    margin-top: 14px;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-stats > div {
+    min-height: 49px;
+    padding: 8px 9px 7px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.34);
+    border: 1px solid rgba(255,255,255,0.58);
+    box-shadow: inset 2px 2px 5px rgba(161,126,155,0.10), inset -2px -2px 5px rgba(255,255,255,0.66);
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-stats span {
+    display: block;
+    color: var(--easter-ui-muted, #587d4f);
+    font-size: 0.58rem;
+    font-weight: 900;
+    letter-spacing: 0.07em;
+    line-height: 1.1;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-stats strong {
+    display: block;
+    margin-top: 4px;
+    color: var(--easter-ui-title, #6b2c8f);
+    font-size: 1.02rem;
+    line-height: 1;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.84);
 }
 
 body.easter-theme #game-over-screen.is-solo-result .game-over-claim-button {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     color: #254633 !important;
     border: 1px solid rgba(255,255,255,0.72) !important;
     border-radius: 999px !important;
@@ -4314,13 +4427,6 @@ body.easter-theme #game-over-screen.is-solo-result .game-over-claim-button {
         7px 7px 15px rgba(184,148,111,0.22),
         -7px -7px 15px rgba(255,255,255,0.70),
         inset 1px 1px 2px rgba(255,255,255,0.82) !important;
-}
-
-body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-exit-icon {
-    width: 23px;
-    height: 23px;
-    flex-basis: 23px;
-    margin-left: 1px;
 }
 
 @keyframes easterSoloFinishReveal {
@@ -4568,11 +4674,11 @@ body.easter-theme #game-over-screen.screen.active .logo-anim {
 
 body.easter-theme #game-over-screen.screen.active > .modal-box {
     position: absolute !important;
-    top: 118px !important;
+    top: max(84px, calc(var(--safe-top) + 34px)) !important;
     left: 50% !important;
     right: auto !important;
-    width: min(400px, calc(100vw - 28px)) !important;
-    max-height: calc(100vh - 142px) !important;
+    width: min(440px, calc(100vw - 18px)) !important;
+    max-height: calc(100vh - 108px) !important;
     margin: 0 !important;
     overflow-y: auto !important;
     transform: translateX(-50%) !important;
@@ -12723,7 +12829,7 @@ body.severna-theme #main-menu .mode-btn > div[style*="font-size: 6.5rem"] {
 /* --- THEME LOADING GATE: Vaskrs / Pustinjsko staklo / Severna maglina --- */
 .theme-loading-gate.theme-easter {
     --theme-loading-base: #ffeaf7;
-    --theme-loading-bg-image: url("assets/easter-neumorphic-bg-v2.png");
+    --theme-loading-bg-image: url("assets/easter-neumorphic-bg-v3.png");
     --theme-loading-veil-top: rgba(255, 246, 252, 0.18);
     --theme-loading-veil-bottom: rgba(62, 29, 85, 0.42);
     --theme-loading-glow: rgba(255, 217, 244, 0.30);

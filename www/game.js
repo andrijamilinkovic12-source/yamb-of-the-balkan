@@ -1500,12 +1500,12 @@ class YambApp {
         const packs = {
             easter: {
                 title: lang === 'en' ? 'Easter Theme' : 'Vaskrs tema',
-                background: 'assets/easter-neumorphic-bg-v2.png',
+                background: 'assets/easter-neumorphic-bg-v3.png',
                 icons: [
                     'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
                     'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
                     'assets/easter-soft-clay/treasury-pro-v2.png?v=1',
-                    'assets/easter-soft-clay/tournament-pro-v3.png?v=1',
+                    'assets/easter-soft-clay/tournament-pro-v4.png?v=1',
                     'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1'
                 ],
                 assets: [
@@ -1514,7 +1514,7 @@ class YambApp {
                     'assets/easter-soft-clay/global-chat-empty-pro-v2.png?v=1',
                     'assets/easter-soft-clay/online-players-pro-v4.png?v=1',
                     'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=1',
-                    'assets/easter-soft-clay/online-spectate-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/online-spectate-pro-v4.png?v=1',
                     'assets/easter-soft-clay/online-duel-pro-v3.png?v=1',
                     'assets/easter-soft-clay/online-players-state-pro-v2.png?v=1',
                     'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1',
@@ -1548,7 +1548,7 @@ class YambApp {
                     'assets/easter-soft-clay/treasury/collection-bronze-v2.png?v=2',
                     'assets/easter-soft-clay/treasury/collection-silver-v2.png?v=2',
                     'assets/easter-soft-clay/treasury/collection-gold-v2.png?v=2',
-                    'assets/easter-soft-clay/tournament/tab-bracket-v2.png?v=2',
+                    'assets/easter-soft-clay/tournament/tab-bracket-v3.png?v=1',
                     'assets/easter-soft-clay/rules-pro-v2.png?v=1',
                     'assets/easter-soft-clay/statistics/record-v2.png?v=1',
                     'assets/easter-soft-clay/statistics/games-v2.png?v=1',
@@ -1581,10 +1581,9 @@ class YambApp {
                     'assets/easter-soft-clay/leaderboard/medal-bronze-v4.png?v=1',
                     'assets/easter-soft-clay/opponent/vs-v2.png?v=2',
                     'assets/easter-soft-clay/solo/personal-best.png?v=1',
-                    'assets/easter-soft-clay/solo/finish-ducat-v2.png?v=1',
+                    'assets/easter-soft-clay/solo/finish-score-mark-v1.png?v=1',
                     'assets/easter-soft-clay/solo/finish-reward-video-v2.png?v=1',
                     'assets/easter-soft-clay/solo/finish-claim-v2.png?v=1',
-                    'assets/easter-soft-clay/solo/finish-exit-v2.png?v=1',
                     'assets/easter-soft-clay/hotseat/winner.png?v=2',
                     'assets/easter-soft-clay/opponent/scanning.png?v=2',
                     'assets/easter-soft-clay/opponent/found.png?v=1',
@@ -1948,6 +1947,9 @@ class YambApp {
 
         // Splash/login ekran pamti poslednju vizuelnu temu čak i kada se nalog odjavi.
         localStorage.setItem('yamb_last_theme', safeTheme);
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('monitor_theme_seen', { theme: safeTheme });
+        }
 
         const themeDefaultSkins = {
             desert: 'desert_glass',
@@ -3372,6 +3374,7 @@ class YambApp {
     // --- PROXY ZA GLOBAL CHAT ---
     async openGlobalChat(options = {}) {
         if (!this.requireLogin()) return;
+        this.reportMonitorRoomVisit('globalChat');
 
         if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('globalChat')) {
             this.playEasterRoomIntro('globalChat', () => this.openGlobalChat({ skipRoomIntro: true }));
@@ -3383,6 +3386,7 @@ class YambApp {
 
     openOnlinePlayers(options = {}) {
         if (!this.requireLogin()) return;
+        this.reportMonitorRoomVisit('onlinePlayers');
 
         if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('onlinePlayers')) {
             this.playEasterRoomIntro('onlinePlayers', () => this.openOnlinePlayers({ skipRoomIntro: true }));
@@ -3725,7 +3729,7 @@ class YambApp {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro-v3.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
                             gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆",
                             { contextClass: 'tourney-winner' }
                         );
@@ -4594,6 +4598,7 @@ class YambApp {
     }
 
     showSettings(options = {}) {
+        this.reportMonitorRoomVisit('settings');
         if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('settings')) {
             this.playEasterRoomIntro('settings', () => this.showSettings({ skipRoomIntro: true }));
             return;
@@ -4740,6 +4745,7 @@ class YambApp {
     }
 
     showStats(options = {}) {
+        this.reportMonitorRoomVisit('statistics');
         if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('statistics')) {
             this.playEasterRoomIntro('statistics', () => this.showStats({ skipRoomIntro: true }));
             return;
@@ -4852,6 +4858,7 @@ class YambApp {
     async showHighscoresScreen() {
         const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
         if (!rewardReady) return;
+        this.reportMonitorRoomVisit('leaderboard');
 
         if (this.shouldPlayThemedRoomIntro('leaderboard')) {
             this.playEasterRoomIntro('leaderboard', () => {
@@ -4867,6 +4874,12 @@ class YambApp {
 
     shouldPlayEasterRoomIntro() {
         return (localStorage.getItem('yamb_theme') || 'dark') === 'easter';
+    }
+
+    reportMonitorRoomVisit(roomId) {
+        if (this.socket && this.socket.connected) {
+            this.socket.emit('monitor_room_visit', { room: roomId });
+        }
     }
 
     shouldPlayDesertRoomIntro(roomId) {
@@ -4887,6 +4900,7 @@ class YambApp {
 
     playEasterRoomIntro(roomId, onComplete) {
         if (this.easterRoomIntroPlaying) return;
+        this.reportMonitorRoomVisit(roomId);
 
         const rooms = {
             leaderboard: {
@@ -5148,6 +5162,7 @@ class YambApp {
     }
     
     showRules(options = {}) {
+        this.reportMonitorRoomVisit('rules');
         if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('rules')) {
             this.playEasterRoomIntro('rules', () => this.showRules({ skipRoomIntro: true }));
             return;
@@ -5250,6 +5265,7 @@ class YambApp {
 
     async startPrivateHosting(options = {}) {
         if (!this.requireLogin()) return;
+        this.reportMonitorRoomVisit('invite');
 
         const nickname = this.getCurrentOnlinePlayerName();
         if (!nickname) return;
@@ -5460,6 +5476,7 @@ class YambApp {
     }
     
     async setupOnline(mode = 'random', options = {}) {
+        if (mode === 'random') this.reportMonitorRoomVisit('opponent');
         if (!this.requireLogin()) return;
 
         const nickname = this.getCurrentOnlinePlayerName();
@@ -5682,7 +5699,7 @@ class YambApp {
             if (this.isSpectator) {
                 timerDisplay.classList.remove('timer-turn--opponent', 'timer-turn--urgent');
                 timerDisplay.style.display = 'flex';
-                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectating-live-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-spectating-live-icon" src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
+                timerDisplay.innerHTML = `<span class="spectator-live-pill" style="color:#fff; background:var(--danger); padding:4px 10px; border-radius:12px; font-weight:900; font-size:0.8rem; letter-spacing:1px; box-shadow:0 0 10px rgba(244,67,54,0.6);"><span class="spectator-live-fallback" aria-hidden="true">👁️</span><img class="easter-spectating-live-icon" src="assets/easter-soft-clay/online-spectate-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectating-live-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-spectating-live-icon" src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"> ${gt('live_badge') || 'UŽIVO'}</span>`;
                 timerDisplay.style.animation = 'pulse 2s infinite';
             } else if (this.onlineMode && this.gameActive) {
                 timerDisplay.style.display = 'flex';
@@ -6818,6 +6835,7 @@ class YambApp {
     }
     
     async setupGame(numPlayers, isAi = false, diff = 'medium') {
+        this.reportMonitorRoomVisit(numPlayers === 1 ? 'solo' : 'hotseat');
         if (isAi) { console.log("AI is disabled."); return; }
         localStorage.removeItem('yamb_active_online_room');
         localStorage.removeItem('yamb_local_recovery_pending');
@@ -7513,6 +7531,30 @@ class YambApp {
         if (score < 0) score = 0;
         if (score >= 60) score += 40;
         return score;
+    }
+
+    getSoloFinishSummary(pIdx) {
+        const sheet = this.allScores && this.allScores[pIdx];
+        if (!sheet) return { bestColumn: 0, hasNoZero: false };
+
+        let bestColumn = 0;
+        let hasNoZero = true;
+        KOLONE.forEach(col => {
+            const valueAt = row => Math.max(0, Number(sheet[col] && sheet[col][row]) || 0);
+            let upper = 0;
+            ["1", "2", "3", "4", "5", "6"].forEach(row => { upper += valueAt(row); });
+            if (upper >= 60) upper += 30;
+            const middle = this.calculateMiddleSectionScore(sheet, col);
+            let lower = 0;
+            ["Triling", "Kenta", "Ful", "Poker", "Yamb"].forEach(row => { lower += valueAt(row); });
+            bestColumn = Math.max(bestColumn, upper + middle + lower);
+
+            REDOVI_IGRA.forEach(row => {
+                if (valueAt(row) === 0) hasNoZero = false;
+            });
+        });
+
+        return { bestColumn, hasNoZero };
     }
 
     calculateTotalScore(pIdx) {
@@ -8351,6 +8393,31 @@ class YambApp {
             gameOverScreen.classList.toggle('is-hotseat-result', isHotseatResult);
             gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);
         }
+        const isEasterSoloFinish = this.players.length === 1
+            && document.body
+            && document.body.classList.contains('easter-theme');
+        const soloFinishTier = document.getElementById('solo-finish-tier');
+        const soloFinishStats = document.getElementById('solo-finish-stats');
+        if (isEasterSoloFinish && myScoreEntry) {
+            const myScore = Math.max(0, Number(myScoreEntry.score) || 0);
+            const tierIndex = myScore > 3000 ? 5 : myScore > 2500 ? 4 : myScore > 2000 ? 3 : myScore > 1500 ? 2 : myScore > 1000 ? 1 : 0;
+            const summary = this.getSoloFinishSummary(0);
+            if (soloFinishTier) {
+                soloFinishTier.hidden = false;
+                soloFinishTier.querySelectorAll('.easter-solo-finish-tier-step').forEach((step, index) => {
+                    step.classList.toggle('is-reached', index < tierIndex);
+                    step.classList.toggle('is-current', index === tierIndex);
+                });
+            }
+            if (soloFinishStats) soloFinishStats.hidden = false;
+            const bestColumnEl = document.getElementById('solo-finish-best-column');
+            const noZeroEl = document.getElementById('solo-finish-no-zero');
+            if (bestColumnEl) bestColumnEl.innerText = summary.bestColumn.toLocaleString('sr-RS');
+            if (noZeroEl) noZeroEl.innerText = summary.hasNoZero ? (gt('go_yes') || 'DA') : (gt('go_no') || 'NE');
+        } else {
+            if (soloFinishTier) soloFinishTier.hidden = true;
+            if (soloFinishStats) soloFinishStats.hidden = true;
+        }
         const personalBestBadge = document.getElementById('solo-personal-best-badge');
         if (personalBestBadge) personalBestBadge.hidden = !isNewSoloPersonalBest;
         const goScoreLabel = document.querySelector('#game-over-screen [data-lang="go_msg_solo"]');
@@ -8994,6 +9061,7 @@ class YambApp {
     // --- UNDO MENU & TOKENS (Delegati za vracanjeupisa.js) ---
     
     openUndoMenu(options = {}) {
+        this.reportMonitorRoomVisit('economy');
         if (!options.skipRoomIntro && this.shouldPlayThemedRoomIntro('economy')) {
             this.playEasterRoomIntro('economy', () => this.openUndoMenu({ skipRoomIntro: true }));
             return;

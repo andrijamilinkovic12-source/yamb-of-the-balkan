@@ -576,6 +576,31 @@ MatchResultSchema.index({ 'participants.uid': 1, finishedAt: -1 });
 MatchResultSchema.index({ mode: 1, resultType: 1, finishedAt: -1 });
 const MatchResult = mongoose.model('MatchResult', MatchResultSchema);
 
+// Privatni operativni podaci za read-only Yamb Server Dashboard.
+// Ne čuva imena, naloge ni sadržaj partija — samo zbirne dnevne vrednosti.
+const ServerMonitorDailySchema = new mongoose.Schema({
+    dayKey: { type: String, unique: true, required: true },
+    peakOnline: { type: Number, default: 0 },
+    disconnectsToday: { type: Number, default: 0 },
+    matchmakingWaitTotalMs: { type: Number, default: 0 },
+    matchmakingWaitSamples: { type: Number, default: 0 },
+    roomVisits: { type: Object, default: {} },
+    adRewardsGranted: { type: Number, default: 0 },
+    adRewardErrors: { type: Number, default: 0 },
+    updatedAt: { type: Date, default: Date.now }
+}, { versionKey: false });
+const ServerMonitorDaily = mongoose.model('ServerMonitorDaily', ServerMonitorDailySchema);
+
+// Jednosmerni identifikator služi isključivo za brojanje aktivnih naloga.
+// Dashboard nikada ne dobija Firebase UID, ime, e-mail ni sadržaj aktivnosti.
+const ServerMonitorActivitySchema = new mongoose.Schema({
+    anonId: { type: String, unique: true, required: true },
+    lastSeenAt: { type: Date, default: Date.now, index: true },
+    lastDayKey: { type: String, default: '', index: true },
+    updatedAt: { type: Date, default: Date.now }
+}, { versionKey: false });
+const ServerMonitorActivity = mongoose.model('ServerMonitorActivity', ServerMonitorActivitySchema);
+
 const LeagueScoreSchema = new mongoose.Schema({
     playerId: String,
     playerName: String,
@@ -5263,18 +5288,256 @@ async function buildTourneyStatsPayload(limit = 20) {
 // ==================================================================
 const activeConnections = new Map();
 
-function updateOnlineCount() {
-    const uniqueKeys = new Set();
+const YAMB_MONITOR_TOKEN = String(process.env.YAMB_MONITOR_TOKEN || '').trim();
+const monitorRuntimeMetrics = {
+    dayKey: '',
+    disconnectsToday: 0
+};
+const MONITOR_THEMES = new Set(['dark', 'light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']);
+const MONITOR_ROOMS = new Set(['daily', 'leaderboard', 'statistics', 'settings', 'rules', 'treasury', 'tournament', 'solo', 'hotseat', 'opponent', 'invite', 'globalChat', 'onlinePlayers', 'economy']);
 
+function normalizeMonitorTheme(value) {
+    const theme = String(value || '').trim().toLowerCase();
+    return MONITOR_THEMES.has(theme) ? theme : 'dark';
+}
+
+function monitorActivityId(uid) {
+    const secret = String(process.env.MONITOR_ACTIVITY_HASH_SECRET || YAMB_MONITOR_TOKEN || 'yamb-monitor-activity').trim();
+    return crypto.createHash('sha256').update(`${secret}\u0000${String(uid || '')}`).digest('hex');
+}
+
+function touchMonitorActivity(uid) {
+    if (!MONGO_URI || !uid) return;
+    const now = new Date();
+    const dayKey = getBelgradeDayKey(now);
+    ServerMonitorActivity.updateOne(
+        { anonId: monitorActivityId(uid) },
+        { $set: { lastSeenAt: now, lastDayKey: dayKey, updatedAt: now } },
+        { upsert: true }
+    ).catch(error => console.warn('Monitor aktivnost nije sačuvana:', error.message));
+}
+
+function updateMonitorDaily(delta = {}, extra = {}) {
+    if (!MONGO_URI) return;
+    const dayKey = resetMonitorRuntimeDayIfNeeded();
+    const inc = {};
+    Object.entries(delta).forEach(([key, value]) => {
+        const safe = Number(value);
+        if (Number.isFinite(safe) && safe !== 0) inc[key] = safe;
+    });
+    const update = { $set: { updatedAt: new Date(), ...extra } };
+    if (Object.keys(inc).length > 0) update.$inc = inc;
+    ServerMonitorDaily.updateOne({ dayKey }, update, { upsert: true })
+        .catch(error => console.warn('Monitor dnevne metrike nisu sačuvane:', error.message));
+}
+
+function recordMonitorWait(startedAt) {
+    const elapsed = Math.max(0, Math.min(60 * 60 * 1000, Date.now() - Number(startedAt || Date.now())));
+    updateMonitorDaily({ matchmakingWaitTotalMs: elapsed, matchmakingWaitSamples: 1 });
+}
+
+function recordMonitorRoomVisit(socket, roomId) {
+    const room = String(roomId || '');
+    if (!MONITOR_ROOMS.has(room)) return;
+    const now = Date.now();
+    if (socket.monitorLastRoomVisit === room && now - Number(socket.monitorLastRoomVisitAt || 0) < 15000) return;
+    socket.monitorLastRoomVisit = room;
+    socket.monitorLastRoomVisitAt = now;
+    touchMonitorActivity(getVerifiedUid(socket));
+    updateMonitorDaily({ [`roomVisits.${room}`]: 1 });
+}
+
+function recordMonitorAdOutcome(outcome) {
+    if (outcome === 'success') updateMonitorDaily({ adRewardsGranted: 1 });
+    if (outcome === 'error') updateMonitorDaily({ adRewardErrors: 1 });
+}
+
+function getBelgradeDateParts(date = new Date()) {
+    const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Belgrade',
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit', second: '2-digit',
+        hourCycle: 'h23'
+    }).formatToParts(date).reduce((result, part) => {
+        if (part.type !== 'literal') result[part.type] = Number(part.value);
+        return result;
+    }, {});
+    return parts;
+}
+
+function getBelgradeDayKey(date = new Date()) {
+    const parts = getBelgradeDateParts(date);
+    return `${parts.year}-${String(parts.month).padStart(2, '0')}-${String(parts.day).padStart(2, '0')}`;
+}
+
+function getBelgradeTimeZoneOffset(date) {
+    const parts = getBelgradeDateParts(date);
+    return Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second) - date.getTime();
+}
+
+function getBelgradeDayRange(date = new Date()) {
+    const parts = getBelgradeDateParts(date);
+    const currentMidnightUtc = Date.UTC(parts.year, parts.month - 1, parts.day);
+    const nextMidnightUtc = currentMidnightUtc + (24 * 60 * 60 * 1000);
+    const start = new Date(currentMidnightUtc - getBelgradeTimeZoneOffset(new Date(currentMidnightUtc + (12 * 60 * 60 * 1000))));
+    const end = new Date(nextMidnightUtc - getBelgradeTimeZoneOffset(new Date(nextMidnightUtc + (12 * 60 * 60 * 1000))));
+    return { start, end };
+}
+
+function resetMonitorRuntimeDayIfNeeded() {
+    const dayKey = getBelgradeDayKey();
+    if (monitorRuntimeMetrics.dayKey === dayKey) return dayKey;
+    monitorRuntimeMetrics.dayKey = dayKey;
+    monitorRuntimeMetrics.disconnectsToday = 0;
+    return dayKey;
+}
+
+function getOnlineThemeUsage() {
+    const activeUsers = new Map();
     io.sockets.sockets.forEach((clientSocket, id) => {
         if (!clientSocket.playerName) return;
-
-        const ip = activeConnections.get(id) || "unknown_ip";
-        let uniqueKey = clientSocket.playerId || registeredSockets[id] || ip;
-        uniqueKeys.add(uniqueKey);
+        const ip = activeConnections.get(id) || `socket:${id}`;
+        const key = clientSocket.playerId || registeredSockets[id] || ip;
+        activeUsers.set(key, normalizeMonitorTheme(clientSocket.activeTheme));
     });
+    const counts = {};
+    activeUsers.forEach(theme => { counts[theme] = (counts[theme] || 0) + 1; });
+    const total = activeUsers.size;
+    return Object.entries(counts)
+        .map(([theme, count]) => ({ theme, count, percent: total ? Math.round((count / total) * 100) : 0 }))
+        .sort((a, b) => b.count - a.count || a.theme.localeCompare(b.theme));
+}
 
-    io.emit('users_count', uniqueKeys.size);
+function getUniqueOnlinePlayersCount() {
+    const uniqueKeys = new Set();
+    io.sockets.sockets.forEach((clientSocket, id) => {
+        if (!clientSocket.playerName) return;
+        const ip = activeConnections.get(id) || 'unknown_ip';
+        uniqueKeys.add(clientSocket.playerId || registeredSockets[id] || ip);
+    });
+    return uniqueKeys.size;
+}
+
+function getRealtimeMonitorSnapshot() {
+    const activeStates = Object.values(roomState).filter(state => state && !state.gameFinished && Array.isArray(state.players));
+    const playersInGame = new Set();
+    activeStates.forEach(state => state.players.forEach(socketId => playersInGame.add(socketId)));
+    const waitingPrivate = Object.values(privateRooms).filter(room => room && room.p1 && !room.p2).length;
+    return {
+        online: getUniqueOnlinePlayersCount(),
+        playersInGame: playersInGame.size,
+        activeDuels: activeStates.length,
+        waitingForOpponent: (waitingPlayer ? 1 : 0) + waitingPrivate,
+        disconnectsToday: monitorRuntimeMetrics.disconnectsToday
+    };
+}
+
+function isMonitorRequestAuthorized(req) {
+    if (!YAMB_MONITOR_TOKEN) return false;
+    const received = String(req.get('x-yamb-monitor-token') || '');
+    if (!received || received.length !== YAMB_MONITOR_TOKEN.length) return false;
+    return crypto.timingSafeEqual(Buffer.from(received), Buffer.from(YAMB_MONITOR_TOKEN));
+}
+
+function updateDailyMonitorPeak(onlineCount) {
+    if (!MONGO_URI || !Number.isFinite(onlineCount)) return;
+    const dayKey = resetMonitorRuntimeDayIfNeeded();
+    ServerMonitorDaily.updateOne(
+        { dayKey },
+        { $max: { peakOnline: Math.max(0, onlineCount) }, $set: { updatedAt: new Date() } },
+        { upsert: true }
+    ).catch(error => console.warn('Monitor peak nije sačuvan:', error.message));
+}
+
+app.get('/api/monitor/status', async (req, res) => {
+    if (!isMonitorRequestAuthorized(req)) {
+        return res.status(YAMB_MONITOR_TOKEN ? 401 : 503).json({ ok: false, reason: YAMB_MONITOR_TOKEN ? 'unauthorized' : 'monitor_not_configured' });
+    }
+
+    resetMonitorRuntimeDayIfNeeded();
+    const realtime = getRealtimeMonitorSnapshot();
+    const { start, end } = getBelgradeDayRange();
+    const dayKey = monitorRuntimeMetrics.dayKey;
+    try {
+        const now = new Date();
+        const since24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        const currentLeague = getServerQuarterInfo();
+        const sevenDayKeys = Array.from({ length: 7 }, (_, index) => getBelgradeDayKey(new Date(now.getTime() - index * 24 * 60 * 60 * 1000)));
+        const [modeRows, dailyRecord, recentDaily, activeToday, activeLast24h, leaguePlayers, adGrantedToday, adPendingToday] = await Promise.all([
+            MONGO_URI ? MatchResult.aggregate([
+                { $match: { finishedAt: { $gte: start, $lt: end } } },
+                { $group: { _id: '$mode', count: { $sum: 1 } } }
+            ]) : Promise.resolve([]),
+            MONGO_URI ? ServerMonitorDaily.findOne({ dayKey }).lean() : Promise.resolve(null),
+            MONGO_URI ? ServerMonitorDaily.find({ dayKey: { $in: sevenDayKeys } }).lean() : Promise.resolve([]),
+            MONGO_URI ? ServerMonitorActivity.countDocuments({ lastDayKey: dayKey }) : Promise.resolve(null),
+            MONGO_URI ? ServerMonitorActivity.countDocuments({ lastSeenAt: { $gte: since24h } }) : Promise.resolve(null),
+            MONGO_URI ? LeagueScore.distinct('playerId', { year: currentLeague.year, quarter: currentLeague.quarter }).then(rows => rows.length) : Promise.resolve(null),
+            MONGO_URI ? AdMobRewardVerification.countDocuments({ claimedAt: { $gte: start, $lt: end } }) : Promise.resolve(null),
+            MONGO_URI ? AdMobRewardVerification.countDocuments({ receivedAt: { $gte: start, $lt: end }, claimedAt: null }) : Promise.resolve(null)
+        ]);
+        const completedByMode = { solo: 0, hotseat: 0, random: 0, friend: 0 };
+        modeRows.forEach(row => {
+            const mode = String(row?._id || '');
+            const count = Math.max(0, Number(row?.count) || 0);
+            if (mode === 'solo') completedByMode.solo += count;
+            else if (mode === 'hotseat') completedByMode.hotseat += count;
+            else if (mode === 'random') completedByMode.random += count;
+            else if (['friend_invite', 'challenge'].includes(mode)) completedByMode.friend += count;
+        });
+        const completedToday = modeRows.reduce((sum, row) => sum + Math.max(0, Number(row?.count) || 0), 0);
+        const roomVisits = Object.entries(dailyRecord?.roomVisits || {})
+            .map(([room, visits]) => ({ room, visits: Math.max(0, Number(visits) || 0) }))
+            .sort((a, b) => b.visits - a.visits || a.room.localeCompare(b.room))
+            .slice(0, 5);
+        const waitSamples = Math.max(0, Number(dailyRecord?.matchmakingWaitSamples) || 0);
+        const waitTotal = Math.max(0, Number(dailyRecord?.matchmakingWaitTotalMs) || 0);
+        const peakOnlineLast7Days = recentDaily.reduce((peak, row) => Math.max(peak, Number(row?.peakOnline) || 0), realtime.online);
+        res.set('Cache-Control', 'no-store');
+        res.json({
+            ok: true,
+            generatedAt: new Date().toISOString(),
+            dayKey,
+            metrics: {
+                ...realtime,
+                disconnectsToday: Math.max(realtime.disconnectsToday, Number(dailyRecord?.disconnectsToday) || 0),
+                completedToday,
+                completedByMode,
+                averageMatchmakingWaitSeconds: waitSamples ? Math.round(waitTotal / waitSamples / 1000) : null,
+                peakOnlineToday: Math.max(realtime.online, Number(dailyRecord?.peakOnline) || 0),
+                peakOnlineLast7Days,
+                activePlayersToday: activeToday,
+                activePlayersLast24h: activeLast24h,
+                themeUsageOnline: getOnlineThemeUsage(),
+                topRoomsToday: roomVisits,
+                tournament: {
+                    status: tournamentState.status,
+                    registrations: Array.isArray(tournamentState.players) ? tournamentState.players.length : 0,
+                    capacity: 8
+                },
+                quarterlyLeague: {
+                    year: currentLeague.year,
+                    quarter: currentLeague.quarter,
+                    participants: leaguePlayers
+                },
+                rewardedVideo: {
+                    status: ADMOB_REWARDED_AD_UNIT_ID ? 'ready' : 'unavailable',
+                    grantedToday: adGrantedToday,
+                    pendingVerificationToday: adPendingToday,
+                    errorsToday: Math.max(0, Number(dailyRecord?.adRewardErrors) || 0)
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Monitor status greška:', error);
+        res.status(503).json({ ok: false, reason: 'metrics_unavailable' });
+    }
+});
+
+function updateOnlineCount() {
+    const onlineCount = getUniqueOnlinePlayersCount();
+    updateDailyMonitorPeak(onlineCount);
+    io.emit('users_count', onlineCount);
     notifyOnlinePlayersStatusChanged();
 }
 
@@ -7335,6 +7598,7 @@ async function recordVerifiedAdMobReward(params) {
 
 async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
     if (!REQUIRE_ADMOB_SSV) {
+        recordMonitorAdOutcome('success');
         return { ok: true, bypassed: true };
     }
 
@@ -7374,13 +7638,17 @@ async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
             { new: true }
         );
 
-        if (reward) return { ok: true, reward };
+        if (reward) {
+            recordMonitorAdOutcome('success');
+            return { ok: true, reward };
+        }
         await sleep(ADMOB_SSV_POLL_MS);
     }
 
     if (clientFallbackAllowed) {
         const fallbackContext = allowedContexts[0] || 'rewarded_ad';
         console.warn(`⚠️ AdMob SSV nije stigao na vreme; prihvatam client rewarded fallback za ${cleanUid} (${fallbackContext}).`);
+        recordMonitorAdOutcome('success');
         return {
             ok: true,
             clientFallback: true,
@@ -7392,6 +7660,7 @@ async function waitForVerifiedAdMobReward(uid, nonce, contexts, options = {}) {
         };
     }
 
+    recordMonitorAdOutcome('error');
     return { ok: false, reason: 'ad_verification_pending', permanent: false, retryAfterMs: 2000 };
 }
 
@@ -8269,6 +8538,15 @@ io.on('connection', (socket) => {
 
     updateOnlineCount();
 
+    socket.on('monitor_theme_seen', (data = {}) => {
+        socket.activeTheme = normalizeMonitorTheme(data.theme);
+        touchMonitorActivity(getVerifiedUid(socket));
+    });
+
+    socket.on('monitor_room_visit', (data = {}) => {
+        recordMonitorRoomVisit(socket, data.room);
+    });
+
     // ==================================================================
     // POPRAVLJENO: SAFETY NET KLIJENTSKA PROVERA TAJMERA SA GRACE PERIODOM
     // ==================================================================
@@ -8631,6 +8909,7 @@ io.on('connection', (socket) => {
             socket.playerId = verifiedUid;
         }
         data.name = bezbednoIme;
+        socket.activeTheme = normalizeMonitorTheme(data?.stats?.activeTheme);
 
         if (stariPlayerId && stariPlayerId !== socket.playerId) {
             delete onlinePlayers[stariPlayerId];
@@ -8649,6 +8928,8 @@ io.on('connection', (socket) => {
             }
             return;
         }
+
+        touchMonitorActivity(verifiedUid);
 
         try {
             if (!MONGO_URI) {
@@ -11325,7 +11606,7 @@ io.on('connection', (socket) => {
         // Random matchmaking nije direktna pozivnica. Ako se isti nalog ponovo
         // povezao dok je samo čekao, nova konekcija preuzima njegovo mesto u redu.
         if (waitingPlayer && requesterUid && waitingPlayer.uid === requesterUid) {
-            waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+            waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl, queuedAt: waitingPlayer.queuedAt || Date.now() };
             socket.emit('waiting_for_opponent');
             return;
         }
@@ -11348,12 +11629,13 @@ io.on('connection', (socket) => {
                 });
                 if (opponentMatchmakingBusyState) {
                     console.warn(`Random waiting player skipped for ${opponentId}: ${opponentMatchmakingBusyState.reason || 'busy'} ${opponentMatchmakingBusyState.roomId || ''}`);
-                    waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+                    waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl, queuedAt: Date.now() };
                     socket.emit('waiting_for_opponent');
                     return;
                 }
 
                 const roomId = `room_${opponentId}_${socket.id}`;
+                recordMonitorWait(waitingPlayer.queuedAt);
                 waitingPlayer = null;
 
                 socket.join(roomId);
@@ -11396,11 +11678,11 @@ io.on('connection', (socket) => {
                 });
 
             } else {
-                waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+                waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl, queuedAt: Date.now() };
                 socket.emit('waiting_for_opponent');
             }
         } else {
-            waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl };
+            waitingPlayer = { id: socket.id, uid: requesterUid, nickname: nickname, stats: socket.playerStats, photoUrl: photoUrl, queuedAt: Date.now() };
             socket.emit('waiting_for_opponent');
             console.log(`⏳ ${nickname} čeka random protivnika...`);
         }
@@ -11426,7 +11708,7 @@ io.on('connection', (socket) => {
         }
 
         if (!privateRooms[roomId]) {
-            privateRooms[roomId] = { p1: { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
+            privateRooms[roomId] = { queuedAt: Date.now(), p1: { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
             socket.join(roomId);
             playerRooms[socket.id] = roomId;
             socket.emit('private_waiting', { roomId });
@@ -11438,15 +11720,16 @@ io.on('connection', (socket) => {
             
             if (!p1Socket) {
                 console.log("--> Host je nestao. Postajem novi host.");
-                privateRooms[roomId] = { p1: { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
+                privateRooms[roomId] = { queuedAt: Date.now(), p1: { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname, stats: socket.playerStats, photoUrl: photoUrl } };
                 socket.join(roomId); playerRooms[socket.id] = roomId;
                 socket.emit('private_waiting', { roomId });
                 return;
             }
 
-            if (p1.id === socket.id) return; 
+            if (p1.id === socket.id) return;
 
             privateRooms[roomId].p2 = { id: socket.id, uid: socket.playerId || registeredSockets[socket.id] || '', name: nickname };
+            recordMonitorWait(privateRooms[roomId].queuedAt);
             socket.join(roomId);
             playerRooms[socket.id] = roomId; playerRooms[p1.id] = roomId;
             startScoreSession(socket.id); startScoreSession(p1.id);
@@ -12884,6 +13167,11 @@ io.on('connection', (socket) => {
         const pid = registeredSockets[socket.id];
         const activeRoomId = playerRooms[socket.id];
         const activeRoomState = activeRoomId ? roomState[activeRoomId] : null;
+        if (activeRoomId && activeRoomState && !activeRoomState.gameFinished) {
+            resetMonitorRuntimeDayIfNeeded();
+            monitorRuntimeMetrics.disconnectsToday += 1;
+            updateMonitorDaily({ disconnectsToday: 1 });
+        }
         clearChallengesForSocket(socket.id);
         clearPendingRoomInvitesForSocket(socket.id);
         clearPendingTournamentDuelInvitesForSocket(socket.id);

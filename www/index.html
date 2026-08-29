@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.20">
-    <link rel="stylesheet" href="teme.css?v=6.28">
+    <link rel="stylesheet" href="teme.css?v=6.30">
     <link rel="stylesheet" href="kockice.css?v=1.5">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
@@ -589,7 +589,7 @@
             </button>
             <button class="btn-special-square spec-turnir" onclick="if(window.app && app.openTournament) { app.openTournament(); } else { alert(typeof t === 'function' ? t('tourney_coming_soon') : 'Turniri stižu uskoro!'); }" aria-label="Turnir" data-lang-aria="tourney_title">
                 <img class="special-svg-icon special-svg-icon--tournament" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
-                <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/tournament-pro-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-special-icon" src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-special-icon" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
                 <img class="nebula-soft-clay-special-icon" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <div id="tourney-status-badge" style="position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #111; display: none; z-index: 10;"></div>
@@ -648,7 +648,7 @@
 
                 <img id="gh-current-avatar" src="" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--gold-main); object-fit: cover; display: none; box-shadow: 0 0 5px rgba(255,215,0,0.5);">
 
-                <span id="gh-spectator-icon" class="game-header-icon gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci" data-lang-title="tooltip_spectators"><span class="gh-spectator-fallback" aria-hidden="true">👁️</span><img class="easter-spectator-soft-clay-icon" src="assets/easter-soft-clay/online-spectate-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectator-soft-clay-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-spectator-soft-clay-icon" src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"></span>
+                <span id="gh-spectator-icon" class="game-header-icon gh-btn-inactive" style="font-size: 1.3rem; transition: 0.3s;" title="Gledaoci" data-lang-title="tooltip_spectators"><span class="gh-spectator-fallback" aria-hidden="true">👁️</span><img class="easter-spectator-soft-clay-icon" src="assets/easter-soft-clay/online-spectate-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-spectator-soft-clay-icon" src="assets/desert-soft-clay/online-spectate-pro.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-spectator-soft-clay-icon" src="assets/severna-soft-clay/online-spectate-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async"></span>
 
                 <button id="btn-undo-move" class="btn-secondary game-header-icon gh-btn-inactive" style="border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; width: 34px; height: 34px; font-size:1.1rem; transition: 0.3s;" onclick="if(!this.classList.contains('gh-btn-inactive')) app.undoLastMove()" title="Ispravka poteza" data-lang-title="tooltip_undo_move">↩️</button>
                 
@@ -1017,7 +1017,7 @@
     <div id="tournament-intro" class="tournament-intro hidden" aria-hidden="true">
         <div class="tournament-intro-mark-wrap">
             <img class="tournament-intro-mark" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
-            <img class="tournament-intro-mark-easter" src="assets/easter-soft-clay/tournament-pro-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
+            <img class="tournament-intro-mark-easter" src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async">
             <img class="tournament-intro-mark-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
             <img class="tournament-intro-mark-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">
         </div>
@@ -1206,10 +1206,17 @@
                     <span data-lang="go_personal_best">LIČNI REKORD</span>
                 </div>
                 <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="go_msg_solo">Osvojeni Poeni</div>
-                <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
+                <div class="game-over-score-total" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
                     <svg class="dukat-icon-inline dukat-icon-large game-over-ducat-legacy" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
-                    <img class="easter-solo-finish-ducat" src="assets/easter-soft-clay/solo/finish-ducat-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="easter-solo-finish-score-mark" src="assets/easter-soft-clay/solo/finish-score-mark-v1.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <span id="go-score" style="font-size: 2.2rem; font-weight: 800; color: var(--gold-main);">0</span>
+                </div>
+                <div id="solo-finish-tier" class="easter-solo-finish-tier" aria-hidden="true">
+                    <span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span><span class="easter-solo-finish-tier-step"></span>
+                </div>
+                <div id="solo-finish-stats" class="easter-solo-finish-stats" aria-hidden="true">
+                    <div><span data-lang="go_best_column">NAJJAČA KOLONA</span><strong id="solo-finish-best-column">—</strong></div>
+                    <div><span data-lang="go_no_zero">BEZ NULE</span><strong id="solo-finish-no-zero">—</strong></div>
                 </div>
             </div>
             
@@ -1223,7 +1230,6 @@
             </button>
             <button class="btn-menu btn-secondary game-over-claim-button" onclick="app.claimReward(false)">
                 <img class="easter-solo-finish-action-icon easter-solo-finish-claim-icon" src="assets/easter-soft-clay/solo/finish-claim-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="easter-solo-finish-action-icon easter-solo-finish-exit-icon" src="assets/easter-soft-clay/solo/finish-exit-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <span id="go-claim-label" data-lang="go_claim">Preuzmi i Izađi</span>
             </button>
         </div>
@@ -1636,7 +1642,7 @@
                 <div class="global-chat-title-group">
                     <span class="global-chat-title tourney-header-title">
                         <img class="tourney-header-icon tourney-header-icon-default" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
-                        <img class="tourney-header-icon-easter" src="assets/easter-soft-clay/tournament-pro-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="tourney-header-icon-easter" src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="tourney-header-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="tourney_title">TURNIR</span>
                     </span>
@@ -1718,7 +1724,7 @@
     <script src="globalchat.js?v=1.3"></script>
     <script src="auth.js?v=1012"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=4.81"></script>
+    <script src="game.js?v=4.83"></script>
     <script src="kvartalnaliga.js?v=1010"></script>
     <script src="onlinenumber.js?v=1008"></script>
     <script src="vatreniniz.js?v=1003"></script>

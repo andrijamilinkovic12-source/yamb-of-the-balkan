@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yamb of the Balkan — Server indikator</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+  <style>
+    :root { color-scheme: dark; --page:#101527; --panel:#1a2138; --panel-light:#222b47; --ink:#f7f4eb; --muted:#adb6cc; --ok:#77d7a4; --warn:#f0b866; --error:#ed7e92; --sky:#9bc8ff; --edge:rgba(255,255,255,.11); }
+    * { box-sizing: border-box; }
+    body { min-height:100vh; margin:0; padding:14px; font:16px/1.4 Inter,"Segoe UI",system-ui,sans-serif; background:radial-gradient(circle at 15% 10%,rgba(109,159,207,.18),transparent 32%),radial-gradient(circle at 90% 90%,rgba(112,197,151,.12),transparent 35%),var(--page); color:var(--ink); }
+    main { width:min(100%,1440px); margin:0 auto; overflow:hidden; border:1px solid var(--edge); border-radius:22px; background:linear-gradient(145deg,rgba(35,44,72,.97),rgba(19,25,43,.98)); box-shadow:18px 22px 48px rgba(0,0,0,.32),inset 1px 1px 0 rgba(255,255,255,.05); }
+    header { display:flex; align-items:start; justify-content:space-between; gap:20px; padding:18px 22px 14px; }
+    h1 { margin:0; font-size:1.14rem; letter-spacing:.02em; }
+    header p { margin:6px 0 0; color:var(--muted); font-size:.87rem; }
+    .state { display:inline-flex; align-items:center; gap:8px; flex:0 0 auto; padding:7px 10px; border:1px solid var(--edge); border-radius:999px; color:var(--muted); font-size:.76rem; }
+    .dot { width:8px; height:8px; border-radius:50%; background:var(--warn); box-shadow:0 0 0 4px rgba(240,184,102,.11); }
+    .state.connected .dot { background:var(--ok); box-shadow:0 0 0 4px rgba(119,215,164,.11); }
+    .state.error .dot { background:var(--error); box-shadow:0 0 0 4px rgba(237,126,146,.11); }
+    .summary { margin:0 18px 12px; padding:13px 20px 15px; text-align:center; border:1px solid rgba(119,215,164,.18); border-radius:18px; background:radial-gradient(circle at 50% 0%,rgba(119,215,164,.14),transparent 58%),var(--panel-light); }
+    .summary.zero { border-color:rgba(237,126,146,.64); background:radial-gradient(circle at 50% 0%,rgba(237,126,146,.24),transparent 60%),var(--panel-light); animation:zero-pulse 1.2s ease-in-out infinite; }
+    .label { color:var(--muted); font-size:.72rem; font-weight:800; letter-spacing:.13em; }
+    #online { margin:3px 0 0; font-size:clamp(3.2rem,7vw,4.6rem); font-weight:800; line-height:1; letter-spacing:-.07em; color:var(--ok); text-shadow:0 0 28px rgba(119,215,164,.2); }
+    .summary.zero #online { color:var(--error); text-shadow:0 0 28px rgba(237,126,146,.27); }
+    .metrics { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; padding:0 18px 12px; }
+    .metric { min-height:92px; padding:12px; border:1px solid var(--edge); border-radius:15px; background:rgba(7,11,25,.19); }
+    .metric .value { margin-top:5px; font-size:1.65rem; font-weight:800; letter-spacing:-.05em; color:var(--sky); }
+    .metric small { display:block; min-height:2.35em; margin-top:4px; color:var(--muted); font-size:.68rem; line-height:1.25; }
+    .metric.waiting .value { color:var(--warn); }.metric.alert .value { color:var(--error); }
+    .monitor-panels { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; padding:0 18px 12px; }
+    .monitor-panel { min-height:112px; padding:12px; border:1px solid var(--edge); border-radius:15px; background:rgba(7,11,25,.19); }
+    .monitor-panel h2 { margin:0 0 7px; color:#d7deed; font-size:.7rem; letter-spacing:.09em; }
+    .monitor-list { display:grid; gap:4px; margin:0; padding:0; list-style:none; color:var(--muted); font-size:.74rem; }
+    .monitor-list li { display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid rgba(164,184,222,.09); padding-bottom:4px; }
+    .monitor-list li:last-child { border-bottom:0; padding-bottom:0; }
+    .monitor-list b { color:var(--sky); font-variant-numeric:tabular-nums; }
+    footer { display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:10px; padding:2px 22px 16px; }
+    #updated { color:var(--muted); font-size:.76rem; }
+    button { appearance:none; min-height:38px; padding:0 14px; border:1px solid rgba(119,215,164,.34); border-radius:11px; background:rgba(119,215,164,.11); color:#dffff0; font:inherit; font-weight:700; cursor:pointer; }
+    button:hover { background:rgba(119,215,164,.18); } button:disabled { opacity:.55; cursor:wait; }
+    #alarm-toggle { border-color:rgba(240,184,102,.38); background:rgba(240,184,102,.1); color:#ffe7bd; }
+    #alarm-toggle.enabled { border-color:rgba(119,215,164,.42); background:rgba(119,215,164,.13); color:#dffff0; }
+    details { border-top:1px solid var(--edge); padding:0 26px 22px; color:var(--muted); font-size:.78rem; }
+    summary { padding:15px 0 4px; cursor:pointer; color:#d7deed; }.hint { margin:8px 0 4px; }
+    label { display:block; margin-top:12px; color:#d7deed; font-weight:700; }
+    input { width:100%; margin-top:5px; padding:9px 10px; border:1px solid var(--edge); border-radius:9px; background:rgba(4,7,16,.28); color:var(--ink); font:inherit; font-size:.82rem; }
+    @keyframes zero-pulse { 50% { box-shadow:0 0 0 5px rgba(237,126,146,.08),0 0 30px rgba(237,126,146,.13); } }
+    @media (max-width:1050px) { .metrics { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+    @media (max-width:560px) { body { padding:12px; } header { padding:21px 20px 17px; }.metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }.metric { min-height:105px; }.monitor-panels { grid-template-columns:1fr; } footer { grid-template-columns:1fr auto; } footer #updated { grid-column:1 / -1; } details { padding-left:20px; padding-right:20px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div><h1>Yamb of the Balkan</h1><p>Privatni, read-only pregled stanja servera</p></div>
+      <div id="state" class="state"><i class="dot"></i><span>Čekam podatke</span></div>
+    </header>
+    <section class="summary" aria-live="polite"><div class="label">ONLINE IGRAČA</div><div id="online">—</div></section>
+    <section class="metrics" aria-live="polite">
+      <article class="metric"><div class="label">U PARTIJI</div><div class="value" id="in-game">—</div><small id="duels">Aktivni dueli: —</small></article>
+      <article class="metric waiting"><div class="label">ČEKA PROTIVNIKA</div><div class="value" id="waiting">—</div><small>Javno ili privatno uparivanje</small></article>
+      <article class="metric"><div class="label">ZAVRŠENO DANAS</div><div class="value" id="completed">—</div><small>Upisani završeni rezultati</small></article>
+      <article class="metric alert"><div class="label">PREKIDI VEZE</div><div class="value" id="disconnects">—</div><small>Samo tokom aktivnog duela</small></article>
+      <article class="metric"><div class="label">NAJVIŠE ONLINE</div><div class="value" id="peak">—</div><small>Najveća vrednost danas</small></article>
+      <article class="metric"><div class="label">OPERATIVNI DAN</div><div class="value" id="day" style="font-size:1.15rem;letter-spacing:0">—</div><small>Vreme: Evropa/Beograd</small></article>
+      <article class="metric waiting"><div class="label">PROSEČNO VREME ČEKANJA</div><div class="value" id="average-wait">—</div><small>Nasumično i privatno uparivanje</small></article>
+      <article class="metric"><div class="label">NAJVEĆI BROJ ONLINE · SEDAM DANA</div><div class="value" id="peak-7d">—</div><small>Najveći online broj u poslednjih sedam dana</small></article>
+      <article class="metric"><div class="label">AKTIVNI IGRAČI DANAS</div><div class="value" id="active-players">—</div><small id="active-players-note">Danas i poslednja 24 sata</small></article>
+      <article class="metric"><div class="label">TURNIR I KVARTALNA LIGA</div><div class="value" id="competition">—</div><small id="competition-note">Prijave i učesnici aktuelnog kvartala</small></article>
+      <article class="metric"><div class="label">NAGRADNI VIDEO</div><div class="value" id="rewarded-video">—</div><small id="rewarded-video-note">Status i današnje potvrđene nagrade</small></article>
+      <article class="metric"><div class="label">PARTIJE PO VRSTI DANAS</div><div class="value" id="games-by-mode">—</div><small>Solo, Hotseat, nasumične i prijateljske</small></article>
+    </section>
+    <section class="monitor-panels" aria-live="polite">
+      <article class="monitor-panel"><h2>TEME AKTIVNIH ONLINE IGRAČA</h2><ul class="monitor-list" id="theme-usage"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
+      <article class="monitor-panel"><h2>NAJPOSEĆENIJE SOBE DANAS</h2><ul class="monitor-list" id="top-rooms"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
+    </section>
+    <footer><div id="updated">Potrebni su URL servera i monitor token.</div><button id="alarm-toggle" type="button">Uključi alarm za 0</button><button id="refresh" type="button">Osveži</button></footer>
+    <details>
+      <summary>Podešavanje privatnog pregleda</summary>
+      <p class="hint">Ovaj dokument ne prijavljuje igrača i ne učestvuje u igri. Token se čuva samo u memoriji ovog otvorenog taba.</p>
+      <label for="server-url">URL Yamb servera</label><input id="server-url" value="https://yamb-of-the-balkan.onrender.com" autocomplete="url" spellcheck="false">
+      <label for="token">Monitor token</label><input id="token" type="password" autocomplete="off" placeholder="YAMB_MONITOR_TOKEN">
+    </details>
+  </main>
+  <script>
+    (() => {
+      const $ = id => document.getElementById(id);
+      const state = $('state'), updated = $('updated'), button = $('refresh'), alarmButton = $('alarm-toggle'), url = $('server-url'), token = $('token'), summary = document.querySelector('.summary');
+      const number = value => Number.isFinite(Number(value)) ? Number(value).toLocaleString('sr-RS') : '—';
+      const themeLabel = { dark: 'Zelena', light: 'Svetlo zlato', medium: 'Trula višnja', winter: 'Plavi okean', neon: 'Neon cyber', amethyst: 'Kraljevski ametist', easter: 'Vaskrs', desert: 'Pustinjsko staklo', moon: 'Mesečev sjaj', severna: 'Severna maglina' };
+      const roomLabel = { daily: 'Dnevni izazov', leaderboard: 'Top lista', statistics: 'Statistika', settings: 'Podešavanja', rules: 'Pravila', treasury: 'Riznica', tournament: 'Turnir', solo: 'Solo igra', hotseat: 'Dva igrača', opponent: 'Nađi protivnika', invite: 'Pozovi prijatelja', globalChat: 'Global chat', onlinePlayers: 'Online igrači', economy: 'Dukati i upisi' };
+      const formatWait = seconds => {
+        if (!Number.isFinite(Number(seconds))) return '—';
+        const value = Math.max(0, Math.round(Number(seconds)));
+        return value < 60 ? `${value}s` : `${Math.floor(value / 60)}m ${value % 60}s`;
+      };
+      function renderList(id, rows, labelFor, valueFor) {
+        const list = $(id); list.replaceChildren();
+        const safeRows = Array.isArray(rows) ? rows : [];
+        if (!safeRows.length) {
+          const li = document.createElement('li'), label = document.createElement('span'), value = document.createElement('b');
+          label.textContent = 'Još nema podataka'; value.textContent = '—'; li.append(label, value); list.append(li); return;
+        }
+        safeRows.forEach(row => {
+          const li = document.createElement('li'), label = document.createElement('span'), value = document.createElement('b');
+          label.textContent = labelFor(row); value.textContent = valueFor(row); li.append(label, value); list.append(li);
+        });
+      }
+      const ALARM_STORAGE_KEY = 'yamb_zero_alarm_enabled';
+      let timer = null, audioContext = null, alarmEnabled = localStorage.getItem(ALARM_STORAGE_KEY) === 'true', zeroAlarmPlayed = false, zeroAlarmTimer = null, fallbackSocket = null;
+      token.value = sessionStorage.getItem('yamb_monitor_token') || '';
+      function setState(kind, message) { state.className = `state ${kind}`; state.querySelector('span').textContent = message; }
+      function renderAlarmButton() {
+        alarmButton.classList.toggle('enabled', alarmEnabled);
+        alarmButton.textContent = alarmEnabled ? 'Alarm za 0: uključen' : 'Uključi alarm za 0';
+      }
+      async function armAudio() {
+        if (!alarmEnabled) return false;
+        audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioContext.state === 'suspended') await audioContext.resume();
+        return audioContext.state === 'running';
+      }
+      function playZeroAlarm() {
+        if (!audioContext || audioContext.state !== 'running') return;
+        const now = audioContext.currentTime;
+        [0, .28, .56].forEach((offset, index) => {
+          const oscillator = audioContext.createOscillator(), gain = audioContext.createGain();
+          oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(index === 2 ? 880 : 660, now + offset);
+          gain.gain.setValueAtTime(.0001, now + offset); gain.gain.exponentialRampToValueAtTime(.18, now + offset + .025);
+          gain.gain.exponentialRampToValueAtTime(.0001, now + offset + .2); oscillator.connect(gain).connect(audioContext.destination);
+          oscillator.start(now + offset); oscillator.stop(now + offset + .22);
+        });
+      }
+      function stopZeroAlarmRepeat() {
+        if (!zeroAlarmTimer) return;
+        window.clearInterval(zeroAlarmTimer); zeroAlarmTimer = null;
+      }
+      function startZeroAlarmRepeat() {
+        if (zeroAlarmTimer || !alarmEnabled) return;
+        zeroAlarmTimer = window.setInterval(() => {
+          if (alarmEnabled && summary.classList.contains('zero')) playZeroAlarm();
+        }, 30000);
+      }
+      function updateZeroAlarm(value) {
+        const online = Number(value);
+        const isZero = Number.isFinite(online) && online === 0;
+        summary.classList.toggle('zero', isZero);
+        if (!isZero) { zeroAlarmPlayed = false; stopZeroAlarmRepeat(); return; }
+        if (alarmEnabled && !zeroAlarmPlayed) { zeroAlarmPlayed = true; playZeroAlarm(); }
+        if (alarmEnabled) startZeroAlarmRepeat();
+      }
+      function fill(metrics, dayKey) {
+        $('online').textContent = number(metrics.online); updateZeroAlarm(metrics.online); $('in-game').textContent = number(metrics.playersInGame);
+        $('duels').textContent = `Aktivni dueli: ${number(metrics.activeDuels)}`; $('waiting').textContent = number(metrics.waitingForOpponent);
+        $('completed').textContent = number(metrics.completedToday); $('disconnects').textContent = number(metrics.disconnectsToday);
+        $('peak').textContent = number(metrics.peakOnlineToday); $('day').textContent = dayKey || '—';
+        $('average-wait').textContent = formatWait(metrics.averageMatchmakingWaitSeconds);
+        $('peak-7d').textContent = number(metrics.peakOnlineLast7Days);
+        $('active-players').textContent = number(metrics.activePlayersToday);
+        $('active-players-note').textContent = `Danas: ${number(metrics.activePlayersToday)} · poslednja 24 sata: ${number(metrics.activePlayersLast24h)}`;
+        const tournament = metrics.tournament || {}, league = metrics.quarterlyLeague || {};
+        $('competition').textContent = `${number(tournament.registrations)}/${number(tournament.capacity)}`;
+        $('competition-note').textContent = `Turnir: ${tournament.status || '—'} · Kvartal ${number(league.quarter)}: ${number(league.participants)} igrača`;
+        const rewarded = metrics.rewardedVideo || {};
+        $('rewarded-video').textContent = rewarded.status === 'ready' ? 'SPREMAN' : (rewarded.status === 'unavailable' ? 'NEDOSTUPAN' : '—');
+        $('rewarded-video-note').textContent = `Dodeljeno: ${number(rewarded.grantedToday)} · čeka proveru: ${number(rewarded.pendingVerificationToday)} · greške: ${number(rewarded.errorsToday)}`;
+        const modes = metrics.completedByMode || {};
+        $('games-by-mode').textContent = `${number(metrics.completedToday)}`;
+        $('games-by-mode').nextElementSibling.textContent = `Solo ${number(modes.solo)} · Hotseat ${number(modes.hotseat)} · nasumične ${number(modes.random)} · prijateljske ${number(modes.friend)}`;
+        renderList('theme-usage', metrics.themeUsageOnline, row => themeLabel[row.theme] || row.theme, row => `${number(row.count)} · ${number(row.percent)}%`);
+        renderList('top-rooms', metrics.topRoomsToday, row => roomLabel[row.room] || row.room, row => number(row.visits));
+      }
+      function messageFor(response) { if (response.status === 401) return 'Monitor token nije ispravan.'; if (response.status === 503) return 'Na serveru nije podešen YAMB_MONITOR_TOKEN.'; return 'Server trenutno nije dostupan.'; }
+      function stopPublicOnlineFallback() {
+        if (!fallbackSocket) return;
+        fallbackSocket.disconnect(); fallbackSocket = null;
+      }
+      function startPublicOnlineFallback() {
+        if (fallbackSocket || typeof window.io !== 'function') return;
+        const base = url.value.trim().replace(/\/+$/, '');
+        if (!base) return;
+        fallbackSocket = window.io(base, { transports: ['websocket', 'polling'], reconnection: true, reconnectionDelay: 1500, timeout: 15000 });
+        fallbackSocket.on('connect', () => {
+          setState('connected', 'Povezano — alarm prati online igrače');
+          updated.textContent = 'Rezervni režim: samo online broj · osvežava se uživo';
+        });
+        fallbackSocket.on('users_count', value => {
+          $('online').textContent = number(value); updateZeroAlarm(value);
+          updated.textContent = `Online broj ažuriran: ${new Date().toLocaleTimeString('sr-RS')}`;
+        });
+        fallbackSocket.on('connect_error', () => setState('error', 'Nije moguće povezati se sa serverom.'));
+      }
+      async function refresh() {
+        const base = url.value.trim().replace(/\/+$/, ''), secret = token.value.trim();
+        if (!base) { setState('error', 'Unesite URL servera.'); updated.textContent = 'Čekam adresu servera.'; return; }
+        if (!secret) { startPublicOnlineFallback(); setState('connected', 'Alarm prati online igrače'); updated.textContent = 'Unesite token za dodatne privatne statistike.'; return; }
+        button.disabled = true;
+        try {
+          const response = await fetch(`${base}/api/monitor/status`, { headers: { 'X-Yamb-Monitor-Token': secret }, cache: 'no-store' });
+          if (response.status === 404) { startPublicOnlineFallback(); return; }
+          if (!response.ok) throw new Error(messageFor(response));
+          const data = await response.json(); if (!data.ok) throw new Error('Podaci nisu dostupni.');
+          stopPublicOnlineFallback(); sessionStorage.setItem('yamb_monitor_token', secret); fill(data.metrics || {}, data.dayKey);
+          setState('connected', 'Povezano — automatsko osvežavanje');
+          updated.textContent = `Ažurirano: ${new Date(data.generatedAt || Date.now()).toLocaleTimeString('sr-RS')} · na 10 sekundi`;
+        } catch (error) { setState('error', error.message || 'Greška pri čitanju podataka.'); updated.textContent = 'Nema novog podatka. Proverite server i token.'; }
+        finally { button.disabled = false; }
+      }
+      button.addEventListener('click', refresh);
+      url.addEventListener('change', () => { stopPublicOnlineFallback(); refresh(); });
+      token.addEventListener('change', refresh);
+      alarmButton.addEventListener('click', async () => {
+        alarmEnabled = !alarmEnabled;
+        localStorage.setItem(ALARM_STORAGE_KEY, String(alarmEnabled)); renderAlarmButton();
+        if (!alarmEnabled) { stopZeroAlarmRepeat(); return; }
+        await armAudio(); zeroAlarmPlayed = false; playZeroAlarm();
+        if (summary.classList.contains('zero')) startZeroAlarmRepeat();
+      });
+      // Preglednici posle osvežavanja stranice dozvoljavaju zvuk tek nakon prve radnje korisnika.
+      // Podešavanje ostaje uključeno; prvi klik/taster ponovo aktivira zvuk bez menjanja stanja alarma.
+      ['pointerdown', 'keydown'].forEach(eventName => window.addEventListener(eventName, async () => {
+        const armed = await armAudio();
+        if (armed && summary.classList.contains('zero')) playZeroAlarm();
+      }, { once: true }));
+      window.addEventListener('storage', event => {
+        if (event.key !== ALARM_STORAGE_KEY) return;
+        alarmEnabled = event.newValue === 'true'; renderAlarmButton();
+        if (!alarmEnabled) stopZeroAlarmRepeat();
+      });
+      renderAlarmButton();
+      timer = window.setInterval(refresh, 10000); refresh();
+      window.addEventListener('beforeunload', () => { window.clearInterval(timer); stopZeroAlarmRepeat(); stopPublicOnlineFallback(); });
+    })();
+  </script>
+</body>
+</html>

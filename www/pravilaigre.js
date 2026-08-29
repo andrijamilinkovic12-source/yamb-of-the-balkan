@@ -34,7 +34,7 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/treasury/tab-skins-v2.png': 'assets/desert-soft-clay/treasury/tab-skins.png?v=1',
         'assets/easter-soft-clay/treasury/tab-effects-v2.png': 'assets/desert-soft-clay/treasury/tab-effects.png?v=1',
         'assets/easter-soft-clay/treasury/tab-themes-v2.png': 'assets/desert-soft-clay/treasury/tab-themes.png?v=1',
-        'assets/easter-soft-clay/tournament-pro-v3.png': 'assets/desert-soft-clay/tournament-pro.png?v=4',
+        'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/desert-soft-clay/tournament-pro.png?v=4',
         'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/desert-soft-clay/tournament/state-start.png?v=3',
         'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png': 'assets/desert-soft-clay/tournament/tab-hall-of-fame.png?v=3',
         'assets/easter-soft-clay/mode-solo-pro-v2.png': 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
@@ -44,7 +44,7 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/desert-soft-clay/global-chat-pro.png?v=1',
         'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/desert-soft-clay/online-players-pro.png?v=1',
         'assets/easter-soft-clay/online-add-friend-pro-v2.png': 'assets/desert-soft-clay/online-add-friend-pro.png?v=1',
-        'assets/easter-soft-clay/online-spectate-pro-v2.png': 'assets/desert-soft-clay/online-spectate-pro.png?v=1',
+        'assets/easter-soft-clay/online-spectate-pro-v4.png': 'assets/desert-soft-clay/online-spectate-pro.png?v=1',
         'assets/easter-soft-clay/online-duel-pro-v3.png': 'assets/desert-soft-clay/online-duel-pro-v2.png?v=1',
         'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png': 'assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2',
         'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
@@ -91,7 +91,7 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/severna-soft-clay/economy/ad-unavailable-v3.png?v=1',
         'assets/easter-soft-clay/rules-pro-v2.png': 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
         'assets/easter-soft-clay/treasury-pro-v2.png': 'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
-        'assets/easter-soft-clay/tournament-pro-v3.png': 'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
+        'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
         'assets/easter-soft-clay/mode-solo-pro-v2.png': 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
         'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
         'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
@@ -101,7 +101,7 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
         'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
         'assets/easter-soft-clay/online-add-friend-pro-v2.png': 'assets/severna-soft-clay/online-add-friend-pro-v2.png?v=1',
-        'assets/easter-soft-clay/online-spectate-pro-v2.png': 'assets/severna-soft-clay/online-spectate-pro-v2.png?v=1',
+        'assets/easter-soft-clay/online-spectate-pro-v4.png': 'assets/severna-soft-clay/online-spectate-pro-v2.png?v=1',
         'assets/easter-soft-clay/online-duel-pro-v3.png': 'assets/severna-soft-clay/online-duel-pro-v2.png?v=1',
         'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/severna-soft-clay/tournament/state-start-v3.png?v=1',
         'assets/easter-soft-clay/tournament/state-match-complete-v2.png': 'assets/severna-soft-clay/tournament/state-match-complete-v3.png?v=1',
@@ -237,12 +237,12 @@ const RulesData = {
                 <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1')} Privatni dueli</h4>
                 <p>Prijatelja možete dodati preko liste aktivnih igrača ili pozivnice. Kada protivnik prihvati izazov, otvara se privatni duel.</p>
 
-                <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Turniri</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Turniri</h3>
                 <ul>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Sistem:</strong> Nedeljni turnir prima 8 igrača i igra se na ispadanje: četvrtfinale, polufinale i finale. Svaki duel je jedna partija.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Sistem:</strong> Nedeljni turnir prima 8 igrača i igra se na ispadanje: četvrtfinale, polufinale i finale. Svaki duel je jedna partija.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=1')} Prijava:</strong> Kotizacija je 5500 dukata. Odjava i povraćaj mogući su samo dok traje faza prijave, pre početka turnira.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('📅', 'assets/easter-soft-clay/tournament/state-start-v2.png?v=1')} Zakazivanje:</strong> Kada se prijavi svih 8 igrača, protivnici u kosturu predlažu i prihvataju termin meča. Meč se pokreće kada je termin potvrđen.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=2')} upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=2')} upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=2')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
                 </ul>
                 
@@ -259,7 +259,7 @@ const RulesData = {
                 <p>Aplikacija prikazuje broj igrača koji su trenutno na mreži i listu dostupnih igrača.</p>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('➕', 'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=1')} Dodaj prijatelja:</strong> Pošaljite zahtev željenom igraču u realnom vremenu.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('👁️', 'assets/easter-soft-clay/online-spectate-pro-v2.png?v=1')} Gledaj partiju:</strong> Posmatrajte tuđe mečeve uživo kada niste učesnik tog duela.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('👁️', 'assets/easter-soft-clay/online-spectate-pro-v4.png?v=1')} Gledaj partiju:</strong> Posmatrajte tuđe mečeve uživo kada niste učesnik tog duela.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro-v3.png?v=1')} Izazov:</strong> Klikom na ikonicu možete direktno izazvati igrača na duel.</li>
                 </ul>
 
@@ -280,7 +280,7 @@ const RulesData = {
                     <li><strong>🎲 Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
                 </ul>
 
                 <h3>${rulesThemeAssetIconHtml('assets/undo-token-icon.svg', 'assets/easter-soft-clay/economy/undo-token.png?v=1')} Vraćanje upisa</h3>
@@ -401,12 +401,12 @@ const RulesData = {
                 <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1')} Friend Duels</h4>
                 <p>You can add friends from the active player list or by invite. Once the opponent accepts, a private duel opens.</p>
 
-                <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Tournaments</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Tournaments</h3>
                 <ul>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Format:</strong> The weekly tournament accepts 8 players and is played as a knockout bracket: quarterfinals, semifinals, and final. Each duel is one game.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Format:</strong> The weekly tournament accepts 8 players and is played as a knockout bracket: quarterfinals, semifinals, and final. Each duel is one game.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=1')} Entry:</strong> The entry fee is 5500 ducats. Unregistering and refunds are possible only during registration, before the tournament starts.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('📅', 'assets/easter-soft-clay/tournament/state-start-v2.png?v=1')} Scheduling:</strong> Once all 8 players register, opponents in the bracket propose and accept match times. A match starts after the time is confirmed.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=2')} Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=2')} Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=2')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
                 </ul>
                 
@@ -423,7 +423,7 @@ const RulesData = {
                 <p>The app shows how many players are currently online and lists available players.</p>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('➕', 'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=1')} Add Friend:</strong> Send a real-time friend request.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('👁️', 'assets/easter-soft-clay/online-spectate-pro-v2.png?v=1')} Spectate:</strong> Watch other matches live when you are not a participant in that duel.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('👁️', 'assets/easter-soft-clay/online-spectate-pro-v4.png?v=1')} Spectate:</strong> Watch other matches live when you are not a participant in that duel.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/online-duel-pro-v3.png?v=1')} Challenge:</strong> Use the challenge icon to invite a player directly to a duel.</li>
                 </ul>
 
@@ -444,7 +444,7 @@ const RulesData = {
                     <li><strong>🎲 Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
                 </ul>
 
                 <h3>${rulesThemeAssetIconHtml('assets/undo-token-icon.svg', 'assets/easter-soft-clay/economy/undo-token.png?v=1')} Undo entry</h3>
