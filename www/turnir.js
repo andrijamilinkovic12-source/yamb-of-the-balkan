@@ -786,13 +786,13 @@ class TournamentManager {
                 </button>
                 <button class="tourney-tab-btn ${this.activeTab === 'bracket' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'bracket'}" aria-label="${tt('tourney_tab_bracket') || 'Kostur'}" title="${tt('tourney_tab_bracket') || 'Kostur'}" onclick="app.tournamentManager.switchTab('bracket')">
                     <img class="tourney-tab-icon tourney-tab-icon--tournament tourney-tab-icon-default" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
-                    <img class="tourney-tab-soft-clay-icon" src="assets/easter-soft-clay/tournament/tab-bracket-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-tab-soft-clay-icon" src="assets/easter-soft-clay/tournament/tab-bracket-v2.png?v=2" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament/tab-bracket.png?v=3" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament/tab-bracket-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </button>
                 <button class="tourney-tab-btn ${this.activeTab === 'leaderboard' ? 'active' : ''}" role="tab" aria-selected="${this.activeTab === 'leaderboard'}" aria-label="${tt('tourney_tab_fame') || 'Slavni'}" title="${tt('tourney_tab_fame') || 'Slavni'}" onclick="app.tournamentManager.switchTab('leaderboard')">
                     <img class="tourney-tab-icon tourney-tab-icon--fame tourney-tab-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
-                    <img class="tourney-tab-soft-clay-icon" src="assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="tourney-tab-soft-clay-icon" src="assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=2" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-desert-soft-clay-icon" src="assets/desert-soft-clay/tournament/tab-hall-of-fame.png?v=3" alt="" aria-hidden="true" decoding="async">
                     <img class="tourney-tab-nebula-soft-clay-icon" src="assets/severna-soft-clay/tournament/tab-hall-of-fame-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                 </button>
@@ -1152,7 +1152,7 @@ class TournamentManager {
                 const shareLabel = this.escape(tt('tourney_share_card') || 'Podeli karticu');
                 const podiumType = idx === 0 ? 'gold' : (idx === 1 ? 'silver' : (idx === 2 ? 'bronze' : ''));
                 const podiumHtml = podiumType
-                    ? `<img class="tourney-podium-medal tourney-podium-medal-easter tourney-podium-medal--${podiumType}" src="assets/easter-soft-clay/tournament/podium-${podiumType}-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-desert tourney-podium-medal--${podiumType}" src="assets/desert-soft-clay/tournament/podium-${podiumType}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-nebula tourney-podium-medal--${podiumType}" src="assets/severna-soft-clay/tournament/podium-${podiumType}-v2.png?v=1" alt="" aria-hidden="true" decoding="async">`
+                    ? `<img class="tourney-podium-medal tourney-podium-medal-easter tourney-podium-medal--${podiumType}" src="assets/easter-soft-clay/tournament/podium-${podiumType}-v2.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-desert tourney-podium-medal--${podiumType}" src="assets/desert-soft-clay/tournament/podium-${podiumType}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-nebula tourney-podium-medal--${podiumType}" src="assets/severna-soft-clay/tournament/podium-${podiumType}-v2.png?v=1" alt="" aria-hidden="true" decoding="async">`
                     : '';
 
                 leaderboardHtml += `
@@ -1913,7 +1913,7 @@ class TournamentManager {
         const resultLabel = this.getMatchResultLabel(match);
         const drawReplayLabel = this.getMatchDrawReplayLabel(match);
         const resultHtml = resultLabel
-            ? `<div class="tourney-completed-match-result" style="text-align: center; padding: 2px 8px; font-size: 0.7rem; line-height: 1.15; font-weight: 900; color: var(--gold-main); background: rgba(255,215,0,0.07); border-bottom: 1px solid rgba(255,215,0,0.12); text-shadow: 0 0 5px rgba(255,215,0,0.25);"><img class="tourney-inline-match-state" src="assets/easter-soft-clay/tournament/state-match-complete-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-match-state-desert" src="assets/desert-soft-clay/tournament/state-match-complete.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-match-state-nebula" src="assets/severna-soft-clay/tournament/state-match-complete-v3.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${resultLabel}</span></div>`
+            ? `<div class="tourney-completed-match-result" style="text-align: center; padding: 2px 8px; font-size: 0.7rem; line-height: 1.15; font-weight: 900; color: var(--gold-main); background: rgba(255,215,0,0.07); border-bottom: 1px solid rgba(255,215,0,0.12); text-shadow: 0 0 5px rgba(255,215,0,0.25);"><img class="tourney-inline-match-state" src="assets/easter-soft-clay/tournament/state-match-complete-v2.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-match-state-desert" src="assets/desert-soft-clay/tournament/state-match-complete.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-inline-match-state-nebula" src="assets/severna-soft-clay/tournament/state-match-complete-v3.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${resultLabel}</span></div>`
             : (drawReplayLabel ? `<div style="text-align: center; padding: 2px 8px; font-size: 0.66rem; line-height: 1.15; font-weight: 1000; color: #ffb74d; background: rgba(255,152,0,0.1); border-bottom: 1px solid rgba(255,152,0,0.18); text-shadow: 0 0 5px rgba(255,152,0,0.2);">${drawReplayLabel}</div>` : '');
         const cardMinHeight = (resultLabel || drawReplayLabel) ? '76px' : '62px';
         const canOpenMatch = Boolean(match.p1 && match.p2 && (this.state.status === 'finished' || this.isTournamentSchedulingUnlocked()));

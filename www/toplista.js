@@ -52,7 +52,7 @@ class TopListManager {
         if (!medal) return '';
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         const medalSrc = activeTheme === 'easter'
-            ? `assets/easter-soft-clay/leaderboard/medal-${medal}-v3.png?v=1`
+            ? `assets/easter-soft-clay/leaderboard/medal-${medal}-v4.png?v=1`
             : activeTheme === 'desert'
                 ? `assets/desert-soft-clay/leaderboard/medal-${medal}-v2.png?v=1`
                 : activeTheme === 'severna'
