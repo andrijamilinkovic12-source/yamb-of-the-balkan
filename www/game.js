@@ -1503,7 +1503,7 @@ class YambApp {
                 background: 'assets/easter-neumorphic-bg-v2.png',
                 icons: [
                     'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
-                    'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
                     'assets/easter-soft-clay/treasury-pro-v2.png?v=1',
                     'assets/easter-soft-clay/tournament-pro-v3.png?v=1',
                     'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1'
@@ -1521,7 +1521,7 @@ class YambApp {
                     'assets/easter-soft-clay/ducats-undo-pro-v3.png?v=1',
                     'assets/easter-soft-clay/economy/ducat.png?v=1',
                     'assets/easter-soft-clay/economy/undo-token.png?v=1',
-                    'assets/easter-soft-clay/economy/rewarded-video.png?v=1',
+                    'assets/easter-soft-clay/economy/rewarded-video.png?v=2',
                     'assets/easter-soft-clay/economy/ad-unavailable.png?v=1',
                     'assets/easter-soft-clay/mode-hotseat-pro-v2.png?v=1',
                     'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1',
@@ -1536,18 +1536,18 @@ class YambApp {
                     'assets/easter-soft-clay/settings/language-v2.png?v=1',
                     'assets/easter-soft-clay/settings/terms-v2.png?v=1',
                     'assets/easter-soft-clay/settings/privacy-v2.png?v=1',
-                    'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=1',
+                    'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=2',
                     'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=1',
                     'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=1',
                     'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=1',
-                    'assets/easter-soft-clay/treasury/reward-video-v2.png?v=1',
+                    'assets/easter-soft-clay/treasury/reward-video-v2.png?v=2',
                     'assets/easter-soft-clay/treasury/status-owned-v2.png?v=1',
                     'assets/easter-soft-clay/treasury/status-active-v2.png?v=1',
                     'assets/easter-soft-clay/treasury/status-locked-v2.png?v=1',
                     'assets/easter-soft-clay/treasury/status-insufficient-v2.png?v=1',
-                    'assets/easter-soft-clay/treasury/collection-bronze-v2.png?v=1',
-                    'assets/easter-soft-clay/treasury/collection-silver-v2.png?v=1',
-                    'assets/easter-soft-clay/treasury/collection-gold-v2.png?v=1',
+                    'assets/easter-soft-clay/treasury/collection-bronze-v2.png?v=2',
+                    'assets/easter-soft-clay/treasury/collection-silver-v2.png?v=2',
+                    'assets/easter-soft-clay/treasury/collection-gold-v2.png?v=2',
                     'assets/easter-soft-clay/tournament/tab-bracket-v2.png?v=2',
                     'assets/easter-soft-clay/rules-pro-v2.png?v=1',
                     'assets/easter-soft-clay/statistics/record-v2.png?v=1',
@@ -1579,16 +1579,20 @@ class YambApp {
                     'assets/easter-soft-clay/leaderboard/medal-gold-v4.png?v=1',
                     'assets/easter-soft-clay/leaderboard/medal-silver-v4.png?v=1',
                     'assets/easter-soft-clay/leaderboard/medal-bronze-v4.png?v=1',
-                    'assets/easter-soft-clay/opponent/vs-v2.png?v=1',
+                    'assets/easter-soft-clay/opponent/vs-v2.png?v=2',
                     'assets/easter-soft-clay/solo/personal-best.png?v=1',
-                    'assets/easter-soft-clay/hotseat/winner.png?v=1',
-                    'assets/easter-soft-clay/opponent/scanning.png?v=1',
+                    'assets/easter-soft-clay/solo/finish-ducat-v2.png?v=1',
+                    'assets/easter-soft-clay/solo/finish-reward-video-v2.png?v=1',
+                    'assets/easter-soft-clay/solo/finish-claim-v2.png?v=1',
+                    'assets/easter-soft-clay/solo/finish-exit-v2.png?v=1',
+                    'assets/easter-soft-clay/hotseat/winner.png?v=2',
+                    'assets/easter-soft-clay/opponent/scanning.png?v=2',
                     'assets/easter-soft-clay/opponent/found.png?v=1',
-                    'assets/easter-soft-clay/opponent/disconnected.png?v=1',
-                    'assets/easter-soft-clay/opponent/reconnected.png?v=1',
-                    'assets/easter-soft-clay/invite/send.png?v=1',
+                    'assets/easter-soft-clay/opponent/disconnected.png?v=2',
+                    'assets/easter-soft-clay/opponent/reconnected.png?v=2',
+                    'assets/easter-soft-clay/invite/send.png?v=2',
                     'assets/easter-soft-clay/invite/empty.png?v=1',
-                    'assets/easter-soft-clay/invite/sent.png?v=1',
+                    'assets/easter-soft-clay/invite/sent.png?v=2',
                     'assets/easter-soft-clay/invite/accepted.png?v=1',
                     'assets/easter-soft-clay/ql/tab-league.png?v=1',
                     'assets/easter-soft-clay/ql/tab-hall-of-fame.png?v=1',
@@ -1600,9 +1604,9 @@ class YambApp {
                     'assets/easter-soft-clay/ql/rank-legenda.png?v=1',
                     'assets/easter-soft-clay/ql/rank-titan.png?v=1',
                     'assets/easter-soft-clay/ql/rank-alltime.png?v=1',
-                    'assets/easter-soft-clay/ql/medal-gold-v2.png?v=1',
-                    'assets/easter-soft-clay/ql/medal-silver-v2.png?v=1',
-                    'assets/easter-soft-clay/ql/medal-bronze-v2.png?v=1',
+                    'assets/easter-soft-clay/ql/medal-gold-v2.png?v=4',
+                    'assets/easter-soft-clay/ql/medal-silver-v2.png?v=4',
+                    'assets/easter-soft-clay/ql/medal-bronze-v2.png?v=4',
                     'assets/easter-soft-clay/tournament/tab-info-v2.png?v=1',
                     'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=2',
                     'assets/easter-soft-clay/tournament/state-register-v2.png?v=1',
@@ -1614,7 +1618,7 @@ class YambApp {
                     'assets/easter-soft-clay/tournament/podium-gold-v2.png?v=2',
                     'assets/easter-soft-clay/tournament/podium-silver-v2.png?v=2',
                     'assets/easter-soft-clay/tournament/podium-bronze-v2.png?v=2',
-                    'assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=1'
+                    'assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=2'
                 ]
             },
             desert: {
@@ -2958,7 +2962,7 @@ class YambApp {
                                 <div class="easter-friend-record-row easter-friend-loss"><span>POR</span><strong>${safeLosses}</strong></div>
                             </div>
                         </div>
-                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-invite-send-icon" src="assets/desert-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-invite-send-icon" src="assets/severna-soft-clay/invite/send-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
+                        <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" src="assets/easter-soft-clay/invite/send.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="desert-invite-send-icon" src="assets/desert-soft-clay/invite/send.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-invite-send-icon" src="assets/severna-soft-clay/invite/send-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
                     </div>
                 `;
             });
@@ -3069,7 +3073,7 @@ class YambApp {
                 window.showNotification(titleText, sentText, {
                     icon: (localStorage.getItem('yamb_theme') || 'dark') === 'severna'
                         ? 'assets/severna-soft-clay/invite/sent-v2.png?v=1'
-                        : this.getSoftClayThemeAsset('invite/sent.png?v=1'),
+                        : this.getSoftClayThemeAsset('invite/sent.png?v=2'),
                     className: 'invite-sent-toast'
                 });
             } else {
@@ -3727,7 +3731,7 @@ class YambApp {
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
                             gt('tourney_finalist_title') || "FINALISTA 🥈",
                             { contextClass: 'tourney-finalist' }
                         );
@@ -4930,7 +4934,7 @@ class YambApp {
                     : 'DVA IGRAČA HOTSEAT'
             },
             opponent: {
-                icon: 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1',
+                icon: 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
                 desertIcon: 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
                 scale: 1.2,
@@ -5611,7 +5615,7 @@ class YambApp {
                 : fallbackText;
 
             timerDisplay.style.display = 'flex';
-            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" src="assets/desert-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-opponent-connection-icon" src="assets/severna-soft-clay/opponent/disconnected-v3.png?v=1" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
+            timerDisplay.innerHTML = `<img class="easter-opponent-connection-icon" src="assets/easter-soft-clay/opponent/disconnected.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="desert-opponent-connection-icon" src="assets/desert-soft-clay/opponent/disconnected.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="severna-opponent-connection-icon" src="assets/severna-soft-clay/opponent/disconnected-v3.png?v=1" alt="" aria-hidden="true" decoding="async"><span style="color:#ffcc00; font-size: 0.8rem;">${text}</span>`;
             timerDisplay.style.animation = 'pulse 1s infinite';
 
             if (this.opponentReconnectGraceDeadline && msLeft <= 0) {
@@ -8077,8 +8081,8 @@ class YambApp {
         const btnRematch = document.getElementById('btn-rematch');
         if (btnRematch) btnRematch.style.display = 'none';
 
-        const btnClaim = document.querySelector('#game-over-screen .btn-secondary');
-        if(btnClaim) btnClaim.innerText = gt('go_claim') || 'Preuzmi i Izađi';
+        const claimLabel = document.getElementById('go-claim-label');
+        if (claimLabel) claimLabel.innerText = gt('go_claim') || 'Preuzmi i Izađi';
 
         if (iAmWinner && this.effectMgr) this.effectMgr.celebrateWin();
         this.navigateTo('game-over-screen');
@@ -8291,8 +8295,20 @@ class YambApp {
         let scoreLabel = gt('go_msg_solo') || "OSVOJENI POENI";
 
         if (this.players.length === 1) {
-            const myScore = myScoreEntry ? myScoreEntry.score : 0;
-            if (myScore >= 1000) {
+            const myScore = Math.max(0, Number(myScoreEntry ? myScoreEntry.score : 0) || 0);
+            const isEasterSoloFinish = document.body && document.body.classList.contains('easter-theme');
+            if (isEasterSoloFinish) {
+                let soloFinishKey = 'solo_rough';
+                if (myScore > 3000) soloFinishKey = 'solo_perfect';
+                else if (myScore > 2500) soloFinishKey = 'solo_masterful';
+                else if (myScore > 2000) soloFinishKey = 'solo_good';
+                else if (myScore > 1500) soloFinishKey = 'solo_progress';
+                else if (myScore > 1000) soloFinishKey = 'solo_more';
+
+                title = gt(`go_title_${soloFinishKey}`) || gt('go_title_good') || 'DOBRA PARTIJA';
+                message = (gt(`go_msg_${soloFinishKey}`) || 'Završio si partiju sa {0} poena.').replace('{0}', myScore);
+                if (myScore > 2500 && this.effectMgr) this.effectMgr.celebrateWin();
+            } else if (myScore >= 1000) {
                 this.effectMgr.celebrateWin();
                 title = gt('go_title_great');
                 message = (gt('go_msg_solo_great') || "Sjajna partija! Osvojio si {0} poena.").replace('{0}', myScore);
@@ -8343,10 +8359,14 @@ class YambApp {
         const btnAd = document.getElementById('btn-ad-double');
         if ((myScoreEntry && myScoreEntry.score <= 0)) { if(btnAd) btnAd.style.display = 'none'; } else { if(btnAd) btnAd.style.display = 'flex'; }
         
-        const btnClaim = document.querySelector('#game-over-screen .btn-secondary');
-        if(btnClaim) btnClaim.innerText = gt('go_claim');
-        const btnDouble = document.querySelector('#btn-ad-double span');
-        if(btnDouble) btnDouble.innerHTML = gt('go_double');
+        const claimLabel = document.getElementById('go-claim-label');
+        if (claimLabel) claimLabel.innerText = gt('go_claim');
+        const btnDouble = document.getElementById('go-double-label');
+        if (btnDouble) {
+            const isEasterGameOver = document.body && document.body.classList.contains('easter-theme');
+            if (isEasterGameOver) btnDouble.innerText = gt('go_double_easter') || 'DUPLIRAJ NAGRADU (x2)';
+            else btnDouble.innerHTML = gt('go_double');
+        }
 
         const btnRematch = document.getElementById('btn-rematch');
         if (this.onlineMode) {

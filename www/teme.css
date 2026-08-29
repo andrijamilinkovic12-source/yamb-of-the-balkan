@@ -4273,6 +4273,85 @@ body.easter-theme #go-score {
     text-shadow: 0 1px 0 rgba(255,255,255,0.92) !important;
 }
 
+/* Vaskrs Solo Finish / Reward pack: novi asseti su vidljivi samo u ovoj temi. */
+.easter-solo-finish-ducat,
+.easter-solo-finish-action-icon {
+    display: none;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .game-over-ducat-legacy {
+    display: none !important;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-ducat {
+    display: block;
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 6px rgba(107, 44, 143, 0.14));
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-action-icon {
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    object-fit: contain;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .game-over-claim-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: #254633 !important;
+    border: 1px solid rgba(255,255,255,0.72) !important;
+    border-radius: 999px !important;
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,0.82), transparent 36%),
+        linear-gradient(145deg, #c8efd0, #7fca93) !important;
+    box-shadow:
+        7px 7px 15px rgba(184,148,111,0.22),
+        -7px -7px 15px rgba(255,255,255,0.70),
+        inset 1px 1px 2px rgba(255,255,255,0.82) !important;
+}
+
+body.easter-theme #game-over-screen.is-solo-result .easter-solo-finish-exit-icon {
+    width: 23px;
+    height: 23px;
+    flex-basis: 23px;
+    margin-left: 1px;
+}
+
+@keyframes easterSoloFinishReveal {
+    0% { opacity: 0; transform: translateY(9px) scale(0.975); }
+    68% { opacity: 1; transform: translateY(-1px) scale(1.006); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+body.easter-theme #game-over-screen.is-solo-result.screen.active #go-title,
+body.easter-theme #game-over-screen.is-solo-result.screen.active #go-msg,
+body.easter-theme #game-over-screen.is-solo-result.screen.active .game-over-score-card,
+body.easter-theme #game-over-screen.is-solo-result.screen.active #btn-ad-double,
+body.easter-theme #game-over-screen.is-solo-result.screen.active .game-over-claim-button {
+    animation: easterSoloFinishReveal 0.48s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+body.easter-theme #game-over-screen.is-solo-result.screen.active #go-msg { animation-delay: .06s; }
+body.easter-theme #game-over-screen.is-solo-result.screen.active .game-over-score-card { animation-delay: .12s; }
+body.easter-theme #game-over-screen.is-solo-result.screen.active #btn-ad-double { animation-delay: .18s; }
+body.easter-theme #game-over-screen.is-solo-result.screen.active .game-over-claim-button { animation-delay: .24s; }
+
+@media (prefers-reduced-motion: reduce) {
+    body.easter-theme #game-over-screen.is-solo-result.screen.active #go-title,
+    body.easter-theme #game-over-screen.is-solo-result.screen.active #go-msg,
+    body.easter-theme #game-over-screen.is-solo-result.screen.active .game-over-score-card,
+    body.easter-theme #game-over-screen.is-solo-result.screen.active #btn-ad-double,
+    body.easter-theme #game-over-screen.is-solo-result.screen.active .game-over-claim-button {
+        animation: none !important;
+    }
+}
+
 body.easter-theme #btn-rematch,
 body.easter-theme #btn-ad-double {
     width: 100% !important;

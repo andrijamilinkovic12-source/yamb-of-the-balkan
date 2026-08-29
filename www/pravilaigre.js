@@ -165,7 +165,7 @@ function rulesPageTitleGlyphIconHtml(defaultGlyph, easterSrc) {
 }
 
 function rulesQlPodiumPackHtml() {
-    return `<span class="rules-podium-pack rules-podium-pack-easter rules-ql-podium-pack" aria-hidden="true"><img src="assets/easter-soft-clay/ql/medal-gold-v2.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-silver-v2.png?v=1" alt=""><img src="assets/easter-soft-clay/ql/medal-bronze-v2.png?v=1" alt=""></span><span class="rules-podium-pack rules-podium-pack-desert rules-ql-podium-pack" aria-hidden="true"><img src="assets/desert-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-bronze.png?v=1" alt=""></span><span class="rules-podium-pack rules-podium-pack-nebula rules-ql-podium-pack" aria-hidden="true"><img src="assets/severna-soft-clay/ql/medal-gold-v3.png?v=1" alt=""><img src="assets/severna-soft-clay/ql/medal-silver-v3.png?v=1" alt=""><img src="assets/severna-soft-clay/ql/medal-bronze-v3.png?v=1" alt=""></span>`;
+    return `<span class="rules-podium-pack rules-podium-pack-easter rules-ql-podium-pack" aria-hidden="true"><img src="assets/easter-soft-clay/ql/medal-gold-v2.png?v=4" alt=""><img src="assets/easter-soft-clay/ql/medal-silver-v2.png?v=4" alt=""><img src="assets/easter-soft-clay/ql/medal-bronze-v2.png?v=4" alt=""></span><span class="rules-podium-pack rules-podium-pack-desert rules-ql-podium-pack" aria-hidden="true"><img src="assets/desert-soft-clay/ql/medal-gold.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-silver.png?v=1" alt=""><img src="assets/desert-soft-clay/ql/medal-bronze.png?v=1" alt=""></span><span class="rules-podium-pack rules-podium-pack-nebula rules-ql-podium-pack" aria-hidden="true"><img src="assets/severna-soft-clay/ql/medal-gold-v3.png?v=1" alt=""><img src="assets/severna-soft-clay/ql/medal-silver-v3.png?v=1" alt=""><img src="assets/severna-soft-clay/ql/medal-bronze-v3.png?v=1" alt=""></span>`;
 }
 
 const RulesData = {
@@ -231,8 +231,8 @@ const RulesData = {
         {
             title: `${rulesPageTitleIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png?v=1')} Multiplayer i takmičenja`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1')} Multiplayer i dueli</h3>
-                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1')} Klasični Multiplayer</h4>
+                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2')} Multiplayer i dueli</h3>
+                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2')} Klasični Multiplayer</h4>
                 <p>Online igra vas spaja sa protivnikom koji je trenutno na mreži. Direktni dueli sa prijateljima čuvaju H2H istoriju i utiču na pobede, poraze i vatreni niz.</p>
                 <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1')} Privatni dueli</h4>
                 <p>Prijatelja možete dodati preko liste aktivnih igrača ili pozivnice. Kada protivnik prihvati izazov, otvara se privatni duel.</p>
@@ -243,7 +243,7 @@ const RulesData = {
                     <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=1')} Prijava:</strong> Kotizacija je 5500 dukata. Odjava i povraćaj mogući su samo dok traje faza prijave, pre početka turnira.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('📅', 'assets/easter-soft-clay/tournament/state-start-v2.png?v=1')} Zakazivanje:</strong> Kada se prijavi svih 8 igrača, protivnici u kosturu predlažu i prihvataju termin meča. Meč se pokreće kada je termin potvrđen.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=2')} upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=1')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=2')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
                 </ul>
                 
                 <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1')} Kvartalna liga</h3>
@@ -279,7 +279,7 @@ const RulesData = {
                 <ul>
                     <li><strong>🎲 Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=1')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
                 </ul>
 
@@ -294,7 +294,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/treasury-icon.svg', 'assets/easter-soft-clay/treasury-pro-v2.png?v=1')} Riznica</h3>
                 <p>Riznica je mesto za personalizaciju igre i pregled osvojenih stvari.</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏆', 'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=1')} Trofeji:</strong> Posebni izazovi se otključavaju tokom igre i mogu doneti nagrade u dukatima.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🏆', 'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=2')} Trofeji:</strong> Posebni izazovi se otključavaju tokom igre i mogu doneti nagrade u dukatima.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=1')} Kockice:</strong> Kupujete i birate skinove za kockice.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('✨', 'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=1')} Efekti:</strong> Animacije se aktiviraju kada u partiji dobijete Yamb.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🎨', 'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=1')} Teme:</strong> Menjaju izgled aplikacije. Neki artikli se kupuju dukatima, a neki podržavaju reklamu ili popust od 20%.</li>
@@ -320,15 +320,15 @@ const RulesData = {
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('🛡️', 'assets/easter-soft-clay/settings/privacy-v2.png?v=1')} Fer igra:</strong> Server proverava online mečeve, rezultate, ekonomiju i nagrade kako bi sprečio manipulacije.</li>
                     <li><strong>⏱️ Anti-troll tajmer:</strong> Ako protivnik namerno odugovlači, server može dodeliti tehničku pobedu.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🔌', 'assets/easter-soft-clay/opponent/reconnected.png?v=1')} Grace period:</strong> Kod kratkog prekida veze postoji pauza od 30 sekundi za povratak u meč.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🚪', 'assets/easter-soft-clay/opponent/disconnected.png?v=1')} Napuštanje meča:</strong> Namerno napuštanje online duela može doneti kaznu u ligi i dukatima.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🔌', 'assets/easter-soft-clay/opponent/reconnected.png?v=2')} Grace period:</strong> Kod kratkog prekida veze postoji pauza od 30 sekundi za povratak u meč.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🚪', 'assets/easter-soft-clay/opponent/disconnected.png?v=2')} Napuštanje meča:</strong> Namerno napuštanje online duela može doneti kaznu u ligi i dukatima.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('📺', 'assets/easter-soft-clay/economy/rewarded-video.png?v=1')} Reklame (AdMob)</h3>
+                <h3>${rulesThemeGlyphIconHtml('📺', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Reklame (AdMob)</h3>
                 <p>Reklame omogućavaju da igra ostane besplatna i da se nagrade potvrde na serveru.</p>
                 <ul>
                     <li><strong>⏳ Kratke reklame:</strong> Koriste se za pojedine akcije, povratak u meni, lokalno vraćanje upisa ili odjavu sa turnira. Ne isplaćuju direktno dukate ni tokene.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎁', 'assets/easter-soft-clay/economy/rewarded-video.png?v=1')} Nagradne reklame:</strong> Koriste se za dupliranje nagrade, Dnevni izazov, dukate, tokene i popust u Riznici, uz potvrdu na serveru.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🎁', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Nagradne reklame:</strong> Koriste se za dupliranje nagrade, Dnevni izazov, dukate, tokene i popust u Riznici, uz potvrdu na serveru.</li>
                 </ul>
             `
         }
@@ -395,8 +395,8 @@ const RulesData = {
         {
             title: `${rulesPageTitleIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png?v=1')} Multiplayer & competitions`,
             content: `
-                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1')} Multiplayer & Duels</h3>
-                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=1')} Classic Multiplayer</h4>
+                <h3>${rulesThemeGlyphIconHtml('🌍', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2')} Multiplayer & Duels</h3>
+                <h4>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2')} Classic Multiplayer</h4>
                 <p>Online play matches you with an opponent who is currently online. Direct friend duels save H2H history and affect wins, losses, and win streaks.</p>
                 <h4>${rulesThemeGlyphIconHtml('🤝', 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1')} Friend Duels</h4>
                 <p>You can add friends from the active player list or by invite. Once the opponent accepts, a private duel opens.</p>
@@ -407,7 +407,7 @@ const RulesData = {
                     <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=1')} Entry:</strong> The entry fee is 5500 ducats. Unregistering and refunds are possible only during registration, before the tournament starts.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('📅', 'assets/easter-soft-clay/tournament/state-start-v2.png?v=1')} Scheduling:</strong> Once all 8 players register, opponents in the bracket propose and accept match times. A match starts after the time is confirmed.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=2')} Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=1')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=2')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
                 </ul>
                 
                 <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1')} Quarterly League</h3>
@@ -443,7 +443,7 @@ const RulesData = {
                 <ul>
                     <li><strong>🎲 Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=1')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v3.png?v=1')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
                 </ul>
 
@@ -458,7 +458,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/treasury-icon.svg', 'assets/easter-soft-clay/treasury-pro-v2.png?v=1')} Treasury</h3>
                 <p>The Treasury is where you personalize the game and review collected items.</p>
                 <ul>
-                    <li><strong>${rulesThemeGlyphIconHtml('🏆', 'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=1')} Trophies:</strong> Special challenges unlock during play and can reward ducats.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🏆', 'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=2')} Trophies:</strong> Special challenges unlock during play and can reward ducats.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🎲', 'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=1')} Dice:</strong> Buy and equip dice skins.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('✨', 'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=1')} Effects:</strong> Animations trigger when you score Yamb in a game.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🎨', 'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=1')} Themes:</strong> Change the app appearance. Some items are bought with ducats, and some support ads or a 20% discount.</li>
@@ -484,15 +484,15 @@ const RulesData = {
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('🛡️', 'assets/easter-soft-clay/settings/privacy-v2.png?v=1')} Fair play:</strong> The server checks online matches, results, economy, and rewards to prevent manipulation.</li>
                     <li><strong>⏱️ Anti-troll timer:</strong> If an opponent intentionally stalls, the server can award a technical win.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🔌', 'assets/easter-soft-clay/opponent/reconnected.png?v=1')} Grace period:</strong> A short connection drop gives you a 30-second pause to return to the match.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🚪', 'assets/easter-soft-clay/opponent/disconnected.png?v=1')} Leaving a match:</strong> Intentionally leaving an online duel can cause league and ducat penalties.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🔌', 'assets/easter-soft-clay/opponent/reconnected.png?v=2')} Grace period:</strong> A short connection drop gives you a 30-second pause to return to the match.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🚪', 'assets/easter-soft-clay/opponent/disconnected.png?v=2')} Leaving a match:</strong> Intentionally leaving an online duel can cause league and ducat penalties.</li>
                 </ul>
 
-                <h3>${rulesThemeGlyphIconHtml('📺', 'assets/easter-soft-clay/economy/rewarded-video.png?v=1')} Ads (AdMob)</h3>
+                <h3>${rulesThemeGlyphIconHtml('📺', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Ads (AdMob)</h3>
                 <p>Ads help keep the game free and allow rewards to be verified by the server.</p>
                 <ul>
                     <li><strong>⏳ Short ads:</strong> Used for some actions, returning to the menu, local undo, or tournament unregistering. They do not directly pay ducats or undo tokens.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🎁', 'assets/easter-soft-clay/economy/rewarded-video.png?v=1')} Rewarded ads:</strong> Used for reward doubling, Daily Challenge, ducats, undo tokens, and Treasury discounts, with server verification.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🎁', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Rewarded ads:</strong> Used for reward doubling, Daily Challenge, ducats, undo tokens, and Treasury discounts, with server verification.</li>
                 </ul>
             `
         }
