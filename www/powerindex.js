@@ -71,6 +71,7 @@ class PowerIndexLeaderboard {
                 <div class="chat-header global-chat-header pi-modal-header">
                     <h2 class="pi-modal-title">
                         <span class="power-index-title-legacy" style="font-size: 1.5rem;">⚡</span>
+                        <img class="power-index-soft-clay-bolt power-index-title-bolt power-index-title-bolt-easter" src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="power-index-soft-clay-bolt power-index-title-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="power-index-soft-clay-bolt power-index-title-bolt-nebula" src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
                         ${this.gt('pi_title', 'TOP IGRAČI')}
@@ -209,7 +210,9 @@ class PowerIndexLeaderboard {
         const podiumTheme = activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter');
         const podiumAssetSrc = podiumTheme === 'severna'
             ? `assets/severna-soft-clay/statistics/power-index/${podiumTone}-v10.png?v=1`
-            : `assets/${podiumTheme}-soft-clay/statistics/power-index/${podiumTone}.png?v=2`;
+            : podiumTheme === 'easter'
+                ? `assets/easter-soft-clay/statistics/power-index/${podiumTone}-v3.png?v=1`
+                : `assets/${podiumTheme}-soft-clay/statistics/power-index/${podiumTone}.png?v=2`;
         const legacyRank = rank === 1 ? '⚡' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span style="color: var(--text-muted);">${rank}.</span>`;
         const podiumRank = podiumTone
             ? `<img class="power-index-podium-medal" src="${podiumAssetSrc}" alt="" aria-hidden="true">`
@@ -269,6 +272,7 @@ class PowerIndexLeaderboard {
                     <div style="display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 15px; border: 1px solid rgba(255,140,0,0.3); flex-shrink: 0;">
                         <span style="color: #FFD700; font-weight: 900; font-size: 1rem; text-shadow: 0 0 5px rgba(255,140,0,0.5);">${powerIndex}</span>
                         <span class="power-index-value-legacy" style="font-size: 0.8rem;">⚡</span>
+                        <img class="power-index-soft-clay-bolt power-index-value-bolt power-index-value-bolt-easter" src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="power-index-soft-clay-bolt power-index-value-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="power-index-soft-clay-bolt power-index-value-bolt-nebula" src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
                     </div>

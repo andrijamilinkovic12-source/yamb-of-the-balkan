@@ -621,7 +621,7 @@ class DnevniIzazov {
             <div class="daily-glass-card" id="glass-daily-card">
                 <div class="daily-glass-header">
                     <img class="daily-glass-room-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-task-mark-easter" src="assets/easter-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-easter" src="assets/easter-soft-clay/daily/task-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-room-mark-desert" src="assets/desert-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-task-mark-desert" src="assets/desert-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-room-mark-nebula" src="assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1" alt="" aria-hidden="true" decoding="async">
@@ -892,7 +892,7 @@ class DnevniIzazov {
     showAlreadyPlayedInfo() {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         const message = activeTheme === 'easter'
-            ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" src="assets/easter-soft-clay/daily/already-played.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+            ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" src="assets/easter-soft-clay/daily/already-played-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
             : activeTheme === 'desert'
                 ? `<div class="daily-already-desert"><img class="daily-already-desert-icon" src="assets/desert-soft-clay/daily/already-played.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
                 : activeTheme === 'severna'
@@ -1126,12 +1126,12 @@ class DnevniIzazov {
         resDiv.className = 'glass-daily-result';
 
         resDiv.innerHTML = `
-            <img class="daily-glass-complete-mark-easter" src="assets/easter-soft-clay/daily/complete.png?v=1" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-easter" src="assets/easter-soft-clay/daily/complete-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
             <img class="daily-glass-complete-mark-desert" src="assets/desert-soft-clay/daily/complete.png?v=1" alt="" aria-hidden="true" decoding="async">
             <img class="daily-glass-complete-mark-nebula" src="assets/severna-soft-clay/daily/complete-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
             <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 <span class="daily-glass-reward-video-fallback" aria-hidden="true">🎥</span>
-                <img class="daily-glass-reward-video-mark-easter" src="assets/easter-soft-clay/daily/reward-video-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-easter" src="assets/easter-soft-clay/daily/reward-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-desert" src="assets/desert-soft-clay/daily/reward-video-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-nebula" src="assets/severna-soft-clay/daily/reward-video-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
                 ${t('btn_double_short')} ${dukatIconHtml()} (x2)

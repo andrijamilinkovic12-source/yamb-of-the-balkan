@@ -9190,6 +9190,56 @@ body.easter-theme .h2h-empty-soft-clay-icon {
     object-fit: contain;
 }
 
+body.easter-theme .power-index-title-legacy,
+body.easter-theme .power-index-value-legacy,
+body.easter-theme .power-index-watermark-legacy,
+body.easter-theme .power-index-title-bolt:not(.power-index-title-bolt-easter),
+body.easter-theme .power-index-value-bolt:not(.power-index-value-bolt-easter),
+body.easter-theme .power-index-watermark-bolt:not(.power-index-watermark-bolt-easter),
+body.easter-theme .fire-streak-value-legacy,
+body.easter-theme .fire-streak-value-soft-clay-icon:not(.fire-streak-value-soft-clay-icon-easter) {
+    display: none !important;
+}
+
+body.easter-theme .power-index-title-bolt-easter,
+body.easter-theme .power-index-value-bolt-easter,
+body.easter-theme .power-index-watermark-bolt-easter,
+body.easter-theme .fire-streak-value-soft-clay-icon-easter {
+    display: block;
+    object-fit: contain;
+}
+
+body.easter-theme .power-index-title-bolt-easter {
+    width: 27px;
+    height: 27px;
+    margin-right: 7px;
+    vertical-align: middle;
+}
+
+body.easter-theme .power-index-watermark-bolt-easter {
+    position: absolute;
+    top: -7px;
+    right: 16%;
+    width: 94px;
+    height: 94px;
+    opacity: 0.18;
+    pointer-events: none;
+}
+
+body.easter-theme .power-index-value-bolt-easter {
+    width: 16px;
+    height: 16px;
+    margin-left: 3px;
+    vertical-align: middle;
+}
+
+body.easter-theme .fire-streak-value-soft-clay-icon-easter {
+    width: 23px;
+    height: 23px;
+    margin-right: 3px;
+    vertical-align: middle;
+}
+
 body.easter-theme .power-index-rank-mark,
 body.easter-theme .fire-streak-rank-mark {
     position: relative;

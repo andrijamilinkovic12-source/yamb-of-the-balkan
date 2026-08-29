@@ -39,7 +39,7 @@ class TopListManager {
         return `
             <div class="hs-list-state hs-list-state-${state}">
                 <span class="hs-state-fallback" aria-hidden="true">${fallbackIcon}</span>
-                <img class="hs-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="hs-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="hs-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="hs-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <span class="hs-list-state-text">${message}</span>
@@ -52,7 +52,7 @@ class TopListManager {
         if (!medal) return '';
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         const medalSrc = activeTheme === 'easter'
-            ? `assets/easter-soft-clay/leaderboard/medal-${medal}-v2.png?v=1`
+            ? `assets/easter-soft-clay/leaderboard/medal-${medal}-v3.png?v=1`
             : activeTheme === 'desert'
                 ? `assets/desert-soft-clay/leaderboard/medal-${medal}-v2.png?v=1`
                 : activeTheme === 'severna'

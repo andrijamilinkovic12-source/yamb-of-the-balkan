@@ -3480,11 +3480,11 @@ class ShopManager {
     }
 
     getEasterTreasuryStatusIcon(iconName, className = '') {
-        return `<img class="riznica-status-soft-clay-icon ${className}" src="assets/easter-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+        return `<img class="riznica-status-soft-clay-icon ${className}" src="assets/easter-soft-clay/treasury/${iconName}-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async">`;
     }
 
     getTreasuryRewardVideoIcon() {
-        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" src="assets/desert-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">';
+        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" src="assets/desert-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">';
     }
 
     getTreasuryInsufficientIconPath() {
@@ -3492,7 +3492,7 @@ class ShopManager {
         if (activeTheme === 'severna') return 'assets/severna-soft-clay/treasury/status-insufficient.png?v=1';
         return activeTheme === 'desert'
             ? 'assets/desert-soft-clay/treasury/status-insufficient.png?v=3'
-            : 'assets/easter-soft-clay/treasury/status-insufficient.png?v=1';
+            : 'assets/easter-soft-clay/treasury/status-insufficient-v2.png?v=1';
     }
 
     render() {
@@ -3505,7 +3505,7 @@ class ShopManager {
             section.className = 'category-section';
             const categoryMeta = this.getEasterTreasuryCategoryMeta(categoryName);
             const categoryHtml = categoryMeta
-                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
+                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
                 : categoryName;
             section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''}>${categoryHtml}</div>`;
             

@@ -38,7 +38,7 @@ class VatreniNizManager {
                 <div class="chat-header global-chat-header streak-modal-header">
                     <span class="streak-modal-title">
                         <span class="fire-streak-title-legacy">${this.gt('streak_top_title', '🔥 TOP VATRENI NIZ')}</span>
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-nebula" src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
                         <span class="fire-streak-title-easter">${this.gt('streak_top_title_plain', 'TOP VATRENI NIZ')}</span>
@@ -219,7 +219,9 @@ class VatreniNizManager {
         const podiumTheme = activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter');
         const podiumAssetSrc = podiumTheme === 'severna'
             ? `assets/severna-soft-clay/statistics/fire-streak/${podiumTone}-v10.png?v=1`
-            : `assets/${podiumTheme}-soft-clay/statistics/fire-streak/${podiumTone}.png?v=2`;
+            : podiumTheme === 'easter'
+                ? `assets/easter-soft-clay/statistics/fire-streak/${podiumTone}-v3.png?v=1`
+                : `assets/${podiumTheme}-soft-clay/statistics/fire-streak/${podiumTone}.png?v=2`;
         const legacyRank = rank === 1 ? '🔥' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : `${rank}.`));
         const podiumRank = podiumTone
             ? `<img class="fire-streak-podium-medal" src="${podiumAssetSrc}" alt="" aria-hidden="true">`
@@ -268,6 +270,7 @@ class VatreniNizManager {
                     <div style="text-align: right; line-height: 1.2; min-width: 80px; display: flex; flex-direction: column; align-items: flex-end;">
                         <div class="fire-streak-value" style="color: #FF5722; font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 5px rgba(255, 87, 34, 0.4);">
                             <span class="fire-streak-value-legacy">🔥</span>
+                            <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <img class="fire-streak-value-soft-clay-icon" src="assets/desert-soft-clay/statistics/fire-streak.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <img class="fire-streak-value-soft-clay-icon-nebula" src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
                             <span>${maxWinStreak}</span>
