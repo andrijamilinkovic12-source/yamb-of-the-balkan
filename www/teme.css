@@ -5709,6 +5709,29 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
     transform-origin: center;
 }
 
+/* Vaskrs / Top lista: samo velika ikona, bez ponovljenog naziva sobe. */
+.easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-title--hidden {
+    display: none;
+}
+
+.easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark-wrap {
+    animation: easterLeaderboardIconFadeIn 620ms cubic-bezier(.22,.8,.28,1) both;
+}
+
+.easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark {
+    animation: easterLeaderboardIconPulse 1.8s 620ms ease-in-out infinite;
+}
+
+@keyframes easterLeaderboardIconFadeIn {
+    from { opacity: 0; transform: translateY(7px) scale(.92); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes easterLeaderboardIconPulse {
+    0%, 100% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.035); filter: brightness(1.035); }
+}
+
 .easter-room-intro-title {
     display: flex;
     align-items: center;
@@ -5798,7 +5821,9 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .easter-room-intro-wave-letter {
+    .easter-room-intro-wave-letter,
+    .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark-wrap,
+    .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark {
         animation: none !important;
     }
 }

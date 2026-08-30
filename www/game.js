@@ -5076,6 +5076,7 @@ class YambApp {
         const introTheme = activeTheme === 'severna' && room.severnaIcon
             ? 'severna'
             : (activeTheme === 'desert' && room.desertIcon ? 'desert' : 'easter');
+        const isEasterLeaderboardIconOnly = introTheme === 'easter' && roomId === 'leaderboard';
 
         if (iconElement) {
             iconElement.src = introTheme === 'severna'
@@ -5097,8 +5098,13 @@ class YambApp {
             return letter;
         });
 
-        titleElement.classList.toggle('easter-room-intro-title--stacked', titleLines.length > 1);
-        if (titleLines.length > 1) {
+        titleElement.classList.toggle('easter-room-intro-title--stacked', !isEasterLeaderboardIconOnly && titleLines.length > 1);
+        titleElement.classList.toggle('easter-room-intro-title--hidden', isEasterLeaderboardIconOnly);
+        titleElement.setAttribute('aria-hidden', isEasterLeaderboardIconOnly ? 'true' : 'false');
+        if (isEasterLeaderboardIconOnly) {
+            titleElement.replaceChildren();
+            titleElement.removeAttribute('aria-label');
+        } else if (titleLines.length > 1) {
             titleElement.replaceChildren(...titleLines.map((line, lineIndex) => {
                 const lineElement = document.createElement('span');
                 lineElement.className = `easter-room-intro-title-line easter-room-intro-title-line--${lineIndex + 1}`;
@@ -5109,11 +5115,12 @@ class YambApp {
             const title = titleLines[0] || '';
             titleElement.replaceChildren(...createWaveLetters(title));
         }
-        titleElement.setAttribute('aria-label', titleLines.join(' – '));
+        if (!isEasterLeaderboardIconOnly) titleElement.setAttribute('aria-label', titleLines.join(' – '));
 
         this.easterRoomIntroPlaying = true;
-        overlay.classList.remove('theme-easter', 'theme-desert', 'theme-severna');
+        overlay.classList.remove('theme-easter', 'theme-desert', 'theme-severna', 'easter-room-intro--leaderboard-icon-only');
         overlay.classList.add(`theme-${introTheme}`);
+        overlay.classList.toggle('easter-room-intro--leaderboard-icon-only', isEasterLeaderboardIconOnly);
         overlay.classList.add('hidden');
         void overlay.offsetWidth;
         overlay.classList.remove('hidden');
