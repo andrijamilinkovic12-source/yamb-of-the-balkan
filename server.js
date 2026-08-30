@@ -601,6 +601,19 @@ const ServerMonitorActivitySchema = new mongoose.Schema({
 }, { versionKey: false });
 const ServerMonitorActivity = mongoose.model('ServerMonitorActivity', ServerMonitorActivitySchema);
 
+// Jedan dokument po anonimnom aktivnom igraču i danu. Ovo je istorijski
+// analitički zapis, ne „slika” ekrana: omogućava kasnije grupisanje po danu
+// i temi bez čuvanja Firebase UID-a ili imena igrača.
+const ServerMonitorDailyActivitySchema = new mongoose.Schema({
+    dayKey: { type: String, required: true, index: true },
+    anonId: { type: String, required: true },
+    theme: { type: String, default: 'dark' },
+    firstSeenAt: { type: Date, default: Date.now },
+    lastSeenAt: { type: Date, default: Date.now }
+}, { versionKey: false });
+ServerMonitorDailyActivitySchema.index({ dayKey: 1, anonId: 1 }, { unique: true });
+const ServerMonitorDailyActivity = mongoose.model('ServerMonitorDailyActivity', ServerMonitorDailyActivitySchema);
+
 const LeagueScoreSchema = new mongoose.Schema({
     playerId: String,
     playerName: String,
@@ -5306,15 +5319,22 @@ function monitorActivityId(uid) {
     return crypto.createHash('sha256').update(`${secret}\u0000${String(uid || '')}`).digest('hex');
 }
 
-function touchMonitorActivity(uid) {
+function touchMonitorActivity(uid, theme = 'dark') {
     if (!MONGO_URI || !uid) return;
     const now = new Date();
     const dayKey = getBelgradeDayKey(now);
+    const anonId = monitorActivityId(uid);
+    const safeTheme = normalizeMonitorTheme(theme);
     ServerMonitorActivity.updateOne(
-        { anonId: monitorActivityId(uid) },
+        { anonId },
         { $set: { lastSeenAt: now, lastDayKey: dayKey, updatedAt: now } },
         { upsert: true }
     ).catch(error => console.warn('Monitor aktivnost nije sačuvana:', error.message));
+    ServerMonitorDailyActivity.updateOne(
+        { dayKey, anonId },
+        { $set: { lastSeenAt: now, theme: safeTheme }, $setOnInsert: { firstSeenAt: now } },
+        { upsert: true }
+    ).catch(error => console.warn('Monitor dnevna aktivnost nije sačuvana:', error.message));
 }
 
 function updateMonitorDaily(delta = {}, extra = {}) {
@@ -5343,7 +5363,7 @@ function recordMonitorRoomVisit(socket, roomId) {
     if (socket.monitorLastRoomVisit === room && now - Number(socket.monitorLastRoomVisitAt || 0) < 15000) return;
     socket.monitorLastRoomVisit = room;
     socket.monitorLastRoomVisitAt = now;
-    touchMonitorActivity(getVerifiedUid(socket));
+    touchMonitorActivity(getVerifiedUid(socket), socket.activeTheme);
     updateMonitorDaily({ [`roomVisits.${room}`]: 1 });
 }
 
@@ -5463,15 +5483,19 @@ app.get('/api/monitor/status', async (req, res) => {
         const since24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
         const currentLeague = getServerQuarterInfo();
         const sevenDayKeys = Array.from({ length: 7 }, (_, index) => getBelgradeDayKey(new Date(now.getTime() - index * 24 * 60 * 60 * 1000)));
-        const [modeRows, dailyRecord, recentDaily, activeToday, activeLast24h, leaguePlayers, adGrantedToday, adPendingToday] = await Promise.all([
+        const [modeRows, dailyRecord, recentDaily, activeToday, activeLast24h, dailyThemeRows, leaguePlayers, adGrantedToday, adPendingToday] = await Promise.all([
             MONGO_URI ? MatchResult.aggregate([
                 { $match: { finishedAt: { $gte: start, $lt: end } } },
                 { $group: { _id: '$mode', count: { $sum: 1 } } }
             ]) : Promise.resolve([]),
             MONGO_URI ? ServerMonitorDaily.findOne({ dayKey }).lean() : Promise.resolve(null),
             MONGO_URI ? ServerMonitorDaily.find({ dayKey: { $in: sevenDayKeys } }).lean() : Promise.resolve([]),
-            MONGO_URI ? ServerMonitorActivity.countDocuments({ lastDayKey: dayKey }) : Promise.resolve(null),
+            MONGO_URI ? ServerMonitorDailyActivity.countDocuments({ dayKey }) : Promise.resolve(null),
             MONGO_URI ? ServerMonitorActivity.countDocuments({ lastSeenAt: { $gte: since24h } }) : Promise.resolve(null),
+            MONGO_URI ? ServerMonitorDailyActivity.aggregate([
+                { $match: { dayKey } },
+                { $group: { _id: '$theme', count: { $sum: 1 } } }
+            ]) : Promise.resolve([]),
             MONGO_URI ? LeagueScore.distinct('playerId', { year: currentLeague.year, quarter: currentLeague.quarter }).then(rows => rows.length) : Promise.resolve(null),
             MONGO_URI ? AdMobRewardVerification.countDocuments({ claimedAt: { $gte: start, $lt: end } }) : Promise.resolve(null),
             MONGO_URI ? AdMobRewardVerification.countDocuments({ receivedAt: { $gte: start, $lt: end }, claimedAt: null }) : Promise.resolve(null)
@@ -5493,6 +5517,14 @@ app.get('/api/monitor/status', async (req, res) => {
         const waitSamples = Math.max(0, Number(dailyRecord?.matchmakingWaitSamples) || 0);
         const waitTotal = Math.max(0, Number(dailyRecord?.matchmakingWaitTotalMs) || 0);
         const peakOnlineLast7Days = recentDaily.reduce((peak, row) => Math.max(peak, Number(row?.peakOnline) || 0), realtime.online);
+        const dailyThemeTotal = dailyThemeRows.reduce((sum, row) => sum + Math.max(0, Number(row?.count) || 0), 0);
+        const themeUsageToday = dailyThemeRows
+            .map(row => ({
+                theme: normalizeMonitorTheme(row?._id),
+                count: Math.max(0, Number(row?.count) || 0),
+                percent: dailyThemeTotal ? Math.round((Math.max(0, Number(row?.count) || 0) / dailyThemeTotal) * 100) : 0
+            }))
+            .sort((a, b) => b.count - a.count || a.theme.localeCompare(b.theme));
         res.set('Cache-Control', 'no-store');
         res.json({
             ok: true,
@@ -5508,6 +5540,7 @@ app.get('/api/monitor/status', async (req, res) => {
                 peakOnlineLast7Days,
                 activePlayersToday: activeToday,
                 activePlayersLast24h: activeLast24h,
+                themeUsageToday,
                 themeUsageOnline: getOnlineThemeUsage(),
                 topRoomsToday: roomVisits,
                 tournament: {
@@ -8540,7 +8573,7 @@ io.on('connection', (socket) => {
 
     socket.on('monitor_theme_seen', (data = {}) => {
         socket.activeTheme = normalizeMonitorTheme(data.theme);
-        touchMonitorActivity(getVerifiedUid(socket));
+        touchMonitorActivity(getVerifiedUid(socket), socket.activeTheme);
     });
 
     socket.on('monitor_room_visit', (data = {}) => {
@@ -8929,7 +8962,7 @@ io.on('connection', (socket) => {
             return;
         }
 
-        touchMonitorActivity(verifiedUid);
+        touchMonitorActivity(verifiedUid, socket.activeTheme);
 
         try {
             if (!MONGO_URI) {

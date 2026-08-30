@@ -71,7 +71,7 @@
       <article class="metric"><div class="label">PARTIJE PO VRSTI DANAS</div><div class="value" id="games-by-mode">—</div><small>Solo, Hotseat, nasumične i prijateljske</small></article>
     </section>
     <section class="monitor-panels" aria-live="polite">
-      <article class="monitor-panel"><h2>TEME AKTIVNIH ONLINE IGRAČA</h2><ul class="monitor-list" id="theme-usage"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
+      <article class="monitor-panel"><h2>TEME AKTIVNIH IGRAČA DANAS</h2><ul class="monitor-list" id="theme-usage"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
       <article class="monitor-panel"><h2>NAJPOSEĆENIJE SOBE DANAS</h2><ul class="monitor-list" id="top-rooms"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
     </section>
     <footer><div id="updated">Potrebni su URL servera i monitor token.</div><button id="alarm-toggle" type="button">Uključi alarm za 0</button><button id="refresh" type="button">Osveži</button></footer>
@@ -167,7 +167,7 @@
         const modes = metrics.completedByMode || {};
         $('games-by-mode').textContent = `${number(metrics.completedToday)}`;
         $('games-by-mode').nextElementSibling.textContent = `Solo ${number(modes.solo)} · Hotseat ${number(modes.hotseat)} · nasumične ${number(modes.random)} · prijateljske ${number(modes.friend)}`;
-        renderList('theme-usage', metrics.themeUsageOnline, row => themeLabel[row.theme] || row.theme, row => `${number(row.count)} · ${number(row.percent)}%`);
+        renderList('theme-usage', metrics.themeUsageToday || metrics.themeUsageOnline, row => themeLabel[row.theme] || row.theme, row => `${number(row.count)} · ${number(row.percent)}%`);
         renderList('top-rooms', metrics.topRoomsToday, row => roomLabel[row.room] || row.room, row => number(row.visits));
       }
       function messageFor(response) { if (response.status === 401) return 'Monitor token nije ispravan.'; if (response.status === 503) return 'Na serveru nije podešen YAMB_MONITOR_TOKEN.'; return 'Server trenutno nije dostupan.'; }

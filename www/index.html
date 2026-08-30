@@ -89,6 +89,23 @@
                     : (themeIds.includes(accountTheme) ? accountTheme : 'dark'));
 
             if (startupTheme !== 'dark') document.body.classList.add(`${startupTheme}-theme`);
+
+            // Pozadina je najveći element prvog prikaza. Započni preuzimanje
+            // odmah, pre pokretanja ostatka aplikacije i bez čekanja na ikone.
+            const themeBackgrounds = {
+                easter: 'assets/easter-neumorphic-bg-v4.png',
+                desert: 'assets/desert-neumorphic-bg-v1.png',
+                severna: 'assets/severna-maglina-bg-v3-neuphoric.png'
+            };
+            const background = themeBackgrounds[startupTheme];
+            if (background) {
+                const preload = document.createElement('link');
+                preload.rel = 'preload';
+                preload.as = 'image';
+                preload.href = background;
+                preload.fetchPriority = 'high';
+                document.head.appendChild(preload);
+            }
         })();
     </script>
     <div id="theme-loading-gate" class="theme-loading-gate" aria-hidden="true" role="status" aria-live="polite">

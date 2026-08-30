@@ -145,6 +145,7 @@ class YambApp {
         this.easterRoomIntroPlaying = false;
         this.themeLoadingToken = 0;
         this.themeLoadingHideTimer = null;
+        this.themeWarmups = new Map();
         this.themeManualSwitchUntil = 0;
         this.skinManualSwitchUntil = 0;
         this.dualBoardLastFollowedPlayerIdx = null;
@@ -1500,7 +1501,7 @@ class YambApp {
         const packs = {
             easter: {
                 title: lang === 'en' ? 'Easter Theme' : 'Vaskrs tema',
-                background: 'assets/easter-neumorphic-bg-v3.png',
+                background: 'assets/easter-neumorphic-bg-v4.png',
                 icons: [
                     'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
                     'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
@@ -1790,7 +1791,7 @@ class YambApp {
         };
     }
 
-    preloadThemeImage(src, timeoutMs = 2200) {
+    preloadThemeImage(src, timeoutMs = 2200, priority = 'auto') {
         if (!src) return Promise.resolve(false);
 
         return new Promise(resolve => {
@@ -1805,6 +1806,7 @@ class YambApp {
             const timer = setTimeout(() => finish(false), timeoutMs);
 
             img.decoding = 'async';
+            img.fetchPriority = priority;
             img.onload = async () => {
                 try {
                     if (typeof img.decode === 'function') await img.decode();
@@ -1818,6 +1820,46 @@ class YambApp {
 
             if (img.complete && img.naturalWidth > 0) finish(true);
         });
+    }
+
+    preloadThemeSources(sources, { concurrency = 4, priority = 'auto' } = {}) {
+        const uniqueSources = [...new Set((sources || []).filter(Boolean))];
+        if (uniqueSources.length === 0) return Promise.resolve();
+
+        let nextIndex = 0;
+        const worker = async () => {
+            while (nextIndex < uniqueSources.length) {
+                const source = uniqueSources[nextIndex++];
+                await this.preloadThemeImage(source, 2200, priority);
+            }
+        };
+        return Promise.all(Array.from({ length: Math.min(concurrency, uniqueSources.length) }, worker));
+    }
+
+    warmThemePack(theme) {
+        const pack = this.getThemeLoadingPack(theme);
+        if (!pack) return { critical: Promise.resolve(), all: Promise.resolve() };
+
+        const existing = this.themeWarmups.get(theme);
+        if (existing) return existing;
+
+        // Prvo učitavamo ono što korisnik odmah vidi. Veliki paket ikona se ne
+        // sme takmičiti sa početnim ekranom za mrežu i CPU u istom trenutku.
+        const criticalSources = [...new Set([pack.background, ...pack.icons])];
+        const optionalSources = pack.assets.filter(source => !criticalSources.includes(source));
+        const critical = this.preloadThemeSources(criticalSources, { concurrency: 3, priority: 'high' });
+        const all = critical.then(() => new Promise(resolve => {
+            const warmOptionalAssets = () => this.preloadThemeSources(optionalSources, { concurrency: 4 }).then(resolve);
+            if (typeof window.requestIdleCallback === 'function') {
+                window.requestIdleCallback(warmOptionalAssets, { timeout: 1200 });
+            } else {
+                setTimeout(warmOptionalAssets, 120);
+            }
+        }));
+
+        const warmup = { critical, all };
+        this.themeWarmups.set(theme, warmup);
+        return warmup;
     }
 
     hideThemeLoadingGate({ immediate = false } = {}) {
@@ -1870,7 +1912,7 @@ class YambApp {
 
         let gateShownAt = 0;
         let gateVisible = false;
-        const minimumVisibleMs = manualSwitch ? 560 : (initialLoad ? 420 : 340);
+        const minimumVisibleMs = manualSwitch ? 420 : 300;
         const revealGate = () => {
             if (token !== this.themeLoadingToken || gateVisible) return;
             gateVisible = true;
@@ -1910,8 +1952,15 @@ class YambApp {
             });
         };
 
-        this.themeLoadingRevealTimer = setTimeout(revealGate, 220);
-        const preloadPromise = Promise.allSettled(pack.assets.map(src => this.preloadThemeImage(src)));
+        const warmup = this.warmThemePack(theme);
+        const preloadPromise = warmup.critical;
+
+        // Pri ulasku u aplikaciju ostaje postojeći splash, bez dodatne poruke.
+        // Ekran učitavanja je rezerva samo kod ručne promene teme kada osnovni
+        // resursi zaista kasne.
+        if (initialLoad) return warmup.all;
+
+        this.themeLoadingRevealTimer = setTimeout(revealGate, manualSwitch ? 700 : 950);
 
         preloadPromise.then(() => {
             if (token !== this.themeLoadingToken) return;
@@ -1932,7 +1981,7 @@ class YambApp {
             }, remaining);
         });
 
-        return preloadPromise;
+        return warmup.all;
     }
 
     applyTheme(theme, { initialLoad = false, skipThemeDiceDefault = false, manualSwitch = false, loadingDelayMs = 0 } = {}) {
