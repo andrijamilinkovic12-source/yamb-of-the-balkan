@@ -1862,6 +1862,22 @@ class YambApp {
         return warmup;
     }
 
+    hydrateThemeImageSources(theme) {
+        const safeTheme = String(theme || 'dark');
+        const themeRoot = safeTheme === 'easter'
+            ? 'assets/easter-soft-clay/'
+            : (safeTheme === 'desert'
+                ? 'assets/desert-soft-clay/'
+                : (safeTheme === 'severna' ? 'assets/severna-soft-clay/' : ''));
+        if (!themeRoot) return;
+
+        document.querySelectorAll('img[data-theme-src]').forEach(image => {
+            const source = image.dataset.themeSrc || '';
+            if (!source.startsWith(themeRoot) || image.getAttribute('src')) return;
+            image.src = source;
+        });
+    }
+
     hideThemeLoadingGate({ immediate = false } = {}) {
         const gate = document.getElementById('theme-loading-gate');
         if (!gate) return;
@@ -1955,10 +1971,10 @@ class YambApp {
         const warmup = this.warmThemePack(theme);
         const preloadPromise = warmup.critical;
 
-        // Pri ulasku u aplikaciju ostaje postojeći splash, bez dodatne poruke.
-        // Ekran učitavanja je rezerva samo kod ručne promene teme kada osnovni
-        // resursi zaista kasne.
-        if (initialLoad) return warmup.all;
+        // Pri ulasku u aplikaciju i automatskom vraćanju teme ostaje postojeći
+        // splash, bez dodatnog preloading ekrana. Ekran je rezerva samo za
+        // izričitu ručnu promenu teme kada osnovni resursi zaista kasne.
+        if (initialLoad || !manualSwitch) return warmup.all;
 
         this.themeLoadingRevealTimer = setTimeout(revealGate, manualSwitch ? 700 : 950);
 
@@ -1993,6 +2009,7 @@ class YambApp {
 
         document.body.classList.remove(...themeClasses);
         if (safeTheme !== 'dark') document.body.classList.add(`${safeTheme}-theme`);
+        this.hydrateThemeImageSources(safeTheme);
 
         // Splash/login ekran pamti poslednju vizuelnu temu čak i kada se nalog odjavi.
         localStorage.setItem('yamb_last_theme', safeTheme);
