@@ -109,7 +109,9 @@ function checkRewardsAndArchiveSafety() {
 }
 
 function checkTotalsAndPresentation() {
-    assert(serverSource.includes('const MAX_LEAGUE_ALL_TIME_SCORE = 1000000000;'), 'All-Time total still uses the quarterly cap');
+    assert(serverSource.includes('const MAX_LEAGUE_SCORE = Number.MAX_SAFE_INTEGER;'), 'Quarterly league still has a practical score ceiling');
+    assert(serverSource.includes('const MAX_LEAGUE_ALL_TIME_SCORE = Number.MAX_SAFE_INTEGER;'), 'All-Time total still has a practical score ceiling');
+    assert(serverSource.includes('const LEGACY_MAX_LEAGUE_SCORE = 1000000;'), 'Legacy league cap is missing for safe migration of older capped scores');
     assert(serverSource.includes('Math.min(MAX_LEAGUE_ALL_TIME_SCORE'), 'All-Time normalization does not use its own cap');
     assert(leagueSource.includes("timeZone: 'Europe/Belgrade'"), 'Client quarter is based on device timezone');
     assert(leagueSource.includes('const safePoints = Number(points);'), 'Client league points can concatenate strings');

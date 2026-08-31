@@ -553,6 +553,10 @@ class DnevniIzazov {
                 filter: drop-shadow(0 3px 4px rgba(92, 58, 94, 0.18));
             }
 
+            .daily-glass-easter-ducat-icon.daily-glass-easter-ducat-icon--reward-end {
+                margin: 0 0 0 3px;
+            }
+
             .daily-glass-btn .daily-glass-easter-ducat-icon {
                 width: 26px;
                 height: 26px;
@@ -1168,15 +1172,33 @@ class DnevniIzazov {
         }
     }
 
-    getDailyRewardDukatIconHtml() {
+    getDailyRewardDukatIconHtml(options = {}) {
         if (document.body && document.body.classList.contains('easter-theme')) {
-            return '<img class="daily-glass-easter-ducat-icon" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">';
+            const endClass = options.rewardEnd === true ? ' daily-glass-easter-ducat-icon--reward-end' : '';
+            return `<img class="daily-glass-easter-ducat-icon${endClass}" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">`;
         }
         return dukatIconHtml();
     }
 
     getDailyRewardMessage(key, amount) {
         const genericIcon = dukatIconHtml();
+        const isEasterTheme = document.body && document.body.classList.contains('easter-theme');
+        if (isEasterTheme) {
+            const iconMarker = '__EASTER_DAILY_DUCAT__';
+            const amountText = String(amount);
+            const themedIcon = this.getDailyRewardDukatIconHtml({ rewardEnd: true });
+            let message = t(key)
+                .replace(genericIcon, iconMarker)
+                .replace('{DUKAT_ICON}', iconMarker)
+                .replace('{0}', amountText);
+
+            // Vaskrs: broj stoji pre ikone, bez suvišne reči „dukata/ducats“.
+            // Uzvičnik iz prevoda ostaje neposredno iza ikone: „130 [ikona]!“.
+            message = message
+                .replace(`${iconMarker} ${amountText} dukata`, `${amountText} ${themedIcon}`)
+                .replace(`${iconMarker} ${amountText} ducats`, `${amountText} ${themedIcon}`);
+            return message.replace(iconMarker, themedIcon);
+        }
         return t(key)
             .replace('{0}', amount)
             .replace(genericIcon, this.getDailyRewardDukatIconHtml());

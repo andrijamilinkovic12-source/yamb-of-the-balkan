@@ -34,6 +34,12 @@
     .monitor-list li { display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid rgba(164,184,222,.09); padding-bottom:4px; }
     .monitor-list li:last-child { border-bottom:0; padding-bottom:0; }
     .monitor-list b { color:var(--sky); font-variant-numeric:tabular-nums; }
+    .diagnostic-panel { grid-column:1 / -1; min-height:0; }
+    .diagnostic-head, .diagnostic-row { display:grid; grid-template-columns:110px minmax(165px,1.15fr) minmax(190px,1.4fr) minmax(145px,1fr); gap:10px; align-items:center; }
+    .diagnostic-head { padding:0 0 6px; color:var(--muted); font-size:.66rem; font-weight:800; letter-spacing:.08em; }
+    .diagnostic-row { padding:7px 0; border-top:1px solid rgba(164,184,222,.09); color:#d7deed; font-size:.74rem; }
+    .diagnostic-row span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .diagnostic-row .muted { color:var(--muted); }.diagnostic-row .warn { color:var(--warn); }.diagnostic-row .ok { color:var(--ok); }.diagnostic-row .error { color:var(--error); }
     footer { display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:10px; padding:2px 22px 16px; }
     #updated { color:var(--muted); font-size:.76rem; }
     button { appearance:none; min-height:38px; padding:0 14px; border:1px solid rgba(119,215,164,.34); border-radius:11px; background:rgba(119,215,164,.11); color:#dffff0; font:inherit; font-weight:700; cursor:pointer; }
@@ -73,6 +79,7 @@
     <section class="monitor-panels" aria-live="polite">
       <article class="monitor-panel"><h2>TEME AKTIVNIH IGRAČA DANAS</h2><ul class="monitor-list" id="theme-usage"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
       <article class="monitor-panel"><h2>NAJPOSEĆENIJE SOBE DANAS</h2><ul class="monitor-list" id="top-rooms"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
+      <article class="monitor-panel diagnostic-panel"><h2>POSLEDNJI PREKIDI TOKOM DUELA · BRIŠU SE POSLE TRIDESET DANA</h2><div class="diagnostic-head" aria-hidden="true"><span>VREME</span><span>PARTIJA</span><span>MREŽA / RAZLOG</span><span>ISHOD</span></div><div id="disconnect-diagnostics"><div class="diagnostic-row"><span class="muted">Čekam podatke</span><span>—</span><span>—</span><span>—</span></div></div></article>
     </section>
     <footer><div id="updated">Potrebni su URL servera i monitor token.</div><button id="alarm-toggle" type="button">Uključi alarm za 0</button><button id="refresh" type="button">Osveži</button></footer>
     <details>
@@ -104,6 +111,34 @@
         safeRows.forEach(row => {
           const li = document.createElement('li'), label = document.createElement('span'), value = document.createElement('b');
           label.textContent = labelFor(row); value.textContent = valueFor(row); li.append(label, value); list.append(li);
+        });
+      }
+      const disconnectReasonLabel = { ping_timeout: 'Istek pinga', transport_error: 'Greška transporta', transport_closed: 'Transport zatvoren', server_disconnect: 'Server prekinuo vezu', client_disconnect: 'Klijent prekinuo vezu', other: 'Drugi Socket.IO razlog', unknown: 'Nepoznat razlog' };
+      const disconnectTriggerLabel = { disconnect: 'Socket prekid', app_backgrounded: 'Aplikacija u pozadini', presence_stale_timeout: 'Istek prisutnosti' };
+      const disconnectOutcomeLabel = { pending: 'Čeka oporavak', recovered: 'Veza vraćena', technical_result: 'Tehnički rezultat', ended_without_penalty: 'Završeno bez kazne' };
+      function renderDisconnectDiagnostics(rows) {
+        const container = $('disconnect-diagnostics'); container.replaceChildren();
+        const items = Array.isArray(rows) ? rows : [];
+        if (!items.length) {
+          const row = document.createElement('div'); row.className = 'diagnostic-row';
+          ['Nema zabeleženih prekida', '—', '—', '—'].forEach((text, index) => { const cell = document.createElement('span'); cell.textContent = text; if (index === 0) cell.className = 'muted'; row.append(cell); });
+          container.append(row); return;
+        }
+        items.forEach(item => {
+          const row = document.createElement('div'); row.className = 'diagnostic-row';
+          const occurredAt = item.occurredAt ? new Date(item.occurredAt).toLocaleString('sr-RS', { dateStyle:'short', timeStyle:'medium' }) : '—';
+          const matchSuffix = item.matchId ? `#${String(item.matchId).slice(-8)}` : 'bez ID-a';
+          const party = [item.mode || 'duel', matchSuffix, item.playerName && item.opponentName ? `${item.playerName} — ${item.opponentName}` : 'Učesnici nisu dostupni'].join(' · ');
+          const network = [disconnectTriggerLabel[item.trigger] || item.trigger || 'Socket prekid', disconnectReasonLabel[item.reasonClass] || 'Nepoznat razlog', item.socketReason || '', item.transport || 'transport nije poznat', item.clientConnectionType || 'mrežni tip nije prijavljen'].filter(Boolean).join(' · ');
+          const recoveredAfter = item.outcome === 'recovered' && Number.isFinite(Number(item.reconnectDurationMs)) ? ` za ${Math.max(0, Math.round(Number(item.reconnectDurationMs) / 1000))} s` : '';
+          const outcome = `${disconnectOutcomeLabel[item.outcome] || item.outcome || '—'}${recoveredAfter}`;
+          [occurredAt, party, network, outcome].forEach((text, index) => {
+            const cell = document.createElement('span'); cell.textContent = text;
+            if (index === 2) cell.className = 'muted';
+            if (index === 3) cell.className = item.outcome === 'recovered' || item.outcome === 'ended_without_penalty' ? 'ok' : (item.outcome === 'technical_result' ? 'error' : 'warn');
+            row.append(cell);
+          });
+          container.append(row);
         });
       }
       const ALARM_STORAGE_KEY = 'yamb_zero_alarm_enabled';
@@ -169,6 +204,7 @@
         $('games-by-mode').nextElementSibling.textContent = `Solo ${number(modes.solo)} · Hotseat ${number(modes.hotseat)} · nasumične ${number(modes.random)} · prijateljske ${number(modes.friend)}`;
         renderList('theme-usage', metrics.themeUsageToday || metrics.themeUsageOnline, row => themeLabel[row.theme] || row.theme, row => `${number(row.count)} · ${number(row.percent)}%`);
         renderList('top-rooms', metrics.topRoomsToday, row => roomLabel[row.room] || row.room, row => number(row.visits));
+        renderDisconnectDiagnostics(metrics.disconnectDiagnostics);
       }
       function messageFor(response) { if (response.status === 401) return 'Monitor token nije ispravan.'; if (response.status === 503) return 'Na serveru nije podešen YAMB_MONITOR_TOKEN.'; return 'Server trenutno nije dostupan.'; }
       function stopPublicOnlineFallback() {

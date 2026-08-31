@@ -3468,6 +3468,28 @@ class YambApp {
         if (this.globalChat) await this.globalChat.close(skipAd);
     }
 
+    getConnectionDiagnosticSnapshot() {
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        return {
+            onlineAtDisconnect: navigator.onLine,
+            connectionType: String(connection?.effectiveType || connection?.type || '').substring(0, 32)
+        };
+    }
+
+    reportRecoveredConnectionDiagnostic() {
+        const diagnostic = this.pendingConnectionDiagnostic;
+        if (!diagnostic || !this.socket || !this.socket.connected) return;
+
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        this.socket.emit('connection_diagnostic', {
+            disconnectReason: String(diagnostic.reason || '').substring(0, 120),
+            onlineAtDisconnect: diagnostic.onlineAtDisconnect === true,
+            connectionType: diagnostic.connectionType || '',
+            reconnectTransport: String(this.socket.io?.engine?.transport?.name || connection?.effectiveType || connection?.type || '').substring(0, 32)
+        });
+        this.pendingConnectionDiagnostic = null;
+    }
+
     initSocketConnection() {
         if (this.socket) {
             if (this.socket.disconnected) { 
@@ -3504,6 +3526,7 @@ class YambApp {
                     if (!this.playerId) return;
 
                     await this.authenticateSocketIdentity();
+                    this.reportRecoveredConnectionDiagnostic();
                     const pendingMatchSync = await this.syncPendingMatchResults();
                     
                     const now = new Date();
@@ -3631,7 +3654,12 @@ class YambApp {
                     this.updateOnlineCounterUI();
                 });
 
-                this.socket.on('disconnect', () => {
+                this.socket.on('disconnect', (reason = '') => {
+                    this.pendingConnectionDiagnostic = {
+                        reason: String(reason || '').substring(0, 120),
+                        ...this.getConnectionDiagnosticSnapshot(),
+                        disconnectedAt: Date.now()
+                    };
                     this.socketVerifiedUid = null;
                     this.authRetryInProgress = false;
                     this.onlineRollPending = false;

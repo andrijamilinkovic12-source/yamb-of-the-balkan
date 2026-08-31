@@ -5728,12 +5728,14 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
 .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark-wrap::before {
     content: '';
     position: absolute;
-    inset: 12%;
-    z-index: -1;
+    /* Halo mora da izlazi izvan neprozirne PNG ikone; raniji manji sloj
+       bio je u potpunosti prekriven samom ikonom. */
+    inset: -16%;
+    z-index: 0;
     border-radius: 50%;
     pointer-events: none;
-    background: radial-gradient(circle, rgba(255,244,179,.28) 0%, rgba(202,134,242,.16) 42%, rgba(107,44,143,0) 73%);
-    filter: blur(10px);
+    background: radial-gradient(circle, rgba(255,244,179,.24) 0%, rgba(202,134,242,.18) 44%, rgba(107,44,143,0) 74%);
+    filter: blur(13px);
     animation: easterLeaderboardHaloPulse 1.8s ease-in-out infinite;
 }
 

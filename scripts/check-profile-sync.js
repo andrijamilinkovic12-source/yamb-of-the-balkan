@@ -309,6 +309,7 @@ async function checkRewardedAdClientFallback() {
         ADMOB_SSV_POLL_MS: 750,
         toSafeInt,
         sleep: async () => {},
+        recordMonitorAdOutcome() {},
         AdMobRewardVerification: {
             findOneAndUpdate: async () => null
         },
