@@ -541,6 +541,25 @@ class DnevniIzazov {
                 filter: drop-shadow(0 4px 5px rgba(0, 3, 16, 0.25)) drop-shadow(0 0 6px rgba(134, 247, 255, 0.12));
             }
 
+            /* Vaskrs — završna nagrada Dnevnog izazova koristi isti dukat asset
+               kao soba Dukati; globalni SVG ostaje za sve ostale teme. */
+            .daily-glass-easter-ducat-icon {
+                display: inline-block;
+                width: 24px;
+                height: 24px;
+                margin: 0 3px;
+                vertical-align: -6px;
+                object-fit: contain;
+                filter: drop-shadow(0 3px 4px rgba(92, 58, 94, 0.18));
+            }
+
+            .daily-glass-btn .daily-glass-easter-ducat-icon {
+                width: 26px;
+                height: 26px;
+                margin: 0 1px 0 3px;
+                vertical-align: -7px;
+            }
+
             .daily-already-easter,
             .daily-already-desert,
             .daily-already-nebula {
@@ -1135,7 +1154,7 @@ class DnevniIzazov {
                 <img class="daily-glass-reward-video-mark-easter" src="assets/easter-soft-clay/daily/reward-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-desert" src="assets/desert-soft-clay/daily/reward-video-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-nebula" src="assets/severna-soft-clay/daily/reward-video-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
-                ${t('btn_double_short')} ${dukatIconHtml()} (x2)
+                ${t('btn_double_short')} ${this.getDailyRewardDukatIconHtml()} (x2)
             </button>
             <button class="daily-glass-btn daily-glass-btn-claim" onclick="dnevniIzazov.claim(false)">
                 ${t('btn_claim_short')}
@@ -1147,6 +1166,20 @@ class DnevniIzazov {
         if (window.adMobGlobal && typeof window.adMobGlobal.prepareReward === 'function') {
             window.adMobGlobal.prepareReward(this.getDoubleRewardOptions());
         }
+    }
+
+    getDailyRewardDukatIconHtml() {
+        if (document.body && document.body.classList.contains('easter-theme')) {
+            return '<img class="daily-glass-easter-ducat-icon" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">';
+        }
+        return dukatIconHtml();
+    }
+
+    getDailyRewardMessage(key, amount) {
+        const genericIcon = dukatIconHtml();
+        return t(key)
+            .replace('{0}', amount)
+            .replace(genericIcon, this.getDailyRewardDukatIconHtml());
     }
 
     getDoubleRewardOptions() {
@@ -1318,9 +1351,9 @@ class DnevniIzazov {
 
         if (doubled) {
             if (this.app.effectMgr) this.app.effectMgr.trigger('confetti');
-            this.app.modal.alert(t('dc_reward_doubled').replace('{0}', awardedAmount), t('dc_congrats'));
+            this.app.modal.alert(this.getDailyRewardMessage('dc_reward_doubled', awardedAmount), t('dc_congrats'));
         } else {
-            this.app.modal.alert(t('dc_reward_won').replace('{0}', awardedAmount), t('dc_success'));
+            this.app.modal.alert(this.getDailyRewardMessage('dc_reward_won', awardedAmount), t('dc_success'));
         }
     }
 }

@@ -482,7 +482,7 @@ body.winter-theme .btn-square:active { box-shadow: 0 0 0 #001122, inset 0 2px 8p
 
 /* --- TEMA 7: VASKRŠNJA (EASTER) V5.0 - PASTEL NEUMORPHISM --- */
 body.easter-theme {
-    --easter-theme-bg-image: url("assets/easter-neumorphic-bg-v4.png");
+    --easter-theme-bg-image: url("assets/easter-neumorphic-bg-v5.png");
     --bg-base: #f4eadb;
     --bg-gradient-1: #fff7ec;
     --bg-gradient-2: #dfeecf;
@@ -5715,21 +5715,36 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
 }
 
 .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark-wrap {
-    animation: easterLeaderboardIconFadeIn 620ms cubic-bezier(.22,.8,.28,1) both;
+    position: relative;
+    isolation: isolate;
 }
 
 .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark {
-    animation: easterLeaderboardIconPulse 1.8s 620ms ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+    animation: easterLeaderboardIconPulse 1.8s ease-in-out infinite;
 }
 
-@keyframes easterLeaderboardIconFadeIn {
-    from { opacity: 0; transform: translateY(7px) scale(.92); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+.easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark-wrap::before {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(255,244,179,.28) 0%, rgba(202,134,242,.16) 42%, rgba(107,44,143,0) 73%);
+    filter: blur(10px);
+    animation: easterLeaderboardHaloPulse 1.8s ease-in-out infinite;
 }
 
 @keyframes easterLeaderboardIconPulse {
     0%, 100% { transform: scale(1); filter: brightness(1); }
     50% { transform: scale(1.035); filter: brightness(1.035); }
+}
+
+@keyframes easterLeaderboardHaloPulse {
+    0%, 100% { opacity: .42; transform: scale(.84); }
+    50% { opacity: .72; transform: scale(1.08); }
 }
 
 .easter-room-intro-title {
@@ -5823,7 +5838,8 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
 @media (prefers-reduced-motion: reduce) {
     .easter-room-intro-wave-letter,
     .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark-wrap,
-    .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark {
+    .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark,
+    .easter-room-intro.theme-easter.easter-room-intro--leaderboard-icon-only .easter-room-intro-mark-wrap::before {
         animation: none !important;
     }
 }
@@ -12854,7 +12870,7 @@ body.severna-theme #main-menu .mode-btn > div[style*="font-size: 6.5rem"] {
 /* --- THEME LOADING GATE: Vaskrs / Pustinjsko staklo / Severna maglina --- */
 .theme-loading-gate.theme-easter {
     --theme-loading-base: #ffeaf7;
-    --theme-loading-bg-image: url("assets/easter-neumorphic-bg-v4.png");
+    --theme-loading-bg-image: url("assets/easter-neumorphic-bg-v5.png");
     --theme-loading-veil-top: rgba(255, 246, 252, 0.18);
     --theme-loading-veil-bottom: rgba(62, 29, 85, 0.42);
     --theme-loading-glow: rgba(255, 217, 244, 0.30);

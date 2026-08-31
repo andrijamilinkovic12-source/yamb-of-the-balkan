@@ -1501,7 +1501,7 @@ class YambApp {
         const packs = {
             easter: {
                 title: lang === 'en' ? 'Easter Theme' : 'Vaskrs tema',
-                background: 'assets/easter-neumorphic-bg-v4.png',
+                background: 'assets/easter-neumorphic-bg-v5.png',
                 icons: [
                     'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
                     'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
@@ -3483,9 +3483,14 @@ class YambApp {
                 
                 console.log("🔌 Povezujem se prvi put na:", connectionUrl);
 
-                this.socket = io(connectionUrl, { 
-                    transports: ['websocket'],
-                    reconnection: true,             
+                this.socket = io(connectionUrl, {
+                    // WebSocket ostaje prvi izbor zbog odziva u duelima. Ako ga
+                    // mreža korisnika blokira, Socket.IO 4.8 prelazi na polling
+                    // i kasnije se automatski nadograđuje kada WebSocket postane dostupan.
+                    transports: ['websocket', 'polling'],
+                    tryAllTransports: true,
+                    upgrade: true,
+                    reconnection: true,
                     reconnectionAttempts: 20,       
                     reconnectionDelay: 1000,        
                     timeout: 20000,                 

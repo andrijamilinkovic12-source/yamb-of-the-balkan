@@ -113,11 +113,15 @@ const server = http.createServer(app);
 // Socket.io konfiguracija (POBOLJŠANA ZA MOBILNE MREŽE)
 const io = new Server(server, {
     cors: {
-        origin: "*", 
+        origin: "*",
         methods: ["GET", "POST"]
     },
-    pingInterval: 25000, 
-    pingTimeout: 20000   
+    // WebSocket je primaran, ali polling ostaje dozvoljen kao pouzdan fallback
+    // za mreže/proxy-je koji blokiraju ili prekidaju WebSocket vezu.
+    transports: ["polling", "websocket"],
+    allowUpgrades: true,
+    pingInterval: 25000,
+    pingTimeout: 20000
 });
 
 // Middleware
@@ -501,6 +505,13 @@ if (MONGO_URI) {
                 if (count > 0) console.log(`🏆 TOP LISTA BACKFILL: Dopisano ${count} propuštenih online skorova.`);
             })
             .catch(err => console.error('Greška pri backfill-u online skorova za top listu:', err));
+        recoverLegacyCappedLeagueScores()
+            .then(result => {
+                if (result.recovered > 0) {
+                    console.log(`🏆 KVARTALNA LIGA OPORAVAK: vraćeno ${result.recovered} ranije odsečenih rezultata.`);
+                }
+            })
+            .catch(err => console.error('Greška pri oporavku odsečenih ligaških rezultata:', err));
     })
     .catch(err => {
         console.error('❌ MongoDB connection error:', err.message);
@@ -860,8 +871,13 @@ const MAX_SCORE = 3500;
 const MAX_NAME_LENGTH = 24;
 const MIN_GAME_DURATION = 120000;
 const MAX_GAME_DURATION = 6 * 60 * 60 * 1000;
-const MAX_LEAGUE_SCORE = 1000000;
-const MAX_LEAGUE_ALL_TIME_SCORE = 1000000000;
+// Liga nema takmičarski plafon. Number.MAX_SAFE_INTEGER je samo tehnička
+// granica preciznog čuvanja celih brojeva u JavaScript-u.
+const MAX_LEAGUE_SCORE = Number.MAX_SAFE_INTEGER;
+const MAX_LEAGUE_ALL_TIME_SCORE = Number.MAX_SAFE_INTEGER;
+// Raniji plafon se čuva isključivo radi bezbedne migracije već odsečenih
+// rezultata iz postojećih serverom potvrđenih partija.
+const LEGACY_MAX_LEAGUE_SCORE = 1000000;
 const LEAGUE_SETTLEMENT_GRACE_MS = MAX_GAME_DURATION + (5 * 60 * 1000);
 const MAX_LEAGUE_SCORE_DELTA = MAX_SCORE + 500;
 const MIN_LEAGUE_SESSION_DURATION = 30000;
@@ -7305,6 +7321,80 @@ async function syncCurrentLeagueScoreFromUserProfile(user, playerName, photoUrl)
         console.error('Greška pri sinhronizaciji profila sa Kvartalnom Ligom:', err);
         return null;
     }
+}
+
+function getLeaguePeriodStart(year, quarter) {
+    if (!Number.isInteger(year) || !Number.isInteger(quarter) || quarter < 1 || quarter > 4) return null;
+    const startMonth = ((quarter - 1) * 3) + 1;
+    return zonedLocalMidnightToUtc(year, startMonth, 1, LEADERBOARD_TIME_ZONE);
+}
+
+function getLeaguePointsFromStoredMatchResult(result, playerId) {
+    const participant = (result?.participants || []).find((item) => String(item?.uid || '') === String(playerId || ''));
+    if (!participant) return 0;
+
+    if (result.resultType === 'regular') {
+        return Math.max(0, toSafeInt(participant.score, 0));
+    }
+    if (participant.result === 'win') {
+        return Math.max(0, toSafeInt(result.winnerReward, 0));
+    }
+    if (participant.result === 'loss') {
+        return -Math.max(0, toSafeInt(result.loserCoinPenalty, 0));
+    }
+    return 0;
+}
+
+// Ranije je kvartalni zbir bio odsecan na 1.000.000. Za svaki takav zapis
+// ponovo sabiramo isključivo serverom sačuvane rezultate tekućeg kvartala.
+// Ne diramo rezultat ako istorija ne daje veći, proverljiv zbir.
+async function recoverLegacyCappedLeagueScores() {
+    if (!MONGO_URI) return { recovered: 0 };
+
+    const period = getServerQuarterInfo();
+    const periodStart = getLeaguePeriodStart(period.year, period.quarter);
+    const periodEnd = getLeaguePeriodEnd(period.year, period.quarter);
+    if (!periodStart || !periodEnd) return { recovered: 0 };
+
+    const cappedRows = await LeagueScore.find({
+        year: period.year,
+        quarter: period.quarter,
+        score: LEGACY_MAX_LEAGUE_SCORE
+    }).lean();
+
+    let recovered = 0;
+    for (const row of cappedRows) {
+        const playerId = String(row?.playerId || '').trim();
+        if (!playerId) continue;
+
+        const results = await MatchResult.find({
+            'participants.uid': playerId,
+            finishedAt: { $gte: periodStart, $lt: periodEnd }
+        }).select('resultType participants winnerReward loserCoinPenalty').lean();
+
+        const reconstructedScore = results.reduce(
+            (sum, result) => sum + getLeaguePointsFromStoredMatchResult(result, playerId),
+            0
+        );
+        if (!Number.isSafeInteger(reconstructedScore) || reconstructedScore <= LEGACY_MAX_LEAGUE_SCORE) continue;
+
+        await LeagueScore.updateOne(
+            { _id: row._id },
+            { $max: { score: reconstructedScore } }
+        );
+
+        await UserProfile.updateOne(
+            {
+                firebaseUid: playerId,
+                'leagueData.year': period.year,
+                'leagueData.quarter': period.quarter
+            },
+            { $max: { 'leagueData.quarterlyScore': reconstructedScore } }
+        );
+        recovered++;
+    }
+
+    return { recovered };
 }
 
 async function maybeApplyLegacyLeagueMigration(user, submittedStats, playerName, photoUrl) {
