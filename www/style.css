@@ -250,15 +250,29 @@ body {
 }
 
 .riznica-header-logo-easter,
+.riznica-header-logo-desert,
+.riznica-header-logo-nebula,
 .riznica-tab-soft-clay-icon,
+.riznica-tab-desert-soft-clay-icon,
+.riznica-tab-nebula-soft-clay-icon,
 .riznica-reward-video-soft-clay-icon,
+.riznica-reward-video-desert-soft-clay-icon,
+.riznica-reward-video-nebula-soft-clay-icon,
 .riznica-item-reward-video-soft-clay-icon,
+.riznica-item-reward-video-desert-soft-clay-icon,
+.riznica-item-reward-video-nebula-soft-clay-icon,
 .riznica-status-soft-clay-icon,
+.riznica-status-desert-soft-clay-icon,
+.riznica-status-nebula-soft-clay-icon,
 .riznica-category-soft-clay-icon,
+.riznica-category-desert-soft-clay-icon,
+.riznica-category-nebula-soft-clay-icon,
 .riznica-balance-ducat-icon-easter,
 .riznica-balance-ducat-icon-desert,
+.riznica-balance-ducat-icon-nebula,
 .riznica-ad-ducat-icon-easter,
 .riznica-ad-ducat-icon-desert,
+.riznica-ad-ducat-icon-nebula,
 .custom-toast.treasury-insufficient-toast .custom-toast-soft-clay-icon {
     display: none;
 }
@@ -1258,6 +1272,13 @@ body {
 .category-header { font-size: 0.9rem; color: var(--gold-main); text-transform: uppercase; letter-spacing: 2px; border-bottom: var(--glass-border); padding-bottom: 5px; margin-bottom: 15px; margin-left: 5px; font-weight: 700; opacity: 0.9; display: flex; align-items: center; gap: 10px; }
 .category-grid, #grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; align-content: start; }
 @media (min-width: 600px) { .category-grid, #grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+
+/* Riznica: kartice prate sadržaj svog reda, ali nikada ne nasleđuju prirodnu
+   veličinu PNG asseta druge teme. Time svi tabovi zadržavaju isti stari raspored. */
+#riznica-screen .category-grid > .card {
+    height: auto;
+    min-height: 180px;
+}
 
 .card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.12); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 12px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); overflow: hidden; height: 100%; justify-content: space-between; min-height: 180px; box-shadow: 0 10px 25px rgba(0,0,0,0.1), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(20px); }
 .card.locked { opacity: 0.6; filter: grayscale(1); border-style: dashed; }
