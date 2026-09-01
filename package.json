@@ -10,7 +10,8 @@
     "check:profile-sync": "node scripts/check-profile-sync.js",
     "check:match-results": "node scripts/check-match-results.js",
     "check:league": "node scripts/check-quarterly-league.js",
-    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league"
+    "check:online-reconnect": "node scripts/check-online-reconnect.js",
+    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect"
   },
   "keywords": [],
   "author": "",

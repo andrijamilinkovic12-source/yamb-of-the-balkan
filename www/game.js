@@ -152,6 +152,8 @@ class YambApp {
         this.onlineRollPending = false;
         this.onlineTurnTimerPaused = false;
         this.opponentReconnectGraceTimer = null;
+        this.opponentReconnectNoticeTimer = null;
+        this.opponentReconnectNoticeVisible = false;
         this.opponentReconnectGraceDeadline = 0;
         this.currentHostingRoomId = null;
         this.waitingHofPeriod = 'weekly';
@@ -3513,9 +3515,14 @@ class YambApp {
                     tryAllTransports: true,
                     upgrade: true,
                     reconnection: true,
-                    reconnectionAttempts: 20,       
-                    reconnectionDelay: 1000,        
-                    timeout: 20000,                 
+                    // Kratki prekidi na 4G/5G mrezi treba da se oporave pre nego sto
+                    // korisnik primeti zastoj. Ogranicen maksimum drzi sve pokusaje
+                    // unutar serverskog reconnect grace perioda od 30 sekundi.
+                    reconnectionAttempts: 30,
+                    reconnectionDelay: 250,
+                    reconnectionDelayMax: 1500,
+                    randomizationFactor: 0.25,
+                    timeout: 20000,
                     autoConnect: true
                 });
                 
@@ -5707,6 +5714,11 @@ class YambApp {
             clearInterval(this.opponentReconnectGraceTimer);
             this.opponentReconnectGraceTimer = null;
         }
+        if (this.opponentReconnectNoticeTimer) {
+            clearTimeout(this.opponentReconnectNoticeTimer);
+            this.opponentReconnectNoticeTimer = null;
+        }
+        this.opponentReconnectNoticeVisible = false;
         this.opponentReconnectGraceDeadline = 0;
         const gameScene = document.getElementById('game-scene');
         if (gameScene) gameScene.classList.remove('opponent-reconnecting');
@@ -5720,9 +5732,6 @@ class YambApp {
         if (safeRemainingMs > 0) {
             this.opponentReconnectGraceDeadline = Date.now() + safeRemainingMs;
         }
-        const gameScene = document.getElementById('game-scene');
-        const isRandomOpponentRoom = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
-        if (gameScene) gameScene.classList.toggle('opponent-reconnecting', isRandomOpponentRoom);
 
         const render = () => {
             const timerDisplay = document.getElementById('turn-timer-display');
@@ -5746,9 +5755,30 @@ class YambApp {
             }
         };
 
-        render();
-        if (this.opponentReconnectGraceDeadline) {
-            this.opponentReconnectGraceTimer = setInterval(render, 1000);
+        const showNotice = () => {
+            this.opponentReconnectNoticeTimer = null;
+            this.opponentReconnectNoticeVisible = true;
+            const gameScene = document.getElementById('game-scene');
+            const isRandomOpponentRoom = this.inferOnlineDuelType(this.roomId, { duelType: this.onlineDuelType }) === 'random';
+            if (gameScene) gameScene.classList.toggle('opponent-reconnecting', isRandomOpponentRoom);
+
+            render();
+            if (this.opponentReconnectGraceDeadline) {
+                this.opponentReconnectGraceTimer = setInterval(render, 1000);
+            }
+        };
+
+        // Server odmah pauzira autoritativni tajmer i blokira poteze, ali kratki
+        // mobilni prekid ne treba da bljesne kao greska. Sync odgovori bez ovog
+        // parametra i dalje odmah prikazuju stvarni, duzi prekid.
+        const requestedDelayMs = Math.max(0, Number(data.noticeDelayMs) || 0);
+        const noticeDelayMs = safeRemainingMs > 0
+            ? Math.min(requestedDelayMs, Math.max(0, safeRemainingMs - 1000))
+            : requestedDelayMs;
+        if (noticeDelayMs > 0) {
+            this.opponentReconnectNoticeTimer = setTimeout(showNotice, noticeDelayMs);
+        } else {
+            showNotice();
         }
     }
 
@@ -5888,7 +5918,7 @@ class YambApp {
 
             this.onlineTurnTimerPaused = true;
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
-            this.showOpponentReconnectGraceCountdown(data);
+            this.showOpponentReconnectGraceCountdown({ ...data, noticeDelayMs: 1500 });
 
             const btnBacaj = document.getElementById('btn-bacaj');
             if (btnBacaj) btnBacaj.disabled = true;
@@ -5902,6 +5932,7 @@ class YambApp {
         this.socket.off('opponent_connection_restored');
         this.socket.on('opponent_connection_restored', (data = {}) => {
             if (this.isSpectator) return;
+            const reconnectNoticeWasVisible = this.opponentReconnectNoticeVisible;
             this.clearOpponentReconnectGraceCountdown();
 
             const restoredUid = String(data.restoredUid || '');
@@ -5911,7 +5942,7 @@ class YambApp {
             const gameScene = document.getElementById('game-scene');
             if (gameScene) gameScene.classList.remove('opponent-reconnecting');
 
-            if (restoredOpponent && typeof window.showNotification === 'function') {
+            if (restoredOpponent && reconnectNoticeWasVisible && typeof window.showNotification === 'function') {
                 window.showNotification(
                     gt('info_title') || "INFO",
                     gt('opp_reconnected') || "Protivnik se vratio u igru!",
