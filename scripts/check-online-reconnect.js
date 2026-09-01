@@ -6,6 +6,7 @@ const vm = require('vm');
 const root = path.resolve(__dirname, '..');
 const gameSource = fs.readFileSync(path.join(root, 'www', 'game.js'), 'utf8');
 const indexSource = fs.readFileSync(path.join(root, 'www', 'index.html'), 'utf8');
+const socketClientSource = fs.readFileSync(path.join(root, 'www', 'socket.io.min.js'), 'utf8');
 
 function extractClassMethod(source, methodName) {
     const signature = `${methodName}(`;
@@ -96,6 +97,9 @@ async function run() {
     assert(gameSource.includes('reconnectionDelayMax: 1500'));
     assert(gameSource.includes('randomizationFactor: 0.25'));
     assert(gameSource.includes('noticeDelayMs: 1500'));
+    assert(socketClientSource.includes('Socket.IO v4.8.3'));
+    assert(socketClientSource.includes('tryAllTransports'));
+    assert(indexSource.includes('socket.io.min.js?v=4.8.3'));
     assert(indexSource.includes('game.js?v=4.84'));
 
     const shortDrop = createHarness();
