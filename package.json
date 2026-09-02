@@ -12,7 +12,10 @@
     "check:league": "node scripts/check-quarterly-league.js",
     "check:online-reconnect": "node scripts/check-online-reconnect.js",
     "audit:statistics": "node scripts/audit-statistics.js",
-    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect"
+    "inspect:result-flow": "node scripts/inspect-player-result-flow.js",
+    "check:h2h-ledger": "node scripts/check-h2h-ledger-rebuild.js",
+    "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
+    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:h2h-ledger"
   },
   "keywords": [],
   "author": "",

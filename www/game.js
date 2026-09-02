@@ -2164,7 +2164,7 @@ class YambApp {
         let bestScore = 0;
 
         scores.forEach(entry => {
-            if (!entry || typeof entry !== 'object') return;
+            if (!entry || typeof entry !== 'object' || entry.synced !== true) return;
             const entryUid = String(entry.uid || entry.playerId || '').trim();
             const entryName = String(entry.playerName || entry.name || '').trim();
 
@@ -4241,6 +4241,7 @@ class YambApp {
 
             let pending = this.readPendingMatchResults();
             let profileNotFound = false;
+            const acceptedClientResultIds = [];
 
             for (const item of [...pending]) {
                 if (!item || item.syncRejected) continue;
@@ -4248,6 +4249,7 @@ class YambApp {
 
                 if (response && response.ok) {
                     pending = pending.filter(candidate => candidate.clientResultId !== item.clientResultId);
+                    acceptedClientResultIds.push(item.clientResultId);
                     this.writePendingMatchResults(pending);
                     continue;
                 }
@@ -4266,7 +4268,8 @@ class YambApp {
             return {
                 ok: pending.length === 0,
                 remaining: pending.filter(item => item && !item.syncRejected).length,
-                profileNotFound
+                profileNotFound,
+                acceptedClientResultIds
             };
         })();
 
@@ -4302,8 +4305,13 @@ class YambApp {
         this.writePendingMatchResults(pending);
         const playerScore = entry.participants[entry.playerIndex]?.score || 0;
         if (playerScore > 0) this.rememberPendingGameReward(entry.clientResultId, playerScore);
-        await this.syncPendingMatchResults();
-        return entry.clientResultId;
+        const syncResult = await this.syncPendingMatchResults();
+        return {
+            clientResultId: entry.clientResultId,
+            accepted: Array.isArray(syncResult?.acceptedClientResultIds) &&
+                syncResult.acceptedClientResultIds.includes(entry.clientResultId),
+            pending: Math.max(0, Number(syncResult?.remaining) || 0)
+        };
     }
 
     updateOnlineCounterUI() {
@@ -8502,23 +8510,37 @@ class YambApp {
              );
              isNewSoloPersonalBest = this.players.length === 1
                  && Number(myScoreEntry.score) > soloHighscoreBeforeGame;
-             this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, {
-                 serverApplied: serverStatsApplied,
-                 skipH2H: serverStatsApplied,
-                 deferServerSync: this.onlineMode ? serverStatsApplied : true
-             });
+             let localResultAccepted = false;
              if (!this.onlineMode) {
-                 matchResultRef = await this.queueCompletedLocalMatchResult({
+                 const queuedResult = await this.queueCompletedLocalMatchResult({
                      mode: detectedMode,
                      participants: finalResults,
                      playerIndex: myIndex >= 0 ? myIndex : 0
                  });
+                 matchResultRef = queuedResult?.clientResultId || '';
+                 localResultAccepted = queuedResult?.accepted === true;
                  if (this.socket && this.socket.connected) {
                      this.emitPlayerData(false).catch(err => {
                          console.warn("Nije moguće odmah sinhronizovati završenu lokalnu partiju:", err);
                      });
                  }
              }
+             // Lokalna partija nikada ne sme sama da menja zvaničnu statistiku.
+             // Kada MatchResult stigne, server šalje potpuni autoritativni profil.
+             if (this.onlineMode) {
+                 this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, {
+                     serverApplied: serverStatsApplied,
+                     skipH2H: serverStatsApplied,
+                     deferServerSync: true
+                 });
+             } else {
+                 this.updateStats(myScoreEntry.score, resultType, finalOppScore, false, {
+                     serverApplied: true,
+                     skipH2H: true,
+                     deferServerSync: true
+                 });
+             }
+             this.lastLocalResultAccepted = localResultAccepted;
              this.pendingRewardMatchId = String(matchResultRef || '');
              if (this.pendingScore > 0 && this.pendingRewardMatchId) {
                  this.rememberPendingGameReward(this.pendingRewardMatchId, this.pendingScore);
@@ -8536,7 +8558,9 @@ class YambApp {
         try {
             if (myScoreEntry && myScoreEntry.score > 0) {
                 const myPhoto = localStorage.getItem('yamb_player_photo') || '';
-                await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto, matchResultRef);
+                await this.safeSubmitScore(this.playerName, myScoreEntry.score, saveMode, myPhoto, matchResultRef, {
+                    serverVerified: this.onlineMode || localResultAccepted
+                });
             }
         } catch (err) {
             console.warn("Greška pri slanju na top listu, igra nastavlja dalje:", err);
@@ -8689,10 +8713,10 @@ class YambApp {
         this.navigateTo('game-over-screen');
     }
 
-    async safeSubmitScore(name, score, mode, photoUrl = undefined, matchId = '') {
+    async safeSubmitScore(name, score, mode, photoUrl = undefined, matchId = '', options = {}) {
         try {
             let finalScore = parseInt(score); if (isNaN(finalScore)) finalScore = 0;
-            this.recordSubmittedScoreAsHighscore(finalScore);
+            if (options.serverVerified === true) this.recordSubmittedScoreAsHighscore(finalScore);
             if(this.topListManager) {
                 await this.topListManager.submitScore(name, finalScore, mode, photoUrl, matchId);
             }

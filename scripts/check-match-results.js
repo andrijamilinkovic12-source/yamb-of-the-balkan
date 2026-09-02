@@ -402,7 +402,10 @@ function checkVerifiedEconomyMatchProof() {
     assert(balanceClaim.includes('-RECENT_MATCH_RESULT_MEMORY'), 'Atomic reward claim history is not bounded');
     assert(serverSource.includes('{ $addToSet: { rewardClaimedUids: finalUid }, $set: { updatedAt: new Date() } }'), 'Game reward claim is not persisted in the permanent match ledger');
     assert(gameSource.includes("gameSessionToken: this.localGameSessionToken || ''"), 'Client does not preserve the signed local game session');
-    assert(gameSource.includes('matchResultRef = await this.queueCompletedLocalMatchResult({'), 'Client submits leaderboard score before storing local match proof');
+    assert(gameSource.includes('const queuedResult = await this.queueCompletedLocalMatchResult({'), 'Client submits leaderboard score before storing local match proof');
+    assert(gameSource.includes('acceptedClientResultIds.push(item.clientResultId);'), 'Client cannot distinguish a confirmed MatchResult from a queued local result');
+    assert(gameSource.includes('serverApplied: true,\n                     skipH2H: true,'), 'An unconfirmed local result can still alter official statistics');
+    assert(gameSource.includes("entry.synced !== true) return;"), 'An unconfirmed local leaderboard entry can still alter highscore statistics');
     assert(gameSource.includes("matchId: String(matchId || '')"), 'Reward claim does not carry durable match proof');
     assert(topListSource.includes("matchId: String(matchId || '')"), 'Leaderboard payload does not carry its match proof');
 

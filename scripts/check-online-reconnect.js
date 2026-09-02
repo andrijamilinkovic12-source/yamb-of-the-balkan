@@ -100,7 +100,7 @@ async function run() {
     assert(socketClientSource.includes('Socket.IO v4.8.3'));
     assert(socketClientSource.includes('tryAllTransports'));
     assert(indexSource.includes('socket.io.min.js?v=4.8.3'));
-    assert(indexSource.includes('game.js?v=4.86'));
+    assert(indexSource.includes('game.js?v=4.87'));
 
     const shortDrop = createHarness();
     timerDisplay.innerHTML = '';

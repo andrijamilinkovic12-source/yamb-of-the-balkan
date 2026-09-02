@@ -640,7 +640,7 @@ function checkAuthoritativeOnlineDuelStats() {
 
     const clientFinishStart = gameSource.indexOf('const serverStatsApplied = !!(');
     assert.notStrictEqual(clientFinishStart, -1, 'Client does not detect server-applied regular duel stats');
-    const clientFinish = gameSource.slice(clientFinishStart, clientFinishStart + 900);
+    const clientFinish = gameSource.slice(clientFinishStart, clientFinishStart + 1800);
     assert(
         clientFinish.includes('serverApplied: serverStatsApplied'),
         'Client does not pass the server-applied marker into updateStats'

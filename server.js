@@ -836,6 +836,8 @@ const UserProfileSchema = new mongoose.Schema({
     statsMigratedAt: { type: Date, default: null },
     h2hMigrationApplied: { type: Boolean, default: false },
     h2hMigratedAt: { type: Date, default: null },
+    h2hLedgerVersion: { type: Number, default: 0 },
+    h2hLedgerMigratedAt: { type: Date, default: null },
     recentMatchResultIds: { type: [String], default: [] },
     claimedGameRewardIds: { type: [String], default: [] },
     lastLogin: { type: Date, default: Date.now }
