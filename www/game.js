@@ -160,6 +160,7 @@ class YambApp {
         this.waitingHofInterval = null;
         this.settingsSyncTimer = null;
         this.matchResultSyncPromise = null;
+        this.localGameSessionStartPromise = null;
         
         this.currentOpponentPhoto = '';
         this.currentOpponentUid = null;
@@ -205,6 +206,8 @@ class YambApp {
 
         this.adMob = window.adMobGlobal;
         this.pendingScore = 0;
+        this.pendingRewardMatchId = '';
+        this.rewardRuntimeId = `${Date.now()}_${Math.random().toString(36).slice(2)}`;
         this.rewardClaimed = false;
         this.rewardClaimInProgress = false;
 
@@ -3638,7 +3641,7 @@ class YambApp {
                         console.log("🔄 Rekonekcija detektovana, tražim stanje table od protivnika...");
                         this.socket.emit('request_state_sync', { roomId: this.roomId });
                     } else if (this.gameActive && !this.onlineMode) {
-                        this.emitLocalGameSessionStart();
+                        await this.emitLocalGameSessionStart();
                     }
                     
                     const authResult = await this.emitPlayerData();
@@ -3650,7 +3653,10 @@ class YambApp {
                     }
 
                     if(document.getElementById('wait-msg')) document.getElementById('wait-msg').innerText = gt('hs_loading');
-                    if (authResult && authResult.ok && this.topListManager) this.topListManager.syncOfflineScores();
+                    if (authResult && authResult.ok && this.topListManager) {
+                        await this.topListManager.syncOfflineScores();
+                    }
+                    if (authResult && authResult.ok) await this.recoverPendingGameRewards();
                     
                     const params = new URLSearchParams(window.location.search);
                     if (params.get('room') && !this.gameActive) { this.checkForInvite(); }
@@ -4294,6 +4300,8 @@ class YambApp {
         const pending = this.readPendingMatchResults();
         pending.push(entry);
         this.writePendingMatchResults(pending);
+        const playerScore = entry.participants[entry.playerIndex]?.score || 0;
+        if (playerScore > 0) this.rememberPendingGameReward(entry.clientResultId, playerScore);
         await this.syncPendingMatchResults();
         return entry.clientResultId;
     }
@@ -4416,27 +4424,80 @@ class YambApp {
     buildLocalGameSessionPayload(roomId = this.roomId) {
         return {
             roomId,
-            gameSessionToken: this.localGameSessionToken || ''
+            gameSessionToken: this.localGameSessionToken || '',
+            carriedDurationMs: this.getLocalGameElapsedMs()
         };
     }
 
-    emitLocalGameSessionStart() {
-        if (!this.socket || !this.roomId || this.onlineMode || this.isSpectator) return;
-        const emitStart = () => {
-            if (this.socket && this.socket.connected && this.roomId) {
-                this.socket.emit('start_local_game', this.buildLocalGameSessionPayload(), (result = {}) => {
-                    if (!result.ok || !result.gameSessionToken) return;
-                    this.localGameSessionToken = result.gameSessionToken;
-                });
-            }
-        };
-
-        if (this.socket.connected) {
-            emitStart();
-        } else {
-            this.socket.once('connect', emitStart);
-            if (this.socket.disconnected) this.socket.connect();
+    async emitLocalGameSessionStart(options = {}) {
+        if (!this.roomId || this.onlineMode || this.isSpectator) {
+            return { ok: false, reason: 'invalid_local_game' };
         }
+        if (this.localGameSessionStartPromise) return this.localGameSessionStartPromise;
+
+        const roomId = this.roomId;
+        const timeoutMs = Math.max(1000, Math.min(20000, Number(options.timeoutMs) || 8000));
+        this.localGameSessionStartPromise = (async () => {
+            this.initSocketConnection();
+            const connection = await this.waitForSocketConnection(timeoutMs);
+            if (!connection || !connection.ok) {
+                return { ok: false, reason: connection?.reason || 'socket_disconnected' };
+            }
+
+            const authResult = await this.authenticateSocketIdentity();
+            if (!authResult || !authResult.ok) {
+                return { ok: false, reason: authResult?.reason || 'auth_failed' };
+            }
+
+            return new Promise(resolve => {
+                let settled = false;
+                const finish = (result = {}) => {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timer);
+                    if (
+                        result.ok &&
+                        result.gameSessionToken &&
+                        this.roomId === roomId &&
+                        !this.onlineMode
+                    ) {
+                        this.localGameSessionToken = result.gameSessionToken;
+                    }
+                    resolve(result);
+                };
+                const timer = setTimeout(
+                    () => finish({ ok: false, reason: 'local_game_session_timeout' }),
+                    timeoutMs
+                );
+
+                this.socket.emit('start_local_game', this.buildLocalGameSessionPayload(roomId), finish);
+            });
+        })();
+
+        try {
+            return await this.localGameSessionStartPromise;
+        } finally {
+            this.localGameSessionStartPromise = null;
+        }
+    }
+
+    async requireLocalGameSession() {
+        const result = await this.emitLocalGameSessionStart();
+        if (
+            result &&
+            result.ok &&
+            result.gameSessionToken &&
+            this.localGameSessionToken === result.gameSessionToken
+        ) return true;
+
+        console.warn(`Lokalna partija nije pokrenuta jer server nije potvrdio sesiju: ${result?.reason || 'unknown_error'}`);
+        if (this.modal && typeof this.modal.alert === 'function') {
+            await this.modal.alert(
+                gt('local_game_sync_required'),
+                gt('modal_title_info') || 'OBAVEŠTENJE'
+            );
+        }
+        return false;
     }
 
     handleAppPause() {
@@ -7013,7 +7074,12 @@ class YambApp {
         this.initSocketConnection();
         this.setupSocketListeners(p1Name);
 
-        this.emitLocalGameSessionStart();
+        const localSessionReady = await this.requireLocalGameSession();
+        if (!localSessionReady) {
+            this.pauseLocalGameClock();
+            this.showMainMenu();
+            return;
+        }
         
         // ---> DODATO: Puštanje muzike kada partija krene <---
         if(this.soundMgr) this.soundMgr.playMusic();
@@ -8230,6 +8296,7 @@ class YambApp {
 
         this.gameActive = false;
         this.pendingScore = 0;
+        this.pendingRewardMatchId = '';
         this.rewardClaimed = false;
         this.rewardClaimInProgress = false;
         this.lastGameType = 'technical';
@@ -8298,6 +8365,7 @@ class YambApp {
             clearInterval(this.turnTimerInterval);
             this.turnTimerInterval = null;
         }
+        if (!this.onlineMode) this.pauseLocalGameClock();
         this.gameActive = false;
 
         const onlineResult = this.onlineMode ? (options.onlineResult || this.lastOnlineGameResult || null) : null;
@@ -8340,13 +8408,6 @@ class YambApp {
                 : finalResults.every(r => r.score === finalResults[0].score))
             : false;
 
-        if(window.localforage) {
-            const uid = localStorage.getItem('yamb_uid') || 'guest';
-            await localforage.removeItem(`yamb_saved_game_${uid}_${this.players.length}`); 
-            await localforage.removeItem('yamb_saved_game'); 
-            await localforage.removeItem('yamb_saved_game_' + this.players.length); 
-        }
-        
         let detectedMode = this.aiMode ? "AI" : "Solo";
         if (this.onlineMode) detectedMode = "Online"; else if (!this.aiMode && this.players.length > 1) detectedMode = "Hotseat";
 
@@ -8458,6 +8519,18 @@ class YambApp {
                      });
                  }
              }
+             this.pendingRewardMatchId = String(matchResultRef || '');
+             if (this.pendingScore > 0 && this.pendingRewardMatchId) {
+                 this.rememberPendingGameReward(this.pendingRewardMatchId, this.pendingScore);
+             }
+        }
+
+        // The completed board is removed only after its result is durable.
+        if(window.localforage) {
+            const uid = localStorage.getItem('yamb_uid') || 'guest';
+            await localforage.removeItem(`yamb_saved_game_${uid}_${this.players.length}`);
+            await localforage.removeItem('yamb_saved_game');
+            await localforage.removeItem('yamb_saved_game_' + this.players.length);
         }
 
         try {
@@ -8628,7 +8701,76 @@ class YambApp {
         }
     }
 
-    claimServerGameReward(score, doubled, ssvNonce = '') {
+    getPendingGameRewardsKey() {
+        const uid = getPlayerId() || this.playerId;
+        return uid ? `yamb_pending_game_rewards_${uid}` : '';
+    }
+
+    readPendingGameRewards() {
+        const key = this.getPendingGameRewardsKey();
+        if (!key) return [];
+        try {
+            const parsed = JSON.parse(localStorage.getItem(key) || '[]');
+            return Array.isArray(parsed) ? parsed.filter(item => item && item.matchId) : [];
+        } catch (_err) {
+            return [];
+        }
+    }
+
+    writePendingGameRewards(items) {
+        const key = this.getPendingGameRewardsKey();
+        if (!key) return;
+        localStorage.setItem(key, JSON.stringify(Array.isArray(items) ? items.slice(-20) : []));
+    }
+
+    rememberPendingGameReward(matchId, score) {
+        const safeMatchId = String(matchId || '').trim();
+        const safeScore = Math.max(0, Math.floor(Number(score) || 0));
+        if (!safeMatchId || safeScore <= 0) return;
+        const items = this.readPendingGameRewards().filter(item => item.matchId !== safeMatchId);
+        items.push({
+            matchId: safeMatchId,
+            score: safeScore,
+            runtimeId: this.rewardRuntimeId,
+            createdAt: Date.now()
+        });
+        this.writePendingGameRewards(items);
+    }
+
+    forgetPendingGameReward(matchId) {
+        const safeMatchId = String(matchId || '').trim();
+        if (!safeMatchId) return;
+        this.writePendingGameRewards(
+            this.readPendingGameRewards().filter(item => item.matchId !== safeMatchId)
+        );
+    }
+
+    applyAuthoritativeGameRewardBalance(balance) {
+        const safeBalance = Math.max(0, parseInt(balance, 10) || 0);
+        localStorage.setItem('yamb_dukati', safeBalance);
+        if (window.statsManager) {
+            window.statsManager.stats.balance = safeBalance;
+            window.statsManager.saveStats();
+        }
+    }
+
+    async recoverPendingGameRewards() {
+        if (!this.socket || !this.socket.connected) return;
+        const recoverable = this.readPendingGameRewards()
+            .filter(item => item.runtimeId !== this.rewardRuntimeId);
+
+        for (const item of recoverable) {
+            const result = await this.claimServerGameReward(item.score, false, '', item.matchId);
+            if (result && result.ok && typeof result.balance === 'number') {
+                this.applyAuthoritativeGameRewardBalance(result.balance);
+                this.forgetPendingGameReward(item.matchId);
+            } else {
+                console.warn(`Odložena nagrada još nije potvrđena: ${result?.reason || 'unknown_error'}`);
+            }
+        }
+    }
+
+    claimServerGameReward(score, doubled, ssvNonce = '', matchId = this.pendingRewardMatchId) {
         return new Promise(resolve => {
             if (!this.socket || !this.socket.connected) {
                 resolve({ ok: false, reason: 'socket_disconnected', localFallback: true });
@@ -8646,6 +8788,7 @@ class YambApp {
             const timer = setTimeout(() => finish({ ok: false, reason: 'game_reward_timeout', permanent: false }), claimTimeoutMs);
 
             this.socket.emit('claim_game_reward', {
+                matchId: String(matchId || ''),
                 score: Math.max(0, parseInt(score) || 0),
                 doubled: !!doubled,
                 ssvNonce,
@@ -8674,24 +8817,28 @@ class YambApp {
             };
 
             const finishClaim = () => {
+                this.forgetPendingGameReward(this.pendingRewardMatchId);
                 this.rewardClaimed = true;
                 this.rewardClaimInProgress = false;
                 this.pendingScore = 0;
+                this.pendingRewardMatchId = '';
                 this.pendingBaseRewardClaimPromise = null;
             };
 
             try {
+                const pendingMatchSync = await this.syncPendingMatchResults();
+                if (pendingMatchSync && pendingMatchSync.remaining > 0) {
+                    this.rewardClaimInProgress = false;
+                    this.pendingBaseRewardClaimPromise = null;
+                    return false;
+                }
+                if (this.topListManager && typeof this.topListManager.syncOfflineScores === 'function') {
+                    await this.topListManager.syncOfflineScores();
+                }
                 const result = await this.claimServerGameReward(baseScore, false);
 
                 if (result && result.ok && typeof result.balance === 'number') {
                     applyBalance(result.balance);
-                    finishClaim();
-                    return true;
-                }
-
-                if (result && result.localFallback) {
-                    const currentBalance = Math.max(0, parseInt(localStorage.getItem('yamb_dukati'), 10) || 0);
-                    applyBalance(currentBalance + baseScore);
                     finishClaim();
                     return true;
                 }
@@ -8750,9 +8897,11 @@ class YambApp {
         if (this.rewardClaimed || this.rewardClaimInProgress) return;
         this.rewardClaimInProgress = true;
         const finishRewardClaim = () => {
+            this.forgetPendingGameReward(this.pendingRewardMatchId);
             this.rewardClaimed = true;
             this.rewardClaimInProgress = false;
             this.pendingScore = 0;
+            this.pendingRewardMatchId = '';
         };
         if (this.lastGameType === 'technical') {
             finishRewardClaim();
@@ -8773,15 +8922,13 @@ class YambApp {
                 console.warn("Cloud potvrda dukata nije uspela:", err);
             }
         };
-        const applyServerBalance = (balance) => {
-            const safeBalance = Math.max(0, parseInt(balance) || 0);
-            localStorage.setItem('yamb_dukati', safeBalance);
-            if (window.statsManager) {
-                window.statsManager.stats.balance = safeBalance;
-                window.statsManager.saveStats();
-            }
-        };
         const claimNormalGameReward = async (baseScore, wasDoubled) => {
+            const pendingMatchSync = await this.syncPendingMatchResults();
+            if (pendingMatchSync && pendingMatchSync.remaining > 0) return false;
+            if (this.topListManager && typeof this.topListManager.syncOfflineScores === 'function') {
+                await this.topListManager.syncOfflineScores();
+            }
+
             const ssvNonce = wasDoubled ? (this.pendingRewardSsvNonce || '') : '';
             const result = wasDoubled && window.adMobGlobal && typeof window.adMobGlobal.claimRewardWithSsvRetry === 'function'
                 ? await window.adMobGlobal.claimRewardWithSsvRetry(
@@ -8790,7 +8937,7 @@ class YambApp {
                 )
                 : await this.claimServerGameReward(baseScore, wasDoubled, ssvNonce);
             if (result && result.ok && typeof result.balance === 'number') {
-                applyServerBalance(result.balance);
+                this.applyAuthoritativeGameRewardBalance(result.balance);
                 this.pendingRewardSsvNonce = '';
                 return true;
             }
@@ -8847,12 +8994,15 @@ class YambApp {
                 return;
             }
         } else {
-            let currentDukati = parseInt(localStorage.getItem('yamb_dukati')) || 0;
-            currentDukati += finalAmount;
-            localStorage.setItem('yamb_dukati', currentDukati);
-            if (window.statsManager) { window.statsManager.stats.balance = currentDukati; window.statsManager.saveStats(); }
-
-            await claimNormalGameReward(this.pendingScore, false);
+            const confirmed = await claimNormalGameReward(this.pendingScore, false);
+            if (!confirmed) {
+                this.rewardClaimInProgress = false;
+                this.modal.alert(
+                    gt('reward_claim_retry'),
+                    gt('modal_title_info') || 'OBAVEŠTENJE'
+                );
+                return;
+            }
         }
 
         if (window.kvartalnaLiga) {
@@ -9144,7 +9294,12 @@ class YambApp {
             this.initSocketConnection();
             this.setupSocketListeners(this.playerName);
 
-            this.emitLocalGameSessionStart();
+            const localSessionReady = await this.requireLocalGameSession();
+            if (!localSessionReady) {
+                this.pauseLocalGameClock();
+                this.showMainMenu();
+                return;
+            }
 
             this.lastMoveSnapshot = null;
             const btnUndo = document.getElementById('btn-undo-move');

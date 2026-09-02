@@ -500,9 +500,9 @@ if (MONGO_URI) {
         initTournamentFromDb();
         initChatFromDb();
         queueMatchResultReconciliation(1000);
-        backfillRecentLeaderboardScoresFromMatchResults(1000, 93)
+        backfillMissingLeaderboardScoresFromMatchResults(1000)
             .then(count => {
-                if (count > 0) console.log(`🏆 TOP LISTA BACKFILL: Dopisano ${count} propuštenih online skorova.`);
+                if (count > 0) console.log(`🏆 TOP LISTA BACKFILL: Dopisano ${count} propuštenih skorova.`);
             })
             .catch(err => console.error('Greška pri backfill-u online skorova za top listu:', err));
         recoverLegacyCappedLeagueScores()
@@ -586,6 +586,26 @@ MatchResultSchema.index(
 MatchResultSchema.index({ 'participants.uid': 1, finishedAt: -1 });
 MatchResultSchema.index({ mode: 1, resultType: 1, finishedAt: -1 });
 const MatchResult = mongoose.model('MatchResult', MatchResultSchema);
+
+// Privatni trag prijema lokalnih rezultata za podrsku igracima.
+// Ne cuva IP adresu ni tabelu partije i automatski se brise nakon 30 dana.
+const MatchResultSubmissionDiagnosticSchema = new mongoose.Schema({
+    occurredAt: { type: Date, default: Date.now },
+    uid: { type: String, default: '' },
+    playerName: { type: String, default: '' },
+    clientResultId: { type: String, default: '' },
+    matchId: { type: String, default: '' },
+    mode: { type: String, default: '' },
+    stage: { type: String, default: '' },
+    outcome: { type: String, enum: ['accepted', 'rejected'], required: true },
+    reason: { type: String, default: '' },
+    permanent: { type: Boolean, default: false },
+    duplicate: { type: Boolean, default: false },
+    statsApplied: { type: Boolean, default: false }
+}, { versionKey: false });
+MatchResultSubmissionDiagnosticSchema.index({ occurredAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
+MatchResultSubmissionDiagnosticSchema.index({ uid: 1, occurredAt: -1 });
+const MatchResultSubmissionDiagnostic = mongoose.model('MatchResultSubmissionDiagnostic', MatchResultSubmissionDiagnosticSchema);
 
 // Privatna operativna dijagnostika prekida tokom aktivnih duela.
 // Ne čuva IP adresu; automatski se briše nakon 30 dana.
@@ -1435,18 +1455,22 @@ function signLocalGameSessionPayload(encodedPayload) {
         .digest('base64url');
 }
 
-function createLocalGameSessionToken(uid) {
+function createLocalGameSessionToken(uid, carriedDurationMs = 0) {
+    const carriedDuration = Math.min(
+        Math.max(0, normalizeCarriedGameDuration(carriedDurationMs)),
+        MAX_GAME_DURATION - 1000
+    );
     const payload = {
         v: 1,
         uid: String(uid || '').trim(),
         sessionId: crypto.randomBytes(18).toString('hex'),
-        startedAt: Date.now()
+        startedAt: Date.now() - carriedDuration
     };
     const encodedPayload = encodeLocalGameSessionPart(payload);
     return `${encodedPayload}.${signLocalGameSessionPayload(encodedPayload)}`;
 }
 
-function verifyLocalGameSessionToken(token, expectedUid) {
+function verifyLocalGameSessionToken(token, expectedUid, options = {}) {
     const parts = String(token || '').split('.');
     if (parts.length !== 2 || !parts[0] || !parts[1]) {
         return { ok: false, reason: 'missing_game_session' };
@@ -1470,11 +1494,19 @@ function verifyLocalGameSessionToken(token, expectedUid) {
         }
 
         const duration = Date.now() - startedAt;
-        if (duration < 0 || duration > MAX_GAME_DURATION) {
+        if (duration < 0 || (!options.allowExpired && duration > MAX_GAME_DURATION)) {
             return { ok: false, reason: 'stale_game_session' };
         }
 
-        return { ok: true, uid, sessionId, startedAt, duration, token: String(token) };
+        return {
+            ok: true,
+            uid,
+            sessionId,
+            startedAt,
+            duration,
+            expired: duration > MAX_GAME_DURATION,
+            token: String(token)
+        };
     } catch (err) {
         return { ok: false, reason: 'invalid_game_session' };
     }
@@ -3192,6 +3224,29 @@ async function ensureMatchResult(payload = {}) {
     }
 }
 
+async function recordMatchResultSubmissionDiagnostic(payload = {}) {
+    if (!MONGO_URI || !payload.uid) return;
+
+    try {
+        await MatchResultSubmissionDiagnostic.create({
+            occurredAt: new Date(),
+            uid: String(payload.uid || '').trim().substring(0, 128),
+            playerName: sanitizeTournamentName(payload.playerName || 'Nepoznat'),
+            clientResultId: String(payload.clientResultId || '').trim().substring(0, 128),
+            matchId: String(payload.matchId || '').trim().substring(0, 128),
+            mode: normalizeMatchResultMode(payload.mode, ''),
+            stage: String(payload.stage || '').trim().substring(0, 80),
+            outcome: payload.ok ? 'accepted' : 'rejected',
+            reason: String(payload.reason || '').trim().substring(0, 120),
+            permanent: payload.permanent === true,
+            duplicate: payload.duplicate === true,
+            statsApplied: payload.statsApplied === true
+        });
+    } catch (err) {
+        console.warn(`MATCH RESULT DIAGNOSTIC: Nije sacuvan trag za ${payload.uid}:`, err.message);
+    }
+}
+
 async function markMatchResultStatsApplied(matchId, uid) {
     if (!MONGO_URI || !matchId || !uid) return false;
     const update = await MatchResult.updateOne(
@@ -3233,13 +3288,6 @@ function rememberUserAppliedMatchResult(user, matchId) {
 
 function hasUserClaimedGameReward(user, matchId) {
     return !!user && !!matchId && Array.isArray(user.claimedGameRewardIds) && user.claimedGameRewardIds.includes(matchId);
-}
-
-function rememberUserClaimedGameReward(user, matchId) {
-    if (!user || !matchId) return;
-    const ids = Array.isArray(user.claimedGameRewardIds) ? user.claimedGameRewardIds : [];
-    user.claimedGameRewardIds = [...ids.filter(id => id !== matchId), matchId].slice(-RECENT_MATCH_RESULT_MEMORY);
-    user.markModified('claimedGameRewardIds');
 }
 
 async function findVerifiedMatchParticipant(uid, submittedMatchId, expectedScore = null) {
@@ -3329,7 +3377,12 @@ async function persistLeaderboardScoreRecord(options = {}) {
 
 async function persistLeaderboardScoresForMatchResult(result, options = {}) {
     const source = result && result.toObject ? result.toObject() : result;
-    if (!source || source.verification !== 'server' || source.resultType !== 'regular' || source.economyEligible !== true) {
+    if (
+        !source ||
+        !['server', 'authenticated_client'].includes(source.verification) ||
+        source.resultType !== 'regular' ||
+        source.economyEligible !== true
+    ) {
         return 0;
     }
 
@@ -7300,23 +7353,71 @@ async function reconcileStoredServerMatchResult(result) {
     return appliedCount + leaderboardAppliedCount;
 }
 
-async function backfillRecentLeaderboardScoresFromMatchResults(limit = 1000, lookbackDays = 93) {
+async function backfillMissingLeaderboardScoresFromMatchResults(limit = 1000) {
     if (!MONGO_URI || mongoose.connection.readyState !== 1) return 0;
 
-    const since = new Date(Date.now() - (Math.max(1, toSafeInt(lookbackDays, 93)) * 24 * 60 * 60 * 1000));
-    const results = await MatchResult.find({
-        verification: 'server',
-        resultType: 'regular',
-        economyEligible: true,
-        finishedAt: { $gte: since }
-    }).sort({ finishedAt: -1 }).limit(Math.max(1, Math.min(2000, toSafeInt(limit, 1000))));
+    const missingParticipants = await MatchResult.aggregate([
+        { $match: { resultType: 'regular', economyEligible: true } },
+        { $unwind: '$participants' },
+        {
+            $match: {
+                'participants.uid': { $type: 'string', $ne: '' },
+                'participants.score': { $gt: 0 }
+            }
+        },
+        {
+            $lookup: {
+                from: Score.collection.name,
+                let: { matchId: '$matchId', uid: '$participants.uid' },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    { $eq: ['$matchId', '$$matchId'] },
+                                    {
+                                        $or: [
+                                            { $eq: ['$playerId', '$$uid'] },
+                                            { $eq: ['$uid', '$$uid'] }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    { $limit: 1 }
+                ],
+                as: 'storedScores'
+            }
+        },
+        { $match: { storedScores: { $eq: [] } } },
+        { $sort: { finishedAt: 1 } },
+        { $limit: Math.max(1, Math.min(5000, toSafeInt(limit, 1000))) },
+        {
+            $project: {
+                _id: 0,
+                matchId: 1,
+                mode: 1,
+                finishedAt: 1,
+                participant: '$participants'
+            }
+        }
+    ]);
 
     let insertedCount = 0;
-    for (const result of results) {
-        insertedCount += await persistLeaderboardScoresForMatchResult(result, {
+    for (const entry of missingParticipants) {
+        const persisted = await persistLeaderboardScoreRecord({
+            uid: entry.participant.uid,
+            playerName: entry.participant.name,
+            score: entry.participant.score,
+            mode: entry.mode,
+            photoUrl: '',
+            matchId: entry.matchId,
+            date: entry.finishedAt,
             notifyRecords: false,
             silent: true
         });
+        if (persisted.ok && !persisted.duplicate) insertedCount++;
     }
 
     return insertedCount;
@@ -8193,6 +8294,88 @@ function openPendingGameRewardSession(uid, socketId, matchId, score, mode) {
     }, GAME_REWARD_CLAIM_WINDOW_MS);
 
     return rewardSession;
+}
+
+async function resolvePendingGameRewardSession(uid, socketId, data = {}) {
+    const requestedMatchId = String(data?.matchId || '').trim().substring(0, 128);
+    let rewardSession = pendingGameRewards[socketId] || pendingGameRewardsByUid[uid];
+
+    if (rewardSession && rewardSession.uid === uid) {
+        const sessionIsCurrent = Date.now() - rewardSession.createdAt <= GAME_REWARD_CLAIM_WINDOW_MS;
+        const requestedSessionMatches = !requestedMatchId || rewardSession.matchId === requestedMatchId;
+        if (sessionIsCurrent && requestedSessionMatches) {
+            return { ok: true, rewardSession };
+        }
+        clearPendingGameRewardSession(uid, rewardSession);
+    }
+
+    if (!requestedMatchId) {
+        return { ok: false, reason: 'missing_reward_session', permanent: false };
+    }
+
+    const submittedScore = Number(data?.score);
+    const expectedScore = Number.isInteger(submittedScore) ? Math.floor(submittedScore) : null;
+    const verifiedMatch = await findVerifiedMatchParticipant(uid, requestedMatchId, expectedScore);
+    if (!verifiedMatch.ok) {
+        return { ok: false, reason: verifiedMatch.reason, permanent: false };
+    }
+
+    rewardSession = openPendingGameRewardSession(
+        uid,
+        socketId,
+        verifiedMatch.matchId,
+        verifiedMatch.score,
+        verifiedMatch.result.mode
+    );
+    if (!rewardSession) {
+        return { ok: false, reason: 'missing_reward_session', permanent: false };
+    }
+
+    return { ok: true, rewardSession, restored: true };
+}
+
+async function claimVerifiedGameRewardBalance(uid, matchId, reward) {
+    const safeReward = Math.max(0, Math.min(MAX_REWARD_PER_GAME, toSafeInt(reward, 0)));
+    const claimedUser = await UserProfile.findOneAndUpdate(
+        {
+            firebaseUid: uid,
+            claimedGameRewardIds: { $ne: matchId }
+        },
+        [
+            {
+                $set: {
+                    balance: {
+                        $min: [
+                            MAX_BALANCE,
+                            { $max: [0, { $add: [{ $ifNull: ['$balance', 0] }, safeReward] }] }
+                        ]
+                    },
+                    claimedGameRewardIds: {
+                        $slice: [
+                            {
+                                $concatArrays: [
+                                    {
+                                        $filter: {
+                                            input: { $ifNull: ['$claimedGameRewardIds', []] },
+                                            as: 'claimedMatchId',
+                                            cond: { $ne: ['$$claimedMatchId', matchId] }
+                                        }
+                                    },
+                                    [matchId]
+                                ]
+                            },
+                            -RECENT_MATCH_RESULT_MEMORY
+                        ]
+                    }
+                }
+            }
+        ],
+        { new: true }
+    );
+
+    if (claimedUser) return { ok: true, claimed: true, user: claimedUser };
+    const existingUser = await UserProfile.findOne({ firebaseUid: uid });
+    return { ok: !!existingUser, claimed: false, user: existingUser };
 }
 
 function filterAllowedUnlocks(clientItems, serverItems, requestedTrophies, acceptPaidUnlocks) {
@@ -9876,7 +10059,10 @@ io.on('connection', (socket) => {
 
         const suppliedToken = typeof payload === 'object' ? payload?.gameSessionToken : '';
         const suppliedSession = verifyLocalGameSessionToken(suppliedToken, uid);
-        const gameSessionToken = suppliedSession.ok ? suppliedSession.token : createLocalGameSessionToken(uid);
+        const carriedDurationMs = typeof payload === 'object' ? payload?.carriedDurationMs : 0;
+        const gameSessionToken = suppliedSession.ok
+            ? suppliedSession.token
+            : createLocalGameSessionToken(uid, carriedDurationMs);
         const session = verifyLocalGameSessionToken(gameSessionToken, uid);
         const previousRoomId = playerRooms[socket.id];
         if (previousRoomId && previousRoomId !== roomId && isLocalRoomId(previousRoomId)) {
@@ -10576,8 +10762,20 @@ io.on('connection', (socket) => {
     });
 
     socket.on('submit_match_result', async (data = {}, ack) => {
+        let diagnosticStage = 'authentication';
+        let diagnosticMatchId = '';
+        const diagnosticUid = String(socket.verifiedUid || '').trim();
         const replyMatchResult = (ok, reason = null, permanent = !ok, extra = {}) => {
             const result = { ok, reason, permanent, ...extra };
+            void recordMatchResultSubmissionDiagnostic({
+                uid: diagnosticUid,
+                playerName: socket.playerName || 'Igrac',
+                clientResultId: data?.clientResultId,
+                matchId: extra.matchId || diagnosticMatchId,
+                mode: data?.mode,
+                stage: diagnosticStage,
+                ...result
+            });
             if (typeof ack === 'function') ack(result);
             return result;
         };
@@ -10588,13 +10786,23 @@ io.on('connection', (socket) => {
             socket.emit('auth_required', result);
             return;
         }
+        diagnosticStage = 'database';
         if (!MONGO_URI) return replyMatchResult(false, 'db_unavailable', false);
 
+        diagnosticStage = 'payload_validation';
         const normalized = buildClientReportedMatchResult(verifiedUid, socket.playerName || 'Igrac', data);
         if (!normalized.ok) return replyMatchResult(false, normalized.reason, true);
+        diagnosticMatchId = normalized.payload.matchId;
 
         try {
-            const session = verifyLocalGameSessionToken(data?.gameSessionToken, verifiedUid);
+            diagnosticStage = 'session_validation';
+            // A signed session remains valid proof when a completed result had to
+            // wait in the durable client queue for longer than six hours.
+            const session = verifyLocalGameSessionToken(
+                data?.gameSessionToken,
+                verifiedUid,
+                { allowExpired: true }
+            );
             const existingResult = await MatchResult.findOne({ matchId: normalized.payload.matchId });
             if (!session.ok && !existingResult) {
                 return replyMatchResult(false, session.reason, false);
@@ -10616,6 +10824,7 @@ io.on('connection', (socket) => {
                 ? existingResult.economyEligible === true
                 : true;
 
+            diagnosticStage = 'ledger_write';
             const ledgerWrite = await ensureMatchResult(normalized.payload);
             if (!ledgerWrite.ok) {
                 return replyMatchResult(
@@ -10626,18 +10835,26 @@ io.on('connection', (socket) => {
             }
 
             const matchId = normalized.payload.matchId;
+            diagnosticStage = 'leaderboard_write';
+            await persistLeaderboardScoresForMatchResult(ledgerWrite.result, {
+                notifyRecords: true,
+                silent: true
+            });
             const appliedUids = new Set(Array.isArray(ledgerWrite.result?.statsAppliedUids)
                 ? ledgerWrite.result.statsAppliedUids
                 : []);
             if (appliedUids.has(verifiedUid)) {
+                diagnosticStage = 'complete';
                 return replyMatchResult(true, null, false, { matchId, duplicate: true, statsApplied: true });
             }
 
+            diagnosticStage = 'profile_lookup';
             const user = await UserProfile.findOne({ firebaseUid: verifiedUid });
             if (!user) return replyMatchResult(false, 'profile_not_found', false, { matchId });
 
             if (hasUserAppliedMatchResult(user, matchId)) {
                 await markMatchResultStatsApplied(matchId, verifiedUid);
+                diagnosticStage = 'complete';
                 return replyMatchResult(true, null, false, { matchId, duplicate: true, statsApplied: true });
             }
 
@@ -10655,6 +10872,7 @@ io.on('connection', (socket) => {
                 user.highscore = Math.max(Math.max(0, toSafeInt(user.highscore, 0)), score);
             }
 
+            diagnosticStage = 'stats_application';
             await applyTechnicalLeagueDelta(user, normalized.selfParticipant.score, { periodDate: normalized.payload.finishedAt });
             rememberUserAppliedMatchResult(user, matchId);
             await user.save();
@@ -10667,6 +10885,7 @@ io.on('connection', (socket) => {
                 }
             });
 
+            diagnosticStage = 'complete';
             return replyMatchResult(true, null, false, {
                 matchId,
                 duplicate: !ledgerWrite.created || alreadyIncludedInProfile,
@@ -10780,16 +10999,9 @@ io.on('connection', (socket) => {
                 return replyGameReward({ ok: true, localFallback: true, reward: localReward });
             }
 
-            const rewardSession = pendingGameRewards[socket.id] || pendingGameRewardsByUid[finalUid];
-            if (!rewardSession || rewardSession.uid !== finalUid) {
-                return replyGameReward({ ok: false, reason: 'missing_reward_session', permanent: false });
-            }
-
-            if (Date.now() - rewardSession.createdAt > GAME_REWARD_CLAIM_WINDOW_MS) {
-                delete pendingGameRewards[socket.id];
-                clearPendingGameRewardSession(finalUid, rewardSession);
-                return replyGameReward({ ok: false, reason: 'reward_session_expired', permanent: true });
-            }
+            const rewardResolution = await resolvePendingGameRewardSession(finalUid, socket.id, data);
+            if (!rewardResolution.ok) return replyGameReward(rewardResolution);
+            const rewardSession = rewardResolution.rewardSession;
 
             const submittedScore = Number(data?.score);
             if (Number.isFinite(submittedScore) && Math.floor(submittedScore) !== rewardSession.score) {
@@ -10814,7 +11026,7 @@ io.on('connection', (socket) => {
                 }
             };
 
-            const user = await UserProfile.findOne({ firebaseUid: finalUid });
+            let user = await UserProfile.findOne({ firebaseUid: finalUid });
             if (!user) {
                 releaseRewardClaimLock();
                 return replyGameReward({ ok: false, reason: 'profile_not_found', permanent: false });
@@ -10850,14 +11062,29 @@ io.on('connection', (socket) => {
                 }
             }
 
-            if (data?.stats && typeof data.stats === 'object') {
-                const statsGuard = applyProfileStatsGuard(user, data.stats);
-                user.unlockedTrophies = statsGuard.acceptedTrophies;
+            const balanceClaim = await claimVerifiedGameRewardBalance(
+                finalUid,
+                rewardSession.matchId,
+                reward
+            );
+            if (!balanceClaim.ok || !balanceClaim.user) {
+                releaseRewardClaimLock();
+                return replyGameReward({ ok: false, reason: 'profile_not_found', permanent: false });
+            }
+            user = balanceClaim.user;
+            if (!balanceClaim.claimed) {
+                rewardSession.claimedAt = Date.now();
+                clearPendingGameRewardSession(finalUid, rewardSession);
+                emitProfileSync(socket, user);
+                return replyGameReward({
+                    ok: true,
+                    reward: 0,
+                    balance: Math.max(0, toSafeInt(user.balance, 0)),
+                    alreadyClaimed: true,
+                    doubled: multiplier === 2
+                });
             }
 
-            user.balance = Math.min(MAX_BALANCE, Math.max(0, toSafeInt(user.balance, 0)) + reward);
-            rememberUserClaimedGameReward(user, rewardSession.matchId);
-            await user.save();
             await MatchResult.updateOne(
                 { matchId: rewardSession.matchId, 'participants.uid': finalUid },
                 { $addToSet: { rewardClaimedUids: finalUid }, $set: { updatedAt: new Date() } }
