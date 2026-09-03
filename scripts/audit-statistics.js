@@ -81,6 +81,7 @@ function getTrackedPlayer(map, uid) {
             maxWinStreak: 0,
             currentWinStreak: 0,
             matchIds: [],
+            ledgerAppliedMatchIds: [],
             h2h: new Map()
         });
     }
@@ -316,7 +317,11 @@ function buildTrackedStatistics(matches, profilesByUid, report) {
             const player = getTrackedPlayer(tracked, uid);
             const score = safeInt(participant.score);
             player.games += 1;
-            player.matchIds.push(String(match.matchId || ''));
+            const matchId = String(match.matchId || '');
+            player.matchIds.push(matchId);
+            if (Array.isArray(match.statsAppliedUids) && match.statsAppliedUids.includes(uid)) {
+                player.ledgerAppliedMatchIds.push(matchId);
+            }
 
             if (match.resultType === 'regular') {
                 player.totalScoreSum += score;
@@ -400,10 +405,15 @@ function compareTrackedStatistics(profilesByUid, tracked, report) {
         }
 
         const recentIds = new Set(Array.isArray(profile.recentMatchResultIds) ? profile.recentMatchResultIds : []);
+        const ledgerAppliedIds = new Set(expected.ledgerAppliedMatchIds);
         const expectedRecent = expected.matchIds.slice(-RECENT_MATCH_RESULT_MEMORY);
         for (const matchId of expectedRecent) {
             if (!recentIds.has(matchId)) {
-                addIssue(report, 'critical', 'recent_profile_ledger_missing_match', { player: name, match: matchId.slice(-16) });
+                const severity = ledgerAppliedIds.has(matchId) ? 'warning' : 'critical';
+                const code = ledgerAppliedIds.has(matchId)
+                    ? 'legacy_profile_marker_window_shifted'
+                    : 'recent_profile_ledger_missing_match';
+                addIssue(report, severity, code, { player: name, match: matchId.slice(-16) });
             }
         }
         for (const matchId of recentIds) {

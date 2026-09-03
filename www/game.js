@@ -3481,6 +3481,24 @@ class YambApp {
         };
     }
 
+    reportCurrentConnectionDiagnosticSnapshot() {
+        if (!this.socket || !this.socket.connected) return;
+        this.socket.emit('connection_diagnostic_snapshot', this.getConnectionDiagnosticSnapshot());
+    }
+
+    bindConnectionDiagnosticListeners() {
+        if (this.connectionDiagnosticListenersBound) return;
+        this.connectionDiagnosticListenersBound = true;
+
+        const report = () => this.reportCurrentConnectionDiagnosticSnapshot();
+        window.addEventListener('online', report);
+        window.addEventListener('offline', report);
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (connection && typeof connection.addEventListener === 'function') {
+            connection.addEventListener('change', report);
+        }
+    }
+
     reportRecoveredConnectionDiagnostic() {
         const diagnostic = this.pendingConnectionDiagnostic;
         if (!diagnostic || !this.socket || !this.socket.connected) return;
@@ -3528,10 +3546,12 @@ class YambApp {
                     timeout: 20000,
                     autoConnect: true
                 });
-                
+                this.bindConnectionDiagnosticListeners();
+
                 this.socket.on('connect', async () => {
                     console.log("✅ Socket povezan! ID:", this.socket.id);
                     this.socketVerifiedUid = null;
+                    this.reportCurrentConnectionDiagnosticSnapshot();
                     
                     if (!this.playerId) return;
 
@@ -5768,7 +5788,10 @@ class YambApp {
         if (!force && this.lastOnlinePresencePingAt && now - this.lastOnlinePresencePingAt < 2000) return;
 
         this.lastOnlinePresencePingAt = now;
-        this.socket.emit('online_presence_ping', { roomId: this.roomId });
+        this.socket.emit('online_presence_ping', {
+            roomId: this.roomId,
+            ...this.getConnectionDiagnosticSnapshot()
+        });
     }
 
     formatReconnectGraceTime(ms) {
@@ -6856,6 +6879,20 @@ class YambApp {
     setupOnlineRecoveryListeners() {
         if (!this.socket) return;
 
+        this.socket.off('match_ended_without_penalty');
+        this.socket.on('match_ended_without_penalty', async (data = {}) => {
+            if (data.reason !== 'mutual_disconnect') return;
+            if (data.roomId && this.roomId && data.roomId !== this.roomId) return;
+
+            localStorage.removeItem('yamb_active_online_room');
+            await this.refreshProfileAfterOnlineRoomClosed();
+            this.modal.alert(
+                gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.',
+                gt('mutual_disconnect_title') || 'OBOSTRANI PREKID'
+            );
+            this.cancelOnline();
+        });
+
         // DODATO: Osluškivač odgovora servera o stanju prekinute partije
         this.socket.off('room_status_result');
         this.socket.on('room_status_result', async (data) => {
@@ -6932,13 +6969,20 @@ class YambApp {
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
             localStorage.removeItem('yamb_active_online_room');
             await this.refreshProfileAfterOnlineRoomClosed();
+            const wasMutualDisconnect = data.reason === 'mutual_disconnect';
             if (this.modal) {
                 this.modal.alert(
-                    gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme.",
-                    gt('online_recovery_expired_title') || "KRAJ PARTIJE"
+                    wasMutualDisconnect
+                        ? (gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.')
+                        : (gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme."),
+                    wasMutualDisconnect
+                        ? (gt('mutual_disconnect_title') || 'OBOSTRANI PREKID')
+                        : (gt('online_recovery_expired_title') || "KRAJ PARTIJE")
                 );
             } else {
-                alert(gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme.");
+                alert(wasMutualDisconnect
+                    ? (gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.')
+                    : (gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme."));
             }
             this.cancelOnline(); 
         });

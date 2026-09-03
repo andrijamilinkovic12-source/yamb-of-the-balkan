@@ -13,6 +13,10 @@ const https = require('https');
 const crypto = require('crypto');
 const powerIndexCore = require('./www/powerIndexCore');
 
+const MAINTENANCE_MODE = /^(?:1|true|yes|on)$/i.test(String(process.env.MAINTENANCE_MODE || '').trim());
+const MAINTENANCE_RETRY_AFTER_SECONDS = 300;
+const MAINTENANCE_PAGE_PATH = path.join(__dirname, 'www', 'maintenance.html');
+
 let firebaseAuth = null;
 let firebaseMessaging = null;
 let firebaseAdminProjectId = null;
@@ -124,9 +128,45 @@ const io = new Server(server, {
     pingTimeout: 20000
 });
 
+io.use((socket, next) => {
+    if (!MAINTENANCE_MODE) return next();
+
+    const error = new Error('Server je trenutno na održavanju. Vratite se malo kasnije.');
+    error.data = { code: 'server_maintenance' };
+    return next(error);
+});
+
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Hosting health check ostaje dostupan i dok igra prikazuje ekran održavanja.
+app.get('/healthz', (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.status(200).json({ ok: true, maintenance: MAINTENANCE_MODE });
+});
+
+app.use((req, res, next) => {
+    if (!MAINTENANCE_MODE) return next();
+
+    const isMaintenanceAsset = req.path === '/assets/moonlight-lunar-bg.png';
+    const isAndroidAppLink = req.path === '/.well-known/assetlinks.json';
+    if (isMaintenanceAsset || isAndroidAppLink) return next();
+
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.setHeader('Retry-After', String(MAINTENANCE_RETRY_AFTER_SECONDS));
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+
+    if (req.path.startsWith('/api/') || req.path.startsWith('/socket.io/') || !['GET', 'HEAD'].includes(req.method)) {
+        return res.status(503).json({
+            ok: false,
+            reason: 'server_maintenance',
+            message: 'Server je trenutno na održavanju. Vratite se malo kasnije.'
+        });
+    }
+
+    return res.status(503).sendFile(MAINTENANCE_PAGE_PATH);
+});
 
 // ==================================================================
 // 0. FILTER VULGARNOSTI ZA GLOBALNI CHAT I IMENA (PAMETNI FILTER)
@@ -623,7 +663,7 @@ const DisconnectDiagnosticSchema = new mongoose.Schema({
     reasonClass: { type: String, default: 'unknown' },
     transport: { type: String, default: '' },
     graceMs: { type: Number, default: 0 },
-    outcome: { type: String, enum: ['pending', 'recovered', 'technical_result', 'ended_without_penalty'], default: 'pending' },
+    outcome: { type: String, enum: ['pending', 'recovered', 'technical_result', 'ended_without_penalty', 'mutual_disconnect'], default: 'pending' },
     reconnectDurationMs: { type: Number, default: 0 },
     clientOnlineAtDisconnect: { type: Boolean, default: null },
     clientConnectionType: { type: String, default: '' },
@@ -738,6 +778,7 @@ const GlobalChatMessageSchema = new mongoose.Schema({
 
 const GlobalChatSchema = new mongoose.Schema({
     messages: { type: [GlobalChatMessageSchema], default: [] },
+    systemAnnouncementIds: { type: [String], default: [] },
     lastResetWeekKey: { type: String, default: '' },
     lastResetAt: { type: Number, default: 0 }
 });
@@ -1951,6 +1992,16 @@ let globalChatLastResetWeekKey = '';
 let globalChatLastResetAt = 0;
 const MAX_CHAT_HISTORY = 50;
 const GLOBAL_CHAT_RESET_TIME_ZONE = LEADERBOARD_TIME_ZONE;
+const GLOBAL_CHAT_SYSTEM_ANNOUNCEMENTS = [
+    {
+        id: 'yotb-support-result-recording-20260902',
+        msg: 'Obaveštenje: Ispravljen je problem sa upisom rezultata lokalnih partija. Nakon server potvrde, rezultati se pravilno evidentiraju u statistici, Kvartalnoj ligi, dukatima i rang-listama. Ako primetite novi problem nakon partije, javite nam što pre kako bismo proverili konkretan slučaj.'
+    },
+    {
+        id: 'yotb-support-h2h-rebuild-20260902',
+        msg: 'Obaveštenje: H2H kartice su usklađene sa potvrđenim online mečevima. Kod pojedinih igrača broj kartica može biti manji, jer su uklonjene stare, duplirane ili nepotpune kartice bez pouzdano evidentiranog duela. Validne partije nisu obrisane; preostale kartice prikazuju proverene H2H rezultate.'
+    }
+];
 
 function createGlobalChatMessageId() {
     return crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
@@ -2079,6 +2130,7 @@ async function initChatFromDb() {
             } else if (!storedWeekKey || globalChatHistory.length !== rawMessages.length || globalChatHistory.some((message, index) => message.id !== rawMessages[index]?.id)) {
                 await saveChatToDb();
             }
+            await ensureGlobalChatSystemAnnouncements(dbChat.systemAnnouncementIds);
             console.log("💬 Globalni chat uspešno učitan iz baze.");
         } else {
             const currentWeekKey = getGlobalChatWeekKey();
@@ -2090,10 +2142,47 @@ async function initChatFromDb() {
                 lastResetAt: globalChatLastResetAt
             });
             await newChat.save();
+            await ensureGlobalChatSystemAnnouncements([]);
             console.log("💬 Kreiran novi čist globalni chat u bazi.");
         }
     } catch (err) {
         console.error("Greška pri učitavanju chata iz baze:", err);
+    }
+}
+
+async function ensureGlobalChatSystemAnnouncements(existingIds = []) {
+    if (!process.env.MONGO_URI) return;
+
+    const announcedIds = new Set(Array.isArray(existingIds) ? existingIds.map(String) : []);
+    const pendingAnnouncements = GLOBAL_CHAT_SYSTEM_ANNOUNCEMENTS.filter(announcement => !announcedIds.has(announcement.id));
+    if (pendingAnnouncements.length === 0) return;
+
+    const createdAt = Date.now();
+    const messages = pendingAnnouncements.map((announcement, index) => ({
+        id: announcement.id,
+        sender: 'YotB Support',
+        senderId: 'support',
+        senderUid: 'support',
+        msg: announcement.msg,
+        createdAt: createdAt + index
+    }));
+
+    globalChatHistory = [...globalChatHistory, ...messages].slice(-MAX_CHAT_HISTORY);
+    try {
+        const GlobalChatDb = mongoose.model('GlobalChat');
+        await GlobalChatDb.findOneAndUpdate(
+            {},
+            {
+                $push: {
+                    messages: { $each: messages, $slice: -MAX_CHAT_HISTORY },
+                    systemAnnouncementIds: { $each: pendingAnnouncements.map(announcement => announcement.id) }
+                }
+            },
+            { upsert: true }
+        );
+    } catch (err) {
+        globalChatHistory = globalChatHistory.filter(message => !messages.some(announcement => announcement.id === message.id));
+        console.error("Greška pri dodavanju sistemskih Global chat poruka:", err);
     }
 }
 
@@ -2161,10 +2250,13 @@ const disconnectTimers = {};
 const ghostSessions = {};
 const DISCONNECT_GRACE_MS = 30 * 1000;
 const TOURNAMENT_DISCONNECT_GRACE_MS = 5 * 60 * 1000;
+const MUTUAL_DISCONNECT_WINDOW_MS = 2 * 1000;
 const RECONNECT_RESUME_MIN_TURN_MS = 15 * 1000;
 const TOURNAMENT_PRESENCE_STALE_MS = 4500;
 const SERVER_TECHNICAL_SYNC_IGNORE_WINDOW_MS = 20000;
+const RECENT_ENDED_ROOM_REASON_TTL_MS = 10 * 60 * 1000;
 const recentServerTechnicalResults = new Map();
+const recentEndedOnlineRooms = new Map();
 const disconnectDiagnosticWrites = new Map();
 
 function isTournamentRoomId(roomId) {
@@ -2195,6 +2287,67 @@ function getRoomDisconnectGraceRemainingMs(roomId) {
         const startedAt = toSafeInt(ghost.startedAt, now);
         return Math.max(remaining, Math.max(0, graceMs - (now - startedAt)));
     }, 0);
+}
+
+function rememberEndedOnlineRoom(roomId, reason, matchId = '') {
+    if (!roomId) return;
+    const marker = {
+        reason: String(reason || '').substring(0, 60),
+        matchId: String(matchId || '').substring(0, 128),
+        expiresAt: Date.now() + RECENT_ENDED_ROOM_REASON_TTL_MS
+    };
+    recentEndedOnlineRooms.set(roomId, marker);
+
+    const cleanupTimer = setTimeout(() => {
+        if (recentEndedOnlineRooms.get(roomId) === marker) recentEndedOnlineRooms.delete(roomId);
+    }, RECENT_ENDED_ROOM_REASON_TTL_MS);
+    if (typeof cleanupTimer.unref === 'function') cleanupTimer.unref();
+}
+
+function getRecentEndedOnlineRoom(roomId) {
+    const marker = roomId ? recentEndedOnlineRooms.get(roomId) : null;
+    if (!marker) return null;
+    if (marker.expiresAt <= Date.now()) {
+        recentEndedOnlineRooms.delete(roomId);
+        return null;
+    }
+    return marker;
+}
+
+function getMutualDisconnectGraceState(roomId, state, now = Date.now()) {
+    if (!roomId || !state || !Array.isArray(state.players) || state.players.length !== 2) return null;
+    // Turnirski bracket zahteva pobednika; njegovo ponovno zakazivanje je zaseban tok.
+    if (isTournamentRoomId(roomId)) return null;
+
+    const participants = state.players.map((socketId) => ({
+        socketId,
+        uid: getRoomParticipantMeta(state, socketId).uid
+    }));
+    if (participants.some((participant) => !participant.uid)) return null;
+    if (new Set(participants.map((participant) => participant.uid)).size !== participants.length) return null;
+
+    const entries = participants.map((participant) => ({
+        ...participant,
+        ghost: ghostSessions[participant.uid]
+    }));
+    const allDisconnected = entries.every(({ uid, socketId, ghost }) => (
+        ghost &&
+        ghost.roomId === roomId &&
+        ghost.oldSocketId === socketId &&
+        !!disconnectTimers[uid]
+    ));
+    if (!allDisconnected) return null;
+
+    const startedAtValues = entries.map(({ ghost }) => toSafeInt(ghost.startedAt, now));
+    if (Math.max(...startedAtValues) - Math.min(...startedAtValues) > MUTUAL_DISCONNECT_WINDOW_MS) return null;
+
+    const graceMs = getDisconnectGraceMs(roomId);
+    const resolveAt = Math.max(...startedAtValues.map((startedAt) => startedAt + graceMs));
+    return {
+        entries,
+        resolveAt,
+        remainingMs: Math.max(0, resolveAt - now)
+    };
 }
 
 function getRoomPresenceKeys(state, socketId) {
@@ -2322,6 +2475,17 @@ function getSocketTransport(socket) {
     return String(socket?.conn?.transport?.name || '').substring(0, 32);
 }
 
+function rememberClientConnectionDiagnosticSnapshot(socket, data = {}) {
+    if (!socket) return;
+    socket.clientConnectionDiagnosticSnapshot = {
+        online: typeof data.onlineAtDisconnect === 'boolean'
+            ? data.onlineAtDisconnect
+            : (typeof data.online === 'boolean' ? data.online : null),
+        connectionType: String(data.connectionType || '').substring(0, 32),
+        reportedAt: Date.now()
+    };
+}
+
 function createDisconnectDiagnostic(socket, roomId, state, playerId, source, socketReason, graceMs) {
     if (!MONGO_URI || !socket || !roomId || !state || !playerId) return '';
 
@@ -2332,6 +2496,7 @@ function createDisconnectDiagnostic(socket, roomId, state, playerId, source, soc
     const opponent = opponentSocketId ? getRoomParticipantMeta(state, opponentSocketId) : null;
     const eventId = createServerMatchId();
     const occurredAt = new Date();
+    const clientSnapshot = socket.clientConnectionDiagnosticSnapshot || {};
     const record = {
         eventId,
         occurredAt,
@@ -2345,7 +2510,9 @@ function createDisconnectDiagnostic(socket, roomId, state, playerId, source, soc
         reasonClass: classifySocketDisconnectReason(socketReason),
         transport: getSocketTransport(socket),
         graceMs: Math.max(0, toSafeInt(graceMs, 0)),
-        outcome: 'pending'
+        outcome: 'pending',
+        clientOnlineAtDisconnect: typeof clientSnapshot.online === 'boolean' ? clientSnapshot.online : null,
+        clientConnectionType: String(clientSnapshot.connectionType || '').substring(0, 32)
     };
 
     const write = DisconnectDiagnostic.updateOne(
@@ -2374,6 +2541,123 @@ function resolveDisconnectDiagnostic(eventId, fields = {}) {
     write.finally(() => {
         if (disconnectDiagnosticWrites.get(eventId) === write) disconnectDiagnosticWrites.delete(eventId);
     });
+}
+
+function scheduleDisconnectGraceTimeout(uid, roomId, oldSocketId, delayMs) {
+    disconnectTimers[uid] = setTimeout(() => {
+        handleDisconnectGraceTimeout(uid, roomId, oldSocketId)
+            .catch((error) => console.error(`Reconnect timeout obrada nije uspela za sobu ${roomId}:`, error));
+    }, Math.max(1, toSafeInt(delayMs, 1)));
+
+    if (disconnectTimers[uid] && typeof disconnectTimers[uid].unref === 'function') {
+        disconnectTimers[uid].unref();
+    }
+}
+
+async function handleDisconnectGraceTimeout(pid, activeRoomId, oldSocketId) {
+    const ghost = ghostSessions[pid];
+    if (!ghost || ghost.roomId !== activeRoomId || ghost.oldSocketId !== oldSocketId) {
+        console.log(`ℹ️ Ignorišem zastareli reconnect timeout za ${pid}; sesija je već obnovljena ili promenjena.`);
+        delete disconnectTimers[pid];
+        return;
+    }
+
+    const stateAfterGrace = roomState[activeRoomId];
+    const mutualDisconnect = getMutualDisconnectGraceState(activeRoomId, stateAfterGrace);
+    if (mutualDisconnect?.remainingMs > 0) {
+        console.log(`ℹ️ Oba igrača su izgubila vezu u sobi ${activeRoomId}; čekam puni reconnect rok oba igrača.`);
+        scheduleDisconnectGraceTimeout(pid, activeRoomId, oldSocketId, mutualDisconnect.remainingMs);
+        return;
+    }
+
+    if (mutualDisconnect) {
+        const matchId = String(stateAfterGrace?.matchId || '').substring(0, 128);
+        console.log(`⚖️ Obostrani prekid u sobi ${activeRoomId}. Partija se završava bez rezultata i bez kazne.`);
+        rememberEndedOnlineRoom(activeRoomId, 'mutual_disconnect', matchId);
+        mutualDisconnect.entries.forEach(({ ghost: disconnectedGhost }) => {
+            resolveDisconnectDiagnostic(disconnectedGhost.diagnosticEventId, {
+                outcome: 'mutual_disconnect',
+                matchId
+            });
+        });
+        io.to(activeRoomId).emit('match_ended_without_penalty', {
+            roomId: activeRoomId,
+            matchId,
+            reason: 'mutual_disconnect'
+        });
+        cleanupOnlineRoom(activeRoomId);
+        return;
+    }
+
+    console.log(`❌ Reconnect grace istekao za ${pid}. Partija se trajno prekida.`);
+    let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
+
+    if (stateAfterGrace && stateAfterGrace.gameFinished) {
+        console.log(`ℹ️ Reconnect timeout za ${pid} preskočen; soba ${activeRoomId} je već završena.`);
+        resolveDisconnectDiagnostic(ghost.diagnosticEventId, { outcome: 'ended_without_penalty' });
+        delete ghostSessions[pid];
+        delete disconnectTimers[pid];
+        return;
+    }
+
+    if (stateAfterGrace) {
+        if (!stateAfterGrace.players.includes(ghost.oldSocketId)) {
+            console.log(`ℹ️ Ignorišem reconnect timeout za ${pid}; stari socket više nije igrač u sobi ${activeRoomId}.`);
+            resolveDisconnectDiagnostic(ghost.diagnosticEventId, { outcome: 'ended_without_penalty' });
+            delete ghostSessions[pid];
+            delete disconnectTimers[pid];
+            resumeRoomAfterDisconnectGrace(activeRoomId);
+            return;
+        }
+
+        const penaltyAmount = getDynamicPenalty(activeRoomId);
+        const oppSocketId = stateAfterGrace.players.find(id => id !== ghost.oldSocketId);
+        const winnerParticipant = getRoomParticipantMeta(stateAfterGrace, oppSocketId);
+        const loserParticipant = getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId);
+        const winnerUid = winnerParticipant.uid;
+        const h2hKey = getH2HKeyForOpponent(winnerParticipant);
+
+        technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
+            winnerOpponent: loserParticipant,
+            loserOpponent: winnerParticipant,
+            roomId: activeRoomId,
+            reason: 'disconnect_grace_expired'
+        });
+        resolveDisconnectDiagnostic(ghost.diagnosticEventId, {
+            outcome: 'technical_result',
+            matchId: String(technicalResult.matchId || stateAfterGrace.matchId || '').substring(0, 128)
+        });
+        await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
+    } else {
+        console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
+    }
+
+    const technicalWinnerSocketId = Array.isArray(stateAfterGrace?.players)
+        ? stateAfterGrace.players.find(id => id !== ghost.oldSocketId)
+        : '';
+    const technicalWinner = stateAfterGrace && technicalWinnerSocketId
+        ? getRoomParticipantMeta(stateAfterGrace, technicalWinnerSocketId)
+        : null;
+    const technicalLoser = stateAfterGrace
+        ? getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId)
+        : null;
+
+    io.to(activeRoomId).emit('opponent_left', {
+        matchId: technicalResult.matchId || ensureRoomMatchId(activeRoomId, stateAfterGrace),
+        winnerId: technicalWinnerSocketId || '',
+        loserId: ghost.oldSocketId,
+        duelType: getOnlineDuelType(activeRoomId),
+        winnerName: technicalWinner?.name || 'Igrac',
+        loserName: technicalLoser?.name || 'Igrac',
+        reward: technicalResult.winnerReward,
+        coinPenalty: technicalResult.loserCoinPenalty,
+        serverApplied: technicalResult.serverApplied
+    });
+
+    cleanupOnlineRoom(activeRoomId);
+
+    delete ghostSessions[pid];
+    delete disconnectTimers[pid];
 }
 
 function beginReconnectGraceForSocket(socket, activeRoomId, source = 'disconnect', socketReason = '') {
@@ -2409,89 +2693,7 @@ function beginReconnectGraceForSocket(socket, activeRoomId, source = 'disconnect
     pauseRoomForDisconnectGrace(activeRoomId);
     io.to(activeRoomId).emit('opponent_connection_lost', { graceMs, remainingMs: graceMs, source });
 
-    disconnectTimers[pid] = setTimeout(async () => {
-        const ghost = ghostSessions[pid];
-        if (!ghost || ghost.roomId !== activeRoomId || ghost.oldSocketId !== socket.id) {
-            console.log(`ℹ️ Ignorišem zastareli reconnect timeout za ${pid}; sesija je već obnovljena ili promenjena.`);
-            delete disconnectTimers[pid];
-            return;
-        }
-
-        console.log(`❌ Reconnect grace istekao za ${pid}. Partija se trajno prekida.`);
-        let technicalResult = { winnerReward: 500, loserCoinPenalty: 500 };
-        const stateAfterGrace = roomState[activeRoomId];
-
-        if (stateAfterGrace && stateAfterGrace.gameFinished) {
-            console.log(`ℹ️ Reconnect timeout za ${pid} preskočen; soba ${activeRoomId} je već završena.`);
-            resolveDisconnectDiagnostic(ghost.diagnosticEventId, { outcome: 'ended_without_penalty' });
-            delete ghostSessions[pid];
-            delete disconnectTimers[pid];
-            return;
-        }
-
-        if (stateAfterGrace) {
-            if (!stateAfterGrace.players.includes(ghost.oldSocketId)) {
-                console.log(`ℹ️ Ignorišem reconnect timeout za ${pid}; stari socket više nije igrač u sobi ${activeRoomId}.`);
-                resolveDisconnectDiagnostic(ghost.diagnosticEventId, { outcome: 'ended_without_penalty' });
-                delete ghostSessions[pid];
-                delete disconnectTimers[pid];
-                resumeRoomAfterDisconnectGrace(activeRoomId);
-                return;
-            }
-
-            const penaltyAmount = getDynamicPenalty(activeRoomId);
-            const oppSocketId = stateAfterGrace.players.find(id => id !== ghost.oldSocketId);
-            const winnerParticipant = getRoomParticipantMeta(stateAfterGrace, oppSocketId);
-            const loserParticipant = getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId);
-            const winnerUid = winnerParticipant.uid;
-            const h2hKey = getH2HKeyForOpponent(winnerParticipant);
-
-            technicalResult = await applyServerSideTechnicalResult(winnerUid, pid, penaltyAmount, h2hKey, {
-                winnerOpponent: loserParticipant,
-                loserOpponent: winnerParticipant,
-                roomId: activeRoomId,
-                reason: 'disconnect_grace_expired'
-            });
-            resolveDisconnectDiagnostic(ghost.diagnosticEventId, {
-                outcome: 'technical_result',
-                matchId: String(technicalResult.matchId || stateAfterGrace.matchId || '').substring(0, 128)
-            });
-            await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
-        } else {
-            console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
-        }
-
-        const technicalWinnerSocketId = Array.isArray(stateAfterGrace?.players)
-            ? stateAfterGrace.players.find(id => id !== ghost.oldSocketId)
-            : '';
-        const technicalWinner = stateAfterGrace && technicalWinnerSocketId
-            ? getRoomParticipantMeta(stateAfterGrace, technicalWinnerSocketId)
-            : null;
-        const technicalLoser = stateAfterGrace
-            ? getRoomParticipantMeta(stateAfterGrace, ghost.oldSocketId)
-            : null;
-
-        io.to(activeRoomId).emit('opponent_left', {
-            matchId: technicalResult.matchId || ensureRoomMatchId(activeRoomId, stateAfterGrace),
-            winnerId: technicalWinnerSocketId || '',
-            loserId: ghost.oldSocketId,
-            duelType: getOnlineDuelType(activeRoomId),
-            winnerName: technicalWinner?.name || 'Igrac',
-            loserName: technicalLoser?.name || 'Igrac',
-            reward: technicalResult.winnerReward,
-            coinPenalty: technicalResult.loserCoinPenalty,
-            serverApplied: technicalResult.serverApplied
-        });
-
-        cleanupOnlineRoom(activeRoomId);
-
-        delete ghostSessions[pid];
-        delete disconnectTimers[pid];
-    }, graceMs);
-
-    if (disconnectTimers[pid] && typeof disconnectTimers[pid].unref === 'function') {
-        disconnectTimers[pid].unref();
-    }
+    scheduleDisconnectGraceTimeout(pid, activeRoomId, socket.id, graceMs);
 
     return true;
 }
@@ -9058,6 +9260,7 @@ io.on('connection', (socket) => {
     socket.on('online_presence_ping', (data = {}) => {
         const roomId = playerRooms[socket.id] || String(data.roomId || '');
         if (!roomId || !isTournamentRoomId(roomId)) return;
+        rememberClientConnectionDiagnosticSnapshot(socket, data);
         rememberRoomPresence(roomId, socket);
     });
 
@@ -12570,7 +12773,12 @@ io.on('connection', (socket) => {
              }
         } else {
             // Ako soba više ne postoji (istekao grace period)
-            socket.emit('force_cancel_online', { roomId: roomId || requestedRoomId || null }); // Izbacujemo ga nazad u meni
+            const endedRoom = getRecentEndedOnlineRoom(roomId || requestedRoomId);
+            socket.emit('force_cancel_online', {
+                roomId: roomId || requestedRoomId || null,
+                reason: endedRoom?.reason || '',
+                matchId: endedRoom?.matchId || ''
+            }); // Izbacujemo ga nazad u meni
         }
     });
 
@@ -12727,6 +12935,10 @@ io.on('connection', (socket) => {
     });
 
     socket.on('chat_msg', (data) => relayEvent('chat_msg', data));
+
+    socket.on('connection_diagnostic_snapshot', (data = {}) => {
+        rememberClientConnectionDiagnosticSnapshot(socket, data);
+    });
 
     socket.on('connection_diagnostic', (data = {}) => {
         if (!socket.verifiedUid || !socket.pendingDisconnectDiagnosticEventId) return;
@@ -13770,4 +13982,7 @@ setInterval(() => {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`🚀 Yamb Server sluša na portu ${PORT}`);
+    if (MAINTENANCE_MODE) {
+        console.log('🛠️ MAINTENANCE_MODE je uključen: igrači vide YotB ekran održavanja.');
+    }
 });

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#07101e">
+    <meta name="robots" content="noindex, nofollow">
+    <title>YotB — Održavanje servera</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: Montserrat, "Segoe UI", Arial, sans-serif;
+            --ice: #eaf4ff;
+            --muted: #b8c9da;
+            --gold: #f1cd79;
+            --gold-bright: #fff0bd;
+            --panel: rgba(5, 13, 25, 0.72);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
+            margin: 0;
+        }
+
+        body {
+            min-height: 100dvh;
+            overflow: hidden;
+            color: var(--ice);
+            background:
+                linear-gradient(180deg, rgba(2, 7, 14, 0.18), rgba(2, 7, 14, 0.66)),
+                url("/assets/moonlight-lunar-bg.png?v=1") center / cover no-repeat fixed,
+                #050b14;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 50% 36%, rgba(97, 177, 241, 0.17), transparent 32%),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.24), transparent 28%, transparent 72%, rgba(0, 0, 0, 0.2));
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+            min-height: 100dvh;
+            display: grid;
+            place-items: center;
+            padding:
+                max(24px, env(safe-area-inset-top))
+                max(18px, env(safe-area-inset-right))
+                max(24px, env(safe-area-inset-bottom))
+                max(18px, env(safe-area-inset-left));
+        }
+
+        .maintenance-card {
+            width: min(440px, 100%);
+            padding: 28px 26px 24px;
+            text-align: center;
+            border: 1px solid rgba(220, 238, 255, 0.18);
+            border-radius: 28px;
+            background: var(--panel);
+            box-shadow:
+                0 24px 70px rgba(0, 0, 0, 0.48),
+                inset 0 1px 0 rgba(255, 255, 255, 0.09),
+                0 0 45px rgba(67, 143, 204, 0.08);
+            backdrop-filter: blur(18px) saturate(120%);
+            -webkit-backdrop-filter: blur(18px) saturate(120%);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 13px;
+            margin-bottom: 24px;
+        }
+
+        .brand-mark {
+            position: relative;
+            width: 58px;
+            height: 58px;
+            border: 1px solid rgba(255, 240, 189, 0.48);
+            border-radius: 17px;
+            background: linear-gradient(145deg, #fff0b9, #bc7e26 68%, #75400e);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), 0 0 24px rgba(241, 205, 121, 0.18);
+            transform: rotate(-6deg);
+        }
+
+        .pip {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #1c2940;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.65), 0 1px 0 rgba(255, 255, 255, 0.24);
+        }
+
+        .pip:nth-child(1) { top: 13px; left: 13px; }
+        .pip:nth-child(2) { top: 13px; right: 13px; }
+        .pip:nth-child(3) { top: 25px; left: 25px; }
+        .pip:nth-child(4) { bottom: 13px; left: 13px; }
+        .pip:nth-child(5) { right: 13px; bottom: 13px; }
+
+        .brand-copy {
+            text-align: left;
+        }
+
+        .brand-name {
+            display: block;
+            color: var(--gold-bright);
+            font-size: 1.65rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(241, 205, 121, 0.18);
+        }
+
+        .brand-full {
+            display: block;
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.19em;
+            text-transform: uppercase;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 13px;
+            padding: 7px 12px;
+            color: #ffd998;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 208, 128, 0.18);
+            border-radius: 999px;
+            background: rgba(178, 113, 27, 0.12);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ffc25e;
+            box-shadow: 0 0 0 4px rgba(255, 194, 94, 0.1), 0 0 14px rgba(255, 194, 94, 0.72);
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.75rem, 7vw, 2.35rem);
+            line-height: 1.1;
+            letter-spacing: -0.025em;
+        }
+
+        .message {
+            max-width: 330px;
+            margin: 16px auto 0;
+            color: var(--muted);
+            font-size: 0.98rem;
+            line-height: 1.65;
+        }
+
+        .message strong {
+            color: var(--ice);
+            font-weight: 700;
+        }
+
+        button {
+            width: 100%;
+            min-height: 50px;
+            margin-top: 24px;
+            padding: 12px 18px;
+            cursor: pointer;
+            color: #172033;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            border: 0;
+            border-radius: 15px;
+            background: linear-gradient(180deg, #fff0bd, #d9a84d);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+            transition: transform 150ms ease, filter 150ms ease;
+        }
+
+        button:active {
+            transform: translateY(1px) scale(0.99);
+        }
+
+        button:disabled {
+            cursor: wait;
+            filter: saturate(0.55);
+        }
+
+        .check-note {
+            min-height: 18px;
+            margin: 12px 0 0;
+            color: rgba(206, 222, 238, 0.68);
+            font-size: 0.72rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.58; transform: scale(0.88); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-height: 570px) {
+            .maintenance-card { padding: 20px 22px 17px; }
+            .brand { margin-bottom: 16px; }
+            .brand-mark { width: 50px; height: 50px; border-radius: 14px; }
+            .pip:nth-child(1) { top: 11px; left: 11px; }
+            .pip:nth-child(2) { top: 11px; right: 11px; }
+            .pip:nth-child(3) { top: 21px; left: 21px; }
+            .pip:nth-child(4) { bottom: 11px; left: 11px; }
+            .pip:nth-child(5) { right: 11px; bottom: 11px; }
+            .message { margin-top: 11px; line-height: 1.48; }
+            button { margin-top: 17px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .status-dot { animation: none; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <section class="maintenance-card" aria-labelledby="maintenance-title">
+            <div class="brand" aria-label="Yamb of the Balkan">
+                <div class="brand-mark" aria-hidden="true">
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                </div>
+                <div class="brand-copy">
+                    <span class="brand-name">YotB</span>
+                    <span class="brand-full">Yamb of the Balkan</span>
+                </div>
+            </div>
+
+            <div class="status"><span class="status-dot" aria-hidden="true"></span>Planirano održavanje</div>
+            <h1 id="maintenance-title">Održavanje servera</h1>
+            <p class="message">
+                Trenutno unapređujemo YotB kako bi igra radila još bolje.
+                <strong>Vratite se malo kasnije.</strong>
+            </p>
+            <button id="retry-button" type="button">Proveri ponovo</button>
+            <p id="check-note" class="check-note" role="status" aria-live="polite">Automatski proveravamo dostupnost servera.</p>
+        </section>
+    </main>
+
+    <script>
+        (() => {
+            const button = document.getElementById('retry-button');
+            const note = document.getElementById('check-note');
+            let checking = false;
+
+            async function checkServer(manual = false) {
+                if (checking) return;
+                checking = true;
+                button.disabled = true;
+                if (manual) note.textContent = 'Proveravamo server…';
+
+                try {
+                    const response = await fetch(`/?maintenance-check=${Date.now()}`, {
+                        method: 'HEAD',
+                        cache: 'no-store'
+                    });
+                    if (response.ok) {
+                        note.textContent = 'Server je spreman. Pokrećemo igru…';
+                        window.location.replace('/');
+                        return;
+                    }
+                    if (manual) note.textContent = 'Održavanje još traje. Pokušajte ponovo uskoro.';
+                } catch (error) {
+                    if (manual) note.textContent = 'Server još nije dostupan. Pokušajte ponovo uskoro.';
+                } finally {
+                    checking = false;
+                    button.disabled = false;
+                }
+            }
+
+            button.addEventListener('click', () => checkServer(true));
+            window.setInterval(() => checkServer(false), 20000);
+        })();
+    </script>
+</body>
+</html>

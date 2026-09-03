@@ -115,10 +115,17 @@
       }
       const disconnectReasonLabel = { ping_timeout: 'Istek pinga', transport_error: 'Greška transporta', transport_closed: 'Transport zatvoren', server_disconnect: 'Server prekinuo vezu', client_disconnect: 'Klijent prekinuo vezu', other: 'Drugi Socket.IO razlog', unknown: 'Nepoznat razlog' };
       const disconnectTriggerLabel = { disconnect: 'Socket prekid', app_backgrounded: 'Aplikacija u pozadini', presence_stale_timeout: 'Istek prisutnosti' };
-      const disconnectOutcomeLabel = { pending: 'Čeka oporavak', recovered: 'Veza vraćena', technical_result: 'Tehnički rezultat', ended_without_penalty: 'Završeno bez kazne' };
+      const disconnectOutcomeLabel = { pending: 'Čeka oporavak', recovered: 'Veza vraćena', technical_result: 'Tehnički rezultat', ended_without_penalty: 'Završeno bez kazne', mutual_disconnect: 'Obostrani prekid · bez kazne' };
       function renderDisconnectDiagnostics(rows) {
         const container = $('disconnect-diagnostics'); container.replaceChildren();
-        const items = Array.isArray(rows) ? rows : [];
+        const seenMutualDisconnects = new Set();
+        const items = (Array.isArray(rows) ? rows : []).filter(item => {
+          if (item.outcome !== 'mutual_disconnect') return true;
+          const key = item.matchId || item.roomId || `${item.occurredAt || ''}:${item.playerName || ''}:${item.opponentName || ''}`;
+          if (seenMutualDisconnects.has(key)) return false;
+          seenMutualDisconnects.add(key);
+          return true;
+        });
         if (!items.length) {
           const row = document.createElement('div'); row.className = 'diagnostic-row';
           ['Nema zabeleženih prekida', '—', '—', '—'].forEach((text, index) => { const cell = document.createElement('span'); cell.textContent = text; if (index === 0) cell.className = 'muted'; row.append(cell); });
@@ -135,7 +142,7 @@
           [occurredAt, party, network, outcome].forEach((text, index) => {
             const cell = document.createElement('span'); cell.textContent = text;
             if (index === 2) cell.className = 'muted';
-            if (index === 3) cell.className = item.outcome === 'recovered' || item.outcome === 'ended_without_penalty' ? 'ok' : (item.outcome === 'technical_result' ? 'error' : 'warn');
+            if (index === 3) cell.className = item.outcome === 'recovered' || item.outcome === 'ended_without_penalty' || item.outcome === 'mutual_disconnect' ? 'ok' : (item.outcome === 'technical_result' ? 'error' : 'warn');
             row.append(cell);
           });
           container.append(row);
