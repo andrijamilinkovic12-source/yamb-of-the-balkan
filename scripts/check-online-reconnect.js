@@ -77,6 +77,23 @@ const classSource = [
     extractClassMethod(gameSource, 'showOpponentReconnectGraceCountdown')
 ].join('\n');
 
+const lifecycleSandbox = {
+    setTimeout,
+    clearTimeout,
+    Math,
+    Number,
+    localStorage: {
+        values: new Map(),
+        setItem(key, value) { this.values.set(key, String(value)); },
+        getItem(key) { return this.values.get(key) || null; }
+    }
+};
+vm.createContext(lifecycleSandbox);
+vm.runInContext(`
+    ${extractClassMethod(gameSource, 'handleAppPause').replace('handleAppPause(', 'function handleAppPause(')}
+    ${extractClassMethod(gameSource, 'handleAppResume').replace('handleAppResume(', 'function handleAppResume(')}
+`, lifecycleSandbox);
+
 const sceneClasses = new Set();
 const timerDisplay = { style: {}, innerHTML: '' };
 const sandbox = {
@@ -129,10 +146,69 @@ async function run() {
     assert(socketClientSource.includes('Socket.IO v4.8.3'));
     assert(socketClientSource.includes('tryAllTransports'));
     assert(indexSource.includes('socket.io.min.js?v=4.8.3'));
-    assert(indexSource.includes('game.js?v=4.88'));
+    assert(indexSource.includes('game.js?v=4.89'));
     assert(serverSource.includes("outcome: 'mutual_disconnect'"), 'Obostrani prekid nije posebno evidentiran');
     assert(serverSource.includes("socket.on('connection_diagnostic_snapshot'"), 'Server ne prima poslednji poznati tip mreže');
     assert(gameSource.includes("this.socket.emit('connection_diagnostic_snapshot'"), 'Klijent ne šalje poslednji poznati tip mreže');
+    assert(gameSource.includes("addListener('appStateChange'"), 'Capacitor lifecycle nije povezan sa grace periodom');
+    assert(gameSource.includes("addEventListener('pageshow'"), 'Povratak browser stranice nije povezan sa oporavkom');
+
+    const backgroundHandlerStart = serverSource.indexOf("socket.on('online_app_backgrounded'");
+    const backgroundHandlerEnd = serverSource.indexOf("socket.on('online_presence_ping'", backgroundHandlerStart);
+    const backgroundHandler = serverSource.slice(backgroundHandlerStart, backgroundHandlerEnd);
+    assert(backgroundHandlerStart >= 0 && backgroundHandlerEnd > backgroundHandlerStart, 'Nedostaje serverska obrada odlaska u pozadinu');
+    assert(backgroundHandler.includes('isLocalRoomId(roomId)'), 'Lokalne partije nisu isključene iz online grace toka');
+    assert(!backgroundHandler.includes('isTournamentRoomId(roomId)'), 'Odlazak u pozadinu je i dalje ograničen samo na turnir');
+    assert(backgroundHandler.includes("beginReconnectGraceForSocket(socket, roomId, 'app_backgrounded')"), 'Pozadina ne pokreće reconnect grace');
+    assert(backgroundHandler.includes('rememberClientConnectionDiagnosticSnapshot(socket, data)'), 'Pozadina ne čuva poslednji mrežni tip');
+
+    for (const roomId of ['duel-challenge', 'yamb-friend', 'room-random', 'tourney-round']) {
+        const emitted = [];
+        const app = {
+            appLifecyclePaused: false,
+            appResumeTimer: null,
+            gameActive: true,
+            onlineMode: true,
+            isSpectator: false,
+            roomId,
+            socket: {
+                connected: true,
+                emit(event, payload) { emitted.push({ event, payload }); }
+            },
+            getConnectionDiagnosticSnapshot() {
+                return { onlineAtDisconnect: true, connectionType: '4g' };
+            }
+        };
+        lifecycleSandbox.handleAppPause.call(app);
+        lifecycleSandbox.handleAppPause.call(app);
+        assert.strictEqual(emitted.length, 1, `${roomId} mora tačno jednom prijaviti odlazak u pozadinu`);
+        assert.strictEqual(emitted[0].event, 'online_app_backgrounded');
+        assert.strictEqual(emitted[0].payload.roomId, roomId);
+        assert.strictEqual(emitted[0].payload.connectionType, '4g');
+    }
+
+    const resumedEvents = [];
+    const resumedApp = {
+        appLifecyclePaused: true,
+        gameActive: true,
+        onlineMode: true,
+        isSpectator: false,
+        roomId: 'yamb-friend',
+        tournamentManager: null,
+        socket: {
+            connected: true,
+            emit(event, payload) { resumedEvents.push({ event, payload }); }
+        },
+        checkForInvite() {},
+        getConnectionDiagnosticSnapshot() { return { onlineAtDisconnect: true, connectionType: 'wifi' }; },
+        isTournamentOnlineDuel() { return false; },
+        requestOnlineStateSync(roomId) { resumedEvents.push({ event: 'state_sync', payload: { roomId } }); },
+        checkSavedGame() {}
+    };
+    lifecycleSandbox.handleAppResume.call(resumedApp);
+    assert.strictEqual(resumedApp.appLifecyclePaused, false, 'Resume mora vratiti lifecycle u aktivno stanje');
+    assert(resumedEvents.some(item => item.event === 'online_app_resumed'), 'Običan duel ne prijavljuje povratak aplikacije');
+    assert(resumedEvents.some(item => item.event === 'state_sync'), 'Povratak aplikacije ne traži autoritativno stanje');
 
     const mutualSandbox = {
         Date,
@@ -295,7 +371,7 @@ async function run() {
     assert.strictEqual(syncedDrop.opponentReconnectNoticeVisible, true, 'Autoritativni sync duzeg prekida mora odmah biti vidljiv');
     syncedDrop.clearOpponentReconnectGraceCountdown();
 
-    console.log('Online reconnect checks passed: fast retry config, mutual disconnect fairness, cached network diagnostics, hidden short drop, visible long drop, sync recovery, and cache version.');
+    console.log('Online reconnect checks passed: all online lifecycle modes, fast retry config, mutual disconnect fairness, cached network diagnostics, hidden short drop, visible long drop, sync recovery, and cache version.');
 }
 
 run().catch(error => {

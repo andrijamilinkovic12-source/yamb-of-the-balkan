@@ -9249,11 +9249,12 @@ io.on('connection', (socket) => {
 
     socket.on('online_app_backgrounded', (data = {}) => {
         const roomId = playerRooms[socket.id] || String(data.roomId || '');
-        if (!roomId || !isTournamentRoomId(roomId)) return;
+        if (!roomId || isLocalRoomId(roomId)) return;
 
         const state = roomState[roomId];
         if (!state || state.gameFinished || !Array.isArray(state.players) || !state.players.includes(socket.id)) return;
 
+        rememberClientConnectionDiagnosticSnapshot(socket, data);
         beginReconnectGraceForSocket(socket, roomId, 'app_backgrounded');
     });
 
@@ -9269,6 +9270,7 @@ io.on('connection', (socket) => {
         const uid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
         if (!uid || !roomId) return;
 
+        rememberClientConnectionDiagnosticSnapshot(socket, data);
         rememberRoomPresence(roomId, socket);
         const restored = clearDisconnectGraceForUid(uid, roomId);
         if (restored) {

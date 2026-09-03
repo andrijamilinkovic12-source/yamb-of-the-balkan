@@ -261,21 +261,30 @@ class YambApp {
                     }
                 } catch (err) { console.error("Link error:", err); }
             });
+
+            window.Capacitor.Plugins.App.addListener('appStateChange', ({ isActive } = {}) => {
+                if (isActive === false) {
+                    this.handleAppPause();
+                } else if (isActive === true) {
+                    this.scheduleAppResume();
+                }
+            });
         }
 
         document.addEventListener("pause", () => { this.handleAppPause(); }, false);
-        document.addEventListener("resume", () => { setTimeout(() => { this.handleAppResume(); }, 500); }, false);
+        document.addEventListener("resume", () => { this.scheduleAppResume(); }, false);
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'hidden') {
                 this.handleAppPause();
             } else if (document.visibilityState === 'visible') {
-                setTimeout(() => { this.handleAppResume(); }, 500);
+                this.scheduleAppResume();
             }
         });
         window.addEventListener('pagehide', () => { this.handleAppPause(); });
+        window.addEventListener('pageshow', () => { this.scheduleAppResume(); });
         window.addEventListener('beforeunload', () => { this.handleAppPause(); });
 
-        setTimeout(() => { this.handleAppResume(); }, 500);
+        this.scheduleAppResume();
 
         this.handleRotationLock();
         window.addEventListener('resize', () => this.handleRotationLock());
@@ -4528,11 +4537,29 @@ class YambApp {
         return false;
     }
 
+    scheduleAppResume(delayMs = 500) {
+        if (this.appResumeTimer) clearTimeout(this.appResumeTimer);
+        this.appResumeTimer = setTimeout(() => {
+            this.appResumeTimer = null;
+            this.handleAppResume();
+        }, Math.max(0, Number(delayMs) || 0));
+    }
+
     handleAppPause() {
-        if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket && this.roomId && this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })) {
+        if (this.appResumeTimer) {
+            clearTimeout(this.appResumeTimer);
+            this.appResumeTimer = null;
+        }
+        if (this.appLifecyclePaused) return;
+        this.appLifecyclePaused = true;
+
+        if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket && this.roomId) {
             localStorage.setItem('yamb_active_online_room', this.roomId);
             if (this.socket.connected) {
-                this.socket.emit('online_app_backgrounded', { roomId: this.roomId });
+                this.socket.emit('online_app_backgrounded', {
+                    roomId: this.roomId,
+                    ...this.getConnectionDiagnosticSnapshot()
+                });
             }
         }
 
@@ -4544,6 +4571,7 @@ class YambApp {
     }
 
     handleAppResume() {
+        this.appLifecyclePaused = false;
         this.checkForInvite();
 
         if (this.gameActive && !this.onlineMode) {
@@ -4572,8 +4600,11 @@ class YambApp {
                 const roomId = this.roomId;
                 if (!roomId) return;
 
+                this.socket.emit('online_app_resumed', {
+                    roomId,
+                    ...this.getConnectionDiagnosticSnapshot()
+                });
                 if (this.isTournamentOnlineDuel(roomId, { duelType: this.onlineDuelType })) {
-                    this.socket.emit('online_app_resumed', { roomId });
                     this.emitOnlinePresencePing(true);
                 }
 
