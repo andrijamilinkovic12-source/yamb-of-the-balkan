@@ -85,6 +85,8 @@ class PowerIndexLeaderboard {
                     </div>
                 </div>
 
+                <div class="pi-my-rank-dock" id="pi-my-rank-dock" aria-live="polite"></div>
+
             </div>
         </div>`;
 
@@ -284,6 +286,12 @@ class PowerIndexLeaderboard {
         const container = document.getElementById('pi-list-container');
         if (!container) return;
 
+        const myRankDock = document.getElementById('pi-my-rank-dock');
+        if (myRankDock) {
+            myRankDock.classList.remove('is-visible');
+            myRankDock.replaceChildren();
+        }
+
         if (this.loading && this.data.length === 0) {
             container.innerHTML = `
                 <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; padding: 20px;">
@@ -299,7 +307,15 @@ class PowerIndexLeaderboard {
 
         const myUid = localStorage.getItem('yamb_uid') || '';
         const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe || (myUid && player.uid && player.uid === myUid)));
-        const myRankHtml = this.myPlayer && !isMyPlayerVisible
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const dockMyRank = activeTheme === 'easter' && !!this.myPlayer && !!myRankDock;
+
+        if (dockMyRank) {
+            myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });
+            myRankDock.classList.add('is-visible');
+        }
+
+        const myRankHtml = !dockMyRank && this.myPlayer && !isMyPlayerVisible
             ? `<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">${this.renderPlayerRow(this.myPlayer, { pinned: true })}</div>`
             : '';
 

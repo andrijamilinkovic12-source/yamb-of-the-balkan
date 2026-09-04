@@ -1084,7 +1084,23 @@ async function checkLoginStatus() {
                 const activeScreen = document.querySelector('.screen.active');
                 const stillOnSplash = !activeScreen || activeScreen.id === 'splash-screen';
                 if (window.app && !window.app.inviteDetected && stillOnSplash) {
-                    window.app.navigateTo('main-menu'); 
+                    const finishSplash = () => {
+                        if (window.yambEasterSplashAssetPending) {
+                            setTimeout(finishSplash, 100);
+                            return;
+                        }
+                        const remainingHoldMs = Math.max(0, Number(window.yambSplashHoldUntil || 0) - Date.now());
+                        if (remainingHoldMs > 0) {
+                            setTimeout(finishSplash, Math.min(remainingHoldMs, 250));
+                            return;
+                        }
+                        const currentScreen = document.querySelector('.screen.active');
+                        const stillWaiting = !currentScreen || currentScreen.id === 'splash-screen';
+                        if (window.app && !window.app.inviteDetected && stillWaiting) {
+                            window.app.navigateTo('main-menu');
+                        }
+                    };
+                    finishSplash();
                 }
             }, 4000);
 

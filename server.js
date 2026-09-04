@@ -668,7 +668,11 @@ const DisconnectDiagnosticSchema = new mongoose.Schema({
     clientOnlineAtDisconnect: { type: Boolean, default: null },
     clientConnectionType: { type: String, default: '' },
     clientDisconnectReason: { type: String, default: '' },
-    clientReconnectTransport: { type: String, default: '' }
+    clientReconnectTransport: { type: String, default: '' },
+    clientLifecycleSource: { type: String, default: '' },
+    matchStartedAt: { type: Date, default: null },
+    matchAgeMs: { type: Number, default: 0 },
+    moveCount: { type: Number, default: 0 }
 }, { versionKey: false });
 DisconnectDiagnosticSchema.index({ occurredAt: 1 }, { expireAfterSeconds: 30 * 24 * 60 * 60 });
 const DisconnectDiagnostic = mongoose.model('DisconnectDiagnostic', DisconnectDiagnosticSchema);
@@ -2433,6 +2437,12 @@ function clearDisconnectGraceForUid(uid, roomId = null) {
     }
 
     if (ghost && (!roomId || ghost.roomId === roomId)) {
+        if (!ghost.diagnosticResolved) {
+            resolveDisconnectDiagnostic(ghost.diagnosticEventId, {
+                outcome: 'recovered',
+                reconnectDurationMs: Math.max(0, Date.now() - toSafeInt(ghost.startedAt, Date.now()))
+            });
+        }
         delete ghostSessions[uid];
         cleared = true;
     }
@@ -2452,6 +2462,9 @@ function clearDisconnectGraceForRoom(roomId) {
 
     Object.entries(ghostSessions).forEach(([uid, ghost]) => {
         if (!ghost || ghost.roomId !== roomId) return;
+        if (!ghost.diagnosticResolved) {
+            resolveDisconnectDiagnostic(ghost.diagnosticEventId, { outcome: 'ended_without_penalty' });
+        }
         if (disconnectTimers[uid]) {
             clearTimeout(disconnectTimers[uid]);
             delete disconnectTimers[uid];
@@ -2507,7 +2520,11 @@ function createDisconnectDiagnostic(socket, roomId, state, playerId, source, soc
         opponentName: String(opponent?.name || 'Nepoznat').substring(0, MAX_NAME_LENGTH),
         trigger: String(source || 'disconnect').substring(0, 48),
         socketReason: String(socketReason || '').substring(0, 120),
-        reasonClass: classifySocketDisconnectReason(socketReason),
+        reasonClass: source === 'app_backgrounded' ? 'app_backgrounded' : classifySocketDisconnectReason(socketReason),
+        clientLifecycleSource: source === 'app_backgrounded' ? String(socket.clientLifecycleSource || 'legacy_unspecified').substring(0, 48) : '',
+        matchStartedAt: state.matchStartedAt ? new Date(state.matchStartedAt) : null,
+        matchAgeMs: state.matchStartedAt ? Math.max(0, Date.now() - state.matchStartedAt) : 0,
+        moveCount: Math.max(0, toSafeInt(state.moveCount, 0)),
         transport: getSocketTransport(socket),
         graceMs: Math.max(0, toSafeInt(graceMs, 0)),
         outcome: 'pending',
@@ -2528,6 +2545,11 @@ function createDisconnectDiagnostic(socket, roomId, state, playerId, source, soc
 }
 
 function resolveDisconnectDiagnostic(eventId, fields = {}) {
+    if (eventId && fields.outcome && fields.outcome !== 'pending') {
+        Object.values(ghostSessions).forEach(ghost => {
+            if (ghost?.diagnosticEventId === eventId) ghost.diagnosticResolved = true;
+        });
+    }
     if (!MONGO_URI || !eventId) return;
     const update = {
         resolvedAt: new Date(),
@@ -2544,7 +2566,9 @@ function resolveDisconnectDiagnostic(eventId, fields = {}) {
 }
 
 function scheduleDisconnectGraceTimeout(uid, roomId, oldSocketId, delayMs) {
+    const scheduledGhost = ghostSessions[uid];
     disconnectTimers[uid] = setTimeout(() => {
+        if (ghostSessions[uid] !== scheduledGhost) return;
         handleDisconnectGraceTimeout(uid, roomId, oldSocketId)
             .catch((error) => console.error(`Reconnect timeout obrada nije uspela za sobu ${roomId}:`, error));
     }, Math.max(1, toSafeInt(delayMs, 1)));
@@ -2558,7 +2582,6 @@ async function handleDisconnectGraceTimeout(pid, activeRoomId, oldSocketId) {
     const ghost = ghostSessions[pid];
     if (!ghost || ghost.roomId !== activeRoomId || ghost.oldSocketId !== oldSocketId) {
         console.log(`ℹ️ Ignorišem zastareli reconnect timeout za ${pid}; sesija je već obnovljena ili promenjena.`);
-        delete disconnectTimers[pid];
         return;
     }
 
@@ -2630,6 +2653,7 @@ async function handleDisconnectGraceTimeout(pid, activeRoomId, oldSocketId) {
         await applyTournamentTechnicalWinner(activeRoomId, winnerUid, 'disconnect_grace_expired');
     } else {
         console.log(`ℹ️ Igrač ${pid} je napustio završenu, solo ili lokalnu partiju. Bez kazne.`);
+        resolveDisconnectDiagnostic(ghost.diagnosticEventId, { outcome: 'ended_without_penalty' });
     }
 
     const technicalWinnerSocketId = Array.isArray(stateAfterGrace?.players)
@@ -5516,8 +5540,7 @@ async function recordTournamentChampion(match, winnerObj) {
                 $push: {
                     championships: {
                         $each: [championshipRecord],
-                        $position: 0,
-                        $slice: 20
+                        $position: 0
                     }
                 }
             },
@@ -5526,7 +5549,7 @@ async function recordTournamentChampion(match, winnerObj) {
 
         match.statsRecorded = true;
 
-        const stats = await buildTourneyStatsPayload(20);
+        const stats = await buildTourneyStatsPayload();
         io.emit('tourney_stats_data', stats);
     } finally {
         delete match.statsRecordInProgress;
@@ -5538,6 +5561,11 @@ function hasChampionshipRecordForFinal(championships, record) {
     if (!record || !Array.isArray(championships)) return false;
     return championships.some(item => {
         if (!item || typeof item !== 'object') return false;
+        const itemNumber = Number(item.tournamentNumber);
+        const recordNumber = Number(record.tournamentNumber);
+        if (Number.isFinite(itemNumber) && Number.isFinite(recordNumber)) {
+            return Math.floor(itemNumber) === Math.floor(recordNumber);
+        }
         return item.winnerId === record.winnerId &&
             item.runnerUpId === record.runnerUpId &&
             String(item.scoreLabel || '') === String(record.scoreLabel || '');
@@ -5628,8 +5656,7 @@ async function persistCurrentFinishedTournamentHistoryIfNeeded() {
             $push: {
                 championships: {
                     $each: [fallbackRecord],
-                    $position: 0,
-                    $slice: 20
+                    $position: 0
                 }
             }
         },
@@ -5637,8 +5664,8 @@ async function persistCurrentFinishedTournamentHistoryIfNeeded() {
     );
 }
 
-async function buildTourneyStatsPayload(limit = 20) {
-    const stats = await TourneyStats.find().sort({ wins: -1, lastWinDate: -1 }).limit(limit).lean();
+async function buildTourneyStatsPayload() {
+    const stats = await TourneyStats.find().sort({ wins: -1, lastWinDate: -1 }).lean();
     const currentChampionFallback = getCurrentFinishedChampionStatsFallback();
     if (currentChampionFallback && !stats.some(item => item.playerId === currentChampionFallback.playerId)) {
         const storedCurrentChampion = await TourneyStats.findOne({ playerId: currentChampionFallback.playerId }).lean();
@@ -5665,7 +5692,7 @@ async function buildTourneyStatsPayload(limit = 20) {
 
         const currentFallback = buildCurrentFinishedChampionshipFallback(payload);
         if (currentFallback && !hasChampionshipRecordForFinal(championships, currentFallback)) {
-            payload.championships = [currentFallback, ...championships].slice(0, 20);
+            payload.championships = [currentFallback, ...championships];
             payload.photoUrl = payload.photoUrl || currentFallback.winnerPhotoUrl || '';
         }
 
@@ -5957,7 +5984,11 @@ app.get('/api/monitor/status', async (req, res) => {
                     clientOnlineAtDisconnect: item.clientOnlineAtDisconnect,
                     clientConnectionType: item.clientConnectionType,
                     clientDisconnectReason: item.clientDisconnectReason,
-                    clientReconnectTransport: item.clientReconnectTransport
+                    clientReconnectTransport: item.clientReconnectTransport,
+                    clientLifecycleSource: item.clientLifecycleSource,
+                    matchStartedAt: item.matchStartedAt,
+                    matchAgeMs: item.matchAgeMs,
+                    moveCount: item.moveCount
                 }))
             }
         });
@@ -9248,6 +9279,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('online_app_backgrounded', (data = {}) => {
+        if (data.roomId && playerRooms[socket.id] && data.roomId !== playerRooms[socket.id]) return;
         const roomId = playerRooms[socket.id] || String(data.roomId || '');
         if (!roomId || isLocalRoomId(roomId)) return;
 
@@ -9255,23 +9287,35 @@ io.on('connection', (socket) => {
         if (!state || state.gameFinished || !Array.isArray(state.players) || !state.players.includes(socket.id)) return;
 
         rememberClientConnectionDiagnosticSnapshot(socket, data);
+        socket.clientLifecycleSource = String(data.lifecycleSource || 'legacy_unspecified').substring(0, 48);
         beginReconnectGraceForSocket(socket, roomId, 'app_backgrounded');
     });
 
     socket.on('online_presence_ping', (data = {}) => {
+        if (data.roomId && playerRooms[socket.id] && data.roomId !== playerRooms[socket.id]) return;
         const roomId = playerRooms[socket.id] || String(data.roomId || '');
-        if (!roomId || !isTournamentRoomId(roomId)) return;
+        if (!roomId || isLocalRoomId(roomId) || !rememberRoomPresence(roomId, socket)) return;
         rememberClientConnectionDiagnosticSnapshot(socket, data);
-        rememberRoomPresence(roomId, socket);
+        const uid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
+        const ghost = uid && ghostSessions[uid];
+        // Only explicit foreground evidence from the actual player repairs a missed resume.
+        // Legacy tournament heartbeats may run in the background and must not cancel grace.
+        if (data.foreground === true && ghost?.source === 'app_backgrounded' &&
+            ghost.roomId === roomId && ghost.oldSocketId === socket.id && socket.connected) {
+            if (clearDisconnectGraceForUid(uid, roomId)) {
+                io.to(roomId).emit('opponent_connection_restored', { roomId, restoredUid: uid });
+                emitAuthoritativeRoomState(socket, roomId);
+            }
+        }
     });
 
     socket.on('online_app_resumed', (data = {}) => {
+        if (data.roomId && playerRooms[socket.id] && data.roomId !== playerRooms[socket.id]) return;
         const roomId = playerRooms[socket.id] || String(data.roomId || '');
         const uid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
-        if (!uid || !roomId) return;
+        if (!uid || !roomId || !rememberRoomPresence(roomId, socket)) return;
 
         rememberClientConnectionDiagnosticSnapshot(socket, data);
-        rememberRoomPresence(roomId, socket);
         const restored = clearDisconnectGraceForUid(uid, roomId);
         if (restored) {
             io.to(roomId).emit('opponent_connection_restored', { roomId, restoredUid: uid });
@@ -13426,7 +13470,7 @@ io.on('connection', (socket) => {
                 socket.emit('tourney_stats_data', [{ playerName: "Mock Šampion", wins: 5, championships: [] }]);
                 return;
             }
-            const stats = await buildTourneyStatsPayload(20);
+            const stats = await buildTourneyStatsPayload();
             socket.emit('tourney_stats_data', stats);
         } catch (err) {
             console.error("Greška pri dohvatanju turnirske statistike:", err);

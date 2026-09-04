@@ -50,6 +50,8 @@ class VatreniNizManager {
                     <div style="text-align: center; font-size: 0.8rem; color: var(--text-muted);">${this.gt('streak_loading', 'Učitavam listu... ⏳')}</div>
                 </div>
 
+                <div class="streak-my-rank-dock" id="streak-my-rank-dock" aria-live="polite"></div>
+
             </div>
         </div>`;
 
@@ -287,6 +289,12 @@ class VatreniNizManager {
         const body = document.getElementById('streak-body');
         if (!body) return;
 
+        const myRankDock = document.getElementById('streak-my-rank-dock');
+        if (myRankDock) {
+            myRankDock.classList.remove('is-visible');
+            myRankDock.replaceChildren();
+        }
+
         if (this.loading && this.data.length === 0) {
             body.innerHTML = `<div style="text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 20px;">${this.gt('streak_searching', 'Tražim najvatrenije igrače...')}</div>`;
             return;
@@ -299,7 +307,15 @@ class VatreniNizManager {
 
         const myUid = localStorage.getItem('yamb_uid') || '';
         const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe || (myUid && player.uid && player.uid === myUid)));
-        const myRankHtml = this.myPlayer && !isMyPlayerVisible
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const dockMyRank = activeTheme === 'easter' && !!this.myPlayer && !!myRankDock;
+
+        if (dockMyRank) {
+            myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });
+            myRankDock.classList.add('is-visible');
+        }
+
+        const myRankHtml = !dockMyRank && this.myPlayer && !isMyPlayerVisible
             ? `<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">${this.renderPlayerRow(this.myPlayer, { pinned: true })}</div>`
             : '';
         const rowsHtml = this.data

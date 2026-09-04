@@ -1776,6 +1776,7 @@ class EffectManager {
 
     spawnGoldRain() {
         const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const isEasterTheme = document.body.classList.contains('easter-theme');
         const isCompact = window.innerWidth < 640;
         const totalDuration = 6000;
         const emitDuration = reducedMotion ? 2600 : 4400;
@@ -1806,6 +1807,18 @@ class EffectManager {
             <div class="gold-rain-glint gold-rain-glint--two"></div>
         `;
         document.body.appendChild(atmosphere);
+
+        if (isEasterTheme) {
+            if (!reducedMotion) {
+                this.spawnEmojiRain(['dukat-icon'], isCompact ? 34 : 56, 'gold_rain');
+            }
+            this.scheduleEffectTimeout(() => {
+                document.body.classList.remove('fx-gold-rain');
+                document.querySelectorAll('.falling-coin.gold-rain-coin').forEach(el => el.remove());
+                if (atmosphere.parentNode) atmosphere.remove();
+            }, reducedMotion ? 250 : totalDuration, 'gold_rain');
+            return;
+        }
 
         const canvas = document.createElement('canvas');
         canvas.className = 'gold-rain-canvas';
@@ -1964,7 +1977,7 @@ class EffectManager {
                 } else {
                     el.innerText = emoji;
                 }
-                el.className = 'falling-coin';
+                el.className = `falling-coin${group === 'gold_rain' ? ' gold-rain-coin' : ''}`;
                 el.style.left = Math.random() * 100 + 'vw'; el.style.animationDuration = (Math.random() * 2 + 1) + 's';
                 document.body.appendChild(el);
                 this.scheduleEffectTimeout(() => el.remove(), 3000, group);

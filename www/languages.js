@@ -1651,6 +1651,11 @@ const TRANSLATIONS = {
 
 function dukatIconHtml(extraClass = '') {
     const className = `dukat-icon-inline${extraClass ? ` ${extraClass}` : ''}`;
+    const isEasterTheme = document.body?.classList.contains('easter-theme')
+        || (localStorage.getItem('yamb_theme') || 'dark') === 'easter';
+    if (isEasterTheme) {
+        return `<img class="${className} dukat-icon-inline--easter" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+    }
     return `<svg class="${className}" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>`;
 }
 

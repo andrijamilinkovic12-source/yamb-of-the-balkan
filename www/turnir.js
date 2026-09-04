@@ -827,6 +827,35 @@ class TournamentManager {
         return championships.filter(item => item && typeof item === 'object' && item.bracket);
     }
 
+    getTournamentHistoryEntries() {
+        const entries = [];
+        const seenTournamentNumbers = new Set();
+
+        (Array.isArray(this.tourneyLeaderboard) ? this.tourneyLeaderboard : []).forEach((player, playerIndex) => {
+            this.getSavedChampionships(player).forEach((championship, championshipIndex) => {
+                const parsedNumber = Number(championship?.tournamentNumber);
+                const tournamentNumber = Number.isFinite(parsedNumber)
+                    ? Math.max(1, Math.floor(parsedNumber))
+                    : null;
+                const historyKey = tournamentNumber === null
+                    ? `legacy:${championship?.winnerId || player?.playerId || playerIndex}:${championship?.wonAt || championshipIndex}`
+                    : `tournament:${tournamentNumber}`;
+                if (seenTournamentNumbers.has(historyKey)) return;
+                seenTournamentNumbers.add(historyKey);
+                entries.push({ player, playerIndex, championship, championshipIndex, tournamentNumber });
+            });
+        });
+
+        return entries.sort((a, b) => {
+            if (a.tournamentNumber !== null && b.tournamentNumber !== null) {
+                return a.tournamentNumber - b.tournamentNumber;
+            }
+            if (a.tournamentNumber !== null) return -1;
+            if (b.tournamentNumber !== null) return 1;
+            return new Date(a.championship?.wonAt || 0).getTime() - new Date(b.championship?.wonAt || 0).getTime();
+        });
+    }
+
     toRomanNumeral(value) {
         const num = Math.max(1, Math.min(3999, Math.floor(Number(value) || 1)));
         const table = [
@@ -857,11 +886,13 @@ class TournamentManager {
         return `${this.toRomanNumeral(number)} ${this.tr('tourney_edition_suffix', 'TURNIR')}`;
     }
 
-    getChampionSharePayload(index) {
+    getChampionSharePayload(index, championshipIndex = 0) {
         const player = Array.isArray(this.tourneyLeaderboard) ? this.tourneyLeaderboard[index] : null;
         if (!player) return null;
 
-        const championship = this.getLatestChampionship(player) || {};
+        const savedChampionships = this.getSavedChampionships(player);
+        const selectedIndex = Math.max(0, Math.min(savedChampionships.length - 1, Math.floor(Number(championshipIndex) || 0)));
+        const championship = savedChampionships[selectedIndex] || this.getLatestChampionship(player) || {};
         const name = String(championship.winnerName || player.playerName || tt('player_guest') || 'Igrač').trim();
         const wins = Number.isFinite(Number(player.wins)) ? Math.max(0, Math.floor(Number(player.wins))) : 0;
         const edition = this.getChampionshipEditionLabel(championship, index + 1);
@@ -889,11 +920,11 @@ class TournamentManager {
         };
     }
 
-    async shareChampionCard(index) {
-        const data = this.getChampionSharePayload(index);
+    async shareChampionCard(index, championshipIndex = 0) {
+        const data = this.getChampionSharePayload(index, championshipIndex);
         if (!data) return;
 
-        const shareBtn = document.querySelector(`.tourney-champion-share-btn[data-champion-index="${index}"]`);
+        const shareBtn = document.querySelector(`.tourney-champion-share-btn[data-champion-index="${index}"][data-championship-index="${championshipIndex}"]`);
         const originalHtml = shareBtn ? shareBtn.innerHTML : '';
         if (shareBtn) {
             shareBtn.disabled = true;
@@ -1123,6 +1154,7 @@ class TournamentManager {
     }
 
     getLeaderboardHTML() {
+        const tournamentHistory = this.getTournamentHistoryEntries();
         let leaderboardHtml = `
             <div class="tourney-champions-view">
                 <img class="tourney-hof-trophy tourney-trophy-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
@@ -1135,43 +1167,43 @@ class TournamentManager {
                 <div class="tourney-champions-list">
         `;
 
-        if (!this.tourneyLeaderboard || this.tourneyLeaderboard.length === 0) {
+        if (tournamentHistory.length === 0) {
             leaderboardHtml += `<div class="tourney-champions-empty">${tt('tourney_no_champs_yet') || 'Još uvek nema osvajača turnira.'}</div>`;
         } else {
-            this.tourneyLeaderboard.forEach((player, idx) => {
-                const photo = this.playerPhotoUrl({ ...player, name: player.playerName });
-                const safePlayerName = this.escape(player.playerName || tt('player_guest') || 'Igrač');
-                const safeWins = Number.isFinite(Number(player.wins)) ? Math.max(0, Math.floor(Number(player.wins))) : 0;
-                const savedChampionships = this.getSavedChampionships(player);
-                const hasJourney = savedChampionships.length > 0;
-                const cardClass = `tourney-champion-card${idx === 0 ? ' is-top' : ''}${hasJourney ? ' is-openable' : ''}`;
-                const clickAttr = hasJourney ? `onclick="app.tournamentManager.openChampionJourney(${idx})"` : '';
-                const ariaLabel = this.escapeAttr(`${safePlayerName} - ${this.getTournamentEditionLabel(player, idx)}`);
-                const journeyButton = hasJourney
-                    ? `<button type="button" class="tourney-champion-action-btn" onclick="event.stopPropagation(); app.tournamentManager.openChampionJourney(${idx})">${this.escape(tt('tourney_champion_journey_btn') || 'Put do titule')}</button>`
-                    : `<span class="tourney-champion-action-placeholder">${this.escape(tt('tourney_champion_no_path') || 'Put ovog turnira nije sačuvan.')}</span>`;
+            tournamentHistory.forEach(entry => {
+                const { player, playerIndex, championship, championshipIndex } = entry;
+                const winnerName = championship.winnerName || player.playerName || tt('player_guest') || 'Igrač';
+                const photo = this.playerPhotoUrl({
+                    name: winnerName,
+                    playerName: winnerName,
+                    photoUrl: championship.winnerPhotoUrl || player.photoUrl
+                });
+                const safePlayerName = this.escape(winnerName);
+                const editionLabel = this.getChampionshipEditionLabel(championship, entry.tournamentNumber || 1);
+                const safeEditionLabel = this.escape(editionLabel);
+                const safeFinalScore = this.escape(championship.scoreLabel || '-');
+                const safeRunnerUp = this.escape(championship.runnerUpName || tt('tourney_finalist_title') || 'Finalista');
+                const finalLabel = this.escape(this.getHistoryRoundLabel('f'));
+                const runnerLabel = this.escape(tt('tourney_finalist_title') || 'Finalista');
+                const cardClass = 'tourney-champion-card is-openable';
+                const clickAttr = `onclick="app.tournamentManager.openChampionJourney(${playerIndex}, ${championshipIndex})"`;
+                const ariaLabel = this.escapeAttr(`${editionLabel} - ${winnerName}`);
+                const journeyButton = `<button type="button" class="tourney-champion-action-btn" onclick="event.stopPropagation(); app.tournamentManager.openChampionJourney(${playerIndex}, ${championshipIndex})">${this.escape(tt('tourney_champion_journey_btn') || 'Put do titule')}</button>`;
                 const shareLabel = this.escape(tt('tourney_share_card') || 'Podeli karticu');
-                const podiumType = idx === 0 ? 'gold' : (idx === 1 ? 'silver' : (idx === 2 ? 'bronze' : ''));
-                const podiumHtml = podiumType
-                    ? `<img class="tourney-podium-medal tourney-podium-medal-easter tourney-podium-medal--${podiumType}" src="assets/easter-soft-clay/tournament/podium-${podiumType}-v2.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-desert tourney-podium-medal--${podiumType}" src="assets/desert-soft-clay/tournament/podium-${podiumType}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="tourney-podium-medal-nebula tourney-podium-medal--${podiumType}" src="assets/severna-soft-clay/tournament/podium-${podiumType}-v2.png?v=1" alt="" aria-hidden="true" decoding="async">`
-                    : '';
 
                 leaderboardHtml += `
                     <div class="${cardClass}" ${clickAttr} role="group" aria-label="${ariaLabel}">
-                        ${podiumHtml}
-                        <div class="tourney-champion-edition">${this.getTournamentEditionLabel(player, idx)}</div>
+                        <div class="tourney-champion-edition">${safeEditionLabel}</div>
                         <img class="tourney-champion-avatar" src="${photo}" alt="" aria-hidden="true" decoding="async">
                         <div class="tourney-champion-name">${safePlayerName}</div>
-                        <div class="tourney-champion-count" aria-label="${this.escapeAttr(tt('tourney_champion_titles') || 'Osvojeni turniri')} ${safeWins}">
-                            <img class="tourney-wins-trophy-icon tourney-trophy-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
-                            <img class="tourney-wins-trophy-icon-easter" src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async">
-                            <img class="tourney-wins-trophy-icon-desert" src="assets/desert-soft-clay/tournament-pro.png?v=4" alt="" aria-hidden="true" decoding="async">
-                            <img class="tourney-wins-trophy-icon-nebula" src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" alt="" aria-hidden="true" decoding="async">
-                            <strong>${safeWins}</strong>
+                        <div class="tourney-champion-count" aria-label="${this.escapeAttr(`${finalLabel}: ${safeFinalScore}`)}">
+                            <span class="tourney-champion-final-label">${finalLabel}</span>
+                            <strong>${safeFinalScore}</strong>
                         </div>
+                        <div class="tourney-champion-runner-up"><span>${runnerLabel}:</span> ${safeRunnerUp}</div>
                         <div class="tourney-champion-actions">
                             ${journeyButton}
-                            <button type="button" class="tourney-champion-action-btn tourney-champion-share-btn" data-champion-index="${idx}" aria-label="${this.escapeAttr(tt('tourney_share_aria') || 'Podeli karticu osvajača')}" onclick="event.stopPropagation(); app.tournamentManager.shareChampionCard(${idx})">
+                            <button type="button" class="tourney-champion-action-btn tourney-champion-share-btn" data-champion-index="${playerIndex}" data-championship-index="${championshipIndex}" aria-label="${this.escapeAttr(tt('tourney_share_aria') || 'Podeli karticu osvajača')}" onclick="event.stopPropagation(); app.tournamentManager.shareChampionCard(${playerIndex}, ${championshipIndex})">
                                 <span aria-hidden="true">↗</span>
                                 <span>${shareLabel}</span>
                             </button>
@@ -1197,8 +1229,11 @@ class TournamentManager {
                 .tourney-champion-avatar { grid-row: 2 / 4; width: 58px; height: 58px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gold-main); background: rgba(0,0,0,0.24); box-shadow: 0 5px 14px rgba(0,0,0,0.35), 0 0 0 4px rgba(127,127,127,0.08); }
                 .tourney-champion-name { min-width: 0; color: var(--tourney-card-strong); font-size: 1.03rem; line-height: 1.12; font-weight: 900; word-break: break-word; text-shadow: none; }
                 .tourney-champion-card.is-top .tourney-champion-name { color: var(--gold-main); }
-                .tourney-champion-count { justify-self: end; display: inline-flex; align-items: center; gap: 6px; min-width: 54px; justify-content: center; background: var(--tourney-card-surface); padding: 7px 10px; border-radius: 999px; border: var(--glass-border); color: var(--tourney-card-strong); }
+                .tourney-champion-count { justify-self: end; display: inline-flex; flex-direction: column; align-items: flex-end; gap: 3px; min-width: 68px; justify-content: center; background: var(--tourney-card-surface); padding: 6px 10px; border-radius: 8px; border: var(--glass-border); color: var(--tourney-card-strong); }
+                .tourney-champion-final-label { color: var(--tourney-card-soft); font-size: 0.58rem; line-height: 1; font-weight: 900; text-transform: uppercase; }
                 .tourney-champion-count strong { color: var(--tourney-card-strong); font-weight: 1000; font-size: 1.08rem; line-height: 1; }
+                .tourney-champion-runner-up { grid-column: 2 / -1; min-width: 0; color: var(--tourney-card-soft); font-size: 0.75rem; line-height: 1.15; font-weight: 800; overflow-wrap: anywhere; }
+                .tourney-champion-runner-up span { color: var(--tourney-card-strong); font-weight: 900; text-transform: uppercase; }
                 .tourney-champion-actions { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: 100%; }
                 .tourney-champion-action-btn { min-width: 0; min-height: 40px; border: var(--glass-border); border-radius: 8px; background: var(--tourney-card-surface); color: var(--tourney-card-strong); font-family: 'Montserrat', sans-serif; font-size: 0.72rem; line-height: 1.05; font-weight: 1000; text-transform: uppercase; letter-spacing: 0; padding: 8px 9px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); overflow: hidden; text-overflow: ellipsis; }
                 .tourney-champion-action-btn:hover, .tourney-champion-action-btn:focus-visible { outline: none; border-color: var(--gold-main); color: var(--gold-main); }
@@ -1353,6 +1388,10 @@ class TournamentManager {
         const finalScore = this.escape(championship.scoreLabel || '-');
         const wonAt = championship.wonAt ? this.escape(this.formatDate(championship.wonAt)) : '';
         const finalLabel = this.escape(this.getHistoryRoundLabel('f'));
+        const journeyTrophySrc = (document.body.classList.contains('easter-theme')
+            || (localStorage.getItem('yamb_theme') || 'dark') === 'easter')
+            ? 'assets/easter-soft-clay/tournament-pro-v4.png?v=1'
+            : 'assets/tournament-trophy-yotb.svg';
         const selectorHtml = savedChampionships.length > 1
             ? `
                 <div class="tourney-journey-picker" aria-label="${this.escapeAttr(tt('tourney_champion_pick_title') || 'Izaberi titulu')}">
@@ -1373,7 +1412,7 @@ class TournamentManager {
                     <img class="tourney-journey-avatar" src="${photo}" alt="" aria-hidden="true" decoding="async">
                     <h3>${safeName}</h3>
                     <div class="tourney-journey-final">
-                        <img src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
+                        <img src="${journeyTrophySrc}" alt="" aria-hidden="true" decoding="async">
                         <span>${finalLabel}: <strong>${finalScore}</strong></span>
                     </div>
                     ${wonAt ? `<div class="tourney-journey-date">${wonAt}</div>` : ''}
@@ -1964,13 +2003,15 @@ class TournamentManager {
             const drawCountHtml = drawCountLabel
                 ? `<div style="margin-top: 5px; color: var(--text-muted); font-size: 0.82rem;">${this.escape(drawCountLabel)}</div>`
                 : '';
-            const easterResultIcon = round === 'f' ? 'tournament-pro-v3.png' : 'tournament/state-match-complete-v2.png';
+            const easterResultIcon = round === 'f'
+                ? 'assets/easter-soft-clay/tournament-pro-v4.png?v=1'
+                : 'assets/easter-soft-clay/tournament/state-match-complete-v2.png?v=1';
             const resultIcon = round === 'f' ? 'tournament-pro.png' : 'tournament/state-match-complete.png';
             const severnaResultIcon = round === 'f' ? 'tournament-pro-v7.png?v=1' : 'tournament/state-match-complete-v3.png?v=1';
             const finalistHtml = round === 'f'
                 ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-easter" src="assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-desert" src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-nebula" src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
                 : '';
-            akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-easter" src="assets/easter-soft-clay/${easterResultIcon}?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-desert" src="assets/desert-soft-clay/${resultIcon}?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-nebula" src="assets/severna-soft-clay/${severnaResultIcon}" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
+            akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-easter" src="${easterResultIcon}" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-desert" src="assets/desert-soft-clay/${resultIcon}?v=1" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-nebula" src="assets/severna-soft-clay/${severnaResultIcon}" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
         }
         else if (isMyMatch) {
             if (match.timeAccepted) {

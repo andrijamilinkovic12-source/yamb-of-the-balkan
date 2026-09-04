@@ -280,6 +280,54 @@
             `;
         }
 
+        function fillTournamentHistory(doc) {
+            const app = frame.contentWindow && frame.contentWindow.app;
+            const manager = app && app.tournamentManager;
+            if (!manager) return;
+
+            const makePlayer = (id, name) => ({ id, name, photoUrl: '', pi: '100' });
+            const makeRecord = (tournamentNumber, winner, runnerUp, scoreLabel) => ({
+                tournamentNumber,
+                wonAt: `2026-08-${String(tournamentNumber * 7).padStart(2, '0')}T12:00:00Z`,
+                winnerId: winner.id,
+                winnerName: winner.name,
+                winnerPhotoUrl: '',
+                runnerUpId: runnerUp.id,
+                runnerUpName: runnerUp.name,
+                scoreLabel,
+                resultType: 'regular',
+                bracket: {
+                    qf: [{ p1: winner, p2: makePlayer(`q${tournamentNumber}`, `Rival ${tournamentNumber}`), winnerId: winner.id, resultType: 'regular', scoreLabel: '551 : 498' }, null, null, null],
+                    sf: [{ p1: winner, p2: makePlayer(`s${tournamentNumber}`, `Polufinalista ${tournamentNumber}`), winnerId: winner.id, resultType: 'regular', scoreLabel: '579 : 526' }, null],
+                    f: [{ p1: winner, p2: runnerUp, winnerId: winner.id, resultType: 'regular', scoreLabel }]
+                }
+            });
+            const ana = makePlayer('ana', 'Ana');
+            const boris = makePlayer('boris', 'Boris');
+            const ceda = makePlayer('ceda', 'Čeda');
+
+            manager.tourneyLeaderboard = [
+                {
+                    playerId: ana.id,
+                    playerName: ana.name,
+                    wins: 2,
+                    championships: [
+                        makeRecord(3, ana, ceda, '613 : 552'),
+                        makeRecord(1, ana, boris, '601 : 548')
+                    ]
+                },
+                {
+                    playerId: boris.id,
+                    playerName: boris.name,
+                    wins: 1,
+                    championships: [makeRecord(2, boris, ana, '608 : 571')]
+                }
+            ];
+            manager.tourneyLeaderboardLoaded = true;
+            manager.activeTab = 'leaderboard';
+            manager.render();
+        }
+
         function prepareState(state) {
             const doc = safeDoc();
             if (!doc || !doc.body) return;
@@ -315,6 +363,28 @@
                     showOnly(doc, 'stats-screen');
                     fillStats(doc);
                     break;
+                case 'h2hdetail': {
+                    showOnly(doc, 'stats-screen');
+                    fillStats(doc);
+                    const app = frame.contentWindow && frame.contentWindow.app;
+                    if (app && typeof app.openH2HDetail === 'function') {
+                        app.playerName = 'Vaskr Igrač';
+                        app.openH2HDetail({
+                            name: 'Prolećni Rival',
+                            wins: 12,
+                            losses: 7,
+                            draws: 3,
+                            myTotalScore: 8420,
+                            gamesWithScore: 22,
+                            myHighScore: 612,
+                            maxWinMargin: 148,
+                            maxLossMargin: 76,
+                            currentWinStreak: 4,
+                            maxWinStreak: 8
+                        });
+                    }
+                    break;
+                }
                 case 'treasury':
                     showOnly(doc, 'riznica-screen');
                     break;
@@ -338,6 +408,10 @@
                 case 'tournament':
                     showOnly(doc, 'tournament-screen');
                     fillTournament(doc);
+                    break;
+                case 'tournamenthistory':
+                    showOnly(doc, 'tournament-screen');
+                    fillTournamentHistory(doc);
                     break;
                 case 'dailyintro': {
                     const dailyIntro = doc.getElementById('daily-intro');

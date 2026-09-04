@@ -240,6 +240,19 @@ class YambApp {
             : (this.getValidThemeIds().includes(rememberedSplashTheme) ? rememberedSplashTheme : 'dark');
         if (this.playerId && startupTheme !== savedTheme) localStorage.setItem('yamb_theme', startupTheme);
         this.applyTheme(startupTheme, { initialLoad: true });
+        const easterSplashDelay = window.Capacitor ? 950 : 120;
+        if (startupTheme === 'easter') {
+            window.yambSplashHoldUntil = Date.now() + easterSplashDelay + 4500;
+        }
+        const startEasterSplash = () => setTimeout(
+            () => this.restartEasterSplashLogoAnimation(),
+            easterSplashDelay
+        );
+        if (document.readyState === 'complete') {
+            startEasterSplash();
+        } else {
+            window.addEventListener('load', startEasterSplash, { once: true });
+        }
         
         this.initSocketConnection();
 
@@ -263,26 +276,30 @@ class YambApp {
             });
 
             window.Capacitor.Plugins.App.addListener('appStateChange', ({ isActive } = {}) => {
+                this.nativeAppActive = isActive;
                 if (isActive === false) {
-                    this.handleAppPause();
+                    this.handleAppPause('capacitor_app_state');
                 } else if (isActive === true) {
                     this.scheduleAppResume();
                 }
             });
         }
 
-        document.addEventListener("pause", () => { this.handleAppPause(); }, false);
+        document.addEventListener("pause", () => { this.handleAppPause('document_pause'); }, false);
         document.addEventListener("resume", () => { this.scheduleAppResume(); }, false);
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'hidden') {
-                this.handleAppPause();
+                this.handleAppPause('visibility_hidden');
             } else if (document.visibilityState === 'visible') {
                 this.scheduleAppResume();
             }
         });
-        window.addEventListener('pagehide', () => { this.handleAppPause(); });
+        window.addEventListener('pagehide', () => { this.handleAppPause('pagehide'); });
         window.addEventListener('pageshow', () => { this.scheduleAppResume(); });
-        window.addEventListener('beforeunload', () => { this.handleAppPause(); });
+        window.addEventListener('beforeunload', () => { this.handleAppPause('beforeunload'); });
+
+        // Independent of the turn timer: that timer is stopped during reconnect grace.
+        this.onlineForegroundRecoveryTimer = setInterval(() => this.checkOnlineForegroundRecovery(), 2000);
 
         this.scheduleAppResume();
 
@@ -991,6 +1008,20 @@ class YambApp {
         const maxShort = this.escapeHtml(gt('h2h_max_short') || 'Max');
         const shareLabel = this.escapeHtml(gt('h2h_share_btn') || 'Podeli karticu');
         const shareAria = this.escapeHtml(gt('h2h_share_aria') || gt('h2h_share_btn') || 'Podeli karticu');
+        const activeH2HTheme = document.body.classList.contains('easter-theme')
+            ? 'easter'
+            : (localStorage.getItem('yamb_theme') || 'dark');
+        const detailLabel = (key, fallback) => {
+            const label = String(gt(key) || fallback).trim();
+            const themedLabel = activeH2HTheme === 'easter'
+                ? label.replace(/^[^\p{L}\p{N}]+/u, '').trim()
+                : label;
+            return this.escapeHtml(themedLabel);
+        };
+        const easterDetailIcon = (fileName) => `
+            <img class="h2h-detail-stat-icon h2h-detail-stat-icon-easter"
+                 src="assets/easter-soft-clay/statistics/h2h-detail/${fileName}-v3.png?v=1"
+                 alt="" aria-hidden="true" decoding="async">`;
 
         this.currentH2HShareData = {
             ...r,
@@ -1012,7 +1043,10 @@ class YambApp {
                     <div class="h2h-detail-name">${safeMyName}</div>
                     <div class="h2h-detail-score w-color">${r.wins} ${winShort}</div>
                 </div>
-                <div class="h2h-detail-vs">VS</div>
+                <div class="h2h-detail-vs">
+                    <span class="h2h-detail-vs-text">VS</span>
+                    <img class="h2h-detail-vs-icon-easter" src="assets/easter-soft-clay/opponent/vs-v2.png?v=2" alt="" aria-hidden="true" decoding="async">
+                </div>
                 <div class="h2h-detail-player">
                     <img src="${oppAvatar}" class="h2h-detail-avatar h2h-detail-avatar-opp" alt="${safeOppName}">
                     <div class="h2h-detail-name">${safeOppName}</div>
@@ -1022,27 +1056,27 @@ class YambApp {
             <div class="h2h-detail-total">${matchText}</div>
             <div class="h2h-stats-area h2h-detail-stats">
                 <div class="h2h-stat-row">
-                    <span class="lbl">${this.escapeHtml(gt('h2h_highest_score') || 'Najviše poena:')}</span>
+                    <span class="lbl h2h-detail-stat-label">${easterDetailIcon('highest-score')}<span>${detailLabel('h2h_highest_score', 'Najviše poena:')}</span></span>
                     <span class="val">${r.myHighScore || 0}</span>
                 </div>
                 <div class="h2h-stat-row">
-                    <span class="lbl">${this.escapeHtml(gt('h2h_max_diff') || 'Najveća razlika:')}</span>
+                    <span class="lbl h2h-detail-stat-label">${easterDetailIcon('max-margin')}<span>${detailLabel('h2h_max_diff', 'Najveća razlika:')}</span></span>
                     <span class="val c-success">+${r.maxWinMargin || 0}</span>
                 </div>
                 <div class="h2h-stat-row">
-                    <span class="lbl">${this.escapeHtml(gt('h2h_worst_loss') || 'Najteži poraz:')}</span>
+                    <span class="lbl h2h-detail-stat-label">${easterDetailIcon('worst-loss')}<span>${detailLabel('h2h_worst_loss', 'Najteži poraz:')}</span></span>
                     <span class="val c-danger">-${r.maxLossMargin || 0}</span>
                 </div>
                 <div class="h2h-stat-row">
-                    <span class="lbl">${this.escapeHtml(gt('h2h_win_streak') || 'Vatreni niz:')}</span>
+                    <span class="lbl h2h-detail-stat-label">${easterDetailIcon('win-streak')}<span>${detailLabel('h2h_win_streak', 'Vatreni niz:')}</span></span>
                     <span class="val h2h-streak-val">${r.currentWinStreak || 0} <span>(${maxShort}: ${r.maxWinStreak || 0})</span></span>
                 </div>
                 <div class="h2h-stat-row">
-                    <span class="lbl">${this.escapeHtml(gt('h2h_draws') || 'Nerešeno:')}</span>
+                    <span class="lbl h2h-detail-stat-label">${easterDetailIcon('draw')}<span>${detailLabel('h2h_draws', 'Nerešeno:')}</span></span>
                     <span class="val">${r.draws || 0}</span>
                 </div>
                 <div class="h2h-stat-row">
-                    <span class="lbl">${this.escapeHtml(gt('h2h_avg_pts') || 'Tvoj prosek poena:')}</span>
+                    <span class="lbl h2h-detail-stat-label">${easterDetailIcon('average')}<span>${detailLabel('h2h_avg_pts', 'Tvoj prosek poena:')}</span></span>
                     <span class="val">${avg}</span>
                 </div>
             </div>
@@ -1576,6 +1610,12 @@ class YambApp {
                     'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=1',
                     'assets/easter-soft-clay/statistics/h2h-v2.png?v=1',
                     'assets/easter-soft-clay/statistics/h2h-empty-v2.png?v=1',
+                    'assets/easter-soft-clay/statistics/h2h-detail/highest-score-v3.png?v=1',
+                    'assets/easter-soft-clay/statistics/h2h-detail/max-margin-v3.png?v=1',
+                    'assets/easter-soft-clay/statistics/h2h-detail/worst-loss-v3.png?v=1',
+                    'assets/easter-soft-clay/statistics/h2h-detail/win-streak-v3.png?v=1',
+                    'assets/easter-soft-clay/statistics/h2h-detail/draw-v3.png?v=1',
+                    'assets/easter-soft-clay/statistics/h2h-detail/average-v3.png?v=1',
                     'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=1',
                     'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=1',
                     'assets/easter-soft-clay/statistics/power-index/gold-v3.png?v=1',
@@ -2023,7 +2063,15 @@ class YambApp {
 
         document.body.classList.remove(...themeClasses);
         if (safeTheme !== 'dark') document.body.classList.add(`${safeTheme}-theme`);
+        document.documentElement.dataset.splashTheme = safeTheme;
         this.hydrateThemeImageSources(safeTheme);
+        const splashScreen = document.getElementById('splash-screen');
+        const splashIsActive = splashScreen?.classList.contains('active');
+        const splashLogo = splashScreen?.querySelector(':scope > .logo-anim');
+        if (safeTheme === 'easter' && splashIsActive && splashLogo
+            && !splashLogo.classList.contains('easter-splash-logo-playing')) {
+            this.restartEasterSplashLogoAnimation();
+        }
 
         // Splash/login ekran pamti poslednju vizuelnu temu čak i kada se nalog odjavi.
         localStorage.setItem('yamb_last_theme', safeTheme);
@@ -4538,6 +4586,7 @@ class YambApp {
     }
 
     scheduleAppResume(delayMs = 500) {
+        this.appLifecycleRevision = (this.appLifecycleRevision || 0) + 1;
         if (this.appResumeTimer) clearTimeout(this.appResumeTimer);
         this.appResumeTimer = setTimeout(() => {
             this.appResumeTimer = null;
@@ -4545,7 +4594,34 @@ class YambApp {
         }, Math.max(0, Number(delayMs) || 0));
     }
 
-    handleAppPause() {
+    async checkOnlineForegroundRecovery() {
+        if (!this.gameActive || !this.onlineMode || this.isSpectator || !this.roomId) return;
+        if (document.visibilityState === 'hidden' || this.onlineForegroundCheckPending) return;
+        const roomId = this.roomId;
+        const revision = this.appLifecycleRevision || 0;
+        this.onlineForegroundCheckPending = true;
+        try {
+            const appPlugin = window.Capacitor?.Plugins?.App;
+            if (appPlugin && typeof appPlugin.getState === 'function') {
+                const state = await appPlugin.getState();
+                if (revision !== (this.appLifecycleRevision || 0)) return;
+                this.nativeAppActive = state?.isActive;
+                if (this.nativeAppActive !== true) return;
+            } else if (this.nativeAppActive === false) {
+                return;
+            }
+            if (this.roomId !== roomId || !this.gameActive || !this.onlineMode || this.isSpectator || document.visibilityState === 'hidden') return;
+            if (this.appLifecyclePaused) this.handleAppResume();
+            this.emitOnlinePresencePing();
+        } catch (_) {
+            // An unavailable native state is not proof that the player returned.
+        } finally {
+            this.onlineForegroundCheckPending = false;
+        }
+    }
+
+    handleAppPause(lifecycleSource = 'app_pause') {
+        this.appLifecycleRevision = (this.appLifecycleRevision || 0) + 1;
         if (this.appResumeTimer) {
             clearTimeout(this.appResumeTimer);
             this.appResumeTimer = null;
@@ -4558,6 +4634,7 @@ class YambApp {
             if (this.socket.connected) {
                 this.socket.emit('online_app_backgrounded', {
                     roomId: this.roomId,
+                    lifecycleSource,
                     ...this.getConnectionDiagnosticSnapshot()
                 });
             }
@@ -4571,6 +4648,8 @@ class YambApp {
     }
 
     handleAppResume() {
+        if (document.visibilityState === 'hidden') return;
+        if (this.gameActive && this.onlineMode && this.nativeAppActive === false) return;
         this.appLifecyclePaused = false;
         this.checkForInvite();
 
@@ -4596,9 +4675,15 @@ class YambApp {
         }
 
         if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket) {
+            const resumeRoomId = this.roomId;
+            const resumeSocket = this.socket;
+            const resumeRevision = this.appLifecycleRevision || 0;
             const requestSync = () => {
                 const roomId = this.roomId;
-                if (!roomId) return;
+                if (!roomId || roomId !== resumeRoomId || this.socket !== resumeSocket ||
+                    resumeRevision !== (this.appLifecycleRevision || 0) ||
+                    !this.gameActive || !this.onlineMode || this.isSpectator || this.appLifecyclePaused ||
+                    document.visibilityState === 'hidden' || this.nativeAppActive === false) return;
 
                 this.socket.emit('online_app_resumed', {
                     roomId,
@@ -4623,11 +4708,57 @@ class YambApp {
         this.checkSavedGame();
     }
     
+    restartEasterSplashLogoAnimation() {
+        if (!document.body.classList.contains('easter-theme')) return;
+        const logo = document.querySelector('#splash-screen > .logo-anim');
+        if (!logo) return;
+        const titleImage = logo.querySelector('.easter-splash-clay-title-png');
+        const playAnimation = () => {
+            window.yambSplashHoldUntil = Date.now() + 4500;
+            window.yambEasterSplashAssetPending = false;
+            document.documentElement.classList.remove('easter-splash-boot');
+            logo.classList.remove('easter-splash-logo-playing');
+            void logo.offsetWidth;
+            requestAnimationFrame(() => {
+                logo.classList.add('easter-splash-logo-playing');
+            });
+        };
+
+        if (titleImage && titleImage.dataset.splashDecoded !== '1' && typeof titleImage.decode === 'function') {
+            window.yambEasterSplashAssetPending = true;
+            if (titleImage.dataset.splashDecodePending === '1') return;
+            titleImage.dataset.splashDecodePending = '1';
+            const continueAfterDecode = () => {
+                delete titleImage.dataset.splashDecodePending;
+                titleImage.dataset.splashDecoded = '1';
+                playAnimation();
+            };
+            titleImage.decode().then(continueAfterDecode).catch(continueAfterDecode);
+            return;
+        }
+
+        if (titleImage && (!titleImage.complete || !titleImage.naturalWidth)) {
+            window.yambEasterSplashAssetPending = true;
+            if (titleImage.dataset.splashDecodePending === '1') return;
+            titleImage.dataset.splashDecodePending = '1';
+            const continueAfterLoad = () => {
+                delete titleImage.dataset.splashDecodePending;
+                playAnimation();
+            };
+            titleImage.addEventListener('load', continueAfterLoad, { once: true });
+            titleImage.addEventListener('error', continueAfterLoad, { once: true });
+            return;
+        }
+
+        playAnimation();
+    }
+
     navigateTo(screenId) {
         if (screenId !== 'game-scene') this.clearOnlineGameOverDelay();
         document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
         const target = document.getElementById(screenId);
         if (target) target.classList.add('active');
+        if (screenId === 'splash-screen') this.restartEasterSplashLogoAnimation();
         if (this.soundMgr) {
             if (screenId === 'splash-screen' && this.soundMgr.playIntro) {
                 this.soundMgr.playIntro();
@@ -5236,7 +5367,8 @@ class YambApp {
         const introTheme = activeTheme === 'severna' && room.severnaIcon
             ? 'severna'
             : (activeTheme === 'desert' && room.desertIcon ? 'desert' : 'easter');
-        const isEasterLeaderboardIconOnly = introTheme === 'easter' && roomId === 'leaderboard';
+        const isEasterIconOnly = introTheme === 'easter'
+            && ['leaderboard', 'statistics', 'settings', 'rules', 'hotseat', 'opponent', 'invite', 'globalChat', 'onlinePlayers', 'economy'].includes(roomId);
 
         if (iconElement) {
             iconElement.src = introTheme === 'severna'
@@ -5258,10 +5390,10 @@ class YambApp {
             return letter;
         });
 
-        titleElement.classList.toggle('easter-room-intro-title--stacked', !isEasterLeaderboardIconOnly && titleLines.length > 1);
-        titleElement.classList.toggle('easter-room-intro-title--hidden', isEasterLeaderboardIconOnly);
-        titleElement.setAttribute('aria-hidden', isEasterLeaderboardIconOnly ? 'true' : 'false');
-        if (isEasterLeaderboardIconOnly) {
+        titleElement.classList.toggle('easter-room-intro-title--stacked', !isEasterIconOnly && titleLines.length > 1);
+        titleElement.classList.toggle('easter-room-intro-title--hidden', isEasterIconOnly);
+        titleElement.setAttribute('aria-hidden', isEasterIconOnly ? 'true' : 'false');
+        if (isEasterIconOnly) {
             titleElement.replaceChildren();
             titleElement.removeAttribute('aria-label');
         } else if (titleLines.length > 1) {
@@ -5275,12 +5407,12 @@ class YambApp {
             const title = titleLines[0] || '';
             titleElement.replaceChildren(...createWaveLetters(title));
         }
-        if (!isEasterLeaderboardIconOnly) titleElement.setAttribute('aria-label', titleLines.join(' – '));
+        if (!isEasterIconOnly) titleElement.setAttribute('aria-label', titleLines.join(' – '));
 
         this.easterRoomIntroPlaying = true;
-        overlay.classList.remove('theme-easter', 'theme-desert', 'theme-severna', 'easter-room-intro--leaderboard-icon-only');
+        overlay.classList.remove('theme-easter', 'theme-desert', 'theme-severna', 'easter-room-intro--icon-only');
         overlay.classList.add(`theme-${introTheme}`);
-        overlay.classList.toggle('easter-room-intro--leaderboard-icon-only', isEasterLeaderboardIconOnly);
+        overlay.classList.toggle('easter-room-intro--icon-only', isEasterIconOnly);
         overlay.classList.add('hidden');
         void overlay.offsetWidth;
         overlay.classList.remove('hidden');
@@ -5813,7 +5945,7 @@ class YambApp {
     emitOnlinePresencePing(force = false) {
         if (!this.gameActive || !this.onlineMode || this.isSpectator) return;
         if (!this.socket || !this.socket.connected || !this.roomId) return;
-        if (!this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })) return;
+        if (this.appLifecyclePaused || this.nativeAppActive === false || document.visibilityState === 'hidden') return;
 
         const now = Date.now();
         if (!force && this.lastOnlinePresencePingAt && now - this.lastOnlinePresencePingAt < 2000) return;
@@ -5821,6 +5953,7 @@ class YambApp {
         this.lastOnlinePresencePingAt = now;
         this.socket.emit('online_presence_ping', {
             roomId: this.roomId,
+            foreground: true,
             ...this.getConnectionDiagnosticSnapshot()
         });
     }
@@ -6150,7 +6283,9 @@ class YambApp {
                 : (activeQlRewardTheme === 'desert' ? 'assets/desert-soft-clay/ql' : 'assets/easter-soft-clay/ql');
             const qlMedalFile = activeQlRewardTheme === 'severna'
                 ? `medal-${medalType}-v3.png?v=1`
-                : `medal-${medalType}.png?v=2`;
+                : (activeQlRewardTheme === 'easter'
+                    ? `medal-${medalType}-v2.png?v=4`
+                    : `medal-${medalType}.png?v=2`);
             let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlAssetRoot}/${qlMedalFile}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
             let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
@@ -7872,6 +8007,8 @@ class YambApp {
                 return value || '';
             };
             const coinIcon = (typeof dukatIconHtml === 'function') ? dukatIconHtml() : 'dukata';
+            const isEasterTheme = document.body.classList.contains('easter-theme')
+                || (localStorage.getItem('yamb_theme') || 'dark') === 'easter';
             const totalReward = earnedTrophies.reduce((sum, trophy) => sum + Math.max(0, Number(trophy.reward) || 0), 0);
             const title = lang === 'en'
                 ? (earnedTrophies.length === 1 ? 'TROPHY UNLOCKED' : 'TROPHIES UNLOCKED')
@@ -7891,7 +8028,9 @@ class YambApp {
             const cardsHtml = earnedTrophies.map((trophy, index) => {
                 const trophyTitle = this.escapeHtml(textFor(trophy.title) || trophy.id);
                 const reward = Math.max(0, Number(trophy.reward) || 0);
-                const icon = trophy.icon || '🏆';
+                const icon = isEasterTheme
+                    ? '<img class="easter-trophy-showcase-icon" src="assets/easter-soft-clay/statistics/trophies-v3.png?v=1" alt="" aria-hidden="true" decoding="async">'
+                    : (trophy.icon || '🏆');
 
                 return `
                     <div class="trophy-showcase-card" style="--i:${index};">
@@ -8099,6 +8238,13 @@ class YambApp {
             this.rememberTournamentFinalCeremony(ceremonyData.role, true);
 
             const isWinner = ceremonyData.role === 'winner';
+            const isEasterTheme = document.body.classList.contains('easter-theme')
+                || (localStorage.getItem('yamb_theme') || 'dark') === 'easter';
+            const trophySrc = isEasterTheme
+                ? (isWinner
+                    ? 'assets/easter-soft-clay/tournament-pro-v4.png?v=1'
+                    : 'assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=2')
+                : 'assets/tournament-trophy-yotb.svg';
             const rewardLabel = this.formatTourneyDukatAmount(ceremonyData.reward);
             const coinIcon = (typeof dukatIconHtml === 'function') ? dukatIconHtml() : 'dukata';
             const title = isWinner
@@ -8121,7 +8267,7 @@ class YambApp {
                 <div class="tournament-final-ceremony-panel">
                     <div class="tournament-final-ceremony-rays" aria-hidden="true"></div>
                     <div class="tournament-final-ceremony-trophy-wrap">
-                        <img class="tournament-final-ceremony-trophy" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async">
+                        <img class="tournament-final-ceremony-trophy" src="${trophySrc}" alt="" aria-hidden="true" decoding="async">
                     </div>
                     <div class="tournament-final-ceremony-kicker">${this.escapeHtml(kicker)}</div>
                     <h2 class="tournament-final-ceremony-title">${this.escapeHtml(title)}</h2>

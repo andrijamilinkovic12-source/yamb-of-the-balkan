@@ -11,7 +11,7 @@ const socketClientSource = fs.readFileSync(path.join(root, 'www', 'socket.io.min
 
 function extractClassMethod(source, methodName) {
     const signature = `${methodName}(`;
-    const definitionMatch = new RegExp(`^    ${methodName}\\(`, 'm').exec(source);
+    const definitionMatch = new RegExp(`^    (?:async )?${methodName}\\(`, 'm').exec(source);
     const start = definitionMatch ? definitionMatch.index + 4 : -1;
     assert(start >= 0, `Nedostaje metoda ${methodName}`);
 
@@ -47,7 +47,8 @@ function extractServerFunction(source, functionName) {
     let start = source.indexOf(`async function ${functionName}(`);
     if (start === -1) start = source.indexOf(`function ${functionName}(`);
     assert(start >= 0, `Nedostaje serverska funkcija ${functionName}`);
-    const bodyStart = source.indexOf('{', start);
+    const signatureEnd = source.indexOf(') {', start);
+    const bodyStart = signatureEnd >= 0 ? signatureEnd + 2 : -1;
     assert(bodyStart >= 0, `Nedostaje telo serverske funkcije ${functionName}`);
 
     let depth = 0;
@@ -82,6 +83,9 @@ const lifecycleSandbox = {
     clearTimeout,
     Math,
     Number,
+    Date,
+    document: { visibilityState: 'visible' },
+    window: {},
     localStorage: {
         values: new Map(),
         setItem(key, value) { this.values.set(key, String(value)); },
@@ -92,6 +96,8 @@ vm.createContext(lifecycleSandbox);
 vm.runInContext(`
     ${extractClassMethod(gameSource, 'handleAppPause').replace('handleAppPause(', 'function handleAppPause(')}
     ${extractClassMethod(gameSource, 'handleAppResume').replace('handleAppResume(', 'function handleAppResume(')}
+    ${extractClassMethod(gameSource, 'checkOnlineForegroundRecovery').replace('checkOnlineForegroundRecovery(', 'function checkOnlineForegroundRecovery(')}
+    ${extractClassMethod(gameSource, 'emitOnlinePresencePing').replace('emitOnlinePresencePing(', 'function emitOnlinePresencePing(')}
 `, lifecycleSandbox);
 
 const sceneClasses = new Set();
@@ -146,7 +152,7 @@ async function run() {
     assert(socketClientSource.includes('Socket.IO v4.8.3'));
     assert(socketClientSource.includes('tryAllTransports'));
     assert(indexSource.includes('socket.io.min.js?v=4.8.3'));
-    assert(indexSource.includes('game.js?v=4.89'));
+    assert(indexSource.includes('game.js?v=5.6'));
     assert(serverSource.includes("outcome: 'mutual_disconnect'"), 'Obostrani prekid nije posebno evidentiran');
     assert(serverSource.includes("socket.on('connection_diagnostic_snapshot'"), 'Server ne prima poslednji poznati tip mreže');
     assert(gameSource.includes("this.socket.emit('connection_diagnostic_snapshot'"), 'Klijent ne šalje poslednji poznati tip mreže');
@@ -162,7 +168,7 @@ async function run() {
     assert(backgroundHandler.includes("beginReconnectGraceForSocket(socket, roomId, 'app_backgrounded')"), 'Pozadina ne pokreće reconnect grace');
     assert(backgroundHandler.includes('rememberClientConnectionDiagnosticSnapshot(socket, data)'), 'Pozadina ne čuva poslednji mrežni tip');
 
-    for (const roomId of ['duel-challenge', 'yamb-friend', 'room-random', 'tourney-round']) {
+    for (const roomId of ['duel_challenge', 'yamb-friend', 'room_random', 'tourney_round']) {
         const emitted = [];
         const app = {
             appLifecyclePaused: false,
@@ -209,6 +215,138 @@ async function run() {
     assert.strictEqual(resumedApp.appLifecyclePaused, false, 'Resume mora vratiti lifecycle u aktivno stanje');
     assert(resumedEvents.some(item => item.event === 'online_app_resumed'), 'Običan duel ne prijavljuje povratak aplikacije');
     assert(resumedEvents.some(item => item.event === 'state_sync'), 'Povratak aplikacije ne traži autoritativno stanje');
+
+    const foregroundApp = {
+        ...resumedApp,
+        appLifecyclePaused: true,
+        handleAppResume() { lifecycleSandbox.handleAppResume.call(this); },
+        emitOnlinePresencePing(force) { lifecycleSandbox.emitOnlinePresencePing.call(this, force); }
+    };
+    lifecycleSandbox.window.Capacitor = { Plugins: { App: { async getState() { return { isActive: false }; } } } };
+    await lifecycleSandbox.checkOnlineForegroundRecovery.call(foregroundApp);
+    assert.strictEqual(foregroundApp.appLifecyclePaused, true, 'Vidljiv WebView nije dovoljan dok native aplikacija nije aktivna');
+    lifecycleSandbox.window.Capacitor.Plugins.App.getState = async () => ({ isActive: true });
+    await lifecycleSandbox.checkOnlineForegroundRecovery.call(foregroundApp);
+    assert.strictEqual(foregroundApp.appLifecyclePaused, false, 'Propušteni resume mora biti popravljen native proverom');
+    assert(resumedEvents.some(item => item.event === 'online_presence_ping' && item.payload.foreground === true));
+    const beforeHiddenPing = resumedEvents.length;
+    lifecycleSandbox.document.visibilityState = 'hidden';
+    lifecycleSandbox.emitOnlinePresencePing.call(foregroundApp, true);
+    assert.strictEqual(resumedEvents.length, beforeHiddenPing, 'Pozadina ne sme slati foreground heartbeat');
+    lifecycleSandbox.document.visibilityState = 'visible';
+    foregroundApp.appLifecyclePaused = true;
+    lifecycleSandbox.window.Capacitor.Plugins.App.getState = async () => {
+        foregroundApp.appLifecycleRevision = (foregroundApp.appLifecycleRevision || 0) + 1;
+        return { isActive: true };
+    };
+    await lifecycleSandbox.checkOnlineForegroundRecovery.call(foregroundApp);
+    assert.strictEqual(foregroundApp.appLifecyclePaused, true, 'Zakašnjeli getState ne sme poništiti noviji pause');
+
+    let delayedResume;
+    const delayedApp = { ...resumedApp, appLifecyclePaused: false,
+        socket: { connected: false, once(event, fn) { delayedResume = fn; } } };
+    lifecycleSandbox.handleAppResume.call(delayedApp);
+    delayedApp.appLifecyclePaused = true;
+    delayedResume(); // Must not emit to a socket after another pause.
+    delayedApp.appLifecyclePaused = false;
+    delayedApp.roomId = 'duel_new';
+    delayedResume(); // Must not recover a newer room using an older callback.
+    delayedApp.roomId = resumedApp.roomId;
+    delayedApp.appLifecycleRevision = 2;
+    delayedResume(); // Same room ID can be reused, but the lifecycle generation is different.
+
+    let localSaved = 0;
+    let localPaused = 0;
+    const localApp = { gameActive: true, onlineMode: false,
+        pauseLocalGameClock() { localPaused++; }, autoSaveGame() { localSaved++; } };
+    lifecycleSandbox.handleAppPause.call(localApp);
+    assert.strictEqual(localPaused, 1);
+    assert.strictEqual(localSaved, 1);
+    for (const flags of [{ gameActive: false }, { isSpectator: true }]) {
+        const excludedApp = { ...resumedApp, ...flags, appLifecyclePaused: false,
+            socket: { connected: true, emit() { throw new Error('Menu/spectator must not start grace'); } } };
+        lifecycleSandbox.handleAppPause.call(excludedApp);
+    }
+
+    // Execute the real server lifecycle handlers with deterministic timers and no database.
+    const serverEvents = [];
+    const callbacks = [];
+    const handlers = {};
+    const serverSandbox = {
+        Date, Math, Number, String, Object, Promise,
+        console: { log() {}, warn() {} },
+        MONGO_URI: '', DISCONNECT_GRACE_MS: 30000, TOURNAMENT_DISCONNECT_GRACE_MS: 300000,
+        ghostSessions: {}, disconnectTimers: {}, roomState: {}, playerRooms: {},
+        parseTournamentRoomId: id => id.startsWith('tourney_'),
+        isLocalRoomId: id => id.startsWith('local_'),
+        getSocketUid: id => id === 'socket-a' ? 'uid-a' : 'uid-b',
+        toSafeInt: (value, fallback = 0) => Number.isFinite(Number(value)) ? Math.floor(Number(value)) : fallback,
+        createDisconnectDiagnostic: () => `diag-${callbacks.length}`,
+        pauseRoomForDisconnectGrace() {}, resumeRoomAfterDisconnectGrace() {},
+        rememberClientConnectionDiagnosticSnapshot() {},
+        emitAuthoritativeRoomState() {},
+        io: { to: roomId => ({ emit: (event, data) => serverEvents.push({ roomId, event, data }) }) },
+        setTimeout(fn, ms) { callbacks.push({ fn, ms }); return callbacks.length; },
+        clearTimeout() {},
+        handleDisconnectGraceTimeout() { throw new Error('Zastareli timeout se izvršio'); },
+        socket: { id: 'socket-a', connected: true, on(event, fn) { handlers[event] = fn; } }
+    };
+    vm.createContext(serverSandbox);
+    for (const name of ['isTournamentRoomId', 'getDisconnectGraceMs', 'rememberRoomPresence',
+        'resolveDisconnectDiagnostic', 'clearDisconnectGraceForUid', 'clearDisconnectGraceForRoom',
+        'scheduleDisconnectGraceTimeout', 'beginReconnectGraceForSocket']) {
+        vm.runInContext(extractServerFunction(serverSource, name), serverSandbox);
+    }
+    const handlerEnd = serverSource.indexOf("socket.on('auth_firebase_token'", backgroundHandlerEnd);
+    vm.runInContext(serverSource.slice(backgroundHandlerStart, handlerEnd), serverSandbox);
+    const realResolver = serverSandbox.resolveDisconnectDiagnostic;
+    const resolutions = [];
+    serverSandbox.resolveDisconnectDiagnostic = (eventId, fields) => {
+        resolutions.push({ eventId, fields });
+        realResolver(eventId, fields);
+    };
+    for (const roomId of ['duel_challenge', 'yamb-friend', 'room_random', 'tourney_round']) {
+        serverSandbox.playerRooms['socket-a'] = roomId;
+        serverSandbox.roomState[roomId] = { players: ['socket-a', 'socket-b'] };
+        handlers.online_app_backgrounded({ roomId, lifecycleSource: 'visibility_hidden' });
+        const firstGhost = serverSandbox.ghostSessions['uid-a'];
+        assert(firstGhost, `${roomId}: grace must start`);
+        assert.strictEqual(callbacks.at(-1).ms, roomId.startsWith('tourney_') ? 300000 : 30000);
+        handlers.online_app_backgrounded({ roomId });
+        assert.strictEqual(serverSandbox.ghostSessions['uid-a'], firstGhost, 'Dupli pause ne produžava rok');
+        handlers.online_presence_ping({ roomId });
+        assert(serverSandbox.ghostSessions['uid-a'], 'Legacy ping ne sme poništiti background grace');
+        handlers.online_presence_ping({ roomId: 'duel_old', foreground: true });
+        assert(serverSandbox.ghostSessions['uid-a'], 'Stara soba ne sme oporaviti novu');
+        handlers.online_presence_ping({ roomId, foreground: true });
+        assert(!serverSandbox.ghostSessions['uid-a'], 'Foreground ping mora popraviti propušteni resume');
+        assert(resolutions.some(item => item.eventId === firstGhost.diagnosticEventId && item.fields.outcome === 'recovered'));
+        const expiredCallback = callbacks.at(-1).fn;
+        handlers.online_app_backgrounded({ roomId });
+        expiredCallback();
+        assert(serverSandbox.ghostSessions['uid-a'], 'Stari timeout ne sme obrisati novi grace');
+        handlers.online_app_resumed({ roomId });
+        assert(!serverSandbox.ghostSessions['uid-a'], 'Same-socket resume mora zatvoriti grace');
+        assert.strictEqual(resolutions.at(-1).fields.outcome, 'recovered');
+    }
+    serverSandbox.playerRooms['socket-a'] = 'duel_challenge';
+    handlers.online_app_backgrounded({ roomId: 'duel_old' });
+    assert(!serverSandbox.ghostSessions['uid-a'], 'Zakašnjeli pause stare sobe ne sme pauzirati novu');
+    serverSandbox.roomState.duel_challenge.players = ['socket-b'];
+    handlers.online_app_backgrounded({ roomId: 'duel_challenge' });
+    assert(!serverSandbox.ghostSessions['uid-a'], 'Gledalac ne sme pokrenuti grace');
+    serverSandbox.roomState.duel_challenge.players = ['socket-a', 'socket-b'];
+    handlers.online_app_backgrounded({ roomId: 'duel_challenge' });
+    serverSandbox.clearDisconnectGraceForRoom('duel_challenge');
+    assert.strictEqual(resolutions.at(-1).fields.outcome, 'ended_without_penalty');
+    handlers.online_app_backgrounded({ roomId: 'duel_challenge' });
+    serverSandbox.resolveDisconnectDiagnostic(serverSandbox.ghostSessions['uid-a'].diagnosticEventId, { outcome: 'technical_result' });
+    serverSandbox.clearDisconnectGraceForRoom('duel_challenge');
+    assert.strictEqual(resolutions.at(-1).fields.outcome, 'technical_result', 'Cleanup ne sme pregaziti tehnički rezultat');
+    serverSandbox.playerRooms['socket-a'] = 'local_solo';
+    serverSandbox.roomState.local_solo = { players: ['socket-a'] };
+    handlers.online_app_backgrounded({ roomId: 'local_solo' });
+    assert(!serverSandbox.ghostSessions['uid-a'], 'Server mora isključiti lokalne partije');
 
     const mutualSandbox = {
         Date,
@@ -371,7 +509,7 @@ async function run() {
     assert.strictEqual(syncedDrop.opponentReconnectNoticeVisible, true, 'Autoritativni sync duzeg prekida mora odmah biti vidljiv');
     syncedDrop.clearOpponentReconnectGraceCountdown();
 
-    console.log('Online reconnect checks passed: all online lifecycle modes, fast retry config, mutual disconnect fairness, cached network diagnostics, hidden short drop, visible long drop, sync recovery, and cache version.');
+    console.log('Online reconnect checks passed: all modes, foreground recovery, native background guard, lifecycle races, stale room/timer guards, same-socket diagnostic resolution, cleanup outcomes, mutual disconnect fairness, network diagnostics, and reconnect UI.');
 }
 
 run().catch(error => {

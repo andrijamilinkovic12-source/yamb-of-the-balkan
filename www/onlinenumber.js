@@ -99,11 +99,23 @@ window.showNotification = function(title, message, options = {}) {
     const optionalIcon = options.icon
         ? `<img class="custom-toast-soft-clay-icon" src="${sec.escapeAttr(options.icon)}" alt="" aria-hidden="true" decoding="async">`
         : '';
+    const iconTokens = [];
+    const tokenizedMessage = String(message ?? '').replace(
+        /<svg\b[^>]*\bdukat-icon-inline\b[^>]*>[\s\S]*?<\/svg>|<img\b[^>]*\bdukat-icon-inline\b[^>]*>/gi,
+        () => `__YOTB_DUKAT_ICON_${iconTokens.push(true) - 1}__`
+    );
+    let safeMessageHtml = sec.escapeHtml(tokenizedMessage);
+    const inlineDukat = typeof dukatIconHtml === 'function'
+        ? dukatIconHtml('custom-toast-inline-ducat')
+        : 'dukata';
+    iconTokens.forEach((_, index) => {
+        safeMessageHtml = safeMessageHtml.replace(`__YOTB_DUKAT_ICON_${index}__`, inlineDukat);
+    });
     toast.innerHTML = `
         ${optionalIcon}
         <div class="custom-toast-copy">
             <div class="toast-title">${sec.escapeHtml(title)}</div>
-            <div class="toast-msg">${sec.escapeHtml(message)}</div>
+            <div class="toast-msg">${safeMessageHtml}</div>
         </div>
     `;
     
