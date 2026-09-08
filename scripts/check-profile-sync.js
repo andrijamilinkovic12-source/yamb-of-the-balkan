@@ -526,7 +526,7 @@ function checkTournamentChampionFallbackPayload() {
 
     const recordFn = extractAsyncFunction(serverSource, 'recordTournamentChampion');
     assert(
-        recordFn.includes('const stats = await buildTourneyStatsPayload(20);'),
+        recordFn.includes('const stats = await buildTourneyStatsPayload();'),
         'Tournament champion live update bypasses the resilient champions payload builder'
     );
 }

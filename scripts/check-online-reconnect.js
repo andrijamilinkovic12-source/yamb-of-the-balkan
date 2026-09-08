@@ -354,6 +354,7 @@ async function run() {
         Number,
         Set,
         MUTUAL_DISCONNECT_WINDOW_MS: 2000,
+        MUTUAL_APP_BACKGROUND_WINDOW_MS: 2500,
         ghostSessions: {},
         disconnectTimers: {},
         toSafeInt(value, fallback = 0) {
@@ -395,6 +396,22 @@ async function run() {
         'Turnirski meč ne sme biti poništen bez zasebne bracket odluke'
     );
 
+    mutualSandbox.ghostSessions['uid-a'].source = 'app_backgrounded';
+    mutualSandbox.ghostSessions['uid-b'].source = 'app_backgrounded';
+    mutualSandbox.ghostSessions['uid-b'].startedAt = 3017;
+    assert(
+        mutualSandbox.getMutualDisconnectGraceState('room-1', mutualState, 33017),
+        'Obostrana pozadina sa mrežnim kašnjenjem od 2017 ms mora biti tretirana kao zajednički prekid'
+    );
+    mutualSandbox.ghostSessions['uid-b'].startedAt = 3501;
+    assert.strictEqual(
+        mutualSandbox.getMutualDisconnectGraceState('room-1', mutualState, 33501),
+        null,
+        'Tolerancija pozadine ne sme obuhvatiti događaje udaljene više od 2500 ms'
+    );
+    delete mutualSandbox.ghostSessions['uid-a'].source;
+    delete mutualSandbox.ghostSessions['uid-b'].source;
+
     mutualSandbox.ghostSessions['uid-b'].startedAt = 3001;
     assert.strictEqual(
         mutualSandbox.getMutualDisconnectGraceState('room-1', mutualState, 33001),
@@ -418,6 +435,7 @@ async function run() {
         Set,
         String,
         MUTUAL_DISCONNECT_WINDOW_MS: 2000,
+        MUTUAL_APP_BACKGROUND_WINDOW_MS: 2500,
         ghostSessions: {
             'uid-a': { roomId: 'room-1', oldSocketId: 'socket-a', startedAt: handlerNow - 30010, diagnosticEventId: 'diag-a' },
             'uid-b': { roomId: 'room-1', oldSocketId: 'socket-b', startedAt: handlerNow - 30001, diagnosticEventId: 'diag-b' }

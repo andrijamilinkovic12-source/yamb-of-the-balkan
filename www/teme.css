@@ -3594,14 +3594,36 @@ body.easter-theme #splash-screen > .logo-anim {
 }
 
 @keyframes easterSplashClayReveal {
-    0% { opacity: 1; transform: translateY(5px) scale(.965); }
-    18% { opacity: 1; transform: translateY(0) scale(1.012); }
-    30%, 76% { opacity: 1; transform: translateY(0) scale(1); }
-    100% { opacity: 0; transform: translateY(-3px) scale(.985); }
+    0% {
+        opacity: 0;
+        transform: translateY(14px) scale(.94);
+    }
+    12% {
+        opacity: 1;
+        transform: translateY(2px) scaleX(.985) scaleY(1.015);
+    }
+    19% {
+        opacity: 1;
+        transform: translateY(-2px) scaleX(1.012) scaleY(.992);
+    }
+    26% {
+        opacity: 1;
+        transform: translateY(1px) scaleX(.997) scaleY(1.006);
+    }
+    34%, 82% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(0) scale(.992);
+    }
 }
 
 body.easter-theme #splash-screen > .logo-anim.easter-splash-logo-playing {
-    animation: easterSplashClayReveal 4.5s cubic-bezier(.22, 1, .36, 1) forwards !important;
+    transform-origin: 50% 58%;
+    will-change: transform, opacity;
+    animation: easterSplashClayReveal 4.5s cubic-bezier(.2, .72, .25, 1) forwards !important;
 }
 
 body.easter-theme #splash-screen > .logo-anim .splash-logo-fallback {
@@ -3622,7 +3644,8 @@ body.easter-theme #splash-screen > .logo-anim .easter-splash-clay-title-png {
 
 @media (prefers-reduced-motion: reduce) {
     @keyframes easterSplashClayRevealReduced {
-        0%, 90% { opacity: 1; }
+        0% { opacity: 0; }
+        12%, 88% { opacity: 1; }
         100% { opacity: 0; }
     }
 
@@ -4142,6 +4165,33 @@ body.easter-theme #riznica-screen .riznica-category-soft-clay-icon {
     filter: drop-shadow(0 3px 5px rgba(94,48,126,0.18));
 }
 
+.riznica-trophy-soft-clay-icon {
+    display: none;
+}
+
+body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+    filter: none;
+}
+
+body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    width: 78px;
+    height: 78px;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(94,48,126,0.20));
+}
+
 body.easter-theme #riznica-screen .riznica-item-status {
     display: flex;
     align-items: center;
@@ -4228,6 +4278,12 @@ body.easter-theme .custom-toast.treasury-insufficient-toast .custom-toast-copy {
         width: 25px;
         height: 25px;
         flex-basis: 25px;
+    }
+
+    body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual,
+    body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+        width: 72px;
+        height: 72px;
     }
 }
 

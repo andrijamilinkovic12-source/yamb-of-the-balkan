@@ -2255,6 +2255,10 @@ const ghostSessions = {};
 const DISCONNECT_GRACE_MS = 30 * 1000;
 const TOURNAMENT_DISCONNECT_GRACE_MS = 5 * 60 * 1000;
 const MUTUAL_DISCONNECT_WINDOW_MS = 2 * 1000;
+// Native lifecycle callbacks from two devices can cross the wire a few hundred
+// milliseconds apart. This is only a classification tolerance; it does not add
+// time to either player's reconnect grace.
+const MUTUAL_APP_BACKGROUND_WINDOW_MS = 2500;
 const RECONNECT_RESUME_MIN_TURN_MS = 15 * 1000;
 const TOURNAMENT_PRESENCE_STALE_MS = 4500;
 const SERVER_TECHNICAL_SYNC_IGNORE_WINDOW_MS = 20000;
@@ -2343,7 +2347,10 @@ function getMutualDisconnectGraceState(roomId, state, now = Date.now()) {
     if (!allDisconnected) return null;
 
     const startedAtValues = entries.map(({ ghost }) => toSafeInt(ghost.startedAt, now));
-    if (Math.max(...startedAtValues) - Math.min(...startedAtValues) > MUTUAL_DISCONNECT_WINDOW_MS) return null;
+    const mutualWindowMs = entries.every(({ ghost }) => ghost.source === 'app_backgrounded')
+        ? MUTUAL_APP_BACKGROUND_WINDOW_MS
+        : MUTUAL_DISCONNECT_WINDOW_MS;
+    if (Math.max(...startedAtValues) - Math.min(...startedAtValues) > mutualWindowMs) return null;
 
     const graceMs = getDisconnectGraceMs(roomId);
     const resolveAt = Math.max(...startedAtValues.map((startedAt) => startedAt + graceMs));

@@ -113,7 +113,7 @@
           label.textContent = labelFor(row); value.textContent = valueFor(row); li.append(label, value); list.append(li);
         });
       }
-      const disconnectReasonLabel = { ping_timeout: 'Istek pinga', transport_error: 'Greška transporta', transport_closed: 'Transport zatvoren', server_disconnect: 'Server prekinuo vezu', client_disconnect: 'Klijent prekinuo vezu', other: 'Drugi Socket.IO razlog', unknown: 'Nepoznat razlog' };
+      const disconnectReasonLabel = { app_backgrounded: 'Promena stanja aplikacije', ping_timeout: 'Istek pinga', transport_error: 'Greška transporta', transport_closed: 'Transport zatvoren', server_disconnect: 'Server prekinuo vezu', client_disconnect: 'Klijent prekinuo vezu', other: 'Drugi Socket.IO razlog', unknown: 'Nepoznat razlog' };
       const disconnectTriggerLabel = { disconnect: 'Socket prekid', app_backgrounded: 'Aplikacija u pozadini', presence_stale_timeout: 'Istek prisutnosti' };
       const disconnectOutcomeLabel = { pending: 'Čeka oporavak', recovered: 'Veza vraćena', technical_result: 'Tehnički rezultat', ended_without_penalty: 'Završeno bez kazne', mutual_disconnect: 'Obostrani prekid · bez kazne' };
       function renderDisconnectDiagnostics(rows) {

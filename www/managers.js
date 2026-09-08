@@ -3540,6 +3540,8 @@ class ShopManager {
                     visualHtml = `<div class="dice-preview preview-${item.id}">⚅</div>`;
                 } else if (this.type === 'effect') {
                     visualHtml = `<div class="effect-preview-box ${item.cssClass}">${item.innerHtml || ''}</div>`;
+                } else if (this.type === 'trophy' && item.easterIcon) {
+                    visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${item.easterIcon}" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else {
                     visualHtml = `<div class="icon">${item.icon}</div>`;
                 }

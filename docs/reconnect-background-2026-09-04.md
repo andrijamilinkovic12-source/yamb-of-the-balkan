@@ -20,6 +20,7 @@ Stara dijagnostika ne razlikuje zaključavanje telefona, stvarno minimizovanje, 
 - Zaštićeni su zakašnjeli native odgovori, reconnect callback posle novog pause događaja, poruke druge sobe i timeout prethodne grejs sesije.
 - Nova dijagnostika beleži konkretan lifecycle izvor, vreme početka meča, starost meča i broj poteza. Background ima zasebnu reasonClass, umesto klasifikacije kao nepoznata socket greška. Monitor API izlaže nova polja; zaseban dashboard može zahtevati dopunu prikaza oznaka.
 - Trajanje grejsa ostaje 30 s za obične online režime i 5 min za turnire. Ne poništavati grejs samo zato što je socket povezan: povezana aplikacija može stvarno biti u pozadini.
+- Naknadna analiza slučaja `a441cc52` pokazala je dva `app_backgrounded` događaja razdvojena 2017 ms. Uvedena je uska tolerancija od 2500 ms samo kada oba igrača prijave pozadinu; obični socket prekidi ostaju na 2000 ms. Ovo menja samo klasifikaciju obostranog prekida, ne produžava reconnect grejs. Monitor sada prikazuje „Promena stanja aplikacije“ umesto netačnog „Nepoznat razlog“.
 
 ## Verifikacija i ograničenja
 
