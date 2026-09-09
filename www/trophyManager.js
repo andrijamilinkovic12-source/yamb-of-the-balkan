@@ -480,10 +480,16 @@ class TrophyManager {
         const desc = trophy.desc[lang] || trophy.desc['sr'];
         const reward = rewardOverride !== null ? rewardOverride : trophy.reward;
         const rewardHtml = reward > 0 ? `<div class="tp-reward">+${reward} ${dukatIconHtml()}</div>` : '';
-        const iconHtml = (document.body.classList.contains('easter-theme')
-            || (localStorage.getItem('yamb_theme') || 'dark') === 'easter')
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const isEasterTheme = document.body.classList.contains('easter-theme')
+            || activeTheme === 'easter';
+        const isDesertTheme = document.body.classList.contains('desert-theme')
+            || activeTheme === 'desert';
+        const iconHtml = isEasterTheme
             ? '<img class="easter-trophy-popup-icon" src="assets/easter-soft-clay/statistics/trophies-v3.png?v=1" alt="" aria-hidden="true" decoding="async">'
-            : trophy.icon;
+            : (isDesertTheme && trophy.desertIcon
+                ? `<img class="desert-trophy-popup-icon" src="${trophy.desertIcon}" alt="" aria-hidden="true" decoding="async">`
+                : trophy.icon);
 
         div.innerHTML = `
             <div class="tp-icon">${iconHtml}</div>

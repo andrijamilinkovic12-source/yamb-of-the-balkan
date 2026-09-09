@@ -3493,11 +3493,24 @@ class ShopManager {
     }
 
     getEasterTreasuryStatusIcon(iconName, className = '') {
-        return `<img class="riznica-status-soft-clay-icon ${className}" src="assets/easter-soft-clay/treasury/${iconName}-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+        const easterIconName = iconName === 'status-locked' ? 'status-locked-v3' : `${iconName}-v2`;
+        const easterVersion = iconName === 'status-locked' ? 2 : 1;
+        return `<img class="riznica-status-soft-clay-icon ${className}" src="assets/easter-soft-clay/treasury/${easterIconName}.png?v=${easterVersion}" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+    }
+
+    getTreasuryLockIcon() {
+        return '<span class="riznica-lock-fallback" aria-hidden="true">🔒</span><img class="riznica-lock-soft-clay-icon" src="assets/easter-soft-clay/treasury/status-locked-v3.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-desert-soft-clay-icon" src="assets/desert-soft-clay/treasury/status-locked.png?v=3" alt="" aria-hidden="true" decoding="async">';
+    }
+
+    getThemedTrophyCardSource(item) {
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const source = activeTheme === 'desert' ? item?.desertIcon : item?.easterIcon;
+        const safeSource = String(source || item?.easterIcon || '');
+        return `${safeSource}${safeSource.includes('?') ? '&' : '?'}card=384-v1`;
     }
 
     getTreasuryRewardVideoIcon() {
-        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" src="assets/desert-soft-clay/economy/rewarded-video.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">';
+        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">';
     }
 
     getTreasuryInsufficientIconPath() {
@@ -3541,7 +3554,7 @@ class ShopManager {
                 } else if (this.type === 'effect') {
                     visualHtml = `<div class="effect-preview-box ${item.cssClass}">${item.innerHtml || ''}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {
-                    visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${item.easterIcon}" alt="" aria-hidden="true" decoding="async"></div>`;
+                    visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else {
                     visualHtml = `<div class="icon">${item.icon}</div>`;
                 }
@@ -3611,7 +3624,7 @@ class ShopManager {
                         }
                     }
                 } else {
-                    btnHtml = `<div class="desc">${isUnlocked ? itemDesc : '??? (🔒)'}</div>`;
+                    btnHtml = `<div class="desc">${isUnlocked ? itemDesc : `??? (${this.getTreasuryLockIcon()})`}</div>`;
                 }
 
                 card.innerHTML = `

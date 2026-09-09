@@ -3046,23 +3046,17 @@ body.desert-theme #highscores-screen .hs-podium-medal {
 }
 
 body.desert-theme #highscores-screen .hs-podium-rank-number {
-    display: flex;
+    display: block;
     position: absolute;
-    right: -7px;
-    bottom: -6px;
-    z-index: 3;
-    width: 17px;
-    height: 17px;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255,248,230,.82);
-    border-radius: 50%;
-    background: #985026;
-    color: #fff8e8;
-    box-shadow: 0 3px 6px rgba(93,57,33,.24);
-    font-size: .64rem;
-    font-weight: 900;
-    line-height: 1;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
 }
 
 body.desert-theme #highscores-screen .hs-list-state {
@@ -3146,22 +3140,17 @@ body.desert-theme .waiting-podium-medal {
 }
 
 body.desert-theme .waiting-podium-rank-number {
-    display: flex;
+    display: block;
     position: absolute;
-    right: -7px;
-    bottom: -4px;
-    z-index: 2;
-    width: 14px;
-    height: 14px;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(255,248,230,.82);
-    border-radius: 50%;
-    background: #985026;
-    color: #fff8e8;
-    font-size: .52rem;
-    font-weight: 900;
-    line-height: 1;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
 }
 
 body.desert-theme .waiting-hof-loading-state,
@@ -3580,11 +3569,13 @@ body.easter-theme .splash-language-switcher {
     transform: none !important;
 }
 
-.easter-splash-clay-title-png {
+.easter-splash-clay-title-png,
+.desert-splash-clay-title-png {
     display: none;
 }
 
-body.easter-theme #splash-screen > .logo-anim {
+body.easter-theme #splash-screen > .logo-anim,
+body.desert-theme #splash-screen > .logo-anim {
     display: block !important;
     width: 100%;
     line-height: 1 !important;
@@ -3620,17 +3611,20 @@ body.easter-theme #splash-screen > .logo-anim {
     }
 }
 
-body.easter-theme #splash-screen > .logo-anim.easter-splash-logo-playing {
+body.easter-theme #splash-screen > .logo-anim.easter-splash-logo-playing,
+body.desert-theme #splash-screen > .logo-anim.desert-splash-logo-playing {
     transform-origin: 50% 58%;
     will-change: transform, opacity;
     animation: easterSplashClayReveal 4.5s cubic-bezier(.2, .72, .25, 1) forwards !important;
 }
 
-body.easter-theme #splash-screen > .logo-anim .splash-logo-fallback {
+body.easter-theme #splash-screen > .logo-anim .splash-logo-fallback,
+body.desert-theme #splash-screen > .logo-anim .splash-logo-fallback {
     display: none !important;
 }
 
-body.easter-theme #splash-screen > .logo-anim .easter-splash-clay-title-png {
+body.easter-theme #splash-screen > .logo-anim .easter-splash-clay-title-png,
+body.desert-theme #splash-screen > .logo-anim .desert-splash-clay-title-png {
     display: block;
     width: min(88vw, 680px);
     max-height: 30vh;
@@ -3642,6 +3636,10 @@ body.easter-theme #splash-screen > .logo-anim .easter-splash-clay-title-png {
     filter: saturate(1.02) contrast(1.01);
 }
 
+body.desert-theme #splash-screen > .logo-anim .desert-splash-clay-title-png {
+    filter: saturate(.92) contrast(1.025) drop-shadow(0 10px 18px rgba(93,57,33,.18));
+}
+
 @media (prefers-reduced-motion: reduce) {
     @keyframes easterSplashClayRevealReduced {
         0% { opacity: 0; }
@@ -3649,7 +3647,8 @@ body.easter-theme #splash-screen > .logo-anim .easter-splash-clay-title-png {
         100% { opacity: 0; }
     }
 
-    body.easter-theme #splash-screen > .logo-anim.easter-splash-logo-playing {
+    body.easter-theme #splash-screen > .logo-anim.easter-splash-logo-playing,
+    body.desert-theme #splash-screen > .logo-anim.desert-splash-logo-playing {
         animation: easterSplashClayRevealReduced 4.5s linear forwards !important;
         transform: none !important;
     }
@@ -4169,6 +4168,11 @@ body.easter-theme #riznica-screen .riznica-category-soft-clay-icon {
     display: none;
 }
 
+.riznica-lock-soft-clay-icon,
+.riznica-lock-desert-soft-clay-icon {
+    display: none;
+}
+
 body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
     display: grid;
     place-items: center;
@@ -4190,6 +4194,20 @@ body.easter-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-sof
     object-fit: contain;
     pointer-events: none;
     filter: drop-shadow(0 5px 7px rgba(94,48,126,0.20));
+}
+
+body.easter-theme #riznica-screen .riznica-lock-fallback {
+    display: none;
+}
+
+body.easter-theme #riznica-screen .riznica-lock-soft-clay-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    vertical-align: -5px;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 3px rgba(94,48,126,0.18));
 }
 
 body.easter-theme #riznica-screen .riznica-item-status {
@@ -4971,7 +4989,7 @@ body.easter-theme #streak-overlay #streak-body [style*="background:rgba(0,0,0"] 
 body.easter-theme #streak-overlay .streak-modal-title,
 body.easter-theme #streak-overlay #streak-body [style*="color: #FF5722"],
 body.easter-theme #streak-overlay #streak-body [style*="color: #FF8A50"] {
-    color: #b44745 !important;
+    color: #71314c !important;
     text-shadow: 0 1px 0 rgba(255,255,255,0.86) !important;
 }
 
@@ -5578,7 +5596,6 @@ body.easter-theme #waiting-screen.is-random-online .ws-random-records {
 .daily-intro-mark-easter,
 .daily-intro-easter-wave,
 .daily-intro-mark-desert,
-.daily-intro-desert-wave,
 .daily-intro-mark-nebula,
 .daily-intro-nebula-wave {
     display: none;
@@ -5689,8 +5706,8 @@ body.easter-theme #daily-intro.theme-easter .daily-intro-mark-wrap::after {
     }
 }
 
-/* Pustinjsko staklo — isti provereni 4,6 s raspored Dnevnog izazova kao Vaskrs,
-   sa zasebnim Desert Soft Clay znakom, paletom i talasom naslova. */
+/* Pustinjsko staklo — isti provereni 4,6 s icon-only uvod kao Vaskrs,
+   sa zasebnim Desert Soft Clay znakom, paletom i mirnim pulsiranjem. */
 #daily-intro.theme-desert {
     --daily-intro-text: #5e3924;
     --daily-intro-glow: rgba(176, 99, 56, .22);
@@ -5738,6 +5755,7 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
     height: 100%;
     object-fit: contain;
     filter: none !important;
+    animation: easterRoomIconPulse 1.8s ease-in-out infinite;
 }
 
 #daily-intro.theme-desert .daily-intro-word {
@@ -5745,41 +5763,16 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
 }
 
 #daily-intro.theme-desert .daily-intro-title {
-    min-height: clamp(52px, 8vh, 72px);
-    width: min(94vw, 720px);
-    font-size: clamp(1.75rem, 7.6vw, 3rem);
-    line-height: 1;
-    letter-spacing: clamp(.7px, .35vw, 2px);
-    color: #5e3924 !important;
-    text-shadow:
-        0 2px 0 rgba(255,247,225,.78),
-        0 7px 17px rgba(93,57,36,.18) !important;
-    margin-top: 0;
+    display: none !important;
 }
 
-#daily-intro.theme-desert .daily-intro-desert-wave {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: nowrap;
-    white-space: nowrap;
+@media (prefers-reduced-motion: reduce) {
+    #daily-intro.theme-desert .daily-intro-mark-desert {
+        animation: none !important;
+    }
 }
 
-#daily-intro.theme-desert .daily-intro-wave-letter,
-#daily-intro.theme-desert .daily-intro-wave-space {
-    display: inline-block;
-}
-
-#daily-intro.theme-desert .daily-intro-wave-letter {
-    animation: desertDailyTitleWave 1.05s cubic-bezier(.34, 1.56, .64, 1) both;
-    animation-delay: calc(350ms + (var(--wave-index) * 75ms));
-    transform-origin: 50% 75%;
-}
-
-#daily-intro.theme-desert .daily-intro-wave-space {
-    width: .34em;
-}
-
+/* Zajednički Desert talas ostaje dostupan drugim room intro ekranima. */
 @keyframes desertDailyTitleWave {
     0%, 100% {
         transform: translateY(0) scale(1);
@@ -5795,12 +5788,6 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
         transform: translateY(2px) scale(.985);
         color: #397f80;
         filter: none;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    #daily-intro.theme-desert .daily-intro-wave-letter {
-        animation: none !important;
     }
 }
 
@@ -5858,11 +5845,13 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
 }
 
 /* Vaskrs / izabrane sobe: samo velika ikona, bez ponovljenog naziva sobe. */
-.easter-room-intro.theme-easter.easter-room-intro--icon-only .easter-room-intro-title--hidden {
+.easter-room-intro.theme-easter.easter-room-intro--icon-only .easter-room-intro-title--hidden,
+.easter-room-intro.theme-desert.easter-room-intro--icon-only .easter-room-intro-title--hidden {
     display: none;
 }
 
-.easter-room-intro.theme-easter.easter-room-intro--icon-only .easter-room-intro-mark-wrap {
+.easter-room-intro.theme-easter.easter-room-intro--icon-only .easter-room-intro-mark-wrap,
+.easter-room-intro.theme-desert.easter-room-intro--icon-only .easter-room-intro-mark-wrap {
     position: relative;
 }
 
@@ -5870,9 +5859,18 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
     animation: easterRoomIconPulse 1.8s ease-in-out infinite;
 }
 
+.easter-room-intro.theme-desert.easter-room-intro--icon-only .easter-room-intro-mark {
+    animation: desertRoomIconPulse 1.8s ease-in-out infinite;
+}
+
 @keyframes easterRoomIconPulse {
     0%, 100% { transform: scale(1); filter: brightness(1); }
     50% { transform: scale(1.035); filter: brightness(1.035); }
+}
+
+@keyframes desertRoomIconPulse {
+    0%, 100% { transform: scale(var(--easter-room-icon-scale, 1)); filter: brightness(1); }
+    50% { transform: scale(var(--easter-room-icon-pulse-scale, 1.035)); filter: brightness(1.035); }
 }
 
 .easter-room-intro-title {
@@ -5966,7 +5964,8 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
 @media (prefers-reduced-motion: reduce) {
     .easter-room-intro-wave-letter,
     .easter-room-intro.theme-easter.easter-room-intro--icon-only .easter-room-intro-mark-wrap,
-    .easter-room-intro.theme-easter.easter-room-intro--icon-only .easter-room-intro-mark {
+    .easter-room-intro.theme-easter.easter-room-intro--icon-only .easter-room-intro-mark,
+    .easter-room-intro.theme-desert.easter-room-intro--icon-only .easter-room-intro-mark {
         animation: none !important;
     }
 }
@@ -6700,7 +6699,7 @@ body.desert-theme #splash-screen,
 body.desert-theme #quote-screen,
 body.desert-theme #waiting-screen,
 body.desert-theme #game-over-screen { background: linear-gradient(180deg, rgba(255,242,210,.24), rgba(151,80,31,.12)), var(--desert-theme-bg-image) center / cover no-repeat !important; }
-body.desert-theme #splash-screen .logo-anim,
+body.desert-theme #splash-screen .logo-anim { filter: none !important; }
 body.desert-theme #splash-screen > img { filter: sepia(.72) saturate(1.18) hue-rotate(340deg) drop-shadow(0 10px 18px rgba(106,54,20,.28)) !important; }
 body.desert-theme #splash-screen .splash-copy-panel { background: rgba(255,246,224,.48) !important; border-color: rgba(255,255,255,.62) !important; box-shadow: var(--desert-ui-raised) !important; }
 body.desert-theme #splash-screen #dugmeGooglePrijava { background: linear-gradient(145deg, rgba(255,250,235,.92), rgba(234,191,129,.84)) !important; color: var(--desert-ui-ink-strong) !important; border: var(--desert-ui-border) !important; box-shadow: var(--desert-ui-raised) !important; }
@@ -7096,7 +7095,7 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1") center / contain no-repeat;
+    background: url("assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=1") center / contain no-repeat;
     opacity: .16;
     filter: grayscale(1) sepia(.26) saturate(1.35) hue-rotate(236deg) brightness(.72) contrast(1.08);
     pointer-events: none;
@@ -7112,8 +7111,8 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
     box-sizing: border-box;
 }
 
-/* Vaskrs — Kvartalna liga koristi izabrani YotB QL Soft Clay znak i isti
-   standardizovani 4,6 s uvod, razmak i talas naslova kao ostale sobe. */
+/* Vaskrs — Kvartalna liga koristi izabrani YotB QL Soft Clay znak kao
+   icon-only 4,6 s uvod sa istim mirnim pulsom kao ostale sobe. */
 .league-intro-mark-easter {
     display: none;
 }
@@ -7153,23 +7152,12 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
     width: 100%;
     height: 100%;
     object-fit: contain;
+    transform-origin: center;
+    animation: easterRoomIconPulse 1.8s ease-in-out infinite;
 }
 
 #league-intro.theme-easter .league-intro-title {
-    gap: 0;
-    width: min(94vw, 720px);
-    min-height: clamp(52px, 8vh, 72px);
-    margin-top: 0;
-    color: #6b2c8f;
-    font-family: 'Montserrat', sans-serif;
-    font-size: clamp(1.45rem, 6.2vw, 2.55rem);
-    font-weight: 900;
-    line-height: 1;
-    letter-spacing: clamp(.4px, .25vw, 1.5px);
-    white-space: nowrap;
-    text-shadow:
-        0 2px 0 rgba(255,255,255,.94),
-        0 7px 17px rgba(107,44,143,.18);
+    display: none !important;
 }
 
 .league-intro-easter-wave-letter,
@@ -7188,7 +7176,8 @@ body.easter-theme #main-menu > div[style*="margin-top: 50px"] > .main-league-car
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .league-intro-easter-wave-letter {
+    .league-intro-easter-wave-letter,
+    #league-intro.theme-easter .league-intro-mark-easter {
         animation: none !important;
     }
 }
@@ -7739,6 +7728,30 @@ body.desert-theme #main-menu .main-online-soft-clay-icon-desert {
     object-fit: contain;
     pointer-events: none;
     filter: drop-shadow(0 3px 5px rgba(93,57,33,.17));
+    transform-origin: center;
+    animation: desertOnlineRoomSignal 2.35s ease-in-out infinite;
+}
+
+@keyframes desertOnlineRoomSignal {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+        filter: drop-shadow(0 3px 5px rgba(93,57,33,.17)) brightness(1);
+    }
+    50% {
+        transform: translateY(-1.5px) scale(1.045);
+        filter: drop-shadow(0 3px 5px rgba(93,57,33,.17)) brightness(1.055);
+    }
+}
+
+body.desert-theme #main-menu .main-online-card:active .main-online-soft-clay-icon-desert {
+    animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.desert-theme #main-menu .main-online-soft-clay-icon-desert {
+        animation: none !important;
+        transform: none;
+    }
 }
 
 body.desert-theme #online-players-overlay .online-players-title {
@@ -8659,6 +8672,24 @@ body.desert-theme #main-menu .main-economy-soft-clay-icon-desert {
     visibility: visible;
     pointer-events: none;
     filter: drop-shadow(0 5px 8px rgba(93,57,33,.18));
+    transform-origin: center;
+    animation: desertEconomyRoomSway 2.7s ease-in-out infinite;
+}
+
+@keyframes desertEconomyRoomSway {
+    0%, 100% { transform: translateY(0) rotate(-1.8deg) scale(1); }
+    50% { transform: translateY(-2px) rotate(1.8deg) scale(1.025); }
+}
+
+body.desert-theme #main-menu .main-economy-card:active .main-economy-soft-clay-icon-desert {
+    animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.desert-theme #main-menu .main-economy-soft-clay-icon-desert {
+        animation: none !important;
+        transform: none;
+    }
 }
 
 body.desert-theme #undo-menu-overlay .economy-card-header {
@@ -9552,6 +9583,7 @@ body.easter-theme .h2h-empty-soft-clay-icon {
 }
 
 .h2h-detail-vs-icon-easter,
+.h2h-detail-vs-icon-desert,
 .h2h-detail-stat-icon {
     display: none;
 }
@@ -9605,6 +9637,58 @@ body.easter-theme .h2h-detail-stats {
 }
 
 body.easter-theme .h2h-detail-stats .h2h-stat-row {
+    min-height: 30px;
+}
+
+body.desert-theme .h2h-detail-players {
+    grid-template-columns: 1fr 50px 1fr;
+}
+
+body.desert-theme .h2h-detail-vs {
+    width: 50px;
+    height: 50px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+body.desert-theme .h2h-detail-vs-text {
+    display: none;
+}
+
+body.desert-theme .h2h-detail-vs-icon-desert {
+    display: block;
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 7px rgba(96, 57, 31, .22));
+}
+
+body.desert-theme .h2h-detail-stat-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+}
+
+body.desert-theme .h2h-detail-stat-icon-desert {
+    display: block;
+    width: 26px;
+    height: 26px;
+    flex: 0 0 26px;
+    object-fit: contain;
+}
+
+body.desert-theme .h2h-detail-stats {
+    gap: 7px;
+    padding: 11px 12px;
+    background: rgba(255, 239, 205, .52);
+    border-color: rgba(166, 91, 48, .2);
+    box-shadow: inset 3px 3px 8px rgba(96, 57, 31, .08), inset -3px -3px 8px rgba(255, 250, 230, .64);
+}
+
+body.desert-theme .h2h-detail-stats .h2h-stat-row {
     min-height: 30px;
 }
 
@@ -9689,14 +9773,34 @@ body.easter-theme .power-index-podium-medal {
 body.easter-theme #pi-modal-overlay .pi-my-rank-dock.is-visible {
     display: block;
     flex: 0 0 auto;
-    padding: 10px 14px max(12px, env(safe-area-inset-bottom) + 6px);
-    background: rgba(252, 244, 255, .96);
+    --rank-dock-old-bottom: max(12px, calc(env(safe-area-inset-bottom) + 6px));
+    padding: calc(10px + var(--rank-dock-old-bottom) - 2mm) 14px 2mm;
+    background: linear-gradient(145deg, rgba(229, 216, 237, .98), rgba(215, 227, 207, .98)) !important;
     border-top: 1px solid rgba(139, 69, 190, .22);
     box-shadow: 0 -8px 22px rgba(107, 44, 143, .14);
 }
 
 body.easter-theme #pi-modal-overlay .pi-my-rank-dock .power-index-player-row {
     margin: 0;
+}
+
+body.easter-theme #pi-modal-overlay .pi-my-rank-dock.is-visible .power-index-player-row.is-pinned {
+    background: linear-gradient(145deg, rgba(207, 188, 220, .99), rgba(195, 212, 188, .98)) !important;
+    border: 1px solid rgba(107, 44, 143, .52) !important;
+    box-shadow:
+        4px 4px 10px rgba(107, 44, 143, .16),
+        -3px -3px 8px rgba(255,255,255,.54),
+        inset 1px 1px 2px rgba(255,255,255,.66) !important;
+}
+
+body.easter-theme #pi-modal-overlay .power-index-player-row.is-pinned .power-index-pinned-label,
+body.easter-theme #pi-modal-overlay .power-index-player-row.is-pinned .power-index-player-name {
+    color: #432550 !important;
+    text-shadow: none !important;
+}
+
+body.easter-theme #pi-modal-overlay .power-index-player-row.is-pinned .power-index-player-avatar {
+    border-color: rgba(107, 44, 143, .58) !important;
 }
 
 .streak-my-rank-dock {
@@ -9706,10 +9810,67 @@ body.easter-theme #pi-modal-overlay .pi-my-rank-dock .power-index-player-row {
 body.easter-theme #streak-overlay .streak-my-rank-dock.is-visible {
     display: block;
     flex: 0 0 auto;
-    padding: 10px 14px max(12px, env(safe-area-inset-bottom) + 6px);
-    background: rgba(255, 247, 242, .96);
+    --rank-dock-old-bottom: max(12px, calc(env(safe-area-inset-bottom) + 6px));
+    padding: calc(10px + var(--rank-dock-old-bottom) - 2mm) 14px 2mm;
+    background: linear-gradient(145deg, rgba(239, 216, 224, .98), rgba(226, 214, 235, .98)) !important;
     border-top: 1px solid rgba(255, 87, 34, .24);
     box-shadow: 0 -8px 22px rgba(255, 87, 34, .13);
+}
+
+body.easter-theme #streak-overlay .fire-streak-player-row {
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.84), transparent 40%),
+        linear-gradient(145deg, rgba(255,251,246,.96), rgba(237,229,247,.88)) !important;
+    border: 1px solid rgba(139,69,190,.20) !important;
+    box-shadow:
+        4px 4px 10px rgba(184,148,111,.14),
+        -4px -4px 10px rgba(255,255,255,.66),
+        inset 1px 1px 2px rgba(255,255,255,.84) !important;
+    color: #402848 !important;
+}
+
+body.easter-theme #streak-overlay .streak-my-rank-dock.is-visible .fire-streak-player-row.is-pinned {
+    background: linear-gradient(145deg, rgba(220, 190, 202, .99), rgba(208, 195, 220, .98)) !important;
+    border: 1px solid rgba(151,55,91,.52) !important;
+    box-shadow:
+        4px 4px 10px rgba(151,55,91,.15),
+        -3px -3px 8px rgba(255,255,255,.52),
+        inset 1px 1px 2px rgba(255,255,255,.62) !important;
+}
+
+body.easter-theme #streak-overlay .fire-streak-player-name {
+    color: #402848 !important;
+    text-shadow: none !important;
+}
+
+body.easter-theme #streak-overlay .fire-streak-player-row.is-first .fire-streak-player-name,
+body.easter-theme #streak-overlay .fire-streak-player-row.is-me .fire-streak-player-name,
+body.easter-theme #streak-overlay .fire-streak-pinned-label,
+body.easter-theme #streak-overlay .fire-streak-value {
+    color: #71314c !important;
+    text-shadow: none !important;
+}
+
+body.easter-theme #streak-overlay .fire-streak-player-avatar {
+    border-color: rgba(139,69,190,.34) !important;
+}
+
+body.easter-theme #streak-overlay .fire-streak-player-row.is-me .fire-streak-player-avatar {
+    border-color: rgba(151,55,91,.58) !important;
+}
+
+body.easter-theme #streak-overlay .fire-streak-current-pill {
+    color: #4d3653 !important;
+    background: rgba(255,250,244,.72) !important;
+    border: 1px solid rgba(113,49,76,.18);
+}
+
+body.easter-theme #streak-overlay .fire-streak-current-text.is-active {
+    color: #2d6642 !important;
+}
+
+body.easter-theme #streak-overlay .fire-streak-current-text.is-broken {
+    color: #5d495f !important;
 }
 
 body.easter-theme .fire-streak-podium-medal {
@@ -9884,6 +10045,106 @@ body.desert-theme .fire-streak-podium-medal {
     max-width: none;
     object-fit: contain;
     flex: 0 0 42px;
+}
+
+/* Pustinjsko staklo: isti fiksni "Moje mesto" dok i iste mere kao Vaskrs. */
+body.desert-theme #pi-modal-overlay .pi-my-rank-dock.is-visible {
+    display: block;
+    flex: 0 0 auto;
+    --rank-dock-old-bottom: max(12px, calc(env(safe-area-inset-bottom) + 6px));
+    padding: calc(10px + var(--rank-dock-old-bottom) - 2mm) 14px 2mm;
+    background: linear-gradient(145deg, rgba(250,231,193,.98), rgba(224,192,144,.98)) !important;
+    border-top: 1px solid rgba(151,84,35,.24);
+    box-shadow: 0 -8px 22px rgba(121,64,29,.15);
+}
+
+body.desert-theme #pi-modal-overlay .pi-my-rank-dock .power-index-player-row {
+    margin: 0;
+}
+
+body.desert-theme #pi-modal-overlay .pi-my-rank-dock.is-visible .power-index-player-row.is-pinned {
+    background: linear-gradient(145deg, rgba(231,190,132,.99), rgba(188,195,153,.98)) !important;
+    border: 1px solid rgba(47,127,122,.54) !important;
+    box-shadow:
+        4px 4px 10px rgba(121,64,29,.16),
+        -3px -3px 8px rgba(255,250,233,.56),
+        inset 1px 1px 2px rgba(255,255,255,.64) !important;
+}
+
+body.desert-theme #pi-modal-overlay .power-index-player-row.is-pinned .power-index-pinned-label,
+body.desert-theme #pi-modal-overlay .power-index-player-row.is-pinned .power-index-player-name {
+    color: var(--desert-ui-ink-strong, #39200f) !important;
+    text-shadow: none !important;
+}
+
+body.desert-theme #pi-modal-overlay .power-index-player-row.is-pinned .power-index-player-avatar {
+    border-color: rgba(47,127,122,.62) !important;
+}
+
+body.desert-theme #streak-overlay .streak-my-rank-dock.is-visible {
+    display: block;
+    flex: 0 0 auto;
+    --rank-dock-old-bottom: max(12px, calc(env(safe-area-inset-bottom) + 6px));
+    padding: calc(10px + var(--rank-dock-old-bottom) - 2mm) 14px 2mm;
+    background: linear-gradient(145deg, rgba(250,229,190,.98), rgba(232,191,139,.98)) !important;
+    border-top: 1px solid rgba(188,91,46,.28);
+    box-shadow: 0 -8px 22px rgba(121,64,29,.15);
+}
+
+body.desert-theme #streak-overlay .fire-streak-player-row {
+    background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.72), transparent 40%),
+        linear-gradient(145deg, rgba(255,247,226,.96), rgba(232,197,148,.90)) !important;
+    border: 1px solid rgba(151,84,35,.22) !important;
+    box-shadow:
+        4px 4px 10px rgba(121,64,29,.14),
+        -4px -4px 10px rgba(255,255,255,.58),
+        inset 1px 1px 2px rgba(255,255,255,.76) !important;
+    color: var(--desert-ui-ink, #52331d) !important;
+}
+
+body.desert-theme #streak-overlay .streak-my-rank-dock.is-visible .fire-streak-player-row.is-pinned {
+    background: linear-gradient(145deg, rgba(224,160,109,.99), rgba(205,171,126,.98)) !important;
+    border: 1px solid rgba(151,70,35,.56) !important;
+    box-shadow:
+        4px 4px 10px rgba(121,64,29,.17),
+        -3px -3px 8px rgba(255,244,218,.50),
+        inset 1px 1px 2px rgba(255,255,255,.58) !important;
+}
+
+body.desert-theme #streak-overlay .fire-streak-player-name {
+    color: var(--desert-ui-ink, #52331d) !important;
+    text-shadow: none !important;
+}
+
+body.desert-theme #streak-overlay .fire-streak-player-row.is-first .fire-streak-player-name,
+body.desert-theme #streak-overlay .fire-streak-player-row.is-me .fire-streak-player-name,
+body.desert-theme #streak-overlay .fire-streak-pinned-label,
+body.desert-theme #streak-overlay .fire-streak-value {
+    color: #7b321b !important;
+    text-shadow: none !important;
+}
+
+body.desert-theme #streak-overlay .fire-streak-player-avatar {
+    border-color: rgba(47,127,122,.38) !important;
+}
+
+body.desert-theme #streak-overlay .fire-streak-player-row.is-me .fire-streak-player-avatar {
+    border-color: rgba(151,70,35,.64) !important;
+}
+
+body.desert-theme #streak-overlay .fire-streak-current-pill {
+    color: var(--desert-ui-ink, #52331d) !important;
+    background: rgba(255,247,226,.72) !important;
+    border: 1px solid rgba(121,64,29,.18);
+}
+
+body.desert-theme #streak-overlay .fire-streak-current-text.is-active {
+    color: #27614e !important;
+}
+
+body.desert-theme #streak-overlay .fire-streak-current-text.is-broken {
+    color: #6e5542 !important;
 }
 
 body.desert-theme .stats-overview-panel > div:first-child {
@@ -10616,9 +10877,12 @@ body.desert-theme #main-menu .spec-riznica .desert-soft-clay-special-icon {
     pointer-events: none;
     transform: translate(-50%, -50%);
     filter: drop-shadow(0 5px 8px rgba(93,57,33,.18));
+    transform-origin: center;
+    animation: desertTreasuryBreath 2.6s ease-in-out infinite;
 }
 
 body.desert-theme #main-menu .spec-riznica:active .desert-soft-clay-special-icon {
+    animation: none !important;
     transform: translate(-50%, -47%) scale(.95);
 }
 
@@ -10626,6 +10890,17 @@ body.desert-theme #main-menu .spec-riznica:active {
     background: transparent !important;
     border-color: transparent !important;
     box-shadow: none !important;
+}
+
+@keyframes desertTreasuryBreath {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        filter: brightness(1) drop-shadow(0 5px 8px rgba(93,57,33,.18));
+    }
+    50% {
+        transform: translate(-50%, calc(-50% - 2px)) scale(1.035);
+        filter: brightness(1.045) drop-shadow(0 7px 10px rgba(93,57,33,.20));
+    }
 }
 
 body.desert-theme #riznica-screen .riznica-header-logo-default,
@@ -10812,6 +11087,46 @@ body.desert-theme #riznica-screen .card .duration {
     color: var(--desert-ui-muted) !important;
 }
 
+body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-fallback {
+    display: none;
+}
+
+body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual {
+    display: grid;
+    place-items: center;
+    width: 78px;
+    height: 78px;
+    margin-bottom: 8px;
+    line-height: 1;
+    filter: none;
+}
+
+body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    width: 78px;
+    height: 78px;
+}
+
+body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+    display: block;
+    object-fit: contain;
+    pointer-events: none;
+    filter: drop-shadow(0 5px 7px rgba(93,57,33,.20));
+}
+
+body.desert-theme #riznica-screen .riznica-lock-fallback {
+    display: none;
+}
+
+body.desert-theme #riznica-screen .riznica-lock-desert-soft-clay-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    vertical-align: -5px;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 3px rgba(93,57,33,.18));
+}
+
 body.desert-theme #riznica-screen .riznica-item-status {
     display: flex;
     align-items: center;
@@ -10886,7 +11201,7 @@ body.desert-theme .custom-toast.treasury-insufficient-toast .custom-toast-copy {
     min-width: 0;
 }
 
-/* Desert Riznica uvod: ista 4,6 s geometrija, razmak i talas kao Vaskrs. */
+/* Desert Riznica uvod: ista 4,6 s geometrija i icon-only puls kao Vaskrs. */
 #riznica-intro.theme-desert {
     z-index: 1000002;
     gap: 0;
@@ -10910,7 +11225,7 @@ body.desert-theme .custom-toast.treasury-insufficient-toast .custom-toast-copy {
     height: clamp(210px, 34vmin, 290px);
     object-fit: contain;
     filter: drop-shadow(0 14px 18px rgba(93,57,33,.19));
-    animation: none;
+    animation: easterRoomIconPulse 1.8s ease-in-out infinite;
 }
 
 #riznica-intro.theme-desert .riznica-intro-line {
@@ -10938,8 +11253,103 @@ body.desert-theme .custom-toast.treasury-insufficient-toast .custom-toast-copy {
     animation: none;
 }
 
+#riznica-intro.theme-desert .riznica-intro-line {
+    display: none !important;
+}
+
 #riznica-intro.theme-desert .easter-room-intro-wave-letter {
     animation-name: desertDailyTitleWave;
+}
+
+/* Otključavanje trofeja ostaje funkcionalno isto kao u Vaskrs temi,
+   ali prikazuje konkretan Desert trofej i Desert dukat. */
+body.desert-theme img.dukat-icon-inline--desert {
+    object-fit: contain;
+    filter: drop-shadow(0 2px 3px rgba(93,57,33,.20)) !important;
+}
+
+body.desert-theme .trophy-popup {
+    background: var(--desert-ui-surface) !important;
+    border: var(--desert-ui-border) !important;
+    color: var(--desert-ui-ink) !important;
+    box-shadow: var(--desert-ui-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme .trophy-popup .tp-title,
+body.desert-theme .trophy-showcase-kicker,
+body.desert-theme .trophy-showcase-name {
+    color: var(--desert-ui-title) !important;
+    text-shadow: 0 1px 0 rgba(255,255,255,.66) !important;
+}
+
+body.desert-theme .trophy-popup .tp-desc,
+body.desert-theme .trophy-showcase-subtitle {
+    color: var(--desert-ui-muted) !important;
+}
+
+body.desert-theme .trophy-popup .tp-reward,
+body.desert-theme .trophy-showcase-reward {
+    color: var(--desert-ui-gold) !important;
+    background: rgba(255,244,219,.58) !important;
+    border: 1px solid rgba(184,116,47,.22) !important;
+}
+
+body.desert-theme .desert-trophy-popup-icon,
+body.desert-theme .desert-trophy-showcase-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+body.desert-theme .trophy-popup .tp-icon {
+    width: 58px;
+    height: 58px;
+    flex: 0 0 58px;
+    filter: drop-shadow(0 7px 10px rgba(93,57,33,.20));
+}
+
+body.desert-theme .trophy-showcase {
+    background:
+        radial-gradient(circle at 50% 22%, rgba(255,244,219,.30), transparent 42%),
+        linear-gradient(180deg, rgba(85,53,33,.36), rgba(38,86,84,.28)),
+        var(--desert-theme-bg-image) center / cover no-repeat !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+body.desert-theme .trophy-showcase-panel {
+    background: var(--desert-ui-surface) !important;
+    border: var(--desert-ui-border) !important;
+    color: var(--desert-ui-ink) !important;
+    box-shadow: var(--desert-ui-raised) !important;
+}
+
+body.desert-theme .trophy-showcase-card {
+    background: var(--desert-ui-surface-soft) !important;
+    border: 1px solid rgba(184,116,47,.20) !important;
+    box-shadow: var(--desert-ui-raised) !important;
+}
+
+body.desert-theme .trophy-showcase-icon {
+    overflow: visible;
+    border-radius: 14px;
+    background: var(--desert-ui-surface-inset) !important;
+    border-color: rgba(184,116,47,.18) !important;
+    box-shadow: var(--desert-ui-inset) !important;
+}
+
+body.desert-theme .trophy-showcase-total {
+    background: var(--desert-ui-surface-inset) !important;
+    border: 1px solid rgba(184,116,47,.20) !important;
+    color: var(--desert-ui-muted) !important;
+    box-shadow: var(--desert-ui-inset) !important;
+}
+
+body.desert-theme .trophy-showcase-total strong {
+    color: var(--desert-ui-title) !important;
 }
 
 @media (max-width: 480px) {
@@ -10964,11 +11374,32 @@ body.desert-theme .custom-toast.treasury-insufficient-toast .custom-toast-copy {
         height: 25px;
         flex-basis: 25px;
     }
+
+    body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-visual,
+    body.desert-theme #riznica-screen[data-riznica-tab="trophy"] .riznica-trophy-soft-clay-icon {
+        width: 72px;
+        height: 72px;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    body.desert-theme #main-menu .spec-riznica > .desert-soft-clay-special-icon,
+    body.desert-theme .trophy-showcase-panel::before,
+    body.desert-theme .trophy-showcase-card,
+    body.desert-theme .trophy-showcase-icon,
+    body.desert-theme .trophy-popup .tp-icon,
+    #riznica-intro.theme-desert .riznica-intro-gem-desert,
     #riznica-intro.theme-desert .easter-room-intro-wave-letter {
         animation: none !important;
+    }
+
+    body.desert-theme #main-menu .spec-riznica > .desert-soft-clay-special-icon {
+        transform: translate(-50%, -50%);
+    }
+
+    body.desert-theme .trophy-popup,
+    body.desert-theme .trophy-showcase {
+        transition-duration: .01ms !important;
     }
 }
 

@@ -541,9 +541,9 @@ class DnevniIzazov {
                 filter: drop-shadow(0 4px 5px rgba(0, 3, 16, 0.25)) drop-shadow(0 0 6px rgba(134, 247, 255, 0.12));
             }
 
-            /* Vaskrs — završna nagrada Dnevnog izazova koristi isti dukat asset
-               kao soba Dukati; globalni SVG ostaje za sve ostale teme. */
-            .daily-glass-easter-ducat-icon {
+            /* Tematske završne nagrade koriste isti dukat asset kao soba Dukati. */
+            .daily-glass-easter-ducat-icon,
+            .daily-glass-desert-ducat-icon {
                 display: inline-block;
                 width: 24px;
                 height: 24px;
@@ -553,11 +553,17 @@ class DnevniIzazov {
                 filter: drop-shadow(0 3px 4px rgba(92, 58, 94, 0.18));
             }
 
-            .daily-glass-easter-ducat-icon.daily-glass-easter-ducat-icon--reward-end {
+            .daily-glass-desert-ducat-icon {
+                filter: drop-shadow(0 3px 4px rgba(93, 57, 33, 0.18));
+            }
+
+            .daily-glass-easter-ducat-icon.daily-glass-easter-ducat-icon--reward-end,
+            .daily-glass-desert-ducat-icon.daily-glass-desert-ducat-icon--reward-end {
                 margin: 0 0 0 3px;
             }
 
-            .daily-glass-btn .daily-glass-easter-ducat-icon {
+            .daily-glass-btn .daily-glass-easter-ducat-icon,
+            .daily-glass-btn .daily-glass-desert-ducat-icon {
                 width: 26px;
                 height: 26px;
                 margin: 0 1px 0 3px;
@@ -643,10 +649,10 @@ class DnevniIzazov {
         overlay.innerHTML = `
             <div class="daily-glass-card" id="glass-daily-card">
                 <div class="daily-glass-header">
-                    <img class="daily-glass-room-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro-v5.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-task-mark-easter" src="assets/easter-soft-clay/daily/task-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-room-mark-desert" src="assets/desert-soft-clay/daily-challenge-pro.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-task-mark-desert" src="assets/desert-soft-clay/daily/task.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-desert" src="assets/desert-soft-clay/daily-challenge-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-desert" src="assets/desert-soft-clay/daily/task-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-room-mark-nebula" src="assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-task-mark-nebula" src="assets/severna-soft-clay/daily/task-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
                     <h2 class="daily-glass-title">${txtTitle}</h2>
@@ -860,8 +866,17 @@ class DnevniIzazov {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
-        this.setIntroTitle(leftWord, rightWord);
-        this.setEasterIntroWaveTitle(overlay);
+        const title = overlay.querySelector('.daily-intro-title');
+        const isDesertIconOnlyIntro = overlay.classList.contains('theme-desert');
+        if (isDesertIconOnlyIntro) {
+            if (leftWord) leftWord.textContent = '';
+            if (rightWord) rightWord.textContent = '';
+            title?.setAttribute('aria-hidden', 'true');
+        } else {
+            title?.removeAttribute('aria-hidden');
+            this.setIntroTitle(leftWord, rightWord);
+            this.setEasterIntroWaveTitle(overlay);
+        }
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
 
@@ -918,7 +933,7 @@ class DnevniIzazov {
         const message = activeTheme === 'easter'
             ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" src="assets/easter-soft-clay/daily/already-played-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
             : activeTheme === 'desert'
-                ? `<div class="daily-already-desert"><img class="daily-already-desert-icon" src="assets/desert-soft-clay/daily/already-played.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+                ? `<div class="daily-already-desert"><img class="daily-already-desert-icon" src="assets/desert-soft-clay/daily/already-played-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
                 : activeTheme === 'severna'
                     ? `<div class="daily-already-nebula"><img class="daily-already-nebula-icon" src="assets/severna-soft-clay/daily/already-played-v10.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
                     : t('dc_done');
@@ -951,7 +966,7 @@ class DnevniIzazov {
     setEasterIntroWaveTitle(overlay) {
         if (!overlay) return;
 
-        const waveTitles = overlay.querySelectorAll('.daily-intro-easter-wave, .daily-intro-desert-wave, .daily-intro-nebula-wave');
+        const waveTitles = overlay.querySelectorAll('.daily-intro-easter-wave, .daily-intro-nebula-wave');
         if (!waveTitles.length) return;
 
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
@@ -1151,12 +1166,12 @@ class DnevniIzazov {
 
         resDiv.innerHTML = `
             <img class="daily-glass-complete-mark-easter" src="assets/easter-soft-clay/daily/complete-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-            <img class="daily-glass-complete-mark-desert" src="assets/desert-soft-clay/daily/complete.png?v=1" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-desert" src="assets/desert-soft-clay/daily/complete-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
             <img class="daily-glass-complete-mark-nebula" src="assets/severna-soft-clay/daily/complete-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
             <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 <span class="daily-glass-reward-video-fallback" aria-hidden="true">🎥</span>
                 <img class="daily-glass-reward-video-mark-easter" src="assets/easter-soft-clay/daily/reward-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="daily-glass-reward-video-mark-desert" src="assets/desert-soft-clay/daily/reward-video-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-desert" src="assets/desert-soft-clay/daily/reward-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-nebula" src="assets/severna-soft-clay/daily/reward-video-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
                 ${t('btn_double_short')} ${this.getDailyRewardDukatIconHtml()} (x2)
             </button>
@@ -1173,9 +1188,17 @@ class DnevniIzazov {
     }
 
     getDailyRewardDukatIconHtml(options = {}) {
-        if (document.body && document.body.classList.contains('easter-theme')) {
+        const storedTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const isEasterTheme = document.body?.classList.contains('easter-theme') || storedTheme === 'easter';
+        const isDesertTheme = document.body?.classList.contains('desert-theme') || storedTheme === 'desert';
+
+        if (isEasterTheme) {
             const endClass = options.rewardEnd === true ? ' daily-glass-easter-ducat-icon--reward-end' : '';
             return `<img class="daily-glass-easter-ducat-icon${endClass}" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+        }
+        if (isDesertTheme) {
+            const endClass = options.rewardEnd === true ? ' daily-glass-desert-ducat-icon--reward-end' : '';
+            return `<img class="daily-glass-desert-ducat-icon${endClass}" src="assets/desert-soft-clay/economy/ducat-v2.png?v=1" alt="" aria-hidden="true" decoding="async">`;
         }
         return dukatIconHtml();
     }

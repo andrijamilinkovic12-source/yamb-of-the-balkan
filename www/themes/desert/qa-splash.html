@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pustinjsko staklo Pack — Splash QA</title>
   <link rel="stylesheet" href="../../style.css?v=5.6">
-  <link rel="stylesheet" href="../../teme.css?v=6.17">
+  <link rel="stylesheet" href="../../teme.css?v=6.56">
   <style>
     body { margin:0; min-height:100vh; font-family:Montserrat,Arial,sans-serif; }
     #splash-screen { position:relative !important; inset:auto !important; min-height:100vh; display:flex !important; flex-direction:column; align-items:center; justify-content:center; padding:28px; text-align:center; }
@@ -22,7 +22,10 @@
 <body class="desert-theme">
   <section id="splash-screen" class="screen active">
     <div class="qa-language"><button>SRB</button><button>ENG</button></div>
-    <div class="logo-anim">YAMB OF THE<br><span>BALKAN</span></div>
+    <div class="logo-anim desert-splash-logo-playing">
+      <span class="splash-logo-fallback">YAMB OF THE<br><span style="color:var(--gold-main)">BALKAN</span></span>
+      <img class="desert-splash-clay-title-png" src="/assets/desert-soft-clay/splash-title-soft-clay-v1.png" alt="Yamb of the Balkan" decoding="async" fetchpriority="high">
+    </div>
     <div class="splash-copy-panel"><p class="splash-quote-text">„Ko misli da je srećan, on je zaista srećan.”</p><p class="splash-author">— Jovan Dučić</p></div>
     <button id="dugmeGooglePrijava">PRIJAVI SE</button>
     <p class="qa-legal">Nastavkom prihvatate naše Uslove korišćenja i Politiku privatnosti.</p>

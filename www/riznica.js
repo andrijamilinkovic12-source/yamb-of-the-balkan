@@ -5,6 +5,7 @@ class RiznicaManager {
         this.currentTab = 'trophy';
         this.shop = null;
         this.isIntroPlaying = false;
+        this.trophyWarmupPromises = new Map();
         this.initGlobalModals();
     }
 
@@ -37,6 +38,11 @@ class RiznicaManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
+        if (overlay.classList.contains('theme-easter')) {
+            this.warmTrophyAssets('easter');
+        } else if (overlay.classList.contains('theme-desert')) {
+            this.warmTrophyAssets('desert');
+        }
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
         introText.textContent = '';
@@ -130,6 +136,44 @@ class RiznicaManager {
 
         knownThemes.forEach(theme => overlay.classList.remove(`theme-${theme}`));
         overlay.classList.add(`theme-${introTheme}`);
+    }
+
+    warmTrophyAssets(themeName) {
+        const theme = themeName === 'desert' ? 'desert' : 'easter';
+        if (this.trophyWarmupPromises.has(theme) || typeof SHOP_DATA === 'undefined') {
+            return this.trophyWarmupPromises.get(theme) || null;
+        }
+
+        const sources = (SHOP_DATA.TROPHIES || [])
+            .map(item => theme === 'desert' ? item?.desertIcon : item?.easterIcon)
+            .filter(Boolean)
+            .map(source => `${source}${source.includes('?') ? '&' : '?'}card=384-v1`);
+        let nextSource = 0;
+
+        const loadSource = source => new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = async () => {
+                try {
+                    if (typeof image.decode === 'function') await image.decode();
+                } catch (_) {}
+                resolve();
+            };
+            image.onerror = resolve;
+            image.src = source;
+        });
+        const worker = async () => {
+            while (nextSource < sources.length) {
+                const source = sources[nextSource++];
+                await loadSource(source);
+            }
+        };
+
+        const warmupPromise = Promise.all(
+            Array.from({ length: Math.min(4, sources.length) }, worker)
+        );
+        this.trophyWarmupPromises.set(theme, warmupPromise);
+        return warmupPromise;
     }
 
     close() {

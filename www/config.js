@@ -194,6 +194,12 @@ const SHOP_DATA = {
     ]
 };
 
+// Desert trofeji zadržavaju iste ID-jeve i uslove kao zajednički/Vaskrs set,
+// ali koriste poseban raster pack bez menjanja logike otključavanja.
+SHOP_DATA.TROPHIES.forEach(item => {
+    item.desertIcon = `assets/desert-soft-clay/treasury/trophies/${item.id}-v1.png?v=1`;
+});
+
 // Export (ako je potrebno za module, mada u browseru radi globalno)
 if (typeof window !== 'undefined') { Object.freeze(CONFIG); }
 if (typeof module !== 'undefined' && module.exports) { module.exports = CONFIG; }

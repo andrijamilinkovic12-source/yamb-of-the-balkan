@@ -1085,7 +1085,7 @@ async function checkLoginStatus() {
                 const stillOnSplash = !activeScreen || activeScreen.id === 'splash-screen';
                 if (window.app && !window.app.inviteDetected && stillOnSplash) {
                     const finishSplash = () => {
-                        if (window.yambEasterSplashAssetPending) {
+                        if (window.yambThemedSplashAssetPending || window.yambEasterSplashAssetPending) {
                             setTimeout(finishSplash, 100);
                             return;
                         }

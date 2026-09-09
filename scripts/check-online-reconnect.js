@@ -152,7 +152,7 @@ async function run() {
     assert(socketClientSource.includes('Socket.IO v4.8.3'));
     assert(socketClientSource.includes('tryAllTransports'));
     assert(indexSource.includes('socket.io.min.js?v=4.8.3'));
-    assert(indexSource.includes('game.js?v=5.6'));
+    assert(/game\.js\?v=\d+(?:\.\d+)*/.test(indexSource), 'index.html ne učitava verzionisani game.js');
     assert(serverSource.includes("outcome: 'mutual_disconnect'"), 'Obostrani prekid nije posebno evidentiran');
     assert(serverSource.includes("socket.on('connection_diagnostic_snapshot'"), 'Server ne prima poslednji poznati tip mreže');
     assert(gameSource.includes("this.socket.emit('connection_diagnostic_snapshot'"), 'Klijent ne šalje poslednji poznati tip mreže');

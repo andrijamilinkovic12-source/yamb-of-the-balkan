@@ -22,12 +22,12 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/desert-soft-clay/rules/pages/communication.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/desert-soft-clay/rules/pages/economy-treasury.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/desert-soft-clay/rules/pages/account-server.png?v=1',
-        'assets/easter-soft-clay/daily-challenge-pro-v4.png': 'assets/desert-soft-clay/daily-challenge-pro.png?v=1',
-        'assets/easter-soft-clay/leaderboard-pro-v2.png': 'assets/desert-soft-clay/leaderboard-pro.png?v=1',
-        'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/desert-soft-clay/statistics-pro.png?v=1',
-        'assets/easter-soft-clay/settings-pro-v3.png': 'assets/desert-soft-clay/settings-pro.png?v=1',
-        'assets/easter-soft-clay/settings/profile-v2.png': 'assets/desert-soft-clay/settings/profile.png?v=1',
-        'assets/easter-soft-clay/settings/privacy-v2.png': 'assets/desert-soft-clay/settings/privacy.png?v=1',
+        'assets/easter-soft-clay/daily-challenge-pro-v5.png': 'assets/desert-soft-clay/daily-challenge-pro-v2.png?v=1',
+        'assets/easter-soft-clay/leaderboard-pro-v2.png': 'assets/desert-soft-clay/leaderboard-pro-v2.png?v=1',
+        'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/desert-soft-clay/statistics-pro-v2.png?v=1',
+        'assets/easter-soft-clay/settings-pro-v3.png': 'assets/desert-soft-clay/settings-pro-v2.png?v=1',
+        'assets/easter-soft-clay/settings/profile-v2.png': 'assets/desert-soft-clay/settings/profile-v2.png?v=1',
+        'assets/easter-soft-clay/settings/privacy-v2.png': 'assets/desert-soft-clay/settings/privacy-v2.png?v=1',
         'assets/easter-soft-clay/rules-pro-v2.png': 'assets/desert-soft-clay/rules-pro.png?v=1',
         'assets/easter-soft-clay/treasury-pro-v2.png': 'assets/desert-soft-clay/treasury-pro.png?v=1',
         'assets/easter-soft-clay/treasury/tab-trophies-v2.png': 'assets/desert-soft-clay/treasury/tab-trophies.png?v=1',
@@ -41,19 +41,23 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
         'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
         'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
-        'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/desert-soft-clay/global-chat-pro.png?v=1',
-        'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/desert-soft-clay/online-players-pro.png?v=1',
-        'assets/easter-soft-clay/online-add-friend-pro-v2.png': 'assets/desert-soft-clay/online-add-friend-pro.png?v=1',
-        'assets/easter-soft-clay/online-spectate-pro-v4.png': 'assets/desert-soft-clay/online-spectate-pro.png?v=1',
+        'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/desert-soft-clay/global-chat-pro-v2.png?v=1',
+        'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/desert-soft-clay/online-players-pro-v2.png?v=1',
+        'assets/easter-soft-clay/online-add-friend-pro-v2.png': 'assets/desert-soft-clay/online-add-friend-pro-v2.png?v=1',
+        'assets/easter-soft-clay/online-spectate-pro-v4.png': 'assets/desert-soft-clay/online-spectate-pro-v2.png?v=1',
         'assets/easter-soft-clay/online-duel-pro-v3.png': 'assets/desert-soft-clay/online-duel-pro-v2.png?v=1',
-        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png': 'assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2',
-        'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/desert-soft-clay/ducats-undo-pro.png?v=2',
+        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png': 'assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2',
+        'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/desert-soft-clay/ducats-undo-pro-v2.png?v=1',
+        'assets/easter-soft-clay/economy/ducat.png': 'assets/desert-soft-clay/economy/ducat-v2.png?v=1',
+        'assets/easter-soft-clay/economy/undo-token.png': 'assets/desert-soft-clay/economy/undo-token-v2.png?v=1',
+        'assets/easter-soft-clay/economy/rewarded-video.png': 'assets/desert-soft-clay/economy/rewarded-video-v2.png?v=1',
+        'assets/easter-soft-clay/economy/ad-unavailable.png': 'assets/desert-soft-clay/economy/ad-unavailable-v2.png?v=1',
         'assets/easter-soft-clay/statistics/power-index-bolt-v3.png': 'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=1',
-        'assets/easter-soft-clay/statistics/record-v2.png': 'assets/desert-soft-clay/statistics/record.png?v=1',
-        'assets/easter-soft-clay/statistics/wins-v2.png': 'assets/desert-soft-clay/statistics/wins.png?v=1',
-        'assets/easter-soft-clay/statistics/fire-streak-v2.png': 'assets/desert-soft-clay/statistics/fire-streak.png?v=1',
-        'assets/easter-soft-clay/statistics/all-time-points-v2.png': 'assets/desert-soft-clay/statistics/all-time-points.png?v=1',
-        'assets/easter-soft-clay/statistics/h2h-v2.png': 'assets/desert-soft-clay/statistics/h2h.png?v=1'
+        'assets/easter-soft-clay/statistics/record-v2.png': 'assets/desert-soft-clay/statistics/record-v2.png?v=1',
+        'assets/easter-soft-clay/statistics/wins-v2.png': 'assets/desert-soft-clay/statistics/wins-v2.png?v=1',
+        'assets/easter-soft-clay/statistics/fire-streak-v2.png': 'assets/desert-soft-clay/statistics/fire-streak-v3.png?v=1',
+        'assets/easter-soft-clay/statistics/all-time-points-v2.png': 'assets/desert-soft-clay/statistics/all-time-points-v3.png?v=1',
+        'assets/easter-soft-clay/statistics/h2h-v2.png': 'assets/desert-soft-clay/statistics/h2h-v2.png?v=1'
     };
 
     if (desertOverrides[normalizedPath]) return desertOverrides[normalizedPath];
@@ -75,7 +79,7 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/severna-soft-clay/rules/pages/communication-v2.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/severna-soft-clay/rules/pages/economy-treasury-v2.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/severna-soft-clay/rules/pages/account-server-v2.png?v=1',
-        'assets/easter-soft-clay/daily-challenge-pro-v4.png': 'assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1',
+        'assets/easter-soft-clay/daily-challenge-pro-v5.png': 'assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1',
         'assets/easter-soft-clay/leaderboard-pro-v2.png': 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
         'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
         'assets/easter-soft-clay/settings-pro-v3.png': 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
@@ -96,7 +100,7 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
         'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
         'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
-        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png': 'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1',
+        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png': 'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1',
         'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
         'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
         'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/severna-soft-clay/ducats-undo-pro-v6.png?v=1',
@@ -246,10 +250,10 @@ const RulesData = {
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=2')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
                 </ul>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1')} Kvartalna liga</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=1')} Kvartalna liga</h3>
                 <p>Kvartalna liga traje 3 kalendarska meseca po vremenu Beograda. U svakoj regularno završenoj solo, AI, lokalnoj ili online partiji Vaš konačni rezultat se dodaje ligaškom zbiru. Kod tehničkog ishoda pobedniku se dodaje izračunata nagrada, a poraženom se isti obračunati iznos oduzima do najmanje 0 poena.</p>
                 <p>Rangovi su: Amater 0-4.999, Profi 5.000-14.999, Majstor 15.000-49.999, Legenda 50.000-99.999 i Titan od 100.000 poena.</p>
-                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
+                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=1', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} Posle završnog obračuna kvartala prva tri igrača dobijaju 10.000, 5.000 i 2.500 dukata i medalje, a prvoplasirani postaje Šampion ciklusa. Poeni prelaze u Sva vremena, dok novi kvartal kreće od nule.</p>
             `
         },
         {
@@ -278,7 +282,7 @@ const RulesData = {
                 <p>Dukati su glavna valuta u igri. Koriste se za prijave na turnire, kupovine u Riznici i napredovanje kroz kolekcije.</p>
                 <ul>
                     <li><strong>🎲 Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=1')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
                 </ul>
@@ -410,10 +414,10 @@ const RulesData = {
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=2')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
                 </ul>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1')} Quarterly League</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/quarterly-league-icon.svg', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=1')} Quarterly League</h3>
                 <p>The Quarterly League lasts 3 calendar months in Belgrade time. In every regularly completed solo, AI, local, or online game, your final score is added to your league total. For a technical result, the calculated reward is added to the winner and the same calculated amount is deducted from the loser, down to a minimum of 0 points.</p>
                 <p>The ranks are: Amateur 0-4,999, Pro 5,000-14,999, Master 15,000-49,999, Legend 50,000-99,999, and Titan from 100,000 points.</p>
-                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=1', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
+                <p>${rulesThemeAssetIconHtml('assets/quarterly-league-watermark.png', 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=1', 'rules-asset-icon--png')} ${rulesQlPodiumPackHtml()} After the quarter's final settlement, the top three players receive 10,000, 5,000, and 2,500 ducats plus medals, while first place becomes the Cycle Champion. Points move to All-Time and the new quarter starts from zero.</p>
             `
         },
         {
@@ -442,7 +446,7 @@ const RulesData = {
                 <p>Ducats are the main in-game currency. They are used for tournament entries, Treasury purchases, and collection progress.</p>
                 <ul>
                     <li><strong>🎲 Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v4.png?v=1')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=1')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=2')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
                 </ul>
