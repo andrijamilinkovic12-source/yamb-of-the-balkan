@@ -30,6 +30,8 @@ const greenAchievementTrophiesRegistry = greenAssetRegistry.families?.achievemen
 const greenTreasuryControlsRegistry = greenAssetRegistry.families?.treasuryControls;
 const greenQuarterlyRankBadgesRegistry = greenAssetRegistry.families?.quarterlyRankBadges;
 const greenQuarterlyNavigationRegistry = greenAssetRegistry.families?.quarterlyNavigation;
+const greenTournamentNavigationRegistry = greenAssetRegistry.families?.tournamentNavigation;
+const greenTournamentStatesRegistry = greenAssetRegistry.families?.tournamentStates;
 const greenRewardedVideoManifestPath = path.join(root, greenRewardedVideoRegistry.sourceManifest);
 const greenRewardedVideoManifest = JSON.parse(fs.readFileSync(greenRewardedVideoManifestPath, 'utf8'));
 const greenCompetitionMedalsManifestPath = path.join(root, 'source-assets', 'green-soft-clay-canonical', 'competition-medals', 'manifest.json');
@@ -44,6 +46,12 @@ const greenQuarterlyRankBadgesManifestPath = path.join(root, 'source-assets', 'g
 const greenQuarterlyRankBadgesManifest = JSON.parse(fs.readFileSync(greenQuarterlyRankBadgesManifestPath, 'utf8'));
 const greenQuarterlyNavigationManifestPath = path.join(root, 'source-assets', 'green-soft-clay-canonical', 'quarterly-navigation', 'manifest.json');
 const greenQuarterlyNavigationManifest = JSON.parse(fs.readFileSync(greenQuarterlyNavigationManifestPath, 'utf8'));
+const greenTournamentNavigationManifestPath = path.join(root, 'source-assets', 'green-soft-clay-canonical', 'tournament-navigation', 'manifest.json');
+const greenTournamentNavigationManifest = JSON.parse(fs.readFileSync(greenTournamentNavigationManifestPath, 'utf8'));
+const greenTournamentStatesManifestPath = path.join(root, 'source-assets', 'green-soft-clay-canonical', 'tournament-states', 'manifest.json');
+const greenTournamentStatesManifest = JSON.parse(fs.readFileSync(greenTournamentStatesManifestPath, 'utf8'));
+const greenTournamentAwardsManifestPath = path.join(root, 'source-assets', 'green-soft-clay-canonical', 'tournament-awards', 'manifest.json');
+const greenTournamentAwardsManifest = JSON.parse(fs.readFileSync(greenTournamentAwardsManifestPath, 'utf8'));
 
 const assert = (condition, message) => {
     if (!condition) throw new Error(message);
@@ -306,6 +314,167 @@ assert(quarterlyLeagueSource.includes("const medalsTabIcon = this.getQlAssetSour
 assert(quarterlyLeagueSource.split("const championsTabIcon = this.getQlAssetSource('tab-champions')").length - 1 === 2, 'Quarterly League Champions identitet mora ostati vezan za tab i champion marker.');
 assert(quarterlyLeagueSource.split('assets/green-soft-clay/canonical/quarterly-navigation/').length - 1 === 1, 'Green Quarterly navigation resolver mora imati tačno jednu canonical template vezu.');
 assert(greenQuarterlyNavigationManifest.integration?.mainTabs === 'connected' && greenQuarterlyNavigationManifest.integration?.hallOfFameSubtabs === 'connected' && greenQuarterlyNavigationManifest.integration?.championMarker === 'connected' && greenQuarterlyNavigationManifest.integration?.roomOnDemand === 'connected', 'Green Quarterly Navigation integracija nije kompletno evidentirana.');
+assert(greenTournamentNavigationRegistry?.status === 'locked', 'Green Tournament Navigation porodica mora biti zaključana u centralnom registru.');
+assert(greenTournamentNavigationManifest.status === 'locked', 'Green Tournament Navigation source manifest mora biti zaključan.');
+assert(greenTournamentNavigationManifest.integration?.finalAudit === 'locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js', 'Green Tournament Navigation završna kontrola nije evidentirana u source manifestu.');
+const expectedTournamentNavigationIds = ['tab-bracket', 'tab-hall-of-fame', 'tab-info'];
+assert(greenTournamentNavigationManifest.catalog.length === 3, 'Green Tournament Navigation paket mora imati tačno tri glyph-a.');
+assert(JSON.stringify(greenTournamentNavigationManifest.catalog.map(asset => asset.id).sort()) === JSON.stringify(expectedTournamentNavigationIds), 'Green Tournament Navigation nema tačan skup tri ID-ja.');
+const expectedTournamentNavigationOrder = ['tab-info', 'tab-bracket', 'tab-hall-of-fame'];
+assert(JSON.stringify(greenTournamentNavigationManifest.catalog.map(asset => asset.id)) === JSON.stringify(expectedTournamentNavigationOrder), 'Green Tournament Navigation manifest nema zaključan redosled identiteta.');
+assert(greenTournamentNavigationManifest.identity?.material === 'matte 3D Soft Clay Neumorphism' && greenTournamentNavigationManifest.identity?.palette === 'forest-green, warm-ivory and terracotta clay' && greenTournamentNavigationManifest.identity?.mapping === 'one immutable PNG identity per Tournament navigation ID', 'Green Tournament Navigation vizuelni DNK ili ID mapiranje je promenjeno.');
+const expectedTournamentNavigationGlyphs = ['ivory information mark inside a forest-green ring', 'symmetrical eight-player bracket with one central terracotta star', 'ivory historical scroll with forest-green lines and one terracotta seal'];
+assert(JSON.stringify(greenTournamentNavigationManifest.catalog.map(asset => asset.glyph)) === JSON.stringify(expectedTournamentNavigationGlyphs), 'Green Tournament Navigation semantičke siluete su promenjene.');
+assert(new Set(greenTournamentNavigationManifest.catalog.map(asset => asset.runtimeSha256)).size === 3, 'Green Tournament Navigation sadrži dupliran canonical runtime sadržaj.');
+assert(greenTournamentNavigationRegistry.canonicalRuntime.length === 3, 'Green Tournament Navigation registar mora imati tačno tri canonical runtime asseta.');
+assert(new Set(greenTournamentNavigationRegistry.canonicalRuntime.map(asset => asset.role)).size === 3, 'Green Tournament Navigation registry uloge moraju biti jedinstvene.');
+const tournamentNavigationManifestPaths = greenTournamentNavigationManifest.catalog.map(asset => asset.runtime.replace(/^www\//, '')).sort();
+const tournamentNavigationRegistryPaths = greenTournamentNavigationRegistry.canonicalRuntime.map(asset => asset.path).sort();
+assert(JSON.stringify(tournamentNavigationManifestPaths) === JSON.stringify(tournamentNavigationRegistryPaths), 'Tournament Navigation manifest i centralni registar nemaju isti runtime katalog.');
+for (const asset of greenTournamentNavigationManifest.catalog) {
+    const master = path.join(path.dirname(greenTournamentNavigationManifestPath), asset.master);
+    const runtime = path.join(root, asset.runtime);
+    assert(fs.existsSync(master), `Nedostaje Green Tournament navigation master: ${master}`);
+    assert(fs.existsSync(runtime), `Nedostaje Green Tournament navigation canonical runtime: ${runtime}`);
+    const masterInfo = readPngInfo(master);
+    const runtimeInfo = readPngInfo(runtime);
+    assert(masterInfo.width === asset.masterSize[0] && masterInfo.height === asset.masterSize[1], `Green Tournament navigation master dimenzija nije evidentirana: ${master}`);
+    assert(runtimeInfo.width === 256 && runtimeInfo.height === 256, `Green Tournament navigation canonical runtime mora biti 256x256: ${runtime}`);
+    assert([4, 6].includes(masterInfo.colorType) && [4, 6].includes(runtimeInfo.colorType), `Green Tournament navigation glyph nema direktan alpha kanal: ${asset.id}`);
+    assert(asset.master === `green-${asset.id}-master-v1.png`, `Green Tournament navigation nema canonical master ime: ${asset.id}`);
+    assert(asset.runtime === `www/assets/green-soft-clay/canonical/tournament-navigation/${asset.id}-v1.png`, `Green Tournament navigation nema canonical runtime ime: ${asset.id}`);
+    assert(sha256File(master) === asset.masterSha256, `Green Tournament navigation master otisak se ne poklapa: ${asset.id}`);
+    assert(sha256File(runtime) === asset.runtimeSha256, `Green Tournament navigation canonical runtime otisak se ne poklapa: ${asset.id}`);
+    const registryAsset = greenTournamentNavigationRegistry.canonicalRuntime.find(candidate => candidate.role === asset.id);
+    assert(registryAsset, `Green Tournament Navigation registry nema ulogu: ${asset.id}`);
+    assert(registryAsset.path === asset.runtime.replace(/^www\//, ''), `Green Tournament Navigation registry putanja se ne poklapa: ${asset.id}`);
+    assert(registryAsset.sha256 === asset.runtimeSha256, `Green Tournament Navigation registry hash se ne poklapa: ${asset.id}`);
+    assert(gameSource.split(registryAsset.path).length - 1 === 1, `Green Tournament room paket mora imati tačno jednu canonical vezu za ${asset.id}.`);
+    assert(tournamentSource.split(registryAsset.path).length - 1 === 1, `Green Tournament tab mora imati tačno jednu canonical vezu za ${asset.id}.`);
+}
+const bracketNavigation = greenTournamentNavigationManifest.catalog.find(asset => asset.id === 'tab-bracket');
+assert(JSON.stringify(bracketNavigation.activeRuntimeSize) === JSON.stringify([246, 256]) && JSON.stringify(bracketNavigation.runtimeSize) === JSON.stringify([256, 256]), 'Green Tournament bracket dimenziona normalizacija nije evidentirana.');
+assert(bracketNavigation.normalization === 'approved 246x256 runtime pixels centered unchanged at x=5 on a transparent 256x256 canvas', 'Green Tournament bracket canvas pravilo je promenjeno.');
+for (const exclusion of ['Tournament registration and match action states', 'Tournament finalist award', 'Tournament winner trophy, intro and main logo', 'Quarterly League navigation tabs', 'Quarterly League rank badges', 'Quarterly League and General Podium medals', 'Treasury navigation tabs', 'winner and victory-state marks']) {
+    assert(greenTournamentNavigationManifest.semanticExclusions.includes(exclusion), `Tournament Navigation manifest ne razdvaja semantički izuzetak: ${exclusion}`);
+}
+assert(rulesSource.split('assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png').length - 1 === 1, 'Green Pravila moraju imati tačno jednu canonical Tournament Hall of Fame vezu.');
+assert(greenTournamentNavigationManifest.integration?.tournamentTabs === 'connected' && greenTournamentNavigationManifest.integration?.rulesHallOfFameReference === 'connected' && greenTournamentNavigationManifest.integration?.roomOnDemand === 'connected', 'Green Tournament Navigation integracija nije kompletno evidentirana.');
+assert(greenTournamentStatesRegistry?.status === 'locked', 'Green Tournament States porodica mora biti zaključana u centralnom registru.');
+assert(greenTournamentStatesManifest.status === 'locked', 'Green Tournament States source manifest mora biti zaključan.');
+assert(greenTournamentStatesManifest.integration?.finalAudit === 'locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js', 'Green Tournament States završna kontrola nije evidentirana u source manifestu.');
+assert(Object.keys(greenTournamentStatesManifest.subfamilies || {}).sort().join(',') === 'flowStates,registrationActions', 'Green Tournament States paket mora imati registrationActions i flowStates podgrupe.');
+const tournamentStateCatalog = Object.values(greenTournamentStatesManifest.subfamilies).flatMap(subfamily => subfamily.catalog || []);
+const expectedTournamentStateIds = ['state-match-active', 'state-match-complete', 'state-register', 'state-registration-locked', 'state-start', 'state-unregister'];
+assert(tournamentStateCatalog.length === 6, 'Green Tournament States paket mora imati tačno šest identiteta.');
+assert(JSON.stringify(tournamentStateCatalog.map(asset => asset.id).sort()) === JSON.stringify(expectedTournamentStateIds), 'Green Tournament States nema tačan skup šest ID-ja.');
+const expectedTournamentStateOrder = ['state-register', 'state-unregister', 'state-registration-locked', 'state-start', 'state-match-active', 'state-match-complete'];
+assert(JSON.stringify(tournamentStateCatalog.map(asset => asset.id)) === JSON.stringify(expectedTournamentStateOrder), 'Green Tournament States manifest nema zaključan redosled identiteta.');
+assert(greenTournamentStatesManifest.identity?.material === 'matte 3D Soft Clay Neumorphism' && greenTournamentStatesManifest.identity?.palette === 'forest-green, warm-ivory and terracotta clay' && greenTournamentStatesManifest.identity?.mapping === 'one immutable PNG identity per Tournament action or state ID', 'Green Tournament States vizuelni DNK ili ID mapiranje je promenjeno.');
+const expectedTournamentStateGlyphs = [
+    'ivory admission ticket with a forest-green check and one terracotta notch accent',
+    'ivory admission ticket with a forest-green return arrow and three terracotta marks',
+    'ivory admission ticket with a forest-green padlock and terracotta keyhole',
+    'ivory play triangle inside a forest-green ring with one terracotta base accent',
+    'two ivory dice linked by a forest-green ring around one terracotta sparkle',
+    'forest-green award medallion with an ivory check and terracotta inner ring'
+];
+assert(JSON.stringify(tournamentStateCatalog.map(asset => asset.glyph)) === JSON.stringify(expectedTournamentStateGlyphs), 'Green Tournament States semantičke siluete su promenjene.');
+assert(new Set(tournamentStateCatalog.map(asset => asset.masterSha256)).size === 6, 'Green Tournament States sadrži dupliran master sadržaj.');
+assert(new Set(tournamentStateCatalog.map(asset => asset.runtimeSha256)).size === 6, 'Green Tournament States sadrži dupliran canonical runtime sadržaj.');
+assert(greenTournamentStatesRegistry.canonicalRuntime.length === 6, 'Green Tournament States registar mora imati tačno šest canonical runtime asseta.');
+assert(new Set(greenTournamentStatesRegistry.canonicalRuntime.map(asset => asset.role)).size === 6, 'Green Tournament States registry uloge moraju biti jedinstvene.');
+const tournamentStateManifestPaths = tournamentStateCatalog.map(asset => asset.runtime.replace(/^www\//, '')).sort();
+const tournamentStateRegistryPaths = greenTournamentStatesRegistry.canonicalRuntime.map(asset => asset.path).sort();
+assert(JSON.stringify(tournamentStateManifestPaths) === JSON.stringify(tournamentStateRegistryPaths), 'Tournament States manifest i centralni registar nemaju isti runtime katalog.');
+for (const asset of tournamentStateCatalog) {
+    const master = path.join(path.dirname(greenTournamentStatesManifestPath), asset.master);
+    const runtime = path.join(root, asset.runtime);
+    const activeRuntime = path.join(root, asset.activeRuntime);
+    assert(fs.existsSync(master), `Nedostaje Green Tournament state master: ${master}`);
+    assert(fs.existsSync(runtime), `Nedostaje Green Tournament state canonical runtime: ${runtime}`);
+    assert(!fs.existsSync(activeRuntime), `Stari Green Tournament state runtime nije uklonjen: ${activeRuntime}`);
+    const masterInfo = readPngInfo(master);
+    const runtimeInfo = readPngInfo(runtime);
+    assert(JSON.stringify([masterInfo.width, masterInfo.height]) === JSON.stringify(asset.masterSize), `Green Tournament state master dimenzija nije evidentirana: ${asset.id}`);
+    assert(runtimeInfo.width === 256 && runtimeInfo.height === 256 && JSON.stringify(asset.runtimeSize) === JSON.stringify([256, 256]), `Green Tournament state canonical runtime mora biti 256x256: ${asset.id}`);
+    assert([4, 6].includes(masterInfo.colorType) && [4, 6].includes(runtimeInfo.colorType), `Green Tournament state asset nema direktan alpha kanal: ${asset.id}`);
+    assert(asset.master.endsWith(`/green-${asset.id}-master-v1.png`), `Green Tournament state nema canonical master ime: ${asset.id}`);
+    assert(asset.runtime === `www/assets/green-soft-clay/canonical/tournament-states/${asset.id}-v1.png`, `Green Tournament state nema canonical runtime ime: ${asset.id}`);
+    assert(asset.activeRuntime === `www/assets/green-soft-clay/tournament/${asset.id}-v1.png`, `Green Tournament state nema evidentiranu aktivnu putanju: ${asset.id}`);
+    assert(sha256File(master) === asset.masterSha256, `Green Tournament state master otisak se ne poklapa: ${asset.id}`);
+    assert(sha256File(runtime) === asset.runtimeSha256, `Green Tournament state canonical runtime otisak se ne poklapa: ${asset.id}`);
+    const registryAsset = greenTournamentStatesRegistry.canonicalRuntime.find(candidate => candidate.role === asset.id);
+    assert(registryAsset, `Green Tournament States registry nema ulogu: ${asset.id}`);
+    assert(registryAsset.path === asset.runtime.replace(/^www\//, ''), `Green Tournament States registry putanja se ne poklapa: ${asset.id}`);
+    assert(registryAsset.sha256 === asset.runtimeSha256, `Green Tournament States registry hash se ne poklapa: ${asset.id}`);
+    assert(gameSource.split(registryAsset.path).length - 1 === 1, `Green Tournament room paket mora imati tačno jednu canonical vezu za ${asset.id}.`);
+}
+const expectedTournamentStateCanvas = {
+    'state-register': { contentSize: [256, 171], contentOffset: [0, 42] },
+    'state-unregister': { contentSize: [256, 256], contentOffset: [0, 0] },
+    'state-registration-locked': { contentSize: [253, 256], contentOffset: [1, 0] },
+    'state-start': { contentSize: [256, 256], contentOffset: [0, 0] },
+    'state-match-active': { contentSize: [256, 256], contentOffset: [0, 0] },
+    'state-match-complete': { contentSize: [256, 256], contentOffset: [0, 0] }
+};
+for (const asset of tournamentStateCatalog) {
+    assert(JSON.stringify({ contentSize: asset.contentSize, contentOffset: asset.contentOffset }) === JSON.stringify(expectedTournamentStateCanvas[asset.id]), `Green Tournament state canvas normalizacija je promenjena: ${asset.id}`);
+    assert(typeof asset.normalization === 'string' && asset.normalization.includes('256x256'), `Green Tournament state nema precizno pravilo normalizacije: ${asset.id}`);
+}
+assert(tournamentSource.split('assets/green-soft-clay/canonical/tournament-states/state-register-v1.png').length - 1 === 1, 'Green Tournament Register akcija mora imati tačno jednu canonical state-register vezu.');
+assert(tournamentSource.split('assets/green-soft-clay/canonical/tournament-states/state-unregister-v1.png').length - 1 === 1, 'Green Tournament Unregister akcija mora imati tačno jednu canonical state-unregister vezu.');
+assert(tournamentSource.includes("const greenState = isFinished ? 'state-match-complete-v1' : (isRegistered ? 'state-start-v1' : 'state-registration-locked-v1');") && tournamentSource.includes('assets/green-soft-clay/canonical/tournament-states/${greenState}.png'), 'Green Tournament dinamički canonical registration state potrošači nisu očuvani.');
+assert(tournamentSource.split('assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png').length - 1 === 1, 'Green Tournament aktivni meč mora imati tačno jednu canonical state-match-active vezu.');
+assert(tournamentSource.split('assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png').length - 1 === 2, 'Green Tournament završeni rezultat mora imati tačno dve direktne canonical state-match-complete veze.');
+assert(rulesSource.split('assets/green-soft-clay/canonical/tournament-states/state-start-v1.png').length - 1 === 1, 'Green Pravila moraju imati tačno jednu canonical Tournament Start referencu.');
+for (const exclusion of ['Tournament navigation tabs', 'Tournament finalist award', 'Tournament winner trophy, intro and main logo', 'Treasury item statuses', 'Daily Challenge completed and already-played states', 'Invite Friend sent and accepted states', 'Hotseat and generic winner marks', 'Rewarded Video active and unavailable states', 'canonical Undo token']) {
+    assert(greenTournamentStatesManifest.semanticExclusions.includes(exclusion), `Tournament States manifest ne razdvaja semantički izuzetak: ${exclusion}`);
+}
+assert(greenTournamentStatesManifest.integration?.tournamentRegistrationActions === 'connected' && greenTournamentStatesManifest.integration?.tournamentRegistrationPanel === 'connected' && greenTournamentStatesManifest.integration?.tournamentMatchStates === 'connected' && greenTournamentStatesManifest.integration?.rulesStartReference === 'connected' && greenTournamentStatesManifest.integration?.roomOnDemand === 'connected' && greenTournamentStatesManifest.integration?.legacyRuntime === 'retired in standardization step 3', 'Green Tournament States integracija nije kompletno evidentirana.');
+assert(greenTournamentAwardsManifest.status === 'canonical', 'Green Tournament Awards paket mora imati canonical status u Koraku 2.');
+const expectedTournamentAwardIds = ['champion-trophy', 'finalist-silver'];
+assert(greenTournamentAwardsManifest.catalog.length === 2, 'Green Tournament Awards paket mora imati tačno dva identiteta.');
+assert(JSON.stringify(greenTournamentAwardsManifest.catalog.map(asset => asset.id)) === JSON.stringify(expectedTournamentAwardIds), 'Green Tournament Awards nema tačan katalog ili redosled identiteta.');
+assert(new Set(greenTournamentAwardsManifest.catalog.map(asset => asset.masterSha256)).size === 2, 'Green Tournament Awards sadrži dupliran master sadržaj.');
+assert(new Set(greenTournamentAwardsManifest.catalog.map(asset => asset.runtimeSha256)).size === 2, 'Green Tournament Awards sadrži dupliran canonical runtime sadržaj.');
+for (const asset of greenTournamentAwardsManifest.catalog) {
+    const master = path.join(path.dirname(greenTournamentAwardsManifestPath), asset.master);
+    const runtime = path.join(root, asset.runtime);
+    const activeRuntime = path.join(root, asset.activeRuntime);
+    assert(fs.existsSync(master), `Nedostaje Green Tournament award master: ${master}`);
+    assert(fs.existsSync(runtime), `Nedostaje Green Tournament award canonical runtime: ${runtime}`);
+    assert(fs.existsSync(activeRuntime), `Nedostaje trenutno aktivan Green Tournament award runtime: ${activeRuntime}`);
+    const masterInfo = readPngInfo(master);
+    const runtimeInfo = readPngInfo(runtime);
+    const activeInfo = readPngInfo(activeRuntime);
+    assert(JSON.stringify([masterInfo.width, masterInfo.height]) === JSON.stringify(asset.masterSize), `Green Tournament award master dimenzija nije evidentirana: ${asset.id}`);
+    assert(JSON.stringify([runtimeInfo.width, runtimeInfo.height]) === JSON.stringify(asset.runtimeSize), `Green Tournament award canonical dimenzija nije evidentirana: ${asset.id}`);
+    assert(JSON.stringify([activeInfo.width, activeInfo.height]) === JSON.stringify(asset.activeRuntimeSize), `Green Tournament award aktivna dimenzija nije evidentirana: ${asset.id}`);
+    assert([4, 6].includes(masterInfo.colorType) && [4, 6].includes(runtimeInfo.colorType) && [4, 6].includes(activeInfo.colorType), `Green Tournament award asset nema direktan alpha kanal: ${asset.id}`);
+    assert(asset.master === `green-${asset.id}-master-v1.png`, `Green Tournament award nema canonical master ime: ${asset.id}`);
+    assert(asset.runtime === `www/assets/green-soft-clay/canonical/tournament-awards/${asset.id}-v1.png`, `Green Tournament award nema canonical runtime ime: ${asset.id}`);
+    assert(sha256File(master) === asset.masterSha256, `Green Tournament award master otisak se ne poklapa: ${asset.id}`);
+    assert(sha256File(runtime) === asset.runtimeSha256, `Green Tournament award canonical runtime otisak se ne poklapa: ${asset.id}`);
+    assert(sha256File(activeRuntime) === asset.activeRuntimeSha256, `Green Tournament award aktivni runtime otisak se ne poklapa: ${asset.id}`);
+}
+const championAward = greenTournamentAwardsManifest.catalog.find(asset => asset.id === 'champion-trophy');
+const championStartup = path.join(root, championAward.activeStartup);
+assert(fs.existsSync(championStartup), `Nedostaje Green Tournament champion startup izvedenica: ${championStartup}`);
+const championStartupInfo = readPngInfo(championStartup);
+assert(JSON.stringify([championStartupInfo.width, championStartupInfo.height]) === JSON.stringify(championAward.activeStartupSize), 'Green Tournament champion startup dimenzija nije evidentirana.');
+assert([4, 6].includes(championStartupInfo.colorType), 'Green Tournament champion startup nema direktan alpha kanal.');
+assert(sha256File(championStartup) === championAward.activeStartupSha256 && championAward.runtimeSha256 === championAward.activeStartupSha256, 'Green Tournament champion canonical runtime mora biti bajt-po-bajt identičan odobrenoj startup izvedenici.');
+const finalistAward = greenTournamentAwardsManifest.catalog.find(asset => asset.id === 'finalist-silver');
+assert(JSON.stringify(championAward.runtimeSize) === JSON.stringify([384, 384]) && championAward.normalization === 'canonical runtime is byte-identical to the approved 384x384 startup derivative of the same 1254x1254 master', 'Green Tournament champion optimizacija nije precizno evidentirana.');
+assert(JSON.stringify(finalistAward.runtimeSize) === JSON.stringify([256, 256]) && finalistAward.normalization === 'approved 1254x1254 master reduced proportionally to the full 256x256 transparent canvas', 'Green Tournament finalist optimizacija nije precizno evidentirana.');
+assert(indexSource.split('assets/green-soft-clay/tournament-free-v2.png').length - 1 === 2 && indexSource.split('assets/green-soft-clay/runtime/menu/tournament-free-v2.png').length - 1 === 1, 'Green Tournament champion index potrošači nisu očuvani pre standardizacije.');
+assert(gameSource.split('assets/green-soft-clay/tournament-free-v2.png').length - 1 === 3 && tournamentSource.split('assets/green-soft-clay/tournament-free-v2.png').length - 1 === 6 && rulesSource.split('assets/green-soft-clay/tournament-free-v2.png').length - 1 === 1, 'Green Tournament champion sobni potrošači nisu očuvani pre standardizacije.');
+assert(gameSource.split('assets/green-soft-clay/tournament/finalist-silver-v1.png').length - 1 === 3 && tournamentSource.split('assets/green-soft-clay/tournament/finalist-silver-v1.png').length - 1 === 1, 'Green Tournament finalist potrošači nisu očuvani pre standardizacije.');
+for (const exclusion of ['General Podium competition medals', 'Quarterly League podium medals', 'Treasury Collection medals', 'individual achievement trophies', 'Tournament navigation tabs', 'Tournament registration and match states', 'Quarterly League navigation and champion marker', 'Quarterly League rank badges', 'Hotseat, Online and generic winner marks']) {
+    assert(greenTournamentAwardsManifest.semanticExclusions.includes(exclusion), `Tournament Awards manifest ne razdvaja semantički izuzetak: ${exclusion}`);
+}
+assert(greenTournamentAwardsManifest.integration?.mainMenuStartup === 'planned for standardization step 3' && greenTournamentAwardsManifest.integration?.tournamentBranding === 'planned for standardization step 3' && greenTournamentAwardsManifest.integration?.championConsumers === 'planned for standardization step 3' && greenTournamentAwardsManifest.integration?.finalistConsumers === 'planned for standardization step 3' && greenTournamentAwardsManifest.integration?.rulesChampionReference === 'planned for standardization step 3' && greenTournamentAwardsManifest.integration?.roomOnDemand === 'planned for standardization step 3', 'Green Tournament Awards plan integracije nije kompletno evidentiran.');
 assert(Object.keys(greenCompetitionMedalsManifest.subfamilies || {}).sort().join(',') === 'generalPodium,quarterlyLeaguePodium', 'Green Competition Medals paket mora imati tačno General Podium i Quarterly League podfamiliju.');
 for (const [subfamilyName, subfamily] of Object.entries(greenCompetitionMedalsManifest.subfamilies)) {
     assert(subfamily.masters.length === 3 && subfamily.runtime.length === 3, `Green ${subfamilyName} mora imati kompletan gold/silver/bronze trio.`);
@@ -528,7 +697,7 @@ const roomMatchers = {
     economy: relative => relative.startsWith('economy/') || relative.startsWith('ducats-undo') || relative.startsWith('canonical/ducat/') || relative.startsWith('canonical/undo-token/') || relative.startsWith('canonical/rewarded-video/'),
     quarterlyLeague: relative => relative.startsWith('ql/') || relative.startsWith('quarterly-league') || relative.startsWith('canonical/competition-medals/quarterly-league-') || relative.startsWith('canonical/quarterly-rank-badges/') || relative.startsWith('canonical/quarterly-navigation/'),
     treasury: (relative, themeDir) => relative.startsWith('treasury/') || relative.startsWith('treasury-') || relative.startsWith('economy/ducat') || relative.startsWith('canonical/ducat/') || relative.startsWith('canonical/collection-medals/') || relative.startsWith('canonical/achievement-trophies/') || relative.startsWith('canonical/treasury-controls/') || (themeDir !== 'green-soft-clay' && relative.includes('rewarded-video')),
-    tournament: relative => relative.startsWith('tournament/') || relative.startsWith('tournament-'),
+    tournament: relative => relative.startsWith('tournament/') || relative.startsWith('tournament-') || relative.startsWith('canonical/tournament-navigation/') || relative.startsWith('canonical/tournament-states/'),
     solo: relative => relative.startsWith('solo/') || relative.startsWith('mode-solo'),
     hotseat: relative => relative.startsWith('hotseat/') || relative.startsWith('mode-hotseat'),
     opponent: relative => relative.startsWith('opponent/') || relative.startsWith('mode-opponent'),

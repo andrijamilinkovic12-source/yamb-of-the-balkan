@@ -1,0 +1,94 @@
+{
+  "id": "green-tournament-awards",
+  "version": 1,
+  "status": "canonical",
+  "plannedRegistry": "www/themes/green/asset-registry.json",
+  "semanticRole": "official Green Tournament identity with separate champion and finalist honors",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory, terracotta and controlled silver clay",
+    "presentation": "one centered Tournament honor on transparent background without a backing tile or text",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity for champion and one for finalist"
+  },
+  "catalog": [
+    {
+      "id": "champion-trophy",
+      "role": "official Tournament identity and champion honor",
+      "glyph": "forest-green two-handled trophy with ivory handles and star plus one terracotta collar",
+      "usedBy": [
+        "Tournament main-menu card",
+        "Tournament intro mark",
+        "Tournament header",
+        "Tournament wins summary",
+        "Tournament Hall of Fame and championship history",
+        "Tournament registration panel",
+        "Tournament final round winner",
+        "Tournament champion reward modal",
+        "Tournament champion ceremony",
+        "Rules Tournament reference"
+      ],
+      "master": "green-champion-trophy-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "d0f6d9677e46f725c5b5cefca8d0650380348896918a0b09121ebe349abbbc4d",
+      "runtime": "www/assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeSha256": "2a0cdbd77a321ce9964213a91087c8c2375660bb94ad4e4da9cd75588ccf01f5",
+      "activeRuntime": "www/assets/green-soft-clay/tournament-free-v2.png",
+      "activeRuntimeSize": [512, 512],
+      "activeRuntimeSha256": "bf7216e839c742c625f502dc92a5a2720d438ef96c95d28990ee68b482fce801",
+      "activeStartup": "www/assets/green-soft-clay/runtime/menu/tournament-free-v2.png",
+      "activeStartupSize": [384, 384],
+      "activeStartupSha256": "2a0cdbd77a321ce9964213a91087c8c2375660bb94ad4e4da9cd75588ccf01f5",
+      "normalization": "canonical runtime is byte-identical to the approved 384x384 startup derivative of the same 1254x1254 master"
+    },
+    {
+      "id": "finalist-silver",
+      "role": "Tournament runner-up honor",
+      "glyph": "full silver medallion with one ivory star, solid forest-green ribbons and one terracotta clasp",
+      "usedBy": [
+        "Tournament final result finalist mark",
+        "Tournament runner-up reward modal",
+        "Tournament finalist ceremony"
+      ],
+      "master": "green-finalist-silver-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "c9645d2c524275bcf3ebdbf2f380bce60c02b88f64d3ece47647553a04ee46e2",
+      "runtime": "www/assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "eb430e12e61b44f35cb9aa33a1e9913daee5e28cfcd74535f9ded37e1137d2eb",
+      "activeRuntime": "www/assets/green-soft-clay/tournament/finalist-silver-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeSha256": "6973e93ce0f8f652103f3d0123ce803721c37cc714eaf818c30488dbaad75daa",
+      "normalization": "approved 1254x1254 master reduced proportionally to the full 256x256 transparent canvas"
+    }
+  ],
+  "semanticExclusions": [
+    "General Podium competition medals",
+    "Quarterly League podium medals",
+    "Treasury Collection medals",
+    "individual achievement trophies",
+    "Tournament navigation tabs",
+    "Tournament registration and match states",
+    "Quarterly League navigation and champion marker",
+    "Quarterly League rank badges",
+    "Hotseat, Online and generic winner marks",
+    "dukats, Undo tokens and Rewarded Video symbols"
+  ],
+  "integration": {
+    "mainMenuStartup": "planned for standardization step 3",
+    "tournamentBranding": "planned for standardization step 3",
+    "championConsumers": "planned for standardization step 3",
+    "finalistConsumers": "planned for standardization step 3",
+    "rulesChampionReference": "planned for standardization step 3",
+    "roomOnDemand": "planned for standardization step 3",
+    "legacyRuntime": "retained until standardization step 3"
+  },
+  "rules": [
+    "The champion trophy is the official Tournament identity and may be reused for Tournament branding and champion honors.",
+    "The champion trophy must not become a generic winner mark outside Tournament context.",
+    "The finalist silver medallion is exclusive to Tournament runner-up status.",
+    "Never substitute General Podium, Quarterly League Podium, Collection, achievement, navigation, state, rank or generic-winner assets.",
+    "Use the canonical runtime pack instead of copying or recoloring Tournament honors."
+  ]
+}

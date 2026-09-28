@@ -1,0 +1,165 @@
+{
+  "id": "green-tournament-states",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "six stable Green identities for Tournament registration actions and match-flow states",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and terracotta clay",
+    "presentation": "one centered semantic glyph on a transparent square canvas without text or a generic backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity per Tournament action or state ID"
+  },
+  "subfamilies": {
+    "registrationActions": {
+      "semanticRole": "enter, withdraw from or communicate unavailable Tournament registration",
+      "catalog": [
+        {
+          "id": "state-register",
+          "role": "enter Tournament registration",
+          "glyph": "ivory admission ticket with a forest-green check and one terracotta notch accent",
+          "usedBy": ["Tournament Register action"],
+          "master": "registration-actions/green-state-register-master-v1.png",
+          "masterSize": [1536, 1024],
+          "masterSha256": "62f0e14c00b293a5ba85791450395c92d91136ae875ff5a72f358480a02830e3",
+          "runtime": "www/assets/green-soft-clay/canonical/tournament-states/state-register-v1.png",
+          "runtimeSize": [256, 256],
+          "contentSize": [256, 171],
+          "contentOffset": [0, 42],
+          "runtimeSha256": "ef258055abb163198b8a4e6090941950fb3d423e60642e7865ca18c609064d96",
+          "activeRuntime": "www/assets/green-soft-clay/tournament/state-register-v1.png",
+          "activeRuntimeSize": [512, 341],
+          "activeRuntimeSha256": "f7be76bf66cc4edef95b3aca4a986bd7e980b0888deb1d8df9d2e79f58d0c1c8",
+          "normalization": "approved 1536x1024 master reduced proportionally to 256x171 and centered at x=0 y=42 on a transparent 256x256 canvas"
+        },
+        {
+          "id": "state-unregister",
+          "role": "withdraw Tournament registration",
+          "glyph": "ivory admission ticket with a forest-green return arrow and three terracotta marks",
+          "usedBy": ["Tournament Unregister action"],
+          "master": "registration-actions/green-state-unregister-master-v1.png",
+          "masterSize": [1254, 1254],
+          "masterSha256": "61d3c3cbfc2c90237578a1df59375ed73e2e84fab85167af1b5753c3d2458582",
+          "runtime": "www/assets/green-soft-clay/canonical/tournament-states/state-unregister-v1.png",
+          "runtimeSize": [256, 256],
+          "contentSize": [256, 256],
+          "contentOffset": [0, 0],
+          "runtimeSha256": "22ca79f68b2ff31e62dfab66091634f06fd21a0b664e24349e56008ad94f9ce5",
+          "activeRuntime": "www/assets/green-soft-clay/tournament/state-unregister-v1.png",
+          "activeRuntimeSize": [512, 512],
+          "activeRuntimeSha256": "ee4da8d5fa10eadc05dd0377c0a37ed2c3483e2f0fbe89bd18104bd1e07c368b",
+          "normalization": "approved 1254x1254 master reduced proportionally to the full 256x256 transparent canvas"
+        },
+        {
+          "id": "state-registration-locked",
+          "role": "Tournament registration is unavailable",
+          "glyph": "ivory admission ticket with a forest-green padlock and terracotta keyhole",
+          "usedBy": ["Tournament Registration locked state"],
+          "master": "registration-actions/green-state-registration-locked-master-v1.png",
+          "masterSize": [1247, 1261],
+          "masterSha256": "0d30034e1bf7cec4af8808f3eb7651f1a55434b621dbfa736e94166e5e565b8e",
+          "runtime": "www/assets/green-soft-clay/canonical/tournament-states/state-registration-locked-v1.png",
+          "runtimeSize": [256, 256],
+          "contentSize": [253, 256],
+          "contentOffset": [1, 0],
+          "runtimeSha256": "b03455b6457234098c56a2fc50f3aa3c63ec05ba90a4cdeb618730303bdebc38",
+          "activeRuntime": "www/assets/green-soft-clay/tournament/state-registration-locked-v1.png",
+          "activeRuntimeSize": [506, 512],
+          "activeRuntimeSha256": "edc0be1f4d234566b536bd03e27e4a5cc06edb259e176da07705a2c90e9f0378",
+          "normalization": "approved 1247x1261 master reduced proportionally to 253x256 and centered at x=1 y=0 on a transparent 256x256 canvas"
+        }
+      ]
+    },
+    "flowStates": {
+      "semanticRole": "communicate Tournament start, playable match and completed match result",
+      "catalog": [
+        {
+          "id": "state-start",
+          "role": "Tournament begins or is active",
+          "glyph": "ivory play triangle inside a forest-green ring with one terracotta base accent",
+          "usedBy": ["Tournament active registration panel", "Rules Tournament start reference"],
+          "master": "flow-states/green-state-start-master-v1.png",
+          "masterSize": [1254, 1254],
+          "masterSha256": "c091cd3e18f9f16efdd29577c985a59d4f5d3e034ee6c2951a6893562d73e555",
+          "runtime": "www/assets/green-soft-clay/canonical/tournament-states/state-start-v1.png",
+          "runtimeSize": [256, 256],
+          "contentSize": [256, 256],
+          "contentOffset": [0, 0],
+          "runtimeSha256": "39d478e2cc5a6a8d34e6c68c130ff089778ef3d599ae88df11179dbc02c05778",
+          "activeRuntime": "www/assets/green-soft-clay/tournament/state-start-v1.png",
+          "activeRuntimeSize": [512, 512],
+          "activeRuntimeSha256": "e66111ec5634af01f69284b6bbab52f6e32bce42a594da933f7375421787ccee",
+          "normalization": "approved 1254x1254 master reduced proportionally to the full 256x256 transparent canvas"
+        },
+        {
+          "id": "state-match-active",
+          "role": "Tournament match is available to start",
+          "glyph": "two ivory dice linked by a forest-green ring around one terracotta sparkle",
+          "usedBy": ["Tournament Start match action"],
+          "master": "flow-states/green-state-match-active-master-v1.png",
+          "masterSize": [1254, 1254],
+          "masterSha256": "364ba9d7931028774bd01a322c26cc0ac8d2e9d075c0e32aac990fd72092446f",
+          "runtime": "www/assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png",
+          "runtimeSize": [256, 256],
+          "contentSize": [256, 256],
+          "contentOffset": [0, 0],
+          "runtimeSha256": "f1c9fd5f222b98abaf44eafc798dd1f68163fd4d3bc15a7dc0a35bb3db254ce6",
+          "activeRuntime": "www/assets/green-soft-clay/tournament/state-match-active-v1.png",
+          "activeRuntimeSize": [512, 512],
+          "activeRuntimeSha256": "4362c8946d5a127687943af72aa6d92877fcb2d92e56d8375855799d25c6906c",
+          "normalization": "approved 1254x1254 master reduced proportionally to the full 256x256 transparent canvas"
+        },
+        {
+          "id": "state-match-complete",
+          "role": "Tournament match has a completed result",
+          "glyph": "forest-green award medallion with an ivory check and terracotta inner ring",
+          "usedBy": ["Tournament finished registration panel", "Tournament completed bracket result", "Tournament completed match modal"],
+          "master": "flow-states/green-state-match-complete-master-v1.png",
+          "masterSize": [1254, 1254],
+          "masterSha256": "b382898038a06dc8fd845cfe761904178f3f1b08d744b5910049a7f3c4f8a328",
+          "runtime": "www/assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png",
+          "runtimeSize": [256, 256],
+          "contentSize": [256, 256],
+          "contentOffset": [0, 0],
+          "runtimeSha256": "dcee565b9bea8039126569cc2f17c2c57520924cfe3cd283f7a2d756d12b6225",
+          "activeRuntime": "www/assets/green-soft-clay/tournament/state-match-complete-v1.png",
+          "activeRuntimeSize": [512, 512],
+          "activeRuntimeSha256": "fff238f14e3c96c90cab3770bbcca96d7febd13ef3173324ade196bf180bef88",
+          "normalization": "approved 1254x1254 master reduced proportionally to the full 256x256 transparent canvas"
+        }
+      ]
+    }
+  },
+  "semanticExclusions": [
+    "Tournament navigation tabs",
+    "Tournament finalist award",
+    "Tournament winner trophy, intro and main logo",
+    "Treasury item statuses",
+    "Daily Challenge completed and already-played states",
+    "Invite Friend sent and accepted states",
+    "Hotseat and generic winner marks",
+    "Rewarded Video active and unavailable states",
+    "canonical Undo token",
+    "podium and collection medals",
+    "Quarterly League rank badges",
+    "achievement trophies and dukats"
+  ],
+  "integration": {
+    "tournamentRegistrationActions": "connected",
+    "tournamentRegistrationPanel": "connected",
+    "tournamentMatchStates": "connected",
+    "rulesStartReference": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Registration actions and Tournament flow states remain separate subfamilies.",
+    "Each Tournament action or state ID owns exactly one Green canonical PNG identity.",
+    "The unregister return arrow is not a consumable Undo token.",
+    "The Tournament start play triangle is not a Rewarded Video ticket.",
+    "The completed-match check is not a Treasury ownership, invitation acceptance or generic winner mark.",
+    "Use the canonical runtime pack instead of copying or recoloring individual Tournament state glyphs."
+  ]
+}

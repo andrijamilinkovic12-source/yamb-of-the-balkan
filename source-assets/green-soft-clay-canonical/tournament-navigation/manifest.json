@@ -1,0 +1,89 @@
+{
+  "id": "green-tournament-navigation",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "three stable Green navigation identities for Tournament content",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and terracotta clay",
+    "presentation": "one centered navigation glyph on transparent background without a backing tile or text",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity per Tournament navigation ID"
+  },
+  "catalog": [
+    {
+      "id": "tab-info",
+      "role": "Tournament information and rules navigation",
+      "glyph": "ivory information mark inside a forest-green ring",
+      "usedBy": ["Tournament Info tab"],
+      "master": "green-tab-info-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "d4ffa7b66badb04cac3068b1e6d2ff94f62958257e8d07c20e72209899187bd6",
+      "runtime": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-info-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "4494345f66e40818e6ab05ffe284684b181a54689fecf8218a1ed5c5f77ad687",
+      "activeRuntime": "www/assets/green-soft-clay/tournament/tab-info-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "4494345f66e40818e6ab05ffe284684b181a54689fecf8218a1ed5c5f77ad687"
+    },
+    {
+      "id": "tab-bracket",
+      "role": "Tournament bracket and match navigation",
+      "glyph": "symmetrical eight-player bracket with one central terracotta star",
+      "usedBy": ["Tournament Bracket tab"],
+      "master": "green-tab-bracket-master-v1.png",
+      "masterSize": [1230, 1278],
+      "masterSha256": "7ef1a4411154b33599d9acc1663dfc0140c094ea95e7fe69303a52c3b74e7e7a",
+      "runtime": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "b1161e4553c41bfae427e560d8a019eef524cf1563633ccc76e9bc46193340b2",
+      "activeRuntime": "www/assets/green-soft-clay/tournament/tab-bracket-v1.png",
+      "activeRuntimeSize": [246, 256],
+      "activeRuntimeSha256": "be30b68a56a680db3e9ddf178290f7a4ebef07631945a08b06a4e6e32b6a5ddf",
+      "normalization": "approved 246x256 runtime pixels centered unchanged at x=5 on a transparent 256x256 canvas"
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "role": "Tournament history and champions navigation",
+      "glyph": "ivory historical scroll with forest-green lines and one terracotta seal",
+      "usedBy": ["Tournament Hall of Fame tab", "Rules Tournament Hall of Fame reference"],
+      "master": "green-tab-hall-of-fame-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "282dbc2a5c61689cf371d37a9e7304211f762c422c1d46905f35deacd25cde2e",
+      "runtime": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "087f94672a7abfade8de55a02edcfbc057b4b2fbeea88f15a2a04520f2636b3c",
+      "activeRuntime": "www/assets/green-soft-clay/tournament/tab-hall-of-fame-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "087f94672a7abfade8de55a02edcfbc057b4b2fbeea88f15a2a04520f2636b3c"
+    }
+  ],
+  "semanticExclusions": [
+    "Tournament registration and match action states",
+    "Tournament finalist award",
+    "Tournament winner trophy, intro and main logo",
+    "Quarterly League navigation tabs",
+    "Quarterly League rank badges",
+    "Quarterly League and General Podium medals",
+    "Treasury navigation tabs",
+    "Treasury Collection medals and achievement trophies",
+    "Statistics aggregate trophies metric",
+    "winner and victory-state marks",
+    "dukats and consumable tokens"
+  ],
+  "integration": {
+    "tournamentTabs": "connected",
+    "rulesHallOfFameReference": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Each Tournament navigation ID owns exactly one Green canonical PNG identity.",
+    "The Tournament Hall of Fame scroll remains distinct from the Quarterly League Hall of Fame building.",
+    "All canonical runtime assets use a 256x256 transparent canvas without stretching or cropping the approved glyph.",
+    "Never substitute registration, match-state, finalist, trophy, rank, podium or winner assets for navigation glyphs.",
+    "Use the canonical runtime pack instead of copying or recoloring individual Tournament navigation glyphs."
+  ]
+}

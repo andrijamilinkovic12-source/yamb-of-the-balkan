@@ -567,6 +567,110 @@
         "Green Quarterly League champion card marker",
         "Green Quarterly League room-on-demand pack"
       ]
+    },
+    "tournamentNavigation": {
+      "semanticRole": "three stable Green navigation identities for Tournament content",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/tournament-navigation/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and terracotta clay",
+        "presentation": "one centered navigation glyph on transparent background without a backing tile or text",
+        "mapping": "one immutable PNG identity per Tournament navigation ID"
+      },
+      "canonicalRuntime": [
+        { "role": "tab-info", "path": "assets/green-soft-clay/canonical/tournament-navigation/tab-info-v1.png", "size": 256, "sha256": "4494345f66e40818e6ab05ffe284684b181a54689fecf8218a1ed5c5f77ad687" },
+        { "role": "tab-bracket", "path": "assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png", "size": 256, "sha256": "b1161e4553c41bfae427e560d8a019eef524cf1563633ccc76e9bc46193340b2" },
+        { "role": "tab-hall-of-fame", "path": "assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png", "size": 256, "sha256": "087f94672a7abfade8de55a02edcfbc057b4b2fbeea88f15a2a04520f2636b3c" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/tournament/tab-info-v1.png",
+        "assets/green-soft-clay/tournament/tab-bracket-v1.png",
+        "assets/green-soft-clay/tournament/tab-hall-of-fame-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "tournament/tab-info-v1.png": "canonical/tournament-navigation/tab-info-v1.png",
+        "tournament/tab-bracket-v1.png": "canonical/tournament-navigation/tab-bracket-v1.png",
+        "tournament/tab-hall-of-fame-v1.png": "canonical/tournament-navigation/tab-hall-of-fame-v1.png"
+      },
+      "semanticExclusions": [
+        "Tournament registration and match action states",
+        "Tournament finalist award",
+        "Tournament winner trophy, intro and main logo",
+        "Quarterly League navigation tabs",
+        "Quarterly League rank badges",
+        "Quarterly League and General Podium medals",
+        "Treasury navigation tabs",
+        "Treasury Collection medals and achievement trophies",
+        "Statistics aggregate trophies metric",
+        "winner and victory-state marks",
+        "dukats and consumable tokens"
+      ],
+      "codeBindings": [
+        "Green Tournament Info tab",
+        "Green Tournament Bracket tab",
+        "Green Tournament Hall of Fame tab",
+        "Green Rules Tournament Hall of Fame reference",
+        "Green Tournament room-on-demand pack"
+      ]
+    },
+    "tournamentStates": {
+      "semanticRole": "six stable Green identities for Tournament registration actions and match-flow states",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/tournament-states/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and terracotta clay",
+        "presentation": "one centered semantic glyph on a transparent square canvas without text or a generic backing tile",
+        "mapping": "one immutable PNG identity per Tournament action or state ID"
+      },
+      "canonicalRuntime": [
+        { "role": "state-register", "path": "assets/green-soft-clay/canonical/tournament-states/state-register-v1.png", "size": 256, "sha256": "ef258055abb163198b8a4e6090941950fb3d423e60642e7865ca18c609064d96" },
+        { "role": "state-unregister", "path": "assets/green-soft-clay/canonical/tournament-states/state-unregister-v1.png", "size": 256, "sha256": "22ca79f68b2ff31e62dfab66091634f06fd21a0b664e24349e56008ad94f9ce5" },
+        { "role": "state-registration-locked", "path": "assets/green-soft-clay/canonical/tournament-states/state-registration-locked-v1.png", "size": 256, "sha256": "b03455b6457234098c56a2fc50f3aa3c63ec05ba90a4cdeb618730303bdebc38" },
+        { "role": "state-start", "path": "assets/green-soft-clay/canonical/tournament-states/state-start-v1.png", "size": 256, "sha256": "39d478e2cc5a6a8d34e6c68c130ff089778ef3d599ae88df11179dbc02c05778" },
+        { "role": "state-match-active", "path": "assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png", "size": 256, "sha256": "f1c9fd5f222b98abaf44eafc798dd1f68163fd4d3bc15a7dc0a35bb3db254ce6" },
+        { "role": "state-match-complete", "path": "assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png", "size": 256, "sha256": "dcee565b9bea8039126569cc2f17c2c57520924cfe3cd283f7a2d756d12b6225" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/tournament/state-register-v1.png",
+        "assets/green-soft-clay/tournament/state-unregister-v1.png",
+        "assets/green-soft-clay/tournament/state-registration-locked-v1.png",
+        "assets/green-soft-clay/tournament/state-start-v1.png",
+        "assets/green-soft-clay/tournament/state-match-active-v1.png",
+        "assets/green-soft-clay/tournament/state-match-complete-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "tournament/state-register-v1.png": "canonical/tournament-states/state-register-v1.png",
+        "tournament/state-unregister-v1.png": "canonical/tournament-states/state-unregister-v1.png",
+        "tournament/state-registration-locked-v1.png": "canonical/tournament-states/state-registration-locked-v1.png",
+        "tournament/state-start-v1.png": "canonical/tournament-states/state-start-v1.png",
+        "tournament/state-match-active-v1.png": "canonical/tournament-states/state-match-active-v1.png",
+        "tournament/state-match-complete-v1.png": "canonical/tournament-states/state-match-complete-v1.png"
+      },
+      "semanticExclusions": [
+        "Tournament navigation tabs",
+        "Tournament finalist award",
+        "Tournament winner trophy, intro and main logo",
+        "Treasury item statuses",
+        "Daily Challenge completed and already-played states",
+        "Invite Friend sent and accepted states",
+        "Hotseat and generic winner marks",
+        "Rewarded Video active and unavailable states",
+        "canonical Undo token",
+        "podium and collection medals",
+        "Quarterly League rank badges",
+        "achievement trophies and dukats"
+      ],
+      "codeBindings": [
+        "Green Tournament Register and Unregister actions",
+        "Green Tournament registration status panel",
+        "Green Tournament active and completed match states",
+        "Green Rules Tournament Start reference",
+        "Green Tournament room-on-demand pack"
+      ]
     }
   }
 }
