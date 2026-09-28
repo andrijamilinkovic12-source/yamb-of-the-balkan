@@ -1651,16 +1651,31 @@ const TRANSLATIONS = {
 
 function dukatIconHtml(extraClass = '') {
     const className = `dukat-icon-inline${extraClass ? ` ${extraClass}` : ''}`;
-    const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+    const activeTheme = document.documentElement?.dataset?.splashTheme
+        || localStorage.getItem('yamb_theme')
+        || 'dark';
     const isEasterTheme = document.body?.classList.contains('easter-theme')
         || activeTheme === 'easter';
     const isDesertTheme = document.body?.classList.contains('desert-theme')
         || activeTheme === 'desert';
+    const isGreenTheme = activeTheme === 'dark'
+        && !document.body?.classList.contains('light-theme')
+        && !document.body?.classList.contains('medium-theme')
+        && !document.body?.classList.contains('winter-theme')
+        && !document.body?.classList.contains('neon-theme')
+        && !document.body?.classList.contains('amethyst-theme')
+        && !document.body?.classList.contains('easter-theme')
+        && !document.body?.classList.contains('desert-theme')
+        && !document.body?.classList.contains('moon-theme')
+        && !document.body?.classList.contains('severna-theme');
     if (isEasterTheme) {
-        return `<img class="${className} dukat-icon-inline--easter" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+        return `<img class="${className} dukat-icon-inline--easter" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
     }
     if (isDesertTheme) {
-        return `<img class="${className} dukat-icon-inline--desert" src="assets/desert-soft-clay/economy/ducat-v2.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+        return `<img class="${className} dukat-icon-inline--desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
+    }
+    if (isGreenTheme) {
+        return `<img class="${className} dukat-icon-inline--green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
     }
     return `<svg class="${className}" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>`;
 }

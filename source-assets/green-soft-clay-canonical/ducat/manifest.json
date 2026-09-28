@@ -1,0 +1,51 @@
+{
+  "id": "green-ducat",
+  "version": 1,
+  "status": "canonical",
+  "approvedIdentity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "rim": "rounded ivory clay",
+    "faceAndBody": "terracotta clay",
+    "mark": "exactly five dark forest-green rounded-square clay pips",
+    "pipLayout": "four corners plus center",
+    "lighting": "soft upper-left studio light"
+  },
+  "masters": {
+    "front": "green-ducat-front-master-v1.png",
+    "angleLeft": "green-ducat-angle-left-master-v1.png",
+    "angleRight": "green-ducat-angle-right-master-v1.png"
+  },
+  "runtime": {
+    "front": "www/assets/green-soft-clay/canonical/ducat/ducat-front-v1.png",
+    "inline": "www/assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png",
+    "particle": "www/assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png",
+    "angleLeft": "www/assets/green-soft-clay/canonical/ducat/ducat-angle-left-v1.png",
+    "angleRight": "www/assets/green-soft-clay/canonical/ducat/ducat-angle-right-v1.png"
+  },
+  "integration": {
+    "directUi": "connected",
+    "translatedMessages": "connected through dukatIconHtml",
+    "goldRain": "connected for Green theme only",
+    "royalYamb": "connected for Green theme only",
+    "treasuryPreview": "connected for Green theme only",
+    "embeddedCompositions": {
+      "status": "connected in standardization step 4",
+      "assets": [
+        "ducats-undo-free-v3.png",
+        "ducats-undo-pro-v2.png",
+        "treasury-free-v3.png",
+        "daily/reward-video-v2.png",
+        "treasury/reward-video-v2.png",
+        "solo/finish-reward-video-v2.png",
+        "rules/pages/economy-treasury-v2.png"
+      ]
+    }
+  },
+  "rules": [
+    "Never change the ivory rim, terracotta face/body or five forest-green pip mark.",
+    "Never replace the five pips with a star, crown, letter, leaf, currency glyph or blank face.",
+    "Scale, crop, rotate or use the approved perspective masters instead of regenerating a new dukat.",
+    "Every Green currency depiction, including embedded chest coins and particles, must derive from this pack.",
+    "Competition medals, rank badges and achievement trophies are not dukats."
+  ]
+}

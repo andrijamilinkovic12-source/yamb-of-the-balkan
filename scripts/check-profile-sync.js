@@ -462,6 +462,24 @@ function checkAdUnlockItemsAreNotFreeUnlocks() {
     );
 }
 
+function checkGreenClaySkinIsFreeAndServerAllowed() {
+    assert(serverSource.includes('green_clay: 0,'), 'Green Clay skin is missing from the server free-price catalog');
+    assert(
+        serverSource.includes("'glass_sapphire', 'green_clay', 'desert_glass'"),
+        'Green Clay skin is missing from the server skin allowlist'
+    );
+    assert(
+        managersSource.includes("this.type === 'skin' && !savedUnlocked.includes('green_clay')")
+            && managersSource.includes("savedUnlocked.push('green_clay')"),
+        'Green Clay skin is not granted as a free client inventory item'
+    );
+    assert(
+        managersSource.includes("item.id === 'green_clay'")
+            && managersSource.includes('dice-dots-wrapper val-6'),
+        'Green Clay treasury card is not using the real six-pip CSS preview'
+    );
+}
+
 function checkPowerIndexUsesRolledLeagueScore() {
     assert.strictEqual(
         powerIndexCore.calculateLeaguePowerPoints({ baselineScore: 120000, quarterlyScore: 3000 }),
@@ -972,6 +990,7 @@ async function main() {
     checkUndoRewardedTokenAmount();
     checkShopDiscountRequiresServerVerification();
     checkAdUnlockItemsAreNotFreeUnlocks();
+    checkGreenClaySkinIsFreeAndServerAllowed();
     checkPowerIndexUsesRolledLeagueScore();
     checkTournamentChampionFallbackPayload();
     checkQuarterRewardAtomicClaim();

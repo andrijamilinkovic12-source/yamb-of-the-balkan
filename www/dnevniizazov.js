@@ -165,6 +165,10 @@ class DnevniIzazov {
                 position: relative;
             }
 
+            .daily-glass-room-mark-green,
+            .daily-glass-task-mark-green,
+            .daily-glass-complete-mark-green,
+            .daily-glass-reward-video-mark-green,
             .daily-glass-room-mark-easter,
             .daily-glass-task-mark-easter,
             .daily-glass-complete-mark-easter,
@@ -178,6 +182,16 @@ class DnevniIzazov {
             .daily-glass-complete-mark-nebula,
             .daily-glass-reward-video-mark-nebula {
                 display: none;
+            }
+
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-room-mark-green,
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-task-mark-green,
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-complete-mark-green,
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-reward-video-mark-green {
+                display: block;
+                object-fit: contain;
+                pointer-events: none;
+                user-select: none;
             }
 
             body.easter-theme .daily-glass-room-mark-easter,
@@ -210,6 +224,15 @@ class DnevniIzazov {
                 user-select: none;
             }
 
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-room-mark-green {
+                position: absolute;
+                top: -7px;
+                left: 2px;
+                width: 54px;
+                height: 54px;
+                filter: drop-shadow(0 7px 8px rgba(7, 29, 15, 0.28));
+            }
+
             body.easter-theme .daily-glass-room-mark-easter {
                 position: absolute;
                 top: -7px;
@@ -235,6 +258,15 @@ class DnevniIzazov {
                 width: 54px;
                 height: 54px;
                 filter: drop-shadow(0 7px 8px rgba(0, 3, 16, 0.28)) drop-shadow(0 0 7px rgba(134, 247, 255, 0.14));
+            }
+
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-task-mark-green {
+                position: absolute;
+                top: -2px;
+                right: 6px;
+                width: 44px;
+                height: 44px;
+                filter: drop-shadow(0 6px 7px rgba(7, 29, 15, 0.25));
             }
 
             body.easter-theme .daily-glass-task-mark-easter {
@@ -264,6 +296,7 @@ class DnevniIzazov {
                 filter: drop-shadow(0 6px 7px rgba(0, 3, 16, 0.25)) drop-shadow(0 0 6px rgba(134, 247, 255, 0.13));
             }
 
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-title,
             body.easter-theme .daily-glass-title,
             body.desert-theme .daily-glass-title,
             body.severna-theme .daily-glass-title {
@@ -477,6 +510,16 @@ class DnevniIzazov {
                 position: relative;
             }
 
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-complete-mark-green {
+                position: absolute;
+                width: 58px;
+                height: 58px;
+                left: 50%;
+                top: -66px;
+                transform: translateX(-50%);
+                filter: drop-shadow(0 8px 10px rgba(7, 29, 15, 0.3));
+            }
+
             body.easter-theme .daily-glass-complete-mark-easter {
                 position: absolute;
                 width: 58px;
@@ -511,10 +554,19 @@ class DnevniIzazov {
                 display: inline;
             }
 
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-reward-video-fallback,
             body.easter-theme .daily-glass-reward-video-fallback,
             body.desert-theme .daily-glass-reward-video-fallback,
             body.severna-theme .daily-glass-reward-video-fallback {
                 display: none;
+            }
+
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-reward-video-mark-green {
+                width: 28px;
+                height: 28px;
+                flex: 0 0 28px;
+                margin-right: 2px;
+                filter: drop-shadow(0 4px 5px rgba(7, 29, 15, 0.28));
             }
 
             body.easter-theme .daily-glass-reward-video-mark-easter {
@@ -542,6 +594,7 @@ class DnevniIzazov {
             }
 
             /* Tematske završne nagrade koriste isti dukat asset kao soba Dukati. */
+            .daily-glass-green-ducat-icon,
             .daily-glass-easter-ducat-icon,
             .daily-glass-desert-ducat-icon {
                 display: inline-block;
@@ -553,15 +606,21 @@ class DnevniIzazov {
                 filter: drop-shadow(0 3px 4px rgba(92, 58, 94, 0.18));
             }
 
+            .daily-glass-green-ducat-icon {
+                filter: drop-shadow(0 3px 4px rgba(7, 29, 15, 0.24));
+            }
+
             .daily-glass-desert-ducat-icon {
                 filter: drop-shadow(0 3px 4px rgba(93, 57, 33, 0.18));
             }
 
+            .daily-glass-green-ducat-icon.daily-glass-green-ducat-icon--reward-end,
             .daily-glass-easter-ducat-icon.daily-glass-easter-ducat-icon--reward-end,
             .daily-glass-desert-ducat-icon.daily-glass-desert-ducat-icon--reward-end {
                 margin: 0 0 0 3px;
             }
 
+            .daily-glass-btn .daily-glass-green-ducat-icon,
             .daily-glass-btn .daily-glass-easter-ducat-icon,
             .daily-glass-btn .daily-glass-desert-ducat-icon {
                 width: 26px;
@@ -570,6 +629,7 @@ class DnevniIzazov {
                 vertical-align: -7px;
             }
 
+            .daily-already-green,
             .daily-already-easter,
             .daily-already-desert,
             .daily-already-nebula {
@@ -580,6 +640,7 @@ class DnevniIzazov {
                 text-align: center;
             }
 
+            .daily-already-green-icon,
             .daily-already-easter-icon,
             .daily-already-desert-icon,
             .daily-already-nebula-icon {
@@ -587,6 +648,10 @@ class DnevniIzazov {
                 height: 104px;
                 object-fit: contain;
                 filter: drop-shadow(0 9px 12px rgba(92, 58, 94, 0.22));
+            }
+
+            .daily-already-green-icon {
+                filter: drop-shadow(0 9px 12px rgba(7, 29, 15, 0.3));
             }
 
             .daily-already-desert-icon {
@@ -649,12 +714,14 @@ class DnevniIzazov {
         overlay.innerHTML = `
             <div class="daily-glass-card" id="glass-daily-card">
                 <div class="daily-glass-header">
-                    <img class="daily-glass-room-mark-easter" src="assets/easter-soft-clay/daily-challenge-pro-v5.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-task-mark-easter" src="assets/easter-soft-clay/daily/task-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-room-mark-desert" src="assets/desert-soft-clay/daily-challenge-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-task-mark-desert" src="assets/desert-soft-clay/daily/task-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-room-mark-nebula" src="assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-task-mark-nebula" src="assets/severna-soft-clay/daily/task-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-green" data-theme-src="assets/green-soft-clay/daily-challenge-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-green" data-theme-src="assets/green-soft-clay/daily/task-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-easter" data-theme-src="assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-easter" data-theme-src="assets/easter-soft-clay/daily/task-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-desert" data-theme-src="assets/desert-soft-clay/daily-challenge-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-desert" data-theme-src="assets/desert-soft-clay/daily/task-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-room-mark-nebula" data-theme-src="assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-nebula" data-theme-src="assets/severna-soft-clay/daily/task-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <h2 class="daily-glass-title">${txtTitle}</h2>
                     <div class="daily-glass-subtitle">${txtSub}</div>
                 </div>
@@ -797,6 +864,7 @@ class DnevniIzazov {
         if (!this.app.requireLogin()) return;
         if (typeof this.app.reportMonitorRoomVisit === 'function') this.app.reportMonitorRoomVisit('daily');
         if (this.isIntroPlaying || this.isActive || this.loadingChallenge) return;
+        if (typeof this.app.prepareThemeRoomAssets === 'function') this.app.prepareThemeRoomAssets('dailyChallenge');
 
         const uid = this.getCurrentUid();
         const locallyClaimedToday = this.isRewardClaimedForDay(uid);
@@ -867,8 +935,8 @@ class DnevniIzazov {
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
         const title = overlay.querySelector('.daily-intro-title');
-        const isDesertIconOnlyIntro = overlay.classList.contains('theme-desert');
-        if (isDesertIconOnlyIntro) {
+        const isIconOnlyIntro = overlay.classList.contains('theme-dark') || overlay.classList.contains('theme-desert');
+        if (isIconOnlyIntro) {
             if (leftWord) leftWord.textContent = '';
             if (rightWord) rightWord.textContent = '';
             title?.setAttribute('aria-hidden', 'true');
@@ -930,12 +998,14 @@ class DnevniIzazov {
 
     showAlreadyPlayedInfo() {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const message = activeTheme === 'easter'
-            ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" src="assets/easter-soft-clay/daily/already-played-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
-            : activeTheme === 'desert'
-                ? `<div class="daily-already-desert"><img class="daily-already-desert-icon" src="assets/desert-soft-clay/daily/already-played-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+        const message = activeTheme === 'dark'
+            ? `<div class="daily-already-green"><img class="daily-already-green-icon" data-theme-src="assets/green-soft-clay/daily/already-played-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+            : activeTheme === 'easter'
+                ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" data-theme-src="assets/easter-soft-clay/daily/already-played-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+                : activeTheme === 'desert'
+                ? `<div class="daily-already-desert"><img class="daily-already-desert-icon" data-theme-src="assets/desert-soft-clay/daily/already-played-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
                 : activeTheme === 'severna'
-                    ? `<div class="daily-already-nebula"><img class="daily-already-nebula-icon" src="assets/severna-soft-clay/daily/already-played-v10.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+                    ? `<div class="daily-already-nebula"><img class="daily-already-nebula-icon" data-theme-src="assets/severna-soft-clay/daily/already-played-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
                     : t('dc_done');
         const alertPromise = this.app?.modal?.alert
             ? this.app.modal.alert(message, t('info_title'))
@@ -1165,14 +1235,16 @@ class DnevniIzazov {
         resDiv.className = 'glass-daily-result';
 
         resDiv.innerHTML = `
-            <img class="daily-glass-complete-mark-easter" src="assets/easter-soft-clay/daily/complete-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-            <img class="daily-glass-complete-mark-desert" src="assets/desert-soft-clay/daily/complete-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-            <img class="daily-glass-complete-mark-nebula" src="assets/severna-soft-clay/daily/complete-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-green" data-theme-src="assets/green-soft-clay/daily/complete-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-easter" data-theme-src="assets/easter-soft-clay/daily/complete-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-desert" data-theme-src="assets/desert-soft-clay/daily/complete-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-nebula" data-theme-src="assets/severna-soft-clay/daily/complete-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 <span class="daily-glass-reward-video-fallback" aria-hidden="true">🎥</span>
-                <img class="daily-glass-reward-video-mark-easter" src="assets/easter-soft-clay/daily/reward-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="daily-glass-reward-video-mark-desert" src="assets/desert-soft-clay/daily/reward-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="daily-glass-reward-video-mark-nebula" src="assets/severna-soft-clay/daily/reward-video-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-green" data-theme-src="assets/green-soft-clay/daily/reward-video-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-easter" data-theme-src="assets/easter-soft-clay/daily/reward-video-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-desert" data-theme-src="assets/desert-soft-clay/daily/reward-video-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-nebula" data-theme-src="assets/severna-soft-clay/daily/reward-video-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 ${t('btn_double_short')} ${this.getDailyRewardDukatIconHtml()} (x2)
             </button>
             <button class="daily-glass-btn daily-glass-btn-claim" onclick="dnevniIzazov.claim(false)">
@@ -1189,16 +1261,30 @@ class DnevniIzazov {
 
     getDailyRewardDukatIconHtml(options = {}) {
         const storedTheme = localStorage.getItem('yamb_theme') || 'dark';
+        const isGreenTheme = !document.body?.classList.contains('light-theme')
+            && !document.body?.classList.contains('medium-theme')
+            && !document.body?.classList.contains('winter-theme')
+            && !document.body?.classList.contains('neon-theme')
+            && !document.body?.classList.contains('amethyst-theme')
+            && !document.body?.classList.contains('easter-theme')
+            && !document.body?.classList.contains('desert-theme')
+            && !document.body?.classList.contains('moon-theme')
+            && !document.body?.classList.contains('severna-theme')
+            && storedTheme === 'dark';
         const isEasterTheme = document.body?.classList.contains('easter-theme') || storedTheme === 'easter';
         const isDesertTheme = document.body?.classList.contains('desert-theme') || storedTheme === 'desert';
 
+        if (isGreenTheme) {
+            const endClass = options.rewardEnd === true ? ' daily-glass-green-ducat-icon--reward-end' : '';
+            return `<img class="daily-glass-green-ducat-icon${endClass}" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
+        }
         if (isEasterTheme) {
             const endClass = options.rewardEnd === true ? ' daily-glass-easter-ducat-icon--reward-end' : '';
-            return `<img class="daily-glass-easter-ducat-icon${endClass}" src="assets/easter-soft-clay/economy/ducat.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+            return `<img class="daily-glass-easter-ducat-icon${endClass}" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
         }
         if (isDesertTheme) {
             const endClass = options.rewardEnd === true ? ' daily-glass-desert-ducat-icon--reward-end' : '';
-            return `<img class="daily-glass-desert-ducat-icon${endClass}" src="assets/desert-soft-clay/economy/ducat-v2.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+            return `<img class="daily-glass-desert-ducat-icon${endClass}" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
         }
         return dukatIconHtml();
     }

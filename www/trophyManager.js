@@ -485,11 +485,17 @@ class TrophyManager {
             || activeTheme === 'easter';
         const isDesertTheme = document.body.classList.contains('desert-theme')
             || activeTheme === 'desert';
+        const isGreenTheme = activeTheme === 'dark'
+            && !document.body.classList.contains('easter-theme')
+            && !document.body.classList.contains('desert-theme')
+            && !document.body.classList.contains('severna-theme');
         const iconHtml = isEasterTheme
-            ? '<img class="easter-trophy-popup-icon" src="assets/easter-soft-clay/statistics/trophies-v3.png?v=1" alt="" aria-hidden="true" decoding="async">'
+            ? '<img class="easter-trophy-popup-icon" data-theme-src="assets/easter-soft-clay/statistics/trophies-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">'
             : (isDesertTheme && trophy.desertIcon
                 ? `<img class="desert-trophy-popup-icon" src="${trophy.desertIcon}" alt="" aria-hidden="true" decoding="async">`
-                : trophy.icon);
+                : (isGreenTheme && trophy.greenIcon
+                    ? `<img class="green-trophy-popup-icon" src="${trophy.greenIcon}" alt="" aria-hidden="true" decoding="async">`
+                    : trophy.icon));
 
         div.innerHTML = `
             <div class="tp-icon">${iconHtml}</div>

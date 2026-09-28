@@ -38,9 +38,10 @@ class VatreniNizManager {
                 <div class="chat-header global-chat-header streak-modal-header">
                     <span class="streak-modal-title">
                         <span class="fire-streak-title-legacy">${this.gt('streak_top_title', '🔥 TOP VATRENI NIZ')}</span>
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-desert" src="assets/desert-soft-clay/statistics/fire-streak-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-nebula" src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/statistics/fire-streak-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <span class="fire-streak-title-easter">${this.gt('streak_top_title_plain', 'TOP VATRENI NIZ')}</span>
                     </span>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="${this.gt('aria_close_streak', 'Zatvori Vatreni niz listu')}">×</button>
@@ -218,9 +219,11 @@ class VatreniNizManager {
         // Tema bira svoj versionirani Vatreni niz podium pack.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const podiumTheme = activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter');
+        const podiumTheme = activeTheme === 'dark' ? 'green' : (activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter'));
         const podiumAssetSrc = podiumTheme === 'severna'
             ? `assets/severna-soft-clay/statistics/fire-streak/${podiumTone}-v10.png?v=1`
+            : podiumTheme === 'green'
+                ? `assets/green-soft-clay/leaderboard/medal-${podiumTone}-v1.png?v=1`
             : podiumTheme === 'easter'
                 ? `assets/easter-soft-clay/statistics/fire-streak/${podiumTone}-v3.png?v=1`
                 : `assets/desert-soft-clay/statistics/fire-streak/${podiumTone}-v3.png?v=1`;
@@ -272,9 +275,10 @@ class VatreniNizManager {
                     <div class="fire-streak-stats" style="text-align: right; line-height: 1.2; min-width: 80px; display: flex; flex-direction: column; align-items: flex-end;">
                         <div class="fire-streak-value" style="color: #FF5722; font-weight: 900; font-size: 1.25rem; text-shadow: 0 0 5px rgba(255, 87, 34, 0.4);">
                             <span class="fire-streak-value-legacy">🔥</span>
-                            <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-easter" src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                            <img class="fire-streak-value-soft-clay-icon" src="assets/desert-soft-clay/statistics/fire-streak-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                            <img class="fire-streak-value-soft-clay-icon-nebula" src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" alt="" aria-hidden="true" decoding="async">
+                            <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                            <img class="fire-streak-value-soft-clay-icon" data-theme-src="assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                            <img class="fire-streak-value-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                            <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/statistics/fire-streak-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <span class="fire-streak-value-number">${maxWinStreak}</span>
                         </div>
                         <div class="fire-streak-current-pill" style="font-size: 0.65rem; font-weight: bold; margin-top: 4px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">
@@ -308,7 +312,7 @@ class VatreniNizManager {
         const myUid = localStorage.getItem('yamb_uid') || '';
         const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe || (myUid && player.uid && player.uid === myUid)));
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const dockMyRank = ['easter', 'desert'].includes(activeTheme) && !!this.myPlayer && !!myRankDock;
+        const dockMyRank = ['dark', 'easter', 'desert'].includes(activeTheme) && !!this.myPlayer && !!myRankDock;
 
         if (dockMyRank) {
             myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });

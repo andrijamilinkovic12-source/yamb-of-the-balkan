@@ -87,9 +87,10 @@ class GlobalChatManager {
         const fallback = isLoading ? 'Učitavam poruke...' : 'Još nema poruka. Započnite razgovor.';
         body.innerHTML = `
             <div class="global-chat-welcome global-chat-state${isLoading ? ' is-loading' : ''}" data-chat-state="${isLoading ? 'loading' : 'empty'}">
-                <img class="global-chat-state-soft-clay-icon global-chat-state-soft-clay-icon-easter" src="assets/easter-soft-clay/global-chat-empty-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="global-chat-state-soft-clay-icon-desert" src="assets/desert-soft-clay/global-chat-empty-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="global-chat-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/global-chat-empty-pro-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="global-chat-state-soft-clay-icon global-chat-state-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/global-chat-empty-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="global-chat-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/global-chat-empty-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="global-chat-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/global-chat-empty-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="global-chat-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/global-chat-empty-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span>${this.gt(key) || fallback}</span>
             </div>`;
     }

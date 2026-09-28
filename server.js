@@ -1926,6 +1926,7 @@ const SHOP_ITEM_PRICES = Object.freeze({
     glass_ruby: 50000,
     glass_emerald: 50000,
     glass_sapphire: 50000,
+    green_clay: 0,
     desert_glass: 0,
     easter_neumorphic: 0,
     magma: 75000,
@@ -1976,7 +1977,7 @@ const SKIN_UNLOCK_IDS = new Set([
     'gold_classic', 'gold_rose', 'gold_ancient', 'gold_midas',
     'wood', 'marble', 'pearl', 'carbon', 'obsidian', 'leather',
     'neon_blue', 'neon_pink', 'neon_green', 'stealth',
-    'glass_clear', 'glass_ruby', 'glass_emerald', 'glass_sapphire', 'desert_glass', 'easter_neumorphic',
+    'glass_clear', 'glass_ruby', 'glass_emerald', 'glass_sapphire', 'green_clay', 'desert_glass', 'easter_neumorphic',
     'magma', 'galaxy', 'retro', 'hologram'
 ]);
 const EFFECT_UNLOCK_IDS = new Set([

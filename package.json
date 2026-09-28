@@ -14,8 +14,9 @@
     "audit:statistics": "node scripts/audit-statistics.js",
     "inspect:result-flow": "node scripts/inspect-player-result-flow.js",
     "check:h2h-ledger": "node scripts/check-h2h-ledger-rebuild.js",
+    "check:theme-performance": "node scripts/check-theme-performance.js",
     "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
-    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:h2h-ledger"
+    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:h2h-ledger && npm run check:theme-performance"
   },
   "keywords": [],
   "author": "",

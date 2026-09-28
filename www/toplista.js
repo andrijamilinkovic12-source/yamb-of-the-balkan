@@ -39,9 +39,10 @@ class TopListManager {
         return `
             <div class="hs-list-state hs-list-state-${state}">
                 <span class="hs-state-fallback" aria-hidden="true">${fallbackIcon}</span>
-                <img class="hs-state-soft-clay-icon" src="assets/easter-soft-clay/leaderboard/empty-loading-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="hs-state-soft-clay-icon-desert" src="assets/desert-soft-clay/leaderboard/empty-loading-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                <img class="hs-state-soft-clay-icon-nebula" src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" alt="" aria-hidden="true" decoding="async">
+                <img class="hs-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/leaderboard/empty-loading-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="hs-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="hs-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="hs-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span class="hs-list-state-text">${message}</span>
             </div>
         `;
@@ -51,7 +52,9 @@ class TopListManager {
         const medal = ['gold', 'silver', 'bronze'][index];
         if (!medal) return '';
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const medalSrc = activeTheme === 'easter'
+        const medalSrc = activeTheme === 'dark'
+            ? `assets/green-soft-clay/leaderboard/medal-${medal}-v1.png?v=1`
+            : activeTheme === 'easter'
             ? `assets/easter-soft-clay/leaderboard/medal-${medal}-v4.png?v=1`
             : activeTheme === 'desert'
                 ? `assets/desert-soft-clay/leaderboard/medal-${medal}-v4.png?v=1`
@@ -554,12 +557,19 @@ class TopListManager {
         }
 
         const currentLang = localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS';
+        const currentUid = String(localStorage.getItem('yamb_uid') || '');
         const sec = window.YambSecurity;
 
         validData.forEach((entry, index) => {
             const absoluteIndex = rankOffset + index;
             const li = document.createElement('li');
             li.className = 'highscore-item'; 
+            const entryUid = String(entry.stableUid || entry.uid || entry.playerId || '');
+            const isCurrentPlayer = Boolean(currentUid && entryUid && currentUid === entryUid);
+            if (isCurrentPlayer) {
+                li.classList.add('hs-current-player');
+                li.setAttribute('aria-current', 'true');
+            }
 
             let rankClass = 'rank-circle';
             if (absoluteIndex === 0) rankClass += ' rank-1';

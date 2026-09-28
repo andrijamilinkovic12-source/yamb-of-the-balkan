@@ -71,9 +71,10 @@ class PowerIndexLeaderboard {
                 <div class="chat-header global-chat-header pi-modal-header">
                     <h2 class="pi-modal-title">
                         <span class="power-index-title-legacy" style="font-size: 1.5rem;">⚡</span>
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt power-index-title-bolt-easter" src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt-nebula" src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-title-bolt power-index-title-bolt-easter" data-theme-src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-title-bolt" data-theme-src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-title-bolt-nebula" data-theme-src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-title-bolt-green" data-theme-src="assets/green-soft-clay/statistics/power-index-bolt-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         ${this.gt('pi_title', 'TOP IGRAČI')}
                     </h2>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('pi-modal-overlay').remove()" aria-label="${this.gt('aria_close_power_index', 'Zatvori Power index listu')}">×</button>
@@ -209,9 +210,11 @@ class PowerIndexLeaderboard {
         // Tema bira svoj versionirani Power Index podium pack.
         const podiumTone = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const podiumTheme = activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter');
+        const podiumTheme = activeTheme === 'dark' ? 'green' : (activeTheme === 'severna' ? 'severna' : (activeTheme === 'desert' ? 'desert' : 'easter'));
         const podiumAssetSrc = podiumTheme === 'severna'
             ? `assets/severna-soft-clay/statistics/power-index/${podiumTone}-v10.png?v=1`
+            : podiumTheme === 'green'
+                ? `assets/green-soft-clay/leaderboard/medal-${podiumTone}-v1.png?v=1`
             : podiumTheme === 'easter'
                 ? `assets/easter-soft-clay/statistics/power-index/${podiumTone}-v3.png?v=1`
                 : `assets/desert-soft-clay/statistics/power-index/${podiumTone}-v3.png?v=1`;
@@ -274,9 +277,10 @@ class PowerIndexLeaderboard {
                     <div class="power-index-value-pill" style="display: flex; align-items: center; gap: 4px; background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 15px; border: 1px solid rgba(255,140,0,0.3); flex-shrink: 0;">
                         <span class="power-index-value-number" style="color: #FFD700; font-weight: 900; font-size: 1rem; text-shadow: 0 0 5px rgba(255,140,0,0.5);">${powerIndex}</span>
                         <span class="power-index-value-legacy" style="font-size: 0.8rem;">⚡</span>
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt power-index-value-bolt-easter" src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt" src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt-nebula" src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-value-bolt power-index-value-bolt-easter" data-theme-src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-value-bolt" data-theme-src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-value-bolt-nebula" data-theme-src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-value-bolt-green" data-theme-src="assets/green-soft-clay/statistics/power-index-bolt-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     </div>
                 </div>
             </div>`;
@@ -308,7 +312,7 @@ class PowerIndexLeaderboard {
         const myUid = localStorage.getItem('yamb_uid') || '';
         const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe || (myUid && player.uid && player.uid === myUid)));
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const dockMyRank = ['easter', 'desert'].includes(activeTheme) && !!this.myPlayer && !!myRankDock;
+        const dockMyRank = ['dark', 'easter', 'desert'].includes(activeTheme) && !!this.myPlayer && !!myRankDock;
 
         if (dockMyRank) {
             myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });

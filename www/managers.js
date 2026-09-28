@@ -247,6 +247,7 @@ class EffectManager {
         this.goldRainAnimationId = null;
         this.goldRainResizeHandler = null;
         this.goldRainSprites = null;
+        this.greenDucatParticleSpritePromise = null;
         this.effectTimeouts = [];
         this.iceAgeRunId = 0;
     }
@@ -1276,11 +1277,17 @@ class EffectManager {
         });
     }
 
-    runRoyalYambCanvas(canvas, duration = 8000) {
+    async runRoyalYambCanvas(canvas, duration = 8000) {
         if (!canvas || !canvas.getContext) return;
 
         const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
         if (!ctx) return;
+
+        const isGreenTheme = this.isGreenThemeActive();
+        const greenDucatSprite = isGreenTheme
+            ? await this.loadGreenDucatParticleSprite()
+            : null;
+        if (!canvas.isConnected) return;
 
         const start = performance.now();
         let rafId = 0;
@@ -1330,7 +1337,7 @@ class EffectManager {
             return sprite;
         };
 
-        const coinSprites = golds.map(color => createSprite(64, (spriteCtx, size) => {
+        const legacyCoinSprites = golds.map(color => createSprite(64, (spriteCtx, size) => {
             const center = size / 2;
             const radius = size * 0.31;
             const gradient = spriteCtx.createRadialGradient(center - 8, center - 10, 3, center, center, radius);
@@ -1359,6 +1366,7 @@ class EffectManager {
             spriteCtx.textBaseline = 'middle';
             spriteCtx.fillText('Y', center, center + 1);
         }));
+        const coinSprites = greenDucatSprite ? [greenDucatSprite] : legacyCoinSprites;
 
         const diamondSprite = createSprite(52, (spriteCtx, size) => {
             const center = size / 2;
@@ -1401,7 +1409,7 @@ class EffectManager {
         const falling = Array.from({ length: coinCount }, (_, index) => {
             const size = random(compact ? 7 : 8, compact ? 14 : 18);
             return {
-                kind: index % 7 === 0 ? 'diamond' : 'coin',
+                kind: !greenDucatSprite && index % 7 === 0 ? 'diamond' : 'coin',
                 x: random(width * 0.04, width * 0.96),
                 y: random(-height * 0.45, -size * 2),
                 drift: random(-80, 80),
@@ -1410,7 +1418,9 @@ class EffectManager {
                 life: random(2800, 4300),
                 spin: random(-5.2, 5.2),
                 wobble: random(0.8, 2.4),
-                sprite: index % 7 === 0 ? diamondSprite : coinSprites[index % coinSprites.length]
+                sprite: !greenDucatSprite && index % 7 === 0
+                    ? diamondSprite
+                    : coinSprites[index % coinSprites.length]
             };
         });
 
@@ -1624,6 +1634,44 @@ class EffectManager {
         }
     }
 
+    isGreenThemeActive() {
+        const activeTheme = document.documentElement?.dataset?.splashTheme
+            || localStorage.getItem('yamb_theme')
+            || 'dark';
+        if (activeTheme !== 'dark') return false;
+
+        return ![
+            'light-theme',
+            'medium-theme',
+            'winter-theme',
+            'neon-theme',
+            'amethyst-theme',
+            'easter-theme',
+            'desert-theme',
+            'moon-theme',
+            'severna-theme'
+        ].some(className => document.body?.classList.contains(className));
+    }
+
+    loadGreenDucatParticleSprite() {
+        if (this.greenDucatParticleSpritePromise) {
+            return this.greenDucatParticleSpritePromise;
+        }
+
+        this.greenDucatParticleSpritePromise = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                this.greenDucatParticleSpritePromise = null;
+                resolve(null);
+            };
+            image.src = 'assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png?v=1';
+        });
+
+        return this.greenDucatParticleSpritePromise;
+    }
+
     getGoldRainSprites() {
         if (this.goldRainSprites) return this.goldRainSprites;
 
@@ -1774,9 +1822,10 @@ class EffectManager {
         return this.goldRainSprites;
     }
 
-    spawnGoldRain() {
+    async spawnGoldRain() {
         const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const isEasterTheme = document.body.classList.contains('easter-theme');
+        const isGreenTheme = this.isGreenThemeActive();
         const isCompact = window.innerWidth < 640;
         const totalDuration = 6000;
         const emitDuration = reducedMotion ? 2600 : 4400;
@@ -1784,7 +1833,13 @@ class EffectManager {
         const sparkCount = reducedMotion ? 14 : (isCompact ? 26 : 48);
         const rand = (min, max) => min + Math.random() * (max - min);
         const ease = t => t * t * (3 - 2 * t);
-        const sprites = this.getGoldRainSprites();
+        let sprites = this.getGoldRainSprites();
+        if (isGreenTheme) {
+            const greenDucatSprite = await this.loadGreenDucatParticleSprite();
+            if (greenDucatSprite) {
+                sprites = { ...sprites, coin: greenDucatSprite };
+            }
+        }
 
         this.clearEffectTimeouts('gold_rain');
         if (this.goldRainAnimationId) {
@@ -1826,7 +1881,11 @@ class EffectManager {
 
         const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) {
-            this.spawnEmojiRain(['dukat-icon', '🪙', '💎', '👑'], reducedMotion ? 16 : 34, 'gold_rain');
+            this.spawnEmojiRain(
+                isGreenTheme ? ['dukat-icon'] : ['dukat-icon', '🪙', '💎', '👑'],
+                reducedMotion ? 16 : 34,
+                'gold_rain'
+            );
             this.scheduleEffectTimeout(() => {
                 document.body.classList.remove('fx-gold-rain');
                 if (atmosphere.parentNode) atmosphere.remove();
@@ -1856,7 +1915,7 @@ class EffectManager {
 
         const makeCoinParticle = () => {
             const roll = Math.random();
-            const isDukat = roll < 0.78;
+            const isDukat = isGreenTheme || roll < 0.78;
             const isCrown = !isDukat && roll > 0.93;
             const delay = rand(0, emitDuration);
             const preferredFallDuration = rand(reducedMotion ? 2600 : 2800, reducedMotion ? 3900 : 5000);
@@ -3392,6 +3451,9 @@ class ShopManager {
             ['default', 'confetti', 'dark', 'light', 'medium', 'winter'].forEach(item => {
                 if (!savedUnlocked.includes(item)) savedUnlocked.push(item);
             });
+            if (this.type === 'skin' && !savedUnlocked.includes('green_clay')) {
+                savedUnlocked.push('green_clay');
+            }
         }
         
         this.unlocked = savedUnlocked;
@@ -3495,30 +3557,33 @@ class ShopManager {
     getEasterTreasuryStatusIcon(iconName, className = '') {
         const easterIconName = iconName === 'status-locked' ? 'status-locked-v3' : `${iconName}-v2`;
         const easterVersion = iconName === 'status-locked' ? 2 : 1;
-        return `<img class="riznica-status-soft-clay-icon ${className}" src="assets/easter-soft-clay/treasury/${easterIconName}.png?v=${easterVersion}" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" alt="" aria-hidden="true" decoding="async">`;
+        return `<img class="riznica-status-soft-clay-icon ${className}" data-theme-src="assets/easter-soft-clay/treasury/${easterIconName}.png?v=${easterVersion}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" data-theme-src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" data-theme-src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-green-soft-clay-icon ${className}" data-theme-src="assets/green-soft-clay/treasury/${iconName}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
     }
 
     getTreasuryLockIcon() {
-        return '<span class="riznica-lock-fallback" aria-hidden="true">🔒</span><img class="riznica-lock-soft-clay-icon" src="assets/easter-soft-clay/treasury/status-locked-v3.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-desert-soft-clay-icon" src="assets/desert-soft-clay/treasury/status-locked.png?v=3" alt="" aria-hidden="true" decoding="async">';
+        return '<span class="riznica-lock-fallback" aria-hidden="true">🔒</span><img class="riznica-lock-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/status-locked-v3.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/status-locked.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/status-locked-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">';
     }
 
     getThemedTrophyCardSource(item) {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const source = activeTheme === 'desert' ? item?.desertIcon : item?.easterIcon;
+        const source = activeTheme === 'dark'
+            ? item?.greenIcon
+            : (activeTheme === 'desert' ? item?.desertIcon : item?.easterIcon);
         const safeSource = String(source || item?.easterIcon || '');
         return `${safeSource}${safeSource.includes('?') ? '&' : '?'}card=384-v1`;
     }
 
     getTreasuryRewardVideoIcon() {
-        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=1" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" alt="" aria-hidden="true" decoding="async">';
+        return '<span class="riznica-item-reward-video-fallback" aria-hidden="true">📺</span><img class="riznica-item-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-item-reward-video-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/reward-video-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">';
     }
 
     getTreasuryInsufficientIconPath() {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        if (activeTheme === 'dark') return 'assets/green-soft-clay/treasury/status-insufficient-v1.png?v=opt2';
         if (activeTheme === 'severna') return 'assets/severna-soft-clay/treasury/status-insufficient.png?v=1';
         return activeTheme === 'desert'
-            ? 'assets/desert-soft-clay/treasury/status-insufficient.png?v=3'
-            : 'assets/easter-soft-clay/treasury/status-insufficient-v2.png?v=1';
+            ? 'assets/desert-soft-clay/treasury/status-insufficient.png?v=opt2'
+            : 'assets/easter-soft-clay/treasury/status-insufficient-v2.png?v=opt2';
     }
 
     render() {
@@ -3531,7 +3596,7 @@ class ShopManager {
             section.className = 'category-section';
             const categoryMeta = this.getEasterTreasuryCategoryMeta(categoryName);
             const categoryHtml = categoryMeta
-                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}-v2.png?v=2" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
+                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}-v2.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/collection-${categoryMeta.type}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
                 : categoryName;
             section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''}>${categoryHtml}</div>`;
             
@@ -3550,7 +3615,10 @@ class ShopManager {
 
                 let visualHtml = '';
                 if (this.type === 'skin') {
-                    visualHtml = `<div class="dice-preview preview-${item.id}">⚅</div>`;
+                    const greenClayPreview = item.id === 'green_clay'
+                        ? '<div class="dice-dots-wrapper val-6" aria-hidden="true"><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div></div>'
+                        : '⚅';
+                    visualHtml = `<div class="dice-preview preview-${item.id}">${greenClayPreview}</div>`;
                 } else if (this.type === 'effect') {
                     visualHtml = `<div class="effect-preview-box ${item.cssClass}">${item.innerHtml || ''}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {

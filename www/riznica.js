@@ -12,6 +12,7 @@ class RiznicaManager {
     open() {
         if (this.isIntroPlaying) return;
         if (window.app && typeof window.app.reportMonitorRoomVisit === 'function') window.app.reportMonitorRoomVisit('treasury');
+        if (window.app && typeof window.app.prepareThemeRoomAssets === 'function') window.app.prepareThemeRoomAssets('treasury');
 
         if (!document.getElementById('riznica-screen')?.classList.contains('active')) {
             this.playIntro(() => this.showRiznica());
@@ -42,6 +43,8 @@ class RiznicaManager {
             this.warmTrophyAssets('easter');
         } else if (overlay.classList.contains('theme-desert')) {
             this.warmTrophyAssets('desert');
+        } else if (overlay.classList.contains('theme-dark')) {
+            this.warmTrophyAssets('green');
         }
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
@@ -50,7 +53,8 @@ class RiznicaManager {
         const lang = localStorage.getItem('yamb_lang') || 'sr';
         const isSoftClayIntro = overlay.classList.contains('theme-easter')
             || overlay.classList.contains('theme-desert')
-            || overlay.classList.contains('theme-severna');
+            || overlay.classList.contains('theme-severna')
+            || overlay.classList.contains('theme-dark');
 
         if (isSoftClayIntro) {
             const introLabel = lang === 'en' || lang === 'en-GB' ? 'TREASURY' : 'RIZNICA';
@@ -139,13 +143,13 @@ class RiznicaManager {
     }
 
     warmTrophyAssets(themeName) {
-        const theme = themeName === 'desert' ? 'desert' : 'easter';
+        const theme = ['desert', 'green'].includes(themeName) ? themeName : 'easter';
         if (this.trophyWarmupPromises.has(theme) || typeof SHOP_DATA === 'undefined') {
             return this.trophyWarmupPromises.get(theme) || null;
         }
 
         const sources = (SHOP_DATA.TROPHIES || [])
-            .map(item => theme === 'desert' ? item?.desertIcon : item?.easterIcon)
+            .map(item => theme === 'green' ? item?.greenIcon : (theme === 'desert' ? item?.desertIcon : item?.easterIcon))
             .filter(Boolean)
             .map(source => `${source}${source.includes('?') ? '&' : '?'}card=384-v1`);
         let nextSource = 0;

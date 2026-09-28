@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Plavi okean — QA tabla</title>
+  <link rel="stylesheet" href="../../style.css">
+  <link rel="stylesheet" href="../../teme.css">
+  <link rel="stylesheet" href="../../kockice.css">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; }
+    body { overflow: hidden; font-family: Montserrat, Arial, sans-serif; }
+    #game-scene { position: relative; display: flex; }
+    .qa-brand { color: var(--ocean-ink-strong); font-size: .72rem; font-weight: 1000; letter-spacing: .08em; text-shadow: 0 1px rgba(255,255,255,.8); }
+    .qa-header-mark { color: var(--ocean-coral); font-weight: 1000; }
+  </style>
+</head>
+<body class="winter-theme">
+  <main id="game-scene" class="screen active" aria-label="QA prikaz table Plavi okean">
+    <header class="game-header">
+      <button class="btn-secondary game-header-icon game-header-exit" aria-label="Izlaz">‹</button>
+      <span class="qa-brand">PLAVI OKEAN <span class="qa-header-mark">●</span></span>
+      <div class="game-header-controls">
+        <div id="turn-timer-display" style="display:flex">00:42</div>
+        <button class="btn-secondary game-header-icon" aria-label="Ispravka">↩</button>
+        <button class="btn-secondary game-header-icon" aria-label="Meni">⋮</button>
+      </div>
+    </header>
+
+    <div class="game-content">
+      <div class="left-panel">
+        <div class="tables-wrapper" id="tables-container">
+          <section class="player-table" aria-label="Yamb tabela igrača">
+            <div class="player-name">IGRAČ · 248</div>
+            <div class="grid-container" id="qa-grid"></div>
+            <div class="total-score">UKUPNO · 248</div>
+          </section>
+        </div>
+
+        <section class="controls-area" aria-label="Kontrole bacanja">
+          <div id="lbl-turn">TVOJ POTEZ · BACANJE 2/3</div>
+          <div class="dice-container" id="dice-container"></div>
+          <div class="game-info">
+            <div class="status-label">ZADRŽI KOCKICE</div>
+            <div class="action-btn-group">
+              <button id="btn-najava" class="game-btn btn-secondary">NAJAVA</button>
+              <button id="btn-bacaj" class="game-btn btn-throw">BACAJ</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const columns = [
+        ["NADOLE", "c-nadole"],
+        ["SLOB.", "c-slobodna"],
+        ["SRED.", "c-sredina"],
+        ["NAGORE", "c-nagore"],
+        ["RUČNO", "c-rucno"],
+        ["NAJAVA", "c-najava"]
+      ];
+      const rows = ["1", "2", "3", "4", "5", "6", "ZBIR I", "MAX", "MIN", "ZBIR II", "TRILING", "KENTA", "FUL", "POKER", "YAMB", "ZBIR III"];
+      const values = {
+        "1": [3, 2, "", 4, "", 1],
+        "2": [8, "", 6, "", 4, ""],
+        "3": [12, 9, "", 6, "", 15],
+        "4": ["", 16, 12, "", 8, ""],
+        "5": [20, "", 15, 10, "", 25],
+        "6": [24, 18, "", 12, 30, ""],
+        "MAX": [28, "", 26, "", 30, ""],
+        "MIN": [8, 7, "", 9, "", 6],
+        "TRILING": [23, "", 19, "", 26, ""],
+        "KENTA": [66, 56, "", 46, "", 66],
+        "FUL": [48, "", 44, "", 52, ""],
+        "POKER": [55, 49, "", 47, "", 58],
+        "YAMB": [72, "", 64, "", 80, ""]
+      };
+      const sums = { "ZBIR I": [67,45,33,32,42,41], "ZBIR II": [100,78,62,76,88,69], "ZBIR III": [264,105,127,93,158,124] };
+      const grid = document.getElementById("qa-grid");
+      const addCell = (className, text) => {
+        const cell = document.createElement("div");
+        cell.className = className;
+        cell.textContent = text;
+        grid.appendChild(cell);
+        return cell;
+      };
+      addCell("grid-cell col-header", "");
+      columns.forEach(([label, cls]) => addCell(`grid-cell col-header ${cls}`, label));
+      rows.forEach((row) => {
+        const isSum = row.startsWith("ZBIR");
+        addCell(`grid-cell row-header${isSum ? " sum" : ""}`, row);
+        const rowValues = isSum ? sums[row] : (values[row] || []);
+        for (let col = 0; col < 6; col += 1) {
+          if (isSum) {
+            addCell("grid-cell cell-sum", String(rowValues[col]));
+          } else {
+            const cell = addCell("grid-cell", "");
+            const button = document.createElement("button");
+            const value = rowValues[col];
+            button.className = `score-btn${value !== undefined && value !== "" ? " filled" : ""}`;
+            button.textContent = value ?? "";
+            if (row === "YAMB" && col === 5) cell.classList.add("highlight-najava");
+            cell.appendChild(button);
+          }
+        }
+      });
+
+      const dotCount = [5, 3, 6, 4, 2, 1];
+      const dice = document.getElementById("dice-container");
+      dotCount.forEach((value, index) => {
+        const die = document.createElement("div");
+        die.className = `dice skin-default val-${value}${index === 1 || index === 4 ? " held" : ""}`;
+        const wrapper = document.createElement("span");
+        wrapper.className = "dice-dots-wrapper";
+        for (let dot = 0; dot < value; dot += 1) {
+          const pip = document.createElement("i");
+          pip.className = "dice-dot";
+          wrapper.appendChild(pip);
+        }
+        die.appendChild(wrapper);
+        dice.appendChild(die);
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -229,6 +229,7 @@ class KvartalnaLigaManager {
         if (activeTheme === 'severna') return 'severna';
         if (activeTheme === 'desert') return 'desert';
         if (activeTheme === 'easter') return 'easter';
+        if (activeTheme === 'dark') return 'green';
         if (document.body.classList.contains('severna-theme')) return 'severna';
         if (document.body.classList.contains('desert-theme')) return 'desert';
         if (document.body.classList.contains('easter-theme')) return 'easter';
@@ -239,6 +240,7 @@ class KvartalnaLigaManager {
         const visualTheme = this.getQlVisualTheme();
         if (visualTheme === 'severna') return 'assets/severna-soft-clay/ql';
         if (visualTheme === 'desert') return 'assets/desert-soft-clay/ql';
+        if (visualTheme === 'green') return 'assets/green-soft-clay/ql';
         return 'assets/easter-soft-clay/ql';
     }
 
@@ -260,13 +262,37 @@ class KvartalnaLigaManager {
             'medal-bronze': '-v3'
         };
         const easterVersions = {
+            'tab-hall-of-fame': '-v2',
+            'rank-amater': '-v4',
+            'rank-profi': '-v4',
+            'rank-majstor': '-v4',
+            'rank-legenda': '-v2',
+            'rank-titan': '-v4',
+            'rank-alltime': '-v3',
             'medal-gold': '-v2',
             'medal-silver': '-v2',
             'medal-bronze': '-v2'
         };
+        const greenVersions = {
+            'tab-league': '-v1',
+            'tab-hall-of-fame': '-v1',
+            'tab-medals': '-v1',
+            'tab-champions': '-v1',
+            'rank-amater': '-v1',
+            'rank-profi': '-v1',
+            'rank-majstor': '-v1',
+            'rank-legenda': '-v1',
+            'rank-titan': '-v1',
+            'rank-alltime': '-v1',
+            'medal-gold': '-v1',
+            'medal-silver': '-v1',
+            'medal-bronze': '-v1'
+        };
         const fileSuffix = visualTheme === 'severna'
             ? (severnaVersions[assetName] || '')
-            : (visualTheme === 'easter' ? (easterVersions[assetName] || '') : '');
+            : (visualTheme === 'easter'
+                ? (easterVersions[assetName] || '')
+                : (visualTheme === 'green' ? (greenVersions[assetName] || '') : ''));
         const retrySuffix = retryToken ? `&retry=${encodeURIComponent(retryToken)}` : '';
         return `${this.getQlAssetRoot()}/${assetName}${fileSuffix}.png?v=1${retrySuffix}`;
     }
@@ -308,7 +334,7 @@ class KvartalnaLigaManager {
 
     preloadRankBadges() {
         const visualTheme = this.getQlVisualTheme();
-        if (visualTheme !== 'easter' && visualTheme !== 'desert' && visualTheme !== 'severna') return Promise.resolve([]);
+        if (visualTheme !== 'easter' && visualTheme !== 'desert' && visualTheme !== 'severna' && visualTheme !== 'green') return Promise.resolve([]);
         if (this.rankBadgePreloadTheme !== visualTheme) {
             this.rankBadgePreloadPromise = null;
             this.rankBadgeImageCache.clear();
@@ -350,6 +376,9 @@ class KvartalnaLigaManager {
     async openModal() {
         if (this.isIntroPlaying || this.isOpenPending) return;
         this.isOpenPending = true;
+        if (window.app && typeof window.app.prepareThemeRoomAssets === 'function') {
+            window.app.prepareThemeRoomAssets('quarterlyLeague');
+        }
         try {
             await this.preloadRankBadges();
         } finally {
@@ -370,7 +399,7 @@ class KvartalnaLigaManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
-        if (overlay.classList.contains('theme-easter')) {
+        if (overlay.classList.contains('theme-easter') || overlay.classList.contains('theme-dark')) {
             titleElement?.replaceChildren();
             titleElement?.removeAttribute('aria-label');
         } else {
@@ -445,8 +474,10 @@ class KvartalnaLigaManager {
         const softClaySource = icon === 'hof'
             ? this.getQlAssetSource('tab-hall-of-fame')
             : (visualTheme === 'easter'
-                ? 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=1'
-                : this.getQlAssetSource('tab-league'));
+                ? 'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2'
+                : (visualTheme === 'desert'
+                    ? 'assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2'
+                    : this.getQlAssetSource('tab-league')));
         const softClayIcon = `<img class="league-tab-soft-clay-icon" src="${softClaySource}" alt="" aria-hidden="true" decoding="async">`;
         if (icon === 'hof') {
             return `${softClayIcon}
@@ -509,9 +540,10 @@ class KvartalnaLigaManager {
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,215,0,0.2); background: rgba(0,0,0,0.3); flex-shrink: 0;">
                     <div class="league-modal-title-group">
                         <img class="league-modal-header-icon league-modal-header-icon-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-easter" src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=1" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-desert" src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro.png?v=2" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-nebula" src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" alt="" aria-hidden="true" decoding="async">
+                        <img class="league-modal-header-icon league-modal-header-icon-easter" data-theme-src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="league-modal-header-icon league-modal-header-icon-desert" data-theme-src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="league-modal-header-icon league-modal-header-icon-nebula" data-theme-src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="league-modal-header-icon league-modal-header-icon-green" data-theme-src="assets/green-soft-clay/quarterly-league-yotb-ql-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <h2 style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
                     </div>
                     <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold; line-height: 1;" onclick="document.getElementById('league-modal-overlay').remove()">✖</span>

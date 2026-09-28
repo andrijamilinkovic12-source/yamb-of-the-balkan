@@ -75,6 +75,8 @@ class UndoManager {
         const undoDesertIcon = document.getElementById('economy-header-undo-desert-icon');
         const ducatsNebulaIcon = document.getElementById('economy-header-ducats-nebula-icon');
         const undoNebulaIcon = document.getElementById('economy-header-undo-nebula-icon');
+        const ducatsGreenIcon = document.getElementById('economy-header-ducats-green-icon');
+        const undoGreenIcon = document.getElementById('economy-header-undo-green-icon');
         if (ducatsIcon) ducatsIcon.classList.toggle('hidden', normalizedIndex === 1);
         if (undoIcon) undoIcon.classList.toggle('hidden', normalizedIndex === 0);
         if (ducatsSoftClayIcon) ducatsSoftClayIcon.classList.toggle('hidden', normalizedIndex === 1);
@@ -83,6 +85,8 @@ class UndoManager {
         if (undoDesertIcon) undoDesertIcon.classList.toggle('hidden', normalizedIndex === 0);
         if (ducatsNebulaIcon) ducatsNebulaIcon.classList.toggle('hidden', normalizedIndex === 1);
         if (undoNebulaIcon) undoNebulaIcon.classList.toggle('hidden', normalizedIndex === 0);
+        if (ducatsGreenIcon) ducatsGreenIcon.classList.toggle('hidden', normalizedIndex === 1);
+        if (undoGreenIcon) undoGreenIcon.classList.toggle('hidden', normalizedIndex === 0);
 
         if (normalizedIndex !== this.currentMenuPage) {
             this.currentMenuPage = normalizedIndex;

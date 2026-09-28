@@ -1,0 +1,22 @@
+{
+  "id": "winter",
+  "name": "Plavi okean",
+  "version": 3,
+  "status": "complete",
+  "background": "assets/ocean-neumorphic-bg-v2.png",
+  "designTokens": {
+    "surface": "translucent powder-blue soft clay",
+    "ink": "deep Adriatic navy",
+    "accent": "turquoise, coral and warm ivory",
+    "shapeLanguage": "rounded shells, inset water channels and raised clay tiles",
+    "shadowLanguage": "soft top-left highlights with cool blue raised and inset shadows"
+  },
+  "rules": [
+    "Keep every game layout and interaction shared with the base game.",
+    "Keep all Plavi okean styling isolated under body.winter-theme.",
+    "Keep the center of the background calm enough for menus and score tables.",
+    "Use dark navy text on pale ocean surfaces and white text only on deep-blue controls.",
+    "Preserve the existing board dimensions, grid geometry and responsive breakpoints.",
+    "Use the existing winter theme ID so saved profiles remain compatible."
+  ]
+}

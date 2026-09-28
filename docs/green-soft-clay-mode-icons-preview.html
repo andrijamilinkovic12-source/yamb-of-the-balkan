@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Green Soft Clay — mode icons V2</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      color: #eef4e5;
+      font: 600 16px/1.25 system-ui, sans-serif;
+      background:
+        linear-gradient(rgba(24, 53, 32, .56), rgba(18, 43, 27, .70)),
+        url("../www/assets/green-clay-balkan-diorama-v3.png") center / cover fixed;
+    }
+    main {
+      width: min(1000px, calc(100vw - 48px));
+      padding: 34px;
+      border: 1px solid rgba(220, 235, 195, .24);
+      border-radius: 30px;
+      background: linear-gradient(145deg, rgba(96, 131, 84, .94), rgba(42, 77, 48, .95));
+      box-shadow: 18px 22px 42px rgba(7, 29, 15, .46), inset 2px 2px 3px rgba(230, 240, 208, .20);
+    }
+    h1 { margin: 0 0 24px; text-align: center; font-size: 25px; }
+    .large, .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .large { margin-bottom: 28px; }
+    .large figure { margin: 0; padding: 16px; text-align: center; }
+    .large img { width: 150px; height: 150px; object-fit: contain; filter: drop-shadow(0 10px 14px rgba(7,29,15,.40)); }
+    .large figcaption { margin-top: 5px; color: #dce7c9; }
+    .card {
+      min-height: 148px;
+      padding: 18px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid rgba(211, 227, 185, .28);
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(111,145,96,.96), rgba(53,89,55,.96));
+      box-shadow: 8px 9px 18px rgba(8,31,17,.38), -4px -4px 10px rgba(155,183,131,.12), inset 1px 1px 2px rgba(225,239,201,.27);
+    }
+    .card img { width: 68px; height: 68px; object-fit: contain; filter: drop-shadow(0 6px 9px rgba(7,29,15,.36)); }
+    .card span { font-size: 15px; text-align: center; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Balkan Clay Glyphs V2 — modovi igre</h1>
+    <section class="large">
+      <figure><img src="../www/assets/green-soft-clay/mode-solo-free-v2.png"><figcaption>Solo</figcaption></figure>
+      <figure><img src="../www/assets/green-soft-clay/mode-hotseat-free-v2.png"><figcaption>Hotseat</figcaption></figure>
+      <figure><img src="../www/assets/green-soft-clay/mode-opponent-free-v2.png"><figcaption>Online Random</figcaption></figure>
+      <figure><img src="../www/assets/green-soft-clay/mode-invite-free-v2.png"><figcaption>Pozovi prijatelja</figcaption></figure>
+    </section>
+    <section class="cards">
+      <div class="card"><img src="../www/assets/green-soft-clay/mode-solo-free-v2.png"><span>Solo igra</span></div>
+      <div class="card"><img src="../www/assets/green-soft-clay/mode-hotseat-free-v2.png"><span>Dva igrača</span></div>
+      <div class="card"><img src="../www/assets/green-soft-clay/mode-opponent-free-v2.png"><span>Random igrač</span></div>
+      <div class="card"><img src="../www/assets/green-soft-clay/mode-invite-free-v2.png"><span>Prijatelj</span></div>
+    </section>
+  </main>
+</body>
+</html>
