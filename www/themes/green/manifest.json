@@ -1,7 +1,7 @@
 {
   "id": "dark",
   "name": "Zelena Soft Clay",
-  "version": 30,
+  "version": 38,
   "status": "complete",
   "background": "assets/green-clay-balkan-diorama-v3.png",
   "defaultDiceSkin": "green_clay",
@@ -41,6 +41,11 @@
     "Treat themes/green/asset-registry.json as the machine-readable source of truth for approved canonical Green asset families, runtime variants, composite uses, semantic exclusions and forbidden retired paths.",
     "Use one canonical Green Undo token for every standalone token depiction: a thick rounded ivory rim, recessed dark forest-green face and one solid terracotta counter-clockwise arrow with its head in the upper-left sector. Keep large action arrows around dukats and gameplay/navigation arrows as separate semantic controls.",
     "Use one canonical Green rewarded-video ticket for direct active actions and one matching unavailable state: a forest-green notched clay ticket, rounded ivory inner frame and right-facing ivory play triangle, with a terracotta sparkle for active state or terracotta diagonal slash for unavailable state. Reward dukats remain separate canonical objects in room-specific composites.",
+    "Use the locked canonical Collection medal trio only for Bronze, Silver and Gold Treasury dice-skin category headers: one ivory rim, one raised tier star, striped forest-green ribbons and one round terracotta clasp. Never substitute General Podium, Quarterly League, finalist, rank, trophy, winner, dukat or token assets.",
+    "Use one canonical 26-entry Green achievement trophy catalog: each achievement ID keeps its own semantic glyph, and the same PNG identity must be reused by the Treasury card, unlock popup and end-game showcase. Keep tab, aggregate statistics, tournament, podium, collection, rank and winner symbols outside this family.",
+    "Use the canonical Green Treasury Controls pack with separate navigationTabs and itemStatuses subfamilies. Reuse the four tab glyphs in Treasury and Rules, keep owned distinct from active, keep locked distinct from insufficient balance, and never substitute tournament, daily, invite, solo or rewarded-video states.",
+    "Use one canonical Green Quarterly League rank badge for each of the six rank IDs: Amater, Profi, Majstor, Legenda, Titan and All-time. Preserve the five seasonal score levels and keep All-time as a separate Hall of Fame identity; never substitute podium medals, navigation glyphs, trophies or winner marks.",
+    "Use the canonical Green Quarterly League Navigation pack for the League, Hall of Fame, Medals and Champions views. Reuse the Champions identity only for the champion archive tab and champion card marker, and keep rank badges, podium medals, Tournament tabs, trophies and winner marks outside this family.",
     "Load only the active Green splash, background and optimized 384 px main-menu thumbnails at startup; hydrate each room's transparent 256/384/512 px runtime PNGs on room entry, while preserving the original high-resolution masters outside the shipped www tree.",
     "Preserve the existing internal dark theme ID for saved-profile compatibility."
   ]

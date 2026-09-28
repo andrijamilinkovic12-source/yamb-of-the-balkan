@@ -1,0 +1,102 @@
+{
+  "id": "green-quarterly-navigation",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "four stable Green navigation identities for Quarterly League content",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and terracotta clay",
+    "presentation": "one centered navigation glyph on transparent background without a backing tile or text",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity per Quarterly League navigation ID"
+  },
+  "catalog": [
+    {
+      "id": "tab-league",
+      "role": "live Quarterly League rankings navigation",
+      "glyph": "rising podium bars with one ivory star",
+      "usedBy": ["League main tab"],
+      "master": "green-tab-league-master-v1.png",
+      "masterSha256": "b13c78b65c7130229aa16b09ae1d5d08fd5d7b126afa8ec6e3ef682f820a1790",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-league-v1.png",
+      "size": 256,
+      "runtimeSha256": "f40a3b7929a00158136f08df1520492d0a3917dfd3082a82c36a6167c72b27a2",
+      "activeRuntime": "www/assets/green-soft-clay/ql/tab-league-v1.png",
+      "activeSize": 256,
+      "activeRuntimeSha256": "f40a3b7929a00158136f08df1520492d0a3917dfd3082a82c36a6167c72b27a2"
+    },
+    {
+      "id": "tab-hall-of-fame",
+      "role": "Quarterly League Hall of Fame navigation",
+      "glyph": "ceremonial hall with one terracotta star",
+      "usedBy": ["Hall of Fame main tab"],
+      "master": "green-tab-hall-of-fame-master-v1.png",
+      "masterSha256": "6d6ff6bbe9f6b0ad8afde56df20628fc677c99573763c950bed8919ebc569ae0",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v1.png",
+      "size": 256,
+      "runtimeSha256": "7bc6e75d502f439ee5f545424d132900d2eaaedb259d7bbb8382f1463d429f81",
+      "activeRuntime": "www/assets/green-soft-clay/ql/tab-hall-of-fame-v1.png",
+      "activeSize": 256,
+      "activeRuntimeSha256": "7bc6e75d502f439ee5f545424d132900d2eaaedb259d7bbb8382f1463d429f81"
+    },
+    {
+      "id": "tab-medals",
+      "role": "Quarterly League medal archive navigation",
+      "glyph": "gold, silver and bronze medal trio",
+      "usedBy": ["Hall of Fame Medals subtab"],
+      "master": "green-tab-medals-master-v1.png",
+      "masterSha256": "997bab279edb58bc674c32c5c460c71f7b5e4c119819faf420e34d5a6499dde4",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v1.png",
+      "size": 256,
+      "runtimeSha256": "75db6fa1bf822490fc0f6de3b205e3636d181008ddab448396a1ea20d7ca0c81",
+      "activeRuntime": "www/assets/green-soft-clay/ql/tab-medals-v1.png",
+      "activeSize": 256,
+      "activeRuntimeSha256": "75db6fa1bf822490fc0f6de3b205e3636d181008ddab448396a1ea20d7ca0c81"
+    },
+    {
+      "id": "tab-champions",
+      "role": "Quarterly League champion archive identity",
+      "glyph": "ivory crown inside forest-green laurels",
+      "usedBy": ["Hall of Fame Champions subtab", "champion card marker"],
+      "master": "green-tab-champions-master-v1.png",
+      "masterSha256": "d91714191ea7c4100b2188cfb14aec91a255e077d0ebb8bf9ddb20a5d3797468",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-champions-v1.png",
+      "size": 256,
+      "runtimeSha256": "a4274e7e793e34f7c7797d2b6eceda11850de2949ab62d072e7841f5698d1a8b",
+      "activeRuntime": "www/assets/green-soft-clay/ql/tab-champions-v1.png",
+      "activeSize": 384,
+      "activeRuntimeSha256": "4d366cc7d224dda375d9da5d101a73a679aa416a0b46c159bc2dd13b024007a5",
+      "normalization": "canonical runtime reduced from 384 to 256 pixels from the same approved 512-pixel master"
+    }
+  ],
+  "semanticExclusions": [
+    "Quarterly League rank badges",
+    "Quarterly League podium medals",
+    "General Podium competition medals",
+    "Tournament navigation tabs",
+    "Treasury navigation tabs",
+    "Treasury Collection medals",
+    "Tournament finalist award",
+    "Treasury achievement trophies",
+    "Statistics aggregate trophies metric",
+    "winner and victory-state marks",
+    "Quarterly League intro and main logo",
+    "dukats and consumable tokens"
+  ],
+  "integration": {
+    "mainTabs": "connected",
+    "hallOfFameSubtabs": "connected",
+    "championMarker": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Each Quarterly League navigation ID owns exactly one Green canonical PNG identity.",
+    "The champions identity may be reused as a champion card marker because both uses express the same concept.",
+    "All canonical runtime navigation assets use the shared 256-pixel mobile size.",
+    "Never substitute rank badges, podium medals, trophies, finalist awards or winner marks for navigation glyphs.",
+    "Use the canonical runtime pack instead of copying or recoloring individual navigation glyphs."
+  ]
+}

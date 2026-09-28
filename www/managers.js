@@ -3557,11 +3557,11 @@ class ShopManager {
     getEasterTreasuryStatusIcon(iconName, className = '') {
         const easterIconName = iconName === 'status-locked' ? 'status-locked-v3' : `${iconName}-v2`;
         const easterVersion = iconName === 'status-locked' ? 2 : 1;
-        return `<img class="riznica-status-soft-clay-icon ${className}" data-theme-src="assets/easter-soft-clay/treasury/${easterIconName}.png?v=${easterVersion}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" data-theme-src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" data-theme-src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-green-soft-clay-icon ${className}" data-theme-src="assets/green-soft-clay/treasury/${iconName}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
+        return `<img class="riznica-status-soft-clay-icon ${className}" data-theme-src="assets/easter-soft-clay/treasury/${easterIconName}.png?v=${easterVersion}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-desert-soft-clay-icon ${className}" data-theme-src="assets/desert-soft-clay/treasury/${iconName}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-nebula-soft-clay-icon ${className}" data-theme-src="assets/severna-soft-clay/treasury/${iconName}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-status-green-soft-clay-icon ${className}" data-theme-src="assets/green-soft-clay/canonical/treasury-controls/${iconName}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
     }
 
     getTreasuryLockIcon() {
-        return '<span class="riznica-lock-fallback" aria-hidden="true">🔒</span><img class="riznica-lock-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/status-locked-v3.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/status-locked.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/status-locked-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">';
+        return '<span class="riznica-lock-fallback" aria-hidden="true">🔒</span><img class="riznica-lock-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/status-locked-v3.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/status-locked.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-lock-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">';
     }
 
     getThemedTrophyCardSource(item) {
@@ -3579,7 +3579,7 @@ class ShopManager {
 
     getTreasuryInsufficientIconPath() {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        if (activeTheme === 'dark') return 'assets/green-soft-clay/treasury/status-insufficient-v1.png?v=opt2';
+        if (activeTheme === 'dark') return 'assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png?v=1';
         if (activeTheme === 'severna') return 'assets/severna-soft-clay/treasury/status-insufficient.png?v=1';
         return activeTheme === 'desert'
             ? 'assets/desert-soft-clay/treasury/status-insufficient.png?v=opt2'
@@ -3596,7 +3596,7 @@ class ShopManager {
             section.className = 'category-section';
             const categoryMeta = this.getEasterTreasuryCategoryMeta(categoryName);
             const categoryHtml = categoryMeta
-                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}-v2.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/collection-${categoryMeta.type}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
+                ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}-v2.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/collection-medals/collection-${categoryMeta.type}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
                 : categoryName;
             section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''}>${categoryHtml}</div>`;
             

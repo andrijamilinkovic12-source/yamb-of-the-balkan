@@ -1,0 +1,136 @@
+{
+  "id": "green-competition-medals",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "subfamilies": {
+    "generalPodium": {
+      "semanticRole": "shared first, second and third place medals for general competitive rankings",
+      "usedBy": [
+        "Leaderboard",
+        "Tournament podium",
+        "Power Index",
+        "Fire Streak"
+      ],
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "shape": "front-facing circular medal with two short ribbon tails",
+        "mark": "one ivory laurel wreath",
+        "ribbons": "forest-green clay with a narrow ivory stripe and terracotta tips",
+        "tiers": "gold, silver and bronze clay bodies"
+      },
+      "masters": [
+        {
+          "tier": "gold",
+          "path": "general-podium/green-general-podium-gold-master-v1.png",
+          "sha256": "cd358553a095a14735d4131cd9aa29eb808bb15806e78349eeb24262a9c176c3"
+        },
+        {
+          "tier": "silver",
+          "path": "general-podium/green-general-podium-silver-master-v1.png",
+          "sha256": "99c47b55f9d3b1d9def54792d31a36be241b0fd47e3a7ac4f7c1a2d9a80e8deb"
+        },
+        {
+          "tier": "bronze",
+          "path": "general-podium/green-general-podium-bronze-master-v1.png",
+          "sha256": "dc6cb22ebac3727ce7a318b4289f27b20529eb2c8c620bd18a74ab8f1abd059e"
+        }
+      ],
+      "runtime": [
+        {
+          "tier": "gold",
+          "path": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v1.png",
+          "size": 256,
+          "sha256": "d28b456736188dfc50e929708ca3d77ad43acb11fb42af786ef68055a95b500a"
+        },
+        {
+          "tier": "silver",
+          "path": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v1.png",
+          "size": 256,
+          "sha256": "cc279768a06b8b2a76543b8266fbe49ab111ed1eb404e8abe2bb06689d8bee7f"
+        },
+        {
+          "tier": "bronze",
+          "path": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png",
+          "size": 256,
+          "sha256": "40330474bbca7ebe87b539e1311307a7a552edd90e9dd4febb60d49218d4d775"
+        }
+      ]
+    },
+    "quarterlyLeaguePodium": {
+      "semanticRole": "first, second and third place medals exclusive to the Quarterly League",
+      "usedBy": [
+        "Quarterly League live rankings",
+        "Quarterly League Hall of Fame",
+        "Rules quarterly podium"
+      ],
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "shape": "front-facing circular medal with the Quarterly League ribbon layout",
+        "mark": "one ivory five-point star",
+        "ribbons": "forest-green, ivory and terracotta Quarterly League ribbon layout",
+        "tiers": "gold, silver and bronze clay bodies"
+      },
+      "masters": [
+        {
+          "tier": "gold",
+          "path": "quarterly-league/green-quarterly-league-podium-gold-master-v1.png",
+          "sha256": "962ad9ca3a3f556f00fa36b020d11d29242fea6ef067a02cf6d97891fc2c40be"
+        },
+        {
+          "tier": "silver",
+          "path": "quarterly-league/green-quarterly-league-podium-silver-master-v1.png",
+          "sha256": "1a93fdd086c5f33131d55cc910a93fa9153d820e8933145d7750c1cae53ee4e7"
+        },
+        {
+          "tier": "bronze",
+          "path": "quarterly-league/green-quarterly-league-podium-bronze-master-v1.png",
+          "sha256": "958261a5d2b18d46db32dbc4e8b4e1bbca9293bd1cf782eddc8d98e999cb7ded"
+        }
+      ],
+      "runtime": [
+        {
+          "tier": "gold",
+          "path": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png",
+          "size": 256,
+          "sha256": "103af0ef4870d349e8309e2f4cfe27b1c3392c472c65fb42a8ed50ca6cbfa436"
+        },
+        {
+          "tier": "silver",
+          "path": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png",
+          "size": 256,
+          "sha256": "2e295ab91a23c792ffd1076dbd0568f060e8268fbc045a1b312549fa268e4eba"
+        },
+        {
+          "tier": "bronze",
+          "path": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png",
+          "size": 256,
+          "sha256": "8816d19cb16f63b0b03b602cb6b0d06a6208513c6c99ef52a491a687c775f64b"
+        }
+      ]
+    }
+  },
+  "semanticExclusions": [
+    "Treasury collection progress medals",
+    "Tournament finalist award",
+    "Quarterly League medals-tab navigation glyph",
+    "Quarterly League rank badges",
+    "Treasury achievement trophies",
+    "winner and victory-state marks",
+    "dukats and consumable tokens"
+  ],
+  "integration": {
+    "generalPodium": "connected to Leaderboard, Tournament, Power Index, Fire Streak and waiting-room Hall of Fame",
+    "quarterlyLeaguePodium": "connected to Quarterly League rankings, Hall of Fame and Rules",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "General Podium always uses the ivory laurel identity.",
+    "Quarterly League Podium always uses the ivory five-point star identity.",
+    "Never mix General Podium and Quarterly League assets even when the tier color matches.",
+    "Use the canonical runtime pack instead of copying or recoloring individual medals.",
+    "Collection, finalist, rank, trophy and navigation assets remain separate semantic families."
+  ]
+}

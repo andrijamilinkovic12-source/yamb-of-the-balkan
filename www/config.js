@@ -199,7 +199,7 @@ const SHOP_DATA = {
 // ali koriste poseban raster pack bez menjanja logike otključavanja.
 SHOP_DATA.TROPHIES.forEach(item => {
     item.desertIcon = `assets/desert-soft-clay/treasury/trophies/${item.id}-v1.png?v=1`;
-    item.greenIcon = `assets/green-soft-clay/treasury/trophies/${item.id}-v1.png?v=1`;
+    item.greenIcon = `assets/green-soft-clay/canonical/achievement-trophies/${item.id}-v1.png?v=1`;
 });
 
 // Export (ako je potrebno za module, mada u browseru radi globalno)

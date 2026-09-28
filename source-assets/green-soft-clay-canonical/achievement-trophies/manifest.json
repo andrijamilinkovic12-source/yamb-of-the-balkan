@@ -1,0 +1,75 @@
+{
+  "id": "green-achievement-trophies",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "one stable Green visual identity for each of the 26 gameplay achievements",
+  "usedBy": [
+    "Treasury trophy cards",
+    "achievement unlock popup",
+    "end-game trophy showcase"
+  ],
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and terracotta clay",
+    "presentation": "one centered semantic glyph on transparent background without a backing tile or text",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity per achievement ID"
+  },
+  "catalog": [
+    { "id": "first_play", "role": "first completed game", "master": "green-first_play-master-v1.png", "masterSha256": "da3461ef91d69449c0a512750c676870ff2bb0ab402ff3487f62f4fb6c96323c", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png", "size": 256, "runtimeSha256": "a4513fd37e267840d152d759f9e3fc06c5d5a845128a1e1b11736c606254572e" },
+    { "id": "apprentice", "role": "ten completed games", "master": "green-apprentice-master-v1.png", "masterSha256": "a87d9bb7d0a3f4f9c221836246d4fe2888f2a8db92575630f55bfcfd450bdf49", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/apprentice-v1.png", "size": 256, "runtimeSha256": "3169902c572ef26d6819825dadd96107a422ffc2e0d087ae0158bb6ba9195584" },
+    { "id": "veteran", "role": "fifty completed games", "master": "green-veteran-master-v1.png", "masterSha256": "707381040f49caff3c6ed14295a7045c9c939e1cb403cec5c895d91d3f20576a", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/veteran-v1.png", "size": 256, "runtimeSha256": "c84e8165651a1090ab654fb4a8b747b11989871f2c4ee8494360a287a020efc8" },
+    { "id": "kafana", "role": "completed Hotseat game", "master": "green-kafana-master-v1.png", "masterSha256": "5c42d9fc30b0372d99d023a074cb08a19319fb01e41cdeabee0df8d7e6b1c6e6", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/kafana-v1.png", "size": 256, "runtimeSha256": "c55cb59257eff82c396437b5a8389b518eeeb763bef2d532fbab2d9f6416ad9f" },
+    { "id": "score_1000", "role": "score over 1000", "master": "green-score_1000-master-v1.png", "masterSha256": "a7dde15dda7aeb35af7e6789f3eff2dae8735b07dde7bba962a8f2680dafb386", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/score_1000-v1.png", "size": 256, "runtimeSha256": "85b4f001c3922aa5aa1bbd5c5daa18d52e6c49b4743d9e2fc1df60babeacb12e" },
+    { "id": "grandmaster", "role": "score over 1250", "master": "green-grandmaster-master-v1.png", "masterSha256": "015c9680aa70dafaf2d39b8f7e678df560ec3821327365cc9a5145b7bb1ac7df", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/grandmaster-v1.png", "size": 256, "runtimeSha256": "af0015226451ab4afc22b532b244d4593db035d636dda0e91f1605beed38c0f4" },
+    { "id": "legend", "role": "score over 2000", "master": "green-legend-master-v1.png", "masterSha256": "77853485c15a209dc2dee234268c424b81bb10a57f37b7f093ccee318cac1fa8", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/legend-v1.png", "size": 256, "runtimeSha256": "316990c9c9400761ce5bfceaa69754b6eb68d8c41d873954d714a06e26c15125" },
+    { "id": "mythic", "role": "score over 2500", "master": "green-mythic-master-v1.png", "masterSha256": "b23e9b11a55a2b624677720ebe011fe4687da2c64c1ede30dd76080060833d5f", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/mythic-v1.png", "size": 256, "runtimeSha256": "3596cf0e6ace95ed1f53a307ba42b23bcf21c6d9164da927f908b886c20a45e2" },
+    { "id": "godlike", "role": "score 3000 or more", "master": "green-godlike-master-v1.png", "masterSha256": "db87226e73a7e94a6297db448d577bfce37230b202afd8933dbebb31585a884b", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/godlike-v1.png", "size": 256, "runtimeSha256": "2f6fd6e3fc62ed42519e84eb217168bf4d90f9cc75d471a746b19313b631603b" },
+    { "id": "surgeon", "role": "Manual column without zero", "master": "green-surgeon-master-v1.png", "masterSha256": "f0c1482f7b5fc02c0f8c0220ef80f415b4a695773e2bbcf3297ac8e18aa3d623", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/surgeon-v1.png", "size": 256, "runtimeSha256": "63f09fc627f39b34ca2108a244e89696afbeed21566f05ca20b4cdf5fe35983c" },
+    { "id": "prophet", "role": "three successful announcements in a row", "master": "green-prophet-master-v1.png", "masterSha256": "5a58ee74083fdfec287806718089494c2a18881486629d0ac5c29edb7460f9bc", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/prophet-v1.png", "size": 256, "runtimeSha256": "2e7f03e2a7dbfbcce680a5d2b635549a846a0de0d80cae2d600e5c62fa2f5069" },
+    { "id": "sniper", "role": "Yamb in Announcement", "master": "green-sniper-master-v1.png", "masterSha256": "8f3b48ce4e4795b346a5d52b6ee5b4a5937d4f99b4074eaa8e990675c03129b5", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/sniper-v1.png", "size": 256, "runtimeSha256": "472da60cce5a26e1a1ce67a079cf99f994f1700487dd4a961445306f116c25ad" },
+    { "id": "math", "role": "exactly 63 in Sum 1", "master": "green-math-master-v1.png", "masterSha256": "4de67bee332db60ad33a487ba616157cae66c0099df7d1722fc4f289bcff4ba8", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/math-v1.png", "size": 256, "runtimeSha256": "6435bbfcebb947500890baa724c3d0e32cecd8cd5cf86d9fb00921b446a24658" },
+    { "id": "concrete", "role": "all Kentas filled", "master": "green-concrete-master-v1.png", "masterSha256": "31ddc69227dce18e9a1b799ab1664774969ba76c3053bae07415853444e5225e", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/concrete-v1.png", "size": 256, "runtimeSha256": "b8203b1777ee61a099e28cf866289fcf824c424f8a444d9f43d0bbf2d655d69d" },
+    { "id": "perfectionist", "role": "Sum 1 bonus in every column", "master": "green-perfectionist-master-v1.png", "masterSha256": "9655e80c077c6cc0e410d0ae652dfde50e6ab180c9432e9791b4f4b62af9621f", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/perfectionist-v1.png", "size": 256, "runtimeSha256": "7911c09ec9a1786fb18336b51d86edcb7fad66066f9a608dcae6ac8ca65f9c5d" },
+    { "id": "miner", "role": "Sum 2 greater than 60", "master": "green-miner-master-v1.png", "masterSha256": "630ab0c5b27bc8fd3b7e7fd99b6a18d3ea030bb66e389b2b0f9bacadf77000b8", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/miner-v1.png", "size": 256, "runtimeSha256": "eb5f480a88257661a44199459b105cba83ba5e8c69c17dc7825729727f529392" },
+    { "id": "immortal", "role": "full game without zero", "master": "green-immortal-master-v1.png", "masterSha256": "53ac78aedf712bedd6008e136349b73e67fffca1d105f7b9684e9b06609a3aff", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/immortal-v1.png", "size": 256, "runtimeSha256": "88740713d5f818b3b18f43cd1d74faf110f9aad815e6ff972127d7c450f37762" },
+    { "id": "sveti_ilija", "role": "Yamb on the first roll", "master": "green-sveti_ilija-master-v1.png", "masterSha256": "4504ad3a4683126a641f93339f38d55d0f98b462cb603b2bf7b2198d2931e1e2", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/sveti_ilija-v1.png", "size": 256, "runtimeSha256": "63ecbfba3ef52e3a8ff12663dc8b43878ad0ad647bbc7b0542f5ad4824e604bd" },
+    { "id": "hazard", "role": "Yamb in Manual column", "master": "green-hazard-master-v1.png", "masterSha256": "c4a0099cc8cef290a99cb81a0a1344453ad4e37e3d70eac559ad9b053a6270e0", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/hazard-v1.png", "size": 256, "runtimeSha256": "3f418c5d5deb914218cb644f00da74d63ca75018a83266175478ba5ca62e79cb" },
+    { "id": "firecracker", "role": "all five Yambs filled", "master": "green-firecracker-master-v1.png", "masterSha256": "d613efb2e9148937b8917103a282ed392b53a0c387975f8582c53f77ee20fbb7", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/firecracker-v1.png", "size": 256, "runtimeSha256": "cd584001e12a9e4b26ea2cc683fdb8c200b651f1242899a15620b27fdd0337ad" },
+    { "id": "potato", "role": "crossed-out Yamb", "master": "green-potato-master-v1.png", "masterSha256": "3abdf88ef53d7962e65db28c5588f2fa4e6916de667a187b0030cf338b9991fd", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/potato-v1.png", "size": 256, "runtimeSha256": "82f7382a559e179df4ac37eb8ccc4903a179c8cab69c680a02d605b938534b06" },
+    { "id": "minimal", "role": "Min below seven", "master": "green-minimal-master-v1.png", "masterSha256": "f4fa2f5dc12e573be36ef3b6f3790396e549a4867a620d02b6a932abef4faeee", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/minimal-v1.png", "size": 256, "runtimeSha256": "388876fa471acc42352124ee7492bb7d07a7d56773d29411e0344a4784a4509f" },
+    { "id": "achilles", "role": "only Yamb is zero", "master": "green-achilles-master-v1.png", "masterSha256": "47b245d4146ec53185a35d3ac470ddd55660d2f9a4caf72c64d43e04b7c1b914", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/achilles-v1.png", "size": 256, "runtimeSha256": "ff094d934007c58d2528986833068b9012eb9d2b4f9a363ebefc6cc1b5376eb0" },
+    { "id": "close_call", "role": "multiplayer score gap below five", "master": "green-close_call-master-v1.png", "masterSha256": "f9807524f1703960658f6cecbce7226ddb8605df2deae5764704fe91e8196270", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/close_call-v1.png", "size": 256, "runtimeSha256": "93018c414ac7017249a382286e3b8cb2905e55983ba1175fa703f50d246f0aa7" },
+    { "id": "night_owl", "role": "game finished between 03:00 and 05:59", "master": "green-night_owl-master-v1.png", "masterSha256": "c0e56789508f118f8b36ef3eab546552c69b5ea5e0069fbff4de7bfb615be47a", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/night_owl-v1.png", "size": 256, "runtimeSha256": "dc031b9e1e706dc99e49e0c9e34061a6132560cd0023aeba6e7d79d118699233" },
+    { "id": "spite", "role": "finish while losing by 200 or more", "master": "green-spite-master-v1.png", "masterSha256": "9adc5143f523b68b07665614a4d8a0615a3a995793a72cafe7140725ee8d2693", "runtime": "www/assets/green-soft-clay/canonical/achievement-trophies/spite-v1.png", "size": 256, "runtimeSha256": "d376135025eeebfa5396e5fea88c8ce70260e5eaaf90838934345c1ca4e1f5f0" }
+  ],
+  "semanticExclusions": [
+    "Treasury trophies-tab navigation glyph",
+    "Statistics aggregate trophies counter",
+    "Tournament winner and ceremony trophies",
+    "Tournament finalist award",
+    "General Podium competition medals",
+    "Quarterly League podium medals",
+    "Treasury collection medals",
+    "Quarterly League rank badges and medals-tab glyph",
+    "winner and victory-state marks",
+    "room-intro symbols",
+    "dukats and consumable tokens"
+  ],
+  "integration": {
+    "treasuryCards": "connected through SHOP_DATA.TROPHIES Green icon identity",
+    "unlockPopup": "connected",
+    "endGameShowcase": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Each achievement ID owns exactly one Green canonical PNG identity.",
+    "Treasury cards, unlock popup and end-game showcase must reuse the same canonical asset for the same ID.",
+    "Never substitute a generic trophy, podium medal, collection medal, rank badge or tournament award.",
+    "Preserve the approved semantic silhouette, transparent background and Green Soft Clay palette.",
+    "Use the canonical runtime pack instead of copying or recoloring individual achievement icons."
+  ]
+}

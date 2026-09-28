@@ -1,0 +1,65 @@
+{
+  "id": "green-treasury-controls",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "Treasury navigation tabs and item-state indicators",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and terracotta clay",
+    "presentation": "one centered semantic glyph on transparent background without a backing tile or text",
+    "lighting": "soft upper-left light with controlled clay depth"
+  },
+  "subfamilies": {
+    "navigationTabs": {
+      "semanticRole": "select one of the four Treasury content categories",
+      "catalog": [
+        { "id": "tab-trophies", "role": "achievement catalog navigation", "master": "navigation-tabs/green-tab-trophies-master-v1.png", "masterSha256": "022edade4cb31dd5c51d14476522cc15e2b2717641a472ad3709c48a0a2e255d", "runtime": "www/assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png", "size": 256, "runtimeSha256": "256552dff0d241d35ae99afa76529b8d03befa5ca2f721e490fa3c884e9baf16" },
+        { "id": "tab-skins", "role": "dice-skin catalog navigation", "master": "navigation-tabs/green-tab-skins-master-v1.png", "masterSha256": "a948068c5cc8e13998f694f708a8f05eac473ad347416b6e8bd035b24d40e364", "runtime": "www/assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png", "size": 256, "runtimeSha256": "8f8dedd2ad601223cdf51591a6a483bcf60302960468032ba26a7f1baeb93814" },
+        { "id": "tab-effects", "role": "visual-effects catalog navigation", "master": "navigation-tabs/green-tab-effects-master-v1.png", "masterSha256": "5867b3d00b9917d7c4e9f7a58513acd5200951f914d012f1ba4bd585077124ef", "runtime": "www/assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png", "size": 256, "runtimeSha256": "939931a4c6945357936f703318baaa0c894121a620a9cd86bf9f021f3e736d7e" },
+        { "id": "tab-themes", "role": "interface-theme catalog navigation", "master": "navigation-tabs/green-tab-themes-master-v1.png", "masterSha256": "2bc3956933d47ef2ab1d750c87a664758fc6c9e84b73b6d89edec440a22ab49f", "runtime": "www/assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png", "size": 256, "runtimeSha256": "99cd75792d315f53ffa8657486f726724a5080ac338e3f0201cbd8a43ecb5a02" }
+      ]
+    },
+    "itemStatuses": {
+      "semanticRole": "describe the ownership, equipment, requirement or purchase state of one Treasury item",
+      "catalog": [
+        { "id": "status-owned", "role": "item is already owned", "master": "item-statuses/green-status-owned-master-v1.png", "masterSha256": "731a5f3e8bfb986821759f54cf79b1fc6a08eef30b545640840906994f2f7286", "runtime": "www/assets/green-soft-clay/canonical/treasury-controls/status-owned-v1.png", "size": 256, "runtimeSha256": "0afb2cf2183ad566f2924d04dcfad0efa7ce18a0751102397f9625d3b365a27f" },
+        { "id": "status-active", "role": "owned item is currently equipped", "master": "item-statuses/green-status-active-master-v1.png", "masterSha256": "8aef06aaf41dcb255b067dc11dbce13e2e809e0e7522ff025283d32faae5d078", "runtime": "www/assets/green-soft-clay/canonical/treasury-controls/status-active-v1.png", "size": 256, "runtimeSha256": "5aef6096dcda567757171ad5c4f18eae143875429e7e80513f28f1fa437ff802" },
+        { "id": "status-locked", "role": "item requirement is not yet met", "master": "item-statuses/green-status-locked-master-v1.png", "masterSha256": "3a830a2bbfee740a28ec96340db8ef5a223a84f7ee3ab3b11713b8d2538f9fa0", "runtime": "www/assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png", "size": 256, "runtimeSha256": "39cd8935b7ddc8853c961e210b4edaf9bf91b3a1e6d52fedd515e685d3e2c358" },
+        { "id": "status-insufficient", "role": "insufficient dukat balance for purchase", "master": "item-statuses/green-status-insufficient-master-v1.png", "masterSha256": "f8c3d2c74df0b49a67be90a0c8dc158063c093307572239a005f1c6d5a9a5afb", "runtime": "www/assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png", "size": 256, "runtimeSha256": "ad2fd1981551494955699c2fc991ff131133296f636aeacfa15360ff7e94c061" }
+      ]
+    }
+  },
+  "semanticExclusions": [
+    "individual achievement trophies",
+    "Statistics aggregate trophies metric",
+    "Treasury collection medals",
+    "Tournament tabs and match or registration states",
+    "Tournament winner, ceremony and finalist awards",
+    "Quarterly League tabs, podium medals and rank badges",
+    "Daily completed and already-played states",
+    "Invite accepted state",
+    "Solo claim action",
+    "Rewarded Video active and unavailable states",
+    "generic claim, check and playback actions",
+    "CSS active state of a navigation tab",
+    "dukats, consumable tokens and winner marks"
+  ],
+  "integration": {
+    "treasuryTabs": "connected",
+    "rulesNavigationGlyphs": "connected",
+    "itemStatusHelper": "connected",
+    "hiddenDescriptionLock": "connected",
+    "insufficientFundsAlerts": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Navigation tabs and item statuses remain separate subfamilies.",
+    "Owned and active are distinct item states and must not share one icon.",
+    "Locked requirements and insufficient balance are distinct failure states.",
+    "Do not reuse Treasury item statuses for tournament, daily, invite, solo or rewarded-video states.",
+    "Use the canonical runtime pack instead of copying or recoloring individual controls."
+  ]
+}

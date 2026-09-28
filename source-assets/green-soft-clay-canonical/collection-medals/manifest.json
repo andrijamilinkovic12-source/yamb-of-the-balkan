@@ -1,0 +1,81 @@
+{
+  "id": "green-collection-medals",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "Treasury dice-skin collection category tiers",
+  "usedBy": [
+    "Treasury Bronze Collection category header",
+    "Treasury Silver Collection category header",
+    "Treasury Gold Collection category header"
+  ],
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "shape": "front-facing circular medal with two symmetrical ribbon tails",
+    "rim": "one thick rounded warm-ivory clay rim",
+    "mark": "one raised five-point tier star",
+    "ribbons": "forest-green clay with one narrow warm-ivory inset stripe on each tail",
+    "clasp": "one small centered round terracotta clay clasp",
+    "tiers": "gold, silver and bronze clay faces and stars"
+  },
+  "masters": [
+    {
+      "tier": "gold",
+      "path": "green-collection-gold-master-v1.png",
+      "sha256": "25a6a275d2750dbdc46abef1b62819b8987090f6b4ce92a3d203f19383ce74f2"
+    },
+    {
+      "tier": "silver",
+      "path": "green-collection-silver-master-v1.png",
+      "sha256": "d36a5d623e6d9f592857b42ba577798bece9e3c5cd532da163f0c0890535fa93"
+    },
+    {
+      "tier": "bronze",
+      "path": "green-collection-bronze-master-v1.png",
+      "sha256": "3ec880117a46f8b6538ad50098559824a50eee0f889e1321d6fbeee1fa02887a"
+    }
+  ],
+  "runtime": [
+    {
+      "tier": "gold",
+      "path": "www/assets/green-soft-clay/canonical/collection-medals/collection-gold-v1.png",
+      "size": 256,
+      "sha256": "a6159b9e3a89741a2e707065bb1d3888c67d5066e936d90055dafa6e1ecb3cb6"
+    },
+    {
+      "tier": "silver",
+      "path": "www/assets/green-soft-clay/canonical/collection-medals/collection-silver-v1.png",
+      "size": 256,
+      "sha256": "071bcd49e87312fbf280cd2458ac9756081f9acf8c786691ba6fc83e18d05859"
+    },
+    {
+      "tier": "bronze",
+      "path": "www/assets/green-soft-clay/canonical/collection-medals/collection-bronze-v1.png",
+      "size": 256,
+      "sha256": "c7e07bd5cdbf1e8804fb847e8808c439b30ea48b05e60528bbe2305ddf354e5d"
+    }
+  ],
+  "semanticExclusions": [
+    "General Podium competition medals",
+    "Quarterly League podium medals",
+    "Tournament finalist award",
+    "Quarterly League medals-tab navigation glyph",
+    "Quarterly League rank badges",
+    "Treasury achievement trophies",
+    "winner and victory-state marks",
+    "dukats and consumable tokens"
+  ],
+  "integration": {
+    "treasuryCategoryHeaders": "connected for Bronze, Silver and Gold skin collections",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Collection medals identify Treasury dice-skin categories, not competitive placement.",
+    "Keep the ivory rim, tier star, striped Green ribbons and round terracotta clasp in every tier.",
+    "Gold, silver and bronze tier materials may differ while the shared construction stays recognizable.",
+    "Never substitute General Podium or Quarterly League medals for Collection category headers.",
+    "Use the canonical runtime pack instead of copying or recoloring individual category icons."
+  ]
+}

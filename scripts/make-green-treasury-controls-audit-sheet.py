@@ -1,0 +1,89 @@
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+
+ROOT = Path(__file__).resolve().parents[1]
+RUNTIME = ROOT / "www" / "assets" / "green-soft-clay"
+HIRES = ROOT / "source-assets" / "green-soft-clay-hires"
+OUTPUT = ROOT / "docs" / "green-asset-standardization-treasury-controls-audit.png"
+
+CANDIDATES = [
+    ("N1  trophies tab", "treasury/tab-trophies-v1.png", "IN: Treasury navigation - achievement catalog"),
+    ("N2  skins tab", "treasury/tab-skins-v1.png", "IN: Treasury navigation - dice skins"),
+    ("N3  effects tab", "treasury/tab-effects-v1.png", "IN: Treasury navigation - visual effects"),
+    ("N4  themes tab", "treasury/tab-themes-v1.png", "IN: Treasury navigation - interface themes"),
+    ("S1  owned", "treasury/status-owned-v1.png", "IN: shop item is already owned"),
+    ("S2  active", "treasury/status-active-v1.png", "IN: owned item is currently equipped"),
+    ("S3  locked", "treasury/status-locked-v1.png", "IN: shop item requirement is locked"),
+    ("S4  insufficient", "treasury/status-insufficient-v1.png", "IN: insufficient dukat balance"),
+    ("X1  stats trophies", "statistics/trophies-v1.png", "OUT: aggregate statistics metric"),
+    ("X2  tournament locked", "tournament/state-registration-locked-v1.png", "OUT: tournament registration state"),
+    ("X3  match active", "tournament/state-match-active-v1.png", "OUT: tournament live-match state"),
+    ("X4  collection tier", "canonical/collection-medals/collection-gold-v1.png", "OUT: Treasury skin category header"),
+    ("X5  QL medals tab", "ql/tab-medals-v1.png", "OUT: Quarterly League navigation"),
+]
+
+
+def source_for(relative: str) -> Path:
+    high_resolution = HIRES / relative
+    return high_resolution if high_resolution.exists() else RUNTIME / relative
+
+
+def checker(size: tuple[int, int], block: int = 14) -> Image.Image:
+    result = Image.new("RGBA", size, (39, 65, 47, 255))
+    draw = ImageDraw.Draw(result)
+    colors = ((66, 94, 69, 255), (50, 78, 57, 255))
+    for y in range(0, size[1], block):
+        for x in range(0, size[0], block):
+            draw.rectangle((x, y, x + block - 1, y + block - 1), fill=colors[(x // block + y // block) % 2])
+    return result
+
+
+def main() -> None:
+    columns = 4
+    cell_width = 390
+    preview_height = 292
+    label_height = 92
+    header_height = 126
+    rows = (len(CANDIDATES) + columns - 1) // columns
+    sheet = Image.new(
+        "RGBA",
+        (columns * cell_width, header_height + rows * (preview_height + label_height)),
+        (21, 51, 32, 255),
+    )
+    draw = ImageDraw.Draw(sheet)
+    title_font = ImageFont.load_default(size=21)
+    font = ImageFont.load_default(size=15)
+    small_font = ImageFont.load_default(size=12)
+    draw.text((30, 24), "GREEN ASSET STANDARDIZATION - TREASURY CONTROLS AUDIT", fill=(232, 240, 207, 255), font=title_font)
+    draw.text((30, 65), "Navigation tabs, shop states and semantic exclusions - no runtime changes", fill=(172, 204, 161, 255), font=font)
+
+    for index, (label, relative, assessment) in enumerate(CANDIDATES):
+        column = index % columns
+        row = index // columns
+        x = column * cell_width
+        y = header_height + row * (preview_height + label_height)
+        panel = checker((cell_width - 18, preview_height - 12))
+        source = source_for(relative)
+        if source.exists():
+            source_image = Image.open(source).convert("RGBA")
+            preview = source_image.copy()
+            preview.thumbnail((250, 250), Image.Resampling.LANCZOS)
+            panel.alpha_composite(preview, ((panel.width - preview.width) // 2, (panel.height - preview.height) // 2))
+            meta = f"{relative} | {source_image.width}x{source_image.height}"
+        else:
+            meta = f"{relative} | MISSING"
+        sheet.alpha_composite(panel, (x + 9, y + 6))
+        draw.rectangle((x + 9, y + 6, x + cell_width - 10, y + preview_height - 7), outline=(128, 165, 116, 255), width=2)
+        draw.text((x + 16, y + preview_height + 4), label, fill=(239, 231, 194, 255), font=font)
+        draw.text((x + 16, y + preview_height + 31), assessment, fill=(185, 211, 172, 255), font=small_font)
+        draw.text((x + 16, y + preview_height + 55), meta, fill=(143, 178, 137, 255), font=small_font)
+
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    sheet.convert("RGB").save(OUTPUT, quality=94, subsampling=0)
+    print(OUTPUT)
+
+
+if __name__ == "__main__":
+    main()

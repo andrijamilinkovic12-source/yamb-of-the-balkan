@@ -1,0 +1,115 @@
+{
+  "id": "green-quarterly-rank-badges",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "stable Green visual identity for each Quarterly League rank level",
+  "usedBy": [
+    "Quarterly League rank carousel headings",
+    "Quarterly League current-player rank summary",
+    "Quarterly League rank badge preload"
+  ],
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and terracotta clay",
+    "presentation": "one centered rank badge on transparent background without a backing tile or text",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "progression": "increasing ceremonial authority from seedling shield to crowned infinity laurels",
+    "mapping": "one immutable PNG identity per Quarterly League rank ID"
+  },
+  "catalog": [
+    {
+      "id": "amater",
+      "role": "entry seasonal rank",
+      "scoreRange": "0-4999",
+      "glyph": "seedling shield",
+      "master": "green-rank-amater-master-v1.png",
+      "masterSha256": "fc635e41043d633dc1905a47c04dba88610237d476a712c827eb3753d0162800",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-amater-v1.png",
+      "size": 384,
+      "runtimeSha256": "2e561163a4986d4364b6bb2c2eae4fc29f633c26b2ea97342dd17bdd32a3966c"
+    },
+    {
+      "id": "profi",
+      "role": "second seasonal rank",
+      "scoreRange": "5000-14999",
+      "glyph": "double-chevron shield",
+      "master": "green-rank-profi-master-v1.png",
+      "masterSha256": "85b9a3acb6594791f8d1ecbf6f16ba22a383f5e874392e4fb10d6dc612ad64a7",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-profi-v1.png",
+      "size": 384,
+      "runtimeSha256": "651a21a08d820944d4bbb3b4fb0a05b41f75b801f14cf4546a2dee6f1282aa09"
+    },
+    {
+      "id": "majstor",
+      "role": "third seasonal rank",
+      "scoreRange": "15000-49999",
+      "glyph": "crowned diamond",
+      "master": "green-rank-majstor-master-v1.png",
+      "masterSha256": "56efe95ce5dd95b73fd0ddceb5d705ffc130ee9d996651ff95a7db2a554faf21",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-majstor-v1.png",
+      "size": 384,
+      "runtimeSha256": "eb47e9946a7d8f5682ae1d5251b61613561b59151038cc840d0bbc5795ee7f2e"
+    },
+    {
+      "id": "legenda",
+      "role": "fourth seasonal rank",
+      "scoreRange": "50000-99999",
+      "glyph": "laurel star",
+      "master": "green-rank-legenda-master-v1.png",
+      "masterSha256": "50d5437842628078263d2d52cc5641daf06ca3e39d3c35c4e1742c1e00477b7c",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-legenda-v1.png",
+      "size": 384,
+      "runtimeSha256": "1f244905698bef7e89b64ffede9579d6970b222284af9bd8de1cf94b8c1ad020"
+    },
+    {
+      "id": "titan",
+      "role": "highest seasonal rank",
+      "scoreRange": "100000+",
+      "glyph": "winged crown",
+      "master": "green-rank-titan-master-v1.png",
+      "masterSha256": "8b21d2e701919c1e4748f3472a12c86e1afa9b058e9e9db0c617da6589f3a3f6",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-titan-v1.png",
+      "size": 384,
+      "runtimeSha256": "04805a105fa8ee538833d42c7e7ae9830e6d36ee8260941f7a32dcf0477b872f"
+    },
+    {
+      "id": "alltime",
+      "role": "all-time Hall of Fame rank",
+      "scoreRange": "all-time leaderboard",
+      "glyph": "crowned infinity laurels",
+      "master": "green-rank-alltime-master-v1.png",
+      "masterSha256": "a3ab9308d8195f6c5a7b18e87be6ae94cf7baaafc196df7e360b7502c33dda66",
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v1.png",
+      "size": 384,
+      "runtimeSha256": "1869fdb9830f450a557d73e4bbf05467041e74753ded2ebf48a01f3ba8ef0ad6"
+    }
+  ],
+  "semanticExclusions": [
+    "Quarterly League navigation tabs",
+    "Quarterly League podium medals",
+    "General Podium competition medals",
+    "Treasury Collection medals",
+    "Tournament finalist award",
+    "Treasury achievement trophies",
+    "Statistics aggregate trophies metric",
+    "winner and victory-state marks",
+    "Quarterly League intro and main logo",
+    "dukats and consumable tokens"
+  ],
+  "integration": {
+    "rankResolver": "connected",
+    "rankCarousel": "connected",
+    "currentRankSummary": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Each Quarterly League rank ID owns exactly one Green canonical PNG identity.",
+    "Amater, Profi, Majstor, Legenda and Titan preserve the existing seasonal score progression.",
+    "All-time remains the separate Hall of Fame identity and is not a sixth seasonal threshold.",
+    "Never substitute podium medals, collection medals, trophies, navigation glyphs or winner marks for rank badges.",
+    "Use the canonical runtime pack instead of copying or recoloring individual rank badges."
+  ]
+}

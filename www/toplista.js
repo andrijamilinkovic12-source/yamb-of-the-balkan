@@ -53,7 +53,7 @@ class TopListManager {
         if (!medal) return '';
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         const medalSrc = activeTheme === 'dark'
-            ? `assets/green-soft-clay/leaderboard/medal-${medal}-v1.png?v=1`
+            ? `assets/green-soft-clay/canonical/competition-medals/general-podium-${medal}-v1.png?v=1`
             : activeTheme === 'easter'
             ? `assets/easter-soft-clay/leaderboard/medal-${medal}-v4.png?v=1`
             : activeTheme === 'desert'

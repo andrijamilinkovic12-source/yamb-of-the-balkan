@@ -26,6 +26,18 @@ Kanonske porodice i zabranjene zastarele runtime putanje evidentirane su u `asse
 
 Samostalni Undo token koristi jedan kanonski identitet: debeo ivory glineni obod, uvučeno šumsko-zeleno lice i punu terracotta kružnu strelicu suprotnu smeru kazaljke na satu. Velika strelica oko dukata u zajedničkoj ikoni sobe i gameplay/navigacione strelice ostaju zasebni action glyph simboli, a ne tokeni.
 
-Porodice `ducat`, `undoToken` i `rewardedVideo` imaju status `locked` u centralnom registru. Automatska provera čuva njihove direktne prikaze, složene kompozicije, runtime dimenzije, transparentnost, preload izolaciju i semantičko razdvajanje od medalja, trofeja, funkcionalnih strelica i običnih playback kontrola.
+Porodice `ducat`, `undoToken`, `rewardedVideo`, `competitionMedals`, `collectionMedals`, `achievementTrophies`, `treasuryControls`, `quarterlyRankBadges` i `quarterlyNavigation` imaju status `locked` u centralnom registru. Automatska provera čuva njihove direktne prikaze, složene kompozicije, runtime dimenzije, transparentnost, preload izolaciju i semantičko razdvajanje od podium/finalist/rank/tab/aggregate simbola, funkcionalnih strelica i običnih playback kontrola.
 
 Rewarded-video akcija koristi jedan kanonski horizontalni forest-green ticket sa ivory okvirom i play trouglom. Aktivno stanje ima mali terracotta svetlucavi akcenat, a nedostupan oglas isti ticket sa jasnom terracotta kosom zabranom. Dnevni izazov, Riznica i Solo double-reward sada koriste isti ticket u optimizovanim sobnim kompozicijama, uz zaključan raspored od jednog, jednog i dva kanonska dukata. Claim, completed i ordinary playback simboli ostaju odvojene semantičke porodice.
+
+Takmičarske medalje koriste dve odvojene canonical podfamilije. General Podium za Top listu, Turnir, Power Index i Vatreni niz koristi ivory lovor kroz gold, silver i bronze nivo. Quarterly League Podium koristi sopstveni trio sa ivory zvezdom. Treasury collection medalje, finalist nagrada, QL rank bedževi, tab ikona i achievement trofeji ostaju zasebni simboli.
+
+Treasury Bronze, Silver i Gold kolekcije skinova koriste poseban standardizovan trio category medalja: zajednički ivory obod, podignutu tier zvezdu, forest-green trake sa tankim ivory umetkom i okruglu terracotta kopču. Ove medalje služe isključivo kao zaglavlja kolekcija u Riznici i ne smeju se mešati sa General Podium, Quarterly League, finalist, rank ili achievement simbolima.
+
+Svaki od 26 Treasury achievement trofeja koristi jedan canonical Green PNG identitet kroz karticu Riznice, unlock popup i završni showcase. Katalog je standardizovan bez vizuelne izmene: svi simboli zadržavaju sopstvenu achievement semantiku, ali dele forest-green, warm-ivory i terracotta Soft Clay DNK. Tab, zbirni statistics trofej, tournament pehari, podium i collection medalje ostaju zasebne porodice.
+
+Treasury kontrole koriste poseban canonical paket sa dve podfamilije. `navigationTabs` čuva četiri simbola za Trofeje, Kockice, Efekte i Teme i ponavlja ih u sadržaju Pravila. `itemStatuses` čuva odvojene identitete za kupljen, aktivan, zaključan i nedovoljan balans; ovi statusi se ne koriste za tournament, daily, invite, solo ili rewarded-video stanja.
+
+Kvartalna liga koristi jedan canonical Green bedž za svaki rank ID: Amater, Profi, Majstor, Legenda, Titan i All-time. Pet sezonskih nivoa zadržava postojeće bodovne pragove, dok All-time ostaje poseban Hall of Fame identitet. Rank bedževi se ne mešaju sa QL podium medaljama, navigacionim tabovima, Treasury trofejima ili winner oznakama.
+
+Quarterly League navigacija koristi četiri odvojena canonical glyph-a: rastuće stubiće za Ligu, ceremonijalnu građevinu za Dvoranu slavnih, trio medalja za Medalje i krunu u lovoru za Šampione. Champions glyph se namerno ponavlja kao oznaka šampiona na kartici, jer oba mesta predstavljaju isti pojam; ne koristi se kao generička winner oznaka partije.

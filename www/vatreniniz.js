@@ -223,7 +223,7 @@ class VatreniNizManager {
         const podiumAssetSrc = podiumTheme === 'severna'
             ? `assets/severna-soft-clay/statistics/fire-streak/${podiumTone}-v10.png?v=1`
             : podiumTheme === 'green'
-                ? `assets/green-soft-clay/leaderboard/medal-${podiumTone}-v1.png?v=1`
+                ? `assets/green-soft-clay/canonical/competition-medals/general-podium-${podiumTone}-v1.png?v=1`
             : podiumTheme === 'easter'
                 ? `assets/easter-soft-clay/statistics/fire-streak/${podiumTone}-v3.png?v=1`
                 : `assets/desert-soft-clay/statistics/fire-streak/${podiumTone}-v3.png?v=1`;

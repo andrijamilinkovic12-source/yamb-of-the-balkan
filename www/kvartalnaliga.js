@@ -273,27 +273,22 @@ class KvartalnaLigaManager {
             'medal-silver': '-v2',
             'medal-bronze': '-v2'
         };
-        const greenVersions = {
-            'tab-league': '-v1',
-            'tab-hall-of-fame': '-v1',
-            'tab-medals': '-v1',
-            'tab-champions': '-v1',
-            'rank-amater': '-v1',
-            'rank-profi': '-v1',
-            'rank-majstor': '-v1',
-            'rank-legenda': '-v1',
-            'rank-titan': '-v1',
-            'rank-alltime': '-v1',
-            'medal-gold': '-v1',
-            'medal-silver': '-v1',
-            'medal-bronze': '-v1'
-        };
         const fileSuffix = visualTheme === 'severna'
             ? (severnaVersions[assetName] || '')
             : (visualTheme === 'easter'
                 ? (easterVersions[assetName] || '')
-                : (visualTheme === 'green' ? (greenVersions[assetName] || '') : ''));
+                : '');
         const retrySuffix = retryToken ? `&retry=${encodeURIComponent(retryToken)}` : '';
+        if (visualTheme === 'green' && ['medal-gold', 'medal-silver', 'medal-bronze'].includes(assetName)) {
+            const tier = assetName.replace('medal-', '');
+            return `assets/green-soft-clay/canonical/competition-medals/quarterly-league-${tier}-v1.png?v=1${retrySuffix}`;
+        }
+        if (visualTheme === 'green' && ['rank-amater', 'rank-profi', 'rank-majstor', 'rank-legenda', 'rank-titan', 'rank-alltime'].includes(assetName)) {
+            return `assets/green-soft-clay/canonical/quarterly-rank-badges/${assetName}-v1.png?v=1${retrySuffix}`;
+        }
+        if (visualTheme === 'green' && ['tab-league', 'tab-hall-of-fame', 'tab-medals', 'tab-champions'].includes(assetName)) {
+            return `assets/green-soft-clay/canonical/quarterly-navigation/${assetName}-v1.png?v=1${retrySuffix}`;
+        }
         return `${this.getQlAssetRoot()}/${assetName}${fileSuffix}.png?v=1${retrySuffix}`;
     }
 

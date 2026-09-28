@@ -724,7 +724,7 @@ class TournamentManager {
                         ? 'assets/easter-soft-clay/tournament/podium-silver-v3.png?v=opt2'
                         : `assets/easter-soft-clay/tournament/podium-${podiumTone}-v2.png?v=2`;
                     const desertPodiumSrc = `assets/desert-soft-clay/tournament/podium-${podiumTone}.png?v=3`;
-                    const greenPodiumSrc = `assets/green-soft-clay/leaderboard/medal-${podiumTone}-v1.png?v=1`;
+                    const greenPodiumSrc = `assets/green-soft-clay/canonical/competition-medals/general-podium-${podiumTone}-v1.png?v=1`;
                     return `
                         <div class="tournament-intro-champion-row">
                             <span class="tournament-intro-champion-rank" aria-label="${index + 1}">

@@ -167,6 +167,406 @@
         "Green Treasury reward composition",
         "Green Solo double-reward composition"
       ]
+    },
+    "competitionMedals": {
+      "semanticRole": "competition-aware Green podium medals with separate General and Quarterly League identities",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/competition-medals/manifest.json",
+      "subfamilies": {
+        "generalPodium": {
+          "mark": "one ivory laurel wreath",
+          "tiers": ["gold", "silver", "bronze"],
+          "usedBy": ["Leaderboard", "Tournament podium", "Power Index", "Fire Streak"]
+        },
+        "quarterlyLeaguePodium": {
+          "mark": "one ivory five-point star",
+          "tiers": ["gold", "silver", "bronze"],
+          "usedBy": ["Quarterly League rankings", "Quarterly League Hall of Fame", "Rules quarterly podium"]
+        }
+      },
+      "canonicalRuntime": [
+        { "role": "general-gold", "path": "assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v1.png", "size": 256, "sha256": "d28b456736188dfc50e929708ca3d77ad43acb11fb42af786ef68055a95b500a" },
+        { "role": "general-silver", "path": "assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v1.png", "size": 256, "sha256": "cc279768a06b8b2a76543b8266fbe49ab111ed1eb404e8abe2bb06689d8bee7f" },
+        { "role": "general-bronze", "path": "assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png", "size": 256, "sha256": "40330474bbca7ebe87b539e1311307a7a552edd90e9dd4febb60d49218d4d775" },
+        { "role": "quarterly-league-gold", "path": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png", "size": 256, "sha256": "103af0ef4870d349e8309e2f4cfe27b1c3392c472c65fb42a8ed50ca6cbfa436" },
+        { "role": "quarterly-league-silver", "path": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png", "size": 256, "sha256": "2e295ab91a23c792ffd1076dbd0568f060e8268fbc045a1b312549fa268e4eba" },
+        { "role": "quarterly-league-bronze", "path": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png", "size": 256, "sha256": "8816d19cb16f63b0b03b602cb6b0d06a6208513c6c99ef52a491a687c775f64b" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/leaderboard/medal-gold-v1.png",
+        "assets/green-soft-clay/leaderboard/medal-silver-v1.png",
+        "assets/green-soft-clay/leaderboard/medal-bronze-v1.png",
+        "assets/green-soft-clay/ql/medal-gold-v1.png",
+        "assets/green-soft-clay/ql/medal-silver-v1.png",
+        "assets/green-soft-clay/ql/medal-bronze-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "leaderboard/medal-gold-v1.png": "canonical/competition-medals/general-podium-gold-v1.png",
+        "leaderboard/medal-silver-v1.png": "canonical/competition-medals/general-podium-silver-v1.png",
+        "leaderboard/medal-bronze-v1.png": "canonical/competition-medals/general-podium-bronze-v1.png",
+        "ql/medal-gold-v1.png": "canonical/competition-medals/quarterly-league-gold-v1.png",
+        "ql/medal-silver-v1.png": "canonical/competition-medals/quarterly-league-silver-v1.png",
+        "ql/medal-bronze-v1.png": "canonical/competition-medals/quarterly-league-bronze-v1.png"
+      },
+      "semanticExclusions": [
+        "Treasury collection progress medals",
+        "Tournament finalist award",
+        "Quarterly League medals-tab navigation glyph",
+        "Quarterly League rank badges",
+        "Treasury achievement trophies",
+        "winner and victory-state marks",
+        "dukats and consumable tokens"
+      ],
+      "codeBindings": [
+        "Green Leaderboard podium",
+        "Green Tournament podium",
+        "Green Power Index podium",
+        "Green Fire Streak podium",
+        "Green waiting-room Hall of Fame podium",
+        "Green Quarterly League rankings and Hall of Fame",
+        "Green Rules quarterly podium"
+      ]
+    },
+    "collectionMedals": {
+      "semanticRole": "Treasury dice-skin collection category medals",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/collection-medals/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "shape": "front-facing circular medal with two symmetrical ribbon tails",
+        "rim": "one thick rounded warm-ivory clay rim",
+        "mark": "one raised five-point tier star",
+        "ribbons": "forest-green clay with one narrow warm-ivory inset stripe on each tail",
+        "clasp": "one small centered round terracotta clay clasp",
+        "tiers": "gold, silver and bronze clay faces and stars"
+      },
+      "canonicalRuntime": [
+        { "role": "gold", "path": "assets/green-soft-clay/canonical/collection-medals/collection-gold-v1.png", "size": 256, "sha256": "a6159b9e3a89741a2e707065bb1d3888c67d5066e936d90055dafa6e1ecb3cb6" },
+        { "role": "silver", "path": "assets/green-soft-clay/canonical/collection-medals/collection-silver-v1.png", "size": 256, "sha256": "071bcd49e87312fbf280cd2458ac9756081f9acf8c786691ba6fc83e18d05859" },
+        { "role": "bronze", "path": "assets/green-soft-clay/canonical/collection-medals/collection-bronze-v1.png", "size": 256, "sha256": "c7e07bd5cdbf1e8804fb847e8808c439b30ea48b05e60528bbe2305ddf354e5d" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/treasury/collection-gold-v1.png",
+        "assets/green-soft-clay/treasury/collection-silver-v1.png",
+        "assets/green-soft-clay/treasury/collection-bronze-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "treasury/collection-gold-v1.png": "canonical/collection-medals/collection-gold-v1.png",
+        "treasury/collection-silver-v1.png": "canonical/collection-medals/collection-silver-v1.png",
+        "treasury/collection-bronze-v1.png": "canonical/collection-medals/collection-bronze-v1.png"
+      },
+      "semanticExclusions": [
+        "General Podium competition medals",
+        "Quarterly League podium medals",
+        "Tournament finalist award",
+        "Quarterly League medals-tab navigation glyph",
+        "Quarterly League rank badges",
+        "Treasury achievement trophies",
+        "winner and victory-state marks",
+        "dukats and consumable tokens"
+      ],
+      "codeBindings": [
+        "Green Treasury Bronze/Silver/Gold Collection category headers",
+        "Green Treasury room-on-demand pack"
+      ]
+    },
+    "achievementTrophies": {
+      "semanticRole": "one stable Green visual identity for each gameplay achievement",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/achievement-trophies/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and terracotta clay",
+        "presentation": "one centered semantic glyph on transparent background without a backing tile or text",
+        "mapping": "one immutable PNG identity per achievement ID"
+      },
+      "canonicalRuntime": [
+        { "role": "first_play", "path": "assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png", "size": 256, "sha256": "a4513fd37e267840d152d759f9e3fc06c5d5a845128a1e1b11736c606254572e" },
+        { "role": "apprentice", "path": "assets/green-soft-clay/canonical/achievement-trophies/apprentice-v1.png", "size": 256, "sha256": "3169902c572ef26d6819825dadd96107a422ffc2e0d087ae0158bb6ba9195584" },
+        { "role": "veteran", "path": "assets/green-soft-clay/canonical/achievement-trophies/veteran-v1.png", "size": 256, "sha256": "c84e8165651a1090ab654fb4a8b747b11989871f2c4ee8494360a287a020efc8" },
+        { "role": "kafana", "path": "assets/green-soft-clay/canonical/achievement-trophies/kafana-v1.png", "size": 256, "sha256": "c55cb59257eff82c396437b5a8389b518eeeb763bef2d532fbab2d9f6416ad9f" },
+        { "role": "score_1000", "path": "assets/green-soft-clay/canonical/achievement-trophies/score_1000-v1.png", "size": 256, "sha256": "85b4f001c3922aa5aa1bbd5c5daa18d52e6c49b4743d9e2fc1df60babeacb12e" },
+        { "role": "grandmaster", "path": "assets/green-soft-clay/canonical/achievement-trophies/grandmaster-v1.png", "size": 256, "sha256": "af0015226451ab4afc22b532b244d4593db035d636dda0e91f1605beed38c0f4" },
+        { "role": "legend", "path": "assets/green-soft-clay/canonical/achievement-trophies/legend-v1.png", "size": 256, "sha256": "316990c9c9400761ce5bfceaa69754b6eb68d8c41d873954d714a06e26c15125" },
+        { "role": "mythic", "path": "assets/green-soft-clay/canonical/achievement-trophies/mythic-v1.png", "size": 256, "sha256": "3596cf0e6ace95ed1f53a307ba42b23bcf21c6d9164da927f908b886c20a45e2" },
+        { "role": "godlike", "path": "assets/green-soft-clay/canonical/achievement-trophies/godlike-v1.png", "size": 256, "sha256": "2f6fd6e3fc62ed42519e84eb217168bf4d90f9cc75d471a746b19313b631603b" },
+        { "role": "surgeon", "path": "assets/green-soft-clay/canonical/achievement-trophies/surgeon-v1.png", "size": 256, "sha256": "63f09fc627f39b34ca2108a244e89696afbeed21566f05ca20b4cdf5fe35983c" },
+        { "role": "prophet", "path": "assets/green-soft-clay/canonical/achievement-trophies/prophet-v1.png", "size": 256, "sha256": "2e7f03e2a7dbfbcce680a5d2b635549a846a0de0d80cae2d600e5c62fa2f5069" },
+        { "role": "sniper", "path": "assets/green-soft-clay/canonical/achievement-trophies/sniper-v1.png", "size": 256, "sha256": "472da60cce5a26e1a1ce67a079cf99f994f1700487dd4a961445306f116c25ad" },
+        { "role": "math", "path": "assets/green-soft-clay/canonical/achievement-trophies/math-v1.png", "size": 256, "sha256": "6435bbfcebb947500890baa724c3d0e32cecd8cd5cf86d9fb00921b446a24658" },
+        { "role": "concrete", "path": "assets/green-soft-clay/canonical/achievement-trophies/concrete-v1.png", "size": 256, "sha256": "b8203b1777ee61a099e28cf866289fcf824c424f8a444d9f43d0bbf2d655d69d" },
+        { "role": "perfectionist", "path": "assets/green-soft-clay/canonical/achievement-trophies/perfectionist-v1.png", "size": 256, "sha256": "7911c09ec9a1786fb18336b51d86edcb7fad66066f9a608dcae6ac8ca65f9c5d" },
+        { "role": "miner", "path": "assets/green-soft-clay/canonical/achievement-trophies/miner-v1.png", "size": 256, "sha256": "eb5f480a88257661a44199459b105cba83ba5e8c69c17dc7825729727f529392" },
+        { "role": "immortal", "path": "assets/green-soft-clay/canonical/achievement-trophies/immortal-v1.png", "size": 256, "sha256": "88740713d5f818b3b18f43cd1d74faf110f9aad815e6ff972127d7c450f37762" },
+        { "role": "sveti_ilija", "path": "assets/green-soft-clay/canonical/achievement-trophies/sveti_ilija-v1.png", "size": 256, "sha256": "63ecbfba3ef52e3a8ff12663dc8b43878ad0ad647bbc7b0542f5ad4824e604bd" },
+        { "role": "hazard", "path": "assets/green-soft-clay/canonical/achievement-trophies/hazard-v1.png", "size": 256, "sha256": "3f418c5d5deb914218cb644f00da74d63ca75018a83266175478ba5ca62e79cb" },
+        { "role": "firecracker", "path": "assets/green-soft-clay/canonical/achievement-trophies/firecracker-v1.png", "size": 256, "sha256": "cd584001e12a9e4b26ea2cc683fdb8c200b651f1242899a15620b27fdd0337ad" },
+        { "role": "potato", "path": "assets/green-soft-clay/canonical/achievement-trophies/potato-v1.png", "size": 256, "sha256": "82f7382a559e179df4ac37eb8ccc4903a179c8cab69c680a02d605b938534b06" },
+        { "role": "minimal", "path": "assets/green-soft-clay/canonical/achievement-trophies/minimal-v1.png", "size": 256, "sha256": "388876fa471acc42352124ee7492bb7d07a7d56773d29411e0344a4784a4509f" },
+        { "role": "achilles", "path": "assets/green-soft-clay/canonical/achievement-trophies/achilles-v1.png", "size": 256, "sha256": "ff094d934007c58d2528986833068b9012eb9d2b4f9a363ebefc6cc1b5376eb0" },
+        { "role": "close_call", "path": "assets/green-soft-clay/canonical/achievement-trophies/close_call-v1.png", "size": 256, "sha256": "93018c414ac7017249a382286e3b8cb2905e55983ba1175fa703f50d246f0aa7" },
+        { "role": "night_owl", "path": "assets/green-soft-clay/canonical/achievement-trophies/night_owl-v1.png", "size": 256, "sha256": "dc031b9e1e706dc99e49e0c9e34061a6132560cd0023aeba6e7d79d118699233" },
+        { "role": "spite", "path": "assets/green-soft-clay/canonical/achievement-trophies/spite-v1.png", "size": 256, "sha256": "d376135025eeebfa5396e5fea88c8ce70260e5eaaf90838934345c1ca4e1f5f0" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/treasury/trophies/first_play-v1.png",
+        "assets/green-soft-clay/treasury/trophies/apprentice-v1.png",
+        "assets/green-soft-clay/treasury/trophies/veteran-v1.png",
+        "assets/green-soft-clay/treasury/trophies/kafana-v1.png",
+        "assets/green-soft-clay/treasury/trophies/score_1000-v1.png",
+        "assets/green-soft-clay/treasury/trophies/grandmaster-v1.png",
+        "assets/green-soft-clay/treasury/trophies/legend-v1.png",
+        "assets/green-soft-clay/treasury/trophies/mythic-v1.png",
+        "assets/green-soft-clay/treasury/trophies/godlike-v1.png",
+        "assets/green-soft-clay/treasury/trophies/surgeon-v1.png",
+        "assets/green-soft-clay/treasury/trophies/prophet-v1.png",
+        "assets/green-soft-clay/treasury/trophies/sniper-v1.png",
+        "assets/green-soft-clay/treasury/trophies/math-v1.png",
+        "assets/green-soft-clay/treasury/trophies/concrete-v1.png",
+        "assets/green-soft-clay/treasury/trophies/perfectionist-v1.png",
+        "assets/green-soft-clay/treasury/trophies/miner-v1.png",
+        "assets/green-soft-clay/treasury/trophies/immortal-v1.png",
+        "assets/green-soft-clay/treasury/trophies/sveti_ilija-v1.png",
+        "assets/green-soft-clay/treasury/trophies/hazard-v1.png",
+        "assets/green-soft-clay/treasury/trophies/firecracker-v1.png",
+        "assets/green-soft-clay/treasury/trophies/potato-v1.png",
+        "assets/green-soft-clay/treasury/trophies/minimal-v1.png",
+        "assets/green-soft-clay/treasury/trophies/achilles-v1.png",
+        "assets/green-soft-clay/treasury/trophies/close_call-v1.png",
+        "assets/green-soft-clay/treasury/trophies/night_owl-v1.png",
+        "assets/green-soft-clay/treasury/trophies/spite-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "treasury/trophies/first_play-v1.png": "canonical/achievement-trophies/first_play-v1.png",
+        "treasury/trophies/apprentice-v1.png": "canonical/achievement-trophies/apprentice-v1.png",
+        "treasury/trophies/veteran-v1.png": "canonical/achievement-trophies/veteran-v1.png",
+        "treasury/trophies/kafana-v1.png": "canonical/achievement-trophies/kafana-v1.png",
+        "treasury/trophies/score_1000-v1.png": "canonical/achievement-trophies/score_1000-v1.png",
+        "treasury/trophies/grandmaster-v1.png": "canonical/achievement-trophies/grandmaster-v1.png",
+        "treasury/trophies/legend-v1.png": "canonical/achievement-trophies/legend-v1.png",
+        "treasury/trophies/mythic-v1.png": "canonical/achievement-trophies/mythic-v1.png",
+        "treasury/trophies/godlike-v1.png": "canonical/achievement-trophies/godlike-v1.png",
+        "treasury/trophies/surgeon-v1.png": "canonical/achievement-trophies/surgeon-v1.png",
+        "treasury/trophies/prophet-v1.png": "canonical/achievement-trophies/prophet-v1.png",
+        "treasury/trophies/sniper-v1.png": "canonical/achievement-trophies/sniper-v1.png",
+        "treasury/trophies/math-v1.png": "canonical/achievement-trophies/math-v1.png",
+        "treasury/trophies/concrete-v1.png": "canonical/achievement-trophies/concrete-v1.png",
+        "treasury/trophies/perfectionist-v1.png": "canonical/achievement-trophies/perfectionist-v1.png",
+        "treasury/trophies/miner-v1.png": "canonical/achievement-trophies/miner-v1.png",
+        "treasury/trophies/immortal-v1.png": "canonical/achievement-trophies/immortal-v1.png",
+        "treasury/trophies/sveti_ilija-v1.png": "canonical/achievement-trophies/sveti_ilija-v1.png",
+        "treasury/trophies/hazard-v1.png": "canonical/achievement-trophies/hazard-v1.png",
+        "treasury/trophies/firecracker-v1.png": "canonical/achievement-trophies/firecracker-v1.png",
+        "treasury/trophies/potato-v1.png": "canonical/achievement-trophies/potato-v1.png",
+        "treasury/trophies/minimal-v1.png": "canonical/achievement-trophies/minimal-v1.png",
+        "treasury/trophies/achilles-v1.png": "canonical/achievement-trophies/achilles-v1.png",
+        "treasury/trophies/close_call-v1.png": "canonical/achievement-trophies/close_call-v1.png",
+        "treasury/trophies/night_owl-v1.png": "canonical/achievement-trophies/night_owl-v1.png",
+        "treasury/trophies/spite-v1.png": "canonical/achievement-trophies/spite-v1.png"
+      },
+      "semanticExclusions": [
+        "Treasury trophies-tab navigation glyph",
+        "Statistics aggregate trophies counter",
+        "Tournament winner and ceremony trophies",
+        "Tournament finalist award",
+        "General Podium competition medals",
+        "Quarterly League podium medals",
+        "Treasury collection medals",
+        "Quarterly League rank badges and medals-tab glyph",
+        "winner and victory-state marks",
+        "room-intro symbols",
+        "dukats and consumable tokens"
+      ],
+      "codeBindings": [
+        "SHOP_DATA.TROPHIES Green icon identity",
+        "Green Treasury trophy cards",
+        "Green achievement unlock popup",
+        "Green end-game trophy showcase",
+        "Green Treasury room-on-demand pack"
+      ]
+    },
+    "treasuryControls": {
+      "semanticRole": "Treasury navigation tabs and item-state indicators",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/treasury-controls/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and terracotta clay",
+        "presentation": "one centered semantic glyph on transparent background without a backing tile or text"
+      },
+      "subfamilies": {
+        "navigationTabs": {
+          "roles": ["tab-trophies", "tab-skins", "tab-effects", "tab-themes"]
+        },
+        "itemStatuses": {
+          "roles": ["status-owned", "status-active", "status-locked", "status-insufficient"]
+        }
+      },
+      "canonicalRuntime": [
+        { "role": "tab-trophies", "path": "assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png", "size": 256, "sha256": "256552dff0d241d35ae99afa76529b8d03befa5ca2f721e490fa3c884e9baf16" },
+        { "role": "tab-skins", "path": "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png", "size": 256, "sha256": "8f8dedd2ad601223cdf51591a6a483bcf60302960468032ba26a7f1baeb93814" },
+        { "role": "tab-effects", "path": "assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png", "size": 256, "sha256": "939931a4c6945357936f703318baaa0c894121a620a9cd86bf9f021f3e736d7e" },
+        { "role": "tab-themes", "path": "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png", "size": 256, "sha256": "99cd75792d315f53ffa8657486f726724a5080ac338e3f0201cbd8a43ecb5a02" },
+        { "role": "status-owned", "path": "assets/green-soft-clay/canonical/treasury-controls/status-owned-v1.png", "size": 256, "sha256": "0afb2cf2183ad566f2924d04dcfad0efa7ce18a0751102397f9625d3b365a27f" },
+        { "role": "status-active", "path": "assets/green-soft-clay/canonical/treasury-controls/status-active-v1.png", "size": 256, "sha256": "5aef6096dcda567757171ad5c4f18eae143875429e7e80513f28f1fa437ff802" },
+        { "role": "status-locked", "path": "assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png", "size": 256, "sha256": "39cd8935b7ddc8853c961e210b4edaf9bf91b3a1e6d52fedd515e685d3e2c358" },
+        { "role": "status-insufficient", "path": "assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png", "size": 256, "sha256": "ad2fd1981551494955699c2fc991ff131133296f636aeacfa15360ff7e94c061" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/treasury/tab-trophies-v1.png",
+        "assets/green-soft-clay/treasury/tab-skins-v1.png",
+        "assets/green-soft-clay/treasury/tab-effects-v1.png",
+        "assets/green-soft-clay/treasury/tab-themes-v1.png",
+        "assets/green-soft-clay/treasury/status-owned-v1.png",
+        "assets/green-soft-clay/treasury/status-active-v1.png",
+        "assets/green-soft-clay/treasury/status-locked-v1.png",
+        "assets/green-soft-clay/treasury/status-insufficient-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "treasury/tab-trophies-v1.png": "canonical/treasury-controls/tab-trophies-v1.png",
+        "treasury/tab-skins-v1.png": "canonical/treasury-controls/tab-skins-v1.png",
+        "treasury/tab-effects-v1.png": "canonical/treasury-controls/tab-effects-v1.png",
+        "treasury/tab-themes-v1.png": "canonical/treasury-controls/tab-themes-v1.png",
+        "treasury/status-owned-v1.png": "canonical/treasury-controls/status-owned-v1.png",
+        "treasury/status-active-v1.png": "canonical/treasury-controls/status-active-v1.png",
+        "treasury/status-locked-v1.png": "canonical/treasury-controls/status-locked-v1.png",
+        "treasury/status-insufficient-v1.png": "canonical/treasury-controls/status-insufficient-v1.png"
+      },
+      "semanticExclusions": [
+        "individual achievement trophies",
+        "Statistics aggregate trophies metric",
+        "Treasury collection medals",
+        "Tournament tabs and match or registration states",
+        "Tournament winner, ceremony and finalist awards",
+        "Quarterly League tabs, podium medals and rank badges",
+        "Daily completed and already-played states",
+        "Invite accepted state",
+        "Solo claim action",
+        "Rewarded Video active and unavailable states",
+        "generic claim, check and playback actions",
+        "CSS active state of a navigation tab",
+        "dukats, consumable tokens and winner marks"
+      ],
+      "codeBindings": [
+        "Green Treasury tab buttons",
+        "Green Rules Treasury navigation glyphs",
+        "Green Treasury item status helper",
+        "Green Treasury hidden-description lock",
+        "Green Treasury insufficient-funds alerts",
+        "Green Treasury room-on-demand pack"
+      ]
+    },
+    "quarterlyRankBadges": {
+      "semanticRole": "stable Green visual identity for each Quarterly League rank level",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/quarterly-rank-badges/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and terracotta clay",
+        "presentation": "one centered rank badge on transparent background without a backing tile or text",
+        "progression": "seedling shield, double chevron, crown, laureled star, winged crown and crowned infinity laurels",
+        "mapping": "one immutable PNG identity per Quarterly League rank ID"
+      },
+      "rankOrder": ["amater", "profi", "majstor", "legenda", "titan", "alltime"],
+      "canonicalRuntime": [
+        { "role": "amater", "path": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-amater-v1.png", "size": 384, "sha256": "2e561163a4986d4364b6bb2c2eae4fc29f633c26b2ea97342dd17bdd32a3966c" },
+        { "role": "profi", "path": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-profi-v1.png", "size": 384, "sha256": "651a21a08d820944d4bbb3b4fb0a05b41f75b801f14cf4546a2dee6f1282aa09" },
+        { "role": "majstor", "path": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-majstor-v1.png", "size": 384, "sha256": "eb47e9946a7d8f5682ae1d5251b61613561b59151038cc840d0bbc5795ee7f2e" },
+        { "role": "legenda", "path": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-legenda-v1.png", "size": 384, "sha256": "1f244905698bef7e89b64ffede9579d6970b222284af9bd8de1cf94b8c1ad020" },
+        { "role": "titan", "path": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-titan-v1.png", "size": 384, "sha256": "04805a105fa8ee538833d42c7e7ae9830e6d36ee8260941f7a32dcf0477b872f" },
+        { "role": "alltime", "path": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v1.png", "size": 384, "sha256": "1869fdb9830f450a557d73e4bbf05467041e74753ded2ebf48a01f3ba8ef0ad6" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/ql/rank-amater-v1.png",
+        "assets/green-soft-clay/ql/rank-profi-v1.png",
+        "assets/green-soft-clay/ql/rank-majstor-v1.png",
+        "assets/green-soft-clay/ql/rank-legenda-v1.png",
+        "assets/green-soft-clay/ql/rank-titan-v1.png",
+        "assets/green-soft-clay/ql/rank-alltime-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "ql/rank-amater-v1.png": "canonical/quarterly-rank-badges/rank-amater-v1.png",
+        "ql/rank-profi-v1.png": "canonical/quarterly-rank-badges/rank-profi-v1.png",
+        "ql/rank-majstor-v1.png": "canonical/quarterly-rank-badges/rank-majstor-v1.png",
+        "ql/rank-legenda-v1.png": "canonical/quarterly-rank-badges/rank-legenda-v1.png",
+        "ql/rank-titan-v1.png": "canonical/quarterly-rank-badges/rank-titan-v1.png",
+        "ql/rank-alltime-v1.png": "canonical/quarterly-rank-badges/rank-alltime-v1.png"
+      },
+      "semanticExclusions": [
+        "Quarterly League navigation tabs",
+        "Quarterly League podium medals",
+        "General Podium competition medals",
+        "Treasury Collection medals",
+        "Tournament finalist award",
+        "Treasury achievement trophies",
+        "Statistics aggregate trophies metric",
+        "winner and victory-state marks",
+        "Quarterly League intro and main logo",
+        "dukats and consumable tokens"
+      ],
+      "codeBindings": [
+        "Green Quarterly League rank resolver",
+        "Green Quarterly League rank carousel headings",
+        "Green Quarterly League current-rank summary",
+        "Green Quarterly League rank preload",
+        "Green Quarterly League room-on-demand pack"
+      ]
+    },
+    "quarterlyNavigation": {
+      "semanticRole": "four stable Green navigation identities for Quarterly League content",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/quarterly-navigation/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and terracotta clay",
+        "presentation": "one centered navigation glyph on transparent background without a backing tile or text",
+        "mapping": "one immutable PNG identity per Quarterly League navigation ID"
+      },
+      "canonicalRuntime": [
+        { "role": "tab-league", "path": "assets/green-soft-clay/canonical/quarterly-navigation/tab-league-v1.png", "size": 256, "sha256": "f40a3b7929a00158136f08df1520492d0a3917dfd3082a82c36a6167c72b27a2" },
+        { "role": "tab-hall-of-fame", "path": "assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v1.png", "size": 256, "sha256": "7bc6e75d502f439ee5f545424d132900d2eaaedb259d7bbb8382f1463d429f81" },
+        { "role": "tab-medals", "path": "assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v1.png", "size": 256, "sha256": "75db6fa1bf822490fc0f6de3b205e3636d181008ddab448396a1ea20d7ca0c81" },
+        { "role": "tab-champions", "path": "assets/green-soft-clay/canonical/quarterly-navigation/tab-champions-v1.png", "size": 256, "sha256": "a4274e7e793e34f7c7797d2b6eceda11850de2949ab62d072e7841f5698d1a8b" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/ql/tab-league-v1.png",
+        "assets/green-soft-clay/ql/tab-hall-of-fame-v1.png",
+        "assets/green-soft-clay/ql/tab-medals-v1.png",
+        "assets/green-soft-clay/ql/tab-champions-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "ql/tab-league-v1.png": "canonical/quarterly-navigation/tab-league-v1.png",
+        "ql/tab-hall-of-fame-v1.png": "canonical/quarterly-navigation/tab-hall-of-fame-v1.png",
+        "ql/tab-medals-v1.png": "canonical/quarterly-navigation/tab-medals-v1.png",
+        "ql/tab-champions-v1.png": "canonical/quarterly-navigation/tab-champions-v1.png"
+      },
+      "semanticExclusions": [
+        "Quarterly League rank badges",
+        "Quarterly League podium medals",
+        "General Podium competition medals",
+        "Tournament navigation tabs",
+        "Treasury navigation tabs",
+        "Treasury Collection medals",
+        "Tournament finalist award",
+        "Treasury achievement trophies",
+        "Statistics aggregate trophies metric",
+        "winner and victory-state marks",
+        "Quarterly League intro and main logo",
+        "dukats and consumable tokens"
+      ],
+      "codeBindings": [
+        "Green Quarterly League navigation resolver",
+        "Green Quarterly League League and Hall of Fame main tabs",
+        "Green Quarterly League Medals and Champions subtabs",
+        "Green Quarterly League champion card marker",
+        "Green Quarterly League room-on-demand pack"
+      ]
     }
   }
 }
