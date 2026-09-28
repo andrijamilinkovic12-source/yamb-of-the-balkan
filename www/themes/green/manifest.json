@@ -1,7 +1,7 @@
 {
   "id": "dark",
   "name": "Zelena Soft Clay",
-  "version": 24,
+  "version": 30,
   "status": "complete",
   "background": "assets/green-clay-balkan-diorama-v3.png",
   "defaultDiceSkin": "green_clay",
@@ -38,6 +38,9 @@
     "Use the original forest-green YotB QL clay rhombus as a subtle right-side watermark on the live Quarterly League card.",
     "Use one canonical Green dukat everywhere: an ivory rounded clay rim, terracotta face/body and exactly five forest-green rounded-square pips in the four-corners-plus-center layout. Direct UI icons, translated messages, effect particles and previews must use the approved canonical runtime pack; embedded compositions must derive from the approved perspective masters.",
     "Use the canonical Green dukat inside every composite currency asset, including Ducats / Undo, Treasury chests, rewarded-video actions, Solo double-reward and the Rules economy illustration. Undo tokens, medals, trophies, video symbols and decorative chest reliefs remain separate semantic objects and must not be converted into dukats.",
+    "Treat themes/green/asset-registry.json as the machine-readable source of truth for approved canonical Green asset families, runtime variants, composite uses, semantic exclusions and forbidden retired paths.",
+    "Use one canonical Green Undo token for every standalone token depiction: a thick rounded ivory rim, recessed dark forest-green face and one solid terracotta counter-clockwise arrow with its head in the upper-left sector. Keep large action arrows around dukats and gameplay/navigation arrows as separate semantic controls.",
+    "Use one canonical Green rewarded-video ticket for direct active actions and one matching unavailable state: a forest-green notched clay ticket, rounded ivory inner frame and right-facing ivory play triangle, with a terracotta sparkle for active state or terracotta diagonal slash for unavailable state. Reward dukats remain separate canonical objects in room-specific composites.",
     "Load only the active Green splash, background and optimized 384 px main-menu thumbnails at startup; hydrate each room's transparent 256/384/512 px runtime PNGs on room entry, while preserving the original high-resolution masters outside the shipped www tree.",
     "Preserve the existing internal dark theme ID for saved-profile compatibility."
   ]

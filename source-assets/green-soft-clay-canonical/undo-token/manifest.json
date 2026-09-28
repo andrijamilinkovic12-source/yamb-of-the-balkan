@@ -1,0 +1,32 @@
+{
+  "id": "green-undo-token",
+  "version": 1,
+  "status": "canonical",
+  "registry": "www/themes/green/asset-registry.json",
+  "approvedIdentity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "rim": "thick rounded ivory clay",
+    "face": "recessed dark forest-green clay",
+    "mark": "one solid terracotta counter-clockwise Undo arrow",
+    "arrowHead": "upper-left sector",
+    "lighting": "soft upper-left studio light"
+  },
+  "master": "green-undo-token-front-master-v1.png",
+  "runtime": {
+    "front": "www/assets/green-soft-clay/canonical/undo-token/undo-token-front-v1.png",
+    "inline": "www/assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png"
+  },
+  "integration": {
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js",
+    "directUi": "connected",
+    "rulesInline": "connected",
+    "sharedActionGlyph": "registered separately from the token",
+    "rulesEconomyTreasuryComposition": "connected in economy-treasury-v3.png"
+  },
+  "rules": [
+    "Never change the ivory rim, forest-green face or terracotta Undo arrow.",
+    "Never add dukat pips, letters, stars, crowns, medals or extra ornament.",
+    "Scale the approved master instead of regenerating direct UI variants.",
+    "A standalone Undo token is distinct from the larger action arrow used around a dukat and from navigation arrows."
+  ]
+}

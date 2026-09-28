@@ -1,12 +1,23 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const root = path.resolve(__dirname, '..');
 const www = path.join(root, 'www');
 const indexSource = fs.readFileSync(path.join(www, 'index.html'), 'utf8');
 const gameSource = fs.readFileSync(path.join(www, 'game.js'), 'utf8');
+const dailyChallengeSource = fs.readFileSync(path.join(www, 'dnevniizazov.js'), 'utf8');
 const languagesSource = fs.readFileSync(path.join(www, 'languages.js'), 'utf8');
 const managersSource = fs.readFileSync(path.join(www, 'managers.js'), 'utf8');
+const rulesSource = fs.readFileSync(path.join(www, 'pravilaigre.js'), 'utf8');
+const greenAssetRegistryPath = path.join(www, 'themes', 'green', 'asset-registry.json');
+const greenAssetRegistry = JSON.parse(fs.readFileSync(greenAssetRegistryPath, 'utf8'));
+const greenAssetFamilies = Object.entries(greenAssetRegistry.families || {});
+const greenDucatRegistry = greenAssetRegistry.families?.ducat;
+const greenUndoTokenRegistry = greenAssetRegistry.families?.undoToken;
+const greenRewardedVideoRegistry = greenAssetRegistry.families?.rewardedVideo;
+const greenRewardedVideoManifestPath = path.join(root, greenRewardedVideoRegistry.sourceManifest);
+const greenRewardedVideoManifest = JSON.parse(fs.readFileSync(greenRewardedVideoManifestPath, 'utf8'));
 
 const assert = (condition, message) => {
     if (!condition) throw new Error(message);
@@ -30,6 +41,44 @@ const readPngInfo = filePath => {
         colorType: buffer[25]
     };
 };
+const sha256File = filePath => crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+
+assert(greenDucatRegistry?.status === 'locked', 'Green dukat porodica mora biti zaključana u centralnom registru.');
+assert(greenUndoTokenRegistry?.status === 'locked', 'Green Undo-token porodica mora biti zaključana u centralnom registru.');
+assert(greenRewardedVideoRegistry?.status === 'locked', 'Green Rewarded Video porodica mora biti zaključana u centralnom registru.');
+assert(greenRewardedVideoManifest.status === 'locked', 'Green Rewarded Video source manifest mora biti zaključan.');
+const registeredGreenDucatAssets = [
+    ...greenDucatRegistry.canonicalRuntime,
+    ...greenDucatRegistry.compositeRuntime
+];
+const greenDucatAssetByRole = role => {
+    const asset = registeredGreenDucatAssets.find(candidate => candidate.role === role);
+    assert(asset, `Nedostaje Green dukat registry uloga: ${role}`);
+    return asset;
+};
+const greenUndoTokenAssetByRole = role => {
+    const asset = greenUndoTokenRegistry.canonicalRuntime.find(candidate => candidate.role === role);
+    assert(asset, `Nedostaje Green Undo-token registry uloga: ${role}`);
+    return asset;
+};
+const greenRewardedVideoAssetByRole = role => {
+    const asset = greenRewardedVideoRegistry.canonicalRuntime.find(candidate => candidate.role === role);
+    assert(asset, `Nedostaje Green Rewarded Video registry uloga: ${role}`);
+    return asset;
+};
+const greenRewardedVideoCompositeByRole = role => {
+    const asset = greenRewardedVideoRegistry.compositeRuntime.find(candidate => candidate.role === role);
+    assert(asset, `Nedostaje Green Rewarded Video kompozitna registry uloga: ${role}`);
+    return asset;
+};
+for (const [role, fileName] of Object.entries(greenRewardedVideoManifest.masters || {})) {
+    const master = path.join(path.dirname(greenRewardedVideoManifestPath), fileName);
+    assert(fs.existsSync(master), `Nedostaje Green Rewarded Video master (${role}): ${master}`);
+    const info = readPngInfo(master);
+    assert(info.width === 512 && info.height === 512, `Green Rewarded Video master mora biti 512x512: ${master}`);
+    assert([4, 6].includes(info.colorType), `Green Rewarded Video master nema direktan alpha kanal: ${master}`);
+    assert(sha256File(master) === greenRewardedVideoManifest.masterSha256?.[role], `Green Rewarded Video master je promenjen: ${master}`);
+}
 
 const splashImages = indexSource.match(/<img\b[^>]*id="theme-splash-clay-title"[^>]*>/g) || [];
 assert(splashImages.length === 1, 'Mora postojati tačno jedan dinamički theme splash <img>.');
@@ -37,8 +86,8 @@ assert(!/<img\b[^>]*src="assets\/(?:easter|desert|green)-soft-clay\/splash-title
 assert(gameSource.includes('prepareThemeRoomAssets(roomId'), 'Nedostaje room-on-demand priprema asseta.');
 assert(gameSource.includes('installThemeImageHydrationObserver()'), 'Nedostaje observer za naknadno dodate tematske slike.');
 assert(!gameSource.includes('const optionalSources = pack.assets'), 'Startup i dalje preuzima ceo opcioni paket teme.');
-assert(languagesSource.includes('green-soft-clay/canonical/ducat/ducat-inline-v1.png'), 'Dinamičke Green poruke ne koriste kanonski dukat.');
-assert(managersSource.includes('green-soft-clay/canonical/ducat/ducat-particle-v1.png'), 'Green efekti ne koriste kanonski particle dukat.');
+assert(languagesSource.includes(greenDucatAssetByRole('inline').path.replace(/^assets\//, '')), 'Dinamičke Green poruke ne koriste kanonski dukat.');
+assert(managersSource.includes(greenDucatAssetByRole('particle').path.replace(/^assets\//, '')), 'Green efekti ne koriste kanonski particle dukat.');
 assert(managersSource.includes('const isDukat = isGreenTheme || roll < 0.78'), 'Green Gold Rain može da meša druge simbole sa dukatima.');
 
 const runtimeJsFiles = fs.readdirSync(www)
@@ -49,43 +98,71 @@ for (const { file, source } of runtimeJsFiles) {
     assert(directThemeImages.length === 0, `${file} sadrži direktan src za skrivenu tematsku varijantu.`);
 }
 const runtimeThemeSource = `${indexSource}\n${runtimeJsFiles.map(({ source }) => source).join('\n')}`;
-assert(!runtimeThemeSource.includes('green-soft-clay/economy/ducat-v1.png'), 'Stari Green dukat je i dalje direktno povezan u runtime kodu.');
-const retiredGreenCompositionPaths = [
-    'green-soft-clay/ducats-undo-free-v2.png',
-    'green-soft-clay/ducats-undo-pro-v1.png',
-    'green-soft-clay/treasury-free-v2.png',
-    'green-soft-clay/daily/reward-video-v1.png',
-    'green-soft-clay/treasury/reward-video-v1.png',
-    'green-soft-clay/solo/finish-reward-video-v1.png',
-    'green-soft-clay/rules/pages/economy-treasury-v1.png'
-];
-for (const retiredPath of retiredGreenCompositionPaths) {
-    assert(!runtimeThemeSource.includes(retiredPath), `Zastarela Green kompozicija je i dalje povezana: ${retiredPath}`);
+const undoFrontPath = greenUndoTokenAssetByRole('front').path;
+const undoInlinePath = greenUndoTokenAssetByRole('inline').path;
+const countOccurrences = (source, needle) => source.split(needle).length - 1;
+assert(countOccurrences(indexSource, undoFrontPath) === 2, 'Green Undo front mora biti vezan tačno za zaglavlje i Undo tab.');
+assert(countOccurrences(indexSource, undoInlinePath) === 2, 'Green Undo inline mora biti vezan tačno za stanje tokena i +1 nagradu.');
+assert(gameSource.includes(undoFrontPath) && gameSource.includes(undoInlinePath), 'Green room-on-demand paket ne priprema obe kanonske Undo izvedenice.');
+assert(rulesSource.includes(undoInlinePath), 'Green Pravila ne koriste kanonski inline Undo token.');
+assert(gameSource.includes('assets/green-soft-clay/ducats-undo-free-v3.png'), 'Green Economy intro ne koristi odobreni Undo action glyph.');
+assert(indexSource.includes('assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png'), 'Green glavni meni ne koristi optimizovani Undo action glyph.');
+assert(gameSource.includes('assets/green-soft-clay/rules/pages/economy-treasury-v3.png') && rulesSource.includes('assets/green-soft-clay/rules/pages/economy-treasury-v3.png'), 'Standardizovana Green Rules kompozicija nije potpuno povezana.');
+const gameplayUndoButton = indexSource.match(/<button\b[^>]*id="btn-undo-move"[^>]*>[\s\S]*?<\/button>/i)?.[0] || '';
+assert(gameplayUndoButton.includes('↩️'), 'Gameplay Undo dugme je izgubilo svoj funkcionalni action glyph.');
+assert(!gameplayUndoButton.includes('canonical/undo-token'), 'Kanonski potrošni Undo token ne sme zameniti gameplay action glyph.');
+assert(greenUndoTokenRegistry.semanticExclusions.includes('large Undo action arrow around a dukat'), 'Registar ne razdvaja veliki Undo action glyph od tokena.');
+assert(greenUndoTokenRegistry.semanticExclusions.includes('gameplay Undo button'), 'Registar ne razdvaja gameplay Undo dugme od tokena.');
+const rewardedVideoActivePath = greenRewardedVideoAssetByRole('active').path;
+const rewardedVideoActiveInlinePath = greenRewardedVideoAssetByRole('active-inline').path;
+const rewardedVideoUnavailablePath = greenRewardedVideoAssetByRole('unavailable').path;
+const rewardedVideoUnavailableInlinePath = greenRewardedVideoAssetByRole('unavailable-inline').path;
+const rewardedVideoDailyPath = greenRewardedVideoCompositeByRole('daily-reward').path;
+const rewardedVideoTreasuryPath = greenRewardedVideoCompositeByRole('treasury-reward').path;
+const rewardedVideoSoloPath = greenRewardedVideoCompositeByRole('solo-double-reward').path;
+assert(greenRewardedVideoRegistry.canonicalRuntime.length === 4, 'Green Rewarded Video mora imati tačno četiri kanonske runtime izvedenice.');
+assert(new Set(greenRewardedVideoRegistry.canonicalRuntime.map(asset => asset.role)).size === 4, 'Green Rewarded Video kanonske runtime uloge moraju biti jedinstvene.');
+assert(greenRewardedVideoRegistry.compositeRuntime.length === 3, 'Green Rewarded Video mora imati tačno tri sobne kompozicije.');
+assert(new Set(greenRewardedVideoRegistry.compositeRuntime.map(asset => asset.role)).size === 3, 'Green Rewarded Video sobne uloge moraju biti jedinstvene.');
+assert(JSON.stringify(greenRewardedVideoManifest.integration?.roomComposites?.rewardDucatCounts) === JSON.stringify({ daily: 1, treasury: 1, solo: 2 }), 'Green Rewarded Video manifest mora zaključati raspored nagrada 1/1/2.');
+assert(countOccurrences(indexSource, rewardedVideoActivePath) === 2, 'Green Economy mora imati tačno dve aktivne Rewarded Video veze.');
+assert(countOccurrences(indexSource, rewardedVideoUnavailablePath) === 4, 'Green Economy mora imati tačno četiri unavailable-ad veze.');
+assert(countOccurrences(rulesSource, rewardedVideoActiveInlinePath) === 1 && countOccurrences(rulesSource, rewardedVideoUnavailableInlinePath) === 1, 'Green Pravila moraju koristiti tačno po jednu inline Rewarded Video izvedenicu.');
+for (const canonicalPath of [rewardedVideoActivePath, rewardedVideoActiveInlinePath, rewardedVideoUnavailablePath, rewardedVideoUnavailableInlinePath]) {
+    assert(countOccurrences(gameSource, canonicalPath) === 1, `Green room paket mora pripremiti tačno jednu vezu za ${canonicalPath}.`);
 }
-const retiredGreenRuntimeFiles = [
-    ...retiredGreenCompositionPaths.map(relative => path.join(www, 'assets', relative)),
-    path.join(www, 'assets/green-soft-clay/runtime/menu/ducats-undo-free-v2.png'),
-    path.join(www, 'assets/green-soft-clay/runtime/menu/treasury-free-v2.png')
-];
-for (const retiredFile of retiredGreenRuntimeFiles) {
-    assert(!fs.existsSync(retiredFile), `Zastarela Green runtime kopija nije uklonjena: ${retiredFile}`);
+assert(countOccurrences(dailyChallengeSource, rewardedVideoDailyPath) === 1, 'Dnevni izazov mora imati tačno jednu Green Rewarded Video kompoziciju.');
+assert(countOccurrences(indexSource, rewardedVideoTreasuryPath) === 1, 'Riznica mora imati tačno jednu statičku Green Rewarded Video kompoziciju.');
+assert(countOccurrences(managersSource, rewardedVideoTreasuryPath) === 1, 'Dinamička Riznica mora imati tačno jednu Green Rewarded Video kompoziciju.');
+assert(countOccurrences(indexSource, rewardedVideoSoloPath) === 1, 'Solo završetak mora imati tačno jednu Green Rewarded Video kompoziciju.');
+for (const compositePath of [rewardedVideoDailyPath, rewardedVideoTreasuryPath, rewardedVideoSoloPath]) {
+    assert(countOccurrences(gameSource, compositePath) === 1, `Green room-on-demand paket mora pripremiti tačno jednu vezu za ${compositePath}.`);
 }
+for (const asset of [...greenRewardedVideoRegistry.canonicalRuntime, ...greenRewardedVideoRegistry.compositeRuntime]) {
+    assert(/^[a-f0-9]{64}$/.test(asset.sha256 || ''), `Green Rewarded Video asset nema zaključan SHA-256 otisak: ${asset.path}`);
+    const file = path.join(www, asset.path);
+    assert(sha256File(file) === asset.sha256, `Green Rewarded Video zaključani sadržaj je promenjen: ${asset.path}`);
+}
+assert(greenRewardedVideoRegistry.semanticExclusions.includes('claim and check actions'), 'Rewarded Video registar ne razdvaja claim/check akcije.');
+assert(greenRewardedVideoRegistry.semanticExclusions.includes('daily completed and already-played states'), 'Rewarded Video registar ne razdvaja Daily completed/already-played stanja.');
+assert(greenRewardedVideoRegistry.semanticExclusions.includes('ordinary non-reward playback controls'), 'Rewarded Video registar ne razdvaja obične playback kontrole.');
+for (const [familyName, family] of greenAssetFamilies) {
+    for (const forbiddenPath of family.forbiddenRuntimePaths || []) {
+        const sourcePath = forbiddenPath.replace(/^assets\//, '');
+        assert(!runtimeThemeSource.includes(sourcePath), `Zabranjeni Green ${familyName} asset je i dalje povezan: ${forbiddenPath}`);
+        const forbiddenFile = path.join(www, forbiddenPath);
+        assert(!fs.existsSync(forbiddenFile), `Zabranjeni Green runtime asset nije uklonjen: ${forbiddenFile}`);
+    }
 
-const standardizedGreenCompositions = {
-    'assets/green-soft-clay/ducats-undo-free-v3.png': 512,
-    'assets/green-soft-clay/ducats-undo-pro-v2.png': 512,
-    'assets/green-soft-clay/treasury-free-v3.png': 512,
-    'assets/green-soft-clay/daily/reward-video-v2.png': 384,
-    'assets/green-soft-clay/treasury/reward-video-v2.png': 256,
-    'assets/green-soft-clay/solo/finish-reward-video-v2.png': 384,
-    'assets/green-soft-clay/rules/pages/economy-treasury-v2.png': 512
-};
-for (const [relative, expectedSize] of Object.entries(standardizedGreenCompositions)) {
-    const file = path.join(www, relative);
-    assert(fs.existsSync(file), `Nedostaje standardizovana Green kompozicija: ${relative}`);
-    const info = readPngInfo(file);
-    assert(info.width === expectedSize && info.height === expectedSize, `Pogrešna runtime rezolucija za ${relative}.`);
-    assert([4, 6].includes(info.colorType), `Standardizovana Green kompozicija nema direktan alpha kanal: ${relative}`);
+    const registeredAssets = [...(family.canonicalRuntime || []), ...(family.compositeRuntime || [])];
+    for (const { role, path: relative, size: expectedSize } of registeredAssets) {
+        const file = path.join(www, relative);
+        assert(fs.existsSync(file), `Nedostaje registrovan Green ${familyName} asset (${role}): ${relative}`);
+        const info = readPngInfo(file);
+        assert(info.width === expectedSize && info.height === expectedSize, `Pogrešna runtime rezolucija za ${relative}.`);
+        assert([4, 6].includes(info.colorType), `Registrovan Green ${familyName} asset nema direktan alpha kanal: ${relative}`);
+        assert(runtimeThemeSource.includes(relative), `Registrovan Green ${familyName} asset nije povezan u runtime kodu: ${relative}`);
+    }
 }
 
 const themeDirs = ['easter-soft-clay', 'desert-soft-clay', 'green-soft-clay'];
@@ -103,9 +180,9 @@ const roomMatchers = {
     rules: relative => relative.startsWith('rules/') || relative.startsWith('rules-'),
     globalChat: relative => relative.startsWith('global-chat'),
     onlinePlayers: relative => relative.startsWith('online-players') || relative.startsWith('online-add-') || relative.startsWith('online-spectate') || relative.startsWith('online-duel'),
-    economy: relative => relative.startsWith('economy/') || relative.startsWith('ducats-undo') || relative.startsWith('canonical/ducat/'),
+    economy: relative => relative.startsWith('economy/') || relative.startsWith('ducats-undo') || relative.startsWith('canonical/ducat/') || relative.startsWith('canonical/undo-token/') || relative.startsWith('canonical/rewarded-video/'),
     quarterlyLeague: relative => relative.startsWith('ql/') || relative.startsWith('quarterly-league'),
-    treasury: relative => relative.startsWith('treasury/') || relative.startsWith('treasury-') || relative.startsWith('economy/ducat') || relative.startsWith('canonical/ducat/') || relative.includes('rewarded-video'),
+    treasury: (relative, themeDir) => relative.startsWith('treasury/') || relative.startsWith('treasury-') || relative.startsWith('economy/ducat') || relative.startsWith('canonical/ducat/') || (themeDir !== 'green-soft-clay' && relative.includes('rewarded-video')),
     tournament: relative => relative.startsWith('tournament/') || relative.startsWith('tournament-'),
     solo: relative => relative.startsWith('solo/') || relative.startsWith('mode-solo'),
     hotseat: relative => relative.startsWith('hotseat/') || relative.startsWith('mode-hotseat'),
@@ -138,7 +215,7 @@ for (const themeDir of themeDirs) {
         startupDecodedBytes += info.width * info.height * 4;
     }
     const roomTotals = Object.entries(roomMatchers).map(([roomId, matcher]) => {
-        const roomFiles = files.filter(file => matcher(path.relative(directory, file).replaceAll('\\', '/').toLowerCase()));
+        const roomFiles = files.filter(file => matcher(path.relative(directory, file).replaceAll('\\', '/').toLowerCase(), themeDir));
         return roomFiles.reduce((totals, file) => {
             const info = readPngInfo(file);
             totals.bytes += fs.statSync(file).size;
@@ -155,14 +232,13 @@ const optimizedMasterDirs = [
     'easter-soft-clay-hires',
     'desert-soft-clay-hires'
 ];
-const retiredGreenMasterReplacements = new Map([
-    ['ducats-undo-free-v2.png', 'ducats-undo-free-v3.png'],
-    ['ducats-undo-pro-v1.png', 'ducats-undo-pro-v2.png'],
-    ['treasury-free-v2.png', 'treasury-free-v3.png'],
-    ['daily/reward-video-v1.png', 'daily/reward-video-v2.png'],
-    ['treasury/reward-video-v1.png', 'treasury/reward-video-v2.png'],
-    ['solo/finish-reward-video-v1.png', 'solo/finish-reward-video-v2.png']
-]);
+const retiredGreenMasterReplacements = new Map();
+for (const [familyName, family] of greenAssetFamilies) {
+    for (const [retired, replacement] of Object.entries(family.retiredMasterReplacements || {})) {
+        assert(!retiredGreenMasterReplacements.has(retired), `Duplirana Green master zamena (${familyName}): ${retired}`);
+        retiredGreenMasterReplacements.set(retired, replacement);
+    }
+}
 for (const masterDir of optimizedMasterDirs) {
     const masterRoot = path.join(root, 'source-assets', masterDir);
     for (const master of walkPngs(masterRoot)) {

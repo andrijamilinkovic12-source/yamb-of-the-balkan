@@ -10,7 +10,7 @@ Ista šumska dark-green paleta primenjena je na kompletan ekran igre: header, st
 
 Pet donjih ikona glavnog menija koriste namenski renderovane transparentne `Balkan Clay` PNG simbole iz `../../assets/green-soft-clay/`. Asseti više nemaju sopstvenu kvadratnu pločicu, okvir ili pejzažnu bazu: svaki je slobodan glineni simbol u šumsko-zelenoj, krečnjačkoj i terakota paleti. Postojeće dimenzije i klik-zone dugmadi nisu menjane.
 
-Istim slobodnim sistemom bez pozadinske pločice pokriveni su Global chat, Online igrači i zajednička kartica Dukati / Ispravi zadnji upis. Kombinovana ekonomija ikona koristi pravilan raspored pet tačkica na dukatu i jasnu terakota undo strelicu, dok postojeći živi status indikator Online igrača ostaje funkcionalan iznad PNG asseta.
+Istim slobodnim sistemom bez pozadinske pločice pokriveni su Global chat, Online igrači i zajednička kartica Dukati / Ispravi zadnji upis. Cela tema koristi jedan zaključan dukat: terracotta clay lice i telo, zaobljen ivory clay obod i tačno pet tamnozelenih zaobljenih kvadratnih tačaka u rasporedu četiri ugla plus centar. Isti identitet se koristi u direktnom UI-u, porukama, efektima, kovčezima i nagradnim kompozicijama. Undo token i terakota Undo strelica ostaju zasebni simboli, dok postojeći živi status indikator Online igrača ostaje funkcionalan iznad PNG asseta.
 
 Četiri kartice za izbor moda sada koriste isti V2 jezik slobodnih glinenih simbola: jedan igrač za Solo, dva ravnopravna igrača za Hotseat, globus sa nasumičnim strelicama za Online Random i povezane karike sa plusom za Pozovi prijatelja. Kartice, tekstovi, klik-zone i funkcije nisu menjani; zamenjene su samo ikonice zelene teme.
 
@@ -21,3 +21,11 @@ Kvartalna liga ima originalni zeleni `YotB / QL` logo u romb formi: tamnozeleno 
 Motivi na pozadini su verni igri: standardni rasporedi tačkica na kockicama i diskretan Yamb listić sa šest kolona. Centralna zona ostaje mirna kako bi meniji, modali i tabla zadržali čitljivost.
 
 Tema ostaje registrovana pod internim ID-em `dark` radi kompatibilnosti sa postojećim profilima i sačuvanim podešavanjima.
+
+Kanonske porodice i zabranjene zastarele runtime putanje evidentirane su u `asset-registry.json`. Svaka buduća Green kompozicija sa valutom mora koristiti odobrene front/angle mastere i proći `check-theme-performance.js` pre objavljivanja.
+
+Samostalni Undo token koristi jedan kanonski identitet: debeo ivory glineni obod, uvučeno šumsko-zeleno lice i punu terracotta kružnu strelicu suprotnu smeru kazaljke na satu. Velika strelica oko dukata u zajedničkoj ikoni sobe i gameplay/navigacione strelice ostaju zasebni action glyph simboli, a ne tokeni.
+
+Porodice `ducat`, `undoToken` i `rewardedVideo` imaju status `locked` u centralnom registru. Automatska provera čuva njihove direktne prikaze, složene kompozicije, runtime dimenzije, transparentnost, preload izolaciju i semantičko razdvajanje od medalja, trofeja, funkcionalnih strelica i običnih playback kontrola.
+
+Rewarded-video akcija koristi jedan kanonski horizontalni forest-green ticket sa ivory okvirom i play trouglom. Aktivno stanje ima mali terracotta svetlucavi akcenat, a nedostupan oglas isti ticket sa jasnom terracotta kosom zabranom. Dnevni izazov, Riznica i Solo double-reward sada koriste isti ticket u optimizovanim sobnim kompozicijama, uz zaključan raspored od jednog, jednog i dva kanonska dukata. Claim, completed i ordinary playback simboli ostaju odvojene semantičke porodice.

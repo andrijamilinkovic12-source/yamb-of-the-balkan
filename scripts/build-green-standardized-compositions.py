@@ -13,15 +13,14 @@ OUTPUTS = {
         ("ducats-undo-free-v3.png", 512),
         ("runtime/menu/ducats-undo-free-v3.png", 384),
     ],
-    "ducats-undo-pro-v2.png": [("ducats-undo-pro-v2.png", 512)],
     "treasury-free-v3.png": [
         ("treasury-free-v3.png", 512),
         ("runtime/menu/treasury-free-v3.png", 384),
     ],
-    "daily/reward-video-v2.png": [("daily/reward-video-v2.png", 384)],
-    "treasury/reward-video-v2.png": [("treasury/reward-video-v2.png", 256)],
-    "solo/finish-reward-video-v2.png": [("solo/finish-reward-video-v2.png", 384)],
-    "rules/pages/economy-treasury-v2.png": [("rules/pages/economy-treasury-v2.png", 512)],
+    "daily/reward-video-v3.png": [("daily/reward-video-v3.png", 384)],
+    "treasury/reward-video-v3.png": [("treasury/reward-video-v3.png", 256)],
+    "solo/finish-reward-video-v3.png": [("solo/finish-reward-video-v3.png", 384)],
+    "rules/pages/economy-treasury-v3.png": [("rules/pages/economy-treasury-v3.png", 512)],
 }
 
 

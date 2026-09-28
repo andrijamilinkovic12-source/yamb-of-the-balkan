@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "themeId": "dark",
+  "themeName": "Zelena Soft Clay",
+  "families": {
+    "ducat": {
+      "semanticRole": "single Green currency identity",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/ducat/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "faceAndBody": "terracotta clay",
+        "rim": "rounded ivory clay",
+        "mark": "exactly five dark forest-green rounded-square clay pips",
+        "pipLayout": "four corners plus center"
+      },
+      "canonicalRuntime": [
+        { "role": "front", "path": "assets/green-soft-clay/canonical/ducat/ducat-front-v1.png", "size": 512 },
+        { "role": "inline", "path": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png", "size": 192 },
+        { "role": "particle", "path": "assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png", "size": 128 },
+        { "role": "angle-left", "path": "assets/green-soft-clay/canonical/ducat/ducat-angle-left-v1.png", "size": 512 },
+        { "role": "angle-right", "path": "assets/green-soft-clay/canonical/ducat/ducat-angle-right-v1.png", "size": 512 }
+      ],
+      "compositeRuntime": [
+        { "role": "economy-menu", "path": "assets/green-soft-clay/ducats-undo-free-v3.png", "size": 512 },
+        { "role": "treasury-room", "path": "assets/green-soft-clay/treasury-free-v3.png", "size": 512 },
+        { "role": "daily-reward-video", "path": "assets/green-soft-clay/daily/reward-video-v3.png", "size": 384 },
+        { "role": "treasury-reward-video", "path": "assets/green-soft-clay/treasury/reward-video-v3.png", "size": 256 },
+        { "role": "solo-double-reward", "path": "assets/green-soft-clay/solo/finish-reward-video-v3.png", "size": 384 },
+        { "role": "rules-economy-treasury", "path": "assets/green-soft-clay/rules/pages/economy-treasury-v3.png", "size": 512 },
+        { "role": "economy-menu-startup", "path": "assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png", "size": 384 },
+        { "role": "treasury-menu-startup", "path": "assets/green-soft-clay/runtime/menu/treasury-free-v3.png", "size": 384 }
+      ],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/economy/ducat-v1.png",
+        "assets/green-soft-clay/ducats-undo-free-v2.png",
+        "assets/green-soft-clay/ducats-undo-pro-v1.png",
+        "assets/green-soft-clay/ducats-undo-pro-v2.png",
+        "assets/green-soft-clay/treasury-free-v2.png",
+        "assets/green-soft-clay/daily/reward-video-v1.png",
+        "assets/green-soft-clay/daily/reward-video-v2.png",
+        "assets/green-soft-clay/treasury/reward-video-v1.png",
+        "assets/green-soft-clay/treasury/reward-video-v2.png",
+        "assets/green-soft-clay/solo/finish-reward-video-v1.png",
+        "assets/green-soft-clay/solo/finish-reward-video-v2.png",
+        "assets/green-soft-clay/rules/pages/economy-treasury-v1.png",
+        "assets/green-soft-clay/rules/pages/economy-treasury-v2.png",
+        "assets/green-soft-clay/runtime/menu/ducats-undo-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/treasury-free-v2.png"
+      ],
+      "retiredMasterReplacements": {
+        "economy/ducat-v1.png": "canonical/ducat/ducat-front-v1.png",
+        "ducats-undo-free-v2.png": "ducats-undo-free-v3.png",
+        "ducats-undo-pro-v1.png": "ducats-undo-free-v3.png",
+        "ducats-undo-pro-v2.png": "ducats-undo-free-v3.png",
+        "treasury-free-v2.png": "treasury-free-v3.png",
+        "daily/reward-video-v1.png": "daily/reward-video-v3.png",
+        "daily/reward-video-v2.png": "daily/reward-video-v3.png",
+        "treasury/reward-video-v1.png": "treasury/reward-video-v3.png",
+        "treasury/reward-video-v2.png": "treasury/reward-video-v3.png",
+        "solo/finish-reward-video-v1.png": "solo/finish-reward-video-v3.png",
+        "solo/finish-reward-video-v2.png": "solo/finish-reward-video-v3.png",
+        "rules/pages/economy-treasury-v2.png": "rules/pages/economy-treasury-v3.png"
+      },
+      "semanticExclusions": [
+        "Undo token and Undo arrows",
+        "competition medals and rank badges",
+        "achievement trophies",
+        "video play symbols and film frames",
+        "decorative chest reliefs",
+        "dice pips"
+      ],
+      "codeBindings": [
+        "dukatIconHtml",
+        "EffectManager.spawnGoldRain",
+        "EffectManager.runRoyalYambCanvas",
+        "Green Treasury Gold Rain preview"
+      ]
+    },
+    "undoToken": {
+      "semanticRole": "single Green consumable Undo-token identity",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/undo-token/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "rim": "thick rounded ivory clay",
+        "face": "recessed dark forest-green clay",
+        "mark": "one solid terracotta counter-clockwise Undo arrow",
+        "arrowHead": "upper-left sector"
+      },
+      "canonicalRuntime": [
+        { "role": "front", "path": "assets/green-soft-clay/canonical/undo-token/undo-token-front-v1.png", "size": 512 },
+        { "role": "inline", "path": "assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png", "size": 192 }
+      ],
+      "compositeRuntime": [
+        { "role": "economy-room-action-glyph", "path": "assets/green-soft-clay/ducats-undo-free-v3.png", "size": 512 },
+        { "role": "economy-menu-action-glyph", "path": "assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png", "size": 384 },
+        { "role": "rules-economy-treasury", "path": "assets/green-soft-clay/rules/pages/economy-treasury-v3.png", "size": 512 }
+      ],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/economy/undo-token-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "economy/undo-token-v1.png": "canonical/undo-token/undo-token-front-v1.png"
+      },
+      "semanticExclusions": [
+        "large Undo action arrow around a dukat",
+        "gameplay Undo button",
+        "back and navigation arrows",
+        "video play and unavailable-ad symbols",
+        "dukats, medals, rank badges and trophies"
+      ],
+      "codeBindings": [
+        "Green Economy header and Undo tab",
+        "Green Undo-token balance and +1 reward",
+        "Green Rules inline Undo heading",
+        "Green Economy room and menu action glyph",
+        "Green Rules economy and Treasury illustration"
+      ]
+    },
+    "rewardedVideo": {
+      "semanticRole": "single Green rewarded-video action with matching unavailable state",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/rewarded-video/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "body": "forest-green horizontal ticket with softly notched side edges",
+        "innerFrame": "thick rounded ivory clay",
+        "playMark": "one ivory right-facing play triangle",
+        "activeAccent": "small terracotta four-point sparkle in the upper-right corner",
+        "unavailableMark": "one thick terracotta diagonal slash from upper-left to lower-right"
+      },
+      "canonicalRuntime": [
+        { "role": "active", "path": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png", "size": 256, "sha256": "4d5c8e280f9a612cb7cc07bd22347a8a82898bbfae1dc20c34116b86d244f019" },
+        { "role": "active-inline", "path": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png", "size": 128, "sha256": "d1988cf91e07f1b94ee0036d2f1dba6bf7f37899015cf8852b5d9651e4de901e" },
+        { "role": "unavailable", "path": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png", "size": 256, "sha256": "81637ce7fda39163eb7c01cf95115e21b6fa8b4bfbc6aae5acce211921a9281b" },
+        { "role": "unavailable-inline", "path": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png", "size": 128, "sha256": "2b33901e2ad67380351ae71eed751e13374342b171a6b9f6f25cb995cb58a38f" }
+      ],
+      "compositeRuntime": [
+        { "role": "daily-reward", "path": "assets/green-soft-clay/daily/reward-video-v3.png", "size": 384, "sha256": "ae01fd5ba5251e7947328cc9600adc3168385339029b7105cbba29be9d1437ad" },
+        { "role": "treasury-reward", "path": "assets/green-soft-clay/treasury/reward-video-v3.png", "size": 256, "sha256": "509456022dbef450dda16e9d0cca1fdc32e26b73022422e590d1af4e9fbdc486" },
+        { "role": "solo-double-reward", "path": "assets/green-soft-clay/solo/finish-reward-video-v3.png", "size": 384, "sha256": "a4f0abc60ba91a5fbcb1acd5926e0ffcd8db7977bd94b1a98b18dd05d6106564" }
+      ],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/economy/rewarded-video-v1.png",
+        "assets/green-soft-clay/economy/ad-unavailable-v1.png",
+        "assets/green-soft-clay/daily/reward-video-v2.png",
+        "assets/green-soft-clay/treasury/reward-video-v2.png",
+        "assets/green-soft-clay/solo/finish-reward-video-v2.png"
+      ],
+      "retiredMasterReplacements": {
+        "economy/rewarded-video-v1.png": "canonical/rewarded-video/rewarded-video-active-v1.png",
+        "economy/ad-unavailable-v1.png": "canonical/rewarded-video/rewarded-video-unavailable-v1.png"
+      },
+      "semanticExclusions": [
+        "claim and check actions",
+        "daily completed and already-played states",
+        "ordinary non-reward playback controls",
+        "tournament start-match action",
+        "reward dukats embedded as separate canonical objects"
+      ],
+      "codeBindings": [
+        "Green Economy rewarded-video cards",
+        "Green Economy unavailable-ad cards and banners",
+        "Green Rules rewarded-video and unavailable-ad headings",
+        "Green Daily Challenge reward composition",
+        "Green Treasury reward composition",
+        "Green Solo double-reward composition"
+      ]
+    }
+  }
+}

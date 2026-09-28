@@ -2,6 +2,7 @@
   "id": "green-ducat",
   "version": 1,
   "status": "canonical",
+  "registry": "www/themes/green/asset-registry.json",
   "approvedIdentity": {
     "material": "matte 3D Soft Clay Neumorphism",
     "rim": "rounded ivory clay",
@@ -23,6 +24,7 @@
     "angleRight": "www/assets/green-soft-clay/canonical/ducat/ducat-angle-right-v1.png"
   },
   "integration": {
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js",
     "directUi": "connected",
     "translatedMessages": "connected through dukatIconHtml",
     "goldRain": "connected for Green theme only",
@@ -32,12 +34,11 @@
       "status": "connected in standardization step 4",
       "assets": [
         "ducats-undo-free-v3.png",
-        "ducats-undo-pro-v2.png",
         "treasury-free-v3.png",
-        "daily/reward-video-v2.png",
-        "treasury/reward-video-v2.png",
-        "solo/finish-reward-video-v2.png",
-        "rules/pages/economy-treasury-v2.png"
+        "daily/reward-video-v3.png",
+        "treasury/reward-video-v3.png",
+        "solo/finish-reward-video-v3.png",
+        "rules/pages/economy-treasury-v3.png"
       ]
     }
   },

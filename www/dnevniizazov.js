@@ -1241,7 +1241,7 @@ class DnevniIzazov {
             <img class="daily-glass-complete-mark-nebula" data-theme-src="assets/severna-soft-clay/daily/complete-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <button class="daily-glass-btn daily-glass-btn-double" onclick="dnevniIzazov.watchAdToDouble()">
                 <span class="daily-glass-reward-video-fallback" aria-hidden="true">🎥</span>
-                <img class="daily-glass-reward-video-mark-green" data-theme-src="assets/green-soft-clay/daily/reward-video-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="daily-glass-reward-video-mark-green" data-theme-src="assets/green-soft-clay/daily/reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-easter" data-theme-src="assets/easter-soft-clay/daily/reward-video-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-desert" data-theme-src="assets/desert-soft-clay/daily/reward-video-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-nebula" data-theme-src="assets/severna-soft-clay/daily/reward-video-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">

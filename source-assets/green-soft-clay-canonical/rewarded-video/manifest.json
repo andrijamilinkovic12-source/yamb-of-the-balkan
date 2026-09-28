@@ -1,0 +1,56 @@
+{
+  "id": "green-rewarded-video",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "approvedIdentity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "body": "forest-green horizontal ticket with softly notched side edges",
+    "innerFrame": "thick rounded ivory clay",
+    "playMark": "one ivory right-facing play triangle",
+    "activeAccent": "small terracotta four-point clay sparkle in the upper-right corner",
+    "unavailableMark": "one thick terracotta diagonal slash from upper-left to lower-right",
+    "lighting": "soft upper-left studio light"
+  },
+  "masters": {
+    "active": "green-rewarded-video-active-master-v1.png",
+    "unavailable": "green-rewarded-video-unavailable-master-v1.png"
+  },
+  "masterSha256": {
+    "active": "ee893a23b2b78738fbab1e29196168ad5d707cbcbbf9589b805dff88cfc7f433",
+    "unavailable": "47f0040f1a47d3587fc043be0c4d2b1c8da7218d2481af7425f9608af5861df9"
+  },
+  "runtime": {
+    "active": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+    "activeInline": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+    "unavailable": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+    "unavailableInline": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png"
+  },
+  "integration": {
+    "economyActive": "connected",
+    "economyUnavailable": "connected",
+    "rulesInline": "connected",
+    "roomOnDemand": "connected",
+    "roomComposites": {
+      "status": "locked in step 4",
+      "assets": [
+        "daily/reward-video-v3.png",
+        "treasury/reward-video-v3.png",
+        "solo/finish-reward-video-v3.png"
+      ],
+      "rewardDucatCounts": {
+        "daily": 1,
+        "treasury": 1,
+        "solo": 2
+      }
+    },
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Keep the same ticket body, ivory frame and right-facing play triangle in every direct depiction.",
+    "Use the terracotta sparkle only for the active action and the terracotta diagonal slash for unavailable state.",
+    "Scale the approved masters instead of regenerating direct UI variants.",
+    "Reward dukats remain separate canonical objects in room-specific composite assets.",
+    "Claim, completed, already-played and ordinary playback controls are not part of this family."
+  ]
+}
