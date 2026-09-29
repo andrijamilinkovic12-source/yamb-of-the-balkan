@@ -1,8 +1,8 @@
 {
   "id": "green-tournament-awards",
   "version": 1,
-  "status": "canonical",
-  "plannedRegistry": "www/themes/green/asset-registry.json",
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
   "semanticRole": "official Green Tournament identity with separate champion and finalist honors",
   "identity": {
     "material": "matte 3D Soft Clay Neumorphism",
@@ -76,13 +76,14 @@
     "dukats, Undo tokens and Rewarded Video symbols"
   ],
   "integration": {
-    "mainMenuStartup": "planned for standardization step 3",
-    "tournamentBranding": "planned for standardization step 3",
-    "championConsumers": "planned for standardization step 3",
-    "finalistConsumers": "planned for standardization step 3",
-    "rulesChampionReference": "planned for standardization step 3",
-    "roomOnDemand": "planned for standardization step 3",
-    "legacyRuntime": "retained until standardization step 3"
+    "mainMenuStartup": "connected",
+    "tournamentBranding": "connected",
+    "championConsumers": "connected",
+    "finalistConsumers": "connected",
+    "rulesChampionReference": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
   },
   "rules": [
     "The champion trophy is the official Tournament identity and may be reused for Tournament branding and champion honors.",

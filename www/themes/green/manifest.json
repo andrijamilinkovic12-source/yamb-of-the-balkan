@@ -1,7 +1,7 @@
 {
   "id": "dark",
   "name": "Zelena Soft Clay",
-  "version": 42,
+  "version": 50,
   "status": "complete",
   "background": "assets/green-clay-balkan-diorama-v3.png",
   "defaultDiceSkin": "green_clay",
@@ -48,6 +48,12 @@
     "Use the canonical Green Quarterly League Navigation pack for the League, Hall of Fame, Medals and Champions views. Reuse the Champions identity only for the champion archive tab and champion card marker, and keep rank badges, podium medals, Tournament tabs, trophies and winner marks outside this family.",
     "Use the canonical Green Tournament Navigation pack for Info, Bracket and Tournament Hall of Fame. Reuse the Tournament Hall of Fame scroll in the matching Rules reference, keep it distinct from the Quarterly League Hall of Fame building, and keep registration, match states, finalist awards, trophies and winner marks outside this family.",
     "Use the canonical Green Tournament States pack for Register, Unregister, Registration locked, Tournament start, Match active and Match complete. Keep registration actions separate from flow states, and never substitute Undo tokens, rewarded-video tickets, Treasury statuses, Daily or Invite states, finalist awards or winner marks.",
+    "Use one canonical Green Tournament champion trophy for the main-menu identity, intro, room branding, champion results and ceremony, and one separate canonical silver medal for Tournament finalist status. Keep both distinct from podium, collection, achievement, navigation, state, rank and generic winner assets.",
+    "Use one canonical Green Hotseat Winner mark only for a completed non-draw local two-player game: two clay player figures with the forest-green winner in front, one ivory check and one terracotta accent. Do not reuse it for Statistics, Solo, Online, technical, Tournament, League, Treasury or generic winner states.",
+    "Use the canonical Green Solo Results pack with separate Personal Best, Final Score Mark and Finish Claim identities. Keep the locked Rewarded Video composition, main Solo menu/intro icon, CSS score tiers, Statistics metrics and multiplayer result states outside this family, while preserving real high-score and claim behavior.",
+    "Use the canonical Green Statistics Overview pack with separate Power Index, Record, Games, Wins, Draws, Losses, Fire Streak, Average, Trophies and All-time Points identities. Keep H2H, canonical dukat, Solo Personal Best, Hotseat Winner, competition awards and individual achievements outside this family while preserving all real statistics data, formulas, modal actions and display sizes.",
+    "Use the canonical Green H2H Statistics pack for the H2H identity, empty state, rival-specific highest score, maximum win margin, worst loss margin and VS separator. Reuse the locked Statistics Overview Fire Streak, Draws and Average glyphs for identical H2H concepts without merging their opponent-specific data or formulas.",
+    "Use one canonical Green Statistics Room identity across the main menu, theme loading gate, 4.6-second icon-only intro, room header and matching Rules references. Use the 384 px menu delivery only on the startup path and the 512 px room delivery only for room, intro, header and Rules contexts; never restore the rejected framed statistics-pro variant.",
     "Load only the active Green splash, background and optimized 384 px main-menu thumbnails at startup; hydrate each room's transparent 256/384/512 px runtime PNGs on room entry, while preserving the original high-resolution masters outside the shipped www tree.",
     "Preserve the existing internal dark theme ID for saved-profile compatibility."
   ]

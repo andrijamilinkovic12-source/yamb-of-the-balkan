@@ -1,0 +1,256 @@
+{
+  "id": "green-statistics-overview",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "ten stable Green identities for aggregate Statistics Overview metrics",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and one terracotta accent",
+    "presentation": "one centered aggregate metric glyph on a transparent background without text or a backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity for each Statistics Overview metric"
+  },
+  "catalog": [
+    {
+      "id": "power-index",
+      "role": "global Power Index value and rank",
+      "glyph": "ivory lightning bolt inside a forest-green ring with one terracotta dot",
+      "usedBy": [
+        "Statistics Overview Power Index watermark",
+        "Power Index modal title and value",
+        "Rules statistics reference",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[94, 94], [27, 27], [16, 16]],
+      "master": "green-power-index-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "77545e0f854f6d501c886e84670a9fc8b7d4f96db28064f50d6481e230a44bb3",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "aca987078b4173c89cdae4d44b8ab471792558d24bd52ec5c86b0f5519910fe1",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/power-index-bolt-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "aca987078b4173c89cdae4d44b8ab471792558d24bd52ec5c86b0f5519910fe1",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "record",
+      "role": "best stored Solo score aggregate",
+      "glyph": "ascending ivory path with forest-green nodes and one terracotta arrowhead",
+      "usedBy": [
+        "Statistics Overview record card",
+        "Rules statistics reference",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[19, 19]],
+      "master": "green-record-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "b8b9a067524f56cd4daf5ec4d9a4a4b1b222a2d53ad97e65836731f5aa5acdbe",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/record-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "9e3cca29bc7ec413863ca360b07de2f322cef1e2d35deab686a35a8957e6380b",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/record-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "9e3cca29bc7ec413863ca360b07de2f322cef1e2d35deab686a35a8957e6380b",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "games",
+      "role": "total completed games aggregate",
+      "glyph": "vertical stack of three rounded dice showing one, three and five pips",
+      "usedBy": [
+        "Statistics Overview total-games card",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[19, 19]],
+      "master": "green-games-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "13189b80a7ecae4564457fb40a5e3b3a366bef15aa30f7addaf3fe7e9d362977",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/games-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "41c1f718f4af64d8286d3f39caa7a90d3a2b07240130a53a1939b8e68619ddb7",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/games-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "41c1f718f4af64d8286d3f39caa7a90d3a2b07240130a53a1939b8e68619ddb7",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "wins",
+      "role": "aggregate wins count",
+      "glyph": "large ivory check on a forest-green base with one terracotta star",
+      "usedBy": [
+        "Statistics Overview wins row",
+        "Rules statistics reference",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[14, 14]],
+      "master": "green-wins-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "fc00372c7ba5154902f11332d456a017e60c4e6f9c907228ba1daf03f459f5e2",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/wins-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "56c08c3ffcd753a10d87b81b721086dbd1415f9e13ed246a36bd7b05b8f950c4",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/wins-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "56c08c3ffcd753a10d87b81b721086dbd1415f9e13ed246a36bd7b05b8f950c4",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "draws",
+      "role": "aggregate draws count",
+      "glyph": "two ivory horizontal bars with forest-green end caps and one terracotta center dot",
+      "usedBy": [
+        "Statistics Overview draws row",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[14, 14]],
+      "master": "green-draws-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "8925a428c85256924cfb5f7a6e7f23d3639c302ad6d30824c095443b174d9a1d",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/draws-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "ac875bb7e77abcc37b672a2e5a46251c001a36fa219906595669b6fe820aac82",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/draws-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "ac875bb7e77abcc37b672a2e5a46251c001a36fa219906595669b6fe820aac82",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "losses",
+      "role": "aggregate losses count",
+      "glyph": "terracotta downward chevron above one ivory dot and a forest-green base",
+      "usedBy": [
+        "Statistics Overview losses row",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[14, 14]],
+      "master": "green-losses-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "fe9c5a2f0f21acc673520af2dc8eba5125e10425f0866830278cbafa6468a17e",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/losses-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "e0f872aa3fc25541c9b5fb394dfbca40137f8c99c7ae510b890c1502243cd3fc",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/losses-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "e0f872aa3fc25541c9b5fb394dfbca40137f8c99c7ae510b890c1502243cd3fc",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "fire-streak",
+      "role": "current and best Fire Streak metric",
+      "glyph": "terracotta outer flame with an ivory center and a forest-green inner drop",
+      "usedBy": [
+        "Statistics Overview Fire Streak card",
+        "Fire Streak modal title and value",
+        "Rules statistics reference",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[24, 24], [32, 32], [23, 23]],
+      "master": "green-fire-streak-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "67fff13074702422654052a870ddfdceec7b9660734368cc7cc4dd7fffada89a",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "9d9cb7a4189caf38d4cbb0b166a8f2cebed7aab5a969763de3c55763db7a3847",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/fire-streak-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "9d9cb7a4189caf38d4cbb0b166a8f2cebed7aab5a969763de3c55763db7a3847",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "average",
+      "role": "average score metric",
+      "glyph": "three ascending forest-green bars crossed by an ivory average line with one terracotta dot",
+      "usedBy": [
+        "Statistics Overview average-score card",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[24, 24]],
+      "master": "green-average-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "a89b376e9a43030d00e05f5034544bb366cabe8fffaad33d4594ca6e48adaeed",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/average-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "fdc3b6eae21540d3003eadc697c24862aa69667293bc0fa75790499ba59b2a12",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/average-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "fdc3b6eae21540d3003eadc697c24862aa69667293bc0fa75790499ba59b2a12",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "trophies",
+      "role": "aggregate unlocked achievement trophies count",
+      "glyph": "ivory trophy with one terracotta star and a forest-green base",
+      "usedBy": [
+        "Statistics Overview trophies card",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[24, 24]],
+      "master": "green-trophies-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "b59ea27b291e47ee76b53b74cdc8efd323ee9773284aa1ab0f1a4d2857b910ae",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/trophies-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "b698d3624653518ba0bb7014ee94e411d73da87fd8e3fa0b52f7c26fc635880e",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/trophies-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "b698d3624653518ba0bb7014ee94e411d73da87fd8e3fa0b52f7c26fc635880e",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "all-time-points",
+      "role": "lifetime score aggregate",
+      "glyph": "forest-green orbital construction around one ivory star with one terracotta dot",
+      "usedBy": [
+        "Statistics Overview all-time-points card",
+        "Rules statistics reference",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[24, 24]],
+      "master": "green-all-time-points-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "b6b8661ec764c02819ce2d56df07ea73ffaef0fffb2e6228d177823eeac432d5",
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-overview/all-time-points-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "670e8f0a5773e56b423cc205a0dc10ca3454d4591f0b6a57a1304acc6fbd933c",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/all-time-points-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "670e8f0a5773e56b423cc205a0dc10ca3454d4591f0b6a57a1304acc6fbd933c",
+      "normalization": "approved 1254x1254 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    }
+  ],
+  "semanticExclusions": [
+    "H2H overview, empty and detail identities",
+    "main Statistics menu and intro identity",
+    "locked canonical dukat and Economy identities",
+    "Solo Results and Hotseat Winner identities",
+    "Online, Invite and technical results",
+    "Tournament awards, states and navigation",
+    "Quarterly League rank, navigation and podium identities",
+    "General Podium and Collection medals",
+    "individual Achievement Trophies",
+    "Treasury navigation and item states",
+    "Daily states",
+    "gameplay dice, dice skins, navigation arrows and Undo token"
+  ],
+  "integration": {
+    "statisticsOverview": "connected",
+    "powerIndexModal": "connected",
+    "fireStreakModal": "connected",
+    "rulesReferences": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Each aggregate metric keeps one immutable visual identity across all consumers.",
+    "Record is an aggregate high score and does not replace the Solo Personal Best result status.",
+    "Wins, draws and losses are aggregate counters and do not replace single-match result identities.",
+    "The trophies metric is not a Treasury tab, individual achievement, Tournament award or League medal.",
+    "The locked canonical dukat remains the only Statistics balance glyph.",
+    "H2H overview, empty and detail identities remain outside this family.",
+    "Preserve all existing display sizes, data formulas, modal actions and room-on-demand behavior during integration.",
+    "Use the canonical runtime pack instead of copying or recoloring individual Statistics Overview glyphs."
+  ]
+}

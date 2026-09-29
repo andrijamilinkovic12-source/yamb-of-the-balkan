@@ -1,0 +1,109 @@
+{
+  "id": "green-statistics-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "single Green identity for the Statistics room across menu, intro, header and Rules",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green base, three warm-ivory ascending bars and one terracotta top dot",
+    "presentation": "one centered free-standing statistics glyph on a transparent background without text, frame or backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Statistics room identity with room and menu delivery variants"
+  },
+  "master": {
+    "path": "green-statistics-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 601843,
+    "sha256": "a6b66b766925133dd68cce4c290087770d602b633960d082cc42b90ac1a498ea",
+    "approvedSource": "source-assets/green-soft-clay-hires/statistics-free-v2.png",
+    "approvedSourceSha256": "a6b66b766925133dd68cce4c290087770d602b633960d082cc42b90ac1a498ea"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Statistics intro, room header, Rules inline identity, theme loading gate and room-on-demand preload",
+      "usedBy": [
+        "Statistics room header",
+        "Statistics icon-only room intro",
+        "Rules Game columns and Tracking statistics references in Serbian and English",
+        "Green theme loading gate Statistics icon",
+        "Green Statistics room-on-demand package"
+      ],
+      "displaySizes": [
+        [34, 34],
+        [45, 45],
+        ["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"],
+        ["responsive-inline", "responsive-inline"]
+      ],
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 99726,
+      "runtimeSha256": "1b410b9c5af60dfa552122a9eb2ba70abb05bb4f3fdfc4acd7ed0868679611f0",
+      "activeRuntime": "www/assets/green-soft-clay/statistics-free-v2.png",
+      "activeRuntimeSha256": "1b410b9c5af60dfa552122a9eb2ba70abb05bb4f3fdfc4acd7ed0868679611f0",
+      "expectedCanonicalReferences": 4,
+      "normalization": "approved 1254x1254 RGBA master reduced directly to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Statistics main-menu startup icon",
+      "usedBy": [
+        "Green main-menu Statistics button",
+        "Green startup preload collected from the active main-menu DOM"
+      ],
+      "displaySizes": [[52, 52], [46, 46]],
+      "runtime": "www/assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 60928,
+      "runtimeSha256": "e4ab3a61aecdb9e14e84159a11b4e5ca1608e87996d663114eedf903ab0654fa",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/statistics-free-v2.png",
+      "activeRuntimeSha256": "e4ab3a61aecdb9e14e84159a11b4e5ca1608e87996d663114eedf903ab0654fa",
+      "expectedCanonicalReferences": 2,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling to preserve the approved menu delivery"
+    }
+  ],
+  "rejectedCandidates": [
+    {
+      "id": "statistics-pro-v1",
+      "status": "rejected-orphan",
+      "source": "source-assets/green-soft-clay-hires/statistics-pro-v1.png",
+      "sourceSize": [1254, 1254],
+      "sourceSha256": "9d218e445b401c788dfcd0e0fd2dbb732e34006ab8cfc10c0f8139a4ea073c1e",
+      "runtime": "www/assets/green-soft-clay/statistics-pro-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeSha256": "6d90b2ede4d24444469d9f017793a226ce96bf60e80bff9e0db3a5fa8330762d",
+      "activeReferences": 0,
+      "reason": "framed square illustration violates the free-standing Green menu-icon rule and has no active Green consumer",
+      "retirement": "runtime retired in standardization step 3; rejected high-resolution source retained for audit provenance"
+    }
+  ],
+  "motionContract": {
+    "mainMenu": "easterBottomIconWave 8.4s with Statistics delay 1.56s and reduced-motion fallback",
+    "intro": "greenRoomIconPulse 1.8s at scale 1.06 inside the shared 4.6s room intro with reduced-motion fallback",
+    "header": "static 34x34 contain presentation",
+    "rules": "existing responsive inline presentation"
+  },
+  "integration": {
+    "mainMenu": "connected",
+    "statisticsIntro": "connected",
+    "statisticsHeader": "connected",
+    "rules": "connected",
+    "roomOnDemand": "connected",
+    "startup": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "rejectedAlternate": "runtime retired in standardization step 3; high-resolution source retained for audit provenance",
+    "centralRegistry": "standardized in standardization step 3",
+    "cacheVersion": 48,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "Statistics Overview metric glyphs and formulas",
+    "H2H identity, empty state, versus and detail glyphs",
+    "Rules Statistics and leaderboards narrative illustration",
+    "Power Index watermark and modal identity",
+    "leaderboards and Solo Record identities",
+    "medals, trophies, ranks and single-match result identities",
+    "gameplay dice, dice skins, navigation and Economy identities"
+  ]
+}

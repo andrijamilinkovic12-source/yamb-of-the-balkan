@@ -1,0 +1,60 @@
+{
+  "id": "green-hotseat-winner",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "one stable Green identity for the winner of a non-draw local two-player Hotseat game",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and one terracotta accent",
+    "presentation": "two centered player figures on a transparent background without text or a backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity for a non-draw local Hotseat winner"
+  },
+  "catalog": [
+    {
+      "id": "hotseat-winner",
+      "role": "winner of a completed non-draw local Hotseat game",
+      "glyph": "two clay player figures with a foreground forest-green winner, ivory check and one terracotta dot",
+      "usedBy": [
+        "Hotseat game-over winner card",
+        "Hotseat room-on-demand package"
+      ],
+      "master": "green-hotseat-winner-master-v1.png",
+      "masterSize": [512, 512],
+      "masterSha256": "99f6cb072816aba333f883a4e2ad3def3fdc0fdb5bb29a40e6e70954acd30beb",
+      "runtime": "www/assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "4020edd452e925903508af646e4f56ec55320982fa573e3a97a25aefe4d7824b",
+      "activeRuntime": "www/assets/green-soft-clay/hotseat/winner-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeSha256": "396a608821feaa3f02597e2c06c7681032f93a857f5a7cbf3dad940591994981",
+      "normalization": "approved 512x512 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    }
+  ],
+  "semanticExclusions": [
+    "Statistics wins, draws and losses",
+    "Tournament champion and finalist awards",
+    "Quarterly League champion, rank and podium identities",
+    "General Podium and Treasury Collection medals",
+    "achievement trophies",
+    "Solo result marks and actions",
+    "Online, Invite and technical results",
+    "Tournament completed-match state",
+    "Invite accepted and Treasury owned states",
+    "dukats, Undo tokens and Rewarded Video symbols"
+  ],
+  "integration": {
+    "gameOverConsumer": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "The Hotseat Winner mark belongs only to a completed non-draw local two-player game.",
+    "Online and technical results do not inherit this identity without a separately approved asset and ID.",
+    "The player-and-check composition is not a Statistics wins mark, Tournament award, League identity or generic winner symbol.",
+    "Preserve the existing 58x58 presentation, reveal motion and reduced-motion behavior during integration.",
+    "Use the canonical runtime pack instead of copying or recoloring the Hotseat Winner mark."
+  ]
+}

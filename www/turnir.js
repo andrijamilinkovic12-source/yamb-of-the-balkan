@@ -740,7 +740,7 @@ class TournamentManager {
                                 <img class="tournament-intro-wins-icon-easter" data-theme-src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                 <img class="tournament-intro-wins-icon-desert" data-theme-src="assets/desert-soft-clay/tournament-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                 <img class="tournament-intro-wins-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                                <img class="tournament-intro-wins-icon-green" data-theme-src="assets/green-soft-clay/tournament-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                                <img class="tournament-intro-wins-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                 <strong>${wins}</strong>
                             </span>
                         </div>
@@ -1179,7 +1179,7 @@ class TournamentManager {
                 <img class="tourney-hof-trophy-easter" data-theme-src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="tourney-hof-trophy-desert" data-theme-src="assets/desert-soft-clay/tournament-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="tourney-hof-trophy-nebula" data-theme-src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="tourney-hof-trophy-green" data-theme-src="assets/green-soft-clay/tournament-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="tourney-hof-trophy-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <h3 class="tourney-champions-title">
                     ${tt('tourney_hall_of_fame') || 'OSVAJAČI TURNIRA'}
                 </h3>
@@ -1421,7 +1421,7 @@ class TournamentManager {
             : (isDesertTheme
                 ? 'assets/desert-soft-clay/tournament-pro.png?v=4'
                 : (isGreenTheme
-                    ? 'assets/green-soft-clay/tournament-free-v2.png?v=opt2'
+                    ? 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1'
                     : 'assets/tournament-trophy-yotb.svg'));
         const selectorHtml = savedChampionships.length > 1
             ? `
@@ -1586,7 +1586,7 @@ class TournamentManager {
 
         container.innerHTML = `
             <div class="tourney-registration-panel">
-                <div class="tourney-icon-large tourney-registration-icon"><span class="tourney-registration-icon-fallback" aria-hidden="true">🏆</span><img class="tourney-registration-soft-clay-icon" data-theme-src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/tournament-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/tournament-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>
+                <div class="tourney-icon-large tourney-registration-icon"><span class="tourney-registration-icon-fallback" aria-hidden="true">🏆</span><img class="tourney-registration-soft-clay-icon" data-theme-src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/tournament-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-registration-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>
                 <h3 class="tourney-registration-title">${currentEdition}</h3>
                 <p class="tourney-registration-desc">${registrationDesc}</p>
 
@@ -1879,7 +1879,7 @@ class TournamentManager {
                                 <img class="tourney-round-trophy-easter" data-theme-src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                 <img class="tourney-round-trophy-desert" data-theme-src="assets/desert-soft-clay/tournament-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                 <img class="tourney-round-trophy-nebula" data-theme-src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                                <img class="tourney-round-trophy-green" data-theme-src="assets/green-soft-clay/tournament-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                                <img class="tourney-round-trophy-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             </h3>
                             <div class="tourney-matches tourney-matches--f">
                                 ${f.map((m, i) => this.createMatchHTML(m, 'f', i)).join('')}
@@ -2045,10 +2045,10 @@ class TournamentManager {
             const resultIcon = round === 'f' ? 'tournament-pro.png' : 'tournament/state-match-complete.png';
             const severnaResultIcon = round === 'f' ? 'tournament-pro-v7.png?v=1' : 'tournament/state-match-complete-v3.png?v=1';
             const greenResultIcon = round === 'f'
-                ? 'assets/green-soft-clay/tournament-free-v2.png?v=opt2'
+                ? 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1'
                 : 'assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png?v=1';
             const finalistHtml = round === 'f'
-                ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-easter" data-theme-src="assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-desert" data-theme-src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-green" data-theme-src="assets/green-soft-clay/tournament/finalist-silver-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
+                ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-easter" data-theme-src="assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-desert" data-theme-src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
                 : '';
             akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-easter" data-theme-src="${easterResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-desert" data-theme-src="assets/desert-soft-clay/${resultIcon}?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-nebula" data-theme-src="assets/severna-soft-clay/${severnaResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-green" data-theme-src="${greenResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
         }

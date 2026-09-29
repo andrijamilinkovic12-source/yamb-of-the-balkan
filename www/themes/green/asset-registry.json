@@ -671,6 +671,423 @@
         "Green Rules Tournament Start reference",
         "Green Tournament room-on-demand pack"
       ]
+    },
+    "tournamentAwards": {
+      "semanticRole": "official Green Tournament identity with separate champion and finalist honors",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/tournament-awards/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory, terracotta and controlled silver clay",
+        "presentation": "one centered Tournament honor on transparent background without a backing tile or text",
+        "mapping": "one immutable PNG identity for champion and one for finalist"
+      },
+      "canonicalRuntime": [
+        { "role": "champion-trophy", "path": "assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png", "size": 384, "sha256": "2a0cdbd77a321ce9964213a91087c8c2375660bb94ad4e4da9cd75588ccf01f5" },
+        { "role": "finalist-silver", "path": "assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png", "size": 256, "sha256": "eb430e12e61b44f35cb9aa33a1e9913daee5e28cfcd74535f9ded37e1137d2eb" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/tournament-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/tournament-free-v2.png",
+        "assets/green-soft-clay/tournament/finalist-silver-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "tournament-free-v2.png": "canonical/tournament-awards/champion-trophy-v1.png",
+        "tournament/finalist-silver-v1.png": "canonical/tournament-awards/finalist-silver-v1.png"
+      },
+      "semanticExclusions": [
+        "General Podium competition medals",
+        "Quarterly League podium medals",
+        "Treasury Collection medals",
+        "individual achievement trophies",
+        "Tournament navigation tabs",
+        "Tournament registration and match states",
+        "Quarterly League navigation and champion marker",
+        "Quarterly League rank badges",
+        "Hotseat, Online and generic winner marks",
+        "dukats, Undo tokens and Rewarded Video symbols"
+      ],
+      "codeBindings": [
+        "Green Tournament main-menu and startup identity",
+        "Green Tournament intro, header, registration and history branding",
+        "Green Tournament champion results, modal and ceremony",
+        "Green Tournament finalist results, modal and ceremony",
+        "Green Rules Tournament champion reference",
+        "Green Tournament room-on-demand pack"
+      ]
+    },
+    "hotseatWinner": {
+      "semanticRole": "one stable Green identity for the winner of a non-draw local two-player Hotseat game",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/hotseat-winner/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and one terracotta accent",
+        "presentation": "two centered player figures on a transparent background without text or a backing tile",
+        "mapping": "one immutable PNG identity for a non-draw local Hotseat winner"
+      },
+      "canonicalRuntime": [
+        { "role": "hotseat-winner", "path": "assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png", "size": 256, "sha256": "4020edd452e925903508af646e4f56ec55320982fa573e3a97a25aefe4d7824b" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/hotseat/winner-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "hotseat/winner-v1.png": "canonical/hotseat-winner/hotseat-winner-v1.png"
+      },
+      "semanticExclusions": [
+        "Statistics wins, draws and losses",
+        "Tournament champion and finalist awards",
+        "Quarterly League champion, rank and podium identities",
+        "General Podium and Treasury Collection medals",
+        "achievement trophies",
+        "Solo result marks and actions",
+        "Online, Invite and technical results",
+        "Tournament completed-match state",
+        "Invite accepted and Treasury owned states",
+        "dukats, Undo tokens and Rewarded Video symbols"
+      ],
+      "codeBindings": [
+        "Green Hotseat game-over winner card",
+        "Green Hotseat room-on-demand pack"
+      ]
+    },
+    "soloResults": {
+      "semanticRole": "three stable Green identities for Solo personal-best status, final score display and reward claim action",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/solo-results/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and one terracotta accent",
+        "presentation": "one centered Solo result glyph on a transparent background without text or a backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable PNG identity for each Solo result status, score mark and claim action"
+      },
+      "canonicalRuntime": [
+        { "role": "personal-best", "path": "assets/green-soft-clay/canonical/solo-results/personal-best-v1.png", "size": 256, "sha256": "573a9df91281784f5b8739e7ae55ec137093e37fdea8e8fbdc0beecb7273b76d" },
+        { "role": "finish-score-mark", "path": "assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png", "size": 256, "sha256": "722f391eb7d85e41b537212d81d680f1f2fc152dbe42fe5e45bba2f8960d33ce" },
+        { "role": "finish-claim", "path": "assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png", "size": 256, "sha256": "f7102115b111f605f9bf38d25ff7a0d5aedd9bb812814fee79e1771eeb5ef09e" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/solo/personal-best-v1.png",
+        "assets/green-soft-clay/solo/finish-score-mark-v1.png",
+        "assets/green-soft-clay/solo/finish-claim-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "solo/personal-best-v1.png": "canonical/solo-results/personal-best-v1.png",
+        "solo/finish-score-mark-v1.png": "canonical/solo-results/finish-score-mark-v1.png",
+        "solo/finish-claim-v1.png": "canonical/solo-results/finish-claim-v1.png"
+      },
+      "semanticExclusions": [
+        "main Solo menu and intro identity",
+        "locked Rewarded Video and canonical dukat families",
+        "CSS score tiers, summary cards and result text",
+        "Statistics record, wins and aggregate metrics",
+        "Hotseat Winner identity",
+        "Online, Invite and technical results",
+        "Tournament awards and states",
+        "Quarterly League champion, rank and podium identities",
+        "General Podium, Collection medals and achievement trophies",
+        "Daily and Treasury states",
+        "gameplay, navigation and Undo arrows"
+      ],
+      "codeBindings": [
+        "Green Solo personal-best badge",
+        "Green Solo final-score row",
+        "Green Solo claim-and-exit action",
+        "Green Solo room-on-demand pack"
+      ]
+    },
+    "statisticsOverview": {
+      "semanticRole": "ten stable Green identities for aggregate Statistics Overview metrics",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/statistics-overview/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and one terracotta accent",
+        "presentation": "one centered aggregate metric glyph on a transparent background without text or a backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable PNG identity for each Statistics Overview metric"
+      },
+      "canonicalRuntime": [
+        { "role": "power-index", "path": "assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png", "size": 256, "sha256": "aca987078b4173c89cdae4d44b8ab471792558d24bd52ec5c86b0f5519910fe1" },
+        { "role": "record", "path": "assets/green-soft-clay/canonical/statistics-overview/record-v1.png", "size": 256, "sha256": "9e3cca29bc7ec413863ca360b07de2f322cef1e2d35deab686a35a8957e6380b" },
+        { "role": "games", "path": "assets/green-soft-clay/canonical/statistics-overview/games-v1.png", "size": 256, "sha256": "41c1f718f4af64d8286d3f39caa7a90d3a2b07240130a53a1939b8e68619ddb7" },
+        { "role": "wins", "path": "assets/green-soft-clay/canonical/statistics-overview/wins-v1.png", "size": 256, "sha256": "56c08c3ffcd753a10d87b81b721086dbd1415f9e13ed246a36bd7b05b8f950c4" },
+        { "role": "draws", "path": "assets/green-soft-clay/canonical/statistics-overview/draws-v1.png", "size": 256, "sha256": "ac875bb7e77abcc37b672a2e5a46251c001a36fa219906595669b6fe820aac82" },
+        { "role": "losses", "path": "assets/green-soft-clay/canonical/statistics-overview/losses-v1.png", "size": 256, "sha256": "e0f872aa3fc25541c9b5fb394dfbca40137f8c99c7ae510b890c1502243cd3fc" },
+        { "role": "fire-streak", "path": "assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png", "size": 256, "sha256": "9d9cb7a4189caf38d4cbb0b166a8f2cebed7aab5a969763de3c55763db7a3847" },
+        { "role": "average", "path": "assets/green-soft-clay/canonical/statistics-overview/average-v1.png", "size": 256, "sha256": "fdc3b6eae21540d3003eadc697c24862aa69667293bc0fa75790499ba59b2a12" },
+        { "role": "trophies", "path": "assets/green-soft-clay/canonical/statistics-overview/trophies-v1.png", "size": 256, "sha256": "b698d3624653518ba0bb7014ee94e411d73da87fd8e3fa0b52f7c26fc635880e" },
+        { "role": "all-time-points", "path": "assets/green-soft-clay/canonical/statistics-overview/all-time-points-v1.png", "size": 256, "sha256": "670e8f0a5773e56b423cc205a0dc10ca3454d4591f0b6a57a1304acc6fbd933c" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/statistics/power-index-bolt-v1.png",
+        "assets/green-soft-clay/statistics/record-v1.png",
+        "assets/green-soft-clay/statistics/games-v1.png",
+        "assets/green-soft-clay/statistics/wins-v1.png",
+        "assets/green-soft-clay/statistics/draws-v1.png",
+        "assets/green-soft-clay/statistics/losses-v1.png",
+        "assets/green-soft-clay/statistics/fire-streak-v1.png",
+        "assets/green-soft-clay/statistics/average-v1.png",
+        "assets/green-soft-clay/statistics/trophies-v1.png",
+        "assets/green-soft-clay/statistics/all-time-points-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "statistics/power-index-bolt-v1.png": "canonical/statistics-overview/power-index-v1.png",
+        "statistics/record-v1.png": "canonical/statistics-overview/record-v1.png",
+        "statistics/games-v1.png": "canonical/statistics-overview/games-v1.png",
+        "statistics/wins-v1.png": "canonical/statistics-overview/wins-v1.png",
+        "statistics/draws-v1.png": "canonical/statistics-overview/draws-v1.png",
+        "statistics/losses-v1.png": "canonical/statistics-overview/losses-v1.png",
+        "statistics/fire-streak-v1.png": "canonical/statistics-overview/fire-streak-v1.png",
+        "statistics/average-v1.png": "canonical/statistics-overview/average-v1.png",
+        "statistics/trophies-v1.png": "canonical/statistics-overview/trophies-v1.png",
+        "statistics/all-time-points-v1.png": "canonical/statistics-overview/all-time-points-v1.png"
+      },
+      "semanticExclusions": [
+        "H2H overview, empty and detail identities",
+        "main Statistics menu and intro identity",
+        "locked canonical dukat and Economy identities",
+        "Solo Results and Hotseat Winner identities",
+        "Online, Invite and technical results",
+        "Tournament awards, states and navigation",
+        "Quarterly League rank, navigation and podium identities",
+        "General Podium and Collection medals",
+        "individual Achievement Trophies",
+        "Treasury navigation and item states",
+        "Daily states",
+        "gameplay dice, dice skins, navigation arrows and Undo token"
+      ],
+      "codeBindings": [
+        "Green Statistics Overview metrics",
+        "Green Power Index modal",
+        "Green Fire Streak modal",
+        "Green Rules statistics references",
+        "Green Statistics room-on-demand pack"
+      ]
+    },
+    "h2hStatistics": {
+      "semanticRole": "stable Green identities for opponent-specific H2H statistics",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/h2h-statistics/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and one terracotta accent",
+        "presentation": "one centered H2H glyph on a transparent background without text or a backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable PNG identity per concept, shared with locked Statistics Overview when the concept is identical"
+      },
+      "canonicalRuntime": [
+        { "role": "h2h-identity", "path": "assets/green-soft-clay/canonical/h2h-statistics/h2h-identity-v1.png", "size": 256, "sha256": "de557083a92dbb1c6a7b61286976a052ee04ad2a31db38c01708e8148aa87941" },
+        { "role": "h2h-empty", "path": "assets/green-soft-clay/canonical/h2h-statistics/h2h-empty-v1.png", "size": 384, "sha256": "43bc21b1893ae56d609d69ad429cdfc502e343fcd08c1df7956bbfb74f358c70" },
+        { "role": "highest-score", "path": "assets/green-soft-clay/canonical/h2h-statistics/highest-score-v1.png", "size": 256, "sha256": "82457189670699df4ab70a44f29e85f6c14233177d732a6f9ad164eb5306fe9c" },
+        { "role": "max-win-margin", "path": "assets/green-soft-clay/canonical/h2h-statistics/max-win-margin-v1.png", "width": 256, "height": 128, "sha256": "473eb985d4f6e876134c8597f3fac345a3ba938b2094d1cec6055354355bd24c" },
+        { "role": "worst-loss-margin", "path": "assets/green-soft-clay/canonical/h2h-statistics/worst-loss-margin-v1.png", "size": 256, "sha256": "d318a8ea88f1fb22ba8e49a05b126846789bb57c34fe564841261710b429ab21" },
+        { "role": "versus", "path": "assets/green-soft-clay/canonical/h2h-statistics/versus-v1.png", "size": 256, "sha256": "c4b26891699042c903f204c3551b9d6bf526642dd96c90bcc630e648dde54534" }
+      ],
+      "externalCanonicalReferences": [
+        { "role": "win-streak", "family": "statisticsOverview", "canonicalRole": "fire-streak", "path": "assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png", "sha256": "9d9cb7a4189caf38d4cbb0b166a8f2cebed7aab5a969763de3c55763db7a3847" },
+        { "role": "draws", "family": "statisticsOverview", "canonicalRole": "draws", "path": "assets/green-soft-clay/canonical/statistics-overview/draws-v1.png", "sha256": "ac875bb7e77abcc37b672a2e5a46251c001a36fa219906595669b6fe820aac82" },
+        { "role": "average", "family": "statisticsOverview", "canonicalRole": "average", "path": "assets/green-soft-clay/canonical/statistics-overview/average-v1.png", "sha256": "fdc3b6eae21540d3003eadc697c24862aa69667293bc0fa75790499ba59b2a12" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/statistics/h2h-v1.png",
+        "assets/green-soft-clay/statistics/h2h-empty-v1.png",
+        "assets/green-soft-clay/statistics/h2h-detail/highest-score-v1.png",
+        "assets/green-soft-clay/statistics/h2h-detail/max-margin-v1.png",
+        "assets/green-soft-clay/statistics/h2h-detail/worst-loss-v1.png",
+        "assets/green-soft-clay/statistics/h2h-detail/win-streak-v1.png",
+        "assets/green-soft-clay/statistics/h2h-detail/draw-v1.png",
+        "assets/green-soft-clay/statistics/h2h-detail/average-v1.png",
+        "assets/green-soft-clay/statistics/h2h-detail/vs-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "statistics/h2h-v1.png": "canonical/h2h-statistics/h2h-identity-v1.png",
+        "statistics/h2h-empty-v1.png": "canonical/h2h-statistics/h2h-empty-v1.png",
+        "statistics/h2h-detail/highest-score-v1.png": "canonical/h2h-statistics/highest-score-v1.png",
+        "statistics/h2h-detail/max-margin-v1.png": "canonical/h2h-statistics/max-win-margin-v1.png",
+        "statistics/h2h-detail/worst-loss-v1.png": "canonical/h2h-statistics/worst-loss-margin-v1.png",
+        "statistics/h2h-detail/win-streak-v1.png": "canonical/statistics-overview/fire-streak-v1.png",
+        "statistics/h2h-detail/draw-v1.png": "canonical/statistics-overview/draws-v1.png",
+        "statistics/h2h-detail/average-v1.png": "canonical/statistics-overview/average-v1.png",
+        "statistics/h2h-detail/vs-v1.png": "canonical/h2h-statistics/versus-v1.png"
+      },
+      "semanticExclusions": [
+        "aggregate Statistics Overview values and formulas",
+        "Solo Record and Personal Best identities",
+        "single-match Hotseat, Online and Invite result identities",
+        "Power Index, trophies, medals and league or tournament ranks",
+        "avatars and friend or online presence states",
+        "gameplay dice, dice skins, navigation and Economy identities"
+      ],
+      "codeBindings": [
+        "Green Statistics H2H overview and title",
+        "Green Statistics H2H empty state",
+        "Green Invite empty-rival state",
+        "Green H2H detail modal",
+        "Green Rules H2H references",
+        "Green Statistics room-on-demand pack"
+      ]
+    },
+    "statisticsRoomIdentity": {
+      "semanticRole": "single Green identity for the Statistics room across menu, intro, header and Rules",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/statistics-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green base, three warm-ivory ascending bars and one terracotta top dot",
+        "presentation": "one centered free-standing statistics glyph on a transparent background without text, frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Statistics room identity with room and menu delivery variants"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png", "size": 512, "sha256": "1b410b9c5af60dfa552122a9eb2ba70abb05bb4f3fdfc4acd7ed0868679611f0" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png", "size": 384, "sha256": "e4ab3a61aecdb9e14e84159a11b4e5ca1608e87996d663114eedf903ab0654fa" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/statistics-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/statistics-free-v2.png",
+        "assets/green-soft-clay/statistics-pro-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "statistics-free-v2.png": "canonical/statistics-room-identity/statistics-room-v1.png",
+        "runtime/menu/statistics-free-v2.png": "canonical/statistics-room-identity/statistics-room-menu-v1.png",
+        "statistics-pro-v1.png": "canonical/statistics-room-identity/statistics-room-v1.png"
+      },
+      "rejectedCandidates": [
+        {
+          "id": "statistics-pro-v1",
+          "reason": "framed square illustration violates the free-standing Green menu-icon rule and had no active Green consumer",
+          "runtimeStatus": "retired",
+          "sourceStatus": "retained for audit provenance"
+        }
+      ],
+      "semanticExclusions": [
+        "Statistics Overview metric glyphs and formulas",
+        "H2H identity, empty state, versus and detail glyphs",
+        "Rules Statistics and leaderboards narrative illustration",
+        "Power Index watermark and modal identity",
+        "leaderboards and Solo Record identities",
+        "medals, trophies, ranks and single-match result identities",
+        "gameplay dice, dice skins, navigation and Economy identities"
+      ],
+      "codeBindings": [
+        "Green Statistics main-menu icon and startup preload",
+        "Green Statistics icon-only room intro",
+        "Green Statistics room header",
+        "Green Rules Statistics room references",
+        "Green Statistics room-on-demand pack",
+        "Green theme loading-gate Statistics icon"
+      ]
+    },
+    "leaderboardRoomIdentity": {
+      "semanticRole": "single Green identity for entering the Leaderboard room across menu, intro, header and Rules",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/leaderboard-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green base, three warm-ivory podium blocks and one terracotta star",
+        "presentation": "one centered free-standing podium glyph on a transparent background without text, frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Leaderboard room identity with room and menu delivery variants"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png", "size": 512, "sha256": "8acfb917163a7cf02142c1d0c5613c850cd5e882b8a586caead1d282c0d7aa0e" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png", "size": 384, "sha256": "a18d1f54fffc1de4047a066629313eef85d9a5f6934eee3cbd1a7cdc8a77a72b" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/leaderboard-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/leaderboard-free-v2.png",
+        "assets/green-soft-clay/leaderboard-pro-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "leaderboard-free-v2.png": "canonical/leaderboard-room-identity/leaderboard-room-v1.png",
+        "runtime/menu/leaderboard-free-v2.png": "canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+        "leaderboard-pro-v1.png": "canonical/leaderboard-room-identity/leaderboard-room-v1.png"
+      },
+      "rejectedCandidates": [
+        {
+          "id": "leaderboard-pro-v1",
+          "reason": "framed square illustration violates the free-standing Green menu-icon rule and had no active Green consumer",
+          "runtimeStatus": "retired",
+          "sourceStatus": "retained for audit provenance"
+        }
+      ],
+      "semanticExclusions": [
+        "Global and Local leaderboard navigation glyphs",
+        "Leaderboard empty and loading state glyph shared with online waiting",
+        "General Podium medals already locked in Competition Medals",
+        "Rules Statistics and leaderboards narrative illustration",
+        "Statistics room identity and Statistics metrics",
+        "rank badges, trophies, scores and match results"
+      ],
+      "codeBindings": [
+        "Green Leaderboard main-menu icon and startup preload",
+        "Green Leaderboard icon-only room intro",
+        "Green Leaderboard room header",
+        "Green Rules Leaderboard room references",
+        "Green Leaderboard room-on-demand pack",
+        "Green theme loading-gate Leaderboard icon"
+      ]
+    },
+    "dailyRoomIdentity": {
+      "semanticRole": "single Green identity for entering the Daily Challenge room across menu, intro, header and Rules",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/daily-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "warm-ivory calendar body, terracotta top bar and two forest-green binders with one forest-green checkmark",
+        "presentation": "one centered free-standing calendar glyph on a transparent background without text, frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Daily Challenge room identity with room and menu delivery variants"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png", "size": 512, "sha256": "1a0669083da288f1cb4bd673508acf0e6d4380b7fa1346c03004ebddd4343dcc" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png", "size": 384, "sha256": "ac6eae4d916598174fa9bb7a54f7ed326fa1f6dae7d5a4a68e1e4eb40b666c07" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/daily-challenge-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/daily-challenge-free-v2.png",
+        "assets/green-soft-clay/daily-challenge-pro-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "daily-challenge-free-v2.png": "canonical/daily-room-identity/daily-room-v1.png",
+        "runtime/menu/daily-challenge-free-v2.png": "canonical/daily-room-identity/daily-room-menu-v1.png",
+        "daily-challenge-pro-v1.png": "canonical/daily-room-identity/daily-room-v1.png"
+      },
+      "rejectedCandidates": [
+        {
+          "id": "daily-challenge-pro-v1",
+          "reason": "framed square illustration violates the free-standing Green menu-icon rule and had no active Green consumer",
+          "runtimeStatus": "retired",
+          "sourceStatus": "retained for audit provenance"
+        }
+      ],
+      "semanticExclusions": [
+        "Daily task list and target glyph",
+        "Daily completed confirmation glyph",
+        "Daily already-played calendar with clock status",
+        "Daily rewarded-video and ducat composition",
+        "server-selected dice, scoring and reward logic",
+        "other room identities, medals, ranks and gameplay dice"
+      ],
+      "codeBindings": [
+        "Green Daily Challenge main-menu icon and startup preload",
+        "Green Daily Challenge dedicated icon-only intro",
+        "Green Daily Challenge room header",
+        "Green Rules Daily Challenge reference",
+        "Green Daily Challenge room-on-demand pack",
+        "Green theme loading-gate Daily Challenge icon"
+      ]
     }
   }
 }

@@ -1,0 +1,106 @@
+{
+  "id": "green-solo-results",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "three stable Green identities for Solo personal-best status, final score display and reward claim action",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and one terracotta accent",
+    "presentation": "one centered Solo result glyph on a transparent background without text or a backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity for each Solo result status, score mark and claim action"
+  },
+  "catalog": [
+    {
+      "id": "personal-best",
+      "role": "new Solo personal-best status",
+      "glyph": "three ascending forest-green bars on an ivory base with an ivory-green check medallion and one terracotta dot",
+      "usedBy": [
+        "Solo personal-best badge",
+        "Solo room-on-demand package"
+      ],
+      "displaySize": [30, 30],
+      "master": "green-personal-best-master-v1.png",
+      "masterSize": [512, 512],
+      "masterSha256": "b4db90b668914c1f6e7f48bc18b167d470ee7cbc0964983562ff4a9dcb16a11c",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-results/personal-best-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "573a9df91281784f5b8739e7ae55ec137093e37fdea8e8fbdc0beecb7273b76d",
+      "activeRuntime": "www/assets/green-soft-clay/solo/personal-best-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeSha256": "ac213fdc20049f52b14cbea78cfa919bb7cb8cf7ee2eb61453a1fb238ae52a06",
+      "normalization": "approved 512x512 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "finish-score-mark",
+      "role": "visual marker for the final Solo score",
+      "glyph": "forest-green ring with one ivory four-point sparkle and one terracotta dot",
+      "usedBy": [
+        "Solo final-score row",
+        "Solo room-on-demand package"
+      ],
+      "displaySize": [42, 42],
+      "master": "green-finish-score-mark-master-v1.png",
+      "masterSize": [512, 512],
+      "masterSha256": "2166314a33094c8055224fc7a60fe3b640cd631b30b4550a627890ea25613297",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "722f391eb7d85e41b537212d81d680f1f2fc152dbe42fe5e45bba2f8960d33ce",
+      "activeRuntime": "www/assets/green-soft-clay/solo/finish-score-mark-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeSha256": "9748e8219e899584cce92ee6dbd41d594a308070d321551eb04c919878cd9cbc",
+      "normalization": "approved 512x512 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    },
+    {
+      "id": "finish-claim",
+      "role": "claim Solo reward and exit action",
+      "glyph": "large ivory down arrow entering a forest-green receiver with one terracotta dot",
+      "usedBy": [
+        "Solo claim-and-exit button",
+        "Solo room-on-demand package"
+      ],
+      "displaySize": [29, 29],
+      "master": "green-finish-claim-master-v1.png",
+      "masterSize": [512, 512],
+      "masterSha256": "2c166c068fc0e791b695a6a9b30226105e42f7bbb874910ae9d926dafc71ad99",
+      "runtime": "www/assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "f7102115b111f605f9bf38d25ff7a0d5aedd9bb812814fee79e1771eeb5ef09e",
+      "activeRuntime": "www/assets/green-soft-clay/solo/finish-claim-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeSha256": "b75d44838805a8de1022d6a35ca418049a52371387921f45a54b6adca3a14ec7",
+      "normalization": "approved 512x512 source reduced proportionally to the full 256x256 transparent canvas with LANCZOS resampling"
+    }
+  ],
+  "semanticExclusions": [
+    "main Solo menu and intro identity",
+    "locked Rewarded Video and canonical dukat families",
+    "CSS score tiers, summary cards and result text",
+    "Statistics record, wins and aggregate metrics",
+    "Hotseat Winner identity",
+    "Online, Invite and technical results",
+    "Tournament awards and states",
+    "Quarterly League champion, rank and podium identities",
+    "General Podium, Collection medals and achievement trophies",
+    "Daily and Treasury states",
+    "gameplay, navigation and Undo arrows"
+  ],
+  "integration": {
+    "personalBestState": "connected",
+    "scoreDisplay": "connected",
+    "claimAction": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Personal Best, Final Score Mark and Finish Claim remain three separate Solo result identities.",
+    "The Personal Best glyph is shown only for a real new Solo high score.",
+    "The Finish Claim glyph does not change claimReward(false), reward persistence or duplicate-claim protection.",
+    "The locked Solo Rewarded Video composition remains owned by the Rewarded Video family.",
+    "The main Solo menu and intro identity is not a Solo result glyph.",
+    "Preserve display sizes, result motion ordering and reduced-motion behavior during integration.",
+    "Use the canonical runtime pack instead of copying or recoloring individual Solo result glyphs."
+  ]
+}

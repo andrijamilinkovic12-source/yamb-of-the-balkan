@@ -41,7 +41,7 @@ class VatreniNizManager {
                         <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/statistics/fire-streak-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="fire-streak-title-soft-clay-icon fire-streak-title-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <span class="fire-streak-title-easter">${this.gt('streak_top_title_plain', 'TOP VATRENI NIZ')}</span>
                     </span>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('streak-overlay').style.display='none'" aria-label="${this.gt('aria_close_streak', 'Zatvori Vatreni niz listu')}">×</button>
@@ -278,7 +278,7 @@ class VatreniNizManager {
                             <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <img class="fire-streak-value-soft-clay-icon" data-theme-src="assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <img class="fire-streak-value-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                            <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/statistics/fire-streak-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                            <img class="fire-streak-value-soft-clay-icon fire-streak-value-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <span class="fire-streak-value-number">${maxWinStreak}</span>
                         </div>
                         <div class="fire-streak-current-pill" style="font-size: 0.65rem; font-weight: bold; margin-top: 4px; background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px;">

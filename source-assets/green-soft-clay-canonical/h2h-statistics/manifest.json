@@ -1,0 +1,192 @@
+{
+  "id": "green-h2h-statistics",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "stable Green identities for opponent-specific H2H statistics",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and one terracotta accent",
+    "presentation": "one centered H2H glyph on a transparent background without text or a backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity per concept, shared with locked Statistics Overview when the concept is identical"
+  },
+  "catalog": [
+    {
+      "id": "h2h-identity",
+      "role": "H2H overview, rival and rules identity",
+      "glyph": "two opposing rounded player portraits separated by one ivory vertical bar and a forest-green center dot",
+      "usedBy": [
+        "Statistics favorite-rival card",
+        "Statistics H2H page title",
+        "Rules Rival and H2H references",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[16, 16], [29, 29], ["responsive-inline", "responsive-inline"]],
+      "master": "green-h2h-identity-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "57929c5f401337e5181425fcc48e485a8fa8692fda247e8cd7cdcfbd96ff1fad",
+      "runtime": "www/assets/green-soft-clay/canonical/h2h-statistics/h2h-identity-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "de557083a92dbb1c6a7b61286976a052ee04ad2a31db38c01708e8148aa87941",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "de557083a92dbb1c6a7b61286976a052ee04ad2a31db38c01708e8148aa87941",
+      "normalization": "approved native source reduced proportionally to the declared transparent runtime canvas with LANCZOS resampling"
+    },
+    {
+      "id": "h2h-empty",
+      "role": "no H2H rivals or duels state",
+      "glyph": "two empty ivory rounded portrait frames separated by one terracotta vertical bar",
+      "usedBy": [
+        "Statistics H2H empty state",
+        "Invite owner empty-rival state",
+        "Statistics room-on-demand package"
+      ],
+      "displaySizes": [[92, 92], [54, 54]],
+      "master": "green-h2h-empty-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "c635137433b4819f3f26fbb46273c7dc6eba5db7580b5acc31dd8bee6ca9fef1",
+      "runtime": "www/assets/green-soft-clay/canonical/h2h-statistics/h2h-empty-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeSha256": "43bc21b1893ae56d609d69ad429cdfc502e343fcd08c1df7956bbfb74f358c70",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-empty-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeSha256": "43bc21b1893ae56d609d69ad429cdfc502e343fcd08c1df7956bbfb74f358c70",
+      "normalization": "approved native source reduced proportionally to the declared transparent runtime canvas with LANCZOS resampling"
+    },
+    {
+      "id": "highest-score",
+      "role": "best player score against one selected rival",
+      "glyph": "three ascending forest-green bars ending in an ivory star with three terracotta rays",
+      "usedBy": ["H2H detail highest-score row", "Statistics room-on-demand package"],
+      "displaySizes": [[26, 26]],
+      "master": "green-highest-score-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "27703f4146facc5743be7125c78b99f04ed92413a2cdb6965f1743b488896fcd",
+      "runtime": "www/assets/green-soft-clay/canonical/h2h-statistics/highest-score-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "82457189670699df4ab70a44f29e85f6c14233177d732a6f9ad164eb5306fe9c",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-detail/highest-score-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "82457189670699df4ab70a44f29e85f6c14233177d732a6f9ad164eb5306fe9c",
+      "normalization": "approved native source reduced proportionally to the declared transparent runtime canvas with LANCZOS resampling"
+    },
+    {
+      "id": "max-win-margin",
+      "role": "largest winning score margin against one selected rival",
+      "glyph": "opposing ivory arrows joined by a forest-green line with one terracotta center dot",
+      "usedBy": ["H2H detail maximum-win-margin row", "Statistics room-on-demand package"],
+      "displaySizes": [[26, 26]],
+      "master": "green-max-win-margin-master-v1.png",
+      "masterSize": [1774, 887],
+      "masterSha256": "cf0ead6d5a75ba8fdf19c0183ce5093879102af38ceb4bd2ef5c8b0f5353f0c3",
+      "runtime": "www/assets/green-soft-clay/canonical/h2h-statistics/max-win-margin-v1.png",
+      "runtimeSize": [256, 128],
+      "runtimeSha256": "473eb985d4f6e876134c8597f3fac345a3ba938b2094d1cec6055354355bd24c",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-detail/max-margin-v1.png",
+      "activeRuntimeSize": [256, 128],
+      "activeRuntimeSha256": "473eb985d4f6e876134c8597f3fac345a3ba938b2094d1cec6055354355bd24c",
+      "normalization": "approved native source reduced proportionally to the declared transparent runtime canvas with LANCZOS resampling"
+    },
+    {
+      "id": "worst-loss-margin",
+      "role": "largest losing score margin against one selected rival",
+      "glyph": "ivory shield placed over a terracotta downward chevron and a forest-green base",
+      "usedBy": ["H2H detail worst-loss-margin row", "Statistics room-on-demand package"],
+      "displaySizes": [[26, 26]],
+      "master": "green-worst-loss-margin-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "152d3cf6b50859125d82dfbc2b4843fd6372870d9e0469c5b593de828b56f866",
+      "runtime": "www/assets/green-soft-clay/canonical/h2h-statistics/worst-loss-margin-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "d318a8ea88f1fb22ba8e49a05b126846789bb57c34fe564841261710b429ab21",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-detail/worst-loss-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "d318a8ea88f1fb22ba8e49a05b126846789bb57c34fe564841261710b429ab21",
+      "normalization": "approved native source reduced proportionally to the declared transparent runtime canvas with LANCZOS resampling"
+    },
+    {
+      "id": "versus",
+      "role": "two-player opposition separator",
+      "glyph": "ivory VS letters inside a forest-green disk and ivory ring with one terracotta center dot",
+      "usedBy": ["H2H detail player separator", "Statistics room-on-demand package"],
+      "displaySizes": [[50, 50]],
+      "master": "green-versus-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterSha256": "b519eb42eb2dac64fea5b646574df495b628681a1c55cb7c35508c42501136ab",
+      "runtime": "www/assets/green-soft-clay/canonical/h2h-statistics/versus-v1.png",
+      "runtimeSize": [256, 256],
+      "runtimeSha256": "c4b26891699042c903f204c3551b9d6bf526642dd96c90bcc630e648dde54534",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-detail/vs-v1.png",
+      "activeRuntimeSize": [256, 256],
+      "activeRuntimeSha256": "c4b26891699042c903f204c3551b9d6bf526642dd96c90bcc630e648dde54534",
+      "normalization": "approved native source reduced proportionally to the declared transparent runtime canvas with LANCZOS resampling"
+    }
+  ],
+  "externalCanonicalReferences": [
+    {
+      "id": "win-streak",
+      "role": "current and maximum win streak against one selected rival",
+      "canonicalFamily": "statisticsOverview",
+      "canonicalRole": "fire-streak",
+      "canonicalRuntime": "www/assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png",
+      "canonicalSha256": "9d9cb7a4189caf38d4cbb0b166a8f2cebed7aab5a969763de3c55763db7a3847",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-detail/win-streak-v1.png",
+      "activeRuntimeSha256": "60cc3483eff946fa1799e917638e26c71ac18e1a2971c471f80db316f9824b8e",
+      "displaySizes": [[26, 26]],
+      "migration": "reuse the locked fire-streak visual identity without changing H2H data scope"
+    },
+    {
+      "id": "draws",
+      "role": "draw count against one selected rival",
+      "canonicalFamily": "statisticsOverview",
+      "canonicalRole": "draws",
+      "canonicalRuntime": "www/assets/green-soft-clay/canonical/statistics-overview/draws-v1.png",
+      "canonicalSha256": "ac875bb7e77abcc37b672a2e5a46251c001a36fa219906595669b6fe820aac82",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-detail/draw-v1.png",
+      "activeRuntimeSha256": "c7b3f7a153cc8845912213a0bda927c4b8ad3ec4f059ef3c0b519e5a8f93197c",
+      "displaySizes": [[26, 26]],
+      "migration": "reuse the locked draws visual identity without changing H2H data scope"
+    },
+    {
+      "id": "average",
+      "role": "average player score against one selected rival",
+      "canonicalFamily": "statisticsOverview",
+      "canonicalRole": "average",
+      "canonicalRuntime": "www/assets/green-soft-clay/canonical/statistics-overview/average-v1.png",
+      "canonicalSha256": "fdc3b6eae21540d3003eadc697c24862aa69667293bc0fa75790499ba59b2a12",
+      "activeRuntime": "www/assets/green-soft-clay/statistics/h2h-detail/average-v1.png",
+      "activeRuntimeSha256": "f1ed16540bea0e16e7bac4f24891ef3c9f75d9e8997372ab1eafc90f52bb0307",
+      "displaySizes": [[26, 26]],
+      "migration": "reuse the locked average visual identity without changing H2H data scope"
+    }
+  ],
+  "integration": {
+    "statisticsPage": "connected",
+    "h2hEmptyState": "connected",
+    "inviteEmptyRival": "connected",
+    "h2hDetailModal": "connected",
+    "rulesReferences": "connected",
+    "roomOnDemand": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "aggregate Statistics Overview values and formulas",
+    "Solo Record and Personal Best identities",
+    "single-match Hotseat, Online and Invite result identities",
+    "Power Index, trophies, medals and league or tournament ranks",
+    "avatars and friend or online presence states",
+    "gameplay dice, dice skins, navigation and Economy identities"
+  ],
+  "rules": [
+    "H2H-specific identities describe one rival or the H2H relationship, never a global aggregate.",
+    "Identical concepts reuse the locked Statistics Overview Fire Streak, Draws and Average identities.",
+    "Sharing a visual identity never merges H2H and aggregate data sources or formulas.",
+    "Highest Score remains distinct from Solo Record because its scope is one selected rival.",
+    "Worst Loss Margin remains distinct from aggregate Losses because it is a magnitude, not a count.",
+    "The wide Max Win Margin source and runtime preserve their native two-to-one aspect ratio.",
+    "No H2H asset belongs to the startup critical path."
+  ]
+}

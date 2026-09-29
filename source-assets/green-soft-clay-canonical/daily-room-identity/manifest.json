@@ -1,0 +1,111 @@
+{
+  "id": "green-daily-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "single Green identity for entering the Daily Challenge room across menu, intro, header and Rules",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "warm-ivory calendar body, terracotta top bar and two forest-green binders with one forest-green checkmark",
+    "presentation": "one centered free-standing calendar glyph on a transparent background without text, frame or backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Daily Challenge room identity with room and menu delivery variants"
+  },
+  "master": {
+    "path": "green-daily-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 1429413,
+    "sha256": "b4aee4510505f2b60fc8a321ac0bbaa60cfeb170a2bf7675dbc01440abf4b163",
+    "approvedSource": "source-assets/green-soft-clay-hires/daily-challenge-free-v2.png",
+    "approvedSourceSha256": "b4aee4510505f2b60fc8a321ac0bbaa60cfeb170a2bf7675dbc01440abf4b163"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Daily Challenge intro, room header, Rules inline identity, theme loading gate and room-on-demand preload",
+      "usedBy": [
+        "Daily Challenge icon-only intro",
+        "Daily Challenge room header",
+        "Rules Daily Challenge references in Serbian and English",
+        "Green theme loading gate Daily Challenge icon",
+        "Green Daily Challenge room-on-demand package"
+      ],
+      "displaySizes": [
+        [54, 54],
+        [45, 45],
+        ["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"],
+        ["responsive-inline", "responsive-inline"]
+      ],
+      "runtime": "www/assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 209611,
+      "runtimeSha256": "1a0669083da288f1cb4bd673508acf0e6d4380b7fa1346c03004ebddd4343dcc",
+      "activeRuntime": "www/assets/green-soft-clay/daily-challenge-free-v2.png",
+      "activeRuntimeSha256": "1a0669083da288f1cb4bd673508acf0e6d4380b7fa1346c03004ebddd4343dcc",
+      "expectedCanonicalReferences": 4,
+      "normalization": "approved 1254x1254 RGBA master reduced directly to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Daily Challenge main-menu startup icon",
+      "usedBy": [
+        "Green main-menu Daily Challenge button",
+        "Green startup preload collected from the active main-menu DOM"
+      ],
+      "displaySizes": [[52, 52], [46, 46]],
+      "runtime": "www/assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 124828,
+      "runtimeSha256": "ac6eae4d916598174fa9bb7a54f7ed326fa1f6dae7d5a4a68e1e4eb40b666c07",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/daily-challenge-free-v2.png",
+      "activeRuntimeSha256": "ac6eae4d916598174fa9bb7a54f7ed326fa1f6dae7d5a4a68e1e4eb40b666c07",
+      "expectedCanonicalReferences": 1,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling to preserve the approved menu delivery"
+    }
+  ],
+  "rejectedCandidates": [
+    {
+      "id": "daily-challenge-pro-v1",
+      "status": "rejected-orphan",
+      "source": "source-assets/green-soft-clay-hires/daily-challenge-pro-v1.png",
+      "sourceSize": [1254, 1254],
+      "sourceSha256": "3e215bfe29779061dd4f6acdcd5d1348524f582def90ad2adb22761b551cb47c",
+      "runtime": "www/assets/green-soft-clay/daily-challenge-pro-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 245646,
+      "runtimeSha256": "18a1cac98abc5b8e8e4b5ccf3114682a46d652c507c3058104badaf9586df83c",
+      "activeReferences": 0,
+      "reason": "framed square illustration violates the free-standing Green menu-icon rule and has no active Green consumer",
+      "retirement": "runtime retired in standardization step 3; rejected high-resolution source retained for audit provenance"
+    }
+  ],
+  "motionContract": {
+    "mainMenu": "easterBottomIconWave 8.4s with Daily Challenge delay 1.2s and reduced-motion fallback",
+    "intro": "dedicated Daily icon-only intro with easterRoomIconPulse 1.8s inside a 4.6s overlay with reduced-motion fallback",
+    "header": "static 54x54 contain presentation",
+    "rules": "existing responsive inline presentation",
+    "loadingGate": "source PNG inside the shared 45x45 floating icon presentation"
+  },
+  "integration": {
+    "mainMenu": "connected",
+    "dailyIntro": "connected",
+    "dailyHeader": "connected",
+    "rules": "connected",
+    "themeLoadingGate": "connected",
+    "roomOnDemand": "connected",
+    "startup": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "rejectedAlternate": "runtime retired in standardization step 3; high-resolution source retained for audit provenance",
+    "centralRegistry": "standardized in standardization step 3",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js",
+    "cacheVersion": 50
+  },
+  "semanticExclusions": [
+    "Daily task list and target glyph",
+    "Daily completed confirmation glyph",
+    "Daily already-played calendar with clock status",
+    "Daily rewarded-video and ducat composition",
+    "server-selected dice, scoring and reward logic",
+    "other room identities, medals, ranks and gameplay dice"
+  ]
+}

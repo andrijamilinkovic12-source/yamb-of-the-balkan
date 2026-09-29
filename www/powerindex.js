@@ -74,7 +74,7 @@ class PowerIndexLeaderboard {
                         <img class="power-index-soft-clay-bolt power-index-title-bolt power-index-title-bolt-easter" data-theme-src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="power-index-soft-clay-bolt power-index-title-bolt" data-theme-src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="power-index-soft-clay-bolt power-index-title-bolt-nebula" data-theme-src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-title-bolt-green" data-theme-src="assets/green-soft-clay/statistics/power-index-bolt-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-title-bolt-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         ${this.gt('pi_title', 'TOP IGRAČI')}
                     </h2>
                     <button type="button" class="global-chat-close" onclick="document.getElementById('pi-modal-overlay').remove()" aria-label="${this.gt('aria_close_power_index', 'Zatvori Power index listu')}">×</button>
@@ -280,7 +280,7 @@ class PowerIndexLeaderboard {
                         <img class="power-index-soft-clay-bolt power-index-value-bolt power-index-value-bolt-easter" data-theme-src="assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="power-index-soft-clay-bolt power-index-value-bolt" data-theme-src="assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="power-index-soft-clay-bolt power-index-value-bolt-nebula" data-theme-src="assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="power-index-soft-clay-bolt power-index-value-bolt-green" data-theme-src="assets/green-soft-clay/statistics/power-index-bolt-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="power-index-soft-clay-bolt power-index-value-bolt-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     </div>
                 </div>
             </div>`;
