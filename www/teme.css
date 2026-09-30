@@ -3456,6 +3456,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 .riznica-reward-video-green-soft-clay-icon,
 .riznica-item-reward-video-green-soft-clay-icon,
 .riznica-status-green-soft-clay-icon,
+.riznica-green-theme-icon,
 .riznica-category-green-soft-clay-icon,
 .riznica-lock-green-soft-clay-icon,
 .riznica-balance-ducat-icon-green,
@@ -19888,8 +19889,8 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 }
 
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #highscores-screen .hs-list-state-loading .hs-state-soft-clay-icon-green {
-    width: 68px;
-    height: 68px;
+    width: 86px;
+    height: 86px;
 }
 
 @keyframes greenLeaderboardStateFloat {
@@ -22632,7 +22633,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     color: var(--green-clay-muted) !important;
 }
 
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#stats-screen, #settings-screen, #highscores-screen, #rules-overlay-ui, #league-modal-overlay, #tournament-screen, #riznica-screen, #global-chat-overlay, #online-players-overlay, #waiting-screen, #undo-menu-overlay) .global-chat-close,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#stats-screen, #settings-screen, #highscores-screen, #rules-overlay-ui, #league-modal-overlay, #tournament-screen, #riznica-screen, #global-chat-overlay, #online-players-overlay, #waiting-screen, #undo-menu-overlay, #pi-modal-overlay, #streak-overlay) .global-chat-close,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .cm-close {
     width: var(--green-ui-close-size) !important;
     height: var(--green-ui-close-size) !important;
@@ -22699,7 +22700,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     margin-inline: auto;
 }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-overlay .daily-glass-die.dice {
-    width: min(100%, 82px) !important;
+    width: min(100%, 14vw, 60px) !important;
     height: auto !important;
     max-width: none !important;
     max-height: none !important;
@@ -22889,5 +22890,331 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(.custom-toast, .custom-modal, #rules-overlay-ui .rules-card, #league-modal-overlay > .modal-box) {
         transition-duration: 0s !important;
         animation-duration: 0s !important;
+    }
+}
+
+/* Green room follow-up: keep the bracket readable without nested horizontal gutters. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-page {
+    padding-inline: 2px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-card {
+    padding: 8px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-match {
+    flex: 0 0 auto;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-identity {
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: visible !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-name {
+    font-size: .84rem !important;
+    line-height: 1.2 !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    overflow: visible !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-row.is-loser {
+    opacity: .76 !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-power {
+    font-size: .72rem !important;
+    margin-left: 4px;
+}
+
+/* Invite friend: one screen on ordinary phones, with a scrolling fallback on short ones. */
+.green-friend-presence { display: none; }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
+    box-sizing: border-box;
+    overflow-y: hidden;
+    padding-bottom: var(--safe-bottom) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite #friends-list-container {
+    flex: 1 1 auto !important;
+    min-height: 0;
+    margin-top: 6px !important;
+    padding-bottom: 4px !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite #friends-list {
+    min-height: 0;
+    align-items: flex-start;
+    padding-bottom: 6px !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-avatar,
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .easter-invite-rival-img {
+    box-sizing: border-box;
+    width: 48px !important;
+    height: 48px !important;
+    max-width: 48px;
+    max-height: 48px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-card.friend-player-card {
+    box-sizing: border-box;
+    height: 230px;
+    padding: 8px 9px !important;
+    justify-content: flex-start;
+    gap: 3px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card > div:first-child {
+    display: none;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-card-img {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    flex: 0 0 44px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card .friend-card-name {
+    height: 2.4em;
+    min-height: 2.4em;
+    max-height: 2.4em;
+    flex: 0 0 2.4em;
+    margin: 0 0 4px;
+    line-height: 1.2;
+    display: block !important;
+    overflow: hidden;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats {
+    min-height: 72px;
+    padding: 4px 7px;
+    flex: 0 0 72px;
+    justify-content: center;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card .easter-friend-records {
+    display: grid !important;
+    grid-template-rows: repeat(4, minmax(15px, auto));
+    width: 100%;
+    gap: 1px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card .easter-friend-record-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 4px;
+    min-height: 15px;
+    padding: 0 3px;
+    font-size: .68rem;
+    line-height: 1.1;
+    text-align: left;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card .easter-friend-record-row strong {
+    min-width: 22px;
+    text-align: right;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card .friend-card-btn {
+    flex: 0 0 28px;
+    min-height: 28px;
+    height: 28px;
+    margin: 0 !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .green-friend-presence {
+    display: block;
+    width: 100%;
+    flex: 0 0 auto;
+    text-align: center;
+    font-size: .67rem;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: .4px;
+    color: #d9efb7;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card.is-offline .green-friend-presence {
+    color: #f2b3a5;
+}
+@media (max-height: 700px) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
+        overflow-y: auto;
+        scroll-padding-bottom: var(--safe-bottom);
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite #friends-list-container {
+        flex: 0 0 auto !important;
+        padding-bottom: var(--safe-bottom) !important;
+    }
+}
+
+/* The league modal must subtract its fixed top offset and bottom system inset. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay > .modal-box {
+    top: var(--safe-top);
+    height: min(800px, calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px)) !important;
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay .league-summary-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 12px;
+    width: 100%;
+    align-items: center;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay .league-summary-card > div {
+    min-width: 0;
+    text-align: left !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay .league-summary-points {
+    padding-left: 12px;
+    border-left: 1px solid rgba(211,229,184,.24);
+    overflow-wrap: anywhere;
+}
+
+/* The existing Green selectors use nine :not() classes; match their priority. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite {
+    padding-bottom: var(--safe-bottom) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
+    flex: 1 1 auto !important;
+    min-height: 0;
+    padding-bottom: 4px !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .friend-card.friend-player-card {
+    padding: 8px 9px !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats {
+    padding: 4px 7px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay#league-modal-overlay > .modal-box {
+    top: var(--safe-top);
+    height: min(800px, calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px)) !important;
+    max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px) !important;
+}
+@media (max-height: 700px) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
+        flex: 0 0 auto !important;
+        padding-bottom: var(--safe-bottom) !important;
+    }
+}
+
+/* Green statistics: a broken streak remains readable against its dark pill. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #streak-overlay .fire-streak-current-text.is-broken {
+    color: #e5e9d9 !important;
+}
+
+/* Green treasury: signal a locked trophy through its surface, not by fading all text. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .card.locked {
+    opacity: 1;
+    filter: none;
+    color: #edf4df !important;
+    background: linear-gradient(145deg, rgba(43, 77, 48, .97), rgba(27, 57, 37, .97)) !important;
+    border: 1px dashed rgba(219, 234, 195, .55) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .card.locked .riznica-trophy-soft-clay-icon {
+    filter: saturate(.65) brightness(.9);
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .card.locked :is(.title, .desc) {
+    color: #edf4df !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .card.locked .riznica-item-status--locked {
+    color: #edf4df !important;
+    background: rgba(17, 47, 28, .9) !important;
+    border-color: rgba(219, 234, 195, .52) !important;
+}
+
+/* Green treasury catalog: replace legacy emoji markers with existing Green clay assets. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .category-header[data-green-category] {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .category-header[data-green-category] > span:last-child {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .riznica-green-category-mark {
+    display: block;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: drop-shadow(0 3px 4px rgba(8,31,17,.28));
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen [data-green-category="skin"] .riznica-green-category-mark {
+    background-image: url("assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=1");
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen [data-green-category="effect"] .riznica-green-category-mark {
+    background-image: url("assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=1");
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen [data-green-category="theme"] .riznica-green-category-mark {
+    background-image: url("assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1");
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .riznica-green-theme-fallback {
+    display: none;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .riznica-green-theme-icon {
+    display: block;
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 8px rgba(8,31,17,.30));
+}
+
+/* The free celebration preview belongs to Green's clay family, without the shared party emoji. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .effect-preview-box.prev-confetti {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: radial-gradient(circle at 50% 44%, #517354 0%, #234330 66%, #142d22 100%);
+    box-shadow: inset 0 3px 11px rgba(6, 25, 14, .36), inset 0 -1px 0 rgba(228, 241, 209, .22);
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .effect-preview-box.prev-confetti::before {
+    content: "";
+    position: absolute;
+    inset: 22%;
+    background: url("assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=1") center / contain no-repeat;
+    filter: drop-shadow(0 5px 6px rgba(8, 28, 16, .5));
+    animation: greenClayConfettiFloat 2.6s ease-in-out infinite alternate;
+    z-index: 2;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .effect-preview-box.prev-confetti::after {
+    content: "";
+    position: absolute;
+    inset: 6%;
+    background:
+        radial-gradient(circle at 18% 24%, #e3ead0 0 3px, transparent 4px),
+        radial-gradient(circle at 79% 28%, #d78355 0 3px, transparent 4px),
+        radial-gradient(circle at 74% 76%, #e3ead0 0 2px, transparent 3px),
+        radial-gradient(circle at 28% 80%, #a0bb8d 0 3px, transparent 4px),
+        radial-gradient(circle at 88% 57%, #b9ce9c 0 2px, transparent 3px),
+        radial-gradient(circle at 13% 63%, #d78355 0 2px, transparent 3px);
+    filter: drop-shadow(0 2px 2px rgba(7, 24, 14, .42));
+    animation: greenClayConfettiDrift 3.2s ease-in-out infinite alternate;
+    z-index: 1;
+}
+@keyframes greenClayConfettiFloat {
+    from { transform: translateY(3px) rotate(-5deg); }
+    to { transform: translateY(-4px) rotate(6deg); }
+}
+@keyframes greenClayConfettiDrift {
+    from { transform: translateY(-3px) rotate(-4deg); }
+    to { transform: translateY(4px) rotate(5deg); }
+}
+/* Long rewarded-unlock copy has its own icon line on narrow Treasury cards. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .card .riznica-reward-video-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    text-align: center;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .card .riznica-reward-video-copy > span {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .effect-preview-box.prev-confetti::before,
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .effect-preview-box.prev-confetti::after {
+        animation: none;
     }
 }

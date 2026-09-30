@@ -667,11 +667,23 @@ class RulesUI {
             if (!touch) return;
             this.touchStartX = touch.clientX;
             this.touchStartY = touch.clientY;
+            this.touchStartScrollLeft = this.sliderTrack.scrollLeft;
+            this.touchGestureHorizontal = false;
         }, { passive: true });
 
+        this.sliderTrack.addEventListener('touchmove', (e) => {
+            if (document.documentElement.dataset.splashTheme !== 'dark') return;
+            const touch = e.touches[0];
+            if (!touch) return;
+            const deltaX = touch.clientX - this.touchStartX;
+            const deltaY = touch.clientY - this.touchStartY;
+            if (Math.abs(deltaX) > 12 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+                this.touchGestureHorizontal = true;
+            }
+            if (this.touchGestureHorizontal && e.cancelable) e.preventDefault();
+        }, { passive: false });
+
         this.sliderTrack.addEventListener('touchend', (e) => {
-            // Green uses the native snap carousel; a second manual swipe here can skip a page.
-            if (document.documentElement.dataset.splashTheme === 'dark') return;
             const touch = e.changedTouches[0];
             if (!touch) return;
 
@@ -680,6 +692,14 @@ class RulesUI {
             const isHorizontalSwipe = Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2;
 
             if (!isHorizontalSwipe) return;
+
+            // Native scroll-snap can already have advanced the Green carousel.
+            // Use the gesture's starting page so one swipe never skips two pages.
+            if (document.documentElement.dataset.splashTheme === 'dark') {
+                const startIndex = Math.round(this.touchStartScrollLeft / this.sliderTrack.clientWidth);
+                this.goToSlide(startIndex + (deltaX < 0 ? 1 : -1));
+                return;
+            }
 
             if (deltaX < 0) {
                 this.goToSlide(this.currentSlide + 1);

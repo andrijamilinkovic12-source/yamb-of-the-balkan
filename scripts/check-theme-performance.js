@@ -276,6 +276,21 @@ for (const role of ['tab-trophies', 'tab-skins', 'tab-effects', 'tab-themes']) {
 const treasuryControlsBase = 'assets/green-soft-clay/canonical/treasury-controls/';
 assert(managersSource.split(treasuryControlsBase).length - 1 === 3, 'Green Treasury status helperi moraju imati tačno jednu template, lock i insufficient canonical vezu.');
 assert(managersSource.split("getEasterTreasuryStatusIcon('status-owned')").length - 1 === 1, 'Owned status mora imati tačno jednu shop vezu.');
+assert(managersSource.includes("const visibleBoughtLabel = isGreenTreasury ? boughtLabel.replace(/^\\s*[✔✓]\\s*/u, '') : boughtLabel;")
+    && managersSource.includes("document.body.matches('body:not(:is(.light-theme, .medium-theme"),
+    'Green status Kupljeno mora imati samo jednu kvačicu, bez promene natpisa drugih tema.');
+assert(managersSource.includes('data-green-category=')
+    && managersSource.includes('riznica-green-theme-icon')
+    && themeCssSource.includes('#riznica-screen .riznica-green-theme-fallback')
+    && themeCssSource.includes('#riznica-screen .riznica-green-theme-icon')
+    && configSource.includes('3D Soft Clay tema sa šumskim motivima i glinenim kockicama.'),
+    'Green katalog Riznice je izgubio sopstveni motiv ili opis teme.');
+assert(managersSource.includes("watchToUnlockLabel.replace(/\\s*📺\\s*/u, ' ').trim()")
+    && managersSource.includes("${isGreenTreasury ? '' : '⏱ '}${resolveText(item.duration)}")
+    && themeCssSource.includes('#riznica-screen#riznica-screen .card .riznica-reward-video-copy > span')
+    && themeCssSource.includes('#riznica-screen .effect-preview-box.prev-confetti::before')
+    && themeCssSource.includes('greenClayConfettiFloat'),
+    'Green preview Konfeta ili prelom teksta otključavanja reklamom nije sačuvan.');
 assert(managersSource.split("getEasterTreasuryStatusIcon('status-active')").length - 1 === 1, 'Active status mora imati tačno jednu shop vezu.');
 assert(managersSource.split("getEasterTreasuryStatusIcon('status-locked')").length - 1 === 2, 'Locked status mora ostati vezan za trophy i requirement stanje.');
 assert(greenTreasuryControlsManifest.integration?.treasuryTabs === 'connected' && greenTreasuryControlsManifest.integration?.rulesNavigationGlyphs === 'connected' && greenTreasuryControlsManifest.integration?.itemStatusHelper === 'connected' && greenTreasuryControlsManifest.integration?.hiddenDescriptionLock === 'connected' && greenTreasuryControlsManifest.integration?.insufficientFundsAlerts === 'connected' && greenTreasuryControlsManifest.integration?.roomOnDemand === 'connected', 'Green Treasury Controls integracija nije kompletno evidentirana.');
@@ -1035,7 +1050,7 @@ assert(greenLeaderboardControlsRegistry.sourceManifest === path.relative(root, g
 assert(JSON.stringify(greenLeaderboardControlsRegistry.identity) === JSON.stringify(greenLeaderboardControlsManifest.identity), 'Green Leaderboard Controls identitet registra i manifesta odstupa.');
 assert(greenLeaderboardControlsManifest.identity?.material === 'matte 3D Soft Clay Neumorphism' && greenLeaderboardControlsManifest.identity?.mapping === 'one immutable PNG for Global navigation, one for Local navigation and one shared empty/loading state', 'Green Leaderboard Controls DNK ili mapiranje odstupa.');
 assert(JSON.stringify(greenLeaderboardControlsManifest.catalog.map(asset => asset.id)) === JSON.stringify(['global', 'local', 'empty-loading']), 'Green Leaderboard Controls katalog mora imati Global, Local i Empty/Loading redosled.');
-assert(JSON.stringify(greenLeaderboardControlsManifest.catalog.map(asset => asset.displaySizes)) === JSON.stringify([[[21, 21], [25, 25]], [[21, 21], [25, 25]], [[86, 86], [68, 68], [58, 58]]]), 'Green Leaderboard Controls stvarne UI veličine nisu zaključane.');
+assert(JSON.stringify(greenLeaderboardControlsManifest.catalog.map(asset => asset.displaySizes)) === JSON.stringify([[[21, 21], [25, 25]], [[21, 21], [25, 25]], [[86, 86], [58, 58]]]), 'Green Leaderboard Controls stvarne UI veličine nisu zaključane.');
 assert(greenLeaderboardControlsManifest.catalog[0].glyph === 'warm-ivory podium with a forest-green and ivory globe, terracotta star and forest-green base' && greenLeaderboardControlsManifest.catalog[1].glyph === 'forest-green circular location mark with a warm-ivory house, terracotta dot and small ivory podium' && greenLeaderboardControlsManifest.catalog[2].glyph === 'terracotta hourglass above a warm-ivory podium on a forest-green base', 'Green Leaderboard Controls vizuelne siluete odstupaju.');
 for (const asset of greenLeaderboardControlsAudit) {
     const source = path.join(root, 'source-assets', 'green-soft-clay-hires', 'leaderboard', `${asset.id}-v1.png`);
@@ -1071,7 +1086,7 @@ assert(greenLeaderboardControlsManifest.catalog[2].usedBy.includes('Online waiti
 assert(JSON.stringify(greenLeaderboardControlsManifest.protectedFamilies.map(family => family.id)) === JSON.stringify(['leaderboardRoomIdentity', 'competitionMedals', 'onlineRandomRoomIdentity']) && greenLeaderboardRoomIdentityManifest.status === 'locked' && greenCompetitionMedalsRegistry?.status === 'locked', 'Green Leaderboard Controls zaštićene semantičke porodice nisu očuvane.');
 assert(greenLeaderboardControlsManifest.integration?.leaderboardUi === 'connected' && greenLeaderboardControlsManifest.integration?.onlineWaitingUi === 'connected' && greenLeaderboardControlsManifest.integration?.roomOnDemand === 'connected' && greenLeaderboardControlsManifest.integration?.centralRegistry === 'standardized in standardization step 3' && greenLeaderboardControlsManifest.integration?.activeRuntime === 'retired in standardization step 3' && greenLeaderboardControlsManifest.integration?.cacheVersion === 61 && greenLeaderboardControlsManifest.integration?.finalAudit === 'locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js', 'Green Leaderboard Controls završni audit status odstupa.');
 assert(/#highscores-screen \.hs-tab-soft-clay-icon-green\s*\{[^}]*width:\s*21px;[^}]*height:\s*21px;/s.test(themeCssSource) && /#highscores-screen \.hs-panel-soft-clay-icon-green\s*\{[^}]*width:\s*25px;[^}]*height:\s*25px;/s.test(themeCssSource), 'Green Leaderboard Global/Local tab ili panel naslov mera odstupa.');
-assert(/#highscores-screen \.hs-state-soft-clay-icon-green\s*\{[^}]*width:\s*86px;[^}]*height:\s*86px;[^}]*animation:\s*greenLeaderboardStateFloat 2\.4s/s.test(themeCssSource) && /#highscores-screen \.hs-list-state-loading \.hs-state-soft-clay-icon-green\s*\{[^}]*width:\s*68px;[^}]*height:\s*68px;/s.test(themeCssSource), 'Green Leaderboard empty/loading prikaz ili motion odstupa.');
+assert(/#highscores-screen \.hs-state-soft-clay-icon-green\s*\{[^}]*width:\s*86px;[^}]*height:\s*86px;[^}]*animation:\s*greenLeaderboardStateFloat 2\.4s/s.test(themeCssSource) && /#highscores-screen \.hs-list-state-loading \.hs-state-soft-clay-icon-green\s*\{[^}]*width:\s*86px;[^}]*height:\s*86px;/s.test(themeCssSource), 'Green Leaderboard empty/loading prikaz ili motion odstupa.');
 assert(/#waiting-screen\.is-random-online \.waiting-hof-state-soft-clay-icon-green\s*\{[^}]*width:\s*58px;[^}]*height:\s*58px;[^}]*animation:\s*greenWaitingHofStateFloat 2\.4s/s.test(themeCssSource), 'Green online waiting deljeni state prikaz ili motion odstupa.');
 assert(/@media \(prefers-reduced-motion: reduce\)[\s\S]*?#highscores-screen \.hs-state-soft-clay-icon-green\s*\{[^}]*animation:\s*none !important;/s.test(themeCssSource) && /@media \(prefers-reduced-motion: reduce\)[\s\S]*?#waiting-screen\.is-random-online \.waiting-hof-state-soft-clay-icon-green\s*\{[^}]*animation:\s*none !important;/s.test(themeCssSource), 'Green Leaderboard deljeni state reduced-motion zaštita odstupa.');
 assert(greenLeaderboardRoomIdentityManifest.semanticExclusions.includes('Global and Local leaderboard navigation glyphs') && greenLeaderboardRoomIdentityManifest.semanticExclusions.includes('Leaderboard empty and loading state glyph shared with online waiting') && greenCompetitionMedalsRegistry?.status === 'locked', 'Green Leaderboard Controls semantička granica prema sobnom znaku i medaljama odstupa.');
@@ -2372,15 +2387,63 @@ assert(indexSource.includes('goToStatsPage(0)') && indexSource.includes('goToSta
     && rulesSource.includes("dot.setAttribute('aria-current', 'step')")
     && quarterlyLeagueSource.includes('class="league-page-dot')
     && quarterlyLeagueSource.includes('goToSlide(${i})'), 'Green pageri nisu standardizovani i upotrebljivi.');
-assert(rulesSource.includes("document.documentElement.dataset.splashTheme === 'dark') return;")
+assert(rulesSource.includes("this.touchStartScrollLeft = this.sliderTrack.scrollLeft;")
+    && rulesSource.includes("if (this.touchGestureHorizontal && e.cancelable) e.preventDefault();")
+    && rulesSource.includes("this.goToSlide(startIndex + (deltaX < 0 ? 1 : -1));")
     && quarterlyLeagueSource.includes('track.parentElement.clientWidth * 0.22')
     && quarterlyLeagueSource.includes("track.addEventListener('touchcancel'")
     && gameSource.includes("if (typeof updateStatsPagination === 'function') updateStatsPagination();")
     && themeCssSource.includes('/* One pager language: a 44px tap target')
     && themeCssSource.includes('#league-modal-overlay .league-page-dot):focus-visible'), 'Green navigacija: swipe, reset ili zona dodira nisu usklađeni.');
+assert(/\.daily-glass-die\.dice\s*\{[^}]*width:\s*min\(100%, 14vw, 60px\) !important;/s.test(themeCssSource)
+    && dailyChallengeSource.includes("${isGreenTheme ? '' : ' (x2)'}")
+    && dailyChallengeSource.includes('if (isEasterTheme || isGreenTheme)'), 'Green dnevni izazov: kockice ili tekst dupliranja odstupaju.');
+assert(fireStreakSource.includes("const dockMyRank = ['easter', 'desert'].includes(activeTheme)")
+    && powerIndexSource.includes("const dockMyRank = ['easter', 'desert'].includes(activeTheme)")
+    && fireStreakSource.includes("this.renderPlayerRow(this.myPlayer)\n")
+    && powerIndexSource.includes("this.renderPlayerRow(this.myPlayer)\n"), 'Green statističke liste moraju imati jedan red igrača u samoj listi.');
+assert(gameSource.includes('class="green-friend-presence"')
+    && themeCssSource.includes('#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container')
+    && themeCssSource.includes('#league-modal-overlay#league-modal-overlay > .modal-box')
+    && tournamentSource.includes('tourney-participant-row'), 'Green Poziv, Liga ili bracket nisu obuhvaćeni follow-up rasporedom.');
+assert(indexSource.includes('data-green-record="win"')
+    && indexSource.includes('data-green-record="draw"')
+    && indexSource.includes('data-green-record="loss"')
+    && languagesSource.includes('function syncGreenRecordLabels()')
+    && gameSource.includes("if (typeof syncGreenRecordLabels === 'function') syncGreenRecordLabels();")
+    && gameSource.includes("recordLabel('ws_record_win_short', 'POB')")
+    && gameSource.includes("recordLabel('ws_record_draw_short', 'NER')")
+    && gameSource.includes("recordLabel('ws_record_loss_short', 'POR')"), 'Green Poziv: kratke oznake pobeda/nerešenih/poraza nisu dosledne u oba jezika.');
 const uiTranslations = vm.runInNewContext(
     `${languagesSource.slice(0, languagesSource.indexOf('\nfunction dukatIconHtml'))}\nTRANSLATIONS`, {}
 );
+assert(['win', 'draw', 'loss'].every((kind, index) => {
+    const key = `ws_record_${kind}_short`;
+    return uiTranslations.sr[key] === ['POB', 'NER', 'POR'][index]
+        && uiTranslations.en[key] === ['W', 'D', 'L'][index];
+}), 'Green Poziv: SR/EN kratke oznake rezultata nisu kompletne.');
+const greenRecordSyncSource = languagesSource.match(/function syncGreenRecordLabels\(\) \{[\s\S]*?\n\}/)?.[0];
+assert(greenRecordSyncSource, 'Green Poziv: sinhronizacija statičkih oznaka nije pronađena.');
+const recordLabels = ['win', 'draw', 'loss', 'win', 'draw', 'loss']
+    .map(greenRecord => ({ dataset: { greenRecord }, textContent: '' }));
+const recordContext = {
+    document: {
+        documentElement: { dataset: { splashTheme: 'dark' } },
+        querySelectorAll: () => recordLabels
+    },
+    localStorage: { getItem: key => key === 'yamb_lang' ? recordContext.lang : recordContext.theme },
+    t: key => uiTranslations[recordContext.lang][key],
+    lang: 'en', theme: 'dark'
+};
+vm.runInNewContext(`${greenRecordSyncSource}\nsyncGreenRecordLabels()`, recordContext);
+assert(JSON.stringify(recordLabels.map(label => label.textContent)) === JSON.stringify(['W', 'D', 'L', 'W', 'D', 'L']), 'Green EN statičke oznake nisu W/D/L.');
+recordContext.document.documentElement.dataset.splashTheme = 'easter';
+vm.runInNewContext('syncGreenRecordLabels()', recordContext);
+assert(JSON.stringify(recordLabels.map(label => label.textContent)) === JSON.stringify(['POB', 'NER', 'POR', 'POB', 'NER', 'POR']), 'Druga tema mora da zadrži svoje oznake.');
+recordContext.document.documentElement.dataset.splashTheme = 'dark';
+recordContext.lang = 'sr';
+vm.runInNewContext('syncGreenRecordLabels()', recordContext);
+assert(JSON.stringify(recordLabels.map(label => label.textContent)) === JSON.stringify(['POB', 'NER', 'POR', 'POB', 'NER', 'POR']), 'Green SR oznake nisu očuvane.');
 for (const lang of ['sr', 'en']) {
     for (const key of ['aria_stats_overview_page', 'aria_stats_h2h_page', 'aria_close_league', 'aria_league_rank_page', 'aria_league_sections', 'aria_hof_sections']) {
         assert(typeof uiTranslations[lang]?.[key] === 'string' && uiTranslations[lang][key].trim(), `Q1 nedostaje ${lang} prevod za ${key}.`);
@@ -2448,6 +2511,9 @@ assert(themeCssSource.includes(':is(.custom-modal .cm-btn-cancel, .custom-modal 
     'Green otkazivanje u popup-u ponovo ima nečitljiv tekst.');
 assert(/\.custom-modal \.cm-btn\s*\{[^}]*font-size:\s*var\(--green-ui-body\) !important;/s.test(themeCssSource),
     'Green popup dugmad ne koriste standardizovanu veličinu teksta.');
+assert(/#riznica-screen#riznica-screen \.card\.locked\s*\{[^}]*opacity:\s*1;[^}]*filter:\s*none;[^}]*background:\s*linear-gradient\(145deg, rgba\(43, 77, 48, \.97\)/s.test(themeCssSource)
+    && contrastRatio(rgbFromHex('#edf4df'), rgbFromHex('#2b4d30')) >= 4.5,
+    'Green zaključani trofej ne sme ponovo da izbledi tekst ili izgubi čitljiv kontrast.');
 assert(themeCssSource.includes('--green-ui-close-size: 44px;')
     && themeCssSource.includes('--green-ui-room-radius: 20px;')
     && themeCssSource.includes('#highscores-screen .hs-card.modal-box')

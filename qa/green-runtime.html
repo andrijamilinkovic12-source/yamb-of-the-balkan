@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="google" content="notranslate">
+  <base href="/">
+  <title>Green Room Pack — izolovani vizuelni QA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="teme.css">
+  <link rel="stylesheet" href="kockice.css">
+  <link rel="stylesheet" href="efekti.css">
+  <style>
+    #qa-error { position: fixed; inset: 20px; z-index: 9999999; color: white; font: 16px Arial, sans-serif; }
+    #qa-caption { position: fixed; z-index: 9999999; left: 12px; bottom: max(50px, env(safe-area-inset-bottom)); padding: 3px 8px; border-radius: 8px; background: #173b26; color: #f1f7e6; font: 10px Arial, sans-serif; pointer-events: none; opacity: .8; }
+    .qa-avatar { background: #496f51; }
+  </style>
+</head>
+<body>
+  <div id="qa-root"></div>
+  <div id="qa-caption">IZOLOVANI QA — bez naloga, meča i upisa</div>
+  <script>
+    (() => {
+      'use strict';
+      const state = (location.hash || '#waiting-search').slice(1);
+      const qaLang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'sr';
+      document.documentElement.lang = qaLang;
+      const allowed = new Set([
+        'waiting-search', 'waiting-vs', 'invite-host', 'league-summary', 'solo-result',
+        'online-result', 'insufficient', 'confirm', 'daily-active', 'daily-double',
+        'daily-final', 'daily-final-double', 'leaderboard-empty-global',
+        'leaderboard-empty-local', 'tournament-semi', 'tournament-final',
+        'pi-off-top', 'streak-off-top', 'toast-success', 'toast-error',
+        'toast-invite', 'toast-insufficient', 'toast-long-invite',
+        'modal-confirm-buy', 'modal-error-long', 'treasury-locked',
+        'treasury-skin', 'treasury-effect', 'treasury-theme',
+        'online-players-loading', 'online-players-empty', 'online-players-error', 'online-players-disabled'
+      ]);
+      const root = document.getElementById('qa-root');
+      const caption = document.getElementById('qa-caption');
+      if (qaLang === 'en') caption.textContent = 'ISOLATED QA — no account, match or writes';
+      if (!allowed.has(state)) {
+        root.textContent = `Nepoznato QA stanje: ${state}`;
+        return;
+      }
+
+      const avatar = (letter, color) => {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><circle cx="64" cy="64" r="64" fill="${color}"/><text x="64" y="83" fill="#f4f5df" font-family="Arial,sans-serif" font-size="72" font-weight="700" text-anchor="middle">${letter}</text></svg>`;
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      };
+      const qaTranslations = {
+        dc_title: 'DNEVNI IZAZOV', dc_desc: 'Zaustavi kockice u pravom trenutku!',
+        dc_sum: 'TRENUTNI ZBIR', dc_stop: 'STOP', dc_success: 'USPEŠNO',
+        dc_congrats: 'ČESTITAMO', btn_double_short: 'DUPLIRAJ', btn_claim_short: 'PREUZMI',
+        dc_reward_won: 'Osvojili ste {DUKAT_ICON} {0} dukata!',
+        dc_reward_doubled: 'Nagrada je duplirana! Osvojili ste {DUKAT_ICON} {0} dukata!',
+        tourney_tabs_aria: 'Sekcije turnira', tourney_tab_info: 'Info',
+        tourney_tab_bracket: 'Kostur', tourney_tab_fame: 'Slavni',
+        tourney_qf: 'ČETVRTFINALE', tourney_sf: 'POLUFINALE', tourney_f: 'FINALE',
+        player_guest: 'Igrač'
+      };
+      window.t = key => qaTranslations[key] ?? key;
+      window.dukatIconHtml = () => '{DUKAT_ICON}';
+      const loadRealTranslations = async () => {
+        const response = await fetch('languages.js', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`languages.js: HTTP ${response.status}`);
+        const source = await response.text();
+        const objectSource = source.match(/^const TRANSLATIONS = \{[\s\S]*?^\};/m)?.[0];
+        if (!objectSource) throw new Error('TRANSLATIONS nisu pronađeni');
+        const translations = new Function(`${objectSource}\nreturn TRANSLATIONS;`)();
+        window.t = key => {
+          const value = translations[qaLang]?.[key] ?? qaTranslations[key] ?? key;
+          return typeof value === 'string' ? value.replace(/\{DUKAT_ICON\}/g, greenDukatHtml('')) : value;
+        };
+      };
+      const hydrateGreenImages = element => {
+        element.querySelectorAll('img[data-theme-src]').forEach(image => {
+          const sourcePath = image.getAttribute('data-theme-src');
+          if (sourcePath.includes('green-soft-clay/')) image.src = sourcePath;
+        });
+      };
+      const loadIsolatedClass = async (path, className) => {
+        const response = await fetch(path, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+        const source = await response.text();
+        // These files define classes only. Do not evaluate auto-instantiation tails.
+        const safeSource = source
+          .replace(/window\.powerIndexLeaderboard\s*=\s*new PowerIndexLeaderboard\(\);[\s\S]*$/, '')
+          .replace(/window\.vatreniNiz\s*=\s*new VatreniNizManager\(\);[\s\S]*$/, '');
+        return new Function(`${safeSource}\nreturn ${className};`)();
+      };
+      const greenDukatHtml = extraClass => `<img class="dukat-icon-inline ${extraClass} dukat-icon-inline--green" src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" alt="" aria-hidden="true">`;
+      const loadManagerClass = async (className, nextMarker) => {
+        const response = await fetch('managers.js', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`managers.js: HTTP ${response.status}`);
+        const source = await response.text();
+        const start = source.indexOf(`class ${className} {`);
+        const end = source.indexOf(nextMarker, start);
+        if (start < 0 || end < 0) throw new Error(`${className} nije pronađen`);
+        const resolveText = data => typeof data === 'object' && data !== null
+          ? (data[qaLang] || data.sr || '') : data;
+        // Only a class declaration is evaluated; no manager constructors or app setup run here.
+        return new Function('_safeT', 't', 'resolveText', 'dukatIconHtml',
+          `${source.slice(start, end)}\nreturn ${className};`
+        )(window.t, window.t, resolveText, greenDukatHtml);
+      };
+      const loadShopData = async () => {
+        const response = await fetch('config.js', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`config.js: HTTP ${response.status}`);
+        const source = await response.text();
+        const declaration = source.match(/^const SHOP_DATA = \{[\s\S]*?^\};/m)?.[0];
+        if (!declaration) throw new Error('SHOP_DATA nisu pronađeni');
+        // Evaluate the static data declaration only, not the config module.
+        return new Function(`${declaration}\nreturn SHOP_DATA;`)();
+      };
+      const loadToastRenderer = async () => {
+        const response = await fetch('onlinenumber.js', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`onlinenumber.js: HTTP ${response.status}`);
+        const source = await response.text();
+        const start = source.indexOf('window.showNotification = function(');
+        const end = source.indexOf('\n};', start);
+        if (start < 0 || end < 0) throw new Error('Toast prikazivač nije pronađen');
+        const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[char]);
+        // Evaluate only the renderer definition, not the online-player module or its bootstrap.
+        return new Function('getOnlineNumberSecurity', 'dukatIconHtml', 'requestAnimationFrame', 'setTimeout',
+          `${source.slice(start, end + 3)}\nreturn window.showNotification;`
+        )(() => ({ escapeHtml, escapeAttr: escapeHtml }), greenDukatHtml,
+          callback => requestAnimationFrame(callback), () => 0);
+      };
+      const loadOnlinePlayersRenderer = async () => {
+        const response = await fetch('onlinenumber.js', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`onlinenumber.js: HTTP ${response.status}`);
+        const source = await response.text();
+        const start = source.indexOf('let onlinePlayersRefreshTimer = null;');
+        const end = source.indexOf("document.addEventListener('DOMContentLoaded'", start);
+        if (start < 0 || end < 0) throw new Error('Online Players prikazivač nije pronađen');
+        const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+          '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[char]);
+        const security = {
+          escapeHtml, escapeAttr: escapeHtml,
+          jsString: value => JSON.stringify(String(value ?? '')),
+          safeUrl: (value, fallback = '') => {
+            try {
+              const url = new URL(value, location.origin);
+              return ['http:', 'https:'].includes(url.protocol) ? url.href : fallback;
+            } catch { return fallback; }
+          }
+        };
+        // The real renderer runs against an in-memory socket. No timers or network are started.
+        new Function('getOnlineNumberSecurity', 'setInterval', 'clearInterval', 'setTimeout', 'clearTimeout',
+          `${source.slice(start, end)}\nreturn window.openOnlinePlayersModal;`
+        )(() => security, () => 0, () => {}, () => 0, () => {});
+        return window.openOnlinePlayersModal;
+      };
+      const setText = (id, value) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = value;
+      };
+      const setImage = (id, src) => {
+        const element = document.getElementById(id);
+        if (element) element.src = src;
+      };
+      const copyScreen = (sourceDoc, selector) => {
+        const source = sourceDoc.querySelector(selector);
+        if (!source) throw new Error(`Nedostaje aplikacioni ekran ${selector}`);
+        const copy = document.importNode(source, true);
+        copy.querySelectorAll('[onclick],[onchange],[onmousedown],[onmouseup],[onerror]').forEach(element => {
+          for (const name of element.getAttributeNames()) {
+            if (name.startsWith('on')) element.removeAttribute(name);
+          }
+        });
+        hydrateGreenImages(copy);
+        copy.querySelectorAll('[data-lang]').forEach(element => {
+          element.innerHTML = window.t(element.getAttribute('data-lang'));
+        });
+        for (const [attribute, target] of [['data-lang-title', 'title'], ['data-lang-aria', 'aria-label'], ['data-lang-placeholder', 'placeholder']]) {
+          copy.querySelectorAll(`[${attribute}]`).forEach(element => {
+            element.setAttribute(target, window.t(element.getAttribute(attribute)));
+          });
+        }
+        copy.querySelectorAll('[data-green-record]').forEach(element => {
+          element.textContent = window.t(`ws_record_${element.dataset.greenRecord}_short`);
+        });
+        copy.querySelectorAll('img[src^="http"]').forEach(image => image.removeAttribute('src'));
+        root.append(copy);
+        return copy;
+      };
+
+      fetch('index.html', { cache: 'no-store' })
+        .then(response => {
+          if (!response.ok) throw new Error(`index.html: HTTP ${response.status}`);
+          return response.text();
+        })
+        .then(async html => {
+          await loadRealTranslations();
+          const sourceDoc = new DOMParser().parseFromString(html, 'text/html');
+          if (state.startsWith('toast-')) {
+            const showToast = await loadToastRenderer();
+            if (state === 'toast-success') {
+              showToast(window.t('success_title'), window.t('msg_purchase_success'));
+            } else if (state === 'toast-error') {
+              showToast(window.t('err_title'), window.t('err_server_conn'));
+            } else if (state === 'toast-invite') {
+              showToast(window.t('alert_invite_title'), window.t('alert_invite_sent'), {
+                icon: 'assets/green-soft-clay/invite/sent-v1.png?v=opt2',
+                className: 'invite-sent-toast'
+              });
+            } else if (state === 'toast-long-invite') {
+              const detail = qaLang === 'en'
+                ? ' Recipient: Aleksandar Petrović-Milinković. Please check the invitation before the match begins.'
+                : ' Primalac: Aleksandar Petrović-Milinković. Proverite pozivnicu pre početka partije.';
+              showToast(window.t('alert_invite_title'), window.t('alert_invite_sent') + detail, {
+                icon: 'assets/green-soft-clay/invite/sent-v1.png?v=opt2',
+                className: 'invite-sent-toast'
+              });
+            } else {
+              showToast(window.t('modal_title_info'), window.t('msg_no_money').replace('{DUKAT_ICON}',
+                '<img class="dukat-icon-inline" alt="">'), {
+                icon: 'assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png?v=1',
+                className: 'treasury-insufficient-toast'
+              });
+            }
+          } else if (state.startsWith('online-players-')) {
+            const openPlayers = await loadOnlinePlayersRenderer();
+            const overlay = copyScreen(sourceDoc, '#online-players-overlay');
+            overlay.style.display = 'flex';
+            const listeners = {};
+            const socket = {
+              id: 'qa-local-socket', connected: true, disconnected: false,
+              on: (event, listener) => { listeners[event] = listener; },
+              off: event => { delete listeners[event]; },
+              once: (event, listener) => { listeners[event] = listener; },
+              emit: () => {} // Intentionally never leaves the fixture.
+            };
+            window.app = state === 'online-players-error' ? {} : { playerId: 'qa-local', socket };
+            openPlayers();
+            if (state === 'online-players-empty') listeners.online_players_list_data([]);
+            if (state === 'online-players-disabled') {
+              const localPhoto = new URL('assets/green-soft-clay/canonical/settings-controls/profile-v1.png', location.origin).href;
+              listeners.online_players_list_data([
+                { uid: 'qa-friend', socketId: 'qa-friend-socket', name: 'Aleksandar Petrović-Milinković', photoUrl: localPhoto, isFriend: true, isPlaying: true, isBusy: true, status: 'playing', roomId: 'qa-room', canSpectate: true },
+                { uid: 'qa-idle', socketId: 'qa-idle-socket', name: 'Marija Jovanović', photoUrl: localPhoto, isFriend: false, isPlaying: false, isBusy: false, status: 'online' }
+              ]);
+              overlay.querySelectorAll('.online-player-action').forEach(button => {
+                button.removeAttribute('onclick');
+                button.removeAttribute('onmousedown');
+                button.removeAttribute('onmouseup');
+                button.style.pointerEvents = 'none';
+              });
+            }
+            hydrateGreenImages(overlay);
+          } else if (state.startsWith('treasury-')) {
+            const Shop = await loadManagerClass('ShopManager', '// --- 7. ADMOB CONTROLLER');
+            const shop = Object.create(Shop.prototype);
+            const screen = copyScreen(sourceDoc, '#riznica-screen');
+            screen.classList.add('active');
+            const type = state === 'treasury-locked' ? 'trophy' : state.slice('treasury-'.length);
+            screen.dataset.riznicaTab = type;
+            shop.type = type;
+            if (type === 'trophy') {
+              shop.items = [{
+                id: 'first_play', icon: '🐣',
+                easterIcon: 'assets/easter-soft-clay/treasury/trophies/first_play.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png?v=1',
+                title: { sr: 'Prvo Bacanje', en: 'First Roll' },
+                desc: { sr: 'Završi prvu partiju.', en: 'Finish your first game.' },
+                category: { sr: 'POČETAK', en: 'START' }, reward: 500
+              }];
+            } else {
+              const data = await loadShopData();
+              const ids = type === 'skin' ? ['green_clay', 'bronze_antique', 'default']
+                : type === 'effect' ? ['confetti', 'gold_rain', 'thunder']
+                  : ['dark', 'light', 'easter'];
+              const catalog = data[type === 'skin' ? 'SKINS' : type === 'effect' ? 'EFFECTS' : 'THEMES'];
+              shop.items = new URLSearchParams(location.search).get('catalog') === 'all'
+                ? catalog
+                : ids.map(id => catalog.find(item => item.id === id)).filter(Boolean);
+            }
+            shop.unlocked = type === 'skin' ? ['green_clay', 'default']
+              : type === 'effect' ? ['confetti'] : type === 'theme' ? ['dark', 'light'] : [];
+            shop.activeItem = type === 'skin' ? 'green_clay' : type === 'effect' ? 'confetti' : type === 'theme' ? 'dark' : null;
+            shop.discountedItems = new URLSearchParams(location.search).get('discount') === '1'
+              ? { gold_rain: { discountedPrice: 8000, expiresAt: Date.now() + 60_000 } }
+              : {};
+            shop.container = document.getElementById('riznica-shop-container');
+            shop.getThemedTrophyCardSource = item => item.greenIcon;
+            const tabId = { trophy: 'tab-trophies', skin: 'tab-skins', effect: 'tab-effects', theme: 'tab-themes' }[type];
+            screen.querySelectorAll('.riznica-tabs .tab-btn').forEach(tab => tab.classList.toggle('active', tab.id === tabId));
+            shop.render();
+            hydrateGreenImages(screen);
+            screen.querySelectorAll('button').forEach(button => {
+              button.removeAttribute('onclick');
+              button.style.pointerEvents = 'none';
+            });
+          } else if (state.startsWith('daily-')) {
+            const Daily = await loadIsolatedClass('dnevniizazov.js', 'DnevniIzazov');
+            const daily = new Daily(null);
+            const overlay = document.getElementById('glass-daily-overlay');
+            overlay.classList.add('active');
+            [1, 2, 3, 4, 5, 6].forEach((value, index) => {
+              document.getElementById(`gd-${index}`).innerHTML = daily.getDiceDotsHTML(value);
+            });
+            setText('glass-daily-sum', '135');
+            hydrateGreenImages(overlay);
+            if (state !== 'daily-active') {
+              daily.showResultModal();
+              hydrateGreenImages(overlay);
+            }
+            if (state.startsWith('daily-final')) {
+              overlay.remove();
+              const modal = copyScreen(sourceDoc, '#custom-modal-overlay');
+              modal.classList.add('active');
+              modal.style.display = 'flex';
+              setText('cm-title', window.t(state === 'daily-final-double' ? 'dc_congrats' : 'dc_success'));
+              const message = daily.getDailyRewardMessage(
+                state === 'daily-final-double' ? 'dc_reward_doubled' : 'dc_reward_won',
+                state === 'daily-final-double' ? 270 : 135
+              );
+              document.getElementById('cm-msg').innerHTML = message;
+              hydrateGreenImages(modal);
+            }
+          } else if (state.startsWith('leaderboard-empty-')) {
+            const TopList = await loadIsolatedClass('toplista.js', 'TopListManager');
+            const manager = new TopList(null);
+            const screen = copyScreen(sourceDoc, '#highscores-screen');
+            screen.classList.add('active');
+            const target = state.endsWith('global') ? 'global' : 'local';
+            screen.querySelectorAll('[data-hs-tab]').forEach(tab => tab.classList.toggle('active', tab.dataset.hsTab === target));
+            screen.querySelectorAll('[data-hs-panel]').forEach(panel => panel.classList.toggle('active', panel.dataset.hsPanel === target));
+            document.getElementById(`${target}-hs-list`).innerHTML = manager._stateMarkup(window.t('msg_no_results'), 'empty');
+            hydrateGreenImages(screen);
+          } else if (state.startsWith('tournament-')) {
+            const Tournament = await loadIsolatedClass('turnir.js', 'TournamentManager');
+            const manager = new Tournament(null);
+            manager.app = { playerId: 'qa-local' };
+            manager.playerPhotoUrl = player => avatar(String(player?.name || 'I').slice(0, 1), '#54785b');
+            const players = [
+              { id: 'p1', name: 'Aleksandar Petrović-Milinković', pi: 18472 },
+              { id: 'p2', name: 'Marija Jovanović', pi: 24901 },
+              { id: 'p3', name: 'Goran Mihajlović', pi: 12836 },
+              { id: 'p4', name: 'Katarina Šnajderbek', pi: 19155 }
+            ];
+            const match = (a, b, first, second) => ({
+              p1: players[a], p2: players[b], winnerId: players[a].id,
+              p1Score: first, p2Score: second
+            });
+            manager.state = {
+              status: 'finished', players, tournamentNumber: 7,
+              bracket: { qf: [], sf: [match(0, 1, 2764, 2354), match(2, 3, 2628, 2511)],
+                f: [match(0, 2, 2880, 2721)] }
+            };
+            manager.activeTab = 'bracket';
+            const screen = copyScreen(sourceDoc, '#tournament-screen');
+            screen.classList.add('active');
+            manager.render();
+            hydrateGreenImages(screen);
+            const carousel = document.getElementById('tourney-carousel');
+            const page = state === 'tournament-semi' ? 1 : 2;
+            requestAnimationFrame(() => {
+              carousel.scrollLeft = page * carousel.clientWidth;
+              screen.querySelectorAll('.tourney-pagination .dot').forEach((dot, index) => dot.classList.toggle('active', index === page));
+            });
+          } else if (state === 'pi-off-top' || state === 'streak-off-top') {
+            const power = state === 'pi-off-top';
+            const Leader = await loadIsolatedClass(
+              power ? 'powerindex.js' : 'vatreniniz.js',
+              power ? 'PowerIndexLeaderboard' : 'VatreniNizManager'
+            );
+            const manager = Object.create(Leader.prototype);
+            manager.loading = false;
+            manager.hasMore = false;
+            manager.getAvatarUrl = name => avatar(String(name).slice(0, 1), '#54785b');
+            if (power) {
+              root.innerHTML = `
+                <div id="pi-modal-overlay" class="modal-overlay global-chat-overlay pi-modal-overlay active" style="z-index:999999;display:flex">
+                  <div class="modal-box global-chat-shell pi-modal-shell">
+                    <div class="chat-header global-chat-header pi-modal-header">
+                      <h2 class="pi-modal-title"><img class="power-index-soft-clay-bolt power-index-title-bolt-green" src="assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1" alt="">${window.t('pi_title')}</h2>
+                      <button class="global-chat-close" aria-label="Zatvori">×</button>
+                    </div>
+                    <div class="chat-body global-chat-body pi-list-container" id="pi-list-container"></div>
+                    <div class="pi-my-rank-dock" id="pi-my-rank-dock"></div>
+                  </div>
+                </div>`;
+              manager.data = [
+                { rank: 1, playerName: 'Maja Petrović', powerIndex: 18240 },
+                { rank: 2, playerName: 'Aleksandar Jovanović', powerIndex: 16920 },
+                { rank: 3, playerName: 'Ivana Marković', powerIndex: 15310 },
+                { rank: 4, playerName: 'Katarina Šnajderbek', powerIndex: 13870 }
+              ];
+              manager.myPlayer = { rank: 147, playerName: 'Test Igrač sa dugim imenom', powerIndex: 6911, isMe: true };
+            } else {
+              manager.boundHandleScroll = () => {};
+              manager.createModal();
+              const overlay = document.getElementById('streak-overlay');
+              overlay.classList.add('active');
+              overlay.style.display = 'flex';
+              manager.data = [
+                { rank: 1, name: 'Maja Petrović', maxWinStreak: 13, currentWinStreak: 0 },
+                { rank: 2, name: 'Aleksandar Jovanović', maxWinStreak: 11, currentWinStreak: 5 },
+                { rank: 3, name: 'Ivana Marković', maxWinStreak: 9, currentWinStreak: 1 },
+                { rank: 4, name: 'Katarina Šnajderbek', maxWinStreak: 8, currentWinStreak: 0 }
+              ];
+              manager.myPlayer = { rank: 147, name: 'Test Igrač sa dugim imenom', maxWinStreak: 3, currentWinStreak: 1, isMe: true };
+            }
+            manager.renderList();
+            hydrateGreenImages(document.body);
+          } else if (state.startsWith('waiting') || state === 'invite-host') {
+            const screen = copyScreen(sourceDoc, '#waiting-screen');
+            screen.classList.add('active');
+            screen.classList.add(state === 'invite-host' ? 'is-hosting-invite' : 'is-random-online');
+            setText('waiting-my-name', 'Test Igrač');
+            setText('waiting-my-power', '1280');
+            setText('waiting-my-wins', '18');
+            setText('waiting-my-draws', '4');
+            setText('waiting-my-losses', '9');
+            setText('waiting-online-count', '27');
+            setImage('waiting-my-img', avatar('T', '#527a57'));
+            const rival = document.getElementById('easter-invite-top-rival');
+            if (rival && state !== 'invite-host') rival.style.display = 'none';
+            const friends = document.getElementById('friends-list-container');
+            const hall = document.getElementById('ws-hall-of-fame');
+            if (friends) friends.style.display = 'none';
+            if (hall) hall.style.display = 'none';
+            if (state === 'waiting-vs') {
+              setText('waiting-title', 'PROTIVNIK PRONAĐEN');
+              setText('wait-msg', 'Protivnik je tu. Partija počinje...');
+              setText('waiting-opp-name', 'Aleksandar Petrović-Milinković');
+              setText('waiting-opp-power', '1435');
+              setText('waiting-opp-wins', '22');
+              setText('waiting-opp-draws', '5');
+              setText('waiting-opp-losses', '8');
+              setImage('waiting-opp-img', avatar('A', '#688a57'));
+              document.getElementById('waiting-opp-searching').style.display = 'none';
+              document.getElementById('waiting-opp-found').style.display = 'flex';
+              document.getElementById('waiting-opp-box').classList.remove('is-searching');
+            } else if (state === 'invite-host') {
+              setText('waiting-title', window.t('ws_title_invite'));
+              setText('wait-msg', window.t('ws_msg_invite'));
+              setText('easter-invite-rival-name', 'Rival Primer');
+              setText('easter-invite-rival-power', '1380');
+              setImage('easter-invite-rival-img', avatar('R', '#54785b'));
+              document.getElementById('waiting-opp-box').style.display = 'none';
+              document.getElementById('waiting-vs-badge').style.display = 'none';
+              friends.classList.remove('hidden');
+              friends.style.display = 'flex';
+              document.getElementById('friends-list').innerHTML = [
+                ['Milica Petrović', 'M', true, '1420', '21', '3', '8'],
+                ['Aleksandar Petrović-Milinković', 'A', false, '1175', '9', '2', '14']
+              ].map(([name, letter, online, power, wins, draws, losses]) => `
+                <div class="friend-card friend-player-card ${online ? 'is-online' : 'is-offline'}">
+                  <div style="position:absolute;top:8px;right:8px;width:10px;height:10px;border-radius:50%;background:${online ? '#76c878' : '#d68170'}"></div>
+                  <img class="friend-card-img" src="${avatar(letter, '#54785b')}" alt="">
+                  <span class="friend-card-name">${name}</span>
+                  <div class="friend-card-stats"><div class="easter-friend-records">
+                    <div class="easter-friend-record-row easter-friend-power"><span>${window.t('ws_power')}</span><strong>${power}</strong></div>
+                    <div class="easter-friend-record-row easter-friend-win"><span>${window.t('ws_record_win_short')}</span><strong>${wins}</strong></div>
+                    <div class="easter-friend-record-row easter-friend-draw"><span>${window.t('ws_record_draw_short')}</span><strong>${draws}</strong></div>
+                    <div class="easter-friend-record-row easter-friend-loss"><span>${window.t('ws_record_loss_short')}</span><strong>${losses}</strong></div>
+                  </div></div>
+                  <button class="friend-card-btn" ${online ? '' : 'disabled'}>${window.t('btn_invite_friend')}</button>
+                  <span class="green-friend-presence">${online ? window.t('ui_online_short') : window.t('btn_offline')}</span>
+                </div>
+              `).join('');
+            }
+          } else if (state === 'league-summary') {
+            root.innerHTML = `
+              <div id="league-modal-overlay" class="modal-overlay active" style="display:flex">
+                <div class="modal-box" style="display:flex;flex-direction:column;padding:0;overflow:hidden">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 20px">
+                    <h2 id="league-modal-title">KVARTALNA LIGA</h2>
+                    <button class="global-chat-close league-close-green" aria-label="Zatvori">×</button>
+                  </div>
+                  <div style="display:flex;gap:10px;padding:15px 15px 5px;flex-shrink:0">
+                    <button class="btn-menu btn-primary league-tab-button">LIGA</button>
+                    <button class="btn-menu btn-secondary league-tab-button">DVORANA SLAVNIH</button>
+                  </div>
+                  <div id="league-main-content" style="display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden">
+                    <div style="padding:10px 15px;flex-shrink:0">
+                      <div class="league-summary-card" style="display:flex;justify-content:space-between;align-items:center;padding:10px 15px;border-radius:12px">
+                        <div class="league-summary-rank" style="text-align:left">
+                          <div>VAŠ RANG</div><div class="league-current-rank"><span>SREBRNA LIGA</span></div>
+                        </div>
+                        <div class="league-summary-points" style="text-align:right">
+                          <div>2.450 PTS</div><div id="league-summary-alltime">SVA VREMENA: 12.875</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="league-carousel-container" style="flex:1;min-height:0;overflow:hidden;padding:10px 15px">
+                      <div class="league-rank-scroll" style="height:100%;overflow-y:auto;padding:12px">
+                        <h3 class="league-rank-heading">SREBRNA LIGA</h3><p>Testni pregled sadržaja, bez učitavanja naloga ili rezultata.</p>
+                      </div>
+                    </div>
+                    <div style="display:flex;justify-content:center;padding:10px 0 15px;flex-shrink:0">
+                      <button class="league-page-dot is-active" aria-label="Strana 1"></button>
+                      <button class="league-page-dot" aria-label="Strana 2"></button>
+                    </div>
+                  </div>
+                </div>
+              </div>`;
+          } else if (state.endsWith('result')) {
+            const screen = copyScreen(sourceDoc, '#game-over-screen');
+            screen.classList.add('active');
+            if (state === 'solo-result') {
+              screen.classList.add('is-solo-result');
+              setText('go-title', 'KRAJ SOLO IGRE');
+              setText('go-msg', 'Novi lični rekord! Rezultat je prikazan samo u test pregledu.');
+              setText('go-score', '1864');
+              document.getElementById('solo-personal-best-badge').hidden = false;
+              setText('solo-finish-best-column', 'NADOLE');
+              setText('solo-finish-no-zero', 'DA');
+            } else {
+              setText('go-title', 'POBEDA!');
+              setText('go-msg', 'Pobeda nad test protivnikom. Nema stvarnog meča ni nagrade.');
+              setText('go-score', '1458');
+              document.getElementById('btn-rematch').style.display = 'flex';
+              const rematchLabel = document.querySelector('#btn-rematch [data-lang="go_rematch"]');
+              if (rematchLabel) rematchLabel.textContent = rematchLabel.textContent.replace(/^🔄\s*/u, '');
+              document.getElementById('btn-ad-double').style.display = 'none';
+            }
+          } else {
+            const overlay = copyScreen(sourceDoc, '#custom-modal-overlay');
+            const Modal = await loadManagerClass('ModalManager', '// --- 4. EFFECT MANAGER');
+            const modal = new Modal();
+            document.documentElement.dataset.splashTheme = 'dark';
+            if (state === 'insufficient') {
+              modal.alert(qaLang === 'en' ? 'Not enough coins for this option. Your balance has not changed.'
+                : 'Za ovu opciju nemate dovoljno dukata. Stanje nije promenjeno.',
+                qaLang === 'en' ? 'NOT ENOUGH COINS' : 'NEDOVOLJNO DUKATA');
+            } else if (state === 'modal-error-long') {
+              const message = qaLang === 'en'
+                ? 'The server is temporarily unavailable. Your purchase was not completed and your balance has not changed. Please try again later.'
+                : 'Server trenutno nije dostupan. Kupovina nije završena i stanje dukata nije promenjeno. Pokušajte ponovo kasnije.';
+              modal.alert(message, window.t('err_title'));
+            } else if (state === 'modal-confirm-buy') {
+              const itemName = qaLang === 'en' ? 'Antique Bronze' : 'Antička Bronza';
+              modal.confirm(`${window.t('msg_confirm_buy')} <b>${itemName}</b>?`);
+            } else {
+              modal.confirm(qaLang === 'en' ? 'Do you want to continue? This is only a visual test.'
+                : 'Da li želite da nastavite? Ovo je samo test izgleda poruke.');
+            }
+          }
+          caption.textContent += ` · ${state}`;
+        })
+        .catch(error => {
+          root.innerHTML = '';
+          const message = document.createElement('pre');
+          message.id = 'qa-error';
+          message.textContent = `QA prikaz nije učitan: ${error.message}`;
+          root.append(message);
+        });
+    })();
+  </script>
+</body>
+</html>

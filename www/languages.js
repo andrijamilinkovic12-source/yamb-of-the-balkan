@@ -714,6 +714,9 @@ const TRANSLATIONS = {
         "ws_online_players": "Online igrača:",
         "ws_power": "Moć ⚡",
         "ws_wl": "Pob/Ner/Por",
+        "ws_record_win_short": "POB",
+        "ws_record_draw_short": "NER",
+        "ws_record_loss_short": "POR",
         "ws_searching_opp": "Tražim<br>protivnika...",
         "ws_game_starting": "Protivnik je tu. Partija počinje...",
         "ws_close_search": "Zatvori traženje protivnika",
@@ -1542,6 +1545,9 @@ const TRANSLATIONS = {
         "ws_online_players": "Players online:",
         "ws_power": "Power ⚡",
         "ws_wl": "W/D/L",
+        "ws_record_win_short": "W",
+        "ws_record_draw_short": "D",
+        "ws_record_loss_short": "L",
         "ws_searching_opp": "Finding<br>opponent...",
         "ws_game_starting": "Opponent found. The game is starting...",
         "ws_close_search": "Close opponent search",
@@ -1746,6 +1752,7 @@ function applyTranslations() {
         const key = el.getAttribute('data-lang');
         if (key) el.innerHTML = t(key); // Koristimo innerHTML zbog <b> i <strong> tagova
     });
+    syncGreenRecordLabels();
 
     document.querySelectorAll('[data-lang-title]').forEach(el => {
         const key = el.getAttribute('data-lang-title');
@@ -1796,6 +1803,20 @@ function applyTranslations() {
             if (onclickAttr.includes('riznicaManager.open()')) btn.title = t('menu_shop').replace('💎 ', '');
             if (onclickAttr.includes('openTournament()')) btn.title = t('tourney_title');
         }
+    });
+}
+
+function syncGreenRecordLabels() {
+    const activeTheme = document.documentElement.dataset.splashTheme
+        || localStorage.getItem('yamb_theme') || 'dark';
+    const greenTheme = activeTheme === 'dark';
+    const labels = {
+        win: greenTheme ? t('ws_record_win_short') : 'POB',
+        draw: greenTheme ? t('ws_record_draw_short') : 'NER',
+        loss: greenTheme ? t('ws_record_loss_short') : 'POR'
+    };
+    document.querySelectorAll('#waiting-screen [data-green-record]').forEach(el => {
+        el.textContent = labels[el.dataset.greenRecord] || '';
     });
 }
 

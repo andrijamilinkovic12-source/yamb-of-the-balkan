@@ -1229,6 +1229,7 @@ class DnevniIzazov {
     showResultModal() {
         const card = document.getElementById('glass-daily-card');
         document.getElementById('glass-btn-action').style.display = 'none';
+        const isGreenTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'dark';
         
         const resDiv = document.createElement('div');
         resDiv.id = 'glass-daily-result';
@@ -1247,7 +1248,7 @@ class DnevniIzazov {
                 <img class="daily-glass-reward-video-mark-easter" data-theme-src="assets/easter-soft-clay/daily/reward-video-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-desert" data-theme-src="assets/desert-soft-clay/daily/reward-video-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="daily-glass-reward-video-mark-nebula" data-theme-src="assets/severna-soft-clay/daily/reward-video-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                ${t('btn_double_short')} ${this.getDailyRewardDukatIconHtml()} (x2)
+                ${t('btn_double_short')} ${this.getDailyRewardDukatIconHtml()}${isGreenTheme ? '' : ' (x2)'}
             </button>
             <button class="daily-glass-btn daily-glass-btn-claim" onclick="dnevniIzazov.claim(false)">
                 ${t('btn_claim_short')}
@@ -1294,8 +1295,9 @@ class DnevniIzazov {
     getDailyRewardMessage(key, amount) {
         const genericIcon = dukatIconHtml();
         const isEasterTheme = document.body && document.body.classList.contains('easter-theme');
-        if (isEasterTheme) {
-            const iconMarker = '__EASTER_DAILY_DUCAT__';
+        const isGreenTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'dark';
+        if (isEasterTheme || isGreenTheme) {
+            const iconMarker = '__DAILY_DUCAT__';
             const amountText = String(amount);
             const themedIcon = this.getDailyRewardDukatIconHtml({ rewardEnd: true });
             let message = t(key)
@@ -1303,7 +1305,7 @@ class DnevniIzazov {
                 .replace('{DUKAT_ICON}', iconMarker)
                 .replace('{0}', amountText);
 
-            // Vaskrs: broj stoji pre ikone, bez suvišne reči „dukata/ducats“.
+            // Green i Vaskrs: broj stoji pre ikone, bez suvišne reči „dukata/ducats“.
             // Uzvičnik iz prevoda ostaje neposredno iza ikone: „130 [ikona]!“.
             message = message
                 .replace(`${iconMarker} ${amountText} dukata`, `${amountText} ${themedIcon}`)

@@ -4,6 +4,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "qa:green": "node scripts/serve-green-qa.js",
     "check:js": "node scripts/check-js.js",
     "check:game-rules": "node scripts/check-game-rules.js",
     "check:trophies": "node scripts/check-trophies.js",

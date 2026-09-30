@@ -2512,6 +2512,7 @@ class YambApp {
         document.body.classList.remove(...themeClasses);
         if (safeTheme !== 'dark') document.body.classList.add(`${safeTheme}-theme`);
         document.documentElement.dataset.splashTheme = safeTheme;
+        if (typeof syncGreenRecordLabels === 'function') syncGreenRecordLabels();
         this.configureThemeSplashImage(safeTheme);
         const loadingPack = this.getThemeLoadingPack(safeTheme);
         this.hydrateThemeImageSources(safeTheme, {
@@ -3499,7 +3500,7 @@ class YambApp {
                 html += `
                     <div class="friend-card" style="border: 1px dashed var(--gold-main); background: rgba(224, 201, 149, 0.1);">
                         <img src="${safeAvatar}" class="friend-card-img" style="border: 2px solid #aaa;">
-                        <span class="friend-card-name">${safeName}</span>
+                        <span class="friend-card-name" title="${safeName}">${safeName}</span>
                         <span style="font-size: 0.7rem; color: #aaa; text-align: center; margin-bottom: 5px; font-weight: bold;">${gt('friend_req_new') || 'Novi zahtev'}</span>
                         <div style="display:flex; gap:10px; width: 100%; justify-content: center;">
                             <button onclick="app.resolveFriendRequest('${safeUid}', true, '${safeRequestNameJs}')" style="background:var(--success); color:#fff; border:none; padding:5px 15px; border-radius:15px; cursor:pointer; font-size: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.5);" title="${acceptTitle}">✅</button>
@@ -3519,12 +3520,14 @@ class YambApp {
                 const h2hLine = this.formatH2HRecordLine(h2hRecord, f.stats);
                 const h2hParts = this.getH2HRecordParts(h2hRecord, f.stats);
                 const isOnline = f.isOnline;
+                const isGreenTheme = (localStorage.getItem('yamb_theme') || 'dark') === 'dark';
 
                 const statusColor = isOnline ? 'var(--success)' : 'var(--danger)';
                 const btnDisabled = (!isOnline || !f.socketId) ? 'disabled' : '';
                 const btnStyle = isOnline ? 'background:var(--gold-main); color:#000; cursor:pointer;' : 'background:gray; color:#ddd; cursor:not-allowed;';
 
-                const btnText = isOnline ? (gt('btn_invite_friend') || 'POZOVI') : (gt('btn_offline') || 'OFFLINE');
+                const btnText = (isOnline || isGreenTheme) ? (gt('btn_invite_friend') || 'POZOVI') : (gt('btn_offline') || 'OFFLINE');
+                const statusText = isOnline ? (gt('ui_online_short') || 'Online') : (gt('btn_offline') || 'OFFLINE');
                 const friendName = String(f.name || getFallbackPlayerName());
                 const safeName = this.escapeHtml(friendName);
                 const safeAvatar = this.escapeHtml(this.friendAvatarUrl(friendName, f.photoUrl));
@@ -3538,23 +3541,25 @@ class YambApp {
                 const safeWins = this.escapeHtml(h2hParts.wins);
                 const safeDraws = this.escapeHtml(h2hParts.draws);
                 const safeLosses = this.escapeHtml(h2hParts.losses);
+                const recordLabel = (key, fallback) => this.escapeHtml(isGreenTheme ? gt(key) : fallback);
 
                 html += `
-                    <div class="friend-card friend-player-card">
+                    <div class="friend-card friend-player-card${isOnline ? ' is-online' : ' is-offline'}">
                         <div style="position: absolute; top: 8px; right: 8px; width: 10px; height: 10px; border-radius: 50%; background: ${statusColor}; box-shadow: 0 0 8px ${statusColor};"></div>
                         <img src="${safeAvatar}" class="friend-card-img" style="border: 2px solid ${statusColor};">
-                        <span class="friend-card-name">${safeName}</span>
+                        <span class="friend-card-name" title="${safeName}">${safeName}</span>
                         <div class="friend-card-stats">
                             <span class="friend-card-power" style="font-size: 0.8rem; color: #FFD700; font-weight: 900; margin-bottom: 2px; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${safePi}</span>
                             <span class="friend-card-wl">${safeWlLabel}: ${safeH2HLine}</span>
                             <div class="easter-friend-records" aria-label="${safeWlLabel}">
                                 <div class="easter-friend-record-row easter-friend-power"><span>${safePowerLabel}</span><strong>${safePi}</strong></div>
-                                <div class="easter-friend-record-row easter-friend-win"><span>POB</span><strong>${safeWins}</strong></div>
-                                <div class="easter-friend-record-row easter-friend-draw"><span>NER</span><strong>${safeDraws}</strong></div>
-                                <div class="easter-friend-record-row easter-friend-loss"><span>POR</span><strong>${safeLosses}</strong></div>
+                                <div class="easter-friend-record-row easter-friend-win"><span>${recordLabel('ws_record_win_short', 'POB')}</span><strong>${safeWins}</strong></div>
+                                <div class="easter-friend-record-row easter-friend-draw"><span>${recordLabel('ws_record_draw_short', 'NER')}</span><strong>${safeDraws}</strong></div>
+                                <div class="easter-friend-record-row easter-friend-loss"><span>${recordLabel('ws_record_loss_short', 'POR')}</span><strong>${safeLosses}</strong></div>
                             </div>
                         </div>
                         <button class="friend-card-btn" ${btnDisabled} onclick="app.inviteFriendToRoom('${safeSocketId}', '${safeUid}', '${safeFriendNameJs}')" style="${btnStyle}"><img class="easter-invite-send-icon" data-theme-src="assets/easter-soft-clay/invite/send.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="desert-invite-send-icon" data-theme-src="assets/desert-soft-clay/invite/send.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="severna-invite-send-icon" data-theme-src="assets/severna-soft-clay/invite/send-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="green-invite-send-icon" data-theme-src="assets/green-soft-clay/invite/send-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${this.escapeHtml(btnText)}</span></button>
+                        <span class="green-friend-presence" aria-label="${this.escapeHtml(statusText)}">${this.escapeHtml(statusText)}</span>
                     </div>
                 `;
             });

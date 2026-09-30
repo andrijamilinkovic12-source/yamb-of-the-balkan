@@ -7,6 +7,7 @@ const wwwDir = join(root, 'www');
 
 const files = [
     join(root, 'server.js'),
+    join(root, 'scripts', 'serve-green-qa.js'),
     ...readdirSync(wwwDir)
         .filter(name => name.endsWith('.js') && !name.endsWith('.min.js'))
         .map(name => join(wwwDir, name))

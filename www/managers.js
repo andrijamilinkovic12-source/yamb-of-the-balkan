@@ -3605,15 +3605,19 @@ class ShopManager {
         if (!this.container) return;
         this.container.innerHTML = '';
         const groupedItems = this.groupByCategory();
+        const isGreenTreasury = document.body.matches('body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme))');
 
         for (const [categoryName, items] of Object.entries(groupedItems)) {
             const section = document.createElement('div');
             section.className = 'category-section';
             const categoryMeta = this.getEasterTreasuryCategoryMeta(categoryName);
+            const usesGreenCategoryMark = isGreenTreasury && !categoryMeta && ['skin', 'effect', 'theme'].includes(this.type);
             const categoryHtml = categoryMeta
                 ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}-v2.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/collection-medals/collection-${categoryMeta.type}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
-                : categoryName;
-            section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''}>${categoryHtml}</div>`;
+                : usesGreenCategoryMark
+                    ? `<span class="riznica-green-category-mark" aria-hidden="true"></span><span>${categoryName.replace(/^[^\p{L}\p{N}]+\s*/u, '')}</span>`
+                    : categoryName;
+            section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''} ${usesGreenCategoryMark ? `data-green-category="${this.type}"` : ''}>${categoryHtml}</div>`;
             
             const grid = document.createElement('div');
             grid.className = 'category-grid'; 
@@ -3638,6 +3642,8 @@ class ShopManager {
                     visualHtml = `<div class="effect-preview-box ${item.cssClass}">${item.innerHtml || ''}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {
                     visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
+                } else if (this.type === 'theme' && item.id === 'dark') {
+                    visualHtml = `<div class="icon riznica-green-theme-visual"><span class="riznica-green-theme-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-green-theme-icon" data-theme-src="assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else {
                     visualHtml = `<div class="icon">${item.icon}</div>`;
                 }
@@ -3651,12 +3657,16 @@ class ShopManager {
                     priceHtml = `<div class="status ${isUnlocked ? 'status-unlocked' : 'status-locked'} ${isUnlocked ? '' : 'riznica-item-status riznica-item-status--locked'}">${lockedStatusIcon}<span>${isUnlocked ? _safeT('btn_won') : `${dukatIconHtml()} ${item.reward}`}</span></div>`;
                 } else {
                     if (isUnlocked) {
-                        priceHtml = `<div class="price riznica-item-status riznica-item-status--owned">${this.getEasterTreasuryStatusIcon('status-owned')}<span>${_safeT('btn_bought')}</span></div>`;
+                        const boughtLabel = _safeT('btn_bought');
+                        const visibleBoughtLabel = isGreenTreasury ? boughtLabel.replace(/^\s*[✔✓]\s*/u, '') : boughtLabel;
+                        priceHtml = `<div class="price riznica-item-status riznica-item-status--owned">${this.getEasterTreasuryStatusIcon('status-owned')}<span>${visibleBoughtLabel}</span></div>`;
                     } else {
                         // NOVO: Provera da li se otključava reklamama
                         if (item.adUnlock) {
-                            const watchToUnlockText = String(_safeT('shop_watch_to_unlock') || 'Gledaj 📺 za otključavanje')
-                                .replace('📺', this.getTreasuryRewardVideoIcon());
+                            const watchToUnlockLabel = String(_safeT('shop_watch_to_unlock') || 'Gledaj 📺 za otključavanje');
+                            const watchToUnlockText = isGreenTreasury
+                                ? `${this.getTreasuryRewardVideoIcon()}<span>${watchToUnlockLabel.replace(/\s*📺\s*/u, ' ').trim()}</span>`
+                                : watchToUnlockLabel.replace('📺', this.getTreasuryRewardVideoIcon());
                             priceHtml = `<div class="price riznica-reward-video-copy" style="color: var(--text-muted); font-size: 0.75rem;">${watchToUnlockText}</div>`;
                         } else {
                             let price = item.price;
@@ -3713,7 +3723,7 @@ class ShopManager {
                 card.innerHTML = `
                     ${visualHtml}
                     <div class="title">${itemName}</div>
-                    ${this.type === 'effect' ? `<div class="duration">⏱ ${resolveText(item.duration)}</div>` : ''} ${this.type !== 'trophy' ? `<div class="desc">${itemDesc || ''}</div>` : ''}
+                    ${this.type === 'effect' ? `<div class="duration">${isGreenTreasury ? '' : '⏱ '}${resolveText(item.duration)}</div>` : ''} ${this.type !== 'trophy' ? `<div class="desc">${itemDesc || ''}</div>` : ''}
                     ${priceHtml}
                     ${btnHtml}
                 `;

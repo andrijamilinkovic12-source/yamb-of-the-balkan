@@ -554,12 +554,12 @@ class KvartalnaLigaManager {
 
                 <div id="league-main-content" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; width: 100%; min-height: 0;">
                     <div style="padding: 10px 15px; flex-shrink: 0;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(224, 201, 149, 0.08); padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(224, 201, 149, 0.2);">
-                            <div style="text-align: left;">
+                        <div class="league-summary-card" style="display: flex; justify-content: space-between; align-items: center; background: rgba(224, 201, 149, 0.08); padding: 10px 15px; border-radius: 12px; border: 1px solid rgba(224, 201, 149, 0.2);">
+                            <div class="league-summary-rank" style="text-align: left;">
                                 <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">${gt('league_your_rank', 'Vaš rang')}</div>
                                 <div class="league-current-rank" style="font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px var(--gold-main);"><img class="league-current-rank-soft-clay-badge" src="${this.getRankBadgeSource(currentRankData.id)}" alt="" aria-hidden="true" decoding="sync" loading="eager" onerror="window.kvartalnaLiga && window.kvartalnaLiga.retryRankBadgeElement(this, '${currentRankData.id}')"><span>${rank}</span></div>
                             </div>
-                            <div style="text-align: right;">
+                            <div class="league-summary-points" style="text-align: right;">
                                 <div style="font-size: 1.1rem; color: var(--gold-main); font-weight: bold;">${pts} PTS</div>
                                 <div id="league-summary-alltime" style="font-size: 0.65rem; color: var(--text-muted);">${gt('league_all_time', 'SVA VREMENA')}: ${allTime}</div>
                             </div>

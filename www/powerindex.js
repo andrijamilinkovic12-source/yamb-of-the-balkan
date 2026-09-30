@@ -310,22 +310,27 @@ class PowerIndexLeaderboard {
         }
 
         const myUid = localStorage.getItem('yamb_uid') || '';
-        const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe || (myUid && player.uid && player.uid === myUid)));
+        const myName = localStorage.getItem('yamb_player_name') || this.gt('player_guest', 'Gost');
+        const isMyPlayerVisible = !!(this.myPlayer && this.data.some(player => player.isMe
+            || (myUid && player.uid && player.uid === myUid)
+            || (!player.uid && player.playerName === myName)));
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const dockMyRank = ['dark', 'easter', 'desert'].includes(activeTheme) && !!this.myPlayer && !!myRankDock;
+        const dockMyRank = ['easter', 'desert'].includes(activeTheme) && !!this.myPlayer && !!myRankDock;
 
         if (dockMyRank) {
             myRankDock.innerHTML = this.renderPlayerRow(this.myPlayer, { pinned: true });
             myRankDock.classList.add('is-visible');
         }
 
-        const myRankHtml = !dockMyRank && this.myPlayer && !isMyPlayerVisible
+        const myRankHtml = activeTheme !== 'dark' && !dockMyRank && this.myPlayer && !isMyPlayerVisible
             ? `<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px;">${this.renderPlayerRow(this.myPlayer, { pinned: true })}</div>`
             : '';
 
         const rowsHtml = this.data
             .map(player => this.renderPlayerRow(player))
-            .join('');
+            .join('') + (activeTheme === 'dark' && this.myPlayer && !isMyPlayerVisible
+                ? this.renderPlayerRow(this.myPlayer)
+                : '');
 
         const footerHtml = this.loading
             ? `<div style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">${this.gt('pi_loading_more', 'Učitavam još igrača...')}</div>`

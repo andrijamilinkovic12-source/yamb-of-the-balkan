@@ -1967,12 +1967,12 @@ class TournamentManager {
             powerIndex = this.escape(powerIndex);
 
             return `
-                <div style="display: flex; align-items: center; justify-content: space-between; padding: 5px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
-                    <div style="display: flex; align-items: center; overflow: hidden; padding-right: 5px;">
+                <div class="tourney-participant-row${isLoser ? ' is-loser' : ''}" style="display: flex; align-items: center; justify-content: space-between; padding: 5px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
+                    <div class="tourney-participant-identity" style="display: flex; align-items: center; overflow: hidden; padding-right: 5px;">
                         <img src="${photo}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 2px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 8px; flex-shrink: 0; box-shadow: 0 0 5px rgba(0,0,0,0.5);">
-                        <span style="font-size: 0.78rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${safeName}</span>
+                        <span class="tourney-participant-name" style="font-size: 0.78rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${safeName}</span>
                     </div>
-                    <span style="font-size: 0.62rem; color: var(--gold-main); font-weight: 900; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${powerIndex}</span>
+                    <span class="tourney-participant-power" style="font-size: 0.62rem; color: var(--gold-main); font-weight: 900; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${powerIndex}</span>
                 </div>
             `;
         };

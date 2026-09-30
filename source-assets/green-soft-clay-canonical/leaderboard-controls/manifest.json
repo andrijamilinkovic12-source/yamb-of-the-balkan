@@ -69,7 +69,7 @@
       "role": "shared empty and loading status for Leaderboard and online waiting Hall of Fame",
       "glyph": "terracotta hourglass above a warm-ivory podium on a forest-green base",
       "usedBy": ["Leaderboard empty state", "Leaderboard loading state", "Online waiting Hall of Fame loading and empty states", "Leaderboard room-on-demand package"],
-      "displaySizes": [[86, 86], [68, 68], [58, 58]],
+      "displaySizes": [[86, 86], [58, 58]],
       "master": "green-leaderboard-empty-loading-master-v1.png",
       "masterSize": [1254, 1254],
       "masterBytes": 732830,

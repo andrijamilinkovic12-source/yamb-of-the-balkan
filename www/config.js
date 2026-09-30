@@ -152,7 +152,7 @@ const SHOP_DATA = {
     ],
 
     THEMES: [
-        { id: 'dark', name: { sr: 'Zelena', en: 'Green' }, price: 0, desc: { sr: 'Klasična Yamb tema.', en: 'Classic Yamb theme.' }, icon: '🎲', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
+        { id: 'dark', name: { sr: 'Zelena', en: 'Green' }, price: 0, desc: { sr: '3D Soft Clay tema sa šumskim motivima i glinenim kockicama.', en: 'A 3D Soft Clay theme with woodland motifs and clay dice.' }, icon: '🎲', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
         { id: 'light', name: { sr: 'Svetlo Zlato', en: 'Light Gold' }, price: 0, desc: { sr: 'Svetla tema sa zlatnim detaljima.', en: 'Light theme with gold details.' }, icon: '🎨', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
         { id: 'medium', name: { sr: 'Trula Višnja', en: 'Dark Cherry' }, price: 0, desc: { sr: 'Luksuzna bordo tema.', en: 'Luxurious burgundy theme.' }, icon: '🍒', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
         { id: 'winter', name: { sr: 'Plavi Okean', en: 'Blue Ocean' }, price: 0, desc: { sr: 'Opuštajuća plava tema.', en: 'Relaxing blue theme.' }, icon: '🌊', category: { sr: '🎨 BOJE INTERFEJSA', en: '🎨 INTERFACE COLORS' } },
