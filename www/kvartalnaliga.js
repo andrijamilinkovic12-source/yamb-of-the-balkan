@@ -3,6 +3,7 @@ class KvartalnaLigaManager {
     constructor() {
         this.storageKey = 'yamb_quarter_data'; 
         this.currentSlide = 0;
+        this.previousFocus = null;
         this.hofData = null; 
         this.isIntroPlaying = false;
         this.isOpenPending = false;
@@ -494,6 +495,7 @@ class KvartalnaLigaManager {
     }
 
     showModal() {
+        if (document.documentElement.dataset.splashTheme === 'dark') this.previousFocus = document.activeElement;
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const data = this.getScores();
         
@@ -518,19 +520,19 @@ class KvartalnaLigaManager {
                 <h3 class="league-rank-heading" style="color: var(--gold-main); font-size: 0.85rem; text-align: center; margin-bottom: 8px; flex-shrink: 0; letter-spacing: 1px;"><img class="league-rank-soft-clay-badge" src="${this.getRankBadgeSource(r.id)}" alt="" aria-hidden="true" decoding="sync" loading="eager" onerror="window.kvartalnaLiga && window.kvartalnaLiga.retryRankBadgeElement(this, '${r.id}')"><span>${r.name}</span></h3>
                 <div class="league-rank-scroll" data-league-rank="${r.id}" style="flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                     <ul id="league-list-${r.id}" style="list-style: none; padding: 0; margin: 0;">
-                        <li style="text-align: center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_loading', 'Učitavanje podataka... ⏳')}</li>
+                        <li role="status" aria-live="polite" style="text-align: center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_loading', 'Učitavanje podataka... ⏳')}</li>
                     </ul>
                 </div>
             </div>
         `).join('');
 
         let dotsHtml = currentRanks.map((_, i) => `
-            <div id="league-dot-${i}" style="width: 8px; height: 8px; border-radius: 50%; background: ${i === this.currentSlide ? 'var(--carousel-dot-active)' : 'var(--carousel-dot-idle)'}; margin: 0 4px; transition: background 0.3s, box-shadow 0.3s; box-shadow: ${i === this.currentSlide ? '0 0 10px var(--carousel-dot-glow)' : 'inset 0 0 3px rgba(0,0,0,0.5)'};"></div>
+            <button type="button" id="league-dot-${i}" class="league-page-dot${i === this.currentSlide ? ' is-active' : ''}" onclick="window.kvartalnaLiga.goToSlide(${i})" aria-label="${this.escapeAttr(gt('aria_league_rank_page', 'Kvartalna liga: ') + currentRanks[i].name)}"${i === this.currentSlide ? ' aria-current="step"' : ''} style="width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: ${i === this.currentSlide ? 'var(--carousel-dot-active)' : 'var(--carousel-dot-idle)'}; margin: 0 4px; transition: background 0.3s, box-shadow 0.3s; box-shadow: ${i === this.currentSlide ? '0 0 10px var(--carousel-dot-glow)' : 'inset 0 0 3px rgba(0,0,0,0.5)'};"></button>
         `).join('');
 
         let modalHtml = `
         <div id="league-modal-overlay" class="modal-overlay" style="z-index: 999999; display: flex;">
-            <div class="modal-box" style="width: 95%; max-width: 450px; height: 85vh; max-height: 800px; display: flex; flex-direction: column; padding: 0; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); overflow: hidden;">
+            <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="league-modal-title" style="width: 95%; max-width: 450px; height: 85vh; max-height: 800px; display: flex; flex-direction: column; padding: 0; background: linear-gradient(135deg, #111, #222); border: 2px solid var(--gold-main); overflow: hidden;">
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,215,0,0.2); background: rgba(0,0,0,0.3); flex-shrink: 0;">
                     <div class="league-modal-title-group">
@@ -538,15 +540,16 @@ class KvartalnaLigaManager {
                         <img class="league-modal-header-icon league-modal-header-icon-easter" data-theme-src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="league-modal-header-icon league-modal-header-icon-desert" data-theme-src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="league-modal-header-icon league-modal-header-icon-nebula" data-theme-src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="league-modal-header-icon league-modal-header-icon-green" data-theme-src="assets/green-soft-clay/quarterly-league-yotb-ql-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <h2 style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
+                        <img class="league-modal-header-icon league-modal-header-icon-green" data-theme-src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <h2 id="league-modal-title" style="color: var(--gold-main); font-size: 1.1rem; margin: 0; text-transform: uppercase; letter-spacing: 1px;">${gt('menu_league', 'KVARTALNA LIGA')}</h2>
                     </div>
-                    <span style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold; line-height: 1;" onclick="document.getElementById('league-modal-overlay').remove()">✖</span>
+                    <span class="league-close-legacy" style="color: var(--danger); font-size: 1.5rem; cursor: pointer; font-weight: bold; line-height: 1;" onclick="window.kvartalnaLiga.closeModal()">✖</span>
+                    <button type="button" class="global-chat-close league-close-green" onclick="window.kvartalnaLiga.closeModal()" aria-label="${this.escapeAttr(gt('aria_close_league', 'Zatvori kvartalnu ligu'))}">×</button>
                 </div>
 
-                <div style="display: flex; justify-content: center; gap: 10px; padding: 15px 15px 5px 15px; flex-shrink: 0;">
-                    <button id="tab-league-main" class="btn-menu btn-primary league-tab-button" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('league')">${this.getMainTabIcon('league')}<span>${leagueTabLabel}</span></button>
-                    <button id="tab-league-hof" class="btn-menu btn-secondary league-tab-button" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('hof')">${this.getMainTabIcon('hof')}<span>${hofTabLabel}</span></button>
+                <div role="group" aria-label="${this.escapeAttr(gt('aria_league_sections', 'Sekcije kvartalne lige'))}" style="display: flex; justify-content: center; gap: 10px; padding: 15px 15px 5px 15px; flex-shrink: 0;">
+                    <button id="tab-league-main" class="btn-menu btn-primary league-tab-button" aria-pressed="true" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('league')">${this.getMainTabIcon('league')}<span>${leagueTabLabel}</span></button>
+                    <button id="tab-league-hof" class="btn-menu btn-secondary league-tab-button" aria-pressed="false" style="flex: 1; padding: 8px; font-size: 0.75rem; margin: 0; height: auto;" onclick="window.kvartalnaLiga.toggleMainView('hof')">${this.getMainTabIcon('hof')}<span>${hofTabLabel}</span></button>
                 </div>
 
                 <div id="league-main-content" style="display: flex; flex-direction: column; flex: 1; overflow: hidden; width: 100%; min-height: 0;">
@@ -575,14 +578,14 @@ class KvartalnaLigaManager {
                 </div>
 
                 <div id="hof-main-content" style="display: none; flex-direction: column; flex: 1; overflow: hidden; width: 100%; padding: 10px 15px 15px 15px; min-height: 0;">
-                    <div style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0;">
-                        <button id="hof-tab-medals" class="league-hof-tab-button is-active" aria-selected="true" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="${medalsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏅</span></button>
-                        <button id="hof-tab-champions" class="league-hof-tab-button" aria-selected="false" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏆</span></button>
+                    <div role="group" aria-label="${this.escapeAttr(gt('aria_hof_sections', 'Sekcije Dvorane slavnih'))}" style="display: flex; justify-content: center; gap: 5px; margin-bottom: 10px; flex-shrink: 0;">
+                        <button id="hof-tab-medals" class="league-hof-tab-button is-active" aria-pressed="true" style="flex: 1; background: var(--gold-main); color: #000; font-weight: bold; border: none; border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('medals')"><img class="league-hof-tab-soft-clay-icon" src="${medalsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${medalsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏅</span></button>
+                        <button id="hof-tab-champions" class="league-hof-tab-button" aria-pressed="false" style="flex: 1; background: rgba(255,255,255,0.1); color: #fff; font-weight: bold; border: 1px solid var(--gold-main); border-radius: 8px; padding: 8px; font-size: 0.75rem; cursor: pointer; transition: all 0.3s;" onclick="window.kvartalnaLiga.switchHofTab('champions')"><img class="league-hof-tab-soft-clay-icon" src="${championsTabIcon}" alt="" aria-hidden="true" decoding="async"><span>${championsTabLabel}</span><span class="league-hof-tab-fallback" aria-hidden="true">🏆</span></button>
                     </div>
                     
                     <div style="flex: 1; min-height: 0; overflow-y: auto; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); padding: 5px; -webkit-overflow-scrolling: touch;">
                         <ul id="hof-list" style="list-style: none; padding: 0; margin: 0;">
-                            <li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_loading', 'Učitavanje Dvorane Slavnih... ⏳')}</li>
+                            <li role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_loading', 'Učitavanje Dvorane Slavnih... ⏳')}</li>
                         </ul>
                     </div>
                 </div>
@@ -594,6 +597,12 @@ class KvartalnaLigaManager {
         if (existing) existing.remove();
 
         document.body.insertAdjacentHTML('beforeend', modalHtml);
+        if (document.documentElement.dataset.splashTheme === 'dark') {
+            document.querySelector('#league-modal-overlay .league-close-green')?.focus({ preventScroll: true });
+        }
+        document.getElementById('league-modal-overlay')?.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') this.closeModal();
+        });
 
         this.setupTouch();
         this.setupLeaderboardInfiniteScroll();
@@ -602,6 +611,12 @@ class KvartalnaLigaManager {
         setTimeout(() => {
             this.fetchLeaderboard();
         }, 300);
+    }
+
+    closeModal() {
+        document.getElementById('league-modal-overlay')?.remove();
+        if (this.previousFocus?.isConnected) this.previousFocus.focus({ preventScroll: true });
+        this.previousFocus = null;
     }
 
     toggleMainView(view) {
@@ -617,11 +632,15 @@ class KvartalnaLigaManager {
             hMain.style.display = 'none';
             btnL.className = 'btn-menu btn-primary league-tab-button';
             btnH.className = 'btn-menu btn-secondary league-tab-button';
+            btnL.setAttribute('aria-pressed', 'true');
+            btnH.setAttribute('aria-pressed', 'false');
         } else {
             lMain.style.display = 'none';
             hMain.style.display = 'flex';
             btnL.className = 'btn-menu btn-secondary league-tab-button';
             btnH.className = 'btn-menu btn-primary league-tab-button';
+            btnL.setAttribute('aria-pressed', 'false');
+            btnH.setAttribute('aria-pressed', 'true');
             this.fetchHallOfFame();
         }
     }
@@ -634,8 +653,8 @@ class KvartalnaLigaManager {
         const medalsActive = tab === 'medals';
         btnM.classList.toggle('is-active', medalsActive);
         btnC.classList.toggle('is-active', !medalsActive);
-        btnM.setAttribute('aria-selected', String(medalsActive));
-        btnC.setAttribute('aria-selected', String(!medalsActive));
+        btnM.setAttribute('aria-pressed', String(medalsActive));
+        btnC.setAttribute('aria-pressed', String(!medalsActive));
         
         if (medalsActive) {
             btnM.style.background = 'var(--gold-main)'; btnM.style.color = '#000';
@@ -656,7 +675,7 @@ class KvartalnaLigaManager {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
 
         if (!window.app || !window.app.socket) {
-            document.getElementById('hof-list').innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
+            document.getElementById('hof-list').innerHTML = `<li role="alert" style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
             return;
         }
         
@@ -677,7 +696,7 @@ class KvartalnaLigaManager {
         const medalBronzeIcon = this.getQlAssetSource('medal-bronze');
 
         if (!this.hofData || !this.hofData.medals || this.hofData.medals.length === 0) {
-            list.innerHTML = `<li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_no_medals', 'Još uvek nema osvajača medalja.')}</li>`;
+            list.innerHTML = `<li role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_no_medals', 'Još uvek nema osvajača medalja.')}</li>`;
             return;
         }
         
@@ -710,7 +729,7 @@ class KvartalnaLigaManager {
         const championsTabIcon = this.getQlAssetSource('tab-champions');
 
         if (!this.hofData || !this.hofData.champions || this.hofData.champions.length === 0) {
-            list.innerHTML = `<li style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_no_champs', 'Još uvek nema završenih ciklusa.')}</li>`;
+            list.innerHTML = `<li role="status" aria-live="polite" style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_no_champs', 'Još uvek nema završenih ciklusa.')}</li>`;
             return;
         }
         
@@ -788,7 +807,9 @@ class KvartalnaLigaManager {
 
             const endX = e.changedTouches[0].clientX;
             const diff = endX - startX;
-            const swipeThreshold = 120;
+            const swipeThreshold = document.documentElement.dataset.splashTheme === 'dark'
+                ? Math.min(120, Math.max(45, track.parentElement.clientWidth * 0.22))
+                : 120;
             
             if (diff < -swipeThreshold && this.currentSlide < this.ranks.length - 1) {
                 this.currentSlide++;
@@ -798,6 +819,13 @@ class KvartalnaLigaManager {
             
             this.updateSlide();
         });
+
+        track.addEventListener('touchcancel', () => {
+            if (!isDragging) return;
+            isDragging = false;
+            track.style.transition = 'transform 0.3s ease-out';
+            this.updateSlide();
+        }, { passive: true });
     }
 
     updateSlide() {
@@ -808,10 +836,18 @@ class KvartalnaLigaManager {
         currentRanks.forEach((_, i) => {
             const dot = document.getElementById(`league-dot-${i}`);
             if (dot) {
+                dot.classList.toggle('is-active', i === this.currentSlide);
+                if (i === this.currentSlide) dot.setAttribute('aria-current', 'step');
+                else dot.removeAttribute('aria-current');
                 dot.style.background = i === this.currentSlide ? 'var(--carousel-dot-active)' : 'var(--carousel-dot-idle)';
                 dot.style.boxShadow = i === this.currentSlide ? '0 0 10px var(--carousel-dot-glow)' : 'inset 0 0 3px rgba(0,0,0,0.5)';
             }
         });
+    }
+
+    goToSlide(index) {
+        this.currentSlide = Math.max(0, Math.min(index, this.ranks.length - 1));
+        this.updateSlide();
     }
 
     resetLeaderboardPagination() {
@@ -855,6 +891,7 @@ class KvartalnaLigaManager {
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const item = document.createElement('li');
         item.className = `league-page-status league-page-status--${status}`;
+        item.setAttribute('role', status === 'loading' ? 'status' : 'alert');
         item.style.cssText = 'text-align:center; color:var(--text-muted); font-size:0.78rem; padding:12px 8px; list-style:none;';
         if (status === 'loading') {
             item.textContent = gt('league_loading', 'Učitavanje podataka...');
@@ -952,7 +989,7 @@ class KvartalnaLigaManager {
         if (!window.app || !window.app.socket || !window.app.socket.connected) {
             this.ranks.forEach(r => {
                 const listEl = document.getElementById(`league-list-${r.id}`);
-                if(listEl) listEl.innerHTML = `<li style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
+                if(listEl) listEl.innerHTML = `<li role="alert" style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
             });
             return;
         }
@@ -1056,7 +1093,7 @@ class KvartalnaLigaManager {
 
         if (!scores || scores.length === 0) {
             if (!append && listEl.children.length === 0) {
-                listEl.innerHTML = `<li style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi prvi!')}</li>`;
+                listEl.innerHTML = `<li role="status" aria-live="polite" style="text-align:center; color: #aaa; font-size: 0.85rem; padding: 20px;">${gt('league_no_results', 'Još uvek nema upisanih rezultata za ovaj rang.<br>Budi prvi!')}</li>`;
             }
             return;
         }

@@ -1,0 +1,86 @@
+{
+  "id": "green-hotseat-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "one Green local two-player Hotseat identity for the main-menu card and icon-only room intro",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "one forest-green player, one warm-ivory player and one terracotta connecting accent",
+    "presentation": "two equal freestanding clay player figures on a transparent square canvas, without a backing tile, text, medal or winner check",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Hotseat entry identity with room and menu delivery variants",
+    "liveData": "active player, scores, draw or winner state, boards and game flow remain separate functional UI and assets"
+  },
+  "master": {
+    "path": "green-hotseat-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 741942,
+    "sha256": "ea4c3634a38bb596c9fb27541cb3a7c8f33e0514a3f279c00daa4128f30729bd",
+    "approvedSource": "source-assets/green-soft-clay-hires/mode-hotseat-free-v2.png",
+    "approvedSourceSha256": "ea4c3634a38bb596c9fb27541cb3a7c8f33e0514a3f279c00daa4128f30729bd"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Hotseat room-on-demand preload and 4.6-second icon-only intro",
+      "usedBy": ["Hotseat room package", "Hotseat icon-only intro"],
+      "displaySizes": [["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"]],
+      "runtime": "www/assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 120269,
+      "runtimeSha256": "f1f006758f2b8fffde82401d6f89a4fc8ce3a72749114c1ad4833c3390954021",
+      "activeRuntime": "www/assets/green-soft-clay/mode-hotseat-free-v2.png",
+      "activeRuntimeSha256": "f1f006758f2b8fffde82401d6f89a4fc8ce3a72749114c1ad4833c3390954021",
+      "legacyReferencesBeforeIntegration": 2,
+      "expectedCanonicalReferences": 2,
+      "normalization": "approved 1254x1254 RGBA master reduced to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Hotseat main-menu card and startup preload",
+      "usedBy": ["Green main-menu Hotseat card", "Green startup menu image"],
+      "displaySizes": [[68, 68], [60, 60]],
+      "runtime": "www/assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 74765,
+      "runtimeSha256": "de933f7fe0b272d177f4cd4521dc859af2045eed8ce879f3084055f3500ad0fc",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/mode-hotseat-free-v2.png",
+      "activeRuntimeSha256": "de933f7fe0b272d177f4cd4521dc859af2045eed8ce879f3084055f3500ad0fc",
+      "legacyReferencesBeforeIntegration": 1,
+      "expectedCanonicalReferences": 2,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling"
+    }
+  ],
+  "protectedFamilies": [
+    { "role": "decisive Hotseat winner mark", "sourceManifest": "source-assets/green-soft-clay-canonical/hotseat-winner/manifest.json", "status": "locked; distinct result identity and absent for draws" },
+    { "role": "Solo entry identity", "sourceManifest": "source-assets/green-soft-clay-canonical/solo-room-identity/manifest.json", "status": "locked; distinct one-player mode" },
+    { "role": "H2H statistics identities", "sourceManifest": "source-assets/green-soft-clay-canonical/h2h-statistics/manifest.json", "status": "locked; rival statistics, not local mode entry" },
+    { "role": "Online Players room identity", "sourceManifest": "source-assets/green-soft-clay-canonical/online-players-room-identity/manifest.json", "status": "locked; online presence, not local Hotseat" }
+  ],
+  "motionContract": {
+    "mainMenu": "68x68 image inside the existing 64x64 wrapper; 60x60 on narrow portrait; existing hover and press transforms stay unchanged",
+    "intro": "4.6s Green icon-only intro at clamp(210px, 34vmin, 290px), greenRoomIconPulse 1.8s; game opens behind overlay at 3.65s with reduced-motion fallback",
+    "result": "locked Hotseat Winner appears at 58x58 with a 0.48s reveal only for a decisive local result; draws show no winner mark",
+    "loadingGate": "startup should use only the 384px menu image; 512px room identity should load on Hotseat room demand"
+  },
+  "integration": {
+    "mainMenu": "connected",
+    "roomIntro": "connected",
+    "roomOnDemand": "connected",
+    "startupFallback": "connected; only the 384px Hotseat menu delivery is preloaded with or without main-menu DOM",
+    "centralRegistry": "standardized in standardization step 3",
+    "legacyRuntime": "retired in standardization step 3",
+    "cacheVersion": 57,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "decisive Hotseat Winner mark and draw handling",
+    "Solo, Online Random and Invite Friend mode identities",
+    "H2H statistics and Online Players room identities",
+    "active-player indicator, player names, scores and result text",
+    "two boards, swipe, automatic following, resume and new-game flow",
+    "scoring, save recovery, gameplay rules and board geometry",
+    "unrelated theme assets and room identities"
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "id": "green-invite-friend-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "one Green Invite Friend private-duel entry identity for the main-menu card, icon-only room intro, waiting-room header and matching Rules references",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "one forest-green link, one warm-ivory link and one terracotta plus accent",
+    "presentation": "two connected freestanding clay links with one separate plus on a transparent square canvas, without a backing tile, text, player portrait or invitation-state badge",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Invite Friend entry identity with room and menu delivery variants",
+    "liveData": "real friend and rival cards, profile images, Power and POB/NER/POR data, requests, invitations, sockets, boards and gameplay remain separate functional UI and assets"
+  },
+  "master": {
+    "path": "green-invite-friend-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 930755,
+    "sha256": "5a59eccad3f26779dbe2e8388f51916681e285cffd31b7f904231ffb3872a183",
+    "approvedSource": "source-assets/green-soft-clay-hires/mode-invite-free-v2.png",
+    "approvedSourceSha256": "5a59eccad3f26779dbe2e8388f51916681e285cffd31b7f904231ffb3872a183"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Invite Friend room-on-demand preload, 4.6-second icon-only intro, waiting-room header and matching Rules references",
+      "usedBy": ["Invite Friend room package", "Invite Friend icon-only intro", "waiting-room header", "SR/EN Rules private-duel references"],
+      "displaySizes": [["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"], [34, 34]],
+      "runtime": "www/assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 150862,
+      "runtimeSha256": "30894f35a73c1ae1e1ca27267c2342e7c2aac46753c3d8ccffcc5bfaaa0dd356",
+      "activeRuntime": "www/assets/green-soft-clay/mode-invite-free-v2.png",
+      "activeRuntimeSha256": "30894f35a73c1ae1e1ca27267c2342e7c2aac46753c3d8ccffcc5bfaaa0dd356",
+      "legacyReferencesBeforeIntegration": 4,
+      "expectedCanonicalReferences": 4,
+      "normalization": "approved 1254x1254 RGBA master reduced to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Invite Friend main-menu card and startup preload",
+      "usedBy": ["Green main-menu Invite Friend card", "Green startup menu image"],
+      "displaySizes": [[68, 68], [60, 60]],
+      "runtime": "www/assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 92386,
+      "runtimeSha256": "ae634e3928fef02d57d8dc13f5415ff5de76e1451575a92a155319fd1c5b77e4",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/mode-invite-free-v2.png",
+      "activeRuntimeSha256": "ae634e3928fef02d57d8dc13f5415ff5de76e1451575a92a155319fd1c5b77e4",
+      "legacyReferencesBeforeIntegration": 1,
+      "expectedCanonicalReferences": 2,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling"
+    }
+  ],
+  "functionalStates": [
+    { "role": "send invitation", "runtime": "www/assets/green-soft-clay/invite/send-v1.png", "sha256": "232862a11b63bf8e637980184c56289c584fd1cd45f71ed6298e08e0053e1628" },
+    { "role": "empty friend list", "runtime": "www/assets/green-soft-clay/invite/empty-v1.png", "sha256": "be936013867a9a3946bac39846ec254c2bc77ee9241901c55625648a74aff6b9" },
+    { "role": "invitation sent", "runtime": "www/assets/green-soft-clay/invite/sent-v1.png", "sha256": "809b913c55e33e080f238c0a71b5b3ff002bb3237f49d584be434d171f286994" },
+    { "role": "invitation accepted", "runtime": "www/assets/green-soft-clay/invite/accepted-v1.png", "sha256": "dc90636ed9aabdacf4f61a70d49c1056dbdaeee46bedb3b1e838b29aaa22925a" }
+  ],
+  "sharedActions": [
+    { "role": "add or search friend", "runtime": "www/assets/green-soft-clay/online-add-friend-v1.png", "sha256": "61dc2f1a57f475a2279f48337590784f527edcf2044e53c52df43f1814ef0dda", "package": "shared Online Players and Invite Friend action; intentionally outside the narrow invite matcher" }
+  ],
+  "protectedFamilies": [
+    { "role": "H2H empty and rival statistics identities", "sourceManifest": "source-assets/green-soft-clay-canonical/h2h-statistics/manifest.json", "status": "locked; rival data and empty state, not room entry" },
+    { "role": "Online Players room identity", "sourceManifest": "source-assets/green-soft-clay-canonical/online-players-room-identity/manifest.json", "status": "locked; live player discovery, not private-duel entry" },
+    { "role": "Online Random entry identity", "sourceManifest": "source-assets/green-soft-clay-canonical/online-random-room-identity/manifest.json", "status": "locked; random matchmaking, not a friend invitation" },
+    { "role": "Hotseat entry identity", "sourceManifest": "source-assets/green-soft-clay-canonical/hotseat-room-identity/manifest.json", "status": "locked; local two-player mode" }
+  ],
+  "motionContract": {
+    "mainMenu": "68x68 image inside the existing 64x64 wrapper; 60x60 on narrow portrait; existing hover and press transforms stay unchanged",
+    "intro": "4.6s Green icon-only intro at clamp(210px, 34vmin, 290px), configured scale 1.05 and greenRoomIconPulse 1.8s; room opens behind overlay at 3.65s with reduced-motion fallback",
+    "waitingRoom": "34x34 static room mark for host and invited player; existing panel-lift sequence remains separate",
+    "friendActions": "shared add-friend remains 52x52 with greenInviteSoftBreath 2.1s; send remains 18x18, empty 64x64 and sent/accepted toast marks 52x52",
+    "loadingGate": "startup should use only the 384px menu image; 512px room identity and four invite states should load on Invite Friend room demand"
+  },
+  "integration": {
+    "mainMenu": "connected",
+    "roomIntro": "connected",
+    "waitingRoomHeader": "connected",
+    "rulesReferences": "connected",
+    "roomOnDemand": "connected; room identity plus four separate invitation states",
+    "startupFallback": "connected; only the 384px Invite Friend menu delivery is preloaded with or without main-menu DOM",
+    "centralRegistry": "standardized in standardization step 3",
+    "legacyRuntime": "retired in standardization step 3",
+    "cacheVersion": 59,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "add or search friend shared action",
+    "send, empty, sent and accepted invitation states",
+    "H2H empty identity and greatest-rival data",
+    "Online Players, Online Random, Hotseat and Solo room identities",
+    "real friend and rival cards, portraits, names, Power and POB/NER/POR data",
+    "friend search, requests, invitation delivery and room-join logic",
+    "socket connection, reconnect fairness, board swipe and automatic active-player following",
+    "scoring, gameplay rules, board geometry and unrelated theme assets"
+  ]
+}

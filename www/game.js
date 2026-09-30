@@ -859,7 +859,7 @@ class YambApp {
                 : statsTheme === 'easter'
                     ? 'assets/easter-soft-clay/statistics/h2h-empty-v2.png?v=opt2'
                     : 'assets/desert-soft-clay/statistics/h2h-empty-v3.png?v=opt2';
-            container.innerHTML = `<div class="h2h-empty-state"><img class="h2h-empty-soft-clay-icon" src="${h2hEmptyIcon}" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
+            container.innerHTML = `<div class="h2h-empty-state" role="status" aria-live="polite"><img class="h2h-empty-soft-clay-icon" src="${h2hEmptyIcon}" alt="" aria-hidden="true"><span>${this.escapeHtml(gt('stat_h2h_empty') || "Nema odigranih duela...")}</span></div>`;
             return;
         }
 
@@ -1573,25 +1573,32 @@ class YambApp {
             dark: {
                 title: lang === 'en' ? 'Green Soft Clay' : 'Zelena Soft Clay',
                 background: 'assets/green-clay-balkan-diorama-v3.png',
+                menuAssets: [
+                    'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png?v=1'
+                ],
                 icons: [
                     'assets/green-soft-clay/splash-title-soft-clay-v1.png?v=1',
                     'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1',
                     'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
                     'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png?v=1',
-                    'assets/green-soft-clay/settings-free-v2.png?v=opt2',
-                    'assets/green-soft-clay/rules-free-v2.png?v=opt2'
+                    'assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png?v=1'
                 ],
                 assets: [
-                    'assets/green-soft-clay/rules/pages/rules-scoring-v1.png',
-                    'assets/green-soft-clay/rules/pages/stats-leaderboards-v1.png',
-                    'assets/green-soft-clay/rules/pages/multiplayer-competitions-v1.png',
+                    'assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png?v=1',
                     'assets/green-soft-clay/rules/pages/communication-v1.png',
                     'assets/green-soft-clay/rules/pages/economy-treasury-v3.png?v=1',
-                    'assets/green-soft-clay/rules/pages/account-server-v1.png',
-                    'assets/green-soft-clay/global-chat-free-v2.png?v=opt2',
+                    'assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
                     'assets/green-soft-clay/global-chat-send-v1.png?v=opt2',
                     'assets/green-soft-clay/global-chat-empty-v1.png?v=opt2',
-                    'assets/green-soft-clay/online-players-free-v2.png?v=opt2',
+                    'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
                     'assets/green-soft-clay/online-players-state-v1.png?v=opt2',
                     'assets/green-soft-clay/online-add-friend-v1.png?v=opt2',
                     'assets/green-soft-clay/online-spectate-v1.png?v=opt2',
@@ -1603,18 +1610,18 @@ class YambApp {
                     'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png?v=1',
                     'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png?v=1',
                     'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png?v=1',
-                    'assets/green-soft-clay/daily/task-v1.png?v=opt2',
-                    'assets/green-soft-clay/daily/complete-v1.png?v=opt2',
-                    'assets/green-soft-clay/daily/already-played-v1.png?v=opt2',
+                    'assets/green-soft-clay/canonical/daily-states/task-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/daily-states/complete-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/daily-states/already-played-v1.png?v=1',
                     'assets/green-soft-clay/daily/reward-video-v3.png?v=1',
                     'assets/green-soft-clay/canonical/ducat/ducat-front-v1.png?v=1',
                     'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1',
                     'assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png?v=1',
                     'assets/green-soft-clay/canonical/ducat/ducat-angle-left-v1.png?v=1',
                     'assets/green-soft-clay/canonical/ducat/ducat-angle-right-v1.png?v=1',
-                    'assets/green-soft-clay/leaderboard/global-v1.png?v=opt2',
-                    'assets/green-soft-clay/leaderboard/local-v1.png?v=opt2',
-                    'assets/green-soft-clay/leaderboard/empty-loading-v1.png?v=opt2',
+                    'assets/green-soft-clay/canonical/leaderboard-controls/global-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/leaderboard-controls/local-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png?v=1',
                     'assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v1.png?v=1',
                     'assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v1.png?v=1',
                     'assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png?v=1',
@@ -1635,28 +1642,28 @@ class YambApp {
                     'assets/green-soft-clay/canonical/h2h-statistics/worst-loss-margin-v1.png?v=1',
                     'assets/green-soft-clay/canonical/h2h-statistics/versus-v1.png?v=1',
                     'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png?v=1',
-                    'assets/green-soft-clay/settings/profile-v1.png?v=opt2',
-                    'assets/green-soft-clay/settings/sound-v1.png?v=opt2',
-                    'assets/green-soft-clay/settings/music-v1.png?v=opt2',
-                    'assets/green-soft-clay/settings/vibration-v1.png?v=opt2',
-                    'assets/green-soft-clay/settings/display-theme-v1.png?v=opt2',
-                    'assets/green-soft-clay/settings/language-v1.png?v=opt2',
-                    'assets/green-soft-clay/settings/terms-v1.png?v=opt2',
-                    'assets/green-soft-clay/settings/privacy-v1.png?v=opt2',
-                    'assets/green-soft-clay/mode-solo-free-v2.png?v=opt2',
+                    'assets/green-soft-clay/canonical/settings-controls/profile-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/settings-controls/sound-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/settings-controls/music-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/settings-controls/vibration-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/settings-controls/language-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/settings-controls/terms-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1',
+                    'assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png?v=1',
                     'assets/green-soft-clay/canonical/solo-results/personal-best-v1.png?v=1',
                     'assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png?v=1',
                     'assets/green-soft-clay/solo/finish-reward-video-v3.png?v=1',
                     'assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png?v=1',
-                    'assets/green-soft-clay/mode-hotseat-free-v2.png?v=opt2',
+                    'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png?v=1',
                     'assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png?v=1',
-                    'assets/green-soft-clay/mode-opponent-free-v2.png?v=opt2',
+                    'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1',
                     'assets/green-soft-clay/opponent/scanning-v1.png?v=opt2',
                     'assets/green-soft-clay/opponent/found-v1.png?v=opt2',
                     'assets/green-soft-clay/opponent/vs-v1.png?v=opt2',
                     'assets/green-soft-clay/opponent/disconnected-v1.png?v=opt2',
                     'assets/green-soft-clay/opponent/reconnected-v1.png?v=opt2',
-                    'assets/green-soft-clay/mode-invite-free-v2.png?v=opt2',
+                    'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
                     'assets/green-soft-clay/invite/send-v1.png?v=opt2',
                     'assets/green-soft-clay/invite/empty-v1.png?v=opt2',
                     'assets/green-soft-clay/invite/sent-v1.png?v=opt2',
@@ -1711,7 +1718,7 @@ class YambApp {
                     'assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png?v=1',
                     'assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png?v=1',
                     'assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png?v=1',
-                    'assets/green-soft-clay/quarterly-league-yotb-ql-free-v2.png?v=opt2',
+                    'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1',
                     'assets/green-soft-clay/canonical/quarterly-navigation/tab-league-v1.png?v=1',
                     'assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v1.png?v=1',
                     'assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v1.png?v=1',
@@ -1724,11 +1731,7 @@ class YambApp {
                     'assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v1.png?v=1',
                     'assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png?v=1',
                     'assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png?v=1',
-                    'assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png?v=1',
-                    'assets/treasury-icon.svg',
-                    'assets/tournament-icon.svg',
-                    'assets/dukat-icon.svg',
-                    'assets/undo-token-icon.svg'
+                    'assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png?v=1'
                 ]
             },
             winter: {
@@ -2167,16 +2170,17 @@ class YambApp {
         const root = this.getThemeAssetRoot(theme);
         const splash = this.getThemeSplashSource(theme);
         const leagueWatermarks = {
-            dark: 'assets/green-soft-clay/runtime/menu/quarterly-league-yotb-ql-free-v2.png?v=1',
+            dark: 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png?v=1',
             easter: 'assets/easter-soft-clay/runtime/menu/quarterly-league-yotb-ql-pro-v3.png?v=1',
             desert: 'assets/desert-soft-clay/runtime/menu/quarterly-league-yotb-ql-pro-v2.png?v=1',
             severna: 'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1'
         };
-        const mainMenuAsset = /\/(?:daily-challenge|leaderboard-(?:pro|free)|statistics-(?:pro|free)|settings-(?:pro|free)|rules-(?:pro|free)|global-chat-(?:pro|free)|online-players-(?:pro|free)|quarterly-league|ducats-undo|mode-(?:solo|hotseat|opponent|invite)|treasury-(?:pro|free)|tournament-(?:pro|free)|canonical\/tournament-awards\/champion-trophy|canonical\/statistics-room-identity\/statistics-room-menu|canonical\/leaderboard-room-identity\/leaderboard-room-menu|canonical\/daily-room-identity\/daily-room-menu)[^/]*\.png(?:\?|$)/i;
+        const mainMenuAsset = /\/(?:daily-challenge|leaderboard-(?:pro|free)|statistics-(?:pro|free)|settings-(?:pro|free)|rules-(?:pro|free)|global-chat-(?:pro|free)|online-players-(?:pro|free)|quarterly-league|ducats-undo|mode-(?:solo|hotseat|opponent|invite)|treasury-(?:pro|free)|tournament-(?:pro|free)|canonical\/tournament-awards\/champion-trophy|canonical\/statistics-room-identity\/statistics-room-menu|canonical\/leaderboard-room-identity\/leaderboard-room-menu|canonical\/daily-room-identity\/daily-room-menu|canonical\/settings-room-identity\/settings-room-menu|canonical\/rules-room-identity\/rules-room-menu|canonical\/global-chat-room-identity\/global-chat-room-menu|canonical\/online-players-room-identity\/online-players-room-menu|canonical\/solo-room-identity\/solo-room-menu|canonical\/hotseat-room-identity\/hotseat-room-menu|canonical\/online-random-room-identity\/online-random-room-menu|canonical\/invite-friend-room-identity\/invite-friend-room-menu)[^/]*\.png(?:\?|$)/i;
         const menuRoot = document.getElementById('main-menu');
         const menuSources = menuRoot
             ? this.collectThemeSourcesFromRoot(theme, menuRoot)
-            : pack.assets.filter(source => source.startsWith(root) && mainMenuAsset.test(source));
+            : [...pack.assets, ...(pack.menuAssets || [])].filter(source => source.startsWith(root) && mainMenuAsset.test(source)
+                && !source.includes('/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png'));
         return [...new Set([pack.background, splash, leagueWatermarks[theme], ...menuSources].filter(Boolean))];
     }
 
@@ -2194,21 +2198,21 @@ class YambApp {
         const safeRoomId = aliases[roomId] || roomId;
         const relativePath = source => source.split('?')[0].slice(root.length).toLowerCase();
         const matchers = {
-            dailyChallenge: path => path.startsWith('daily/') || path.startsWith('daily-challenge') || path === 'canonical/daily-room-identity/daily-room-v1.png',
-            leaderboard: path => path.startsWith('leaderboard/') || path.startsWith('leaderboard-') || path.startsWith('canonical/competition-medals/general-podium-') || path === 'canonical/leaderboard-room-identity/leaderboard-room-v1.png',
+            dailyChallenge: path => path.startsWith('daily/') || path.startsWith('daily-challenge') || path.startsWith('canonical/daily-states/') || path === 'canonical/daily-room-identity/daily-room-v1.png',
+            leaderboard: path => path.startsWith('leaderboard/') || path.startsWith('leaderboard-') || path.startsWith('canonical/leaderboard-controls/') || path.startsWith('canonical/competition-medals/general-podium-') || path === 'canonical/leaderboard-room-identity/leaderboard-room-v1.png',
             statistics: path => path.startsWith('statistics/') || path.startsWith('statistics-') || path.startsWith('canonical/statistics-overview/') || path.startsWith('canonical/h2h-statistics/') || path === 'canonical/statistics-room-identity/statistics-room-v1.png',
-            settings: path => path.startsWith('settings/') || path.startsWith('settings-'),
-            rules: path => path.startsWith('rules/') || path.startsWith('rules-'),
-            globalChat: path => path.startsWith('global-chat'),
-            onlinePlayers: path => path.startsWith('online-players') || path.startsWith('online-add-') || path.startsWith('online-spectate') || path.startsWith('online-duel'),
+            settings: path => path.startsWith('settings/') || path.startsWith('settings-') || path.startsWith('canonical/settings-controls/') || path === 'canonical/settings-room-identity/settings-room-v1.png',
+            rules: path => path.startsWith('rules/') || path.startsWith('rules-') || path.startsWith('canonical/rules-page-illustrations/') || path === 'canonical/rules-room-identity/rules-room-v1.png',
+            globalChat: path => path.startsWith('global-chat') || path === 'canonical/global-chat-room-identity/global-chat-room-v1.png',
+            onlinePlayers: path => path.startsWith('online-players') || path.startsWith('online-add-') || path.startsWith('online-spectate') || path.startsWith('online-duel') || path === 'canonical/online-players-room-identity/online-players-room-v1.png',
             economy: path => path.startsWith('economy/') || path.startsWith('ducats-undo') || path.startsWith('canonical/rewarded-video/'),
-            quarterlyLeague: path => path.startsWith('ql/') || path.startsWith('quarterly-league') || path.startsWith('canonical/competition-medals/quarterly-league-'),
+            quarterlyLeague: path => path.startsWith('ql/') || path.startsWith('quarterly-league') || path.startsWith('canonical/competition-medals/quarterly-league-') || path === 'canonical/quarterly-league-room-identity/quarterly-league-room-v1.png',
             treasury: path => path.startsWith('treasury/') || path.startsWith('treasury-') || path.startsWith('economy/ducat') || path.startsWith('canonical/collection-medals/') || path.startsWith('canonical/achievement-trophies/') || path.startsWith('canonical/treasury-controls/') || (theme !== 'dark' && path.includes('rewarded-video')),
             tournament: path => path.startsWith('tournament/') || path.startsWith('tournament-') || path.startsWith('canonical/tournament-navigation/') || path.startsWith('canonical/tournament-states/') || path.startsWith('canonical/tournament-awards/'),
-            solo: path => path.startsWith('solo/') || path.startsWith('mode-solo') || path.startsWith('canonical/solo-results/'),
-            hotseat: path => path.startsWith('hotseat/') || path.startsWith('mode-hotseat') || path.startsWith('canonical/hotseat-winner/'),
-            opponent: path => path.startsWith('opponent/') || path.startsWith('mode-opponent'),
-            invite: path => path.startsWith('invite/') || path.startsWith('mode-invite')
+            solo: path => path.startsWith('solo/') || path.startsWith('canonical/solo-results/') || path === 'canonical/solo-room-identity/solo-room-v1.png',
+            hotseat: path => path.startsWith('hotseat/') || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
+            opponent: path => path.startsWith('opponent/') || path === 'canonical/online-random-room-identity/online-random-room-v1.png',
+            invite: path => path.startsWith('invite/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
         if (!matcher) return [];
@@ -3681,7 +3685,7 @@ class YambApp {
                     <img class="waiting-hof-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="waiting-hof-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="waiting-hof-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="waiting-hof-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/leaderboard/empty-loading-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="waiting-hof-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <div class="loader" style="width: 25px; height: 25px; margin: 10px auto;"></div>
                 </div>
             `;
@@ -3775,7 +3779,7 @@ class YambApp {
                     <img class="waiting-hof-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="waiting-hof-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="waiting-hof-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="waiting-hof-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/leaderboard/empty-loading-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="waiting-hof-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <span>${gt('ws_hof_no_results') || 'Još uvek nema rezultata za ovaj period.'}</span>
                 </div>
             `;
@@ -5584,6 +5588,11 @@ class YambApp {
 
         this.refreshLocalStats();
         this.navigateTo('stats-screen'); 
+        if (document.documentElement.dataset.splashTheme === 'dark') {
+            const carousel = document.getElementById('stats-carousel');
+            if (carousel) carousel.scrollLeft = 0;
+            if (typeof updateStatsPagination === 'function') updateStatsPagination();
+        }
         const h2hRecord = this.getLocalH2HRecordSummary();
         document.getElementById('stat-games').innerText = this.stats.games; 
         document.getElementById('stat-high').innerText = this.stats.highscore; 
@@ -5761,7 +5770,7 @@ class YambApp {
             },
             settings: {
                 icon: 'assets/easter-soft-clay/settings-pro-v3.png?v=1',
-                greenIcon: 'assets/green-soft-clay/settings-free-v2.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/settings-pro-v2.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
                 scale: 1,
@@ -5769,7 +5778,7 @@ class YambApp {
             },
             rules: {
                 icon: 'assets/easter-soft-clay/rules-pro-v2.png?v=1',
-                greenIcon: 'assets/green-soft-clay/rules-free-v2.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/rules-pro.png?v=opt2',
                 severnaIcon: 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
                 scale: 1.16,
@@ -5777,7 +5786,7 @@ class YambApp {
             },
             solo: {
                 icon: 'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
-                greenIcon: 'assets/green-soft-clay/mode-solo-free-v2.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-solo-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
                 scale: 1,
@@ -5785,7 +5794,7 @@ class YambApp {
             },
             hotseat: {
                 icon: 'assets/easter-soft-clay/mode-hotseat-pro-v2.png?v=1',
-                greenIcon: 'assets/green-soft-clay/mode-hotseat-free-v2.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-hotseat-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
                 scale: 1,
@@ -5795,7 +5804,7 @@ class YambApp {
             },
             opponent: {
                 icon: 'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
-                greenIcon: 'assets/green-soft-clay/mode-opponent-free-v2.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
                 scale: 1.2,
@@ -5805,7 +5814,7 @@ class YambApp {
             },
             invite: {
                 icon: 'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1',
-                greenIcon: 'assets/green-soft-clay/mode-invite-free-v2.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/mode-invite-pro.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/mode-invite-pro-v6.png?v=1',
                 scale: 1.05,
@@ -5815,7 +5824,7 @@ class YambApp {
             },
             globalChat: {
                 icon: 'assets/easter-soft-clay/global-chat-pro-v6.png?v=1',
-                greenIcon: 'assets/green-soft-clay/global-chat-free-v2.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/global-chat-pro-v2.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
                 scale: 1,
@@ -5823,7 +5832,7 @@ class YambApp {
             },
             onlinePlayers: {
                 icon: 'assets/easter-soft-clay/online-players-pro-v4.png?v=1',
-                greenIcon: 'assets/green-soft-clay/online-players-free-v2.png?v=opt2',
+                greenIcon: 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/online-players-pro-v2.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
                 scale: 1,
@@ -10203,7 +10212,7 @@ class YambApp {
                     <img class="quarter-winner-logo quarter-winner-logo-easter" data-theme-src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-desert" data-theme-src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-nebula" data-theme-src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="quarter-winner-logo quarter-winner-logo-green" data-theme-src="assets/green-soft-clay/quarterly-league-yotb-ql-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="quarter-winner-logo quarter-winner-logo-green" data-theme-src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 </div>
                 <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
                 <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>

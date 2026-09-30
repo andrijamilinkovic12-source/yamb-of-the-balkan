@@ -1,0 +1,110 @@
+{
+  "id": "green-global-chat-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "single Green identity for entering Global Chat across menu, intro, header and Rules references",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "warm-ivory speech bubble with three forest-green dots, larger forest-green speech-bubble silhouette behind and one terracotta circular accent",
+    "presentation": "one centered free-standing conversation glyph on a transparent background without text, square frame or backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Global Chat room identity with room and menu delivery variants",
+    "accentMeaning": "static terracotta design accent, not live online or unread status"
+  },
+  "master": {
+    "path": "green-global-chat-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 1092962,
+    "sha256": "e4b6c9fa9474614af58846a5df24cf196297b22f0673ead64a478c2b5b4bebbf",
+    "approvedSource": "source-assets/green-soft-clay-hires/global-chat-free-v2.png",
+    "approvedSourceSha256": "e4b6c9fa9474614af58846a5df24cf196297b22f0673ead64a478c2b5b4bebbf"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Global Chat icon-only intro, room header, Rules references and room-on-demand preload",
+      "usedBy": [
+        "Global Chat icon-only room intro",
+        "Global Chat room header",
+        "Green Global Chat mapping in SR/EN Rules content",
+        "Green Global Chat room-on-demand package"
+      ],
+      "displaySizes": [[32, 32], ["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"], ["1.42em", "1.42em"]],
+      "runtime": "www/assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 178822,
+      "runtimeSha256": "ea96cb6a2f1a83768074adb6d2d9be44cbf4e9a21819619dbc18bfe7a1237e7e",
+      "activeRuntime": "www/assets/green-soft-clay/global-chat-free-v2.png",
+      "activeRuntimeSha256": "ea96cb6a2f1a83768074adb6d2d9be44cbf4e9a21819619dbc18bfe7a1237e7e",
+      "expectedCanonicalReferences": 4,
+      "normalization": "approved 1254x1254 RGBA master reduced directly to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Global Chat main-menu startup icon",
+      "usedBy": ["Green main-menu Global Chat button", "Green startup preload collected from the active main-menu DOM"],
+      "displaySizes": [[52, 52]],
+      "runtime": "www/assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 108756,
+      "runtimeSha256": "57e55c8e9fef67d9576e112cc78bbcc3ba5f1ac006e1d5bd5405e8260517d070",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/global-chat-free-v2.png",
+      "activeRuntimeSha256": "57e55c8e9fef67d9576e112cc78bbcc3ba5f1ac006e1d5bd5405e8260517d070",
+      "expectedCanonicalReferences": 1,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling to preserve the approved menu delivery"
+    }
+  ],
+  "rejectedCandidates": [
+    {
+      "id": "global-chat-pro-v1",
+      "status": "rejected-orphan",
+      "source": "source-assets/green-soft-clay-hires/global-chat-pro-v1.png",
+      "sourceSize": [1254, 1254],
+      "sourceSha256": "f5edab2efa7e203f8fda43029a3e02beea65b196c5fc9a47aa70b5aec171d655",
+      "runtime": "www/assets/green-soft-clay/global-chat-pro-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 250515,
+      "runtimeSha256": "9aa752441629f1a3ddfbceaaa8f27d170de763624e235f85507c80fe63c34f68",
+      "activeReferences": 0,
+      "reason": "framed square illustration violates the free-standing Green menu-icon rule and has no active Green consumer",
+      "retirement": "runtime retired in standardization step 3; rejected source retained for audit provenance"
+    }
+  ],
+  "preservedRuntimeAssets": [
+    { "role": "empty or loading history state", "path": "www/assets/green-soft-clay/global-chat-empty-v1.png", "size": [384, 384], "bytes": 84201, "sha256": "107a1d13229eb836b45a20ffe5502ad3c598ab93c9a81b83f5a90809b3e24783" },
+    { "role": "send message action", "path": "www/assets/green-soft-clay/global-chat-send-v1.png", "size": [384, 384], "bytes": 88665, "sha256": "d10f3db0831d99f9b34504bd48f0f64b49f5521710ee2e998ddd89477d34b426" },
+    { "role": "Rules communication page scene", "path": "www/assets/green-soft-clay/rules/pages/communication-v1.png", "size": [512, 512], "sha256": "50ed1ec25dbf9c1de01059ad2d4c15cf5ec230b69c29c370a2ba7e0c901ae05d" }
+  ],
+  "motionContract": {
+    "mainMenu": "52x52 image in the existing 44x44 transparent control, press scale 0.9 to 1, not part of the bottom-menu wave",
+    "intro": "greenRoomIconPulse 1.8s at scale 1 inside the shared 4.6s icon-only room intro with reduced-motion fallback",
+    "header": "static 32x32 contain presentation",
+    "roomShell": "easterPanelLift 0.42s with reduced-motion fallback",
+    "historyState": "separate 76x76 empty/loading glyph, pulse 1.55s only while loading with reduced-motion fallback",
+    "send": "separate 32x32 paper-plane glyph inside the existing 45x45 button",
+    "loadingGate": "not a consumer; preserve the existing six Green gate icons"
+  },
+  "integration": {
+    "mainMenu": "connected",
+    "chatIntro": "connected",
+    "chatHeader": "connected",
+    "rulesMapping": "connected",
+    "roomOnDemand": "connected",
+    "startup": "connected",
+    "centralRegistry": "standardized in standardization step 3",
+    "legacyRuntime": "retired in standardization step 3",
+    "rejectedAlternate": "runtime retired in standardization step 3; source retained for audit provenance",
+    "cacheVersion": 53,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "empty and loading history state glyph",
+    "send-message paper plane and compose controls",
+    "Rules communication page scene and its SR/EN title mapping",
+    "live online count, online dot, character counter and error status",
+    "message history, socket authentication, access rules and moderation",
+    "close and report-message controls",
+    "other room identities, invite-send states, Undo tokens and rewarded-video symbols"
+  ]
+}

@@ -136,34 +136,34 @@ function rulesSevernaAssetSrc(easterSrc = '') {
 
 function rulesGreenAssetSrc(easterSrc = '') {
     const source = String(easterSrc || '');
-    const [path] = source.split('?');
-    const normalizedPath = path.replace(/\\/g, '/');
+    const normalizedSource = source.replace(/\\/g, '/');
+    const [normalizedPath] = normalizedSource.split('?');
     const greenOverrides = {
-        'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/green-soft-clay/rules/pages/rules-scoring-v1.png?v=1',
-        'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/green-soft-clay/rules/pages/stats-leaderboards-v1.png?v=1',
-        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/green-soft-clay/rules/pages/multiplayer-competitions-v1.png?v=1',
+        'assets/easter-soft-clay/rules/pages/rules-scoring.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png?v=1',
+        'assets/easter-soft-clay/rules/pages/stats-leaderboards.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png?v=1',
+        'assets/easter-soft-clay/rules/pages/multiplayer-competitions.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png?v=1',
         'assets/easter-soft-clay/rules/pages/communication.png': 'assets/green-soft-clay/rules/pages/communication-v1.png?v=1',
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/green-soft-clay/rules/pages/economy-treasury-v3.png?v=1',
-        'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/green-soft-clay/rules/pages/account-server-v1.png?v=1',
+        'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png?v=1',
         'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2': 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1',
         'assets/easter-soft-clay/leaderboard-pro-v2.png': 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
         'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png?v=1',
-        'assets/easter-soft-clay/settings-pro-v3.png': 'assets/green-soft-clay/settings-free-v2.png?v=opt2',
-        'assets/easter-soft-clay/settings/profile-v2.png?v=opt2': 'assets/green-soft-clay/settings/profile-v1.png?v=opt2',
-        'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2': 'assets/green-soft-clay/settings/privacy-v1.png?v=opt2',
-        'assets/easter-soft-clay/rules-pro-v2.png': 'assets/green-soft-clay/rules-free-v2.png?v=opt2',
+        'assets/easter-soft-clay/settings-pro-v3.png': 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1',
+        'assets/easter-soft-clay/settings/profile-v2.png?v=opt2': 'assets/green-soft-clay/canonical/settings-controls/profile-v1.png?v=1',
+        'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2': 'assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1',
+        'assets/easter-soft-clay/rules-pro-v2.png': 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png?v=1',
         'assets/easter-soft-clay/treasury-pro-v2.png': 'assets/green-soft-clay/treasury-free-v3.png?v=1',
         'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1',
         'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/green-soft-clay/canonical/tournament-states/state-start-v1.png?v=1',
         'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2': 'assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png?v=1',
-        'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/green-soft-clay/mode-opponent-free-v2.png?v=opt2',
-        'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/green-soft-clay/mode-invite-free-v2.png?v=opt2',
-        'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/green-soft-clay/global-chat-free-v2.png?v=opt2',
-        'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/green-soft-clay/online-players-free-v2.png?v=opt2',
+        'assets/easter-soft-clay/mode-opponent-pro-v2.png': 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1',
+        'assets/easter-soft-clay/mode-invite-pro-v2.png': 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1',
+        'assets/easter-soft-clay/global-chat-pro-v6.png': 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1',
+        'assets/easter-soft-clay/online-players-pro-v4.png': 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png?v=1',
         'assets/easter-soft-clay/online-add-friend-pro-v2.png?v=opt2': 'assets/green-soft-clay/online-add-friend-v1.png?v=opt2',
         'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2': 'assets/green-soft-clay/online-spectate-v1.png?v=opt2',
         'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/green-soft-clay/online-duel-v1.png?v=opt2',
-        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2': 'assets/green-soft-clay/quarterly-league-yotb-ql-free-v2.png?v=opt2',
+        'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2': 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1',
         'assets/easter-soft-clay/economy/ducat.png?v=opt2': 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1',
         'assets/easter-soft-clay/economy/undo-token.png?v=opt2': 'assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png?v=1',
         'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2': 'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png?v=1',
@@ -182,7 +182,7 @@ function rulesGreenAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/treasury/tab-themes-v2.png?v=opt2': 'assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1'
     };
 
-    return greenOverrides[normalizedPath] || '';
+    return greenOverrides[normalizedPath] || greenOverrides[normalizedSource] || '';
 }
 
 function rulesThemeAssetIconHtml(defaultSrc, easterSrc, extraClass = '') {
@@ -205,6 +205,10 @@ function rulesThemeGlyphIconHtml(defaultGlyph, easterSrc, extraClass = '') {
     const greenSrc = rulesGreenAssetSrc(easterSrc);
     const greenIcon = greenSrc ? `<img class="rules-inline-icon rules-asset-icon rules-theme-icon-green${suffix}" data-theme-src="${greenSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">` : '';
     return `<span class="rules-theme-glyph-default${suffix}" aria-hidden="true">${defaultGlyph}</span><img class="rules-inline-icon rules-asset-icon rules-theme-icon-easter${suffix}" data-theme-src="${easterSrc}" loading="lazy" alt="" aria-hidden="true" decoding="async">${desertIcon}${severnaIcon}${greenIcon}`;
+}
+
+function rulesTextGlyphHtml(glyph) {
+    return `<span class="rules-text-glyph-default" aria-hidden="true">${glyph}</span>`;
 }
 
 function rulesPageTitleIconHtml(defaultSrc, easterSrc) {
@@ -236,7 +240,7 @@ const RulesData = {
         {
             title: `${rulesPageTitleIconHtml('assets/rules-icon.svg', 'assets/easter-soft-clay/rules/pages/rules-scoring.png?v=1')} Pravila i bodovanje`,
             content: `
-                <h3>🎯 Cilj igre</h3>
+                <h3>${rulesTextGlyphHtml('🎯')} Cilj igre</h3>
                 <p>Cilj je osvojiti što više poena bacanjem 6 kockica i upisivanjem najboljih kombinacija u tabelu. U svakom potezu imate do 3 bacanja, a posle svakog bacanja možete zadržati kockice koje želite da sačuvate.</p>
                 <p>Svako polje u tabeli može se popuniti samo jednom. Ako kombinacija ne postoji, u polje se upisuje 0.</p>
                 
@@ -247,7 +251,7 @@ const RulesData = {
                     <li><strong>⇅ SREDINA:</strong> Popunjava se od sredine ka krajevima. Gornja grana kreće od MAX ka 1, a donja od MIN ka Yambu.</li>
                     <li><strong>S SLOBODNA:</strong> Može se popunjavati bilo kojim redosledom u toku igre.</li>
                     <li><strong>R RUČNO:</strong> Boduje se samo posle prvog bacanja. Ako pokušate da upišete polje u ovoj koloni posle drugog ili trećeg bacanja, igra ga upisuje kao 0 tek nakon potvrde.</li>
-                    <li><strong>📢 NAJAVA:</strong> Posle prvog bacanja možete uključiti Najavu, izabrati tačno polje u koloni Najava i zatim morate upisati baš to polje. Najava se može otkazati dok još nije zaključana.</li>
+                    <li><strong>${rulesTextGlyphHtml('📢')} NAJAVA:</strong> Posle prvog bacanja možete uključiti Najavu, izabrati tačno polje u koloni Najava i zatim morate upisati baš to polje. Najava se može otkazati dok još nije zaključana.</li>
                 </ul>
                 
                 <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-leaderboard'), 'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1')} Bodovanje i sekcije</h3>
@@ -340,7 +344,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=opt2')} Dukati i ekonomija</h3>
                 <p>Dukati su glavna valuta u igri. Koriste se za prijave na turnire, kupovine u Riznici i napredovanje kroz kolekcije.</p>
                 <ul>
-                    <li><strong>🎲 Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
+                    <li><strong>${rulesTextGlyphHtml('🎲')} Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2')} Dnevni izazov:</strong> Dnevna nagrada je dostupna jednom dnevno. Server određuje kockice: prve 4 se sabiraju, 5. kockica množi taj zbir, a 6. množi ceo rezultat. Nagrada se može duplirati reklamom.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Reklame za nagradu:</strong> U meniju dukata nagradni video donosi +500 dukata kada je dostupan i potvrđen na serveru.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Takmičenja:</strong> Turniri i Kvartalna liga donose najveće nagrade najboljim igračima.</li>
@@ -382,7 +386,7 @@ const RulesData = {
                 <h3>${rulesThemeGlyphIconHtml('🖥️', 'assets/easter-soft-clay/settings-pro-v3.png?v=1')} Server podrška i bezbednost</h3>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('🛡️', 'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2')} Fer igra:</strong> Server proverava online mečeve, rezultate, ekonomiju i nagrade kako bi sprečio manipulacije.</li>
-                    <li><strong>⏱️ Anti-troll tajmer:</strong> Ako protivnik namerno odugovlači, server može dodeliti tehničku pobedu.</li>
+                    <li><strong>${rulesTextGlyphHtml('⏱️')} Anti-troll tajmer:</strong> Ako protivnik namerno odugovlači, server može dodeliti tehničku pobedu.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🔌', 'assets/easter-soft-clay/opponent/reconnected.png?v=opt2')} Grace period:</strong> Kod kratkog prekida veze postoji pauza od 30 sekundi za povratak u meč.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🚪', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Napuštanje meča:</strong> Namerno napuštanje online duela može doneti kaznu u ligi i dukatima.</li>
                 </ul>
@@ -390,7 +394,7 @@ const RulesData = {
                 <h3>${rulesThemeGlyphIconHtml('📺', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Reklame (AdMob)</h3>
                 <p>Reklame omogućavaju da igra ostane besplatna i da se nagrade potvrde na serveru.</p>
                 <ul>
-                    <li><strong>⏳ Kratke reklame:</strong> Koriste se za pojedine akcije, povratak u meni, lokalno vraćanje upisa ili odjavu sa turnira. Ne isplaćuju direktno dukate ni tokene.</li>
+                    <li><strong>${rulesTextGlyphHtml('⏳')} Kratke reklame:</strong> Koriste se za pojedine akcije, povratak u meni, lokalno vraćanje upisa ili odjavu sa turnira. Ne isplaćuju direktno dukate ni tokene.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🎁', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Nagradne reklame:</strong> Koriste se za dupliranje nagrade, Dnevni izazov, dukate, tokene i popust u Riznici, uz potvrdu na serveru.</li>
                 </ul>
             `
@@ -400,7 +404,7 @@ const RulesData = {
         {
             title: `${rulesPageTitleIconHtml('assets/rules-icon.svg', 'assets/easter-soft-clay/rules/pages/rules-scoring.png?v=1')} Rules & scoring`,
             content: `
-                <h3>🎯 Goal of the Game</h3>
+                <h3>${rulesTextGlyphHtml('🎯')} Goal of the Game</h3>
                 <p>The goal is to score as many points as possible by rolling 6 dice and entering the best combinations into the table. Each turn gives you up to 3 rolls, and after every roll you may hold dice you want to keep.</p>
                 <p>Each table field can be filled only once. If the combination does not exist, the field scores 0.</p>
                 
@@ -411,7 +415,7 @@ const RulesData = {
                     <li><strong>⇅ MIDDLE:</strong> Filled from the middle outward. The upper branch starts at MAX and moves toward 1; the lower branch starts at MIN and moves toward Yamb.</li>
                     <li><strong>S FREE:</strong> Can be filled in any order.</li>
                     <li><strong>R HAND:</strong> Scores only after the first roll. If you try to enter a field in this column after the second or third roll, the game enters 0 after confirmation.</li>
-                    <li><strong>📢 ANNOUNCE:</strong> After the first roll, you may enable Announce, select the exact field in the Announce column, and then you must fill that field. The announcement can be canceled before it is locked.</li>
+                    <li><strong>${rulesTextGlyphHtml('📢')} ANNOUNCE:</strong> After the first roll, you may enable Announce, select the exact field in the Announce column, and then you must fill that field. The announcement can be canceled before it is locked.</li>
                 </ul>
                 
                 <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-leaderboard'), 'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1')} Scoring & Sections</h3>
@@ -504,7 +508,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=opt2')} Ducats & economy</h3>
                 <p>Ducats are the main in-game currency. They are used for tournament entries, Treasury purchases, and collection progress.</p>
                 <ul>
-                    <li><strong>🎲 Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
+                    <li><strong>${rulesTextGlyphHtml('🎲')} Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/daily-challenge-icon.svg', 'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2')} Daily Challenge:</strong> The daily reward is available once per day. The server sets the dice: the first 4 are summed, the 5th die multiplies that sum, and the 6th multiplies the total. The reward can be doubled with an ad.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/ad-ticket-icon.svg', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Reward ads:</strong> In the ducat menu, a rewarded video grants +500 ducats when available and verified by the server.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Competitions:</strong> Tournaments and the Quarterly League give the largest rewards to top players.</li>
@@ -546,7 +550,7 @@ const RulesData = {
                 <h3>${rulesThemeGlyphIconHtml('🖥️', 'assets/easter-soft-clay/settings-pro-v3.png?v=1')} Server Support & Security</h3>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('🛡️', 'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2')} Fair play:</strong> The server checks online matches, results, economy, and rewards to prevent manipulation.</li>
-                    <li><strong>⏱️ Anti-troll timer:</strong> If an opponent intentionally stalls, the server can award a technical win.</li>
+                    <li><strong>${rulesTextGlyphHtml('⏱️')} Anti-troll timer:</strong> If an opponent intentionally stalls, the server can award a technical win.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🔌', 'assets/easter-soft-clay/opponent/reconnected.png?v=opt2')} Grace period:</strong> A short connection drop gives you a 30-second pause to return to the match.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🚪', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Leaving a match:</strong> Intentionally leaving an online duel can cause league and ducat penalties.</li>
                 </ul>
@@ -554,7 +558,7 @@ const RulesData = {
                 <h3>${rulesThemeGlyphIconHtml('📺', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Ads (AdMob)</h3>
                 <p>Ads help keep the game free and allow rewards to be verified by the server.</p>
                 <ul>
-                    <li><strong>⏳ Short ads:</strong> Used for some actions, returning to the menu, local undo, or tournament unregistering. They do not directly pay ducats or undo tokens.</li>
+                    <li><strong>${rulesTextGlyphHtml('⏳')} Short ads:</strong> Used for some actions, returning to the menu, local undo, or tournament unregistering. They do not directly pay ducats or undo tokens.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🎁', 'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2')} Rewarded ads:</strong> Used for reward doubling, Daily Challenge, ducats, undo tokens, and Treasury discounts, with server verification.</li>
                 </ul>
             `
@@ -571,6 +575,7 @@ class RulesUI {
         this.dots = [];
         this.touchStartX = 0;
         this.touchStartY = 0;
+        this.previousFocus = null;
     }
 
     init() {
@@ -582,7 +587,7 @@ class RulesUI {
         this.overlay.className = 'modal-overlay global-chat-overlay rules-overlay';
         
         this.overlay.innerHTML = `
-            <div class="rules-card modal-box global-chat-shell">
+            <div class="rules-card modal-box global-chat-shell" role="dialog" aria-modal="true" aria-labelledby="rules-main-title">
                 
                 <div class="chat-header global-chat-header rules-card-header">
                     <div class="global-chat-title-group">
@@ -591,7 +596,7 @@ class RulesUI {
                             <img class="rules-header-icon rules-header-icon-easter" data-theme-src="assets/easter-soft-clay/rules-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-desert" data-theme-src="assets/desert-soft-clay/rules-pro.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <img class="rules-header-icon rules-header-icon-nebula" data-theme-src="assets/severna-soft-clay/rules-pro-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                            <img class="rules-header-icon rules-header-icon-green" data-theme-src="assets/green-soft-clay/rules-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                            <img class="rules-header-icon rules-header-icon-green" data-theme-src="assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <span>${typeof t === 'function' ? t('rules_header_title') : (this.currentLang === 'sr' ? 'PRAVILA I UPUTSTVO' : 'RULES & GUIDE')}</span>
                         </span>
                     </div>
@@ -631,12 +636,15 @@ class RulesUI {
         const data = RulesData[this.currentLang];
         const slideLabel = this.currentLang === 'sr' ? 'Slajd' : 'Slide';
         return data.map((_, index) => `
-            <button type="button" class="rule-dot${index === 0 ? ' active' : ''}" data-index="${index}" aria-label="${slideLabel} ${index + 1}"></button>
+            <button type="button" class="rule-dot${index === 0 ? ' active' : ''}" data-index="${index}" aria-label="${slideLabel} ${index + 1}"${index === 0 ? ' aria-current="step"' : ''}></button>
         `).join('');
     }
 
     attachEvents() {
         document.getElementById('btn-close-rules').addEventListener('click', () => this.close());
+        this.overlay.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') this.close();
+        });
         
         // Detekcija prelaska na drugi slajd pomoću nativnog skrola
         this.sliderTrack.addEventListener('scroll', () => {
@@ -662,6 +670,8 @@ class RulesUI {
         }, { passive: true });
 
         this.sliderTrack.addEventListener('touchend', (e) => {
+            // Green uses the native snap carousel; a second manual swipe here can skip a page.
+            if (document.documentElement.dataset.splashTheme === 'dark') return;
             const touch = e.changedTouches[0];
             if (!touch) return;
 
@@ -681,6 +691,8 @@ class RulesUI {
 
     updateDots() {
         this.dots.forEach((dot, i) => {
+            if (i === this.currentSlide) dot.setAttribute('aria-current', 'step');
+            else dot.removeAttribute('aria-current');
             if (i === this.currentSlide) {
                 dot.classList.add('active');
             } else {
@@ -695,10 +707,13 @@ class RulesUI {
         this.currentSlide = Math.min(Math.max(index, 0), lastIndex);
         this.updateDots();
         const targetScroll = this.sliderTrack.clientWidth * this.currentSlide;
-        this.sliderTrack.scrollTo({ left: targetScroll, behavior: 'smooth' });
+        const reduceMotion = document.documentElement.dataset.splashTheme === 'dark'
+            && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        this.sliderTrack.scrollTo({ left: targetScroll, behavior: reduceMotion ? 'auto' : 'smooth' });
     }
 
     open() {
+        if (document.documentElement.dataset.splashTheme === 'dark') this.previousFocus = document.activeElement;
         const currentStoredLang = localStorage.getItem('yamb_lang') || 'sr';
         if (this.currentLang !== currentStoredLang) {
             this.currentLang = currentStoredLang;
@@ -715,8 +730,13 @@ class RulesUI {
 
         // Ponovo uključivanje glatke animacije nakon renderovanja
         setTimeout(() => {
-            this.sliderTrack.style.scrollBehavior = 'smooth';
+            const reduceMotion = document.documentElement.dataset.splashTheme === 'dark'
+                && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+            this.sliderTrack.style.scrollBehavior = reduceMotion ? 'auto' : 'smooth';
             this.overlay.classList.add('active');
+            if (document.documentElement.dataset.splashTheme === 'dark') {
+                this.overlay.querySelector('#btn-close-rules')?.focus({ preventScroll: true });
+            }
         }, 10);
     }
 
@@ -724,6 +744,8 @@ class RulesUI {
         this.overlay.classList.remove('active');
         setTimeout(() => {
             this.overlay.style.display = 'none';
+            if (this.previousFocus?.isConnected) this.previousFocus.focus({ preventScroll: true });
+            this.previousFocus = null;
         }, 300);
     }
 }

@@ -1,0 +1,93 @@
+{
+  "id": "green-quarterly-league-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "one Green Quarterly League rhombus identity across the main-menu watermark, intro, room header, winner popup and SR/EN Rules",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green recessed Yamb scorecard, raised warm-ivory YotB and QL lettering, rounded ivory diamond rim and four terracotta clay pins",
+    "presentation": "one centered rounded rhombus logo on a transparent square canvas; its ivory diamond rim belongs to the logo, not to a generic backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Quarterly League room identity with room and menu-watermark delivery variants",
+    "liveData": "rank, points, progress, standings, season state and medals remain separate functional UI and assets"
+  },
+  "master": {
+    "path": "green-quarterly-league-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 1263658,
+    "sha256": "4b5f7c66d8a4cd7a859e355d12efc6cec5adfa546d77b78129283f575b4b6597",
+    "approvedSource": "source-assets/green-soft-clay-hires/quarterly-league-yotb-ql-free-v2.png",
+    "approvedSourceSha256": "4b5f7c66d8a4cd7a859e355d12efc6cec5adfa546d77b78129283f575b4b6597"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Quarterly League intro, room header, winner popup, Rules references and room-on-demand preload",
+      "usedBy": [
+        "Quarterly League 4.6-second icon-only intro",
+        "Quarterly League modal header",
+        "Quarterly League winner popup",
+        "Green Quarterly League mapping in SR/EN Rules content",
+        "Green Quarterly League room-on-demand package"
+      ],
+      "displaySizes": [["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"], [42, 42], [96, 96], ["1.42em", "1.42em"], ["1.62em", "1.62em"]],
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 217526,
+      "runtimeSha256": "87a0a07b5abf5abc9dfa58a5265665fd2d1b81f62c48e692cfa0ffe4657a7ed4",
+      "activeRuntime": "www/assets/green-soft-clay/quarterly-league-yotb-ql-free-v2.png",
+      "activeRuntimeSha256": "87a0a07b5abf5abc9dfa58a5265665fd2d1b81f62c48e692cfa0ffe4657a7ed4",
+      "expectedCanonicalReferences": 5,
+      "normalization": "approved 1254x1254 RGBA master reduced directly to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Quarterly League main-menu CSS watermark and explicit startup preload",
+      "usedBy": ["Green main-menu Quarterly League card CSS watermark", "Green startup explicit league watermark source"],
+      "displaySizes": [[86, 86]],
+      "runtime": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 136653,
+      "runtimeSha256": "f21cece394a0184082aaaa7ed7fa327d3beedd360c1f01383002965bd96191bb",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/quarterly-league-yotb-ql-free-v2.png",
+      "activeRuntimeSha256": "f21cece394a0184082aaaa7ed7fa327d3beedd360c1f01383002965bd96191bb",
+      "expectedCanonicalReferences": 2,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling to preserve the approved watermark delivery"
+    }
+  ],
+  "protectedFamilies": [
+    { "role": "four Quarterly League navigation tab glyphs", "sourceManifest": "source-assets/green-soft-clay-canonical/quarterly-navigation/manifest.json", "status": "already locked; not part of this room identity" },
+    { "role": "six seasonal and all-time rank badges", "sourceManifest": "source-assets/green-soft-clay-canonical/quarterly-rank-badges/manifest.json", "status": "already locked; Majstor diamond is a rank, not this logo" },
+    { "role": "three Quarterly League podium medals", "sourceManifest": "source-assets/green-soft-clay-canonical/competition-medals/manifest.json", "subfamily": "quarterlyLeaguePodium", "status": "already locked; awarded medal, not this logo" }
+  ],
+  "motionContract": {
+    "mainMenu": "86x86 CSS watermark at opacity 0.18 with a separate live rank/points/progress overlay; card press scale 0.98 to 1",
+    "intro": "4.6s Green icon-only league intro with the logo in clamp(210px, 34vmin, 290px), easterRoomIconPulse 1.8s, room opened behind overlay at 3.65s and reduced-motion fallback",
+    "header": "static 42x42 contain presentation",
+    "winnerPopup": "static 96x96 contain presentation above a distinct Quarterly League gold medal",
+    "rules": "same logo at 1.42em inline heading and 1.62em PNG paragraph sizes",
+    "loadingGate": "not a new loading-gate icon; startup needs only the 384px menu watermark"
+  },
+  "integration": {
+    "mainMenuWatermark": "connected",
+    "roomIntro": "connected",
+    "roomHeader": "connected",
+    "winnerPopup": "connected",
+    "rulesMapping": "connected",
+    "roomOnDemand": "connected",
+    "startupFallback": "connected; only 384px menu watermark is preloaded when main-menu DOM is unavailable",
+    "centralRegistry": "standardized in standardization step 3",
+    "legacyRuntime": "retired in standardization step 3",
+    "cacheVersion": 55,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "Quarterly League tab navigation and its champion marker",
+    "six rank-level badges and the Majstor diamond badge",
+    "Quarterly League gold, silver and bronze podium medals",
+    "live rank, points, progress and standings in the main menu and room",
+    "season settlement, award rules, server data and timers",
+    "other competition medals, Tournament champion trophy and unrelated room identities"
+  ]
+}

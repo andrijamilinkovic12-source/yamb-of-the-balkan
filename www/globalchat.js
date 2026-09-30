@@ -71,6 +71,8 @@ class GlobalChatManager {
         const top = viewport ? viewport.offsetTop : 0;
 
         root.style.setProperty('--global-chat-height', `${Math.max(320, Math.round(height))}px`);
+        // Green overlays must follow the actual visible area when the keyboard is open.
+        root.style.setProperty('--green-visible-viewport-height', `${Math.max(1, Math.round(height))}px`);
         root.style.setProperty('--global-chat-top', `${Math.round(top)}px`);
     }
 
@@ -86,7 +88,7 @@ class GlobalChatManager {
         const key = isLoading ? 'global_chat_loading' : 'global_chat_empty';
         const fallback = isLoading ? 'Učitavam poruke...' : 'Još nema poruka. Započnite razgovor.';
         body.innerHTML = `
-            <div class="global-chat-welcome global-chat-state${isLoading ? ' is-loading' : ''}" data-chat-state="${isLoading ? 'loading' : 'empty'}">
+            <div class="global-chat-welcome global-chat-state${isLoading ? ' is-loading' : ''}" data-chat-state="${isLoading ? 'loading' : 'empty'}" role="status" aria-live="polite">
                 <img class="global-chat-state-soft-clay-icon global-chat-state-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/global-chat-empty-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="global-chat-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/global-chat-empty-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="global-chat-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/global-chat-empty-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">

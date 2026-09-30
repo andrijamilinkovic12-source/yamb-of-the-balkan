@@ -1,0 +1,117 @@
+{
+  "id": "green-online-players-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "single Green identity for entering Online Players across menu, intro, header and Rules references",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "one larger forest-green player in front, two warm-ivory players behind and a small ivory neck detail on the central figure",
+    "presentation": "one centered free-standing three-player glyph on a transparent background without text, square frame or backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Online Players room identity with room and menu delivery variants",
+    "livePresence": "online presence dot and live count are separate functional UI, never baked into the room PNG"
+  },
+  "master": {
+    "path": "green-online-players-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 912657,
+    "sha256": "d72cf7d27bfbd93662b68ef819bb6376e99018e0b56e61f1666104c4dc5ee65d",
+    "approvedSource": "source-assets/green-soft-clay-hires/online-players-free-v2.png",
+    "approvedSourceSha256": "d72cf7d27bfbd93662b68ef819bb6376e99018e0b56e61f1666104c4dc5ee65d"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Online Players icon-only intro, room header, Rules references and room-on-demand preload",
+      "usedBy": [
+        "Online Players icon-only room intro",
+        "Online Players room header",
+        "Green Online Players mapping in SR/EN Rules content",
+        "Green Online Players room-on-demand package"
+      ],
+      "displaySizes": [[32, 32], ["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"], ["1.42em", "1.42em"]],
+      "runtime": "www/assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 154856,
+      "runtimeSha256": "319f2407117c1ec539af88248b48ee2c2daaf544342dbf36c13ed2697f2bd189",
+      "activeRuntime": "www/assets/green-soft-clay/online-players-free-v2.png",
+      "activeRuntimeSha256": "319f2407117c1ec539af88248b48ee2c2daaf544342dbf36c13ed2697f2bd189",
+      "expectedCanonicalReferences": 4,
+      "normalization": "approved 1254x1254 RGBA master reduced directly to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Online Players main-menu startup icon",
+      "usedBy": ["Green main-menu Online Players card", "Green startup preload collected from the active main-menu DOM", "Green startup fallback when main-menu DOM is unavailable"],
+      "displaySizes": [[44, 44]],
+      "runtime": "www/assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 94595,
+      "runtimeSha256": "330662c03ccc96c84ddd920834bb16a73ee5cc8ff4143cd9fcbaf0089ea6623f",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/online-players-free-v2.png",
+      "activeRuntimeSha256": "330662c03ccc96c84ddd920834bb16a73ee5cc8ff4143cd9fcbaf0089ea6623f",
+      "expectedCanonicalReferences": 2,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling to preserve the approved menu delivery"
+    }
+  ],
+  "rejectedCandidates": [
+    {
+      "id": "online-players-pro-v1",
+      "status": "rejected-orphan",
+      "source": "source-assets/green-soft-clay-hires/online-players-pro-v1.png",
+      "sourceSize": [1254, 1254],
+      "sourceSha256": "919d9c49de3956ec84f3d90c256b858a37f289113f1b0cd957340e340bf02b54",
+      "runtime": "www/assets/green-soft-clay/online-players-pro-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 249836,
+      "runtimeSha256": "5f6fab755cd9d8a6eda27680fba52852524d8654adcf9cdf6408a8308e1b13f9",
+      "activeReferences": 0,
+      "reason": "framed square illustration violates the free-standing Green menu-icon rule and has no active Green consumer",
+      "retirement": "runtime retired in standardization step 3; rejected source retained for audit provenance"
+    }
+  ],
+  "preservedRuntimeAssets": [
+    { "role": "empty or loading player-list state", "path": "www/assets/green-soft-clay/online-players-state-v1.png", "size": [384, 384], "bytes": 70632, "sha256": "0ee96acc12409963fa3c9799da9f703097c77c09b219f652d270db370d1d4193" },
+    { "role": "shared add-friend action across Online Players, invite and Rules", "path": "www/assets/green-soft-clay/online-add-friend-v1.png", "size": [384, 384], "bytes": 76237, "sha256": "61dc2f1a57f475a2279f48337590784f527edcf2044e53c52df43f1814ef0dda" },
+    { "role": "shared spectate action across Online Players, gameplay, LIVE and Rules", "path": "www/assets/green-soft-clay/online-spectate-v1.png", "size": [384, 384], "bytes": 61861, "sha256": "7bd46544d38104aa8a100da3c52e29eff7128c0efb9ed40c0159e5c28c30ec75" },
+    { "role": "shared challenge and duel action across Online Players and Rules", "path": "www/assets/green-soft-clay/online-duel-v1.png", "size": [384, 384], "bytes": 78685, "sha256": "38b68fc8f6c5033aa993ab569864967c56fefced373e075d151e30ff343317ea" },
+    { "role": "Rules communication page scene", "path": "www/assets/green-soft-clay/rules/pages/communication-v1.png", "size": [512, 512], "sha256": "50ed1ec25dbf9c1de01059ad2d4c15cf5ec230b69c29c370a2ba7e0c901ae05d" }
+  ],
+  "motionContract": {
+    "mainMenu": "44x44 image in the existing 38x38 wrapper, card press scale 0.95 to 1, not part of the bottom-menu wave",
+    "livePresence": "separate 8x8 CSS presence dot with pulse 2s and a live text count",
+    "intro": "greenRoomIconPulse 1.8s at scale 1 inside the shared 4.6s icon-only room intro with reduced-motion fallback",
+    "header": "static 32x32 contain presentation",
+    "roomShell": "easterPanelLift 0.42s with reduced-motion fallback",
+    "listState": "separate 88x88 empty/loading glyph at opacity 0.86, pulse 1.55s only while loading with reduced-motion fallback",
+    "actions": "existing 38x38 action targets; add-friend and duel images 36x36, spectate image 27x27; preserve disabled opacity and grayscale treatment",
+    "inviteAddFriend": "same shared add-friend glyph at 52x52 with greenInviteSoftBreath 2.1s",
+    "gameplaySpectate": "same shared spectate glyph at 27x27 in gameplay header and 19x19 in LIVE badge",
+    "loadingGate": "not a consumer; preserve the existing six Green gate icons"
+  },
+  "integration": {
+    "mainMenu": "connected",
+    "roomIntro": "connected",
+    "roomHeader": "connected",
+    "rulesMapping": "connected",
+    "roomOnDemand": "connected",
+    "startup": "connected",
+    "centralRegistry": "standardized in standardization step 3",
+    "legacyRuntime": "retired in standardization step 3",
+    "rejectedAlternate": "runtime retired in standardization step 3; source retained for audit provenance",
+    "cacheVersion": 54,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "empty and loading player-list state glyph",
+    "shared add-friend action in player list, invite and Rules",
+    "shared spectate action in player list, gameplay header, LIVE badge and Rules",
+    "shared challenge and duel action, including Duel Chat and Chat challenge Rules references",
+    "Rules communication page scene and its SR/EN title mapping",
+    "live online count, presence dot, player status and profile photos",
+    "search, refresh, pagination, load-more, close and friend-request controls",
+    "login rules, socket actions and live player-list behavior",
+    "other room identities, H2H statistics, hotseat, online random and Global Chat send glyph"
+  ]
+}

@@ -2940,6 +2940,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #rules-overlay-ui .rules-theme-icon-desert,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #rules-overlay-ui .rules-theme-icon-nebula,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #rules-overlay-ui .rules-theme-glyph-default,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #rules-overlay-ui .rules-text-glyph-default,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #rules-overlay-ui .rules-page-glyph-default {
     display: none !important;
 }
@@ -18715,10 +18716,10 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     --green-clay-bg-image: url("assets/green-clay-balkan-diorama-v3.png");
     --green-clay-ink: #e7efda;
     --green-clay-ink-strong: #f2f6e8;
-    --green-clay-muted: #c7d5ba;
+    --green-clay-muted: #e1ecd2;
     --green-clay-mint: #d6e4b8;
-    --green-clay-surface: linear-gradient(145deg, rgba(98,132,86,.95), rgba(52,86,54,.94));
-    --green-clay-surface-soft: linear-gradient(145deg, rgba(111,145,96,.95), rgba(61,96,61,.94));
+    --green-clay-surface: linear-gradient(145deg, rgba(69,103,64,.98), rgba(52,86,54,.98));
+    --green-clay-surface-soft: linear-gradient(145deg, rgba(71,105,65,.98), rgba(45,81,53,.98));
     --green-clay-surface-inset: rgba(30,66,38,.62);
     --green-clay-line: rgba(207,225,181,.34);
     --green-clay-raised:
@@ -18749,7 +18750,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     --text-filled: var(--green-clay-ink-strong);
     --text-sum: #f1f5e6;
     --text-sum-label: #edf3df;
-    --text-muted: #cbd8bf;
+    --text-muted: #e1ecd2;
     --glass-bg: rgba(56,89,55,.78);
     --glass-panel: var(--green-clay-surface-soft);
     --glass-border: 1px solid var(--green-clay-line);
@@ -19131,7 +19132,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     transform: translateY(-50%);
     border: 0;
     border-radius: 0;
-    background: url("assets/green-soft-clay/runtime/menu/quarterly-league-yotb-ql-free-v2.png?v=1") center / contain no-repeat;
+    background: url("assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png?v=1") center / contain no-repeat;
     opacity: .18;
     filter: saturate(.78) brightness(.86) contrast(1.04) drop-shadow(0 5px 8px rgba(7,29,15,.18));
     pointer-events: none;
@@ -20796,6 +20797,11 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     filter: drop-shadow(0 7px 11px rgba(8,31,17,.22));
 }
 
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #online-players-overlay .online-players-state[data-online-state="error"] {
+    color: var(--green-clay-ink-strong) !important;
+    border-color: rgba(239, 208, 173, .58) !important;
+}
+
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #online-players-overlay .online-players-state.is-loading .online-players-state-soft-clay-icon-green {
     animation: easterOnlinePlayersStatePulse 1.55s ease-in-out infinite;
 }
@@ -21760,7 +21766,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
    GREEN ROOM PACK — SOLO MOD
    Intro, završni pregled i nagrade bez promene pravila ili geometrije igre.
    ========================================================= */
-.green-solo-result-mark,
 .green-solo-personal-best-icon,
 .green-solo-finish-score-mark,
 .green-solo-finish-action-icon {
@@ -21815,7 +21820,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .easter-solo-result-mark,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .desert-solo-result-mark,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .severna-solo-result-mark,
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .green-solo-result-mark,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result .game-over-ducat-legacy,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-solo-result #go-double-label .dukat-icon-inline {
     display: none !important;
@@ -22493,5 +22497,296 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen.is-hosting-invite.screen.active .ws-vs-area-horizontal,
     body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen.is-hosting-invite.screen.active #friends-list-container {
         animation: none !important;
+    }
+}
+
+/* Green UI contract: shared type, contrast, controls and containment. */
+.league-close-green { display: none !important; }
+.green-game-over-ducat { display: none !important; }
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) {
+    --green-ui-title: clamp(1.05rem, 4.2vw, 1.22rem);
+    --green-ui-section: clamp(.98rem, 3.6vw, 1.08rem);
+    --green-ui-body: .9rem;
+    --green-ui-caption: .82rem;
+    --green-ui-close-size: 44px;
+    --green-ui-room-radius: 20px;
+    --green-ui-room-header-min: 58px;
+    --green-ui-inset-x: max(12px, env(safe-area-inset-left), env(safe-area-inset-right));
+    --global-chat-height: var(--green-visible-viewport-height, 100dvh);
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay .league-close-legacy { display: none !important; }
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay .league-close-green { display: inline-flex !important; }
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen .game-over-ducat-legacy { display: none !important; }
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen:not(.is-solo-result) .green-game-over-ducat { display: block !important; object-fit: contain; }
+
+/* The late dark-clay surface must not inherit the early dark-green toast ink. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(.custom-toast, .custom-toast.treasury-insufficient-toast, .custom-modal) {
+    color: var(--green-clay-ink-strong) !important;
+    background: linear-gradient(145deg, #4d7046, #244b30) !important;
+    border-color: rgba(221, 238, 197, .5) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(.custom-toast .toast-title, .custom-modal .cm-title) {
+    color: #f4f8e8 !important;
+    text-shadow: 0 2px 4px rgba(7, 29, 15, .5) !important;
+    font-size: var(--green-ui-section) !important;
+    line-height: 1.22 !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(.custom-toast .toast-msg, .custom-modal .cm-msg) {
+    color: #edf4df !important;
+    text-shadow: 0 1px 2px rgba(7, 29, 15, .42) !important;
+    font-size: var(--green-ui-body) !important;
+    line-height: 1.42 !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .custom-toast-copy {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(.custom-modal .cm-btn-cancel, .custom-modal .btn-modal-cancel) {
+    color: #f4f8e8 !important;
+    background: rgba(23, 53, 31, .92) !important;
+    border: 1px solid rgba(223, 236, 198, .72) !important;
+    text-shadow: none !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .custom-modal .cm-btn {
+    font-size: var(--green-ui-body) !important;
+    line-height: 1.2 !important;
+}
+
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#stats-screen, #settings-screen, #highscores-screen, #rules-overlay-ui, #league-modal-overlay, #tournament-screen, #riznica-screen, #global-chat-overlay, #online-players-overlay, #waiting-screen, #undo-menu-overlay) .global-chat-title,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay .league-modal-title-group h2 {
+    font-size: var(--green-ui-title) !important;
+    line-height: 1.2 !important;
+    font-weight: 850 !important;
+    letter-spacing: .025em !important;
+    color: var(--green-clay-ink-strong) !important;
+    text-shadow: 0 2px 4px rgba(7, 29, 15, .44) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#stats-screen, #settings-screen, #highscores-screen, #rules-overlay-ui, #tournament-screen, #riznica-screen, #global-chat-overlay, #online-players-overlay, #undo-menu-overlay) .global-chat-header {
+    background: linear-gradient(145deg, #4d7046, #244b30) !important;
+    border-bottom-color: rgba(221, 238, 197, .36) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#settings-screen .settings-section-title, #highscores-screen .hs-panel-title, #stats-screen .stats-h2h-title, #rules-overlay-ui .rules-slide-title, #league-modal-overlay .league-rank-heading) {
+    font-size: var(--green-ui-section) !important;
+    line-height: 1.25 !important;
+    font-weight: 850 !important;
+    color: var(--green-clay-ink-strong) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#settings-screen .settings-row-label, #rules-overlay-ui .rules-slide-content p, #rules-overlay-ui .rules-slide-content li) {
+    font-size: var(--green-ui-body) !important;
+    line-height: 1.4 !important;
+    color: var(--green-clay-ink) !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #stats-screen .stats-h2h-desc {
+    font-size: var(--green-ui-caption) !important;
+    line-height: 1.4 !important;
+    color: var(--green-clay-muted) !important;
+}
+
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#stats-screen, #settings-screen, #highscores-screen, #rules-overlay-ui, #league-modal-overlay, #tournament-screen, #riznica-screen, #global-chat-overlay, #online-players-overlay, #waiting-screen, #undo-menu-overlay) .global-chat-close,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .cm-close {
+    width: var(--green-ui-close-size) !important;
+    height: var(--green-ui-close-size) !important;
+    min-width: var(--green-ui-close-size) !important;
+    min-height: var(--green-ui-close-size) !important;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50% !important;
+    border: 1px solid rgba(223, 236, 198, .42) !important;
+    background: linear-gradient(145deg, #78976b, #355b3e) !important;
+    color: #f4f8e8 !important;
+    box-shadow: var(--green-clay-raised-small) !important;
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+    flex: 0 0 var(--green-ui-close-size);
+}
+
+/* Shared room geometry; the full-screen economy and compact feature cards remain intentional exceptions. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#highscores-screen .hs-card.modal-box, #stats-screen .stats-shell, #settings-screen .settings-shell, #tournament-screen .tourney-shell, #global-chat-overlay .global-chat-shell, #online-players-overlay .online-players-shell) {
+    box-sizing: border-box;
+    max-width: 100%;
+    border-radius: var(--green-ui-room-radius) !important;
+}
+/* An inline rule later in index.html otherwise restores the generic glass surface on Top lista. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #highscores-screen .hs-card.modal-box {
+    background: linear-gradient(145deg, rgba(103,139,91,.94), rgba(45,82,50,.93)) !important;
+    border: 1px solid rgba(213,231,185,.38) !important;
+    box-shadow: var(--green-clay-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#highscores-screen, #stats-screen, #settings-screen, #tournament-screen, #global-chat-overlay, #online-players-overlay, #undo-menu-overlay) .global-chat-header {
+    min-height: var(--green-ui-room-header-min);
+    box-sizing: border-box;
+    gap: 8px;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#highscores-screen, #stats-screen, #settings-screen, #tournament-screen, #riznica-screen, #global-chat-overlay, #online-players-overlay, #undo-menu-overlay) :is(.global-chat-title-group, .global-chat-title) {
+    min-width: 0;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .cm-close {
+    font-size: 0 !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .cm-close::after {
+    content: '×';
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+/* The generic .dice mobile widths overrode the daily 3-column grid. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-overlay {
+    padding: max(12px, env(safe-area-inset-top)) var(--green-ui-inset-x) max(12px, env(safe-area-inset-bottom));
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-overlay .daily-glass-card {
+    width: min(430px, 100%);
+    max-height: 100%;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-overlay .daily-glass-dice-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    justify-items: center;
+    width: 100%;
+    min-width: 0;
+    margin-inline: auto;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-overlay .daily-glass-die.dice {
+    width: min(100%, 82px) !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    aspect-ratio: 1;
+    justify-self: center;
+    line-height: 1 !important;
+}
+
+/* Avatar images may cover their own circle, never leave a modal/card slot. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen .ws-glass-card {
+    min-width: 0;
+    overflow: hidden;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen .ws-glass-avatar,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #settings-screen .settings-avatar,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #stats-screen .h2h-rival-avatar {
+    display: block;
+    max-width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen #waiting-opp-found {
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Invite hosting has two profiles inside the owner's card. Side-by-side outer cards
+   leave the avatar/name subcolumns below their usable minimum on phones. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card {
+    width: 100%;
+    flex: 0 0 auto;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-vs {
+    flex: 0 0 42px;
+    margin-inline: auto;
+}
+
+/* One pager language: a 44px tap target around each 10px visual dot. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#rules-overlay-ui .rule-dot, #stats-screen .stats-pagination .dot, #league-modal-overlay .league-page-dot) {
+    width: 44px !important;
+    height: 44px !important;
+    flex: 0 0 44px;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-grid;
+    place-items: center;
+    border: 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transform: none !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #rules-overlay-ui .rules-dots-container {
+    gap: 2px;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#rules-overlay-ui .rule-dot, #stats-screen .stats-pagination .dot, #league-modal-overlay .league-page-dot):focus-visible {
+    outline: 2px solid var(--green-clay-ink-strong);
+    outline-offset: -3px;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#rules-overlay-ui .rule-dot, #stats-screen .stats-pagination .dot, #league-modal-overlay .league-page-dot)::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--carousel-dot-idle);
+    box-shadow: inset 0 0 3px rgba(0, 0, 0, .42);
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#rules-overlay-ui .rule-dot.active, #stats-screen .stats-pagination .dot.active, #league-modal-overlay .league-page-dot.is-active)::before {
+    background: var(--carousel-dot-active);
+    transform: scale(1.35);
+    box-shadow: 0 0 10px var(--carousel-dot-glow);
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay {
+    padding: max(12px, env(safe-area-inset-top)) var(--green-ui-inset-x) max(12px, env(safe-area-inset-bottom));
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay > .modal-box {
+    width: min(450px, 100%) !important;
+    height: min(800px, 100%) !important;
+    max-height: 100% !important;
+}
+
+/* Short phones need to reach the bottom menu row without crossing system navigation. */
+@media (max-height: 740px) and (max-width: 599px) {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu {
+        justify-content: flex-start;
+        overflow-x: hidden;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: max(var(--safe-bottom), calc(env(safe-area-inset-bottom) + 16px));
+        scroll-padding-bottom: max(var(--safe-bottom), calc(env(safe-area-inset-bottom) + 16px));
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu > :not(.main-global-chat-btn) {
+        flex-shrink: 0;
+    }
+}
+
+/* The mode PNGs are the Green identity; translation emoji must not sit beside them. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-text {
+    font-size: 0 !important;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-text::after {
+    display: block;
+    font-size: clamp(.68rem, 2.7vw, .8rem);
+    line-height: 1.2;
+}
+html[lang="sr"] body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-text::after {
+    content: attr(data-easter-label-sr);
+}
+html[lang="en"] body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-text::after {
+    content: attr(data-easter-label-en);
+}
+
+/* Android WebView can retain its native input ink instead of the theme color. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #settings-screen #setting-name {
+    color: #f4f8e8 !important;
+    -webkit-text-fill-color: #f4f8e8 !important;
+    caret-color: #f4f8e8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#rules-overlay-ui .rules-slider-track, #stats-screen .stats-carousel) {
+        scroll-behavior: auto !important;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(#league-modal-overlay #league-track, #rules-overlay-ui .rule-dot, #stats-screen .stats-pagination .dot, #league-modal-overlay .league-page-dot, #rules-overlay-ui .rule-dot::before, #stats-screen .stats-pagination .dot::before, #league-modal-overlay .league-page-dot::before) {
+        transition-duration: 0s !important;
+        animation-duration: 0s !important;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(.custom-toast, .custom-modal, #rules-overlay-ui .rules-card, #league-modal-overlay > .modal-box) {
+        transition-duration: 0s !important;
+        animation-duration: 0s !important;
     }
 }

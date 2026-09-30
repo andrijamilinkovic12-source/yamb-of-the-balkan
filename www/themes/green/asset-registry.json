@@ -1088,6 +1088,589 @@
         "Green Daily Challenge room-on-demand pack",
         "Green theme loading-gate Daily Challenge icon"
       ]
+    },
+    "settingsRoomIdentity": {
+      "semanticRole": "single Green identity for entering the Settings room across menu, intro, header and Rules",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/settings-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green gear, warm-ivory raised ring and one terracotta center dot",
+        "presentation": "one centered free-standing gear glyph on a transparent background without text, frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Settings room identity with room and menu delivery variants"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png", "size": 512, "sha256": "ab4a2390a61348440cd594ade5aef57c0c1a3a05c0b3f6007b5783630f5ab3c9" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png", "size": 384, "sha256": "9018529478652929f353e24edf8c02edb1193896791e39b3284b664862915201" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/settings-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/settings-free-v2.png",
+        "assets/green-soft-clay/settings-pro-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "settings-free-v2.png": "canonical/settings-room-identity/settings-room-v1.png",
+        "runtime/menu/settings-free-v2.png": "canonical/settings-room-identity/settings-room-menu-v1.png",
+        "settings-pro-v1.png": "canonical/settings-room-identity/settings-room-v1.png"
+      },
+      "rejectedCandidates": [
+        {
+          "id": "settings-pro-v1",
+          "reason": "framed square illustration violates the free-standing Green menu-icon rule and had no active Green consumer",
+          "runtimeStatus": "retired",
+          "sourceStatus": "retained for audit provenance"
+        }
+      ],
+      "semanticExclusions": [
+        "Settings profile and account glyph",
+        "Settings sound, music and vibration glyphs",
+        "Settings display/theme and language glyphs",
+        "Settings terms and privacy glyphs",
+        "live form controls, account data and legal links",
+        "other room identities, medals, ranks and gameplay dice"
+      ],
+      "codeBindings": [
+        "Green Settings main-menu icon and startup preload",
+        "Green Settings icon-only room intro",
+        "Green Settings room header",
+        "Green Rules Settings reference",
+        "Green Settings room-on-demand pack",
+        "Green theme loading-gate Settings icon"
+      ]
+    },
+    "rulesRoomIdentity": {
+      "semanticRole": "single Green identity for entering the Rules room across menu, intro, header and theme loading gate",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/rules-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "warm-ivory open book, forest-green spine and inset page lines with one terracotta bookmark",
+        "presentation": "one centered free-standing open-book glyph on a transparent background without text, frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Rules room identity with room and menu delivery variants"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png", "size": 512, "sha256": "48527b7eb726778604fc25ba437d0d350a3ab97708c7c4d3dd8ad19c537a8ae4" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png", "size": 384, "sha256": "d00302c37418b3f87b8d4077a54a6c1742e1d78199dd1065e32dc3685a742d1a" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/rules-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/rules-free-v2.png",
+        "assets/green-soft-clay/rules-pro-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "rules-free-v2.png": "canonical/rules-room-identity/rules-room-v1.png",
+        "runtime/menu/rules-free-v2.png": "canonical/rules-room-identity/rules-room-menu-v1.png",
+        "rules-pro-v1.png": "canonical/rules-room-identity/rules-room-v1.png"
+      },
+      "rejectedCandidates": [
+        {
+          "id": "rules-pro-v1",
+          "reason": "framed square illustration violates the free-standing Green menu-icon rule and had no active Green consumer",
+          "runtimeStatus": "retired",
+          "sourceStatus": "retained for audit provenance"
+        }
+      ],
+      "semanticExclusions": [
+        "six Rules page illustrations and their SR/EN title mappings",
+        "page-level score, statistics, competitions and communication glyphs",
+        "Economy/Treasury page composition with canonical ducats and Undo token",
+        "account, privacy and server page illustration",
+        "rules text, navigation, dot indicators and swipe behavior",
+        "other room identities, medals, ranks and gameplay dice"
+      ],
+      "codeBindings": [
+        "Green Rules main-menu icon and startup preload",
+        "Green Rules icon-only room intro",
+        "Green Rules room header",
+        "Green Rules room-icon mapping",
+        "Green Rules room-on-demand pack",
+        "Green theme loading-gate Rules icon"
+      ]
+    },
+    "globalChatRoomIdentity": {
+      "semanticRole": "single Green identity for entering Global Chat across menu, intro, header and Rules references",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/global-chat-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "warm-ivory speech bubble with three forest-green dots, larger forest-green speech-bubble silhouette behind and one terracotta circular accent",
+        "presentation": "one centered free-standing conversation glyph on a transparent background without text, square frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Global Chat room identity with room and menu delivery variants",
+        "accentMeaning": "static terracotta design accent, not live online or unread status"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png", "size": 512, "sha256": "ea96cb6a2f1a83768074adb6d2d9be44cbf4e9a21819619dbc18bfe7a1237e7e" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png", "size": 384, "sha256": "57e55c8e9fef67d9576e112cc78bbcc3ba5f1ac006e1d5bd5405e8260517d070" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/global-chat-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/global-chat-free-v2.png",
+        "assets/green-soft-clay/global-chat-pro-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "global-chat-free-v2.png": "canonical/global-chat-room-identity/global-chat-room-v1.png",
+        "runtime/menu/global-chat-free-v2.png": "canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+        "global-chat-pro-v1.png": "canonical/global-chat-room-identity/global-chat-room-v1.png"
+      },
+      "rejectedCandidates": [
+        { "id": "global-chat-pro-v1", "reason": "framed square illustration violates the free-standing Green menu-icon rule and had no active Green consumer", "runtimeStatus": "retired", "sourceStatus": "retained for audit provenance" }
+      ],
+      "semanticExclusions": [
+        "empty and loading history state glyph",
+        "send-message paper plane and compose controls",
+        "Rules communication page scene and its SR/EN title mapping",
+        "live online count, online dot, character counter and error status",
+        "message history, socket authentication, access rules and moderation",
+        "close and report-message controls",
+        "other room identities, invite-send states, Undo tokens and rewarded-video symbols"
+      ],
+      "codeBindings": [
+        "Green Global Chat main-menu icon and startup preload",
+        "Green Global Chat icon-only room intro",
+        "Green Global Chat room header",
+        "Green Global Chat SR/EN Rules references",
+        "Green Global Chat room-on-demand pack"
+      ]
+    },
+    "onlinePlayersRoomIdentity": {
+      "semanticRole": "single Green identity for entering Online Players across menu, intro, header and Rules references",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/online-players-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "one larger forest-green player in front, two warm-ivory players behind and a small ivory neck detail on the central figure",
+        "presentation": "one centered free-standing three-player glyph on a transparent background without text, square frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Online Players room identity with room and menu delivery variants",
+        "livePresence": "online presence dot and live count are separate functional UI, never baked into the room PNG"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png", "size": 512, "sha256": "319f2407117c1ec539af88248b48ee2c2daaf544342dbf36c13ed2697f2bd189" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png", "size": 384, "sha256": "330662c03ccc96c84ddd920834bb16a73ee5cc8ff4143cd9fcbaf0089ea6623f" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/online-players-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/online-players-free-v2.png",
+        "assets/green-soft-clay/online-players-pro-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "online-players-free-v2.png": "canonical/online-players-room-identity/online-players-room-v1.png",
+        "runtime/menu/online-players-free-v2.png": "canonical/online-players-room-identity/online-players-room-menu-v1.png",
+        "online-players-pro-v1.png": "canonical/online-players-room-identity/online-players-room-v1.png"
+      },
+      "rejectedCandidates": [
+        { "id": "online-players-pro-v1", "reason": "framed square illustration violates the free-standing Green menu-icon rule and had no active Green consumer", "runtimeStatus": "retired", "sourceStatus": "retained for audit provenance" }
+      ],
+      "semanticExclusions": [
+        "empty and loading player-list state glyph",
+        "shared add-friend action in player list, invite and Rules",
+        "shared spectate action in player list, gameplay header, LIVE badge and Rules",
+        "shared challenge and duel action, including Duel Chat and Chat challenge Rules references",
+        "Rules communication page scene and its SR/EN title mapping",
+        "live online count, presence dot, player status and profile photos",
+        "search, refresh, pagination, load-more, close and friend-request controls",
+        "login rules, socket actions and live player-list behavior",
+        "other room identities, H2H statistics, hotseat, online random and Global Chat send glyph"
+      ],
+      "codeBindings": [
+        "Green Online Players main-menu icon and startup preload",
+        "Green Online Players icon-only room intro",
+        "Green Online Players room header",
+        "Green Online Players SR/EN Rules references",
+        "Green Online Players room-on-demand pack"
+      ]
+    },
+    "quarterlyLeagueRoomIdentity": {
+      "semanticRole": "one Green Quarterly League rhombus identity across the main-menu watermark, intro, room header, winner popup and SR/EN Rules",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/quarterly-league-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green recessed Yamb scorecard, raised warm-ivory YotB and QL lettering, rounded ivory diamond rim and four terracotta clay pins",
+        "presentation": "one centered rounded rhombus logo on a transparent square canvas; its ivory diamond rim belongs to the logo, not to a generic backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Quarterly League room identity with room and menu-watermark delivery variants",
+        "liveData": "rank, points, progress, standings, season state and medals remain separate functional UI and assets"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png", "size": 512, "sha256": "87a0a07b5abf5abc9dfa58a5265665fd2d1b81f62c48e692cfa0ffe4657a7ed4" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png", "size": 384, "sha256": "f21cece394a0184082aaaa7ed7fa327d3beedd360c1f01383002965bd96191bb" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/quarterly-league-yotb-ql-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/quarterly-league-yotb-ql-free-v2.png"
+      ],
+      "retiredMasterReplacements": {
+        "quarterly-league-yotb-ql-free-v2.png": "canonical/quarterly-league-room-identity/quarterly-league-room-v1.png",
+        "runtime/menu/quarterly-league-yotb-ql-free-v2.png": "canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png"
+      },
+      "semanticExclusions": [
+        "Quarterly League tab navigation and its champion marker",
+        "six rank-level badges and the Majstor diamond badge",
+        "Quarterly League gold, silver and bronze podium medals",
+        "live rank, points, progress and standings in the main menu and room",
+        "season settlement, award rules, server data and timers",
+        "other competition medals, Tournament champion trophy and unrelated room identities"
+      ],
+      "codeBindings": [
+        "Green Quarterly League main-menu CSS watermark and startup preload",
+        "Green Quarterly League 4.6-second icon-only intro",
+        "Green Quarterly League modal header and winner popup",
+        "Green Quarterly League SR/EN Rules references",
+        "Green Quarterly League room-on-demand pack"
+      ]
+    },
+    "soloRoomIdentity": {
+      "semanticRole": "one Green Solo mode identity for the main-menu card and the icon-only room intro",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/solo-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green single-player figure, warm-ivory neck ring and one terracotta hanging accent",
+        "presentation": "one freestanding clay figure on a transparent square canvas, without a backing tile, text or medal",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Solo entry identity with room and menu delivery variants",
+        "liveData": "score, personal best, reward, opponent modes and game state remain separate functional UI and assets"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png", "size": 512, "sha256": "d697e38721762c01fcf90a13475ff67dc7413b677765c70865ff3453e589ceb4" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png", "size": 384, "sha256": "71ea4a39070b18d03403818a26689add95223ccbd952736282ddaf4031bd4ee5" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/mode-solo-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/mode-solo-free-v2.png"
+      ],
+      "retiredMasterReplacements": {
+        "mode-solo-free-v2.png": "canonical/solo-room-identity/solo-room-v1.png",
+        "runtime/menu/mode-solo-free-v2.png": "canonical/solo-room-identity/solo-room-menu-v1.png"
+      },
+      "semanticExclusions": [
+        "Hotseat, online-random and invite-friend mode identities",
+        "Solo personal-best, finish-score and claim-result assets",
+        "Solo rewarded-video and ducat composition",
+        "Hotseat winner identity",
+        "Solo score, reward calculation, account, game mechanics and board geometry",
+        "unrelated theme assets and room identities"
+      ],
+      "codeBindings": [
+        "Green Solo main-menu icon and startup preload",
+        "Green Solo 4.6-second icon-only intro",
+        "Green Solo room-on-demand pack"
+      ]
+    },
+    "hotseatRoomIdentity": {
+      "semanticRole": "one Green local two-player Hotseat identity for the main-menu card and icon-only room intro",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/hotseat-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "one forest-green player, one warm-ivory player and one terracotta connecting accent",
+        "presentation": "two equal freestanding clay player figures on a transparent square canvas, without a backing tile, text, medal or winner check",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Hotseat entry identity with room and menu delivery variants",
+        "liveData": "active player, scores, draw or winner state, boards and game flow remain separate functional UI and assets"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png", "size": 512, "sha256": "f1f006758f2b8fffde82401d6f89a4fc8ce3a72749114c1ad4833c3390954021" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png", "size": 384, "sha256": "de933f7fe0b272d177f4cd4521dc859af2045eed8ce879f3084055f3500ad0fc" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/mode-hotseat-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/mode-hotseat-free-v2.png"
+      ],
+      "retiredMasterReplacements": {
+        "mode-hotseat-free-v2.png": "canonical/hotseat-room-identity/hotseat-room-v1.png",
+        "runtime/menu/mode-hotseat-free-v2.png": "canonical/hotseat-room-identity/hotseat-room-menu-v1.png"
+      },
+      "semanticExclusions": [
+        "decisive Hotseat Winner mark and draw handling",
+        "Solo, Online Random and Invite Friend mode identities",
+        "H2H statistics and Online Players room identities",
+        "active-player indicator, player names, scores and result text",
+        "two boards, swipe, automatic following, resume and new-game flow",
+        "scoring, save recovery, gameplay rules and board geometry",
+        "unrelated theme assets and room identities"
+      ],
+      "codeBindings": [
+        "Green Hotseat main-menu icon and startup preload",
+        "Green Hotseat 4.6-second icon-only intro",
+        "Green Hotseat room-on-demand pack"
+      ]
+    },
+    "onlineRandomRoomIdentity": {
+      "semanticRole": "one Green Online Random matchmaking entry identity for the main-menu card, icon-only room intro, waiting-room header and matching Rules references",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/online-random-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green globe, warm-ivory latitude and longitude grid and two terracotta counter-direction arrows",
+        "presentation": "one freestanding clay globe-and-arrows mark on a transparent square canvas, without a backing tile, text, player portrait or connection-state badge",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Online Random entry identity with room and menu delivery variants",
+        "liveData": "real player cards, Power and POB/NER/POR data, matchmaking, socket state, timers, boards and gameplay remain separate functional UI and assets"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png", "size": 512, "sha256": "4a35ca20523d6ed8929f4179767841eee53dd1d15665078cf7e175a957a5820a" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png", "size": 384, "sha256": "a1593092e3f0634f2f07d824b9fc3173eb654f9f30690e3d20fbdf33a27aceb4" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/mode-opponent-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/mode-opponent-free-v2.png"
+      ],
+      "retiredMasterReplacements": {
+        "mode-opponent-free-v2.png": "canonical/online-random-room-identity/online-random-room-v1.png",
+        "runtime/menu/mode-opponent-free-v2.png": "canonical/online-random-room-identity/online-random-room-menu-v1.png"
+      },
+      "semanticExclusions": [
+        "matchmaking scanning, opponent-found and VS functional states",
+        "disconnect and reconnect connection states",
+        "shared spectate action and Online Players list actions",
+        "Invite Friend, Hotseat, Solo and Online Players room identities",
+        "real player cards, portraits, names, Power and POB/NER/POR data",
+        "matchmaking, socket connection, reconnect grace period and technical result logic",
+        "timer pill, spectator flow, board swipe and automatic active-player following",
+        "scoring, gameplay rules, board geometry and unrelated theme assets"
+      ],
+      "codeBindings": [
+        "Green Online Random main-menu icon and startup preload",
+        "Green Online Random 4.6-second icon-only intro",
+        "Green Online Random waiting-room header and SR/EN Rules references",
+        "Green Online Random room-on-demand pack with five separate functional states"
+      ]
+    },
+    "inviteFriendRoomIdentity": {
+      "semanticRole": "one Green Invite Friend private-duel entry identity for the main-menu card, icon-only room intro, waiting-room header and matching Rules references",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/invite-friend-room-identity/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "one forest-green link, one warm-ivory link and one terracotta plus accent",
+        "presentation": "two connected freestanding clay links with one separate plus on a transparent square canvas, without a backing tile, text, player portrait or invitation-state badge",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable Invite Friend entry identity with room and menu delivery variants",
+        "liveData": "real friend and rival cards, profile images, Power and POB/NER/POR data, requests, invitations, sockets, boards and gameplay remain separate functional UI and assets"
+      },
+      "canonicalRuntime": [
+        { "role": "room", "path": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png", "size": 512, "sha256": "30894f35a73c1ae1e1ca27267c2342e7c2aac46753c3d8ccffcc5bfaaa0dd356" },
+        { "role": "menu", "path": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png", "size": 384, "sha256": "ae634e3928fef02d57d8dc13f5415ff5de76e1451575a92a155319fd1c5b77e4" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/mode-invite-free-v2.png",
+        "assets/green-soft-clay/runtime/menu/mode-invite-free-v2.png"
+      ],
+      "retiredMasterReplacements": {
+        "mode-invite-free-v2.png": "canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+        "runtime/menu/mode-invite-free-v2.png": "canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png"
+      },
+      "semanticExclusions": [
+        "add or search friend shared action",
+        "send, empty, sent and accepted invitation states",
+        "H2H empty identity and greatest-rival data",
+        "Online Players, Online Random, Hotseat and Solo room identities",
+        "real friend and rival cards, portraits, names, Power and POB/NER/POR data",
+        "friend search, requests, invitation delivery and room-join logic",
+        "socket connection, reconnect fairness, board swipe and automatic active-player following",
+        "scoring, gameplay rules, board geometry and unrelated theme assets"
+      ],
+      "codeBindings": [
+        "Green Invite Friend main-menu icon and startup preload",
+        "Green Invite Friend 4.6-second icon-only intro",
+        "Green Invite Friend waiting-room header and SR/EN Rules references",
+        "Green Invite Friend room-on-demand pack with four separate invitation states"
+      ]
+    },
+    "dailyStates": {
+      "semanticRole": "three separate Green Daily Challenge identities for the task, successful completion and already-played replay lock states",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/daily-states/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and one restrained terracotta accent",
+        "presentation": "one centered state glyph on a transparent background without text, frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable PNG identity for each Daily task, completion and already-played state"
+      },
+      "canonicalRuntime": [
+        { "role": "task", "path": "assets/green-soft-clay/canonical/daily-states/task-v1.png", "size": 384, "sha256": "750f23bcf3458d5017f838f9717560041279702a0c35a4f4dc4031504cc8ffe9" },
+        { "role": "complete", "path": "assets/green-soft-clay/canonical/daily-states/complete-v1.png", "size": 384, "sha256": "bc340dc50f576c011e6073eb929a914a4538ab39a38a95b4423fbe3e863ba97d" },
+        { "role": "already-played", "path": "assets/green-soft-clay/canonical/daily-states/already-played-v1.png", "size": 384, "sha256": "3a5b3b09c98487465d463c855e343134a12e33fd15ab02ffe49d4ed0f58eca3e" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/daily/task-v1.png",
+        "assets/green-soft-clay/daily/complete-v1.png",
+        "assets/green-soft-clay/daily/already-played-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "daily/task-v1.png": "canonical/daily-states/task-v1.png",
+        "daily/complete-v1.png": "canonical/daily-states/complete-v1.png",
+        "daily/already-played-v1.png": "canonical/daily-states/already-played-v1.png"
+      },
+      "semanticExclusions": [
+        "main Daily Challenge menu, loading-gate, intro and room-header identity",
+        "Daily rewarded-video and canonical ducat composition",
+        "server-selected dice, rolling dice, scoring and reward logic",
+        "leaderboard, statistics, tournament, treasury and other room states"
+      ],
+      "codeBindings": [
+        "Green Daily Challenge task card",
+        "Green Daily Challenge successful-completion card",
+        "Green Daily Challenge already-played replay-lock card",
+        "Green Daily room-on-demand pack"
+      ]
+    },
+    "leaderboardControls": {
+      "semanticRole": "distinct Global and Local leaderboard navigation glyphs plus one shared empty and loading state identity",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/leaderboard-controls/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and restrained terracotta accents",
+        "presentation": "one centered freestanding glyph on a transparent canvas without text, frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable PNG for Global navigation, one for Local navigation and one shared empty/loading state"
+      },
+      "canonicalRuntime": [
+        { "role": "global", "path": "assets/green-soft-clay/canonical/leaderboard-controls/global-v1.png", "size": 256, "bytes": 47269, "sha256": "3a9aa67230a1d53d6e1e05dac1b8f8ca4a738f92cb3cf07d495bde165ac2519a" },
+        { "role": "local", "path": "assets/green-soft-clay/canonical/leaderboard-controls/local-v1.png", "size": 256, "bytes": 38952, "sha256": "44e60c1c9a9166f77294a9d3197bdb4cfd41c64d283753288635498de39d5630" },
+        { "role": "empty-loading", "path": "assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png", "size": 384, "bytes": 68504, "sha256": "7b0c89808cd5185fb53e16a52320f1e575fbeeb691efad255971f5ca9aee67ba" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/leaderboard/global-v1.png",
+        "assets/green-soft-clay/leaderboard/local-v1.png",
+        "assets/green-soft-clay/leaderboard/empty-loading-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "leaderboard/global-v1.png": "canonical/leaderboard-controls/global-v1.png",
+        "leaderboard/local-v1.png": "canonical/leaderboard-controls/local-v1.png",
+        "leaderboard/empty-loading-v1.png": "canonical/leaderboard-controls/empty-loading-v1.png"
+      },
+      "semanticExclusions": [
+        "main Leaderboard room menu, intro, header, Rules and loading-gate identity",
+        "General Podium medals for actual rank positions",
+        "Rules Statistics and leaderboards narrative illustration",
+        "Statistics metrics, seasonal rank badges, trophies, scores and filter logic",
+        "Online Random room entry and connection-state identities"
+      ],
+      "codeBindings": [
+        "Green Global and Local tabs and panel headings",
+        "Green Leaderboard empty and loading states",
+        "Green online waiting Hall of Fame shared loading and empty state",
+        "Green Leaderboard room-on-demand pack"
+      ]
+    },
+    "rulesPageIllustrations": {
+      "semanticRole": "four distinct Green Rules page title scenes for scoring, statistics and leaderboards, multiplayer competitions, and account privacy and server",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/rules-page-illustrations/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and restrained terracotta accents",
+        "presentation": "one transparent page scene per SR/EN title without text, square frame or backing tile",
+        "lighting": "soft upper-left light with controlled clay depth",
+        "mapping": "one immutable 512px PNG for each of four page titles; Communication and Economy/Treasury remain protected outside this family"
+      },
+      "canonicalRuntime": [
+        { "role": "rules-scoring", "path": "assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png", "size": 512, "bytes": 188200, "sha256": "58d0c32e0cd9c8a92e97a95b6ccb4468df19adde7901ef2052e42a45a3ea00ca" },
+        { "role": "stats-leaderboards", "path": "assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png", "size": 512, "bytes": 174369, "sha256": "41b88e864d1933b43ba9081c5ebba6d6844e23afc3fba71f5cac45ecb6969b7a" },
+        { "role": "multiplayer-competitions", "path": "assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png", "size": 512, "bytes": 193124, "sha256": "efa52e4b24c8d78602efb812bba4cde8c36fdf4b345fb683337386cd44cbe50b" },
+        { "role": "account-server", "path": "assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png", "size": 512, "bytes": 240872, "sha256": "a1092f5af79c8a73982147c78713de0e0fe7b92cfe0bdf7557babb9ba6cfab7a" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/rules/pages/rules-scoring-v1.png",
+        "assets/green-soft-clay/rules/pages/stats-leaderboards-v1.png",
+        "assets/green-soft-clay/rules/pages/multiplayer-competitions-v1.png",
+        "assets/green-soft-clay/rules/pages/account-server-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "rules/pages/rules-scoring-v1.png": "canonical/rules-page-illustrations/rules-scoring-v1.png",
+        "rules/pages/stats-leaderboards-v1.png": "canonical/rules-page-illustrations/stats-leaderboards-v1.png",
+        "rules/pages/multiplayer-competitions-v1.png": "canonical/rules-page-illustrations/multiplayer-competitions-v1.png",
+        "rules/pages/account-server-v1.png": "canonical/rules-page-illustrations/account-server-v1.png"
+      },
+      "semanticExclusions": [
+        "main Rules room menu, intro, header, Rules reference and loading-gate identity",
+        "Communication page scene owned by Global Chat and Online Players",
+        "Economy/Treasury page composition with canonical ducats and Undo token",
+        "Global and Local leaderboard controls and actual podium medals",
+        "Online Random room entry, connection states and actual game dice",
+        "Settings functional controls, profile data, rules text and navigation"
+      ],
+      "codeBindings": [
+        "Green Rules SR and EN page 1 scoring illustration",
+        "Green Rules SR and EN page 2 statistics illustration",
+        "Green Rules SR and EN page 3 multiplayer illustration",
+        "Green Rules SR and EN page 6 account and server illustration",
+        "Green Rules room-on-demand package"
+      ]
+    },
+    "settingsControls": {
+      "semanticRole": "eight distinct functional glyphs inside Green Settings, with profile and privacy also reused in Rules",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/settings-controls/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and restrained terracotta accents",
+        "presentation": "one freestanding glyph per setting on transparent canvas without text, frame or backing tile",
+        "mapping": "one immutable 256px PNG per semantic control; the Settings room gear remains separate"
+      },
+      "canonicalRuntime": [
+        { "role": "profile", "path": "assets/green-soft-clay/canonical/settings-controls/profile-v1.png", "size": 256, "bytes": 40077, "sha256": "4d9dbbce33cecc87901eabdb67719b9f8253526a8f5df7340fb9dfda50b901c4" },
+        { "role": "sound", "path": "assets/green-soft-clay/canonical/settings-controls/sound-v1.png", "size": 256, "bytes": 41850, "sha256": "0b5a470fb79fc8e8805a4a627a88d4639aafc68ee631ff1d9f9ab0c8561a7ce4" },
+        { "role": "music", "path": "assets/green-soft-clay/canonical/settings-controls/music-v1.png", "size": 256, "bytes": 31850, "sha256": "8c81adfd83a6389ef5c5f55ab098e36610e1a11427731bbaad1edfb9468bd88f" },
+        { "role": "vibration", "path": "assets/green-soft-clay/canonical/settings-controls/vibration-v1.png", "size": 256, "bytes": 42238, "sha256": "893e80c00e4cf4432bd7fcd9cba2deeeee96807faf7ce95c7421c28ee6b871c0" },
+        { "role": "display-theme", "path": "assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png", "size": 256, "bytes": 57344, "sha256": "9c9332adbc012cbd3211bf4c909437d09cc1a10ee960d683e00fdea81ea5669a" },
+        { "role": "language", "path": "assets/green-soft-clay/canonical/settings-controls/language-v1.png", "size": 256, "bytes": 47659, "sha256": "ea983bc0e7b24162e7682897fdd6cbe4da45a5383664297eb76a29fb70f0b742" },
+        { "role": "terms", "path": "assets/green-soft-clay/canonical/settings-controls/terms-v1.png", "size": 256, "bytes": 50701, "sha256": "07cebe403288e99f12c63e1f3afa2fb5de884cc6387514f82e28e7de71c2ebc5" },
+        { "role": "privacy", "path": "assets/green-soft-clay/canonical/settings-controls/privacy-v1.png", "size": 256, "bytes": 46345, "sha256": "4118758bdf0cc8798654c48f4d15a05e28124426d61f3d4f404d629dada3a48b" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [
+        "assets/green-soft-clay/settings/profile-v1.png",
+        "assets/green-soft-clay/settings/sound-v1.png",
+        "assets/green-soft-clay/settings/music-v1.png",
+        "assets/green-soft-clay/settings/vibration-v1.png",
+        "assets/green-soft-clay/settings/display-theme-v1.png",
+        "assets/green-soft-clay/settings/language-v1.png",
+        "assets/green-soft-clay/settings/terms-v1.png",
+        "assets/green-soft-clay/settings/privacy-v1.png"
+      ],
+      "retiredMasterReplacements": {
+        "settings/profile-v1.png": "canonical/settings-controls/profile-v1.png",
+        "settings/sound-v1.png": "canonical/settings-controls/sound-v1.png",
+        "settings/music-v1.png": "canonical/settings-controls/music-v1.png",
+        "settings/vibration-v1.png": "canonical/settings-controls/vibration-v1.png",
+        "settings/display-theme-v1.png": "canonical/settings-controls/display-theme-v1.png",
+        "settings/language-v1.png": "canonical/settings-controls/language-v1.png",
+        "settings/terms-v1.png": "canonical/settings-controls/terms-v1.png",
+        "settings/privacy-v1.png": "canonical/settings-controls/privacy-v1.png"
+      },
+      "semanticExclusions": [
+        "main Settings room menu, intro, header and loading-gate gear identity",
+        "live toggles, selected values, account data, legal URL content and Rules text",
+        "other room identities, medals, ranks and gameplay dice"
+      ],
+      "codeBindings": [
+        "Green Settings profile and display/language headings",
+        "Green Settings sound, music and vibration rows",
+        "Green Settings terms and privacy links",
+        "Green Rules inline profile and privacy glyphs",
+        "Green Settings room-on-demand package"
+      ]
     }
   }
 }

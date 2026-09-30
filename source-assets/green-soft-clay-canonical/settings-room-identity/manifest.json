@@ -1,0 +1,111 @@
+{
+  "id": "green-settings-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "single Green identity for entering the Settings room across menu, intro, header and Rules",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green gear, warm-ivory raised ring and one terracotta center dot",
+    "presentation": "one centered free-standing gear glyph on a transparent background without text, frame or backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Settings room identity with room and menu delivery variants"
+  },
+  "master": {
+    "path": "green-settings-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 1208329,
+    "sha256": "e7c20cc7fc3fce6a93c3c69cff6c14e398f405cd80037180c53cc1d89aa8ee67",
+    "approvedSource": "source-assets/green-soft-clay-hires/settings-free-v2.png",
+    "approvedSourceSha256": "e7c20cc7fc3fce6a93c3c69cff6c14e398f405cd80037180c53cc1d89aa8ee67"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Settings icon-only intro, room header, Rules inline identity, theme loading gate and room-on-demand preload",
+      "usedBy": [
+        "Settings icon-only room intro",
+        "Settings room header",
+        "Green Rules Settings reference",
+        "Green theme loading gate Settings icon",
+        "Green Settings room-on-demand package"
+      ],
+      "displaySizes": [
+        [32, 32],
+        [45, 45],
+        ["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"],
+        ["responsive-inline", "responsive-inline"]
+      ],
+      "runtime": "www/assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 195989,
+      "runtimeSha256": "ab4a2390a61348440cd594ade5aef57c0c1a3a05c0b3f6007b5783630f5ab3c9",
+      "activeRuntime": "www/assets/green-soft-clay/settings-free-v2.png",
+      "activeRuntimeSha256": "ab4a2390a61348440cd594ade5aef57c0c1a3a05c0b3f6007b5783630f5ab3c9",
+      "expectedCanonicalReferences": 4,
+      "normalization": "approved 1254x1254 RGBA master reduced directly to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Settings main-menu startup icon",
+      "usedBy": [
+        "Green main-menu Settings button",
+        "Green startup preload collected from the active main-menu DOM"
+      ],
+      "displaySizes": [[52, 52], [46, 46]],
+      "runtime": "www/assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 118253,
+      "runtimeSha256": "9018529478652929f353e24edf8c02edb1193896791e39b3284b664862915201",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/settings-free-v2.png",
+      "activeRuntimeSha256": "9018529478652929f353e24edf8c02edb1193896791e39b3284b664862915201",
+      "expectedCanonicalReferences": 1,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling to preserve the approved menu delivery"
+    }
+  ],
+  "rejectedCandidates": [
+    {
+      "id": "settings-pro-v1",
+      "status": "rejected-orphan",
+      "source": "source-assets/green-soft-clay-hires/settings-pro-v1.png",
+      "sourceSize": [1254, 1254],
+      "sourceSha256": "8449fae31b26a917f672fbfff55f13c8ae1e79912b54274e0d9a471c345927d2",
+      "runtime": "www/assets/green-soft-clay/settings-pro-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 254057,
+      "runtimeSha256": "a67996b03ced2f73ed606a8899c4999359882f0faf51374e2ae34802baea407d",
+      "activeReferences": 0,
+      "reason": "framed square illustration violates the free-standing Green menu-icon rule and has no active Green consumer",
+      "retirement": "runtime retired in standardization step 3; rejected high-resolution source retained for audit provenance"
+    }
+  ],
+  "motionContract": {
+    "mainMenu": "easterBottomIconWave 8.4s with Settings delay 1.74s and reduced-motion fallback",
+    "intro": "greenRoomIconPulse 1.8s at scale 1 inside the shared 4.6s room intro with reduced-motion fallback",
+    "header": "static 32x32 contain presentation",
+    "rules": "existing responsive inline presentation",
+    "loadingGate": "source PNG inside the shared 45x45 floating icon presentation"
+  },
+  "integration": {
+    "mainMenu": "connected",
+    "settingsIntro": "connected",
+    "settingsHeader": "connected",
+    "rules": "connected",
+    "themeLoadingGate": "connected",
+    "roomOnDemand": "connected",
+    "startup": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "rejectedAlternate": "runtime retired in standardization step 3; high-resolution source retained for audit provenance",
+    "centralRegistry": "standardized in standardization step 3",
+    "cacheVersion": 51,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "Settings profile and account glyph",
+    "Settings sound, music and vibration glyphs",
+    "Settings display/theme and language glyphs",
+    "Settings terms and privacy glyphs",
+    "live form controls, account data and legal links",
+    "other room identities, medals, ranks and gameplay dice"
+  ]
+}

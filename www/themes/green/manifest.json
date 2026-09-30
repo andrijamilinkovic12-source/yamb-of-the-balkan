@@ -1,10 +1,11 @@
 {
   "id": "dark",
   "name": "Zelena Soft Clay",
-  "version": 50,
+  "version": 63,
   "status": "complete",
   "background": "assets/green-clay-balkan-diorama-v3.png",
   "defaultDiceSkin": "green_clay",
+  "foundationManifest": "source-assets/green-soft-clay-canonical/theme-foundation/manifest.json",
   "designTokens": {
     "surface": "muted emerald and jade matte clay",
     "ink": "deep forest green",
@@ -51,9 +52,14 @@
     "Use one canonical Green Tournament champion trophy for the main-menu identity, intro, room branding, champion results and ceremony, and one separate canonical silver medal for Tournament finalist status. Keep both distinct from podium, collection, achievement, navigation, state, rank and generic winner assets.",
     "Use one canonical Green Hotseat Winner mark only for a completed non-draw local two-player game: two clay player figures with the forest-green winner in front, one ivory check and one terracotta accent. Do not reuse it for Statistics, Solo, Online, technical, Tournament, League, Treasury or generic winner states.",
     "Use the canonical Green Solo Results pack with separate Personal Best, Final Score Mark and Finish Claim identities. Keep the locked Rewarded Video composition, main Solo menu/intro icon, CSS score tiers, Statistics metrics and multiplayer result states outside this family, while preserving real high-score and claim behavior.",
+    "Use one canonical Green Solo room identity for the main-menu card and 4.6-second icon-only intro: the 384 px menu delivery is the only Solo image loaded at startup and the 512 px room delivery loads only on Solo entry. Keep Solo Results, Rewarded Video, Hotseat Winner and the other three mode identities separate.",
+    "Use one canonical Green Hotseat room identity for the main-menu card and 4.6-second icon-only intro: two equal local players with the 384 px menu delivery loaded at startup and the 512 px room delivery loaded only on Hotseat entry. Keep the decisive Hotseat Winner, draw handling, H2H statistics, Online Players and other mode identities separate.",
+    "Use one canonical Green Online Random room identity across the main-menu card, 4.6-second icon-only intro, waiting-room header and matching SR/EN Rules references: the 384 px menu delivery is the only Online Random image loaded at startup and the 512 px room delivery loads with five separate matchmaking/connection states only on Online Random entry. Keep real player data, spectate, Invite Friend, Hotseat, Online Players and H2H identities separate.",
+    "Use one canonical Green Invite Friend room identity across the main-menu card, 4.6-second icon-only intro, waiting-room header and matching SR/EN Rules references: the 384 px menu delivery is the only Invite Friend image loaded at startup and the 512 px room delivery loads with four separate invitation states only on Invite Friend entry. Keep add-friend, H2H empty/rival data, Online Players, Online Random, Hotseat and real friend data separate.",
     "Use the canonical Green Statistics Overview pack with separate Power Index, Record, Games, Wins, Draws, Losses, Fire Streak, Average, Trophies and All-time Points identities. Keep H2H, canonical dukat, Solo Personal Best, Hotseat Winner, competition awards and individual achievements outside this family while preserving all real statistics data, formulas, modal actions and display sizes.",
     "Use the canonical Green H2H Statistics pack for the H2H identity, empty state, rival-specific highest score, maximum win margin, worst loss margin and VS separator. Reuse the locked Statistics Overview Fire Streak, Draws and Average glyphs for identical H2H concepts without merging their opponent-specific data or formulas.",
     "Use one canonical Green Statistics Room identity across the main menu, theme loading gate, 4.6-second icon-only intro, room header and matching Rules references. Use the 384 px menu delivery only on the startup path and the 512 px room delivery only for room, intro, header and Rules contexts; never restore the rejected framed statistics-pro variant.",
+    "Use one canonical Green Online Players room identity across the main-menu card, 4.6-second icon-only intro, room header and matching SR/EN Rules references. Use the 384 px menu delivery at startup and the 512 px room delivery on room entry; preserve the separate live presence dot, player count, list-state and shared add-friend, spectate and duel actions. Never restore the rejected framed online-players-pro variant or add this room identity to the theme loading gate.",
     "Load only the active Green splash, background and optimized 384 px main-menu thumbnails at startup; hydrate each room's transparent 256/384/512 px runtime PNGs on room entry, while preserving the original high-resolution masters outside the shipped www tree.",
     "Preserve the existing internal dark theme ID for saved-profile compatibility."
   ]

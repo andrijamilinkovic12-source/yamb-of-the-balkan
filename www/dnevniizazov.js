@@ -715,7 +715,7 @@ class DnevniIzazov {
             <div class="daily-glass-card" id="glass-daily-card">
                 <div class="daily-glass-header">
                     <img class="daily-glass-room-mark-green" data-theme-src="assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                    <img class="daily-glass-task-mark-green" data-theme-src="assets/green-soft-clay/daily/task-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="daily-glass-task-mark-green" data-theme-src="assets/green-soft-clay/canonical/daily-states/task-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-room-mark-easter" data-theme-src="assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-task-mark-easter" data-theme-src="assets/easter-soft-clay/daily/task-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="daily-glass-room-mark-desert" data-theme-src="assets/desert-soft-clay/daily-challenge-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -999,7 +999,7 @@ class DnevniIzazov {
     showAlreadyPlayedInfo() {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         const message = activeTheme === 'dark'
-            ? `<div class="daily-already-green"><img class="daily-already-green-icon" data-theme-src="assets/green-soft-clay/daily/already-played-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
+            ? `<div class="daily-already-green"><img class="daily-already-green-icon" data-theme-src="assets/green-soft-clay/canonical/daily-states/already-played-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
             : activeTheme === 'easter'
                 ? `<div class="daily-already-easter"><img class="daily-already-easter-icon" data-theme-src="assets/easter-soft-clay/daily/already-played-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${t('dc_done')}</span></div>`
                 : activeTheme === 'desert'
@@ -1233,9 +1233,11 @@ class DnevniIzazov {
         const resDiv = document.createElement('div');
         resDiv.id = 'glass-daily-result';
         resDiv.className = 'glass-daily-result';
+        resDiv.setAttribute('role', 'status');
+        resDiv.setAttribute('aria-label', t('dc_success'));
 
         resDiv.innerHTML = `
-            <img class="daily-glass-complete-mark-green" data-theme-src="assets/green-soft-clay/daily/complete-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <img class="daily-glass-complete-mark-green" data-theme-src="assets/green-soft-clay/canonical/daily-states/complete-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <img class="daily-glass-complete-mark-easter" data-theme-src="assets/easter-soft-clay/daily/complete-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <img class="daily-glass-complete-mark-desert" data-theme-src="assets/desert-soft-clay/daily/complete-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <img class="daily-glass-complete-mark-nebula" data-theme-src="assets/severna-soft-clay/daily/complete-v11.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">

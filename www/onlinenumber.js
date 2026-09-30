@@ -80,7 +80,7 @@ window.showNotification = function(title, message, options = {}) {
         container = document.createElement('div');
         container.id = containerId;
         container.style.position = 'fixed';
-        container.style.top = '20px';
+        container.style.top = 'max(20px, calc(env(safe-area-inset-top) + 12px))';
         container.style.left = '50%';
         container.style.transform = 'translateX(-50%)';
         container.style.zIndex = '100000';
@@ -96,6 +96,8 @@ window.showNotification = function(title, message, options = {}) {
     const toast = document.createElement('div');
     const safeClassName = String(options.className || '').replace(/[^a-zA-Z0-9_-]/g, '');
     toast.className = `custom-toast ${safeClassName}`.trim();
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     const optionalIcon = options.icon
         ? `<img class="custom-toast-soft-clay-icon" src="${sec.escapeAttr(options.icon)}" alt="" aria-hidden="true" decoding="async">`
         : '';
@@ -164,6 +166,9 @@ let onlinePlayersFilteredCount = 0;
 let onlinePlayersSearchQuery = '';
 let onlinePlayersRenderCurrent = null;
 let onlinePlayersSearchTimer = null;
+let onlinePlayersConnectionTimer = null;
+let onlinePlayersPendingConnectHandler = null;
+let onlinePlayersDisconnectHandler = null;
 
 function normalizeOnlinePlayerSearch(value) {
     return String(value || '')
@@ -230,10 +235,22 @@ function stopOnlinePlayersAutoRefresh() {
 
 function cleanupOnlinePlayersSocketListeners() {
     const socket = window.app && window.app.socket;
+    if (onlinePlayersConnectionTimer) {
+        clearTimeout(onlinePlayersConnectionTimer);
+        onlinePlayersConnectionTimer = null;
+    }
     if (!socket || typeof socket.off !== 'function') return;
 
     socket.off('online_players_list_data');
     socket.off('online_players_status_changed');
+    if (onlinePlayersDisconnectHandler) {
+        socket.off('disconnect', onlinePlayersDisconnectHandler);
+        onlinePlayersDisconnectHandler = null;
+    }
+    if (onlinePlayersPendingConnectHandler) {
+        socket.off('connect', onlinePlayersPendingConnectHandler);
+        onlinePlayersPendingConnectHandler = null;
+    }
 }
 
 function startOnlinePlayersAutoRefresh() {
@@ -273,6 +290,7 @@ window.refreshOnlinePlayersModal = function() {
 
 // --- NOVA FUNKCIJA: OTVARANJE MODALA ZA ONLINE IGRAČE ---
 window.openOnlinePlayersModal = function() {
+    cleanupOnlinePlayersSocketListeners();
     const sec = getOnlineNumberSecurity();
     const tr = (key, fallback) => {
         const value = window.t ? window.t(key) : key;
@@ -294,7 +312,7 @@ window.openOnlinePlayersModal = function() {
     const renderPlayersState = (state, text) => {
         if (!body) return;
         body.innerHTML = `
-            <div class="online-players-state ${state === 'loading' ? 'is-loading' : ''}" data-online-state="${sec.escapeAttr(state)}">
+            <div class="online-players-state ${state === 'loading' ? 'is-loading' : ''}" data-online-state="${sec.escapeAttr(state)}" role="${state === 'error' ? 'alert' : 'status'}" aria-live="${state === 'error' ? 'assertive' : 'polite'}">
                 <img class="online-players-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="online-players-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="online-players-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-players-state-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -344,6 +362,11 @@ window.openOnlinePlayersModal = function() {
 
     if (window.app && window.app.socket) {
         const bindOnlinePlayersList = () => {
+            if (onlinePlayersConnectionTimer) {
+                clearTimeout(onlinePlayersConnectionTimer);
+                onlinePlayersConnectionTimer = null;
+            }
+            onlinePlayersPendingConnectHandler = null;
             if (!isOnlinePlayersModalOpen()) return;
             const renderOnlinePlayers = (players, options = {}) => {
             if (!body) return;
@@ -470,6 +493,13 @@ window.openOnlinePlayersModal = function() {
             }
 
             body.innerHTML = html;
+            body.querySelectorAll('.online-player-action[title]').forEach(button => {
+                button.setAttribute('aria-label', button.title);
+            });
+            body.querySelectorAll('.online-player-identity > img').forEach(avatar => {
+                avatar.alt = '';
+                avatar.setAttribute('aria-hidden', 'true');
+            });
             if (options.preserveScroll) body.scrollTop = previousScrollTop;
             fitOnlinePlayerNames(body);
         };
@@ -482,6 +512,13 @@ window.openOnlinePlayersModal = function() {
             window.app.socket.on('online_players_status_changed', () => {
                 if (isOnlinePlayersModalOpen()) requestOnlinePlayersList();
             });
+            if (onlinePlayersDisconnectHandler) window.app.socket.off('disconnect', onlinePlayersDisconnectHandler);
+            onlinePlayersDisconnectHandler = () => {
+                if (isOnlinePlayersModalOpen()) {
+                    renderPlayersState('error', tr('online_no_conn', 'Niste povezani na server.'));
+                }
+            };
+            window.app.socket.on('disconnect', onlinePlayersDisconnectHandler);
 
             startOnlinePlayersAutoRefresh();
             requestOnlinePlayersList();
@@ -490,13 +527,21 @@ window.openOnlinePlayersModal = function() {
         if (window.app.socket.connected) {
             bindOnlinePlayersList();
         } else {
+            onlinePlayersPendingConnectHandler = bindOnlinePlayersList;
             window.app.socket.once('connect', bindOnlinePlayersList);
+            onlinePlayersConnectionTimer = setTimeout(() => {
+                onlinePlayersConnectionTimer = null;
+                if (!isOnlinePlayersModalOpen() || window.app.socket.connected) return;
+                if (body?.querySelector('[data-online-state="loading"]')) {
+                    renderPlayersState('error', tr('online_no_conn', 'Niste povezani na server.'));
+                }
+            }, 8000);
             if (window.app.socket.disconnected) window.app.socket.connect();
         }
     } else {
         if (body) {
             const noConnText = tr('online_no_conn', 'Niste povezani na server.');
-            body.innerHTML = `<div style="text-align: center; color: var(--danger); font-weight: bold; padding-top: 20px;">${sec.escapeHtml(noConnText)}</div>`;
+            renderPlayersState('error', noConnText);
         }
     }
 };

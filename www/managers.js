@@ -142,7 +142,7 @@ class StatsManager {
 
 // --- 3. MODAL MANAGER (UI) ---
 class ModalManager {
-    constructor() {}
+    constructor() { this.previousFocus = null; }
 
     get elements() {
         return {
@@ -235,8 +235,23 @@ class ModalManager {
         }
     }
 
-    open() { const els = this.elements; if(els.overlay) els.overlay.style.display = 'flex'; }
-    close() { const els = this.elements; if(els.overlay) els.overlay.style.display = 'none'; }
+    open() {
+        const els = this.elements;
+        if (!els.overlay) return;
+        if (document.documentElement.dataset.splashTheme === 'dark') this.previousFocus = document.activeElement;
+        els.overlay.style.display = 'flex';
+        if (document.documentElement.dataset.splashTheme === 'dark') {
+            const target = els.input && !els.input.classList.contains('hidden') ? els.input
+                : els.btnCancel && !els.btnCancel.classList.contains('hidden') ? els.btnCancel : els.btnOk;
+            target?.focus({ preventScroll: true });
+        }
+    }
+    close() {
+        const els = this.elements;
+        if (els.overlay) els.overlay.style.display = 'none';
+        if (this.previousFocus?.isConnected) this.previousFocus.focus({ preventScroll: true });
+        this.previousFocus = null;
+    }
 }
 
 // --- 4. EFFECT MANAGER (VISUALS) ---

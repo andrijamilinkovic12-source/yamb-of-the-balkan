@@ -1,0 +1,66 @@
+{
+  "id": "green-theme-foundation",
+  "version": 1,
+  "status": "locked",
+  "scope": "Green theme background and splash foundation; intentionally outside icon-family asset-registry.json",
+  "active": [
+    {
+      "role": "theme background",
+      "runtime": "www/assets/green-clay-balkan-diorama-v3.png",
+      "size": [941, 1672],
+      "bytes": 1562192,
+      "colorType": 2,
+      "sha256": "049c6cdafe90cd37bab3f1b2c48831ed7253ca16d95ba411f8cec98f58a12c41"
+    },
+    {
+      "role": "splash title",
+      "runtime": "www/assets/green-soft-clay/splash-title-soft-clay-v1.png",
+      "size": [1672, 941],
+      "bytes": 1687588,
+      "colorType": 6,
+      "sha256": "2773c5e488ce046fb2a83266ebfaee4d4597733169dd4bacdf353a046226a6d3"
+    }
+  ],
+  "retiredRuntime": [
+    {
+      "role": "superseded first Balkan diorama candidate",
+      "historicalPath": "www/assets/green-clay-balkan-diorama-v1.png",
+      "size": [941, 1672],
+      "bytes": 2242192,
+      "colorType": 2,
+      "sha256": "4eb1fa4059da0ac9cf3985972ea3b243bbc583d6b0e7a3101b9f2afd335eb22a",
+      "recovery": "tracked Git history"
+    },
+    {
+      "role": "superseded second Balkan diorama candidate",
+      "historicalPath": "www/assets/green-clay-balkan-diorama-v2.png",
+      "size": [941, 1672],
+      "bytes": 1563017,
+      "colorType": 2,
+      "sha256": "1575115c7491bc50df21baa50e3f7fb843b1a6ff3a6bf34190f9071cc72efe95",
+      "recovery": "tracked Git history"
+    },
+    {
+      "role": "superseded early Yamb background candidate",
+      "historicalPath": "www/assets/green-clay-yamb-bg-v1.png",
+      "size": [941, 1672],
+      "bytes": 1545247,
+      "colorType": 2,
+      "sha256": "54611a8d156b63a576a1bebe23ac692e65e5ddaed04dba8d0916b6100474c2db",
+      "recovery": "tracked Git history"
+    }
+  ],
+  "integration": {
+    "activeBackground": "connected through www/themes/green/manifest.json, www/index.html and www/game.js",
+    "splash": "connected through www/index.html and Green startup preload",
+    "retiredRuntime": "removed from shipped www tree in Global Coverage step 2 after zero-reference and hash verification",
+    "cacheVersion": 59,
+    "finalAudit": "locked by scripts/check-green-asset-coverage.js"
+  },
+  "semanticExclusions": [
+    "procedural Green game-board CSS layers",
+    "green_clay CSS dice skin and valid pip geometry",
+    "canonical room, action, state, medal, trophy, currency and navigation PNG families",
+    "other themes and their backgrounds or splash titles"
+  ]
+}

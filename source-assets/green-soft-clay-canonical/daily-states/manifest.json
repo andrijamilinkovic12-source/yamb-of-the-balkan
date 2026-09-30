@@ -1,0 +1,147 @@
+{
+  "id": "green-daily-states",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "three separate Green Daily Challenge identities for the task, successful completion and already-played replay lock states",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and one restrained terracotta accent",
+    "presentation": "one centered state glyph on a transparent background without text, frame or backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable PNG identity for each Daily task, completion and already-played state"
+  },
+  "catalog": [
+    {
+      "id": "task",
+      "role": "active Daily Challenge task and target state",
+      "glyph": "warm-ivory checklist calendar with forest-green binders and check, terracotta top and task dots, and one pale-green active row",
+      "usedBy": [
+        "Daily Challenge task card",
+        "Daily room-on-demand package"
+      ],
+      "displaySize": [44, 44],
+      "master": "green-daily-task-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterBytes": 1136336,
+      "masterSha256": "660c7737a83fbb49dccefa5648fcc999b5fb2669bdf79dae992482fd39a13372",
+      "approvedSource": "source-assets/green-soft-clay-hires/daily/task-v1.png",
+      "approvedSourceSize": [1254, 1254],
+      "approvedSourceBytes": 1136336,
+      "approvedSourceSha256": "660c7737a83fbb49dccefa5648fcc999b5fb2669bdf79dae992482fd39a13372",
+      "runtime": "www/assets/green-soft-clay/canonical/daily-states/task-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 106757,
+      "runtimeSha256": "750f23bcf3458d5017f838f9717560041279702a0c35a4f4dc4031504cc8ffe9",
+      "activeRuntime": "www/assets/green-soft-clay/daily/task-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeBytes": 106757,
+      "activeRuntimeSha256": "750f23bcf3458d5017f838f9717560041279702a0c35a4f4dc4031504cc8ffe9",
+      "legacyReferencesBeforeIntegration": 2,
+      "expectedCanonicalReferences": 2,
+      "normalization": "direct 1254x1254 to 384x384 LANCZOS reduction on the full transparent RGBA canvas"
+    },
+    {
+      "id": "complete",
+      "role": "successfully completed Daily Challenge state",
+      "glyph": "forest-green completion medallion with a large warm-ivory check and one restrained terracotta accent",
+      "usedBy": [
+        "Daily Challenge completion card",
+        "Daily room-on-demand package"
+      ],
+      "displaySize": [58, 58],
+      "master": "green-daily-complete-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterBytes": 1399019,
+      "masterSha256": "d348d061b4764f93e243249d570b43b3c3a3ec46ee785875741d4ab222ad9f75",
+      "approvedSource": "source-assets/green-soft-clay-hires/daily/complete-v1.png",
+      "approvedSourceSize": [1254, 1254],
+      "approvedSourceBytes": 1399019,
+      "approvedSourceSha256": "d348d061b4764f93e243249d570b43b3c3a3ec46ee785875741d4ab222ad9f75",
+      "runtime": "www/assets/green-soft-clay/canonical/daily-states/complete-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 117989,
+      "runtimeSha256": "bc340dc50f576c011e6073eb929a914a4538ab39a38a95b4423fbe3e863ba97d",
+      "activeRuntime": "www/assets/green-soft-clay/daily/complete-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeBytes": 117989,
+      "activeRuntimeSha256": "bc340dc50f576c011e6073eb929a914a4538ab39a38a95b4423fbe3e863ba97d",
+      "legacyReferencesBeforeIntegration": 2,
+      "expectedCanonicalReferences": 2,
+      "normalization": "direct 1254x1254 to 384x384 LANCZOS reduction on the full transparent RGBA canvas"
+    },
+    {
+      "id": "already-played",
+      "role": "already-played Daily Challenge replay-lock state",
+      "glyph": "warm-ivory calendar with forest-green binders, check and clock hands plus a terracotta top and clock rim",
+      "usedBy": [
+        "Daily Challenge already-played card",
+        "Daily room-on-demand package"
+      ],
+      "displaySize": [104, 104],
+      "master": "green-daily-already-played-master-v1.png",
+      "masterSize": [1254, 1254],
+      "masterBytes": 1239755,
+      "masterSha256": "ce45193a5ac23d30d757c7e0928016f70b667e06f7daf4903ce87a2a676c69a4",
+      "approvedSource": "source-assets/green-soft-clay-hires/daily/already-played-v1.png",
+      "approvedSourceSize": [1254, 1254],
+      "approvedSourceBytes": 1239755,
+      "approvedSourceSha256": "ce45193a5ac23d30d757c7e0928016f70b667e06f7daf4903ce87a2a676c69a4",
+      "runtime": "www/assets/green-soft-clay/canonical/daily-states/already-played-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 118655,
+      "runtimeSha256": "3a5b3b09c98487465d463c855e343134a12e33fd15ab02ffe49d4ed0f58eca3e",
+      "activeRuntime": "www/assets/green-soft-clay/daily/already-played-v1.png",
+      "activeRuntimeSize": [384, 384],
+      "activeRuntimeBytes": 118655,
+      "activeRuntimeSha256": "3a5b3b09c98487465d463c855e343134a12e33fd15ab02ffe49d4ed0f58eca3e",
+      "legacyReferencesBeforeIntegration": 2,
+      "expectedCanonicalReferences": 2,
+      "normalization": "direct 1254x1254 to 384x384 LANCZOS reduction on the full transparent RGBA canvas"
+    }
+  ],
+  "protectedFamilies": [
+    {
+      "id": "dailyRoomIdentity",
+      "manifest": "source-assets/green-soft-clay-canonical/daily-room-identity/manifest.json",
+      "status": "locked"
+    },
+    {
+      "id": "rewardedVideo",
+      "manifest": "source-assets/green-soft-clay-canonical/rewarded-video/manifest.json",
+      "status": "locked"
+    },
+    {
+      "id": "ducat",
+      "manifest": "source-assets/green-soft-clay-canonical/ducat/manifest.json",
+      "status": "locked by central registry"
+    }
+  ],
+  "motionContract": {
+    "stateGlyphs": "static",
+    "diceMotion": "dailyDicePulse 0.32s applies only to rolling Daily dice",
+    "reducedMotion": "existing Daily reduced-motion behavior remains unchanged"
+  },
+  "semanticExclusions": [
+    "main Daily Challenge menu, loading-gate, intro and room-header identity",
+    "Daily rewarded-video and canonical ducat composition",
+    "server-selected dice, rolling dice, scoring and reward logic",
+    "leaderboard, statistics, tournament, treasury and other room states"
+  ],
+  "integration": {
+    "dailyUi": "connected",
+    "roomOnDemand": "connected",
+    "centralRegistry": "standardized in standardization step 3",
+    "activeRuntime": "retired in standardization step 3",
+    "cacheVersion": 60,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Task, Complete and Already Played remain three separate Daily state identities.",
+    "Do not substitute the Daily Room Identity, Rewarded Video composition or canonical ducat for a Daily state glyph.",
+    "Preserve the 44x44, 58x58 and 104x104 display sizes during integration.",
+    "Keep all three state glyphs static; rolling motion belongs only to Daily dice.",
+    "Do not change Daily eligibility, score, reward, already-played or replay-lock logic.",
+    "Use the canonical runtime pack instead of copying or recoloring individual Daily state glyphs."
+  ]
+}

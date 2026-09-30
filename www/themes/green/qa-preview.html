@@ -27,6 +27,9 @@
     .dice-dots-wrapper { position: absolute; inset: 10px; }
     .qa-actions { display: flex; justify-content: center; gap: 10px; }
     .qa-actions button { min-height: 43px; padding: 0 22px; border-radius: 999px; font-weight: 950; }
+    .qa-feedback { display: grid; gap: 12px; }
+    .qa-feedback .custom-modal { margin: 0 auto; }
+    .qa-feedback .custom-toast { padding: 12px 15px; border: 2px solid var(--gold-main); border-radius: 12px; }
     .qa-note { margin: 0; color: #e2f2e7; font-size: .64rem; font-weight: 700; line-height: 1.45; text-align: center; text-shadow: 0 2px 5px rgba(11,42,29,.62); }
   </style>
 </head>
@@ -56,6 +59,23 @@
         <div class="dice skin-green_clay"><div class="dice-dots-wrapper val-6"><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div></div></div>
       </div>
       <div class="qa-actions"><button class="btn-secondary">NAJAVA</button><button class="btn-throw">BACAJ</button></div>
+    </section>
+    <p class="qa-label">Tekst i iskačuće poruke · SR/EN uzorak</p>
+    <section class="qa-feedback" aria-label="Green kontrast uzorci">
+      <div class="custom-toast">
+        <div class="custom-toast-copy">
+          <div class="toast-title">OBAVEŠTENJE / NOTICE</div>
+          <div class="toast-msg">Rezultat je sačuvan. Your result was saved. Duža poruka mora ostati čitljiva i pravilno se prelomiti na uskom telefonu.</div>
+        </div>
+      </div>
+      <div class="custom-modal">
+        <div class="cm-title">POTVRDA / CONFIRM</div>
+        <div class="cm-msg">Da li želite da nastavite? Do you want to continue? Ovo je samo statički pregled boje teksta i dugmadi.</div>
+        <div class="cm-btn-group">
+          <button class="cm-btn cm-btn-cancel" type="button">ODUSTANI</button>
+          <button class="cm-btn cm-btn-ok" type="button">U REDU</button>
+        </div>
+      </div>
     </section>
     <p class="qa-note">Statičan QA prikaz ne menja nalog, rezultate ni sačuvanu temu igrača.</p>
   </main>

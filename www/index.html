@@ -78,11 +78,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.20">
-    <link rel="stylesheet" href="teme.css?v=6.84">
+    <link rel="stylesheet" href="teme.css?v=6.91">
     <link rel="stylesheet" href="kockice.css?v=1.7">
     <link rel="stylesheet" href="efekti.css?v=1.4">
     
-    <script src="languages.js?v=5.8"></script>
+    <script src="languages.js?v=5.9"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -486,7 +486,7 @@
     </div>
 
     <div id="custom-modal-overlay" class="modal-overlay" style="z-index: 999999;">
-        <div class="custom-modal">
+        <div class="custom-modal" role="dialog" aria-modal="true" aria-labelledby="cm-title" aria-describedby="cm-msg">
             <button id="cm-close" class="cm-close hidden" type="button" aria-label="Zatvori" data-lang-aria="undo_close">X</button>
             <div id="cm-title" class="cm-title" data-lang="modal_title_info">OBAVEŠTENJE</div>
             <div id="cm-msg" class="cm-msg">Poruka ide ovde...</div>
@@ -576,7 +576,7 @@
              onmousedown="this.style.transform='scale(0.9)'" 
              onmouseup="this.style.transform='scale(1)'">
             <span class="main-global-chat-fallback" aria-hidden="true">💬</span>
-            <img class="green-global-chat-icon" data-theme-src="assets/green-soft-clay/runtime/menu/global-chat-free-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <img class="green-global-chat-icon" data-theme-src="assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <img class="easter-global-chat-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/global-chat-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <img class="desert-global-chat-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/global-chat-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <img class="nebula-global-chat-icon" data-theme-src="assets/severna-soft-clay/global-chat-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -587,7 +587,7 @@
             <div class="main-online-card" onclick="app.openOnlinePlayers()" style="flex: 1; cursor: pointer; transition: transform 0.1s; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.15); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 12px 5px; box-shadow: 0 15px 30px rgba(0,0,0,0.15), inset 0 1px 1px rgba(255,255,255,0.15); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); position: relative; overflow: hidden;" onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
                 <div style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%;">
                     <div class="main-online-icon-wrap">
-                        <img class="main-online-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/runtime/menu/online-players-free-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="main-online-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="main-online-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/online-players-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="main-online-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/runtime/menu/online-players-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="main-online-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-players-pro-v5.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -634,7 +634,7 @@
                 <div id="mode-content-1" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
                     <span class="mode-icon">
                         👤
-                        <img class="green-solo-soft-clay-icon" data-theme-src="assets/green-soft-clay/runtime/menu/mode-solo-free-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="green-solo-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="easter-solo-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/mode-solo-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="desert-solo-soft-clay-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/mode-solo-pro.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="nebula-solo-soft-clay-icon" data-theme-src="assets/severna-soft-clay/mode-solo-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -653,7 +653,7 @@
                 <div id="mode-content-2" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; position: relative; z-index: 1;">
                     <span class="mode-icon">
                         👥
-                        <img class="green-hotseat-soft-clay-icon" data-theme-src="assets/green-soft-clay/runtime/menu/mode-hotseat-free-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="green-hotseat-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="easter-hotseat-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/mode-hotseat-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="desert-hotseat-soft-clay-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/mode-hotseat-pro.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="nebula-hotseat-soft-clay-icon" data-theme-src="assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -672,7 +672,7 @@
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
                     <span class="mode-icon">
                         🌐
-                        <img class="green-opponent-soft-clay-icon" data-theme-src="assets/green-soft-clay/runtime/menu/mode-opponent-free-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="green-opponent-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="easter-opponent-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/mode-opponent-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="desert-opponent-soft-clay-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/mode-opponent-pro.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="nebula-opponent-soft-clay-icon" data-theme-src="assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -687,7 +687,7 @@
                 <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; position: relative; z-index: 1;">
                     <span class="mode-icon">
                         🔗
-                        <img class="green-invite-soft-clay-icon" data-theme-src="assets/green-soft-clay/runtime/menu/mode-invite-free-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="green-invite-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="easter-invite-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/mode-invite-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="desert-invite-soft-clay-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/mode-invite-pro.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="nebula-invite-soft-clay-icon" data-theme-src="assets/severna-soft-clay/mode-invite-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -742,14 +742,14 @@
             </button>
             <button class="btn-square" onclick="app.showSettings()" aria-label="Podešavanja" data-lang-aria="menu_settings">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-settings"></use></svg>
-                <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/runtime/menu/settings-free-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="easter-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/settings-pro-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/settings-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/settings-pro-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             </button>
             <button class="btn-square" onclick="app.showRules()" aria-label="Pravila igre" data-lang-aria="menu_rules">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-rules"></use></svg>
-                <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/runtime/menu/rules-free-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="easter-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/rules-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/rules-pro.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/rules-pro-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -958,25 +958,39 @@
 
             <div class="global-chat-footer stats-card-footer">
                 <div class="stats-pagination">
-                    <div class="dot active" id="stat-dot-0"></div>
-                    <div class="dot" id="stat-dot-1"></div>
+                    <button type="button" class="dot active" id="stat-dot-0" onclick="goToStatsPage(0)" aria-label="Statistika: pregled" data-lang-aria="aria_stats_overview_page" aria-current="step"></button>
+                    <button type="button" class="dot" id="stat-dot-1" onclick="goToStatsPage(1)" aria-label="Statistika: međusobni dueli" data-lang-aria="aria_stats_h2h_page"></button>
                 </div>
             </div>
         </div>
 
         <script>
+            function goToStatsPage(index) {
+                const carousel = document.getElementById('stats-carousel');
+                if (!carousel) return;
+                const pageCount = carousel.querySelectorAll('.stats-page').length;
+                const targetIndex = Math.max(0, Math.min(index, pageCount - 1));
+                const reduceMotion = document.documentElement.dataset.splashTheme === 'dark'
+                    && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+                carousel.scrollTo({ left: carousel.clientWidth * targetIndex, behavior: reduceMotion ? 'auto' : 'smooth' });
+            }
             function updateStatsPagination() {
                 const carousel = document.getElementById('stats-carousel');
                 if(!carousel) return;
                 const scrollLeft = carousel.scrollLeft;
                 const width = carousel.clientWidth;
-                const activeIndex = Math.round(scrollLeft / width);
+                const activeIndex = width > 0 ? Math.max(0, Math.min(1, Math.round(scrollLeft / width))) : 0;
                 
                 document.getElementById('stat-dot-0').classList.remove('active');
                 document.getElementById('stat-dot-1').classList.remove('active');
-                
+                document.getElementById('stat-dot-0').removeAttribute('aria-current');
+                document.getElementById('stat-dot-1').removeAttribute('aria-current');
+
                 const activeDot = document.getElementById('stat-dot-' + activeIndex);
-                if(activeDot) activeDot.classList.add('active');
+                if(activeDot) {
+                    activeDot.classList.add('active');
+                    activeDot.setAttribute('aria-current', 'step');
+                }
             }
         </script>
 
@@ -998,7 +1012,7 @@
             .stats-h2h-desc { text-align: center; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; padding: 0 10px; line-height: 1.35; flex: 0 0 auto; }
             
             .stats-pagination { display: flex; gap: 12px; justify-content: center; align-items: center; margin: 0; min-height: 18px; }
-            .stats-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--carousel-dot-idle); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
+            .stats-pagination .dot { width: 10px; height: 10px; padding: 0; border: 0; border-radius: 50%; background: var(--carousel-dot-idle); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); cursor: pointer; }
             .stats-pagination .dot.active { background: var(--carousel-dot-active); transform: scale(1.4); box-shadow: 0 0 10px var(--carousel-dot-glow); }
             @media (min-width: 760px) {
                 #stats-screen { padding-top: 22px; padding-bottom: 22px; }
@@ -1120,7 +1134,7 @@
             <img class="league-intro-mark-easter" data-theme-src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <img class="league-intro-mark-desert" data-theme-src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
             <img class="league-intro-mark-nebula" data-theme-src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-            <img class="league-intro-mark-green" data-theme-src="assets/green-soft-clay/quarterly-league-yotb-ql-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <img class="league-intro-mark-green" data-theme-src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
         </div>
         <div class="league-intro-title" aria-live="polite">
             <span class="league-intro-word league-intro-word-left"></span>
@@ -1146,7 +1160,7 @@
 
     <div id="easter-room-intro" class="easter-room-intro hidden" aria-hidden="true">
         <div class="easter-room-intro-mark-wrap">
-            <img class="easter-room-intro-mark" data-theme-src="assets/easter-soft-clay/leaderboard-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+            <img class="easter-room-intro-mark" loading="lazy" alt="" aria-hidden="true" decoding="async">
         </div>
         <div class="easter-room-intro-title" aria-live="polite"></div>
     </div>
@@ -1182,7 +1196,7 @@
             <div class="hs-card-toolbar">
                 <div class="hs-tabs">
                     <button class="hs-tab-btn active" data-hs-tab="global" onclick="app.switchHsTab('global')">
-                        <img class="hs-tab-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/leaderboard/global-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-tab-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-controls/global-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/global-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-tab-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/global-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-tab-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/global-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1190,7 +1204,7 @@
                         <span class="hs-tab-label-easter" data-lang="hs_global_plain">GLOBALNA</span>
                     </button>
                     <button class="hs-tab-btn" data-hs-tab="local" onclick="app.switchHsTab('local')">
-                        <img class="hs-tab-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/leaderboard/local-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-tab-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-controls/local-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/local-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-tab-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/local-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-tab-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/local-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1203,7 +1217,7 @@
             <div class="chat-body global-chat-body hs-card-body">
                 <section class="hs-panel active" data-hs-panel="global">
                     <h3 class="hs-panel-title">
-                        <img class="hs-panel-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/leaderboard/global-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-panel-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-controls/global-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-panel-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/global-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-panel-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/global-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-panel-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/global-v10.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1223,7 +1237,7 @@
 
                 <section class="hs-panel" data-hs-panel="local">
                     <h3 class="hs-panel-title">
-                        <img class="hs-panel-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/leaderboard/local-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-panel-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-controls/local-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-panel-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/local-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-panel-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/local-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-panel-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/local-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1256,7 +1270,7 @@
                         <img class="settings-header-icon settings-header-icon-easter" data-theme-src="assets/easter-soft-clay/settings-pro-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="settings-header-icon settings-header-icon-desert" data-theme-src="assets/desert-soft-clay/settings-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="settings-header-icon settings-header-icon-nebula" data-theme-src="assets/severna-soft-clay/settings-pro-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="settings-header-icon settings-header-icon-green" data-theme-src="assets/green-soft-clay/settings-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="settings-header-icon settings-header-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="settings_title">PODEŠAVANJA</span>
                     </span>
                 </div>
@@ -1266,7 +1280,7 @@
             <div class="chat-body global-chat-body settings-card-body">
             
             <div class="settings-section">
-                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/profile-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/profile-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/profile-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/settings/profile-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_profile_acc">Profil i Nalog</span></span>
+                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/profile-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/profile-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/profile-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/profile-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_profile_acc">Profil i Nalog</span></span>
                 
                 <input type="text" id="setting-name" class="modal-input settings-input" placeholder="Igrač" data-lang-placeholder="settings_name_placeholder" onchange="app.saveSettingAuto('name', this.value)">
                 
@@ -1285,23 +1299,23 @@
                 <span class="settings-section-title" data-lang="settings_sound_haptics">Zvuk i Haptika</span>
                 
                 <div class="settings-row">
-                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">🎵</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/sound-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/sound-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/sound-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/settings/sound-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_sound">Zvučni efekti</span></span>
+                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">🎵</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/sound-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/sound-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/sound-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/sound-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_sound">Zvučni efekti</span></span>
                     <input type="checkbox" id="setting-sound" class="settings-checkbox" onchange="app.saveSettingAuto('sound', this.checked)">
                 </div>
 
                 <div class="settings-row">
-                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">🎧</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/music-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/music-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/music-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/settings/music-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_music">Muzika</span></span>
+                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">🎧</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/music-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/music-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/music-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/music-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_music">Muzika</span></span>
                     <input type="checkbox" id="setting-music" class="settings-checkbox" onchange="app.saveSettingAuto('music', this.checked)">
                 </div>
 
                 <div class="settings-row">
-                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">📳</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/vibration-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/vibration-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/vibration-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/settings/vibration-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><span data-lang="set_vibration">Vibracija</span></span>
+                    <span class="settings-row-label settings-row-label-with-icon"><span class="settings-row-icon-legacy">📳</span><img class="settings-row-soft-clay-icon settings-row-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/vibration-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/vibration-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/vibration-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-row-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/vibration-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"><span data-lang="set_vibration">Vibracija</span></span>
                     <input type="checkbox" id="setting-vibration" class="settings-checkbox" onchange="app.saveSettingAuto('vibration', this.checked)">
                 </div>
             </div>
 
             <div class="settings-section settings-section-last">
-                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/display-theme-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/display-theme-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/display-theme-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/settings/display-theme-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_display_lang">Prikaz i Jezik</span><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter settings-language-soft-clay-icon" data-theme-src="assets/easter-soft-clay/settings/language-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert settings-language-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/language-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-nebula settings-language-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/language-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-green settings-language-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/settings/language-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true"></span>
+                <span class="settings-section-title settings-section-title-with-icons"><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/display-theme-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/display-theme-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/display-theme-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_display_lang">Prikaz i Jezik</span><img class="settings-section-soft-clay-icon settings-section-soft-clay-icon-easter settings-language-soft-clay-icon" data-theme-src="assets/easter-soft-clay/settings/language-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-desert settings-language-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/language-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-nebula settings-language-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/language-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-section-soft-clay-icon-green settings-language-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/language-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"></span>
                 
                 <select id="setting-theme" class="modal-input settings-input settings-select" onchange="app.saveSettingAuto('theme', this.value)">
                     <option value="dark" data-lang="theme_dark">Zelena</option>
@@ -1323,9 +1337,9 @@
             </div>
 
             <div class="settings-legal-row">
-                <span onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">📜</span><img class="settings-legal-soft-clay-icon settings-legal-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/terms-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/terms-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/terms-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/settings/terms-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_terms_label">Uslovi</span></span>
+                <span onclick="window.open('https://www.yambofthebalkan.com/terms.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">📜</span><img class="settings-legal-soft-clay-icon settings-legal-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/terms-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/terms-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/terms-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/terms-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_terms_label">Uslovi</span></span>
                 <span class="settings-legal-divider">|</span>
-                <span onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">🔒</span><img class="settings-legal-soft-clay-icon settings-legal-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/privacy-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/privacy-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/privacy-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/settings/privacy-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_privacy_label">Privatnost</span></span>
+                <span onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">🔒</span><img class="settings-legal-soft-clay-icon settings-legal-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/privacy-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/privacy-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/privacy-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_privacy_label">Privatnost</span></span>
             </div>
             </div>
         </div>
@@ -1344,7 +1358,6 @@
                 <img class="severna-solo-result-mark" data-theme-src="assets/severna-soft-clay/mode-solo-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="severna-hotseat-winner-mark" data-theme-src="assets/severna-soft-clay/hotseat/winner-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-hotseat-winner-mark" data-theme-src="assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="green-solo-result-mark" data-theme-src="assets/green-soft-clay/mode-solo-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <div id="solo-personal-best-badge" class="easter-solo-personal-best" hidden>
                     <img class="easter-solo-personal-best-icon" data-theme-src="assets/easter-soft-clay/solo/personal-best.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="desert-solo-personal-best-icon" data-theme-src="assets/desert-soft-clay/solo/personal-best.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1355,6 +1368,7 @@
                 <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;" data-lang="go_msg_solo">Osvojeni Poeni</div>
                 <div class="game-over-score-total" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 5px;">
                     <svg class="dukat-icon-inline dukat-icon-large game-over-ducat-legacy" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
+                    <img class="dukat-icon-inline dukat-icon-large green-game-over-ducat" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="easter-solo-finish-score-mark" data-theme-src="assets/easter-soft-clay/solo/finish-score-mark-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="green-solo-finish-score-mark" data-theme-src="assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <span id="go-score" style="font-size: 2.2rem; font-weight: 800; color: var(--gold-main);">0</span>
@@ -1395,8 +1409,8 @@
                 <img class="desert-invite-header-icon" data-theme-src="assets/desert-soft-clay/mode-invite-pro.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="severna-opponent-header-icon" data-theme-src="assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="severna-invite-header-icon" data-theme-src="assets/severna-soft-clay/mode-invite-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="green-opponent-header-icon" data-theme-src="assets/green-soft-clay/mode-opponent-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="green-invite-header-icon" data-theme-src="assets/green-soft-clay/mode-invite-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="green-opponent-header-icon" data-theme-src="assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="green-invite-header-icon" data-theme-src="assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <span id="waiting-title" class="global-chat-title" data-lang="ws_searching">TRAŽENJE PROTIVNIKA...</span>
             </div>
             <button type="button" class="global-chat-close" onclick="app.cancelOnline()" aria-label="Zatvori traženje protivnika" data-lang-aria="ws_close_search">×</button>
@@ -1425,7 +1439,7 @@
                 </div>
                 <div id="easter-invite-top-rival" class="easter-invite-rival-card" aria-live="polite">
                     <div class="easter-invite-rival-body">
-                        <img id="easter-invite-rival-img" class="easter-invite-rival-img" data-theme-src="assets/easter-soft-clay/statistics/h2h-empty-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true">
+                        <img id="easter-invite-rival-img" class="easter-invite-rival-img" loading="lazy" alt="" aria-hidden="true">
                         <span id="easter-invite-rival-name" class="easter-invite-rival-name" data-lang="stat_none">Nema</span>
                     </div>
                     <div id="easter-invite-rival-record" class="easter-invite-rival-stats" aria-label="Podaci najvećeg rivala">
@@ -1721,7 +1735,7 @@
                         <img class="global-chat-header-soft-clay-icon global-chat-header-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/global-chat-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="global-chat-header-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/global-chat-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="global-chat-header-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/global-chat-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="global-chat-header-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/global-chat-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="global-chat-header-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="ui_global_chat_title">GLOBAL CHAT</span>
                     </span>
                     <span class="global-chat-online-pill" title="Trenutno igrača na serveru" data-lang-title="tooltip_global_chat_online">
@@ -1732,7 +1746,7 @@
             </div>
 
             <div id="global-chat-body" class="chat-body global-chat-body">
-                <div class="global-chat-welcome global-chat-state" data-chat-state="empty">
+                <div class="global-chat-welcome global-chat-state" data-chat-state="empty" role="status" aria-live="polite">
                     <img class="global-chat-state-soft-clay-icon global-chat-state-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/global-chat-empty-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="global-chat-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/global-chat-empty-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="global-chat-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/global-chat-empty-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1755,7 +1769,7 @@
                 <div class="global-chat-hint-row">
                     <span id="global-chat-char-count" class="global-chat-char-count">0/550</span>
                 </div>
-                <div id="global-chat-status" class="global-chat-status"></div>
+                <div id="global-chat-status" class="global-chat-status" role="alert"></div>
             </div>
 
         </div>
@@ -1769,7 +1783,7 @@
                         <img class="online-players-header-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-players-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="online-players-header-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-players-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="online-players-header-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-players-pro-v5.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="online-players-header-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/online-players-free-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="online-players-header-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <span class="online-players-title-fallback" aria-hidden="true">🟢</span>
                         <span data-lang="online_players_title">ONLINE IGRAČI</span>
                     </span>
@@ -1783,7 +1797,7 @@
             </label>
 
             <div id="online-players-body" class="chat-body global-chat-body online-players-body">
-                <div class="online-players-state is-loading" data-online-state="loading">
+                <div class="online-players-state is-loading" data-online-state="loading" role="status" aria-live="polite">
                     <img class="online-players-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="online-players-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="online-players-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/online-players-state-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1871,22 +1885,22 @@
     </script>
 
     <script src="config.js?v=5.6"></script>
-    <script src="managers.js?v=5.22"></script>
-    <script src="dnevniizazov.js?v=2.6"></script>
+    <script src="managers.js?v=5.23"></script>
+    <script src="dnevniizazov.js?v=2.7"></script>
     <script src="riznica.js?v=1.12"></script>
     <script src="trophyManager.js?v=4.6"></script>
     <script src="features.js?v=3.8"></script>
-    <script src="toplista.js?v=4.7"></script>
+    <script src="toplista.js?v=4.8"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
     <script src="turnir.js?v=1017"></script>
-    <script src="pravilaigre.js?v=1.18"></script>
+    <script src="pravilaigre.js?v=1.22"></script>
     <script src="vracanjeupisa.js?v=1.7"></script>
-    <script src="globalchat.js?v=1.5"></script>
+    <script src="globalchat.js?v=1.7"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=5.44"></script>
-    <script src="kvartalnaliga.js?v=1023"></script>
-    <script src="onlinenumber.js?v=1011"></script>
+    <script src="game.js?v=5.46"></script>
+    <script src="kvartalnaliga.js?v=1025"></script>
+    <script src="onlinenumber.js?v=1012"></script>
     <script src="vatreniniz.js?v=1008"></script>
     <script src="powerindex.js?v=1.9"></script>
 

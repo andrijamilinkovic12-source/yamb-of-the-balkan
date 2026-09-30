@@ -37,9 +37,9 @@ class TopListManager {
 
     _stateMarkup(message, state = 'empty', fallbackIcon = '📜') {
         return `
-            <div class="hs-list-state hs-list-state-${state}">
+            <div class="hs-list-state hs-list-state-${state}" role="${state === 'offline' ? 'alert' : 'status'}" aria-live="${state === 'offline' ? 'assertive' : 'polite'}">
                 <span class="hs-state-fallback" aria-hidden="true">${fallbackIcon}</span>
-                <img class="hs-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/leaderboard/empty-loading-v1.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="hs-state-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="hs-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="hs-state-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard/empty-loading-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="hs-state-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard/empty-loading-v9.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">

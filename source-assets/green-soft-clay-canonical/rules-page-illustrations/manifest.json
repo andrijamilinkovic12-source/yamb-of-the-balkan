@@ -1,0 +1,123 @@
+{
+  "id": "green-rules-page-illustrations",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "four distinct Green Rules page title scenes for scoring, statistics and leaderboards, multiplayer competitions, and account privacy and server",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and restrained terracotta accents",
+    "presentation": "one transparent page scene per SR/EN title without text, square frame or backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable 512px PNG for each of four page titles; Communication and Economy/Treasury remain protected outside this family"
+  },
+  "provenance": {
+    "approvedResolution": [512, 512],
+    "higherResolutionGreenSource": "not found in source-assets/green-soft-clay-hires",
+    "masterPolicy": "byte-for-byte snapshot of each approved active 512x512 RGBA PNG; never upscale and label it a high-resolution original",
+    "normalization": "direct lossless copy of approved bytes, with no resampling, recompression or pixel edits"
+  },
+  "catalog": [
+    {
+      "id": "rules-scoring",
+      "role": "Rules & scoring / Pravila i bodovanje page title illustration",
+      "glyph": "open warm-ivory Yamb score sheet with green grid and terracotta checkmarks",
+      "usedBy": ["SR Rules page 1", "EN Rules page 1", "Rules room-on-demand package"],
+      "displaySizes": [[38, 38]],
+      "approvedSource": "www/assets/green-soft-clay/rules/pages/rules-scoring-v1.png",
+      "master": "green-rules-page-rules-scoring-master-v1.png",
+      "runtime": "www/assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png",
+      "size": [512, 512],
+      "bytes": 188200,
+      "sha256": "58d0c32e0cd9c8a92e97a95b6ccb4468df19adde7901ef2052e42a45a3ea00ca",
+      "legacyReferencesBeforeIntegration": 2,
+      "expectedCanonicalReferences": 2
+    },
+    {
+      "id": "stats-leaderboards",
+      "role": "Stats & leaderboards / Statistika i liste page title illustration",
+      "glyph": "rising ivory-to-forest-green bars with a terracotta crown and warm-ivory base",
+      "usedBy": ["SR Rules page 2", "EN Rules page 2", "Rules room-on-demand package"],
+      "displaySizes": [[38, 38]],
+      "approvedSource": "www/assets/green-soft-clay/rules/pages/stats-leaderboards-v1.png",
+      "master": "green-rules-page-stats-leaderboards-master-v1.png",
+      "runtime": "www/assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png",
+      "size": [512, 512],
+      "bytes": 174369,
+      "sha256": "41b88e864d1933b43ba9081c5ebba6d6844e23afc3fba71f5cac45ecb6969b7a",
+      "legacyReferencesBeforeIntegration": 2,
+      "expectedCanonicalReferences": 2
+    },
+    {
+      "id": "multiplayer-competitions",
+      "role": "Multiplayer & competitions / Multiplayer i takmičenja page title illustration",
+      "glyph": "two warm-ivory players around a die and terracotta-star trophy with forest-green leaves",
+      "usedBy": ["SR Rules page 3", "EN Rules page 3", "Rules room-on-demand package"],
+      "displaySizes": [[38, 38]],
+      "approvedSource": "www/assets/green-soft-clay/rules/pages/multiplayer-competitions-v1.png",
+      "master": "green-rules-page-multiplayer-competitions-master-v1.png",
+      "runtime": "www/assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png",
+      "size": [512, 512],
+      "bytes": 193124,
+      "sha256": "efa52e4b24c8d78602efb812bba4cde8c36fdf4b345fb683337386cd44cbe50b",
+      "legacyReferencesBeforeIntegration": 2,
+      "expectedCanonicalReferences": 2
+    },
+    {
+      "id": "account-server",
+      "role": "Account, privacy & server / Nalog, privatnost i server page title illustration",
+      "glyph": "warm-ivory account figure, green shield with ivory keyhole, and three green server bars",
+      "usedBy": ["SR Rules page 6", "EN Rules page 6", "Rules room-on-demand package"],
+      "displaySizes": [[38, 38]],
+      "approvedSource": "www/assets/green-soft-clay/rules/pages/account-server-v1.png",
+      "master": "green-rules-page-account-server-master-v1.png",
+      "runtime": "www/assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png",
+      "size": [512, 512],
+      "bytes": 240872,
+      "sha256": "a1092f5af79c8a73982147c78713de0e0fe7b92cfe0bdf7557babb9ba6cfab7a",
+      "legacyReferencesBeforeIntegration": 2,
+      "expectedCanonicalReferences": 2
+    }
+  ],
+  "protectedScenes": [
+    {
+      "role": "Communication / Komunikacija page 4",
+      "path": "www/assets/green-soft-clay/rules/pages/communication-v1.png",
+      "sha256": "50ed1ec25dbf9c1de01059ad2d4c15cf5ec230b69c29c370a2ba7e0c901ae05d",
+      "ownership": "Global Chat and Online Players protected cross-family scene"
+    },
+    {
+      "role": "Ducats, tokens & Treasury / Dukati, tokeni i Riznica page 5",
+      "path": "www/assets/green-soft-clay/rules/pages/economy-treasury-v3.png",
+      "sha256": "495fe82e49141fb40dcb195c6f1f2c7d0000511d9ea38a6753e61d3db85eb330",
+      "ownership": "locked Ducat and Undo Token composition"
+    }
+  ],
+  "protectedFamilies": ["rulesRoomIdentity", "globalChatRoomIdentity", "onlinePlayersRoomIdentity", "ducat", "undoToken", "leaderboardControls", "competitionMedals", "onlineRandomRoomIdentity"],
+  "motionContract": {
+    "pageTitle": "greenRulesIconBreath 4.8s at 38x38px",
+    "reducedMotion": "existing Rules page reduced-motion fallback remains unchanged"
+  },
+  "semanticExclusions": [
+    "main Rules room menu, intro, header, Rules reference and loading-gate identity",
+    "Communication page scene owned by Global Chat and Online Players",
+    "Economy/Treasury page composition with canonical ducats and Undo token",
+    "Global and Local leaderboard controls and actual podium medals",
+    "Online Random room entry, connection states and actual game dice",
+    "Settings functional controls, profile data, rules text and navigation"
+  ],
+  "integration": {
+    "rulesUi": "connected",
+    "roomOnDemand": "connected",
+    "centralRegistry": "standardized in standardization step 3",
+    "activeRuntime": "retired in standardization step 3",
+    "cacheVersion": 62,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "rules": [
+    "Use these four page scenes only for their exact SR and EN Rules page titles.",
+    "Do not absorb Communication, Economy/Treasury or the main Rules room identity into this family.",
+    "Retain the approved 512px pixels; no fabricated 1254px source or lossy rerender.",
+    "Keep page order, text, inline glyphs, motion and room-on-demand loading unchanged."
+  ]
+}

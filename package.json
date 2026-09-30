@@ -15,8 +15,9 @@
     "inspect:result-flow": "node scripts/inspect-player-result-flow.js",
     "check:h2h-ledger": "node scripts/check-h2h-ledger-rebuild.js",
     "check:theme-performance": "node scripts/check-theme-performance.js",
+    "check:green-coverage": "node scripts/check-green-asset-coverage.js",
     "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
-    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:h2h-ledger && npm run check:theme-performance"
+    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:green-coverage"
   },
   "keywords": [],
   "author": "",

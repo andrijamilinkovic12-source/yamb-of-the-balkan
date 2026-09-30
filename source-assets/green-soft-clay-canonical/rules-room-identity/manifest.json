@@ -1,0 +1,110 @@
+{
+  "id": "green-rules-room-identity",
+  "version": 1,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "single Green identity for entering the Rules room across menu, intro, header and theme loading gate",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "warm-ivory open book, forest-green spine and inset page lines with one terracotta bookmark",
+    "presentation": "one centered free-standing open-book glyph on a transparent background without text, frame or backing tile",
+    "lighting": "soft upper-left light with controlled clay depth",
+    "mapping": "one immutable Rules room identity with room and menu delivery variants"
+  },
+  "master": {
+    "path": "green-rules-room-master-v1.png",
+    "size": [1254, 1254],
+    "bytes": 1034779,
+    "sha256": "f53a6399c03855ca78bd6c78335bffe61be1f4da744a36406ad49e12b948218a",
+    "approvedSource": "source-assets/green-soft-clay-hires/rules-free-v2.png",
+    "approvedSourceSha256": "f53a6399c03855ca78bd6c78335bffe61be1f4da744a36406ad49e12b948218a"
+  },
+  "variants": [
+    {
+      "id": "room",
+      "role": "Rules icon-only intro, room header, theme loading gate and room-on-demand preload",
+      "usedBy": [
+        "Rules icon-only room intro",
+        "Rules room header",
+        "Green Rules room-icon mapping",
+        "Green theme loading gate Rules icon",
+        "Green Rules room-on-demand package"
+      ],
+      "displaySizes": [
+        [34, 34],
+        [45, 45],
+        ["clamp(210px, 34vmin, 290px)", "clamp(210px, 34vmin, 290px)"]
+      ],
+      "runtime": "www/assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 175314,
+      "runtimeSha256": "48527b7eb726778604fc25ba437d0d350a3ab97708c7c4d3dd8ad19c537a8ae4",
+      "activeRuntime": "www/assets/green-soft-clay/rules-free-v2.png",
+      "activeRuntimeSha256": "48527b7eb726778604fc25ba437d0d350a3ab97708c7c4d3dd8ad19c537a8ae4",
+      "expectedCanonicalReferences": 4,
+      "normalization": "approved 1254x1254 RGBA master reduced directly to 512x512 with LANCZOS resampling"
+    },
+    {
+      "id": "menu",
+      "role": "Rules main-menu startup icon",
+      "usedBy": [
+        "Green main-menu Rules button",
+        "Green startup preload collected from the active main-menu DOM"
+      ],
+      "displaySizes": [[52, 52], [46, 46]],
+      "runtime": "www/assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "runtimeSize": [384, 384],
+      "runtimeBytes": 108123,
+      "runtimeSha256": "d00302c37418b3f87b8d4077a54a6c1742e1d78199dd1065e32dc3685a742d1a",
+      "activeRuntime": "www/assets/green-soft-clay/runtime/menu/rules-free-v2.png",
+      "activeRuntimeSha256": "d00302c37418b3f87b8d4077a54a6c1742e1d78199dd1065e32dc3685a742d1a",
+      "expectedCanonicalReferences": 1,
+      "normalization": "approved master reduced 1254x1254 to 512x512 and then to 384x384 with LANCZOS resampling to preserve the approved menu delivery"
+    }
+  ],
+  "rejectedCandidates": [
+    {
+      "id": "rules-pro-v1",
+      "status": "rejected-orphan",
+      "source": "source-assets/green-soft-clay-hires/rules-pro-v1.png",
+      "sourceSize": [1254, 1254],
+      "sourceSha256": "2c281ffb6c150f71b3295f5dcbb174cd3cb6b141b4878c2419329a3c1c366728",
+      "runtime": "www/assets/green-soft-clay/rules-pro-v1.png",
+      "runtimeSize": [512, 512],
+      "runtimeBytes": 244018,
+      "runtimeSha256": "e0038e18f0bac86ea233dba3787dde4ee7286d82aadfa1ca5d32167ae48b9887",
+      "activeReferences": 0,
+      "reason": "framed square illustration violates the free-standing Green menu-icon rule and has no active Green consumer",
+      "retirement": "runtime retired in standardization step 3; rejected high-resolution source retained for audit provenance"
+    }
+  ],
+  "motionContract": {
+    "mainMenu": "easterBottomIconWave 8.4s with Rules delay 1.92s and reduced-motion fallback",
+    "intro": "greenRoomIconPulse 1.8s at scale 1.16 inside the shared 4.6s room intro with reduced-motion fallback",
+    "header": "static 34x34 contain presentation",
+    "pageScenes": "six separate 38x38 page illustrations with greenRulesIconBreath 4.8s and reduced-motion fallback",
+    "loadingGate": "source PNG inside the shared 45x45 floating icon presentation"
+  },
+  "integration": {
+    "mainMenu": "connected",
+    "rulesIntro": "connected",
+    "rulesHeader": "connected",
+    "roomIconMapping": "connected",
+    "themeLoadingGate": "connected",
+    "roomOnDemand": "connected",
+    "startup": "connected",
+    "legacyRuntime": "retired in standardization step 3",
+    "rejectedAlternate": "runtime retired in standardization step 3; high-resolution source retained for audit provenance",
+    "centralRegistry": "standardized in standardization step 3",
+    "cacheVersion": 52,
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  },
+  "semanticExclusions": [
+    "six Rules page illustrations and their SR/EN title mappings",
+    "page-level score, statistics, competitions and communication glyphs",
+    "Economy/Treasury page composition with canonical ducats and Undo token",
+    "account, privacy and server page illustration",
+    "rules text, navigation, dot indicators and swipe behavior",
+    "other room identities, medals, ranks and gameplay dice"
+  ]
+}
