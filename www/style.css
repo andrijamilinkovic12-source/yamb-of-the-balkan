@@ -2462,6 +2462,21 @@ body {
     object-fit: cover;
     flex-shrink: 0;
 }
+.settings-avatar-fallback {
+    display: none;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--gold-main);
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.3);
+    color: var(--text-main);
+    font-size: 0.8rem;
+    font-weight: 800;
+    line-height: 1;
+}
 .settings-account-copy {
     display: flex;
     flex-direction: column;

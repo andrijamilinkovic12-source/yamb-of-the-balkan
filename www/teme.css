@@ -3628,6 +3628,18 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     opacity: 1;
 }
 
+/* Trophy group headings sit directly on a variable-brightness landscape. */
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #riznica-screen .category-header:not([data-treasury-collection]) {
+    color: var(--green-clay-ink-strong) !important;
+    background: rgba(35, 72, 43, .90);
+    border: 1px solid rgba(213, 229, 186, .22);
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-left: 0;
+    opacity: 1;
+    text-shadow: 0 1px 2px rgba(8, 31, 17, .35);
+}
+
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #riznica-screen .riznica-category-green-soft-clay-icon {
     display: block;
     width: 34px;
@@ -19148,6 +19160,44 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     box-sizing: border-box;
 }
 
+/* Green menu: keep all three summary cards legible on narrow phones. */
+@media (max-width: 360px) {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu > div[style*="margin-top: 50px"] > .main-online-card,
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu > div[style*="margin-top: 50px"] > .main-league-card,
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu > div[style*="margin-top: 50px"] > .main-economy-card {
+        min-width: 0;
+        padding-inline: 4px !important;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .main-league-content {
+        min-width: 0;
+        padding-right: 0 !important;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .main-league-title {
+        max-width: 100%;
+        font-size: .56rem !important;
+        line-height: 1.1;
+        letter-spacing: 0;
+        text-align: center;
+        white-space: normal;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu #league-rank-name {
+        max-width: 100%;
+        font-size: .9rem !important;
+        letter-spacing: 0;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu #league-pts-text {
+        max-width: 100%;
+        font-size: .48rem !important;
+        white-space: nowrap;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu #menu-dukati-count {
+        max-width: 100%;
+        font-size: .84rem !important;
+        letter-spacing: 0;
+        white-space: nowrap;
+    }
+}
+
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-scene .game-header {
     color: #eef4e3 !important;
     background:
@@ -22736,6 +22786,57 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     width: min(450px, 100%) !important;
     height: min(800px, 100%) !important;
     max-height: 100% !important;
+}
+@media (max-width: 759px) {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay > .modal-box {
+        left: var(--green-ui-inset-x);
+        width: calc(100vw - var(--green-ui-inset-x) - var(--green-ui-inset-x)) !important;
+        box-sizing: border-box;
+    }
+}
+@media (max-width: 360px) {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay > .modal-box {
+        height: calc(100dvh - 10px - max(60px, var(--safe-bottom))) !important;
+        max-height: calc(100dvh - 10px - max(60px, var(--safe-bottom))) !important;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay #league-modal-title {
+        font-size: .8rem !important;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay #league-main-content > div:first-child > div {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 4px;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay #league-main-content > div:first-child > div > div:last-child {
+        text-align: left !important;
+    }
+}
+
+@media (max-width: 360px) {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen .waiting-header .global-chat-title-group {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #waiting-screen .waiting-header #waiting-title {
+        min-width: 0;
+        white-space: normal;
+        font-size: .78rem !important;
+        line-height: 1.12 !important;
+        overflow-wrap: normal;
+    }
+}
+
+/* Result content scrolls on short phones; flex shrinking must not stack actions over stats. */
+@media (max-width: 360px), (max-height: 740px) {
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen > .modal-box {
+        justify-content: flex-start;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        scroll-padding-bottom: 20px;
+    }
+    body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen > .modal-box > * {
+        flex-shrink: 0;
+    }
 }
 
 /* Short phones need to reach the bottom menu row without crossing system navigation. */

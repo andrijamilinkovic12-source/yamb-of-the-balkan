@@ -303,6 +303,22 @@ function osveziAuthUI(user) {
     const logoutBtn = document.getElementById('btn-google-logout');
     const nameInput = document.getElementById('setting-name');
     const userPhoto = document.getElementById('auth-user-photo'); 
+    const avatarFallback = document.getElementById('auth-user-photo-fallback');
+
+    if (userPhoto && avatarFallback) {
+        const showFallback = () => {
+            userPhoto.style.display = 'none';
+            avatarFallback.style.display = user && user.displayName ? 'flex' : 'none';
+        };
+        userPhoto.onerror = showFallback;
+        userPhoto.onload = () => {
+            userPhoto.style.display = 'block';
+            avatarFallback.style.display = 'none';
+        };
+        avatarFallback.textContent = user && user.displayName
+            ? Array.from(String(user.displayName).trim())[0]?.toLocaleUpperCase() || '?'
+            : '';
+    }
 
     if (user && user.displayName) {
         if (loginBtn) loginBtn.style.display = 'none';
@@ -318,6 +334,11 @@ function osveziAuthUI(user) {
             if (slikaUrl) {
                 userPhoto.src = slikaUrl;
                 userPhoto.style.display = 'block';
+                if (avatarFallback) avatarFallback.style.display = 'none';
+                if (userPhoto.complete && userPhoto.naturalWidth === 0) userPhoto.onerror();
+            } else if (avatarFallback) {
+                userPhoto.style.display = 'none';
+                avatarFallback.style.display = 'flex';
             }
         }
         
@@ -341,6 +362,7 @@ function osveziAuthUI(user) {
             userPhoto.src = '';
             userPhoto.style.display = 'none';
         }
+        if (avatarFallback) avatarFallback.style.display = 'none';
         
         if (logoutBtn) logoutBtn.style.display = 'none';
         

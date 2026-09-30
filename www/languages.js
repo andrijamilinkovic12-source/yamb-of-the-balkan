@@ -1700,7 +1700,14 @@ function formatDukatIcons(value) {
 function t(key) {
     const lang = localStorage.getItem('yamb_lang') || 'sr';
     if (TRANSLATIONS[lang] && TRANSLATIONS[lang].hasOwnProperty(key)) {
-        return formatDukatIcons(TRANSLATIONS[lang][key]);
+        const value = TRANSLATIONS[lang][key];
+        if (key === 'go_rematch') {
+            const theme = document.documentElement?.dataset?.splashTheme
+                || localStorage.getItem('yamb_theme')
+                || 'dark';
+            if (theme === 'dark') return value.replace(/^🔄\s*/u, '');
+        }
+        return formatDukatIcons(value);
     }
     return key;
 }
