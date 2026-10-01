@@ -149,6 +149,9 @@ try {
 
 assert(serverSource.includes("require('./scripts/reconnect-staging-safety')"), 'Server ne koristi staging startup guard');
 assert(serverSource.includes('validateStagingFirebaseRuntime(firebaseAdminProjectId, process.env)'), 'Server ne proverava staging Firebase identitet');
+assert(serverSource.includes("SERVER_RUNTIME.environment === 'staging' &&"), 'Keyless Firebase Auth mora biti ograničen na staging');
+assert(serverSource.includes('stagingProjectIdOnlyAuth ? { projectId: firebaseAdminProjectId }'), 'Staging Admin Auth nema eksplicitan project ID');
+assert(serverSource.includes('firebaseMessaging = stagingProjectIdOnlyAuth ? null : admin.messaging()'), 'Keyless staging mora isključiti Firebase Messaging');
 assert(serverSource.includes('environment: SERVER_RUNTIME.environment'), 'Health endpoint ne potvrđuje runtime okruženje');
 assert(serverSource.includes('instanceId: SERVER_RUNTIME.instanceId'), 'Health endpoint ne potvrđuje staging instancu');
 assert(managersSource.includes("Staging/local runtime: AdMob je isključen."), 'Staging klijent ne blokira produkcione oglase');
