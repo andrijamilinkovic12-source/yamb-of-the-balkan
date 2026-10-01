@@ -90,6 +90,11 @@ try {
     const serviceAccount = parseFirebaseServiceAccount();
     firebaseAdminCredentialSource = getFirebaseCredentialSource();
     firebaseAdminProjectId = getConfiguredFirebaseProjectId(serviceAccount);
+    const stagingProjectIdOnlyAuth = SERVER_RUNTIME.environment === 'staging' &&
+        !serviceAccount &&
+        !process.env.GOOGLE_APPLICATION_CREDENTIALS &&
+        !process.env.FIREBASE_CONFIG &&
+        firebaseAdminProjectId === process.env.YAMB_STAGING_FIREBASE_PROJECT_ID;
     const hasDefaultCredentials = Boolean(
         process.env.GOOGLE_APPLICATION_CREDENTIALS ||
         process.env.FIREBASE_CONFIG ||
@@ -98,7 +103,7 @@ try {
     );
     const appOptions = serviceAccount
         ? { credential: admin.credential.cert(serviceAccount) }
-        : undefined;
+        : (stagingProjectIdOnlyAuth ? { projectId: firebaseAdminProjectId } : undefined);
 
     if (serviceAccount || hasDefaultCredentials) {
         if (!admin.apps.length) {
@@ -106,8 +111,9 @@ try {
         }
 
         firebaseAuth = admin.auth();
-        firebaseMessaging = admin.messaging();
-        console.log(`✅ Firebase Admin Auth/Messaging spreman (${firebaseAdminProjectId || 'project_id nepoznat'}, ${firebaseAdminCredentialSource}).`);
+        firebaseMessaging = stagingProjectIdOnlyAuth ? null : admin.messaging();
+        if (stagingProjectIdOnlyAuth) firebaseAdminCredentialSource = 'staging_project_id_only';
+        console.log(`✅ Firebase Admin Auth spreman (${firebaseAdminProjectId || 'project_id nepoznat'}, ${firebaseAdminCredentialSource}; Messaging: ${firebaseMessaging ? 'aktivan' : 'isključen'}).`);
     } else {
         console.warn('⚠️ Firebase Admin Auth nije aktivan: nedostaju service account credentials.');
     }

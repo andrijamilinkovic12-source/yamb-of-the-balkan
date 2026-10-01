@@ -52,7 +52,7 @@ Ne koristiti stvarne korisnike, produkcioni matchmaking, produkcioni turnir niti
 ## Bezbedna priprema staging builda
 
 1. Kopirati `.env.reconnect-staging.example` u lokalni `.env.reconnect-staging` i uneti isključivo staging vrednosti. Taj lokalni fajl je ignorisan u Git-u. Secrets se podešavaju u procesu/CI okruženju i ne upisuju se u izvornu konfiguraciju.
-2. Deployovati istu verziju koda kao zaseban staging servis sa `YAMB_RUNTIME_ENV=staging`, posebnom bazom i staging Firebase service account-om. Server se neće pokrenuti ako identiteti nisu usklađeni.
+2. Deployovati istu verziju koda kao zaseban staging servis sa `YAMB_RUNTIME_ENV=staging`, posebnom bazom, `GOOGLE_CLOUD_PROJECT=yamb-reconnect-qa` i staging Firebase Web API ključem. U ovom QA režimu Admin SDK proverava ID tokene bez privatnog ključa, a push poruke su isključene. Server se neće pokrenuti ako identiteti nisu usklađeni.
 3. Podesiti lokalne promenljive za javni staging URL, isti `YAMB_STAGING_INSTANCE_ID`, staging Firebase project ID, package `com.yamb.balkan.staging` i apsolutnu putanju do zasebnog staging `google-services.json`. Firebase projekat mora imati Android klijent registrovan za taj staging package.
 4. Pokrenuti:
 
