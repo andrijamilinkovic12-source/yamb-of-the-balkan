@@ -823,6 +823,7 @@ class TournamentManager {
         const tabContent = document.getElementById('tourney-tab-content');
 
         if (this.activeTab === 'bracket') {
+            tabContent.classList.add('tourney-tab-content--bracket');
             tabContent.style.overflowY = 'hidden';
             tabContent.style.overflowX = 'hidden';
             this.renderBracket(tabContent);
@@ -1806,15 +1807,66 @@ class TournamentManager {
         if(!carousel) return;
         const scrollLeft = carousel.scrollLeft;
         const width = carousel.clientWidth;
+        if (!width) return;
         const activeIndex = Math.round(scrollLeft / width);
 
         for (let i = 0; i <= 2; i++) {
             const dot = document.getElementById('tdot-' + i);
             if (dot) {
-                if (i === activeIndex) dot.classList.add('active');
-                else dot.classList.remove('active');
+                const active = i === activeIndex;
+                dot.classList.toggle('active', active);
+                if (active) dot.setAttribute('aria-current', 'page');
+                else dot.removeAttribute('aria-current');
             }
         }
+    }
+
+    goToTourneyPage(index) {
+        const carousel = document.getElementById('tourney-carousel');
+        if (!carousel || !carousel.clientWidth) return;
+        const page = Math.max(0, Math.min(2, index));
+        carousel.scrollLeft = page * carousel.clientWidth;
+        this.updateTourneyPagination();
+    }
+
+    initTourneySwipe() {
+        const carousel = document.getElementById('tourney-carousel');
+        if (!carousel) return;
+        let startX = 0;
+        let startY = 0;
+        let startPage = 0;
+        let horizontal = false;
+
+        carousel.addEventListener('touchstart', event => {
+            const touch = event.touches[0];
+            if (!touch) return;
+            startX = touch.clientX;
+            startY = touch.clientY;
+            startPage = Math.round(carousel.scrollLeft / carousel.clientWidth);
+            horizontal = false;
+        }, { passive: true });
+        carousel.addEventListener('touchmove', event => {
+            const touch = event.touches[0];
+            if (!touch) return;
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+            if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy) * 1.2) horizontal = true;
+            if (horizontal && event.cancelable) event.preventDefault();
+        }, { passive: false });
+        carousel.addEventListener('touchend', event => {
+            const touch = event.changedTouches[0];
+            if (!touch) return;
+            const dx = touch.clientX - startX;
+            const dy = touch.clientY - startY;
+            if (Math.abs(dx) >= 45 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+                this.goToTourneyPage(startPage + (dx < 0 ? 1 : -1));
+            }
+            horizontal = false;
+        }, { passive: true });
+
+        document.querySelectorAll('#tournament-screen .tourney-pagination .dot').forEach((dot, index) => {
+            dot.addEventListener('click', () => this.goToTourneyPage(index));
+        });
     }
 
     renderBracket(container) {
@@ -1847,7 +1899,7 @@ class TournamentManager {
 
         container.innerHTML = `
             <div class="tourney-bracket-layout">
-                <div class="tourney-carousel" id="tourney-carousel" onscroll="app.tournamentManager.updateTourneyPagination()">
+                <div class="tourney-carousel" id="tourney-carousel">
 
                     <div class="tourney-page">
                         <div class="tourney-card">
@@ -1890,9 +1942,9 @@ class TournamentManager {
                 </div>
 
                 <div class="tourney-pagination">
-                    <div class="dot active" id="tdot-0"></div>
-                    <div class="dot" id="tdot-1"></div>
-                    <div class="dot" id="tdot-2"></div>
+                    <button type="button" class="dot active" id="tdot-0" aria-label="${this.escapeAttr(tt('tourney_qf') || 'Četvrtfinale')}" aria-current="page"></button>
+                    <button type="button" class="dot" id="tdot-1" aria-label="${this.escapeAttr(tt('tourney_sf') || 'Polufinale')}"></button>
+                    <button type="button" class="dot" id="tdot-2" aria-label="${this.escapeAttr(finalTitle)}"></button>
                 </div>
             </div>
 
@@ -1914,18 +1966,22 @@ class TournamentManager {
                 .tourney-match--open:active { transform: scale(0.99); }
                 .tourney-match--empty { justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; background: rgba(0,0,0,0.4); border: 1px dashed rgba(255,215,0,0.3); }
 
-                .tourney-pagination { display: flex; gap: 12px; justify-content: center; margin: 9px 0 2px; flex-shrink: 0; }
-                .tourney-pagination .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--carousel-dot-idle); transition: all 0.3s ease; box-shadow: inset 0 0 3px rgba(0,0,0,0.5); }
-                .tourney-pagination .dot.active { background: var(--carousel-dot-active); transform: scale(1.4); box-shadow: 0 0 10px var(--carousel-dot-glow); }
+                .tourney-pagination { display: flex; gap: 4px; justify-content: center; margin: 2px 0 0; flex-shrink: 0; }
+                .tourney-pagination .dot { width: 44px; height: 44px; padding: 0; border: 0; border-radius: 50%; background: transparent; display: inline-grid; place-items: center; cursor: pointer; }
+                .tourney-pagination .dot::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--carousel-dot-idle); box-shadow: inset 0 0 3px rgba(0,0,0,0.5); transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
+                .tourney-pagination .dot.active::before { background: var(--carousel-dot-active); transform: scale(1.35); box-shadow: 0 0 10px var(--carousel-dot-glow); }
+                .tourney-pagination .dot:focus-visible { outline: 2px solid var(--carousel-dot-active); outline-offset: -2px; }
                 @media (max-height: 700px) {
                     .tourney-card { padding: 10px; }
                     .tourney-round-title { margin-bottom: 8px; font-size: 1rem; padding-bottom: 6px; }
                     .tourney-matches--qf { gap: 5px; }
                     .tourney-matches--sf { gap: 18px; }
-                    .tourney-pagination { margin-top: 7px; }
+                    .tourney-pagination { margin-top: 0; }
                 }
             </style>
         `;
+        document.getElementById('tourney-carousel')?.addEventListener('scroll', () => this.updateTourneyPagination(), { passive: true });
+        this.initTourneySwipe();
     }
 
     createMatchHTML(match, round, index) {

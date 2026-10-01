@@ -29,7 +29,7 @@
         'waiting-search', 'waiting-vs', 'invite-host', 'league-summary', 'solo-result',
         'online-result', 'insufficient', 'confirm', 'daily-active', 'daily-double',
         'daily-final', 'daily-final-double', 'leaderboard-empty-global',
-        'leaderboard-empty-local', 'tournament-semi', 'tournament-final',
+        'leaderboard-empty-local', 'tournament-quarter', 'tournament-semi', 'tournament-final',
         'pi-off-top', 'streak-off-top', 'toast-success', 'toast-error',
         'toast-invite', 'toast-insufficient', 'toast-long-invite',
         'modal-confirm-buy', 'modal-error-long', 'treasury-locked',
@@ -341,7 +341,11 @@
               { id: 'p1', name: 'Aleksandar Petrović-Milinković', pi: 18472 },
               { id: 'p2', name: 'Marija Jovanović', pi: 24901 },
               { id: 'p3', name: 'Goran Mihajlović', pi: 12836 },
-              { id: 'p4', name: 'Katarina Šnajderbek', pi: 19155 }
+              { id: 'p4', name: 'Katarina Šnajderbek', pi: 19155 },
+              { id: 'p5', name: 'Jelena Birinji', pi: 10250 },
+              { id: 'p6', name: 'Sascha Lazić', pi: 46602 },
+              { id: 'p7', name: 'Maja Biskupović', pi: 24226 },
+              { id: 'p8', name: 'Aleksandar Radovanović-Jovanović', pi: 18854 }
             ];
             const match = (a, b, first, second) => ({
               p1: players[a], p2: players[b], winnerId: players[a].id,
@@ -349,7 +353,9 @@
             });
             manager.state = {
               status: 'finished', players, tournamentNumber: 7,
-              bracket: { qf: [], sf: [match(0, 1, 2764, 2354), match(2, 3, 2628, 2511)],
+              bracket: { qf: [match(0, 1, 2764, 2354), match(2, 3, 2628, 2511),
+                match(4, 5, 2754, 2520), match(6, 7, 2680, 2599)],
+                sf: [match(0, 1, 2764, 2354), match(2, 3, 2628, 2511)],
                 f: [match(0, 2, 2880, 2721)] }
             };
             manager.activeTab = 'bracket';
@@ -358,7 +364,7 @@
             manager.render();
             hydrateGreenImages(screen);
             const carousel = document.getElementById('tourney-carousel');
-            const page = state === 'tournament-semi' ? 1 : 2;
+            const page = state === 'tournament-quarter' ? 0 : state === 'tournament-semi' ? 1 : 2;
             requestAnimationFrame(() => {
               carousel.scrollLeft = page * carousel.clientWidth;
               screen.querySelectorAll('.tourney-pagination .dot').forEach((dot, index) => dot.classList.toggle('active', index === page));

@@ -1,6 +1,8 @@
 // Read-only Android Chrome audit for the isolated Green Treasury fixture.
 // Prerequisites: local QA server and `adb forward tcp:9222 localabstract:chrome_devtools_remote`.
 const http = require('http');
+const fs = require('fs');
+const path = require('path');
 
 const fixturePath = `/__green_qa__/green-runtime.html?catalog=all${process.argv.includes('--discount') ? '&discount=1' : ''}`;
 const origin = 'http://127.0.0.1:3130';
@@ -75,6 +77,15 @@ async function main() {
                         });
                         const headings = [...screen.querySelectorAll('.category-header')].filter(el => el.scrollWidth > el.clientWidth + margin).map(el => el.textContent.trim());
                         const preview = screen.querySelector('.prev-confetti');
+                        const effectPreviews = [...screen.querySelectorAll('.effect-preview-box')]
+                            .filter(el => /prev-(?:thunder|balkan|fireworks|bubbles|cosmic-dust|dragon-fire|royal-yamb|fireflies|glass|black-hole|supernova|neon|drones|ufo-abduction)/.test(el.className))
+                            .map(el => ({ className: el.className,
+                                content: getComputedStyle(el, '::before').content,
+                                image: getComputedStyle(el, '::before').backgroundImage,
+                                after: getComputedStyle(el, '::after').content,
+                                children: el.children.length,
+                                opacity: getComputedStyle(el, '::before').opacity,
+                                surface: getComputedStyle(el).backgroundImage }));
                         return {
                             lang: ${JSON.stringify(lang)}, type: ${JSON.stringify(type)}, count: cards.length,
                             issues, headings, width: [screen.scrollWidth, screen.clientWidth],
@@ -84,7 +95,8 @@ async function main() {
                             adUnlock: screen.querySelectorAll('.riznica-reward-video-copy').length,
                             discounted: screen.querySelectorAll('.old-price').length,
                             confettiContent: preview ? getComputedStyle(preview, '::before').content : null,
-                            confettiImage: preview ? getComputedStyle(preview, '::before').backgroundImage : null
+                            confettiImage: preview ? getComputedStyle(preview, '::before').backgroundImage : null,
+                            effectPreviews
                         };
                     })())`, returnByValue: true
                 });
@@ -104,13 +116,22 @@ async function main() {
             report.push(result);
         }
     }
-    const focus = process.argv.includes('--focus-desert')
-        ? { name: 'Pustinjsko Staklo', type: 'theme' }
-        : process.argv.includes('--focus-thunder')
-            ? { name: 'Gromovnik', type: 'effect' }
-            : process.argv.includes('--focus-confetti')
-                ? { name: 'Konfete', type: 'effect' }
-            : null;
+    const focusOptions = {
+        '--focus-desert': { name: 'Pustinjsko Staklo', type: 'theme', slug: 'desert' },
+        '--focus-thunder': { name: 'Gromovnik', type: 'effect', slug: 'thunder' },
+        '--focus-confetti': { name: 'Konfete', type: 'effect', slug: 'confetti' },
+        '--focus-wedding': { name: 'Svadba', type: 'effect', slug: 'wedding' },
+        '--focus-bubbles': { name: 'Magični Mehurići', type: 'effect', slug: 'bubbles' },
+        '--focus-royal': { name: 'Kraljevski Yamb', type: 'effect', slug: 'royal-yamb' },
+        '--focus-fireflies': { name: 'Magični Svici', type: 'effect', slug: 'fireflies' },
+        '--focus-ice': { name: 'Ledeno Doba', type: 'effect', slug: 'ice-age' },
+        '--focus-black-hole': { name: 'Crna Rupa', type: 'effect', slug: 'black-hole' },
+        '--focus-supernova': { name: 'Supernova', type: 'effect', slug: 'supernova' },
+        '--focus-neon': { name: 'Neon Puls', type: 'effect', slug: 'neon-pulse' },
+        '--focus-drones': { name: 'Svetleći Dronovi', type: 'effect', slug: 'drones' },
+        '--focus-ufo': { name: 'UFO Abdukcija', type: 'effect', slug: 'ufo-abduction' }
+    };
+    const focus = Object.entries(focusOptions).find(([flag]) => process.argv.includes(flag))?.[1] || null;
     if (focus) {
         await send('Page.navigate', { url: `${origin}${fixturePath}&lang=sr&qa_run=focus-${focus.type}#treasury-${focus.type}` });
         for (let attempt = 0; attempt < 30; attempt++) {
@@ -128,10 +149,30 @@ async function main() {
             });
             if (response.result?.value === true) break;
         }
+        if (process.argv.includes('--capture')) {
+            const decoded = await send('Runtime.evaluate', {
+                expression: `(() => {
+                    const card = [...document.querySelectorAll('#riznica-shop-container .card')]
+                        .find(el => el.querySelector('.title')?.textContent?.includes(${JSON.stringify(focus.name)}));
+                    const preview = card?.querySelector('.effect-preview-box');
+                    const background = preview ? getComputedStyle(preview, '::before').backgroundImage : 'none';
+                    const url = background.startsWith('url("') ? background.slice(5, -2) : '';
+                    if (!url) return Promise.resolve(true);
+                    const image = new Image(); image.src = url;
+                    return image.decode().then(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve(true)))));
+                })()`, awaitPromise: true, returnByValue: true
+            });
+            if (decoded.result?.value !== true) throw new Error(`Preview image did not decode: ${focus.name}`);
+            const screenshot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
+            const output = path.resolve(__dirname, '..', 'screenshots', 'green-ui-step9', `green-treasury-${focus.slug}-clay-cdp.png`);
+            fs.writeFileSync(output, Buffer.from(screenshot.data, 'base64'));
+            process.stderr.write(`Captured ${output}\n`);
+        }
     }
     socket.close();
-    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
-    if (report.some(entry => entry.issues.length || entry.headings.length || entry.width[0] > entry.width[1] + 2)) process.exitCode = 1;
+    if (!process.argv.includes('--quiet')) process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    if (report.some(entry => entry.issues.length || entry.headings.length || entry.width[0] > entry.width[1] + 2
+        || (entry.type === 'effect' && (entry.effectPreviews.length !== 14 || entry.effectPreviews.some(preview => preview.content !== '""' || preview.after !== 'none' || preview.children !== 0 || preview.opacity !== '1' || !preview.image.includes('canonical/treasury-effect-previews/') || !preview.surface.includes('radial-gradient')))))) process.exitCode = 1;
 }
 
 main().catch(error => { console.error(error); process.exitCode = 1; });

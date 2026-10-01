@@ -1671,6 +1671,35 @@
         "Green Rules inline profile and privacy glyphs",
         "Green Settings room-on-demand package"
       ]
+    },
+    "treasuryEffectPreviews": {
+      "semanticRole": "distinct Green-only Treasury preview motifs for fourteen celebration effects",
+      "status": "locked",
+      "sourceManifest": "source-assets/green-soft-clay-canonical/treasury-effect-previews/manifest.json",
+      "identity": {
+        "material": "matte 3D Soft Clay Neumorphism",
+        "palette": "forest-green, warm-ivory and restrained terracotta clay",
+        "presentation": "one effect-specific glyph on a transparent 3:2 canvas without text or backing tile"
+      },
+      "canonicalRuntime": [
+        { "role": "wedding", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png", "width": 384, "height": 256, "sha256": "617081095a973f8b2c202d114829f15bc8b7bd980ae6808d4585f04ae8003e43" },
+        { "role": "thunder", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png", "width": 384, "height": 256, "sha256": "19cf59b5d750fb8dc59e8e090ac0649894683eb5e9781c5e5da3f4982b46e749" },
+        { "role": "fireworks", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png", "width": 384, "height": 256, "sha256": "8727c9a78c8fb04c3950c720bac8b757422fbfd507c76a77983d656b10f1ca1a" },
+        { "role": "bubbles", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v1.png", "width": 384, "height": 256, "sha256": "890a5258cae23659100282a7e05fccc8b2e4abff175076018f999916337557e7" },
+        { "role": "cosmic-dust", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png", "width": 384, "height": 256, "sha256": "3edf5384d8b8b4213e2157c450e57f50b231b5ff8c01199196c540f60660ddbb" },
+        { "role": "dragon-fire", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-dragon-fire-v1.png", "width": 384, "height": 256, "sha256": "4a6482e7c8c2c6ed6ebeebfaa89e8a42c5c91c5d75fd08e8b09bbe0e425d3a7b" },
+        { "role": "royal-yamb", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png", "width": 384, "height": 256, "sha256": "dede200a1b39a61576bb551e35fbf85e9b3938ae333c6e3113c0f790af387493" },
+        { "role": "fireflies", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v1.png", "width": 384, "height": 256, "sha256": "dc82529cbccba0b5d3f0eb60ebdba454332a42b3ffb2eaaa8ab57db84985efc5" },
+        { "role": "ice-age", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-ice-age-v1.png", "width": 384, "height": 256, "sha256": "c8160a9ca34e5f4c92c5983b62ce21787913a60d1c98162714d611aa01906bd3" },
+        { "role": "black-hole", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-black-hole-v1.png", "width": 384, "height": 256, "sha256": "bbbb447badf67a4fbac5f090053bb9b370086c08e8ccf5f93d15bb9ac318ec4d" },
+        { "role": "supernova", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-supernova-v1.png", "width": 384, "height": 256, "sha256": "2672f0b807ef0770601ca8f17693bb780bc098b883e22e6e16b793ebca671d09" },
+        { "role": "neon-pulse", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png", "width": 384, "height": 256, "sha256": "3ab788d23fe0c19d02805aafc45c2bb263915900923fca965d90b2c23a9704e3" },
+        { "role": "drones", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png", "width": 384, "height": 256, "sha256": "b282dcd67ea4ee389d14f19a34486dfe4b9b78ed5143a21c53bc731b1e769e4f" },
+        { "role": "ufo-abduction", "path": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png", "width": 384, "height": 256, "sha256": "ab6c825ecdf6bb4cce45387d23cded27f2f9a7d37d3f5527fa83fe892b905cc1" }
+      ],
+      "compositeRuntime": [],
+      "forbiddenRuntimePaths": [],
+      "codeBindings": ["Green Treasury effect-card previews", "Green Treasury room-on-demand package"]
     }
   }
 }

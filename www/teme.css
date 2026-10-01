@@ -22893,20 +22893,71 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     }
 }
 
-/* Green room follow-up: keep the bracket readable without nested horizontal gutters. */
-body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-page {
-    padding-inline: 2px;
+/* Green bracket: use the room's full height, with the matches as the only cards. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-pagination .dot::before {
+    background: rgba(227, 239, 207, .58);
+    box-shadow: 0 0 0 1px rgba(20, 49, 27, .32);
 }
-body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-card {
-    padding: 8px;
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-pagination .dot.active::before {
+    background: var(--carousel-dot-active);
+    box-shadow: 0 0 10px var(--carousel-dot-glow);
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-tab-content--bracket {
+    padding: 8px 10px max(4px, env(safe-area-inset-bottom));
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-page {
+    padding-inline: 0;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen #tourney-tab-content .tourney-card {
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches {
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
+    overflow: hidden;
+    padding: 2px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf {
+    display: grid;
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    gap: clamp(6px, 1.2vh, 14px);
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--sf {
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    gap: clamp(10px, 2vh, 24px);
+    align-items: center;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf .tourney-match {
+    min-height: 0;
+    height: 100%;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--sf .tourney-match,
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--f .tourney-match {
+    min-height: var(--match-min-height, 62px);
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-match {
     flex: 0 0 auto;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-row {
+    padding: 2px 6px !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-row img {
+    width: 20px !important;
+    height: 20px !important;
+    border-width: 1px !important;
+    margin-right: 5px !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-completed-match-result {
+    padding: 1px 4px !important;
+    font-size: .64rem !important;
+    line-height: 1 !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-completed-match-result .tourney-inline-match-state-green {
+    width: 15px;
+    height: 15px;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-identity {
     min-width: 0;
@@ -22914,18 +22965,57 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     overflow: visible !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-name {
-    font-size: .84rem !important;
-    line-height: 1.2 !important;
+    font-size: .72rem !important;
+    line-height: 1.1 !important;
     display: block !important;
     -webkit-line-clamp: unset !important;
     overflow: visible !important;
+    overflow-wrap: anywhere;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-row.is-loser {
     opacity: .76 !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-power {
-    font-size: .72rem !important;
+    font-size: .65rem !important;
     margin-left: 4px;
+}
+@media (min-height: 741px) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf .tourney-match {
+        height: auto;
+        align-self: center;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-row {
+        padding: 5px 8px !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-row img {
+        width: 24px !important;
+        height: 24px !important;
+        border-width: 2px !important;
+        margin-right: 8px !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-name {
+        font-size: .84rem !important;
+        line-height: 1.2 !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-power {
+        font-size: .72rem !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-completed-match-result {
+        padding: 2px 8px !important;
+        font-size: .7rem !important;
+        line-height: 1.15 !important;
+    }
+}
+@media (max-height: 640px) {
+    /* Only very short viewports may scroll; never crop player data. */
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf {
+        overflow-y: auto;
+        grid-template-rows: repeat(4, minmax(88px, max-content));
+        overscroll-behavior: contain;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf .tourney-match {
+        height: auto;
+    }
 }
 
 /* Invite friend: one screen on ordinary phones, with a scrolling fallback on short ones. */
@@ -23215,6 +23305,69 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
 @media (prefers-reduced-motion: reduce) {
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .effect-preview-box.prev-confetti::before,
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .effect-preview-box.prev-confetti::after {
+        animation: none;
+    }
+}
+
+/* Fourteen distinct Green clay previews; Confetti and Gold Rain keep their earlier canonical motifs. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen :is(.prev-thunder, .prev-balkan, .prev-fireworks, .prev-bubbles, .prev-cosmic-dust, .prev-dragon-fire, .prev-royal-yamb, .prev-fireflies, .prev-glass, .prev-black-hole, .prev-supernova, .prev-neon, .prev-drones, .prev-ufo-abduction)::before {
+    content: "";
+    display: block;
+    position: absolute;
+    inset: 2px;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    box-shadow: none;
+    text-shadow: none;
+    opacity: 1;
+    filter: drop-shadow(0 3px 4px rgba(4, 20, 11, .4));
+    transform: none;
+    animation: greenClayEffectFloat 3s ease-in-out infinite alternate;
+    z-index: 3;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen :is(.prev-thunder, .prev-balkan, .prev-fireworks, .prev-bubbles, .prev-cosmic-dust, .prev-dragon-fire, .prev-royal-yamb, .prev-fireflies, .prev-glass, .prev-black-hole, .prev-supernova, .prev-neon, .prev-drones, .prev-ufo-abduction) {
+    background: radial-gradient(circle at 50% 42%, #456e50, #1d3d2b 75%, #10291f);
+    box-shadow: inset 0 3px 11px rgba(6, 25, 14, .36), inset 0 -1px 0 rgba(228, 241, 209, .22);
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-glass {
+    background: radial-gradient(circle at 50% 42%, #456e50, #1d3d2b 75%, #10291f) !important;
+    border: 0 !important;
+    box-shadow: inset 0 3px 11px rgba(6, 25, 14, .36), inset 0 -1px 0 rgba(228, 241, 209, .22) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-neon { border: 0; }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen :is(.prev-thunder, .prev-balkan, .prev-fireworks, .prev-bubbles, .prev-cosmic-dust, .prev-dragon-fire, .prev-royal-yamb, .prev-fireflies, .prev-glass, .prev-black-hole, .prev-supernova, .prev-neon, .prev-drones, .prev-ufo-abduction)::after {
+    content: none;
+    animation: none;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-thunder::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-balkan::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-fireworks::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-bubbles::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-cosmic-dust::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-dragon-fire::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-dragon-fire-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-royal-yamb::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-fireflies::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-glass::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-ice-age-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-black-hole::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-black-hole-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-supernova::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-supernova-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-neon::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-drones::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-ufo-abduction::before { background-image: url("assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png?v=1"); }
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen .prev-royal-yamb :is(.royal-yamb-logo-preview, .royal-yamb-title) {
+    display: none;
+}
+@keyframes greenClayEffectFloat {
+    from { transform: translateY(2px); }
+    to { transform: translateY(-3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen :is(.prev-thunder, .prev-balkan, .prev-fireworks, .prev-bubbles, .prev-cosmic-dust, .prev-dragon-fire, .prev-royal-yamb, .prev-fireflies, .prev-glass, .prev-black-hole, .prev-supernova, .prev-neon, .prev-drones, .prev-ufo-abduction)::before {
         animation: none;
     }
 }

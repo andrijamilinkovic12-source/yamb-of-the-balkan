@@ -1,0 +1,36 @@
+{
+  "id": "green-treasury-effect-previews",
+  "version": 3,
+  "status": "locked",
+  "registry": "www/themes/green/asset-registry.json",
+  "semanticRole": "distinct Green-only Treasury preview motifs for fourteen celebration effects",
+  "identity": {
+    "material": "matte 3D Soft Clay Neumorphism",
+    "palette": "forest-green, warm-ivory and restrained terracotta clay",
+    "presentation": "one effect-specific glyph on a transparent 3:2 canvas without text or backing tile"
+  },
+  "catalog": [
+    { "id": "wedding", "effectId": "balkan", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-wedding-master-v1.png", "masterSha256": "a465e18b5116b99def19e472de408c6f9a9441a4e6f55cfa1c5c8665b1e7606e", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png", "runtimeSha256": "617081095a973f8b2c202d114829f15bc8b7bd980ae6808d4585f04ae8003e43" },
+    { "id": "thunder", "effectId": "thunder", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-thunder-master-v1.png", "masterSha256": "89bd1ec2d477fa8c97b8c1b590a763735e5e1753fa898170f20cca615a304aec", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png", "runtimeSha256": "19cf59b5d750fb8dc59e8e090ac0649894683eb5e9781c5e5da3f4982b46e749" },
+    { "id": "fireworks", "effectId": "fireworks", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-fireworks-master-v1.png", "masterSha256": "fa4a87d54e5ef470c369d624f9111146083237030334da5ae9a269ea2f2a753c", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png", "runtimeSha256": "8727c9a78c8fb04c3950c720bac8b757422fbfd507c76a77983d656b10f1ca1a" },
+    { "id": "bubbles", "effectId": "bubbles", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-bubbles-master-v1.png", "masterSha256": "0e0ebaa8c2bc9a810ca5b4f51b67ff85380149b3402b1e5a6347f55b95f11d61", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v1.png", "runtimeSha256": "890a5258cae23659100282a7e05fccc8b2e4abff175076018f999916337557e7" },
+    { "id": "cosmic-dust", "effectId": "cosmic_dust", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-cosmic-dust-master-v1.png", "masterSha256": "0d2472a33ba070832812362944997bf6b7601678fc1489c59f2302afb0d899b1", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png", "runtimeSha256": "3edf5384d8b8b4213e2157c450e57f50b231b5ff8c01199196c540f60660ddbb" },
+    { "id": "dragon-fire", "effectId": "dragon_fire", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-dragon-fire-master-v1.png", "masterSha256": "970f221895cd82c391f784ac7c81edd8191a6a09e1a28ceffde7c8a9d2649dc0", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-dragon-fire-v1.png", "runtimeSha256": "4a6482e7c8c2c6ed6ebeebfaa89e8a42c5c91c5d75fd08e8b09bbe0e425d3a7b" },
+    { "id": "royal-yamb", "effectId": "royal_yamb", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-royal-yamb-master-v1.png", "masterSha256": "938efea283c3a28916a003f1d26a6d6b384e94fedaae29ea295afb6b6adce6b9", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png", "runtimeSha256": "dede200a1b39a61576bb551e35fbf85e9b3938ae333c6e3113c0f790af387493" },
+    { "id": "fireflies", "effectId": "fireflies", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-fireflies-master-v1.png", "masterSha256": "fc52999c4b81a1deb08788b4104dc1b748d43278f4bb37451b5f5105b22dfed1", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v1.png", "runtimeSha256": "dc82529cbccba0b5d3f0eb60ebdba454332a42b3ffb2eaaa8ab57db84985efc5" },
+    { "id": "ice-age", "effectId": "ice_age", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-ice-age-master-v1.png", "masterSha256": "3c161b7395884accecaf00186955750c44fcc0ed73658557771f9a5418bd7070", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-ice-age-v1.png", "runtimeSha256": "c8160a9ca34e5f4c92c5983b62ce21787913a60d1c98162714d611aa01906bd3" },
+    { "id": "black-hole", "effectId": "black_hole", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-black-hole-master-v1.png", "masterSha256": "3aa8c39a20e245838ce3db266bd1fce68a62244053e5411f22a7d1d23ce6a9fc", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-black-hole-v1.png", "runtimeSha256": "bbbb447badf67a4fbac5f090053bb9b370086c08e8ccf5f93d15bb9ac318ec4d" },
+    { "id": "supernova", "effectId": "supernova", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-supernova-master-v1.png", "masterSha256": "e9ee25817d010b3747f4107fc385a4d7e4bed69c0f11c872db17c1e4fb3aca3c", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-supernova-v1.png", "runtimeSha256": "2672f0b807ef0770601ca8f17693bb780bc098b883e22e6e16b793ebca671d09" },
+    { "id": "neon-pulse", "effectId": "neon_pulse", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-neon-pulse-master-v1.png", "masterSha256": "b5d69da5f033cb27958e5fb272f0ae7f36ba39880587ed1330b7ff26fb89b99e", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png", "runtimeSha256": "3ab788d23fe0c19d02805aafc45c2bb263915900923fca965d90b2c23a9704e3" },
+    { "id": "drones", "effectId": "drones", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-drones-master-v1.png", "masterSha256": "53ec84e658432785938d7d4ff0a1597300ed26c2a51fe0be2c2f3f562a20ee56", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png", "runtimeSha256": "b282dcd67ea4ee389d14f19a34486dfe4b9b78ed5143a21c53bc731b1e769e4f" },
+    { "id": "ufo-abduction", "effectId": "ufo_abduction", "master": "source-assets/green-soft-clay-canonical/treasury-effect-previews/preview-ufo-abduction-master-v1.png", "masterSha256": "2038780d04875a3a904e123c75a262c0ed5f2364040b0dd347e67d9d4f32a423", "runtime": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png", "runtimeSha256": "ab6c825ecdf6bb4cce45387d23cded27f2f9a7d37d3f5527fa83fe892b905cc1" }
+  ],
+  "runtimeSize": [384, 256],
+  "masterSize": [1536, 1024],
+  "integration": {
+    "treasuryCssPreviews": "connected",
+    "roomOnDemand": "connected",
+    "liveEffects": "unchanged",
+    "finalAudit": "locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js"
+  }
+}

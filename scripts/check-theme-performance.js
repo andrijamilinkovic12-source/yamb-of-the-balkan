@@ -61,6 +61,7 @@ const greenAchievementTrophiesManifestPath = path.join(root, 'source-assets', 'g
 const greenAchievementTrophiesManifest = JSON.parse(fs.readFileSync(greenAchievementTrophiesManifestPath, 'utf8'));
 const greenTreasuryControlsManifestPath = path.join(root, 'source-assets', 'green-soft-clay-canonical', 'treasury-controls', 'manifest.json');
 const greenTreasuryControlsManifest = JSON.parse(fs.readFileSync(greenTreasuryControlsManifestPath, 'utf8'));
+const greenTreasuryEffectPreviewsManifest = JSON.parse(fs.readFileSync(path.join(root, 'source-assets', 'green-soft-clay-canonical', 'treasury-effect-previews', 'manifest.json'), 'utf8'));
 const greenQuarterlyRankBadgesManifestPath = path.join(root, 'source-assets', 'green-soft-clay-canonical', 'quarterly-rank-badges', 'manifest.json');
 const greenQuarterlyRankBadgesManifest = JSON.parse(fs.readFileSync(greenQuarterlyRankBadgesManifestPath, 'utf8'));
 const greenQuarterlyNavigationManifestPath = path.join(root, 'source-assets', 'green-soft-clay-canonical', 'quarterly-navigation', 'manifest.json');
@@ -294,6 +295,42 @@ assert(managersSource.includes("watchToUnlockLabel.replace(/\\s*📺\\s*/u, ' ')
 assert(managersSource.split("getEasterTreasuryStatusIcon('status-active')").length - 1 === 1, 'Active status mora imati tačno jednu shop vezu.');
 assert(managersSource.split("getEasterTreasuryStatusIcon('status-locked')").length - 1 === 2, 'Locked status mora ostati vezan za trophy i requirement stanje.');
 assert(greenTreasuryControlsManifest.integration?.treasuryTabs === 'connected' && greenTreasuryControlsManifest.integration?.rulesNavigationGlyphs === 'connected' && greenTreasuryControlsManifest.integration?.itemStatusHelper === 'connected' && greenTreasuryControlsManifest.integration?.hiddenDescriptionLock === 'connected' && greenTreasuryControlsManifest.integration?.insufficientFundsAlerts === 'connected' && greenTreasuryControlsManifest.integration?.roomOnDemand === 'connected', 'Green Treasury Controls integracija nije kompletno evidentirana.');
+const greenEffectPreviewRegistry = greenAssetRegistry.families?.treasuryEffectPreviews;
+const effectPreviewIds = ['wedding', 'thunder', 'fireworks', 'bubbles', 'cosmic-dust', 'dragon-fire', 'royal-yamb', 'fireflies', 'ice-age', 'black-hole', 'supernova', 'neon-pulse', 'drones', 'ufo-abduction'];
+const effectPreviewClasses = { wedding: 'balkan', thunder: 'thunder', fireworks: 'fireworks', bubbles: 'bubbles', 'cosmic-dust': 'cosmic-dust', 'dragon-fire': 'dragon-fire', 'royal-yamb': 'royal-yamb', fireflies: 'fireflies', 'ice-age': 'glass', 'black-hole': 'black-hole', supernova: 'supernova', 'neon-pulse': 'neon', drones: 'drones', 'ufo-abduction': 'ufo-abduction' };
+assert(greenTreasuryEffectPreviewsManifest.status === 'locked' && greenEffectPreviewRegistry?.status === 'locked', 'Green Treasury effect preview katalog mora biti zaključan.');
+assert(greenTreasuryEffectPreviewsManifest.integration?.finalAudit === 'locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js'
+    && greenTreasuryEffectPreviewsManifest.integration?.liveEffects === 'unchanged'
+    && greenTreasuryEffectPreviewsManifest.integration?.roomOnDemand === 'connected', 'Green Treasury effect preview integracija nije kompletna.');
+assert(JSON.stringify(greenTreasuryEffectPreviewsManifest.catalog.map(asset => asset.id)) === JSON.stringify(effectPreviewIds)
+    && greenEffectPreviewRegistry.canonicalRuntime.length === effectPreviewIds.length, 'Green Treasury mora imati četrnaest zasebnih preview motiva.');
+const effectPreviewHashes = new Set();
+for (const asset of greenTreasuryEffectPreviewsManifest.catalog) {
+    const master = path.join(root, asset.master);
+    const runtime = path.join(root, asset.runtime);
+    const registered = greenEffectPreviewRegistry.canonicalRuntime.find(item => item.role === asset.id);
+    assert(asset.runtime === `www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-${asset.id}-v1.png`
+        && registered?.path === asset.runtime.replace(/^www\//, '')
+        && registered?.sha256 === asset.runtimeSha256, `Green Treasury effect preview nije pravilno mapiran: ${asset.id}`);
+    assert(fs.existsSync(master) && fs.existsSync(runtime), `Nedostaje Green Treasury effect preview: ${asset.id}`);
+    const masterInfo = readPngInfo(master);
+    const runtimeInfo = readPngInfo(runtime);
+    assert(masterInfo.width === 1536 && masterInfo.height === 1024 && masterInfo.colorType === 6
+        && runtimeInfo.width === 384 && runtimeInfo.height === 256 && runtimeInfo.colorType === 6,
+    `Green Treasury effect preview nema očekivanu rezoluciju ili alpha kanal: ${asset.id}`);
+    assert(sha256File(master) === asset.masterSha256 && sha256File(runtime) === asset.runtimeSha256,
+        `Green Treasury effect preview sadržaj je promenjen: ${asset.id}`);
+    assert(!effectPreviewHashes.has(asset.runtimeSha256), `Green Treasury effect preview je dupliran: ${asset.id}`);
+    effectPreviewHashes.add(asset.runtimeSha256);
+    assert(themeCssSource.includes(`#riznica-screen .prev-${effectPreviewClasses[asset.id]}::before { background-image: url("${registered.path}?v=1"); }`),
+        `Green Treasury effect preview nije vezan za karticu: ${asset.id}`);
+    assert(gameSource.split(registered.path).length - 1 === 1, `Green Treasury effect preview nije tačno jednom u room-on-demand paketu: ${asset.id}`);
+}
+assert(themeCssSource.includes('#riznica-screen :is(.prev-thunder, .prev-balkan, .prev-fireworks, .prev-bubbles, .prev-cosmic-dust, .prev-dragon-fire, .prev-royal-yamb, .prev-fireflies, .prev-glass, .prev-black-hole, .prev-supernova, .prev-neon, .prev-drones, .prev-ufo-abduction)::after {'),
+    'Stara dekorativna polja moraju biti uklonjena iz Green effect preview kartica.');
+assert(managersSource.includes("isGreenTreasury && ['balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id)")
+    && themeCssSource.includes('#riznica-screen .prev-royal-yamb :is(.royal-yamb-logo-preview, .royal-yamb-title)'),
+    'Green Royal Yamb preview ne sme zadržati stari Logo_green ili dekorativne child elemente.');
 assert(greenQuarterlyRankBadgesRegistry?.status === 'locked', 'Green Quarterly Rank Badges porodica mora biti zaključana u centralnom registru.');
 assert(greenQuarterlyRankBadgesManifest.status === 'locked', 'Green Quarterly Rank Badges source manifest mora biti zaključan.');
 assert(greenQuarterlyRankBadgesManifest.integration?.finalAudit === 'locked by www/themes/green/asset-registry.json and scripts/check-theme-performance.js', 'Green Quarterly Rank Badges završna kontrola nije evidentirana u source manifestu.');
@@ -2244,7 +2281,7 @@ const roomMatchers = {
     onlinePlayers: relative => relative.startsWith('online-players') || relative.startsWith('online-add-') || relative.startsWith('online-spectate') || relative.startsWith('online-duel') || relative === 'canonical/online-players-room-identity/online-players-room-v1.png',
     economy: relative => relative.startsWith('economy/') || relative.startsWith('ducats-undo') || relative.startsWith('canonical/ducat/') || relative.startsWith('canonical/undo-token/') || relative.startsWith('canonical/rewarded-video/'),
     quarterlyLeague: relative => relative.startsWith('ql/') || relative.startsWith('quarterly-league') || relative.startsWith('canonical/competition-medals/quarterly-league-') || relative.startsWith('canonical/quarterly-rank-badges/') || relative.startsWith('canonical/quarterly-navigation/') || relative === 'canonical/quarterly-league-room-identity/quarterly-league-room-v1.png',
-    treasury: (relative, themeDir) => relative.startsWith('treasury/') || relative.startsWith('treasury-') || relative.startsWith('economy/ducat') || relative.startsWith('canonical/ducat/') || relative.startsWith('canonical/collection-medals/') || relative.startsWith('canonical/achievement-trophies/') || relative.startsWith('canonical/treasury-controls/') || (themeDir !== 'green-soft-clay' && relative.includes('rewarded-video')),
+    treasury: (relative, themeDir) => relative.startsWith('treasury/') || relative.startsWith('treasury-') || relative.startsWith('economy/ducat') || relative.startsWith('canonical/ducat/') || relative.startsWith('canonical/collection-medals/') || relative.startsWith('canonical/achievement-trophies/') || relative.startsWith('canonical/treasury-controls/') || relative.startsWith('canonical/treasury-effect-previews/') || (themeDir !== 'green-soft-clay' && relative.includes('rewarded-video')),
     tournament: relative => relative.startsWith('tournament/') || relative.startsWith('tournament-') || relative.startsWith('canonical/tournament-navigation/') || relative.startsWith('canonical/tournament-states/') || relative.startsWith('canonical/tournament-awards/'),
     solo: relative => relative.startsWith('solo/') || relative.startsWith('canonical/solo-results/') || relative === 'canonical/solo-room-identity/solo-room-v1.png',
     hotseat: relative => relative.startsWith('hotseat/') || relative.startsWith('canonical/hotseat-winner/') || relative === 'canonical/hotseat-room-identity/hotseat-room-v1.png',

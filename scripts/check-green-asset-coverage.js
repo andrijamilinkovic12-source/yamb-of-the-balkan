@@ -51,7 +51,7 @@ const rulesPageIllustrationsManifest = JSON.parse(fs.readFileSync(rulesPageIllus
 const settingsControlsManifest = JSON.parse(fs.readFileSync(settingsControlsManifestPath, 'utf8'));
 const families = Object.entries(registry.families || {});
 assert(registry.schemaVersion === 1 && registry.themeId === 'dark', 'Green centralni registar ima neočekivan schema/theme identitet.');
-assert(families.length === 32, `Green centralni registar mora imati 32 porodice, pronađeno ${families.length}.`);
+assert(families.length === 33, `Green centralni registar mora imati 33 porodice, pronađeno ${families.length}.`);
 
 const registered = new Map();
 const forbidden = new Map();
@@ -132,8 +132,8 @@ for (const relative of runtimePngs) {
     classifications[categories[0]].push(relative);
 }
 
-assert(runtimePngs.length === 162, `Green runtime inventar odstupa: očekivano 162 PNG, pronađeno ${runtimePngs.length}.`);
-assert(classifications.registered.length === 145, `Očekivano 145 centralno registrovanih PNG-ova, pronađeno ${classifications.registered.length}.`);
+assert(runtimePngs.length === 176, `Green runtime inventar odstupa: očekivano 176 PNG, pronađeno ${runtimePngs.length}.`);
+assert(classifications.registered.length === 159, `Očekivano 159 centralno registrovanih PNG-ova, pronađeno ${classifications.registered.length}.`);
 assert(classifications.protected.length === 16, `Očekivano 16 manifestom zaštićenih funkcionalnih PNG-ova, pronađeno ${classifications.protected.length}.`);
 assert(classifications.foundation.length === 1, `Očekivan je jedan splash foundation PNG, pronađeno ${classifications.foundation.length}.`);
 assert(classifications.pending.length === 0, `Nema preostalih pending Green PNG-ova, pronađeno ${classifications.pending.length}.`);
@@ -175,7 +175,7 @@ assert(retiredBackgrounds.length === 3 && retiredBackgroundBytes === 5350456, `I
 const totalBytes = runtimePngs.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
 const pendingBytes = classifications.pending.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
 const stagedCanonicalBytes = classifications.stagedCanonical.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
-assert(totalBytes === 14792994 && pendingBytes === 0 && stagedCanonicalBytes === 0, 'Green coverage veličine odstupaju od Settings Controls Koraka 3 bilansa.');
+assert(totalBytes === 15959873 && pendingBytes === 0 && stagedCanonicalBytes === 0, 'Green coverage veličine odstupaju od Treasury Effect Previews bilansa.');
 
 console.log('Green asset coverage provera je prošla.');
 console.log(`- centralni registar: ${families.length} locked porodica / ${classifications.registered.length} PNG`);
