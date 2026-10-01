@@ -1,11 +1,13 @@
 apply plugin: 'com.android.application'
 
+def yambApplicationId = System.getenv('YAMB_ANDROID_APPLICATION_ID') ?: 'com.yamb.balkan'
+
 android {
     namespace = "com.yamb.balkan"
     compileSdk = rootProject.ext.compileSdkVersion
     
     defaultConfig {
-        applicationId "com.yamb.balkan"
+        applicationId yambApplicationId
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 111

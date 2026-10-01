@@ -263,7 +263,7 @@ class VatreniNizManager {
             : '';
 
         return `
-            <div class="fire-streak-player-row${rank === 1 ? ' is-first' : ''}${isMe ? ' is-me' : ''}${isPinned ? ' is-pinned' : ''}" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 15px; border-radius: 10px; ${bgStyle} transition: transform 0.2s;">
+            <div class="fire-streak-player-row${rank === 1 ? ' is-first' : ''}${isMe ? ' is-me' : ''}${isPinned ? ' is-pinned' : ''}${options.offTop ? ' is-off-top' : ''}" style="display: flex; flex-direction: column; gap: 4px; padding: 12px 15px; border-radius: 10px; ${bgStyle} transition: transform 0.2s;">
                 ${pinnedLabel}
                 <div style="display: flex; align-items: center;">
                     <div class="fire-streak-rank-mark${podiumTone ? ' has-podium' : ''}" aria-label="${rank}." style="font-size: 1.3rem; font-weight: bold; width: 35px; text-align: center; color: var(--text-muted); flex-shrink: 0; text-shadow: ${rank === 1 ? '0 0 10px rgba(255,87,34,0.5)' : 'none'};">${rankTrophy}</div>
@@ -328,7 +328,7 @@ class VatreniNizManager {
         const rowsHtml = this.data
             .map(player => this.renderPlayerRow(player))
             .join('') + (activeTheme === 'dark' && this.myPlayer && !isMyPlayerVisible
-                ? this.renderPlayerRow(this.myPlayer)
+                ? this.renderPlayerRow(this.myPlayer, { offTop: true })
                 : '');
         const footerHtml = this.loading
             ? `<div style="text-align:center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">${this.gt('streak_loading_more', 'Učitavam još igrača...')}</div>`

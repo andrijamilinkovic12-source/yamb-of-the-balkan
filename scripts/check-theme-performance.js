@@ -2437,8 +2437,8 @@ assert(/\.daily-glass-die\.dice\s*\{[^}]*width:\s*min\(100%, 14vw, 60px\) !impor
     && dailyChallengeSource.includes('if (isEasterTheme || isGreenTheme)'), 'Green dnevni izazov: kockice ili tekst dupliranja odstupaju.');
 assert(fireStreakSource.includes("const dockMyRank = ['easter', 'desert'].includes(activeTheme)")
     && powerIndexSource.includes("const dockMyRank = ['easter', 'desert'].includes(activeTheme)")
-    && fireStreakSource.includes("this.renderPlayerRow(this.myPlayer)\n")
-    && powerIndexSource.includes("this.renderPlayerRow(this.myPlayer)\n"), 'Green statističke liste moraju imati jedan red igrača u samoj listi.');
+    && fireStreakSource.includes("this.renderPlayerRow(this.myPlayer, { offTop: true })")
+    && powerIndexSource.includes("this.renderPlayerRow(this.myPlayer, { offTop: true })"), 'Green statističke liste moraju imati jedan red igrača u samoj listi.');
 assert(gameSource.includes('class="green-friend-presence"')
     && themeCssSource.includes('#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container')
     && themeCssSource.includes('#league-modal-overlay#league-modal-overlay > .modal-box')
@@ -2454,6 +2454,19 @@ assert(indexSource.includes('data-green-record="win"')
 const uiTranslations = vm.runInNewContext(
     `${languagesSource.slice(0, languagesSource.indexOf('\nfunction dukatIconHtml'))}\nTRANSLATIONS`, {}
 );
+const translateSource = languagesSource.match(/function t\(key\) \{[\s\S]*?\n\}/)?.[0];
+assert(translateSource, 'Funkcija prevoda nije pronađena za Green regresiju oznaka.');
+const labelThemeContext = {
+    TRANSLATIONS: uiTranslations,
+    document: { documentElement: { dataset: { splashTheme: 'dark' } } },
+    localStorage: { getItem: key => key === 'yamb_lang' ? 'sr' : 'dark' },
+    formatDukatIcons: value => value
+};
+assert(vm.runInNewContext(`${translateSource}\n[t('tourney_finalist_title'), t('ws_power')]`, labelThemeContext).join('|') === 'FINALISTA|Moć',
+    'Green oznake finaliste i moći ne smeju duplirati kanonske motive emojijima.');
+labelThemeContext.document.documentElement.dataset.splashTheme = 'easter';
+assert(vm.runInNewContext(`${translateSource}\n[t('tourney_finalist_title'), t('ws_power')]`, labelThemeContext).join('|') === 'FINALISTA 🥈|Moć ⚡',
+    'Ostale teme moraju zadržati svoje postojeće oznake.');
 assert(['win', 'draw', 'loss'].every((kind, index) => {
     const key = `ws_record_${kind}_short`;
     return uiTranslations.sr[key] === ['POB', 'NER', 'POR'][index]

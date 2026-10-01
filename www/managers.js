@@ -262,7 +262,12 @@ class EffectManager {
         this.goldRainAnimationId = null;
         this.goldRainResizeHandler = null;
         this.goldRainSprites = null;
+        this.greenGoldRainSparkSprite = null;
         this.greenDucatParticleSpritePromise = null;
+        this.goldRainRunId = 0;
+        this.royalYambRunId = 0;
+        this.royalCanvasCleanup = null;
+        this.supernovaCanvasCleanup = null;
         this.effectTimeouts = [];
         this.iceAgeRunId = 0;
     }
@@ -439,6 +444,7 @@ class EffectManager {
         }
 
         if (type === 'supernova') {
+            if (this.supernovaCanvasCleanup) this.supernovaCanvasCleanup();
             let targetTable = null;
             const tables = document.querySelectorAll('.player-table');
             tables.forEach(tbl => { 
@@ -475,6 +481,13 @@ class EffectManager {
                 const duration = 7600;
                 let rafId = 0;
                 let lastSupernovaDraw = 0;
+                const cleanup = () => {
+                    cancelAnimationFrame(rafId);
+                    targetTable.classList.remove('anim-supernova-table', 'anim-supernova-table--compact');
+                    if (snContainer.parentNode) snContainer.remove();
+                    if (this.supernovaCanvasCleanup === cleanup) this.supernovaCanvasCleanup = null;
+                };
+                this.supernovaCanvasCleanup = cleanup;
 
                 const resizeCanvas = () => {
                     const dpr = Math.min(window.devicePixelRatio || 1, compactSupernova ? 1.15 : 1.5);
@@ -535,6 +548,7 @@ class EffectManager {
                 };
 
                 const renderFrame = start => now => {
+                    if (!snContainer.isConnected) return;
                     if (compactSupernova && lastSupernovaDraw && now - lastSupernovaDraw < 32) {
                         if (snContainer.isConnected) rafId = requestAnimationFrame(renderFrame(start));
                         return;
@@ -837,11 +851,7 @@ class EffectManager {
                 targetTable.classList.add('anim-supernova-table');
                 if (compactSupernova) targetTable.classList.add('anim-supernova-table--compact');
                 
-                this.scheduleEffectTimeout(() => {
-                    cancelAnimationFrame(rafId);
-                    targetTable.classList.remove('anim-supernova-table', 'anim-supernova-table--compact');
-                    if (snContainer.parentNode) snContainer.remove(); 
-                }, duration);
+                this.scheduleEffectTimeout(cleanup, duration);
             }
         }
 
@@ -852,18 +862,22 @@ class EffectManager {
             if (!targetTable && tables.length > 0) targetTable = tables[0];
 
             if (targetTable) {
+                const greenNeon = this.isGreenThemeActive();
                 targetTable.classList.add('anim-neon-pulse');
+                if (greenNeon) targetTable.classList.add('anim-neon-pulse--green');
                 document.body.classList.add('fx-neon_pulse'); 
+                if (greenNeon) document.body.classList.add('fx-neon_pulse--green');
                 
                 this.scheduleEffectTimeout(() => {
-                    targetTable.classList.remove('anim-neon-pulse'); 
-                    document.body.classList.remove('fx-neon_pulse'); 
+                    targetTable.classList.remove('anim-neon-pulse', 'anim-neon-pulse--green');
+                    document.body.classList.remove('fx-neon_pulse', 'fx-neon_pulse--green');
                 }, 5000, 'neon_pulse');
             }
         }
 
         if (type === 'drones') {
             const duration = 8200;
+            const greenDrones = this.isGreenThemeActive();
             const compactDroneViewport = window.matchMedia && (
                 window.matchMedia('(max-width: 760px)').matches ||
                 window.matchMedia('(hover: none) and (pointer: coarse)').matches
@@ -872,6 +886,7 @@ class EffectManager {
 
             const sky = document.createElement('div');
             sky.className = 'drone-night-sky';
+            if (greenDrones) sky.classList.add('drone-night-sky--green');
             if (compactDroneViewport || reducedDroneMotion) sky.classList.add('drone-night-sky--compact');
             sky.innerHTML = `
                 <div class="drone-starfield drone-starfield--far"></div>
@@ -899,19 +914,23 @@ class EffectManager {
 
             const textEl = document.createElement('div');
             textEl.className = 'drone-text';
+            if (greenDrones) textEl.classList.add('drone-text--green');
             if (compactDroneViewport || reducedDroneMotion) textEl.classList.add('drone-text--compact');
             textEl.innerText = firstName;
             textEl.dataset.text = firstName;
             textEl.style.setProperty('--name-length', String(firstName.length));
             document.body.appendChild(textEl);
 
-            const colors = ['#66f7ff', '#ffffff', '#51ffd8', '#9d7cff', '#ffd66f'];
+            const colors = greenDrones
+                ? ['#e7efd2', '#b5cea7', '#d9b98a', '#8aaa82', '#f4f4e7']
+                : ['#66f7ff', '#ffffff', '#51ffd8', '#9d7cff', '#ffd66f'];
             const droneCount = reducedDroneMotion ? 24 : (compactDroneViewport ? 38 : 64);
             const fragment = document.createDocumentFragment();
 
             for (let i = 0; i < droneCount; i++) {
                 const dot = document.createElement('div');
                 dot.className = compactDroneViewport || reducedDroneMotion ? 'drone-dot drone-dot--lite' : 'drone-dot';
+                if (greenDrones) dot.classList.add('drone-dot--green');
 
                 const lane = i / Math.max(1, droneCount - 1);
                 const formationX = 18 + lane * 64 + (Math.random() - 0.5) * 8;
@@ -951,11 +970,24 @@ class EffectManager {
 
         if (type === 'thunder') {
             const flash = document.createElement('div');
-            flash.className = 'anim-thunder'; 
+            const greenThunder = this.isGreenThemeActive();
+            flash.className = greenThunder ? 'anim-thunder anim-thunder--green' : 'anim-thunder';
+            if (greenThunder) document.documentElement.classList.add('green-thunder-active');
             
             document.body.style.setProperty('--dir', Math.random() > 0.5 ? '1' : '-1');
             document.body.appendChild(flash);
+            let greenThunderEmblem = null;
+            if (greenThunder) {
+                greenThunderEmblem = document.createElement('img');
+                greenThunderEmblem.className = 'green-thunder-clay';
+                greenThunderEmblem.dataset.themeSrc = 'assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png?v=1';
+                greenThunderEmblem.alt = '';
+                greenThunderEmblem.setAttribute('aria-hidden', 'true');
+                document.body.appendChild(greenThunderEmblem);
+                greenThunderEmblem.src = greenThunderEmblem.dataset.themeSrc;
+            }
             document.body.classList.add('fx-thunder-shake'); 
+            if (greenThunder) document.body.classList.add('fx-thunder-shake--green');
             
             if (window.app && window.app.soundMgr && typeof window.app.soundMgr.thunder === 'function') {
                 window.app.soundMgr.thunder();
@@ -967,21 +999,29 @@ class EffectManager {
             
             this.scheduleEffectTimeout(() => {
                 if(flash.parentNode) flash.remove();
-                document.body.classList.remove('fx-thunder-shake');
+                if (greenThunderEmblem?.parentNode) greenThunderEmblem.remove();
+                document.documentElement.classList.remove('green-thunder-active');
+                document.body.classList.remove('fx-thunder-shake', 'fx-thunder-shake--green');
             }, 4500, 'thunder');
         }
 
         if (type === 'balkan') {
             document.body.classList.add('fx-balkan');
+            const greenBalkan = this.isGreenThemeActive();
 
             const bg = document.createElement('div');
-            bg.className = 'kafana-overlay';
+            bg.className = greenBalkan ? 'kafana-overlay kafana-overlay--green' : 'kafana-overlay';
             bg.innerHTML = `
                 <div class="kafana-tablecloth"></div>
                 <div class="kafana-tablecloth-frame"></div>
                 <div class="kafana-ambient-lights"></div>
+                ${greenBalkan ? '<img class="green-wedding-emblem" data-theme-src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png?v=1" alt="" aria-hidden="true" decoding="async">' : ''}
             `;
             document.body.appendChild(bg);
+            if (greenBalkan) {
+                const emblem = bg.querySelector('.green-wedding-emblem');
+                if (emblem) emblem.src = emblem.dataset.themeSrc;
+            }
 
             const trumpetData = [
                 { side: 'left', top: '15vh', delay: '0s' },
@@ -989,7 +1029,7 @@ class EffectManager {
                 { side: 'right', top: '24vh', delay: '0.08s' },
                 { side: 'right', top: '66vh', delay: '0.26s' }
             ];
-            const trumpets = trumpetData.map(data => {
+            const trumpets = greenBalkan ? [] : trumpetData.map(data => {
                 const trumpet = document.createElement('div');
                 trumpet.innerText = '🎺';
                 trumpet.className = `trumpet-icon-v2 trumpet-${data.side}`;
@@ -1063,6 +1103,7 @@ class EffectManager {
 
         if (type === 'royal_yamb') {
             document.body.classList.add('fx-royal_yamb');
+            const greenRoyal = this.isGreenThemeActive();
 
             const container = document.createElement('div');
             container.className = 'royal-yamb-container';
@@ -1079,8 +1120,8 @@ class EffectManager {
                 <div class="royal-yamb-stage-glow"></div>
                 <div class="royal-yamb-footlights"></div>
                 <canvas class="royal-yamb-canvas"></canvas>
-                <div class="royal-yamb-emblem">
-                    <img src="Logo_green.png" alt="" draggable="false">
+                <div class="royal-yamb-emblem${greenRoyal ? ' royal-yamb-emblem--green' : ''}">
+                    <img src="${greenRoyal ? 'assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png?v=1' : 'Logo_green.png'}" alt="" draggable="false">
                 </div>
                 <div class="royal-yamb-title-active" aria-label="Yamb of the Balkan">
                     <span class="royal-yamb-title-main">YAMB</span>
@@ -1128,6 +1169,7 @@ class EffectManager {
     runUfoAbduction() {
         const targetTable = this.getTargetTable();
         if (!targetTable) return;
+        const isGreenTheme = this.isGreenThemeActive();
 
         const rect = targetTable.getBoundingClientRect();
         const viewportWidth = window.innerWidth || document.documentElement.clientWidth || rect.width;
@@ -1138,10 +1180,11 @@ class EffectManager {
         const beamWidth = Math.max(220, Math.min(viewportWidth * 0.86, rect.width * 1.08));
 
         document.body.classList.add('fx-ufo_abduction');
+        if (isGreenTheme) document.body.classList.add('fx-ufo_abduction--green');
         targetTable.classList.add('anim-ufo-table');
 
         const container = document.createElement('div');
-        container.className = 'ufo-abduction-container';
+        container.className = `ufo-abduction-container${isGreenTheme ? ' ufo-abduction-container--green' : ''}`;
         container.setAttribute('aria-hidden', 'true');
         container.style.setProperty('--ufo-x', `${ufoX}px`);
         container.style.setProperty('--ufo-y', `${ufoY}px`);
@@ -1151,7 +1194,7 @@ class EffectManager {
             <div class="ufo-space-layer"></div>
             <div class="ufo-scan-grid"></div>
             <div class="ufo-stage">
-                <div class="ufo-speech">BIP?</div>
+                ${isGreenTheme ? '<img class="ufo-green-clay" data-theme-src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png" alt="" draggable="false">' : '<div class="ufo-speech">BIP?</div>'}
                 <div class="ufo-beam">
                     <div class="ufo-beam-core"></div>
                     <div class="ufo-ray ray-one"></div>
@@ -1159,7 +1202,7 @@ class EffectManager {
                     <div class="ufo-ray ray-three"></div>
                     <div class="ufo-ray ray-four"></div>
                 </div>
-                <div class="ufo-ship">
+                ${isGreenTheme ? '' : `<div class="ufo-ship">
                     <div class="ufo-dome">
                         <div class="ufo-alien alien-left"><span></span><span></span></div>
                         <div class="ufo-alien alien-center"><span></span><span></span></div>
@@ -1170,11 +1213,15 @@ class EffectManager {
                     </div>
                     <div class="ufo-rim"></div>
                     <div class="ufo-legs"></div>
-                </div>
+                </div>`}
                 <div class="ufo-score-vortex"></div>
             </div>
         `;
         document.body.appendChild(container);
+        if (isGreenTheme) {
+            const greenUfoImage = container.querySelector('.ufo-green-clay');
+            if (greenUfoImage) greenUfoImage.src = greenUfoImage.dataset.themeSrc;
+        }
 
         const sound = window.app && window.app.soundMgr;
         if (sound && typeof sound.ufoAbduction === 'function') {
@@ -1193,7 +1240,7 @@ class EffectManager {
         }, 1050, 'ufo_abduction');
 
         this.scheduleEffectTimeout(() => {
-            document.body.classList.remove('fx-ufo_abduction');
+            document.body.classList.remove('fx-ufo_abduction', 'fx-ufo_abduction--green');
             targetTable.classList.remove('anim-ufo-table');
             targetTable.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
             document.querySelectorAll('.ufo-abducted-score, .ufo-target-ray').forEach(el => el.remove());
@@ -1294,6 +1341,8 @@ class EffectManager {
 
     async runRoyalYambCanvas(canvas, duration = 8000) {
         if (!canvas || !canvas.getContext) return;
+        if (this.royalCanvasCleanup) this.royalCanvasCleanup();
+        const runId = ++this.royalYambRunId;
 
         const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
         if (!ctx) return;
@@ -1302,7 +1351,7 @@ class EffectManager {
         const greenDucatSprite = isGreenTheme
             ? await this.loadGreenDucatParticleSprite()
             : null;
-        if (!canvas.isConnected) return;
+        if (runId !== this.royalYambRunId || !canvas.isConnected) return;
 
         const start = performance.now();
         let rafId = 0;
@@ -1333,12 +1382,20 @@ class EffectManager {
 
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas, { passive: true });
+        const cleanup = () => {
+            cancelAnimationFrame(rafId);
+            window.removeEventListener('resize', resizeCanvas);
+            if (this.royalCanvasCleanup === cleanup) this.royalCanvasCleanup = null;
+        };
+        this.royalCanvasCleanup = cleanup;
 
         const compact = width < 560 || height < 620;
         const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
         const lowPower = compact || reducedMotion;
         const golds = ['#fff7c2', '#ffd66f', '#f6b63d', '#d98b18'];
-        const burstColors = ['#fff7c2', '#ffd66f', '#ffffff', '#ffb13d', '#7fffe1'];
+        const burstColors = greenDucatSprite
+            ? ['#f6f5d9', '#dce9c5', '#ffffff', '#d4bb93', '#a5c496']
+            : ['#fff7c2', '#ffd66f', '#ffffff', '#ffb13d', '#7fffe1'];
         const coinCount = reducedMotion ? 16 : (compact ? 24 : 36);
         const sparkleCount = reducedMotion ? 20 : (compact ? 28 : 42);
         const burstParticleCount = reducedMotion ? 10 : (compact ? 14 : 20);
@@ -1352,7 +1409,7 @@ class EffectManager {
             return sprite;
         };
 
-        const legacyCoinSprites = golds.map(color => createSprite(64, (spriteCtx, size) => {
+        const legacyCoinSprites = greenDucatSprite ? [] : golds.map(color => createSprite(64, (spriteCtx, size) => {
             const center = size / 2;
             const radius = size * 0.31;
             const gradient = spriteCtx.createRadialGradient(center - 8, center - 10, 3, center, center, radius);
@@ -1383,7 +1440,7 @@ class EffectManager {
         }));
         const coinSprites = greenDucatSprite ? [greenDucatSprite] : legacyCoinSprites;
 
-        const diamondSprite = createSprite(52, (spriteCtx, size) => {
+        const diamondSprite = greenDucatSprite ? null : createSprite(52, (spriteCtx, size) => {
             const center = size / 2;
             const radius = size * 0.28;
             const gradient = spriteCtx.createLinearGradient(center, center - radius, center, center + radius);
@@ -1483,7 +1540,7 @@ class EffectManager {
 
         const draw = now => {
             if (!canvas.isConnected) {
-                window.removeEventListener('resize', resizeCanvas);
+                cleanup();
                 return;
             }
 
@@ -1539,15 +1596,12 @@ class EffectManager {
                 rafId = requestAnimationFrame(draw);
             } else {
                 ctx.clearRect(0, 0, width, height);
-                window.removeEventListener('resize', resizeCanvas);
+                cleanup();
             }
         };
 
         rafId = requestAnimationFrame(draw);
-        this.scheduleEffectTimeout(() => {
-            cancelAnimationFrame(rafId);
-            window.removeEventListener('resize', resizeCanvas);
-        }, duration + 120, 'royal_yamb');
+        this.scheduleEffectTimeout(cleanup, duration + 120, 'royal_yamb');
     }
 
     spawnRealFirework(group = 'fireworks') {
@@ -1837,7 +1891,27 @@ class EffectManager {
         return this.goldRainSprites;
     }
 
+    getGreenGoldRainSparkSprite() {
+        if (this.greenGoldRainSparkSprite) return this.greenGoldRainSparkSprite;
+        const canvas = document.createElement('canvas');
+        canvas.width = 54;
+        canvas.height = 54;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+            const glow = ctx.createRadialGradient(27, 27, 0, 27, 27, 26);
+            glow.addColorStop(0, '#fbf9e8');
+            glow.addColorStop(0.3, '#dbe9c5');
+            glow.addColorStop(0.65, 'rgba(163, 200, 145, 0.3)');
+            glow.addColorStop(1, 'rgba(163, 200, 145, 0)');
+            ctx.fillStyle = glow;
+            ctx.fillRect(0, 0, 54, 54);
+        }
+        this.greenGoldRainSparkSprite = canvas;
+        return canvas;
+    }
+
     async spawnGoldRain() {
+        const runId = ++this.goldRainRunId;
         const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const isEasterTheme = document.body.classList.contains('easter-theme');
         const isGreenTheme = this.isGreenThemeActive();
@@ -1848,13 +1922,8 @@ class EffectManager {
         const sparkCount = reducedMotion ? 14 : (isCompact ? 26 : 48);
         const rand = (min, max) => min + Math.random() * (max - min);
         const ease = t => t * t * (3 - 2 * t);
-        let sprites = this.getGoldRainSprites();
-        if (isGreenTheme) {
-            const greenDucatSprite = await this.loadGreenDucatParticleSprite();
-            if (greenDucatSprite) {
-                sprites = { ...sprites, coin: greenDucatSprite };
-            }
-        }
+        const greenDucatSprite = isGreenTheme ? await this.loadGreenDucatParticleSprite() : null;
+        if (runId !== this.goldRainRunId) return;
 
         this.clearEffectTimeouts('gold_rain');
         if (this.goldRainAnimationId) {
@@ -1895,7 +1964,7 @@ class EffectManager {
         document.body.appendChild(canvas);
 
         const ctx = canvas.getContext('2d', { alpha: true });
-        if (!ctx) {
+        if (!ctx || (isGreenTheme && !greenDucatSprite)) {
             this.spawnEmojiRain(
                 isGreenTheme ? ['dukat-icon'] : ['dukat-icon', '🪙', '💎', '👑'],
                 reducedMotion ? 16 : 34,
@@ -1908,6 +1977,9 @@ class EffectManager {
             }, totalDuration, 'gold_rain');
             return;
         }
+        const sprites = isGreenTheme
+            ? { coin: greenDucatSprite, spark: this.getGreenGoldRainSparkSprite() }
+            : this.getGoldRainSprites();
 
         let width = 0;
         let height = 0;
@@ -2064,6 +2136,7 @@ class EffectManager {
 
         const compact = window.matchMedia?.('(max-width: 760px)').matches;
         const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        const greenWedding = this.isGreenThemeActive();
         const count = reducedMotion ? 18 : (compact ? 28 : 40);
         const symbols = ['💶', '💵', '🥂', '🍾', '💖', '🎵', '🍻'];
         const layer = document.createElement('div');
@@ -2073,8 +2146,8 @@ class EffectManager {
         const fragment = document.createDocumentFragment();
         for (let i = 0; i < count; i++) {
             const particle = document.createElement('span');
-            particle.className = 'wedding-particle';
-            particle.innerText = symbols[i % symbols.length];
+            particle.className = greenWedding ? `wedding-particle wedding-particle--green${i % 4 === 0 ? ' wedding-particle--ducat' : ''}` : 'wedding-particle';
+            if (!greenWedding) particle.innerText = symbols[i % symbols.length];
             particle.style.setProperty('--wedding-x', (2 + Math.random() * 96).toFixed(2) + 'vw');
             particle.style.setProperty('--wedding-drift', (-55 + Math.random() * 110).toFixed(1) + 'px');
             particle.style.setProperty('--wedding-delay', (Math.random() * 2.5).toFixed(2) + 's');
@@ -2146,11 +2219,12 @@ class EffectManager {
 
     spawnBubbles(count, group = 'bubbles') {
         const emojis = ['🫧', '🫧', '⚪']; 
+        const greenBubbles = this.isGreenThemeActive();
         for (let i = 0; i < count; i++) {
             this.scheduleEffectTimeout(() => {
                 const el = document.createElement('div');
-                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                el.className = 'magic-bubble';
+                if (!greenBubbles) el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.className = greenBubbles ? 'magic-bubble magic-bubble--green' : 'magic-bubble';
                 el.style.left = Math.random() * 100 + 'vw';
                 el.style.setProperty('--rnd-x', (Math.random() * 150 - 75) + 'px'); 
                 
@@ -2406,11 +2480,16 @@ class EffectManager {
     }
     
     stop() {
+        this.goldRainRunId++;
+        this.royalYambRunId++;
+        if (this.royalCanvasCleanup) this.royalCanvasCleanup();
+        if (this.supernovaCanvasCleanup) this.supernovaCanvasCleanup();
         this.clearEffectTimeouts();
+        document.documentElement.classList.remove('green-thunder-active');
         if (window.app?.soundMgr?.stopBalkanMusic) {
             window.app.soundMgr.stopBalkanMusic(true);
         }
-        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-cosmic_dust', 'fx-ufo_abduction', 'fx-dragon_fire', 'fx-royal_yamb', 'fx-gold-rain');
+        document.body.classList.remove('fx-glass', 'fx-neon_pulse', 'fx-neon_pulse--green', 'fx-balkan', 'fx-ice-age', 'fx-thunder-shake', 'fx-thunder-shake--green', 'fx-cosmic_dust', 'fx-ufo_abduction', 'fx-ufo_abduction--green', 'fx-dragon_fire', 'fx-royal_yamb', 'fx-gold-rain');
 
         if (this.confettiAnimationId) {
             cancelAnimationFrame(this.confettiAnimationId);
@@ -2432,7 +2511,7 @@ class EffectManager {
             if (confettiCtx) confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
         }
         
-        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-spark').forEach(e => e.remove());
+        document.querySelectorAll('.falling-coin, .firefly, .firefly-field, .trumpet-icon, .trumpet-icon-v2, .kafana-overlay, .wedding-rain, .firework-particle, .ice-overlay-container, .ice-age-atmosphere, .black-hole-container, .supernova-container, .drone-night-sky, .drone-text, .drone-dot, .magic-bubble, .anim-thunder, .green-thunder-clay, .fw-rocket, .fw-flash, .fw-particle, .cosmic-container, .ufo-abduction-container, .ufo-abducted-score, .ufo-target-ray, .dragon-container, .stardust-layer, .dragon-flames, .dragon-embers, .royal-yamb-container, .gold-rain-atmosphere, .gold-rain-canvas, .gold-rain-spark').forEach(e => e.remove());
         
         document.querySelectorAll('.active-ice-table').forEach(tbl => tbl.classList.remove('active-ice-table'));
         document.querySelectorAll('.anim-ice-age-table').forEach(tbl => tbl.classList.remove('anim-ice-age-table'));
@@ -2441,6 +2520,7 @@ class EffectManager {
         document.querySelectorAll('.anim-supernova-table').forEach(tbl => tbl.classList.remove('anim-supernova-table'));
         document.querySelectorAll('.anim-supernova-table--compact').forEach(tbl => tbl.classList.remove('anim-supernova-table--compact'));
         document.querySelectorAll('.anim-neon-pulse').forEach(tbl => tbl.classList.remove('anim-neon-pulse'));
+        document.querySelectorAll('.anim-neon-pulse--green').forEach(tbl => tbl.classList.remove('anim-neon-pulse--green'));
         document.querySelectorAll('.anim-ufo-table').forEach(tbl => tbl.classList.remove('anim-ufo-table'));
         document.querySelectorAll('.ufo-score-dimmed').forEach(btn => btn.classList.remove('ufo-score-dimmed'));
     }
@@ -4297,6 +4377,11 @@ class AdMobController {
     }
 
     async initialize() {
+        if (typeof YAMB_IS_PRODUCTION_SERVER !== 'undefined' && !YAMB_IS_PRODUCTION_SERVER) {
+            console.info('🧪 Staging/local runtime: AdMob je isključen.');
+            this.updateUI(false);
+            return;
+        }
         try {
             if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob) {
                 this.adMobPlugin = window.Capacitor.Plugins.AdMob;
