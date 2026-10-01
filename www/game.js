@@ -154,6 +154,13 @@ class YambApp {
         this.dualBoardLastFollowedPlayerIdx = null;
         this.onlineRollPending = false;
         this.onlineTurnTimerPaused = false;
+        this.appLifecyclePaused = false;
+        this.appLifecycleSequence = 0;
+        this.appLifecycleEpisodeCounter = 0;
+        this.appLifecycleEpisodeId = '';
+        this.appLifecycleNativeConfirmed = false;
+        this.appLifecycleLastResumeAt = 0;
+        this.appLifecycleSessionId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
         this.opponentReconnectGraceTimer = null;
         this.opponentReconnectNoticeTimer = null;
         this.opponentReconnectNoticeVisible = false;
@@ -281,25 +288,25 @@ class YambApp {
             window.Capacitor.Plugins.App.addListener('appStateChange', ({ isActive } = {}) => {
                 this.nativeAppActive = isActive;
                 if (isActive === false) {
-                    this.handleAppPause('capacitor_app_state');
+                    this.handleAppPause('capacitor_app_state', { nativeConfirmed: true });
                 } else if (isActive === true) {
-                    this.scheduleAppResume();
+                    this.scheduleAppResume(0, { nativeVerified: true });
                 }
             });
         }
 
-        document.addEventListener("pause", () => { this.handleAppPause('document_pause'); }, false);
+        document.addEventListener("pause", () => { this.handlePotentialAppPause('document_pause'); }, false);
         document.addEventListener("resume", () => { this.scheduleAppResume(); }, false);
         document.addEventListener("visibilitychange", () => {
             if (document.visibilityState === 'hidden') {
-                this.handleAppPause('visibility_hidden');
+                this.handlePotentialAppPause('visibility_hidden');
             } else if (document.visibilityState === 'visible') {
                 this.scheduleAppResume();
             }
         });
-        window.addEventListener('pagehide', () => { this.handleAppPause('pagehide'); });
+        window.addEventListener('pagehide', () => { this.handlePotentialAppPause('pagehide'); });
         window.addEventListener('pageshow', () => { this.scheduleAppResume(); });
-        window.addEventListener('beforeunload', () => { this.handleAppPause('beforeunload'); });
+        window.addEventListener('beforeunload', () => { this.handlePotentialAppPause('beforeunload'); });
 
         // Independent of the turn timer: that timer is stopped during reconnect grace.
         this.onlineForegroundRecoveryTimer = setInterval(() => this.checkOnlineForegroundRecovery(), 2000);
@@ -309,6 +316,7 @@ class YambApp {
         this.handleRotationLock();
         window.addEventListener('resize', () => this.handleRotationLock());
         window.addEventListener('orientationchange', () => this.handleRotationLock());
+        window.screen?.orientation?.addEventListener?.('change', () => this.handleRotationLock());
 
         this.uiInit();
         this.syncBalance();
@@ -2222,7 +2230,7 @@ class YambApp {
             economy: path => path.startsWith('economy/') || path.startsWith('ducats-undo') || path.startsWith('canonical/rewarded-video/'),
             quarterlyLeague: path => path.startsWith('ql/') || path.startsWith('quarterly-league') || path.startsWith('canonical/competition-medals/quarterly-league-') || path === 'canonical/quarterly-league-room-identity/quarterly-league-room-v1.png',
             treasury: path => path.startsWith('treasury/') || path.startsWith('treasury-') || path.startsWith('economy/ducat') || path.startsWith('canonical/collection-medals/') || path.startsWith('canonical/achievement-trophies/') || path.startsWith('canonical/treasury-controls/') || path.startsWith('canonical/treasury-effect-previews/') || (theme !== 'dark' && path.includes('rewarded-video')),
-            tournament: path => path.startsWith('tournament/') || path.startsWith('tournament-') || path.startsWith('canonical/tournament-navigation/') || path.startsWith('canonical/tournament-states/') || path.startsWith('canonical/tournament-awards/'),
+            tournament: path => path.startsWith('tournament/') || path.startsWith('tournament-') || path.startsWith('canonical/tournament-navigation/') || path.startsWith('canonical/tournament-states/') || path.startsWith('canonical/tournament-awards/') || path === 'canonical/statistics-overview/power-index-v1.png',
             solo: path => path.startsWith('solo/') || path.startsWith('canonical/solo-results/') || path === 'canonical/solo-room-identity/solo-room-v1.png',
             hotseat: path => path.startsWith('hotseat/') || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
             opponent: path => path.startsWith('opponent/') || path === 'canonical/online-random-room-identity/online-random-room-v1.png',
@@ -4331,11 +4339,14 @@ class YambApp {
                     const roomId = data.roomId;
                     if (!roomId) return;
 
-                    if (this.gameActive && this.onlineMode && !this.isSpectator) {
+                    if (!this.isOnlineRecoveryEventRelevant(roomId)) {
+                        console.log("ℹ️ Ignorišem recovery stare sobe ili recovery tokom druge aktivne igre:", roomId);
+                        return;
+                    }
+
+                    if (this.gameActive) {
                         localStorage.setItem('yamb_active_online_room', roomId);
-                        if (this.roomId === roomId) {
-                            this.requestOnlineStateSync(roomId);
-                        }
+                        this.requestOnlineStateSync(roomId);
                         return;
                     }
 
@@ -4939,14 +4950,14 @@ class YambApp {
 
     handleRotationLock() {
         const overlay = document.getElementById('rotate-lock-overlay');
-        if(!overlay) return;
-        const isLandscape = window.innerWidth > window.innerHeight;
-        if (isLandscape && window.innerHeight < 600) {
-            overlay.style.display = 'flex';
-            overlay.style.zIndex = '999999';
-        } else {
-            overlay.style.display = 'none';
-        }
+        if (!overlay) return;
+        const physicalOrientation = window.screen?.orientation?.type || '';
+        const isLandscape = physicalOrientation
+            ? physicalOrientation.startsWith('landscape')
+            : window.matchMedia('(orientation: landscape)').matches;
+        document.documentElement.classList.toggle('landscape-orientation-active', isLandscape);
+        document.documentElement.classList.toggle('portrait-orientation-active', !isLandscape);
+        overlay.setAttribute('aria-hidden', isLandscape ? 'false' : 'true');
     }
 
     checkForInvite() { 
@@ -5073,18 +5084,18 @@ class YambApp {
         return false;
     }
 
-    scheduleAppResume(delayMs = 500) {
+    scheduleAppResume(delayMs = 500, options = {}) {
         this.appLifecycleRevision = (this.appLifecycleRevision || 0) + 1;
         if (this.appResumeTimer) clearTimeout(this.appResumeTimer);
         this.appResumeTimer = setTimeout(() => {
             this.appResumeTimer = null;
-            this.handleAppResume();
+            this.handleAppResume(options);
         }, Math.max(0, Number(delayMs) || 0));
     }
 
     async checkOnlineForegroundRecovery() {
         if (!this.gameActive || !this.onlineMode || this.isSpectator || !this.roomId) return;
-        if (document.visibilityState === 'hidden' || this.onlineForegroundCheckPending) return;
+        if (this.onlineForegroundCheckPending) return;
         const roomId = this.roomId;
         const revision = this.appLifecycleRevision || 0;
         this.onlineForegroundCheckPending = true;
@@ -5098,9 +5109,11 @@ class YambApp {
             } else if (this.nativeAppActive === false) {
                 return;
             }
-            if (this.roomId !== roomId || !this.gameActive || !this.onlineMode || this.isSpectator || document.visibilityState === 'hidden') return;
-            if (this.appLifecyclePaused) this.handleAppResume();
-            this.emitOnlinePresencePing();
+            if (this.roomId !== roomId || !this.gameActive || !this.onlineMode || this.isSpectator) return;
+            const nativeVerified = !!(appPlugin && typeof appPlugin.getState === 'function');
+            if (document.visibilityState === 'hidden' && !nativeVerified) return;
+            if (this.appLifecyclePaused) this.handleAppResume({ nativeVerified });
+            this.emitOnlinePresencePing(false, { nativeVerified });
         } catch (_) {
             // An unavailable native state is not proof that the player returned.
         } finally {
@@ -5108,14 +5121,57 @@ class YambApp {
         }
     }
 
-    handleAppPause(lifecycleSource = 'app_pause') {
+    handlePotentialAppPause(lifecycleSource = 'app_pause') {
+        this.handleAppPause(lifecycleSource, { nativeConfirmed: false });
+
+        const appPlugin = window.Capacitor?.Plugins?.App;
+        if (!appPlugin || typeof appPlugin.getState !== 'function') return;
+        Promise.resolve(appPlugin.getState()).then((state) => {
+            const isActive = state?.isActive;
+            this.nativeAppActive = isActive;
+            if (isActive === true) {
+                this.scheduleAppResume(0, { nativeVerified: true });
+            } else if (isActive === false) {
+                this.handleAppPause(lifecycleSource, { nativeConfirmed: true });
+            }
+        }).catch(() => {});
+    }
+
+    handleAppPause(lifecycleSource = 'app_pause', options = {}) {
         this.appLifecycleRevision = (this.appLifecycleRevision || 0) + 1;
         if (this.appResumeTimer) {
             clearTimeout(this.appResumeTimer);
             this.appResumeTimer = null;
         }
-        if (this.appLifecyclePaused) return;
+        const nativeConfirmed = options.nativeConfirmed === true;
+        if (this.appLifecyclePaused) {
+            if (!nativeConfirmed || this.appLifecycleNativeConfirmed) return;
+            this.appLifecycleNativeConfirmed = true;
+            if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket?.connected && this.roomId) {
+                this.socket.emit('online_app_backgrounded', {
+                    roomId: this.roomId,
+                    lifecycleSource,
+                    lifecycleEpisodeId: this.appLifecycleEpisodeId,
+                    lifecycleSeq: ++this.appLifecycleSequence,
+                    nativeConfirmed: true,
+                    nativeActive: false,
+                    visibilityState: document.visibilityState || '',
+                    ...this.getConnectionDiagnosticSnapshot()
+                });
+            }
+            return;
+        }
+
+        const now = Date.now();
+        const reuseRecentEpisode = this.appLifecycleEpisodeId &&
+            this.appLifecycleLastResumeAt &&
+            now - this.appLifecycleLastResumeAt <= 5000;
+        if (!reuseRecentEpisode) {
+            this.appLifecycleEpisodeCounter++;
+            this.appLifecycleEpisodeId = `${this.appLifecycleSessionId}-${this.appLifecycleEpisodeCounter}`;
+        }
         this.appLifecyclePaused = true;
+        this.appLifecycleNativeConfirmed = nativeConfirmed;
 
         if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket && this.roomId) {
             localStorage.setItem('yamb_active_online_room', this.roomId);
@@ -5123,6 +5179,11 @@ class YambApp {
                 this.socket.emit('online_app_backgrounded', {
                     roomId: this.roomId,
                     lifecycleSource,
+                    lifecycleEpisodeId: this.appLifecycleEpisodeId,
+                    lifecycleSeq: ++this.appLifecycleSequence,
+                    nativeConfirmed,
+                    nativeActive: typeof this.nativeAppActive === 'boolean' ? this.nativeAppActive : null,
+                    visibilityState: document.visibilityState || '',
                     ...this.getConnectionDiagnosticSnapshot()
                 });
             }
@@ -5135,10 +5196,14 @@ class YambApp {
         }
     }
 
-    handleAppResume() {
-        if (document.visibilityState === 'hidden') return;
+    handleAppResume(options = {}) {
+        const nativeVerified = options.nativeVerified === true;
+        if (document.visibilityState === 'hidden' && !nativeVerified) return;
         if (this.gameActive && this.onlineMode && this.nativeAppActive === false) return;
         this.appLifecyclePaused = false;
+        this.appLifecycleNativeConfirmed = false;
+        this.appLifecycleLastResumeAt = Date.now();
+        const lifecycleSeq = ++this.appLifecycleSequence;
         this.checkForInvite();
 
         if (this.gameActive && !this.onlineMode) {
@@ -5171,14 +5236,20 @@ class YambApp {
                 if (!roomId || roomId !== resumeRoomId || this.socket !== resumeSocket ||
                     resumeRevision !== (this.appLifecycleRevision || 0) ||
                     !this.gameActive || !this.onlineMode || this.isSpectator || this.appLifecyclePaused ||
-                    document.visibilityState === 'hidden' || this.nativeAppActive === false) return;
+                    (document.visibilityState === 'hidden' && !nativeVerified) ||
+                    this.nativeAppActive === false) return;
 
                 this.socket.emit('online_app_resumed', {
                     roomId,
+                    lifecycleEpisodeId: this.appLifecycleEpisodeId,
+                    lifecycleSeq,
+                    nativeVerified,
+                    nativeActive: typeof this.nativeAppActive === 'boolean' ? this.nativeAppActive : null,
+                    visibilityState: document.visibilityState || '',
                     ...this.getConnectionDiagnosticSnapshot()
                 });
                 if (this.isTournamentOnlineDuel(roomId, { duelType: this.onlineDuelType })) {
-                    this.emitOnlinePresencePing(true);
+                    this.emitOnlinePresencePing(true, { nativeVerified });
                 }
 
                 this.requestOnlineStateSync(roomId);
@@ -6032,6 +6103,9 @@ class YambApp {
             this.timeLeft = 90;
         }
 
+        // Animations can still be running after a Yamb or result celebration.
+        // They must not remain over the menu (or restart there from a delayed timer).
+        if (this.effectMgr) this.effectMgr.stop();
         this.navigateTo('main-menu');
         const waitingScreen = document.getElementById('waiting-screen');
         if (waitingScreen) waitingScreen.classList.remove('is-hosting-invite', 'is-friend-invite', 'is-random-online');
@@ -6478,10 +6552,12 @@ class YambApp {
         return this.inferOnlineDuelType(roomId, payload) === 'tournament';
     }
 
-    emitOnlinePresencePing(force = false) {
+    emitOnlinePresencePing(force = false, options = {}) {
+        const nativeVerified = options.nativeVerified === true;
         if (!this.gameActive || !this.onlineMode || this.isSpectator) return;
         if (!this.socket || !this.socket.connected || !this.roomId) return;
-        if (this.appLifecyclePaused || this.nativeAppActive === false || document.visibilityState === 'hidden') return;
+        if (this.appLifecyclePaused || this.nativeAppActive === false) return;
+        if (document.visibilityState === 'hidden' && !nativeVerified) return;
 
         const now = Date.now();
         if (!force && this.lastOnlinePresencePingAt && now - this.lastOnlinePresencePingAt < 2000) return;
@@ -6490,6 +6566,11 @@ class YambApp {
         this.socket.emit('online_presence_ping', {
             roomId: this.roomId,
             foreground: true,
+            lifecycleEpisodeId: this.appLifecycleEpisodeId,
+            lifecycleSeq: this.appLifecycleSequence,
+            nativeVerified,
+            nativeActive: typeof this.nativeAppActive === 'boolean' ? this.nativeAppActive : null,
+            visibilityState: document.visibilityState || '',
             ...this.getConnectionDiagnosticSnapshot()
         });
     }
@@ -6706,7 +6787,7 @@ class YambApp {
 
         this.socket.off('opponent_connection_lost');
         this.socket.on('opponent_connection_lost', (data = {}) => {
-            if (this.isSpectator) return;
+            if (!this.gameActive || this.isSpectator || !this.isOnlineRecoveryEventRelevant(data.roomId)) return;
 
             this.onlineTurnTimerPaused = true;
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
@@ -6723,7 +6804,7 @@ class YambApp {
 
         this.socket.off('opponent_connection_restored');
         this.socket.on('opponent_connection_restored', (data = {}) => {
-            if (this.isSpectator) return;
+            if (!this.gameActive || this.isSpectator || !this.isOnlineRecoveryEventRelevant(data.roomId)) return;
             const reconnectNoticeWasVisible = this.opponentReconnectNoticeVisible;
             this.clearOpponentReconnectGraceCountdown();
 
@@ -6837,6 +6918,10 @@ class YambApp {
 
         this.socket.off('game_over_timeout');
         this.socket.on('game_over_timeout', async (data) => {
+            if (!data?.roomId || !this.gameActive || !this.onlineMode || this.roomId !== data.roomId) {
+                console.log("ℹ️ Ignorišem zakašnjeli timeout druge sobe:", data?.roomId);
+                return;
+            }
             this.onlineDuelType = this.inferOnlineDuelType(this.roomId, data);
             if (this.turnTimerInterval) clearInterval(this.turnTimerInterval);
             this.clearOpponentReconnectGraceCountdown();
@@ -7395,6 +7480,10 @@ class YambApp {
 
         this.socket.off('opponent_left');
         this.socket.on('opponent_left', async (data = {}) => {
+            if (!data.roomId || !this.onlineMode || this.roomId !== data.roomId) {
+                console.log("ℹ️ Ignorišem opponent_left iz stare/nepoznate sobe:", data.roomId);
+                return;
+            }
             this.onlineDuelType = this.inferOnlineDuelType(this.roomId, data);
             this.clearOpponentReconnectGraceCountdown();
             localStorage.removeItem('yamb_active_online_room');
@@ -7586,19 +7675,36 @@ class YambApp {
         this.setupOnlineRecoveryListeners();
     }
 
+    isOnlineRecoveryEventRelevant(roomId, options = {}) {
+        const targetRoomId = String(roomId || '');
+        if (!targetRoomId) return false;
+        if (this.gameActive) {
+            return this.onlineMode === true && !this.isSpectator && this.roomId === targetRoomId;
+        }
+        if (options.requireSavedWhenInactive === true) {
+            return localStorage.getItem('yamb_active_online_room') === targetRoomId;
+        }
+        return true;
+    }
+
     setupOnlineRecoveryListeners() {
         if (!this.socket) return;
 
         this.socket.off('match_ended_without_penalty');
         this.socket.on('match_ended_without_penalty', async (data = {}) => {
             if (data.reason !== 'mutual_disconnect') return;
-            if (data.roomId && this.roomId && data.roomId !== this.roomId) return;
+            if (!this.isOnlineRecoveryEventRelevant(data.roomId, { requireSavedWhenInactive: true })) return;
 
             localStorage.removeItem('yamb_active_online_room');
             await this.refreshProfileAfterOnlineRoomClosed();
+            const tournamentReplay = data.tournamentReplay === true;
             this.modal.alert(
-                gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.',
-                gt('mutual_disconnect_title') || 'OBOSTRANI PREKID'
+                tournamentReplay
+                    ? (gt('tourney_network_replay_msg') || 'Veza oba igrača je prekinuta. Turnirski meč ostaje u kosturu i može se ponovo pokrenuti bez dodeljenog pobednika.')
+                    : (gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.'),
+                tournamentReplay
+                    ? (gt('tourney_network_replay_title') || 'TURNIRSKI MEČ SE PONAVLJA')
+                    : (gt('mutual_disconnect_title') || 'OBOSTRANI PREKID')
             );
             this.cancelOnline();
         });
@@ -7610,6 +7716,10 @@ class YambApp {
             const savedRoomId = localStorage.getItem('yamb_active_online_room');
 
             if (!responseRoomId) return;
+            if (!this.isOnlineRecoveryEventRelevant(responseRoomId, { requireSavedWhenInactive: true })) {
+                console.log("ℹ️ Ignorišem room_status iz stare sobe ili tokom druge aktivne igre:", responseRoomId);
+                return;
+            }
 
             if (this.gameActive && this.onlineMode) {
                 if (this.roomId !== responseRoomId) {
@@ -7617,7 +7727,7 @@ class YambApp {
                     return;
                 }
 
-                if (!data.active) {
+                if (!data.active && data.tournamentReplay !== true) {
                     console.log("ℹ️ Ignorišem neaktivan room_status za duel koji je već aktivan na klijentu:", responseRoomId);
                     return;
                 }
@@ -7657,9 +7767,14 @@ class YambApp {
                 // Soba više ne postoji (istekao grace period), obavesti ga direktno
                 localStorage.removeItem('yamb_active_online_room');
                 await this.refreshProfileAfterOnlineRoomClosed();
+                const tournamentReplay = data.tournamentReplay === true;
                 this.modal.alert(
-                    gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme.",
-                    gt('online_recovery_expired_title') || "KRAJ PARTIJE"
+                    tournamentReplay
+                        ? (gt('tourney_network_replay_msg') || 'Veza oba igrača je prekinuta. Turnirski meč ostaje u kosturu i može se ponovo pokrenuti bez dodeljenog pobednika.')
+                        : (gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme."),
+                    tournamentReplay
+                        ? (gt('tourney_network_replay_title') || 'TURNIRSKI MEČ SE PONAVLJA')
+                        : (gt('online_recovery_expired_title') || "KRAJ PARTIJE")
                 );
             }
         });
@@ -7669,28 +7784,33 @@ class YambApp {
         this.socket.on('force_cancel_online', async (data = {}) => {
             const responseRoomId = data && data.roomId;
 
-            if (this.gameActive && this.onlineMode) {
-                if (!responseRoomId || responseRoomId !== this.roomId) {
-                    console.log("ℹ️ Ignorišem force_cancel_online za staru/nepoznatu sobu:", responseRoomId);
-                    return;
-                }
+            if (!this.isOnlineRecoveryEventRelevant(responseRoomId, { requireSavedWhenInactive: true })) {
+                console.log("ℹ️ Ignorišem force_cancel_online za staru/nepoznatu sobu ili tokom druge aktivne igre:", responseRoomId);
+                return;
             }
 
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
             localStorage.removeItem('yamb_active_online_room');
             await this.refreshProfileAfterOnlineRoomClosed();
             const wasMutualDisconnect = data.reason === 'mutual_disconnect';
+            const tournamentReplay = data.tournamentReplay === true;
             if (this.modal) {
                 this.modal.alert(
-                    wasMutualDisconnect
+                    tournamentReplay
+                        ? (gt('tourney_network_replay_msg') || 'Veza oba igrača je prekinuta. Turnirski meč ostaje u kosturu i može se ponovo pokrenuti bez dodeljenog pobednika.')
+                        : wasMutualDisconnect
                         ? (gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.')
                         : (gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme."),
-                    wasMutualDisconnect
+                    tournamentReplay
+                        ? (gt('tourney_network_replay_title') || 'TURNIRSKI MEČ SE PONAVLJA')
+                        : wasMutualDisconnect
                         ? (gt('mutual_disconnect_title') || 'OBOSTRANI PREKID')
                         : (gt('online_recovery_expired_title') || "KRAJ PARTIJE")
                 );
             } else {
-                alert(wasMutualDisconnect
+                alert(tournamentReplay
+                    ? (gt('tourney_network_replay_msg') || 'Veza oba igrača je prekinuta. Turnirski meč ostaje u kosturu i može se ponovo pokrenuti bez dodeljenog pobednika.')
+                    : wasMutualDisconnect
                     ? (gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.')
                     : (gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme."));
             }
@@ -10214,6 +10334,10 @@ class YambApp {
             : (activeQlWinnerTheme === 'dark'
                 ? 'medal-gold-v1.png?v=1'
                 : (activeQlWinnerTheme === 'easter' ? 'medal-gold-v2.png?v=1' : 'medal-gold.png?v=2'));
+        const qlChampionMedalSource = activeQlWinnerTheme === 'dark'
+            ? (this.getThemeRoomSources('dark', 'quarterlyLeague')
+                .find(source => /\/competition-medals\/quarterly-league-gold-v1\.png(?:\?|$)/.test(source)) || '')
+            : `${qlAssetRoot}/${qlChampionMedalFile}`;
         
         let title = gt('league_champion_title') || "ŠAMPION KVARTALNE LIGE";
         let subText = (gt('league_winner_q') || "Pobednik za Q{0} / {1}.").replace('{0}', data.quarter).replace('{1}', data.year);
@@ -10224,32 +10348,32 @@ class YambApp {
         if(this.effectMgr) this.effectMgr.trigger('confetti');
 
         let modalHtml = `
-        <div id="winner-modal-overlay" class="modal-overlay" style="z-index: 9999999; display: flex;">
-            <div class="modal-box" style="text-align: center; padding: 30px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); max-width: 400px; width: 90%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-                <div style="width: 96px; height: 96px; margin: 0 auto 12px auto; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,214,76,0.18), rgba(0,0,0,0.12) 70%); box-shadow: 0 0 22px rgba(255,214,76,0.24); animation: popIn 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+        <div id="winner-modal-overlay" class="modal-overlay${activeQlWinnerTheme === 'dark' ? ' active' : ''}" style="z-index: 9999999; display: flex;">
+            <div class="modal-box quarter-winner-card" style="text-align: center; padding: 30px 20px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(0, 0, 0, 0.2); border-top: 1px solid rgba(255, 255, 255, 0.15); border-left: 1px solid rgba(255, 255, 255, 0.08); max-width: 400px; width: 90%; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.2), inset 0 1px 1px rgba(255,255,255,0.2); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                <div class="quarter-winner-brand" style="width: 96px; height: 96px; margin: 0 auto 12px auto; border-radius: 24px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 42%, rgba(255,214,76,0.18), rgba(0,0,0,0.12) 70%); box-shadow: 0 0 22px rgba(255,214,76,0.24); animation: popIn 0.58s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
                     <img class="quarter-winner-logo quarter-winner-logo-default" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async" style="width: 86px; height: 86px; object-fit: contain; filter: var(--league-logo-watermark-filter);">
                     <img class="quarter-winner-logo quarter-winner-logo-easter" data-theme-src="assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-desert" data-theme-src="assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-nebula" data-theme-src="assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="quarter-winner-logo quarter-winner-logo-green" data-theme-src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 </div>
-                <h2 style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
-                <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
-                <img class="ql-quarter-champion-medal" src="${qlAssetRoot}/${qlChampionMedalFile}" alt="" aria-hidden="true" decoding="async">
+                <h2 class="quarter-winner-title" style="color: var(--gold-main); font-size: clamp(1.25rem, 6vw, 1.72rem); line-height: 1.08; margin-top: 0; margin-bottom: 7px; text-transform: uppercase;">${title}</h2>
+                <p class="quarter-winner-period" style="color: #aaa; font-size: 0.9rem; margin-bottom: 20px; text-transform: uppercase;">${subText}</p>
+                <img class="ql-quarter-champion-medal" src="${qlChampionMedalSource}" alt="" aria-hidden="true" decoding="async">
 
-                <div style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
-                    <img src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">
-                    <div style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); background: var(--gold-main); color: #000; padding: 2px 10px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MVP</div>
+                <div class="quarter-winner-avatar-wrap" style="position: relative; width: 120px; height: 120px; margin: 0 auto 15px auto;">
+                    <img class="quarter-winner-avatar" src="${photo}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 3px solid var(--gold-main); box-shadow: 0 0 15px var(--gold-main);">
+                    <div class="quarter-winner-mvp" style="position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); background: var(--gold-main); color: #000; padding: 2px 10px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MVP</div>
                 </div>
                 
-                <h3 style="color: #fff; font-size: 1.5rem; margin-bottom: 5px;">${data.playerName}</h3>
-                <p style="color: var(--gold-main); font-size: 1.2rem; font-weight: bold; margin-bottom: 25px;">${data.score} PTS</p>
+                <h3 class="quarter-winner-name" style="color: #fff; font-size: 1.5rem; margin-bottom: 5px;">${data.playerName}</h3>
+                <p class="quarter-winner-points" style="color: var(--gold-main); font-size: 1.2rem; font-weight: bold; margin-bottom: 25px;">${data.score} PTS</p>
                 
-                <p style="color: #ddd; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;">
+                <p class="quarter-winner-message" style="color: #ddd; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4;">
                     ${congratsText}
                 </p>
                 
-                <button class="btn-menu btn-primary" onclick="document.getElementById('winner-modal-overlay').remove(); app.effectMgr.stop();" style="width: 100%;">${btnText}</button>
+                <button class="btn-menu btn-primary quarter-winner-action" onclick="document.getElementById('winner-modal-overlay').remove(); app.effectMgr.stop();" style="width: 100%;">${btnText}</button>
             </div>
         </div>`;
 

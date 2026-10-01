@@ -23,19 +23,28 @@
     (() => {
       'use strict';
       const state = (location.hash || '#waiting-search').slice(1);
-      const qaLang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'sr';
+      const params = new URLSearchParams(location.search);
+      const qaLang = params.get('lang') === 'en' ? 'en' : 'sr';
+      const qaTheme = ['easter', 'desert'].includes(params.get('theme')) ? params.get('theme') : 'dark';
+      const qaAssetFolder = qaTheme === 'dark' ? 'green-soft-clay' : `${qaTheme}-soft-clay`;
+      if (qaTheme !== 'dark') document.body.classList.add(`${qaTheme}-theme`);
+      if (params.get('font') === 'large') {
+        document.documentElement.style.fontSize = '20px';
+      }
       document.documentElement.lang = qaLang;
       const allowed = new Set([
         'waiting-search', 'waiting-vs', 'invite-host', 'league-summary', 'solo-result',
         'online-result', 'insufficient', 'confirm', 'daily-active', 'daily-double',
         'daily-final', 'daily-final-double', 'leaderboard-empty-global',
-        'leaderboard-empty-local', 'tournament-quarter', 'tournament-semi', 'tournament-final',
+        'leaderboard-empty-local', 'tournament-quarter', 'tournament-semi', 'tournament-final', 'tournament-detail',
         'pi-off-top', 'streak-off-top', 'toast-success', 'toast-error',
         'toast-invite', 'toast-insufficient', 'toast-long-invite',
         'modal-confirm-buy', 'modal-error-long', 'treasury-locked',
         'treasury-skin', 'treasury-effect', 'treasury-theme',
-        'online-players-loading', 'online-players-empty', 'online-players-error', 'online-players-disabled'
+        'online-players-loading', 'online-players-empty', 'online-players-error', 'online-players-disabled',
+        'room-stats', 'room-settings', 'room-chat', 'room-rules', 'room-economy', 'quarter-winner'
       ]);
+      for (let page = 1; page <= 6; page++) allowed.add(`room-rules-${page}`);
       const root = document.getElementById('qa-root');
       const caption = document.getElementById('qa-caption');
       if (qaLang === 'en') caption.textContent = 'ISOLATED QA — no account, match or writes';
@@ -60,7 +69,7 @@
         player_guest: 'Igrač'
       };
       window.t = key => qaTranslations[key] ?? key;
-      window.dukatIconHtml = () => '{DUKAT_ICON}';
+      window.dukatIconHtml = () => greenDukatHtml('');
       const loadRealTranslations = async () => {
         const response = await fetch('languages.js', { cache: 'no-store' });
         if (!response.ok) throw new Error(`languages.js: HTTP ${response.status}`);
@@ -70,13 +79,16 @@
         const translations = new Function(`${objectSource}\nreturn TRANSLATIONS;`)();
         window.t = key => {
           const value = translations[qaLang]?.[key] ?? qaTranslations[key] ?? key;
-          return typeof value === 'string' ? value.replace(/\{DUKAT_ICON\}/g, greenDukatHtml('')) : value;
+          if (typeof value !== 'string') return value;
+          const themedValue = key === 'tourney_finalist_title' ? value.replace(/\s*🥈/u, '')
+            : key === 'ws_power' ? value.replace(/\s*⚡/u, '') : value;
+          return themedValue.replace(/\{DUKAT_ICON\}/g, greenDukatHtml(''));
         };
       };
       const hydrateGreenImages = element => {
         element.querySelectorAll('img[data-theme-src]').forEach(image => {
           const sourcePath = image.getAttribute('data-theme-src');
-          if (sourcePath.includes('green-soft-clay/')) image.src = sourcePath;
+          if (sourcePath.includes(`${qaAssetFolder}/`)) image.src = sourcePath;
         });
       };
       const loadIsolatedClass = async (path, className) => {
@@ -223,6 +235,54 @@
                 className: 'treasury-insufficient-toast'
               });
             }
+          } else if (state === 'room-stats' || state === 'room-settings') {
+            const screen = copyScreen(sourceDoc, state === 'room-stats' ? '#stats-screen' : '#settings-screen');
+            screen.classList.add('active');
+            if (state === 'room-settings') {
+              screen.querySelector('#setting-theme').value = qaTheme;
+              // auth.js normally hides the photo when nobody is signed in; this fixture does not load auth.js.
+              screen.querySelector('#auth-user-photo').style.display = 'none';
+            }
+            hydrateGreenImages(screen);
+          } else if (state === 'room-chat' || state === 'room-economy') {
+            const overlay = copyScreen(sourceDoc, state === 'room-chat' ? '#global-chat-overlay' : '#undo-menu-overlay');
+            overlay.classList.add('active');
+            overlay.style.display = 'flex';
+            if (state === 'room-economy' && new URLSearchParams(location.search).get('banner') === '1') {
+              overlay.dataset.bannerActive = 'true';
+            }
+            if (state === 'room-economy' && new URLSearchParams(location.search).get('tab') === 'undo') {
+              overlay.querySelector('#economy-tab-ducats').classList.remove('active');
+              overlay.querySelector('#economy-tab-undo').classList.add('active');
+              overlay.querySelector('#economy-panel-ducats').classList.remove('active');
+              overlay.querySelector('#economy-panel-undo').classList.add('active');
+              overlay.querySelector('#economy-header-ducats-green-icon').classList.add('hidden');
+              overlay.querySelector('#economy-header-undo-green-icon').classList.remove('hidden');
+              overlay.querySelector('#economy-menu-title').textContent = window.t('undo_title');
+            }
+            hydrateGreenImages(overlay);
+          } else if (state === 'room-rules' || /^room-rules-[1-6]$/.test(state)) {
+            const response = await fetch('pravilaigre.js', { cache: 'no-store' });
+            if (!response.ok) throw new Error(`pravilaigre.js: HTTP ${response.status}`);
+            const source = await response.text();
+            const end = source.indexOf('// Inicijalizuj instancu');
+            if (end < 0) throw new Error('RulesUI kraj izvora nije pronađen');
+            // Run the real rules renderer, excluding its automatic app initialization.
+            const RulesUI = new Function(`${source.slice(0, end)}\nreturn RulesUI;`)();
+            const rules = new RulesUI();
+            rules.currentLang = qaLang;
+            document.documentElement.dataset.splashTheme = qaTheme;
+            rules.init();
+            rules.overlay.style.display = 'flex';
+            rules.overlay.classList.add('active');
+            hydrateGreenImages(rules.overlay);
+            const page = Number(state.match(/room-rules-([1-6])$/)?.[1] || 1) - 1;
+            requestAnimationFrame(() => {
+              rules.sliderTrack.style.scrollBehavior = 'auto';
+              rules.currentSlide = page;
+              rules.updateDots();
+              rules.sliderTrack.scrollLeft = page * rules.sliderTrack.clientWidth;
+            });
           } else if (state.startsWith('online-players-')) {
             const openPlayers = await loadOnlinePlayersRenderer();
             const overlay = copyScreen(sourceDoc, '#online-players-overlay');
@@ -282,6 +342,16 @@
             shop.unlocked = type === 'skin' ? ['green_clay', 'default']
               : type === 'effect' ? ['confetti'] : type === 'theme' ? ['dark', 'light'] : [];
             shop.activeItem = type === 'skin' ? 'green_clay' : type === 'effect' ? 'confetti' : type === 'theme' ? 'dark' : null;
+            const treasuryParams = new URLSearchParams(location.search);
+            const qaUnlockedItem = treasuryParams.get('unlocked');
+            if (qaUnlockedItem && shop.items.some(item => item.id === qaUnlockedItem)) {
+              shop.unlocked = [...new Set([...shop.unlocked, qaUnlockedItem])];
+            }
+            const qaActiveItem = treasuryParams.get('active');
+            if (qaActiveItem && shop.items.some(item => item.id === qaActiveItem)) {
+              shop.unlocked = [...new Set([...shop.unlocked, qaActiveItem])];
+              shop.activeItem = qaActiveItem;
+            }
             shop.discountedItems = new URLSearchParams(location.search).get('discount') === '1'
               ? { gold_rain: { discountedPrice: 8000, expiresAt: Date.now() + 60_000 } }
               : {};
@@ -363,6 +433,21 @@
             screen.classList.add('active');
             manager.render();
             hydrateGreenImages(screen);
+            if (state === 'tournament-detail') {
+              const detail = copyScreen(sourceDoc, '#custom-modal-overlay');
+              detail.classList.add('active');
+              detail.style.display = 'flex';
+              manager.app.modal = {
+                alert: (message, title) => {
+                  detail.querySelector('#cm-title').textContent = title;
+                  detail.querySelector('#cm-msg').innerHTML = message;
+                  hydrateGreenImages(detail);
+                  return Promise.resolve();
+                }
+              };
+              const detailRound = new URLSearchParams(location.search).get('round');
+              manager.openMatchModal(['qf', 'sf', 'f'].includes(detailRound) ? detailRound : 'qf', 0);
+            }
             const carousel = document.getElementById('tourney-carousel');
             const page = state === 'tournament-quarter' ? 0 : state === 'tournament-semi' ? 1 : 2;
             requestAnimationFrame(() => {
@@ -397,7 +482,14 @@
                 { rank: 3, playerName: 'Ivana Marković', powerIndex: 15310 },
                 { rank: 4, playerName: 'Katarina Šnajderbek', powerIndex: 13870 }
               ];
+              manager.data.push(...Array.from({ length: 36 }, (_, index) => ({
+                rank: index + 5, playerName: `QA Igrač ${index + 5}`, powerIndex: 13700 - index * 125
+              })));
               manager.myPlayer = { rank: 147, playerName: 'Test Igrač sa dugim imenom', powerIndex: 6911, isMe: true };
+              if (new URLSearchParams(location.search).get('mine') === 'top') {
+                manager.data[0] = { ...manager.data[0], isMe: true };
+                manager.myPlayer = { ...manager.data[0] };
+              }
             } else {
               manager.boundHandleScroll = () => {};
               manager.createModal();
@@ -410,7 +502,14 @@
                 { rank: 3, name: 'Ivana Marković', maxWinStreak: 9, currentWinStreak: 1 },
                 { rank: 4, name: 'Katarina Šnajderbek', maxWinStreak: 8, currentWinStreak: 0 }
               ];
+              manager.data.push(...Array.from({ length: 36 }, (_, index) => ({
+                rank: index + 5, name: `QA Igrač ${index + 5}`, maxWinStreak: 7, currentWinStreak: 0
+              })));
               manager.myPlayer = { rank: 147, name: 'Test Igrač sa dugim imenom', maxWinStreak: 3, currentWinStreak: 1, isMe: true };
+              if (new URLSearchParams(location.search).get('mine') === 'top') {
+                manager.data[0] = { ...manager.data[0], isMe: true };
+                manager.myPlayer = { ...manager.data[0] };
+              }
             }
             manager.renderList();
             hydrateGreenImages(document.body);
@@ -472,7 +571,37 @@
                 </div>
               `).join('');
             }
+          } else if (state === 'quarter-winner') {
+            const winnerName = new URLSearchParams(location.search).get('name') === 'long'
+              ? 'Aleksandar Petrović-Milinković Jovanović' : 'Aleksandar Petrović-Milinković';
+            const winnerTitle = qaLang === 'en' ? 'QUARTERLY LEAGUE CHAMPION' : 'ŠAMPION KVARTALNE LIGE';
+            const winnerPeriod = qaLang === 'en' ? 'Winner for Q3 / 2026.' : 'Pobednik za Q3 / 2026.';
+            const winnerMessage = qaLang === 'en'
+              ? 'Congratulations on winning the Quarterly League!<br>The new season has begun; good luck to everyone!'
+              : 'Čestitamo na osvajanju Kvartalne lige!<br>Nova sezona je počela, srećno svima!';
+            root.innerHTML = `
+              <div id="winner-modal-overlay" class="modal-overlay active" style="z-index:9999999;display:flex">
+                <div class="modal-box quarter-winner-card" style="text-align:center;padding:30px 20px;background:rgba(255,255,255,.03);border:1px solid rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.15);border-left:1px solid rgba(255,255,255,.08);max-width:400px;width:90%;border-radius:24px;box-shadow:0 20px 40px rgba(0,0,0,.2),inset 0 1px 1px rgba(255,255,255,.2);backdrop-filter:blur(30px);animation:popIn .5s cubic-bezier(.175,.885,.32,1.275)">
+                  <div class="quarter-winner-brand" style="width:96px;height:96px;margin:0 auto 12px;border-radius:24px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,rgba(255,214,76,.18),rgba(0,0,0,.12) 70%);box-shadow:0 0 22px rgba(255,214,76,.24)">
+                    <img class="quarter-winner-logo quarter-winner-logo-green" src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1" alt="">
+                  </div>
+                  <h2 class="quarter-winner-title" style="color:var(--gold-main);font-size:clamp(1.25rem,6vw,1.72rem);line-height:1.08;margin-top:0;margin-bottom:7px;text-transform:uppercase">${winnerTitle}</h2>
+                  <p class="quarter-winner-period" style="color:#aaa;font-size:.9rem;margin-bottom:20px;text-transform:uppercase">${winnerPeriod}</p>
+                  <img class="ql-quarter-champion-medal" src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png?v=1" alt="">
+                  <div class="quarter-winner-avatar-wrap" style="position:relative;width:120px;height:120px;margin:0 auto 15px"><img class="quarter-winner-avatar" src="${avatar('A','#54785b')}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;border:3px solid var(--gold-main);box-shadow:0 0 15px var(--gold-main)"><div class="quarter-winner-mvp" style="position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);background:var(--gold-main);color:#000;padding:2px 10px;border-radius:10px;font-weight:900;font-size:.8rem;letter-spacing:1px">MVP</div></div>
+                  <h3 class="quarter-winner-name" style="color:#fff;font-size:1.5rem;margin-bottom:5px">${winnerName}</h3>
+                  <p class="quarter-winner-points" style="color:var(--gold-main);font-size:1.2rem;font-weight:bold;margin-bottom:25px">24500 PTS</p>
+                  <p class="quarter-winner-message" style="color:#ddd;font-size:.95rem;margin-bottom:25px;line-height:1.4">${winnerMessage}</p>
+                  <button class="btn-menu btn-primary quarter-winner-action" style="width:100%">${qaLang === 'en' ? 'CONTINUE' : 'NASTAVI'}</button>
+                </div>
+              </div>`;
           } else if (state === 'league-summary') {
+            const rankId = new URLSearchParams(location.search).get('rank') || 'silver';
+            const rankLabels = { majstor: 'MAJSTOR', legenda: 'LEGENDA', titan: 'TITAN', silver: 'SREBRNA LIGA' };
+            const rankLabel = rankLabels[rankId] || rankLabels.silver;
+            const rankBadge = ['majstor', 'legenda', 'titan'].includes(rankId)
+              ? `<img class="league-current-rank-soft-clay-badge" src="assets/green-soft-clay/canonical/quarterly-rank-badges/rank-${rankId}-v1.png?v=1" alt="">`
+              : '';
             root.innerHTML = `
               <div id="league-modal-overlay" class="modal-overlay active" style="display:flex">
                 <div class="modal-box" style="display:flex;flex-direction:column;padding:0;overflow:hidden">
@@ -488,7 +617,7 @@
                     <div style="padding:10px 15px;flex-shrink:0">
                       <div class="league-summary-card" style="display:flex;justify-content:space-between;align-items:center;padding:10px 15px;border-radius:12px">
                         <div class="league-summary-rank" style="text-align:left">
-                          <div>VAŠ RANG</div><div class="league-current-rank"><span>SREBRNA LIGA</span></div>
+                           <div>VAŠ RANG</div><div class="league-current-rank">${rankBadge}<span>${rankLabel}</span></div>
                         </div>
                         <div class="league-summary-points" style="text-align:right">
                           <div>2.450 PTS</div><div id="league-summary-alltime">SVA VREMENA: 12.875</div>

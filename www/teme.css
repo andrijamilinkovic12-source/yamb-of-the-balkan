@@ -22841,6 +22841,58 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 }
 
 /* Short phones need to reach the bottom menu row without crossing system navigation. */
+@media (max-width: 360px) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(#settings-screen, #rules-overlay-ui, #highscores-screen, #stats-screen, #tournament-screen, #global-chat-overlay, #online-players-overlay, #undo-menu-overlay) .global-chat-title-group {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(#settings-screen, #rules-overlay-ui, #highscores-screen, #stats-screen, #tournament-screen, #global-chat-overlay, #online-players-overlay, #undo-menu-overlay) .global-chat-title {
+        min-width: 0;
+        white-space: normal;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(#settings-screen, #rules-overlay-ui, #highscores-screen, #stats-screen, #tournament-screen, #global-chat-overlay, #online-players-overlay, #undo-menu-overlay) .global-chat-title > span {
+        min-width: 0;
+        white-space: normal;
+        overflow-wrap: normal;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #settings-screen#settings-screen .settings-header-title {
+        font-size: .84rem !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #rules-overlay-ui .rules-dots-container {
+        flex-wrap: nowrap;
+        gap: 0;
+        padding-inline: 8px;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-avatar,
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-img {
+        width: 40px !important;
+        height: 40px !important;
+        max-width: 40px;
+        max-height: 40px;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: 230px !important;
+        grid-template-rows: 82px minmax(0, 1fr);
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-name {
+        width: calc(100% - 54px) !important;
+        margin-left: 51px !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        font-size: .64rem !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-body {
+        grid-template-columns: 44px minmax(0, 1fr);
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 82px minmax(0, 1fr) auto;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-name {
+        max-height: none;
+        font-size: .64rem;
+    }
+}
+
 @media (max-height: 740px) and (max-width: 599px) {
     body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu {
         justify-content: flex-start;
@@ -23370,4 +23422,268 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen :is(.prev-thunder, .prev-balkan, .prev-fireworks, .prev-bubbles, .prev-cosmic-dust, .prev-dragon-fire, .prev-royal-yamb, .prev-fireflies, .prev-glass, .prev-black-hole, .prev-supernova, .prev-neon, .prev-drones, .prev-ufo-abduction)::before {
         animation: none;
     }
+}
+
+/* Green statistics: the real player row stays visible inside the list, without a second dock/card. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(#streak-overlay #streak-body .fire-streak-player-row.is-off-top, #pi-modal-overlay #pi-list-container .power-index-player-row.is-off-top) {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background: linear-gradient(145deg, #739e75, #416f4c) !important;
+}
+
+/* The three bracket pages use the same full-width match geometry. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen :is(.tourney-matches--qf, .tourney-matches--sf) {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: stretch;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches {
+    box-sizing: border-box;
+    min-width: 0;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen :is(.tourney-matches--qf, .tourney-matches--sf, .tourney-matches--f) .tourney-match {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-power {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-participant-power-icon-green {
+    width: 12px;
+    height: 12px;
+    flex: 0 0 12px;
+    object-fit: contain;
+}
+
+/* Match details are rendered in the shared modal, outside #tournament-screen. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #custom-modal-overlay .tourney-match-result-icon-default {
+    display: none !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #custom-modal-overlay .tourney-match-result-icon-green {
+    display: inline-block !important;
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #custom-modal-overlay .tourney-finalist-result {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 9px;
+    border-top: 1px solid rgba(223, 237, 204, .3);
+    color: #e8f1dd;
+    font-size: .86rem;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #custom-modal-overlay .tourney-finalist-result-icon-green {
+    display: inline-block !important;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    object-fit: contain;
+    vertical-align: middle;
+}
+
+/* Invite friend: keep the existing geometry and mirror the friend-list result colors. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .easter-invite-rival-power [data-lang="ws_power"] {
+    text-transform: uppercase;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite :is(.ws-random-records [data-green-record="win"] + .val, .easter-invite-rival-stat [data-green-record="win"] + strong) {
+    color: #bddd8d !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite :is(.ws-random-records [data-green-record="draw"] + .val, .easter-invite-rival-stat [data-green-record="draw"] + strong) {
+    color: #ead18d !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite :is(.ws-random-records [data-green-record="loss"] + .val, .easter-invite-rival-stat [data-green-record="loss"] + strong) {
+    color: #efae9b !important;
+}
+
+/* Green room shells share one safe-area envelope and clay surface. Full-screen rooms stay separate. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) {
+    --green-room-top: max(10px, var(--safe-top));
+    --green-room-bottom: max(16px, calc(var(--safe-bottom) + 8px));
+    --green-room-side: max(10px, env(safe-area-inset-left), env(safe-area-inset-right));
+    --green-room-surface: linear-gradient(145deg, rgba(83, 124, 80, .97), rgba(40, 78, 48, .97));
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(#highscores-screen#highscores-screen, #stats-screen#stats-screen, #settings-screen#settings-screen, #tournament-screen#tournament-screen) {
+    padding-top: var(--green-room-top) !important;
+    padding-bottom: var(--green-room-bottom) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(#highscores-screen#highscores-screen .hs-card.modal-box, #stats-screen#stats-screen .stats-shell, #settings-screen#settings-screen .settings-shell, #tournament-screen#tournament-screen .tourney-shell) {
+    box-sizing: border-box;
+    width: calc(100vw - var(--green-room-side) - var(--green-room-side)) !important;
+    max-width: 100% !important;
+    border: 1px solid rgba(216, 235, 190, .38) !important;
+    border-radius: var(--green-ui-room-radius) !important;
+    background: var(--green-room-surface) !important;
+    box-shadow: var(--green-clay-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(#rules-overlay-ui#rules-overlay-ui .rules-card, #league-modal-overlay#league-modal-overlay > .modal-box, #global-chat-overlay#global-chat-overlay .global-chat-shell, #online-players-overlay#online-players-overlay .online-players-shell, #pi-modal-overlay#pi-modal-overlay .pi-modal-shell, #streak-overlay#streak-overlay .streak-modal-shell, #undo-menu-overlay#undo-menu-overlay .economy-shell) {
+    box-sizing: border-box;
+    top: var(--green-room-top) !important;
+    left: var(--green-room-side) !important;
+    width: calc(100vw - var(--green-room-side) - var(--green-room-side)) !important;
+    max-width: 100% !important;
+    height: calc(var(--global-chat-height, 100dvh) - var(--green-room-top) - var(--green-room-bottom)) !important;
+    max-height: calc(var(--global-chat-height, 100dvh) - var(--green-room-top) - var(--green-room-bottom)) !important;
+    padding: 0 !important;
+    border: 1px solid rgba(216, 235, 190, .38) !important;
+    border-radius: var(--green-ui-room-radius) !important;
+    background: var(--green-room-surface) !important;
+    box-shadow: var(--green-clay-raised) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+/* The economy view reserves native banner space below its shell when a banner is present. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #undo-menu-overlay#undo-menu-overlay .economy-shell {
+    height: calc(var(--global-chat-height, 100dvh) - var(--economy-native-banner-space, 0px) - var(--green-room-top) - var(--green-room-bottom)) !important;
+    max-height: calc(var(--global-chat-height, 100dvh) - var(--economy-native-banner-space, 0px) - var(--green-room-top) - var(--green-room-bottom)) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #undo-menu-overlay#undo-menu-overlay .economy-card-header {
+    box-sizing: border-box;
+    width: 100% !important;
+    min-height: var(--green-ui-room-header-min) !important;
+    margin: 0 !important;
+    padding: 11px 14px !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(216, 235, 190, .28) !important;
+    border-radius: var(--green-ui-room-radius) var(--green-ui-room-radius) 0 0 !important;
+    box-shadow: none !important;
+}
+
+/* Keep the badge and every known quarterly rank inside the left half of the summary. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay#league-modal-overlay .league-summary-rank {
+    min-width: 0;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay#league-modal-overlay .league-current-rank {
+    min-width: 0;
+    max-width: 100%;
+    font-size: .93rem !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay#league-modal-overlay .league-current-rank > span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+@media (max-width: 360px) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #league-modal-overlay#league-modal-overlay .league-current-rank {
+        font-size: .78rem !important;
+        gap: 5px;
+    }
+}
+
+/* Green dukat preview uses the same clay-green scene as the other effect previews. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .effect-preview-box.prev-gold_rain {
+    background: radial-gradient(circle at 50% 38%, #759d6d 0%, #315a3c 62%, #173726 100%) !important;
+    box-shadow: inset 0 3px 11px rgba(6, 25, 14, .36), inset 0 -1px 0 rgba(228, 241, 209, .22) !important;
+}
+/* The active badge includes an icon; reserve the same height for KORISTI. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #riznica-screen#riznica-screen .card :is(.btn-equip, .btn-active) {
+    box-sizing: border-box;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Quarterly winner: keep the entire celebration inside the phone safe zone. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay#winner-modal-overlay {
+    box-sizing: border-box;
+    padding: var(--safe-top) max(12px, env(safe-area-inset-left), env(safe-area-inset-right)) calc(var(--safe-bottom) + 8px) !important;
+    align-items: center;
+    justify-content: center;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay#winner-modal-overlay > .quarter-winner-card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(3px, .8vh, 8px);
+    width: min(400px, 100%) !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: clamp(14px, 2vh, 22px) clamp(15px, 4vw, 22px) !important;
+    border-radius: 20px !important;
+    text-align: center;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-brand {
+    width: clamp(58px, 9vh, 76px) !important;
+    height: clamp(58px, 9vh, 76px) !important;
+    flex: 0 0 auto;
+    margin: 0 auto 2px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-logo-green {
+    width: 100% !important;
+    height: 100% !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-title {
+    margin: 0 !important;
+    font-size: clamp(1.05rem, 4.6vw, 1.3rem) !important;
+    line-height: 1.12 !important;
+    color: var(--green-clay-ink-strong) !important;
+    overflow-wrap: anywhere;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-period {
+    margin: 0 !important;
+    font-size: .77rem !important;
+    color: var(--green-clay-muted) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .ql-quarter-champion-medal {
+    width: clamp(38px, 6vh, 50px) !important;
+    height: clamp(38px, 6vh, 50px) !important;
+    flex: 0 0 auto;
+    margin: 0 !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-avatar-wrap {
+    width: clamp(70px, 11vh, 90px) !important;
+    height: clamp(70px, 11vh, 90px) !important;
+    flex: 0 0 auto;
+    margin: 2px auto 11px !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-avatar {
+    box-sizing: border-box;
+    border: 3px solid rgba(225, 239, 199, .78) !important;
+    box-shadow: 0 4px 12px rgba(7, 29, 15, .35) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-mvp {
+    bottom: -9px !important;
+    background: #dce9ba !important;
+    color: #284b32 !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-name {
+    max-width: 100%;
+    margin: 0 !important;
+    font-size: clamp(1rem, 4vw, 1.28rem) !important;
+    line-height: 1.18 !important;
+    color: var(--green-clay-ink-strong) !important;
+    overflow-wrap: anywhere;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-points {
+    margin: 0 !important;
+    font-size: 1.02rem !important;
+    color: #e5efc8 !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-message {
+    margin: 2px 0 0 !important;
+    font-size: .82rem !important;
+    line-height: 1.3 !important;
+    color: var(--green-clay-ink) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #winner-modal-overlay .quarter-winner-action {
+    flex: 0 0 auto;
+    min-height: 44px;
+    margin: 7px 0 0 !important;
 }

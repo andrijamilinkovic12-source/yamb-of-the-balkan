@@ -79,4 +79,18 @@ Poslednji prolaz je zamenio i sedam preostalih zajedničkih CSS preview-a zasebn
 
 Hitna ispravka Turnira pre narednog koraka Riznice: Green četvrtfinale, polufinale i finale sada koriste punu raspoloživu visinu bez nepotrebnog unutrašnjeg okvira; četvrtfinale ne skroluje na testiranom mobilnom profilu. Tačkice su dodirljiva dugmad, a swipe radi u oba smera. [Dokazni snimci i granice provere](green-ui-reported-issues-map-2026-09-30.md#hitna-dopuna-tu-01-turnir--navigacija-i-visina-kostura). Nije rađen build ni commit.
 
+Nastavak normalnog redosleda: [izolovana provera živih efekata Riznice](green-live-effects-audit-2026-10-01.md) pokrenula je svih 16 `EffectManager` animacija na Android emulatoru, proverila čišćenje posle `stop()` i ispravila Green-specifične razlike između preview motiva i animacije u partiji. Stvarni meč, kupovina i produkcioni WebView ostaju otvoreni.
+
+Sledeći dopunski korak proverio je [putanju opremljenog efekta do Yamb upisa](green-yamb-route-audit-2026-10-01.md) preko stvarnog `ShopManager.equip`, `writeScore` i HTML table, ali bez pokretanja aplikacionog backend-a. Prvi hitac namenski koristi Grom, kasniji hitac izabrani efekat. Green Grom je dobio kanonski clay motiv i blaži potres table. Puni native end-to-end i dalje ostaje otvoren bez builda i kontrolisane lokalne sesije.
+
+[Regresija životnog ciklusa efekata](green-effect-lifecycle-audit-2026-10-01.md) zatvorila je curenje animacionih zahteva i `resize` listenera pri prekidu Kraljevskog Yamba i Supernove. Svih 16 efekata prošlo je po četiri brza pokretanja/zaustavljanja bez zaostalih resursa; prirodni završetak dve canvas animacije je zasebno potvrđen. To nije merenje FPS-a ili produkcionog WebView-a.
+
+[Lokalni profil performansi](green-effect-performance-profile-2026-10-01.md) proverio je JS heap i DOM pre/posle šest reprezentativnih efekata i uklonio nepotrebne Green canvas sprite-ove. Headless emulator je imao promenljiv broj frejmova i u mirovanju, pa FPS i dalje nije potvrđen; za to je potreban vidljiv produkcioni WebView kada build bude dozvoljen.
+
+[Provera prekida i prelaska između efekata](green-effect-navigation-audit-2026-10-01.md) obuhvatila je pobedničku animaciju pre i tokom kiše dukata, kao i tri uzastopna ciklusa svih 16 efekata u svakoj od tri teme. Lokalni izolovani prikaz nije pokazao zaostale FX resurse; stvarna partija i produkcioni WebView ostaju otvoreni.
+
+[Granica ekrana i efekata](green-effect-screen-lifecycle-2026-10-01.md) ispravlja dva pozivaoca koji ranije nisu gasili efekat: povratak u meni posle partije i zatvaranje završenog Dnevnog izazova. Direktan test stvarnih metoda potvrđuje redosled prema potvrdi nagrade i zaštitu aktivnog kotrljanja. Produkcioni WebView ostaje nepotvrđen.
+
+[Završna kontrola pre builda](green-prebuild-readiness-2026-10-01.md) grupiše devet kategorija iz početne matrice po nivou dokaza i izdvaja tri preostala vrata: produkcioni WebView, izolovan online QA i drugi telefon. Ona ne proglašava korak 9 potpuno zatvorenim.
+
 Sačuvani su samo ključni dokazni snimci u `screenshots/green-ui-step9/`; 32 prolazna snimka nastala tokom navigacije uklonjena su iz korena radne kopije.

@@ -35,6 +35,9 @@
     .monitor-list li:last-child { border-bottom:0; padding-bottom:0; }
     .monitor-list b { color:var(--sky); font-variant-numeric:tabular-nums; }
     .diagnostic-panel { grid-column:1 / -1; min-height:0; }
+    .diagnostic-summary { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:7px; margin:0 0 9px; padding:0; list-style:none; }
+    .diagnostic-summary li { padding:7px 8px; border:1px solid rgba(164,184,222,.09); border-radius:9px; color:var(--muted); font-size:.68rem; }
+    .diagnostic-summary b { display:block; margin-top:2px; color:var(--sky); font-size:.9rem; font-variant-numeric:tabular-nums; }
     .diagnostic-head, .diagnostic-row { display:grid; grid-template-columns:110px minmax(165px,1.15fr) minmax(190px,1.4fr) minmax(145px,1fr); gap:10px; align-items:center; }
     .diagnostic-head { padding:0 0 6px; color:var(--muted); font-size:.66rem; font-weight:800; letter-spacing:.08em; }
     .diagnostic-row { padding:7px 0; border-top:1px solid rgba(164,184,222,.09); color:#d7deed; font-size:.74rem; }
@@ -51,8 +54,8 @@
     label { display:block; margin-top:12px; color:#d7deed; font-weight:700; }
     input { width:100%; margin-top:5px; padding:9px 10px; border:1px solid var(--edge); border-radius:9px; background:rgba(4,7,16,.28); color:var(--ink); font:inherit; font-size:.82rem; }
     @keyframes zero-pulse { 50% { box-shadow:0 0 0 5px rgba(237,126,146,.08),0 0 30px rgba(237,126,146,.13); } }
-    @media (max-width:1050px) { .metrics { grid-template-columns:repeat(4,minmax(0,1fr)); } }
-    @media (max-width:560px) { body { padding:12px; } header { padding:21px 20px 17px; }.metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }.metric { min-height:105px; }.monitor-panels { grid-template-columns:1fr; } footer { grid-template-columns:1fr auto; } footer #updated { grid-column:1 / -1; } details { padding-left:20px; padding-right:20px; } }
+    @media (max-width:1050px) { .metrics { grid-template-columns:repeat(4,minmax(0,1fr)); }.diagnostic-summary { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+    @media (max-width:560px) { body { padding:12px; } header { padding:21px 20px 17px; }.metrics { grid-template-columns:repeat(2,minmax(0,1fr)); }.metric { min-height:105px; }.monitor-panels { grid-template-columns:1fr; }.diagnostic-summary { grid-template-columns:repeat(2,minmax(0,1fr)); } footer { grid-template-columns:1fr auto; } footer #updated { grid-column:1 / -1; } details { padding-left:20px; padding-right:20px; } }
   </style>
 </head>
 <body>
@@ -79,7 +82,7 @@
     <section class="monitor-panels" aria-live="polite">
       <article class="monitor-panel"><h2>TEME AKTIVNIH IGRAČA DANAS</h2><ul class="monitor-list" id="theme-usage"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
       <article class="monitor-panel"><h2>NAJPOSEĆENIJE SOBE DANAS</h2><ul class="monitor-list" id="top-rooms"><li><span>Čekam podatke</span><b>—</b></li></ul></article>
-      <article class="monitor-panel diagnostic-panel"><h2>POSLEDNJI PREKIDI TOKOM DUELA · BRIŠU SE POSLE TRIDESET DANA</h2><div class="diagnostic-head" aria-hidden="true"><span>VREME</span><span>PARTIJA</span><span>MREŽA / RAZLOG</span><span>ISHOD</span></div><div id="disconnect-diagnostics"><div class="diagnostic-row"><span class="muted">Čekam podatke</span><span>—</span><span>—</span><span>—</span></div></div></article>
+      <article class="monitor-panel diagnostic-panel"><h2>PREKIDI TOKOM DUELA · SAŽETAK SEDAM DANA · ZAPISI SE BRIŠU POSLE TRIDESET DANA</h2><ul class="diagnostic-summary" id="disconnect-summary"><li>Čekam podatke<b>—</b></li></ul><div class="diagnostic-head" aria-hidden="true"><span>VREME</span><span>PARTIJA</span><span>SIGNAL / MREŽA</span><span>DIJAGNOSTIKA / KONAČNI ISHOD</span></div><div id="disconnect-diagnostics"><div class="diagnostic-row"><span class="muted">Čekam podatke</span><span>—</span><span>—</span><span>—</span></div></div></article>
     </section>
     <footer><div id="updated">Potrebni su URL servera i monitor token.</div><button id="alarm-toggle" type="button">Uključi alarm za 0</button><button id="refresh" type="button">Osveži</button></footer>
     <details>
@@ -115,17 +118,48 @@
       }
       const disconnectReasonLabel = { app_backgrounded: 'Promena stanja aplikacije', ping_timeout: 'Istek pinga', transport_error: 'Greška transporta', transport_closed: 'Transport zatvoren', server_disconnect: 'Server prekinuo vezu', client_disconnect: 'Klijent prekinuo vezu', other: 'Drugi Socket.IO razlog', unknown: 'Nepoznat razlog' };
       const disconnectTriggerLabel = { disconnect: 'Socket prekid', app_backgrounded: 'Aplikacija u pozadini', presence_stale_timeout: 'Istek prisutnosti' };
-      const disconnectOutcomeLabel = { pending: 'Čeka oporavak', recovered: 'Veza vraćena', technical_result: 'Tehnički rezultat', ended_without_penalty: 'Završeno bez kazne', mutual_disconnect: 'Obostrani prekid · bez kazne' };
+      const disconnectOutcomeLabel = { pending: 'Dijagnostika: čeka oporavak', recovered: 'Dijagnostika: veza vraćena', technical_result: 'Dijagnostika: istekao mrežni grejs', ended_without_penalty: 'Dijagnostika zatvorena bez mrežne kazne', mutual_disconnect: 'Dijagnostika: obostrani prekid bez kazne' };
+      const matchResultReasonLabel = { back_to_menu: 'napuštanje partije', disconnect_grace_expired: 'istekao mrežni grejs', turn_timeout: 'istek vremena za potez', completed_scores: 'završeni rezultati', mutual_disconnect: 'obostrani prekid', tournament_mutual_disconnect_replay: 'turnirsko ponavljanje zbog mreže' };
+      const lifecycleSourceLabel = { capacitor_app_state: 'Capacitor stanje aplikacije', document_pause: 'pause događaj WebView-a', visibility_hidden: 'WebView više nije vidljiv', pagehide: 'stranica sklonjena', beforeunload: 'stranica se zatvara', legacy_unspecified: 'stari klijent bez izvora', app_pause: 'stanje aplikacije' };
+      const outcomePriority = { pending: 0, ended_without_penalty: 1, recovered: 2, mutual_disconnect: 3, technical_result: 4 };
+      function coalesceDisconnectDiagnostics(rows) {
+        const incidents = new Map();
+        (Array.isArray(rows) ? rows : []).forEach(item => {
+          const fallbackKey = item.outcome === 'mutual_disconnect'
+            ? `mutual:${item.matchId || item.roomId || item.eventId || item.occurredAt}`
+            : `event:${item.eventId || item.occurredAt}:${item.playerName || ''}`;
+          const key = item.incidentKey || fallbackKey;
+          const existing = incidents.get(key);
+          if (!existing) { incidents.set(key, { ...item, combinedRecords: 1 }); return; }
+          existing.combinedRecords++;
+          if ((outcomePriority[item.outcome] ?? -1) > (outcomePriority[existing.outcome] ?? -1)) existing.outcome = item.outcome;
+          if (new Date(item.occurredAt || 0) < new Date(existing.occurredAt || 0)) existing.occurredAt = item.occurredAt;
+          if (new Date(item.resolvedAt || 0) > new Date(existing.resolvedAt || 0)) existing.resolvedAt = item.resolvedAt;
+          ['socketReason', 'subsequentSocketReason', 'socketDisconnectedAt', 'resolutionReason', 'clientReconnectTransport', 'matchResultType', 'matchResultReason', 'matchFinishedAt'].forEach(field => {
+            if (!existing[field] && item[field]) existing[field] = item[field];
+          });
+          existing.reconnectDurationMs = Math.max(Number(existing.reconnectDurationMs) || 0, Number(item.reconnectDurationMs) || 0);
+        });
+        return [...incidents.values()].sort((a, b) => new Date(b.occurredAt || 0) - new Date(a.occurredAt || 0));
+      }
+      function renderDisconnectSummary(summary = {}) {
+        const averageRecovery = summary.averageRecoveryMs != null && Number.isFinite(Number(summary.averageRecoveryMs))
+          ? `${Math.max(0, Math.round(Number(summary.averageRecoveryMs) / 1000))} s`
+          : '—';
+        const rows = [
+          ['Incidenata', number(summary.total)],
+          ['Veza vraćena', number(summary.recovered)],
+          ['Mrežni grejs istekao', number(summary.technicalResult)],
+          ['Bez mrežne kazne', number((Number(summary.endedWithoutPenalty) || 0) + (Number(summary.mutualDisconnect) || 0))],
+          ['Čeka oporavak', number(summary.pending)],
+          ['Prosek povratka', averageRecovery]
+        ];
+        const list = $('disconnect-summary'); list.replaceChildren();
+        rows.forEach(([label, value]) => { const item = document.createElement('li'), strong = document.createElement('b'); item.textContent = label; strong.textContent = value; item.append(strong); list.append(item); });
+      }
       function renderDisconnectDiagnostics(rows) {
         const container = $('disconnect-diagnostics'); container.replaceChildren();
-        const seenMutualDisconnects = new Set();
-        const items = (Array.isArray(rows) ? rows : []).filter(item => {
-          if (item.outcome !== 'mutual_disconnect') return true;
-          const key = item.matchId || item.roomId || `${item.occurredAt || ''}:${item.playerName || ''}:${item.opponentName || ''}`;
-          if (seenMutualDisconnects.has(key)) return false;
-          seenMutualDisconnects.add(key);
-          return true;
-        });
+        const items = coalesceDisconnectDiagnostics(rows);
         if (!items.length) {
           const row = document.createElement('div'); row.className = 'diagnostic-row';
           ['Nema zabeleženih prekida', '—', '—', '—'].forEach((text, index) => { const cell = document.createElement('span'); cell.textContent = text; if (index === 0) cell.className = 'muted'; row.append(cell); });
@@ -136,13 +170,28 @@
           const occurredAt = item.occurredAt ? new Date(item.occurredAt).toLocaleString('sr-RS', { dateStyle:'short', timeStyle:'medium' }) : '—';
           const matchSuffix = item.matchId ? `#${String(item.matchId).slice(-8)}` : 'bez ID-a';
           const party = [item.mode || 'duel', matchSuffix, item.playerName && item.opponentName ? `${item.playerName} — ${item.opponentName}` : 'Učesnici nisu dostupni'].join(' · ');
-          const network = [disconnectTriggerLabel[item.trigger] || item.trigger || 'Socket prekid', disconnectReasonLabel[item.reasonClass] || 'Nepoznat razlog', item.socketReason || '', item.transport || 'transport nije poznat', item.clientConnectionType || 'mrežni tip nije prijavljen'].filter(Boolean).join(' · ');
+          const initialSocketReason = item.socketReason || '';
+          const subsequentSocketReason = item.subsequentSocketReason && item.subsequentSocketReason !== initialSocketReason ? `naknadni socket: ${item.subsequentSocketReason}` : '';
+          const reconnectBudgetMs = Math.max(0, Number(item.reconnectBudgetMs) || 0);
+          const reconnectBudgetRemainingMs = Math.max(0, Number(item.reconnectBudgetRemainingMsAtStart) || 0);
+          const reconnectBudget = reconnectBudgetMs && reconnectBudgetRemainingMs < reconnectBudgetMs
+            ? `preostali grejs poteza ${Math.ceil(reconnectBudgetRemainingMs / 1000)}/${Math.ceil(reconnectBudgetMs / 1000)} s`
+            : '';
+          const lifecycleEvidence = item.trigger === 'app_backgrounded'
+            ? `${lifecycleSourceLabel[item.clientLifecycleSource] || item.clientLifecycleSource || 'izvor lifecycle signala nije prijavljen'}${item.clientNativeConfirmed === true ? ' · native potvrđeno' : (item.clientNativeConfirmed === false ? ' · početni WebView signal' : '')}`
+            : '';
+          const episode = item.clientLifecycleEpisodeId ? `epizoda ${String(item.clientLifecycleEpisodeId).slice(-12)}` : '';
+          const merged = item.combinedRecords > 1 ? `${item.combinedRecords} povezana zapisa` : '';
+          const network = [disconnectTriggerLabel[item.trigger] || item.trigger || 'Socket prekid', disconnectReasonLabel[item.reasonClass] || 'Nepoznat razlog', lifecycleEvidence, initialSocketReason, subsequentSocketReason, item.transport || 'transport nije poznat', item.clientConnectionType || 'mrežni tip nije prijavljen', reconnectBudget, episode, merged].filter(Boolean).join(' · ');
           const recoveredAfter = item.outcome === 'recovered' && Number.isFinite(Number(item.reconnectDurationMs)) ? ` za ${Math.max(0, Math.round(Number(item.reconnectDurationMs) / 1000))} s` : '';
-          const outcome = `${disconnectOutcomeLabel[item.outcome] || item.outcome || '—'}${recoveredAfter}`;
+          const finalMatchOutcome = item.matchResultType
+            ? ` · Konačni ishod: ${item.matchResultType === 'technical' ? 'tehnički rezultat' : 'regularan rezultat'}${item.matchResultReason ? ` (${matchResultReasonLabel[item.matchResultReason] || item.matchResultReason})` : ''}`
+            : '';
+          const outcome = `${disconnectOutcomeLabel[item.outcome] || item.outcome || '—'}${recoveredAfter}${finalMatchOutcome}`;
           [occurredAt, party, network, outcome].forEach((text, index) => {
-            const cell = document.createElement('span'); cell.textContent = text;
+            const cell = document.createElement('span'); cell.textContent = text; cell.title = text;
             if (index === 2) cell.className = 'muted';
-            if (index === 3) cell.className = item.outcome === 'recovered' || item.outcome === 'ended_without_penalty' || item.outcome === 'mutual_disconnect' ? 'ok' : (item.outcome === 'technical_result' ? 'error' : 'warn');
+            if (index === 3) cell.className = item.matchResultType === 'technical' || item.outcome === 'technical_result' ? 'error' : (item.outcome === 'pending' ? 'warn' : 'ok');
             row.append(cell);
           });
           container.append(row);
@@ -211,6 +260,7 @@
         $('games-by-mode').nextElementSibling.textContent = `Solo ${number(modes.solo)} · Hotseat ${number(modes.hotseat)} · nasumične ${number(modes.random)} · prijateljske ${number(modes.friend)}`;
         renderList('theme-usage', metrics.themeUsageToday || metrics.themeUsageOnline, row => themeLabel[row.theme] || row.theme, row => `${number(row.count)} · ${number(row.percent)}%`);
         renderList('top-rooms', metrics.topRoomsToday, row => roomLabel[row.room] || row.room, row => number(row.visits));
+        renderDisconnectSummary(metrics.disconnectDiagnosticSummary);
         renderDisconnectDiagnostics(metrics.disconnectDiagnostics);
       }
       function messageFor(response) { if (response.status === 401) return 'Monitor token nije ispravan.'; if (response.status === 503) return 'Na serveru nije podešen YAMB_MONITOR_TOKEN.'; return 'Server trenutno nije dostupan.'; }

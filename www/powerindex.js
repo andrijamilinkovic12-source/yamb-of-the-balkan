@@ -263,7 +263,7 @@ class PowerIndexLeaderboard {
             : '';
 
         return `
-            <div class="power-index-player-row${rank === 1 ? ' is-first' : ''}${isMe ? ' is-me' : ''}${isPinned ? ' is-pinned' : ''}" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; ${bg} ${glow} transition: transform 0.2s;">
+            <div class="power-index-player-row${rank === 1 ? ' is-first' : ''}${isMe ? ' is-me' : ''}${isPinned ? ' is-pinned' : ''}${options.offTop ? ' is-off-top' : ''}" style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 12px; ${bg} ${glow} transition: transform 0.2s;">
                 ${pinnedLabel}
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
                     <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; flex: 1; padding-right: 5px;">
@@ -329,7 +329,7 @@ class PowerIndexLeaderboard {
         const rowsHtml = this.data
             .map(player => this.renderPlayerRow(player))
             .join('') + (activeTheme === 'dark' && this.myPlayer && !isMyPlayerVisible
-                ? this.renderPlayerRow(this.myPlayer)
+                ? this.renderPlayerRow(this.myPlayer, { offTop: true })
                 : '');
 
         const footerHtml = this.loading

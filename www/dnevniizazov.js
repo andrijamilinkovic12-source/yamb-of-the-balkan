@@ -515,9 +515,19 @@ class DnevniIzazov {
                 width: 58px;
                 height: 58px;
                 left: 50%;
-                top: -66px;
-                transform: translateX(-50%);
+                top: 50%;
+                transform: translate(-50%, -50%);
                 filter: drop-shadow(0 8px 10px rgba(7, 29, 15, 0.3));
+            }
+
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-score-box {
+                position: relative;
+            }
+
+            body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) .daily-glass-score-box.is-complete-green .daily-glass-score-lbl {
+                max-width: 82px;
+                line-height: 1.12;
+                letter-spacing: 0.7px;
             }
 
             body.easter-theme .daily-glass-complete-mark-easter {
@@ -1110,7 +1120,10 @@ class DnevniIzazov {
     close() {
         if (this.isActive) return; // Ne daj izlaz usred rolanja
         const overlay = document.getElementById('glass-daily-overlay');
-        if(overlay) overlay.classList.remove('active');
+        if (overlay && overlay.classList.contains('active')) {
+            overlay.classList.remove('active');
+            if (this.app.effectMgr) this.app.effectMgr.stop();
+        }
     }
 
     resetGame() {
@@ -1256,6 +1269,14 @@ class DnevniIzazov {
         `;
         
         card.appendChild(resDiv);
+        if (isGreenTheme) {
+            const scoreBox = card.querySelector('.daily-glass-score-box');
+            const completeMark = resDiv.querySelector('.daily-glass-complete-mark-green');
+            if (scoreBox && completeMark) {
+                scoreBox.classList.add('is-complete-green');
+                scoreBox.appendChild(completeMark);
+            }
+        }
 
         if (window.adMobGlobal && typeof window.adMobGlobal.prepareReward === 'function') {
             window.adMobGlobal.prepareReward(this.getDoubleRewardOptions());

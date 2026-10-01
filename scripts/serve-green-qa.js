@@ -6,6 +6,9 @@ const path = require('node:path');
 const projectRoot = path.resolve(__dirname, '..');
 const wwwRoot = fs.realpathSync(path.join(projectRoot, 'www'));
 const fixture = path.join(projectRoot, 'qa', 'green-runtime.html');
+const effectFixture = path.join(projectRoot, 'qa', 'green-effect-runtime.html');
+const orientationFixture = path.join(projectRoot, 'qa', 'green-orientation-runtime.html');
+const yambRouteFixture = path.join(projectRoot, 'qa', 'green-yamb-route.html');
 const host = '127.0.0.1';
 const port = Number(process.env.GREEN_QA_PORT || 3130);
 const contentTypes = {
@@ -46,6 +49,12 @@ http.createServer(async (request, response) => {
     let target;
     if (pathname === '/' || pathname === '/__green_qa__/green-runtime.html') {
         target = fixture;
+    } else if (pathname === '/__green_qa__/green-effect-runtime.html') {
+        target = effectFixture;
+    } else if (pathname === '/__green_qa__/green-orientation-runtime.html') {
+        target = orientationFixture;
+    } else if (pathname === '/__green_qa__/green-yamb-route.html') {
+        target = yambRouteFixture;
     } else {
         // Reject traversal and Windows separators before resolving an app asset.
         if (!/^\/[A-Za-z0-9_./-]+$/.test(pathname) || pathname.split('/').includes('..')) {
@@ -58,7 +67,7 @@ http.createServer(async (request, response) => {
     if (!contentType) return fail(404, 'Not found');
     try {
         const realTarget = await fs.promises.realpath(target);
-        if (target !== fixture) {
+        if (target !== fixture && target !== effectFixture && target !== orientationFixture && target !== yambRouteFixture) {
             const relative = path.relative(wwwRoot, realTarget);
             if (!relative || relative.startsWith('..') || path.isAbsolute(relative)) return fail(404, 'Not found');
         }

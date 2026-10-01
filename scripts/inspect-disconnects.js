@@ -12,9 +12,16 @@ async function main() {
     const db = mongoose.connection.db;
     const query = { matchId: { $in: refs.map(ref => new RegExp(ref)) } };
     const incidents = await db.collection('disconnectdiagnostics').find(query, {
-        projection: { _id: 0, eventId: 1, matchId: 1, mode: 1, occurredAt: 1, resolvedAt: 1,
+        projection: { _id: 0, eventId: 1, roomId: 1, matchId: 1, mode: 1, occurredAt: 1, resolvedAt: 1,
             playerName: 1, opponentName: 1, trigger: 1, socketReason: 1, reasonClass: 1,
-            graceMs: 1, outcome: 1, reconnectDurationMs: 1, clientConnectionType: 1 }
+            graceMs: 1, outcome: 1, reconnectDurationMs: 1, clientConnectionType: 1,
+            clientLifecycleSource: 1, clientOnlineAtDisconnect: 1, matchStartedAt: 1,
+            clientLifecycleEpisodeId: 1, clientLifecycleSeq: 1, clientNativeConfirmed: 1,
+            clientNativeActive: 1, clientVisibilityState: 1, subsequentSocketReason: 1,
+            socketDisconnectedAt: 1, resolutionReason: 1, winnerConnectedAtResolution: 1,
+            reconnectTurnKey: 1, reconnectBudgetMs: 1, reconnectBudgetUsedMsAtStart: 1,
+            reconnectBudgetRemainingMsAtStart: 1, matchAgeMs: 1, moveCount: 1,
+            clientDisconnectReason: 1, clientReconnectTransport: 1 }
     }).sort({ occurredAt: 1 }).limit(150).toArray();
     const matches = await db.collection('matchresults').find(query, {
         projection: { _id: 0, matchId: 1, mode: 1, resultType: 1, reason: 1,

@@ -1,0 +1,9 @@
+# Globalna blokada vodoravnog prikaza (2026-10-01)
+
+Postojeća poruka „MOLIMO OKRENITE UREĐAJ” sada je jedinstvena globalna maska za celu igru — meni, sobe, podstrane, modove, rezultat i kasnije otvorene modale. Prethodno je bila ograničena na vodoravne prikaze niže od 600 px i imala `z-index` ispod nekih modala, pa se nije svuda videla.
+
+`www/style.css` sada uključuje masku na **svakom** vodoravnom viewportu, sa punom vidljivom površinom i slojem iznad ostalog UI-ja. `www/game.js` više ne postavlja konkurentni inline `display`; prednost daje fizičkoj `screen.orientation` vrednosti, a CSS aspekt je rezervni signal. Time smanjenje viewporta zbog tastature ne bi trebalo da se pomeša sa okretanjem uređaja. Pri rotaciji osvežava se i `aria-hidden`. Poruka ostaje lokalizovana na srpski i engleski. Android manifest nije zaključan na portrait, jer bi hardverska zabrana rotacije sprečila prikaz poruke koju korisnik želi da vidi.
+
+[Izolovani Android Chrome test](../qa/audit-portrait-lock-cdp.js) učitava stvarni overlay, CSS i metodu za rotaciju, uz sintetički meni, sobu i naknadno otvoren modal. Potvrđeno je: 360 × 740 uspravno — maska sakrivena; fizički uspravno uz privremeno širi/niži viewport — maska ostaje sakrivena; 740 × 360 vodoravno — maska vidljiva i iznad modala; 1024 × 768 vodoravno — isto, bez starog uslova visine; povratak na 360 × 740 — maska se sakriva. U vodoravnom prikazu proverene su i Uskrs, Pustinjsko staklo i Severna klasa teme. [Snimak vodoravnog prikaza](../screenshots/green-ui-step9/green-global-portrait-lock-landscape-cdp.png) pokazuje čitljivu poruku. [Regresioni test](../scripts/check-portrait-lock.js) zaključava globalni CSS uslov, najveći sloj i oba prevoda.
+
+Ovo proverava raspored u izolovanom Android Chrome-u, ne sve otvorene sobe u produkcionom WebView-u. Native build, instalacija i commit nisu rađeni; ponašanje unutar novog APK-a treba potvrditi pri kasnijem odobrenom build-u.

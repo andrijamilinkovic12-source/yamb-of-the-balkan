@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="/">
+  <title>Green Yamb scoring route — isolated QA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="teme.css">
+  <link rel="stylesheet" href="kockice.css">
+  <link rel="stylesheet" href="efekti.css">
+  <style>
+    #qa-error { position: fixed; z-index: 2147483647; inset: auto 8px 8px; max-height: 40vh; overflow: auto; background: #8b2020; color: #fff; padding: 8px; font: 12px Arial, sans-serif; }
+    #qa-label { position: fixed; z-index: 200000; left: 8px; bottom: max(8px, env(safe-area-inset-bottom)); padding: 3px 6px; color: #eaf3d8; background: rgba(17, 53, 31, .88); border-radius: 6px; font: 10px Arial, sans-serif; pointer-events: none; }
+  </style>
+</head>
+<body>
+  <div id="qa-root"></div>
+  <div id="qa-label">IZOLOVANI QA · stvarna tabla i writeScore · bez naloga i servera</div>
+  <pre id="qa-error" hidden></pre>
+  <script>
+    (async () => {
+      try {
+        document.documentElement.dataset.splashTheme = 'dark';
+        const load = async file => {
+          const response = await fetch(file, { cache: 'no-store' });
+          if (!response.ok) throw new Error(`${file}: HTTP ${response.status}`);
+          return response.text();
+        };
+        const [indexSource, gameSource, configSource, managerSource] = await Promise.all([
+          load('index.html'), load('game.js'), load('config.js'), load('managers.js')
+        ]);
+        const sourceDocument = new DOMParser().parseFromString(indexSource, 'text/html');
+        const scene = sourceDocument.querySelector('#game-scene');
+        if (!scene) throw new Error('Real #game-scene not found in index.html');
+        scene.classList.add('active');
+        document.getElementById('qa-root').replaceWith(scene);
+        scene.querySelectorAll('[onclick]').forEach(element => element.removeAttribute('onclick'));
+        scene.querySelectorAll('img[src^="http"]').forEach(image => image.removeAttribute('src'));
+        scene.querySelectorAll('img[data-theme-src*="green-soft-clay/"]').forEach(image => {
+          if (getComputedStyle(image).display !== 'none') image.src = image.dataset.themeSrc;
+        });
+
+        const readArray = name => {
+          const match = configSource.match(new RegExp(`^const ${name} = (\\[[^;]+\\]);`, 'm'));
+          if (!match) throw new Error(`${name} not found in config.js`);
+          return JSON.parse(match[1]);
+        };
+        const KOLONE = readArray('KOLONE');
+        const REDOVI_PRIKAZ = readArray('REDOVI_PRIKAZ');
+        const labels = { col_down: 'NADOLE', col_free: 'SLOBODNA', col_middle: 'SREDINA', col_up: 'NAGORE', col_manual: 'RUČNO', col_announce: 'NAJAVA', row_sum: 'ZBIR' };
+        const gt = key => labels[key] || key.replace(/^row_/, '').toUpperCase();
+        const method = (source, signature, nextSignature) => {
+          const start = source.indexOf(signature);
+          const end = source.indexOf(nextSignature, start + signature.length);
+          if (start < 0 || end <= start) throw new Error(`Method not found: ${signature}`);
+          return source.slice(start, end);
+        };
+        const tableMethod = method(gameSource, '    createScoreTables() {', '    resetTurnLogic() {');
+        const scoreMethod = method(gameSource, '    async writeScore(row, col, pIdx) {', '    switchPlayer() {');
+        const equipMethod = method(managerSource, '    equip(id) {', '    async tryBuy(id, name, price) {');
+        const mathMethods = gameSource.match(/^\s+getBest5\(row, dice\).*\r?\n\s+calcPoints\(row, v\).*$/m)?.[0];
+        if (!mathMethods) throw new Error('Real scoring methods not found');
+        const GameRoute = new Function('KOLONE', 'REDOVI_PRIKAZ', 'gt', 'sum',
+          `return class { ${tableMethod} ${scoreMethod} ${mathMethods} };`
+        )(KOLONE, REDOVI_PRIKAZ, gt, values => values.reduce((sum, value) => sum + value, 0));
+        const ShopEquipRoute = new Function(`return class { ${equipMethod} };`)();
+        const managerStart = managerSource.indexOf('class EffectManager {');
+        const managerEnd = managerSource.indexOf('// --- 5. SOUND MANAGER', managerStart);
+        if (managerStart < 0 || managerEnd < 0) throw new Error('Real EffectManager not found');
+        const EffectManager = new Function('t', 'dukatIconHtml', `${managerSource.slice(managerStart, managerEnd)}; return EffectManager;`)(
+          gt, () => '<img src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" alt="">'
+        );
+        const silentSound = new Proxy({}, { get: () => () => {} });
+        const game = new GameRoute();
+        game.players = ['QA igrač'];
+        game.playerName = 'QA igrač';
+        game.currentPlayerIdx = 0;
+        game.onlineMode = false;
+        game.isSpectator = false;
+        game.onlineRollPending = false;
+        game.roomId = null;
+        game.kockiceVals = [6, 6, 6, 6, 6, 6];
+        game.zadrzane = [false, false, false, false, false, false];
+        game.najavaAktivna = false;
+        game.najavljenoPolje = null;
+        game.consecutiveNajava = 0;
+        game.hasProphet = false;
+        game.hasSvetiIlija = false;
+        game.soundMgr = silentSound;
+        game.modal = { alert: async () => {}, confirm: async () => true };
+        game.features = { checkMoveEffects: () => {} };
+        game.vibrate = () => {};
+        game.isValidColumnOrder = () => true; // Slobodna has no ordering rule.
+        game.updateTableVisuals = () => {};
+        game.switchPlayer = () => {};
+        game.effectMgr = new EffectManager();
+        game.allScores = [{ Slobodna: { Yamb: null } }];
+        game.createScoreTables();
+        const diceContainer = document.getElementById('dice-container');
+        for (let i = 0; i < 6; i++) {
+          const die = document.createElement('div');
+          die.className = 'dice';
+          die.innerHTML = `<div class="dice-dots-wrapper val-6">${'<div class="dice-dot"></div>'.repeat(6)}</div>`;
+          diceContainer.appendChild(die);
+        }
+        window.app = { soundMgr: silentSound, players: game.players, currentPlayerIdx: 0, playerName: game.playerName, vibrate: () => {} };
+        const shop = new ShopEquipRoute();
+        shop.type = 'effect';
+        shop.activeKey = 'yamb_active_effect';
+        shop.items = [{ id: 'ufo_abduction' }, { id: 'royal_yamb' }];
+        shop.unlocked = shop.items.map(item => item.id); // Synthetic entitlement; no purchase is made.
+        shop.render = () => {};
+        window.qaWriteYamb = async (effectId, rollCount) => {
+          game.effectMgr.stop();
+          game.allScores[0].Slobodna.Yamb = null;
+          game.brojBacanja = rollCount;
+          game.hasSvetiIlija = false;
+          const previousEffect = localStorage.getItem('yamb_active_effect');
+          shop.equip(effectId);
+          try {
+            const scoreButton = document.getElementById('btn-0-Slobodna-Yamb');
+            scoreButton.disabled = false;
+            const ok = await scoreButton.onclick();
+            scoreButton.textContent = String(game.allScores[0].Slobodna.Yamb ?? '');
+            return { ok, points: game.allScores[0].Slobodna.Yamb, hasSvetiIlija: game.hasSvetiIlija };
+          } finally {
+            if (previousEffect === null) localStorage.removeItem('yamb_active_effect');
+            else localStorage.setItem('yamb_active_effect', previousEffect);
+          }
+        };
+        window.qaStopYambEffect = () => game.effectMgr.stop();
+        window.qaYambReady = true;
+      } catch (error) {
+        const element = document.getElementById('qa-error');
+        element.hidden = false;
+        element.textContent = error.stack || String(error);
+      }
+    })();
+  </script>
+</body>
+</html>

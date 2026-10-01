@@ -77,10 +77,10 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.20">
-    <link rel="stylesheet" href="teme.css?v=6.91">
+    <link rel="stylesheet" href="style.css?v=5.21">
+    <link rel="stylesheet" href="teme.css?v=6.92">
     <link rel="stylesheet" href="kockice.css?v=1.7">
-    <link rel="stylesheet" href="efekti.css?v=1.4">
+    <link rel="stylesheet" href="efekti.css?v=1.6">
     
     <script src="languages.js?v=5.9"></script>
     <script src="quotes.js"></script>
@@ -339,10 +339,10 @@
 
     <canvas id="confetti-canvas"></canvas>
 
-    <div id="rotate-lock-overlay">
+    <div id="rotate-lock-overlay" role="alertdialog" aria-modal="true" aria-labelledby="rotate-lock-title" aria-describedby="rotate-lock-description">
         <div class="rotate-icon">↻</div>
-        <div class="rotate-msg" data-lang="rotate_msg">MOLIMO OKRENITE UREĐAJ</div>
-        <div class="rotate-sub" data-lang="rotate_sub">Ova igra je optimizovana za uspravni prikaz<br>na telefonima.</div>
+        <div id="rotate-lock-title" class="rotate-msg" data-lang="rotate_msg">MOLIMO OKRENITE UREĐAJ</div>
+        <div id="rotate-lock-description" class="rotate-sub" data-lang="rotate_sub">Ova igra je optimizovana za uspravni prikaz<br>na telefonima.</div>
     </div>
 
     <div id="undo-menu-overlay" class="modal-overlay economy-overlay" style="display: none;">
@@ -1886,8 +1886,8 @@
     </script>
 
     <script src="config.js?v=5.6"></script>
-    <script src="managers.js?v=5.23"></script>
-    <script src="dnevniizazov.js?v=2.7"></script>
+    <script src="managers.js?v=5.27"></script>
+    <script src="dnevniizazov.js?v=2.8"></script>
     <script src="riznica.js?v=1.12"></script>
     <script src="trophyManager.js?v=4.6"></script>
     <script src="features.js?v=3.8"></script>
@@ -1899,7 +1899,7 @@
     <script src="globalchat.js?v=1.7"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=5.46"></script>
+    <script src="game.js?v=5.48"></script>
     <script src="kvartalnaliga.js?v=1025"></script>
     <script src="onlinenumber.js?v=1012"></script>
     <script src="vatreniniz.js?v=1008"></script>

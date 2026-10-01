@@ -149,6 +149,8 @@ const TRANSLATIONS = {
         "online_recovery_expired_msg": "Kraj partije zato što ste napustili igru i niste se vratili na vreme.",
         "mutual_disconnect_title": "OBOSTRANI PREKID",
         "mutual_disconnect_msg": "Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.",
+        "tourney_network_replay_title": "TURNIRSKI MEČ SE PONAVLJA",
+        "tourney_network_replay_msg": "Veza oba igrača je prekinuta. Turnirski meč ostaje u kosturu i može se ponovo pokrenuti bez dodeljenog pobednika.",
         "ui_chat_title": "CHAT",
         "ui_online_short": "Online",
         "ui_global_chat_title": "GLOBALNI CHAT",
@@ -660,6 +662,8 @@ const TRANSLATIONS = {
         "tourney_draw_replay": "Turnirski meč se ponavlja dok neko ne pobedi.",
         "tourney_draw_replay_short": "NEREŠENO - PONAVLJANJE",
         "tourney_draw_replay_modal": "Partija je završena nerešeno. Meč se ponavlja dok neko ne pobedi.",
+        "tourney_network_replay_short": "MREŽNI PREKID - PONAVLJANJE",
+        "tourney_network_replay_modal": "Veza oba igrača je prekinuta. Pobednik nije dodeljen i turnirski meč mora da se ponovi.",
         "tourney_draw_score": "Skor remija",
         "tourney_draw_count": "Broj remija",
         "tourney_replay_match": "⚔️ POKRENI PONAVLJANJE",
@@ -980,6 +984,8 @@ const TRANSLATIONS = {
         "online_recovery_expired_msg": "Game over because you left the game and did not return in time.",
         "mutual_disconnect_title": "BOTH PLAYERS DISCONNECTED",
         "mutual_disconnect_msg": "Both players lost their connection. The match ended without a winner or penalty.",
+        "tourney_network_replay_title": "TOURNAMENT MATCH REPLAY",
+        "tourney_network_replay_msg": "Both players lost their connection. The tournament match remains in the bracket and can be started again without awarding a winner.",
         "ui_chat_title": "CHAT",
         "ui_online_short": "Online",
         "ui_global_chat_title": "GLOBAL CHAT",
@@ -1491,6 +1497,8 @@ const TRANSLATIONS = {
         "tourney_draw_replay": "The tournament match will be replayed until someone wins.",
         "tourney_draw_replay_short": "DRAW - REPLAY REQUIRED",
         "tourney_draw_replay_modal": "The game ended in a draw. The match is replayed until someone wins.",
+        "tourney_network_replay_short": "NETWORK INTERRUPTION - REPLAY",
+        "tourney_network_replay_modal": "Both players lost their connection. No winner was awarded and the tournament match must be replayed.",
         "tourney_draw_score": "Draw score",
         "tourney_draw_count": "Draw count",
         "tourney_replay_match": "⚔️ START REPLAY",
@@ -1707,11 +1715,15 @@ function t(key) {
     const lang = localStorage.getItem('yamb_lang') || 'sr';
     if (TRANSLATIONS[lang] && TRANSLATIONS[lang].hasOwnProperty(key)) {
         const value = TRANSLATIONS[lang][key];
-        if (key === 'go_rematch') {
+        if (key === 'go_rematch' || key === 'tourney_finalist_title' || key === 'ws_power') {
             const theme = document.documentElement?.dataset?.splashTheme
                 || localStorage.getItem('yamb_theme')
                 || 'dark';
-            if (theme === 'dark') return value.replace(/^🔄\s*/u, '');
+            if (theme === 'dark') {
+                if (key === 'go_rematch') return value.replace(/^🔄\s*/u, '');
+                if (key === 'tourney_finalist_title') return value.replace(/\s*🥈/u, '');
+                return value.replace(/\s*⚡/u, '');
+            }
         }
         return formatDukatIcons(value);
     }

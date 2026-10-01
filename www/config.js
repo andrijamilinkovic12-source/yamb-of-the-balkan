@@ -17,19 +17,33 @@ const CONFIG = {
     GAME_STATUS: { IDLE: 'idle', ROLLING: 'rolling', FINISHED: 'finished' }
 };
 
-// --- 2. PAMETNI URL (ISPRAVKA ZA TELEFON) ---
-let serverUrl = 'https://yamb-of-the-balkan.onrender.com';
+// --- 2. PAMETNI URL (ISPRAVKA ZA TELEFON I IZOLOVANI STAGING) ---
+const productionServerUrl = 'https://yamb-of-the-balkan.onrender.com';
+let serverUrl = productionServerUrl;
 const isLocalhost = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 const isNativeApp = (window.Capacitor !== undefined);
+const currentHttpOrigin = (window.location.protocol === 'http:' || window.location.protocol === 'https:')
+    ? window.location.origin
+    : '';
 
 if (isLocalhost && !isNativeApp) {
     serverUrl = 'http://localhost:3000';
     console.log("🖥️ PC Detect: Koristim Localhost server.");
+} else if (currentHttpOrigin) {
+    serverUrl = currentHttpOrigin;
+    console.log("📱 Mobile/Web Detect: Koristim server porekla aplikacije.");
 } else {
-    console.log("📱 Mobile/Web Detect: Koristim Render server.");
+    console.log("📱 Mobile Detect: Koristim produkcioni fallback server.");
 }
 
 const SERVER_URL = serverUrl;
+const YAMB_IS_PRODUCTION_SERVER = (() => {
+    try {
+        return new URL(SERVER_URL).hostname === new URL(productionServerUrl).hostname;
+    } catch (_) {
+        return false;
+    }
+})();
 
 // --- 3. KONSTANTE ZA IGRU ---
 const UNICODE_DICE = ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];

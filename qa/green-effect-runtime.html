@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="/">
+  <title>Green live FX — izolovani QA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="teme.css">
+  <link rel="stylesheet" href="efekti.css">
+  <style>
+    html, body { min-height: 100%; margin: 0; }
+    body { overflow: hidden; }
+    #qa-game { position: fixed; inset: 0; padding: max(48px, env(safe-area-inset-top)) 12px max(40px, env(safe-area-inset-bottom)); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    #qa-title { color: #f4f8e8; font: 800 22px Montserrat, sans-serif; letter-spacing: .02em; text-align: center; }
+    #game-scene { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; width: 100%; min-height: 0; }
+    .player-table { position: relative; width: min(92vw, 440px); height: min(65vh, 620px); display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(7, 1fr); gap: 2px; padding: 12px; border: 2px solid #cfe0ab; border-radius: 18px; background: linear-gradient(145deg, #547a54, #254c34); box-shadow: inset 0 4px 12px rgba(8,30,18,.38), 0 12px 26px rgba(8,30,18,.3); box-sizing: border-box; overflow: hidden; }
+    .grid-cell { display: grid; place-items: center; min-width: 0; border: 1px solid rgba(224,239,201,.35); border-radius: 5px; background: rgba(27,67,40,.52); color: #f4f8e8; font: 700 12px Montserrat, sans-serif; }
+    .score-btn { color: #f4f8e8; }
+    .qa-score { color: #f4f8e8; font: 700 12px Montserrat, sans-serif; }
+    #qa-error { position: fixed; inset: auto 10px 10px; z-index: 2147483647; color: #fff; background: #8b2020; font: 14px Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="qa-game">
+    <div id="qa-title">YAMB OF THE BALKAN</div>
+    <div id="game-scene" class="game-scene">
+      <div class="player-table" id="ptable-0" style="opacity: 1"></div>
+    </div>
+    <div class="qa-score">6 • 6 • 6 • 6 • 6</div>
+  </div>
+  <div id="qa-error" hidden></div>
+  <script>
+    (async () => {
+      try {
+        const pendingRafs = new Set();
+        const resizeListeners = new Set();
+        const nativeRaf = window.requestAnimationFrame.bind(window);
+        const nativeCancelRaf = window.cancelAnimationFrame.bind(window);
+        const nativeAddEventListener = window.addEventListener.bind(window);
+        const nativeRemoveEventListener = window.removeEventListener.bind(window);
+        window.requestAnimationFrame = callback => {
+          let id;
+          id = nativeRaf(time => { pendingRafs.delete(id); callback(time); });
+          pendingRafs.add(id);
+          return id;
+        };
+        window.cancelAnimationFrame = id => { pendingRafs.delete(id); nativeCancelRaf(id); };
+        window.addEventListener = (type, listener, options) => {
+          if (type === 'resize') resizeListeners.add(listener);
+          return nativeAddEventListener(type, listener, options);
+        };
+        window.removeEventListener = (type, listener, options) => {
+          if (type === 'resize') resizeListeners.delete(listener);
+          return nativeRemoveEventListener(type, listener, options);
+        };
+        window.qaFxMetrics = () => ({ pendingRafs: pendingRafs.size, resizeListeners: resizeListeners.size });
+        document.documentElement.dataset.splashTheme = 'dark';
+        const params = new URLSearchParams(location.search);
+        const theme = params.get('theme') || 'green';
+        if (theme === 'easter') document.body.classList.add('easter-theme');
+        if (theme === 'desert') document.body.classList.add('desert-theme');
+        const table = document.querySelector('.player-table');
+        const cells = document.createDocumentFragment();
+        for (let i = 0; i < 28; i++) {
+          const cell = document.createElement('div');
+          cell.className = 'grid-cell';
+          cell.innerHTML = i % 4 === 0 ? `<span class="row-header">${['1','2','3','4','5','6','YAMB'][Math.floor(i / 4)]}</span>`
+            : `<button class="score-btn filled" type="button">${i % 3 === 0 ? 252 : 0}</button>`;
+          cells.appendChild(cell);
+        }
+        table.appendChild(cells);
+        const confettiCanvas = document.createElement('canvas');
+        confettiCanvas.id = 'confetti-canvas';
+        confettiCanvas.style.cssText = 'position:fixed;inset:0;z-index:99999;pointer-events:none;width:100%;height:100%';
+        document.body.appendChild(confettiCanvas);
+        const response = await fetch('managers.js', { cache: 'no-store' });
+        if (!response.ok) throw new Error(`managers.js HTTP ${response.status}`);
+        const source = await response.text();
+        const start = source.indexOf('class EffectManager {');
+        const end = source.indexOf('// --- 5. SOUND MANAGER', start);
+        if (start < 0 || end < 0) throw new Error('EffectManager nije pronađen');
+        const EffectManager = new Function('t', 'dukatIconHtml', `const _safeT = key => t(key); ${source.slice(start, end)}; return EffectManager;`)(
+          key => key === 'hs_player' ? 'IGRAČ' : key,
+          () => '<img src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" alt="">'
+        );
+        const silentSound = new Proxy({}, { get: () => () => {} });
+        window.app = { soundMgr: silentSound, players: ['QA igrač'], currentPlayerIdx: 0, playerName: 'QA igrač', vibrate: () => {} };
+        window.effectMgr = new EffectManager();
+        window.qaRunEffect = id => { window.effectMgr.stop(); window.effectMgr.trigger(id); };
+        window.qaStopEffect = () => window.effectMgr.stop();
+        window.qaEffectReady = true;
+      } catch (error) {
+        const element = document.getElementById('qa-error');
+        element.hidden = false;
+        element.textContent = error.stack || String(error);
+      }
+    })();
+  </script>
+</body>
+</html>

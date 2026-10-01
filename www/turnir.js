@@ -1751,9 +1751,12 @@ class TournamentManager {
 
     getMatchDrawReplayLabel(match) {
         if (!match || match.winnerId || !match.rematchRequired) return '';
-        const label = this.escape(tt('tourney_draw_replay_short') || 'NEREŠENO - PONAVLJANJE');
+        const isNetworkReplay = match.replayReason === 'mutual_disconnect';
+        const label = this.escape(isNetworkReplay
+            ? (tt('tourney_network_replay_short') || 'MREŽNI PREKID - PONAVLJANJE')
+            : (tt('tourney_draw_replay_short') || 'NEREŠENO - PONAVLJANJE'));
         const score = match.lastDrawScoreLabel ? this.escape(match.lastDrawScoreLabel) : '';
-        return score ? `${label}: ${score}` : label;
+        return !isNetworkReplay && score ? `${label}: ${score}` : label;
     }
 
     getMatchDrawCountLabel(match) {
@@ -1766,10 +1769,15 @@ class TournamentManager {
     getMatchDrawReplayNoticeHTML(match) {
         if (!match || match.winnerId || !match.rematchRequired) return '';
 
-        const title = this.escape(tt('tourney_draw_replay_short') || 'NEREŠENO - PONAVLJANJE');
-        const text = this.escape(tt('tourney_draw_replay_modal') || 'Partija je završena nerešeno. Meč se ponavlja dok neko ne pobedi.');
+        const isNetworkReplay = match.replayReason === 'mutual_disconnect';
+        const title = this.escape(isNetworkReplay
+            ? (tt('tourney_network_replay_short') || 'MREŽNI PREKID - PONAVLJANJE')
+            : (tt('tourney_draw_replay_short') || 'NEREŠENO - PONAVLJANJE'));
+        const text = this.escape(isNetworkReplay
+            ? (tt('tourney_network_replay_modal') || 'Veza oba igrača je prekinuta. Pobednik nije dodeljen i turnirski meč mora da se ponovi.')
+            : (tt('tourney_draw_replay_modal') || 'Partija je završena nerešeno. Meč se ponavlja dok neko ne pobedi.'));
         const score = match.lastDrawScoreLabel ? this.escape(match.lastDrawScoreLabel) : '';
-        const scoreHtml = score
+        const scoreHtml = !isNetworkReplay && score
             ? `<p style="margin-top: 8px; color: var(--text-main); font-size: 0.88rem;">${this.escape(tt('tourney_draw_score') || 'Skor remija')}: <strong style="color: var(--gold-main);">${score}</strong></p>`
             : '';
         const countLabel = this.getMatchDrawCountLabel(match);
@@ -2021,6 +2029,11 @@ class TournamentManager {
                 powerIndex = '?';
             }
             powerIndex = this.escape(powerIndex);
+            const isGreenTheme = (document.documentElement?.dataset?.splashTheme
+                || localStorage.getItem('yamb_theme') || 'dark') === 'dark';
+            const powerMark = isGreenTheme
+                ? '<img class="tourney-participant-power-icon-green" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">'
+                : '⚡';
 
             return `
                 <div class="tourney-participant-row${isLoser ? ' is-loser' : ''}" style="display: flex; align-items: center; justify-content: space-between; padding: 5px 8px; ${isTop ? 'border-bottom: 1px solid rgba(255,215,0,0.1);' : ''} opacity: ${opacity}; filter: ${filter};">
@@ -2028,7 +2041,7 @@ class TournamentManager {
                         <img src="${photo}" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 2px solid ${isWinner ? 'var(--success)' : 'rgba(255,215,0,0.4)'}; margin-right: 8px; flex-shrink: 0; box-shadow: 0 0 5px rgba(0,0,0,0.5);">
                         <span class="tourney-participant-name" style="font-size: 0.78rem; font-weight: ${fontWeight}; color: ${nameColor}; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word;">${safeName}</span>
                     </div>
-                    <span class="tourney-participant-power" style="font-size: 0.62rem; color: var(--gold-main); font-weight: 900; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,215,0,0.3);">⚡ ${powerIndex}</span>
+                    <span class="tourney-participant-power" style="font-size: 0.62rem; color: var(--gold-main); font-weight: 900; flex-shrink: 0; text-shadow: 0 0 5px rgba(255,215,0,0.3);">${powerMark} ${powerIndex}</span>
                 </div>
             `;
         };
@@ -2191,7 +2204,7 @@ class TournamentManager {
                 <hr style="border: 0; border-top: 1px solid rgba(255,215,0,0.2); margin: 15px 0;">
                 ${akcijeHtml}
             </div>
-        `, titleFallback + ' ⚔️');
+        `, titleFallback + ((localStorage.getItem('yamb_theme') || 'dark') === 'dark' ? '' : ' ⚔️'));
     }
 
     proposeTime(round, index) {
