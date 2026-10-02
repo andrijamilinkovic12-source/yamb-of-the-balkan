@@ -2,6 +2,9 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { getApps, getApp, initializeApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
+const { getMessaging } = require('firebase-admin/messaging');
 const {
     getMongoDatabaseName,
     getServerRuntimeDescriptor,
@@ -43,6 +46,11 @@ assert.strictEqual(getValidatedStagingClientUrl(safeEnv), 'https://yamb-reconnec
 assert.strictEqual(getValidatedStagingApplicationId(safeEnv), 'com.yamb.balkan.staging');
 assert.strictEqual(getValidatedStagingFirebaseProjectId(safeEnv), 'yamb-reconnect-qa');
 assert.strictEqual(getValidatedStagingInstanceId(safeEnv), 'reconnect-qa-01');
+const testFirebaseApp = initializeApp({ projectId: safeEnv.YAMB_STAGING_FIREBASE_PROJECT_ID }, 'reconnect-staging-check');
+assert(getApps().includes(testFirebaseApp));
+assert.strictEqual(getApp('reconnect-staging-check'), testFirebaseApp);
+assert.strictEqual(typeof getAuth(testFirebaseApp).verifyIdToken, 'function');
+assert.strictEqual(typeof getMessaging(testFirebaseApp).send, 'function');
 assert.deepStrictEqual(getServerRuntimeDescriptor(safeEnv), {
     environment: 'staging',
     instanceId: 'reconnect-qa-01'
@@ -151,7 +159,10 @@ assert(serverSource.includes("require('./scripts/reconnect-staging-safety')"), '
 assert(serverSource.includes('validateStagingFirebaseRuntime(firebaseAdminProjectId, process.env)'), 'Server ne proverava staging Firebase identitet');
 assert(serverSource.includes("SERVER_RUNTIME.environment === 'staging' &&"), 'Keyless Firebase Auth mora biti ograničen na staging');
 assert(serverSource.includes('stagingProjectIdOnlyAuth ? { projectId: firebaseAdminProjectId }'), 'Staging Admin Auth nema eksplicitan project ID');
-assert(serverSource.includes('firebaseMessaging = stagingProjectIdOnlyAuth ? null : admin.messaging()'), 'Keyless staging mora isključiti Firebase Messaging');
+assert(serverSource.includes("require('firebase-admin/app')"), 'Server mora koristiti modularni Firebase Admin App API');
+assert(serverSource.includes("require('firebase-admin/auth')"), 'Server mora koristiti modularni Firebase Admin Auth API');
+assert(serverSource.includes("require('firebase-admin/messaging')"), 'Server mora koristiti modularni Firebase Admin Messaging API');
+assert(serverSource.includes('firebaseMessaging = stagingProjectIdOnlyAuth ? null : getMessaging(firebaseApp)'), 'Keyless staging mora isključiti Firebase Messaging');
 assert(serverSource.includes('environment: SERVER_RUNTIME.environment'), 'Health endpoint ne potvrđuje runtime okruženje');
 assert(serverSource.includes('instanceId: SERVER_RUNTIME.instanceId'), 'Health endpoint ne potvrđuje staging instancu');
 assert(managersSource.includes("Staging/local runtime: AdMob je isključen."), 'Staging klijent ne blokira produkcione oglase');

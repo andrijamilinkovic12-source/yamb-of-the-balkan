@@ -1,6 +1,9 @@
 {
   "name": "yamb_of_the_balkan_ver.3.0",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22"
+  },
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -42,7 +45,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.18.2",
-    "firebase-admin": "^13.9.0",
+    "firebase-admin": "^14.5.0",
     "mongoose": "^8.0.0",
     "socket.io": "^4.8.3"
   },

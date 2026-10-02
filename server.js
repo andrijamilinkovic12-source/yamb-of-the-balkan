@@ -86,7 +86,9 @@ function parseFirebaseServiceAccount() {
 }
 
 try {
-    const admin = require('firebase-admin');
+    const { cert, getApps, getApp, initializeApp } = require('firebase-admin/app');
+    const { getAuth } = require('firebase-admin/auth');
+    const { getMessaging } = require('firebase-admin/messaging');
     const serviceAccount = parseFirebaseServiceAccount();
     firebaseAdminCredentialSource = getFirebaseCredentialSource();
     firebaseAdminProjectId = getConfiguredFirebaseProjectId(serviceAccount);
@@ -102,16 +104,13 @@ try {
         process.env.GCLOUD_PROJECT
     );
     const appOptions = serviceAccount
-        ? { credential: admin.credential.cert(serviceAccount) }
+        ? { credential: cert(serviceAccount) }
         : (stagingProjectIdOnlyAuth ? { projectId: firebaseAdminProjectId } : undefined);
 
     if (serviceAccount || hasDefaultCredentials) {
-        if (!admin.apps.length) {
-            admin.initializeApp(appOptions);
-        }
-
-        firebaseAuth = admin.auth();
-        firebaseMessaging = stagingProjectIdOnlyAuth ? null : admin.messaging();
+        const firebaseApp = getApps().length ? getApp() : initializeApp(appOptions);
+        firebaseAuth = getAuth(firebaseApp);
+        firebaseMessaging = stagingProjectIdOnlyAuth ? null : getMessaging(firebaseApp);
         if (stagingProjectIdOnlyAuth) firebaseAdminCredentialSource = 'staging_project_id_only';
         console.log(`✅ Firebase Admin Auth spreman (${firebaseAdminProjectId || 'project_id nepoznat'}, ${firebaseAdminCredentialSource}; Messaging: ${firebaseMessaging ? 'aktivan' : 'isključen'}).`);
     } else {
