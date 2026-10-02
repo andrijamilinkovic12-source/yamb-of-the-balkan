@@ -160,6 +160,10 @@ class YambApp {
         this.appLifecycleEpisodeId = '';
         this.appLifecycleNativeConfirmed = false;
         this.appLifecycleLastResumeAt = 0;
+        this.appLifecycleForegroundSignalAfterPause = false;
+        this.appLifecyclePauseGeneration = 0;
+        this.appLifecycleLastResumeSyncGeneration = -1;
+        this.appLifecycleLastResumeSyncRoomId = '';
         this.appLifecycleSessionId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
         this.opponentReconnectGraceTimer = null;
         this.opponentReconnectNoticeTimer = null;
@@ -5085,6 +5089,7 @@ class YambApp {
     }
 
     scheduleAppResume(delayMs = 500, options = {}) {
+        if (this.appLifecyclePaused) this.appLifecycleForegroundSignalAfterPause = true;
         this.appLifecycleRevision = (this.appLifecycleRevision || 0) + 1;
         if (this.appResumeTimer) clearTimeout(this.appResumeTimer);
         this.appResumeTimer = setTimeout(() => {
@@ -5105,7 +5110,18 @@ class YambApp {
                 const state = await appPlugin.getState();
                 if (revision !== (this.appLifecycleRevision || 0)) return;
                 this.nativeAppActive = state?.isActive;
+                if (this.nativeAppActive === false) {
+                    if (this.appLifecyclePaused && !this.appLifecycleNativeConfirmed) {
+                        this.handleAppPause('foreground_check', { nativeConfirmed: true });
+                    }
+                    return;
+                }
                 if (this.nativeAppActive !== true) return;
+                // A poll started during a provisional pause may still see the old
+                // native active state. Wait for confirmed inactivity and a visible
+                // WebView before using polling to repair a missed resume callback.
+                if (this.appLifecyclePaused && (!this.appLifecycleNativeConfirmed ||
+                    !this.appLifecycleForegroundSignalAfterPause || document.visibilityState === 'hidden')) return;
             } else if (this.nativeAppActive === false) {
                 return;
             }
@@ -5148,6 +5164,7 @@ class YambApp {
         if (this.appLifecyclePaused) {
             if (!nativeConfirmed || this.appLifecycleNativeConfirmed) return;
             this.appLifecycleNativeConfirmed = true;
+            this.appLifecycleForegroundSignalAfterPause = false;
             if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket?.connected && this.roomId) {
                 this.socket.emit('online_app_backgrounded', {
                     roomId: this.roomId,
@@ -5173,6 +5190,8 @@ class YambApp {
         }
         this.appLifecyclePaused = true;
         this.appLifecycleNativeConfirmed = nativeConfirmed;
+        this.appLifecycleForegroundSignalAfterPause = false;
+        this.appLifecyclePauseGeneration = (this.appLifecyclePauseGeneration || 0) + 1;
 
         if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket && this.roomId) {
             localStorage.setItem('yamb_active_online_room', this.roomId);
@@ -5201,8 +5220,14 @@ class YambApp {
         const nativeVerified = options.nativeVerified === true;
         if (document.visibilityState === 'hidden' && !nativeVerified) return;
         if (this.gameActive && this.onlineMode && this.nativeAppActive === false) return;
+        if (this.gameActive && this.onlineMode && this.appLifecyclePaused && nativeVerified &&
+            window.Capacitor?.Plugins?.App && !this.appLifecycleNativeConfirmed) return;
+        if (this.gameActive && this.onlineMode && !this.appLifecyclePaused &&
+            this.appLifecycleLastResumeSyncGeneration === this.appLifecyclePauseGeneration &&
+            this.appLifecycleLastResumeSyncRoomId === this.roomId) return;
         this.appLifecyclePaused = false;
         this.appLifecycleNativeConfirmed = false;
+        this.appLifecycleForegroundSignalAfterPause = false;
         this.appLifecycleLastResumeAt = Date.now();
         const lifecycleSeq = ++this.appLifecycleSequence;
         this.checkForInvite();
@@ -5249,6 +5274,8 @@ class YambApp {
                     visibilityState: document.visibilityState || '',
                     ...this.getConnectionDiagnosticSnapshot()
                 });
+                this.appLifecycleLastResumeSyncGeneration = this.appLifecyclePauseGeneration;
+                this.appLifecycleLastResumeSyncRoomId = roomId;
                 if (this.isTournamentOnlineDuel(roomId, { duelType: this.onlineDuelType })) {
                     this.emitOnlinePresencePing(true, { nativeVerified });
                 }

@@ -98,6 +98,7 @@ const lifecycleSandbox = {
 vm.createContext(lifecycleSandbox);
 vm.runInContext(`
     ${extractClassMethod(gameSource, 'handlePotentialAppPause').replace('handlePotentialAppPause(', 'function handlePotentialAppPause(')}
+    ${extractClassMethod(gameSource, 'scheduleAppResume').replace('scheduleAppResume(', 'function scheduleAppResume(')}
     ${extractClassMethod(gameSource, 'handleAppPause').replace('handleAppPause(', 'function handleAppPause(')}
     ${extractClassMethod(gameSource, 'handleAppResume').replace('handleAppResume(', 'function handleAppResume(')}
     ${extractClassMethod(gameSource, 'checkOnlineForegroundRecovery').replace('checkOnlineForegroundRecovery(', 'function checkOnlineForegroundRecovery(')}
@@ -254,6 +255,12 @@ async function run() {
     await wait(0);
     assert.strictEqual(pauseSignals.at(-1).nativeConfirmed, true, 'Stvarno native odsustvo mora potvrditi pozadinu');
 
+    const scheduledForegroundApp = { appLifecyclePaused: true, handleAppResume() {} };
+    lifecycleSandbox.scheduleAppResume.call(scheduledForegroundApp, 0);
+    assert.strictEqual(scheduledForegroundApp.appLifecycleForegroundSignalAfterPause, true,
+        'Stvarni foreground callback mora označiti novu proveru posle pozadine');
+    await wait(0);
+
     for (const roomId of ['duel_challenge', 'yamb-friend', 'room_random', 'tourney_round']) {
         const emitted = [];
         const app = {
@@ -282,6 +289,7 @@ async function run() {
     const resumedEvents = [];
     const resumedApp = {
         appLifecyclePaused: true,
+        appLifecyclePauseGeneration: 1,
         gameActive: true,
         onlineMode: true,
         isSpectator: false,
@@ -301,17 +309,34 @@ async function run() {
     assert.strictEqual(resumedApp.appLifecyclePaused, false, 'Resume mora vratiti lifecycle u aktivno stanje');
     assert(resumedEvents.some(item => item.event === 'online_app_resumed'), 'Običan duel ne prijavljuje povratak aplikacije');
     assert(resumedEvents.some(item => item.event === 'state_sync'), 'Povratak aplikacije ne traži autoritativno stanje');
+    const sentAfterFirstResume = resumedEvents.length;
+    lifecycleSandbox.handleAppResume.call(resumedApp);
+    assert.strictEqual(resumedEvents.length, sentAfterFirstResume, 'Dva foreground callbacka ne smeju dva puta poslati resume i state sync');
 
     const foregroundApp = {
         ...resumedApp,
         appLifecyclePaused: true,
+        appLifecycleNativeConfirmed: false,
         handleAppResume() { lifecycleSandbox.handleAppResume.call(this); },
+        handleAppPause(source, options) { lifecycleSandbox.handleAppPause.call(this, source, options); },
         emitOnlinePresencePing(force, options) { lifecycleSandbox.emitOnlinePresencePing.call(this, force, options); }
     };
+    lifecycleSandbox.window.Capacitor = { Plugins: { App: { async getState() { return { isActive: true }; } } } };
+    await lifecycleSandbox.checkOnlineForegroundRecovery.call(foregroundApp);
+    assert.strictEqual(foregroundApp.appLifecyclePaused, true, 'Stari native active odgovor ne sme prekinuti privremenu pozadinu');
+    assert.strictEqual(foregroundApp.appLifecycleNativeConfirmed, false);
     lifecycleSandbox.window.Capacitor = { Plugins: { App: { async getState() { return { isActive: false }; } } } };
     await lifecycleSandbox.checkOnlineForegroundRecovery.call(foregroundApp);
     assert.strictEqual(foregroundApp.appLifecyclePaused, true, 'Vidljiv WebView nije dovoljan dok native aplikacija nije aktivna');
+    assert.strictEqual(foregroundApp.appLifecycleNativeConfirmed, true, 'Native inactive mora potvrditi pozadinu pre polling oporavka');
     lifecycleSandbox.window.Capacitor.Plugins.App.getState = async () => ({ isActive: true });
+    await lifecycleSandbox.checkOnlineForegroundRecovery.call(foregroundApp);
+    assert.strictEqual(foregroundApp.appLifecyclePaused, true, 'Stari active odgovor posle native pause nije foreground signal');
+    foregroundApp.appLifecycleForegroundSignalAfterPause = true;
+    lifecycleSandbox.document.visibilityState = 'hidden';
+    await lifecycleSandbox.checkOnlineForegroundRecovery.call(foregroundApp);
+    assert.strictEqual(foregroundApp.appLifecyclePaused, true, 'Skriven WebView ne sme pollingom prijaviti povratak');
+    lifecycleSandbox.document.visibilityState = 'visible';
     await lifecycleSandbox.checkOnlineForegroundRecovery.call(foregroundApp);
     assert.strictEqual(foregroundApp.appLifecyclePaused, false, 'Propušteni resume mora biti popravljen native proverom');
     assert(resumedEvents.some(item => item.event === 'online_presence_ping' && item.payload.foreground === true));
@@ -329,7 +354,7 @@ async function run() {
     assert.strictEqual(foregroundApp.appLifecyclePaused, true, 'Zakašnjeli getState ne sme poništiti noviji pause');
 
     let delayedResume;
-    const delayedApp = { ...resumedApp, appLifecyclePaused: false,
+    const delayedApp = { ...resumedApp, appLifecyclePaused: false, appLifecycleLastResumeSyncGeneration: -1,
         socket: { connected: false, once(event, fn) { delayedResume = fn; } } };
     lifecycleSandbox.handleAppResume.call(delayedApp);
     delayedApp.appLifecyclePaused = true;
