@@ -2,7 +2,7 @@
   "name": "yamb_of_the_balkan_ver.3.0",
   "version": "1.0.0",
   "engines": {
-    "node": ">=22"
+    "node": "24.21.0"
   },
   "main": "server.js",
   "scripts": {
