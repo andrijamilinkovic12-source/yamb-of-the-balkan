@@ -13,6 +13,14 @@ const {
 
 const root = path.resolve(__dirname, '..');
 const generatedConfigPath = path.join(root, 'android', 'app', 'src', 'main', 'assets', 'capacitor.config.json');
+const generatedPluginsPath = path.join(root, 'android', 'app', 'src', 'main', 'assets', 'capacitor.plugins.json');
+const androidManifestPath = path.join(root, 'android', 'app', 'src', 'main', 'AndroidManifest.xml');
+const generatedGradlePaths = [
+    'android/app/capacitor.build.gradle',
+    'android/capacitor-cordova-android-plugins/build.gradle',
+    'android/capacitor-cordova-android-plugins/cordova.variables.gradle',
+    'android/capacitor.settings.gradle'
+].map(relativePath => path.join(root, relativePath));
 const productionGoogleServicesPath = path.join(root, 'android', 'app', 'google-services.json');
 const sourceApkPath = path.join(root, 'android', 'app', 'build', 'outputs', 'apk', 'debug', 'app-debug.apk');
 const outputDir = path.join(root, 'tmp', 'reconnect-staging');
@@ -80,12 +88,35 @@ async function main() {
     const previousGeneratedConfig = fs.existsSync(generatedConfigPath)
         ? fs.readFileSync(generatedConfigPath)
         : null;
+    const previousGeneratedPlugins = fs.existsSync(generatedPluginsPath)
+        ? fs.readFileSync(generatedPluginsPath)
+        : null;
+    const originalAndroidManifest = fs.readFileSync(androidManifestPath);
+    const previousGradleFiles = generatedGradlePaths.map(filePath =>
+        fs.existsSync(filePath) ? fs.readFileSync(filePath) : null
+    );
     try {
-        run(process.execPath, [path.join(root, 'node_modules', '@capacitor', 'cli', 'bin', 'capacitor'), 'copy', 'android'], root, buildEnv);
+        // `copy` ne generiše registar nativnih plugina. Bez `sync` APK izgleda kao
+        // mobilna aplikacija, ali FirebaseAuthentication nije dostupan u WebView-u.
+        run(process.execPath, [path.join(root, 'node_modules', '@capacitor', 'cli', 'bin', 'capacitor'), 'sync', 'android'], root, buildEnv);
         const generatedConfig = JSON.parse(fs.readFileSync(generatedConfigPath, 'utf8'));
         if (generatedConfig?.server?.url !== serverUrl || generatedConfig?.appId !== applicationId) {
             throw new Error('Generisani Android config nema potvrđeni staging URL i package.');
         }
+        const generatedPlugins = JSON.parse(fs.readFileSync(generatedPluginsPath, 'utf8'));
+        if (!Array.isArray(generatedPlugins) || !generatedPlugins.some(plugin =>
+            plugin?.classpath === 'io.capawesome.capacitorjs.plugins.firebase.authentication.FirebaseAuthenticationPlugin'
+        )) {
+            throw new Error('Staging APK nema registrovan nativni FirebaseAuthentication plugin.');
+        }
+
+        const productionLinkHost = 'android:host="yamb-of-the-balkan.onrender.com"';
+        const manifestText = originalAndroidManifest.toString('utf8');
+        if (manifestText.split(productionLinkHost).length - 1 !== 2) {
+            throw new Error('Android manifest nema očekivana dva produkciona pozivna linka.');
+        }
+        const stagingLinkHost = `android:host="${new URL(serverUrl).hostname}"`;
+        fs.writeFileSync(androidManifestPath, manifestText.replaceAll(productionLinkHost, stagingLinkHost), 'utf8');
 
         fs.writeFileSync(productionGoogleServicesPath, stagingGoogleServices);
 
@@ -118,12 +149,19 @@ async function main() {
         console.log(`SHA-256: ${sha256}`);
     } finally {
         fs.writeFileSync(productionGoogleServicesPath, productionGoogleServices);
+        fs.writeFileSync(androidManifestPath, originalAndroidManifest);
+        generatedGradlePaths.forEach((filePath, index) => {
+            if (previousGradleFiles[index]) fs.writeFileSync(filePath, previousGradleFiles[index]);
+            else if (fs.existsSync(filePath)) fs.rmSync(filePath);
+        });
         if (previousGeneratedConfig) {
             fs.mkdirSync(path.dirname(generatedConfigPath), { recursive: true });
             fs.writeFileSync(generatedConfigPath, previousGeneratedConfig);
         } else if (fs.existsSync(generatedConfigPath)) {
             fs.rmSync(generatedConfigPath);
         }
+        if (previousGeneratedPlugins) fs.writeFileSync(generatedPluginsPath, previousGeneratedPlugins);
+        else if (fs.existsSync(generatedPluginsPath)) fs.rmSync(generatedPluginsPath);
     }
 }
 

@@ -97,6 +97,7 @@ const lifecycleSandbox = {
 };
 vm.createContext(lifecycleSandbox);
 vm.runInContext(`
+    ${extractClassMethod(gameSource, 'handlePotentialAppPause').replace('handlePotentialAppPause(', 'function handlePotentialAppPause(')}
     ${extractClassMethod(gameSource, 'handleAppPause').replace('handleAppPause(', 'function handleAppPause(')}
     ${extractClassMethod(gameSource, 'handleAppResume').replace('handleAppResume(', 'function handleAppResume(')}
     ${extractClassMethod(gameSource, 'checkOnlineForegroundRecovery').replace('checkOnlineForegroundRecovery(', 'function checkOnlineForegroundRecovery(')}
@@ -237,6 +238,21 @@ async function run() {
     assert(!backgroundHandler.includes('isTournamentRoomId(roomId)'), 'Odlazak u pozadinu je i dalje ograničen samo na turnir');
     assert(backgroundHandler.includes("beginReconnectGraceForSocket(socket, roomId, 'app_backgrounded', '', data)"), 'Pozadina ne pokreće reconnect grace sa lifecycle metapodacima');
     assert(backgroundHandler.includes('rememberClientConnectionDiagnosticSnapshot(socket, data)'), 'Pozadina ne čuva poslednji mrežni tip');
+
+    const pauseSignals = [];
+    const potentialPauseApp = {
+        handleAppPause(source, options) { pauseSignals.push({ source, nativeConfirmed: options.nativeConfirmed }); },
+        scheduleAppResume() { pauseSignals.push({ source: 'premature_resume' }); }
+    };
+    lifecycleSandbox.window.Capacitor = { Plugins: { App: { async getState() { return { isActive: true }; } } } };
+    lifecycleSandbox.handlePotentialAppPause.call(potentialPauseApp, 'document_pause');
+    await wait(0);
+    assert.strictEqual(pauseSignals.length, 1, 'Staro native active stanje tokom pause ne sme prerano prijaviti povratak');
+    assert.strictEqual(pauseSignals[0].nativeConfirmed, false);
+    lifecycleSandbox.window.Capacitor.Plugins.App.getState = async () => ({ isActive: false });
+    lifecycleSandbox.handlePotentialAppPause.call(potentialPauseApp, 'visibility_hidden');
+    await wait(0);
+    assert.strictEqual(pauseSignals.at(-1).nativeConfirmed, true, 'Stvarno native odsustvo mora potvrditi pozadinu');
 
     for (const roomId of ['duel_challenge', 'yamb-friend', 'room_random', 'tourney_round']) {
         const emitted = [];

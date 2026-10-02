@@ -5129,9 +5129,10 @@ class YambApp {
         Promise.resolve(appPlugin.getState()).then((state) => {
             const isActive = state?.isActive;
             this.nativeAppActive = isActive;
-            if (isActive === true) {
-                this.scheduleAppResume(0, { nativeVerified: true });
-            } else if (isActive === false) {
+            // getState() pokrenut tokom pause može vratiti staro "active" pre
+            // nego što stigne nativni appStateChange(false). To nije dokaz
+            // povratka i ne sme prerano da zatvori reconnect grace.
+            if (isActive === false) {
                 this.handleAppPause(lifecycleSource, { nativeConfirmed: true });
             }
         }).catch(() => {});
