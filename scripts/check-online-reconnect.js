@@ -189,6 +189,102 @@ async function run() {
     recoveryRoutingSandbox.localStorage.value = 'duel_saved';
     assert.strictEqual(recoveryRoutingSandbox.isOnlineRecoveryEventRelevant.call({ gameActive: false }, 'duel_saved', { requireSavedWhenInactive: true }), true, 'Sačuvana prekinuta soba mora moći da se oporavi iz menija');
     assert.strictEqual(recoveryRoutingSandbox.isOnlineRecoveryEventRelevant.call({ gameActive: false }, 'duel_old', { requireSavedWhenInactive: true }), false, 'Zakašnjeli force-cancel bez odgovarajuće sačuvane sobe mora biti ignorisan');
+    const terminalStorage = new Map();
+    const terminalHandlers = {};
+    const terminalSandbox = {
+        String,
+        console: { log() {} },
+        gt: () => '',
+        localStorage: {
+            getItem(key) { return terminalStorage.get(key) || null; },
+            setItem(key, value) { terminalStorage.set(key, String(value)); },
+            removeItem(key) { terminalStorage.delete(key); }
+        }
+    };
+    vm.createContext(terminalSandbox);
+    vm.runInContext(`
+        ${extractClassMethod(gameSource, 'isOnlineRecoveryEventRelevant').replace('isOnlineRecoveryEventRelevant(', 'function isOnlineRecoveryEventRelevant(')}
+        ${extractClassMethod(gameSource, 'claimOnlineRoomTerminalNotice').replace('claimOnlineRoomTerminalNotice(', 'function claimOnlineRoomTerminalNotice(')}
+        ${extractClassMethod(gameSource, 'canShowOnlineRoomTerminalNotice').replace('canShowOnlineRoomTerminalNotice(', 'function canShowOnlineRoomTerminalNotice(')}
+        ${extractClassMethod(gameSource, 'setupOnlineRecoveryListeners').replace('setupOnlineRecoveryListeners(', 'function setupOnlineRecoveryListeners(')}
+    `, terminalSandbox);
+    let resolveTerminalRefresh;
+    let terminalRefreshCount = 0;
+    let terminalAlertCount = 0;
+    let terminalCancelCount = 0;
+    let terminalLastAlert = '';
+    const terminalApp = {
+        gameActive: true,
+        onlineMode: true,
+        isSpectator: false,
+        roomId: 'duel_terminal_1',
+        onlineRoomTerminalNoticeId: '',
+        isOnlineRecoveryEventRelevant: terminalSandbox.isOnlineRecoveryEventRelevant,
+        claimOnlineRoomTerminalNotice: terminalSandbox.claimOnlineRoomTerminalNotice,
+        canShowOnlineRoomTerminalNotice: terminalSandbox.canShowOnlineRoomTerminalNotice,
+        socket: {
+            off(name) { delete terminalHandlers[name]; },
+            on(name, callback) { terminalHandlers[name] = callback; }
+        },
+        refreshProfileAfterOnlineRoomClosed() {
+            terminalRefreshCount++;
+            return new Promise(resolve => { resolveTerminalRefresh = resolve; });
+        },
+        modal: { alert(message) { terminalAlertCount++; terminalLastAlert = message; } },
+        cancelOnline() { terminalCancelCount++; }
+    };
+    terminalSandbox.setupOnlineRecoveryListeners.call(terminalApp);
+    terminalStorage.set('yamb_active_online_room', 'duel_terminal_1');
+    const firstTerminal = terminalHandlers.force_cancel_online({ roomId: 'duel_terminal_1', reason: 'disconnect_grace_expired' });
+    const repeatedTerminal = terminalHandlers.force_cancel_online({ roomId: 'duel_terminal_1', reason: 'disconnect_grace_expired' });
+    const repeatedMutual = terminalHandlers.match_ended_without_penalty({ roomId: 'duel_terminal_1', reason: 'mutual_disconnect' });
+    assert.strictEqual(terminalRefreshCount, 1, 'Ponovljeni terminalni događaji iste sobe smeju samo jednom osvežiti profil');
+    resolveTerminalRefresh();
+    await Promise.all([firstTerminal, repeatedTerminal, repeatedMutual]);
+    assert.strictEqual(terminalAlertCount, 1, 'Ponovljeni terminalni događaji iste sobe smeju prikazati samo jedno obaveštenje');
+    assert.strictEqual(terminalCancelCount, 1, 'Ponovljeni terminalni događaji iste sobe smeju samo jednom zatvoriti partiju');
+
+    terminalStorage.set('yamb_active_online_room', 'duel_terminal_2');
+    terminalApp.roomId = 'duel_terminal_2';
+    const staleTerminal = terminalHandlers.force_cancel_online({ roomId: 'duel_terminal_2', reason: 'disconnect_grace_expired' });
+    terminalApp.roomId = 'duel_new';
+    terminalStorage.set('yamb_active_online_room', 'duel_new');
+    resolveTerminalRefresh();
+    await staleTerminal;
+    assert.strictEqual(terminalAlertCount, 1, 'Zakašnjeli završetak stare sobe ne sme otvoriti obaveštenje preko nove partije');
+    assert.strictEqual(terminalCancelCount, 1, 'Zakašnjeli završetak stare sobe ne sme zatvoriti novu partiju');
+    assert.strictEqual(terminalStorage.get('yamb_active_online_room'), 'duel_new', 'Zakašnjeli završetak ne sme obrisati identitet nove sobe');
+    assert.strictEqual(terminalRefreshCount, 2, 'Nova soba mora imati sopstvenu jednokratnu obradu terminalnog događaja');
+
+    terminalApp.roomId = 'duel_terminal_3';
+    terminalStorage.set('yamb_active_online_room', 'duel_terminal_3');
+    const mutualFirst = terminalHandlers.match_ended_without_penalty({ roomId: 'duel_terminal_3', reason: 'mutual_disconnect' });
+    const forceAfterMutual = terminalHandlers.force_cancel_online({ roomId: 'duel_terminal_3', reason: 'mutual_disconnect' });
+    resolveTerminalRefresh();
+    await Promise.all([mutualFirst, forceAfterMutual]);
+    assert.strictEqual(terminalAlertCount, 2, 'Obostrani prekid mora prikazati jedno obaveštenje i pored kasnijeg force-cancel događaja');
+    assert(terminalLastAlert.includes('bez pobednika i bez kazne'), 'Obostrani prekid mora zadržati poruku bez kazne');
+    assert.strictEqual(terminalCancelCount, 2, 'Obostrani prekid mora samo jednom zatvoriti sobu');
+
+    terminalApp.gameActive = false;
+    terminalApp.roomId = null;
+    terminalStorage.set('yamb_active_online_room', 'duel_saved_closed');
+    const closedStatus = terminalHandlers.room_status_result({ roomId: 'duel_saved_closed', active: false });
+    const forceAfterStatus = terminalHandlers.force_cancel_online({ roomId: 'duel_saved_closed' });
+    resolveTerminalRefresh();
+    await Promise.all([closedStatus, forceAfterStatus]);
+    assert.strictEqual(terminalAlertCount, 3, 'Zatvoren status iz menija i force-cancel smeju prikazati samo jedno obaveštenje');
+    assert.strictEqual(terminalCancelCount, 2, 'Zatvoren status iz menija ne sme ponovo zatvarati igru');
+
+    terminalApp.gameActive = true;
+    terminalApp.roomId = 'tourney_terminal_1';
+    terminalStorage.set('yamb_active_online_room', 'tourney_terminal_1');
+    const tournamentStatus = terminalHandlers.room_status_result({ roomId: 'tourney_terminal_1', active: false, tournamentReplay: true });
+    resolveTerminalRefresh();
+    await tournamentStatus;
+    assert.strictEqual(terminalAlertCount, 4, 'Zatvoren turnirski status mora prikazati završnu poruku');
+    assert.strictEqual(terminalCancelCount, 3, 'Zatvoren turnirski status mora ukloniti aktivnu staru sobu');
+
     assert(gameSource.includes('Ignorišem zakašnjeli timeout druge sobe'), 'Klijent ne odbacuje timeout stare sobe');
     assert(gameSource.includes('Ignorišem opponent_left iz stare/nepoznate sobe'), 'Klijent ne odbacuje završni događaj stare sobe');
     const reconnectLostEmit = serverSource.slice(serverSource.indexOf("emit('opponent_connection_lost'"), serverSource.indexOf("emit('opponent_connection_lost'") + 300);
