@@ -650,6 +650,75 @@ async function run() {
         delete serverSandbox.roomState.duel_settling;
     }
 
+    // A Wi-Fi/LTE handoff can authenticate a replacement socket before the
+    // old socket's disconnect handler has opened grace. Reattach and sync,
+    // but do not claim the opponent recovered from a loss it never saw.
+    const fastHandoffEvents = [];
+    const fastUid = 'uid-fast-handoff-123456';
+    const fastRoom = 'room-fast-handoff';
+    const fastSockets = new Map();
+    const fastOldSocket = {
+        connected: true,
+        disconnect() { this.connected = false; fastHandoffEvents.push('old-disconnect'); }
+    };
+    fastSockets.set('socket-fast-old', fastOldSocket);
+    let fastGraceClears = 0;
+    const fastSandbox = {
+        Date, Number, String, Object,
+        console: { log() {} },
+        ghostSessions: {}, disconnectTimers: {},
+        onlinePlayers: { [fastUid]: 'socket-fast-old' },
+        registeredSockets: { 'socket-fast-old': fastUid },
+        playerRooms: { 'socket-fast-old': fastRoom },
+        roomState: { [fastRoom]: { players: ['socket-fast-old', 'socket-fast-other'], playerUids: [fastUid, 'uid-other'] } },
+        io: {
+            sockets: { sockets: fastSockets },
+            to() { return { emit(event) { fastHandoffEvents.push(`room:${event}`); } }; }
+        },
+        toSafeInt(value, fallback = 0) { return Number.isFinite(value) ? value : fallback; },
+        rememberRoomPresence() { fastHandoffEvents.push('presence'); return true; },
+        clearDisconnectGraceForUid(uid) { fastGraceClears++; delete fastSandbox.ghostSessions[uid]; },
+        resolveDisconnectDiagnostic() { throw new Error('Unexpected diagnostic for fast handoff'); },
+        getSocketTransport() { return 'websocket'; }
+    };
+    vm.createContext(fastSandbox);
+    vm.runInContext(extractServerFunction(serverSource, 'bindVerifiedPlayerSocket'), fastSandbox);
+    vm.runInContext(extractServerFunction(serverSource, 'flushPendingOnlineRoomResume'), fastSandbox);
+    for (const socketId of ['socket-fast-new', 'socket-fast-newer']) {
+        const replacement = {
+            id: socketId, connected: true,
+            join(roomId) { fastHandoffEvents.push(`join:${roomId}`); },
+            disconnect() { this.connected = false; fastHandoffEvents.push('old-disconnect'); },
+            emit(event) { fastHandoffEvents.push(`emit:${event}`); }
+        };
+        fastSockets.set(socketId, replacement);
+        assert.strictEqual(fastSandbox.bindVerifiedPlayerSocket(replacement, fastUid), true);
+        assert.strictEqual(fastSandbox.roomState[fastRoom].players[0], socketId);
+        assert.strictEqual(replacement.pendingOnlineRoomResume, fastRoom, 'Brz novi socket mora dobiti nastavak sobe');
+        assert.strictEqual(fastSandbox.flushPendingOnlineRoomResume(replacement), true);
+        assert.strictEqual(replacement.pendingOnlineRoomResume, undefined);
+    }
+    assert.strictEqual(fastHandoffEvents.filter(event => event === 'room:opponent_connection_restored').length, 0,
+        'Dva brza handoff-a bez grace-a ne smeju emitovati restored bez lost');
+    assert.strictEqual(fastHandoffEvents.filter(event => event === 'emit:online_room_resume_available').length, 2,
+        'Oba brza nova soketa moraju dobiti signal za sinhronizaciju sobe');
+    assert.strictEqual(fastGraceClears, 0, 'Brz handoff ne sme dirati nepostojeći grace');
+
+    fastSandbox.ghostSessions[fastUid] = {
+        roomId: fastRoom, oldSocketId: 'socket-fast-newer', source: 'disconnect',
+        startedAt: Date.now() - 1000, deadlineAt: Date.now() + 29000
+    };
+    const genuineRecovery = {
+        id: 'socket-fast-recovered', connected: true,
+        join(roomId) { fastHandoffEvents.push(`join:${roomId}`); },
+        emit(event) { fastHandoffEvents.push(`emit:${event}`); }
+    };
+    assert.strictEqual(fastSandbox.bindVerifiedPlayerSocket(genuineRecovery, fastUid), true);
+    assert.strictEqual(fastSandbox.roomState[fastRoom].players[0], genuineRecovery.id);
+    assert.strictEqual(fastHandoffEvents.filter(event => event === 'room:opponent_connection_restored').length, 1,
+        'Stvarni grace mora emitovati tačno jedan restored');
+    assert.strictEqual(fastGraceClears, 1, 'Stvarni oporavak mora zatvoriti grace');
+
     // Reauthentication is not foreground evidence: keep the background ghost
     // and both-player fairness until the actual app resume reattaches the UID.
     const reboundEvents = [];

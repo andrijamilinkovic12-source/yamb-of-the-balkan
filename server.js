@@ -6546,7 +6546,12 @@ function bindVerifiedPlayerSocket(socket, playerId) {
                     roomState[aktivnaSoba].playerUids[idx] = playerId;
                 }
             }
-            io.to(aktivnaSoba).emit('opponent_connection_restored', { roomId: aktivnaSoba, restoredUid: playerId });
+            // A fast transport replacement can beat the old socket disconnect
+            // handler. Reattach the room, but do not announce a recovery unless
+            // the opponent was actually told about this grace episode.
+            if (reconnectGhost?.roomId === aktivnaSoba) {
+                io.to(aktivnaSoba).emit('opponent_connection_restored', { roomId: aktivnaSoba, restoredUid: playerId });
+            }
             restoredRoomId = aktivnaSoba;
             rememberRoomPresence(aktivnaSoba, socket);
         }
