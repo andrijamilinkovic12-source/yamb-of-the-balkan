@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.yamb.balkan.staging",
+      "sha256_cert_fingerprints": [
+        "4F:16:86:7D:5B:F5:BB:BB:B3:FB:6A:7B:EA:99:F7:EF:E5:86:72:81:69:2B:1E:B6:49:7A:52:CB:C3:1D:49:9E"
+      ]
+    }
+  }
+]

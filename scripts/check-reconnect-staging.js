@@ -2,6 +2,9 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { getApps, getApp, initializeApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
+const { getMessaging } = require('firebase-admin/messaging');
 const {
     getMongoDatabaseName,
     getServerRuntimeDescriptor,
@@ -19,6 +22,8 @@ const serverSource = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
 const configSource = fs.readFileSync(path.join(root, 'www', 'config.js'), 'utf8');
 const managersSource = fs.readFileSync(path.join(root, 'www', 'managers.js'), 'utf8');
 const buildSource = fs.readFileSync(path.join(root, 'scripts', 'build-reconnect-staging.js'), 'utf8');
+const productionAssetLinks = JSON.parse(fs.readFileSync(path.join(root, 'www', '.well-known', 'assetlinks.json'), 'utf8'));
+const stagingAssetLinks = JSON.parse(fs.readFileSync(path.join(root, 'scripts', 'assetlinks-reconnect-staging.json'), 'utf8'));
 
 const safeEnv = {
     YAMB_RUNTIME_ENV: 'staging',
@@ -43,11 +48,23 @@ assert.strictEqual(getValidatedStagingClientUrl(safeEnv), 'https://yamb-reconnec
 assert.strictEqual(getValidatedStagingApplicationId(safeEnv), 'com.yamb.balkan.staging');
 assert.strictEqual(getValidatedStagingFirebaseProjectId(safeEnv), 'yamb-reconnect-qa');
 assert.strictEqual(getValidatedStagingInstanceId(safeEnv), 'reconnect-qa-01');
+const testFirebaseApp = initializeApp({ projectId: safeEnv.YAMB_STAGING_FIREBASE_PROJECT_ID }, 'reconnect-staging-check');
+assert(getApps().includes(testFirebaseApp));
+assert.strictEqual(getApp('reconnect-staging-check'), testFirebaseApp);
+assert.strictEqual(typeof getAuth(testFirebaseApp).verifyIdToken, 'function');
+assert.strictEqual(typeof getMessaging(testFirebaseApp).send, 'function');
 assert.deepStrictEqual(getServerRuntimeDescriptor(safeEnv), {
     environment: 'staging',
     instanceId: 'reconnect-qa-01'
 });
 assert.deepStrictEqual(getServerRuntimeDescriptor({}), { environment: 'production', instanceId: '' });
+assert(stagingAssetLinks.some(statement => statement.target?.package_name === safeEnv.YAMB_ANDROID_APPLICATION_ID &&
+    statement.target.sha256_cert_fingerprints.includes('4F:16:86:7D:5B:F5:BB:BB:B3:FB:6A:7B:EA:99:F7:EF:E5:86:72:81:69:2B:1E:B6:49:7A:52:CB:C3:1D:49:9E')),
+    'QA App Link mora povezati staging package i certifikat APK-a');
+assert(productionAssetLinks.every(statement => statement.target?.package_name !== safeEnv.YAMB_ANDROID_APPLICATION_ID),
+    'Produkciona App Link konfiguracija ne sme sadržati QA package');
+assert(/SERVER_RUNTIME\.environment === 'staging'\s*\?\s*path\.join\(__dirname, 'scripts', 'assetlinks-reconnect-staging\.json'\)/.test(serverSource),
+    'QA App Link konfiguracija mora biti ograničena na staging runtime');
 
 assert.throws(
     () => getValidatedStagingClientUrl({ ...safeEnv, YAMB_CAPACITOR_SERVER_URL: 'https://yamb-of-the-balkan.onrender.com' }),
@@ -151,7 +168,10 @@ assert(serverSource.includes("require('./scripts/reconnect-staging-safety')"), '
 assert(serverSource.includes('validateStagingFirebaseRuntime(firebaseAdminProjectId, process.env)'), 'Server ne proverava staging Firebase identitet');
 assert(serverSource.includes("SERVER_RUNTIME.environment === 'staging' &&"), 'Keyless Firebase Auth mora biti ograničen na staging');
 assert(serverSource.includes('stagingProjectIdOnlyAuth ? { projectId: firebaseAdminProjectId }'), 'Staging Admin Auth nema eksplicitan project ID');
-assert(serverSource.includes('firebaseMessaging = stagingProjectIdOnlyAuth ? null : admin.messaging()'), 'Keyless staging mora isključiti Firebase Messaging');
+assert(serverSource.includes("require('firebase-admin/app')"), 'Server mora koristiti modularni Firebase Admin App API');
+assert(serverSource.includes("require('firebase-admin/auth')"), 'Server mora koristiti modularni Firebase Admin Auth API');
+assert(serverSource.includes("require('firebase-admin/messaging')"), 'Server mora koristiti modularni Firebase Admin Messaging API');
+assert(serverSource.includes('firebaseMessaging = stagingProjectIdOnlyAuth ? null : getMessaging(firebaseApp)'), 'Keyless staging mora isključiti Firebase Messaging');
 assert(serverSource.includes('environment: SERVER_RUNTIME.environment'), 'Health endpoint ne potvrđuje runtime okruženje');
 assert(serverSource.includes('instanceId: SERVER_RUNTIME.instanceId'), 'Health endpoint ne potvrđuje staging instancu');
 assert(managersSource.includes("Staging/local runtime: AdMob je isključen."), 'Staging klijent ne blokira produkcione oglase');

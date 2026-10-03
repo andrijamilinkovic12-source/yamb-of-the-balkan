@@ -456,4 +456,3 @@ Korak je završen tek kada:
 - turnirski obostrani prekid ostavi replay bez pobednika;
 - monitor, dijagnostika i `MatchResult` pričaju istu konačnu priču;
 - stanje oba test naloga odgovara tačno jednom autoritativnom rezultatu.
-

@@ -139,6 +139,7 @@ class YambApp {
         this.tournamentFinalCeremonyCountdownTimer = null;
         this.tournamentFinalWinnerSubmittedRooms = new Set();
         this.onlineRecoveryPromptOpen = false;
+        this.onlineRoomTerminalNoticeId = '';
         this.localRecoveryPromptOpen = false;
         this.onlineUsersCount = 1; 
         this.isAnimating = false;
@@ -160,6 +161,10 @@ class YambApp {
         this.appLifecycleEpisodeId = '';
         this.appLifecycleNativeConfirmed = false;
         this.appLifecycleLastResumeAt = 0;
+        this.appLifecycleForegroundSignalAfterPause = false;
+        this.appLifecyclePauseGeneration = 0;
+        this.appLifecycleLastResumeSyncGeneration = -1;
+        this.appLifecycleLastResumeSyncRoomId = '';
         this.appLifecycleSessionId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
         this.opponentReconnectGraceTimer = null;
         this.opponentReconnectNoticeTimer = null;
@@ -5085,6 +5090,7 @@ class YambApp {
     }
 
     scheduleAppResume(delayMs = 500, options = {}) {
+        if (this.appLifecyclePaused) this.appLifecycleForegroundSignalAfterPause = true;
         this.appLifecycleRevision = (this.appLifecycleRevision || 0) + 1;
         if (this.appResumeTimer) clearTimeout(this.appResumeTimer);
         this.appResumeTimer = setTimeout(() => {
@@ -5105,7 +5111,18 @@ class YambApp {
                 const state = await appPlugin.getState();
                 if (revision !== (this.appLifecycleRevision || 0)) return;
                 this.nativeAppActive = state?.isActive;
+                if (this.nativeAppActive === false) {
+                    if (this.appLifecyclePaused && !this.appLifecycleNativeConfirmed) {
+                        this.handleAppPause('foreground_check', { nativeConfirmed: true });
+                    }
+                    return;
+                }
                 if (this.nativeAppActive !== true) return;
+                // A poll started during a provisional pause may still see the old
+                // native active state. Wait for confirmed inactivity and a visible
+                // WebView before using polling to repair a missed resume callback.
+                if (this.appLifecyclePaused && (!this.appLifecycleNativeConfirmed ||
+                    !this.appLifecycleForegroundSignalAfterPause || document.visibilityState === 'hidden')) return;
             } else if (this.nativeAppActive === false) {
                 return;
             }
@@ -5129,9 +5146,10 @@ class YambApp {
         Promise.resolve(appPlugin.getState()).then((state) => {
             const isActive = state?.isActive;
             this.nativeAppActive = isActive;
-            if (isActive === true) {
-                this.scheduleAppResume(0, { nativeVerified: true });
-            } else if (isActive === false) {
+            // getState() pokrenut tokom pause može vratiti staro "active" pre
+            // nego što stigne nativni appStateChange(false). To nije dokaz
+            // povratka i ne sme prerano da zatvori reconnect grace.
+            if (isActive === false) {
                 this.handleAppPause(lifecycleSource, { nativeConfirmed: true });
             }
         }).catch(() => {});
@@ -5147,6 +5165,7 @@ class YambApp {
         if (this.appLifecyclePaused) {
             if (!nativeConfirmed || this.appLifecycleNativeConfirmed) return;
             this.appLifecycleNativeConfirmed = true;
+            this.appLifecycleForegroundSignalAfterPause = false;
             if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket?.connected && this.roomId) {
                 this.socket.emit('online_app_backgrounded', {
                     roomId: this.roomId,
@@ -5172,6 +5191,8 @@ class YambApp {
         }
         this.appLifecyclePaused = true;
         this.appLifecycleNativeConfirmed = nativeConfirmed;
+        this.appLifecycleForegroundSignalAfterPause = false;
+        this.appLifecyclePauseGeneration = (this.appLifecyclePauseGeneration || 0) + 1;
 
         if (this.gameActive && this.onlineMode && !this.isSpectator && this.socket && this.roomId) {
             localStorage.setItem('yamb_active_online_room', this.roomId);
@@ -5200,8 +5221,14 @@ class YambApp {
         const nativeVerified = options.nativeVerified === true;
         if (document.visibilityState === 'hidden' && !nativeVerified) return;
         if (this.gameActive && this.onlineMode && this.nativeAppActive === false) return;
+        if (this.gameActive && this.onlineMode && this.appLifecyclePaused && nativeVerified &&
+            window.Capacitor?.Plugins?.App && !this.appLifecycleNativeConfirmed) return;
+        if (this.gameActive && this.onlineMode && !this.appLifecyclePaused &&
+            this.appLifecycleLastResumeSyncGeneration === this.appLifecyclePauseGeneration &&
+            this.appLifecycleLastResumeSyncRoomId === this.roomId) return;
         this.appLifecyclePaused = false;
         this.appLifecycleNativeConfirmed = false;
+        this.appLifecycleForegroundSignalAfterPause = false;
         this.appLifecycleLastResumeAt = Date.now();
         const lifecycleSeq = ++this.appLifecycleSequence;
         this.checkForInvite();
@@ -5248,6 +5275,8 @@ class YambApp {
                     visibilityState: document.visibilityState || '',
                     ...this.getConnectionDiagnosticSnapshot()
                 });
+                this.appLifecycleLastResumeSyncGeneration = this.appLifecyclePauseGeneration;
+                this.appLifecycleLastResumeSyncRoomId = roomId;
                 if (this.isTournamentOnlineDuel(roomId, { duelType: this.onlineDuelType })) {
                     this.emitOnlinePresencePing(true, { nativeVerified });
                 }
@@ -6033,8 +6062,13 @@ class YambApp {
     }
 
     async showMainMenu(options = {}) {
-        const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
-        if (!rewardReady) return;
+        // A server-closed online room must leave the game immediately. Reward
+        // claiming and saving may wait on network/ads and must not keep a dead
+        // duel on screen; pending rewards remain available for a later claim.
+        if (!options.closedOnlineRoom) {
+            const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
+            if (!rewardReady) return;
+        }
 
         this.clearOnlineGameOverDelay();
         this.onlineGameOverFinishInProgress = false;
@@ -6042,7 +6076,7 @@ class YambApp {
         const hadLiveGameContext = !wasSpectator && (this.gameActive || this.onlineMode || !!this.roomId);
         const wasLocalLiveGame = hadLiveGameContext && this.gameActive && !this.onlineMode;
 
-        await this.autoSaveGame(true);
+        if (!options.closedOnlineRoom) await this.autoSaveGame(true);
         if (wasLocalLiveGame) this.pauseLocalGameClock();
         localStorage.removeItem('yamb_local_recovery_pending');
         this.setInviteBusyState(false);
@@ -7687,16 +7721,37 @@ class YambApp {
         return true;
     }
 
+    claimOnlineRoomTerminalNotice(roomId) {
+        const targetRoomId = String(roomId || '');
+        if (!this.isOnlineRecoveryEventRelevant(targetRoomId, { requireSavedWhenInactive: true })) return false;
+        if (this.onlineRoomTerminalNoticeId === targetRoomId) return false;
+
+        // Mark the room synchronously, before any profile refresh can yield to another event.
+        this.onlineRoomTerminalNoticeId = targetRoomId;
+        if (localStorage.getItem('yamb_active_online_room') === targetRoomId) {
+            localStorage.removeItem('yamb_active_online_room');
+        }
+        return true;
+    }
+
+    canShowOnlineRoomTerminalNotice(roomId) {
+        const targetRoomId = String(roomId || '');
+        if (!targetRoomId || this.onlineRoomTerminalNoticeId !== targetRoomId) return false;
+        if (this.roomId && this.roomId !== targetRoomId) return false;
+        if (this.gameActive && (!this.onlineMode || this.isSpectator)) return false;
+        const savedRoomId = localStorage.getItem('yamb_active_online_room');
+        return !savedRoomId || savedRoomId === targetRoomId;
+    }
+
     setupOnlineRecoveryListeners() {
         if (!this.socket) return;
 
         this.socket.off('match_ended_without_penalty');
         this.socket.on('match_ended_without_penalty', async (data = {}) => {
             if (data.reason !== 'mutual_disconnect') return;
-            if (!this.isOnlineRecoveryEventRelevant(data.roomId, { requireSavedWhenInactive: true })) return;
-
-            localStorage.removeItem('yamb_active_online_room');
-            await this.refreshProfileAfterOnlineRoomClosed();
+            if (!this.claimOnlineRoomTerminalNotice(data.roomId)) return;
+            if (!this.canShowOnlineRoomTerminalNotice(data.roomId)) return;
+            this.cancelOnline({ closedRoom: true });
             const tournamentReplay = data.tournamentReplay === true;
             this.modal.alert(
                 tournamentReplay
@@ -7706,7 +7761,7 @@ class YambApp {
                     ? (gt('tourney_network_replay_title') || 'TURNIRSKI MEČ SE PONAVLJA')
                     : (gt('mutual_disconnect_title') || 'OBOSTRANI PREKID')
             );
-            this.cancelOnline();
+            await this.refreshProfileAfterOnlineRoomClosed();
         });
 
         // DODATO: Osluškivač odgovora servera o stanju prekinute partije
@@ -7716,6 +7771,7 @@ class YambApp {
             const savedRoomId = localStorage.getItem('yamb_active_online_room');
 
             if (!responseRoomId) return;
+            if (this.onlineRoomTerminalNoticeId === String(responseRoomId)) return;
             if (!this.isOnlineRecoveryEventRelevant(responseRoomId, { requireSavedWhenInactive: true })) {
                 console.log("ℹ️ Ignorišem room_status iz stare sobe ili tokom druge aktivne igre:", responseRoomId);
                 return;
@@ -7765,9 +7821,12 @@ class YambApp {
                 }
             } else {
                 // Soba više ne postoji (istekao grace period), obavesti ga direktno
-                localStorage.removeItem('yamb_active_online_room');
-                await this.refreshProfileAfterOnlineRoomClosed();
+                if (!this.claimOnlineRoomTerminalNotice(responseRoomId)) return;
+                if (!this.canShowOnlineRoomTerminalNotice(responseRoomId)) return;
                 const tournamentReplay = data.tournamentReplay === true;
+                if (this.gameActive && this.onlineMode && this.roomId === responseRoomId) {
+                    this.cancelOnline({ closedRoom: true });
+                }
                 this.modal.alert(
                     tournamentReplay
                         ? (gt('tourney_network_replay_msg') || 'Veza oba igrača je prekinuta. Turnirski meč ostaje u kosturu i može se ponovo pokrenuti bez dodeljenog pobednika.')
@@ -7776,6 +7835,7 @@ class YambApp {
                         ? (gt('tourney_network_replay_title') || 'TURNIRSKI MEČ SE PONAVLJA')
                         : (gt('online_recovery_expired_title') || "KRAJ PARTIJE")
                 );
+                await this.refreshProfileAfterOnlineRoomClosed();
             }
         });
 
@@ -7784,14 +7844,14 @@ class YambApp {
         this.socket.on('force_cancel_online', async (data = {}) => {
             const responseRoomId = data && data.roomId;
 
-            if (!this.isOnlineRecoveryEventRelevant(responseRoomId, { requireSavedWhenInactive: true })) {
+            if (!this.claimOnlineRoomTerminalNotice(responseRoomId)) {
                 console.log("ℹ️ Ignorišem force_cancel_online za staru/nepoznatu sobu ili tokom druge aktivne igre:", responseRoomId);
                 return;
             }
 
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
-            localStorage.removeItem('yamb_active_online_room');
-            await this.refreshProfileAfterOnlineRoomClosed();
+            if (!this.canShowOnlineRoomTerminalNotice(responseRoomId)) return;
+            this.cancelOnline({ closedRoom: true });
             const wasMutualDisconnect = data.reason === 'mutual_disconnect';
             const tournamentReplay = data.tournamentReplay === true;
             if (this.modal) {
@@ -7814,14 +7874,16 @@ class YambApp {
                     ? (gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.')
                     : (gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme."));
             }
-            this.cancelOnline(); 
+            await this.refreshProfileAfterOnlineRoomClosed();
         });
     }
     
-    cancelOnline() { 
+    cancelOnline(options = {}) {
         localStorage.removeItem('yamb_active_online_room'); 
         this.stopWaitingHofRotation();
-        this.showMainMenu(); 
+        this.showMainMenu(options.closedRoom
+            ? { closedOnlineRoom: true, skipBackToMenu: true }
+            : {});
         window.history.pushState({}, document.title, window.location.pathname); 
     }
 

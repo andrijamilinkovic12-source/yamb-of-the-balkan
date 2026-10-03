@@ -5,9 +5,9 @@ const path = require('path');
 const vm = require('vm');
 
 const root = path.resolve(__dirname, '..');
-const serverSource = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
-const gameSource = fs.readFileSync(path.join(root, 'www', 'game.js'), 'utf8');
-const topListSource = fs.readFileSync(path.join(root, 'www', 'toplista.js'), 'utf8');
+const serverSource = fs.readFileSync(path.join(root, 'server.js'), 'utf8').replace(/\r\n/g, '\n');
+const gameSource = fs.readFileSync(path.join(root, 'www', 'game.js'), 'utf8').replace(/\r\n/g, '\n');
+const topListSource = fs.readFileSync(path.join(root, 'www', 'toplista.js'), 'utf8').replace(/\r\n/g, '\n');
 
 function sliceBalancedBlock(source, start) {
     const signatureEnd = source.indexOf(') {', start);
