@@ -1100,6 +1100,112 @@ async function run() {
     assert.strictEqual(handled.technical.length, 0, 'Paralelni reconnect timeout ne sme upisati drugi tehnički rezultat');
     assert.strictEqual(handled.cleaned.length, 0, 'Paralelni reconnect timeout ne sme prerano čistiti sobu');
 
+    // Two synthetic tournament participants exercise the real timeout and
+    // bracket-replay functions without eight accounts or a database write.
+    const tournamentRoomId = 'tourney_qf_0_network-test';
+    const integratedTournamentMatch = {
+        p1: { id: 'uid-a' }, p2: { id: 'uid-b' }, winnerId: null,
+        timeAccepted: true, rematchRequired: false
+    };
+    let integratedReplaySaves = 0;
+    let integratedReplayBroadcasts = 0;
+    const tournamentAdvancements = [];
+    handlerSandbox.parseTournamentRoomId = roomId =>
+        roomId.startsWith('tourney_qf_0_') ? { round: 'qf', index: 0 } : null;
+    handlerSandbox.getTournamentMatch = () => ({ match: integratedTournamentMatch, index: 0 });
+    handlerSandbox.tournamentState = { bracket: { qf: [integratedTournamentMatch], sf: [], f: [] } };
+    handlerSandbox.saveTournamentToDb = async () => { integratedReplaySaves++; };
+    handlerSandbox.io.emit = event => {
+        if (event === 'tourney_state_update') integratedReplayBroadcasts++;
+    };
+    handlerSandbox.getDisconnectGraceMs = roomId => roomId.startsWith('tourney_') ? 300000 : 30000;
+    handlerSandbox.applyTournamentTechnicalWinner = async () => {
+        throw new Error('Obostrani turnirski prekid ne sme pozvati obradu tehničkog pobednika');
+    };
+    handlerSandbox.getOnlineDuelType = roomId => roomId.startsWith('tourney_') ? 'tournament' : 'challenge';
+    vm.runInContext(extractServerFunction(serverSource, 'recordTournamentNetworkReplay'), handlerSandbox);
+
+    handled.diagnostics.length = 0;
+    handled.events.length = 0;
+    handled.endedRooms.length = 0;
+    handled.technical.length = 0;
+    handled.cleaned.length = 0;
+    handlerSandbox.ghostSessions = {
+        'uid-a': { roomId: tournamentRoomId, oldSocketId: 'socket-a', startedAt: handlerNow - 300010, diagnosticEventId: 'tourney-diag-a' },
+        'uid-b': { roomId: tournamentRoomId, oldSocketId: 'socket-b', startedAt: handlerNow - 300001, diagnosticEventId: 'tourney-diag-b' }
+    };
+    handlerSandbox.disconnectTimers = { 'uid-a': 1, 'uid-b': 2 };
+    handlerSandbox.roomState = {
+        [tournamentRoomId]: {
+            players: ['socket-a', 'socket-b'], playerUids: ['uid-a', 'uid-b'],
+            playerNames: ['A', 'B'], matchId: 'tourney-match-1'
+        }
+    };
+    await handlerSandbox.handleDisconnectGraceTimeout('uid-a', tournamentRoomId, 'socket-a');
+    assert.strictEqual(handled.technical.length, 0, 'Obostrani turnirski prekid ne sme upisati tehnički rezultat');
+    assert.strictEqual(integratedTournamentMatch.winnerId, null);
+    assert.strictEqual(integratedTournamentMatch.rematchRequired, true);
+    assert.strictEqual(integratedTournamentMatch.replayReason, 'mutual_disconnect');
+    assert.strictEqual(integratedTournamentMatch.networkReplayCount, 1);
+    assert.strictEqual(integratedReplaySaves, 1);
+    assert.strictEqual(integratedReplayBroadcasts, 1);
+    assert.strictEqual(handled.endedRooms[0][1], 'tournament_mutual_disconnect_replay');
+    assert.deepStrictEqual(handled.diagnostics.map(item => item.fields.outcome), ['mutual_disconnect', 'mutual_disconnect']);
+    assert.strictEqual(handled.events.filter(item => item.event === 'match_ended_without_penalty').length, 1);
+    assert.strictEqual(handled.events.find(item => item.event === 'match_ended_without_penalty').data.tournamentReplay, true);
+    assert.strictEqual(handled.cleaned.length, 1, 'Turnirska soba se zatvara samo jednom');
+    await handlerSandbox.handleDisconnectGraceTimeout('uid-b', tournamentRoomId, 'socket-b');
+    assert.strictEqual(integratedReplaySaves, 1, 'Paralelni timeout ne sme ponovo upisati replay');
+    assert.strictEqual(handled.cleaned.length, 1, 'Paralelni timeout ne sme ponovo zatvoriti sobu');
+
+    // A single absent tournament player still loses after the tournament
+    // deadline when the opponent is actually connected and present.
+    const singleTournamentRoomId = 'tourney_qf_0_single-test';
+    const singleTournamentMatch = {
+        p1: { id: 'uid-a' }, p2: { id: 'uid-b' }, winnerId: null,
+        timeAccepted: true, rematchRequired: false
+    };
+    handlerSandbox.tournamentState.bracket.qf[0] = singleTournamentMatch;
+    handlerSandbox.getTournamentMatch = () => ({ match: singleTournamentMatch, index: 0 });
+    handlerSandbox.isTournamentParticipant = (match, uid) =>
+        match.p1.id === uid || match.p2.id === uid;
+    handlerSandbox.setTournamentMatchResult = (match, type, p1Score, p2Score) => {
+        match.resultType = type;
+        match.p1Score = p1Score;
+        match.p2Score = p2Score;
+        return true;
+    };
+    handlerSandbox.advanceTournamentBracket = (...args) => { tournamentAdvancements.push(args); };
+    vm.runInContext(extractServerFunction(serverSource, 'applyTournamentTechnicalWinner'), handlerSandbox);
+    handled.diagnostics.length = 0;
+    handled.events.length = 0;
+    handled.technical.length = 0;
+    handled.cleaned.length = 0;
+    handlerSandbox.ghostSessions = {
+        'uid-b': { roomId: singleTournamentRoomId, oldSocketId: 'socket-b', startedAt: handlerNow - 300010, diagnosticEventId: 'tourney-diag-single' }
+    };
+    handlerSandbox.disconnectTimers = { 'uid-b': 3 };
+    handlerSandbox.roomState = {
+        [singleTournamentRoomId]: {
+            players: ['socket-a', 'socket-b'], playerUids: ['uid-a', 'uid-b'],
+            playerNames: ['A', 'B'], matchId: 'tourney-match-2'
+        }
+    };
+    handlerSandbox.playerRooms['socket-a'] = singleTournamentRoomId;
+    await handlerSandbox.handleDisconnectGraceTimeout('uid-b', singleTournamentRoomId, 'socket-b');
+    assert.strictEqual(handled.technical.length, 1, 'Jednostrani turnirski istek mora dati jedan tehnički rezultat');
+    assert.strictEqual(handled.technical[0][0], 'uid-a');
+    assert.strictEqual(handled.technical[0][1], 'uid-b');
+    assert.strictEqual(singleTournamentMatch.winnerId, 'uid-a', 'Samo prisutan turnirski igrač sme pobediti');
+    assert.strictEqual(singleTournamentMatch.resultType, 'technical');
+    assert.strictEqual(singleTournamentMatch.p1Score, 1);
+    assert.strictEqual(singleTournamentMatch.p2Score, 0);
+    assert.strictEqual(tournamentAdvancements.length, 1, 'Turnirski kostur sme napredovati jednom');
+    assert.strictEqual(tournamentAdvancements[0][0], 'qf');
+    assert.strictEqual(tournamentAdvancements[0][1], 0);
+    assert.strictEqual(integratedReplaySaves, 1, 'Jednostrani istek ne sme otvoriti mrežni replay');
+    assert.strictEqual(handled.cleaned.length, 1);
+
     const shortDrop = createHarness();
     timerDisplay.innerHTML = '';
     shortDrop.showOpponentReconnectGraceCountdown({ remainingMs: 30000, noticeDelayMs: 80 });
