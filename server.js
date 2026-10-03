@@ -264,7 +264,10 @@ function sadrziPsovku(tekst) {
 // ==================================================================
 app.get('/.well-known/assetlinks.json', (req, res) => {
     res.setHeader('Content-Type', 'application/json');
-    res.sendFile(path.join(__dirname, 'www', '.well-known', 'assetlinks.json'));
+    const assetLinksPath = SERVER_RUNTIME.environment === 'staging'
+        ? path.join(__dirname, 'scripts', 'assetlinks-reconnect-staging.json')
+        : path.join(__dirname, 'www', '.well-known', 'assetlinks.json');
+    res.sendFile(assetLinksPath);
 });
 
 function readAndroidFirebaseProjectId() {

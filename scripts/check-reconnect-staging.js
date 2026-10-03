@@ -22,6 +22,8 @@ const serverSource = fs.readFileSync(path.join(root, 'server.js'), 'utf8');
 const configSource = fs.readFileSync(path.join(root, 'www', 'config.js'), 'utf8');
 const managersSource = fs.readFileSync(path.join(root, 'www', 'managers.js'), 'utf8');
 const buildSource = fs.readFileSync(path.join(root, 'scripts', 'build-reconnect-staging.js'), 'utf8');
+const productionAssetLinks = JSON.parse(fs.readFileSync(path.join(root, 'www', '.well-known', 'assetlinks.json'), 'utf8'));
+const stagingAssetLinks = JSON.parse(fs.readFileSync(path.join(root, 'scripts', 'assetlinks-reconnect-staging.json'), 'utf8'));
 
 const safeEnv = {
     YAMB_RUNTIME_ENV: 'staging',
@@ -56,6 +58,13 @@ assert.deepStrictEqual(getServerRuntimeDescriptor(safeEnv), {
     instanceId: 'reconnect-qa-01'
 });
 assert.deepStrictEqual(getServerRuntimeDescriptor({}), { environment: 'production', instanceId: '' });
+assert(stagingAssetLinks.some(statement => statement.target?.package_name === safeEnv.YAMB_ANDROID_APPLICATION_ID &&
+    statement.target.sha256_cert_fingerprints.includes('4F:16:86:7D:5B:F5:BB:BB:B3:FB:6A:7B:EA:99:F7:EF:E5:86:72:81:69:2B:1E:B6:49:7A:52:CB:C3:1D:49:9E')),
+    'QA App Link mora povezati staging package i certifikat APK-a');
+assert(productionAssetLinks.every(statement => statement.target?.package_name !== safeEnv.YAMB_ANDROID_APPLICATION_ID),
+    'Produkciona App Link konfiguracija ne sme sadržati QA package');
+assert(/SERVER_RUNTIME\.environment === 'staging'\s*\?\s*path\.join\(__dirname, 'scripts', 'assetlinks-reconnect-staging\.json'\)/.test(serverSource),
+    'QA App Link konfiguracija mora biti ograničena na staging runtime');
 
 assert.throws(
     () => getValidatedStagingClientUrl({ ...safeEnv, YAMB_CAPACITOR_SERVER_URL: 'https://yamb-of-the-balkan.onrender.com' }),
