@@ -6062,8 +6062,13 @@ class YambApp {
     }
 
     async showMainMenu(options = {}) {
-        const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
-        if (!rewardReady) return;
+        // A server-closed online room must leave the game immediately. Reward
+        // claiming and saving may wait on network/ads and must not keep a dead
+        // duel on screen; pending rewards remain available for a later claim.
+        if (!options.closedOnlineRoom) {
+            const rewardReady = await this.claimPendingRewardBeforeExternalNavigation();
+            if (!rewardReady) return;
+        }
 
         this.clearOnlineGameOverDelay();
         this.onlineGameOverFinishInProgress = false;
@@ -6071,7 +6076,7 @@ class YambApp {
         const hadLiveGameContext = !wasSpectator && (this.gameActive || this.onlineMode || !!this.roomId);
         const wasLocalLiveGame = hadLiveGameContext && this.gameActive && !this.onlineMode;
 
-        await this.autoSaveGame(true);
+        if (!options.closedOnlineRoom) await this.autoSaveGame(true);
         if (wasLocalLiveGame) this.pauseLocalGameClock();
         localStorage.removeItem('yamb_local_recovery_pending');
         this.setInviteBusyState(false);
@@ -7745,9 +7750,8 @@ class YambApp {
         this.socket.on('match_ended_without_penalty', async (data = {}) => {
             if (data.reason !== 'mutual_disconnect') return;
             if (!this.claimOnlineRoomTerminalNotice(data.roomId)) return;
-
-            await this.refreshProfileAfterOnlineRoomClosed();
             if (!this.canShowOnlineRoomTerminalNotice(data.roomId)) return;
+            this.cancelOnline({ closedRoom: true });
             const tournamentReplay = data.tournamentReplay === true;
             this.modal.alert(
                 tournamentReplay
@@ -7757,7 +7761,7 @@ class YambApp {
                     ? (gt('tourney_network_replay_title') || 'TURNIRSKI MEČ SE PONAVLJA')
                     : (gt('mutual_disconnect_title') || 'OBOSTRANI PREKID')
             );
-            this.cancelOnline();
+            await this.refreshProfileAfterOnlineRoomClosed();
         });
 
         // DODATO: Osluškivač odgovora servera o stanju prekinute partije
@@ -7818,9 +7822,11 @@ class YambApp {
             } else {
                 // Soba više ne postoji (istekao grace period), obavesti ga direktno
                 if (!this.claimOnlineRoomTerminalNotice(responseRoomId)) return;
-                await this.refreshProfileAfterOnlineRoomClosed();
                 if (!this.canShowOnlineRoomTerminalNotice(responseRoomId)) return;
                 const tournamentReplay = data.tournamentReplay === true;
+                if (this.gameActive && this.onlineMode && this.roomId === responseRoomId) {
+                    this.cancelOnline({ closedRoom: true });
+                }
                 this.modal.alert(
                     tournamentReplay
                         ? (gt('tourney_network_replay_msg') || 'Veza oba igrača je prekinuta. Turnirski meč ostaje u kosturu i može se ponovo pokrenuti bez dodeljenog pobednika.')
@@ -7829,7 +7835,7 @@ class YambApp {
                         ? (gt('tourney_network_replay_title') || 'TURNIRSKI MEČ SE PONAVLJA')
                         : (gt('online_recovery_expired_title') || "KRAJ PARTIJE")
                 );
-                if (this.gameActive && this.onlineMode && this.roomId === responseRoomId) this.cancelOnline();
+                await this.refreshProfileAfterOnlineRoomClosed();
             }
         });
 
@@ -7844,8 +7850,8 @@ class YambApp {
             }
 
             console.log("Server je odbio rekonekciju: Soba je zatvorena.");
-            await this.refreshProfileAfterOnlineRoomClosed();
             if (!this.canShowOnlineRoomTerminalNotice(responseRoomId)) return;
+            this.cancelOnline({ closedRoom: true });
             const wasMutualDisconnect = data.reason === 'mutual_disconnect';
             const tournamentReplay = data.tournamentReplay === true;
             if (this.modal) {
@@ -7868,14 +7874,16 @@ class YambApp {
                     ? (gt('mutual_disconnect_msg') || 'Veza oba igrača je prekinuta. Partija je završena bez pobednika i bez kazne.')
                     : (gt('online_recovery_expired_msg') || "Kraj partije zato što ste napustili igru i niste se vratili na vreme."));
             }
-            this.cancelOnline(); 
+            await this.refreshProfileAfterOnlineRoomClosed();
         });
     }
     
-    cancelOnline() { 
+    cancelOnline(options = {}) {
         localStorage.removeItem('yamb_active_online_room'); 
         this.stopWaitingHofRotation();
-        this.showMainMenu(); 
+        this.showMainMenu(options.closedRoom
+            ? { closedOnlineRoom: true, skipBackToMenu: true }
+            : {});
         window.history.pushState({}, document.title, window.location.pathname); 
     }
 

@@ -6499,6 +6499,14 @@ function updateOnlineCount() {
     notifyOnlinePlayersStatusChanged();
 }
 
+function hasForegroundEvidenceForBackgroundGhost(ghost, data = {}) {
+    if (!ghost || ghost.source !== 'app_backgrounded') return true;
+    if (ghost.nativeConfirmed === true || ghost.clientSnapshot?.nativeActive === false) {
+        return data.nativeVerified === true && data.nativeActive === true;
+    }
+    return data.visibilityState === 'visible' && data.nativeActive !== false;
+}
+
 function bindVerifiedPlayerSocket(socket, playerId) {
     if (typeof playerId !== 'string' || playerId.length < 20) return false;
 
@@ -6509,12 +6517,17 @@ function bindVerifiedPlayerSocket(socket, playerId) {
         reconnectGhost &&
         Date.now() >= toSafeInt(reconnectGhost.deadlineAt, Number.MAX_SAFE_INTEGER)
     );
+    // Socket authentication can finish while a native app is still on Home.
+    // Keep its background grace until an explicit foreground signal arrives.
+    const backgroundGracePending = !!(reconnectGhost &&
+        reconnectGhost.source === 'app_backgrounded' && !reconnectExpired);
     if (reconnectExpired) reconnectGhost.deadlineExpiredAt = reconnectGhost.deadlineExpiredAt || Date.now();
 
     if (stariSocketId && stariSocketId !== socket.id) {
         const aktivnaSoba = playerRooms[stariSocketId];
 
-        if (aktivnaSoba && !(reconnectExpired && reconnectGhost.roomId === aktivnaSoba)) {
+        if (aktivnaSoba && !backgroundGracePending &&
+            !(reconnectExpired && reconnectGhost.roomId === aktivnaSoba)) {
             console.log(`♻️ ORPHAN DETEKTOVAN: Prebacujem sobu ${aktivnaSoba} sa starog ${stariSocketId} na novi ${socket.id}`);
 
             socket.join(aktivnaSoba);
@@ -6544,7 +6557,7 @@ function bindVerifiedPlayerSocket(socket, playerId) {
     const ghost = reconnectGhost;
     if (ghost && reconnectExpired) {
         socket.emit('force_cancel_online', { roomId: ghost.roomId, reason: 'disconnect_grace_expired' });
-    } else if (ghost) {
+    } else if (ghost && !backgroundGracePending) {
         if (ghost.oldSocketId !== socket.id && playerRooms[socket.id] !== ghost.roomId) {
             socket.join(ghost.roomId);
             playerRooms[socket.id] = ghost.roomId;
@@ -6572,7 +6585,7 @@ function bindVerifiedPlayerSocket(socket, playerId) {
             });
         }
         clearDisconnectGraceForUid(playerId, ghost.roomId);
-    } else if (disconnectTimers[playerId]) {
+    } else if (!ghost && disconnectTimers[playerId]) {
         clearDisconnectGraceForUid(playerId);
     }
 
@@ -7057,7 +7070,7 @@ function emitPlayerBusy(socket, ack = null) {
     return payload;
 }
 
-function reattachSocketToRoomByUid(socket, roomId) {
+function reattachSocketToRoomByUid(socket, roomId, options = {}) {
     if (!socket) return false;
     const state = roomState[roomId];
     const uid = getSocketUid(socket.id);
@@ -7069,6 +7082,9 @@ function reattachSocketToRoomByUid(socket, roomId) {
         socket.emit('force_cancel_online', { roomId, reason: 'disconnect_grace_expired' });
         return false;
     }
+    if (reconnectGhost?.roomId === roomId &&
+        reconnectGhost.source === 'app_backgrounded' &&
+        options.confirmedForeground !== true) return false;
 
     let playerIndex = Array.isArray(state.playerUids) ? state.playerUids.indexOf(uid) : -1;
     if (playerIndex === -1) {
@@ -7091,6 +7107,9 @@ function reattachSocketToRoomByUid(socket, roomId) {
         if (oldSocket) oldSocket.leave(roomId);
     }
 
+    if (reconnectGhost?.diagnosticEventId) {
+        socket.pendingDisconnectDiagnosticEventId = reconnectGhost.diagnosticEventId;
+    }
     rememberRoomPresence(roomId, socket);
     clearDisconnectGraceForUid(uid, roomId);
 
@@ -9806,7 +9825,7 @@ io.on('connection', (socket) => {
     socket.on('online_presence_ping', (data = {}) => {
         if (data.roomId && playerRooms[socket.id] && data.roomId !== playerRooms[socket.id]) return;
         const roomId = playerRooms[socket.id] || String(data.roomId || '');
-        if (!roomId || isLocalRoomId(roomId) || !rememberRoomPresence(roomId, socket)) return;
+        if (!roomId || isLocalRoomId(roomId)) return;
         rememberClientConnectionDiagnosticSnapshot(socket, data);
         const uid = getSocketUid(socket.id) || socket.verifiedUid || socket.playerId;
         const ghost = uid && ghostSessions[uid];
@@ -9821,6 +9840,14 @@ io.on('connection', (socket) => {
             socket.emit('force_cancel_online', { roomId, reason: 'disconnect_grace_expired' });
             return;
         }
+        if (ghost?.roomId === roomId && !hasForegroundEvidenceForBackgroundGhost(ghost, data)) return;
+        if (ghost?.roomId === roomId && ghost.oldSocketId !== socket.id) {
+            if (!data.foreground || !lifecycleEpisodeMatches || !lifecycleOrderValid ||
+                !reattachSocketToRoomByUid(socket, roomId, { confirmedForeground: true })) return;
+            emitAuthoritativeRoomState(socket, roomId);
+            return;
+        }
+        if (!rememberRoomPresence(roomId, socket)) return;
         // Only explicit foreground evidence from the actual player repairs a missed resume.
         // Legacy tournament heartbeats may run in the background and must not cancel grace.
         if (data.foreground === true && lifecycleEpisodeMatches && lifecycleOrderValid && ghost?.source === 'app_backgrounded' &&
@@ -9850,10 +9877,14 @@ io.on('connection', (socket) => {
             socket.emit('force_cancel_online', { roomId, reason: 'disconnect_grace_expired' });
             return;
         }
-        if (!rememberRoomPresence(roomId, socket)) return;
+        if (ghost?.roomId === roomId && !hasForegroundEvidenceForBackgroundGhost(ghost, data)) return;
+        const reboundFromBackground = !!(ghost?.roomId === roomId && ghost.oldSocketId !== socket.id);
+        if (reboundFromBackground) {
+            if (!reattachSocketToRoomByUid(socket, roomId, { confirmedForeground: true })) return;
+        } else if (!rememberRoomPresence(roomId, socket)) return;
 
         rememberClientConnectionDiagnosticSnapshot(socket, data);
-        const restored = clearDisconnectGraceForUid(uid, roomId);
+        const restored = reboundFromBackground ? false : clearDisconnectGraceForUid(uid, roomId);
         if (restored) {
             io.to(roomId).emit('opponent_connection_restored', { roomId, restoredUid: uid });
         }
@@ -13324,6 +13355,12 @@ io.on('connection', (socket) => {
         }
         const roomClients = roomId ? io.sockets.adapter.rooms.get(roomId) : null;
         const socketIsRoomMember = !!(roomClients && roomClients.has(socket.id));
+
+        // Reauth may have completed while the app is still on Home. The room
+        // exists, but this socket must wait for foreground before reattaching;
+        // treating it as a missing room would falsely force-cancel the duel.
+        if (requestedState && !requestedState.gameFinished && reconnectGhost?.roomId === roomId &&
+            reconnectGhost.source === 'app_backgrounded' && !socketIsRoomMember) return;
 
         if (roomId && requestedState && !socketIsRoomMember && !socketUid) {
             socket.pendingOnlineRoomResume = roomId;
