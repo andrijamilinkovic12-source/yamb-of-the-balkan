@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <base href="/">
+  <title>Global portrait lock — isolated QA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="teme.css">
+  <style>
+    #qa-screen { position: fixed; inset: 0; display: grid; place-items: center; background: #244b31; color: #fff; }
+    #qa-room { position: fixed; inset: 8%; z-index: 1000002; background: #456a4a; }
+    #qa-modal { position: fixed; inset: 16%; z-index: 9999999; background: #6c8c62; }
+    #qa-error { position: fixed; inset: auto 8px 8px; z-index: 2147483646; color: #fff; background: #8b2020; }
+  </style>
+</head>
+<body>
+  <div id="qa-screen">Glavni meni / igra</div>
+  <div id="qa-room">Soba</div>
+  <div id="qa-modal">Modal dodat posle sobe</div>
+  <pre id="qa-error" hidden></pre>
+  <script>
+    (async () => {
+      try {
+        const [indexResponse, gameResponse] = await Promise.all([
+          fetch('index.html', { cache: 'no-store' }),
+          fetch('game.js', { cache: 'no-store' })
+        ]);
+        if (!indexResponse.ok || !gameResponse.ok) throw new Error('App sources unavailable');
+        const index = new DOMParser().parseFromString(await indexResponse.text(), 'text/html');
+        const overlay = index.getElementById('rotate-lock-overlay');
+        if (!overlay) throw new Error('Real orientation overlay not found');
+        document.body.appendChild(document.importNode(overlay, true));
+        const source = await gameResponse.text();
+        const start = source.indexOf('    handleRotationLock() {');
+        const end = source.indexOf('    checkForInvite() {', start);
+        if (start < 0 || end < 0) throw new Error('Real orientation handler not found');
+        const RotationRoute = new Function(`return class { ${source.slice(start, end)} };`)();
+        const route = new RotationRoute();
+        window.qaUpdateOrientation = () => route.handleRotationLock();
+        window.addEventListener('resize', window.qaUpdateOrientation);
+        window.addEventListener('orientationchange', window.qaUpdateOrientation);
+        window.qaUpdateOrientation();
+        window.qaOrientationReady = true;
+      } catch (error) {
+        const element = document.getElementById('qa-error');
+        element.hidden = false;
+        element.textContent = error.stack || String(error);
+      }
+    })();
+  </script>
+</body>
+</html>
