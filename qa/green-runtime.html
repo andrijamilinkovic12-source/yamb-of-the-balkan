@@ -533,8 +533,9 @@
             if (friends) friends.style.display = 'none';
             if (hall) hall.style.display = 'none';
             if (state === 'waiting-vs') {
-              setText('waiting-title', 'PROTIVNIK PRONAĐEN');
-              setText('wait-msg', 'Protivnik je tu. Partija počinje...');
+              setText('waiting-title', window.t(qaTheme === 'dark' ? 'ws_found_title' : 'ws_searching'));
+              setText('wait-msg', window.t('ws_wait_msg'));
+              if (qaTheme === 'dark') document.getElementById('wait-msg').style.display = 'none';
               setText('waiting-opp-name', 'Aleksandar Petrović-Milinković');
               setText('waiting-opp-power', '1435');
               setText('waiting-opp-wins', '22');

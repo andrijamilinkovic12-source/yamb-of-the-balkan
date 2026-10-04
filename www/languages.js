@@ -713,6 +713,7 @@ const TRANSLATIONS = {
         
         // --- ONLINE I PRIJATELJI ---
         "ws_searching": "TRAŽENJE PROTIVNIKA...",
+        "ws_found_title": "PROTIVNIK PRONAĐEN",
         "ws_wait_msg": "Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.",
         "ws_title_invite": "POZOVI PRIJATELJA",
         "ws_msg_invite": "Pošaljite link, odaberite prijatelja iz liste ili dodajte novog!",
@@ -1549,6 +1550,7 @@ const TRANSLATIONS = {
         
         // --- ONLINE & FRIENDS ---
         "ws_searching": "SEARCHING FOR OPPONENT...",
+        "ws_found_title": "OPPONENT FOUND",
         "ws_wait_msg": "Please wait, connecting you with the first available player.",
         "ws_title_invite": "INVITE A FRIEND",
         "ws_msg_invite": "Send the link, choose a friend from the list, or add a new one!",

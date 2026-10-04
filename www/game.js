@@ -6306,6 +6306,7 @@ class YambApp {
 
         const msgEl = document.getElementById('wait-msg');
         if (msgEl) {
+            msgEl.style.display = '';
             msgEl.setAttribute('data-lang', 'ws_msg_invite');
             msgEl.innerText = gt('ws_msg_invite') || "Pošaljite link, odaberite prijatelja iz liste ili dodajte novog!";
         }
@@ -6511,6 +6512,7 @@ class YambApp {
 
         const msgEl = document.getElementById('wait-msg');
         if (msgEl) {
+            msgEl.style.display = '';
             msgEl.setAttribute('data-lang', 'ws_wait_msg');
             msgEl.innerText = gt('ws_wait_msg') || "Molimo sačekajte, spajamo vas sa prvim slobodnim igračem.";
         }
@@ -7246,6 +7248,15 @@ class YambApp {
             const canShowWaitingTransition = !data.directDuel && waitingScreen && waitingScreen.classList.contains('active') && searchingUI && foundUI && oppBox;
 
             if (canShowWaitingTransition) {
+                if ((localStorage.getItem('yamb_theme') || 'dark') === 'dark' && waitingScreen.classList.contains('is-random-online')) {
+                    const titleEl = document.getElementById('waiting-title');
+                    if (titleEl) {
+                        titleEl.setAttribute('data-lang', 'ws_found_title');
+                        titleEl.innerText = gt('ws_found_title') || 'PROTIVNIK PRONAĐEN';
+                    }
+                    const msgEl = document.getElementById('wait-msg');
+                    if (msgEl) msgEl.style.display = 'none';
+                }
                 oppBox.style.display = 'flex'; 
                 searchingUI.style.display = 'none';
                 foundUI.style.display = 'flex';

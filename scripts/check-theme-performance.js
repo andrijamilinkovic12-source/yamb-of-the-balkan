@@ -2474,6 +2474,13 @@ assert(indexSource.includes('data-green-record="win"')
 const uiTranslations = vm.runInNewContext(
     `${languagesSource.slice(0, languagesSource.indexOf('\nfunction dukatIconHtml'))}\nTRANSLATIONS`, {}
 );
+assert(uiTranslations.sr.ws_found_title === 'PROTIVNIK PRONAĐEN'
+    && uiTranslations.en.ws_found_title === 'OPPONENT FOUND'
+    && gameSource.includes("waitingScreen.classList.contains('is-random-online')")
+    && gameSource.includes("titleEl.setAttribute('data-lang', 'ws_found_title')")
+    && gameSource.includes("if (msgEl) msgEl.style.display = 'none';")
+    && (gameSource.match(/msgEl\.style\.display = '';/g) || []).length >= 2,
+    'Green random: pronađeni protivnik ne sme zadržati naslov traženja niti sakriti poruku u sledećem toku.');
 const translateSource = languagesSource.match(/function t\(key\) \{[\s\S]*?\n\}/)?.[0];
 assert(translateSource, 'Funkcija prevoda nije pronađena za Green regresiju oznaka.');
 const labelThemeContext = {
