@@ -23079,7 +23079,8 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
     box-sizing: border-box;
     overflow-y: hidden;
-    padding-bottom: var(--safe-bottom) !important;
+    padding-bottom: calc(var(--safe-bottom) + 14px) !important;
+    scroll-padding-bottom: calc(var(--safe-bottom) + 14px);
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite #friends-list-container {
     flex: 0 0 auto !important;
@@ -23174,7 +23175,7 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card.is-offline .green-friend-presence {
     color: #f2b3a5;
 }
-@media (max-height: 760px) and (min-height: 690px) {
+@media (max-height: 760px) and (min-height: 650px) {
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
         overflow-y: hidden;
     }
@@ -23182,23 +23183,68 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
         margin-bottom: 8px;
     }
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
-        margin-bottom: 10px !important;
+        margin-bottom: 6px !important;
+        padding-top: 9px !important;
+        padding-bottom: 9px !important;
     }
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
         margin-top: 4px !important;
     }
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
-        height: 180px !important;
-        grid-template-rows: 60px minmax(0, 1fr) !important;
+        height: clamp(160px, calc(100dvh - 530px), 190px) !important;
+        grid-template-rows: 52px minmax(0, 1fr) !important;
     }
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
-        grid-template-rows: 60px minmax(0, 1fr) auto !important;
+        grid-template-rows: 52px minmax(0, 1fr) auto !important;
     }
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
         margin-top: 4px !important;
     }
 }
-@media (max-height: 689px) {
+@media (max-height: 699px) and (min-height: 650px) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .waiting-header {
+        margin-bottom: 2px !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+        margin-bottom: 3px !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #wait-msg {
+        margin-top: 8px !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+        margin-top: 0 !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: clamp(165px, calc(100dvh - 530px), 169px) !important;
+        grid-template-rows: 48px minmax(0, 1fr) !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 48px minmax(0, 1fr) auto !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
+        margin-top: 0 !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container > h3 {
+        margin-bottom: 6px !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .friend-card.friend-player-card {
+        height: 220px;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .friend-card-img {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .friend-player-card .friend-card-stats {
+        min-height: 68px;
+        flex-basis: 68px;
+    }
+}
+@media (max-height: 649px) {
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
         overflow-y: auto;
         overscroll-behavior-y: contain;
@@ -23231,7 +23277,7 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
 
 /* The existing Green selectors use nine :not() classes; match their priority. */
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite {
-    padding-bottom: var(--safe-bottom) !important;
+    padding-bottom: calc(var(--safe-bottom) + 14px) !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
     flex: 0 0 auto !important;

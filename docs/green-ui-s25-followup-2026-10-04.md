@@ -20,3 +20,21 @@ Redosled: prvo izmeriti stvarni S25 prikaz ili njegov tačan CSS viewport/insete
 - Prošli su `node scripts/check-theme-performance.js`, `node scripts/check-js.js`, `node scripts/check-green-asset-coverage.js` i `git diff --check`. Nije rađen build, commit, instalacija APK-a, prijava, meč ili promena korisničkih podataka.
 
 **Otvoreno za zatvaranje na S25:** osvežiti instalirani WebView tek kada build bude odobren; proveriti stvarne online/offline kartice sa imenima/avatarema i sistemskom navigacijom, kao i QF/SF/finale sa stvarnim podacima. Ako četvrtfinale i dalje deluje zbijeno, potreban je snimak iz tog stanja na S25 da se razlikuje premalo mesta za tekst od položaja pagera.
+
+## Dopuna: donja zona Pozovi prijatelja na više visina
+
+Korisnik je na stvarnom S25 prijavio da ONLINE/OFFLINE i dalje upada u donju sistemsku zonu. Prethodni test od 360 × 700 CSS px nije bio dovoljan dokaz. Green ekran zato sada rezerviše `safe-bottom + 14px`, a za visine 650–760 px smanjuje prazninu gornje profilne/rivalske kartice i statusnog bloka. Za 650–699 px postoji dodatni kompaktni raspored: nijedan podatak nije uklonjen, avatar i statistika ostaju u kartici, status ostaje u dnu kartice prijatelja. Ispod 650 px vertikalni skrol ostaje namerna zaštita od sečenja sadržaja.
+
+U izolovanom Chrome prikazu na 360 × 650, u SR i EN sa dugačkim imenom, `scrollHeight = clientHeight = 650`; kartica prijatelja završava oko y=575, status oko y=570, a kraj kartice je oko 26 px **iznad početka rezervisane donje zone**. Na 360 × 700, 360 × 740, 360 × 780 i 390 × 844 osnovni prikaz takođe staje bez vertikalnog skrola. Na 360 × 620 i 320 × 568 uključuje se rezervni skrol. Provereni su i 320 × 650 i 360 × 680/690. Ovo su lokalne mere posle završetka ulazne animacije; ne potvrđuju stvarni S25 WebView.
+
+Pokrenut je postojeći `Pixel_7_Pro` emulator bez novog APK builda. U njegovom Chrome-u, preko lokalnog QA servera i `adb reverse` samo za port 3130, pregledan je Green prikaz Pozovi prijatelja sa sintetičkim online/offline karticama. Emulator je privremeno postavljen na fizičkih 1080 × 2340 i 480 dpi radi S25-sličnog formata; statusi i cela kartica ostaju vidljivi iznad Android navigacije. Nije bilo prijave, slanja poziva, promene korisničkih podataka ili veze sa serverom igre. Fizički S25 nije bio povezan preko ADB-a, pa njegov nalaz ostaje otvoren.
+
+Na kraju su vraćeni početni 1440 × 3120 i 560 dpi, uklonjeno preusmeravanje porta, zaustavljen lokalni QA server i zatvoren privremeni browser prikaz. Emulator je ostavljen pokrenut na početnom ekranu. Prošli su `check-theme-performance`, `check-js`, `check-green-asset-coverage` i `git diff --check`; build i commit nisu rađeni.
+
+## Ponovna vizuelna provera (isti dan)
+
+U lokalnom QA prikazu u Chrome-u na emulatoru pregledani su Green Turnir i Pozovi prijatelja pri 1080 × 2340 / 480 dpi (S25-sličan format), 1080 × 1920 / 480 dpi (kraći ekran) i podrazumevanih 1440 × 3120 / 560 dpi (Pixel 7 Pro emulator). Na S25-sličnom i podrazumevanom formatu obe ONLINE/OFFLINE oznake su cele i iznad Android navigacije; na kraćem ekranu namerni fallback skrol omogućava da se oba statusa vide iznad navigacije. Ovo su sintetički QA podaci, ne stvarni prijatelji sa naloga.
+
+Na S25-sličnom prikazu Turnira četvrtfinale, polufinale i finale su pregledni; tačkice su dostupne, a swipe je u ponovljenoj proveri prelazio po jednu stranu. Jedno ranije preskakanje sa finala na četvrtfinale nije se ponovilo pri ponavljanju istog gesta, pa ga ne označavamo kao potvrđen kvar. Na kraćem ekranu sva četiri četvrtfinalna meča nisu istovremeno vidljiva, ali unutrašnji skrol daje pristup svima i donje tačkice ostaju iznad sistemske navigacije. Podrazumevani Pixel 7 Pro prikaz pokazuje sva četiri meča bez unutrašnjeg skrola.
+
+Prošli su `check-theme-performance`, `check-js`, `check-green-asset-coverage` i `git diff --check`. Ova provera nije Android WebView build, niti test na fizičkom S25 ili sa stvarnim online podacima; to ostaje uslov za konačnu potvrdu na uređaju.

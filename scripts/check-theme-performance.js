@@ -2444,9 +2444,13 @@ assert(gameSource.includes('class="green-friend-presence"')
     && themeCssSource.includes('#league-modal-overlay#league-modal-overlay > .modal-box')
     && tournamentSource.includes('tourney-participant-row'), 'Green Poziv, Liga ili bracket nisu obuhvaćeni follow-up rasporedom.');
 assert(/#waiting-screen\.is-hosting-invite\s*\{[^}]*overflow-y:\s*hidden;/s.test(themeCssSource)
-    && themeCssSource.includes('@media (max-height: 760px) and (min-height: 690px)')
-    && themeCssSource.includes('height: 180px !important;')
-    && themeCssSource.includes('@media (max-height: 689px)')
+    && themeCssSource.includes('@media (max-height: 760px) and (min-height: 650px)')
+    && themeCssSource.includes('height: clamp(160px, calc(100dvh - 530px), 190px) !important;')
+    && themeCssSource.includes('@media (max-height: 699px) and (min-height: 650px)')
+    && themeCssSource.includes('height: clamp(165px, calc(100dvh - 530px), 169px) !important;')
+    && themeCssSource.includes('height: 220px;')
+    && themeCssSource.includes('padding-bottom: calc(var(--safe-bottom) + 14px) !important;')
+    && themeCssSource.includes('@media (max-height: 649px)')
     && /#waiting-screen#waiting-screen\.is-hosting-invite #friends-list-container\s*\{[^}]*flex:\s*0 0 auto !important;/s.test(themeCssSource)
     && /#waiting-screen\.is-hosting-invite \.green-friend-presence\s*\{[^}]*text-transform:\s*uppercase;/s.test(themeCssSource),
     'Green Poziv: običan telefon mora prikazati ONLINE/OFFLINE bez skrola, uz fallback za vrlo nizak ekran.');
