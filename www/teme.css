@@ -4704,6 +4704,105 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     filter: saturate(.98) contrast(1.025) drop-shadow(0 12px 20px rgba(7,29,15,.30));
 }
 
+/* Green login keeps the new clay title as its only logo and reserves both system insets. */
+html[data-splash-theme="dark"] #splash-screen.has-login {
+    justify-content: flex-start;
+    gap: clamp(8px, 1.5dvh, 15px);
+    padding: calc(var(--safe-top) + 48px) max(14px, var(--safe-right)) calc(var(--safe-bottom) + 12px) max(14px, var(--safe-left));
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-bottom: calc(var(--safe-bottom) + 12px);
+}
+
+html[data-splash-theme="dark"] #splash-screen#splash-screen.has-login > .logo-anim {
+    flex: 0 0 auto;
+    margin-top: auto;
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+html[data-splash-theme="dark"] #splash-screen.has-login > .logo-anim .green-splash-clay-title-png {
+    width: min(88vw, 350px) !important;
+    max-height: min(24dvh, 190px) !important;
+}
+
+html[data-splash-theme="dark"] #splash-screen.has-login #splash-login-container {
+    width: min(100%, 420px);
+    flex: 0 0 auto;
+    gap: clamp(8px, 1.5dvh, 14px) !important;
+    margin: 0 auto auto !important;
+}
+
+html[data-splash-theme="dark"] #splash-screen.has-login .splash-language-switcher {
+    top: calc(var(--safe-top) + 8px) !important;
+    right: max(14px, calc(var(--safe-right) + 14px)) !important;
+}
+
+html[data-splash-theme="dark"] #splash-screen.has-login .splash-legacy-login-logo,
+html[data-splash-theme="dark"] #splash-screen.has-login .splash-welcome-brand,
+html[data-splash-theme="dark"] #splash-screen.has-login .splash-welcome-copy br,
+html[data-splash-theme="dark"] #splash-screen.has-login .splash-login-divider {
+    display: none !important;
+}
+
+html[data-splash-theme="dark"] #splash-screen.has-login .splash-copy-panel {
+    width: min(100%, 380px);
+    margin-bottom: 0;
+}
+
+html[data-splash-theme="dark"] #splash-screen.has-login .splash-legal-copy {
+    max-width: min(100%, 380px);
+    margin-top: 0;
+    padding: 9px 12px;
+    border-radius: 18px;
+    font-size: clamp(.72rem, 2.9vw, .8rem);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+html[data-splash-theme="dark"] #splash-screen.has-login .splash-legal-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 2px 1px;
+}
+
+@media (max-height: 700px) {
+    html[data-splash-theme="dark"] #splash-screen.has-login {
+        padding-top: calc(var(--safe-top) + 46px);
+        gap: 8px;
+    }
+    html[data-splash-theme="dark"] #splash-screen.has-login > .logo-anim .green-splash-clay-title-png {
+        width: min(76vw, 280px) !important;
+        max-height: 21dvh !important;
+    }
+    html[data-splash-theme="dark"] #splash-screen.has-login #splash-login-container {
+        gap: 8px !important;
+    }
+    html[data-splash-theme="dark"] #splash-screen.has-login .splash-copy-panel {
+        padding: 9px 14px;
+    }
+    html[data-splash-theme="dark"] #splash-screen.has-login .splash-quote-text {
+        font-size: clamp(.96rem, 4vw, 1.1rem);
+    }
+}
+
+@media (max-height: 600px) {
+    html[data-splash-theme="dark"] #splash-screen.has-login {
+        padding-top: calc(var(--safe-top) + 40px);
+        gap: 6px;
+    }
+    html[data-splash-theme="dark"] #splash-screen.has-login > .logo-anim .green-splash-clay-title-png {
+        width: min(70vw, 230px) !important;
+        max-height: 18dvh !important;
+    }
+    html[data-splash-theme="dark"] #splash-screen.has-login #splash-login-container {
+        gap: 6px !important;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     @keyframes easterSplashClayRevealReduced {
         0% { opacity: 0; }
@@ -6849,7 +6948,7 @@ body.desert-theme #daily-intro.theme-desert .daily-intro-mark-wrap::after {
     gap: 0;
     background:
         linear-gradient(180deg, rgba(195,216,162,.05), rgba(13,40,22,.16)),
-        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v3.png")) center / cover no-repeat !important;
+        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v4.png")) center / cover no-repeat !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
 }
@@ -6951,7 +7050,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 .easter-room-intro.theme-dark {
     background:
         linear-gradient(180deg, rgba(191,218,166,.08), rgba(18,48,28,.32)),
-        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v3.png")) center / cover no-repeat;
+        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v4.png")) center / cover no-repeat;
 }
 
 .easter-room-intro.theme-dark .easter-room-intro-mark-wrap {
@@ -18726,7 +18825,7 @@ body.winter-theme .tournament-intro.theme-winter {
    Default/free green theme with its own rendered background and dice skin.
    ========================================================= */
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) {
-    --green-clay-bg-image: url("assets/green-clay-balkan-diorama-v3.png");
+    --green-clay-bg-image: url("assets/green-clay-balkan-diorama-v4.png");
     --green-clay-ink: #e7efda;
     --green-clay-ink-strong: #f2f6e8;
     --green-clay-muted: #e1ecd2;
@@ -19906,7 +20005,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 
 .theme-loading-gate.theme-dark {
     --theme-loading-base: #315f4b;
-    --theme-loading-bg-image: url("assets/green-clay-balkan-diorama-v3.png");
+    --theme-loading-bg-image: url("assets/green-clay-balkan-diorama-v4.png");
     --theme-loading-veil-top: rgba(174,215,186,.05);
     --theme-loading-veil-bottom: rgba(20,55,41,.42);
     --theme-loading-glow: rgba(189,227,199,.22);
@@ -21536,7 +21635,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     gap: 0;
     background:
         linear-gradient(180deg, rgba(204,224,172,.07), rgba(10,39,21,.18)),
-        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v3.png")) center / cover no-repeat !important;
+        var(--green-clay-bg-image, url("assets/green-clay-balkan-diorama-v4.png")) center / cover no-repeat !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     animation: easterRoomIntroFade 4.6s ease forwards;
@@ -22554,6 +22653,7 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 /* Green UI contract: shared type, contrast, controls and containment. */
 .league-close-green { display: none !important; }
 .green-game-over-ducat { display: none !important; }
+.green-game-over-result-icon { display: none; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) {
     --green-ui-title: clamp(1.05rem, 4.2vw, 1.22rem);
     --green-ui-section: clamp(.98rem, 3.6vw, 1.08rem);
@@ -22568,7 +22668,25 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay .league-close-legacy { display: none !important; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #league-modal-overlay .league-close-green { display: inline-flex !important; }
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen .game-over-ducat-legacy { display: none !important; }
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen:not(.is-solo-result) .green-game-over-ducat { display: block !important; object-fit: contain; }
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.is-technical-result .green-game-over-ducat { display: block !important; object-fit: contain; }
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen:not(.is-solo-result):not(.is-technical-result) .green-solo-finish-score-mark {
+    display: block;
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen :is(.green-game-over-result-icon--win, .green-game-over-result-icon--loss, .green-game-over-result-icon--draw) {
+    width: 60px;
+    height: 60px;
+    margin: -5px auto 5px;
+    object-fit: contain;
+    filter: drop-shadow(0 5px 8px rgba(7,29,15,.28));
+}
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.result-win:not(.is-hotseat-result) .green-game-over-result-icon--win,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.result-loss:not(.is-hotseat-result) .green-game-over-result-icon--loss,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #game-over-screen.result-draw .green-game-over-result-icon--draw {
+    display: block;
+}
 
 /* The late dark-clay surface must not inherit the early dark-green toast ink. */
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) :is(.custom-toast, .custom-toast.treasury-insufficient-toast, .custom-modal) {
@@ -22977,8 +23095,10 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf {
     display: grid;
-    grid-template-rows: repeat(4, minmax(0, 1fr));
-    gap: clamp(6px, 1.2vh, 14px);
+    grid-template-rows: repeat(4, minmax(max-content, 1fr));
+    gap: clamp(4px, .8vh, 10px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--sf {
     display: grid;
@@ -22987,8 +23107,8 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     align-items: center;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf .tourney-match {
-    min-height: 0;
-    height: 100%;
+    min-height: max-content;
+    height: auto;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--sf .tourney-match,
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--f .tourney-match {
@@ -23063,24 +23183,24 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     }
 }
 @media (max-height: 640px) {
-    /* Only very short viewports may scroll; never crop player data. */
+    /* Keep a readable minimum on very short viewports. */
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf {
-        overflow-y: auto;
         grid-template-rows: repeat(4, minmax(88px, max-content));
-        overscroll-behavior: contain;
     }
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-matches--qf .tourney-match {
         height: auto;
     }
 }
 
-/* Invite friend: keep the complete card visible without page scroll on ordinary phones. */
+/* Invite friend: reserve the Android navigation strip; scroll only if content cannot fit. */
 .green-friend-presence { display: none; }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
     box-sizing: border-box;
-    overflow-y: hidden;
-    padding-bottom: calc(var(--safe-bottom) + 14px) !important;
-    scroll-padding-bottom: calc(var(--safe-bottom) + 14px);
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(var(--safe-bottom) + 20px) !important;
+    scroll-padding-bottom: calc(var(--safe-bottom) + 20px);
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite #friends-list-container {
     flex: 0 0 auto !important;
@@ -23176,9 +23296,6 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     color: #f2b3a5;
 }
 @media (max-height: 760px) and (min-height: 650px) {
-    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
-        overflow-y: hidden;
-    }
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .waiting-header {
         margin-bottom: 8px;
     }
@@ -23244,6 +23361,16 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
         flex-basis: 68px;
     }
 }
+@media (min-height: 761px) and (max-height: 799px) and (max-width: 599px) {
+    /* Bridge the 760px layout breakpoint without pushing friend cards into system navigation. */
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: clamp(190px, calc(100dvh - 560px), 230px) !important;
+        grid-template-rows: 52px minmax(0, 1fr) !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 52px minmax(0, 1fr) auto !important;
+    }
+}
 @media (max-height: 649px) {
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
         overflow-y: auto;
@@ -23277,7 +23404,7 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
 
 /* The existing Green selectors use nine :not() classes; match their priority. */
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite {
-    padding-bottom: calc(var(--safe-bottom) + 14px) !important;
+    padding-bottom: calc(var(--safe-bottom) + 20px) !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
     flex: 0 0 auto !important;

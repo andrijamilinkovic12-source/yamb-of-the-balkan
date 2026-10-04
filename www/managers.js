@@ -162,7 +162,7 @@ class ModalManager {
             const els = this.elements;
             if(!els.overlay) { console.warn("Modal overlay missing! Alert:", text); resolve(true); return; } 
             
-            this.setup(safeTitle, text, false);
+            this.setup(safeTitle, text, false, options);
             els.btnOk.onclick = () => { this.close(); resolve(true); };
             this.open();
         });
@@ -3714,10 +3714,10 @@ class ShopManager {
 
                 let visualHtml = '';
                 if (this.type === 'skin') {
-                    const greenClayPreview = item.id === 'green_clay'
+                    const clayPipPreview = item.id === 'green_clay' || (isGreenTreasury && item.id === 'bronze_antique')
                         ? '<div class="dice-dots-wrapper val-6" aria-hidden="true"><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div></div>'
                         : '⚅';
-                    visualHtml = `<div class="dice-preview preview-${item.id}">${greenClayPreview}</div>`;
+                    visualHtml = `<div class="dice-preview preview-${item.id}">${clayPipPreview}</div>`;
                 } else if (this.type === 'effect') {
                     const greenClayEffect = isGreenTreasury && ['balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id);
                     visualHtml = `<div class="effect-preview-box ${item.cssClass}">${greenClayEffect ? '' : (item.innerHtml || '')}</div>`;

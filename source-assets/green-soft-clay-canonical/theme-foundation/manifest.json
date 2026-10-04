@@ -6,11 +6,11 @@
   "active": [
     {
       "role": "theme background",
-      "runtime": "www/assets/green-clay-balkan-diorama-v3.png",
+      "runtime": "www/assets/green-clay-balkan-diorama-v4.png",
       "size": [941, 1672],
-      "bytes": 1562192,
+      "bytes": 1864586,
       "colorType": 2,
-      "sha256": "049c6cdafe90cd37bab3f1b2c48831ed7253ca16d95ba411f8cec98f58a12c41"
+      "sha256": "0b5f16e08cad0abc487bdd23b3a3c7128903d5a0f06110b457d8b9d8bb1eb181"
     },
     {
       "role": "splash title",
@@ -21,6 +21,13 @@
       "sha256": "2773c5e488ce046fb2a83266ebfaee4d4597733169dd4bacdf353a046226a6d3"
     }
   ],
+  "rollbackBackground": {
+    "runtime": "www/assets/green-clay-balkan-diorama-v3.png",
+    "size": [941, 1672],
+    "bytes": 1562192,
+    "colorType": 2,
+    "sha256": "049c6cdafe90cd37bab3f1b2c48831ed7253ca16d95ba411f8cec98f58a12c41"
+  },
   "retiredRuntime": [
     {
       "role": "superseded first Balkan diorama candidate",

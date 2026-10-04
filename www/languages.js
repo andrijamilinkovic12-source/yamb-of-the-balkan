@@ -1719,12 +1719,13 @@ function t(key) {
     const lang = localStorage.getItem('yamb_lang') || 'sr';
     if (TRANSLATIONS[lang] && TRANSLATIONS[lang].hasOwnProperty(key)) {
         const value = TRANSLATIONS[lang][key];
-        if (key === 'go_rematch' || key === 'tourney_finalist_title' || key === 'ws_power') {
+        if (key === 'go_rematch' || key === 'go_double' || key === 'tourney_finalist_title' || key === 'ws_power') {
             const theme = document.documentElement?.dataset?.splashTheme
                 || localStorage.getItem('yamb_theme')
                 || 'dark';
             if (theme === 'dark') {
                 if (key === 'go_rematch') return value.replace(/^🔄\s*/u, '');
+                if (key === 'go_double') return value.replace(/^🎥\s*/u, '').replace(/\s*\{DUKAT_ICON\}\s*\(x2\)/u, '');
                 if (key === 'tourney_finalist_title') return value.replace(/\s*🥈/u, '');
                 return value.replace(/\s*⚡/u, '');
             }

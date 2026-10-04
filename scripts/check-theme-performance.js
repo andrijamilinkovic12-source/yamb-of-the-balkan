@@ -630,7 +630,8 @@ assert(greenHotseatWinnerRegistry.retiredMasterReplacements?.['hotseat/winner-v1
 assert(indexSource.split(hotseatWinnerPath).length - 1 === 1 && gameSource.split(hotseatWinnerPath).length - 1 === 1, 'Green Hotseat Winner canonical veze nisu kompletne.');
 assert(gameSource.includes("hotseat: path => path.startsWith('hotseat/') || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png'"), 'Green stvarni Hotseat room matcher ne razdvaja canonical room i Winner paket.');
 assert(gameSource.includes("gameOverScreen.classList.toggle('is-hotseat-result', isHotseatResult);") && gameSource.includes("gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);"), 'Green Hotseat Winner više nije ograničen na odlučeni Hotseat rezultat.');
-assert(gameSource.includes("gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner');"), 'Online/tehnički rezultat više ne čisti Hotseat Winner stanje.');
+assert(gameSource.includes("gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner', 'result-win', 'result-loss', 'result-draw');")
+    && gameSource.includes("gameOverScreen.classList.add('is-technical-result', `result-${resultType}`);"), 'Online/tehnički rezultat više ne čisti Hotseat Winner stanje.');
 const hotseatWinnerDisplayRule = themeCssSource.match(/#game-over-screen\.is-hotseat-result\.has-result-winner \.green-hotseat-winner-mark\s*\{([\s\S]*?)\}/)?.[1] || '';
 assert(hotseatWinnerDisplayRule.includes('display: block') && hotseatWinnerDisplayRule.includes('width: 58px') && hotseatWinnerDisplayRule.includes('height: 58px'), 'Green Hotseat Winner zaključani 58x58 prikaz je promenjen.');
 assert(themeCssSource.includes('animation: easterSoloFinishReveal .48s cubic-bezier(.22, 1, .36, 1) both;'), 'Green Hotseat Winner reveal motion je promenjen.');
@@ -756,9 +757,9 @@ const expectedStatisticsOverviewReferenceCounts = {
     'power-index': 5,
     record: 3,
     games: 2,
-    wins: 3,
-    draws: 3,
-    losses: 2,
+    wins: 4,
+    draws: 4,
+    losses: 3,
     'fire-streak': 6,
     average: 3,
     trophies: 2,
@@ -2099,6 +2100,14 @@ for (const [role, fileName] of Object.entries(greenRewardedVideoManifest.masters
 const splashImages = indexSource.match(/<img\b[^>]*id="theme-splash-clay-title"[^>]*>/g) || [];
 assert(splashImages.length === 1, 'Mora postojati tačno jedan dinamički theme splash <img>.');
 assert(!/<img\b[^>]*src="assets\/(?:easter|desert|green)-soft-clay\/splash-title/gi.test(indexSource), 'Splash teme ne smeju imati statički src u HTML-u.');
+assert(indexSource.includes('class="splash-legacy-login-logo" data-legacy-src="Logo_green.png"')
+    && indexSource.includes("screen.classList.toggle('has-login', login.style.display !== 'none');")
+    && indexSource.includes("activeTheme !== 'dark' && !legacyLogo.getAttribute('src')")
+    && themeCssSource.includes('#splash-screen.has-login .splash-legacy-login-logo,')
+    && themeCssSource.includes('padding: calc(var(--safe-top) + 48px)')
+    && themeCssSource.includes('calc(var(--safe-bottom) + 12px)')
+    && themeCssSource.includes('overflow-y: auto;'),
+    'Green prijava mora prikazati jedan novi logo i držati pravni tekst izvan sistemskih zona.');
 assert(gameSource.includes('prepareThemeRoomAssets(roomId'), 'Nedostaje room-on-demand priprema asseta.');
 assert(gameSource.includes('installThemeImageHydrationObserver()'), 'Nedostaje observer za naknadno dodate tematske slike.');
 assert(!gameSource.includes('const optionalSources = pack.assets'), 'Startup i dalje preuzima ceo opcioni paket teme.');
@@ -2253,7 +2262,7 @@ const report = [];
 const startupConfig = {
     'easter-soft-clay': ['assets/easter-neumorphic-bg-v5.png', 'assets/easter-soft-clay/splash-title-soft-clay-v1.png'],
     'desert-soft-clay': ['assets/desert-neumorphic-bg-v1.png', 'assets/desert-soft-clay/splash-title-soft-clay-v1.png'],
-    'green-soft-clay': ['assets/green-clay-balkan-diorama-v3.png', 'assets/green-soft-clay/splash-title-soft-clay-v1.png', 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png', 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png', 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png', 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png', 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png', 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png', 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png', 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png', 'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png', 'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png', 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png']
+    'green-soft-clay': ['assets/green-clay-balkan-diorama-v4.png', 'assets/green-soft-clay/splash-title-soft-clay-v1.png', 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png', 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png', 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png', 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png', 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png', 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png', 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png', 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png', 'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png', 'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png', 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png']
 };
 assert(startupConfig['green-soft-clay'].every(relative => !relative.includes('canonical/statistics-overview/')), 'Statistics Overview paket ne sme ući u Green startup preload.');
 assert(startupConfig['green-soft-clay'].every(relative => !relative.includes('canonical/h2h-statistics/')), 'H2H Statistics paket ne sme ući u Green startup preload.');
@@ -2443,17 +2452,22 @@ assert(gameSource.includes('class="green-friend-presence"')
     && themeCssSource.includes('#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container')
     && themeCssSource.includes('#league-modal-overlay#league-modal-overlay > .modal-box')
     && tournamentSource.includes('tourney-participant-row'), 'Green Poziv, Liga ili bracket nisu obuhvaćeni follow-up rasporedom.');
-assert(/#waiting-screen\.is-hosting-invite\s*\{[^}]*overflow-y:\s*hidden;/s.test(themeCssSource)
+assert(/#waiting-screen\.is-hosting-invite\s*\{[^}]*overflow-y:\s*auto;[^}]*overscroll-behavior-y:\s*contain;/s.test(themeCssSource)
     && themeCssSource.includes('@media (max-height: 760px) and (min-height: 650px)')
     && themeCssSource.includes('height: clamp(160px, calc(100dvh - 530px), 190px) !important;')
     && themeCssSource.includes('@media (max-height: 699px) and (min-height: 650px)')
     && themeCssSource.includes('height: clamp(165px, calc(100dvh - 530px), 169px) !important;')
     && themeCssSource.includes('height: 220px;')
-    && themeCssSource.includes('padding-bottom: calc(var(--safe-bottom) + 14px) !important;')
+    && themeCssSource.includes('padding-bottom: calc(var(--safe-bottom) + 20px) !important;')
+    && themeCssSource.includes('@media (min-height: 761px) and (max-height: 799px) and (max-width: 599px)')
+    && themeCssSource.includes('height: clamp(190px, calc(100dvh - 560px), 230px) !important;')
     && themeCssSource.includes('@media (max-height: 649px)')
     && /#waiting-screen#waiting-screen\.is-hosting-invite #friends-list-container\s*\{[^}]*flex:\s*0 0 auto !important;/s.test(themeCssSource)
     && /#waiting-screen\.is-hosting-invite \.green-friend-presence\s*\{[^}]*text-transform:\s*uppercase;/s.test(themeCssSource),
-    'Green Poziv: običan telefon mora prikazati ONLINE/OFFLINE bez skrola, uz fallback za vrlo nizak ekran.');
+    'Green Poziv: ONLINE/OFFLINE mora ostati iznad sistemske navigacije, uz skrol samo kad sadržaj ne staje.');
+assert(/#tournament-screen \.tourney-matches--qf\s*\{[^}]*grid-template-rows:\s*repeat\(4, minmax\(max-content, 1fr\)\);[^}]*overflow-y:\s*auto;/s.test(themeCssSource)
+    && /#tournament-screen \.tourney-matches--qf \.tourney-match\s*\{[^}]*min-height:\s*max-content;[^}]*height:\s*auto;/s.test(themeCssSource),
+    'Green Turnir: četvrtfinalni parovi ne smeju odseći drugog igrača.');
 assert(['wins', 'draws', 'losses'].every((part, index) =>
     indexSource.includes(`data-green-record="${['win', 'draw', 'loss'][index]}">`)
     && indexSource.includes(`id="waiting-opp-${part}"`))
@@ -2463,6 +2477,25 @@ assert(['wins', 'draws', 'losses'].every((part, index) =>
 assert(/#tournament-screen \.tourney-pagination \.dot\s*\{[^}]*align-items:\s*end;/s.test(themeCssSource)
     && /\.tourney-pagination \.dot\s*\{[^}]*width:\s*44px;\s*height:\s*44px;/s.test(tournamentSource),
     'Green Turnir: vidljive tačkice moraju biti nisko, uz punu zonu dodira.');
+for (const [outcome, file] of [['win', 'wins'], ['loss', 'losses'], ['draw', 'draws']]) {
+    const asset = `assets/green-soft-clay/canonical/statistics-overview/${file}-v1.png`;
+    assert(indexSource.includes(`green-game-over-result-icon--${outcome}`)
+        && indexSource.includes(asset)
+        && fs.existsSync(path.join(www, asset)), `Green završni ekran nema canonical ${outcome} PNG.`);
+    assert(themeCssSource.includes(`#game-over-screen.result-${outcome}`), `Green završni ekran ne prikazuje ${outcome} ishod.`);
+}
+assert(gameSource.includes("this.prepareThemeRoomAssets('gameOver', { root: document.getElementById('game-over-screen') });")
+    && gameSource.includes("gameOverScreen.classList.remove('is-technical-result', 'result-win', 'result-loss', 'result-draw');")
+    && gameSource.includes('if (resultOutcome) gameOverScreen.classList.add(`result-${resultOutcome}`);')
+    && themeCssSource.includes('#game-over-screen.is-technical-result .green-game-over-ducat')
+    && themeCssSource.includes('#game-over-screen:not(.is-solo-result):not(.is-technical-result) .green-solo-finish-score-mark'),
+    'Green završni ekran: ishodi, priprema asseta ili razdvajanje poena i dukata nisu dosledni.');
+assert(managersSource.includes('this.setup(safeTitle, text, false, options);')
+    && gameSource.includes("{ contextClass: 'tourney-winner' }")
+    && gameSource.includes("{ contextClass: 'tourney-finalist' }")
+    && fs.existsSync(path.join(www, 'assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png'))
+    && gameSource.includes('canonical/competition-medals/quarterly-league-${medalType}-v1.png'),
+    'Green nagrade turnira ili Kvartalne lige nemaju ispravan modal ili canonical PNG.');
 assert(indexSource.includes('data-green-record="win"')
     && indexSource.includes('data-green-record="draw"')
     && indexSource.includes('data-green-record="loss"')

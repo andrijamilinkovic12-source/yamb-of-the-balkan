@@ -17,6 +17,7 @@
     "check:league": "node scripts/check-quarterly-league.js",
     "check:online-reconnect": "node scripts/check-online-reconnect.js",
     "check:socket-transport": "node scripts/check-socket-transport.js",
+    "check:firebase-security": "node scripts/check-firebase-security.js",
     "check:reconnect-staging": "node scripts/check-reconnect-staging.js",
     "build:reconnect-staging": "node scripts/build-reconnect-staging.js",
     "install:reconnect-staging-clients": "node scripts/install-reconnect-staging-clients.js",
@@ -28,7 +29,7 @@
     "check:portrait-lock": "node scripts/check-portrait-lock.js",
     "check:green-coverage": "node scripts/check-green-asset-coverage.js",
     "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
-    "test": "npm run check:js && npm run check:ad-consent && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:green-coverage"
+    "test": "npm run check:js && npm run check:ad-consent && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:firebase-security && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:green-coverage"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +38,7 @@
   "dependencies": {
     "@capacitor-community/admob": "^6.2.0",
     "@capacitor-firebase/analytics": "^6.3.1",
+    "@capacitor-firebase/app-check": "6.3.1",
     "@capacitor-firebase/authentication": "^6.3.1",
     "@capacitor/android": "^6.2.1",
     "@capacitor/app": "^6.0.0",

@@ -1,0 +1,11 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Igra trenutno čuva profile, rezultate i ligu u MongoDB-u preko servera.
+    // Firestore ostaje zatvoren dok se ne uvede namenska serverska šema i validacija.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

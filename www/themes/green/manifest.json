@@ -3,7 +3,7 @@
   "name": "Zelena Soft Clay",
   "version": 63,
   "status": "complete",
-  "background": "assets/green-clay-balkan-diorama-v3.png",
+  "background": "assets/green-clay-balkan-diorama-v4.png",
   "defaultDiceSkin": "green_clay",
   "foundationManifest": "source-assets/green-soft-clay-canonical/theme-foundation/manifest.json",
   "designTokens": {

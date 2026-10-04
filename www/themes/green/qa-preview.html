@@ -24,7 +24,12 @@
     .row-header { font-size: .55rem; }
     .dice-container { display: flex; justify-content: center; gap: 12px; margin: 13px 0; padding: 14px 8px; border-radius: 999px; }
     .dice { position: relative; width: 55px; height: 55px; flex: 0 0 55px; border-radius: 16px; }
-    .dice-dots-wrapper { position: absolute; inset: 10px; }
+    .dice-dots-wrapper { position: absolute; inset: 0; width: 100%; height: 100%; padding: 18%; }
+    .qa-dice-matrix { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 6px; justify-items: center; margin: 10px 0 17px; }
+    .qa-dice-matrix .dice { width: 46px; height: 46px; flex: none; border-radius: 13px; }
+    .qa-preview-row { display: flex; justify-content: center; gap: 24px; margin: 12px 0 4px; }
+    .qa-preview-row .dice-preview { margin: 0; }
+    .qa-subtitle { margin: 10px 0 2px; color: var(--green-clay-ink-strong); font-size: .75rem; font-weight: 900; text-align: center; }
     .qa-actions { display: flex; justify-content: center; gap: 10px; }
     .qa-actions button { min-height: 43px; padding: 0 22px; border-radius: 999px; font-weight: 950; }
     .qa-feedback { display: grid; gap: 12px; }
@@ -46,7 +51,7 @@
       </div>
     </section>
 
-    <p class="qa-label">Tabla i namenski Žadna Glina skin</p>
+    <p class="qa-label">Tabla i PNG proba — Žadna Glina</p>
     <section class="qa-panel">
       <div class="player-table">
         <div class="player-name">IGRAČ</div>
@@ -59,6 +64,23 @@
         <div class="dice skin-green_clay"><div class="dice-dots-wrapper val-6"><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div></div></div>
       </div>
       <div class="qa-actions"><button class="btn-secondary">NAJAVA</button><button class="btn-throw">BACAJ</button></div>
+    </section>
+    <p class="qa-label">PNG proba — Antička Bronza (prva bronzana kolekcija)</p>
+    <section class="qa-panel" aria-label="Antička Bronza kockice">
+      <div class="dice-container">
+        <div class="dice skin-bronze_antique"><div class="dice-dots-wrapper val-2"><div class="dice-dot"></div><div class="dice-dot"></div></div></div>
+        <div class="dice skin-bronze_antique held"><div class="dice-dots-wrapper val-4"><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div></div></div>
+        <div class="dice skin-bronze_antique"><div class="dice-dots-wrapper val-6"><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div><div class="dice-dot"></div></div></div>
+      </div>
+    </section>
+    <p class="qa-label">Tačkice 1–6 i pregledi iz Riznice</p>
+    <section class="qa-panel" aria-label="Provera oba skina i svih vrednosti">
+      <p class="qa-subtitle">Žadna Glina · 1–6</p>
+      <div class="qa-dice-matrix" id="green-dice-matrix"></div>
+      <p class="qa-subtitle">Antička Bronza · 1–6</p>
+      <div class="qa-dice-matrix" id="bronze-dice-matrix"></div>
+      <p class="qa-subtitle">Riznica · pregled skina</p>
+      <div class="qa-preview-row" id="dice-shop-previews"></div>
     </section>
     <p class="qa-label">Tekst i iskačuće poruke · SR/EN uzorak</p>
     <section class="qa-feedback" aria-label="Green kontrast uzorci">
@@ -121,6 +143,10 @@
           grid.appendChild(cell);
         });
       });
+      const pips = (value) => `<div class="dice-dots-wrapper val-${value}" aria-hidden="true">${'<div class="dice-dot"></div>'.repeat(value)}</div>`;
+      document.getElementById('green-dice-matrix').innerHTML = Array.from({ length: 6 }, (_, index) => `<div class="dice skin-green_clay">${pips(index + 1)}</div>`).join('');
+      document.getElementById('bronze-dice-matrix').innerHTML = Array.from({ length: 6 }, (_, index) => `<div class="dice skin-bronze_antique">${pips(index + 1)}</div>`).join('');
+      document.getElementById('dice-shop-previews').innerHTML = `<div class="dice-preview preview-green_clay">${pips(6)}</div><div class="dice-preview preview-bronze_antique">${pips(6)}</div>`;
     })();
   </script>
 </body>

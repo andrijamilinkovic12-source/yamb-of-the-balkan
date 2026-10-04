@@ -1585,7 +1585,7 @@ class YambApp {
         const packs = {
             dark: {
                 title: lang === 'en' ? 'Green Soft Clay' : 'Zelena Soft Clay',
-                background: 'assets/green-clay-balkan-diorama-v3.png',
+                background: 'assets/green-clay-balkan-diorama-v4.png',
                 menuAssets: [
                     'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png?v=1',
                     'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png?v=1',
@@ -4421,9 +4421,11 @@ class YambApp {
                     if (data.role === 'winner') {
                         if (this.soundMgr && this.soundMgr.win) this.soundMgr.win();
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
+                        const championTitle = gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆";
                         this.modal.alert(
                             `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" data-theme-src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" data-theme-src="assets/desert-soft-clay/tournament-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
-                            gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆",
+                            (localStorage.getItem('yamb_theme') || 'dark') === 'dark'
+                                ? championTitle.replace(/\s*🏆/gu, '') : championTitle,
                             { contextClass: 'tourney-winner' }
                         );
                     } else if (data.role === 'runnerup') {
@@ -4465,6 +4467,10 @@ class YambApp {
         });
         if (!token) return { ok: false, reason: 'missing_firebase_token' };
 
+        const appCheckToken = window.yambAppCheck?.getToken
+            ? await window.yambAppCheck.getToken(forceRefresh)
+            : '';
+
         return new Promise((resolve) => {
             let settled = false;
             const timer = setTimeout(() => {
@@ -4473,7 +4479,7 @@ class YambApp {
                 resolve({ ok: false, reason: 'auth_timeout' });
             }, 8000);
 
-            this.socket.emit('auth_firebase_token', { token }, (result) => {
+            this.socket.emit('auth_firebase_token', { token, appCheckToken }, (result) => {
                 if (settled) return;
                 settled = true;
                 clearTimeout(timer);
@@ -5352,6 +5358,9 @@ class YambApp {
 
     navigateTo(screenId) {
         if (screenId !== 'game-scene') this.clearOnlineGameOverDelay();
+        if (screenId === 'game-scene' || screenId === 'game-over-screen') {
+            this.prepareThemeRoomAssets('gameOver', { root: document.getElementById('game-over-screen') });
+        }
         document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
         const target = document.getElementById(screenId);
         if (target) target.classList.add('active');
@@ -6945,11 +6954,16 @@ class YambApp {
                     : (activeQlRewardTheme === 'easter'
                         ? `medal-${medalType}-v2.png?v=4`
                         : `medal-${medalType}.png?v=2`));
-            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlAssetRoot}/${qlMedalFile}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
+            const qlMedalSource = activeQlRewardTheme === 'dark'
+                ? `assets/green-soft-clay/canonical/competition-medals/quarterly-league-${medalType}-v1.png?v=1`
+                : `${qlAssetRoot}/${qlMedalFile}`;
+            let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlMedalSource}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
             let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
             
-            this.modal.alert(msg, gt('quarter_reward_title') || "KRAJ KVARTALA 🏆");
+            const quarterRewardTitle = gt('quarter_reward_title') || "KRAJ KVARTALA 🏆";
+            this.modal.alert(msg, activeQlRewardTheme === 'dark'
+                ? quarterRewardTitle.replace(/\s*🏆/gu, '') : quarterRewardTitle);
         });
 
         this.socket.off('game_over_timeout');
@@ -9302,7 +9316,10 @@ class YambApp {
         const message = data.message || fallbackMsg;
 
         const gameOverScreen = document.getElementById('game-over-screen');
-        if (gameOverScreen) gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner');
+        if (gameOverScreen) {
+            gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner', 'result-win', 'result-loss', 'result-draw');
+            gameOverScreen.classList.add('is-technical-result', `result-${resultType}`);
+        }
         const personalBestBadge = document.getElementById('solo-personal-best-badge');
         if (personalBestBadge) personalBestBadge.hidden = true;
 
@@ -9555,6 +9572,7 @@ class YambApp {
         this.soundMgr.win();
         let title = gt('game_over'); let message = "";
         let scoreLabel = gt('go_msg_solo') || "OSVOJENI POENI";
+        let resultOutcome = '';
         const activeSoloFinishTheme = localStorage.getItem('yamb_theme') || 'dark';
         const isEnhancedSoloFinishTheme = activeSoloFinishTheme === 'dark'
             || activeSoloFinishTheme === 'easter'
@@ -9588,12 +9606,14 @@ class YambApp {
             scoreLabel = gt('go_label_your_score') || "TVOJ REZULTAT";
 
             if (isDraw) {
+                resultOutcome = 'draw';
                 title = gt('go_draw') || "NEREŠENO!";
                 message = (gt('go_msg_online_draw') || "Partija je završena bez pobednika. Oboje imate {0} poena.").replace('{0}', winner.score);
                 if (this.isTournamentOnlineDuel(this.roomId, { duelType: this.onlineDuelType })) {
                     message += ` ${gt('tourney_draw_replay') || 'Turnirski meč se ponavlja dok neko ne pobedi.'}`;
                 }
             } else {
+                resultOutcome = amIWinner ? 'win' : 'loss';
                 title = amIWinner ? gt('go_win') : gt('go_loss');
                 if (amIWinner) { this.effectMgr.celebrateWin(); }
                 if (amIWinner) {
@@ -9612,9 +9632,11 @@ class YambApp {
         const gameOverScreen = document.getElementById('game-over-screen');
         if (gameOverScreen) {
             const isHotseatResult = detectedMode === 'Hotseat';
+            gameOverScreen.classList.remove('is-technical-result', 'result-win', 'result-loss', 'result-draw');
             gameOverScreen.classList.toggle('is-solo-result', this.players.length === 1);
             gameOverScreen.classList.toggle('is-hotseat-result', isHotseatResult);
             gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);
+            if (resultOutcome) gameOverScreen.classList.add(`result-${resultOutcome}`);
         }
         const isEnhancedSoloFinish = this.players.length === 1 && isEnhancedSoloFinishTheme;
         const soloFinishTier = document.getElementById('solo-finish-tier');

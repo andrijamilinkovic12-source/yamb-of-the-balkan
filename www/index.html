@@ -79,7 +79,7 @@
     
     <link rel="stylesheet" href="style.css?v=5.22">
     <link rel="stylesheet" href="teme.css?v=6.93">
-    <link rel="stylesheet" href="kockice.css?v=1.7">
+    <link rel="stylesheet" href="kockice.css?v=1.8">
     <link rel="stylesheet" href="efekti.css?v=1.6">
     
     <script src="languages.js?v=5.10"></script>
@@ -164,7 +164,7 @@
             // Pozadina je najveći element prvog prikaza. Započni preuzimanje
             // odmah, pre pokretanja ostatka aplikacije i bez čekanja na ikone.
             const themeBackgrounds = {
-                dark: 'assets/green-clay-balkan-diorama-v3.png',
+                dark: 'assets/green-clay-balkan-diorama-v4.png',
                 winter: 'assets/ocean-neumorphic-bg-v2.png',
                 easter: 'assets/easter-neumorphic-bg-v5.png',
                 desert: 'assets/desert-neumorphic-bg-v1.png',
@@ -533,7 +533,7 @@
                 </div>
             </div>
 
-            <img src="Logo_green.png" alt="Yamb Logo" style="width: 180px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));">
+            <img class="splash-legacy-login-logo" data-legacy-src="Logo_green.png" alt="Yamb Logo" style="width: 180px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));">
 
             <div class="splash-copy-panel">
                 <p data-lang="splash_quote" class="splash-quote-text">
@@ -544,11 +544,11 @@
                 </p>
             </div>
             
-            <div style="width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); margin-bottom: 5px;"></div>
+            <div class="splash-login-divider" style="width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); margin-bottom: 5px;"></div>
 
-            <p style="color: var(--text-main); font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); line-height: 1.4;">
+            <p class="splash-welcome-copy" style="color: var(--text-main); font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); line-height: 1.4;">
                 <span data-lang="splash_welcome_short">DOBRODOŠLI</span><br>
-                YAMB OF THE <span style="color: var(--gold-main);">BALKAN</span>
+                <span class="splash-welcome-brand">YAMB OF THE <span style="color: var(--gold-main);">BALKAN</span></span>
             </p>
             
             <button id="dugmeGooglePrijava" class="btn-menu" style="background: white; color: #333; font-weight: 800; font-size: 1rem; padding: 15px 30px; border-radius: 30px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 12px; width: auto; transition: transform 0.2s; margin-top: 5px;">
@@ -568,6 +568,24 @@
             </div>
             
         </div>
+        <script>
+            (() => {
+                const screen = document.getElementById('splash-screen');
+                const login = document.getElementById('splash-login-container');
+                if (!screen || !login) return;
+                const legacyLogo = login.querySelector('.splash-legacy-login-logo');
+                const syncLoginLayout = () => {
+                    screen.classList.toggle('has-login', login.style.display !== 'none');
+                    const activeTheme = document.documentElement.dataset.splashTheme || window.yambBootTheme || 'dark';
+                    if (legacyLogo && activeTheme !== 'dark' && !legacyLogo.getAttribute('src')) {
+                        legacyLogo.src = legacyLogo.dataset.legacySrc;
+                    }
+                };
+                new MutationObserver(syncLoginLayout).observe(login, { attributes: true, attributeFilter: ['style'] });
+                new MutationObserver(syncLoginLayout).observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
+                syncLoginLayout();
+            })();
+        </script>
     </div>
 
     <div id="main-menu" class="screen">
@@ -1360,6 +1378,9 @@
                 <img class="severna-solo-result-mark" data-theme-src="assets/severna-soft-clay/mode-solo-pro-v6.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="severna-hotseat-winner-mark" data-theme-src="assets/severna-soft-clay/hotseat/winner-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="green-hotseat-winner-mark" data-theme-src="assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="green-game-over-result-icon green-game-over-result-icon--win" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/wins-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="green-game-over-result-icon green-game-over-result-icon--loss" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/losses-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="green-game-over-result-icon green-game-over-result-icon--draw" data-theme-src="assets/green-soft-clay/canonical/statistics-overview/draws-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <div id="solo-personal-best-badge" class="easter-solo-personal-best" hidden>
                     <img class="easter-solo-personal-best-icon" data-theme-src="assets/easter-soft-clay/solo/personal-best.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="desert-solo-personal-best-icon" data-theme-src="assets/desert-soft-clay/solo/personal-best.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1887,7 +1908,7 @@
     </script>
 
     <script src="config.js?v=5.6"></script>
-    <script src="managers.js?v=5.28"></script>
+    <script src="managers.js?v=5.29"></script>
     <script src="dnevniizazov.js?v=2.8"></script>
     <script src="riznica.js?v=1.12"></script>
     <script src="trophyManager.js?v=4.6"></script>
@@ -1898,6 +1919,7 @@
     <script src="pravilaigre.js?v=1.22"></script>
     <script src="vracanjeupisa.js?v=1.7"></script>
     <script src="globalchat.js?v=1.7"></script>
+    <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
     <script src="game.js?v=5.49"></script>

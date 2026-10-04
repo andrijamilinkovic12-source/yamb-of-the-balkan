@@ -2,7 +2,7 @@
 
 Podrazumevana zelena tema koristi svetliju dark-green žadnu paletu, namenski renderovanu 3D Soft Clay / neumorphism pozadinu i sopstveni `green_clay` skin kockica.
 
-Aktivni background: `../../assets/green-clay-balkan-diorama-v3.png`.
+Aktivni background: `../../assets/green-clay-balkan-diorama-v4.png`. Prethodni `v3` PNG ostaje sačuvan kao brza povratna varijanta.
 
 Tabla za igranje je proceduralno renderovana CSS slojevima u svetlijoj dark-green Soft Clay / neumorphism paleti. Renderovana pozadina se pojavljuje kao jedan kontinuiran pejzažni watermark neposredno ispod mreže: nazire se kroz obična prazna polja, dok su zaglavlja i zbirni redovi puniji radi čitljivosti. Produkcione dimenzije, raspored 6 kolona, visine ćelija, padding i razmaci nisu menjani.
 

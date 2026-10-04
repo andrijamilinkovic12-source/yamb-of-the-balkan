@@ -221,3 +221,27 @@
 .skin-bronze_spartan .dice-dot, .preview-bronze_spartan .dice-dot {
     box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 2px 4px rgba(0,0,0,0.5) !important;
 }
+
+/* Green-only PNG dice pilot. Keep the existing HTML/CSS pip geometry (1–6) and
+   the original CSS skin definitions above so this experiment is reversible. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(.dice.skin-green_clay, .dice-preview.preview-green_clay) {
+    background: transparent url("assets/green-dice-pilot/green-clay-face-v1.png") center / 110% 110% no-repeat !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(.dice.skin-bronze_antique, .dice-preview.preview-bronze_antique) {
+    background: transparent url("assets/green-dice-pilot/bronze-antique-face-v1.png") center / 110% 110% no-repeat !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(.dice.skin-green_clay:not(.held), .dice.skin-bronze_antique:not(.held), .dice-preview.preview-green_clay, .dice-preview.preview-bronze_antique) {
+    border-color: transparent !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) .preview-green_clay::before {
+    content: none;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) :is(.skin-bronze_antique, .preview-bronze_antique) .dice-dot {
+    background: radial-gradient(circle at 34% 28%, #fff5df, #e5cdab 78%) !important;
+    box-shadow: inset 1px 2px 3px rgba(81, 43, 22, .31), 0 1px 1px rgba(31, 14, 7, .48) !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) .dice.skin-bronze_antique.held {
+    border-color: rgba(255, 225, 178, .82) !important;
+    filter: brightness(1.04) saturate(.94) !important;
+    box-shadow: 0 0 0 3px rgba(247, 189, 127, .18), 0 0 17px rgba(248, 183, 110, .18), 5px 6px 12px rgba(44, 22, 11, .43) !important;
+}

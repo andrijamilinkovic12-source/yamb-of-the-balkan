@@ -24,9 +24,11 @@ const SERVER_RUNTIME = getServerRuntimeDescriptor(process.env);
 
 let firebaseAuth = null;
 let firebaseMessaging = null;
+let firebaseAppCheck = null;
 let firebaseAdminProjectId = null;
 let firebaseAdminCredentialSource = 'none';
 let firebaseWebApiKey = process.env.FIREBASE_WEB_API_KEY || process.env.FIREBASE_API_KEY || '';
+const FIREBASE_APP_CHECK_ENFORCE = /^(?:1|true|yes|on)$/i.test(String(process.env.FIREBASE_APP_CHECK_ENFORCE || '').trim());
 
 function getFirebaseCredentialSource() {
     if (process.env.FIREBASE_SERVICE_ACCOUNT) return 'FIREBASE_SERVICE_ACCOUNT';
@@ -87,6 +89,7 @@ function parseFirebaseServiceAccount() {
 
 try {
     const { cert, getApps, getApp, initializeApp } = require('firebase-admin/app');
+    const { getAppCheck } = require('firebase-admin/app-check');
     const { getAuth } = require('firebase-admin/auth');
     const { getMessaging } = require('firebase-admin/messaging');
     const serviceAccount = parseFirebaseServiceAccount();
@@ -110,6 +113,7 @@ try {
     if (serviceAccount || hasDefaultCredentials) {
         const firebaseApp = getApps().length ? getApp() : initializeApp(appOptions);
         firebaseAuth = getAuth(firebaseApp);
+        firebaseAppCheck = getAppCheck(firebaseApp);
         firebaseMessaging = stagingProjectIdOnlyAuth ? null : getMessaging(firebaseApp);
         if (stagingProjectIdOnlyAuth) firebaseAdminCredentialSource = 'staging_project_id_only';
         console.log(`✅ Firebase Admin Auth spreman (${firebaseAdminProjectId || 'project_id nepoznat'}, ${firebaseAdminCredentialSource}; Messaging: ${firebaseMessaging ? 'aktivan' : 'isključen'}).`);
@@ -337,7 +341,9 @@ app.get('/api/firebase-auth-status', (req, res) => {
         firebaseAdminProjectId: firebaseAdminProjectId || null,
         firebaseAdminCredentialSource,
         androidFirebaseProjectId: readAndroidFirebaseProjectId(),
-        firebaseWebApiKeyPresent: !!getFirebaseWebApiKey()
+        firebaseWebApiKeyPresent: !!getFirebaseWebApiKey(),
+        firebaseAppCheckActive: !!firebaseAppCheck,
+        firebaseAppCheckEnforced: FIREBASE_APP_CHECK_ENFORCE
     });
 });
 
@@ -7626,6 +7632,27 @@ async function verifyFirebaseSocketToken(socket, token) {
     }
 }
 
+async function verifyFirebaseSocketAppCheckToken(token) {
+    if (typeof token !== 'string' || token.length < 100) {
+        return { ok: false, reason: 'missing_app_check_token' };
+    }
+
+    if (!firebaseAppCheck) {
+        return { ok: false, reason: 'firebase_app_check_unavailable' };
+    }
+
+    try {
+        const decoded = await firebaseAppCheck.verifyToken(token);
+        if (!decoded || typeof decoded.app_id !== 'string' || !decoded.app_id) {
+            return { ok: false, reason: 'invalid_app_check_token' };
+        }
+        return { ok: true, appId: decoded.app_id };
+    } catch (error) {
+        console.warn('Firebase App Check token odbijen:', error?.message || error);
+        return { ok: false, reason: 'invalid_app_check_token' };
+    }
+}
+
 function getServerQuarterInfo(now = new Date()) {
     const parts = getTimeZoneParts(now, LEADERBOARD_TIME_ZONE);
     return {
@@ -9905,7 +9932,26 @@ io.on('connection', (socket) => {
 
     socket.on('auth_firebase_token', async (data, ack) => {
         const token = typeof data === 'string' ? data : data?.token;
+        const appCheckToken = typeof data === 'object' ? data?.appCheckToken : '';
+        const appCheckResult = await verifyFirebaseSocketAppCheckToken(appCheckToken);
+
+        if (FIREBASE_APP_CHECK_ENFORCE && !appCheckResult.ok) {
+            const result = {
+                ok: false,
+                reason: appCheckResult.reason,
+                appCheckEnforced: true
+            };
+            if (typeof ack === 'function') ack(result);
+            socket.emit('auth_required', result);
+            return;
+        }
+
         const result = await verifyFirebaseSocketToken(socket, token);
+        result.appCheck = {
+            verified: !!appCheckResult.ok,
+            enforced: FIREBASE_APP_CHECK_ENFORCE,
+            reason: appCheckResult.ok ? null : appCheckResult.reason
+        };
         if (typeof ack === 'function') ack(result);
         if (!result.ok) socket.emit('auth_required', result);
     });

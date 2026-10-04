@@ -33,8 +33,10 @@
       }
       document.documentElement.lang = qaLang;
       const allowed = new Set([
-        'waiting-search', 'waiting-vs', 'invite-host', 'league-summary', 'solo-result',
-        'online-result', 'insufficient', 'confirm', 'daily-active', 'daily-double',
+        'splash-login', 'waiting-search', 'waiting-vs', 'invite-host', 'league-summary', 'solo-result',
+        'online-result', 'online-win-result', 'online-loss-result', 'online-draw-result', 'hotseat-win-result',
+        'hotseat-draw-result', 'technical-win-result', 'technical-loss-result',
+        'insufficient', 'confirm', 'daily-active', 'daily-double',
         'daily-final', 'daily-final-double', 'leaderboard-empty-global',
         'leaderboard-empty-local', 'tournament-quarter', 'tournament-semi', 'tournament-final', 'tournament-detail',
         'pi-off-top', 'streak-off-top', 'toast-success', 'toast-error',
@@ -42,7 +44,9 @@
         'modal-confirm-buy', 'modal-error-long', 'treasury-locked',
         'treasury-skin', 'treasury-effect', 'treasury-theme',
         'online-players-loading', 'online-players-empty', 'online-players-error', 'online-players-disabled',
-        'room-stats', 'room-settings', 'room-chat', 'room-rules', 'room-economy', 'quarter-winner'
+        'room-stats', 'room-settings', 'room-chat', 'room-rules', 'room-economy', 'quarter-winner',
+        'quarter-reward', 'tournament-prize-winner', 'tournament-prize-finalist',
+        'tournament-ceremony-winner', 'tournament-ceremony-finalist'
       ]);
       for (let page = 1; page <= 6; page++) allowed.add(`room-rules-${page}`);
       const root = document.getElementById('qa-root');
@@ -211,7 +215,20 @@
         .then(async html => {
           await loadRealTranslations();
           const sourceDoc = new DOMParser().parseFromString(html, 'text/html');
-          if (state.startsWith('toast-')) {
+          if (state === 'splash-login') {
+            document.documentElement.dataset.splashTheme = qaTheme;
+            const screen = copyScreen(sourceDoc, '#splash-screen');
+            screen.classList.add('active', 'has-login');
+            screen.querySelector('#splash-login-container').style.display = 'flex';
+            const title = screen.querySelector('#theme-splash-clay-title');
+            title.classList.add(`${qaTheme === 'dark' ? 'green' : qaTheme}-splash-clay-title-png`);
+            title.src = `assets/${qaAssetFolder}/splash-title-soft-clay-v1.png?v=2`;
+            if (qaTheme === 'dark') screen.querySelector('.logo-anim').classList.add('green-splash-logo-playing');
+            if (qaTheme !== 'dark') {
+              const legacy = screen.querySelector('.splash-legacy-login-logo');
+              legacy.src = legacy.dataset.legacySrc;
+            }
+          } else if (state.startsWith('toast-')) {
             const showToast = await loadToastRenderer();
             if (state === 'toast-success') {
               showToast(window.t('success_title'), window.t('msg_purchase_success'));
@@ -404,7 +421,7 @@
             screen.querySelectorAll('[data-hs-panel]').forEach(panel => panel.classList.toggle('active', panel.dataset.hsPanel === target));
             document.getElementById(`${target}-hs-list`).innerHTML = manager._stateMarkup(window.t('msg_no_results'), 'empty');
             hydrateGreenImages(screen);
-          } else if (state.startsWith('tournament-')) {
+          } else if (['tournament-quarter', 'tournament-semi', 'tournament-final', 'tournament-detail'].includes(state)) {
             const Tournament = await loadIsolatedClass('turnir.js', 'TournamentManager');
             const manager = new Tournament(null);
             manager.app = { playerId: 'qa-local' };
@@ -574,6 +591,25 @@
                 </div>
               `).join('');
             }
+          } else if (state.startsWith('tournament-ceremony-')) {
+            const isWinner = state.endsWith('winner');
+            const award = isWinner ? 'champion-trophy-v1.png' : 'finalist-silver-v1.png';
+            const ceremony = document.createElement('div');
+            ceremony.className = `tournament-final-ceremony active ${isWinner ? 'is-winner' : 'is-runnerup'}`;
+            ceremony.innerHTML = `
+              <div class="tournament-final-ceremony-panel">
+                <div class="tournament-final-ceremony-rays" aria-hidden="true"></div>
+                <div class="tournament-final-ceremony-trophy-wrap">
+                  <img class="tournament-final-ceremony-trophy" src="assets/green-soft-clay/canonical/tournament-awards/${award}" alt="">
+                </div>
+                <div class="tournament-final-ceremony-kicker">${isWinner ? 'Velika nagrada' : 'Utešna nagrada'}</div>
+                <h2 class="tournament-final-ceremony-title">${isWinner ? 'ŠAMPION TURNIRA' : 'FINALISTA TURNIRA'}</h2>
+                <p class="tournament-final-ceremony-message">${isWinner ? 'Čestitamo! Osvojili ste turnir.' : 'Čestitamo na učešću u finalu.'}</p>
+                <div class="tournament-final-ceremony-reward"><span>+${isWinner ? '44.000' : '5.500'}</span>${greenDukatHtml('')}</div>
+                <div class="tournament-final-ceremony-meta"><span>Tvoj rezultat</span><strong>2.845</strong></div>
+                <button type="button" class="tournament-final-ceremony-next is-ready">DALJE</button>
+              </div>`;
+            root.append(ceremony);
           } else if (state === 'quarter-winner') {
             const winnerName = new URLSearchParams(location.search).get('name') === 'long'
               ? 'Aleksandar Petrović-Milinković Jovanović' : 'Aleksandar Petrović-Milinković';
@@ -651,10 +687,20 @@
               setText('solo-finish-best-column', 'NADOLE');
               setText('solo-finish-no-zero', 'DA');
             } else {
-              setText('go-title', 'POBEDA!');
-              setText('go-msg', 'Pobeda nad test protivnikom. Nema stvarnog meča ni nagrade.');
+              const outcome = state.includes('loss') ? 'loss' : state.includes('draw') ? 'draw' : 'win';
+              const hotseat = state.startsWith('hotseat-');
+              const technical = state.startsWith('technical-');
+              screen.classList.add(`result-${outcome}`);
+              if (hotseat) screen.classList.add('is-hotseat-result');
+              if (hotseat && outcome !== 'draw') screen.classList.add('has-result-winner');
+              if (technical) screen.classList.add('is-technical-result');
+              setText('go-title', outcome === 'loss' ? 'PORAZ' : outcome === 'draw' ? 'NEREŠENO!' : 'POBEDA!');
+              setText('go-msg', 'Izolovani prikaz završnog obaveštenja — bez stvarnog meča i nagrade.');
               setText('go-score', '1458');
-              document.getElementById('btn-rematch').style.display = 'flex';
+              const scoreLabel = screen.querySelector('[data-lang="go_msg_solo"]');
+              if (scoreLabel) scoreLabel.textContent = technical
+                ? (outcome === 'loss' ? 'KAZNA' : 'NAGRADA') : 'TVOJ REZULTAT';
+              document.getElementById('btn-rematch').style.display = hotseat || technical ? 'none' : 'flex';
               const rematchLabel = document.querySelector('#btn-rematch [data-lang="go_rematch"]');
               if (rematchLabel) rematchLabel.textContent = rematchLabel.textContent.replace(/^🔄\s*/u, '');
               document.getElementById('btn-ad-double').style.display = 'none';
@@ -668,6 +714,14 @@
               modal.alert(qaLang === 'en' ? 'Not enough coins for this option. Your balance has not changed.'
                 : 'Za ovu opciju nemate dovoljno dukata. Stanje nije promenjeno.',
                 qaLang === 'en' ? 'NOT ENOUGH COINS' : 'NEDOVOLJNO DUKATA');
+            } else if (state === 'quarter-reward') {
+              modal.alert(`<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png?v=1" alt=""><span class="ql-medal-fallback" aria-hidden="true">🥇</span></span>Čestitamo! Osvojili ste 1. mesto u Kvartalnoj ligi i nagradu od 25.000 ${greenDukatHtml('')}!`, 'KRAJ KVARTALA');
+            } else if (state === 'tournament-prize-winner' || state === 'tournament-prize-finalist') {
+              const isWinner = state === 'tournament-prize-winner';
+              modal.alert(`<img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/${isWinner ? 'champion-trophy-v1.png' : 'finalist-silver-v1.png'}?v=1" alt="">${isWinner ? 'Čestitamo! Osvojili ste turnir i glavnu nagradu.' : 'Kao finalisti, vraćen Vam je ulog.'}`,
+                isWinner ? 'ŠAMPION TURNIRA' : 'FINALISTA',
+                { contextClass: isWinner ? 'tourney-winner' : 'tourney-finalist' });
+              hydrateGreenImages(overlay);
             } else if (state === 'modal-error-long') {
               const message = qaLang === 'en'
                 ? 'The server is temporarily unavailable. Your purchase was not completed and your balance has not changed. Please try again later.'
