@@ -513,6 +513,7 @@ const TRANSLATIONS = {
         "settings_privacy_short": "🔒 Privatnost",
         "settings_terms_label": "Uslovi",
         "settings_privacy_label": "Privatnost",
+        "settings_ad_privacy_options": "Izbori privatnosti za oglase",
 
         // --- PRAVILA (SR) ---
         "rules_header_title": "PRAVILA I UPUTSTVO",
@@ -1348,6 +1349,7 @@ const TRANSLATIONS = {
         "settings_privacy_short": "🔒 Privacy",
         "settings_terms_label": "Terms",
         "settings_privacy_label": "Privacy",
+        "settings_ad_privacy_options": "Ad privacy choices",
 
         // --- RULES (EN) ---
         "rules_header_title": "RULES & GUIDE",

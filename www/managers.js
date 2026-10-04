@@ -4349,6 +4349,12 @@ class AdMobController {
         this.interstitialId = 'ca-app-pub-4319963185096437/2913237519'; 
         
         this.adMobPlugin = null;
+        this.consentPlugin = null;
+        this.legacyConsentPlugin = null;
+        this.legacyConsentRetryTimer = null;
+        this.legacyConsentRetryCount = 0;
+        this.canRequestAds = false;
+        this.lifecycleListenersAttached = false;
         this.bannerVisible = false;
         this.bannerSlot = null;
         this.bannerLoaded = false;
@@ -4358,12 +4364,14 @@ class AdMobController {
         this.bannerTestMode = localStorage.getItem('yamb_admob_test_ads') === '1';
         
         this.ads = {
-            rewarded: { isReady: false, isLoading: false, retryCount: 0 },
-            interstitial: { isReady: false, isLoading: false, retryCount: 0 }
+            rewarded: { isReady: false, isLoading: false, retryCount: 0, retryTimer: null },
+            interstitial: { isReady: false, isLoading: false, retryCount: 0, retryTimer: null }
         };
-        
-        this.baseRetryDelay = 1000;   
-        this.maxRetryDelay = 30000;   
+
+        this.adRetryPolicy = {
+            rewarded: { baseDelay: 5000, maxDelay: 120000, maxAttempts: 6 },
+            interstitial: { baseDelay: 30000, maxDelay: 900000, maxAttempts: 5 }
+        };
         this.rewardSsvInfo = null;
         this.activeRewardSsvInfo = null;
         this.lastRewardSsvInfo = null;
@@ -4379,6 +4387,46 @@ class AdMobController {
     async initialize() {
         if (typeof YAMB_IS_PRODUCTION_SERVER !== 'undefined' && !YAMB_IS_PRODUCTION_SERVER) {
             console.info('🧪 Staging/local runtime: AdMob je isključen.');
+            this.updateUI(false);
+            return;
+        }
+        const capacitor = window.Capacitor;
+        if (capacitor?.isPluginAvailable?.('AdConsent')) {
+            try {
+                this.consentPlugin = capacitor.Plugins?.AdConsent || capacitor.registerPlugin('AdConsent');
+                const status = await this.consentPlugin.requestConsent();
+                this.canRequestAds = !!status.canRequestAds;
+                this.updatePrivacyOptionsUI(!!status.privacyOptionsRequired);
+            } catch (err) {
+                console.warn('UMP provera nije uspela; oglasi ostaju isključeni.', err);
+                this.canRequestAds = false;
+                this.updatePrivacyOptionsUI(false);
+            }
+        } else if (capacitor?.isNativePlatform?.()) {
+            try {
+                const legacyAdMob = capacitor.Plugins?.AdMob || capacitor.registerPlugin?.('AdMob');
+                if (typeof legacyAdMob?.requestConsentInfo !== 'function' ||
+                        typeof legacyAdMob?.showConsentForm !== 'function') {
+                    throw new Error('Stara AdMob verzija nema UMP API.');
+                }
+                this.legacyConsentPlugin = legacyAdMob;
+                const info = await legacyAdMob.requestConsentInfo();
+                this.canRequestAds = info.status === 'OBTAINED' || info.status === 'NOT_REQUIRED';
+                this.updatePrivacyOptionsUI(!!info.isConsentFormAvailable && info.status === 'OBTAINED');
+                if (this.canRequestAds) {
+                    this.clearLegacyConsentRetry();
+                } else {
+                    // Stari MainActivity već prikazuje UMP formu. Ne otvaraj drugi dijalog.
+                    this.scheduleLegacyConsentRetry();
+                }
+            } catch (err) {
+                console.warn('Stara UMP provera nije uspela; oglasi ostaju isključeni.', err);
+                this.canRequestAds = false;
+                this.updatePrivacyOptionsUI(false);
+                if (this.legacyConsentPlugin) this.scheduleLegacyConsentRetry();
+            }
+        }
+        if (!this.canRequestAds) {
             this.updateUI(false);
             return;
         }
@@ -4402,17 +4450,25 @@ class AdMobController {
                     this.triggerHighPriorityLoad('rewarded');
                     this.triggerHighPriorityLoad('interstitial');
 
-                    document.addEventListener("resume", () => {
-                        this.triggerHighPriorityLoad('rewarded');
-                        this.triggerHighPriorityLoad('interstitial');
-                    }, false);
-
-                    window.addEventListener("visibilitychange", () => {
-                        if (document.visibilityState === 'visible') {
+                    if (!this.lifecycleListenersAttached) {
+                        this.lifecycleListenersAttached = true;
+                        document.addEventListener("resume", () => {
                             this.triggerHighPriorityLoad('rewarded');
                             this.triggerHighPriorityLoad('interstitial');
-                        }
-                    });
+                        }, false);
+
+                        window.addEventListener("visibilitychange", () => {
+                            if (document.visibilityState === 'visible') {
+                                this.triggerHighPriorityLoad('rewarded');
+                                this.triggerHighPriorityLoad('interstitial');
+                            }
+                        });
+
+                        window.addEventListener("online", () => {
+                            this.triggerHighPriorityLoad('rewarded');
+                            this.triggerHighPriorityLoad('interstitial');
+                        });
+                    }
                 }
             } catch (err) { 
                 console.warn("⚠️ AdMob SDK nije podržan u ovom okruženju.", err); 
@@ -4421,6 +4477,58 @@ class AdMobController {
             }
         } else {
             this.updateUI(false);
+        }
+    }
+
+    updatePrivacyOptionsUI(required) {
+        const button = document.getElementById('ad-privacy-options');
+        if (button) button.hidden = !required;
+    }
+
+    clearLegacyConsentRetry() {
+        if (this.legacyConsentRetryTimer) clearTimeout(this.legacyConsentRetryTimer);
+        this.legacyConsentRetryTimer = null;
+        this.legacyConsentRetryCount = 0;
+    }
+
+    scheduleLegacyConsentRetry() {
+        if (this.legacyConsentRetryTimer || this.legacyConsentRetryCount >= 6) return;
+        const delay = Math.min(2000 * Math.pow(2, this.legacyConsentRetryCount++), 30000);
+        this.legacyConsentRetryTimer = setTimeout(() => {
+            this.legacyConsentRetryTimer = null;
+            this.initialize();
+        }, delay);
+    }
+
+    async showPrivacyOptions() {
+        if (!this.consentPlugin && !this.legacyConsentPlugin) return;
+        try {
+            if (this.consentPlugin) {
+                const status = await this.consentPlugin.showPrivacyOptions();
+                this.canRequestAds = !!status.canRequestAds;
+                this.updatePrivacyOptionsUI(!!status.privacyOptionsRequired);
+            } else {
+                const status = await this.legacyConsentPlugin.showConsentForm();
+                this.canRequestAds = status.status === 'OBTAINED' || status.status === 'NOT_REQUIRED';
+                this.updatePrivacyOptionsUI(true);
+            }
+            for (const type of ['rewarded', 'interstitial']) {
+                this.clearAdRetryTimer(type);
+                this.ads[type].isReady = false;
+                this.ads[type].isLoading = false;
+            }
+            await this.removeCurrentBanner();
+            if (!this.canRequestAds) {
+                this.updateUI(false);
+            } else if (!this.adMobPlugin) {
+                await this.initialize();
+            } else {
+                this.updateUI(false);
+                this.triggerHighPriorityLoad('rewarded');
+                this.triggerHighPriorityLoad('interstitial');
+            }
+        } catch (err) {
+            console.warn('Izbori privatnosti nisu mogli da se otvore.', err);
         }
     }
 
@@ -4487,6 +4595,12 @@ class AdMobController {
     }
 
     handleAdLoaded(type) {
+        if (!this.canRequestAds) {
+            this.ads[type].isReady = false;
+            this.ads[type].isLoading = false;
+            return;
+        }
+        this.clearAdRetryTimer(type);
         this.ads[type].isReady = true; 
         this.ads[type].isLoading = false; 
         this.ads[type].retryCount = 0; 
@@ -4506,6 +4620,36 @@ class AdMobController {
         }
     }
 
+    clearAdRetryTimer(type) {
+        const adState = this.ads[type];
+        if (!adState?.retryTimer) return;
+
+        clearTimeout(adState.retryTimer);
+        adState.retryTimer = null;
+    }
+
+    scheduleAdRetry(type, rewardOptions = {}) {
+        const adState = this.ads[type];
+        const policy = this.adRetryPolicy[type];
+        if (!this.canRequestAds || !adState || !policy || adState.retryTimer || !navigator.onLine) return;
+
+        adState.retryCount++;
+        if (adState.retryCount > policy.maxAttempts) {
+            console.warn(`AdMob ${type}: automatski retry je pauziran posle ${policy.maxAttempts} neuspelih pokušaja.`);
+            return;
+        }
+
+        const nextDelay = Math.min(
+            policy.baseDelay * Math.pow(2, adState.retryCount - 1),
+            policy.maxDelay
+        );
+
+        adState.retryTimer = setTimeout(() => {
+            adState.retryTimer = null;
+            this.preloadAd(type, rewardOptions);
+        }, nextDelay);
+    }
+
     handleAdFailed(type, err) {
         this.ads[type].isReady = false; 
         this.ads[type].isLoading = false;
@@ -4519,18 +4663,15 @@ class AdMobController {
             }
             const retryOptions = this.pendingRewardOptions || this.currentRewardOptions || {};
             this.updateUI(this.ads.rewarded.isReady);
-            this.ads[type].retryCount++;
-            const nextDelay = Math.min(this.baseRetryDelay * Math.pow(1.2, this.ads[type].retryCount), this.maxRetryDelay);
-            setTimeout(() => this.preloadAd(type, retryOptions), nextDelay);
+            this.scheduleAdRetry(type, retryOptions);
             return;
         }
 
-        this.ads[type].retryCount++;
-        const nextDelay = Math.min(this.baseRetryDelay * Math.pow(1.2, this.ads[type].retryCount), this.maxRetryDelay);
-        setTimeout(() => this.preloadAd(type), nextDelay);
+        this.scheduleAdRetry(type);
     }
 
     handleAdDismissed(type) {
+        this.clearAdRetryTimer(type);
         this.ads[type].isReady = false;
         const nextRewardOptions = type === 'rewarded'
             ? (this.pendingRewardOptions || this.currentRewardOptions || {})
@@ -4618,7 +4759,7 @@ class AdMobController {
     }
 
     isRewardVideoReadyFor(rewardOptions = {}) {
-        return !!(this.ads.rewarded.isReady && this.isRewardSsvReadyForCurrentUser(rewardOptions));
+        return !!(this.canRequestAds && this.ads.rewarded.isReady && this.isRewardSsvReadyForCurrentUser(rewardOptions));
     }
 
     consumeLastRewardSsvNonce() {
@@ -4705,7 +4846,7 @@ class AdMobController {
     }
 
     async preloadAd(type, rewardOptions = {}) {
-        if (!this.adMobPlugin || !navigator.onLine) return; 
+        if (!this.canRequestAds || !this.adMobPlugin || !navigator.onLine) return;
         if (this.ads[type].isLoading || this.ads[type].isReady) return;
         
         this.ads[type].isLoading = true;
@@ -4737,6 +4878,7 @@ class AdMobController {
     }
 
     triggerHighPriorityLoad(type = 'rewarded', rewardOptions = {}) {
+        if (!this.canRequestAds) return;
         if (type === 'rewarded') {
             if (!this.ads.rewarded) return;
 
@@ -4756,13 +4898,17 @@ class AdMobController {
                 this.updateUI(false);
             }
 
+            this.clearAdRetryTimer('rewarded');
             this.ads.rewarded.retryCount = 0;
             this.preloadAd('rewarded', rewardOptions);
             return;
         }
 
         if (!this.ads[type] || (!this.ads[type].isLoading && !this.ads[type].isReady)) {
-            if (this.ads[type]) this.ads[type].retryCount = 0; 
+            if (this.ads[type]) {
+                this.clearAdRetryTimer(type);
+                this.ads[type].retryCount = 0;
+            }
             this.preloadAd(type, rewardOptions);
         }
     }
@@ -4803,6 +4949,7 @@ class AdMobController {
     }
 
     handleBannerLoaded() {
+        if (!this.canRequestAds) return;
         this.clearBannerLoadTimer();
         this.bannerLoaded = true;
         this.setBannerSlotState('loaded');
@@ -4891,7 +5038,7 @@ class AdMobController {
     }
 
     async showEconomyBanner(slotEl = document.getElementById('economy-banner-slot')) {
-        if (!this.adMobPlugin || !slotEl || !navigator.onLine) return;
+        if (!this.canRequestAds || !this.adMobPlugin || !slotEl || !navigator.onLine) return;
 
         const isSameSlot = this.bannerSlot === slotEl;
         this.bannerSlot = slotEl;
@@ -4902,6 +5049,7 @@ class AdMobController {
         this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
 
         await this.removeCurrentBanner();
+        if (!this.canRequestAds) return;
         this.bannerSlot = slotEl;
         this.setBannerSlotState('loading', _safeT('economy_ad_loading') || 'Učitavanje oglasa...');
         this.startBannerLoadTimer();
@@ -4951,7 +5099,7 @@ class AdMobController {
 
     showRewardVideo(rewardOptions = {}) {
         return new Promise(async (resolve) => {
-            if (!this.adMobPlugin) { resolve(false); return; }
+            if (!this.canRequestAds || !this.adMobPlugin) { resolve(false); return; }
             const readyForReward = await this.waitForRewardVideoReadyFor(rewardOptions);
             if (readyForReward) {
                 try {
@@ -4972,7 +5120,7 @@ class AdMobController {
 
     showInterstitial() {
         return new Promise(async (resolve) => {
-            if (!this.adMobPlugin) { resolve(false); return; }
+            if (!this.canRequestAds || !this.adMobPlugin) { resolve(false); return; }
             if (this.ads.interstitial.isReady) {
                 try {
                     await this.adMobPlugin.showInterstitial(); resolve(true);

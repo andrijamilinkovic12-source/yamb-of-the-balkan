@@ -2443,6 +2443,22 @@ assert(gameSource.includes('class="green-friend-presence"')
     && themeCssSource.includes('#waiting-screen#waiting-screen.is-hosting-invite #friends-list-container')
     && themeCssSource.includes('#league-modal-overlay#league-modal-overlay > .modal-box')
     && tournamentSource.includes('tourney-participant-row'), 'Green Poziv, Liga ili bracket nisu obuhvaćeni follow-up rasporedom.');
+assert(/#waiting-screen\.is-hosting-invite\s*\{[^}]*overflow-y:\s*hidden;/s.test(themeCssSource)
+    && themeCssSource.includes('@media (max-height: 760px) and (min-height: 690px)')
+    && themeCssSource.includes('height: 180px !important;')
+    && themeCssSource.includes('@media (max-height: 689px)')
+    && /#waiting-screen#waiting-screen\.is-hosting-invite #friends-list-container\s*\{[^}]*flex:\s*0 0 auto !important;/s.test(themeCssSource)
+    && /#waiting-screen\.is-hosting-invite \.green-friend-presence\s*\{[^}]*text-transform:\s*uppercase;/s.test(themeCssSource),
+    'Green Poziv: običan telefon mora prikazati ONLINE/OFFLINE bez skrola, uz fallback za vrlo nizak ekran.');
+assert(['wins', 'draws', 'losses'].every((part, index) =>
+    indexSource.includes(`data-green-record="${['win', 'draw', 'loss'][index]}">`)
+    && indexSource.includes(`id="waiting-opp-${part}"`))
+    && /#waiting-screen:is\(\.is-hosting-invite, \.is-random-online\) \[data-lang="ws_power"\]/.test(themeCssSource)
+    && [1, 2, 3].every(index => themeCssSource.includes(`#waiting-screen#waiting-screen.is-random-online .ws-random-records .ws-g-stat:nth-child(${index}) .val`)),
+    'Green random: obe kartice moraju imati prevedene oznake i trobojne rezultate.');
+assert(/#tournament-screen \.tourney-pagination \.dot\s*\{[^}]*align-items:\s*end;/s.test(themeCssSource)
+    && /\.tourney-pagination \.dot\s*\{[^}]*width:\s*44px;\s*height:\s*44px;/s.test(tournamentSource),
+    'Green Turnir: vidljive tačkice moraju biti nisko, uz punu zonu dodira.');
 assert(indexSource.includes('data-green-record="win"')
     && indexSource.includes('data-green-record="draw"')
     && indexSource.includes('data-green-record="loss"')

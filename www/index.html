@@ -77,12 +77,12 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5.21">
-    <link rel="stylesheet" href="teme.css?v=6.92">
+    <link rel="stylesheet" href="style.css?v=5.22">
+    <link rel="stylesheet" href="teme.css?v=6.93">
     <link rel="stylesheet" href="kockice.css?v=1.7">
     <link rel="stylesheet" href="efekti.css?v=1.6">
     
-    <script src="languages.js?v=5.9"></script>
+    <script src="languages.js?v=5.10"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -1342,6 +1342,7 @@
                 <span class="settings-legal-divider">|</span>
                 <span onclick="window.open('https://www.yambofthebalkan.com/privacy.html', '_blank')" class="settings-legal-link"><span class="settings-legal-icon-legacy">🔒</span><img class="settings-legal-soft-clay-icon settings-legal-soft-clay-icon-easter" data-theme-src="assets/easter-soft-clay/settings/privacy-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-desert" data-theme-src="assets/desert-soft-clay/settings/privacy-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-nebula" data-theme-src="assets/severna-soft-clay/settings/privacy-v2.png?v=1" loading="lazy" alt="" aria-hidden="true"><img class="settings-legal-soft-clay-icon-green" data-theme-src="assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true"><span data-lang="settings_privacy_label">Privatnost</span></span>
             </div>
+            <button id="ad-privacy-options" type="button" class="settings-ad-privacy-options" onclick="window.adMobGlobal?.showPrivacyOptions()" data-lang="settings_ad_privacy_options" hidden>Izbori privatnosti za oglase</button>
             </div>
         </div>
     </div>
@@ -1480,9 +1481,9 @@
                         <div class="ws-g-stat"><span class="lbl" data-lang="ws_power">Moć ⚡</span><span id="waiting-opp-power" class="val" style="color: var(--gold-main);">0</span></div>
                         <div class="ws-g-stat ws-record-summary"><span class="lbl" data-lang="ws_wl">Pob/Ner/Por</span><span id="waiting-opp-wl" class="val">0 / 0 / 0</span></div>
                         <div class="ws-random-records" aria-label="Online rekord">
-                            <div class="ws-g-stat"><span class="lbl">POB</span><span id="waiting-opp-wins" class="val">0</span></div>
-                            <div class="ws-g-stat"><span class="lbl">NER</span><span id="waiting-opp-draws" class="val">0</span></div>
-                            <div class="ws-g-stat"><span class="lbl">POR</span><span id="waiting-opp-losses" class="val">0</span></div>
+                            <div class="ws-g-stat"><span class="lbl" data-green-record="win">POB</span><span id="waiting-opp-wins" class="val">0</span></div>
+                            <div class="ws-g-stat"><span class="lbl" data-green-record="draw">NER</span><span id="waiting-opp-draws" class="val">0</span></div>
+                            <div class="ws-g-stat"><span class="lbl" data-green-record="loss">POR</span><span id="waiting-opp-losses" class="val">0</span></div>
                         </div>
                     </div>
                 </div>
@@ -1886,7 +1887,7 @@
     </script>
 
     <script src="config.js?v=5.6"></script>
-    <script src="managers.js?v=5.27"></script>
+    <script src="managers.js?v=5.28"></script>
     <script src="dnevniizazov.js?v=2.8"></script>
     <script src="riznica.js?v=1.12"></script>
     <script src="trophyManager.js?v=4.6"></script>

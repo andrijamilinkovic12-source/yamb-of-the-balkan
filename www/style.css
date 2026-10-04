@@ -2548,6 +2548,22 @@ body {
 .settings-legal-divider {
     color: rgba(255,255,255,0.22);
 }
+.settings-ad-privacy-options {
+    display: block;
+    margin: 10px auto 0;
+    padding: 6px 10px;
+    border: 0;
+    background: transparent;
+    color: var(--text-muted);
+    font: inherit;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.settings-ad-privacy-options[hidden] {
+    display: none !important;
+}
 @media (min-width: 760px) {
     #settings-screen {
         padding-top: 22px;

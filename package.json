@@ -9,6 +9,7 @@
     "start": "node server.js",
     "qa:green": "node scripts/serve-green-qa.js",
     "check:js": "node scripts/check-js.js",
+    "check:ad-consent": "node scripts/check-ad-consent.js",
     "check:game-rules": "node scripts/check-game-rules.js",
     "check:trophies": "node scripts/check-trophies.js",
     "check:profile-sync": "node scripts/check-profile-sync.js",
@@ -27,7 +28,7 @@
     "check:portrait-lock": "node scripts/check-portrait-lock.js",
     "check:green-coverage": "node scripts/check-green-asset-coverage.js",
     "rebuild:h2h:dry": "node scripts/rebuild-h2h-from-ledger.js",
-    "test": "npm run check:js && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:green-coverage"
+    "test": "npm run check:js && npm run check:ad-consent && npm run check:game-rules && npm run check:trophies && npm run check:profile-sync && npm run check:match-results && npm run check:league && npm run check:online-reconnect && npm run check:socket-transport && npm run check:reconnect-staging && npm run check:h2h-ledger && npm run check:theme-performance && npm run check:effect-screen-lifecycle && npm run check:portrait-lock && npm run check:green-coverage"
   },
   "keywords": [],
   "author": "",

@@ -22954,8 +22954,12 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     background: var(--carousel-dot-active);
     box-shadow: 0 0 10px var(--carousel-dot-glow);
 }
+/* Keep the 44px touch target, but place the visible dots near the shell's lower edge. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-pagination .dot {
+    align-items: end;
+}
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-tab-content--bracket {
-    padding: 8px 10px max(4px, env(safe-area-inset-bottom));
+    padding: 4px 10px max(4px, env(safe-area-inset-bottom));
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #tournament-screen .tourney-page {
     padding-inline: 0;
@@ -23070,7 +23074,7 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     }
 }
 
-/* Invite friend: one screen on ordinary phones, with a scrolling fallback on short ones. */
+/* Invite friend: keep the complete card visible without page scroll on ordinary phones. */
 .green-friend-presence { display: none; }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
     box-sizing: border-box;
@@ -23078,15 +23082,14 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     padding-bottom: var(--safe-bottom) !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite #friends-list-container {
-    flex: 1 1 auto !important;
-    min-height: 0;
+    flex: 0 0 auto !important;
     margin-top: 6px !important;
-    padding-bottom: 4px !important;
+    padding-bottom: 0 !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite #friends-list {
-    min-height: 0;
+    flex: 0 0 auto;
     align-items: flex-start;
-    padding-bottom: 6px !important;
+    padding-bottom: 0 !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) > .ws-glass-avatar,
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .easter-invite-rival-img {
@@ -23165,19 +23168,41 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     font-weight: 900;
     line-height: 1.1;
     letter-spacing: .4px;
+    text-transform: uppercase;
     color: #d9efb7;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .friend-player-card.is-offline .green-friend-presence {
     color: #f2b3a5;
 }
-@media (max-height: 700px) {
+@media (max-height: 760px) and (min-height: 690px) {
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
+        overflow-y: hidden;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .waiting-header {
+        margin-bottom: 8px;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .waiting-status-panel {
+        margin-bottom: 10px !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal {
+        margin-top: 4px !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .ws-vs-area-horizontal > .ws-glass-card:not(.opp-card) {
+        height: 180px !important;
+        grid-template-rows: 60px minmax(0, 1fr) !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .easter-invite-rival-card {
+        grid-template-rows: 60px minmax(0, 1fr) auto !important;
+    }
+    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
+        margin-top: 4px !important;
+    }
+}
+@media (max-height: 689px) {
     body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite {
         overflow-y: auto;
-        scroll-padding-bottom: var(--safe-bottom);
-    }
-    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite #friends-list-container {
-        flex: 0 0 auto !important;
-        padding-bottom: var(--safe-bottom) !important;
+        overscroll-behavior-y: contain;
+        -webkit-overflow-scrolling: touch;
     }
 }
 
@@ -23209,9 +23234,8 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     padding-bottom: var(--safe-bottom) !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
-    flex: 1 1 auto !important;
-    min-height: 0;
-    padding-bottom: 4px !important;
+    flex: 0 0 auto !important;
+    padding-bottom: 0 !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite .friend-card.friend-player-card {
     padding: 8px 9px !important;
@@ -23223,12 +23247,6 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     top: var(--safe-top);
     height: min(800px, calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px)) !important;
     max-height: calc(100dvh - var(--safe-top) - var(--safe-bottom) - 8px) !important;
-}
-@media (max-height: 700px) {
-    body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite #friends-list-container {
-        flex: 0 0 auto !important;
-        padding-bottom: var(--safe-bottom) !important;
-    }
 }
 
 /* Green statistics: a broken streak remains readable against its dark pill. */
@@ -23490,7 +23508,8 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
 }
 
 /* Invite friend: keep the existing geometry and mirror the friend-list result colors. */
-body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .easter-invite-rival-power [data-lang="ws_power"] {
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen:is(.is-hosting-invite, .is-random-online) [data-lang="ws_power"],
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen.is-hosting-invite .easter-friend-power > span {
     text-transform: uppercase;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite :is(.ws-random-records [data-green-record="win"] + .val, .easter-invite-rival-stat [data-green-record="win"] + strong) {
@@ -23500,6 +23519,16 @@ body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-
     color: #ead18d !important;
 }
 body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-hosting-invite :is(.ws-random-records [data-green-record="loss"] + .val, .easter-invite-rival-stat [data-green-record="loss"] + strong) {
+    color: #efae9b !important;
+}
+/* Random matchmaking shares the same win/draw/loss palette as friend invitations. */
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-random-online .ws-random-records .ws-g-stat:nth-child(1) .val {
+    color: #bddd8d !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-random-online .ws-random-records .ws-g-stat:nth-child(2) .val {
+    color: #ead18d !important;
+}
+body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)) #waiting-screen#waiting-screen.is-random-online .ws-random-records .ws-g-stat:nth-child(3) .val {
     color: #efae9b !important;
 }
 

@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="efekti.css">
   <style>
     #qa-error { position: fixed; inset: 20px; z-index: 9999999; color: white; font: 16px Arial, sans-serif; }
-    #qa-caption { position: fixed; z-index: 9999999; left: 12px; bottom: max(50px, env(safe-area-inset-bottom)); padding: 3px 8px; border-radius: 8px; background: #173b26; color: #f1f7e6; font: 10px Arial, sans-serif; pointer-events: none; opacity: .8; }
+    #qa-caption { position: fixed; z-index: 9999999; left: 12px; bottom: max(1px, env(safe-area-inset-bottom)); padding: 3px 8px; border-radius: 8px; background: #173b26; color: #f1f7e6; font: 10px Arial, sans-serif; pointer-events: none; opacity: .8; }
     .qa-avatar { background: #496f51; }
   </style>
 </head>
@@ -194,7 +194,9 @@
           });
         }
         copy.querySelectorAll('[data-green-record]').forEach(element => {
-          element.textContent = window.t(`ws_record_${element.dataset.greenRecord}_short`);
+          element.textContent = qaTheme === 'dark'
+            ? window.t(`ws_record_${element.dataset.greenRecord}_short`)
+            : ({ win: 'POB', draw: 'NER', loss: 'POR' })[element.dataset.greenRecord];
         });
         copy.querySelectorAll('img[src^="http"]').forEach(image => image.removeAttribute('src'));
         root.append(copy);
