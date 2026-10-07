@@ -39,7 +39,6 @@ class RiznicaManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
-        const isEasterIntro = overlay.classList.contains('theme-easter');
         if (overlay.classList.contains('theme-easter')) {
             this.warmTrophyAssets('easter');
         } else if (overlay.classList.contains('theme-desert')) {
@@ -49,60 +48,12 @@ class RiznicaManager {
         }
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
-        introText.textContent = '';
+        introText.replaceChildren();
+        introText.setAttribute('aria-hidden', 'true');
 
-        const lang = localStorage.getItem('yamb_lang') || 'sr';
-        const isSoftClayIntro = overlay.classList.contains('theme-easter')
-            || overlay.classList.contains('theme-desert')
-            || overlay.classList.contains('theme-severna')
-            || overlay.classList.contains('theme-dark');
-
-        if (isSoftClayIntro) {
-            const introLabel = lang === 'en' || lang === 'en-GB' ? 'TREASURY' : 'RIZNICA';
-            if (!isEasterIntro) this.setEasterIntroTitle(introText, introLabel);
-
-            let completed = false;
-            const openBehindOverlayAt = 3650;
-            const introDuration = 4600;
-
-            setTimeout(() => {
-                if (completed) return;
-                completed = true;
-                onComplete();
-            }, openBehindOverlayAt);
-
-            setTimeout(() => {
-                if (!completed) {
-                    completed = true;
-                    onComplete();
-                }
-                overlay.classList.add('hidden');
-                overlay.setAttribute('aria-hidden', 'true');
-                this.isIntroPlaying = false;
-            }, introDuration);
-            return;
-        }
-
-        const introLabel = lang === 'en' ? 'T R E A S U R Y' : 'R I Z N I C A';
-        const typeDuration = 2600;
-        const openBehindOverlayAt = 3700;
-        const introDuration = 4700;
-        let step = 0;
+        const openBehindOverlayAt = 3650;
+        const introDuration = 4600;
         let completed = false;
-
-        const typeTimer = setInterval(() => {
-            step += 1;
-            introText.textContent = introLabel.slice(0, step);
-
-            if (step >= introLabel.length) {
-                clearInterval(typeTimer);
-            }
-        }, typeDuration / introLabel.length);
-
-        setTimeout(() => {
-            clearInterval(typeTimer);
-            introText.textContent = introLabel;
-        }, typeDuration + 80);
 
         setTimeout(() => {
             if (completed) return;

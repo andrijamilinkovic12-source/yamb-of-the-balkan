@@ -100,7 +100,8 @@ for (const [familyName, family] of families) {
     }
 }
 
-const themeFoundation = new Set(['splash-title-soft-clay-v1.png']);
+const themeFoundation = new Set(['splash-title-soft-clay-v2.png']);
+const historicalGameLogo = new Set(['splash-title-soft-clay-v1.png']);
 assert(dailyStatesManifest.status === 'locked', 'Daily States manifest mora imati locked status posle završnog audita.');
 assert(leaderboardControlsManifest.status === 'locked', 'Leaderboard Controls manifest mora imati locked status posle završnog audita.');
 assert(rulesPageIllustrationsManifest.status === 'locked' && registry.families?.rulesPageIllustrations?.status === 'locked', 'Rules Page Illustrations manifest i registar moraju biti zaključani posle Koraka 4.');
@@ -119,12 +120,13 @@ const runtimePngs = walkFiles(greenRoot)
     .filter(file => file.toLowerCase().endsWith('.png'))
     .map(file => slash(path.relative(greenRoot, file)))
     .sort();
-const classifications = { registered: [], protected: [], foundation: [], pending: [], stagedCanonical: [] };
+const classifications = { registered: [], protected: [], foundation: [], historicalLogo: [], pending: [], stagedCanonical: [] };
 for (const relative of runtimePngs) {
     const categories = [
         registered.has(relative) ? 'registered' : null,
         manifestProtected.has(relative) ? 'protected' : null,
         themeFoundation.has(relative) ? 'foundation' : null,
+        historicalGameLogo.has(relative) ? 'historicalLogo' : null,
         pending.has(relative) ? 'pending' : null,
         stagedCanonical.has(relative) ? 'stagedCanonical' : null
     ].filter(Boolean);
@@ -132,10 +134,11 @@ for (const relative of runtimePngs) {
     classifications[categories[0]].push(relative);
 }
 
-assert(runtimePngs.length === 176, `Green runtime inventar odstupa: očekivano 176 PNG, pronađeno ${runtimePngs.length}.`);
+assert(runtimePngs.length === 177, `Green runtime inventar odstupa: očekivano 177 PNG, pronađeno ${runtimePngs.length}.`);
 assert(classifications.registered.length === 159, `Očekivano 159 centralno registrovanih PNG-ova, pronađeno ${classifications.registered.length}.`);
 assert(classifications.protected.length === 16, `Očekivano 16 manifestom zaštićenih funkcionalnih PNG-ova, pronađeno ${classifications.protected.length}.`);
 assert(classifications.foundation.length === 1, `Očekivan je jedan splash foundation PNG, pronađeno ${classifications.foundation.length}.`);
+assert(classifications.historicalLogo.length === 1, 'Stari Green logo mora ostati samo istorijski PNG.');
 assert(classifications.pending.length === 0, `Nema preostalih pending Green PNG-ova, pronađeno ${classifications.pending.length}.`);
 assert(classifications.stagedCanonical.length === 0, `Nema preostalih staged Green PNG-ova, pronađeno ${classifications.stagedCanonical.length}.`);
 
@@ -185,12 +188,13 @@ assert(retiredBackgrounds.length === 3 && retiredBackgroundBytes === 5350456, `I
 const totalBytes = runtimePngs.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
 const pendingBytes = classifications.pending.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
 const stagedCanonicalBytes = classifications.stagedCanonical.reduce((sum, relative) => sum + fs.statSync(path.join(greenRoot, relative)).size, 0);
-assert(totalBytes === 15959873 && pendingBytes === 0 && stagedCanonicalBytes === 0, 'Green coverage veličine odstupaju od Treasury Effect Previews bilansa.');
+assert(totalBytes === 17302049 && pendingBytes === 0 && stagedCanonicalBytes === 0, 'Green coverage veličine odstupaju od logo v2 bilansa.');
 
 console.log('Green asset coverage provera je prošla.');
 console.log(`- centralni registar: ${families.length} locked porodica / ${classifications.registered.length} PNG`);
 console.log(`- manifestom zaštićena funkcionalna stanja: ${classifications.protected.length} PNG`);
 console.log(`- theme foundation: ${classifications.foundation.length} PNG`);
+console.log(`- istorijski logo: ${classifications.historicalLogo.length} PNG`);
 console.log(`- staged canonical: ${classifications.stagedCanonical.length} PNG / ${stagedCanonicalBytes} B`);
 console.log(`- sledeće canonical grupe: ${classifications.pending.length} PNG / ${pendingBytes} B`);
 for (const [groupName, paths] of Object.entries(pendingGroups)) {

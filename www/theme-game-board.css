@@ -1,0 +1,374 @@
+/* The score board keeps its existing geometry and text in every theme.
+   Only material, translucency, ink and state colors change. */
+body {
+    --board-shell: linear-gradient(145deg, rgba(64,97,67,.68), rgba(36,66,46,.70));
+    --board-cell: linear-gradient(145deg, rgba(75,112,76,.55), rgba(47,85,56,.57));
+    --board-header: linear-gradient(145deg, rgba(53,88,57,.78), rgba(35,70,47,.80));
+    --board-sum: linear-gradient(145deg, rgba(65,99,62,.78), rgba(42,78,50,.80));
+    --board-gutter: rgba(22,52,29,.43);
+    --board-edge: rgba(198,220,177,.48);
+    --board-cell-edge: rgba(204,225,182,.20);
+    --board-ink: #F1F6E6;
+    --board-shadow: rgba(8,29,17,.34);
+    --board-light: rgba(221,238,198,.28);
+    --board-recess: rgba(12,43,23,.30);
+    --board-hover: rgba(171,198,139,.20);
+    --board-press: rgba(26,66,36,.30);
+    --board-announce: rgba(200,218,158,.93);
+    --board-announce-ink: #193721;
+    --board-die: linear-gradient(145deg, #4a704c, #2d5037);
+}
+
+body.light-theme {
+    --board-shell: linear-gradient(145deg, rgba(255,241,215,.72), rgba(225,188,137,.74));
+    --board-cell: linear-gradient(145deg, rgba(255,248,232,.60), rgba(241,215,175,.62));
+    --board-header: linear-gradient(145deg, rgba(249,226,189,.80), rgba(226,190,143,.82));
+    --board-sum: linear-gradient(145deg, rgba(238,205,156,.80), rgba(215,172,115,.82));
+    --board-gutter: rgba(115,73,38,.22);
+    --board-edge: rgba(143,101,60,.46);
+    --board-cell-edge: rgba(133,93,57,.23);
+    --board-ink: #392817;
+    --board-shadow: rgba(98,62,30,.19);
+    --board-light: rgba(255,251,235,.65);
+    --board-recess: rgba(146,98,52,.13);
+    --board-hover: rgba(170,113,53,.16);
+    --board-press: rgba(133,77,34,.23);
+    --board-announce: rgba(225,205,143,.94);
+    --board-announce-ink: #392817;
+    --board-die: linear-gradient(145deg, #fff4dd, #e7c99d);
+}
+
+body.medium-theme {
+    --board-shell: linear-gradient(145deg, rgba(103,47,59,.72), rgba(55,19,31,.74));
+    --board-cell: linear-gradient(145deg, rgba(114,53,66,.60), rgba(74,25,39,.62));
+    --board-header: linear-gradient(145deg, rgba(130,67,76,.80), rgba(86,33,48,.82));
+    --board-sum: linear-gradient(145deg, rgba(150,80,86,.80), rgba(99,40,54,.82));
+    --board-gutter: rgba(28,8,17,.48);
+    --board-edge: rgba(243,198,184,.39);
+    --board-cell-edge: rgba(246,206,197,.20);
+    --board-ink: #FFF6F2;
+    --board-shadow: rgba(26,6,16,.39);
+    --board-light: rgba(255,217,205,.24);
+    --board-recess: rgba(30,6,17,.34);
+    --board-hover: rgba(243,177,171,.19);
+    --board-press: rgba(32,5,17,.36);
+    --board-announce: rgba(241,195,178,.92);
+    --board-announce-ink: #431720;
+    --board-die: linear-gradient(145deg, #87495a, #602e40);
+}
+
+body.winter-theme {
+    --board-shell: linear-gradient(145deg, rgba(233,246,246,.72), rgba(172,211,219,.74));
+    --board-cell: linear-gradient(145deg, rgba(253,249,234,.60), rgba(214,233,235,.62));
+    --board-header: linear-gradient(145deg, rgba(224,241,240,.80), rgba(188,219,225,.82));
+    --board-sum: linear-gradient(145deg, rgba(205,230,231,.80), rgba(169,207,216,.82));
+    --board-gutter: rgba(20,86,117,.23);
+    --board-edge: rgba(32,100,136,.41);
+    --board-cell-edge: rgba(30,90,121,.22);
+    --board-ink: #18384B;
+    --board-shadow: rgba(12,79,110,.19);
+    --board-light: rgba(255,255,250,.64);
+    --board-recess: rgba(33,111,144,.14);
+    --board-hover: rgba(26,107,147,.16);
+    --board-press: rgba(14,79,118,.24);
+    --board-announce: rgba(167,218,215,.93);
+    --board-announce-ink: #18384B;
+    --board-die: linear-gradient(145deg, #f7f9eb, #b9dce1);
+}
+
+body.neon-theme {
+    --board-shell: linear-gradient(145deg, rgba(28,47,68,.72), rgba(11,22,36,.74));
+    --board-cell: linear-gradient(145deg, rgba(35,58,78,.60), rgba(18,37,55,.62));
+    --board-header: linear-gradient(145deg, rgba(48,76,94,.80), rgba(28,52,73,.82));
+    --board-sum: linear-gradient(145deg, rgba(53,86,96,.80), rgba(28,61,74,.82));
+    --board-gutter: rgba(3,11,22,.49);
+    --board-edge: rgba(98,212,210,.36);
+    --board-cell-edge: rgba(120,215,213,.20);
+    --board-ink: #F4FAFF;
+    --board-shadow: rgba(1,7,16,.41);
+    --board-light: rgba(171,245,239,.17);
+    --board-recess: rgba(2,9,20,.34);
+    --board-hover: rgba(86,229,210,.17);
+    --board-press: rgba(4,38,53,.38);
+    --board-announce: rgba(86,229,210,.89);
+    --board-announce-ink: #102330;
+    --board-die: linear-gradient(145deg, #34536c, #1d3348);
+}
+
+body.amethyst-theme {
+    --board-shell: linear-gradient(145deg, rgba(96,64,111,.72), rgba(48,31,63,.74));
+    --board-cell: linear-gradient(145deg, rgba(104,68,118,.60), rgba(61,37,76,.62));
+    --board-header: linear-gradient(145deg, rgba(120,82,133,.80), rgba(76,46,94,.82));
+    --board-sum: linear-gradient(145deg, rgba(136,95,140,.80), rgba(85,53,99,.82));
+    --board-gutter: rgba(30,14,43,.48);
+    --board-edge: rgba(204,171,215,.41);
+    --board-cell-edge: rgba(218,193,225,.20);
+    --board-ink: #FBF6FF;
+    --board-shadow: rgba(23,9,35,.41);
+    --board-light: rgba(243,217,251,.22);
+    --board-recess: rgba(28,11,41,.34);
+    --board-hover: rgba(221,172,231,.19);
+    --board-press: rgba(38,16,53,.38);
+    --board-announce: rgba(229,196,110,.91);
+    --board-announce-ink: #2D1D3C;
+    --board-die: linear-gradient(145deg, #865b91, #563865);
+}
+
+body.easter-theme {
+    --board-shell: linear-gradient(145deg, rgba(255,248,234,.72), rgba(222,227,201,.74));
+    --board-cell: linear-gradient(145deg, rgba(255,252,239,.60), rgba(231,236,215,.62));
+    --board-header: linear-gradient(145deg, rgba(243,247,223,.80), rgba(213,225,195,.82));
+    --board-sum: linear-gradient(145deg, rgba(226,233,202,.80), rgba(196,213,174,.82));
+    --board-gutter: rgba(72,94,66,.21);
+    --board-edge: rgba(109,133,97,.43);
+    --board-cell-edge: rgba(84,113,77,.22);
+    --board-ink: #3D4434;
+    --board-shadow: rgba(93,104,75,.19);
+    --board-light: rgba(255,255,246,.67);
+    --board-recess: rgba(101,128,84,.13);
+    --board-hover: rgba(83,123,76,.16);
+    --board-press: rgba(65,101,62,.24);
+    --board-announce: rgba(191,219,176,.93);
+    --board-announce-ink: #30432D;
+    --board-die: linear-gradient(145deg, #f4f8e5, #d3e5c5);
+}
+
+body.desert-theme {
+    --board-shell: linear-gradient(145deg, rgba(249,225,191,.72), rgba(215,164,127,.74));
+    --board-cell: linear-gradient(145deg, rgba(255,239,213,.60), rgba(234,194,159,.62));
+    --board-header: linear-gradient(145deg, rgba(248,217,179,.80), rgba(220,174,139,.82));
+    --board-sum: linear-gradient(145deg, rgba(233,196,151,.80), rgba(205,150,112,.82));
+    --board-gutter: rgba(110,61,41,.24);
+    --board-edge: rgba(130,80,54,.44);
+    --board-cell-edge: rgba(119,71,48,.23);
+    --board-ink: #443027;
+    --board-shadow: rgba(101,52,35,.22);
+    --board-light: rgba(255,246,223,.59);
+    --board-recess: rgba(124,68,45,.17);
+    --board-hover: rgba(152,86,53,.17);
+    --board-press: rgba(119,65,43,.26);
+    --board-announce: rgba(193,218,186,.94);
+    --board-announce-ink: #334437;
+    --board-die: linear-gradient(145deg, #f9dfbc, #dda97e);
+}
+
+body.moon-theme {
+    --board-shell: linear-gradient(145deg, rgba(65,69,79,.72), rgba(25,28,36,.74));
+    --board-cell: linear-gradient(145deg, rgba(76,80,90,.60), rgba(43,46,56,.62));
+    --board-header: linear-gradient(145deg, rgba(95,99,109,.80), rgba(58,62,72,.82));
+    --board-sum: linear-gradient(145deg, rgba(111,114,122,.80), rgba(72,75,84,.82));
+    --board-gutter: rgba(8,10,15,.48);
+    --board-edge: rgba(202,204,213,.39);
+    --board-cell-edge: rgba(214,216,223,.20);
+    --board-ink: #F5F5F7;
+    --board-shadow: rgba(3,5,10,.42);
+    --board-light: rgba(235,235,241,.21);
+    --board-recess: rgba(7,8,15,.35);
+    --board-hover: rgba(205,207,219,.17);
+    --board-press: rgba(17,19,28,.40);
+    --board-announce: rgba(202,217,213,.90);
+    --board-announce-ink: #20252B;
+    --board-die: linear-gradient(145deg, #646872, #3a3d49);
+}
+
+body.severna-theme {
+    --board-shell: linear-gradient(145deg, rgba(39,67,89,.72), rgba(15,34,56,.74));
+    --board-cell: linear-gradient(145deg, rgba(47,80,100,.60), rgba(23,49,73,.62));
+    --board-header: linear-gradient(145deg, rgba(62,101,119,.80), rgba(35,71,95,.82));
+    --board-sum: linear-gradient(145deg, rgba(70,111,122,.80), rgba(39,78,98,.82));
+    --board-gutter: rgba(3,15,31,.47);
+    --board-edge: rgba(143,213,223,.39);
+    --board-cell-edge: rgba(151,216,225,.20);
+    --board-ink: #F5FBFF;
+    --board-shadow: rgba(2,10,24,.40);
+    --board-light: rgba(204,247,249,.18);
+    --board-recess: rgba(2,13,29,.35);
+    --board-hover: rgba(138,227,228,.17);
+    --board-press: rgba(7,35,58,.40);
+    --board-announce: rgba(138,227,228,.90);
+    --board-announce-ink: #102A39;
+    --board-die: linear-gradient(145deg, #477185, #274b64);
+}
+
+#game-scene .player-table {
+    background: var(--board-shell) !important;
+    border-color: var(--board-edge) !important;
+    box-shadow: 0 10px 23px var(--board-shadow), inset 0 1px 2px var(--board-light) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    color: var(--board-ink) !important;
+}
+
+/* Clay has a softer, deeper impression; matte plastic stays smooth and even. */
+body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme) #game-scene .player-table,
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)) #game-scene .player-table {
+    box-shadow: 0 11px 24px var(--board-shadow), inset 2px 2px 3px var(--board-light), inset -2px -2px 4px var(--board-recess) !important;
+}
+
+#game-scene .player-table::before,
+#game-scene .player-table::after,
+#game-scene .grid-container::before,
+#game-scene .grid-container::after {
+    content: none !important;
+    display: none !important;
+}
+
+#game-scene .player-table .grid-container {
+    background: var(--board-gutter) !important;
+    box-shadow: inset 1px 1px 3px var(--board-recess) !important;
+}
+
+#game-scene .player-table .grid-cell {
+    background: var(--board-cell) !important;
+    border-color: var(--board-cell-edge) !important;
+    box-shadow: inset 1px 1px 2px var(--board-recess), inset -1px -1px 2px var(--board-light) !important;
+}
+
+#game-scene .player-table :is(.col-header,.row-header,.cell-sum) {
+    background: var(--board-header) !important;
+    color: var(--board-ink) !important;
+    box-shadow: inset 0 1px 2px var(--board-light), inset 0 -1px 2px var(--board-recess) !important;
+}
+
+#game-scene .player-table :is(.row-header.sum,.cell-sum) {
+    background: var(--board-sum) !important;
+    border-top-color: var(--board-edge) !important;
+    border-bottom-color: var(--board-edge) !important;
+}
+
+#game-scene .player-table .player-name,
+#game-scene .player-table .total-score {
+    background: var(--board-header) !important;
+    color: var(--board-ink) !important;
+    box-shadow: inset 0 1px 2px var(--board-light), inset 0 -1px 2px var(--board-recess) !important;
+}
+
+#game-scene .player-table .score-btn,
+#game-scene .player-table .score-btn.filled {
+    color: var(--board-ink) !important;
+    background: transparent !important;
+    text-shadow: none !important;
+}
+
+#game-scene .player-table .score-btn:not(.filled):not(.highlight-najava):not(:disabled):is(:hover,:focus-visible) {
+    background: var(--board-hover) !important;
+    box-shadow: inset 1px 1px 2px var(--board-light), inset -1px -1px 3px var(--board-recess) !important;
+}
+
+#game-scene .player-table .score-btn:not(.filled):not(.highlight-najava):not(:disabled):active {
+    background: var(--board-press) !important;
+    box-shadow: inset 2px 2px 4px var(--board-recess) !important;
+}
+
+#game-scene .player-table .score-btn.highlight-najava {
+    background: var(--board-announce) !important;
+    color: var(--board-announce-ink) !important;
+    border-color: var(--board-edge) !important;
+    box-shadow: inset 1px 1px 2px var(--board-light), inset -1px -1px 2px var(--board-recess) !important;
+}
+
+/* Game actions share the board palette. Existing button geometry and motion stay in style.css. */
+#game-scene #btn-bacaj {
+    background: var(--board-announce) !important;
+    color: var(--board-announce-ink) !important;
+    border-color: var(--board-edge) !important;
+    box-shadow: 0 5px 13px var(--board-shadow), inset 0 1px 2px var(--board-light) !important;
+    text-shadow: none !important;
+}
+
+#game-scene #btn-bacaj::after {
+    content: none !important;
+}
+
+#game-scene #btn-najava {
+    background: var(--board-header) !important;
+    color: var(--board-ink) !important;
+    border-color: var(--board-edge) !important;
+    box-shadow: 0 4px 11px var(--board-shadow), inset 0 1px 2px var(--board-light) !important;
+    text-shadow: none !important;
+}
+
+#game-scene #btn-najava:is(.btn-highlight,.btn-active-toggle) {
+    background: var(--board-announce) !important;
+    color: var(--board-announce-ink) !important;
+}
+
+#game-scene :is(#btn-bacaj,#btn-najava):active:not(:disabled) {
+    box-shadow: inset 2px 2px 5px var(--board-recess), inset -1px -1px 2px var(--board-light) !important;
+}
+
+#game-scene :is(#btn-bacaj,#btn-najava):disabled {
+    opacity: .72;
+    filter: saturate(.72);
+}
+
+/* The default die belongs to the theme; purchased dice retain their own skins. */
+#game-scene #dice-container .dice.skin-default,
+#game-scene #dice-container .dice:not([class*="skin-"]) {
+    background: var(--board-die) !important;
+    color: var(--board-ink) !important;
+    border-color: var(--board-edge) !important;
+    box-shadow: 0 5px 10px var(--board-shadow), inset 0 1px 2px var(--board-light) !important;
+}
+
+#game-scene #dice-container .dice.skin-default.held,
+#game-scene #dice-container .dice:not([class*="skin-"]).held {
+    border-color: var(--board-announce) !important;
+    box-shadow: 0 0 0 2px var(--board-hover), inset 2px 2px 5px var(--board-recess) !important;
+}
+
+body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme) #game-scene :is(#btn-bacaj,#btn-najava):not(:active),
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)) #game-scene :is(#btn-bacaj,#btn-najava):not(:active) {
+    box-shadow: 0 5px 12px var(--board-shadow), inset 2px 2px 3px var(--board-light), inset -2px -2px 4px var(--board-recess) !important;
+}
+
+body:is(.medium-theme,.amethyst-theme,.desert-theme,.moon-theme) #game-scene #dice-container .dice.skin-default,
+body:not(:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme)) #game-scene #dice-container .dice.skin-default {
+    box-shadow: 0 5px 10px var(--board-shadow), inset 2px 2px 3px var(--board-light), inset -2px -2px 4px var(--board-recess) !important;
+}
+
+/* A single dim trace travels along the Neon Cyber rim, then fades away.
+   The overlay sits inside the existing board edge and never covers the cells. */
+@property --neon-board-angle {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: 0deg;
+}
+
+body.neon-theme #game-scene .player-table {
+    position: relative;
+}
+
+body.neon-theme #game-scene .player-table::after {
+    content: "" !important;
+    display: block !important;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: conic-gradient(from var(--neon-board-angle), transparent 0deg 304deg, rgba(86,229,210,.08) 324deg, rgba(86,229,210,.58) 337deg, rgba(86,229,210,.08) 350deg, transparent 360deg);
+    clip-path: inset(0 round 16px);
+    mask-image: linear-gradient(#000 0 0), linear-gradient(#000 0 0);
+    mask-size: 100% 100%, calc(100% - 2px) calc(100% - 2px);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-composite: exclude;
+    opacity: 0;
+    animation: neon-board-trace 22s linear infinite;
+}
+
+@keyframes neon-board-trace {
+    0% { --neon-board-angle: 0deg; opacity: 0; }
+    15% { opacity: .48; }
+    55% { opacity: .48; }
+    77% { opacity: 0; }
+    100% { --neon-board-angle: 360deg; opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.neon-theme #game-scene .player-table::after {
+        animation: none !important;
+        opacity: 0 !important;
+    }
+}
+

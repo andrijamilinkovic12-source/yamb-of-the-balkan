@@ -34,7 +34,10 @@ function pngInfo(file) {
     };
 }
 
-const files = walk(greenRoot).map(file => path.relative(greenRoot, file).replaceAll('\\', '/')).sort();
+const files = walk(greenRoot)
+    .map(file => path.relative(greenRoot, file).replaceAll('\\', '/'))
+    .filter(relative => relative !== 'splash-title-soft-clay-v1.png') // Retired cloud title, preserved for history.
+    .sort();
 if (files.length !== 176) throw new Error(`Expected 176 Green pack PNGs, found ${files.length}`);
 
 const slots = [
@@ -45,7 +48,7 @@ const slots = [
         ...pngInfo(path.join(www, background))
     },
     ...files.map(relative => {
-        const kind = relative === 'splash-title-soft-clay-v1.png'
+        const kind = relative === 'splash-title-soft-clay-v2.png'
             ? 'game-logo'
             : relative.startsWith('runtime/menu/')
                 ? 'startup-thumbnail'
@@ -53,7 +56,7 @@ const slots = [
                     ? 'canonical-or-approved-variant'
                     : 'room-or-composite';
         return {
-            id: relative.slice(0, -4),
+            id: relative === 'splash-title-soft-clay-v2.png' ? 'splash-title-soft-clay-v1' : relative.slice(0, -4),
             greenReference: `assets/green-soft-clay/${relative}`,
             kind,
             ...pngInfo(path.join(greenRoot, relative))
@@ -66,7 +69,7 @@ const catalog = {
     referenceThemeId: 'dark',
     referenceThemeName: 'Green Room Pack',
     definition: 'One production PNG slot per entry. Other themes create their own original PNG for each corresponding semantic slot; Green paths are references, not path templates or images to recolor.',
-    exclusions: ['source masters', 'QA captures', 'retired assets', 'legacy fallback Logo_green.png outside the active Green Room Pack'],
+    exclusions: ['source masters', 'QA captures', 'retired assets', 'retired Green cloud logo v1', 'legacy fallback Logo_green.png outside the active Green Room Pack'],
     requiredPngCountPerTheme: slots.length,
     greenPackPngCount: files.length,
     slots

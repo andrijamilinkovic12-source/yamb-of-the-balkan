@@ -399,12 +399,9 @@ class KvartalnaLigaManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
-        if (overlay.classList.contains('theme-easter') || overlay.classList.contains('theme-dark')) {
-            titleElement?.replaceChildren();
-            titleElement?.removeAttribute('aria-label');
-        } else {
-            this.setIntroTitle(titleElement, overlay.classList.contains('theme-desert') || overlay.classList.contains('theme-severna'));
-        }
+        titleElement?.replaceChildren();
+        titleElement?.removeAttribute('aria-label');
+        titleElement?.setAttribute('aria-hidden', 'true');
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
 

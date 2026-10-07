@@ -1521,12 +1521,15 @@
           "sizeBytes": 148423
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/light/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 903401
         },
         "treasury-free-v3": {
           "stage": "linked",
@@ -3061,12 +3064,15 @@
           "sizeBytes": 197127
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/medium/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 1257058
         },
         "treasury-free-v3": {
           "stage": "linked",
@@ -4601,12 +4607,15 @@
           "sizeBytes": 153894
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/winter/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 749327
         },
         "treasury-free-v3": {
           "stage": "linked",
@@ -6141,12 +6150,15 @@
           "sizeBytes": 164728
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/neon/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 879370
         },
         "treasury-free-v3": {
           "stage": "linked",
@@ -7681,12 +7693,15 @@
           "sizeBytes": 172016
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/amethyst/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 1172800
         },
         "treasury-free-v3": {
           "stage": "linked",
@@ -9221,12 +9236,15 @@
           "sizeBytes": 129923
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/easter/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 940916
         },
         "treasury-free-v3": {
           "stage": "linked",
@@ -10761,12 +10779,15 @@
           "sizeBytes": 170537
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/desert/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 1315052
         },
         "treasury-free-v3": {
           "stage": "linked",
@@ -12301,12 +12322,15 @@
           "sizeBytes": 156231
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/moon/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 904280
         },
         "treasury-free-v3": {
           "stage": "linked",
@@ -13841,12 +13865,15 @@
           "sizeBytes": 145135
         },
         "splash-title-soft-clay-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/splash-title-soft-clay-v1.png",
+          "masterPath": "source-assets/theme-logo-masters/severna/game-logo-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#splash-screen startup preload",
+            "www/game.js:getThemeSplashSource, configureThemeSplashImage"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 611576
         },
         "treasury-free-v3": {
           "stage": "linked",

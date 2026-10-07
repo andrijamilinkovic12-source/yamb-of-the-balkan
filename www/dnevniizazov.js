@@ -945,18 +945,10 @@ class DnevniIzazov {
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
         const title = overlay.querySelector('.daily-intro-title');
-        const isIconOnlyIntro = overlay.classList.contains('theme-dark')
-            || overlay.classList.contains('theme-easter')
-            || overlay.classList.contains('theme-desert');
-        if (isIconOnlyIntro) {
-            if (leftWord) leftWord.textContent = '';
-            if (rightWord) rightWord.textContent = '';
-            title?.setAttribute('aria-hidden', 'true');
-        } else {
-            title?.removeAttribute('aria-hidden');
-            this.setIntroTitle(leftWord, rightWord);
-            this.setEasterIntroWaveTitle(overlay);
-        }
+        if (leftWord) leftWord.textContent = '';
+        if (rightWord) rightWord.textContent = '';
+        title?.replaceChildren();
+        title?.setAttribute('aria-hidden', 'true');
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');
 

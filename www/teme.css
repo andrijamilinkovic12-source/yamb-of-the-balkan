@@ -4659,11 +4659,6 @@ body.desert-theme #splash-screen > .logo-anim.desert-splash-logo-playing {
     animation: easterSplashClayReveal 4.5s cubic-bezier(.2, .72, .25, 1) forwards !important;
 }
 
-body.easter-theme #splash-screen > .logo-anim .splash-logo-fallback,
-body.desert-theme #splash-screen > .logo-anim .splash-logo-fallback {
-    display: none !important;
-}
-
 body.easter-theme #splash-screen > .logo-anim .easter-splash-clay-title-png,
 body.desert-theme #splash-screen > .logo-anim .desert-splash-clay-title-png {
     display: block;
@@ -4725,10 +4720,6 @@ body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):no
     animation: greenSplashClayReveal 4.5s cubic-bezier(.2, .72, .25, 1) forwards !important;
 }
 
-body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #splash-screen > .logo-anim .splash-logo-fallback {
-    display: none !important;
-}
-
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #splash-screen > .logo-anim .green-splash-clay-title-png {
     display: block;
     width: min(90vw, 700px);
@@ -4775,13 +4766,6 @@ html[data-splash-theme="dark"] #splash-screen.has-login #splash-login-container 
 html[data-splash-theme="dark"] #splash-screen.has-login .splash-language-switcher {
     top: calc(var(--safe-top) + 8px) !important;
     right: max(14px, calc(var(--safe-right) + 14px)) !important;
-}
-
-html[data-splash-theme="dark"] #splash-screen.has-login .splash-legacy-login-logo,
-html[data-splash-theme="dark"] #splash-screen.has-login .splash-welcome-brand,
-html[data-splash-theme="dark"] #splash-screen.has-login .splash-welcome-copy br,
-html[data-splash-theme="dark"] #splash-screen.has-login .splash-login-divider {
-    display: none !important;
 }
 
 html[data-splash-theme="dark"] #splash-screen.has-login .splash-copy-panel {

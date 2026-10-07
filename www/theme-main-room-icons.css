@@ -16,10 +16,13 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     opacity: 1 !important;
     visibility: visible !important;
     position: static !important;
-    transform: none !important;
     filter: none !important;
     animation: none !important;
     pointer-events: none;
+}
+
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .theme-main-room-icon:not(.daily-intro-mark-green):not(.league-intro-mark-green):not(.riznica-intro-gem-green):not(.tournament-intro-mark-green) {
+    transform: none !important;
 }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon.theme-main-room-icon-host {
@@ -85,16 +88,27 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     height: auto !important;
     grid-template-rows: none !important;
 }
-/* The visible square keeps its hit area and outline, while the scenery shows through. */
+/* Clear glass: the scenery remains visible, with a soft reflection and a thin edge. */
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn:is(:hover,:active),
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-btn,
 body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-btn:is(:hover,:active) {
-    background: transparent !important;
-    background-image: none !important;
+    background: linear-gradient(145deg,
+        rgba(255,255,255,.18) 0%,
+        rgba(255,255,255,.07) 24%,
+        rgba(255,255,255,.015) 55%,
+        rgba(255,255,255,.08) 100%) !important;
+    border: 1px solid rgba(255,255,255,.34) !important;
+    border-top-color: rgba(255,255,255,.56) !important;
+    border-left-color: rgba(255,255,255,.42) !important;
+    border-right-color: rgba(255,255,255,.18) !important;
+    border-bottom-color: rgba(10,30,40,.14) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    box-shadow: none !important;
+    box-shadow:
+        inset 1px 1px 0 rgba(255,255,255,.34),
+        inset -1px -1px 0 rgba(9,29,40,.12),
+        0 4px 10px rgba(6,18,28,.08) !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn::before,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn::after,
@@ -236,8 +250,8 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     height: 52px !important;
     flex-basis: 52px !important;
 }
-/* Ocean uses the same top-row icon slots as Green; no legacy tile or drawn glyph. */
-body.winter-theme #main-menu > .main-global-chat-btn {
+/* All nine packs share Green's global-chat hit area and its alignment with the top cards. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu > .main-global-chat-btn {
     width: 44px !important;
     height: 44px !important;
     left: max(20px, calc((100% - 380px) / 2 + 10px)) !important;
@@ -246,15 +260,35 @@ body.winter-theme #main-menu > .main-global-chat-btn {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    line-height: 1 !important;
     overflow: visible !important;
+    color: transparent !important;
     background: transparent !important;
     border: 0 !important;
+    border-radius: 0 !important;
     box-shadow: none !important;
     filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
-body.winter-theme #main-menu > .main-global-chat-btn .main-global-chat-fallback {
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu > .main-global-chat-btn::before,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu > .main-global-chat-btn::after {
+    content: none !important;
     display: none !important;
 }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu > .main-global-chat-btn .main-global-chat-fallback {
+    display: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu > .main-global-chat-btn > img.theme-main-room-icon {
+    display: block !important;
+    width: 52px !important;
+    height: 52px !important;
+    flex: 0 0 52px !important;
+    max-width: none !important;
+    object-fit: contain;
+    pointer-events: none;
+}
+/* Ocean's online and economy PNG sizes also remain matched to Green. */
 body.winter-theme #main-menu .main-online-icon-wrap > img.theme-main-room-icon {
     display: block !important;
     width: 44px !important;
@@ -505,19 +539,22 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 /* Easter's gentle icon movement applies to the current PNGs in all ten themes. */
 #main-menu .main-summary-row .main-online-icon-wrap > img[data-theme-src] {
     transform-origin: center;
+    will-change: transform;
     animation: summaryOnlineSignal 2.35s ease-in-out infinite !important;
 }
 #main-menu .main-summary-row .main-economy-icon-wrap > img[data-theme-src] {
     transform-origin: center;
+    will-change: transform;
     animation: summaryEconomySway 2.7s ease-in-out infinite !important;
 }
 @keyframes summaryOnlineSignal {
     0%, 100% { transform: translateY(0) scale(1); }
-    50% { transform: translateY(-1.5px) scale(1.045); }
+    45% { transform: translateY(-4px) scale(1.08); }
+    70% { transform: translateY(-1px) scale(1.025); }
 }
 @keyframes summaryEconomySway {
-    0%, 100% { transform: translateY(0) rotate(-1.8deg) scale(1); }
-    50% { transform: translateY(-2px) rotate(1.8deg) scale(1.025); }
+    0%, 100% { transform: translateY(0) rotate(-3deg) scale(1); }
+    50% { transform: translateY(-3px) rotate(5deg) scale(1.06); }
 }
 #main-menu .main-summary-row .main-online-card:active .main-online-icon-wrap > img[data-theme-src],
 #main-menu .main-summary-row .main-economy-card:active .main-economy-icon-wrap > img[data-theme-src] {
@@ -551,5 +588,71 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     #main-menu .main-summary-row .main-economy-icon-wrap > img[data-theme-src] {
         animation: none !important;
         transform: none !important;
+        will-change: auto;
+    }
+}
+
+/* Every room entrance uses its mapped PNG alone, with Green's size and pulse. */
+#riznica-intro {
+    animation: easterRoomIntroFade 4.6s ease forwards !important;
+}
+
+#daily-intro .daily-intro-title,
+#league-intro .league-intro-title,
+#riznica-intro .riznica-intro-line,
+#tournament-intro .tournament-intro-title,
+#tournament-intro .tournament-intro-champions,
+#easter-room-intro.easter-room-intro--icon-only .easter-room-intro-title {
+    display: none !important;
+}
+
+#daily-intro .daily-intro-mark-wrap,
+#league-intro .league-intro-mark-wrap,
+#tournament-intro .tournament-intro-mark-wrap,
+#easter-room-intro.easter-room-intro--icon-only .easter-room-intro-mark-wrap {
+    width: clamp(210px, 34vmin, 290px) !important;
+    height: clamp(210px, 34vmin, 290px) !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    animation: none !important;
+}
+
+#daily-intro .daily-intro-mark-wrap::before,
+#daily-intro .daily-intro-mark-wrap::after,
+#league-intro .league-intro-mark-wrap::before,
+#league-intro .league-intro-mark-wrap::after,
+#tournament-intro .tournament-intro-mark-wrap::before,
+#tournament-intro .tournament-intro-mark-wrap::after {
+    content: none !important;
+    display: none !important;
+}
+
+#daily-intro .daily-intro-mark-green,
+#riznica-intro .riznica-intro-gem-green,
+#tournament-intro .tournament-intro-mark-green,
+#league-intro#league-intro .league-intro-mark-green {
+    display: block !important;
+    width: clamp(210px, 34vmin, 290px) !important;
+    height: clamp(210px, 34vmin, 290px) !important;
+    flex-basis: auto !important;
+    object-fit: contain !important;
+    transform-origin: center;
+    animation: easterRoomIconPulse 1.8s ease-in-out infinite !important;
+}
+
+#easter-room-intro.easter-room-intro--icon-only .easter-room-intro-mark {
+    animation: greenRoomIconPulse 1.8s ease-in-out infinite !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #daily-intro .daily-intro-mark-green,
+    #riznica-intro .riznica-intro-gem-green,
+    #tournament-intro .tournament-intro-mark-green,
+    #league-intro#league-intro .league-intro-mark-green,
+    #easter-room-intro.easter-room-intro--icon-only .easter-room-intro-mark {
+        animation: none !important;
     }
 }

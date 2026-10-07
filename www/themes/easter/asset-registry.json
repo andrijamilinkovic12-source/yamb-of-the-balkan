@@ -50,7 +50,7 @@
   "foundation": {
     "background": "www/assets/theme-backgrounds/easter-v6-1.png",
     "backgroundBytes": 1849355,
-    "splash": "www/assets/easter-soft-clay/splash-title-soft-clay-v1.png"
+    "splash": "www/assets/theme-packs/easter/splash-title-soft-clay-v1.png"
   },
   "delivery": {
     "startupPngCount": 17,

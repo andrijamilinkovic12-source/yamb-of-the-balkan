@@ -589,27 +589,14 @@ class TournamentManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
-        const isEasterIntro = overlay.classList.contains('theme-easter');
-        const isSoftClayIntro = overlay.classList.contains('theme-easter')
-            || overlay.classList.contains('theme-desert')
-            || overlay.classList.contains('theme-severna')
-            || overlay.classList.contains('theme-dark');
-
-        if (isSoftClayIntro) {
-            if (isEasterIntro) {
-                if (title) title.textContent = '';
-            } else {
-                this.setEasterIntroTitle(title, this.tr('tourney_intro_title', 'TURNIR'));
-            }
-            this.renderEasterIntroChampions();
-            this.requestTournamentStats();
-            setTimeout(() => {
-                if (this.isIntroPlaying && !this.tourneyLeaderboardLoaded) {
-                    this.requestTournamentStats();
-                }
-            }, 1200);
-        } else {
-            this.setIntroTitle(title);
+        if (title) {
+            title.replaceChildren();
+            title.setAttribute('aria-hidden', 'true');
+        }
+        const champions = overlay.querySelector('.tournament-intro-champions');
+        if (champions) {
+            champions.replaceChildren();
+            champions.setAttribute('aria-hidden', 'true');
         }
         overlay.classList.remove('hidden');
         overlay.setAttribute('aria-hidden', 'false');

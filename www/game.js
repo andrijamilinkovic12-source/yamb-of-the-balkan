@@ -256,7 +256,7 @@ class YambApp {
         if (this.playerId && startupTheme !== savedTheme) localStorage.setItem('yamb_theme', startupTheme);
         this.applyTheme(startupTheme, { initialLoad: true });
         const themedSplashDelay = window.Capacitor ? 950 : 120;
-        if (['dark', 'easter', 'desert'].includes(startupTheme)) {
+        if (this.getValidThemeIds().includes(startupTheme)) {
             window.yambSplashHoldUntil = Date.now() + themedSplashDelay + 4500;
         }
         const startThemedSplash = () => setTimeout(
@@ -1594,7 +1594,7 @@ class YambApp {
                     'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png?v=1'
                 ],
                 icons: [
-                    'assets/green-soft-clay/splash-title-soft-clay-v1.png?v=1',
+                    'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1',
                     'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1',
                     'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
                     'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png?v=1',
@@ -2218,9 +2218,16 @@ class YambApp {
 
     getThemeSplashSource(theme) {
         const sources = {
-            dark: 'assets/green-soft-clay/splash-title-soft-clay-v1.png?v=2',
-            easter: 'assets/easter-soft-clay/splash-title-soft-clay-v1.png?v=2',
-            desert: 'assets/desert-soft-clay/splash-title-soft-clay-v1.png?v=2'
+            dark: 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1',
+            light: 'assets/theme-packs/light/splash-title-soft-clay-v1.png?v=1',
+            medium: 'assets/theme-packs/medium/splash-title-soft-clay-v1.png?v=1',
+            winter: 'assets/theme-packs/winter/splash-title-soft-clay-v1.png?v=1',
+            neon: 'assets/theme-packs/neon/splash-title-soft-clay-v1.png?v=1',
+            amethyst: 'assets/theme-packs/amethyst/splash-title-soft-clay-v1.png?v=1',
+            easter: 'assets/theme-packs/easter/splash-title-soft-clay-v1.png?v=1',
+            desert: 'assets/theme-packs/desert/splash-title-soft-clay-v1.png?v=1',
+            moon: 'assets/theme-packs/moon/splash-title-soft-clay-v1.png?v=1',
+            severna: 'assets/theme-packs/severna/splash-title-soft-clay-v1.png?v=1'
         };
         return sources[theme] || '';
     }
@@ -2228,9 +2235,10 @@ class YambApp {
     configureThemeSplashImage(theme) {
         const image = document.getElementById('theme-splash-clay-title');
         if (!image) return;
-        const assetTheme = theme === 'dark' ? 'green' : (['easter', 'desert'].includes(theme) ? theme : '');
+        const assetTheme = theme === 'dark' ? 'green' : (this.getValidThemeIds().includes(theme) ? theme : '');
         const source = this.getThemeSplashSource(theme);
-        image.classList.remove('green-splash-clay-title-png', 'easter-splash-clay-title-png', 'desert-splash-clay-title-png');
+        image.classList.remove(...['green', ...this.getValidThemeIds().filter(id => id !== 'dark')]
+            .map(id => `${id}-splash-clay-title-png`));
 
         if (!assetTheme || !source) {
             image.removeAttribute('src');
@@ -2608,9 +2616,7 @@ class YambApp {
         const splashScreen = document.getElementById('splash-screen');
         const splashIsActive = splashScreen?.classList.contains('active');
         const splashLogo = splashScreen?.querySelector(':scope > .logo-anim');
-        const splashAssetTheme = safeTheme === 'dark'
-            ? 'green'
-            : (['easter', 'desert'].includes(safeTheme) ? safeTheme : '');
+        const splashAssetTheme = safeTheme === 'dark' ? 'green' : safeTheme;
         const splashPlayingClass = `${splashAssetTheme}-splash-logo-playing`;
         if (splashAssetTheme && splashIsActive && splashLogo
             && !splashLogo.classList.contains(splashPlayingClass)) {
@@ -5363,11 +5369,8 @@ class YambApp {
     }
     
     restartThemedSplashLogoAnimation() {
-        const splashTheme = document.body.classList.contains('easter-theme')
-            ? 'easter'
-            : (document.body.classList.contains('desert-theme')
-                ? 'desert'
-                : (document.documentElement.dataset.splashTheme === 'dark' ? 'green' : ''));
+        const activeTheme = document.documentElement.dataset.splashTheme;
+        const splashTheme = activeTheme === 'dark' ? 'green' : activeTheme;
         if (!splashTheme) return;
         const logo = document.querySelector('#splash-screen > .logo-anim');
         if (!logo) return;
@@ -5377,8 +5380,9 @@ class YambApp {
             window.yambSplashHoldUntil = Date.now() + 4500;
             window.yambThemedSplashAssetPending = false;
             window.yambEasterSplashAssetPending = false;
-            document.documentElement.classList.remove('green-splash-boot', 'easter-splash-boot', 'desert-splash-boot');
-            logo.classList.remove('green-splash-logo-playing', 'easter-splash-logo-playing', 'desert-splash-logo-playing');
+            const splashThemeIds = ['green', ...this.getValidThemeIds().filter(id => id !== 'dark')];
+            document.documentElement.classList.remove(...splashThemeIds.map(id => `${id}-splash-boot`));
+            logo.classList.remove(...splashThemeIds.map(id => `${id}-splash-logo-playing`));
             void logo.offsetWidth;
             requestAnimationFrame(() => {
                 logo.classList.add(playingClass);
@@ -5939,7 +5943,7 @@ class YambApp {
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
         return (['light', 'medium', 'winter', 'neon', 'amethyst', 'moon'].includes(activeTheme)
             && ['leaderboard', 'statistics', 'settings', 'rules', 'globalChat', 'onlinePlayers',
-                'solo', 'hotseat', 'opponent', 'invite'].includes(roomId))
+                'economy', 'solo', 'hotseat', 'opponent', 'invite'].includes(roomId))
             || this.shouldPlayGreenRoomIntro(roomId)
             || this.shouldPlayEasterRoomIntro()
             || this.shouldPlayDesertRoomIntro(roomId)

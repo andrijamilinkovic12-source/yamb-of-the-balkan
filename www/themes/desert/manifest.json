@@ -13,7 +13,7 @@
     "audio": "www/managers.js",
     "shopConfig": "www/config.js",
     "backgroundAsset": "www/assets/theme-backgrounds/desert-v8-2.png",
-    "splashTitleAsset": "www/assets/desert-soft-clay/splash-title-soft-clay-v1.png",
+    "splashTitleAsset": "www/assets/theme-packs/desert/splash-title-soft-clay-v1.png",
     "qaPreview": "www/themes/desert/qa-preview.html",
     "qaSplashPreview": "www/themes/desert/qa-splash.html",
     "qaGameOverPreview": "www/themes/desert/qa-gameover.html"
@@ -21,7 +21,7 @@
   "packs": [
     { "id": "performance-loading", "status": "complete", "description": "Only the active splash, background and optimized 384 px main-menu thumbnails load at startup. Transparent 256/384/512 px room assets hydrate on room entry; high-resolution masters remain preserved outside the shipped www tree." },
     { "id": "background", "status": "complete", "description": "Original sculpted desert background with dunes, wind-carved sand, sun and sandstone relief." },
-    { "id": "splash-title", "status": "complete", "description": "Transparent 1672x941 Desert Soft Clay title with two straight centered lines: warm sandstone YAMB OF THE and contrasting muted-turquoise BALKAN. It uses the same responsive slot, 4.5-second reveal, decoded-asset hold and reduced-motion behavior as Easter." },
+    { "id": "splash-title", "status": "complete", "description": "Transparent 1672x941 original Desert Clay title in the accepted sandstone palette, with two centered lines: YAMB OF THE and BALKAN. It uses the shared responsive slot, 4.5-second reveal, decoded-asset hold and reduced-motion behavior." },
     { "id": "main-menu-icons", "status": "complete", "description": "All room and game-mode entries now use the dedicated restrained Desert Soft Clay Relief 3D language. The four main game modes keep the proven Easter card dimensions, positions, title alignment and motion while using Desert-only assets without decorative backplates." },
     { "id": "bottom-room-icons", "status": "complete", "description": "Five professional matte-clay icons for Daily Challenge, Leaderboard, Statistics, Settings and Rules. They use sandstone, cream, terracotta and muted turquoise without jewelry, gemstones, ornate gold or Easter motifs; their 44x44 slots, positions, click geometry and sequential 8.4-second wave motion exactly match the Easter Theme Pack." },
     { "id": "daily-challenge-room", "status": "complete", "description": "Dedicated 4.6-second icon-only Desert Daily Challenge intro with a large softly pulsing room mark, plus room, task, already-played, completion, rewarded-video and Ducat Soft Clay assets. Runtime PNGs use normalized transparent margins, are optimized to 512 px and are prepared on room entry. Layout, spacing and visual dimensions match the proven Easter room parameters while all game logic remains shared and unchanged." },
@@ -58,7 +58,7 @@
   "rules": [
     "Do not change global theme icons as the base game style.",
     "Keep all Desert Glass styling isolated under body.desert-theme.",
-    "The splash title uses the same transparent PNG slot, responsive dimensions, 4.5-second reveal timing, decoded-asset hold and reduced-motion fallback as Easter; both text rows remain straight, while BALKAN uses a contrasting muted Desert turquoise.",
+    "The splash title uses the shared transparent PNG slot, responsive dimensions, 4.5-second reveal timing, decoded-asset hold and reduced-motion fallback.",
     "The bottom room row from Daily Challenge through Rules uses clean standalone 44x44 Soft Clay Relief icons with the same layout and dimensions as Easter, but a restrained sandstone/terracotta/turquoise palette and no decorative backplates or kitsch ornament.",
     "The five Desert bottom-room icons use the same staggered 8.4-second wave as Easter: only the visible icon moves, while button positions and click targets remain fixed; reduced-motion disables the animation.",
     "Daily Challenge uses the same 4.6-second icon-only intro duration, large-icon dimensions and calm pulse as Easter, but only the Desert room mark, colors and background; no intro title is rendered.",

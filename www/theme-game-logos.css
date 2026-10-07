@@ -1,0 +1,163 @@
+/* One PNG game logo per theme, on the same transparent canvas as Green. */
+body:is(.light-theme, .medium-theme, .winter-theme, .neon-theme,
+    .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)
+    #splash-screen > .logo-anim {
+    display: block !important;
+    width: 100%;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    animation: none !important;
+    opacity: 1;
+}
+
+body:is(.light-theme, .medium-theme, .winter-theme, .neon-theme,
+    .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)
+    #splash-screen > .logo-anim .theme-splash-clay-title-png {
+    display: block !important;
+    width: min(90vw, 700px);
+    max-height: 32vh;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: none !important;
+}
+
+body:is(.light-theme, .medium-theme, .winter-theme, .neon-theme,
+    .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)
+    #splash-screen > .logo-anim[class*="-splash-logo-playing"] {
+    transform-origin: 50% 55%;
+    will-change: transform, opacity;
+    animation: greenSplashClayReveal 4.5s cubic-bezier(.2, .72, .25, 1) forwards !important;
+}
+
+body:is(.light-theme, .medium-theme, .winter-theme, .neon-theme,
+    .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)
+    #splash-screen.has-login > .logo-anim {
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+body:is(.light-theme, .medium-theme, .winter-theme, .neon-theme,
+    .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)
+    #splash-screen.has-login > .logo-anim .theme-splash-clay-title-png {
+    width: min(88vw, 350px) !important;
+    max-height: min(24dvh, 190px) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body:is(.light-theme, .medium-theme, .winter-theme, .neon-theme,
+        .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme)
+        #splash-screen > .logo-anim[class*="-splash-logo-playing"] {
+        animation: easterSplashClayRevealReduced 4.5s linear forwards !important;
+        transform: none !important;
+    }
+}
+
+/* Login uses the same single themed PNG and Green reference geometry in all ten themes. */
+html[data-splash-theme] #splash-screen.has-login {
+    justify-content: flex-start;
+    gap: clamp(8px, 1.5dvh, 15px);
+    padding: calc(var(--safe-top) + 48px) max(14px, var(--safe-right))
+        calc(var(--safe-bottom) + 12px) max(14px, var(--safe-left));
+    overflow-x: hidden;
+    /* Easter sets overflow: hidden !important on the splash screen; login must remain scrollable. */
+    overflow-y: auto !important;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-bottom: calc(var(--safe-bottom) + 12px);
+}
+
+html[data-splash-theme] #splash-screen.has-login > .logo-anim {
+    flex: 0 0 auto;
+    margin-top: auto;
+    animation: none !important;
+    opacity: 1 !important;
+}
+
+html[data-splash-theme] #splash-screen.has-login > .logo-anim .theme-splash-clay-title-png {
+    width: min(88vw, 350px) !important;
+    max-height: min(24dvh, 190px) !important;
+}
+
+html[data-splash-theme] #splash-screen.has-login #splash-login-container {
+    width: min(100%, 420px) !important;
+    flex: 0 0 auto;
+    gap: clamp(8px, 1.5dvh, 14px) !important;
+    margin: 0 auto auto !important;
+}
+
+html[data-splash-theme] #splash-screen.has-login .splash-language-switcher {
+    top: calc(var(--safe-top) + 8px) !important;
+    right: max(14px, calc(var(--safe-right) + 14px)) !important;
+}
+
+html[data-splash-theme] #splash-screen.has-login .splash-copy-panel {
+    width: min(100%, 380px);
+    margin-bottom: 0;
+}
+
+html[data-splash-theme] #splash-screen.has-login .splash-legal-copy {
+    max-width: min(100%, 380px);
+    margin-top: 0;
+    padding: 9px 12px;
+    border-radius: 18px;
+    font-size: clamp(.72rem, 2.9vw, .8rem);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+html[data-splash-theme] #splash-screen.has-login .splash-legal-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 2px 1px;
+}
+
+/* The welcome line sits directly on these two approved backgrounds. */
+body.winter-theme #splash-screen.has-login .splash-welcome-copy {
+    color: #f7fbff !important;
+    text-shadow: 0 2px 4px rgba(3, 45, 91, .85), 0 0 10px rgba(3, 45, 91, .45) !important;
+}
+
+body.easter-theme #splash-screen.has-login .splash-welcome-copy {
+    position: relative;
+    z-index: 1;
+    color: #303b2d !important;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, .9), 0 2px 6px rgba(255, 255, 255, .65) !important;
+}
+
+@media (max-height: 700px) {
+    html[data-splash-theme] #splash-screen.has-login {
+        padding-top: calc(var(--safe-top) + 46px);
+        gap: 8px;
+    }
+    html[data-splash-theme] #splash-screen.has-login > .logo-anim .theme-splash-clay-title-png {
+        width: min(76vw, 280px) !important;
+        max-height: 21dvh !important;
+    }
+    html[data-splash-theme] #splash-screen.has-login #splash-login-container {
+        gap: 8px !important;
+    }
+    html[data-splash-theme] #splash-screen.has-login .splash-copy-panel {
+        padding: 9px 14px;
+    }
+    html[data-splash-theme] #splash-screen.has-login .splash-quote-text {
+        font-size: clamp(.96rem, 4vw, 1.1rem);
+    }
+}
+
+@media (max-height: 600px) {
+    html[data-splash-theme] #splash-screen.has-login {
+        padding-top: calc(var(--safe-top) + 40px);
+        gap: 6px;
+    }
+    html[data-splash-theme] #splash-screen.has-login > .logo-anim .theme-splash-clay-title-png {
+        width: min(70vw, 230px) !important;
+        max-height: 18dvh !important;
+    }
+    html[data-splash-theme] #splash-screen.has-login #splash-login-container {
+        gap: 6px !important;
+    }
+}

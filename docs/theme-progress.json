@@ -3,7 +3,7 @@
   "updatedOn": "2026-10-07",
   "activeThemeId": null,
   "workState": "nine-rewarded-video-packs-linked-pending-runtime-visual-qa",
-  "activeWorkPackage": "Svih devet nezelenih tema ima 15 povezanih ikona glavnih soba, kanonske dukate, Undo token i sedam povezanih PNG uloga za nagradni video po temi (63 fajla). Nagradni video ima aktivno i nedostupno stanje u dve veličine, jednu nagradu za Dnevni izazov i Riznicu i dva dukata za Solo; svaki dukat ima pet tačaka. Pet ikona donjeg reda glavnog menija po temi prikazuje se bez kvadratnih podloga, uz sekvencijalni talas samo na ikonama. Nove ikone Riznice i Turnira u meniju su bez podloga i starih SVG duplikata, sa pokretom prema Zelenoj temi. Četiri centralna moda koriste nove tematske PNG-ove u svih devet tema, istu geometriju i pokret kao Zelena, providne kartice bez blura i tekst bez emoji duplikata. Providnost je izričito primenjena i na Zelenu. Pri promeni teme pozadina i 15 vidljivih PNG elemenata novog menija pripremaju se pre vizuelnog prebacivanja, a stari PNG se sakriva dok novi nije učitan. Plavi okean nema stare SVG ikone glavnog menija ni stare nacrtane simbole; novi PNG-ovi stoje na Green pozicijama. Watermark Kvartalne lige je vraćen u svih deset tema kao tematski kanonski PNG; watermark Indeksa moći ostaje uklonjen. Gornje tri kartice imaju Green geometriju i raspored teksta, a ikone Online igrača i Dukata imaju Vaskršnji blagi motion i u Zelenoj. Putanje, dimenzije, RGBA i automatsko mapiranje prolaze; vizuelna provera u stvarnoj aplikaciji i na telefonu, te ostale porodice kataloga, predstoje.",
+  "activeWorkPackage": "Svih devet nezelenih tema ima 15 povezanih ikona glavnih soba, kanonske dukate, Undo token i sedam povezanih PNG uloga za nagradni video po temi (63 fajla). Nagradni video ima aktivno i nedostupno stanje u dve veličine, jednu nagradu za Dnevni izazov i Riznicu i dva dukata za Solo; svaki dukat ima pet tačaka. Pet ikona donjeg reda glavnog menija po temi prikazuje se bez kvadratnih podloga, uz sekvencijalni talas samo na ikonama. Nove ikone Riznice i Turnira u meniju su bez podloga i starih SVG duplikata, sa pokretom prema Zelenoj temi. Četiri centralna moda koriste nove tematske PNG-ove u svih devet tema, istu geometriju i pokret kao Zelena, providne kartice bez blura i tekst bez emoji duplikata. Providnost je izričito primenjena i na Zelenu. Pri promeni teme pozadina i 15 vidljivih PNG elemenata novog menija pripremaju se pre vizuelnog prebacivanja, a stari PNG se sakriva dok novi nije učitan. Plavi okean nema stare SVG ikone glavnog menija ni stare nacrtane simbole; novi PNG-ovi stoje na Green pozicijama. Watermark Kvartalne lige je vraćen u svih deset tema kao tematski kanonski PNG; watermark Indeksa moći ostaje uklonjen. Gornje tri kartice imaju Green geometriju i raspored teksta, a ikone Online igrača i Dukata imaju Vaskršnji blagi motion i u Zelenoj. Putanje, dimenzije, RGBA i automatsko mapiranje prolaze; vizuelna provera u stvarnoj aplikaciji i na telefonu, te ostale porodice kataloga, predstoje. Svih deset tema ima originalni PNG logo igre 1672×941 na splash i login ekranu, bez starih tekstualnih logotipa; Green v2 je samostalni Clay natpis bez oblacica.",
   "requiredSurfaceIds": [
     "splash-login",
     "main-menu",
@@ -119,7 +119,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "www/assets/green-clay-balkan-diorama-v4.png",
-        "logoPng": "www/assets/green-soft-clay/splash-title-soft-clay-v1.png",
+        "logoPng": "www/assets/green-soft-clay/splash-title-soft-clay-v2.png",
         "representativeIconPngs": [
           "www/assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png",
           "www/assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
@@ -229,7 +229,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v9/light-background-master-v9.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/light/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,
@@ -332,7 +332,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v9/medium-background-master-v9.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/medium/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,
@@ -435,7 +435,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v13/winter-background-master-v13.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/winter/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,
@@ -538,7 +538,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/neon/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,
@@ -641,7 +641,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/amethyst/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,
@@ -744,7 +744,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/easter/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,
@@ -847,7 +847,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/desert/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,
@@ -950,7 +950,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v14/moon-background-master-v14.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/moon/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,
@@ -1053,7 +1053,7 @@
       },
       "visualEvidence": {
         "backgroundPng": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png",
-        "logoPng": null,
+        "logoPng": "www/assets/theme-packs/severna/splash-title-soft-clay-v1.png",
         "representativeIconPngs": [],
         "menuCardCapture": null,
         "gameBoardCapture": null,

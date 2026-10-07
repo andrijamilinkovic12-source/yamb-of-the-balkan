@@ -7,6 +7,7 @@ const root = path.resolve(__dirname, '..');
 const www = path.join(root, 'www');
 const indexSource = fs.readFileSync(path.join(www, 'index.html'), 'utf8');
 const themeCssSource = fs.readFileSync(path.join(www, 'teme.css'), 'utf8');
+const themeLogoCssSource = fs.readFileSync(path.join(www, 'theme-game-logos.css'), 'utf8');
 const styleCssSource = fs.readFileSync(path.join(www, 'style.css'), 'utf8');
 const configSource = fs.readFileSync(path.join(www, 'config.js'), 'utf8');
 const gameSource = fs.readFileSync(path.join(www, 'game.js'), 'utf8');
@@ -2142,14 +2143,13 @@ for (const [role, fileName] of Object.entries(greenRewardedVideoManifest.masters
 const splashImages = indexSource.match(/<img\b[^>]*id="theme-splash-clay-title"[^>]*>/g) || [];
 assert(splashImages.length === 1, 'Mora postojati tačno jedan dinamički theme splash <img>.');
 assert(!/<img\b[^>]*src="assets\/(?:easter|desert|green)-soft-clay\/splash-title/gi.test(indexSource), 'Splash teme ne smeju imati statički src u HTML-u.');
-assert(indexSource.includes('class="splash-legacy-login-logo" data-legacy-src="Logo_green.png"')
-    && indexSource.includes("screen.classList.toggle('has-login', login.style.display !== 'none');")
-    && indexSource.includes("activeTheme !== 'dark' && !legacyLogo.getAttribute('src')")
-    && themeCssSource.includes('#splash-screen.has-login .splash-legacy-login-logo,')
-    && themeCssSource.includes('padding: calc(var(--safe-top) + 48px)')
-    && themeCssSource.includes('calc(var(--safe-bottom) + 12px)')
-    && themeCssSource.includes('overflow-y: auto;'),
-    'Green prijava mora prikazati jedan novi logo i držati pravni tekst izvan sistemskih zona.');
+assert(indexSource.includes("screen.classList.toggle('has-login', login.style.display !== 'none');")
+    && !/splash-legacy-login-logo|splash-welcome-brand|splash-logo-fallback|Logo_green\.png/.test(indexSource)
+    && themeLogoCssSource.includes('#splash-screen.has-login > .logo-anim .theme-splash-clay-title-png')
+    && themeLogoCssSource.includes('padding: calc(var(--safe-top) + 48px)')
+    && themeLogoCssSource.includes('calc(var(--safe-bottom) + 12px)')
+    && themeLogoCssSource.includes('overflow-y: auto;'),
+    'Svih deset prijava moraju prikazati jedan tematski PNG logo bez starih tekstualnih logotipa.');
 assert(gameSource.includes('prepareThemeRoomAssets(roomId'), 'Nedostaje room-on-demand priprema asseta.');
 assert(gameSource.includes('installThemeImageHydrationObserver()'), 'Nedostaje observer za naknadno dodate tematske slike.');
 assert(!gameSource.includes('const optionalSources = pack.assets'), 'Startup i dalje preuzima ceo opcioni paket teme.');
@@ -2302,9 +2302,9 @@ for (const [familyName, family] of greenAssetFamilies) {
 const themeDirs = ['easter-soft-clay', 'desert-soft-clay', 'green-soft-clay'];
 const report = [];
 const startupConfig = {
-    'easter-soft-clay': ['assets/theme-backgrounds/easter-v6-1.png', 'assets/easter-soft-clay/splash-title-soft-clay-v1.png'],
-    'desert-soft-clay': ['assets/theme-backgrounds/desert-v8-2.png', 'assets/desert-soft-clay/splash-title-soft-clay-v1.png'],
-    'green-soft-clay': ['assets/green-clay-balkan-diorama-v4.png', 'assets/green-soft-clay/splash-title-soft-clay-v1.png', 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png', 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png', 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png', 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png', 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png', 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png', 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png', 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png', 'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png', 'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png', 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png']
+    'easter-soft-clay': ['assets/theme-backgrounds/easter-v6-1.png', 'assets/theme-packs/easter/splash-title-soft-clay-v1.png'],
+    'desert-soft-clay': ['assets/theme-backgrounds/desert-v8-2.png', 'assets/theme-packs/desert/splash-title-soft-clay-v1.png'],
+    'green-soft-clay': ['assets/green-clay-balkan-diorama-v4.png', 'assets/green-soft-clay/splash-title-soft-clay-v2.png', 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png', 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png', 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png', 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png', 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png', 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png', 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png', 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png', 'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png', 'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png', 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png']
 };
 assert(startupConfig['green-soft-clay'].every(relative => !relative.includes('canonical/statistics-overview/')), 'Statistics Overview paket ne sme ući u Green startup preload.');
 assert(startupConfig['green-soft-clay'].every(relative => !relative.includes('canonical/h2h-statistics/')), 'H2H Statistics paket ne sme ući u Green startup preload.');
@@ -2347,7 +2347,7 @@ for (const themeDir of themeDirs) {
     for (const file of files) {
         const info = readPngInfo(file);
         totalBytes += fs.statSync(file).size;
-        const isSplash = path.basename(file) === 'splash-title-soft-clay-v1.png';
+        const isSplash = /^splash-title-soft-clay-v[12]\.png$/.test(path.basename(file));
         if (!isSplash && Math.max(info.width, info.height) > 768) oversizedRuntimeIcons += 1;
     }
     assert(oversizedRuntimeIcons === 0, `${themeDir} ima ${oversizedRuntimeIcons} runtime ikona većih od 768 px.`);

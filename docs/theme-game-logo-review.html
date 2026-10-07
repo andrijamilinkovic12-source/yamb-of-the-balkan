@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Yamb of the Balkan — logotipi tema</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #16191d; color: #f0f2f3; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 24px; }
+    header { max-width: 1100px; margin: 0 auto 24px; }
+    h1 { font-size: clamp(1.4rem, 3vw, 2rem); margin: 0 0 8px; }
+    p { margin: 0; color: #bac2c9; line-height: 1.45; }
+    main { max-width: 1100px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; }
+    article { background: #242a30; border: 1px solid #3d454c; border-radius: 16px; overflow: hidden; }
+    .scene { aspect-ratio: 9 / 16; position: relative; background: #333 center / cover no-repeat; }
+    .scene::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 10%, rgba(0,0,0,.15)); pointer-events: none; }
+    .logo { position: absolute; top: 24%; left: 5%; width: 90%; height: 32%; object-fit: contain; z-index: 1; }
+    .info { padding: 12px 14px 14px; }
+    h2 { margin: 0 0 4px; font-size: 1rem; }
+    .info p { font-size: .8rem; }
+    .info a { display: inline-block; margin-top: 8px; color: #a9d2f2; font-size: .8rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Logotipi igre po temama</h1>
+    <p>Deset tematskih PNG logotipa na prihvaćenim pozadinama. Svaki ima providno platno 1672 × 941 px i natpis „YAMB OF THE / BALKAN“. Isti logo se koristi na uvodu i prijavi.</p>
+  </header>
+  <main id="gallery"></main>
+  <script>
+    const themes = [
+      ['dark', 'Zelena', 'Clay', '../www/assets/green-clay-balkan-diorama-v4.png', '../www/assets/green-soft-clay/splash-title-soft-clay-v2.png'],
+      ['light', 'Svetlo Zlato', 'Mat silikon / meka plastika', '../source-assets/theme-backgrounds-v9/light-background-master-v9.png'],
+      ['medium', 'Trula Višnja', 'Clay', '../source-assets/theme-backgrounds-v9/medium-background-master-v9.png'],
+      ['winter', 'Plavi Okean', 'Mat silikon / meka plastika', '../source-assets/theme-backgrounds-v13/winter-background-master-v13.png'],
+      ['neon', 'Neon Cyber', 'Mat silikon / meka plastika', '../source-assets/theme-backgrounds-v4/neon-background-master-v4.png'],
+      ['amethyst', 'Kraljevski Ametist', 'Clay', '../source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png'],
+      ['easter', 'Vaskršnja', 'Mat silikon / meka plastika', '../source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png'],
+      ['desert', 'Pustinjsko Staklo', 'Clay', '../source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png'],
+      ['moon', 'Mesečev Sjaj', 'Clay', '../source-assets/theme-backgrounds-v14/moon-background-master-v14.png'],
+      ['severna', 'Severna Maglina', 'Mat silikon / meka plastika', '../source-assets/theme-backgrounds-v4/severna-background-master-v4.png']
+    ];
+    const gallery = document.getElementById('gallery');
+    for (const [id, name, direction, background, referenceLogo] of themes) {
+      const logo = referenceLogo || `../www/assets/theme-packs/${id}/splash-title-soft-clay-v1.png`;
+      const card = document.createElement('article');
+      card.innerHTML = `<div class="scene"><img class="logo" alt="Logo ${name}" loading="lazy"></div><div class="info"><h2></h2><p></p><a target="_blank" rel="noopener">Otvori PNG</a></div>`;
+      card.querySelector('.scene').style.backgroundImage = `url('${background}')`;
+      card.querySelector('.logo').src = logo;
+      card.querySelector('h2').textContent = name;
+      card.querySelector('p').textContent = `3D Soft Neomorphism · ${direction}`;
+      card.querySelector('a').href = logo;
+      gallery.appendChild(card);
+    }
+  </script>
+</body>
+</html>

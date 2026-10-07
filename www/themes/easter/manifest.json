@@ -14,7 +14,7 @@
     "audio": "www/managers.js",
     "shopConfig": "www/config.js",
     "backgroundAsset": "www/assets/theme-backgrounds/easter-v6-1.png",
-    "splashTitleAsset": "www/assets/easter-soft-clay/splash-title-soft-clay-v1.png",
+    "splashTitleAsset": "www/assets/theme-packs/easter/splash-title-soft-clay-v1.png",
     "qaPreview": "www/themes/easter/qa-preview.html",
     "qaSplashPreview": "www/themes/easter/qa-splash.html",
     "qaGameOverPreview": "www/themes/easter/qa-gameover.html"

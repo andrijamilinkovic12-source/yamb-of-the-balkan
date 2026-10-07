@@ -38,7 +38,7 @@ def contexts(slot_id):
     if slot_id == "background/main":
         return ["splash", "main-menu", "all-rooms"]
     if slot_id == "splash-title-soft-clay-v1":
-        return ["splash", "main-menu"]
+        return ["splash", "login"]
     if slot_id.startswith("runtime/menu/"):
         return ["main-menu"]
     family = slot_id.split("/")[1] if slot_id.startswith("canonical/") else slot_id.split("/")[0]

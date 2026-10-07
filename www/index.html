@@ -20,9 +20,16 @@
                 window.yambBootTheme = startupTheme;
                 document.documentElement.dataset.splashTheme = startupTheme;
                 const splashTitleByTheme = {
-                    dark: 'assets/green-soft-clay/splash-title-soft-clay-v1.png?v=2',
-                    easter: 'assets/easter-soft-clay/splash-title-soft-clay-v1.png?v=2',
-                    desert: 'assets/desert-soft-clay/splash-title-soft-clay-v1.png?v=2'
+                    dark: 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1',
+                    light: 'assets/theme-packs/light/splash-title-soft-clay-v1.png?v=1',
+                    medium: 'assets/theme-packs/medium/splash-title-soft-clay-v1.png?v=1',
+                    winter: 'assets/theme-packs/winter/splash-title-soft-clay-v1.png?v=1',
+                    neon: 'assets/theme-packs/neon/splash-title-soft-clay-v1.png?v=1',
+                    amethyst: 'assets/theme-packs/amethyst/splash-title-soft-clay-v1.png?v=1',
+                    easter: 'assets/theme-packs/easter/splash-title-soft-clay-v1.png?v=1',
+                    desert: 'assets/theme-packs/desert/splash-title-soft-clay-v1.png?v=1',
+                    moon: 'assets/theme-packs/moon/splash-title-soft-clay-v1.png?v=1',
+                    severna: 'assets/theme-packs/severna/splash-title-soft-clay-v1.png?v=1'
                 };
                 const splashTitleSrc = splashTitleByTheme[startupTheme];
                 if (splashTitleSrc) {
@@ -74,17 +81,39 @@
                 radial-gradient(circle at 84% 78%, rgba(7,29,15,.34), transparent 38%),
                 linear-gradient(145deg, #557a52 0%, #315b3b 52%, #173a25 100%);
         }
+        html.light-splash-boot { --theme-boot-color: #e6be83; }
+        html.medium-splash-boot { --theme-boot-color: #681d25; }
+        html.winter-splash-boot { --theme-boot-color: #0e5a9b; }
+        html.neon-splash-boot { --theme-boot-color: #080d18; }
+        html.amethyst-splash-boot { --theme-boot-color: #5a386a; }
+        html.moon-splash-boot { --theme-boot-color: #08090c; }
+        html.severna-splash-boot { --theme-boot-color: #0b1830; }
+        html:is(.light-splash-boot, .medium-splash-boot, .winter-splash-boot,
+            .neon-splash-boot, .amethyst-splash-boot, .moon-splash-boot, .severna-splash-boot) {
+            background: var(--theme-boot-color);
+        }
+        html:is(.light-splash-boot, .medium-splash-boot, .winter-splash-boot,
+            .neon-splash-boot, .amethyst-splash-boot, .moon-splash-boot, .severna-splash-boot)::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 2147483646;
+            background: var(--theme-boot-color);
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.22">
     <link rel="stylesheet" href="teme.css?v=6.95">
-    <link rel="stylesheet" href="theme-main-room-icons.css?v=8">
+    <link rel="stylesheet" href="theme-main-room-icons.css?v=12">
+    <link rel="stylesheet" href="theme-main-menu-typography.css?v=1">
+    <link rel="stylesheet" href="theme-game-board.css?v=4">
+    <link rel="stylesheet" href="theme-game-logos.css?v=5">
     <link rel="stylesheet" href="theme-ducat-pack.css?v=1">
     <link rel="stylesheet" href="theme-undo-token-pack.css?v=1">
     <link rel="stylesheet" href="theme-rewarded-video-pack.css?v=1">
     <link rel="stylesheet" href="kockice.css?v=1.8">
-    <link rel="stylesheet" href="efekti.css?v=1.6">
+    <link rel="stylesheet" href="efekti.css?v=1.7">
     
     <script src="languages.js?v=5.12"></script>
     <script src="quotes.js"></script>
@@ -433,7 +462,6 @@
     <div id="splash-screen" class="screen active">
 
         <div class="logo-anim">
-            <span class="splash-logo-fallback">YAMB OF THE<br><span style="color:var(--gold-main)">BALKAN</span></span>
             <img id="theme-splash-clay-title" class="theme-splash-clay-title-png" alt="Yamb of the Balkan" decoding="async" fetchpriority="high">
             <script>
                 (() => {
@@ -450,15 +478,13 @@
         <div id="splash-login-container" style="display: none; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: 10px; animation: fadeIn 1s forwards;">
             
             <div class="splash-language-switcher" style="position: absolute; top: max(30px, env(safe-area-inset-top)); right: 20px; display: flex; gap: 15px; z-index: 100; align-items: center;">
-                <div onclick="setLanguage('sr')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
-                    <img src="https://flagcdn.com/w40/rs.png" alt="SRB" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3);">
+                <div onclick="setLanguage('sr')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); width: 34px; min-height: 24px; text-align: center; font-size: 24px; line-height: 24px;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
+                    <img src="https://flagcdn.com/w40/rs.png" alt="SRB" onerror="this.replaceWith(document.createTextNode('🇷🇸'))" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3);">
                 </div>
-                <div onclick="setLanguage('en')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5));" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
-                    <img src="https://flagcdn.com/w40/gb.png" alt="ENG" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3); position: relative; top: 2px;">
+                <div onclick="setLanguage('en')" style="cursor: pointer; transition: transform 0.1s; filter: drop-shadow(0 2px 3px rgba(0,0,0,0.5)); width: 34px; min-height: 24px; text-align: center; font-size: 24px; line-height: 24px;" onmousedown="this.style.transform='scale(0.9)'" onmouseup="this.style.transform='scale(1)'">
+                    <img src="https://flagcdn.com/w40/gb.png" alt="ENG" onerror="this.replaceWith(document.createTextNode('🇬🇧'))" style="width: 34px; border-radius: 4px; border: 1px solid rgba(255,215,0,0.3); position: relative; top: 2px;">
                 </div>
             </div>
-
-            <img class="splash-legacy-login-logo" data-legacy-src="Logo_green.png" alt="Yamb Logo" style="width: 180px; height: auto; margin-bottom: 20px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5));">
 
             <div class="splash-copy-panel">
                 <p data-lang="splash_quote" class="splash-quote-text">
@@ -469,11 +495,8 @@
                 </p>
             </div>
             
-            <div class="splash-login-divider" style="width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-main), transparent); margin-bottom: 5px;"></div>
-
             <p class="splash-welcome-copy" style="color: var(--text-main); font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; text-align: center; text-shadow: 0 2px 4px rgba(0,0,0,0.5); line-height: 1.4;">
-                <span data-lang="splash_welcome_short">DOBRODOŠLI</span><br>
-                <span class="splash-welcome-brand">YAMB OF THE <span style="color: var(--gold-main);">BALKAN</span></span>
+                <span data-lang="splash_welcome_short">DOBRODOŠLI</span>
             </p>
             
             <button id="dugmeGooglePrijava" class="btn-menu" style="background: white; color: #333; font-weight: 800; font-size: 1rem; padding: 15px 30px; border-radius: 30px; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; gap: 12px; width: auto; transition: transform 0.2s; margin-top: 5px;">
@@ -498,16 +521,10 @@
                 const screen = document.getElementById('splash-screen');
                 const login = document.getElementById('splash-login-container');
                 if (!screen || !login) return;
-                const legacyLogo = login.querySelector('.splash-legacy-login-logo');
                 const syncLoginLayout = () => {
                     screen.classList.toggle('has-login', login.style.display !== 'none');
-                    const activeTheme = document.documentElement.dataset.splashTheme || window.yambBootTheme || 'dark';
-                    if (legacyLogo && activeTheme !== 'dark' && !legacyLogo.getAttribute('src')) {
-                        legacyLogo.src = legacyLogo.dataset.legacySrc;
-                    }
                 };
                 new MutationObserver(syncLoginLayout).observe(login, { attributes: true, attributeFilter: ['style'] });
-                new MutationObserver(syncLoginLayout).observe(document.documentElement, { attributes: true, attributeFilter: ['data-splash-theme'] });
                 syncLoginLayout();
             })();
         </script>
@@ -1000,14 +1017,12 @@
     </div>
 
     <div id="riznica-intro" class="riznica-intro hidden" aria-hidden="true">
-        <img class="riznica-intro-gem" src="assets/treasury-icon.svg" alt="" aria-hidden="true" decoding="async">
         <img class="riznica-intro-gem-green" data-theme-src="assets/green-soft-clay/treasury-free-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
         <div id="riznica-intro-text" class="riznica-intro-line" aria-live="polite"></div>
     </div>
 
     <div id="league-intro" class="league-intro hidden" aria-hidden="true">
         <div class="league-intro-mark-wrap">
-            <img class="league-intro-mark" src="assets/quarterly-league-icon.svg" alt="" aria-hidden="true" decoding="async">
             <img class="league-intro-mark-green" data-theme-src="assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
         </div>
         <div class="league-intro-title" aria-live="polite">
@@ -1018,7 +1033,6 @@
 
     <div id="daily-intro" class="daily-intro hidden" aria-hidden="true">
         <div class="daily-intro-mark-wrap">
-            <img class="daily-intro-mark" src="assets/daily-challenge-icon.svg" alt="" aria-hidden="true" decoding="async">
             <img class="daily-intro-mark-green" data-theme-src="assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
         </div>
         <div class="daily-intro-title" aria-live="polite">
@@ -1038,11 +1052,9 @@
 
     <div id="tournament-intro" class="tournament-intro hidden" aria-hidden="true">
         <div class="tournament-intro-mark-wrap">
-            <img class="tournament-intro-mark" src="assets/tournament-icon.svg" alt="" aria-hidden="true" decoding="async">
             <img class="tournament-intro-mark-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
         </div>
         <div class="tournament-intro-title" aria-live="polite"></div>
-        <div class="tournament-intro-champions" aria-live="polite"></div>
     </div>
     
     <div id="highscores-screen" class="screen" style="justify-content: flex-start;">
@@ -1737,27 +1749,27 @@
         });
     </script>
 
-    <script src="config.js?v=5.6"></script>
-    <script src="managers.js?v=5.30"></script>
-    <script src="dnevniizazov.js?v=2.8"></script>
-    <script src="riznica.js?v=1.12"></script>
+    <script src="config.js?v=5.7"></script>
+    <script src="managers.js?v=5.31"></script>
+    <script src="dnevniizazov.js?v=2.9"></script>
+    <script src="riznica.js?v=1.13"></script>
     <script src="trophyManager.js?v=4.6"></script>
     <script src="features.js?v=3.8"></script>
     <script src="toplista.js?v=4.8"></script>
     <script src="powerIndexCore.js?v=1.0"></script>
-    <script src="turnir.js?v=1018"></script>
+    <script src="turnir.js?v=1019"></script>
     <script src="pravilaigre.js?v=1.22"></script>
     <script src="vracanjeupisa.js?v=1.7"></script>
     <script src="globalchat.js?v=1.7"></script>
     <script src="appCheck.js?v=1.0"></script>
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
-    <script src="game.js?v=5.53"></script>
+    <script src="game.js?v=5.54"></script>
     <script src="theme-main-room-icons.js?v=4"></script>
     <script src="theme-ducat-pack.js?v=1"></script>
     <script src="theme-undo-token-pack.js?v=1"></script>
     <script src="theme-rewarded-video-pack.js?v=1"></script>
-    <script src="kvartalnaliga.js?v=1025"></script>
+    <script src="kvartalnaliga.js?v=1026"></script>
     <script src="onlinenumber.js?v=1012"></script>
     <script src="vatreniniz.js?v=1008"></script>
     <script src="powerindex.js?v=1.9"></script>

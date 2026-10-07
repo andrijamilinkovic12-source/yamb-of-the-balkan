@@ -15,6 +15,12 @@ const YAMB_FREE_THEME_IDS = ['dark', 'light', 'medium', 'winter'];
 const filterYambThemeIds = (items = []) => Array.isArray(items)
     ? items.filter(item => YAMB_THEME_IDS.includes(item))
     : [];
+const getActiveGameLogoSource = () => {
+    const theme = document.documentElement?.dataset?.splashTheme || localStorage.getItem('yamb_theme') || 'dark';
+    return window.app?.getThemeSplashSource?.(theme)
+        || document.getElementById('theme-splash-clay-title')?.getAttribute('src')
+        || 'assets/green-soft-clay/splash-title-soft-clay-v2.png?v=1';
+};
 
 // --- 1. STATE MANAGER ---
 class StateManager {
@@ -1104,6 +1110,7 @@ class EffectManager {
         if (type === 'royal_yamb') {
             document.body.classList.add('fx-royal_yamb');
             const greenRoyal = this.isGreenThemeActive();
+            const gameLogoSource = getActiveGameLogoSource();
 
             const container = document.createElement('div');
             container.className = 'royal-yamb-container';
@@ -1120,12 +1127,11 @@ class EffectManager {
                 <div class="royal-yamb-stage-glow"></div>
                 <div class="royal-yamb-footlights"></div>
                 <canvas class="royal-yamb-canvas"></canvas>
-                <div class="royal-yamb-emblem${greenRoyal ? ' royal-yamb-emblem--green' : ''}">
-                    <img src="${greenRoyal ? 'assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png?v=1' : 'Logo_green.png'}" alt="" draggable="false">
-                </div>
+                ${greenRoyal ? `<div class="royal-yamb-emblem royal-yamb-emblem--green">
+                    <img src="assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png?v=1" alt="" draggable="false">
+                </div>` : ''}
                 <div class="royal-yamb-title-active" aria-label="Yamb of the Balkan">
-                    <span class="royal-yamb-title-main">YAMB</span>
-                    <span class="royal-yamb-title-sub">OF THE BALKAN</span>
+                    <img src="${gameLogoSource}" alt="" draggable="false">
                 </div>
                 <div class="royal-yamb-sparkles"></div>
             `;
@@ -3742,7 +3748,10 @@ class ShopManager {
                     visualHtml = `<div class="dice-preview preview-${item.id}">${clayPipPreview}</div>`;
                 } else if (this.type === 'effect') {
                     const greenClayEffect = isGreenTreasury && ['balkan', 'thunder', 'fireworks', 'bubbles', 'cosmic_dust', 'dragon_fire', 'royal_yamb', 'fireflies', 'ice_age', 'black_hole', 'supernova', 'neon_pulse', 'drones', 'ufo_abduction'].includes(item.id);
-                    visualHtml = `<div class="effect-preview-box ${item.cssClass}">${greenClayEffect ? '' : (item.innerHtml || '')}</div>`;
+                    const effectPreview = item.id === 'royal_yamb'
+                        ? `<img class="royal-yamb-logo-preview" src="${getActiveGameLogoSource()}" alt="" loading="lazy" decoding="async">`
+                        : (item.innerHtml || '');
+                    visualHtml = `<div class="effect-preview-box ${item.cssClass}">${greenClayEffect ? '' : effectPreview}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {
                     visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else if (this.type === 'theme' && item.id === 'easter') {

@@ -1,0 +1,107 @@
+/* Green menu typography is the shared geometry; themes supply only ink and shadows. */
+#main-menu#main-menu .modes-grid .mode-text {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-size: clamp(.68rem, 2.7vw, .8rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .75px !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+}
+
+/* Old theme-specific pseudo-labels must not replace translated real text. */
+#main-menu#main-menu .modes-grid .mode-text::after {
+    content: none !important;
+    display: none !important;
+}
+
+#main-menu#main-menu .main-summary-row .main-online-card #live-online-count {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-size: 1.2rem !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+}
+
+#main-menu#main-menu .main-summary-row .main-economy-card #menu-dukati-count {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-size: 1.15rem !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+}
+
+#main-menu#main-menu .main-summary-row :is(.main-online-card span[data-lang="ui_online_short"], .main-economy-card span[data-lang="menu_ducats"]) {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-size: .55rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .5px !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+}
+
+#main-menu#main-menu .main-summary-row .main-league-card .main-league-title {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-size: .65rem !important;
+    font-weight: 800 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+}
+
+#main-menu#main-menu .main-summary-row .main-league-card #league-rank-name {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-size: 1.2rem !important;
+    font-weight: 900 !important;
+    line-height: 1.12 !important;
+    letter-spacing: 1px !important;
+    text-align: center !important;
+}
+
+#main-menu#main-menu .main-summary-row .main-league-card #league-pts-text {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-size: .6rem !important;
+    font-weight: 600 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+}
+
+#main-menu#main-menu :is(#mode-resume-1, #mode-resume-2) .mini-btn {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-size: .75rem !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    text-align: center !important;
+}
+
+@media (max-width: 360px) {
+    #main-menu#main-menu .main-summary-row .main-league-card .main-league-title {
+        font-size: .56rem !important;
+        line-height: 1.1 !important;
+        letter-spacing: 0 !important;
+    }
+    #main-menu#main-menu .main-summary-row .main-league-card #league-rank-name {
+        font-size: .9rem !important;
+        letter-spacing: 0 !important;
+    }
+    #main-menu#main-menu .main-summary-row .main-league-card #league-pts-text {
+        font-size: .48rem !important;
+    }
+    #main-menu#main-menu .main-summary-row .main-economy-card #menu-dukati-count {
+        font-size: .84rem !important;
+        letter-spacing: 0 !important;
+    }
+}

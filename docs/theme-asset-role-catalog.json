@@ -7,6 +7,7 @@
     "source masters",
     "QA captures",
     "retired assets",
+    "retired Green cloud logo v1",
     "legacy fallback Logo_green.png outside the active Green Room Pack"
   ],
   "requiredPngCountPerTheme": 177,
@@ -1406,7 +1407,7 @@
     },
     {
       "id": "splash-title-soft-clay-v1",
-      "greenReference": "assets/green-soft-clay/splash-title-soft-clay-v1.png",
+      "greenReference": "assets/green-soft-clay/splash-title-soft-clay-v2.png",
       "kind": "game-logo",
       "width": 1672,
       "height": 941,

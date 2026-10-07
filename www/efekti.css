@@ -2975,30 +2975,15 @@ body.fx-dragon_fire .game-scene {
 
 .prev-royal-yamb .royal-yamb-logo-preview {
     position: absolute;
-    top: 5px;
+    top: 0;
     left: 50%;
-    width: 58px;
-    height: 58px;
+    width: min(90%, 160px);
+    height: 70px;
     object-fit: contain;
     transform: translateX(-50%);
     z-index: 2;
     filter: drop-shadow(0 0 10px rgba(255, 225, 112, 0.95));
     animation: royalLogoPreview 1.9s ease-in-out infinite;
-}
-
-.prev-royal-yamb .royal-yamb-title {
-    position: absolute;
-    left: 50%;
-    bottom: 5px;
-    width: 96%;
-    transform: translateX(-50%);
-    z-index: 2;
-    color: #fff7c2;
-    font-size: 0.56rem;
-    line-height: 1;
-    font-weight: 900;
-    letter-spacing: 0;
-    text-shadow: 0 0 8px #f6c44d, 0 2px 4px rgba(0, 0, 0, 0.65);
 }
 
 .royal-yamb-container {
@@ -3276,39 +3261,13 @@ body.fx-dragon_fire .game-scene {
     will-change: transform, opacity;
 }
 
-.royal-yamb-title-main,
-.royal-yamb-title-sub {
+.royal-yamb-title-active img {
     display: block;
-    color: #fff2a7;
-    background: linear-gradient(180deg, #fffef1 0%, #fff1a4 28%, #ffc94f 59%, #9a5207 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: 1px rgba(70, 33, 0, 0.28);
-    text-shadow:
-        0 0 10px rgba(255, 255, 255, 0.78),
-        0 0 28px rgba(255, 198, 57, 0.82),
-        0 10px 24px rgba(0, 0, 0, 0.62);
-}
-
-.royal-yamb-title-main {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(3.45rem, 8.5vw, 7.6rem);
-    line-height: 0.78;
-    font-weight: 900;
-}
-
-.royal-yamb-title-sub {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(1.12rem, 2.7vw, 2.25rem);
-    line-height: 1;
-    font-weight: 800;
-    color: #d9ffe1;
-    background: linear-gradient(180deg, #f1fff1 0%, #bfe2b9 42%, #d5aa4c 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 12px rgba(126, 222, 145, 0.5), 0 6px 16px rgba(0, 0, 0, 0.68);
+    width: min(100%, 700px);
+    max-height: 36vh;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, .46));
 }
 
 .royal-yamb-sparkles {
@@ -3346,8 +3305,6 @@ body.fx-dragon_fire {
 @media (max-width: 520px) {
     .royal-yamb-emblem { top: 9%; width: clamp(150px, 48vw, 190px); }
     .royal-yamb-title-active { top: 57%; width: 96vw; }
-    .royal-yamb-title-main { font-size: clamp(3.2rem, 18vw, 4.8rem); }
-    .royal-yamb-title-sub { font-size: clamp(1rem, 5.2vw, 1.35rem); }
     .royal-yamb-spotlight { min-width: 125px; }
     .royal-yamb-lamp { width: 42px; height: 25px; }
     .royal-yamb-footlights { width: 116vw; }
