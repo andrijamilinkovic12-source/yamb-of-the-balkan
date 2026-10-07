@@ -6,6 +6,7 @@ const html = fs.readFileSync(path.join(root, 'www/index.html'), 'utf8');
 const menu = html.slice(html.indexOf('id="main-menu"'), html.indexOf('id="quote-screen"'));
 assert(menu.length > 0, 'Main menu not found');
 assert(!/data-theme-src="assets\/(?:easter|desert|severna)-soft-clay\//.test(menu), 'Legacy themed menu image remains');
+assert(!/class="special-svg-icon/.test(menu), 'Legacy Treasury or Tournament menu SVG remains');
 for (const source of ['treasury-free-v3.png', 'champion-trophy-v1.png', 'ducats-undo-free-v3.png']) {
   assert(menu.includes(source), `Missing Green anchor for ${source}`);
 }

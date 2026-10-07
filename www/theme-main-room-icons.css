@@ -23,17 +23,22 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 }
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon.theme-main-room-icon-host {
-    width: 68px !important;
-    height: 68px !important;
-    flex: 0 0 68px !important;
+    width: 64px !important;
+    height: 64px !important;
+    flex: 0 0 64px !important;
+    position: relative !important;
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
+    padding: 0 !important;
+    overflow: visible !important;
     font-size: 0 !important;
     color: transparent !important;
     background: none !important;
     box-shadow: none !important;
     border: 0 !important;
+    filter: none !important;
+    animation: float3D 4s ease-in-out infinite !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon.theme-main-room-icon-host::before,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon.theme-main-room-icon-host::after,
@@ -46,14 +51,183 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     display: none !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon > .theme-main-room-icon {
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
     width: 68px !important;
     height: 68px !important;
     flex-basis: 68px !important;
+    margin: 0 !important;
+    translate: -50% -50%;
+    scale: 1;
+    transition: translate .16s ease, scale .16s ease;
+}
+
+/* Four central mode cards share Green's grid, icon geometry and restrained motion. */
+#main-menu .modes-grid {
+    max-width: 292px !important;
+    gap: 12px !important;
+    margin-top: 2px !important;
+    margin-bottom: 12px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn {
+    min-height: 0 !important;
+    padding: 8px !important;
+    border-radius: 24px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn > div:first-child:not([style*="display: none"]) {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 12px !important;
+    width: 100% !important;
+    height: auto !important;
+    grid-template-rows: none !important;
+}
+/* The visible square keeps its hit area and outline, while the scenery shows through. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn:is(:hover,:active),
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-btn,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-btn:is(:hover,:active) {
+    background: transparent !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn::before,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn::after,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-btn::before,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-btn::after {
+    content: none !important;
+    display: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn:hover .mode-icon > .theme-main-room-icon {
+    translate: -50% -54%;
+    scale: 1.035;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-btn:active .mode-icon > .theme-main-room-icon {
+    translate: -50% -47%;
+    scale: .94;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .modes-grid .mode-text,
+body:not(.light-theme):not(.medium-theme):not(.winter-theme):not(.neon-theme):not(.amethyst-theme):not(.easter-theme):not(.desert-theme):not(.moon-theme):not(.severna-theme) #main-menu .modes-grid .mode-text {
+    font-size: clamp(.68rem, 2.7vw, .8rem) !important;
+    line-height: 1.2 !important;
+    letter-spacing: .75px !important;
+    text-align: center !important;
+}
+#main-menu .modes-grid .mode-text::after {
+    content: none !important;
+    display: none !important;
+}
+@media (max-width: 599px) and (orientation: portrait) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon > .theme-main-room-icon {
+        width: 60px !important;
+        height: 60px !important;
+        flex-basis: 60px !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    #main-menu .modes-grid .mode-icon,
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon.theme-main-room-icon-host {
+        animation: none !important;
+    }
+    #main-menu .modes-grid .mode-btn .mode-icon > img {
+        transition: none !important;
+    }
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .btn-square > .theme-main-room-icon {
     width: min(64px, 80%) !important;
     height: min(64px, 80%) !important;
     margin: auto;
+}
+
+/* Five lower menu entries are free symbols, following the Green reference. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid {
+    width: 100% !important;
+    max-width: 350px !important;
+    gap: 15px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square {
+    position: relative;
+    overflow: visible;
+    width: 55px !important;
+    height: 55px !important;
+    flex: 0 0 55px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square:is(:hover,:active) {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square::before,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square::after {
+    content: none !important;
+    display: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square > .theme-main-room-icon {
+    display: block !important;
+    position: absolute !important;
+    left: 50%;
+    top: 50%;
+    width: 52px !important;
+    height: 52px !important;
+    flex: 0 0 52px !important;
+    max-width: none !important;
+    margin: 0 !important;
+    translate: -50% -50%;
+    scale: 1;
+    animation: themeMainBottomIconWave 8.4s cubic-bezier(.34, 1.56, .64, 1) infinite !important;
+    will-change: translate, scale;
+}
+@keyframes themeMainBottomIconWave {
+    0%, 4%, 13%, 100% { translate: -50% -50%; scale: 1; }
+    7% { translate: -50% calc(-50% - 5px); scale: 1.035; }
+    10% { translate: -50% calc(-50% + 1px); scale: .99; }
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square:nth-child(1) > .theme-main-room-icon { animation-delay: 1.2s !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square:nth-child(2) > .theme-main-room-icon { animation-delay: 1.38s !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square:nth-child(3) > .theme-main-room-icon { animation-delay: 1.56s !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square:nth-child(4) > .theme-main-room-icon { animation-delay: 1.74s !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square:nth-child(5) > .theme-main-room-icon { animation-delay: 1.92s !important; }
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square:active > .theme-main-room-icon {
+    animation: none !important;
+    translate: -50% -47%;
+    scale: .94;
+}
+@media (max-width: 599px) and (orientation: portrait) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid {
+        gap: 12px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square {
+        width: 48px !important;
+        height: 48px !important;
+        flex-basis: 48px !important;
+    }
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square > .theme-main-room-icon {
+        width: 46px !important;
+        height: 46px !important;
+        flex-basis: 46px !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .icon-menu-grid .btn-square > .theme-main-room-icon {
+        animation: none !important;
+        will-change: auto;
+    }
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-global-chat-btn > .theme-main-room-icon,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-online-icon-wrap > .theme-main-room-icon,
@@ -62,11 +236,133 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     height: 52px !important;
     flex-basis: 52px !important;
 }
+/* Ocean uses the same top-row icon slots as Green; no legacy tile or drawn glyph. */
+body.winter-theme #main-menu > .main-global-chat-btn {
+    width: 44px !important;
+    height: 44px !important;
+    left: max(20px, calc((100% - 380px) / 2 + 10px)) !important;
+    top: 34px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: visible !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+}
+body.winter-theme #main-menu > .main-global-chat-btn .main-global-chat-fallback {
+    display: none !important;
+}
+body.winter-theme #main-menu .main-online-icon-wrap > img.theme-main-room-icon {
+    display: block !important;
+    width: 44px !important;
+    height: 44px !important;
+    flex-basis: 44px !important;
+}
+body.winter-theme #main-menu .main-economy-icon-wrap > img.theme-main-room-icon {
+    display: block !important;
+    width: 48px !important;
+    height: 48px !important;
+    flex-basis: 48px !important;
+}
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .btn-special-square > .theme-main-room-icon {
     width: min(64px, 82%) !important;
     height: min(64px, 82%) !important;
     flex-basis: auto !important;
     margin: auto;
+}
+
+/* Treasury breath and tournament sway use Green's geometry and timing. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row {
+    max-width: 380px !important;
+    gap: 20px !important;
+    margin: 5px auto 10px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square {
+    position: relative;
+    overflow: visible !important;
+    width: 75px !important;
+    height: 75px !important;
+    flex: 0 0 75px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square:is(:hover,:active) {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square::before,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square::after {
+    content: none !important;
+    display: none !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square > .theme-main-room-icon {
+    display: block !important;
+    position: absolute !important;
+    left: 50%;
+    top: 50%;
+    z-index: 2;
+    width: 82px !important;
+    height: 82px !important;
+    flex: 0 0 82px !important;
+    max-width: none !important;
+    margin: 0 !important;
+    translate: -50% -50%;
+    scale: 1;
+    rotate: 0deg;
+    will-change: translate, scale, rotate;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .spec-riznica > .theme-main-room-icon {
+    animation: themeTreasuryBreath 2.6s ease-in-out infinite !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .spec-turnir > .theme-main-room-icon {
+    animation: themeTournamentVictorySway 2.8s ease-in-out infinite !important;
+}
+@keyframes themeTreasuryBreath {
+    0%, 100% { translate: -50% -50%; scale: 1; }
+    50% { translate: -50% calc(-50% - 2px); scale: 1.035; }
+}
+@keyframes themeTournamentVictorySway {
+    0%, 100% { translate: -50% -50%; rotate: -1.5deg; scale: 1; }
+    50% { translate: -50% calc(-50% - 2px); rotate: 1.5deg; scale: 1.018; }
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square:active > .theme-main-room-icon {
+    animation: none !important;
+    translate: -50% -47%;
+    rotate: 0deg;
+    scale: .95;
+}
+@media (max-width: 599px) and (orientation: portrait) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square > .theme-main-room-icon {
+        width: 74px !important;
+        height: 74px !important;
+        flex-basis: 74px !important;
+    }
+}
+@media (max-width: 360px) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square {
+        width: 65px !important;
+        height: 65px !important;
+        flex-basis: 65px !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .special-actions-row .btn-special-square > .theme-main-room-icon {
+        animation: none !important;
+        will-change: auto;
+    }
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #riznica-intro .riznica-intro-gem-green.theme-main-room-icon,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-intro .tournament-intro-mark-green.theme-main-room-icon {
@@ -80,20 +376,6 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-intro .tournament-intro-mark:not(.theme-main-room-icon) {
     display: none !important;
 }
-body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-league-watermark-zone {
-    position: absolute !important;
-    top: 50% !important;
-    right: -5px !important;
-    width: 86px !important;
-    height: 86px !important;
-    transform: translateY(-50%) !important;
-    background: none !important;
-    opacity: .20 !important;
-    pointer-events: none;
-}
-body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-league-watermark-zone::before { content: none !important; }
-.theme-main-league-watermark { display: block; width: 100%; height: 100%; object-fit: contain; }
-
 /* The same tournament trophy appears at several scales outside the room entrance. */
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-hof-trophy-green.theme-main-room-icon,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .modal-context-tourney-winner .tourney-prize-result-icon-green.theme-main-room-icon {
@@ -131,4 +413,143 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #easter-room-intro:is(.theme-light,.theme-medium,.theme-winter,.theme-neon,.theme-amethyst,.theme-moon) {
     background: linear-gradient(180deg, rgba(15,18,30,.08), rgba(15,18,30,.22)), var(--approved-theme-bg-image) center / cover no-repeat !important;
+}
+
+/* The three summary cards keep their own theme surfaces and Green's shared geometry. */
+#main-menu .main-summary-row {
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: 380px !important;
+    display: flex !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 0 10px !important;
+    margin: 50px auto 15px !important;
+}
+#main-menu .main-summary-row > .main-online-card,
+#main-menu .main-summary-row > .main-economy-card {
+    flex: 1 1 0 !important;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 12px 5px !important;
+    border-radius: 14px !important;
+}
+#main-menu .main-summary-row > .main-league-card {
+    flex: 1.8 1 0 !important;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 12px 10px !important;
+    border-radius: 14px !important;
+}
+#main-menu .main-summary-row .main-league-card .main-league-content {
+    width: 100% !important;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-right: 34px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+#main-menu .main-summary-row .main-league-card .main-league-title {
+    max-width: 100%;
+    margin-bottom: 2px !important;
+    text-align: center;
+}
+#main-menu .main-summary-row .main-league-card .main-league-content #league-rank-name {
+    width: 100% !important;
+    max-width: 100% !important;
+    font-size: 1.2rem !important;
+    line-height: 1.12 !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+#main-menu .main-summary-row .main-league-card .main-league-progress {
+    width: 90% !important;
+    margin-top: 6px !important;
+}
+#main-menu .main-summary-row .main-league-card .main-league-content #league-pts-text {
+    max-width: 100% !important;
+    margin-top: 5px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+/* Each league watermark uses its own theme-pack PNG, behind the text. */
+#main-menu .main-summary-row .main-league-card .main-league-watermark-zone {
+    position: absolute !important;
+    top: 50% !important;
+    right: -5px !important;
+    z-index: 0 !important;
+    width: 86px !important;
+    height: 86px !important;
+    transform: translateY(-50%) !important;
+    opacity: 1 !important;
+    filter: none !important;
+    background: none !important;
+    border: 0 !important;
+    pointer-events: none !important;
+}
+#main-menu .main-summary-row .main-league-card .main-league-watermark-zone::before {
+    content: none !important;
+    display: none !important;
+}
+#main-menu .main-summary-row .main-league-card .main-league-watermark-zone > img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain;
+    opacity: .18;
+}
+/* Easter's gentle icon movement applies to the current PNGs in all ten themes. */
+#main-menu .main-summary-row .main-online-icon-wrap > img[data-theme-src] {
+    transform-origin: center;
+    animation: summaryOnlineSignal 2.35s ease-in-out infinite !important;
+}
+#main-menu .main-summary-row .main-economy-icon-wrap > img[data-theme-src] {
+    transform-origin: center;
+    animation: summaryEconomySway 2.7s ease-in-out infinite !important;
+}
+@keyframes summaryOnlineSignal {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-1.5px) scale(1.045); }
+}
+@keyframes summaryEconomySway {
+    0%, 100% { transform: translateY(0) rotate(-1.8deg) scale(1); }
+    50% { transform: translateY(-2px) rotate(1.8deg) scale(1.025); }
+}
+#main-menu .main-summary-row .main-online-card:active .main-online-icon-wrap > img[data-theme-src],
+#main-menu .main-summary-row .main-economy-card:active .main-economy-icon-wrap > img[data-theme-src] {
+    animation: none !important;
+}
+@media (max-width: 360px) {
+    #main-menu .main-summary-row > .main-online-card,
+    #main-menu .main-summary-row > .main-league-card,
+    #main-menu .main-summary-row > .main-economy-card {
+        padding-inline: 4px !important;
+    }
+    #main-menu .main-summary-row .main-league-card .main-league-content {
+        padding-right: 0 !important;
+    }
+    #main-menu .main-summary-row .main-league-card .main-league-title {
+        font-size: .56rem !important;
+        line-height: 1.1;
+        letter-spacing: 0;
+        white-space: normal;
+    }
+    #main-menu .main-summary-row .main-league-card .main-league-content #league-rank-name {
+        font-size: .9rem !important;
+        letter-spacing: 0 !important;
+    }
+    #main-menu .main-summary-row .main-league-card .main-league-content #league-pts-text {
+        font-size: .48rem !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    #main-menu .main-summary-row .main-online-icon-wrap > img[data-theme-src],
+    #main-menu .main-summary-row .main-economy-icon-wrap > img[data-theme-src] {
+        animation: none !important;
+        transform: none !important;
+    }
 }

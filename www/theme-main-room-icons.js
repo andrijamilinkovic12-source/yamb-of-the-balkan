@@ -17,6 +17,33 @@
     const currentTheme = () => [...themes].find(theme => document.body.classList.contains(`${theme}-theme`))
         || document.documentElement.dataset.splashTheme
         || localStorage.getItem('yamb_theme') || 'dark';
+    const visibilityBeforeSwap = new WeakMap();
+    const observedImages = new WeakSet();
+
+    function restoreVisibility(image) {
+        const previous = visibilityBeforeSwap.get(image);
+        if (!previous || !image.style) return;
+        if (previous.value) image.style.setProperty('visibility', previous.value, previous.priority);
+        else image.style.removeProperty('visibility');
+        visibilityBeforeSwap.delete(image);
+    }
+
+    function guardImageSwap(image) {
+        if (!image.style) return;
+        if (!observedImages.has(image)) {
+            image.addEventListener('load', () => {
+                if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
+            });
+            observedImages.add(image);
+        }
+        if (!visibilityBeforeSwap.has(image)) {
+            visibilityBeforeSwap.set(image, {
+                value: image.style.getPropertyValue('visibility'),
+                priority: image.style.getPropertyPriority('visibility')
+            });
+        }
+        image.style.setProperty('visibility', 'hidden', 'important');
+    }
 
     function syncIcons(root = document) {
         const theme = currentTheme();
@@ -35,32 +62,17 @@
             const nextSource = themes.has(theme)
                 ? sourceFor(theme, role, variant)
                 : original;
-            if (image.getAttribute('src') !== nextSource) image.src = nextSource;
+            if (image.getAttribute('src') !== nextSource) {
+                guardImageSwap(image);
+                image.src = nextSource;
+                if (image.complete && image.naturalWidth > 0) restoreVisibility(image);
+            }
             image.classList.toggle('theme-main-room-icon', themes.has(theme));
             image.parentElement?.classList.toggle('theme-main-room-icon-host', themes.has(theme));
             if (themes.has(theme)) {
                 image.parentElement?.querySelectorAll(':scope > img[data-theme-src*="easter-soft-clay"], :scope > img[data-theme-src*="desert-soft-clay"], :scope > img[data-theme-src*="severna-soft-clay"]').forEach(old => old.remove());
             }
         });
-
-        const watermark = document.querySelector('#main-menu .main-league-watermark-zone');
-        if (watermark) {
-            let image = watermark.querySelector('.theme-main-league-watermark');
-            if (themes.has(theme)) {
-                if (!image) {
-                    image = document.createElement('img');
-                    image.className = 'theme-main-league-watermark';
-                    image.alt = '';
-                    image.setAttribute('aria-hidden', 'true');
-                    image.decoding = 'async';
-                    watermark.appendChild(image);
-                }
-                const source = sourceFor(theme, 'quarterly-league', 'menu');
-                if (image.getAttribute('src') !== source) image.src = source;
-            } else if (image) {
-                image.remove();
-            }
-        }
     }
 
     function start() {

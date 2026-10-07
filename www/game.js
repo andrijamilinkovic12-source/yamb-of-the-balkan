@@ -2183,6 +2183,19 @@ class YambApp {
         return `assets/theme-packs/${theme}/canonical/${role}-room-identity/${role}-room${variant === 'menu' ? '-menu' : ''}-v1.png`;
     }
 
+    getMainMenuIconSources(theme) {
+        if (theme === 'dark') {
+            const menu = document.getElementById('main-menu');
+            return menu ? [...menu.querySelectorAll('img[data-theme-src]')]
+                .map(image => image.dataset.themeSrc || '')
+                .filter(source => source.startsWith('assets/green-soft-clay/')) : [];
+        }
+        const roles = ['solo', 'hotseat', 'online-random', 'invite-friend', 'daily',
+            'global-chat', 'leaderboard', 'online-players', 'quarterly-league', 'rules', 'settings',
+            'statistics', 'treasury', 'tournament', 'economy'];
+        return roles.map(role => this.getMainRoomPackSource(theme, role, 'menu')).filter(Boolean);
+    }
+
     getRewardedVideoPackSources(theme, roomId) {
         if (!['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)) return [];
         const root = `assets/theme-packs/${theme}/`;
@@ -5664,12 +5677,22 @@ class YambApp {
         }
         else if (type === 'theme') {
             const nextTheme = this.isThemeUnlocked(value) ? value : 'dark';
-            this.themeManualSwitchUntil = Date.now() + 2500;
-            localStorage.setItem('yamb_theme', nextTheme);
             const themeSelect = document.getElementById('setting-theme');
             if (themeSelect) themeSelect.blur();
-            this.applyTheme(nextTheme, { manualSwitch: true });
-            if (themeSelect) themeSelect.value = nextTheme;
+            const token = (this.themeSwitchRequestToken || 0) + 1;
+            this.themeSwitchRequestToken = token;
+            const pack = this.getThemeLoadingPack(nextTheme);
+            const sources = [pack?.background, ...this.getMainMenuIconSources(nextTheme)].filter(Boolean);
+            // Decode the visible menu set before changing colors, so old icons never sit on the new theme.
+            this.preloadThemeSources(sources, { concurrency: 16, priority: 'high' }).then(() => {
+                if (token !== this.themeSwitchRequestToken) return;
+                this.themeManualSwitchUntil = Date.now() + 2500;
+                localStorage.setItem('yamb_theme', nextTheme);
+                this.applyTheme(nextTheme);
+                if (themeSelect) themeSelect.value = nextTheme;
+                if (this.socket && this.socket.connected) this.emitPlayerData();
+            });
+            return;
         }
         else if (type === 'language') {
             const nextLanguage = value === 'en' ? 'en' : (value === 'sr' ? 'sr' : null);

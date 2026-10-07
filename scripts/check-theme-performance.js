@@ -793,7 +793,7 @@ const expectedStatisticsOverviewActiveFiles = {
     'all-time-points': 'all-time-points-v1.png'
 };
 const expectedStatisticsOverviewReferenceCounts = {
-    'power-index': 5,
+    'power-index': 4,
     record: 3,
     games: 2,
     wins: 4,
@@ -860,7 +860,7 @@ assert(gameSource.includes("statistics: path => path.startsWith('statistics/') |
 assert(/#stats-screen \.stats-category-soft-clay-icon-green\s*\{[^}]*width:\s*19px;[^}]*height:\s*19px;[^}]*flex:\s*0 0 19px;[^}]*object-fit:\s*contain;/s.test(themeCssSource), 'Green Statistics Record/Games glyph mora ostati 19 × 19 sa contain prikazom.');
 assert(/#stats-screen \.stats-result-soft-clay-icon-green\s*\{[^}]*width:\s*14px;[^}]*height:\s*14px;[^}]*flex:\s*0 0 14px;[^}]*object-fit:\s*contain;/s.test(themeCssSource), 'Green Statistics Wins/Draws/Losses glyph mora ostati 14 × 14 sa contain prikazom.');
 assert(/#stats-screen \.stats-grid-soft-clay-icon-green\s*\{[^}]*width:\s*24px;[^}]*height:\s*24px;[^}]*flex:\s*0 0 24px;[^}]*object-fit:\s*contain;/s.test(themeCssSource), 'Green Statistics grid glyph mora ostati 24 × 24 sa contain prikazom.');
-assert(/#stats-screen \.power-index-watermark-bolt-green\s*\{[^}]*width:\s*94px;[^}]*height:\s*94px;[^}]*opacity:\s*\.16;[^}]*object-fit:\s*contain;/s.test(themeCssSource), 'Green Power Index watermark mora ostati 94 × 94 sa kontrolisanom neprovidnošću.');
+assert(!indexSource.includes('power-index-watermark'), 'Power Index zaglavlje ne sme imati uklonjeni watermark.');
 assert(/\.power-index-title-bolt-green\s*\{[^}]*width:\s*27px;[^}]*height:\s*27px;/s.test(themeCssSource) && /\.power-index-value-bolt-green\s*\{[^}]*width:\s*16px;[^}]*height:\s*16px;/s.test(themeCssSource), 'Green Power Index modalne dimenzije više nisu 27 × 27 i 16 × 16.');
 assert(/#streak-overlay \.fire-streak-title-soft-clay-icon-green\s*\{[^}]*width:\s*32px;[^}]*height:\s*32px;[^}]*flex:\s*0 0 32px;/s.test(themeCssSource) && /\.fire-streak-value-soft-clay-icon-green\s*\{[^}]*width:\s*23px;[^}]*height:\s*23px;/s.test(themeCssSource), 'Green Fire Streak modalne dimenzije više nisu 32 × 32 i 23 × 23.');
 assert(indexSource.includes('onclick="if(window.powerIndexLeaderboard) window.powerIndexLeaderboard.openModal()"') && indexSource.includes('onclick="if(window.vatreniNiz) window.vatreniNiz.openModal()"') && indexSource.includes('onclick="riznicaManager.open()"'), 'Green Statistics kartice više nemaju zaključane Power Index, Fire Streak i Riznica akcije.');
@@ -1729,7 +1729,10 @@ const onlinePlayersLoadingMethod = (name, nextName) => {
 let onlinePlayersMenuFixture = null;
 const onlinePlayersLoadingHarness = vm.runInNewContext(`({${[
     ['getThemeLoadingPack', 'getThemeAssetRoot'],
-    ['getThemeAssetRoot', 'getThemeSplashSource'],
+    ['getThemeAssetRoot', 'getMainRoomPackSource'],
+    ['getMainRoomPackSource', 'getMainMenuIconSources'],
+    ['getMainMenuIconSources', 'getRewardedVideoPackSources'],
+    ['getRewardedVideoPackSources', 'getThemeSplashSource'],
     ['getThemeSplashSource', 'configureThemeSplashImage'],
     ['getThemeStartupSources', 'getThemeRoomSources'],
     ['getThemeRoomSources', 'collectThemeSourcesFromRoot'],
