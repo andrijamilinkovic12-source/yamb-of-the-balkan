@@ -1,0 +1,13 @@
+{
+  "themeId": "desert",
+  "status": "new-five-dot-originals",
+  "tool": "built-in imagegen",
+  "sourceFolder": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "sources": {
+    "front": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-28cc3d49-10a2-417d-a9ef-cfe5c4ba06a0.png",
+    "angleLeft": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-3597aae0-401f-4f0b-b377-bc8821e3795a.png",
+    "angleRight": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-0425e830-5835-42a2-a469-d1389c75877c.png"
+  },
+  "promptSummary": "Original Pustinjsko Staklo coral-sandstone Clay ducat, thick softly irregular layered rim with just two broad stratum changes and exactly five dark-brown recessed pips. 3D Soft Neomorphism; no literal glass, crystal, metal, text or ornament. Opposite left/right angle views retain all five pips.",
+  "derivation": "front, angle-left and angle-right each use an original imagegen master; inline 192px and particle 128px are delivery sizes of the front master"
+}

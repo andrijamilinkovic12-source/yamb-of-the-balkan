@@ -1,0 +1,13 @@
+{
+  "themeId": "winter",
+  "status": "new-five-dot-originals",
+  "tool": "built-in imagegen",
+  "sourceFolder": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "sources": {
+    "front": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-494118d8-ba35-45cc-945e-96248fcfe74c.png",
+    "angleLeft": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-9d77fb09-740c-4abd-8bac-e48e700753fd.png",
+    "angleRight": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-74146f8d-2b1a-4802-bc67-29cabb28fd48.png"
+  },
+  "promptSummary": "Original Plavi Okean Aegean-blue matte-silicone ducat, 3D Soft Neomorphism, exactly five raised warm-ivory pips in die-five layout, clean broad tapered bevel; no wave decoration, metal, glass, text or kitsch. Opposite 25-degree left and right angle views retain the same identity.",
+  "derivation": "front, angle-left and angle-right each use an original imagegen master; inline 192px and particle 128px are delivery sizes of the front master"
+}

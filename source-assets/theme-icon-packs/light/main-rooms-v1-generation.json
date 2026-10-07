@@ -1,0 +1,17 @@
+{
+  "generatedFolder": "01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "icons": {
+    "solo": "exec-0cafa9e0-afa4-46d8-b704-81815f497823.png",
+    "hotseat": "exec-d79f5c0a-cb2f-46f0-857f-d2c3762dd019.png",
+    "online-random": "exec-be8e1d47-2053-4ab6-af0a-a7c8ea1a0746.png",
+    "invite-friend": "exec-f836f0fb-3ba2-4b24-9f5e-6f62cf6b55b7.png",
+    "daily": "exec-7a7ec2f5-26c3-443e-9b22-9032dbc21fbd.png",
+    "global-chat": "exec-a5a2093d-8f91-4440-92ff-60b815815bd4.png",
+    "leaderboard": "exec-c32a0308-348d-47df-b210-a9cc1c3ba827.png",
+    "online-players": "exec-ec87fb33-5338-4131-94b6-20c666e4fc85.png",
+    "quarterly-league": "exec-c6e797e8-5f14-46dc-a72e-7a5de140735d.png",
+    "rules": "exec-72ecaf4d-f7ab-4387-bee3-306300a4026a.png",
+    "settings": "exec-f043e58f-13e9-4f7b-8c91-af73b8fb4683.png",
+    "statistics": "exec-ccf95d57-c7e4-4a3a-b788-e3e70629bcb9.png"
+  }
+}

@@ -4,7 +4,7 @@ Kompletan vizuelni paket za temu Pustinjsko staklo. Aktivira se samo kroz `body.
 
 ## Šta paket pokriva
 
-- originalna pustinjska pozadina: `www/assets/desert-neumorphic-bg-v1.png`
+- prihvaćena pustinjska pozadina: `www/assets/theme-backgrounds/desert-v8-2.png`
 - desert glass badges & pills ikonice za modove, specijalne akcije i donji meni
 - neumorfna tabla, kockice, polja, HUD i kontrolna zona bez promene dimenzija table
 - kartice, fontovi, kontrast, inputi, modali, obaveštenja, chat, riznica, statistika, pravila i top lista

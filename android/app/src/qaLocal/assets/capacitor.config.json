@@ -1,0 +1,17 @@
+{
+  "appId": "com.yamb.balkan",
+  "appName": "Yamb of the Balkan",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "FirebaseAuthentication": {
+      "skipNativeAuth": false,
+      "providers": ["google.com"]
+    },
+    "PushNotifications": {
+      "presentationOptions": ["alert", "sound"]
+    }
+  }
+}

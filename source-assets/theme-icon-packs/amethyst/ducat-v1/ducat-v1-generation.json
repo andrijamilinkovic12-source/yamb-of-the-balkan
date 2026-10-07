@@ -1,0 +1,13 @@
+{
+  "themeId": "amethyst",
+  "status": "new-five-dot-originals",
+  "tool": "built-in imagegen",
+  "sourceFolder": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "sources": {
+    "front": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-01c85e34-dc4b-44b9-b59d-26d0a29d161e.png",
+    "angleLeft": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-12bd229c-77a0-4c37-901a-6d87fd1fa3a3.png",
+    "angleRight": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-947e023c-424f-49b6-ab34-ec2aba7bffb5.png"
+  },
+  "promptSummary": "Original Kraljevski Ametist low wide dusty-purple clay ducat with broad quiet facets and exactly five raised pale-lavender pips in die-five layout. Matte 3D Soft Neomorphism, no jewel, crown, sparkle, gold metal, text or ornament. Opposite 25-degree left and right views preserve all five pips.",
+  "derivation": "front, angle-left and angle-right each use an original imagegen master; inline 192px and particle 128px are delivery sizes of the front master"
+}

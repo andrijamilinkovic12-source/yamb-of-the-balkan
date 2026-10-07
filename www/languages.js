@@ -489,7 +489,7 @@ const TRANSLATIONS = {
         "theme_winter": "Plavi Okean 🌊",
         "theme_neon": "Neon Cyber ⚡",
         "theme_amethyst": "Kraljevski Ametist 🔮",
-        "theme_easter": "Vaskršnja 🐇",
+        "theme_easter": "Vaskršnja",
         "theme_desert": "Pustinjsko Staklo 🏜️",
         "theme_moon": "Mesečev Sjaj 🌕",
         "theme_severna": "Severna Maglina 🌌",
@@ -1326,7 +1326,7 @@ const TRANSLATIONS = {
         "theme_winter": "Blue Ocean 🌊",
         "theme_neon": "Neon Cyber ⚡",
         "theme_amethyst": "Royal Amethyst 🔮",
-        "theme_easter": "Joyful Easter 🐇",
+        "theme_easter": "Joyful Easter",
         "theme_desert": "Desert Glass 🏜️",
         "theme_moon": "Moonlight 🌕",
         "theme_severna": "Northern Nebula 🌌",
@@ -1684,10 +1684,8 @@ function dukatIconHtml(extraClass = '') {
     const activeTheme = document.documentElement?.dataset?.splashTheme
         || localStorage.getItem('yamb_theme')
         || 'dark';
-    const isEasterTheme = document.body?.classList.contains('easter-theme')
-        || activeTheme === 'easter';
-    const isDesertTheme = document.body?.classList.contains('desert-theme')
-        || activeTheme === 'desert';
+    const customThemeIds = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+    const theme = customThemeIds.find(id => document.body?.classList.contains(`${id}-theme`)) || activeTheme;
     const isGreenTheme = activeTheme === 'dark'
         && !document.body?.classList.contains('light-theme')
         && !document.body?.classList.contains('medium-theme')
@@ -1698,11 +1696,8 @@ function dukatIconHtml(extraClass = '') {
         && !document.body?.classList.contains('desert-theme')
         && !document.body?.classList.contains('moon-theme')
         && !document.body?.classList.contains('severna-theme');
-    if (isEasterTheme) {
-        return `<img class="${className} dukat-icon-inline--easter" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
-    }
-    if (isDesertTheme) {
-        return `<img class="${className} dukat-icon-inline--desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
+    if (customThemeIds.includes(theme)) {
+        return `<img class="${className} dukat-icon-inline--theme" src="assets/theme-packs/${theme}/canonical/ducat/ducat-inline-v1.png" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
     }
     if (isGreenTheme) {
         return `<img class="${className} dukat-icon-inline--green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
@@ -1723,6 +1718,9 @@ function t(key) {
             const theme = document.documentElement?.dataset?.splashTheme
                 || localStorage.getItem('yamb_theme')
                 || 'dark';
+            if (key === 'tourney_finalist_title' && theme === 'easter') {
+                return value.replace(/\s*🥈/u, '');
+            }
             if (theme === 'dark') {
                 if (key === 'go_rematch') return value.replace(/^🔄\s*/u, '');
                 if (key === 'go_double') return value.replace(/^🎥\s*/u, '').replace(/\s*\{DUKAT_ICON\}\s*\(x2\)/u, '');

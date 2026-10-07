@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-06",
+  "sourceDefinitions": "docs/theme-definitions.json",
+  "sourcePrompts": "docs/theme-background-prompts-v10.md",
+  "reviewPage": "docs/theme-backgrounds-v10-review.html",
+  "status": "Eight accepted backgrounds remain locked. Blue Ocean V10 harbor direction liked but distant mountains need revision. Moonlight V10 working sketch 2 chosen as direction instead of the V10 master. V11 revisions await review; no runtime links.",
+  "accepted": [
+    {
+      "themeId": "dark",
+      "nameSr": "Zelena",
+      "path": "www/assets/green-clay-balkan-diorama-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1864586,
+      "sha256": "0b5f16e08cad0abc487bdd23b3a3c7128903d5a0f06110b457d8b9d8bb1eb181"
+    },
+    {
+      "themeId": "neon",
+      "nameSr": "Neon Cyber",
+      "path": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1455263,
+      "sha256": "92f4561e7386ddc0e01bd3c5fe8201848ea4f4501948b4d95265fb69dd631292"
+    },
+    {
+      "themeId": "severna",
+      "nameSr": "Severna Maglina",
+      "path": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1576114,
+      "sha256": "efb770cad71d5953226ede546ff93cc92d5c0ea871659d34917813c73c9edcf2"
+    },
+    {
+      "themeId": "easter",
+      "nameSr": "Vaskršnja",
+      "path": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1849355,
+      "sha256": "3c6479fa5e6e25cf5743c15dcc5935c62731967ae66f8a27235768c0a6973944"
+    },
+    {
+      "themeId": "amethyst",
+      "nameSr": "Kraljevski Ametist",
+      "path": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1344412,
+      "sha256": "14bbb54b3d17fdff7b6cb1094dc5631fb89326725f514dcef037651a6633b3ae"
+    },
+    {
+      "themeId": "desert",
+      "nameSr": "Pustinjsko Staklo",
+      "path": "source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1760896,
+      "sha256": "61e4d47eb21d4e127d67c8fbf4128ceaa0d401325d6c85168c14568087120f4b"
+    },
+    {
+      "themeId": "light",
+      "nameSr": "Svetlo Zlato",
+      "path": "source-assets/theme-backgrounds-v9/light-background-master-v9.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1611312,
+      "sha256": "0cccdd806dae1c56be8521716f326541e0d83f16778c65e09559b59753aea43c"
+    },
+    {
+      "themeId": "medium",
+      "nameSr": "Trula Višnja",
+      "path": "source-assets/theme-backgrounds-v9/medium-background-master-v9.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1696787,
+      "sha256": "c1400d160a7165b78cfb5a3aa9b591a420e3bb49892f46c2ac7cc95f4eb48920"
+    }
+  ],
+  "themes": [
+    {
+      "themeId": "winter",
+      "nameSr": "Plavi Okean",
+      "path": "source-assets/theme-backgrounds-v10/winter-background-master-v10.png",
+      "scene": "Grčka kopnena luka sa kosim crepnim krovovima, skromnim kejom i jednim čamcem; bez Santorinija.",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "reviewStatus": "revision-requested-mountains",
+      "runtimeLinked": false,
+      "width": 1024,
+      "height": 1535,
+      "sizeBytes": 1575854,
+      "sha256": "9ea247d32472efe67b2391ce9e5c59c59a900fdedce25cba235dbacb0fb918ab"
+    },
+    {
+      "themeId": "moon",
+      "nameSr": "Mesečev Sjaj",
+      "path": "source-assets/theme-backgrounds-v10/moon-background-master-v10.png",
+      "scene": "Samo glinena površina Meseca sa dva kratera i otvoreni svemir; bez Zemlje, teleskopa i građevina.",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "reviewStatus": "not-selected-working-sketch-2-is-direction",
+      "runtimeLinked": false,
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1619399,
+      "sha256": "8afb0d35b8580cc17c2786f1bc5ce3339824610cfb9fa2fa096ea7605e8f7d4a"
+    }
+  ]
+}

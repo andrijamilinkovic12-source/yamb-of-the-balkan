@@ -1,0 +1,602 @@
+{
+  "schemaVersion": 17,
+  "updatedOn": "2026-10-06",
+  "purpose": "Dogovorene definicije tema za izgled, standardizaciju i buduce planiranje. Ovaj registar ne potvrdjuje da je svaka tema vec uskladjena u aplikaciji.",
+  "sharedStyle": "3D Soft Neomorphism",
+  "visualRestraint": {
+    "scope": "Obavezno za svih deset tema i za svaki vizuelni sloj: pozadine, Icon Pack, logo, ilustracije, kartice, tablu, kontrole, stanja i animacije.",
+    "principle": "Bez kica i nakicenosti. Koristiti ciste siluete, malo pazljivo izabranih detalja i jasnu vizuelnu hijerarhiju. Svaki detalj mora doprineti prepoznatljivosti teme, funkciji ili citljivosti; ukras bez svrhe se uklanja.",
+    "background": "Prepoznatljiv ambijent teme sa mirnijom zonom iza sadrzaja i jasnim materijalnim karakterom, prema backgroundSceneRule. Ambijent moze biti predeo, grad, prostorija, pogled ili grupa predmeta. Bez gomilanja rekvizita, ukrasnih ramova, sjajnih cestica, ponavljanih ornamenata ili vise konkurentskih fokusnih tacaka.",
+    "iconPack": "Jedan citljiv primarni simbol po ulozi, najvise nekoliko pomocnih detalja ako su potrebni za identitet. Bez minijaturnih scena, postolja, ornamentalnih okvira, glitera, nepotrebnih tekstura i sitnih detalja koji nestaju na mobilnoj velicini.",
+    "logo": "Dvoredni naziv ostaje primaran i citljiv. Materijal i oblik slova nose karakter teme; nema dodatnih ukrasa, kruna, svetlucanja ili efekata koji takmice sa nazivom osim ako imaju jasnu funkcionalnu ili identitetsku svrhu i prodju mobilni pregled.",
+    "ui": "Kartice, tabla, dugmad i modali koriste jedan kontrolisan signal dubine/materijala; bez naslaganih obruba, agresivnog sjaja, duplih senki, ornamentalnih uglova i dekoracije koja smanjuje kontrast ili prostor za sadrzaj.",
+    "motion": "Bez stalnog treperenja, kisa cestica i ornamentalnih animacija koje odvlace paznju od igre. Pokret sluzi povratnoj informaciji ili prelazu.",
+    "directionBoundary": "Svaka tema koristi samo Clay ili Smooth Rubber / Matte Plastic kao pravac. Pravac se prepoznaje po materijalu, svetlu i oblicima, ne po ukrasima. Predeo, voda, metal, led i kamen mogu biti motivi, ali se renderuju u izabranom pravcu, bez fotorealizma, staklastog sjaja, filigrana i sitnih detalja.",
+    "review": "Proveriti na 320 CSS px sirine u stvarnom UI-ju. Ako se motiv ne cita, smeta tekstu ili deluje kao ukras bez svrhe, pojednostaviti ili odbaciti. Ovo pravilo vazi i kada tehnicki kontrast i broj asseta prolaze.",
+    "green": "Zelena ostaje zakljucana referenca i nije predmet trenutnog prerenderovanja; univerzalni princip se primenjuje na sve buduce odluke i QA svih tema."
+  },
+  "backgroundSceneRule": {
+    "scope": "Obavezno za pozadinu svih deset tema; Zelena je zakljucana referenca za kvalitet, citljivost i kolicinu detalja, ali ne za vrstu kadra. Novi motivi se ne preslikavaju.",
+    "scene": "Pozadina mora prikazivati prepoznatljiv i zanimljiv svet teme. Dozvoljeni su razliciti tipovi kadra: prirodni predeo, gradski detalj, spoljasnja arhitektura, enterijer, pogled kroz otvor ili pazljivo komponovani predmeti u prostoru. Dubina se gradi prostornim odnosima primerenim kadru, ne obaveznim brdima, rekom i stazom. Ne sme biti samo ravna boja, prazan gradijent ili prazna scena.",
+    "readability": "Zona iza logotipa, kartica i table ostaje citljiva pomocu tona, svetla, skale i rasporeda. Ne zahteva se uvek prazna sredina niti ista podela na prednji, srednji i dalji pejzazni plan.",
+    "restraint": "Zivopisnost ne znaci kic: ograniciti broj motiva, zadrzati jasnu kompoziciju i ukloniti sitne ukrase, suvisne rekvizite, gomilanje svetlucanja i detalje koji konkurisu igri.",
+    "originality": "Svih deset tema ima prihvacene originalne pozadine. Green, Neon Cyber i Severna Maglina ostaju rane reference za kvalitet i meru detalja, ali se njihovi motivi i raspored ne kopiraju. Svaka tema ima samostalnu prostornu ideju i svoj materijalni pravac.",
+    "blueOcean": "Plavi Okean koristi grcki obalski ambijent bez Santorinija: otvoreno plavo more i prepoznatljiv grcki kopneni ili ostrvski detalj, kao sto su kuce sa kosim crepnim krovovima, skromna luka ili kameni kej. Prihvaceni V13 motiv oslanja se na Atinu i Pirej, uz stilizovane udaljene planine. More ostaje glavni motiv. Bez belih kubnih kuca sa plavim kapcima, niza kupola, podvodnog prizora, turistickog kica i fotorealisticne vode.",
+    "balkanInspiration": "Po potrebi koristiti balkansku prirodu, gradsku ulicu ili trg, obalu, arhitektonski detalj, enterijer sobe, lokalne materijale ili predmet. To su mogucnosti, ne obavezan spisak rekvizita za svaku temu; lunarni ili cyber svet ne treba silom pretvarati u balkansku razglednicu.",
+    "balkanRestraint": "Balkanski motiv ima ulogu mesta ili atmosfere, ne ukrasa. Bez gomilanja kuca, crkava, tvrdjava, zastava, narodnih sara i suvenira. Ne kopirati Zeleninu crkvu, brda, put i kompoziciju.",
+    "balancedDetail": "Green, Neon Cyber i Severna Maglina su mera kvaliteta, citljivosti i umerene kolicine detalja, ne sablon kompozicije. Kadar ima jasan fokus i samo onoliko pomocnih elemenata koliko treba da se mesto prepozna. Odbaciti i praznu jednobojnu povrsinu i fotorealistican ili nakicen kadar.",
+    "compositionDiversity": "Pozadine ne smeju biti serija iste kompozicije. Pre svakog buduceg rendera uporediti tip kadra, polozaj fokusa, kameru i vodilju pogleda sa ostalim temama. Ponavljani S-oblik kao reka, put, staza, svetlosni trag ili obala je zabranjen kao univerzalni sablon. Kombinovati predele, grad, enterijer, pogled i predmete samo kada odgovaju identitetu teme; ne nametati jednaku kvotu tipova kadra.",
+    "review": "Na mobilnom prikazu, i bez UI-ja i sa stvarnim UI-jem, gledalac mora odmah prepoznati ambijent teme; sadrzaj ostaje citljiv bez prekrivanja glavnog prizora."
+  },
+  "backgroundCandidatePolicy": {
+    "approvedV4Backgrounds": {
+      "neon": { "path": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png", "sha256": "92f4561e7386ddc0e01bd3c5fe8201848ea4f4501948b4d95265fb69dd631292", "locked": true },
+      "severna": { "path": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png", "sha256": "efb770cad71d5953226ede546ff93cc92d5c0ea871659d34917813c73c9edcf2", "locked": true }
+    },
+    "approvedV6Backgrounds": {
+      "easter": { "path": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png", "sha256": "3c6479fa5e6e25cf5743c15dcc5935c62731967ae66f8a27235768c0a6973944", "version": 1, "locked": true },
+      "amethyst": { "path": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png", "sha256": "14bbb54b3d17fdff7b6cb1094dc5631fb89326725f514dcef037651a6633b3ae", "locked": true }
+    },
+    "approvedV8Backgrounds": {
+      "desert": { "path": "source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png", "sha256": "61e4d47eb21d4e127d67c8fbf4128ceaa0d401325d6c85168c14568087120f4b", "version": 2, "locked": true }
+    },
+    "approvedV9Backgrounds": {
+      "light": { "path": "source-assets/theme-backgrounds-v9/light-background-master-v9.png", "sha256": "0cccdd806dae1c56be8521716f326541e0d83f16778c65e09559b59753aea43c", "locked": true },
+      "medium": { "path": "source-assets/theme-backgrounds-v9/medium-background-master-v9.png", "sha256": "c1400d160a7165b78cfb5a3aa9b591a420e3bb49892f46c2ac7cc95f4eb48920", "locked": true }
+    },
+    "approvedV13Backgrounds": {
+      "winter": { "path": "source-assets/theme-backgrounds-v13/winter-background-master-v13.png", "sha256": "88ea72e66b99875560041e555c1963656e19f68a6320a494445805cde8096ba4", "locked": true }
+    },
+    "approvedV14Backgrounds": {
+      "moon": { "path": "source-assets/theme-backgrounds-v14/moon-background-master-v14.png", "sha256": "d6085eddcaaf4517b5fa434ec687504a16ef2f65d37dc5af1f9cb521416ea13d", "locked": true }
+    },
+    "finalManifestPath": "docs/theme-backgrounds-final.json",
+    "status": "Svih deset pozadina je prihvaceno, zakljucano i povezano sa lokalnom aplikacijom. Plavi Okean V13 i Mesecev Sjaj V14 su poslednja dva izabrana mastera. Putanje i SHA-256 otisci mastera i runtime kopija su u docs/theme-backgrounds-final.json.",
+    "nextStep": "Za svaki naredni dizajn teme koristiti ovu zakljucanu pozadinu i proveriti citljivost sa stvarnim UI-jem na ciljnom telefonu."
+  },
+  "referenceTheme": "dark",
+  "referencePolicy": "Zelena je zakljucan ogledni primer. Ova specifikacija propisuje ciljni izgled i proveru za preostalih devet tema; Green runtime asseti i CSS se ne menjaju ovim dokumentom.",
+  "rebuildPolicy": {
+    "checkpointPath": "docs/theme-rebuild-checkpoint-2026-10-06.md",
+    "greenFingerprintPath": "docs/green-reference-sha256.json",
+    "scope": "Devet tema se izradjuje ponovo prema ovoj definiciji; Zelena ostaje zakljucana referenca i ne ulazi u ponovno dizajniranje.",
+    "decisionOrder": [
+      "Izricita definicija konkretne teme u ovom registru, ukljucujuci njen pravac i paletu.",
+      "Zajednicki katalog asseta, UI ugovor, brojcane vrednosti i pravila prihvatanja u ovom registru.",
+      "Kada prethodna dva nivoa ne odrede odgovor, aktivna Zelena daje primer za funkciju, semanticku ulogu, geometriju, stanja, trajanja i tok ekrana."
+    ],
+    "greenBoundary": "Green resenje sluzi za odluku o tome sta element radi, gde je, koliki je i kada se pojavljuje. Novi motiv, kompozicija, materijal, logo, boja i tekstura ostaju originalni za pravac ciljane teme; PNG Zelene se ne kopira ni prebojava.",
+    "legacyTreatment": "Postojeci nezeleni asseti i CSS su trenutno stanje za audit, a ne odobreni sablon. Novi paket se povezuje tek kada je njegova uloga proverena; ranije fajlove ne brisati na osnovu samog plana i ne oznacavati temu zavrsenom zbog postojeceg broja fajlova.",
+    "deviationRule": "Ako Green i eksplicitna definicija daju razlicite odgovore, prati eksplicitnu definiciju i zabelezi konkretno odstupanje ovde i u checkpoint/QA zapisu. Ako Green referenca ima ocigledan funkcionalni kvar, dokumentuj ga pre preuzimanja pravila; ne prenosi kvar u ostale teme.",
+    "workOrderThemeIds": ["light", "medium", "winter", "neon", "amethyst", "easter", "desert", "moon", "severna"]
+  },
+  "paletteChangePolicy": {
+    "scope": "Palete preostalih devet tema mogu se doradjivati tokom dizajna i provere.",
+    "record": "Svaka promena HEX tokena, njegove namene ili kombinacije povrsina mora se odmah uneti u temu u ovom registru i uskladiti sa docs/theme-design-standard.md.",
+    "review": "Promenjena paleta se ponovo prikazuje i definise u ovom razgovoru, sa razlogom izmene i uticajem na izgled teme.",
+    "validation": "Posle promene ponoviti proveru kontrasta i pregled stvarnog prikaza na relevantnim ekranima; prethodna paleta ostaje istorija u Git-u.",
+    "green": "Postojeca Zelena ostaje zakljucana referenca i nema novu ciljnu paletu u ovom registru."
+  },
+  "visualReviewBoard": {
+    "path": "docs/theme-review-board.html",
+    "progressPath": "docs/theme-progress.json",
+    "requiredPerTheme": ["rendered portrait background", "final two-line game logo", "at least six representative original icons including ducat", "menu card in normal/pressed/disabled states", "game board with dice and score columns", "one room intro frame", "SR and EN narrow-screen captures"],
+    "rule": "Sema boja i skica u preglednoj tabli nisu dokaz zavrsenog izgleda. Konacni prikazi se vezuju za stvarne assete i snimke iz aplikacije; odobrenje zahteva pregled citljivosti, opticke ravnoteze i razlike medju temama."
+  },
+  "assetUsageAndOpticalBounds": {
+    "path": "docs/theme-asset-usage-map.json",
+    "implementationPath": "docs/theme-asset-implementation-map.json",
+    "scope": "Svih 177 produkcionih PNG uloga imaju planirani kontekst, staticki dokaz mesta upotrebe gde je moguce, velicinu fajla, RGBA memoriju i merene vidljive granice Green reference.",
+    "opticalMeasure": "Granice su najmanji pravougaonik piksela sa alpha >= 16 na originalnom PNG platnu; kod neprozirne pozadine vazi celo platno. Meri se posebno za svaki novi tematski PNG i vizuelno proverava.",
+    "consumerEvidence": "Staticki pogodak putanje u kodu je dokaz reference, ali nije dokaz da je asset prikazan. Dinamicki sastavljene putanje i uslovne grane zahtevaju rucnu potvrdu na stvarnom ekranu.",
+    "alignment": "Ikonice iste semanticke uloge u istom CSS polju imaju ujednacenu vidljivu zauzetost i centar; ciljna zauzetost je 70-90% polja za izolovane ikonice, uz dokumentovan izuzetak za dugacke logotipe, ilustracije i namerne kompozicije. Ne seci senke ili rubove.",
+    "completion": "Za svaku temu i slot uneti stvarnu produkcionu putanju, potvrditi sve potrosace i izmeriti opticke granice pre odobrenja teme."
+  },
+  "performanceBudget": {
+    "status": "Ciljevi za proveru na stvarnom uredjaju; nisu tvrdnja da ih postojeci runtime ispunjava.",
+    "units": "MiB = 1048576 bytes; decoded estimate = width * height * 4 bytes per PNG.",
+    "startup": { "maxTransferMiB": 4, "maxDecodedMiB": 16, "scope": "Aktivna pozadina, glavni logo i neophodne menu izvedenice do prvog interaktivnog kadra." },
+    "perRoomAdditional": { "maxTransferMiB": 4, "maxDecodedMiB": 24, "scope": "Samo PNG-ovi koji se prvi put ucitavaju za jednu sobu; ukljucuje njene intro i stanje assete." },
+    "activePeak": { "maxDecodedMiB": 40, "scope": "Zbir trenutno dekodiranih PNG-ova aktivne teme tokom ulaska u sobu; neaktivne sobe se oslobadjaju ili ucitavaju po potrebi." },
+    "measurementRecord": ["device", "build", "network", "coldOrWarm", "transferBytes", "decodedRgbaBytes", "firstInteractiveMs", "evidencePath"],
+    "measurement": "Izmeriti transfer, vreme prvog interaktivnog kadra i vrhunac memorije na sporijem ciljnom Android uredjaju pri hladnom i toplom startu; dokumentovati uredjaj, mrezu, build i room. Svako prekoracenje zahteva optimizaciju ili eksplicitno obrazlozen izuzetak pre prihvatanja."
+  },
+  "missingAssetFallback": {
+    "behavior": "Ako tematski PNG nedostaje ili ne moze da se ucita, prikazati tekstualnu oznaku ili jednostavan CSS simbol u istom polju i trenutnoj paleti, sacuvati interakciju i prijaviti tacnu temu/slot/putanju u dijagnostici.",
+    "background": "Koristiti background HEX token teme kao punu pozadinu.",
+    "logo": "Koristiti dvoredni tekst YAMB OF THE / BALKAN u istom bezbednom polju i sa citljivim kontrastom.",
+    "prohibition": "Ne koristiti PNG druge teme, prebojen tudji asset, nejasan emoji ili tihu zamenu koja menja znacenje.",
+    "releaseGate": "Fallback cuva upotrebljivost, ali nedostajuci obavezni PNG blokira prihvatanje teme."
+  },
+  "implementationProgress": {
+    "path": "docs/theme-progress.json",
+    "stages": ["defined", "created", "linked", "visually-checked", "accepted"],
+    "rule": "Svaka tema i svaki ekran/soba imaju fazu sa dokazom. Faza se podize tek posle stvarne provere; postojanje fajla ili prolaz provere HEX boja nije dokaz prihvatanja. Green je zakljucana referenca, ne zadatak za preradu."
+  },
+  "mainPackRule": "Svaka tema ima jedan glavni Room Pack kao krovni naziv za njene tematske elemente.",
+  "iconPackRules": {
+    "scope": "Svaka tema ima sopstveni Icon Pack unutar svog glavnog Room Pack-a.",
+    "format": "Sve tematske ikonice se isporucuju kao optimizovani PNG asseti sa transparentnom spoljasnjom pozadinom (RGBA).",
+    "uniqueDesign": "Ikonice svake teme moraju biti originalno oblikovane za vizuelni identitet te teme.",
+    "noCrossThemeReuse": "Ikonice iz jedne teme ne smeju se koristiti u drugoj temi, ukljucujuci preuzimanje iste ikonice i promenu samo njene boje ili teksture.",
+    "noCopyOrTracing": "Zabranjeno je preslikavanje, trasiranje, ogledanje ili kopiranje gotove ikonice druge teme uz sitne izmene. Ista funkcija moze imati isti prepoznatljiv pojam, ali svaka tema mora dobiti originalnu kompoziciju i obradu.",
+    "style": "Icon Pack nasledjuje zajednicki stil 3D Soft Neomorphism.",
+    "direction": "Icon Pack koristi tacno iconPackDirection svoje teme, jednak njenom direction: Clay ili Smooth Rubber / Matte Plastic. Ovo vazi za svih 177 uloga gde se pojavljuje tematski PNG, ne samo za sest reprezentativnih ikona.",
+    "restraint": "Ikonica ostaje jedan jasan simbol bez kica, ornamentalnog okvira, postolja ili sitnih dekorativnih dodataka; primenjuje se visualRestraint.iconPack.",
+    "colorBudget": "Po ikoni koristiti najvise tri materijalna tona (osnova, svetlo i senka) i najvise jedan mali akcenat iz iconDna.colorsHex; akcenat najvise oko 10 procenata vidljive povrsine. Kontura je jedan od ta cetiri tona, ne peta boja. Semanticke boje za gresku/uspeh dozvoljene su samo kada nose funkciju i tada zamenjuju dekorativni akcenat.",
+    "contrast": "Nosivi obris ili znak ikone mora imati najmanje 3:1 prema stvarnoj kartici na kojoj stoji, ukljucujuci surface i raised. Znacenje ne zavisi samo od boje; pregledati na 44 px i na 320 CSS px sirine ekrana.",
+    "material": "Dubina je meka i kontrolisana: jedan glavni izvor svetla, jedan citljiv reljef i blaga senka. Bez metalnog sjaja, refleksija stakla, glitera, sarene aura svetlosti, ukrasnih bordura i ornamentalnih postolja.",
+    "distinctDna": "Svaki Icon Pack koristi sopstveni jezik siluete i reljefa iz iconDna. Izuzetak koji sve teme dele jeste pet tacaka na dukatu; svaka tema i dalje originalno oblikuje obod, materijal, reljef, proporcije i paletu, bez preuzimanja tudjeg PNG-a. Unutar jedne teme ostaje isti kanonski motiv svuda.",
+    "approval": "Ciljne boje i opis iconDna nisu potvrda da postojeci PNG-ovi vec prolaze. Pre zakljucavanja paketa uporediti sest reprezentativnih ikona, ukljucujuci dukat, sa svim ostalim temama u istim velicinama i proveriti 177 uloga.",
+    "auditPath": "docs/theme-icon-pack-palette-audit-2026-10-06.md"
+  },
+  "gameLogoRules": {
+    "brandText": "Yamb of the Balkan",
+    "required": "Svaka tema ima sopstveni namenski dizajniran glavni logo igre sa istim nazivom igre.",
+    "format": "Logo se isporucuje kao optimizovani PNG sa transparentnom spoljasnjom pozadinom (RGBA).",
+    "styleAndDirection": "Logo koristi isti 3D Soft Neomorphism stil i jedan od dva dozvoljena pravca kao njegova tema: Clay ili Smooth Rubber / Matte Plastic.",
+    "originality": "Logo druge teme ne sme se preuzeti, preslikati, trasirati ili samo prebojiti. Green logo pokazuje ulogu glavnog logotipa, ali nije sablon za oblikovanje ostalih tema.",
+    "canonicalUse": "Svaka tema ima jedan kanonski identitet glavnog logotipa kroz splash, glavni meni i druga mesta na kojima se prikazuje logo igre. Razlicite rezolucije poticu od istog mastera bez promene dizajna.",
+    "sharedGeometry": "Velicina prikaza, bezbedna zona, pozicija i trajanje pojavljivanja glavnog logotipa prate zajednicki UI ugovor za sve teme.",
+    "catalogRole": "Glavni logo igre je jedna obavezna kanonska PNG uloga u zajednickom katalogu asseta.",
+    "wordmarkLines": ["YAMB OF THE", "BALKAN"],
+    "sourceCanvasPx": [1672, 941],
+    "displayWidthCss": "min(90vw, 700px)",
+    "displayMaxHeightCss": "32vh",
+    "clearSpace": "Najmanje 8% visine vidljivog logotipa sa svake strane; tekst, dugmad i sistemski inseti ne ulaze u taj prostor.",
+    "legibility": "Obe linije su citljive bez uvecavanja na sirini prikaza od 320 CSS px; logo nema dodatni tekst, upisanu senku koja zamagljuje slova ili nepravilno ispisan naziv.",
+    "restraint": "Logo prati visualRestraint.logo: naziv je glavni motiv, bez nakicenih detalja i efekata koji mu konkurisu."
+  },
+  "assetStandardizationRules": {
+    "catalogId": "shared-room-pack-production-png",
+    "catalogStatus": "Zakljucan ciljni inventar prema aktivnom Green Room Pack-u: 176 PNG u paketu plus jedna glavna renderovana pozadina.",
+    "catalogPath": "docs/theme-asset-role-catalog.json",
+    "requiredProductionPngCount": 177,
+    "equalCount": "Svaka tema mora imati tacno 177 produkcionih PNG asseta, rasporedjenih jedan-prema-jedan po istim obaveznim semantickim ulogama. Izvorni masteri, QA snimci, povuceni asseti i legacy fallback fajlovi ne ulaze u broj.",
+    "sameRoles": "Svaka tema mora pokriti isti katalog uloga: pozadine, glavni logo igre, ikonice, tematske ilustracije i ostale renderovane elemente koje standard proglasi obaveznim. Nova obavezna uloga dodaje se svim temama.",
+    "standardizedFiles": "Za svaku ulogu standardizuju se naziv/ID, format PNG, dimenzije, transparentnost gde je potrebna, izvorni master, optimizovana produkciona izvedenica i mesto upotrebe. Tehnicke varijante velicine podlezu istom katalogu u svim temama.",
+    "oneIdentityPerRole": "Unutar jedne teme svaki motiv koji se pojavljuje na vise mesta ima jedan kanonski vizuelni identitet. To vazi za dukat i za sve ostale ponovljene ikonice, simbole i ilustracije.",
+    "ducatFiveDots": "Obavezno za svih deset tema: svaki prikaz dukata nosi tacno pet citljivih tacaka na licu, cetiri oko jedne centralne. Vazi za svih pet kanonskih ducat PNG uloga (front, angle-left, angle-right, inline, particle) i svaku kompoziciju koja prikazuje dukat. Geometrijski znak, romb, list, talas, krater, urez ili drugi motiv ne zamenjuje pet tacaka. Dizajn materijala, rub, volumen i boje ostaju originalni za svaku temu; nema kopiranja ili prebojavanja druge teme.",
+    "reuseWithinTheme": "Ista semanticka uloga koristi isti kanonski PNG gde god je moguce. Tehnicke izvedenice iz istog mastera smeju menjati rezoluciju ili razmeru prikaza, ali ne motiv, oblik, boje, materijal ili prepoznatljive detalje.",
+    "noCrossThemeReuse": "Kanonski identitet i PNG asseti jedne teme ne preuzimaju se u drugu temu."
+  },
+  "crossThemeRoomContract": {
+    "id": "shared-room-ui-contract",
+    "valueStatus": "Kljucne brojcane vrednosti su zakljucane u sharedUiMetrics. Za ostale komponente Green je referentni izvor izracunatih dimenzija na istom viewportu; tematski CSS ne menja geometriju.",
+    "rooms": "Sve teme imaju isti skup soba, isti sadrzaj i redosled odeljaka, iste akcije, navigaciju i funkcionalna stanja.",
+    "geometry": "Odgovarajuci elementi u svim temama imaju iste dimenzije, odnose stranica, pozicije, poravnanja, razmake, padding, zone dodira, skrol granice i redosled slojeva. Ovo vazi za kartice, panele, dugmad, ikonice, table, modale, obavestenja i kontrole.",
+    "typographyAndContent": "Ista hijerarhija naslova i teksta, velicine i raspored tekstualnih zona; isti podaci i lokalizacija na srpskom i engleskom bez skracivanja funkcionalnog sadrzaja po temi.",
+    "intro": "Ulaz u svaku odgovarajucu sobu ima ista pravila pokretanja i prekida, redosled faza, trajanje, velicine, pozicije, skalu, tajming i zavrsni prelaz u svim temama. Tematski PNG i materijal menjaju izgled, ne ugovor introa.",
+    "animation": "Za istu radnju animacije imaju ista pravila okidanja, trajanja, kasnjenja, ritam, opseg kretanja, broj ponavljanja i uslove prekida u svim temama. Tematski vizuelni efekat prati pravac teme, ali ne menja zajednicke vrednosti i tok.",
+    "cardsAndStates": "Kartice i ostali elementi imaju isti broj, semantiku, redosled, sadrzaj, dimenzije i interakcije, ukljucujuci normalno, pritisnuto, aktivno, izabrano, zakljucano, onemoguceno, prazno, ucitavanje, gresku i uspeh.",
+    "functionalValues": "Pravila igre, bodovi, pragovi, nagrade, odbrojavanja, dostupnost akcija i podaci dolaze iz zajednicke logike i ne menjaju se izborom teme. Numericke UI vrednosti za iste komponente imaju jedan zajednicki izvor.",
+    "responsiveAndAccessibility": "Sve teme koriste iste responsive pragove, bezbedne zone, ponasanje pri skrolu, pravila za duzi SR/EN tekst, minimalne zone dodira i reduced-motion ponasanje. Tematski kontrast se proverava pojedinacno.",
+    "visualBoundary": "Svaka tema ima sopstvene boje, materijale, pozadinu, ikonice i dekoraciju unutar zajednicke geometrije i funkcionalnog ugovora. Promena teme ne sme pomeriti sadrzaj ili promeniti ishod radnje."
+  },
+  "sharedUiMetrics": {
+    "units": "CSS px unless a responsive CSS expression is given",
+    "reference": "Current Green shared layout in www/style.css and active Green overrides in www/teme.css; preserve Green values.",
+    "mobilePortraitBreakpointMaxPx": 599,
+    "screenTransitionMs": 400,
+    "splashRevealMs": 4500,
+    "roomIntroMs": 4600,
+    "roomIntroIconBoxCss": "clamp(210px, 34vmin, 290px)",
+    "roomIntroPulseMs": 1800,
+    "roomIntroPulseScale": 1.035,
+    "modeGrid": { "columns": 2, "maxWidthPx": 330, "gapPx": 15, "minCardHeightPx": 120, "cardRadiusPx": 20 },
+    "contentCard": { "radiusPx": 20, "paddingPx": 12, "minHeightPx": 180 },
+    "gameBoard": { "radiusPx": 16, "paddingPx": 2, "mobileCellHeightCss": "clamp(20px, 3.2vh, 36px)" },
+    "menuControl": { "hitBoxPx": 55, "iconBoxPx": 44 },
+    "roomShell": { "maxWidthPx": 760, "viewportSideInsetPx": 22, "radiusPx": 22 },
+    "compactModal": { "maxWidthPx": 420, "viewportSideInsetPx": 14, "radiusPx": 20, "paddingPx": 18 },
+    "mobileDiceCss": "min(14vw, 60px)",
+    "mobileThrowButtonHeightPx": 50,
+    "mobileAnnounceButtonHeightPx": 40,
+    "safeTopCss": "max(45px, env(safe-area-inset-top))",
+    "safeBottomCss": "max(35px, env(safe-area-inset-bottom))",
+    "otherComponentRule": "Za sve ostale iste elemente uzima se izracunata Green geometrija pri istom viewportu, jeziku, font skali i stanju; druga tema nema sopstvenu brojcanu layout vrednost."
+  },
+  "sharedTypography": {
+    "uiFont": "Montserrat",
+    "uiFallback": "Arial, sans-serif",
+    "quoteFont": "Georgia, serif",
+    "fontWeights": { "body": 400, "control": 600, "heading": 700, "emphasis": 800 },
+    "fontSizesPx": { "caption": 12, "secondary": 14, "body": 16, "cardHeading": 18, "sectionHeading": 22, "roomHeading": 28 },
+    "lineHeights": { "heading": 1.2, "body": 1.45 },
+    "rule": "Sve teme koriste iste fontove, velicine, tezine, prelamanje i tekstualne zone radi geometrijske jednakosti; tema menja boju i materijal. Jedinstvena tipografija logotipa je deo PNG dizajna."
+  },
+  "paletteUsage": {
+    "text": "Glavni tekst sme na surface, raised i inset povrsinu; sve tri kombinacije moraju imati najmanje 4,5:1.",
+    "textMuted": "Sekundarni tekst sme na surface i raised povrsinu; na inset povrsini koristi se glavni text token.",
+    "heading": "Naslov sme na surface i raised povrsinu; obe kombinacije moraju imati najmanje 4,5:1.",
+    "primary": "Na primary dugmetu koristi se onPrimary tekst; kombinacija mora imati najmanje 4,5:1.",
+    "logo": "logoMain se proverava prema background fallback boji, a gotov PNG se dodatno proverava preko stvarne renderovane pozadine.",
+    "accentAndStatus": "Accent je dekorativan dok ne prodje kontrast kao tekst; success i danger imaju najmanje 3:1 prema surface za bitne ne-tekstualne oznake. Ako nose tekst, proverava se 4,5:1.",
+    "scoreColumns": "Sest boja kolona (colDown, colUp, colMiddle, colManual, colAnnounce, colFree) koriste se samo za odgovarajuce Yamb oznake; svaka mora imati najmanje 4,5:1 prema surface i znacenje kolone se ne prenosi samo bojom.",
+    "translucency": "Kontrast se proverava nad stvarnom kompozicijom posle renderovanja, ne samo nad HEX fallback tokenima; poluprovidnost ne menja definisani Clay ili Smooth Rubber / Matte Plastic pravac."
+  },
+  "acceptanceCriteria": {
+    "viewportsCssPx": [[320, 568], [360, 780], [412, 915], [768, 1024]],
+    "languages": ["sr", "en"],
+    "fontScaleFactors": [1, 1.3],
+    "contrast": { "normalTextMinimum": 4.5, "largeTextMinimum": 3, "essentialNonTextMinimum": 3, "standard": "WCAG 2.2 AA", "reference": "https://www.w3.org/TR/WCAG22/" },
+    "requiredSurfaces": ["splash and login", "main menu", "solo", "hotseat", "online random and waiting", "invite friend and waiting", "game board", "daily challenge", "leaderboard", "statistics and H2H", "settings", "rules", "global chat", "online players", "economy", "quarterly league", "treasury", "tournament", "game over"],
+    "requiredStates": ["normal", "pressed", "active", "selected", "locked", "disabled", "empty", "loading", "error", "success", "reduced motion"],
+    "assetGate": "Tacno 177 produkcionih PNG uloga, svi fajlovi validni i dimenzije/alpha po katalogu; odobren originalan dizajn bez preslikavanja druge teme; jedan kanonski motiv po ponovljenoj ulozi.",
+    "uiGate": "Na svakoj temi i test velicini nema preklapanja, odsecanja bitnog teksta, pomeranja geometrije prema Green referenci, promene vrednosti ili razlike u funkcionalnom toku.",
+    "fontGate": "Stvarno dostupne Montserrat tezine 400/600/700/800 proveravaju se na Android prikazu; sinteticka ili zakasnela zamena fonta ne sme promeniti prelom i geometriju. Georgia citat zadrzava citljiv fallback.",
+    "motionGate": "Splash 4,5 s; odgovarajuci room intro 4,6 s; isti redosled i vreme faza; reduced-motion varijanta bez dekorativnog kretanja uz ocuvanje sadrzaja i vremena prelaza.",
+    "loadingGate": "Na startu se ucitavaju samo pozadina, logo i potrebne menu izvedenice aktivne teme; sobni PNG-ovi se ucitavaju pri ulasku u sobu; nema asseta druge teme u aktivnom prikazu.",
+    "completionRule": "Tema se oznacava uskladjenom tek posle prolaska kataloga asseta, mape potrosaca i optickih granica, budzeta ucitavanja, kontrasta, vizuelne matrice, pariteta geometrije i funkcionalnog toka na stvarnom mobilnom prikazu.",
+    "restraintGate": "Pozadina, Icon Pack, logo i svi UI slojevi prolaze vizuelni pregled bez kica i nakicenosti na 320 CSS px: jasan primarni motiv, mirna zona sadrzaja, citljive ikonice i uklonjeni detalji bez svrhe. Prolaz automatizovanih provera nije dovoljan.",
+    "backgroundSceneGate": "Svaka pozadina prikazuje prepoznatljiv svet teme sa dubinom ili jasnim prostornim odnosom, a ne samo boju ili praznu povrsinu. Svih deset kadrova se proverava zajedno radi razlicitosti: bez ponovljene S-vodilje od puta, reke, staze ili svetla. Provera se radi zasebno i sa stvarnim UI-jem; Plavi Okean mora jasno prikazati nadvodni okean. Bez kica i pretrpanosti.",
+    "reviewBoardGate": "Konacna pregledna tabla teme sadrzi stvarnu pozadinu, logo, sest ikona, karticu, tablu, intro i SR/EN snimke; sva odstupanja su resena.",
+    "usageMapGate": "Svih 177 slotova imaju potvrdene aktivne potrosace ili dokumentovan razlog zasto je slot rezervisan, stvarne putanje i izmerene vidljive granice.",
+    "performanceGate": "Startup, svaka soba i vrhunac aktivne PNG memorije prolaze performanceBudget na ciljnom Android uredjaju, uz dokumentovana merenja.",
+    "fallbackGate": "Provereni su nedostajuca ikonica, pozadina i logo bez preuzimanja asseta druge teme; obavezni fajlovi postoje u prihvacenoj verziji."
+  },
+  "visualRules": {
+    "background": "Svaka tema ima svoju originalno renderovanu portretnu glavnu pozadinu u svom stilu i pravcu. Pozadina predstavlja prepoznatljiv svet teme kroz razlicite tipove scena prema backgroundSceneRule: predeo, grad, enterijer, pogled ili predmete u prostoru. Selektivno moze koristiti balkanske motive i materijale kada odgovaraju temi, bez kica i kopiranja drugih pozadina. Nema preuzimanja ni prostog prebojavanja pozadine druge teme. Zona iza sadrzaja ostaje citljiva, a kompozicija podrzava razlicite velicine ekrana i bezbedne zone.",
+    "paletteAndMaterial": "Svaka tema definise osnovne boje, akcente, povrsine, svetlo, senke i teksturu u skladu sa svojim pravcem; tekst i kontrole moraju imati citljiv kontrast.",
+    "uiComponents": "Dugmad, kartice, paneli, tabovi, modali, polja za unos i obavestenja koriste materijalni jezik svoje teme. Interaktivne komponente mogu biti izvedene tematskim CSS-om radi prilagodljivosti. Svi elementi postuju visualRestraint.ui bez naslaganih efekata i nepotrebnih dekoracija.",
+    "boardAndDice": "Tabla, polja, zaglavlja, HUD, kontrolna zona i kockice imaju namenske tematske povrsine i detalje. Dimenzije, raspored, znacenje i logika igre ostaju zajednicki.",
+    "specialScreens": "Splash, glavni meni, cekanje, ulazi u sobe i zavrsni ekran prate isti vizuelni identitet kao ostatak teme.",
+    "statesAndMotion": "Svaka tema oblikuje pritisnuto, aktivno, zakljucano, onemoguceno, prazno, ucitavanje i gresku; animacije su umerene i imaju reduced-motion varijantu.",
+    "mobileReadability": "Za svaku temu proveravaju se kontrast, velicine ikonica i dodirnih zona, prelamanje teksta i raspored na uskim i sirim mobilnim ekranima, na srpskom i engleskom.",
+    "assetDelivery": "Za renderovane pozadine i ikonice cuvaju se izvorni masteri i optimizovane runtime izvedenice; pri pokretanju se ucitava samo aktivna tema, a ostali tematski asseti po potrebi."
+  },
+  "allowedDirectionIds": ["clay", "smooth_rubber_matte_plastic"],
+  "directionPolicy": "Za svih deset tema dozvoljeni su samo Clay i Smooth Rubber / Matte Plastic; ranije razmatrani materijalni pravci vise nisu aktivne opcije. Pravac vazi za pozadinu, Icon Pack, logo, UI, tablu, kockice, intro i svaki tematski PNG.",
+  "directions": {
+    "clay": {
+      "name": "Clay",
+      "description": "Glineni, zaobljeni 3D oblici sa mekom teksturom i reljefom."
+    },
+    "smooth_rubber_matte_plastic": {
+      "name": "Smooth Rubber / Matte Plastic",
+      "description": "Zaobljeni, napumpani oblici bez teksture i nesavrsenosti glinenog otiska; cist, moderan i igrackasti izgled citljiv na mobilnim ekranima."
+    }
+  },
+  "themes": [
+    {
+      "id": "dark",
+      "nameSr": "Zelena",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Green Room Pack",
+      "iconPack": "Green Icon Pack",
+      "iconPackDirection": "clay",
+      "iconDna": { "status": "locked-reference", "silhouette": "Postojeci Green Clay oblici su zakljucani; oni odredjuju funkciju i razmeru, ali se njihova kompozicija ne prenosi u druge teme." },
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "clay",
+      "designScope": "locked-reference",
+      "paletteReference": "Postojeci Green Room Pack manifest i aktivni Green CSS; bez novih boja u ovoj specifikaciji.",
+      "gameLogo": { "name": "Green Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "visualIdentity": {
+        "background": "Postojeci originalni sumski glineni diorama pejzaz sa prednjim planom, brdima, puteljkom i mirnijom zonom iza menija i table; zakljucana referenca za zivopisnost, ne sablon za kopiranje.",
+        "palette": ["sumska zelena", "topla slonovaca", "terakota"],
+        "materialAndUi": "Mat glina, zaobljeni reljef, podignute i udubljene kontrole.",
+        "boardAndDice": "Sumsko-zelena glinena tabla i glinene kockice sa jasnim tackicama.",
+        "screens": "Splash, meni, cekanje, ulazi u sobe i rezultat koriste isti Green Clay identitet.",
+        "statesAndMotion": "Blagi glineni pritisak i meki ulazi; statusi ostaju jasno razlikljivi.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "light",
+      "nameSr": "Svetlo Zlato",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Light Gold Room Pack",
+      "iconPack": "Light Gold Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "smooth_rubber_matte_plastic",
+      "designScope": "target-for-implementation",
+      "paletteHex": {
+        "background": "#E6BE83", "surface": "#FFF1D7", "raised": "#F3D6A8", "inset": "#DBB47B",
+        "text": "#392817", "textMuted": "#705237", "heading": "#4A311B",
+        "primary": "#875024", "onPrimary": "#FFFFFF", "accent": "#76612B", "border": "#9B754F",
+        "success": "#35613D", "danger": "#9B3B3A", "logoMain": "#4A311B", "logoAccent": "#795127",
+        "colDown": "#216486", "colUp": "#A13D4A", "colMiddle": "#80502A", "colManual": "#754394", "colAnnounce": "#875024", "colFree": "#4D5D62"
+      },
+      "iconPackDirection": "smooth_rubber_matte_plastic",
+      "gameLogo": { "name": "Light Gold Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "iconDna": {
+        "silhouette": "Siroke, blago zaravnjene oble forme sa mirnim kosim rezom; bez tanke zlatne ornamentike.",
+        "coinFace": "Mat medeno-zlatni zetoncic sa pet utisnutih tacaka i sopstvenim glatkim rubom; bez metalnog sjaja i bez kopiranja Green modela.",
+        "colorsHex": { "body": "#E6BE83", "light": "#FFF1D7", "shade": "#875024", "accent": "#76612B", "contour": "#875024" }
+      },
+      "visualIdentity": {
+        "background": "Prihvaceni V9 kadar prikazuje osuncano balkansko dvoriste, tople kamene ploce, drvene krovove i meka brda u daljini. Medeno svetlo i maslinasto drvo daju dubinu; bez vijugave staze, filigrana i metalnog sjaja.",
+        "palette": ["medeno zlato", "topla slonovaca", "maslinasta senka"],
+        "materialAndUi": "Gladka meka plastika i mat silikon u medeno-zlatnoj paleti sa prigusenim maslinastim akcentom; cisti oblici i kontrolisana volumenska senka bez metalnog sjaja.",
+        "boardAndDice": "Svetla mat-silikonska tabla i krem kockice sa tamnim citljivim oznakama.",
+        "screens": "Svi posebni ekrani koriste isti topli mat-silikonski tretman.",
+        "statesAndMotion": "Kratak meki pritisak i blagi prelazi bez odsjaja.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "medium",
+      "nameSr": "Trula Višnja",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Dark Cherry Room Pack",
+      "iconPack": "Dark Cherry Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "clay",
+      "designScope": "target-for-implementation",
+      "paletteHex": {
+        "background": "#681D25", "surface": "#431720", "raised": "#60252E", "inset": "#301019",
+        "text": "#FFF6F2", "textMuted": "#E6C9C4", "heading": "#FFEDE6",
+        "primary": "#F1C3B2", "onPrimary": "#3A1424", "accent": "#E39A70", "border": "#AF7777",
+        "success": "#8CDEB2", "danger": "#FF9DAA", "logoMain": "#FFEDE6", "logoAccent": "#E9AF9E",
+        "colDown": "#8AD6EF", "colUp": "#FFB4B7", "colMiddle": "#FFD385", "colManual": "#DDB9F0", "colAnnounce": "#F1C3B2", "colFree": "#C4CFD5"
+      },
+      "iconPackDirection": "clay",
+      "gameLogo": { "name": "Dark Cherry Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "iconDna": {
+        "silhouette": "Malo asimetricna, rukom vajana puna glinena masa sa jednom sirokom udubinom; bez preslikavanja Green oblika.",
+        "coinFace": "Visnjin glineni novcic sa pet utisnutih tacaka i nepravilno zaobljenim rubom; topla mat dubina bez ukrasa.",
+        "colorsHex": { "body": "#8B3038", "light": "#F1C3B2", "shade": "#431720", "accent": "#E39A70", "contour": "#F1C3B2" }
+      },
+      "visualIdentity": {
+        "background": "Prihvaceni V9 glineni enterijer ima duboke visnjine zidove, zaobljeni sto, sediste i mali pogled kroz prozor na topli zalazak i kuce. Paleta prati crvenu glinu i narandzasto svetlo, bez folklornih ukrasa, realisticne tkanine i vijugave staze.",
+        "palette": ["duboka visnja", "crvena glina", "topla krem"],
+        "materialAndUi": "Mat bordo glina, rucno vajane ali ciste ivice, neomorfna udubljenja i volumenske senke bez vlakana tkanine.",
+        "boardAndDice": "Precizno oblikovana glinena tabla; svetle glinene kockice sa jakim kontrastom tackica.",
+        "screens": "Svi posebni ekrani zadrzavaju isti tamnovisnjin Clay identitet.",
+        "statesAndMotion": "Meki glineni pritisak i kratki, mirni prelazi.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "winter",
+      "nameSr": "Plavi Okean",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Blue Ocean Room Pack",
+      "iconPack": "Blue Ocean Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "smooth_rubber_matte_plastic",
+      "designScope": "target-for-implementation",
+      "paletteHex": {
+        "background": "#0E5A9B", "surface": "#FFF4E5", "raised": "#DEECEB", "inset": "#BBD8DE",
+        "text": "#18384B", "textMuted": "#476874", "heading": "#173D5B",
+        "primary": "#0B5C8C", "onPrimary": "#FFFFFF", "accent": "#BD684A", "border": "#6D9BA8",
+        "success": "#216F5A", "danger": "#A63A42", "logoMain": "#FFFFFF", "logoAccent": "#FFE8C4",
+        "colDown": "#1B6C8E", "colUp": "#A34851", "colMiddle": "#7B5C13", "colManual": "#664E97", "colAnnounce": "#146778", "colFree": "#4E6973"
+      },
+      "iconPackDirection": "smooth_rubber_matte_plastic",
+      "gameLogo": { "name": "Blue Ocean Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "iconDna": {
+        "silhouette": "Cist sirok luk i jedna blago suzena ivica kao ritam obale ili jedra; bez talasica i camaca dodatih na svaku ikonu.",
+        "coinFace": "Glatki egejsko-plavi zetoncic sa pet citljivih tacaka i zasecenim mat rubom; originalan obris bez kopije Green dukata.",
+        "colorsHex": { "body": "#0E5A9B", "light": "#FFF4E5", "shade": "#173D5B", "accent": "#BD684A", "contour": "#173D5B" }
+      },
+      "visualIdentity": {
+        "background": "Prihvaceni V13 grcki egejski obalski kadar nadahnut Atinom i Pirejem: jasno nadvodno plavo more je glavni motiv, uz skromnu luku, kuce kosih crepnih krovova i stilizovana dalja ostrva. Mat silikon ili meka plastika, cisti zaobljeni oblici. Bez Santorinija, belih kubnih kuca s plavim kapcima, turistickog kica, fotorealisticne vode, morskog dna i S-krivine obale ili puta.",
+        "palette": ["egejska plava", "topla krem", "boja crepa"],
+        "materialAndUi": "Svetla glatka meka plastika i mat silikon; vodeni motiv nastaje kroz oblik i plavu paletu, bez staklaste providnosti.",
+        "boardAndDice": "Svetla mat-silikonska tabla i krem kockice sa jasnim oznakama.",
+        "screens": "Svi posebni ekrani koriste isti morski mat-silikonski identitet.",
+        "statesAndMotion": "Blagi elasticni odziv i mirni vodeni prelazi bez staklenog sjaja.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "neon",
+      "nameSr": "Neon Cyber",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Neon Cyber Room Pack",
+      "iconPack": "Neon Cyber Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "smooth_rubber_matte_plastic",
+      "designScope": "target-for-implementation",
+      "iconPackDirection": "smooth_rubber_matte_plastic",
+      "paletteHex": {
+        "background": "#080D18", "surface": "#121B2B", "raised": "#1A2B40", "inset": "#0C1625",
+        "text": "#F4FAFF", "textMuted": "#B5C7D6", "heading": "#E9FFFF",
+        "primary": "#56E5D2", "onPrimary": "#071923", "accent": "#F08CE3", "border": "#3A8A94",
+        "success": "#72DDAE", "danger": "#FF97AC", "logoMain": "#E9FFFF", "logoAccent": "#56E5D2",
+        "colDown": "#74CBFF", "colUp": "#FF96C8", "colMiddle": "#FFD17B", "colManual": "#C9A2FF", "colAnnounce": "#56E5D2", "colFree": "#B4C6D8"
+      },
+      "gameLogo": { "name": "Neon Cyber Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "iconDna": {
+        "silhouette": "Zaobljeni pravougaoni segmenti i jedan jasan urez; cijan ivica nosi citljivost bez vise svetlecih kontura.",
+        "coinFace": "Jednostavan mat cyber zetoncic sa pet tacaka; tirkiz nosi oblik, magenta je samo mali funkcionalni naglasak.",
+        "colorsHex": { "body": "#193455", "light": "#56E5D2", "shade": "#080D18", "accent": "#F08CE3", "contour": "#56E5D2" }
+      },
+      "visualIdentity": {
+        "background": "Zivopisan nocni cyber gradski predeo sa nekoliko zaobljenih mat-plasticnih zgrada, ulicom ili prolazom koji vodi u dubinu i kontrolisanim tirkizno-magenta svetlom. Centar zadrzava scenu bez gustih svetlosnih linija iza teksta; bez praznog tamnog panela.",
+        "palette": ["tamni grafit", "neon tirkizna", "neon magenta"],
+        "materialAndUi": "Cista mat plastika i meka guma sa preciznim neonskim akcentima.",
+        "boardAndDice": "Tamna mat-plasticna tabla i kockice sa citljivim neonskim oznakama.",
+        "screens": "Svi posebni ekrani koriste isti cyber identitet i kontrolisan neon.",
+        "statesAndMotion": "Kratak svetlosni odziv bez stalnog agresivnog treperenja.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "amethyst",
+      "nameSr": "Kraljevski Ametist",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Royal Amethyst Room Pack",
+      "iconPack": "Royal Amethyst Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "clay",
+      "designScope": "target-for-implementation",
+      "paletteHex": {
+        "background": "#5A386A", "surface": "#3C284B", "raised": "#563660", "inset": "#2D1D3C",
+        "text": "#FBF6FF", "textMuted": "#E0CDE5", "heading": "#FFF2E3",
+        "primary": "#F2C879", "onPrimary": "#2C183A", "accent": "#D691B5", "border": "#A37EAE",
+        "success": "#A3DFC2", "danger": "#F2A3B4", "logoMain": "#FFF5E8", "logoAccent": "#FFD17D",
+        "colDown": "#98CFFF", "colUp": "#F3A9B5", "colMiddle": "#F4D584", "colManual": "#D2A7F0", "colAnnounce": "#E5C46E", "colFree": "#CBD3DE"
+      },
+      "iconPackDirection": "clay",
+      "gameLogo": { "name": "Royal Amethyst Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "iconDna": {
+        "silhouette": "Miran, tezak glineni luk i par sirokih faseta, bez dragulja ili krune nalepljene na svaku ikonu.",
+        "coinFace": "Pljosnati ametistni glineni zetoncic sa pet reljefnih tacaka; zlatno je malo polje, ne metalna oplata.",
+        "colorsHex": { "body": "#5A386A", "light": "#E0CDE5", "shade": "#2D1D3C", "accent": "#F2C879", "contour": "#E0CDE5" }
+      },
+      "visualIdentity": {
+        "background": "Prihvaceni V6 kadar gleda kroz veliki glineni luk na ljubicastu obalu i topli zalazak; pod u prvom planu hvata meko narandzasto svetlo. Bez dodatnih kruna, nakita i filigrana.",
+        "palette": ["ametist ljubicast", "puderasta sljiva", "svetlo zalaska"],
+        "materialAndUi": "Ljubicastasta mat glina, mek reljef i uzdrzani topli akcenti prema svetlu zalaska, bez metalnog ili satenskog sjaja.",
+        "boardAndDice": "Ametistna glinena tabla i svetle ljubicaste glinene kockice sa jasnim oznakama.",
+        "screens": "Svi posebni ekrani koriste isti kraljevski Clay identitet.",
+        "statesAndMotion": "Meki glineni pritisak i dostojanstveni kratki prelazi.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "easter",
+      "nameSr": "Vaskršnja",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Easter Room Pack",
+      "iconPack": "Easter Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "smooth_rubber_matte_plastic",
+      "designScope": "target-for-implementation",
+      "paletteHex": {
+        "background": "#E5D4B9", "surface": "#FFF8EA", "raised": "#EEE5D3", "inset": "#D3D5B7",
+        "text": "#3D4434", "textMuted": "#5F654F", "heading": "#3F4A35",
+        "primary": "#4D6B45", "onPrimary": "#FFFFFF", "accent": "#A66443", "border": "#879373",
+        "success": "#3E674A", "danger": "#9E4A42", "logoMain": "#3F4A35", "logoAccent": "#4D6B45",
+        "colDown": "#2F6D8D", "colUp": "#A0445C", "colMiddle": "#806118", "colManual": "#684C9B", "colAnnounce": "#456F5A", "colFree": "#5D6670"
+      },
+      "iconPackDirection": "smooth_rubber_matte_plastic",
+      "gameLogo": { "name": "Easter Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "iconDna": {
+        "silhouette": "Kompaktne glatke ovalne forme sa jednim listastim zasekom; bez serije jaja, cvetova ili masni na funkcionalnim ikonama.",
+        "coinFace": "Mat krem zetoncic sa pet tacaka i sopstvenim blago ovalnim rubom; ne ponavljati Green materijal i obod.",
+        "colorsHex": { "body": "#D3D5B7", "light": "#FFF8EA", "shade": "#4D6B45", "accent": "#A66443", "contour": "#4D6B45" }
+      },
+      "visualIdentity": {
+        "background": "Prihvaceni V6 kadar je tih prolecni enterijer sa toplim zidovima, zelenim okvirom prozora, drvetom napolju i samo dva jajeta u jednostavnoj ciniji. Bez dekorativnog niza jaja, cvetnih bordura, zeceva, masni i pastelne pretrpanosti. Materijal je mat silikon ili meka plastika.",
+        "palette": ["topla slonovaca", "kadulja zelena", "svetlo drvo"],
+        "materialAndUi": "Cista meka plastika i mat silikon, zaobljeni oblici bez glinene teksture.",
+        "boardAndDice": "Pastelna igrackasta tabla i glatke kockice sa jakom citljivoscu.",
+        "screens": "Svi posebni ekrani koriste isti vedri, glatki prolecni identitet.",
+        "statesAndMotion": "Blago elasticni odziv i kratki vedri prelazi.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "desert",
+      "nameSr": "Pustinjsko Staklo",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Desert Glass Room Pack",
+      "iconPack": "Desert Glass Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "clay",
+      "designScope": "target-for-implementation",
+      "paletteHex": {
+        "background": "#D79269", "surface": "#FFF0DA", "raised": "#F0D0AB", "inset": "#D5B29B",
+        "text": "#443027", "textMuted": "#70513D", "heading": "#56372D",
+        "primary": "#87523C", "onPrimary": "#FFFFFF", "accent": "#396B72", "border": "#A87759",
+        "success": "#32634D", "danger": "#9D3D37", "logoMain": "#4A2C23", "logoAccent": "#396B72",
+        "colDown": "#2A687D", "colUp": "#A13D3D", "colMiddle": "#765919", "colManual": "#754C88", "colAnnounce": "#2D6B6F", "colFree": "#5B655B"
+      },
+      "iconPackDirection": "clay",
+      "gameLogo": { "name": "Desert Glass Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "iconDna": {
+        "silhouette": "Slojevite horizontalne glinene forme sa dva-tri siroka preloma kao pescar; bez kristala, faseta stakla i sitnih gravura.",
+        "coinFace": "Koralan pescarni glineni zetoncic sa pet tacaka i debelim nepravilnim rubom; bez kopiranja Green reljefa.",
+        "colorsHex": { "body": "#D79269", "light": "#FFF0DA", "shade": "#87523C", "accent": "#396B72", "contour": "#87523C" }
+      },
+      "visualIdentity": {
+        "background": "Prihvaceni V8 kadar prikazuje otvoren glineni kanjon u koralno-pescanoj svetlosti, slojevite stene i prigusene plavosive senke u prvom planu. Bez gomile kristala, graviranja i staklastog odsjaja.",
+        "palette": ["koralni pescar", "topla krem", "prigusena plavosiva"],
+        "materialAndUi": "Topla peskovita glina, zaobljeni vajani oblici i prigusena plavosiva kao sporedni akcenat, bez providnog stakla.",
+        "boardAndDice": "Glinena pescana tabla, jasna polja i glinene tematske kockice.",
+        "screens": "Svi posebni ekrani koriste isti pustinjski Clay identitet.",
+        "statesAndMotion": "Meki glineni pritisak i mirni pustinjski prelazi.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "moon",
+      "nameSr": "Mesečev Sjaj",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Moonlight Room Pack",
+      "iconPack": "Moonlight Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "clay",
+      "designScope": "target-for-implementation",
+      "paletteHex": {
+        "background": "#08090C", "surface": "#252934", "raised": "#3B3F4B", "inset": "#181B24",
+        "text": "#F5F5F7", "textMuted": "#C9CAD2", "heading": "#FAFAFB",
+        "primary": "#E1E2E7", "onPrimary": "#242630", "accent": "#A7A9B8", "border": "#858895",
+        "success": "#A8D5BE", "danger": "#F0ACB0", "logoMain": "#F5F5F7", "logoAccent": "#C4C5D0",
+        "colDown": "#B9CFDF", "colUp": "#D9BDD2", "colMiddle": "#D7D1BE", "colManual": "#BFC3DF", "colAnnounce": "#B8D0CB", "colFree": "#D0D2D9"
+      },
+      "iconPackDirection": "clay",
+      "gameLogo": { "name": "Moonlight Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "clay" },
+      "iconDna": {
+        "silhouette": "Niski zaobljeni reljef sa jednom sirokom konkavnom ivicom; bez zvezda, plavog sjaja i kratera na svakoj ikoni.",
+        "coinFace": "Srebrnosivi glineni zetoncic sa pet tacaka i tihim tamnim obodom; mesecni reljef ostaje jednostavan i citljiv.",
+        "colorsHex": { "body": "#3B3F4B", "light": "#E1E2E7", "shade": "#181B24", "accent": "#A7A9B8", "contour": "#E1E2E7" }
+      },
+      "visualIdentity": {
+        "background": "Prihvaceni V14 Mesecev Sjaj prikazuje iskljucivo oblikovanu povrsinu Meseca i otvoreni svemir. Glavni veliki krater je desno, a povrsina Meseca zauzima veci deo kadra; crno nebo je mirno i bez zvezda. Vajani glineni krateri, grebeni i odnos tamnog neba i meke srebrne svetlosti nose identitet. Bez Zemlje, drugih planeta, teleskopa, opservatorija, kuca i druge arhitekture, vijugavog svetlosnog kanala, zimskog fjorda ili polarne aurore.",
+        "palette": ["crni svemir", "srebrnosiva", "hladna bela"],
+        "materialAndUi": "Tamna grafitna glina sa diskretnim srebrnosivim tonom; krateri i povrsine su vajani, bez providnosti i realisticnog kamena.",
+        "boardAndDice": "Tamna glinena tabla i svetle srebrno-sive glinene kockice sa jakim kontrastom.",
+        "screens": "Svi posebni ekrani koriste isti lunarni Clay identitet.",
+        "statesAndMotion": "Kratak meki glineni pritisak bez ornamentalnog odsjaja.",
+        "mobileReadabilityRequired": true
+      }
+    },
+    {
+      "id": "severna",
+      "nameSr": "Severna Maglina",
+      "style": "3D Soft Neomorphism",
+      "mainPack": "Northern Nebula Room Pack",
+      "iconPack": "Northern Nebula Icon Pack",
+      "iconFormat": "PNG",
+      "assetCatalog": "shared-room-pack-production-png",
+      "roomContract": "shared-room-ui-contract",
+      "direction": "smooth_rubber_matte_plastic",
+      "designScope": "target-for-implementation",
+      "paletteHex": {
+        "background": "#0B1830", "surface": "#182C44", "raised": "#24445B", "inset": "#0F2137",
+        "text": "#F5FBFF", "textMuted": "#C3D8E0", "heading": "#F2FBFF",
+        "primary": "#8AE3E4", "onPrimary": "#0A2934", "accent": "#C3ACEA", "border": "#759DA9",
+        "success": "#A4E3C9", "danger": "#FFAFB9", "logoMain": "#F2FBFF", "logoAccent": "#8AE3E4",
+        "colDown": "#8AD9FF", "colUp": "#F7B0D2", "colMiddle": "#E4D18B", "colManual": "#CEB9FF", "colAnnounce": "#8AE3E4", "colFree": "#C6D7E0"
+      },
+      "iconPackDirection": "smooth_rubber_matte_plastic",
+      "gameLogo": { "name": "Northern Nebula Game Logo", "format": "PNG", "style": "3D Soft Neomorphism", "direction": "smooth_rubber_matte_plastic" },
+      "iconDna": {
+        "silhouette": "Siroke neprekinute oble krive sa jednim mekim ledenim zavrsetkom; bez cyber segmenata ili vise aurora po ikoni.",
+        "coinFace": "Mat severni zetoncic sa pet tacaka i glatkim obodom u ledeno-plavoj paleti; bez kopiranja Green oblika.",
+        "colorsHex": { "body": "#24445B", "light": "#F5FBFF", "shade": "#0B1830", "accent": "#8AE3E4", "contour": "#8AE3E4" }
+      },
+      "visualIdentity": {
+        "background": "Zivopisan severni predeo sa velikim glatkim mat-silikonskim oblicima ledenih obala, dalekim planinama ili fjordom, mirnom vodom i jednom mekom cijan-ljubicastom aurom na nebu. Centar je deo predela bez svetlosnog haosa; bez fotorealisticnog leda, mesecevih kratera i kosmickog pejzaza.",
+        "palette": ["ponocno plava", "ledeni cijan", "prigusena ljubicasta"],
+        "materialAndUi": "Tamno-plava meka plastika i mat silikon sa hladnim cijan akcentom; led je stilizovan bojom i oblicima bez staklaste providnosti.",
+        "boardAndDice": "Tamna mat-silikonska tabla i svetle kockice sa jasnim oznakama.",
+        "screens": "Svi posebni ekrani koriste isti severni mat-silikonski identitet.",
+        "statesAndMotion": "Blagi elasticni odziv i kratki mirni prelazi.",
+        "mobileReadabilityRequired": true
+      }
+    }
+  ]
+}

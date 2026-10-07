@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-06",
+  "sourcePrompts": "docs/theme-background-prompts-v7.md",
+  "themeId": "winter",
+  "nameSr": "Plavi Okean",
+  "style": "3D Soft Neomorphism",
+  "directionId": "smooth_rubber_matte_plastic",
+  "scene": "Grčki egejski ostrvski pogled nadahnut Santorinijem: bele kuće sa plavim prozorima, otvoreno more i ostrva.",
+  "masterPath": "source-assets/theme-backgrounds-v7/winter-background-master-v7.png",
+  "width": 941,
+  "height": 1672,
+  "sizeBytes": 1440371,
+  "sha256": "a21967a520fc6af37a7501a6a2d9ccf28e34009f15a297e5a6cf00a9fb05f255",
+  "previousRejectedPath": "source-assets/theme-backgrounds-v6/winter-background-master-v6.png",
+  "reviewStatus": "rejected-by-user",
+  "reviewFeedback": "Previše realističan; korisnik je davao smernice i nije tražio render.",
+  "runtimeLinked": false,
+  "reviewPage": "docs/theme-backgrounds-v7-blue-ocean-review.html"
+}

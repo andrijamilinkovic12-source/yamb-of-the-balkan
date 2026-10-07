@@ -1,0 +1,13 @@
+{
+  "themeId": "moon",
+  "status": "new-five-dot-originals",
+  "tool": "built-in imagegen",
+  "sourceFolder": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "sources": {
+    "front": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-4f750b62-99f4-44d1-91ca-2fc4f199e5c6.png",
+    "angleLeft": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-0dea5fe2-af97-4c93-8c4f-447afe0d9c07.png",
+    "angleRight": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-7636e877-7f34-47e3-9265-099ae5e0dda4.png"
+  },
+  "promptSummary": "Original Mesecev Sjaj low silver-gray lunar-clay ducat with one shallow concave rim section and exactly five dark charcoal recessed pips. 3D Soft Neomorphism Clay; no stars, planet, extra craters, metal shine, text or ornament. Opposite left/right angle views preserve five pips.",
+  "derivation": "front, angle-left and angle-right each use an original imagegen master; inline 192px and particle 128px are delivery sizes of the front master"
+}

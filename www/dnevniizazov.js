@@ -945,7 +945,9 @@ class DnevniIzazov {
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
         const title = overlay.querySelector('.daily-intro-title');
-        const isIconOnlyIntro = overlay.classList.contains('theme-dark') || overlay.classList.contains('theme-desert');
+        const isIconOnlyIntro = overlay.classList.contains('theme-dark')
+            || overlay.classList.contains('theme-easter')
+            || overlay.classList.contains('theme-desert');
         if (isIconOnlyIntro) {
             if (leftWord) leftWord.textContent = '';
             if (rightWord) rightWord.textContent = '';
@@ -1304,7 +1306,7 @@ class DnevniIzazov {
         }
         if (isEasterTheme) {
             const endClass = options.rewardEnd === true ? ' daily-glass-easter-ducat-icon--reward-end' : '';
-            return `<img class="daily-glass-easter-ducat-icon${endClass}" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
+            return `<img class="daily-glass-easter-ducat-icon${endClass}" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">`;
         }
         if (isDesertTheme) {
             const endClass = options.rewardEnd === true ? ' daily-glass-desert-ducat-icon--reward-end' : '';

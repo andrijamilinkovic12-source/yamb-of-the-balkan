@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-06",
+  "purpose": "Sve sačuvane različite slike Plavog Okeana i Mesečevog Sjaja dostupne za poređenje.",
+  "note": "V1 standardized PNG je isti kadar u drugoj dimenziji. V5 PNG-ovi su ranije obrisani po odluci korisnika. Za V2 nema sačuvanih PNG-ova.",
+  "reviewPage": "docs/theme-blue-moon-all-versions.html",
+  "contactSheets": {
+    "winter": "docs/theme-blue-all-versions.png",
+    "moon": "docs/theme-moon-all-versions.png"
+  },
+  "themes": [
+    {
+      "themeId": "winter",
+      "nameSr": "Plavi Okean",
+      "versions": [
+        {
+          "label": "V1 — prvi pokušaj",
+          "path": "source-assets/theme-backgrounds-v1/winter-background-master-v1.png",
+          "status": "odbijena",
+          "width": 941,
+          "height": 1672,
+          "sizeBytes": 1866809,
+          "sha256": "ae841f15bbc2b8c416b065b6b5211248cc3d2b7ae97ba8356abda14ff0d73000"
+        },
+        {
+          "label": "V3",
+          "path": "source-assets/theme-backgrounds-v3/winter-background-master-v3.png",
+          "status": "odbijena",
+          "width": 941,
+          "height": 1672,
+          "sizeBytes": 1420730,
+          "sha256": "467a7ab68286fb4271ecfb49bf2b25f439ab6ad0415de5680c6b443b98404596"
+        },
+        {
+          "label": "V4",
+          "path": "source-assets/theme-backgrounds-v4/winter-background-master-v4.png",
+          "status": "odbijena",
+          "width": 941,
+          "height": 1672,
+          "sizeBytes": 1352323,
+          "sha256": "2e6cb8041528dee8cef5b627d334c727ce2af0477c894c49b512775f646fc1ef"
+        },
+        {
+          "label": "V6",
+          "path": "source-assets/theme-backgrounds-v6/winter-background-master-v6.png",
+          "status": "odbijena",
+          "width": 941,
+          "height": 1672,
+          "sizeBytes": 1591687,
+          "sha256": "db4aa50159e663256f70d85800dd76badde0ae123a4a19b3c63c7d83d5cef4b0"
+        },
+        {
+          "label": "V7 — grčko ostrvo",
+          "path": "source-assets/theme-backgrounds-v7/winter-background-master-v7.png",
+          "status": "odbijena: previše realistična",
+          "width": 941,
+          "height": 1672,
+          "sizeBytes": 1440371,
+          "sha256": "a21967a520fc6af37a7501a6a2d9ccf28e34009f15a297e5a6cf00a9fb05f255"
+        },
+        {
+          "label": "V8 — Santorini",
+          "path": "source-assets/theme-backgrounds-v8/winter-background-master-v8.png",
+          "status": "odbijena",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1610049,
+          "sha256": "a4434735c72e36850c742e7a7881b1f30b6bd585f6925ea2a4cf7a54ed2ba5b6"
+        },
+        {
+          "label": "V9 — bele kockaste kuće",
+          "path": "source-assets/theme-backgrounds-v9/winter-background-master-v9.png",
+          "status": "odbijena",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1528899,
+          "sha256": "cd324a9e00b22b17909d164baa782c11d284e97e3cd543d90b139851ed892242"
+        },
+        {
+          "label": "V10 — radna grčka luka",
+          "path": "source-assets/theme-backgrounds-v10/winter-background-working-1-v10.png",
+          "status": "radna skica, nije ponuđena za izbor",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1687051,
+          "sha256": "95a68d0c069ea8be771b4af5d5f1808f69092aa2bce8a49a0a7dfcec694f7568"
+        },
+        {
+          "label": "V10 — grčka luka",
+          "path": "source-assets/theme-backgrounds-v10/winter-background-master-v10.png",
+          "status": "luka se dopada; planine za doradu",
+          "width": 1024,
+          "height": 1535,
+          "sizeBytes": 1575854,
+          "sha256": "9ea247d32472efe67b2391ce9e5c59c59a900fdedce25cba235dbacb0fb918ab"
+        },
+        {
+          "label": "V11 — dorađene planine",
+          "path": "source-assets/theme-backgrounds-v11/winter-background-master-v11.png",
+          "status": "sačuvana za poređenje",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1549367,
+          "sha256": "372cfae58e3e08a410d7ed5350ecb8837f7cab42a85df8c1769520fc498c8105"
+        },
+        {
+          "label": "V12 — Atina i Pirej",
+          "path": "source-assets/theme-backgrounds-v12/winter-background-master-v12.png",
+          "status": "dobar pravac; planine za doradu",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1858151,
+          "sha256": "b6d4e5a0f3d966f222fbf8797d8bf34f922d617b32e852eacac7c70958141376"
+        },
+        {
+          "label": "V13 — mat-plastične planine",
+          "path": "source-assets/theme-backgrounds-v13/winter-background-master-v13.png",
+          "status": "prihvaćena i zaključana",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1782156,
+          "sha256": "88ea72e66b99875560041e555c1963656e19f68a6320a494445805cde8096ba4"
+        }
+      ]
+    },
+    {
+      "themeId": "moon",
+      "nameSr": "Mesečev Sjaj",
+      "versions": [
+        {
+          "label": "V1 — prvi pokušaj",
+          "path": "source-assets/theme-backgrounds-v1/moon-background-master-v1.png",
+          "status": "odbijena",
+          "width": 940,
+          "height": 1672,
+          "sizeBytes": 1698917,
+          "sha256": "0e1bebd6da9bce674f1d7573f7fd2d83b89fbddb8dcf4b735cc95dfb8cf06ff4"
+        },
+        {
+          "label": "V3",
+          "path": "source-assets/theme-backgrounds-v3/moon-background-master-v3.png",
+          "status": "odbijena",
+          "width": 941,
+          "height": 1672,
+          "sizeBytes": 1747787,
+          "sha256": "d16b56a4c0b83960887b6808fac49b00e2c1031a59de3cfa5c04cb88928006b6"
+        },
+        {
+          "label": "V4",
+          "path": "source-assets/theme-backgrounds-v4/moon-background-master-v4.png",
+          "status": "odbijena",
+          "width": 941,
+          "height": 1672,
+          "sizeBytes": 1438157,
+          "sha256": "22ccb5295240249dad31a9ec27ac97894afca1c04d459e2c6c1e4e71e13f84dc"
+        },
+        {
+          "label": "V6 — raniji smer",
+          "path": "source-assets/theme-backgrounds-v6/moon-background-master-v6.png",
+          "status": "pravac se dopao, bez prihvatanja",
+          "width": 940,
+          "height": 1672,
+          "sizeBytes": 1532834,
+          "sha256": "3cc8ff977135bea105401cbaad3d3e3e4bfd130cfc7899476a9844de289e2b52"
+        },
+        {
+          "label": "V8 — verzija 1",
+          "path": "source-assets/theme-backgrounds-v8/moon-background-variant-1-v8.png",
+          "status": "odbijena",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1731801,
+          "sha256": "6a2657566f27c3b0c3042f86ea65968aaae14ace4643144156d65c8600540e3d"
+        },
+        {
+          "label": "V8 — verzija 2",
+          "path": "source-assets/theme-backgrounds-v8/moon-background-variant-2-v8.png",
+          "status": "odbijena",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1894036,
+          "sha256": "9e0834360bc85bd22290ba0f988cfe7fa53ff2ffc8f659f61213b33fc0181a74"
+        },
+        {
+          "label": "V9 — opservatorija i Zemlja",
+          "path": "source-assets/theme-backgrounds-v9/moon-background-master-v9.png",
+          "status": "odbijena",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1695677,
+          "sha256": "3ef4bfaafb014034657d8457245532f44d9b3a9285072692fa4f0e07d1a94d08"
+        },
+        {
+          "label": "V10 — radna skica 1",
+          "path": "source-assets/theme-backgrounds-v10/moon-background-working-1-v10.png",
+          "status": "radna skica, nije ponuđena za izbor",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 2195729,
+          "sha256": "64cff16ea57f2ad94f85650f50b8996e7c9e834f7c2fc293d9b198c7dcd1975e"
+        },
+        {
+          "label": "V10 — radna skica 2",
+          "path": "source-assets/theme-backgrounds-v10/moon-background-working-2-v10.png",
+          "status": "izabrana kao pravac",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 2121880,
+          "sha256": "141a2e9d2d8adf3082fefcc669a05b0cd1833ea6111b3b33242a963da6e7a489"
+        },
+        {
+          "label": "V10 — površina Meseca",
+          "path": "source-assets/theme-backgrounds-v10/moon-background-master-v10.png",
+          "status": "nije izabrana",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1619399,
+          "sha256": "8afb0d35b8580cc17c2786f1bc5ce3339824610cfb9fa2fa096ea7605e8f7d4a"
+        },
+        {
+          "label": "V11 — glinena skica 2",
+          "path": "source-assets/theme-backgrounds-v11/moon-background-master-v11.png",
+          "status": "nije prihvaćena; zvezde su odbačene",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1653274,
+          "sha256": "b808c56e826d57c66d3eab253d6b952804a3bd43243dc2bc58a66a88e70236e9"
+        },
+        {
+          "label": "V12 — površina bez zvezda",
+          "path": "source-assets/theme-backgrounds-v12/moon-background-master-v12.png",
+          "status": "prethodni kadar: krater levo",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1901889,
+          "sha256": "f28f1cd7ddbad2fff178840b1b733a790f03fb467752272fda623c1de4bd7ea7"
+        },
+        {
+          "label": "V14 — krater desno",
+          "path": "source-assets/theme-backgrounds-v14/moon-background-master-v14.png",
+          "status": "prihvaćena i zaključana",
+          "width": 1024,
+          "height": 1536,
+          "sizeBytes": 1530933,
+          "sha256": "d6085eddcaaf4517b5fa434ec687504a16ef2f65d37dc5af1f9cb521416ea13d"
+        }
+      ]
+    }
+  ]
+}

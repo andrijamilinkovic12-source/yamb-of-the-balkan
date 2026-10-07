@@ -1,0 +1,13 @@
+{
+  "themeId": "medium",
+  "status": "new-five-dot-originals",
+  "tool": "built-in imagegen",
+  "sourceFolder": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "sources": {
+    "front": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-8ed4b8cd-084b-452c-9960-92c6bbd1dce2.png",
+    "angleLeft": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-5c05c2a5-400c-40b8-9edb-4fcd60c5742f.png",
+    "angleRight": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-cb316771-cb4d-46a3-982a-a3b503cb60c0.png"
+  },
+  "promptSummary": "Original Trula Visnja burgundy clay ducat, 3D Soft Neomorphism Clay, exactly five raised cream pips in die-five layout, softly irregular wide rim, no text, gold metal, ornament or Green copied geometry; transparent background. Opposite 25-degree left and right angle views retain the same five-pip identity.",
+  "derivation": "front, angle-left and angle-right each use an original imagegen master; inline 192px and particle 128px are delivery sizes of the front master"
+}

@@ -3,7 +3,7 @@
   "name": "Plavi okean",
   "version": 3,
   "status": "complete",
-  "background": "assets/ocean-neumorphic-bg-v2.png",
+  "background": "assets/theme-backgrounds/winter-v13.png",
   "designTokens": {
     "surface": "translucent powder-blue soft clay",
     "ink": "deep Adriatic navy",

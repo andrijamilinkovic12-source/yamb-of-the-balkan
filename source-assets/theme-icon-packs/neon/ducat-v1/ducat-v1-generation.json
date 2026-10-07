@@ -1,0 +1,13 @@
+{
+  "themeId": "neon",
+  "status": "new-five-dot-originals",
+  "tool": "built-in imagegen",
+  "sourceFolder": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "sources": {
+    "front": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-634b60ec-cc7d-4d44-8312-8f894a8199b6.png",
+    "angleLeft": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-85d092e6-82c7-4edb-a1c2-085a157ce8a4.png",
+    "angleRight": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-2515dc69-992f-45cc-b748-ce8123066671.png"
+  },
+  "promptSummary": "Original Neon Cyber dark-navy matte-plastic squircle ducat with a single controlled cyan rim and exactly five cyan pips in die-five layout. 3D Soft Neomorphism, no circuits, text, metal, glass, extra glow or kitsch. Opposite 25-degree left and right views preserve five pips and the distinct rim.",
+  "derivation": "front, angle-left and angle-right each use an original imagegen master; inline 192px and particle 128px are delivery sizes of the front master"
+}

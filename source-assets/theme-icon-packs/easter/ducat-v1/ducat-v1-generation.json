@@ -1,0 +1,13 @@
+{
+  "themeId": "easter",
+  "status": "new-five-dot-originals",
+  "tool": "built-in imagegen",
+  "sourceFolder": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "sources": {
+    "front": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-663fe329-61cd-4120-9501-096900937d2c.png",
+    "angleLeft": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-24ffda22-0dea-4e2b-944c-721a45caaccd.png",
+    "angleRight": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-f2bbeba0-6481-4f8e-9866-fb7f7440d5ac.png"
+  },
+  "promptSummary": "Original Vaskrsnja slightly tall-oval smooth matte-plastic ducat: continuous warm-cream face, slim sage-green bevel with one tiny silhouette notch, exactly five recessed dark-sage pips. 3D Soft Neomorphism; no Green ivory ring, terracotta, eggs, flowers, text or kitsch. Opposite left/right views retain the same five pips. Initial cream-ring candidate rejected for similarity to Green.",
+  "derivation": "front, angle-left and angle-right each use an original imagegen master; inline 192px and particle 128px are delivery sizes of the front master"
+}

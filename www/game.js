@@ -1761,9 +1761,39 @@ class YambApp {
                     'assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png?v=1'
                 ]
             },
+            light: {
+                title: lang === 'en' ? 'Light Gold' : 'Svetlo zlato',
+                background: 'assets/theme-backgrounds/light-v9.png',
+                icons: [],
+                assets: []
+            },
+            medium: {
+                title: lang === 'en' ? 'Dark Cherry' : 'Trula višnja',
+                background: 'assets/theme-backgrounds/medium-v9.png',
+                icons: [],
+                assets: []
+            },
+            neon: {
+                title: 'Neon Cyber',
+                background: 'assets/theme-backgrounds/neon-v4.png',
+                icons: [],
+                assets: []
+            },
+            amethyst: {
+                title: lang === 'en' ? 'Royal Amethyst' : 'Kraljevski ametist',
+                background: 'assets/theme-backgrounds/amethyst-v6.png',
+                icons: [],
+                assets: []
+            },
+            moon: {
+                title: lang === 'en' ? 'Moonlight' : 'Mesečev sjaj',
+                background: 'assets/theme-backgrounds/moon-v14.png',
+                icons: [],
+                assets: []
+            },
             winter: {
                 title: lang === 'en' ? 'Blue Ocean' : 'Plavi okean',
-                background: 'assets/ocean-neumorphic-bg-v2.png',
+                background: 'assets/theme-backgrounds/winter-v13.png',
                 icons: [
                     'assets/daily-challenge-icon.svg',
                     'assets/leaderboard-icon.svg',
@@ -1780,13 +1810,13 @@ class YambApp {
             },
             easter: {
                 title: lang === 'en' ? 'Easter Theme' : 'Vaskrs tema',
-                background: 'assets/easter-neumorphic-bg-v5.png',
+                background: 'assets/theme-backgrounds/easter-v6-1.png',
                 icons: [
                     'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
                     'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
-                    'assets/easter-soft-clay/treasury-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png?v=1',
                     'assets/easter-soft-clay/tournament-pro-v4.png?v=1',
-                    'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1'
+                    'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1'
                 ],
                 assets: [
                     'assets/easter-soft-clay/global-chat-pro-v6.png?v=1',
@@ -1799,12 +1829,14 @@ class YambApp {
                     'assets/easter-soft-clay/online-players-state-pro-v2.png?v=opt2',
                     'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2',
                     'assets/easter-soft-clay/ducats-undo-pro-v3.png?v=1',
-                    'assets/easter-soft-clay/economy/ducat.png?v=opt2',
+                    'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1',
                     'assets/easter-soft-clay/economy/undo-token.png?v=opt2',
                     'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2',
                     'assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2',
                     'assets/easter-soft-clay/mode-hotseat-pro-v2.png?v=1',
                     'assets/easter-soft-clay/mode-invite-pro-v2.png?v=1',
+                    'assets/easter-soft-clay/game/exit-v1.png?v=1',
+                    'assets/easter-soft-clay/game/announce-v1.png?v=1',
                     'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2',
                     'assets/easter-soft-clay/statistics-pro-v2.png?v=1',
                     'assets/easter-soft-clay/settings-pro-v3.png?v=1',
@@ -1849,12 +1881,9 @@ class YambApp {
                     'assets/easter-soft-clay/statistics/h2h-detail/average-v3.png?v=1',
                     'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2',
                     'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/power-index/gold-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/power-index/silver-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/power-index/bronze-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/fire-streak/gold-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/fire-streak/silver-v3.png?v=opt2',
-                    'assets/easter-soft-clay/statistics/fire-streak/bronze-v3.png?v=opt2',
+                    'assets/easter-soft-clay/canonical/competition-medals/gold-v1.png?v=1',
+                    'assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1',
+                    'assets/easter-soft-clay/canonical/competition-medals/bronze-v1.png?v=1',
                     'assets/easter-soft-clay/daily/task-v2.png?v=opt2',
                     'assets/easter-soft-clay/daily/complete-v2.png?v=opt2',
                     'assets/easter-soft-clay/daily/already-played-v2.png?v=opt2',
@@ -1862,9 +1891,6 @@ class YambApp {
                     'assets/easter-soft-clay/leaderboard/global-v2.png?v=opt2',
                     'assets/easter-soft-clay/leaderboard/local-v2.png?v=opt2',
                     'assets/easter-soft-clay/leaderboard/empty-loading-v2.png?v=opt2',
-                    'assets/easter-soft-clay/leaderboard/medal-gold-v4.png?v=opt2',
-                    'assets/easter-soft-clay/leaderboard/medal-silver-v4.png?v=opt2',
-                    'assets/easter-soft-clay/leaderboard/medal-bronze-v4.png?v=opt2',
                     'assets/easter-soft-clay/opponent/vs-v2.png?v=opt2',
                     'assets/easter-soft-clay/solo/personal-best.png?v=opt2',
                     'assets/easter-soft-clay/solo/finish-score-mark-v1.png?v=opt2',
@@ -1888,9 +1914,6 @@ class YambApp {
                     'assets/easter-soft-clay/ql/rank-legenda-v2.png?v=opt2',
                     'assets/easter-soft-clay/ql/rank-titan-v4.png?v=opt2',
                     'assets/easter-soft-clay/ql/rank-alltime-v3.png?v=opt2',
-                    'assets/easter-soft-clay/ql/medal-gold-v2.png?v=opt2',
-                    'assets/easter-soft-clay/ql/medal-silver-v2.png?v=opt2',
-                    'assets/easter-soft-clay/ql/medal-bronze-v2.png?v=opt2',
                     'assets/easter-soft-clay/tournament/tab-info-v2.png?v=opt2',
                     'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2',
                     'assets/easter-soft-clay/tournament/state-register-v2.png?v=1',
@@ -1898,16 +1921,12 @@ class YambApp {
                     'assets/easter-soft-clay/tournament/state-registration-locked-v2.png?v=1',
                     'assets/easter-soft-clay/tournament/state-start-v2.png?v=1',
                     'assets/easter-soft-clay/tournament/state-match-active-v2.png?v=1',
-                    'assets/easter-soft-clay/tournament/state-match-complete-v2.png?v=2',
-                    'assets/easter-soft-clay/tournament/podium-gold-v2.png?v=opt2',
-                    'assets/easter-soft-clay/tournament/podium-silver-v3.png?v=opt2',
-                    'assets/easter-soft-clay/tournament/podium-bronze-v2.png?v=opt2',
-                    'assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=opt2'
+                    'assets/easter-soft-clay/tournament/state-match-complete-v2.png?v=2'
                 ]
             },
             desert: {
                 title: lang === 'en' ? 'Desert Glass' : 'Pustinjsko staklo',
-                background: 'assets/desert-neumorphic-bg-v1.png',
+                background: 'assets/theme-backgrounds/desert-v8-2.png',
                 icons: [
                     'assets/desert-soft-clay/mode-solo-pro.png?v=1',
                     'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
@@ -2048,7 +2067,7 @@ class YambApp {
             },
             severna: {
                 title: lang === 'en' ? 'Northern Nebula' : 'Severna maglina',
-                background: 'assets/severna-maglina-bg-v3-neuphoric.png',
+                background: 'assets/theme-backgrounds/severna-v4.png',
                 icons: [
                     'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
                     'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
@@ -2161,6 +2180,18 @@ class YambApp {
         return '';
     }
 
+    getMainRoomPackSource(theme, roomId, variant = 'room') {
+        const themes = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'];
+        if (!themes.includes(theme)) return '';
+        const role = { opponent: 'online-random', invite: 'invite-friend', globalChat: 'global-chat',
+            onlinePlayers: 'online-players', quarterlyLeague: 'quarterly-league',
+            dailyChallenge: 'daily' }[roomId] || roomId;
+        const roles = ['solo', 'hotseat', 'online-random', 'invite-friend', 'daily', 'global-chat',
+            'leaderboard', 'online-players', 'quarterly-league', 'rules', 'settings', 'statistics'];
+        if (!roles.includes(role)) return '';
+        return `assets/theme-packs/${theme}/canonical/${role}-room-identity/${role}-room${variant === 'menu' ? '-menu' : ''}-v1.png`;
+    }
+
     getThemeSplashSource(theme) {
         const sources = {
             dark: 'assets/green-soft-clay/splash-title-soft-clay-v1.png?v=2',
@@ -2236,9 +2267,9 @@ class YambApp {
             quarterlyLeague: path => path.startsWith('ql/') || path.startsWith('quarterly-league') || path.startsWith('canonical/competition-medals/quarterly-league-') || path === 'canonical/quarterly-league-room-identity/quarterly-league-room-v1.png',
             treasury: path => path.startsWith('treasury/') || path.startsWith('treasury-') || path.startsWith('economy/ducat') || path.startsWith('canonical/collection-medals/') || path.startsWith('canonical/achievement-trophies/') || path.startsWith('canonical/treasury-controls/') || path.startsWith('canonical/treasury-effect-previews/') || (theme !== 'dark' && path.includes('rewarded-video')),
             tournament: path => path.startsWith('tournament/') || path.startsWith('tournament-') || path.startsWith('canonical/tournament-navigation/') || path.startsWith('canonical/tournament-states/') || path.startsWith('canonical/tournament-awards/') || path === 'canonical/statistics-overview/power-index-v1.png',
-            solo: path => path.startsWith('solo/') || path.startsWith('canonical/solo-results/') || path === 'canonical/solo-room-identity/solo-room-v1.png',
-            hotseat: path => path.startsWith('hotseat/') || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
-            opponent: path => path.startsWith('opponent/') || path === 'canonical/online-random-room-identity/online-random-room-v1.png',
+            solo: path => path.startsWith('solo/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/solo-results/') || path === 'canonical/solo-room-identity/solo-room-v1.png',
+            hotseat: path => path.startsWith('hotseat/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png',
+            opponent: path => path.startsWith('opponent/') || (theme === 'easter' && path.startsWith('game/')) || path === 'canonical/online-random-room-identity/online-random-room-v1.png',
             invite: path => path.startsWith('invite/') || path === 'canonical/invite-friend-room-identity/invite-friend-room-v1.png'
         };
         const matcher = matchers[safeRoomId];
@@ -2287,13 +2318,15 @@ class YambApp {
             || localStorage.getItem('yamb_theme')
             || 'dark';
         const themeRoot = this.getThemeAssetRoot(theme);
-        if (!themeRoot) return Promise.resolve();
+        const roomIcon = this.getMainRoomPackSource(theme, roomId);
+        if (!themeRoot && !roomIcon) return Promise.resolve();
 
         const roomRoot = root || this.getThemeRoomRoot(roomId);
         const sources = [...new Set([
             ...this.getThemeRoomSources(theme, roomId),
-            ...this.collectThemeSourcesFromRoot(theme, roomRoot)
-        ])];
+            ...this.collectThemeSourcesFromRoot(theme, roomRoot),
+            roomIcon
+        ].filter(Boolean))];
         this.hydrateThemeImageSources(theme, { sources });
         if (sources.length === 0) return Promise.resolve();
 
@@ -3838,7 +3871,7 @@ class YambApp {
             const safeScore = Number(p.score || 0).toLocaleString(localStorage.getItem('yamb_lang') === 'en' ? 'en-US' : 'sr-RS');
             const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
             const podiumSrc = activeTheme === 'easter'
-                ? `assets/easter-soft-clay/leaderboard/medal-${medalAsset}-v4.png?v=1`
+                ? `assets/easter-soft-clay/canonical/competition-medals/${medalAsset}-v1.png?v=1`
                 : activeTheme === 'desert'
                     ? `assets/desert-soft-clay/leaderboard/medal-${medalAsset}-v4.png?v=1`
                     : activeTheme === 'severna'
@@ -4430,7 +4463,7 @@ class YambApp {
                         );
                     } else if (data.role === 'runnerup') {
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" data-theme-src="assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" data-theme-src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
+                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" data-theme-src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_runnerup') || `Kao finalisti, vraćen Vam je ulog od 5500 ${dukatIconHtml()}. Više sreće sledeći put!`}`,
                             gt('tourney_finalist_title') || "FINALISTA 🥈",
                             { contextClass: 'tourney-finalist' }
                         );
@@ -5866,7 +5899,11 @@ class YambApp {
     }
 
     shouldPlayThemedRoomIntro(roomId) {
-        return this.shouldPlayGreenRoomIntro(roomId)
+        const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
+        return (['light', 'medium', 'winter', 'neon', 'amethyst', 'moon'].includes(activeTheme)
+            && ['leaderboard', 'statistics', 'settings', 'rules', 'globalChat', 'onlinePlayers',
+                'solo', 'hotseat', 'opponent', 'invite'].includes(roomId))
+            || this.shouldPlayGreenRoomIntro(roomId)
             || this.shouldPlayEasterRoomIntro()
             || this.shouldPlayDesertRoomIntro(roomId)
             || this.shouldPlaySevernaRoomIntro(roomId);
@@ -5881,7 +5918,7 @@ class YambApp {
 
         const rooms = {
             leaderboard: {
-                icon: 'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1',
+                icon: 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1',
                 greenIcon: 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
                 desertIcon: 'assets/desert-soft-clay/leaderboard-pro-v2.png?v=1',
                 severnaIcon: 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
@@ -5995,7 +6032,10 @@ class YambApp {
         }
 
         const activeTheme = localStorage.getItem('yamb_theme') || 'dark';
-        const introTheme = activeTheme === 'dark' && room.greenIcon
+        const roomPackIcon = this.getMainRoomPackSource(activeTheme, roomId);
+        const introTheme = roomPackIcon
+            ? activeTheme
+            : activeTheme === 'dark' && room.greenIcon
             ? 'dark'
             : activeTheme === 'severna' && room.severnaIcon
             ? 'severna'
@@ -6005,14 +6045,14 @@ class YambApp {
         const isDesertIconOnly = introTheme === 'desert'
             && ['leaderboard', 'statistics', 'settings', 'globalChat', 'onlinePlayers', 'economy', 'solo'].includes(roomId);
         const isGreenIconOnly = introTheme === 'dark' && ['leaderboard', 'statistics', 'settings', 'rules', 'globalChat', 'onlinePlayers', 'economy', 'solo', 'hotseat', 'opponent', 'invite'].includes(roomId);
-        const isIconOnly = isGreenIconOnly || isEasterIconOnly || isDesertIconOnly;
+        const isIconOnly = !!roomPackIcon || isGreenIconOnly || isEasterIconOnly || isDesertIconOnly;
 
         if (iconElement) {
-            iconElement.src = introTheme === 'dark'
+            iconElement.src = roomPackIcon || (introTheme === 'dark'
                 ? room.greenIcon
                 : introTheme === 'severna'
                 ? room.severnaIcon
-                : (introTheme === 'desert' ? room.desertIcon : room.icon);
+                : (introTheme === 'desert' ? room.desertIcon : room.icon));
             const roomIconScale = room.scale || 1;
             iconElement.style.setProperty('--easter-room-icon-scale', roomIconScale);
             iconElement.style.setProperty('--easter-room-icon-pulse-scale', roomIconScale * 1.035);
@@ -6051,7 +6091,9 @@ class YambApp {
         if (!isIconOnly) titleElement.setAttribute('aria-label', titleLines.join(' – '));
 
         this.easterRoomIntroPlaying = true;
-        overlay.classList.remove('theme-dark', 'theme-easter', 'theme-desert', 'theme-severna', 'easter-room-intro--icon-only');
+        overlay.classList.remove('theme-dark', 'theme-light', 'theme-medium', 'theme-winter',
+            'theme-neon', 'theme-amethyst', 'theme-easter', 'theme-desert', 'theme-moon',
+            'theme-severna', 'easter-room-intro--icon-only');
         overlay.classList.add(`theme-${introTheme}`);
         overlay.classList.toggle('easter-room-intro--icon-only', isIconOnly);
         overlay.classList.add('hidden');
@@ -6951,12 +6993,12 @@ class YambApp {
                 ? `medal-${medalType}-v3.png?v=1`
                 : (activeQlRewardTheme === 'dark'
                     ? `medal-${medalType}-v1.png?v=1`
-                    : (activeQlRewardTheme === 'easter'
-                        ? `medal-${medalType}-v2.png?v=4`
-                        : `medal-${medalType}.png?v=2`));
+                    : `medal-${medalType}.png?v=2`);
             const qlMedalSource = activeQlRewardTheme === 'dark'
                 ? `assets/green-soft-clay/canonical/competition-medals/quarterly-league-${medalType}-v1.png?v=1`
-                : `${qlAssetRoot}/${qlMedalFile}`;
+                : activeQlRewardTheme === 'easter'
+                    ? `assets/easter-soft-clay/canonical/competition-medals/${medalType}-v1.png?v=1`
+                    : `${qlAssetRoot}/${qlMedalFile}`;
             let medalja = `<span class="ql-quarter-reward-medal"><img class="ql-placement-medal ql-placement-medal--reward" src="${qlMedalSource}" alt="" aria-hidden="true" decoding="async"><span class="ql-medal-fallback" aria-hidden="true">${medalEmoji}</span></span>`;
             let msg = (gt('quarter_reward_msg') || `Čestitamo! Osvojili ste {0}. mesto {1} u Kvartalnoj ligi i nagradu od {2} ${dukatIconHtml()}!`)
                         .replace('{0}', rank).replace('{1}', medalja).replace('{2}', reward);
@@ -8186,7 +8228,23 @@ class YambApp {
             KOLONE.forEach((colName, i) => { 
                 let d = document.createElement('div'); 
                 d.className = 'grid-cell col-header ' + (classes[i] || ""); 
-                d.innerText = colLabels[colName] || colName; 
+                if (colName === 'Najava') {
+                    const label = document.createElement('span');
+                    label.className = 'easter-announce-col-fallback';
+                    label.textContent = colLabels[colName] || colName;
+                    d.appendChild(label);
+                    const icon = document.createElement('img');
+                    icon.className = 'easter-announce-col-icon';
+                    icon.dataset.themeSrc = 'assets/easter-soft-clay/game/announce-v1.png?v=1';
+                    icon.loading = 'lazy';
+                    icon.alt = '';
+                    icon.setAttribute('aria-hidden', 'true');
+                    icon.decoding = 'async';
+                    d.appendChild(icon);
+                    d.setAttribute('aria-label', gt('game_announce') || 'Najava');
+                } else {
+                    d.innerText = colLabels[colName] || colName;
+                }
                 grid.appendChild(d); 
             }); 
             
@@ -9014,7 +9072,7 @@ class YambApp {
             const trophySrc = isEasterTheme
                 ? (isWinner
                     ? 'assets/easter-soft-clay/tournament-pro-v4.png?v=1'
-                    : 'assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=opt2')
+                    : 'assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1')
                 : (isDesertTheme
                     ? (isWinner
                         ? 'assets/desert-soft-clay/tournament-pro.png?v=4'
@@ -10428,11 +10486,13 @@ class YambApp {
             ? 'medal-gold-v3.png?v=1'
             : (activeQlWinnerTheme === 'dark'
                 ? 'medal-gold-v1.png?v=1'
-                : (activeQlWinnerTheme === 'easter' ? 'medal-gold-v2.png?v=1' : 'medal-gold.png?v=2'));
-        const qlChampionMedalSource = activeQlWinnerTheme === 'dark'
-            ? (this.getThemeRoomSources('dark', 'quarterlyLeague')
-                .find(source => /\/competition-medals\/quarterly-league-gold-v1\.png(?:\?|$)/.test(source)) || '')
-            : `${qlAssetRoot}/${qlChampionMedalFile}`;
+                : 'medal-gold.png?v=2');
+            const qlChampionMedalSource = activeQlWinnerTheme === 'dark'
+                ? (this.getThemeRoomSources('dark', 'quarterlyLeague')
+                    .find(source => /\/competition-medals\/quarterly-league-gold-v1\.png(?:\?|$)/.test(source)) || '')
+            : activeQlWinnerTheme === 'easter'
+                ? 'assets/easter-soft-clay/canonical/competition-medals/gold-v1.png?v=1'
+                : `${qlAssetRoot}/${qlChampionMedalFile}`;
         
         let title = gt('league_champion_title') || "ŠAMPION KVARTALNE LIGE";
         let subText = (gt('league_winner_q') || "Pobednik za Q{0} / {1}.").replace('{0}', data.quarter).replace('{1}', data.year);

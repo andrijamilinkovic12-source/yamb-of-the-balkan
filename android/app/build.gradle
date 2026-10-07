@@ -24,6 +24,11 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        // Local packaged-web QA only; normal debug and release keep server.url.
+        qaLocal {
+            initWith debug
+            matchingFallbacks = ['debug']
+        }
     }
 
     // --- AŽURIRANO: Kompatibilnost za Javu 17 ---

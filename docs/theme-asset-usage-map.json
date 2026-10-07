@@ -1,0 +1,4787 @@
+{
+  "schemaVersion": 1,
+  "referenceThemeId": "dark",
+  "alphaThresholdInclusive": 16,
+  "measurement": "Pillow alpha bounding box on each unmodified Green PNG; RGB background uses full canvas.",
+  "sourceReferenceScope": "Top-level production www JS/CSS/HTML/JSON and Green manifest/asset registry only; dynamic references and other consumers require runtime review.",
+  "note": "Contexts are initial route candidates, not verified per-screen usage. False runtimeUseVerified is deliberate until each slot is checked in the app.",
+  "requiredSlotCount": 177,
+  "slots": [
+    {
+      "slotId": "background/main",
+      "greenReference": "assets/green-clay-balkan-diorama-v4.png",
+      "intendedContexts": [
+        "splash",
+        "main-menu",
+        "all-rooms"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1588",
+        "www/index.html:167",
+        "www/teme.css:7090",
+        "www/teme.css:7192",
+        "www/teme.css:19178",
+        "www/teme.css:20358",
+        "www/teme.css:21988",
+        "www/themes/green/manifest.json:6"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 1864586,
+      "greenDecodedRgbaBytes": 6293408,
+      "greenOpticalBoundsPx": {
+        "left": 0,
+        "top": 0,
+        "rightExclusive": 941,
+        "bottomExclusive": 1672,
+        "widthFraction": 1.0,
+        "heightFraction": 1.0,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/achilles-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/achilles-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1732",
+        "www/themes/green/asset-registry.json:308"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 62954,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 32,
+        "top": 13,
+        "rightExclusive": 224,
+        "bottomExclusive": 234,
+        "widthFraction": 0.75,
+        "heightFraction": 0.8633,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4824
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/apprentice-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/apprentice-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1712",
+        "www/themes/green/asset-registry.json:287"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 48569,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 28,
+        "top": 27,
+        "rightExclusive": 230,
+        "bottomExclusive": 220,
+        "widthFraction": 0.7891,
+        "heightFraction": 0.7539,
+        "centerXFraction": 0.5039,
+        "centerYFraction": 0.4824
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/close_call-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/close_call-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1733",
+        "www/themes/green/asset-registry.json:309"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 52391,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 17,
+        "top": 49,
+        "rightExclusive": 239,
+        "bottomExclusive": 203,
+        "widthFraction": 0.8672,
+        "heightFraction": 0.6016,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4922
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/concrete-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/concrete-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1726",
+        "www/themes/green/asset-registry.json:299"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 57601,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 6,
+        "top": 57,
+        "rightExclusive": 249,
+        "bottomExclusive": 204,
+        "widthFraction": 0.9492,
+        "heightFraction": 0.5742,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.5098
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/firecracker-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/firecracker-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1725",
+        "www/themes/green/asset-registry.json:305"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 59464,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 49,
+        "top": 6,
+        "rightExclusive": 207,
+        "bottomExclusive": 234,
+        "widthFraction": 0.6172,
+        "heightFraction": 0.8906,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4688
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/first_play-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1711",
+        "www/themes/green/asset-registry.json:286"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 50086,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 44,
+        "top": 39,
+        "rightExclusive": 213,
+        "bottomExclusive": 215,
+        "widthFraction": 0.6602,
+        "heightFraction": 0.6875,
+        "centerXFraction": 0.502,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/godlike-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/godlike-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1718",
+        "www/themes/green/asset-registry.json:294"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 76642,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 13,
+        "top": 24,
+        "rightExclusive": 243,
+        "bottomExclusive": 230,
+        "widthFraction": 0.8984,
+        "heightFraction": 0.8047,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/grandmaster-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/grandmaster-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1715",
+        "www/themes/green/asset-registry.json:291"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 55057,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 21,
+        "top": 35,
+        "rightExclusive": 235,
+        "bottomExclusive": 223,
+        "widthFraction": 0.8359,
+        "heightFraction": 0.7344,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5039
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/hazard-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/hazard-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1724",
+        "www/themes/green/asset-registry.json:304"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 62054,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 13,
+        "top": 23,
+        "rightExclusive": 243,
+        "bottomExclusive": 230,
+        "widthFraction": 0.8984,
+        "heightFraction": 0.8086,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4941
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/immortal-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/immortal-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1729",
+        "www/themes/green/asset-registry.json:302"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 71945,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 26,
+        "top": 12,
+        "rightExclusive": 230,
+        "bottomExclusive": 244,
+        "widthFraction": 0.7969,
+        "heightFraction": 0.9062,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/kafana-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/kafana-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1713",
+        "www/themes/green/asset-registry.json:289"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 53916,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 15,
+        "top": 51,
+        "rightExclusive": 241,
+        "bottomExclusive": 211,
+        "widthFraction": 0.8828,
+        "heightFraction": 0.625,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5117
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/legend-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/legend-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1716",
+        "www/themes/green/asset-registry.json:292"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 46692,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 40,
+        "top": 20,
+        "rightExclusive": 216,
+        "bottomExclusive": 235,
+        "widthFraction": 0.6875,
+        "heightFraction": 0.8398,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.498
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/math-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/math-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1722",
+        "www/themes/green/asset-registry.json:298"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 54645,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 23,
+        "rightExclusive": 232,
+        "bottomExclusive": 219,
+        "widthFraction": 0.7656,
+        "heightFraction": 0.7656,
+        "centerXFraction": 0.5234,
+        "centerYFraction": 0.4727
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/miner-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/miner-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1728",
+        "www/themes/green/asset-registry.json:301"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 65615,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 41,
+        "top": 22,
+        "rightExclusive": 235,
+        "bottomExclusive": 230,
+        "widthFraction": 0.7578,
+        "heightFraction": 0.8125,
+        "centerXFraction": 0.5391,
+        "centerYFraction": 0.4922
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/minimal-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/minimal-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1731",
+        "www/themes/green/asset-registry.json:307"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 38616,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 37,
+        "top": 42,
+        "rightExclusive": 219,
+        "bottomExclusive": 215,
+        "widthFraction": 0.7109,
+        "heightFraction": 0.6758,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/mythic-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/mythic-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1717",
+        "www/themes/green/asset-registry.json:293"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 65532,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 11,
+        "rightExclusive": 222,
+        "bottomExclusive": 247,
+        "widthFraction": 0.7266,
+        "heightFraction": 0.9219,
+        "centerXFraction": 0.5039,
+        "centerYFraction": 0.5039
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/night_owl-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/night_owl-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1734",
+        "www/themes/green/asset-registry.json:310"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 64780,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 42,
+        "top": 12,
+        "rightExclusive": 214,
+        "bottomExclusive": 239,
+        "widthFraction": 0.6719,
+        "heightFraction": 0.8867,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4902
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/perfectionist-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/perfectionist-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1727",
+        "www/themes/green/asset-registry.json:300"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 69834,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 41,
+        "top": 26,
+        "rightExclusive": 235,
+        "bottomExclusive": 223,
+        "widthFraction": 0.7578,
+        "heightFraction": 0.7695,
+        "centerXFraction": 0.5391,
+        "centerYFraction": 0.4863
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/potato-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/potato-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1730",
+        "www/themes/green/asset-registry.json:306"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 55146,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 42,
+        "top": 37,
+        "rightExclusive": 218,
+        "bottomExclusive": 217,
+        "widthFraction": 0.6875,
+        "heightFraction": 0.7031,
+        "centerXFraction": 0.5078,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/prophet-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/prophet-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1720",
+        "www/themes/green/asset-registry.json:296"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 61655,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 46,
+        "top": 14,
+        "rightExclusive": 208,
+        "bottomExclusive": 240,
+        "widthFraction": 0.6328,
+        "heightFraction": 0.8828,
+        "centerXFraction": 0.4961,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/score_1000-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/score_1000-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1714",
+        "www/themes/green/asset-registry.json:290"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 63328,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 6,
+        "top": 25,
+        "rightExclusive": 250,
+        "bottomExclusive": 228,
+        "widthFraction": 0.9531,
+        "heightFraction": 0.793,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4941
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/sniper-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/sniper-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1721",
+        "www/themes/green/asset-registry.json:297"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 60364,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 33,
+        "top": 32,
+        "rightExclusive": 223,
+        "bottomExclusive": 221,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.7383,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4941
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/spite-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/spite-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1735",
+        "www/themes/green/asset-registry.json:311"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 52958,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 60,
+        "top": 24,
+        "rightExclusive": 228,
+        "bottomExclusive": 233,
+        "widthFraction": 0.6562,
+        "heightFraction": 0.8164,
+        "centerXFraction": 0.5625,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/surgeon-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/surgeon-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1719",
+        "www/themes/green/asset-registry.json:295"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 57255,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 41,
+        "top": 26,
+        "rightExclusive": 220,
+        "bottomExclusive": 227,
+        "widthFraction": 0.6992,
+        "heightFraction": 0.7852,
+        "centerXFraction": 0.5098,
+        "centerYFraction": 0.4941
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/sveti_ilija-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1723",
+        "www/themes/green/asset-registry.json:303"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 63866,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 22,
+        "top": 25,
+        "rightExclusive": 234,
+        "bottomExclusive": 236,
+        "widthFraction": 0.8281,
+        "heightFraction": 0.8242,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5098
+      }
+    },
+    {
+      "slotId": "canonical/achievement-trophies/veteran-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/veteran-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1736",
+        "www/themes/green/asset-registry.json:288"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 55949,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 64,
+        "top": 19,
+        "rightExclusive": 191,
+        "bottomExclusive": 237,
+        "widthFraction": 0.4961,
+        "heightFraction": 0.8516,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/collection-medals/collection-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/collection-medals/collection-bronze-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1708",
+        "www/themes/green/asset-registry.json:247"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 70264,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 12,
+        "rightExclusive": 217,
+        "bottomExclusive": 244,
+        "widthFraction": 0.707,
+        "heightFraction": 0.9062,
+        "centerXFraction": 0.4941,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/collection-medals/collection-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/collection-medals/collection-gold-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1710",
+        "www/themes/green/asset-registry.json:245"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 67133,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 30,
+        "top": 13,
+        "rightExclusive": 226,
+        "bottomExclusive": 241,
+        "widthFraction": 0.7656,
+        "heightFraction": 0.8906,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/collection-medals/collection-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/collection-medals/collection-silver-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1709",
+        "www/themes/green/asset-registry.json:246"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 64571,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 37,
+        "top": 17,
+        "rightExclusive": 219,
+        "bottomExclusive": 238,
+        "widthFraction": 0.7109,
+        "heightFraction": 0.8633,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.498
+      }
+    },
+    {
+      "slotId": "canonical/competition-medals/general-podium-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png",
+      "intendedContexts": [
+        "quarterly-league",
+        "tournament",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1640",
+        "www/themes/green/asset-registry.json:190"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 60710,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 38,
+        "top": 23,
+        "rightExclusive": 218,
+        "bottomExclusive": 229,
+        "widthFraction": 0.7031,
+        "heightFraction": 0.8047,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4922
+      }
+    },
+    {
+      "slotId": "canonical/competition-medals/general-podium-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v1.png",
+      "intendedContexts": [
+        "quarterly-league",
+        "tournament",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1638",
+        "www/themes/green/asset-registry.json:188"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 60173,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 26,
+        "rightExclusive": 219,
+        "bottomExclusive": 230,
+        "widthFraction": 0.7148,
+        "heightFraction": 0.7969,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/competition-medals/general-podium-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v1.png",
+      "intendedContexts": [
+        "quarterly-league",
+        "tournament",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1639",
+        "www/themes/green/asset-registry.json:189"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 57252,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 37,
+        "top": 26,
+        "rightExclusive": 218,
+        "bottomExclusive": 228,
+        "widthFraction": 0.707,
+        "heightFraction": 0.7891,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/competition-medals/quarterly-league-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png",
+      "intendedContexts": [
+        "quarterly-league",
+        "tournament",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1761",
+        "www/pravilaigre.js:234",
+        "www/themes/green/asset-registry.json:193"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 58523,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 26,
+        "rightExclusive": 219,
+        "bottomExclusive": 230,
+        "widthFraction": 0.7148,
+        "heightFraction": 0.7969,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/competition-medals/quarterly-league-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png",
+      "intendedContexts": [
+        "quarterly-league",
+        "tournament",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1759",
+        "www/pravilaigre.js:234",
+        "www/themes/green/asset-registry.json:191"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 61215,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 31,
+        "top": 21,
+        "rightExclusive": 224,
+        "bottomExclusive": 236,
+        "widthFraction": 0.7539,
+        "heightFraction": 0.8398,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/competition-medals/quarterly-league-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png",
+      "intendedContexts": [
+        "quarterly-league",
+        "tournament",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1760",
+        "www/pravilaigre.js:234",
+        "www/themes/green/asset-registry.json:192"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 56129,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 26,
+        "rightExclusive": 219,
+        "bottomExclusive": 230,
+        "widthFraction": 0.7148,
+        "heightFraction": 0.7969,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/daily-room-identity/daily-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "daily-challenge"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/index.html:744",
+        "www/themes/green/asset-registry.json:1054"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 124828,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 59,
+        "rightExclusive": 349,
+        "bottomExclusive": 343,
+        "widthFraction": 0.8151,
+        "heightFraction": 0.7396,
+        "centerXFraction": 0.5013,
+        "centerYFraction": 0.5234
+      }
+    },
+    {
+      "slotId": "canonical/daily-room-identity/daily-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "daily-challenge"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/dnevniizazov.js:727",
+        "www/game.js:1598",
+        "www/index.html:1168",
+        "www/pravilaigre.js:147",
+        "www/themes/green/asset-registry.json:1053"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 209611,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 48,
+        "top": 79,
+        "rightExclusive": 465,
+        "bottomExclusive": 457,
+        "widthFraction": 0.8145,
+        "heightFraction": 0.7383,
+        "centerXFraction": 0.501,
+        "centerYFraction": 0.5234
+      }
+    },
+    {
+      "slotId": "canonical/daily-states/already-played-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-states/already-played-v1.png",
+      "intendedContexts": [
+        "daily-challenge"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/dnevniizazov.js:1014",
+        "www/game.js:1628",
+        "www/themes/green/asset-registry.json:1508"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 118655,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 30,
+        "top": 54,
+        "rightExclusive": 366,
+        "bottomExclusive": 340,
+        "widthFraction": 0.875,
+        "heightFraction": 0.7448,
+        "centerXFraction": 0.5156,
+        "centerYFraction": 0.513
+      }
+    },
+    {
+      "slotId": "canonical/daily-states/complete-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-states/complete-v1.png",
+      "intendedContexts": [
+        "daily-challenge"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/dnevniizazov.js:1256",
+        "www/game.js:1627",
+        "www/themes/green/asset-registry.json:1507"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 117989,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 46,
+        "top": 47,
+        "rightExclusive": 339,
+        "bottomExclusive": 338,
+        "widthFraction": 0.763,
+        "heightFraction": 0.7578,
+        "centerXFraction": 0.5013,
+        "centerYFraction": 0.5013
+      }
+    },
+    {
+      "slotId": "canonical/daily-states/task-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-states/task-v1.png",
+      "intendedContexts": [
+        "daily-challenge"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/dnevniizazov.js:728",
+        "www/game.js:1626",
+        "www/themes/green/asset-registry.json:1506"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 106757,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 60,
+        "top": 42,
+        "rightExclusive": 330,
+        "bottomExclusive": 346,
+        "widthFraction": 0.7031,
+        "heightFraction": 0.7917,
+        "centerXFraction": 0.5078,
+        "centerYFraction": 0.5052
+      }
+    },
+    {
+      "slotId": "canonical/ducat/ducat-angle-left-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-angle-left-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "economy",
+        "treasury",
+        "daily-challenge",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1633",
+        "www/themes/green/asset-registry.json:21"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 184816,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 73,
+        "top": 61,
+        "rightExclusive": 440,
+        "bottomExclusive": 450,
+        "widthFraction": 0.7168,
+        "heightFraction": 0.7598,
+        "centerXFraction": 0.501,
+        "centerYFraction": 0.499
+      }
+    },
+    {
+      "slotId": "canonical/ducat/ducat-angle-right-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-angle-right-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "economy",
+        "treasury",
+        "daily-challenge",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1634",
+        "www/themes/green/asset-registry.json:22"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 185826,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 75,
+        "top": 61,
+        "rightExclusive": 435,
+        "bottomExclusive": 452,
+        "widthFraction": 0.7031,
+        "heightFraction": 0.7637,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.501
+      }
+    },
+    {
+      "slotId": "canonical/ducat/ducat-front-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-front-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "economy",
+        "treasury",
+        "daily-challenge",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1630",
+        "www/index.html:360",
+        "www/index.html:380",
+        "www/index.html:406",
+        "www/themes/green/asset-registry.json:18"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 200404,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 65,
+        "top": 62,
+        "rightExclusive": 445,
+        "bottomExclusive": 449,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.7559,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.499
+      }
+    },
+    {
+      "slotId": "canonical/ducat/ducat-inline-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "economy",
+        "treasury",
+        "daily-challenge",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/dnevniizazov.js:1305",
+        "www/game.js:1631",
+        "www/index.html:427",
+        "www/index.html:940",
+        "www/index.html:1131",
+        "www/index.html:1136",
+        "www/index.html:1396",
+        "www/languages.js:1708",
+        "www/pravilaigre.js:166",
+        "www/themes/green/asset-registry.json:19"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 34617,
+      "greenDecodedRgbaBytes": 147456,
+      "greenOpticalBoundsPx": {
+        "left": 24,
+        "top": 23,
+        "rightExclusive": 167,
+        "bottomExclusive": 169,
+        "widthFraction": 0.7448,
+        "heightFraction": 0.7604,
+        "centerXFraction": 0.4974,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/ducat/ducat-particle-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "economy",
+        "treasury",
+        "daily-challenge",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/efekti.css:3525",
+        "www/game.js:1632",
+        "www/managers.js:1738",
+        "www/teme.css:2864",
+        "www/themes/green/asset-registry.json:20"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 18036,
+      "greenDecodedRgbaBytes": 65536,
+      "greenOpticalBoundsPx": {
+        "left": 16,
+        "top": 15,
+        "rightExclusive": 112,
+        "bottomExclusive": 113,
+        "widthFraction": 0.75,
+        "heightFraction": 0.7656,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/global-chat-room-identity/global-chat-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "global-chat"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/index.html:599",
+        "www/themes/green/asset-registry.json:1208"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 108756,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 38,
+        "top": 70,
+        "rightExclusive": 347,
+        "bottomExclusive": 332,
+        "widthFraction": 0.8047,
+        "heightFraction": 0.6823,
+        "centerXFraction": 0.5013,
+        "centerYFraction": 0.5234
+      }
+    },
+    {
+      "slotId": "canonical/global-chat-room-identity/global-chat-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "global-chat"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1611",
+        "www/game.js:5944",
+        "www/index.html:1763",
+        "www/pravilaigre.js:160",
+        "www/themes/green/asset-registry.json:1207"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 178822,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 50,
+        "top": 94,
+        "rightExclusive": 462,
+        "bottomExclusive": 442,
+        "widthFraction": 0.8047,
+        "heightFraction": 0.6797,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5234
+      }
+    },
+    {
+      "slotId": "canonical/h2h-statistics/h2h-empty-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/h2h-empty-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "h2h"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:871",
+        "www/game.js:1652",
+        "www/game.js:2976",
+        "www/themes/green/asset-registry.json:887"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 49705,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 34,
+        "top": 123,
+        "rightExclusive": 350,
+        "bottomExclusive": 260,
+        "widthFraction": 0.8229,
+        "heightFraction": 0.3568,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4987
+      }
+    },
+    {
+      "slotId": "canonical/h2h-statistics/h2h-identity-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/h2h-identity-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "h2h"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1651",
+        "www/index.html:954",
+        "www/index.html:965",
+        "www/pravilaigre.js:175",
+        "www/themes/green/asset-registry.json:886"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 32497,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 26,
+        "top": 84,
+        "rightExclusive": 230,
+        "bottomExclusive": 178,
+        "widthFraction": 0.7969,
+        "heightFraction": 0.3672,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5117
+      }
+    },
+    {
+      "slotId": "canonical/h2h-statistics/highest-score-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/highest-score-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "h2h"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1042",
+        "www/game.js:1653",
+        "www/themes/green/asset-registry.json:888"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 32775,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 27,
+        "top": 32,
+        "rightExclusive": 229,
+        "bottomExclusive": 224,
+        "widthFraction": 0.7891,
+        "heightFraction": 0.75,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/h2h-statistics/max-win-margin-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/max-win-margin-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "h2h"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1043",
+        "www/game.js:1654",
+        "www/themes/green/asset-registry.json:889"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 8856,
+      "greenDecodedRgbaBytes": 131072,
+      "greenOpticalBoundsPx": {
+        "left": 62,
+        "top": 41,
+        "rightExclusive": 194,
+        "bottomExclusive": 88,
+        "widthFraction": 0.5156,
+        "heightFraction": 0.3672,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5039
+      }
+    },
+    {
+      "slotId": "canonical/h2h-statistics/versus-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/versus-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "h2h"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1084",
+        "www/game.js:1656",
+        "www/themes/green/asset-registry.json:891"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 52887,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 34,
+        "rightExclusive": 219,
+        "bottomExclusive": 215,
+        "widthFraction": 0.7148,
+        "heightFraction": 0.707,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.4863
+      }
+    },
+    {
+      "slotId": "canonical/h2h-statistics/worst-loss-margin-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/worst-loss-margin-v1.png",
+      "intendedContexts": [
+        "statistics",
+        "h2h"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1044",
+        "www/game.js:1655",
+        "www/themes/green/asset-registry.json:890"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 29980,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 44,
+        "top": 58,
+        "rightExclusive": 212,
+        "bottomExclusive": 212,
+        "widthFraction": 0.6562,
+        "heightFraction": 0.6016,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5273
+      }
+    },
+    {
+      "slotId": "canonical/hotseat-room-identity/hotseat-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "hotseat"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1592",
+        "www/index.html:676",
+        "www/themes/green/asset-registry.json:1384"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 74765,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 45,
+        "top": 110,
+        "rightExclusive": 339,
+        "bottomExclusive": 302,
+        "widthFraction": 0.7656,
+        "heightFraction": 0.5,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5365
+      }
+    },
+    {
+      "slotId": "canonical/hotseat-room-identity/hotseat-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "hotseat"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1671",
+        "www/game.js:5914",
+        "www/themes/green/asset-registry.json:1383"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 120269,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 60,
+        "top": 147,
+        "rightExclusive": 452,
+        "bottomExclusive": 403,
+        "widthFraction": 0.7656,
+        "heightFraction": 0.5,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5371
+      }
+    },
+    {
+      "slotId": "canonical/hotseat-winner/hotseat-winner-v1",
+      "greenReference": "assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png",
+      "intendedContexts": [
+        "hotseat",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1672",
+        "www/index.html:1382",
+        "www/themes/green/asset-registry.json:731"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 38409,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 45,
+        "top": 56,
+        "rightExclusive": 216,
+        "bottomExclusive": 209,
+        "widthFraction": 0.668,
+        "heightFraction": 0.5977,
+        "centerXFraction": 0.5098,
+        "centerYFraction": 0.5176
+      }
+    },
+    {
+      "slotId": "canonical/invite-friend-room-identity/invite-friend-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1594",
+        "www/index.html:710",
+        "www/themes/green/asset-registry.json:1466"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 92386,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 48,
+        "top": 68,
+        "rightExclusive": 340,
+        "bottomExclusive": 339,
+        "widthFraction": 0.7604,
+        "heightFraction": 0.7057,
+        "centerXFraction": 0.5052,
+        "centerYFraction": 0.5299
+      }
+    },
+    {
+      "slotId": "canonical/invite-friend-room-identity/invite-friend-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1679",
+        "www/game.js:5934",
+        "www/index.html:1438",
+        "www/pravilaigre.js:159",
+        "www/themes/green/asset-registry.json:1465"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 150862,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 64,
+        "top": 90,
+        "rightExclusive": 453,
+        "bottomExclusive": 452,
+        "widthFraction": 0.7598,
+        "heightFraction": 0.707,
+        "centerXFraction": 0.5049,
+        "centerYFraction": 0.5293
+      }
+    },
+    {
+      "slotId": "canonical/leaderboard-controls/empty-loading-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png",
+      "intendedContexts": [
+        "leaderboard"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1637",
+        "www/game.js:3709",
+        "www/game.js:3803",
+        "www/toplista.js:42",
+        "www/themes/green/asset-registry.json:1548"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 68504,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 27,
+        "top": 64,
+        "rightExclusive": 357,
+        "bottomExclusive": 334,
+        "widthFraction": 0.8594,
+        "heightFraction": 0.7031,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5182
+      }
+    },
+    {
+      "slotId": "canonical/leaderboard-controls/global-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-controls/global-v1.png",
+      "intendedContexts": [
+        "leaderboard"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1635",
+        "www/index.html:1219",
+        "www/index.html:1240",
+        "www/themes/green/asset-registry.json:1546"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 47269,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 20,
+        "top": 24,
+        "rightExclusive": 236,
+        "bottomExclusive": 228,
+        "widthFraction": 0.8438,
+        "heightFraction": 0.7969,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4922
+      }
+    },
+    {
+      "slotId": "canonical/leaderboard-controls/local-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-controls/local-v1.png",
+      "intendedContexts": [
+        "leaderboard"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1636",
+        "www/index.html:1227",
+        "www/index.html:1260",
+        "www/themes/green/asset-registry.json:1547"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 38952,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 58,
+        "top": 34,
+        "rightExclusive": 197,
+        "bottomExclusive": 219,
+        "widthFraction": 0.543,
+        "heightFraction": 0.7227,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.4941
+      }
+    },
+    {
+      "slotId": "canonical/leaderboard-room-identity/leaderboard-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "leaderboard"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/index.html:751",
+        "www/themes/green/asset-registry.json:1003"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 72226,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 31,
+        "top": 68,
+        "rightExclusive": 354,
+        "bottomExclusive": 333,
+        "widthFraction": 0.8411,
+        "heightFraction": 0.6901,
+        "centerXFraction": 0.5013,
+        "centerYFraction": 0.5221
+      }
+    },
+    {
+      "slotId": "canonical/leaderboard-room-identity/leaderboard-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "leaderboard"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1599",
+        "www/game.js:5874",
+        "www/index.html:1206",
+        "www/pravilaigre.js:148",
+        "www/themes/green/asset-registry.json:1002"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 116808,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 41,
+        "top": 91,
+        "rightExclusive": 471,
+        "bottomExclusive": 444,
+        "widthFraction": 0.8398,
+        "heightFraction": 0.6895,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5225
+      }
+    },
+    {
+      "slotId": "canonical/online-players-room-identity/online-players-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "online-players"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1590",
+        "www/index.html:610",
+        "www/themes/green/asset-registry.json:1255"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 94595,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 26,
+        "top": 88,
+        "rightExclusive": 357,
+        "bottomExclusive": 312,
+        "widthFraction": 0.862,
+        "heightFraction": 0.5833,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.5208
+      }
+    },
+    {
+      "slotId": "canonical/online-players-room-identity/online-players-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "online-players"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1614",
+        "www/game.js:5952",
+        "www/index.html:1811",
+        "www/pravilaigre.js:161",
+        "www/themes/green/asset-registry.json:1254"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 154856,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 35,
+        "top": 117,
+        "rightExclusive": 476,
+        "bottomExclusive": 415,
+        "widthFraction": 0.8613,
+        "heightFraction": 0.582,
+        "centerXFraction": 0.499,
+        "centerYFraction": 0.5195
+      }
+    },
+    {
+      "slotId": "canonical/online-random-room-identity/online-random-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "online-random"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1593",
+        "www/index.html:695",
+        "www/themes/green/asset-registry.json:1424"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 83367,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 78,
+        "top": 69,
+        "rightExclusive": 319,
+        "bottomExclusive": 307,
+        "widthFraction": 0.6276,
+        "heightFraction": 0.6198,
+        "centerXFraction": 0.5169,
+        "centerYFraction": 0.4896
+      }
+    },
+    {
+      "slotId": "canonical/online-random-room-identity/online-random-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "online-random"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1673",
+        "www/game.js:5924",
+        "www/index.html:1437",
+        "www/pravilaigre.js:158",
+        "www/themes/green/asset-registry.json:1423"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 135692,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 105,
+        "top": 92,
+        "rightExclusive": 426,
+        "bottomExclusive": 409,
+        "widthFraction": 0.627,
+        "heightFraction": 0.6191,
+        "centerXFraction": 0.5186,
+        "centerYFraction": 0.4893
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:2189",
+        "www/teme.css:19597",
+        "www/themes/green/asset-registry.json:1304"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 136653,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 15,
+        "top": 16,
+        "rightExclusive": 369,
+        "bottomExclusive": 370,
+        "widthFraction": 0.9219,
+        "heightFraction": 0.9219,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5026
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-league-room-identity/quarterly-league-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1748",
+        "www/game.js:10460",
+        "www/index.html:1157",
+        "www/kvartalnaliga.js:547",
+        "www/pravilaigre.js:165",
+        "www/themes/green/asset-registry.json:1303"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 217526,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 20,
+        "top": 21,
+        "rightExclusive": 492,
+        "bottomExclusive": 493,
+        "widthFraction": 0.9219,
+        "heightFraction": 0.9219,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-navigation/tab-champions-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-navigation/tab-champions-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1752",
+        "www/themes/green/asset-registry.json:534"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 63985,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 24,
+        "top": 38,
+        "rightExclusive": 232,
+        "bottomExclusive": 224,
+        "widthFraction": 0.8125,
+        "heightFraction": 0.7266,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5117
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-navigation/tab-hall-of-fame-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1750",
+        "www/themes/green/asset-registry.json:532"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 53357,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 27,
+        "top": 23,
+        "rightExclusive": 229,
+        "bottomExclusive": 231,
+        "widthFraction": 0.7891,
+        "heightFraction": 0.8125,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-navigation/tab-league-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-navigation/tab-league-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1749",
+        "www/themes/green/asset-registry.json:531"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 29593,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 46,
+        "top": 51,
+        "rightExclusive": 210,
+        "bottomExclusive": 214,
+        "widthFraction": 0.6406,
+        "heightFraction": 0.6367,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5176
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-navigation/tab-medals-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1751",
+        "www/themes/green/asset-registry.json:533"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 58295,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 29,
+        "top": 46,
+        "rightExclusive": 227,
+        "bottomExclusive": 202,
+        "widthFraction": 0.7734,
+        "heightFraction": 0.6094,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4844
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-alltime-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1758",
+        "www/themes/green/asset-registry.json:481"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 153842,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 14,
+        "top": 14,
+        "rightExclusive": 369,
+        "bottomExclusive": 369,
+        "widthFraction": 0.9245,
+        "heightFraction": 0.9245,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.4987
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-amater-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-amater-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1753",
+        "www/themes/green/asset-registry.json:476"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 102592,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 66,
+        "top": 41,
+        "rightExclusive": 318,
+        "bottomExclusive": 336,
+        "widthFraction": 0.6562,
+        "heightFraction": 0.7682,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4909
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-legenda-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-legenda-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1756",
+        "www/themes/green/asset-registry.json:479"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 177107,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 24,
+        "top": 12,
+        "rightExclusive": 359,
+        "bottomExclusive": 371,
+        "widthFraction": 0.8724,
+        "heightFraction": 0.9349,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.4987
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-majstor-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-majstor-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1755",
+        "www/themes/green/asset-registry.json:478"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 136674,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 15,
+        "top": 17,
+        "rightExclusive": 368,
+        "bottomExclusive": 368,
+        "widthFraction": 0.9193,
+        "heightFraction": 0.9141,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.5013
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-profi-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-profi-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1754",
+        "www/themes/green/asset-registry.json:477"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 139794,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 51,
+        "top": 17,
+        "rightExclusive": 333,
+        "bottomExclusive": 367,
+        "widthFraction": 0.7344,
+        "heightFraction": 0.9115,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-titan-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-titan-v1.png",
+      "intendedContexts": [
+        "quarterly-league"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1757",
+        "www/themes/green/asset-registry.json:480"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 157456,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 14,
+        "top": 16,
+        "rightExclusive": 369,
+        "bottomExclusive": 369,
+        "widthFraction": 0.9245,
+        "heightFraction": 0.9193,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.5013
+      }
+    },
+    {
+      "slotId": "canonical/rewarded-video/rewarded-video-active-inline-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+      "intendedContexts": [
+        "daily-challenge",
+        "economy",
+        "treasury",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1623",
+        "www/pravilaigre.js:168",
+        "www/themes/green/asset-registry.json:135"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 15743,
+      "greenDecodedRgbaBytes": 65536,
+      "greenOpticalBoundsPx": {
+        "left": 18,
+        "top": 26,
+        "rightExclusive": 113,
+        "bottomExclusive": 104,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.6094,
+        "centerXFraction": 0.5117,
+        "centerYFraction": 0.5078
+      }
+    },
+    {
+      "slotId": "canonical/rewarded-video/rewarded-video-active-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+      "intendedContexts": [
+        "daily-challenge",
+        "economy",
+        "treasury",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1622",
+        "www/index.html:423",
+        "www/index.html:469",
+        "www/themes/green/asset-registry.json:134"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 48652,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 53,
+        "rightExclusive": 226,
+        "bottomExclusive": 207,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.6016,
+        "centerXFraction": 0.5117,
+        "centerYFraction": 0.5078
+      }
+    },
+    {
+      "slotId": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+      "intendedContexts": [
+        "daily-challenge",
+        "economy",
+        "treasury",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1625",
+        "www/pravilaigre.js:169",
+        "www/themes/green/asset-registry.json:137"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 16809,
+      "greenDecodedRgbaBytes": 65536,
+      "greenOpticalBoundsPx": {
+        "left": 17,
+        "top": 25,
+        "rightExclusive": 112,
+        "bottomExclusive": 108,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.6484,
+        "centerXFraction": 0.5039,
+        "centerYFraction": 0.5195
+      }
+    },
+    {
+      "slotId": "canonical/rewarded-video/rewarded-video-unavailable-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+      "intendedContexts": [
+        "daily-challenge",
+        "economy",
+        "treasury",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1624",
+        "www/index.html:424",
+        "www/index.html:435",
+        "www/index.html:470",
+        "www/index.html:481",
+        "www/themes/green/asset-registry.json:136"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 51284,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 35,
+        "top": 51,
+        "rightExclusive": 223,
+        "bottomExclusive": 216,
+        "widthFraction": 0.7344,
+        "heightFraction": 0.6445,
+        "centerXFraction": 0.5039,
+        "centerYFraction": 0.5215
+      }
+    },
+    {
+      "slotId": "canonical/rules-page-illustrations/account-server-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png",
+      "intendedContexts": [
+        "rules"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1610",
+        "www/pravilaigre.js:146",
+        "www/themes/green/asset-registry.json:1590"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 240872,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 22,
+        "top": 23,
+        "rightExclusive": 489,
+        "bottomExclusive": 488,
+        "widthFraction": 0.9121,
+        "heightFraction": 0.9082,
+        "centerXFraction": 0.499,
+        "centerYFraction": 0.499
+      }
+    },
+    {
+      "slotId": "canonical/rules-page-illustrations/multiplayer-competitions-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png",
+      "intendedContexts": [
+        "rules"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1607",
+        "www/pravilaigre.js:143",
+        "www/themes/green/asset-registry.json:1589"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 193124,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 23,
+        "top": 75,
+        "rightExclusive": 489,
+        "bottomExclusive": 437,
+        "widthFraction": 0.9102,
+        "heightFraction": 0.707,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/rules-page-illustrations/rules-scoring-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png",
+      "intendedContexts": [
+        "rules"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1605",
+        "www/pravilaigre.js:141",
+        "www/themes/green/asset-registry.json:1587"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 188200,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 22,
+        "top": 110,
+        "rightExclusive": 490,
+        "bottomExclusive": 402,
+        "widthFraction": 0.9141,
+        "heightFraction": 0.5703,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/rules-page-illustrations/stats-leaderboards-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png",
+      "intendedContexts": [
+        "rules"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1606",
+        "www/pravilaigre.js:142",
+        "www/themes/green/asset-registry.json:1588"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 174369,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 23,
+        "top": 28,
+        "rightExclusive": 490,
+        "bottomExclusive": 484,
+        "widthFraction": 0.9121,
+        "heightFraction": 0.8906,
+        "centerXFraction": 0.501,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/rules-room-identity/rules-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "rules"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/index.html:772",
+        "www/themes/green/asset-registry.json:1156"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 108123,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 24,
+        "top": 79,
+        "rightExclusive": 360,
+        "bottomExclusive": 329,
+        "widthFraction": 0.875,
+        "heightFraction": 0.651,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5312
+      }
+    },
+    {
+      "slotId": "canonical/rules-room-identity/rules-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "rules"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1602",
+        "www/game.js:5898",
+        "www/pravilaigre.js:153",
+        "www/pravilaigre.js:598",
+        "www/themes/green/asset-registry.json:1155"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 175314,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 32,
+        "top": 105,
+        "rightExclusive": 480,
+        "bottomExclusive": 438,
+        "widthFraction": 0.875,
+        "heightFraction": 0.6504,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5303
+      }
+    },
+    {
+      "slotId": "canonical/settings-controls/display-theme-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png",
+      "intendedContexts": [
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1662",
+        "www/index.html:1339",
+        "www/managers.js:3730",
+        "www/themes/green/asset-registry.json:1636"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 57344,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 31,
+        "top": 23,
+        "rightExclusive": 232,
+        "bottomExclusive": 234,
+        "widthFraction": 0.7852,
+        "heightFraction": 0.8242,
+        "centerXFraction": 0.5137,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/settings-controls/language-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/language-v1.png",
+      "intendedContexts": [
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1663",
+        "www/index.html:1339",
+        "www/themes/green/asset-registry.json:1637"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 47659,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 44,
+        "top": 42,
+        "rightExclusive": 212,
+        "bottomExclusive": 215,
+        "widthFraction": 0.6562,
+        "heightFraction": 0.6758,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/settings-controls/music-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/music-v1.png",
+      "intendedContexts": [
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1660",
+        "www/index.html:1328",
+        "www/themes/green/asset-registry.json:1634"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 31850,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 60,
+        "top": 23,
+        "rightExclusive": 224,
+        "bottomExclusive": 233,
+        "widthFraction": 0.6406,
+        "heightFraction": 0.8203,
+        "centerXFraction": 0.5547,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/settings-controls/privacy-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/privacy-v1.png",
+      "intendedContexts": [
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1665",
+        "www/index.html:1363",
+        "www/pravilaigre.js:152",
+        "www/themes/green/asset-registry.json:1639"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 46345,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 43,
+        "top": 29,
+        "rightExclusive": 212,
+        "bottomExclusive": 227,
+        "widthFraction": 0.6602,
+        "heightFraction": 0.7734,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/settings-controls/profile-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/profile-v1.png",
+      "intendedContexts": [
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1658",
+        "www/index.html:1303",
+        "www/pravilaigre.js:151",
+        "www/themes/green/asset-registry.json:1632"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 40077,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 47,
+        "top": 40,
+        "rightExclusive": 219,
+        "bottomExclusive": 219,
+        "widthFraction": 0.6719,
+        "heightFraction": 0.6992,
+        "centerXFraction": 0.5195,
+        "centerYFraction": 0.5059
+      }
+    },
+    {
+      "slotId": "canonical/settings-controls/sound-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/sound-v1.png",
+      "intendedContexts": [
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1659",
+        "www/index.html:1323",
+        "www/themes/green/asset-registry.json:1633"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 41850,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 27,
+        "top": 52,
+        "rightExclusive": 236,
+        "bottomExclusive": 213,
+        "widthFraction": 0.8164,
+        "heightFraction": 0.6289,
+        "centerXFraction": 0.5137,
+        "centerYFraction": 0.5176
+      }
+    },
+    {
+      "slotId": "canonical/settings-controls/terms-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/terms-v1.png",
+      "intendedContexts": [
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1664",
+        "www/index.html:1361",
+        "www/themes/green/asset-registry.json:1638"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 50701,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 45,
+        "top": 26,
+        "rightExclusive": 214,
+        "bottomExclusive": 227,
+        "widthFraction": 0.6602,
+        "heightFraction": 0.7852,
+        "centerXFraction": 0.5059,
+        "centerYFraction": 0.4941
+      }
+    },
+    {
+      "slotId": "canonical/settings-controls/vibration-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/vibration-v1.png",
+      "intendedContexts": [
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1661",
+        "www/index.html:1333",
+        "www/themes/green/asset-registry.json:1635"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 42238,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 29,
+        "top": 35,
+        "rightExclusive": 227,
+        "bottomExclusive": 219,
+        "widthFraction": 0.7734,
+        "heightFraction": 0.7188,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/settings-room-identity/settings-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/index.html:765",
+        "www/themes/green/asset-registry.json:1105"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 118253,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 32,
+        "top": 39,
+        "rightExclusive": 352,
+        "bottomExclusive": 346,
+        "widthFraction": 0.8333,
+        "heightFraction": 0.7995,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5013
+      }
+    },
+    {
+      "slotId": "canonical/settings-room-identity/settings-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "settings"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1601",
+        "www/game.js:5890",
+        "www/index.html:1293",
+        "www/pravilaigre.js:150",
+        "www/themes/green/asset-registry.json:1104"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 195989,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 43,
+        "top": 52,
+        "rightExclusive": 469,
+        "bottomExclusive": 461,
+        "widthFraction": 0.832,
+        "heightFraction": 0.7988,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.501
+      }
+    },
+    {
+      "slotId": "canonical/solo-results/finish-claim-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png",
+      "intendedContexts": [
+        "solo",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1670",
+        "www/index.html:1421",
+        "www/themes/green/asset-registry.json:771"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 39844,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 33,
+        "top": 38,
+        "rightExclusive": 223,
+        "bottomExclusive": 219,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.707,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/solo-results/finish-score-mark-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png",
+      "intendedContexts": [
+        "solo",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1668",
+        "www/index.html:1398",
+        "www/themes/green/asset-registry.json:770"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 49334,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 33,
+        "top": 30,
+        "rightExclusive": 223,
+        "bottomExclusive": 220,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.7422,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4883
+      }
+    },
+    {
+      "slotId": "canonical/solo-results/personal-best-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-results/personal-best-v1.png",
+      "intendedContexts": [
+        "solo",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1667",
+        "www/index.html:1390",
+        "www/themes/green/asset-registry.json:769"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 36303,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 41,
+        "top": 54,
+        "rightExclusive": 216,
+        "bottomExclusive": 204,
+        "widthFraction": 0.6836,
+        "heightFraction": 0.5859,
+        "centerXFraction": 0.502,
+        "centerYFraction": 0.5039
+      }
+    },
+    {
+      "slotId": "canonical/solo-room-identity/solo-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "solo"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1591",
+        "www/index.html:657",
+        "www/themes/green/asset-registry.json:1345"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 93182,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 59,
+        "top": 47,
+        "rightExclusive": 325,
+        "bottomExclusive": 345,
+        "widthFraction": 0.6927,
+        "heightFraction": 0.776,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5104
+      }
+    },
+    {
+      "slotId": "canonical/solo-room-identity/solo-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "solo"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1666",
+        "www/game.js:5906",
+        "www/themes/green/asset-registry.json:1344"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 156807,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 79,
+        "top": 63,
+        "rightExclusive": 433,
+        "bottomExclusive": 460,
+        "widthFraction": 0.6914,
+        "heightFraction": 0.7754,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5107
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/all-time-points-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/all-time-points-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1650",
+        "www/index.html:949",
+        "www/pravilaigre.js:174",
+        "www/themes/green/asset-registry.json:825"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 48898,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 46,
+        "rightExclusive": 226,
+        "bottomExclusive": 206,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.625,
+        "centerXFraction": 0.5117,
+        "centerYFraction": 0.4922
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/average-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/average-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1047",
+        "www/game.js:1648",
+        "www/index.html:919",
+        "www/themes/green/asset-registry.json:823",
+        "www/themes/green/asset-registry.json:896"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 28397,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 69,
+        "rightExclusive": 220,
+        "bottomExclusive": 206,
+        "widthFraction": 0.7188,
+        "heightFraction": 0.5352,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5371
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/draws-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/draws-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1046",
+        "www/game.js:1645",
+        "www/index.html:888",
+        "www/index.html:1385",
+        "www/themes/green/asset-registry.json:820",
+        "www/themes/green/asset-registry.json:895"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 21877,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 52,
+        "top": 83,
+        "rightExclusive": 204,
+        "bottomExclusive": 178,
+        "widthFraction": 0.5938,
+        "heightFraction": 0.3711,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5098
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/fire-streak-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1045",
+        "www/game.js:1647",
+        "www/index.html:909",
+        "www/pravilaigre.js:173",
+        "www/vatreniniz.js:44",
+        "www/vatreniniz.js:281",
+        "www/themes/green/asset-registry.json:822",
+        "www/themes/green/asset-registry.json:894"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 37145,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 57,
+        "top": 32,
+        "rightExclusive": 209,
+        "bottomExclusive": 219,
+        "widthFraction": 0.5938,
+        "heightFraction": 0.7305,
+        "centerXFraction": 0.5195,
+        "centerYFraction": 0.4902
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/games-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/games-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1643",
+        "www/index.html:880",
+        "www/themes/green/asset-registry.json:818"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 24371,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 99,
+        "top": 29,
+        "rightExclusive": 158,
+        "bottomExclusive": 232,
+        "widthFraction": 0.2305,
+        "heightFraction": 0.793,
+        "centerXFraction": 0.502,
+        "centerYFraction": 0.5098
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/losses-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/losses-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1646",
+        "www/index.html:889",
+        "www/index.html:1384",
+        "www/themes/green/asset-registry.json:821"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 24382,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 57,
+        "top": 63,
+        "rightExclusive": 199,
+        "bottomExclusive": 218,
+        "widthFraction": 0.5547,
+        "heightFraction": 0.6055,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5488
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/power-index-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1641",
+        "www/index.html:864",
+        "www/powerindex.js:77",
+        "www/powerindex.js:283",
+        "www/pravilaigre.js:170",
+        "www/turnir.js:2038",
+        "www/themes/green/asset-registry.json:816"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 38478,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 50,
+        "top": 49,
+        "rightExclusive": 207,
+        "bottomExclusive": 215,
+        "widthFraction": 0.6133,
+        "heightFraction": 0.6484,
+        "centerXFraction": 0.502,
+        "centerYFraction": 0.5156
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/record-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/record-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1642",
+        "www/index.html:876",
+        "www/pravilaigre.js:171",
+        "www/themes/green/asset-registry.json:817"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 16242,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 49,
+        "top": 67,
+        "rightExclusive": 223,
+        "bottomExclusive": 198,
+        "widthFraction": 0.6797,
+        "heightFraction": 0.5117,
+        "centerXFraction": 0.5312,
+        "centerYFraction": 0.5176
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/trophies-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/trophies-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1649",
+        "www/index.html:930",
+        "www/themes/green/asset-registry.json:824"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 39193,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 52,
+        "rightExclusive": 220,
+        "bottomExclusive": 218,
+        "widthFraction": 0.7188,
+        "heightFraction": 0.6484,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5273
+      }
+    },
+    {
+      "slotId": "canonical/statistics-overview/wins-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/wins-v1.png",
+      "intendedContexts": [
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1644",
+        "www/index.html:887",
+        "www/index.html:1383",
+        "www/pravilaigre.js:172",
+        "www/themes/green/asset-registry.json:819"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 44712,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 33,
+        "rightExclusive": 227,
+        "bottomExclusive": 230,
+        "widthFraction": 0.7461,
+        "heightFraction": 0.7695,
+        "centerXFraction": 0.5137,
+        "centerYFraction": 0.5137
+      }
+    },
+    {
+      "slotId": "canonical/statistics-room-identity/statistics-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1657",
+        "www/index.html:758",
+        "www/themes/green/asset-registry.json:951"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 60928,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 34,
+        "top": 77,
+        "rightExclusive": 350,
+        "bottomExclusive": 324,
+        "widthFraction": 0.8229,
+        "heightFraction": 0.6432,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5221
+      }
+    },
+    {
+      "slotId": "canonical/statistics-room-identity/statistics-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png",
+      "intendedContexts": [
+        "main-menu",
+        "statistics"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1600",
+        "www/game.js:5882",
+        "www/index.html:846",
+        "www/pravilaigre.js:149",
+        "www/themes/green/asset-registry.json:950"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 99726,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 45,
+        "top": 102,
+        "rightExclusive": 467,
+        "bottomExclusive": 432,
+        "widthFraction": 0.8242,
+        "heightFraction": 0.6445,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5215
+      }
+    },
+    {
+      "slotId": "canonical/tournament-awards/champion-trophy-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png",
+      "intendedContexts": [
+        "tournament",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1737",
+        "www/game.js:4415",
+        "www/game.js:9029",
+        "www/index.html:733",
+        "www/index.html:1194",
+        "www/index.html:1845",
+        "www/pravilaigre.js:155",
+        "www/turnir.js:746",
+        "www/turnir.js:1186",
+        "www/turnir.js:1428",
+        "www/turnir.js:1593",
+        "www/turnir.js:1945",
+        "www/turnir.js:2120",
+        "www/themes/green/asset-registry.json:686"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 99449,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 26,
+        "top": 54,
+        "rightExclusive": 359,
+        "bottomExclusive": 341,
+        "widthFraction": 0.8672,
+        "heightFraction": 0.7474,
+        "centerXFraction": 0.5013,
+        "centerYFraction": 0.5143
+      }
+    },
+    {
+      "slotId": "canonical/tournament-awards/finalist-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png",
+      "intendedContexts": [
+        "tournament",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1747",
+        "www/game.js:4422",
+        "www/game.js:9030",
+        "www/turnir.js:2123",
+        "www/themes/green/asset-registry.json:687"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 40256,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 60,
+        "top": 42,
+        "rightExclusive": 196,
+        "bottomExclusive": 219,
+        "widthFraction": 0.5312,
+        "heightFraction": 0.6914,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5098
+      }
+    },
+    {
+      "slotId": "canonical/tournament-navigation/tab-bracket-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1739",
+        "www/turnir.js:812",
+        "www/themes/green/asset-registry.json:583"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 35866,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 12,
+        "top": 48,
+        "rightExclusive": 244,
+        "bottomExclusive": 207,
+        "widthFraction": 0.9062,
+        "heightFraction": 0.6211,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.498
+      }
+    },
+    {
+      "slotId": "canonical/tournament-navigation/tab-hall-of-fame-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1740",
+        "www/pravilaigre.js:157",
+        "www/turnir.js:819",
+        "www/themes/green/asset-registry.json:584"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 44655,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 44,
+        "top": 34,
+        "rightExclusive": 218,
+        "bottomExclusive": 235,
+        "widthFraction": 0.6797,
+        "heightFraction": 0.7852,
+        "centerXFraction": 0.5117,
+        "centerYFraction": 0.5254
+      }
+    },
+    {
+      "slotId": "canonical/tournament-navigation/tab-info-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-navigation/tab-info-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1738",
+        "www/turnir.js:805",
+        "www/themes/green/asset-registry.json:582"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 39459,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 33,
+        "top": 33,
+        "rightExclusive": 223,
+        "bottomExclusive": 221,
+        "widthFraction": 0.7422,
+        "heightFraction": 0.7344,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/tournament-states/state-match-active-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1745",
+        "www/turnir.js:2143",
+        "www/themes/green/asset-registry.json:633"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 38362,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 21,
+        "top": 64,
+        "rightExclusive": 237,
+        "bottomExclusive": 183,
+        "widthFraction": 0.8438,
+        "heightFraction": 0.4648,
+        "centerXFraction": 0.5039,
+        "centerYFraction": 0.4824
+      }
+    },
+    {
+      "slotId": "canonical/tournament-states/state-match-complete-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1746",
+        "www/turnir.js:2064",
+        "www/turnir.js:2121",
+        "www/themes/green/asset-registry.json:634"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 52754,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 47,
+        "top": 25,
+        "rightExclusive": 209,
+        "bottomExclusive": 229,
+        "widthFraction": 0.6328,
+        "heightFraction": 0.7969,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/tournament-states/state-register-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-register-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1741",
+        "www/turnir.js:1582",
+        "www/themes/green/asset-registry.json:629"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 40494,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 38,
+        "top": 56,
+        "rightExclusive": 224,
+        "bottomExclusive": 203,
+        "widthFraction": 0.7266,
+        "heightFraction": 0.5742,
+        "centerXFraction": 0.5117,
+        "centerYFraction": 0.5059
+      }
+    },
+    {
+      "slotId": "canonical/tournament-states/state-registration-locked-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-registration-locked-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1743",
+        "www/themes/green/asset-registry.json:631"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 61608,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 18,
+        "top": 43,
+        "rightExclusive": 245,
+        "bottomExclusive": 230,
+        "widthFraction": 0.8867,
+        "heightFraction": 0.7305,
+        "centerXFraction": 0.5137,
+        "centerYFraction": 0.5332
+      }
+    },
+    {
+      "slotId": "canonical/tournament-states/state-start-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-start-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1744",
+        "www/pravilaigre.js:156",
+        "www/themes/green/asset-registry.json:632"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 42740,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 34,
+        "top": 30,
+        "rightExclusive": 222,
+        "bottomExclusive": 218,
+        "widthFraction": 0.7344,
+        "heightFraction": 0.7344,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4844
+      }
+    },
+    {
+      "slotId": "canonical/tournament-states/state-unregister-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-unregister-v1.png",
+      "intendedContexts": [
+        "tournament"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1742",
+        "www/turnir.js:1563",
+        "www/themes/green/asset-registry.json:630"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 51667,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 22,
+        "top": 54,
+        "rightExclusive": 234,
+        "bottomExclusive": 198,
+        "widthFraction": 0.8281,
+        "heightFraction": 0.5625,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4922
+      }
+    },
+    {
+      "slotId": "canonical/treasury-controls/status-active-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/status-active-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1691",
+        "www/themes/green/asset-registry.json:414"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 49897,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 35,
+        "top": 36,
+        "rightExclusive": 221,
+        "bottomExclusive": 220,
+        "widthFraction": 0.7266,
+        "heightFraction": 0.7188,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/treasury-controls/status-insufficient-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1693",
+        "www/managers.js:3677",
+        "www/themes/green/asset-registry.json:416"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 54964,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 34,
+        "top": 34,
+        "rightExclusive": 222,
+        "bottomExclusive": 220,
+        "widthFraction": 0.7344,
+        "heightFraction": 0.7266,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/treasury-controls/status-locked-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1692",
+        "www/managers.js:3659",
+        "www/themes/green/asset-registry.json:415"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 58765,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 35,
+        "top": 12,
+        "rightExclusive": 221,
+        "bottomExclusive": 236,
+        "widthFraction": 0.7266,
+        "heightFraction": 0.875,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4844
+      }
+    },
+    {
+      "slotId": "canonical/treasury-controls/status-owned-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/status-owned-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1690",
+        "www/themes/green/asset-registry.json:413"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 71702,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 22,
+        "top": 20,
+        "rightExclusive": 234,
+        "bottomExclusive": 234,
+        "widthFraction": 0.8281,
+        "heightFraction": 0.8359,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/treasury-controls/tab-effects-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1687",
+        "www/index.html:1134",
+        "www/pravilaigre.js:180",
+        "www/teme.css:23824",
+        "www/teme.css:23852",
+        "www/themes/green/asset-registry.json:411"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 35484,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 33,
+        "top": 19,
+        "rightExclusive": 228,
+        "bottomExclusive": 240,
+        "widthFraction": 0.7617,
+        "heightFraction": 0.8633,
+        "centerXFraction": 0.5098,
+        "centerYFraction": 0.5059
+      }
+    },
+    {
+      "slotId": "canonical/treasury-controls/tab-skins-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1686",
+        "www/index.html:1133",
+        "www/pravilaigre.js:179",
+        "www/teme.css:23821",
+        "www/themes/green/asset-registry.json:410"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 68689,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 22,
+        "top": 17,
+        "rightExclusive": 233,
+        "bottomExclusive": 240,
+        "widthFraction": 0.8242,
+        "heightFraction": 0.8711,
+        "centerXFraction": 0.498,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/treasury-controls/tab-themes-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1688",
+        "www/index.html:1135",
+        "www/pravilaigre.js:181",
+        "www/teme.css:23827",
+        "www/themes/green/asset-registry.json:412"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 58182,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 22,
+        "top": 30,
+        "rightExclusive": 241,
+        "bottomExclusive": 231,
+        "widthFraction": 0.8555,
+        "heightFraction": 0.7852,
+        "centerXFraction": 0.5137,
+        "centerYFraction": 0.5098
+      }
+    },
+    {
+      "slotId": "canonical/treasury-controls/tab-trophies-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1685",
+        "www/index.html:1132",
+        "www/pravilaigre.js:178",
+        "www/themes/green/asset-registry.json:409"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 64596,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 5,
+        "top": 28,
+        "rightExclusive": 251,
+        "bottomExclusive": 232,
+        "widthFraction": 0.9609,
+        "heightFraction": 0.7969,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5078
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-black-hole-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-black-hole-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1703",
+        "www/teme.css:23950",
+        "www/themes/green/asset-registry.json:1694"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 92203,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 70,
+        "top": 28,
+        "rightExclusive": 327,
+        "bottomExclusive": 217,
+        "widthFraction": 0.6693,
+        "heightFraction": 0.7383,
+        "centerXFraction": 0.5169,
+        "centerYFraction": 0.4785
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-bubbles-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1697",
+        "www/teme.css:23944",
+        "www/themes/green/asset-registry.json:1688"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 83672,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 87,
+        "top": 40,
+        "rightExclusive": 295,
+        "bottomExclusive": 216,
+        "widthFraction": 0.5417,
+        "heightFraction": 0.6875,
+        "centerXFraction": 0.4974,
+        "centerYFraction": 0.5
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-cosmic-dust-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1698",
+        "www/teme.css:23945",
+        "www/themes/green/asset-registry.json:1689"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 85198,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 95,
+        "top": 30,
+        "rightExclusive": 293,
+        "bottomExclusive": 211,
+        "widthFraction": 0.5156,
+        "heightFraction": 0.707,
+        "centerXFraction": 0.5052,
+        "centerYFraction": 0.4707
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-dragon-fire-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1699",
+        "www/teme.css:23946",
+        "www/themes/green/asset-registry.json:1690"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 75841,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 120,
+        "top": 5,
+        "rightExclusive": 272,
+        "bottomExclusive": 250,
+        "widthFraction": 0.3958,
+        "heightFraction": 0.957,
+        "centerXFraction": 0.5104,
+        "centerYFraction": 0.498
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-drones-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1706",
+        "www/teme.css:23953",
+        "www/themes/green/asset-registry.json:1697"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 88396,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 7,
+        "top": 39,
+        "rightExclusive": 377,
+        "bottomExclusive": 215,
+        "widthFraction": 0.9635,
+        "heightFraction": 0.6875,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-fireflies-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1701",
+        "www/teme.css:23948",
+        "www/themes/green/asset-registry.json:1692"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 84450,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 80,
+        "top": 12,
+        "rightExclusive": 325,
+        "bottomExclusive": 234,
+        "widthFraction": 0.638,
+        "heightFraction": 0.8672,
+        "centerXFraction": 0.5273,
+        "centerYFraction": 0.4805
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-fireworks-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1696",
+        "www/teme.css:23943",
+        "www/themes/green/asset-registry.json:1687"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 60176,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 131,
+        "top": 14,
+        "rightExclusive": 309,
+        "bottomExclusive": 230,
+        "widthFraction": 0.4635,
+        "heightFraction": 0.8438,
+        "centerXFraction": 0.5729,
+        "centerYFraction": 0.4766
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-ice-age-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-ice-age-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1702",
+        "www/teme.css:23949",
+        "www/themes/green/asset-registry.json:1693"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 91378,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 94,
+        "top": 12,
+        "rightExclusive": 293,
+        "bottomExclusive": 245,
+        "widthFraction": 0.5182,
+        "heightFraction": 0.9102,
+        "centerXFraction": 0.5039,
+        "centerYFraction": 0.502
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-neon-pulse-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1705",
+        "www/teme.css:23952",
+        "www/themes/green/asset-registry.json:1696"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 84355,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 83,
+        "top": 28,
+        "rightExclusive": 301,
+        "bottomExclusive": 216,
+        "widthFraction": 0.5677,
+        "heightFraction": 0.7344,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4766
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-royal-yamb-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1700",
+        "www/managers.js:1124",
+        "www/teme.css:23947",
+        "www/themes/green/asset-registry.json:1691"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 78593,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 109,
+        "top": 15,
+        "rightExclusive": 275,
+        "bottomExclusive": 239,
+        "widthFraction": 0.4323,
+        "heightFraction": 0.875,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4961
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-supernova-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-supernova-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1704",
+        "www/teme.css:23951",
+        "www/themes/green/asset-registry.json:1695"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 85674,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 71,
+        "top": 8,
+        "rightExclusive": 313,
+        "bottomExclusive": 241,
+        "widthFraction": 0.6302,
+        "heightFraction": 0.9102,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4863
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-thunder-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1695",
+        "www/managers.js:983",
+        "www/teme.css:23941",
+        "www/themes/green/asset-registry.json:1686"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 78083,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 81,
+        "top": 8,
+        "rightExclusive": 326,
+        "bottomExclusive": 232,
+        "widthFraction": 0.638,
+        "heightFraction": 0.875,
+        "centerXFraction": 0.5299,
+        "centerYFraction": 0.4688
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-ufo-abduction-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1707",
+        "www/managers.js:1197",
+        "www/teme.css:23954",
+        "www/themes/green/asset-registry.json:1698"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 85437,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 82,
+        "top": 15,
+        "rightExclusive": 302,
+        "bottomExclusive": 243,
+        "widthFraction": 0.5729,
+        "heightFraction": 0.8906,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5039
+      }
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-wedding-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1694",
+        "www/managers.js:1018",
+        "www/teme.css:23942",
+        "www/themes/green/asset-registry.json:1685"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 93423,
+      "greenDecodedRgbaBytes": 393216,
+      "greenOpticalBoundsPx": {
+        "left": 7,
+        "top": 3,
+        "rightExclusive": 382,
+        "bottomExclusive": 237,
+        "widthFraction": 0.9766,
+        "heightFraction": 0.9141,
+        "centerXFraction": 0.5065,
+        "centerYFraction": 0.4688
+      }
+    },
+    {
+      "slotId": "canonical/undo-token/undo-token-front-v1",
+      "greenReference": "assets/green-soft-clay/canonical/undo-token/undo-token-front-v1.png",
+      "intendedContexts": [
+        "economy",
+        "game-board",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1620",
+        "www/index.html:361",
+        "www/index.html:394",
+        "www/themes/green/asset-registry.json:92"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 177525,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 81,
+        "top": 77,
+        "rightExclusive": 441,
+        "bottomExclusive": 441,
+        "widthFraction": 0.7031,
+        "heightFraction": 0.7109,
+        "centerXFraction": 0.5098,
+        "centerYFraction": 0.5059
+      }
+    },
+    {
+      "slotId": "canonical/undo-token/undo-token-inline-v1",
+      "greenReference": "assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png",
+      "intendedContexts": [
+        "economy",
+        "game-board",
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1621",
+        "www/index.html:454",
+        "www/index.html:473",
+        "www/pravilaigre.js:167",
+        "www/themes/green/asset-registry.json:93"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 33758,
+      "greenDecodedRgbaBytes": 147456,
+      "greenOpticalBoundsPx": {
+        "left": 30,
+        "top": 28,
+        "rightExclusive": 166,
+        "bottomExclusive": 166,
+        "widthFraction": 0.7083,
+        "heightFraction": 0.7188,
+        "centerXFraction": 0.5104,
+        "centerYFraction": 0.5052
+      }
+    },
+    {
+      "slotId": "daily/reward-video-v3",
+      "greenReference": "assets/green-soft-clay/daily/reward-video-v3.png",
+      "intendedContexts": [
+        "daily-challenge"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/dnevniizazov.js:1262",
+        "www/game.js:1629",
+        "www/themes/green/asset-registry.json:27",
+        "www/themes/green/asset-registry.json:140"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 107898,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 32,
+        "top": 73,
+        "rightExclusive": 354,
+        "bottomExclusive": 322,
+        "widthFraction": 0.8385,
+        "heightFraction": 0.6484,
+        "centerXFraction": 0.5026,
+        "centerYFraction": 0.5143
+      }
+    },
+    {
+      "slotId": "ducats-undo-free-v3",
+      "greenReference": "assets/green-soft-clay/ducats-undo-free-v3.png",
+      "intendedContexts": [
+        "needs-context-review"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1619",
+        "www/game.js:5962",
+        "www/themes/green/asset-registry.json:25",
+        "www/themes/green/asset-registry.json:96"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 222876,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 52,
+        "top": 52,
+        "rightExclusive": 481,
+        "bottomExclusive": 477,
+        "widthFraction": 0.8379,
+        "heightFraction": 0.8301,
+        "centerXFraction": 0.5205,
+        "centerYFraction": 0.5166
+      }
+    },
+    {
+      "slotId": "global-chat-empty-v1",
+      "greenReference": "assets/green-soft-clay/global-chat-empty-v1.png",
+      "intendedContexts": [
+        "needs-context-review"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1613",
+        "www/globalchat.js:95",
+        "www/index.html:1778"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 84201,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 54,
+        "top": 91,
+        "rightExclusive": 336,
+        "bottomExclusive": 324,
+        "widthFraction": 0.7344,
+        "heightFraction": 0.6068,
+        "centerXFraction": 0.5078,
+        "centerYFraction": 0.5404
+      }
+    },
+    {
+      "slotId": "global-chat-send-v1",
+      "greenReference": "assets/green-soft-clay/global-chat-send-v1.png",
+      "intendedContexts": [
+        "needs-context-review"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1612",
+        "www/index.html:1791"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 88665,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 33,
+        "top": 65,
+        "rightExclusive": 351,
+        "bottomExclusive": 318,
+        "widthFraction": 0.8281,
+        "heightFraction": 0.6589,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4987
+      }
+    },
+    {
+      "slotId": "invite/accepted-v1",
+      "greenReference": "assets/green-soft-clay/invite/accepted-v1.png",
+      "intendedContexts": [
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1683",
+        "www/game.js:7657"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 91098,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 27,
+        "top": 80,
+        "rightExclusive": 356,
+        "bottomExclusive": 300,
+        "widthFraction": 0.8568,
+        "heightFraction": 0.5729,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.4948
+      }
+    },
+    {
+      "slotId": "invite/empty-v1",
+      "greenReference": "assets/green-soft-clay/invite/empty-v1.png",
+      "intendedContexts": [
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1681",
+        "www/game.js:3589"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 60682,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 102,
+        "top": 71,
+        "rightExclusive": 292,
+        "bottomExclusive": 326,
+        "widthFraction": 0.4948,
+        "heightFraction": 0.6641,
+        "centerXFraction": 0.513,
+        "centerYFraction": 0.5169
+      }
+    },
+    {
+      "slotId": "invite/send-v1",
+      "greenReference": "assets/green-soft-clay/invite/send-v1.png",
+      "intendedContexts": [
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1680",
+        "www/game.js:3577"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 73781,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 93,
+        "top": 91,
+        "rightExclusive": 333,
+        "bottomExclusive": 310,
+        "widthFraction": 0.625,
+        "heightFraction": 0.5703,
+        "centerXFraction": 0.5547,
+        "centerYFraction": 0.5221
+      }
+    },
+    {
+      "slotId": "invite/sent-v1",
+      "greenReference": "assets/green-soft-clay/invite/sent-v1.png",
+      "intendedContexts": [
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1682",
+        "www/game.js:3689"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 70705,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 84,
+        "top": 83,
+        "rightExclusive": 321,
+        "bottomExclusive": 303,
+        "widthFraction": 0.6172,
+        "heightFraction": 0.5729,
+        "centerXFraction": 0.5273,
+        "centerYFraction": 0.5026
+      }
+    },
+    {
+      "slotId": "online-add-friend-v1",
+      "greenReference": "assets/green-soft-clay/online-add-friend-v1.png",
+      "intendedContexts": [
+        "needs-context-review"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1616",
+        "www/game.js:3501",
+        "www/onlinenumber.js:446",
+        "www/onlinenumber.js:449",
+        "www/pravilaigre.js:162"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 76237,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 65,
+        "top": 67,
+        "rightExclusive": 336,
+        "bottomExclusive": 332,
+        "widthFraction": 0.7057,
+        "heightFraction": 0.6901,
+        "centerXFraction": 0.5221,
+        "centerYFraction": 0.5195
+      }
+    },
+    {
+      "slotId": "online-duel-v1",
+      "greenReference": "assets/green-soft-clay/online-duel-v1.png",
+      "intendedContexts": [
+        "needs-context-review"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1618",
+        "www/onlinenumber.js:463",
+        "www/onlinenumber.js:465",
+        "www/pravilaigre.js:164"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 78685,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 22,
+        "top": 114,
+        "rightExclusive": 361,
+        "bottomExclusive": 295,
+        "widthFraction": 0.8828,
+        "heightFraction": 0.4714,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.5326
+      }
+    },
+    {
+      "slotId": "online-players-state-v1",
+      "greenReference": "assets/green-soft-clay/online-players-state-v1.png",
+      "intendedContexts": [
+        "needs-context-review"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1615",
+        "www/index.html:1829",
+        "www/onlinenumber.js:319"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 70632,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 93,
+        "top": 56,
+        "rightExclusive": 291,
+        "bottomExclusive": 338,
+        "widthFraction": 0.5156,
+        "heightFraction": 0.7344,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.513
+      }
+    },
+    {
+      "slotId": "online-spectate-v1",
+      "greenReference": "assets/green-soft-clay/online-spectate-v1.png",
+      "intendedContexts": [
+        "needs-context-review"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1617",
+        "www/game.js:6745",
+        "www/index.html:798",
+        "www/onlinenumber.js:456",
+        "www/onlinenumber.js:458",
+        "www/pravilaigre.js:163"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 61861,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 53,
+        "top": 114,
+        "rightExclusive": 331,
+        "bottomExclusive": 282,
+        "widthFraction": 0.724,
+        "heightFraction": 0.4375,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5156
+      }
+    },
+    {
+      "slotId": "opponent/disconnected-v1",
+      "greenReference": "assets/green-soft-clay/opponent/disconnected-v1.png",
+      "intendedContexts": [
+        "online-random",
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1677",
+        "www/game.js:6657",
+        "www/pravilaigre.js:177"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 52841,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 33,
+        "top": 139,
+        "rightExclusive": 351,
+        "bottomExclusive": 266,
+        "widthFraction": 0.8281,
+        "heightFraction": 0.3307,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5273
+      }
+    },
+    {
+      "slotId": "opponent/found-v1",
+      "greenReference": "assets/green-soft-clay/opponent/found-v1.png",
+      "intendedContexts": [
+        "online-random",
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1675",
+        "www/index.html:1499"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 79707,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 29,
+        "top": 110,
+        "rightExclusive": 355,
+        "bottomExclusive": 296,
+        "widthFraction": 0.849,
+        "heightFraction": 0.4844,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5286
+      }
+    },
+    {
+      "slotId": "opponent/reconnected-v1",
+      "greenReference": "assets/green-soft-clay/opponent/reconnected-v1.png",
+      "intendedContexts": [
+        "online-random",
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1678",
+        "www/game.js:6859",
+        "www/pravilaigre.js:176"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 54836,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 40,
+        "top": 122,
+        "rightExclusive": 343,
+        "bottomExclusive": 272,
+        "widthFraction": 0.7891,
+        "heightFraction": 0.3906,
+        "centerXFraction": 0.4987,
+        "centerYFraction": 0.513
+      }
+    },
+    {
+      "slotId": "opponent/scanning-v1",
+      "greenReference": "assets/green-soft-clay/opponent/scanning-v1.png",
+      "intendedContexts": [
+        "online-random",
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1674",
+        "www/index.html:1488"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 70869,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 89,
+        "top": 96,
+        "rightExclusive": 323,
+        "bottomExclusive": 301,
+        "widthFraction": 0.6094,
+        "heightFraction": 0.5339,
+        "centerXFraction": 0.5365,
+        "centerYFraction": 0.5169
+      }
+    },
+    {
+      "slotId": "opponent/vs-v1",
+      "greenReference": "assets/green-soft-clay/opponent/vs-v1.png",
+      "intendedContexts": [
+        "online-random",
+        "invite-friend"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1676",
+        "www/index.html:1480"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 102760,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 63,
+        "top": 59,
+        "rightExclusive": 321,
+        "bottomExclusive": 324,
+        "widthFraction": 0.6719,
+        "heightFraction": 0.6901,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.4987
+      }
+    },
+    {
+      "slotId": "rules/pages/communication-v1",
+      "greenReference": "assets/green-soft-clay/rules/pages/communication-v1.png",
+      "intendedContexts": [
+        "rules"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1608",
+        "www/pravilaigre.js:144"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 175405,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 23,
+        "top": 79,
+        "rightExclusive": 489,
+        "bottomExclusive": 432,
+        "widthFraction": 0.9102,
+        "heightFraction": 0.6895,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.499
+      }
+    },
+    {
+      "slotId": "rules/pages/economy-treasury-v3",
+      "greenReference": "assets/green-soft-clay/rules/pages/economy-treasury-v3.png",
+      "intendedContexts": [
+        "rules"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1609",
+        "www/pravilaigre.js:145",
+        "www/themes/green/asset-registry.json:30",
+        "www/themes/green/asset-registry.json:98"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 303396,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 36,
+        "top": 22,
+        "rightExclusive": 479,
+        "bottomExclusive": 498,
+        "widthFraction": 0.8652,
+        "heightFraction": 0.9297,
+        "centerXFraction": 0.5029,
+        "centerYFraction": 0.5078
+      }
+    },
+    {
+      "slotId": "runtime/menu/ducats-undo-free-v3",
+      "greenReference": "assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png",
+      "intendedContexts": [
+        "main-menu"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/index.html:637",
+        "www/themes/green/asset-registry.json:31",
+        "www/themes/green/asset-registry.json:97"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 131899,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 39,
+        "top": 39,
+        "rightExclusive": 361,
+        "bottomExclusive": 358,
+        "widthFraction": 0.8385,
+        "heightFraction": 0.8307,
+        "centerXFraction": 0.5208,
+        "centerYFraction": 0.5169
+      }
+    },
+    {
+      "slotId": "runtime/menu/treasury-free-v3",
+      "greenReference": "assets/green-soft-clay/runtime/menu/treasury-free-v3.png",
+      "intendedContexts": [
+        "main-menu"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/index.html:726",
+        "www/themes/green/asset-registry.json:32"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 129017,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 53,
+        "top": 37,
+        "rightExclusive": 339,
+        "bottomExclusive": 358,
+        "widthFraction": 0.7448,
+        "heightFraction": 0.8359,
+        "centerXFraction": 0.5104,
+        "centerYFraction": 0.5143
+      }
+    },
+    {
+      "slotId": "solo/finish-reward-video-v3",
+      "greenReference": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+      "intendedContexts": [
+        "solo",
+        "game-over"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1669",
+        "www/index.html:1416",
+        "www/themes/green/asset-registry.json:29",
+        "www/themes/green/asset-registry.json:142"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 91400,
+      "greenDecodedRgbaBytes": 589824,
+      "greenOpticalBoundsPx": {
+        "left": 9,
+        "top": 128,
+        "rightExclusive": 375,
+        "bottomExclusive": 271,
+        "widthFraction": 0.9531,
+        "heightFraction": 0.3724,
+        "centerXFraction": 0.5,
+        "centerYFraction": 0.5195
+      }
+    },
+    {
+      "slotId": "splash-title-soft-clay-v1",
+      "greenReference": "assets/green-soft-clay/splash-title-soft-clay-v1.png",
+      "intendedContexts": [
+        "splash",
+        "main-menu"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1597",
+        "www/game.js:2155",
+        "www/index.html:23"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 1687588,
+      "greenDecodedRgbaBytes": 6293408,
+      "greenOpticalBoundsPx": {
+        "left": 29,
+        "top": 110,
+        "rightExclusive": 1642,
+        "bottomExclusive": 830,
+        "widthFraction": 0.9647,
+        "heightFraction": 0.7651,
+        "centerXFraction": 0.4997,
+        "centerYFraction": 0.4995
+      }
+    },
+    {
+      "slotId": "treasury-free-v3",
+      "greenReference": "assets/green-soft-clay/treasury-free-v3.png",
+      "intendedContexts": [
+        "needs-context-review"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1684",
+        "www/index.html:1124",
+        "www/index.html:1147",
+        "www/pravilaigre.js:154",
+        "www/themes/green/asset-registry.json:26"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 215248,
+      "greenDecodedRgbaBytes": 1048576,
+      "greenOpticalBoundsPx": {
+        "left": 71,
+        "top": 50,
+        "rightExclusive": 452,
+        "bottomExclusive": 477,
+        "widthFraction": 0.7441,
+        "heightFraction": 0.834,
+        "centerXFraction": 0.5107,
+        "centerYFraction": 0.5146
+      }
+    },
+    {
+      "slotId": "treasury/reward-video-v3",
+      "greenReference": "assets/green-soft-clay/treasury/reward-video-v3.png",
+      "intendedContexts": [
+        "treasury"
+      ],
+      "contextEvidence": "derived-from-slot-family; verify in app",
+      "staticSourceReferences": [
+        "www/game.js:1689",
+        "www/index.html:1136",
+        "www/managers.js:3672",
+        "www/themes/green/asset-registry.json:28",
+        "www/themes/green/asset-registry.json:141"
+      ],
+      "runtimeUseVerified": false,
+      "greenByteSize": 50685,
+      "greenDecodedRgbaBytes": 262144,
+      "greenOpticalBoundsPx": {
+        "left": 31,
+        "top": 52,
+        "rightExclusive": 229,
+        "bottomExclusive": 213,
+        "widthFraction": 0.7734,
+        "heightFraction": 0.6289,
+        "centerXFraction": 0.5078,
+        "centerYFraction": 0.5176
+      }
+    }
+  ]
+}

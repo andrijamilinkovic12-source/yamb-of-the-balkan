@@ -1,0 +1,1076 @@
+{
+  "schemaVersion": 1,
+  "updatedOn": "2026-10-07",
+  "activeThemeId": null,
+  "workState": "main-room-icons-linked-nine-five-dot-ducat-packs-created",
+  "activeWorkPackage": "Svih devet nezelenih tema ima po 24 PNG ikone glavnih soba (216 povezanih slotova) i po pet novih PNG prikaza dukata (45 slotova). Svaki dukat ima tacno pet tacaka. Prednji, umanjeni i prikaz za cestice povezani su u runtime; levi i desni ugao su kreirani za buduce animacije. Vizuelni QA u aplikaciji predstoji. Zelena ostaje zakljucana.",
+  "requiredSurfaceIds": [
+    "splash-login",
+    "main-menu",
+    "solo",
+    "hotseat",
+    "online-random",
+    "invite-friend",
+    "game-board",
+    "daily-challenge",
+    "leaderboard",
+    "statistics-h2h",
+    "settings",
+    "rules",
+    "global-chat",
+    "online-players",
+    "economy",
+    "quarterly-league",
+    "treasury",
+    "tournament",
+    "game-over"
+  ],
+  "stageOrder": [
+    "defined",
+    "created",
+    "linked",
+    "visually-checked",
+    "accepted"
+  ],
+  "stageEvidenceRule": "Za napredovanje faze upisati dokaz: putanje finalnih asseta, commit ili QA zapis/snimak sa viewportom, jezikom i buildom. Green status reference ne znaci da je prosao novu matricu.",
+  "evidencePathRule": "Sve putanje u visualEvidence su relativne prema korenu projekta, npr. www/assets/... za PNG ili docs/... za QA snimak.",
+  "themes": [
+    {
+      "themeId": "dark",
+      "nameSr": "Zelena",
+      "themeStage": "locked-reference",
+      "surfaces": {
+        "splash-login": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "reference",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "reference",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "www/assets/green-clay-balkan-diorama-v4.png",
+        "logoPng": "www/assets/green-soft-clay/splash-title-soft-clay-v1.png",
+        "representativeIconPngs": [
+          "www/assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png",
+          "www/assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+          "www/assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png",
+          "www/assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+          "www/assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png",
+          "www/assets/green-soft-clay/canonical/ducat/ducat-front-v1.png"
+        ],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Zakljucana referenca; prikazani izvorni PNG-ovi ne znace zavrsen QA u novoj matrici."
+    },
+    {
+      "themeId": "light",
+      "nameSr": "Svetlo Zlato",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v9/light-background-master-v9.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    },
+    {
+      "themeId": "medium",
+      "nameSr": "Trula Višnja",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v9/medium-background-master-v9.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    },
+    {
+      "themeId": "winter",
+      "nameSr": "Plavi Okean",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v13/winter-background-master-v13.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    },
+    {
+      "themeId": "neon",
+      "nameSr": "Neon Cyber",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    },
+    {
+      "themeId": "amethyst",
+      "nameSr": "Kraljevski Ametist",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    },
+    {
+      "themeId": "easter",
+      "nameSr": "Vaskršnja",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    },
+    {
+      "themeId": "desert",
+      "nameSr": "Pustinjsko Staklo",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    },
+    {
+      "themeId": "moon",
+      "nameSr": "Mesečev Sjaj",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v14/moon-background-master-v14.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    },
+    {
+      "themeId": "severna",
+      "nameSr": "Severna Maglina",
+      "themeStage": "defined",
+      "surfaces": {
+        "splash-login": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "main-menu": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "solo": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "hotseat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-random": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "invite-friend": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-board": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "daily-challenge": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "leaderboard": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "statistics-h2h": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "settings": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "rules": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "global-chat": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "online-players": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "economy": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "quarterly-league": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "treasury": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "tournament": {
+          "stage": "defined",
+          "evidence": []
+        },
+        "game-over": {
+          "stage": "defined",
+          "evidence": []
+        }
+      },
+      "visualEvidence": {
+        "backgroundPng": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png",
+        "logoPng": null,
+        "representativeIconPngs": [],
+        "menuCardCapture": null,
+        "gameBoardCapture": null,
+        "roomIntroCapture": null,
+        "srNarrowCapture": null,
+        "enNarrowCapture": null
+      },
+      "performanceEvidence": {
+        "startup": null,
+        "rooms": {},
+        "activePeak": null
+      },
+      "assetUsageAudit": {
+        "confirmedSlotCount": 0,
+        "measuredThemeBoundsCount": 0
+      },
+      "notes": "Ciljna definicija je spremna; produkcioni asseti, povezivanje i QA nisu verifikovani ovim registrom."
+    }
+  ]
+}

@@ -12,7 +12,7 @@
     "css": "www/teme.css",
     "audio": "www/managers.js",
     "shopConfig": "www/config.js",
-    "backgroundAsset": "www/assets/desert-neumorphic-bg-v1.png",
+    "backgroundAsset": "www/assets/theme-backgrounds/desert-v8-2.png",
     "splashTitleAsset": "www/assets/desert-soft-clay/splash-title-soft-clay-v1.png",
     "qaPreview": "www/themes/desert/qa-preview.html",
     "qaSplashPreview": "www/themes/desert/qa-splash.html",

@@ -23,13 +23,13 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/desert-soft-clay/rules/pages/economy-treasury.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/desert-soft-clay/rules/pages/account-server.png?v=opt2',
         'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2': 'assets/desert-soft-clay/daily-challenge-pro-v2.png?v=1',
-        'assets/easter-soft-clay/leaderboard-pro-v2.png': 'assets/desert-soft-clay/leaderboard-pro-v2.png?v=1',
+        'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/desert-soft-clay/leaderboard-pro-v2.png?v=1',
         'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/desert-soft-clay/statistics-pro-v2.png?v=1',
         'assets/easter-soft-clay/settings-pro-v3.png': 'assets/desert-soft-clay/settings-pro-v2.png?v=1',
         'assets/easter-soft-clay/settings/profile-v2.png?v=opt2': 'assets/desert-soft-clay/settings/profile-v2.png?v=opt2',
         'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2': 'assets/desert-soft-clay/settings/privacy-v2.png?v=opt2',
         'assets/easter-soft-clay/rules-pro-v2.png': 'assets/desert-soft-clay/rules-pro.png?v=opt2',
-        'assets/easter-soft-clay/treasury-pro-v2.png': 'assets/desert-soft-clay/treasury-pro.png?v=1',
+        'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png': 'assets/desert-soft-clay/treasury-pro.png?v=1',
         'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2': 'assets/desert-soft-clay/treasury/tab-trophies.png?v=opt2',
         'assets/easter-soft-clay/treasury/tab-skins-v2.png?v=opt2': 'assets/desert-soft-clay/treasury/tab-skins.png?v=opt2',
         'assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2': 'assets/desert-soft-clay/treasury/tab-effects.png?v=opt2',
@@ -48,14 +48,14 @@ function rulesDesertAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/desert-soft-clay/online-duel-pro-v2.png?v=opt2',
         'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2': 'assets/desert-soft-clay/quarterly-league-yotb-ql-pro-v2.png?v=opt2',
         'assets/easter-soft-clay/ducats-undo-pro-v3.png': 'assets/desert-soft-clay/ducats-undo-pro-v2.png?v=1',
-        'assets/easter-soft-clay/economy/ducat.png?v=opt2': 'assets/desert-soft-clay/economy/ducat-v2.png?v=opt2',
+        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/desert-soft-clay/economy/ducat-v2.png?v=opt2',
         'assets/easter-soft-clay/economy/undo-token.png?v=opt2': 'assets/desert-soft-clay/economy/undo-token-v2.png?v=opt2',
         'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2': 'assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2',
         'assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2': 'assets/desert-soft-clay/economy/ad-unavailable-v2.png?v=opt2',
         'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2': 'assets/desert-soft-clay/statistics/power-index-bolt-v2.png?v=opt2',
         'assets/easter-soft-clay/statistics/record-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/record-v2.png?v=opt2',
-        'assets/easter-soft-clay/statistics/wins-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/wins-v2.png?v=opt2',
-        'assets/easter-soft-clay/statistics/fire-streak-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2',
+        'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2': 'assets/desert-soft-clay/statistics/wins-v2.png?v=opt2',
+        'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2': 'assets/desert-soft-clay/statistics/fire-streak-v3.png?v=opt2',
         'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/all-time-points-v3.png?v=opt2',
         'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2': 'assets/desert-soft-clay/statistics/h2h-v2.png?v=opt2'
     };
@@ -80,21 +80,21 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/severna-soft-clay/rules/pages/economy-treasury-v2.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/severna-soft-clay/rules/pages/account-server-v2.png?v=1',
         'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2': 'assets/severna-soft-clay/daily-challenge-pro-v9.png?v=1',
-        'assets/easter-soft-clay/leaderboard-pro-v2.png': 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
+        'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1',
         'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/severna-soft-clay/statistics-pro-v9.png?v=1',
         'assets/easter-soft-clay/settings-pro-v3.png': 'assets/severna-soft-clay/settings-pro-v9.png?v=1',
         'assets/easter-soft-clay/statistics/record-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/record-v10.png?v=1',
         'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2': 'assets/severna-soft-clay/statistics/power-index-bolt-v10.png?v=1',
-        'assets/easter-soft-clay/statistics/wins-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/wins-v10.png?v=1',
-        'assets/easter-soft-clay/statistics/fire-streak-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1',
+        'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2': 'assets/severna-soft-clay/statistics/wins-v10.png?v=1',
+        'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2': 'assets/severna-soft-clay/statistics/fire-streak-v11.png?v=1',
         'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/all-time-points-v11.png?v=1',
         'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2': 'assets/severna-soft-clay/statistics/h2h-v10.png?v=1',
-        'assets/easter-soft-clay/economy/ducat.png?v=opt2': 'assets/severna-soft-clay/economy/ducat-v3.png?v=1',
+        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/severna-soft-clay/economy/ducat-v3.png?v=1',
         'assets/easter-soft-clay/economy/undo-token.png?v=opt2': 'assets/severna-soft-clay/economy/undo-token-v3.png?v=1',
         'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2': 'assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1',
         'assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2': 'assets/severna-soft-clay/economy/ad-unavailable-v3.png?v=1',
         'assets/easter-soft-clay/rules-pro-v2.png': 'assets/severna-soft-clay/rules-pro-v10.png?v=1',
-        'assets/easter-soft-clay/treasury-pro-v2.png': 'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
+        'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png': 'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
         'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
         'assets/easter-soft-clay/mode-solo-pro-v2.png': 'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
         'assets/easter-soft-clay/mode-hotseat-pro-v2.png': 'assets/severna-soft-clay/mode-hotseat-pro-v6.png?v=1',
@@ -109,7 +109,6 @@ function rulesSevernaAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/severna-soft-clay/online-duel-pro-v2.png?v=1',
         'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/severna-soft-clay/tournament/state-start-v3.png?v=1',
         'assets/easter-soft-clay/tournament/state-match-complete-v2.png': 'assets/severna-soft-clay/tournament/state-match-complete-v3.png?v=1',
-        'assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=opt2': 'assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1',
         'assets/easter-soft-clay/opponent/scanning.png?v=opt2': 'assets/severna-soft-clay/opponent/scanning-v3.png?v=1',
         'assets/easter-soft-clay/opponent/found.png?v=opt2': 'assets/severna-soft-clay/opponent/found-v3.png?v=1',
         'assets/easter-soft-clay/opponent/disconnected.png?v=opt2': 'assets/severna-soft-clay/opponent/disconnected-v3.png?v=1',
@@ -146,13 +145,13 @@ function rulesGreenAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/rules/pages/economy-treasury.png': 'assets/green-soft-clay/rules/pages/economy-treasury-v3.png?v=1',
         'assets/easter-soft-clay/rules/pages/account-server.png': 'assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png?v=1',
         'assets/easter-soft-clay/daily-challenge-pro-v5.png?v=opt2': 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png?v=1',
-        'assets/easter-soft-clay/leaderboard-pro-v2.png': 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
+        'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1',
         'assets/easter-soft-clay/statistics-pro-v2.png': 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png?v=1',
         'assets/easter-soft-clay/settings-pro-v3.png': 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png?v=1',
         'assets/easter-soft-clay/settings/profile-v2.png?v=opt2': 'assets/green-soft-clay/canonical/settings-controls/profile-v1.png?v=1',
         'assets/easter-soft-clay/settings/privacy-v2.png?v=opt2': 'assets/green-soft-clay/canonical/settings-controls/privacy-v1.png?v=1',
         'assets/easter-soft-clay/rules-pro-v2.png': 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png?v=1',
-        'assets/easter-soft-clay/treasury-pro-v2.png': 'assets/green-soft-clay/treasury-free-v3.png?v=1',
+        'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png': 'assets/green-soft-clay/treasury-free-v3.png?v=1',
         'assets/easter-soft-clay/tournament-pro-v4.png': 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1',
         'assets/easter-soft-clay/tournament/state-start-v2.png': 'assets/green-soft-clay/canonical/tournament-states/state-start-v1.png?v=1',
         'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2': 'assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png?v=1',
@@ -164,14 +163,14 @@ function rulesGreenAssetSrc(easterSrc = '') {
         'assets/easter-soft-clay/online-spectate-pro-v4.png?v=opt2': 'assets/green-soft-clay/online-spectate-v1.png?v=opt2',
         'assets/easter-soft-clay/online-duel-pro-v3.png?v=opt2': 'assets/green-soft-clay/online-duel-v1.png?v=opt2',
         'assets/easter-soft-clay/quarterly-league-yotb-ql-pro-v3.png?v=opt2': 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png?v=1',
-        'assets/easter-soft-clay/economy/ducat.png?v=opt2': 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1',
+        'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png': 'assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1',
         'assets/easter-soft-clay/economy/undo-token.png?v=opt2': 'assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png?v=1',
         'assets/easter-soft-clay/economy/rewarded-video.png?v=opt2': 'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png?v=1',
         'assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2': 'assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png?v=1',
         'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png?v=1',
         'assets/easter-soft-clay/statistics/record-v2.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/record-v1.png?v=1',
-        'assets/easter-soft-clay/statistics/wins-v2.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/wins-v1.png?v=1',
-        'assets/easter-soft-clay/statistics/fire-streak-v2.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png?v=1',
+        'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/wins-v1.png?v=1',
+        'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png?v=1',
         'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2': 'assets/green-soft-clay/canonical/statistics-overview/all-time-points-v1.png?v=1',
         'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2': 'assets/green-soft-clay/canonical/h2h-statistics/h2h-identity-v1.png?v=1',
         'assets/easter-soft-clay/opponent/reconnected.png?v=opt2': 'assets/green-soft-clay/opponent/reconnected-v1.png?v=opt2',
@@ -232,7 +231,7 @@ function rulesPageTitleGlyphIconHtml(defaultGlyph, easterSrc) {
 }
 
 function rulesQlPodiumPackHtml() {
-    return `<span class="rules-podium-pack rules-podium-pack-easter rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/easter-soft-clay/ql/medal-gold-v2.png?v=opt2" loading="lazy" alt=""><img data-theme-src="assets/easter-soft-clay/ql/medal-silver-v2.png?v=opt2" loading="lazy" alt=""><img data-theme-src="assets/easter-soft-clay/ql/medal-bronze-v2.png?v=opt2" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-desert rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/desert-soft-clay/ql/medal-gold.png?v=opt2" loading="lazy" alt=""><img data-theme-src="assets/desert-soft-clay/ql/medal-silver.png?v=opt2" loading="lazy" alt=""><img data-theme-src="assets/desert-soft-clay/ql/medal-bronze.png?v=opt2" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-nebula rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/severna-soft-clay/ql/medal-gold-v3.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/severna-soft-clay/ql/medal-silver-v3.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/severna-soft-clay/ql/medal-bronze-v3.png?v=1" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-green rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png?v=1" loading="lazy" alt=""></span>`;
+    return `<span class="rules-podium-pack rules-podium-pack-easter rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/easter-soft-clay/canonical/competition-medals/gold-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/easter-soft-clay/canonical/competition-medals/bronze-v1.png?v=1" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-desert rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/desert-soft-clay/ql/medal-gold.png?v=opt2" loading="lazy" alt=""><img data-theme-src="assets/desert-soft-clay/ql/medal-silver.png?v=opt2" loading="lazy" alt=""><img data-theme-src="assets/desert-soft-clay/ql/medal-bronze.png?v=opt2" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-nebula rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/severna-soft-clay/ql/medal-gold-v3.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/severna-soft-clay/ql/medal-silver-v3.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/severna-soft-clay/ql/medal-bronze-v3.png?v=1" loading="lazy" alt=""></span><span class="rules-podium-pack rules-podium-pack-green rules-ql-podium-pack" aria-hidden="true"><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png?v=1" loading="lazy" alt=""><img data-theme-src="assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png?v=1" loading="lazy" alt=""></span>`;
 }
 
 const RulesData = {
@@ -254,7 +253,7 @@ const RulesData = {
                     <li><strong>${rulesTextGlyphHtml('📢')} NAJAVA:</strong> Posle prvog bacanja možete uključiti Najavu, izabrati tačno polje u koloni Najava i zatim morate upisati baš to polje. Najava se može otkazati dok još nije zaključana.</li>
                 </ul>
                 
-                <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-leaderboard'), 'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1')} Bodovanje i sekcije</h3>
+                <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-leaderboard'), 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Bodovanje i sekcije</h3>
                 <h4>1. SEKCIJA (1-6)</h4>
                 <p>Sabiraju se samo odgovarajući brojevi. Ako je zbir u ovoj sekciji najmanje 60, dobijate <strong>bonus od +30 poena</strong>.</p>
                 <h4>2. SEKCIJA (MIN - MAX)</h4>
@@ -277,8 +276,8 @@ const RulesData = {
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2')} Indeks moći (Power Index):</strong> Glavni pokazatelj uspeha koji spaja rezultate, pobede, trofeje i ligaški učinak.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏅', 'assets/easter-soft-clay/statistics/record-v2.png?v=opt2')} Rekord:</strong> Vaš najbolji lični rezultat.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins-v2.png?v=opt2')} Odnos pobeda/poraza (W/L):</strong> Prikazuje efikasnost u direktnim online duelima i turnirima.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak-v2.png?v=opt2')} Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u duelima i turnirima.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2')} Odnos pobeda/poraza (W/L):</strong> Prikazuje efikasnost u direktnim online duelima i turnirima.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2')} Vatreni niz:</strong> Broj uzastopnih pobeda ostvarenih u duelima i turnirima.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🌟', 'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2')} All-Time PTS:</strong> Ukupan zbir poena kroz sve završene partije.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Rival:</strong> Prijatelj sa kojim imate najviše odigranih međusobnih duela.</li>
                 </ul>
@@ -286,7 +285,7 @@ const RulesData = {
                 <h3>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Međusobni dueli (H2H)</h3>
                 <p>Za svakog prijatelja-rivala formira se H2H kartica sa istorijom okršaja: pobede, porazi, nerešeno, najveća pobeda, najteži poraz, prosečni poeni i aktuelni vatreni niz protiv tog rivala.</p>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/leaderboard-icon.svg', 'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1')} Top liste i rangiranje</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/leaderboard-icon.svg', 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Top liste i rangiranje</h3>
                 <ul>
                     <li><strong>Nedeljna lista:</strong> Prikazuje najbolje rezultate iz tekuće nedelje.</li>
                     <li><strong>Mesečna lista:</strong> Prikazuje najbolje rezultate iz tekućeg meseca.</li>
@@ -307,7 +306,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Turniri</h3>
                 <ul>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Sistem:</strong> Nedeljni turnir prima 8 igrača i igra se na ispadanje: četvrtfinale, polufinale i finale. Svaki duel je jedna partija.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=opt2')} Prijava:</strong> Kotizacija je 5500 dukata. Odjava i povraćaj mogući su samo dok traje faza prijave, pre početka turnira.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1')} Prijava:</strong> Kotizacija je 5500 dukata. Odjava i povraćaj mogući su samo dok traje faza prijave, pre početka turnira.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('📅', 'assets/easter-soft-clay/tournament/state-start-v2.png?v=1')} Zakazivanje:</strong> Kada se prijavi svih 8 igrača, protivnici u kosturu predlažu i prihvataju termin meča. Meč se pokreće kada je termin potvrđen.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Nagrade:</strong> Pobednik dobija 44.000 dukata, veliki rast Indeksa moći i ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2')} upis u Dvoranu slavnih. Finalista koji izgubi finale dobija povraćaj uloga od 5500 dukata.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Tehnički rezultat:</strong> Napuštanje, istek vremena ili prekid veze mogu doneti tehničku pobedu protivniku.</li>
@@ -341,7 +340,7 @@ const RulesData = {
         {
             title: `${rulesPageTitleIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/rules/pages/economy-treasury.png?v=1')} Dukati, tokeni i Riznica`,
             content: `
-                <h3>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=opt2')} Dukati i ekonomija</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1')} Dukati i ekonomija</h3>
                 <p>Dukati su glavna valuta u igri. Koriste se za prijave na turnire, kupovine u Riznici i napredovanje kroz kolekcije.</p>
                 <ul>
                     <li><strong>${rulesTextGlyphHtml('🎲')} Završene partije:</strong> Na kraju partije dobijate dukate u skladu sa rezultatom, a nagradu možete duplirati nagradnom reklamom.</li>
@@ -358,7 +357,7 @@ const RulesData = {
                     <li><strong>Nabavka tokena:</strong> U meniju dukata kartica za tokene nudi +1 token za nagradni video.</li>
                 </ul>
 
-                <h3>${rulesThemeAssetIconHtml('assets/treasury-icon.svg', 'assets/easter-soft-clay/treasury-pro-v2.png?v=1')} Riznica</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/treasury-icon.svg', 'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png?v=1')} Riznica</h3>
                 <p>Riznica je mesto za personalizaciju igre i pregled osvojenih stvari.</p>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('🏆', 'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2')} Trofeji:</strong> Posebni izazovi se otključavaju tokom igre i mogu doneti nagrade u dukatima.</li>
@@ -418,7 +417,7 @@ const RulesData = {
                     <li><strong>${rulesTextGlyphHtml('📢')} ANNOUNCE:</strong> After the first roll, you may enable Announce, select the exact field in the Announce column, and then you must fill that field. The announcement can be canceled before it is locked.</li>
                 </ul>
                 
-                <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-leaderboard'), 'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1')} Scoring & Sections</h3>
+                <h3>${rulesThemeGlyphIconHtml(rulesIconHtml('menu-icon-leaderboard'), 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Scoring & Sections</h3>
                 <h4>SECTION 1 (Rows 1 to 6)</h4>
                 <p>Only matching numbers are summed. If the section total is at least 60, you receive a <strong>+30 point bonus</strong>.</p>
                 <h4>SECTION 2 (MIN - MAX)</h4>
@@ -441,8 +440,8 @@ const RulesData = {
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('⚡', 'assets/easter-soft-clay/statistics/power-index-bolt-v3.png?v=opt2')} Power Index:</strong> The main success indicator, combining results, wins, trophies, and league performance.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏅', 'assets/easter-soft-clay/statistics/record-v2.png?v=opt2')} High score:</strong> Your personal best score.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins-v2.png?v=opt2')} W/L Ratio:</strong> Shows your efficiency in direct online duels and tournaments.</li>
-                    <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak-v2.png?v=opt2')} Win Streak:</strong> Number of consecutive wins in duels and tournaments.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('⚖️', 'assets/easter-soft-clay/statistics/wins-v3.png?v=opt2')} W/L Ratio:</strong> Shows your efficiency in direct online duels and tournaments.</li>
+                    <li><strong>${rulesThemeGlyphIconHtml('🔥', 'assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2')} Win Streak:</strong> Number of consecutive wins in duels and tournaments.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🌟', 'assets/easter-soft-clay/statistics/all-time-points-v2.png?v=opt2')} All-Time PTS:</strong> Total points across all finished games.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Rival:</strong> The friend you have played against the most.</li>
                 </ul>
@@ -450,7 +449,7 @@ const RulesData = {
                 <h3>${rulesThemeGlyphIconHtml('⚔️', 'assets/easter-soft-clay/statistics/h2h-v2.png?v=opt2')} Head-to-Head (H2H)</h3>
                 <p>Every friend-rival gets an H2H card with your duel history: wins, losses, draws, biggest win, worst loss, average points, and current win streak against that rival.</p>
                 
-                <h3>${rulesThemeAssetIconHtml('assets/leaderboard-icon.svg', 'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1')} Leaderboards</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/leaderboard-icon.svg', 'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1')} Leaderboards</h3>
                 <ul>
                     <li><strong>Weekly:</strong> Best scores from the current week.</li>
                     <li><strong>Monthly:</strong> Best scores from the current month.</li>
@@ -471,7 +470,7 @@ const RulesData = {
                 <h3>${rulesThemeAssetIconHtml('assets/tournament-info-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Tournaments</h3>
                 <ul>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-icon.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Format:</strong> The weekly tournament accepts 8 players and is played as a knockout bracket: quarterfinals, semifinals, and final. Each duel is one game.</li>
-                    <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=opt2')} Entry:</strong> The entry fee is 5500 ducats. Unregistering and refunds are possible only during registration, before the tournament starts.</li>
+                    <li><strong>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1')} Entry:</strong> The entry fee is 5500 ducats. Unregistering and refunds are possible only during registration, before the tournament starts.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('📅', 'assets/easter-soft-clay/tournament/state-start-v2.png?v=1')} Scheduling:</strong> Once all 8 players register, opponents in the bracket propose and accept match times. A match starts after the time is confirmed.</li>
                     <li><strong>${rulesThemeAssetIconHtml('assets/tournament-trophy-yotb.svg', 'assets/easter-soft-clay/tournament-pro-v4.png?v=1')} Rewards:</strong> The winner receives 44,000 ducats, a major Power Index boost, and a ${rulesThemeAssetIconHtml('assets/tournament-hall-icon.svg', 'assets/easter-soft-clay/tournament/tab-hall-of-fame-v2.png?v=opt2')} Hall of Fame entry. The finalist who loses the final gets the 5500 ducat entry fee refunded.</li>
                     <li><strong>${rulesThemeGlyphIconHtml('🏁', 'assets/easter-soft-clay/opponent/disconnected.png?v=opt2')} Technical result:</strong> Leaving, timing out, or disconnecting can award a technical win to the opponent.</li>
@@ -505,7 +504,7 @@ const RulesData = {
         {
             title: `${rulesPageTitleIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/rules/pages/economy-treasury.png?v=1')} Ducats, tokens & Treasury`,
             content: `
-                <h3>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/economy/ducat.png?v=opt2')} Ducats & economy</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/dukat-icon.svg', 'assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1')} Ducats & economy</h3>
                 <p>Ducats are the main in-game currency. They are used for tournament entries, Treasury purchases, and collection progress.</p>
                 <ul>
                     <li><strong>${rulesTextGlyphHtml('🎲')} Finished games:</strong> At the end of a game, you earn ducats based on your score, and you can double the reward with a rewarded ad.</li>
@@ -522,7 +521,7 @@ const RulesData = {
                     <li><strong>Getting tokens:</strong> The token tab in the ducat menu offers +1 token for a rewarded video.</li>
                 </ul>
 
-                <h3>${rulesThemeAssetIconHtml('assets/treasury-icon.svg', 'assets/easter-soft-clay/treasury-pro-v2.png?v=1')} Treasury</h3>
+                <h3>${rulesThemeAssetIconHtml('assets/treasury-icon.svg', 'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png?v=1')} Treasury</h3>
                 <p>The Treasury is where you personalize the game and review collected items.</p>
                 <ul>
                     <li><strong>${rulesThemeGlyphIconHtml('🏆', 'assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2')} Trophies:</strong> Special challenges unlock during play and can reward ducats.</li>

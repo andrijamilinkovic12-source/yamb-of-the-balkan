@@ -55,7 +55,7 @@ class TopListManager {
         const medalSrc = activeTheme === 'dark'
             ? `assets/green-soft-clay/canonical/competition-medals/general-podium-${medal}-v1.png?v=1`
             : activeTheme === 'easter'
-            ? `assets/easter-soft-clay/leaderboard/medal-${medal}-v4.png?v=1`
+            ? `assets/easter-soft-clay/canonical/competition-medals/${medal}-v1.png?v=1`
             : activeTheme === 'desert'
                 ? `assets/desert-soft-clay/leaderboard/medal-${medal}-v4.png?v=1`
                 : activeTheme === 'severna'

@@ -11,7 +11,7 @@
   "entrypoints": {
     "css": "www/teme.css",
     "shopConfig": "www/config.js",
-    "backgroundAsset": "www/assets/severna-maglina-bg-v3-neuphoric.png"
+    "backgroundAsset": "www/assets/theme-backgrounds/severna-v4.png"
   },
   "packs": [
     {

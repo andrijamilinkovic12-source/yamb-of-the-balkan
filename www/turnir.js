@@ -589,13 +589,18 @@ class TournamentManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
+        const isEasterIntro = overlay.classList.contains('theme-easter');
         const isSoftClayIntro = overlay.classList.contains('theme-easter')
             || overlay.classList.contains('theme-desert')
             || overlay.classList.contains('theme-severna')
             || overlay.classList.contains('theme-dark');
 
         if (isSoftClayIntro) {
-            this.setEasterIntroTitle(title, this.tr('tourney_intro_title', 'TURNIR'));
+            if (isEasterIntro) {
+                if (title) title.textContent = '';
+            } else {
+                this.setEasterIntroTitle(title, this.tr('tourney_intro_title', 'TURNIR'));
+            }
             this.renderEasterIntroChampions();
             this.requestTournamentStats();
             setTimeout(() => {
@@ -720,9 +725,7 @@ class TournamentManager {
                         ? Math.max(0, Math.floor(Number(player.wins)))
                         : 0;
                     const podiumTone = ['gold', 'silver', 'bronze'][index] || 'bronze';
-                    const easterPodiumSrc = podiumTone === 'silver'
-                        ? 'assets/easter-soft-clay/tournament/podium-silver-v3.png?v=opt2'
-                        : `assets/easter-soft-clay/tournament/podium-${podiumTone}-v2.png?v=2`;
+                    const easterPodiumSrc = `assets/easter-soft-clay/canonical/competition-medals/${podiumTone}-v1.png?v=1`;
                     const desertPodiumSrc = `assets/desert-soft-clay/tournament/podium-${podiumTone}.png?v=3`;
                     const greenPodiumSrc = `assets/green-soft-clay/canonical/competition-medals/general-podium-${podiumTone}-v1.png?v=1`;
                     return `
@@ -1220,7 +1223,7 @@ class TournamentManager {
                             <span class="tourney-champion-final-label">${finalLabel}</span>
                             <strong>${safeFinalScore}</strong>
                         </div>
-                        <div class="tourney-champion-runner-up"><span>${runnerLabel}:</span> ${safeRunnerUp}</div>
+                        <div class="tourney-champion-runner-up"><img class="tourney-champion-finalist-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${runnerLabel}:</span> ${safeRunnerUp}</div>
                         <div class="tourney-champion-actions">
                             ${journeyButton}
                             <button type="button" class="tourney-champion-action-btn tourney-champion-share-btn" data-champion-index="${playerIndex}" data-championship-index="${championshipIndex}" aria-label="${this.escapeAttr(tt('tourney_share_aria') || 'Podeli karticu osvajača')}" onclick="event.stopPropagation(); app.tournamentManager.shareChampionCard(${playerIndex}, ${championshipIndex})">
@@ -2117,7 +2120,7 @@ class TournamentManager {
                 ? 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1'
                 : 'assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png?v=1';
             const finalistHtml = round === 'f'
-                ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-easter" data-theme-src="assets/easter-soft-clay/tournament/finalist-silver-v3.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-desert" data-theme-src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
+                ? `<div class="tourney-finalist-result"><img class="tourney-finalist-result-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-desert" data-theme-src="assets/desert-soft-clay/tournament/finalist-silver-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament/finalist-silver-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-finalist-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${tt('tourney_finalist_title') || 'Finalista'}: <strong>${finalistName}</strong></span></div>`
                 : '';
             akcijeHtml = `<div class="tourney-match-result" style="color: var(--success); font-size: 1.1rem; padding: 10px; background: rgba(76, 175, 80, 0.1); border-radius: 8px;">${tt('tourney_winner') || 'Pobednik:'} <strong style="text-transform: uppercase;">${winnerName}</strong> <img class="tourney-match-result-icon-default" src="assets/tournament-trophy-yotb.svg" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-easter" data-theme-src="${easterResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-desert" data-theme-src="assets/desert-soft-clay/${resultIcon}?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-nebula" data-theme-src="assets/severna-soft-clay/${severnaResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-match-result-icon-green" data-theme-src="${greenResultIcon}" loading="lazy" alt="" aria-hidden="true" decoding="async">${finalistHtml}${resultHtml}${drawCountHtml}</div>`;
         }

@@ -30,6 +30,7 @@
         const frame = document.getElementById('qa-frame');
         const themeClasses = ['light-theme', 'medium-theme', 'winter-theme', 'neon-theme', 'amethyst-theme', 'easter-theme', 'desert-theme', 'moon-theme', 'severna-theme'];
         const qaSeed = Date.now();
+        const qaLanguage = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'sr';
 
         function getState() {
             return (location.hash || '#splash').replace('#', '').trim() || 'splash';
@@ -50,21 +51,84 @@
         }
 
         function applyTheme(doc) {
+            localStorage.setItem('yamb_theme', 'easter');
             doc.body.classList.remove(...themeClasses);
             doc.body.classList.add('easter-theme');
+            doc.documentElement.classList.remove('landscape-orientation-active');
+            doc.documentElement.classList.add('portrait-orientation-active');
+            doc.documentElement.dataset.splashTheme = 'easter';
+            const rotationLock = doc.getElementById('rotate-lock-overlay');
+            if (rotationLock) {
+                rotationLock.style.display = 'none';
+                rotationLock.setAttribute('aria-hidden', 'true');
+            }
+            doc.querySelectorAll('img[data-theme-src*="assets/easter-soft-clay/"]').forEach(image => {
+                if (!image.getAttribute('src')) image.setAttribute('src', image.dataset.themeSrc);
+            });
         }
 
-        function fillBoard(doc) {
+        function fillBoard(doc, mode = 'solo') {
             const app = frame.contentWindow && frame.contentWindow.app;
-            if (app && typeof app.initScores === 'function' && typeof app.startGame === 'function' && !doc.body.dataset.qaBoardReady) {
-                app.playerName = 'Vaskr Igrač';
-                app.players = ['Vaskr Igrač'];
-                app.modeTag = 'Solo';
+            const firstPlayer = qaLanguage === 'en' ? 'Easter Player' : 'Vaskrs Igrač';
+            const secondPlayer = 'Aleksandar Mihajlović Petrović';
+            const config = {
+                solo: { players: [firstPlayer], modeTag: 'Solo', online: false, spectator: false },
+                hotseat: { players: [firstPlayer, secondPlayer], modeTag: 'Hotseat', online: false, spectator: false },
+                online: { players: [firstPlayer, secondPlayer], modeTag: 'Online', online: true, spectator: false },
+                spectator: { players: [firstPlayer, secondPlayer], modeTag: 'Online', online: true, spectator: true }
+            }[mode] || { players: [firstPlayer], modeTag: 'Solo', online: false, spectator: false };
+            const boardSignature = `${mode}:${qaLanguage}`;
+
+            const applyBoardModeState = () => {
+                if (!app) return;
+                app.onlineMode = config.online;
+                app.isSpectator = config.spectator;
+                app.myOnlineIndex = 0;
+                app.roomId = config.online ? 'qa-random-room' : null;
+                app.onlineDuelType = config.online ? 'random' : null;
+                if (typeof app.highlightCurrentPlayer === 'function') app.highlightCurrentPlayer();
+                if (config.spectator && typeof app.updateSpectatorIcon === 'function') app.updateSpectatorIcon(3);
+
+                const gameScene = doc.getElementById('game-scene');
+                if (gameScene) {
+                    gameScene.classList.remove('opponent-reconnecting');
+                    gameScene.classList.toggle('online-duel-room', config.online);
+                    gameScene.classList.toggle('random-online-duel-room', config.online);
+                    gameScene.classList.toggle('theme-dual-board-view', config.players.length === 2);
+                }
+                const timer = doc.getElementById('turn-timer-display');
+                if (timer) {
+                    timer.style.animation = '';
+                    timer.style.display = config.online ? 'flex' : 'none';
+                    timer.className = config.online && !config.spectator ? 'timer-turn--opponent' : '';
+                    timer.innerHTML = !config.online
+                        ? ''
+                        : (config.spectator
+                            ? `<span>${qaLanguage === 'en' ? 'LIVE · 3 VIEWERS' : 'UŽIVO · 3 GLEDAOCA'}</span>`
+                            : `<span>${qaLanguage === 'en' ? 'OPPONENT · 00:24' : 'PROTIVNIK · 00:24'}</span>`);
+                }
+                const throwButton = doc.getElementById('btn-bacaj');
+                const announceButton = doc.getElementById('btn-najava');
+                if (throwButton) throwButton.style.display = config.spectator ? 'none' : 'flex';
+                if (announceButton) announceButton.style.display = config.spectator ? 'none' : 'flex';
+                applyTheme(doc);
+                showOnly(doc, 'game-scene');
+            };
+
+            if (app && typeof app.initScores === 'function' && typeof app.startGame === 'function' && doc.body.dataset.qaBoardReady !== boardSignature) {
+                app.playerName = firstPlayer;
+                app.players = [...config.players];
+                app.modeTag = config.modeTag;
                 app.onlineMode = false;
                 app.isSpectator = false;
+                app.myOnlineIndex = 0;
+                app.roomId = config.online ? 'qa-random-room' : null;
+                app.onlineDuelType = config.online ? 'random' : null;
                 app.currentPlayerIdx = 0;
                 app.initScores();
                 app.startGame({ skipQuote: true });
+                app.onlineMode = config.online;
+                app.isSpectator = config.spectator;
 
                 const samples = [
                     ['Nadole', '1', 5],
@@ -82,10 +146,14 @@
                     ['Najava', 'Yamb', 60]
                 ];
 
-                samples.forEach(([col, row, value]) => {
-                    if (app.allScores && app.allScores[0] && app.allScores[0][col]) {
-                        app.allScores[0][col][row] = value;
-                    }
+                samples.forEach(([col, row, value], sampleIndex) => {
+                    config.players.forEach((_, playerIndex) => {
+                        if (app.allScores?.[playerIndex]?.[col]) {
+                            app.allScores[playerIndex][col][row] = playerIndex === 0
+                                ? value
+                                : Math.max(0, value - ((sampleIndex % 3) + 1));
+                        }
+                    });
                 });
 
                 app.brojBacanja = 2;
@@ -95,9 +163,13 @@
                 if (typeof app.updateDiceVisuals === 'function') app.updateDiceVisuals();
                 if (typeof app.updateStatusLabel === 'function') app.updateStatusLabel();
                 if (typeof app.highlightCurrentPlayer === 'function') app.highlightCurrentPlayer();
-                doc.body.dataset.qaBoardReady = 'true';
-                applyTheme(doc);
-                showOnly(doc, 'game-scene');
+                doc.body.dataset.qaBoardReady = boardSignature;
+                applyBoardModeState();
+                return;
+            }
+
+            if (app && doc.body.dataset.qaBoardReady === boardSignature) {
+                applyBoardModeState();
                 return;
             }
 
@@ -143,16 +215,46 @@
             if (status) status.textContent = 'Bacanje 2 / 3';
         }
 
-        function fillHighscores(doc) {
-            const list = doc.getElementById('global-hs-list');
-            if (!list) return;
+        function setHighscoreTab(doc, tabName = 'global') {
+            doc.querySelectorAll('[data-hs-tab]').forEach(button => {
+                button.classList.toggle('active', button.dataset.hsTab === tabName);
+            });
+            doc.querySelectorAll('[data-hs-panel]').forEach(panel => {
+                panel.classList.toggle('active', panel.dataset.hsPanel === tabName);
+            });
+        }
+
+        function fillHighscores(doc, state = 'ready') {
+            const globalList = doc.getElementById('global-hs-list');
+            const localList = doc.getElementById('local-hs-list');
+            const manager = frame.contentWindow?.app?.topListManager;
+            if (!globalList || !localList) return;
+
+            setHighscoreTab(doc, 'global');
+
+            if (state !== 'ready') {
+                const stateConfig = {
+                    empty: ['msg_no_results', 'empty', ''],
+                    loading: ['msg_connecting', 'loading', '⏳'],
+                    offline: ['msg_no_connection', 'offline', '⚠']
+                }[state] || ['msg_no_results', 'empty', ''];
+                const message = manager?._t(stateConfig[0]) || stateConfig[0];
+                const markup = manager?._stateMarkup(message, stateConfig[1], stateConfig[2])
+                    || `<div class="hs-list-state hs-list-state-${stateConfig[1]}"><span class="hs-list-state-text">${message}</span></div>`;
+                globalList.innerHTML = markup;
+                localList.innerHTML = markup;
+                applyTheme(doc);
+                return;
+            }
+
             const rows = [
-                ['Ana', 1864, 'Danas'],
-                ['Miloš', 1740, 'Juče'],
+                ['Aleksandar Mihajlović Petrović', 1864, 'Danas'],
+                ['Konstantin Aleksandrović Jovanović', 1740, 'Juče'],
                 ['Vuk', 1698, 'Nedelja'],
-                ['Lena', 1588, 'Mesec']
+                ['Lena', 1588, 'Mesec'],
+                ['Miloš', 1512, 'Mesec']
             ];
-            list.innerHTML = rows.map((row, index) => `
+            const fallbackMarkup = rows.map((row, index) => `
                 <li class="highscore-item">
                     <div class="rank-circle rank-${index + 1}"><span style="position: relative; z-index: 2;">${index === 0 ? '' : index + 1}</span></div>
                     <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(row[0])}&background=f6b7ca&color=4a3158" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(139,69,190,0.26); box-shadow: 0 2px 5px rgba(0,0,0,0.16);">
@@ -163,25 +265,166 @@
                     <div class="hs-score-pill" style="justify-self: center;">${row[1].toLocaleString('sr-RS')}</div>
                 </li>
             `).join('');
+
+            if (manager?.renderList) {
+                const entries = rows.map((row, index) => ({
+                    uid: `easter-qa-player-${String(index + 1).padStart(3, '0')}-stable`,
+                    playerName: row[0],
+                    score: row[1],
+                    mode: 'Solo',
+                    date: new Date(Date.now() - index * 86400000).toISOString(),
+                    photoUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(row[0])}&background=f6b7ca&color=4a3158`
+                }));
+                manager.renderList(entries, 'global-hs-list');
+                manager.renderList(entries.slice(0, 4), 'local-hs-list');
+            } else {
+                globalList.innerHTML = fallbackMarkup;
+                localList.innerHTML = fallbackMarkup;
+            }
+            applyTheme(doc);
         }
 
-        function fillChat(doc) {
+        function fillDaily(doc, state = 'active') {
+            const manager = frame.contentWindow && frame.contentWindow.dnevniIzazov;
+            const overlay = doc.getElementById('glass-daily-overlay');
+            if (!manager || !overlay) return;
+
+            doc.getElementById('glass-daily-result')?.remove();
+            overlay.classList.remove('daily-glass-overlay--blank');
+            overlay.classList.add('active');
+
+            const button = doc.getElementById('glass-btn-action');
+            if (button) {
+                button.style.display = 'block';
+                button.disabled = false;
+            }
+
+            manager.resetGame();
+            clearInterval(manager.interval);
+            manager.isActive = false;
+            const values = [6, 5, 4, 3, 2, 1];
+            values.forEach((value, index) => {
+                const die = doc.getElementById(`gd-${index}`);
+                if (!die) return;
+                die.innerHTML = manager.getDiceDotsHTML(value);
+                die.dataset.val = String(value);
+                die.className = `daily-glass-die dice${state === 'active' && index === 5 ? ' rolling' : ' locked'}`;
+            });
+            const sum = doc.getElementById('glass-daily-sum');
+            if (sum) sum.textContent = state === 'active' ? '18' : '378';
+
+            if (state === 'result') {
+                manager.calculatedReward = 378;
+                manager.currentBaseReward = 378;
+                manager.showResultModal();
+            }
+
+            applyTheme(doc);
+        }
+
+        function fillTreasury(doc, tabName = 'trophy') {
+            const manager = frame.contentWindow && frame.contentWindow.riznicaManager;
+            if (!manager || typeof manager.switchTab !== 'function') return;
+
+            manager.switchTab(tabName);
+            if (tabName === 'trophy' && manager.shop) {
+                manager.shop.unlocked = ['first_play', 'apprentice', 'kafana', 'score_1000'];
+                manager.shop.render();
+            }
+            const balance = doc.getElementById('riznica-balance');
+            if (balance) balance.textContent = '12.750';
+            applyTheme(doc);
+        }
+
+        function fillEconomy(doc, tabIndex = 0, adUnavailable = false) {
+            const overlay = doc.getElementById('undo-menu-overlay');
+            const manager = frame.contentWindow && frame.contentWindow.undoManager;
+            if (!overlay) return;
+
+            overlay.style.display = 'flex';
+            overlay.classList.add('active');
+            if (manager && typeof manager.switchMenuTab === 'function') manager.switchMenuTab(tabIndex);
+
+            const dukats = doc.getElementById('economy-dukati-count-large');
+            const tokens = doc.getElementById('undo-token-count');
+            if (dukats) dukats.textContent = '12.750';
+            if (tokens) tokens.textContent = '8';
+
+            doc.querySelectorAll('#undo-menu-overlay .btn-ad-state-aware').forEach(button => {
+                button.classList.toggle('disabled', adUnavailable);
+                button.classList.toggle('ad-loading', adUnavailable);
+                button.disabled = adUnavailable;
+                button.style.opacity = adUnavailable ? '0.6' : '1';
+                button.style.filter = adUnavailable ? 'grayscale(100%)' : 'none';
+            });
+            const banner = doc.getElementById('economy-banner-slot');
+            if (banner) {
+                banner.dataset.adState = adUnavailable ? 'failed' : 'idle';
+                const label = banner.querySelector('span');
+                if (label && adUnavailable) label.textContent = qaLanguage === 'en' ? 'Ad is unavailable' : 'Oglas nije dostupan';
+            }
+            applyTheme(doc);
+        }
+
+        function fillChat(doc, state = 'messages') {
             const overlay = doc.getElementById('global-chat-overlay');
             if (!overlay) return;
             overlay.style.display = 'flex';
             overlay.classList.add('active');
 
             const body = doc.getElementById('global-chat-body');
-            if (body) {
+            const manager = frame.contentWindow?.app?.globalChat;
+            if (state === 'empty' || state === 'loading') {
+                manager?.renderHistoryState(state);
+            } else if (body) {
                 body.innerHTML = `
-                    <div class="global-chat-welcome">🐇 Vaskr tema aktivna — poruke ostaju čitljive.</div>
+                    <div class="global-chat-welcome">${qaLanguage === 'en' ? 'Easter theme active — messages remain readable.' : 'Vaskrs tema je aktivna — poruke ostaju čitljive.'}</div>
                     <div class="chat-msg msg-incoming"><strong>Ana:</strong> Srećno bacanje!</div>
                     <div class="chat-msg msg-outgoing"><strong>Ti:</strong> Idemo na Yamb.</div>
                 `;
             }
+            applyTheme(doc);
         }
 
-        function fillOnlinePlayers(doc) {
+        function onlineStateMarkup(state) {
+            const copy = {
+                loading: qaLanguage === 'en' ? 'Loading players...' : 'Učitavam igrače...',
+                empty: qaLanguage === 'en' ? 'There are currently no players online.' : 'Trenutno nema online igrača.',
+                error: qaLanguage === 'en' ? 'You are not connected to the server.' : 'Niste povezani na server.'
+            };
+            return `
+                <div class="online-players-state ${state === 'loading' ? 'is-loading' : ''}" data-online-state="${state}" role="${state === 'error' ? 'alert' : 'status'}">
+                    <img class="online-players-state-soft-clay-icon" data-theme-src="assets/easter-soft-clay/online-players-state-pro-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <span>${copy[state]}</span>
+                </div>`;
+        }
+
+        function onlineActionButton(type, file, label, disabled = false) {
+            return `
+                <button class="online-player-action online-player-action--${type}${disabled ? ' is-disabled' : ''}" ${disabled ? 'disabled' : ''} title="${label}" aria-label="${label}" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;">
+                    <img class="online-player-action-soft-clay-icon" data-theme-src="assets/easter-soft-clay/${file}" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                </button>`;
+        }
+
+        function onlinePlayerCard(name, options = {}) {
+            const addLabel = qaLanguage === 'en' ? 'Add friend' : 'Dodaj prijatelja';
+            const spectateLabel = qaLanguage === 'en' ? 'Watch match' : 'Gledaj partiju';
+            const duelLabel = qaLanguage === 'en' ? 'Challenge to a duel' : 'Izazovi na duel';
+            return `
+                <div class="online-player-card" style="display:flex;align-items:center;justify-content:space-between;padding:12px 15px;gap:10px;">
+                    <div class="online-player-identity" style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
+                        <img src="assets/easter-soft-clay/settings/profile-v2.png?v=opt2" style="width:45px;height:45px;border-radius:50%;object-fit:cover;flex-shrink:0;" alt="" aria-hidden="true">
+                        <span class="online-player-name${name.length > 26 ? ' online-player-name--very-long' : (name.length > 18 ? ' online-player-name--long' : '')}" data-player-name="${name}" title="${name}">${name}</span>
+                    </div>
+                    <div class="online-player-actions" style="display:flex;gap:8px;flex-shrink:0;">
+                        ${onlineActionButton('friend', 'online-add-friend-pro-v2.png?v=opt2', addLabel, !!options.friend)}
+                        ${onlineActionButton('spectate', 'online-spectate-pro-v4.png?v=opt2', spectateLabel, !options.playing)}
+                        ${onlineActionButton('duel', 'online-duel-pro-v3.png?v=opt2', duelLabel, !!options.busy)}
+                    </div>
+                </div>`;
+        }
+
+        function fillOnlinePlayers(doc, state = 'list') {
             const overlay = doc.getElementById('online-players-overlay');
             if (!overlay) return;
             overlay.style.display = 'flex';
@@ -189,30 +432,26 @@
 
             const body = doc.getElementById('online-players-body');
             if (body) {
-                body.innerHTML = `
-                    <div>
-                        <img src="https://ui-avatars.com/api/?name=Ana&background=f6b7ca&color=4a3158" alt="">
-                        <span class="ws-name">Ana</span>
-                        <button class="btn-menu btn-secondary">Pozovi</button>
-                    </div>
-                    <div>
-                        <img src="https://ui-avatars.com/api/?name=Vuk&background=d9b8ff&color=4a3158" alt="">
-                        <span class="ws-name">Vuk</span>
-                        <button class="btn-menu btn-secondary">Pozovi</button>
-                    </div>
-                `;
+                body.innerHTML = state === 'list'
+                    ? onlinePlayerCard('Ana Petrović', { playing: true })
+                        + onlinePlayerCard('Aleksandar Mihajlović Petrović', { friend: true, busy: true })
+                    : onlineStateMarkup(state);
             }
+            applyTheme(doc);
         }
 
-        function fillWaiting(doc) {
+        function fillWaiting(doc, state = 'found') {
+            const app = frame.contentWindow?.app;
             const title = doc.getElementById('waiting-title');
-            if (title) title.textContent = 'TRAŽENJE PROTIVNIKA...';
+            if (title) title.textContent = qaLanguage === 'en' ? 'FINDING AN OPPONENT...' : 'TRAŽENJE PROTIVNIKA...';
 
             const count = doc.getElementById('waiting-online-count');
             if (count) count.textContent = '27';
 
             const myName = doc.getElementById('waiting-my-name');
-            if (myName) myName.textContent = 'Vaskr Igrač';
+            const myDisplayName = qaLanguage === 'en' ? 'Easter Player' : 'Vaskrs Igrač';
+            if (typeof app?.renderWaitingPlayerName === 'function') app.renderWaitingPlayerName('waiting-my-name', myDisplayName);
+            else if (myName) myName.textContent = myDisplayName;
 
             const power = doc.getElementById('waiting-my-power');
             if (power) power.textContent = '1280';
@@ -220,12 +459,15 @@
             const searching = doc.getElementById('waiting-opp-searching');
             const found = doc.getElementById('waiting-opp-found');
             const opponentBox = doc.getElementById('waiting-opp-box');
-            if (searching) searching.style.display = 'none';
-            if (found) found.style.display = 'flex';
-            if (opponentBox) opponentBox.classList.remove('is-searching');
+            const isSearching = state === 'searching';
+            if (searching) searching.style.display = isSearching ? 'flex' : 'none';
+            if (found) found.style.display = isSearching ? 'none' : 'flex';
+            if (opponentBox) opponentBox.classList.toggle('is-searching', isSearching);
 
             const opponentName = doc.getElementById('waiting-opp-name');
-            if (opponentName) opponentName.textContent = 'Aleksandar Petrović';
+            const opponentDisplayName = 'Aleksandar Mihajlović Petrović';
+            if (typeof app?.renderWaitingPlayerName === 'function') app.renderWaitingPlayerName('waiting-opp-name', opponentDisplayName);
+            else if (opponentName) opponentName.textContent = opponentDisplayName;
             const opponentPower = doc.getElementById('waiting-opp-power');
             if (opponentPower) opponentPower.textContent = '1435';
             const opponentWins = doc.getElementById('waiting-opp-wins');
@@ -234,17 +476,50 @@
             if (opponentWins) opponentWins.textContent = '18';
             if (opponentDraws) opponentDraws.textContent = '4';
             if (opponentLosses) opponentLosses.textContent = '9';
+            applyTheme(doc);
         }
 
         function fillGameOver(doc) {
             const title = doc.getElementById('go-title');
-            if (title) title.textContent = 'POBEDA!';
+            if (title) title.textContent = qaLanguage === 'en' ? 'VICTORY!' : 'POBEDA!';
 
             const msg = doc.getElementById('go-msg');
-            if (msg) msg.textContent = 'Vaskr neumorphic paket čuva kontrast i čitljivost završnog ekrana.';
+            if (msg) msg.textContent = qaLanguage === 'en'
+                ? 'The Easter soft-clay pack keeps the result screen clear and readable.'
+                : 'Vaskrs soft-clay paket čuva kontrast i čitljivost završnog ekrana.';
 
             const score = doc.getElementById('go-score');
             if (score) score.textContent = '1864';
+        }
+
+        function fillOpponentConnectionState(doc, state) {
+            const gameScene = doc.getElementById('game-scene');
+            if (state === 'disconnected' && gameScene) {
+                gameScene.classList.add('online-duel-room', 'random-online-duel-room', 'opponent-reconnecting');
+                const timer = doc.getElementById('turn-timer-display');
+                if (timer) {
+                    timer.className = '';
+                    timer.style.display = 'flex';
+                    timer.style.animation = 'pulse 1s infinite';
+                    timer.innerHTML = `
+                        <img class="easter-opponent-connection-icon" data-theme-src="assets/easter-soft-clay/opponent/disconnected.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <span>${qaLanguage === 'en' ? 'Opponent is away. Waiting 01:42.' : 'Protivnik nije u igri. Čekamo još 01:42.'}</span>`;
+                }
+                applyTheme(doc);
+                return;
+            }
+
+            const notify = frame.contentWindow?.showNotification;
+            if (state === 'reconnected' && typeof notify === 'function') {
+                notify(
+                    qaLanguage === 'en' ? 'INFO' : 'INFORMACIJA',
+                    qaLanguage === 'en' ? 'Opponent reconnected!' : 'Protivnik se vratio u igru!',
+                    {
+                        icon: 'assets/easter-soft-clay/opponent/reconnected.png?v=2',
+                        className: 'opponent-reconnected-toast'
+                    }
+                );
+            }
         }
 
         function fillQuote(doc) {
@@ -268,16 +543,120 @@
             if (empty) empty.textContent = 'Nema odigranih duela — prazno stanje u Vaskr stilu.';
         }
 
-        function fillTournament(doc) {
-            const content = doc.getElementById('tourney-content');
-            if (!content) return;
-            content.innerHTML = `
-                <div class="tourney-stats-box">
-                    <div class="tourney-stats-label">Status turnira</div>
-                    <div class="tourney-stats-value">Vaskr Preview</div>
-                </div>
-                <div class="tourney-match tourney-match--empty" style="--match-min-height: 62px;">Čeka se prvi par...</div>
-            `;
+        function fillRules(doc, page) {
+            const openRules = frame.contentWindow?.showGameRules;
+            if (typeof openRules !== 'function') return;
+            openRules();
+            const overlay = doc.getElementById('rules-overlay-ui');
+            const track = doc.getElementById('rules-slider-track');
+            const dots = Array.from(doc.querySelectorAll('.rule-dot'));
+            const pageIndex = Math.min(Math.max(page - 1, 0), dots.length - 1);
+            if (overlay) {
+                overlay.style.display = 'flex';
+                overlay.classList.add('active');
+            }
+            dots[pageIndex]?.click();
+            if (track) {
+                track.style.scrollBehavior = 'auto';
+                track.scrollLeft = track.clientWidth * pageIndex;
+            }
+            applyTheme(doc);
+        }
+
+        function fillLeaderboard(doc, kind) {
+            const manager = kind === 'streak'
+                ? frame.contentWindow?.vatreniNiz
+                : frame.contentWindow?.powerIndexLeaderboard;
+            if (!manager) return;
+            if (kind === 'power' && !doc.getElementById('pi-modal-overlay')) {
+                // Preview ne sme da pošalje pravi upit za rang-listu.
+                manager.requestPage = () => {};
+                manager.openModal();
+            }
+            const overlay = doc.getElementById(kind === 'streak' ? 'streak-overlay' : 'pi-modal-overlay');
+            if (overlay) overlay.style.display = 'flex';
+            const names = ['Aleksandra Mihajlović Petrović', 'Milan Jovanović', 'Čedomir Radovanović', 'Ana Petrović', 'Nikola Marković'];
+            const players = names.map((name, index) => ({
+                uid: `qa-rank-${index + 1}`,
+                name,
+                playerName: name,
+                rank: index + 1,
+                maxWinStreak: 17 - index * 2,
+                currentWinStreak: 6 - index,
+                powerIndex: 1850 - index * 76
+            }));
+            const myPlayer = {
+                uid: 'qa-my-rank', name: 'Vaskrs Igrač', playerName: 'Vaskrs Igrač',
+                rank: 47, isMe: true, maxWinStreak: 4, currentWinStreak: 2, powerIndex: 1210
+            };
+            manager.handlePageData({ players, offset: 0, total: 47, hasMore: false, myRank: 47, myPlayer });
+            applyTheme(doc);
+        }
+
+        function fillTournament(doc, page = 0) {
+            const manager = frame.contentWindow?.app?.tournamentManager;
+            if (!manager) return;
+            const names = ['Aleksandra Mihajlović Petrović', 'Milan Jovanović', 'Čedomir Radovanović', 'Ana Petrović', 'Nikola Marković', 'Petar Ilić', 'Milica Babić', 'Jelena Savić'];
+            const players = names.map((name, index) => ({ id: `qa-player-${index + 1}`, name, photoUrl: '', pi: 1500 - index * 40 }));
+            const match = (first, second, winnerId = null) => ({ p1: players[first], p2: players[second], winnerId });
+            manager.state = {
+                ...manager.state,
+                status: 'active',
+                tournamentNumber: 8,
+                players,
+                bracket: {
+                    qf: [match(0, 1, players[0].id), match(2, 3, players[3].id), match(4, 5), match(6, 7)],
+                    sf: [match(0, 3), match(4, 6)],
+                    f: [match(0, 4)]
+                }
+            };
+            manager.activeTab = 'bracket';
+            manager.render();
+            const carousel = doc.getElementById('tourney-carousel');
+            if (carousel) carousel.scrollLeft = carousel.clientWidth * page;
+            doc.querySelectorAll('#tournament-screen .tourney-pagination .dot').forEach((dot, index) => {
+                dot.classList.toggle('active', index === page);
+                if (index === page) dot.setAttribute('aria-current', 'page');
+                else dot.removeAttribute('aria-current');
+            });
+            applyTheme(doc);
+        }
+
+        function fillInvite(doc) {
+            const app = frame.contentWindow?.app;
+            if (!app || typeof app.renderFriendsList !== 'function') return;
+            const waiting = doc.getElementById('waiting-screen');
+            waiting?.classList.remove('is-random-online');
+            waiting?.classList.add('is-hosting-invite', 'is-friend-invite');
+            const title = doc.getElementById('waiting-title');
+            if (title) title.textContent = qaLanguage === 'en' ? 'INVITE A FRIEND' : 'POZOVI PRIJATELJA';
+            const friends = [
+                { uid: 'qa-friend-1', name: 'Aleksandra Mihajlović Petrović', pi: 1450, isOnline: true, socketId: 'qa-online-1', h2hRecord: { wins: 12, draws: 3, losses: 7 } },
+                { uid: 'qa-friend-2', name: 'Jelena Savić', pi: 1310, isOnline: false, socketId: '', h2hRecord: { wins: 5, draws: 2, losses: 9 } }
+            ];
+            const getTopRival = app.getTopH2HRival;
+            const requestRivalPower = app.requestPublicPlayerPower;
+            app.getTopH2HRival = () => ({ uid: friends[0].uid, name: friends[0].name, wins: 12, draws: 3, losses: 7 });
+            app.requestPublicPlayerPower = () => {};
+            try {
+                app.renderFriendsList(friends, []);
+            } finally {
+                app.getTopH2HRival = getTopRival;
+                app.requestPublicPlayerPower = requestRivalPower;
+            }
+            const listContainer = doc.getElementById('friends-list-container');
+            listContainer?.classList.remove('hidden');
+            if (listContainer) listContainer.style.display = 'flex';
+            const opponentBox = doc.getElementById('waiting-opp-box');
+            if (opponentBox) opponentBox.style.display = 'none';
+            const myName = doc.getElementById('waiting-my-name');
+            if (myName) myName.textContent = qaLanguage === 'en' ? 'Easter Player' : 'Vaskrs Igrač';
+            const myPower = doc.getElementById('waiting-my-power');
+            if (myPower) myPower.textContent = '1280';
+            if (typeof app.renderWaitingH2HRecord === 'function') {
+                app.renderWaitingH2HRecord('my', { wins: 8, draws: 2, losses: 4 });
+            }
+            applyTheme(doc);
         }
 
         function fillTournamentHistory(doc) {
@@ -302,9 +681,9 @@
                     f: [{ p1: winner, p2: runnerUp, winnerId: winner.id, resultType: 'regular', scoreLabel }]
                 }
             });
-            const ana = makePlayer('ana', 'Ana');
-            const boris = makePlayer('boris', 'Boris');
-            const ceda = makePlayer('ceda', 'Čeda');
+            const ana = makePlayer('ana', 'Aleksandra Mihajlović Petrović');
+            const boris = makePlayer('boris', 'Konstantin Aleksandrović Jovanović');
+            const ceda = makePlayer('ceda', 'Čedomir Radovanović Marković');
 
             manager.tourneyLeaderboard = [
                 {
@@ -328,6 +707,33 @@
             manager.render();
         }
 
+        function fillQuarterlyLeague(doc, view = 'league') {
+            const manager = frame.contentWindow && frame.contentWindow.kvartalnaLiga;
+            if (!manager || typeof manager.showModal !== 'function') return;
+            manager.showModal();
+            if (view === 'hof' && typeof manager.toggleMainView === 'function') {
+                manager.toggleMainView('hof');
+            }
+            applyTheme(doc);
+        }
+
+        function fillQuarterWinner(doc) {
+            const app = frame.contentWindow?.app;
+            if (typeof app?.showQuarterWinnerModal !== 'function') return;
+            doc.getElementById('winner-modal-overlay')?.remove();
+            const sound = app.soundMgr;
+            const effect = app.effectMgr;
+            app.soundMgr = null;
+            app.effectMgr = null;
+            try {
+                app.showQuarterWinnerModal({ playerName: 'Aleksandra Mihajlović Petrović', score: 8420, quarter: 3, year: 2026 });
+            } finally {
+                app.soundMgr = sound;
+                app.effectMgr = effect;
+            }
+            applyTheme(doc);
+        }
+
         function prepareState(state) {
             const doc = safeDoc();
             if (!doc || !doc.body) return;
@@ -337,6 +743,38 @@
                 overlay.classList.remove('active');
                 overlay.style.display = 'none';
             });
+            doc.getElementById('h2h-detail-modal')?.classList.remove('active');
+            doc.getElementById('custom-notification-container')?.remove();
+            const rulesOverlay = doc.getElementById('rules-overlay-ui');
+            if (rulesOverlay) {
+                rulesOverlay.classList.remove('active');
+                rulesOverlay.style.display = 'none';
+            }
+            doc.getElementById('winner-modal-overlay')?.remove();
+            doc.getElementById('glass-daily-overlay')?.classList.remove('active', 'daily-glass-overlay--blank');
+            const gameSceneCleanup = doc.getElementById('game-scene');
+            if (gameSceneCleanup) gameSceneCleanup.classList.remove('online-duel-room', 'random-online-duel-room', 'opponent-reconnecting', 'theme-dual-board-view', 'theme-spectator-view');
+            const waitingCleanup = doc.getElementById('waiting-screen');
+            waitingCleanup?.classList.remove('is-hosting-invite', 'is-friend-invite', 'is-random-online');
+            const friendsCleanup = doc.getElementById('friends-list-container');
+            friendsCleanup?.classList.add('hidden');
+            if (friendsCleanup) friendsCleanup.style.display = '';
+            const turnTimerCleanup = doc.getElementById('turn-timer-display');
+            if (turnTimerCleanup) {
+                turnTimerCleanup.style.display = 'none';
+                turnTimerCleanup.style.animation = '';
+                turnTimerCleanup.textContent = '';
+            }
+            const dailyIntroCleanup = doc.getElementById('daily-intro');
+            if (dailyIntroCleanup) {
+                dailyIntroCleanup.classList.add('hidden');
+                dailyIntroCleanup.setAttribute('aria-hidden', 'true');
+            }
+            const treasuryIntroCleanup = doc.getElementById('riznica-intro');
+            if (treasuryIntroCleanup) {
+                treasuryIntroCleanup.classList.add('hidden');
+                treasuryIntroCleanup.setAttribute('aria-hidden', 'true');
+            }
 
             switch (state) {
                 case 'quote':
@@ -347,12 +785,37 @@
                     showOnly(doc, 'main-menu');
                     break;
                 case 'board':
+                case 'board-solo':
                     showOnly(doc, 'game-scene');
-                    fillBoard(doc);
+                    fillBoard(doc, 'solo');
+                    break;
+                case 'board-hotseat':
+                    showOnly(doc, 'game-scene');
+                    fillBoard(doc, 'hotseat');
+                    break;
+                case 'board-online':
+                    showOnly(doc, 'game-scene');
+                    fillBoard(doc, 'online');
+                    break;
+                case 'board-spectator':
+                    showOnly(doc, 'game-scene');
+                    fillBoard(doc, 'spectator');
                     break;
                 case 'highscores':
                     showOnly(doc, 'highscores-screen');
                     fillHighscores(doc);
+                    break;
+                case 'highscores-empty':
+                    showOnly(doc, 'highscores-screen');
+                    fillHighscores(doc, 'empty');
+                    break;
+                case 'highscores-loading':
+                    showOnly(doc, 'highscores-screen');
+                    fillHighscores(doc, 'loading');
+                    break;
+                case 'highscores-offline':
+                    showOnly(doc, 'highscores-screen');
+                    fillHighscores(doc, 'offline');
                     break;
                 case 'settings':
                     showOnly(doc, 'settings-screen');
@@ -363,14 +826,31 @@
                     showOnly(doc, 'stats-screen');
                     fillStats(doc);
                     break;
+                case 'streak':
+                    showOnly(doc, 'stats-screen');
+                    fillLeaderboard(doc, 'streak');
+                    break;
+                case 'power':
+                    showOnly(doc, 'stats-screen');
+                    fillLeaderboard(doc, 'power');
+                    break;
+                case 'rules-1':
+                case 'rules-2':
+                case 'rules-3':
+                case 'rules-4':
+                case 'rules-5':
+                case 'rules-6':
+                    showOnly(doc, 'main-menu');
+                    fillRules(doc, Number(state.slice(-1)));
+                    break;
                 case 'h2hdetail': {
                     showOnly(doc, 'stats-screen');
                     fillStats(doc);
                     const app = frame.contentWindow && frame.contentWindow.app;
                     if (app && typeof app.openH2HDetail === 'function') {
-                        app.playerName = 'Vaskr Igrač';
+                        app.playerName = 'Aleksandar Mihajlović Petrović';
                         app.openH2HDetail({
-                            name: 'Prolećni Rival',
+                            name: 'Konstantin Aleksandrović Jovanović',
                             wins: 12,
                             losses: 7,
                             draws: 3,
@@ -387,48 +867,158 @@
                 }
                 case 'treasury':
                     showOnly(doc, 'riznica-screen');
+                    fillTreasury(doc, 'trophy');
+                    break;
+                case 'treasury-skins':
+                    showOnly(doc, 'riznica-screen');
+                    fillTreasury(doc, 'skin');
+                    break;
+                case 'treasury-effects':
+                    showOnly(doc, 'riznica-screen');
+                    fillTreasury(doc, 'effect');
+                    break;
+                case 'treasury-themes':
+                    showOnly(doc, 'riznica-screen');
+                    fillTreasury(doc, 'theme');
+                    break;
+                case 'treasuryintro': {
+                    showOnly(doc, 'main-menu');
+                    const treasuryIntro = doc.getElementById('riznica-intro');
+                    const treasuryManager = frame.contentWindow && frame.contentWindow.riznicaManager;
+                    if (treasuryIntro && treasuryManager) {
+                        treasuryManager.applyIntroTheme(treasuryIntro);
+                        const introText = doc.getElementById('riznica-intro-text');
+                        if (introText) {
+                            introText.textContent = '';
+                            introText.setAttribute('aria-hidden', 'true');
+                        }
+                        treasuryIntro.classList.remove('hidden');
+                        treasuryIntro.setAttribute('aria-hidden', 'false');
+                    }
+                    break;
+                }
+                case 'economy':
+                    showOnly(doc, 'main-menu');
+                    fillEconomy(doc, 0, false);
+                    break;
+                case 'economy-unavailable':
+                    showOnly(doc, 'main-menu');
+                    fillEconomy(doc, 0, true);
+                    break;
+                case 'economy-undo':
+                    showOnly(doc, 'main-menu');
+                    fillEconomy(doc, 1, false);
                     break;
                 case 'chat':
                     showOnly(doc, 'main-menu');
                     fillChat(doc);
                     break;
+                case 'chat-empty':
+                    showOnly(doc, 'main-menu');
+                    fillChat(doc, 'empty');
+                    break;
+                case 'chat-loading':
+                    showOnly(doc, 'main-menu');
+                    fillChat(doc, 'loading');
+                    break;
                 case 'online':
                     showOnly(doc, 'main-menu');
                     fillOnlinePlayers(doc);
                     break;
-                case 'waiting':
+                case 'online-empty':
+                    showOnly(doc, 'main-menu');
+                    fillOnlinePlayers(doc, 'empty');
+                    break;
+                case 'online-loading':
+                    showOnly(doc, 'main-menu');
+                    fillOnlinePlayers(doc, 'loading');
+                    break;
+                case 'online-error':
+                    showOnly(doc, 'main-menu');
+                    fillOnlinePlayers(doc, 'error');
+                    break;
+                case 'waiting-searching':
                     showOnly(doc, 'waiting-screen');
                     doc.getElementById('waiting-screen')?.classList.add('is-random-online');
-                    fillWaiting(doc);
+                    fillWaiting(doc, 'searching');
+                    break;
+                case 'waiting':
+                case 'waiting-found':
+                    showOnly(doc, 'waiting-screen');
+                    doc.getElementById('waiting-screen')?.classList.add('is-random-online');
+                    fillWaiting(doc, 'found');
+                    break;
+                case 'invite':
+                    showOnly(doc, 'waiting-screen');
+                    fillInvite(doc);
                     break;
                 case 'gameover':
                     showOnly(doc, 'game-over-screen');
                     fillGameOver(doc);
                     break;
+                case 'opponent-disconnected':
+                    showOnly(doc, 'game-scene');
+                    fillOpponentConnectionState(doc, 'disconnected');
+                    break;
+                case 'opponent-reconnected':
+                    showOnly(doc, 'main-menu');
+                    fillOpponentConnectionState(doc, 'reconnected');
+                    break;
                 case 'tournament':
+                case 'tournament-qf':
                     showOnly(doc, 'tournament-screen');
                     fillTournament(doc);
+                    break;
+                case 'tournament-sf':
+                    showOnly(doc, 'tournament-screen');
+                    fillTournament(doc, 1);
+                    break;
+                case 'tournament-final':
+                    showOnly(doc, 'tournament-screen');
+                    fillTournament(doc, 2);
                     break;
                 case 'tournamenthistory':
                     showOnly(doc, 'tournament-screen');
                     fillTournamentHistory(doc);
                     break;
+                case 'league':
+                    showOnly(doc, 'main-menu');
+                    fillQuarterlyLeague(doc);
+                    break;
+                case 'league-hof':
+                    showOnly(doc, 'main-menu');
+                    fillQuarterlyLeague(doc, 'hof');
+                    break;
+                case 'league-winner':
+                    showOnly(doc, 'main-menu');
+                    fillQuarterWinner(doc);
+                    break;
                 case 'dailyintro': {
+                    showOnly(doc, 'main-menu');
                     const dailyIntro = doc.getElementById('daily-intro');
                     const dailyManager = frame.contentWindow && frame.contentWindow.dnevniIzazov;
                     if (dailyIntro && dailyManager) {
                         dailyIntro.classList.remove('theme-dark', 'theme-light', 'theme-medium', 'theme-winter', 'theme-neon', 'theme-amethyst', 'theme-desert', 'theme-moon', 'theme-severna');
                         dailyIntro.classList.add('theme-easter');
-                        dailyManager.setIntroTitle(
-                            dailyIntro.querySelector('.daily-intro-word-left'),
-                            dailyIntro.querySelector('.daily-intro-word-right')
-                        );
-                        dailyManager.setEasterIntroWaveTitle(dailyIntro);
+                        const introTitle = dailyIntro.querySelector('.daily-intro-title');
+                        const leftWord = dailyIntro.querySelector('.daily-intro-word-left');
+                        const rightWord = dailyIntro.querySelector('.daily-intro-word-right');
+                        if (leftWord) leftWord.textContent = '';
+                        if (rightWord) rightWord.textContent = '';
+                        if (introTitle) introTitle.setAttribute('aria-hidden', 'true');
                         dailyIntro.classList.remove('hidden');
                         dailyIntro.setAttribute('aria-hidden', 'false');
                     }
                     break;
                 }
+                case 'daily':
+                    showOnly(doc, 'main-menu');
+                    fillDaily(doc, 'active');
+                    break;
+                case 'dailyresult':
+                    showOnly(doc, 'main-menu');
+                    fillDaily(doc, 'result');
+                    break;
                 case 'splash':
                 default:
                     showOnly(doc, 'splash-screen');
@@ -444,6 +1034,8 @@
 
         frame.addEventListener('load', schedulePrepare);
         window.addEventListener('hashchange', () => prepareState(getState()));
+        localStorage.setItem('yamb_theme', 'easter');
+        localStorage.setItem('yamb_lang', qaLanguage);
         frame.src = '/index.html?easter-qa-preview=' + qaSeed;
     </script>
 </body>

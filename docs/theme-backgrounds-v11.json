@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-06",
+  "sourceDefinitions": "docs/theme-definitions.json",
+  "sourcePrompts": "docs/theme-background-prompts-v11.md",
+  "reviewPage": "docs/theme-backgrounds-v11-review.html",
+  "status": "Eight accepted backgrounds remain locked. Blue Ocean and Moonlight V11 revisions await user review; no runtime links.",
+  "accepted": [
+    {
+      "themeId": "dark",
+      "nameSr": "Zelena",
+      "path": "www/assets/green-clay-balkan-diorama-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1864586,
+      "sha256": "0b5f16e08cad0abc487bdd23b3a3c7128903d5a0f06110b457d8b9d8bb1eb181"
+    },
+    {
+      "themeId": "neon",
+      "nameSr": "Neon Cyber",
+      "path": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1455263,
+      "sha256": "92f4561e7386ddc0e01bd3c5fe8201848ea4f4501948b4d95265fb69dd631292"
+    },
+    {
+      "themeId": "severna",
+      "nameSr": "Severna Maglina",
+      "path": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1576114,
+      "sha256": "efb770cad71d5953226ede546ff93cc92d5c0ea871659d34917813c73c9edcf2"
+    },
+    {
+      "themeId": "easter",
+      "nameSr": "Vaskršnja",
+      "path": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1849355,
+      "sha256": "3c6479fa5e6e25cf5743c15dcc5935c62731967ae66f8a27235768c0a6973944"
+    },
+    {
+      "themeId": "amethyst",
+      "nameSr": "Kraljevski Ametist",
+      "path": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1344412,
+      "sha256": "14bbb54b3d17fdff7b6cb1094dc5631fb89326725f514dcef037651a6633b3ae"
+    },
+    {
+      "themeId": "desert",
+      "nameSr": "Pustinjsko Staklo",
+      "path": "source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1760896,
+      "sha256": "61e4d47eb21d4e127d67c8fbf4128ceaa0d401325d6c85168c14568087120f4b"
+    },
+    {
+      "themeId": "light",
+      "nameSr": "Svetlo Zlato",
+      "path": "source-assets/theme-backgrounds-v9/light-background-master-v9.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1611312,
+      "sha256": "0cccdd806dae1c56be8521716f326541e0d83f16778c65e09559b59753aea43c"
+    },
+    {
+      "themeId": "medium",
+      "nameSr": "Trula Višnja",
+      "path": "source-assets/theme-backgrounds-v9/medium-background-master-v9.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1696787,
+      "sha256": "c1400d160a7165b78cfb5a3aa9b591a420e3bb49892f46c2ac7cc95f4eb48920"
+    }
+  ],
+  "themes": [
+    {
+      "themeId": "winter",
+      "nameSr": "Plavi Okean",
+      "sourcePath": "source-assets/theme-backgrounds-v10/winter-background-master-v10.png",
+      "path": "source-assets/theme-backgrounds-v11/winter-background-master-v11.png",
+      "change": "Ista grčka luka; samo udaljene planine su pojednostavljene u mat-plastične oblike.",
+      "style": "3D Soft Neomorphism",
+      "direction": "smooth_rubber_matte_plastic",
+      "source": {
+        "width": 1024,
+        "height": 1535,
+        "sizeBytes": 1575854,
+        "sha256": "9ea247d32472efe67b2391ce9e5c59c59a900fdedce25cba235dbacb0fb918ab"
+      },
+      "reviewStatus": "pending-user-review",
+      "runtimeLinked": false,
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1549367,
+      "sha256": "372cfae58e3e08a410d7ed5350ecb8837f7cab42a85df8c1769520fc498c8105"
+    },
+    {
+      "themeId": "moon",
+      "nameSr": "Mesečev Sjaj",
+      "sourcePath": "source-assets/theme-backgrounds-v10/moon-background-working-2-v10.png",
+      "path": "source-assets/theme-backgrounds-v11/moon-background-master-v11.png",
+      "change": "Dva kratera i pogled iz V10 radne skice 2, uz glatkiju glinenu površinu.",
+      "style": "3D Soft Neomorphism",
+      "direction": "clay",
+      "source": {
+        "width": 1024,
+        "height": 1536,
+        "sizeBytes": 2121880,
+        "sha256": "141a2e9d2d8adf3082fefcc669a05b0cd1833ea6111b3b33242a963da6e7a489"
+      },
+      "reviewStatus": "pending-user-review",
+      "runtimeLinked": false,
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1653274,
+      "sha256": "b808c56e826d57c66d3eab253d6b952804a3bd43243dc2bc58a66a88e70236e9"
+    }
+  ]
+}

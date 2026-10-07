@@ -1,0 +1,1432 @@
+{
+  "schemaVersion": 1,
+  "referenceThemeId": "dark",
+  "referenceThemeName": "Green Room Pack",
+  "definition": "One production PNG slot per entry. Other themes create their own original PNG for each corresponding semantic slot; Green paths are references, not path templates or images to recolor.",
+  "exclusions": [
+    "source masters",
+    "QA captures",
+    "retired assets",
+    "legacy fallback Logo_green.png outside the active Green Room Pack"
+  ],
+  "requiredPngCountPerTheme": 177,
+  "greenPackPngCount": 176,
+  "slots": [
+    {
+      "id": "background/main",
+      "greenReference": "assets/green-clay-balkan-diorama-v4.png",
+      "kind": "background",
+      "width": 941,
+      "height": 1672,
+      "colorType": 2
+    },
+    {
+      "id": "canonical/achievement-trophies/achilles-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/achilles-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/apprentice-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/apprentice-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/close_call-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/close_call-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/concrete-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/concrete-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/firecracker-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/firecracker-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/first_play-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/godlike-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/godlike-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/grandmaster-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/grandmaster-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/hazard-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/hazard-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/immortal-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/immortal-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/kafana-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/kafana-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/legend-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/legend-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/math-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/math-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/miner-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/miner-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/minimal-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/minimal-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/mythic-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/mythic-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/night_owl-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/night_owl-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/perfectionist-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/perfectionist-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/potato-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/potato-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/prophet-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/prophet-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/score_1000-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/score_1000-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/sniper-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/sniper-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/spite-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/spite-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/surgeon-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/surgeon-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/sveti_ilija-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/sveti_ilija-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/achievement-trophies/veteran-v1",
+      "greenReference": "assets/green-soft-clay/canonical/achievement-trophies/veteran-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/collection-medals/collection-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/collection-medals/collection-bronze-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/collection-medals/collection-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/collection-medals/collection-gold-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/collection-medals/collection-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/collection-medals/collection-silver-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/general-podium-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/general-podium-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/general-podium-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/quarterly-league-bronze-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/quarterly-league-gold-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/competition-medals/quarterly-league-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/daily-room-identity/daily-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/daily-room-identity/daily-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/daily-states/already-played-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-states/already-played-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/daily-states/complete-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-states/complete-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/daily-states/task-v1",
+      "greenReference": "assets/green-soft-clay/canonical/daily-states/task-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/ducat/ducat-angle-left-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-angle-left-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/ducat/ducat-angle-right-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-angle-right-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/ducat/ducat-front-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-front-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/ducat/ducat-inline-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 192,
+      "height": 192,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/ducat/ducat-particle-v1",
+      "greenReference": "assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 128,
+      "height": 128,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/global-chat-room-identity/global-chat-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/global-chat-room-identity/global-chat-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/h2h-statistics/h2h-empty-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/h2h-empty-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/h2h-statistics/h2h-identity-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/h2h-identity-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/h2h-statistics/highest-score-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/highest-score-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/h2h-statistics/max-win-margin-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/max-win-margin-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 128,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/h2h-statistics/versus-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/versus-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/h2h-statistics/worst-loss-margin-v1",
+      "greenReference": "assets/green-soft-clay/canonical/h2h-statistics/worst-loss-margin-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/hotseat-room-identity/hotseat-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/hotseat-room-identity/hotseat-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/hotseat-winner/hotseat-winner-v1",
+      "greenReference": "assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/invite-friend-room-identity/invite-friend-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/invite-friend-room-identity/invite-friend-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/leaderboard-controls/empty-loading-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/leaderboard-controls/global-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-controls/global-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/leaderboard-controls/local-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-controls/local-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/leaderboard-room-identity/leaderboard-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/leaderboard-room-identity/leaderboard-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-players-room-identity/online-players-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-players-room-identity/online-players-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-random-room-identity/online-random-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/online-random-room-identity/online-random-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-league-room-identity/quarterly-league-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-navigation/tab-champions-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-navigation/tab-champions-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-navigation/tab-hall-of-fame-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-navigation/tab-league-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-navigation/tab-league-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-navigation/tab-medals-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-rank-badges/rank-alltime-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-rank-badges/rank-amater-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-amater-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-rank-badges/rank-legenda-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-legenda-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-rank-badges/rank-majstor-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-majstor-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-rank-badges/rank-profi-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-profi-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/quarterly-rank-badges/rank-titan-v1",
+      "greenReference": "assets/green-soft-clay/canonical/quarterly-rank-badges/rank-titan-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rewarded-video/rewarded-video-active-inline-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 128,
+      "height": 128,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rewarded-video/rewarded-video-active-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 128,
+      "height": 128,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rewarded-video/rewarded-video-unavailable-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rules-page-illustrations/account-server-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rules-page-illustrations/multiplayer-competitions-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rules-page-illustrations/rules-scoring-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rules-page-illustrations/stats-leaderboards-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rules-room-identity/rules-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/rules-room-identity/rules-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-controls/display-theme-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-controls/language-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/language-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-controls/music-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/music-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-controls/privacy-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/privacy-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-controls/profile-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/profile-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-controls/sound-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/sound-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-controls/terms-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/terms-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-controls/vibration-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-controls/vibration-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-room-identity/settings-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/settings-room-identity/settings-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/solo-results/finish-claim-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/solo-results/finish-score-mark-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/solo-results/personal-best-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-results/personal-best-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/solo-room-identity/solo-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/solo-room-identity/solo-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/all-time-points-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/all-time-points-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/average-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/average-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/draws-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/draws-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/fire-streak-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/games-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/games-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/losses-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/losses-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/power-index-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/record-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/record-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/trophies-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/trophies-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-overview/wins-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-overview/wins-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-room-identity/statistics-room-menu-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/statistics-room-identity/statistics-room-v1",
+      "greenReference": "assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-awards/champion-trophy-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-awards/finalist-silver-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-navigation/tab-bracket-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-navigation/tab-hall-of-fame-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-navigation/tab-info-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-navigation/tab-info-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-states/state-match-active-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-states/state-match-complete-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-states/state-register-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-register-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-states/state-registration-locked-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-registration-locked-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-states/state-start-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-start-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/tournament-states/state-unregister-v1",
+      "greenReference": "assets/green-soft-clay/canonical/tournament-states/state-unregister-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-controls/status-active-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/status-active-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-controls/status-insufficient-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-controls/status-locked-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-controls/status-owned-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/status-owned-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-controls/tab-effects-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-controls/tab-skins-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-controls/tab-themes-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-controls/tab-trophies-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-black-hole-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-black-hole-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-bubbles-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-cosmic-dust-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-dragon-fire-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-drones-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-fireflies-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-fireworks-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-ice-age-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-ice-age-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-neon-pulse-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-royal-yamb-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-supernova-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-supernova-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-thunder-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-ufo-abduction-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/treasury-effect-previews/preview-wedding-v1",
+      "greenReference": "assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 384,
+      "height": 256,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/undo-token/undo-token-front-v1",
+      "greenReference": "assets/green-soft-clay/canonical/undo-token/undo-token-front-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "canonical/undo-token/undo-token-inline-v1",
+      "greenReference": "assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png",
+      "kind": "canonical-or-approved-variant",
+      "width": 192,
+      "height": 192,
+      "colorType": 6
+    },
+    {
+      "id": "daily/reward-video-v3",
+      "greenReference": "assets/green-soft-clay/daily/reward-video-v3.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "ducats-undo-free-v3",
+      "greenReference": "assets/green-soft-clay/ducats-undo-free-v3.png",
+      "kind": "room-or-composite",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "global-chat-empty-v1",
+      "greenReference": "assets/green-soft-clay/global-chat-empty-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "global-chat-send-v1",
+      "greenReference": "assets/green-soft-clay/global-chat-send-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "invite/accepted-v1",
+      "greenReference": "assets/green-soft-clay/invite/accepted-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "invite/empty-v1",
+      "greenReference": "assets/green-soft-clay/invite/empty-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "invite/send-v1",
+      "greenReference": "assets/green-soft-clay/invite/send-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "invite/sent-v1",
+      "greenReference": "assets/green-soft-clay/invite/sent-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "online-add-friend-v1",
+      "greenReference": "assets/green-soft-clay/online-add-friend-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "online-duel-v1",
+      "greenReference": "assets/green-soft-clay/online-duel-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "online-players-state-v1",
+      "greenReference": "assets/green-soft-clay/online-players-state-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "online-spectate-v1",
+      "greenReference": "assets/green-soft-clay/online-spectate-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "opponent/disconnected-v1",
+      "greenReference": "assets/green-soft-clay/opponent/disconnected-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "opponent/found-v1",
+      "greenReference": "assets/green-soft-clay/opponent/found-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "opponent/reconnected-v1",
+      "greenReference": "assets/green-soft-clay/opponent/reconnected-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "opponent/scanning-v1",
+      "greenReference": "assets/green-soft-clay/opponent/scanning-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "opponent/vs-v1",
+      "greenReference": "assets/green-soft-clay/opponent/vs-v1.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "rules/pages/communication-v1",
+      "greenReference": "assets/green-soft-clay/rules/pages/communication-v1.png",
+      "kind": "room-or-composite",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "rules/pages/economy-treasury-v3",
+      "greenReference": "assets/green-soft-clay/rules/pages/economy-treasury-v3.png",
+      "kind": "room-or-composite",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "runtime/menu/ducats-undo-free-v3",
+      "greenReference": "assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png",
+      "kind": "startup-thumbnail",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "runtime/menu/treasury-free-v3",
+      "greenReference": "assets/green-soft-clay/runtime/menu/treasury-free-v3.png",
+      "kind": "startup-thumbnail",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "solo/finish-reward-video-v3",
+      "greenReference": "assets/green-soft-clay/solo/finish-reward-video-v3.png",
+      "kind": "room-or-composite",
+      "width": 384,
+      "height": 384,
+      "colorType": 6
+    },
+    {
+      "id": "splash-title-soft-clay-v1",
+      "greenReference": "assets/green-soft-clay/splash-title-soft-clay-v1.png",
+      "kind": "game-logo",
+      "width": 1672,
+      "height": 941,
+      "colorType": 6
+    },
+    {
+      "id": "treasury-free-v3",
+      "greenReference": "assets/green-soft-clay/treasury-free-v3.png",
+      "kind": "room-or-composite",
+      "width": 512,
+      "height": 512,
+      "colorType": 6
+    },
+    {
+      "id": "treasury/reward-video-v3",
+      "greenReference": "assets/green-soft-clay/treasury/reward-video-v3.png",
+      "kind": "room-or-composite",
+      "width": 256,
+      "height": 256,
+      "colorType": 6
+    }
+  ]
+}

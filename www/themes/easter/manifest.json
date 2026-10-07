@@ -1,18 +1,19 @@
 {
   "id": "easter",
   "name": {
-    "sr": "Vaskr Neumorphic UI Theme Pack",
-    "en": "Joyful Easter Neumorphic UI Theme Pack"
+    "sr": "Vaskrs Soft Clay UI Theme Pack",
+    "en": "Joyful Easter Soft Clay UI Theme Pack"
   },
-  "version": "3.3.85",
-  "updated": "2026-09-28",
+  "version": "3.3.86",
+  "updated": "2026-10-05",
   "bodyClass": "easter-theme",
+  "assetRegistry": "www/themes/easter/asset-registry.json",
   "scope": "Only active when body has easter-theme class or localStorage yamb_theme is easter.",
   "entrypoints": {
     "css": "www/teme.css",
     "audio": "www/managers.js",
     "shopConfig": "www/config.js",
-    "backgroundAsset": "www/assets/easter-neumorphic-bg-v1.png",
+    "backgroundAsset": "www/assets/theme-backgrounds/easter-v6-1.png",
     "splashTitleAsset": "www/assets/easter-soft-clay/splash-title-soft-clay-v1.png",
     "qaPreview": "www/themes/easter/qa-preview.html",
     "qaSplashPreview": "www/themes/easter/qa-splash.html",

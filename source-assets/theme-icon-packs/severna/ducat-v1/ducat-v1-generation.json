@@ -1,0 +1,13 @@
+{
+  "themeId": "severna",
+  "status": "new-five-dot-originals",
+  "tool": "built-in imagegen",
+  "sourceFolder": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "sources": {
+    "front": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-125cbe7d-9c20-4efe-9404-280469ab82ac.png",
+    "angleLeft": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-2b52acfd-cec2-443d-bbb4-3ab86d65889b.png",
+    "angleRight": "C:/Users/andri/.codex/generated_images/01a1116e-ca3a-72c0-864c-166cc3b5e76a/exec-1899f26e-1160-487b-ad4f-5f17f65b2e0c.png"
+  },
+  "promptSummary": "Original Severna Maglina dark midnight-blue matte-plastic ducat with pale ice-blue face and exactly five dark navy recessed pips. 3D Soft Neomorphism Smooth Rubber/Matte Plastic; no stars, glass, neon, metal shine, text or ornament. Opposite left/right angle views preserve five pips.",
+  "derivation": "front, angle-left and angle-right each use an original imagegen master; inline 192px and particle 128px are delivery sizes of the front master"
+}

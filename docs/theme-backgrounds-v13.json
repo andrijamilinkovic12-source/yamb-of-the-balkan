@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-06",
+  "sourceDefinitions": "docs/theme-definitions.json",
+  "sourcePrompts": "docs/theme-background-prompts-v13.md",
+  "reviewPage": "docs/theme-backgrounds-v13-review.html",
+  "status": "Eight accepted backgrounds remain locked. Blue Ocean V12 foreground is the approved direction; V13 revises distant mountains only. Moonlight V12 crater-left and black-sky composition is the approved direction. Neither full image is finalized or runtime-linked.",
+  "accepted": [
+    {
+      "themeId": "dark",
+      "nameSr": "Zelena",
+      "path": "www/assets/green-clay-balkan-diorama-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1864586,
+      "sha256": "0b5f16e08cad0abc487bdd23b3a3c7128903d5a0f06110b457d8b9d8bb1eb181"
+    },
+    {
+      "themeId": "neon",
+      "nameSr": "Neon Cyber",
+      "path": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1455263,
+      "sha256": "92f4561e7386ddc0e01bd3c5fe8201848ea4f4501948b4d95265fb69dd631292"
+    },
+    {
+      "themeId": "severna",
+      "nameSr": "Severna Maglina",
+      "path": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1576114,
+      "sha256": "efb770cad71d5953226ede546ff93cc92d5c0ea871659d34917813c73c9edcf2"
+    },
+    {
+      "themeId": "easter",
+      "nameSr": "Vaskršnja",
+      "path": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1849355,
+      "sha256": "3c6479fa5e6e25cf5743c15dcc5935c62731967ae66f8a27235768c0a6973944"
+    },
+    {
+      "themeId": "amethyst",
+      "nameSr": "Kraljevski Ametist",
+      "path": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1344412,
+      "sha256": "14bbb54b3d17fdff7b6cb1094dc5631fb89326725f514dcef037651a6633b3ae"
+    },
+    {
+      "themeId": "desert",
+      "nameSr": "Pustinjsko Staklo",
+      "path": "source-assets/theme-backgrounds-v8/desert-background-variant-2-v8.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1760896,
+      "sha256": "61e4d47eb21d4e127d67c8fbf4128ceaa0d401325d6c85168c14568087120f4b"
+    },
+    {
+      "themeId": "light",
+      "nameSr": "Svetlo Zlato",
+      "path": "source-assets/theme-backgrounds-v9/light-background-master-v9.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1611312,
+      "sha256": "0cccdd806dae1c56be8521716f326541e0d83f16778c65e09559b59753aea43c"
+    },
+    {
+      "themeId": "medium",
+      "nameSr": "Trula Višnja",
+      "path": "source-assets/theme-backgrounds-v9/medium-background-master-v9.png",
+      "status": "accepted-locked",
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1696787,
+      "sha256": "c1400d160a7165b78cfb5a3aa9b591a420e3bb49892f46c2ac7cc95f4eb48920"
+    }
+  ],
+  "winter": {
+    "nameSr": "Plavi Okean",
+    "sourcePath": "source-assets/theme-backgrounds-v12/winter-background-master-v12.png",
+    "source": {
+      "width": 1024,
+      "height": 1536,
+      "sizeBytes": 1858151,
+      "sha256": "b6d4e5a0f3d966f222fbf8797d8bf34f922d617b32e852eacac7c70958141376"
+    },
+    "path": "source-assets/theme-backgrounds-v13/winter-background-master-v13.png",
+    "width": 1024,
+    "height": 1536,
+    "sizeBytes": 1782156,
+    "sha256": "88ea72e66b99875560041e555c1963656e19f68a6320a494445805cde8096ba4",
+    "directionStatus": "approved-direction",
+    "reviewStatus": "pending-user-review",
+    "change": "Samo udaljene planine pojednostavljene u glatke mat-plastične oblike; luka, grad i more ostaju osnova kadra.",
+    "runtimeLinked": false
+  },
+  "moon": {
+    "nameSr": "Mesečev Sjaj",
+    "path": "source-assets/theme-backgrounds-v12/moon-background-master-v12.png",
+    "width": 1024,
+    "height": 1536,
+    "sizeBytes": 1901889,
+    "sha256": "f28f1cd7ddbad2fff178840b1b733a790f03fb467752272fda623c1de4bd7ea7",
+    "directionStatus": "approved-direction",
+    "finalImageStatus": "not-yet-finalized",
+    "description": "Veliki krater levo, srebrnosiva glinena površina i crno nebo bez zvezda.",
+    "runtimeLinked": false
+  }
+}

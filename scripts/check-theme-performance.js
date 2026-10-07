@@ -23,6 +23,7 @@ const fireStreakSource = fs.readFileSync(path.join(www, 'vatreniniz.js'), 'utf8'
 const quarterlyLeagueSource = fs.readFileSync(path.join(www, 'kvartalnaliga.js'), 'utf8');
 const trophyManagerSource = fs.readFileSync(path.join(www, 'trophyManager.js'), 'utf8');
 const treasurySource = fs.readFileSync(path.join(www, 'riznica.js'), 'utf8');
+const easterThemeManifest = JSON.parse(fs.readFileSync(path.join(www, 'themes', 'easter', 'manifest.json'), 'utf8'));
 const greenAssetRegistryPath = path.join(www, 'themes', 'green', 'asset-registry.json');
 const greenAssetRegistry = JSON.parse(fs.readFileSync(greenAssetRegistryPath, 'utf8'));
 const greenAssetFamilies = Object.entries(greenAssetRegistry.families || {});
@@ -136,6 +137,44 @@ const readPngInfo = filePath => {
     };
 };
 const sha256File = filePath => crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
+
+// Vaskrs theme cleanup contract: active Soft Clay assets only, no legacy emoji
+// stand-ins in production states, and icon-only Treasury/Tournament intros.
+assert(easterThemeManifest.entrypoints?.backgroundAsset === 'www/assets/theme-backgrounds/easter-v6-1.png', 'Vaskrs manifest mora upućivati na prihvaćenu pozadinu.');
+assert(treasurySource.includes('const isEasterIntro = overlay.classList.contains(\'theme-easter\');')
+    && treasurySource.includes('if (!isEasterIntro) this.setEasterIntroTitle('), 'Vaskrs Riznica intro mora ostati bez teksta.');
+assert(tournamentSource.includes('const isEasterIntro = overlay.classList.contains(\'theme-easter\');')
+    && tournamentSource.includes("if (isEasterIntro) {\n                if (title) title.textContent = '';"), 'Vaskrs Turnir intro mora ostati bez teksta.');
+assert(themeCssSource.includes('#riznica-intro.theme-easter .riznica-intro-line,\n#tournament-intro.theme-easter .tournament-intro-title {\n    display: none !important;'), 'Vaskrs Riznica/Turnir intro tekst mora biti skriven.');
+assert(!themeCssSource.includes("content: '🐣 🥚 🌸'")
+    && !themeCssSource.includes("content: '🐇'")
+    && !themeCssSource.includes("content: '🥚'"), 'Vaskrs cinematic/loading/empty stanja ne smeju koristiti emoji zamene.');
+assert(themeCssSource.includes('body.easter-theme #winner-modal-overlay > .quarter-winner-card'), 'Vaskrs QL winner modal mora imati Soft Clay karticu teme.');
+assert(rulesSource.includes('assets/easter-soft-clay/statistics/wins-v3.png?v=opt2')
+    && rulesSource.includes('assets/easter-soft-clay/statistics/fire-streak-v3.png?v=opt2')
+    && !rulesSource.includes('assets/easter-soft-clay/statistics/wins-v2.png')
+    && !rulesSource.includes('assets/easter-soft-clay/statistics/fire-streak-v2.png'), 'Vaskrs Pravila moraju koristiti aktivne v3 Statistics ikone.');
+assert(managersSource.includes('assets/easter-soft-clay/settings/display-theme-v2.png?v=opt2')
+    && themeCssSource.includes('body.easter-theme #riznica-screen .riznica-easter-theme-fallback {\n    display: none;')
+    && themeCssSource.includes('body.easter-theme #riznica-screen .riznica-easter-theme-icon {\n    display: block;'), 'Vaskrs tema u Riznici mora koristiti PNG umesto vidljive rabbit emoji zamene.');
+assert(!languagesSource.includes('Vaskršnja 🐇') && !languagesSource.includes('Joyful Easter 🐇'), 'Vaskrs naziv teme ne sme sadržati rabbit emoji zamenu.');
+for (const retired of [
+    'assets/easter-neumorphic-bg-v1.png',
+    'assets/easter-neumorphic-bg-v2.png',
+    'assets/easter-neumorphic-bg-v3.png',
+    'assets/easter-neumorphic-bg-v4.png',
+    'assets/easter-soft-clay/ql/rank-alltime-v2.png',
+    'assets/easter-soft-clay/ql/rank-amater-v3.png',
+    'assets/easter-soft-clay/ql/rank-profi-v3.png',
+    'assets/easter-soft-clay/ql/rank-majstor-v3.png',
+    'assets/easter-soft-clay/ql/rank-titan-v3.png',
+    'assets/easter-soft-clay/ql/tab-hall-of-fame.png',
+    'assets/easter-soft-clay/tournament/podium-silver-v2.png',
+    'assets/easter-soft-clay/statistics/wins-v2.png',
+    'assets/easter-soft-clay/statistics/fire-streak-v2.png'
+]) {
+    assert(!fs.existsSync(path.join(www, retired)), `Zastareli Vaskrs runtime asset nije uklonjen: ${retired}`);
+}
 
 assert(greenDucatRegistry?.status === 'locked', 'Green dukat porodica mora biti zaključana u centralnom registru.');
 assert(greenUndoTokenRegistry?.status === 'locked', 'Green Undo-token porodica mora biti zaključana u centralnom registru.');
@@ -628,7 +667,7 @@ const hotseatWinnerPath = 'assets/green-soft-clay/canonical/hotseat-winner/hotse
 assert(JSON.stringify(greenHotseatWinnerRegistry.forbiddenRuntimePaths) === JSON.stringify(['assets/green-soft-clay/hotseat/winner-v1.png']), 'Green Hotseat Winner nema zaključanu staru runtime putanju.');
 assert(greenHotseatWinnerRegistry.retiredMasterReplacements?.['hotseat/winner-v1.png'] === 'canonical/hotseat-winner/hotseat-winner-v1.png', 'Green Hotseat Winner istorijska master zamena je promenjena.');
 assert(indexSource.split(hotseatWinnerPath).length - 1 === 1 && gameSource.split(hotseatWinnerPath).length - 1 === 1, 'Green Hotseat Winner canonical veze nisu kompletne.');
-assert(gameSource.includes("hotseat: path => path.startsWith('hotseat/') || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png'"), 'Green stvarni Hotseat room matcher ne razdvaja canonical room i Winner paket.');
+assert(gameSource.includes("hotseat: path => path.startsWith('hotseat/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/hotseat-winner/') || path === 'canonical/hotseat-room-identity/hotseat-room-v1.png'"), 'Green stvarni Hotseat room matcher ne razdvaja canonical room i Winner paket.');
 assert(gameSource.includes("gameOverScreen.classList.toggle('is-hotseat-result', isHotseatResult);") && gameSource.includes("gameOverScreen.classList.toggle('has-result-winner', isHotseatResult && !isDraw);"), 'Green Hotseat Winner više nije ograničen na odlučeni Hotseat rezultat.');
 assert(gameSource.includes("gameOverScreen.classList.remove('is-solo-result', 'is-hotseat-result', 'has-result-winner', 'result-win', 'result-loss', 'result-draw');")
     && gameSource.includes("gameOverScreen.classList.add('is-technical-result', `result-${resultType}`);"), 'Online/tehnički rezultat više ne čisti Hotseat Winner stanje.');
@@ -697,7 +736,7 @@ for (const asset of greenSoloResultsManifest.catalog) {
     const canonicalPath = asset.runtime.replace(/^www\//, '');
     assert(indexSource.split(canonicalPath).length - 1 === 1 && gameSource.split(canonicalPath).length - 1 === 1, `Green Solo Result canonical veze nisu kompletne: ${asset.id}`);
 }
-assert(gameSource.includes("solo: path => path.startsWith('solo/') || path.startsWith('canonical/solo-results/') || path === 'canonical/solo-room-identity/solo-room-v1.png'"), 'Green stvarni Solo room matcher ne razdvaja canonical room i Results paket.');
+assert(gameSource.includes("solo: path => path.startsWith('solo/') || (theme === 'easter' && path.startsWith('game/')) || path.startsWith('canonical/solo-results/') || path === 'canonical/solo-room-identity/solo-room-v1.png'"), 'Green stvarni Solo room matcher ne razdvaja canonical room i Results paket.');
 assert(gameSource.includes('const soloHighscoreBeforeGame = Math.max(0, Number(this.stats && this.stats.highscore) || 0);') && gameSource.includes('isNewSoloPersonalBest = this.players.length === 1') && gameSource.includes('&& Number(myScoreEntry.score) > soloHighscoreBeforeGame;') && gameSource.includes('if (personalBestBadge) personalBestBadge.hidden = !isNewSoloPersonalBest;'), 'Green Solo Personal Best više nije vezan isključivo za stvarni novi Solo rekord.');
 assert(gameSource.includes("gameOverScreen.classList.toggle('is-solo-result', this.players.length === 1);"), 'Green Solo Results prikaz više nije ograničen na Solo rezultat.');
 assert(indexSource.includes('<button class="btn-menu btn-secondary game-over-claim-button" onclick="app.claimReward(false)">'), 'Green Solo Finish Claim više nije povezan sa osnovnom claimReward(false) akcijom.');
@@ -1064,10 +1103,10 @@ assert(greenLeaderboardRoomIdentityRegistry.canonicalRuntime.length === 2 && JSO
 for (const exclusion of ['Global and Local leaderboard navigation glyphs', 'Leaderboard empty and loading state glyph shared with online waiting', 'General Podium medals already locked in Competition Medals', 'Rules Statistics and leaderboards narrative illustration', 'Statistics room identity and Statistics metrics', 'rank badges, trophies, scores and match results']) {
     assert(greenLeaderboardRoomIdentityManifest.semanticExclusions.includes(exclusion), `Green Leaderboard Room Identity ne razdvaja semantički izuzetak: ${exclusion}`);
 }
-assert(indexSource.includes('assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png?v=1') && indexSource.includes('assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1') && gameSource.includes("greenIcon: 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1'") && rulesSource.includes("'assets/easter-soft-clay/leaderboard-pro-v2.png': 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1'"), 'Green Leaderboard Room Identity canonical UI veze nisu kompletne.');
+assert(indexSource.includes('assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png?v=1') && indexSource.includes('assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1') && gameSource.includes("greenIcon: 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1'") && rulesSource.includes("'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png': 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1'"), 'Green Leaderboard Room Identity canonical UI veze nisu kompletne.');
 assert(/<button class="btn-square" onclick="app\.showHighscoresScreen\(\)"[\s\S]*?<img class="green-soft-clay-icon" data-theme-src="assets\/green-soft-clay\/canonical\/leaderboard-room-identity\/leaderboard-room-menu-v1\.png\?v=1"/.test(indexSource), 'Green Leaderboard main-menu dugme nije vezano za 384 px canonical menu varijantu.');
 assert(/<img class="hs-header-icon hs-header-icon-green" data-theme-src="assets\/green-soft-clay\/canonical\/leaderboard-room-identity\/leaderboard-room-v1\.png\?v=1"/.test(indexSource), 'Green Leaderboard zaglavlje nije vezano za 512 px canonical room varijantu.');
-assert(rulesSource.split("'assets/easter-soft-clay/leaderboard-pro-v2.png?v=1'").length - 1 === 4, 'Green Pravila moraju imati četiri Leaderboard reference kroz oba jezika.');
+assert(rulesSource.split("'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1'").length - 1 === 4, 'Green Pravila moraju imati četiri Leaderboard reference kroz oba jezika.');
 assert(gameSource.includes('canonical\\/leaderboard-room-identity\\/leaderboard-room-menu') && gameSource.includes("path === 'canonical/leaderboard-room-identity/leaderboard-room-v1.png'"), 'Green Leaderboard Room Identity startup fallback ili precizan room matcher nije povezan.');
 assert(/#main-menu \.icon-menu-grid \.green-soft-clay-icon\s*\{[^}]*width:\s*52px;[^}]*height:\s*52px;/s.test(themeCssSource) && /@media \(max-width: 599px\) and \(orientation: portrait\)[\s\S]*?#main-menu \.icon-menu-grid \.green-soft-clay-icon\s*\{[^}]*width:\s*46px;[^}]*height:\s*46px;/s.test(themeCssSource), 'Green Leaderboard main-menu prikaz više nema zaključane 52/46 px dimenzije.');
 assert(themeCssSource.includes('animation: easterBottomIconWave 8.4s cubic-bezier(.34, 1.56, .64, 1) infinite;') && /@media \(prefers-reduced-motion: reduce\)\s*\{[^}]*#main-menu \.icon-menu-grid \.btn-square \.green-soft-clay-icon\s*\{[^}]*animation:\s*none !important;/s.test(themeCssSource), 'Green Leaderboard main-menu wave ili reduced-motion ponašanje nije očuvano.');
@@ -1334,7 +1373,7 @@ const resolveGreenRulesAsset = vm.runInNewContext(`${rulesSource.slice(greenRule
 for (const [easter, expected] of [
     ['settings/profile-v2.png?v=opt2', 'canonical/settings-controls/profile-v1.png?v=1'],
     ['settings/privacy-v2.png?v=opt2', 'canonical/settings-controls/privacy-v1.png?v=1'],
-    ['economy/ducat.png?v=opt2', 'canonical/ducat/ducat-inline-v1.png?v=1'],
+    ['canonical/ducat/ducat-inline-v1.png?v=1', 'canonical/ducat/ducat-inline-v1.png?v=1'],
     ['rules/pages/rules-scoring.png', 'canonical/rules-page-illustrations/rules-scoring-v1.png?v=1']
 ]) {
     assert(resolveGreenRulesAsset(`assets/easter-soft-clay/${easter}`) === `assets/green-soft-clay/${expected}`, `Green Rules query/asset mapiranje ne vraća odgovarajući motiv: ${easter}`);
@@ -2260,8 +2299,8 @@ for (const [familyName, family] of greenAssetFamilies) {
 const themeDirs = ['easter-soft-clay', 'desert-soft-clay', 'green-soft-clay'];
 const report = [];
 const startupConfig = {
-    'easter-soft-clay': ['assets/easter-neumorphic-bg-v5.png', 'assets/easter-soft-clay/splash-title-soft-clay-v1.png'],
-    'desert-soft-clay': ['assets/desert-neumorphic-bg-v1.png', 'assets/desert-soft-clay/splash-title-soft-clay-v1.png'],
+    'easter-soft-clay': ['assets/theme-backgrounds/easter-v6-1.png', 'assets/easter-soft-clay/splash-title-soft-clay-v1.png'],
+    'desert-soft-clay': ['assets/theme-backgrounds/desert-v8-2.png', 'assets/desert-soft-clay/splash-title-soft-clay-v1.png'],
     'green-soft-clay': ['assets/green-clay-balkan-diorama-v4.png', 'assets/green-soft-clay/splash-title-soft-clay-v1.png', 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png', 'assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png', 'assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png', 'assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png', 'assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png', 'assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png', 'assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png', 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png', 'assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png', 'assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png', 'assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png', 'assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png']
 };
 assert(startupConfig['green-soft-clay'].every(relative => !relative.includes('canonical/statistics-overview/')), 'Statistics Overview paket ne sme ući u Green startup preload.');
@@ -2525,8 +2564,14 @@ const labelThemeContext = {
 assert(vm.runInNewContext(`${translateSource}\n[t('tourney_finalist_title'), t('ws_power')]`, labelThemeContext).join('|') === 'FINALISTA|Moć',
     'Green oznake finaliste i moći ne smeju duplirati kanonske motive emojijima.');
 labelThemeContext.document.documentElement.dataset.splashTheme = 'easter';
+assert(vm.runInNewContext(`${translateSource}\n[t('tourney_finalist_title'), t('ws_power')]`, labelThemeContext).join('|') === 'FINALISTA|Moć ⚡',
+    'Vaskrs finalista mora koristiti tematski PNG bez stare emoji oznake.');
+assert(tournamentSource.includes('class="tourney-champion-finalist-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1"')
+    && themeCssSource.includes('body.easter-theme #tournament-screen .tourney-champion-finalist-icon-easter'),
+    'Vaskrs istorija turnira mora prikazati tematsku ikonu finaliste.');
+labelThemeContext.document.documentElement.dataset.splashTheme = 'desert';
 assert(vm.runInNewContext(`${translateSource}\n[t('tourney_finalist_title'), t('ws_power')]`, labelThemeContext).join('|') === 'FINALISTA 🥈|Moć ⚡',
-    'Ostale teme moraju zadržati svoje postojeće oznake.');
+    'Pustinjsko staklo mora zadržati svoje postojeće oznake.');
 assert(['win', 'draw', 'loss'].every((kind, index) => {
     const key = `ws_record_${kind}_short`;
     return uiTranslations.sr[key] === ['POB', 'NER', 'POR'][index]

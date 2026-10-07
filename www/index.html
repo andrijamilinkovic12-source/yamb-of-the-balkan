@@ -78,11 +78,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css?v=5.22">
-    <link rel="stylesheet" href="teme.css?v=6.93">
+    <link rel="stylesheet" href="teme.css?v=6.94">
+    <link rel="stylesheet" href="theme-main-room-icons.css?v=1">
+    <link rel="stylesheet" href="theme-ducat-pack.css?v=1">
     <link rel="stylesheet" href="kockice.css?v=1.8">
     <link rel="stylesheet" href="efekti.css?v=1.6">
     
-    <script src="languages.js?v=5.10"></script>
+    <script src="languages.js?v=5.11"></script>
     <script src="quotes.js"></script>
 
     <script src="localforage.min.js?v=3.7"></script>
@@ -165,10 +167,15 @@
             // odmah, pre pokretanja ostatka aplikacije i bez čekanja na ikone.
             const themeBackgrounds = {
                 dark: 'assets/green-clay-balkan-diorama-v4.png',
-                winter: 'assets/ocean-neumorphic-bg-v2.png',
-                easter: 'assets/easter-neumorphic-bg-v5.png',
-                desert: 'assets/desert-neumorphic-bg-v1.png',
-                severna: 'assets/severna-maglina-bg-v3-neuphoric.png'
+                light: 'assets/theme-backgrounds/light-v9.png',
+                medium: 'assets/theme-backgrounds/medium-v9.png',
+                winter: 'assets/theme-backgrounds/winter-v13.png',
+                neon: 'assets/theme-backgrounds/neon-v4.png',
+                amethyst: 'assets/theme-backgrounds/amethyst-v6.png',
+                easter: 'assets/theme-backgrounds/easter-v6-1.png',
+                desert: 'assets/theme-backgrounds/desert-v8-2.png',
+                moon: 'assets/theme-backgrounds/moon-v14.png',
+                severna: 'assets/theme-backgrounds/severna-v4.png'
             };
             const background = themeBackgrounds[startupTheme];
             if (background) {
@@ -351,7 +358,7 @@
                 <div class="global-chat-title-group">
                     <svg id="economy-header-ducats-icon" class="economy-header-icon" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
                     <svg id="economy-header-undo-icon" class="economy-header-icon hidden" aria-hidden="true" focusable="false"><use href="#app-icon-undo-token"></use></svg>
-                    <img id="economy-header-ducats-soft-clay-icon" class="economy-header-soft-clay-icon" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img id="economy-header-ducats-soft-clay-icon" class="economy-header-soft-clay-icon" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img id="economy-header-undo-soft-clay-icon" class="economy-header-soft-clay-icon hidden" data-theme-src="assets/easter-soft-clay/economy/undo-token.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img id="economy-header-ducats-desert-icon" class="economy-header-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img id="economy-header-undo-desert-icon" class="economy-header-desert-soft-clay-icon hidden" data-theme-src="assets/desert-soft-clay/economy/undo-token-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -374,7 +381,7 @@
                         <path d="M36 38c5-5 13-7 20-3 4 2 6 6 6 11 0 6-3 10-8 13-6 3-14 2-18-3" fill="none" stroke="#FFF5BA" stroke-width="3" stroke-linecap="round" opacity="0.85"/>
                         <path d="M48 24v44M30 43h36" stroke="#FFF5BA" stroke-opacity="0.48" stroke-width="3" stroke-linecap="round"/>
                     </svg>
-                    <img class="economy-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                    <img class="economy-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="economy-tab-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="economy-tab-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                     <img class="economy-tab-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-front-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -400,7 +407,7 @@
                     <div class="economy-page-panel">
                         <div class="economy-hero">
                             <svg class="dukat-icon-inline economy-hero-ducat-icon-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg>
-                            <img class="economy-hero-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                            <img class="economy-hero-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <img class="economy-hero-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <img class="economy-hero-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                             <img class="economy-hero-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-front-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -415,6 +422,7 @@
                                 <span class="economy-reward-top">
                                     <img class="economy-reward-video-icon-default" src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
                                     <img class="economy-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/economy/rewarded-video.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                                    <img class="economy-reward-unavailable-soft-clay-icon" data-theme-src="assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                     <img class="economy-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                     <img class="economy-reward-unavailable-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/ad-unavailable-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                     <img class="economy-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -423,7 +431,7 @@
                                     <img class="economy-reward-unavailable-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                     <span data-lang="economy_reward_video">Nagradni video</span>
                                 </span>
-                                <strong>+500 <svg class="dukat-icon-inline economy-reward-ducat-icon-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="economy-reward-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="economy-reward-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="economy-reward-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="economy-reward-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></strong>
+                                <strong>+500 <svg class="dukat-icon-inline economy-reward-ducat-icon-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="economy-reward-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="economy-reward-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="economy-reward-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="economy-reward-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></strong>
                             </button>
                         </div>
 
@@ -460,6 +468,7 @@
                                 <span class="economy-reward-top">
                                     <img class="economy-reward-video-icon-default" src="assets/ad-ticket-icon.svg" alt="" aria-hidden="true">
                                     <img class="economy-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/economy/rewarded-video.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                                    <img class="economy-reward-unavailable-soft-clay-icon" data-theme-src="assets/easter-soft-clay/economy/ad-unavailable.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                     <img class="economy-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                     <img class="economy-reward-unavailable-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/ad-unavailable-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async">
                                     <img class="economy-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -722,7 +731,7 @@
             <button class="btn-special-square spec-riznica" onclick="if(window.adMobGlobal) window.adMobGlobal.triggerHighPriorityLoad('rewarded'); riznicaManager.open()" aria-label="Riznica" data-lang-aria="menu_shop">
                 <img class="special-svg-icon special-svg-icon--treasury" src="assets/treasury-icon.svg" alt="" aria-hidden="true" decoding="async">
                 <img class="green-soft-clay-special-icon green-soft-clay-special-icon--treasury" data-theme-src="assets/green-soft-clay/runtime/menu/treasury-free-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="easter-soft-clay-special-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/treasury-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-special-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/treasury-chest-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-special-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/treasury-pro.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="nebula-soft-clay-special-icon" data-theme-src="assets/severna-soft-clay/treasury-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             </button>
@@ -747,7 +756,7 @@
             <button class="btn-square" onclick="app.showHighscoresScreen()" aria-label="Top lista" data-lang-aria="menu_hs">
                 <svg class="menu-svg-icon" aria-hidden="true" focusable="false"><use href="#menu-icon-leaderboard"></use></svg>
                 <img class="green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                <img class="easter-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/leaderboard-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="easter-soft-clay-icon" data-theme-src="assets/easter-soft-clay/runtime/menu/leaderboard-podium-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/runtime/menu/leaderboard-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/leaderboard-pro-v8.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
             </button>
@@ -785,7 +794,7 @@
 
     <div id="game-scene" class="screen">
         <div class="game-header">
-            <button class="btn-secondary game-header-icon game-header-exit" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;" onclick="app.quitToMenu()" title="Izađi iz igre" data-lang-title="tooltip_exit_game">🚪</button>
+            <button class="btn-secondary game-header-icon game-header-exit" style="border-radius:50%; padding:0; width: 34px; height: 34px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; transition: 0.3s;" onclick="app.quitToMenu()" title="Izađi iz igre" data-lang-title="tooltip_exit_game" data-lang-aria="tooltip_exit_game"><span class="game-header-exit-fallback" aria-hidden="true">🚪</span><img class="easter-game-exit-icon" data-theme-src="assets/easter-soft-clay/game/exit-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>
             
             <div class="game-header-controls" style="display:flex; gap:12px; align-items:center; justify-content: flex-end; flex: 1;">
                 
@@ -1116,7 +1125,7 @@
         <div class="chat-header global-chat-header riznica-header">
             <div class="global-chat-title-group riznica-title-group">
                 <img class="riznica-header-logo riznica-header-logo-default" src="assets/treasury-icon.svg" alt="Riznica" decoding="async">
-                <img class="riznica-header-logo-easter" data-theme-src="assets/easter-soft-clay/treasury-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                <img class="riznica-header-logo-easter" data-theme-src="assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="riznica-header-logo-desert" data-theme-src="assets/desert-soft-clay/treasury-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="riznica-header-logo-nebula" data-theme-src="assets/severna-soft-clay/treasury-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                 <img class="riznica-header-logo-green" data-theme-src="assets/green-soft-clay/treasury-free-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1126,12 +1135,12 @@
         </div>
 
         <div class="nav-tabs riznica-tabs" aria-label="Kategorije riznice" data-lang-aria="treasury_tabs_aria">
-            <div class="balance-display riznica-balance-pill"><span id="riznica-balance">0</span><svg class="dukat-icon-inline riznica-balance-ducat-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="riznica-balance-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>
+            <div class="balance-display riznica-balance-pill"><span id="riznica-balance">0</span><svg class="dukat-icon-inline riznica-balance-ducat-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="riznica-balance-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-balance-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>
                             <button id="tab-trophies" class="tab-btn active" onclick="riznicaManager.switchTab('trophy')" aria-label="Trofeji" data-lang-aria="tab_trophies" title="Trofeji" data-lang-title="tab_trophies"><span class="riznica-tab-fallback" aria-hidden="true">🏆</span><img class="riznica-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/tab-trophies-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/tab-trophies.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/tab-trophies-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>
                             <button id="tab-skins" class="tab-btn" onclick="riznicaManager.switchTab('skin')" aria-label="Kockice" data-lang-aria="tab_dice" title="Kockice" data-lang-title="tab_dice"><span class="riznica-tab-fallback" aria-hidden="true">🎲</span><img class="riznica-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/tab-skins-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/tab-skins.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/tab-skins-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>
                             <button id="tab-effects" class="tab-btn" onclick="riznicaManager.switchTab('effect')" aria-label="Efekti" data-lang-aria="tab_effects" title="Efekti" data-lang-title="tab_effects"><span class="riznica-tab-fallback" aria-hidden="true">✨</span><img class="riznica-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/tab-effects-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/tab-effects.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/tab-effects-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>
                             <button id="tab-themes" class="tab-btn" onclick="riznicaManager.switchTab('theme')" aria-label="Teme" data-lang-aria="tab_themes" title="Teme" data-lang-title="tab_themes"><span class="riznica-tab-fallback" aria-hidden="true">🎨</span><img class="riznica-tab-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/tab-themes-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/tab-themes.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/tab-themes-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-tab-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></button>
-            <button type="button" class="btn-add-coins riznica-ad-btn" onclick="shop.watchAdForCoins()"><img class="riznica-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>+ 500</span><svg class="dukat-icon-inline riznica-ad-ducat-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="riznica-ad-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/economy/ducat.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span class="riznica-ad-fallback" aria-hidden="true">🎬</span></button>
+            <button type="button" class="btn-add-coins riznica-ad-btn" onclick="shop.watchAdForCoins()"><img class="riznica-reward-video-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/reward-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/economy/rewarded-video-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/economy/rewarded-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-reward-video-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/treasury/reward-video-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>+ 500</span><svg class="dukat-icon-inline riznica-ad-ducat-default" aria-hidden="true" focusable="false"><use href="#app-icon-dukat"></use></svg><img class="riznica-ad-ducat-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-desert" data-theme-src="assets/desert-soft-clay/economy/ducat-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-nebula" data-theme-src="assets/severna-soft-clay/economy/ducat-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-ad-ducat-icon-green" data-theme-src="assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span class="riznica-ad-fallback" aria-hidden="true">🎬</span></button>
         </div>
 
         <div id="riznica-shop-container" class="content-area"></div>
@@ -1139,7 +1148,7 @@
 
     <div id="riznica-intro" class="riznica-intro hidden" aria-hidden="true">
         <img class="riznica-intro-gem" src="assets/treasury-icon.svg" alt="" aria-hidden="true" decoding="async">
-        <img class="riznica-intro-gem-easter" data-theme-src="assets/easter-soft-clay/treasury-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+        <img class="riznica-intro-gem-easter" data-theme-src="assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
         <img class="riznica-intro-gem-desert" data-theme-src="assets/desert-soft-clay/treasury-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async">
         <img class="riznica-intro-gem-nebula" data-theme-src="assets/severna-soft-clay/treasury-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
         <img class="riznica-intro-gem-green" data-theme-src="assets/green-soft-clay/treasury-free-v3.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
@@ -1202,7 +1211,7 @@
                     <span class="global-chat-title hs-header-title">
                         <img class="hs-header-icon hs-header-icon-default" src="assets/leaderboard-icon.svg" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-header-icon hs-header-icon-green" data-theme-src="assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
-                        <img class="hs-header-icon hs-header-icon-easter" data-theme-src="assets/easter-soft-clay/leaderboard-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
+                        <img class="hs-header-icon hs-header-icon-easter" data-theme-src="assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-header-icon hs-header-icon-desert" data-theme-src="assets/desert-soft-clay/leaderboard-pro-v2.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <img class="hs-header-icon hs-header-icon-nebula" data-theme-src="assets/severna-soft-clay/leaderboard-pro-v8.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">
                         <span data-lang="hs_title">TOP LISTA</span>
@@ -1343,7 +1352,7 @@
                     <option value="winter" data-lang="theme_winter">Plavi Okean 🌊</option>
                     <option value="neon" data-lang="theme_neon">Neon Cyber ⚡</option>
                     <option value="amethyst" data-lang="theme_amethyst">Kraljevski Ametist 🔮</option>
-                    <option value="easter" data-lang="theme_easter">Vaskršnja 🐇</option>
+                    <option value="easter" data-lang="theme_easter">Vaskršnja</option>
                     <option value="desert" data-lang="theme_desert">Pustinjsko Staklo 🏜️</option>
                     <option value="moon" data-lang="theme_moon">Mesečev Sjaj 🌕</option>
                     <option value="severna" data-lang="theme_severna">Severna Maglina 🌌</option>
@@ -1908,7 +1917,7 @@
     </script>
 
     <script src="config.js?v=5.6"></script>
-    <script src="managers.js?v=5.29"></script>
+    <script src="managers.js?v=5.30"></script>
     <script src="dnevniizazov.js?v=2.8"></script>
     <script src="riznica.js?v=1.12"></script>
     <script src="trophyManager.js?v=4.6"></script>
@@ -1923,6 +1932,8 @@
     <script src="auth.js?v=1015"></script>
     <script src="pushNotifications.js?v=1.1"></script>
     <script src="game.js?v=5.49"></script>
+    <script src="theme-main-room-icons.js?v=1"></script>
+    <script src="theme-ducat-pack.js?v=1"></script>
     <script src="kvartalnaliga.js?v=1025"></script>
     <script src="onlinenumber.js?v=1012"></script>
     <script src="vatreniniz.js?v=1008"></script>

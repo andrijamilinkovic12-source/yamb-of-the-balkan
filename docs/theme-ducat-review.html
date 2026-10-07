@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dukati · 9 tema · pet tačaka</title>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; padding: 28px; background: #141a23; color: #eef2f5; }
+    h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 42px); }
+    p { margin: 0 0 26px; color: #bbc7d1; max-width: 72ch; line-height: 1.5; }
+    main { display: grid; grid-template-columns: repeat(auto-fit, minmax(285px, 1fr)); gap: 16px; }
+    article { border: 1px solid #3a4653; border-radius: 18px; padding: 17px; background: #202a35; }
+    h2 { margin: 0; font-size: 19px; }
+    small { color: #aebdca; }
+    .views { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; align-items: end; margin-top: 12px; }
+    figure { margin: 0; text-align: center; min-width: 0; }
+    figure img { width: 100%; aspect-ratio: 1; object-fit: contain; background: #303a44; border-radius: 12px; }
+    figcaption { margin-top: 5px; font-size: 12px; color: #cad4dd; }
+    .meta { margin-top: 13px; color: #d8e1e8; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>Dukati sa pet tačaka</h1>
+  <p>Devet tema, po tri originalna pogleda i dve standardne izvedene veličine. Svaki dukat pripada samo svojoj temi. Levo, prednji i desni prikaz služe za proveru oblika, materijala i pet tačaka.</p>
+  <main id="packs"></main>
+  <script>
+    const themes = [
+      ['light', 'Svetlo Zlato', 'Mat silikon / meka plastika'],
+      ['medium', 'Trula Višnja', 'Clay'],
+      ['winter', 'Plavi Okean', 'Mat silikon / meka plastika'],
+      ['neon', 'Neon Cyber', 'Mat silikon / meka plastika'],
+      ['amethyst', 'Kraljevski Ametist', 'Clay'],
+      ['easter', 'Vaskršnja', 'Mat silikon / meka plastika'],
+      ['desert', 'Pustinjsko Staklo', 'Clay'],
+      ['moon', 'Mesečev Sjaj', 'Clay'],
+      ['severna', 'Severna Maglina', 'Mat silikon / meka plastika']
+    ];
+    document.querySelector('#packs').innerHTML = themes.map(([id, name, direction]) => `
+      <article>
+        <h2>${name}</h2><small>3D Soft Neomorphism · ${direction}</small>
+        <div class="views">${[['angle-left', 'Levi ugao'], ['front', 'Spreda'], ['angle-right', 'Desni ugao']].map(([variant, label]) => `
+          <figure><img src="../www/assets/theme-packs/${id}/canonical/ducat/ducat-${variant}-v1.png" alt="${name}: ${label}"><figcaption>${label}</figcaption></figure>`).join('')}</div>
+        <div class="meta">5 PNG slotova · 5 tačaka · bez ukrasa</div>
+      </article>`).join('');
+  </script>
+</body>
+</html>

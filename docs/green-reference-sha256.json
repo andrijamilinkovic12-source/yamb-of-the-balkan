@@ -1,0 +1,893 @@
+{
+  "schemaVersion": 1,
+  "capturedOn": "2026-10-06",
+  "referenceThemeId": "dark",
+  "purpose": "Locked Green reference PNG bytes for the nine-theme rebuild; update only after an intentional Green reference change.",
+  "files": [
+    {
+      "slotId": "background/main",
+      "path": "www/assets/green-clay-balkan-diorama-v4.png",
+      "sha256": "0b5f16e08cad0abc487bdd23b3a3c7128903d5a0f06110b457d8b9d8bb1eb181"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/achilles-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/achilles-v1.png",
+      "sha256": "ff094d934007c58d2528986833068b9012eb9d2b4f9a363ebefc6cc1b5376eb0"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/apprentice-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/apprentice-v1.png",
+      "sha256": "3169902c572ef26d6819825dadd96107a422ffc2e0d087ae0158bb6ba9195584"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/close_call-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/close_call-v1.png",
+      "sha256": "93018c414ac7017249a382286e3b8cb2905e55983ba1175fa703f50d246f0aa7"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/concrete-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/concrete-v1.png",
+      "sha256": "b8203b1777ee61a099e28cf866289fcf824c424f8a444d9f43d0bbf2d655d69d"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/firecracker-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/firecracker-v1.png",
+      "sha256": "cd584001e12a9e4b26ea2cc683fdb8c200b651f1242899a15620b27fdd0337ad"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/first_play-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/first_play-v1.png",
+      "sha256": "a4513fd37e267840d152d759f9e3fc06c5d5a845128a1e1b11736c606254572e"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/godlike-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/godlike-v1.png",
+      "sha256": "2f6fd6e3fc62ed42519e84eb217168bf4d90f9cc75d471a746b19313b631603b"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/grandmaster-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/grandmaster-v1.png",
+      "sha256": "af0015226451ab4afc22b532b244d4593db035d636dda0e91f1605beed38c0f4"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/hazard-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/hazard-v1.png",
+      "sha256": "3f418c5d5deb914218cb644f00da74d63ca75018a83266175478ba5ca62e79cb"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/immortal-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/immortal-v1.png",
+      "sha256": "88740713d5f818b3b18f43cd1d74faf110f9aad815e6ff972127d7c450f37762"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/kafana-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/kafana-v1.png",
+      "sha256": "c55cb59257eff82c396437b5a8389b518eeeb763bef2d532fbab2d9f6416ad9f"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/legend-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/legend-v1.png",
+      "sha256": "316990c9c9400761ce5bfceaa69754b6eb68d8c41d873954d714a06e26c15125"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/math-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/math-v1.png",
+      "sha256": "6435bbfcebb947500890baa724c3d0e32cecd8cd5cf86d9fb00921b446a24658"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/miner-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/miner-v1.png",
+      "sha256": "eb5f480a88257661a44199459b105cba83ba5e8c69c17dc7825729727f529392"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/minimal-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/minimal-v1.png",
+      "sha256": "388876fa471acc42352124ee7492bb7d07a7d56773d29411e0344a4784a4509f"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/mythic-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/mythic-v1.png",
+      "sha256": "3596cf0e6ace95ed1f53a307ba42b23bcf21c6d9164da927f908b886c20a45e2"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/night_owl-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/night_owl-v1.png",
+      "sha256": "dc031b9e1e706dc99e49e0c9e34061a6132560cd0023aeba6e7d79d118699233"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/perfectionist-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/perfectionist-v1.png",
+      "sha256": "7911c09ec9a1786fb18336b51d86edcb7fad66066f9a608dcae6ac8ca65f9c5d"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/potato-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/potato-v1.png",
+      "sha256": "82f7382a559e179df4ac37eb8ccc4903a179c8cab69c680a02d605b938534b06"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/prophet-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/prophet-v1.png",
+      "sha256": "2e7f03e2a7dbfbcce680a5d2b635549a846a0de0d80cae2d600e5c62fa2f5069"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/score_1000-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/score_1000-v1.png",
+      "sha256": "85b4f001c3922aa5aa1bbd5c5daa18d52e6c49b4743d9e2fc1df60babeacb12e"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/sniper-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/sniper-v1.png",
+      "sha256": "472da60cce5a26e1a1ce67a079cf99f994f1700487dd4a961445306f116c25ad"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/spite-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/spite-v1.png",
+      "sha256": "d376135025eeebfa5396e5fea88c8ce70260e5eaaf90838934345c1ca4e1f5f0"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/surgeon-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/surgeon-v1.png",
+      "sha256": "63f09fc627f39b34ca2108a244e89696afbeed21566f05ca20b4cdf5fe35983c"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/sveti_ilija-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/sveti_ilija-v1.png",
+      "sha256": "63ecbfba3ef52e3a8ff12663dc8b43878ad0ad647bbc7b0542f5ad4824e604bd"
+    },
+    {
+      "slotId": "canonical/achievement-trophies/veteran-v1",
+      "path": "www/assets/green-soft-clay/canonical/achievement-trophies/veteran-v1.png",
+      "sha256": "c84e8165651a1090ab654fb4a8b747b11989871f2c4ee8494360a287a020efc8"
+    },
+    {
+      "slotId": "canonical/collection-medals/collection-bronze-v1",
+      "path": "www/assets/green-soft-clay/canonical/collection-medals/collection-bronze-v1.png",
+      "sha256": "c7e07bd5cdbf1e8804fb847e8808c439b30ea48b05e60528bbe2305ddf354e5d"
+    },
+    {
+      "slotId": "canonical/collection-medals/collection-gold-v1",
+      "path": "www/assets/green-soft-clay/canonical/collection-medals/collection-gold-v1.png",
+      "sha256": "a6159b9e3a89741a2e707065bb1d3888c67d5066e936d90055dafa6e1ecb3cb6"
+    },
+    {
+      "slotId": "canonical/collection-medals/collection-silver-v1",
+      "path": "www/assets/green-soft-clay/canonical/collection-medals/collection-silver-v1.png",
+      "sha256": "071bcd49e87312fbf280cd2458ac9756081f9acf8c786691ba6fc83e18d05859"
+    },
+    {
+      "slotId": "canonical/competition-medals/general-podium-bronze-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-bronze-v1.png",
+      "sha256": "40330474bbca7ebe87b539e1311307a7a552edd90e9dd4febb60d49218d4d775"
+    },
+    {
+      "slotId": "canonical/competition-medals/general-podium-gold-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-gold-v1.png",
+      "sha256": "d28b456736188dfc50e929708ca3d77ad43acb11fb42af786ef68055a95b500a"
+    },
+    {
+      "slotId": "canonical/competition-medals/general-podium-silver-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/general-podium-silver-v1.png",
+      "sha256": "cc279768a06b8b2a76543b8266fbe49ab111ed1eb404e8abe2bb06689d8bee7f"
+    },
+    {
+      "slotId": "canonical/competition-medals/quarterly-league-bronze-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-bronze-v1.png",
+      "sha256": "8816d19cb16f63b0b03b602cb6b0d06a6208513c6c99ef52a491a687c775f64b"
+    },
+    {
+      "slotId": "canonical/competition-medals/quarterly-league-gold-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-gold-v1.png",
+      "sha256": "103af0ef4870d349e8309e2f4cfe27b1c3392c472c65fb42a8ed50ca6cbfa436"
+    },
+    {
+      "slotId": "canonical/competition-medals/quarterly-league-silver-v1",
+      "path": "www/assets/green-soft-clay/canonical/competition-medals/quarterly-league-silver-v1.png",
+      "sha256": "2e295ab91a23c792ffd1076dbd0568f060e8268fbc045a1b312549fa268e4eba"
+    },
+    {
+      "slotId": "canonical/daily-room-identity/daily-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/daily-room-identity/daily-room-menu-v1.png",
+      "sha256": "ac6eae4d916598174fa9bb7a54f7ed326fa1f6dae7d5a4a68e1e4eb40b666c07"
+    },
+    {
+      "slotId": "canonical/daily-room-identity/daily-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/daily-room-identity/daily-room-v1.png",
+      "sha256": "1a0669083da288f1cb4bd673508acf0e6d4380b7fa1346c03004ebddd4343dcc"
+    },
+    {
+      "slotId": "canonical/daily-states/already-played-v1",
+      "path": "www/assets/green-soft-clay/canonical/daily-states/already-played-v1.png",
+      "sha256": "3a5b3b09c98487465d463c855e343134a12e33fd15ab02ffe49d4ed0f58eca3e"
+    },
+    {
+      "slotId": "canonical/daily-states/complete-v1",
+      "path": "www/assets/green-soft-clay/canonical/daily-states/complete-v1.png",
+      "sha256": "bc340dc50f576c011e6073eb929a914a4538ab39a38a95b4423fbe3e863ba97d"
+    },
+    {
+      "slotId": "canonical/daily-states/task-v1",
+      "path": "www/assets/green-soft-clay/canonical/daily-states/task-v1.png",
+      "sha256": "750f23bcf3458d5017f838f9717560041279702a0c35a4f4dc4031504cc8ffe9"
+    },
+    {
+      "slotId": "canonical/ducat/ducat-angle-left-v1",
+      "path": "www/assets/green-soft-clay/canonical/ducat/ducat-angle-left-v1.png",
+      "sha256": "36eaed3a228a53aeb212a59edb026485647774f32e7a62f369911d2ecbadc2af"
+    },
+    {
+      "slotId": "canonical/ducat/ducat-angle-right-v1",
+      "path": "www/assets/green-soft-clay/canonical/ducat/ducat-angle-right-v1.png",
+      "sha256": "dc66d9fed6fc2587b182285b1ee94c82970a2dba9349b91b4b3eea691c86373c"
+    },
+    {
+      "slotId": "canonical/ducat/ducat-front-v1",
+      "path": "www/assets/green-soft-clay/canonical/ducat/ducat-front-v1.png",
+      "sha256": "562982d5c6297465852a24b38ab4f75d71683a94d164dfc187e5628822146a26"
+    },
+    {
+      "slotId": "canonical/ducat/ducat-inline-v1",
+      "path": "www/assets/green-soft-clay/canonical/ducat/ducat-inline-v1.png",
+      "sha256": "7c2a30a774a62a81874807be9d73c84752a47fb765f13db268f5f48977a4a5fa"
+    },
+    {
+      "slotId": "canonical/ducat/ducat-particle-v1",
+      "path": "www/assets/green-soft-clay/canonical/ducat/ducat-particle-v1.png",
+      "sha256": "2eb671d2fe1fcf19d0c396a429b5d6979dab41655b43519cf356a6903347163a"
+    },
+    {
+      "slotId": "canonical/global-chat-room-identity/global-chat-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-menu-v1.png",
+      "sha256": "57e55c8e9fef67d9576e112cc78bbcc3ba5f1ac006e1d5bd5405e8260517d070"
+    },
+    {
+      "slotId": "canonical/global-chat-room-identity/global-chat-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/global-chat-room-identity/global-chat-room-v1.png",
+      "sha256": "ea96cb6a2f1a83768074adb6d2d9be44cbf4e9a21819619dbc18bfe7a1237e7e"
+    },
+    {
+      "slotId": "canonical/h2h-statistics/h2h-empty-v1",
+      "path": "www/assets/green-soft-clay/canonical/h2h-statistics/h2h-empty-v1.png",
+      "sha256": "43bc21b1893ae56d609d69ad429cdfc502e343fcd08c1df7956bbfb74f358c70"
+    },
+    {
+      "slotId": "canonical/h2h-statistics/h2h-identity-v1",
+      "path": "www/assets/green-soft-clay/canonical/h2h-statistics/h2h-identity-v1.png",
+      "sha256": "de557083a92dbb1c6a7b61286976a052ee04ad2a31db38c01708e8148aa87941"
+    },
+    {
+      "slotId": "canonical/h2h-statistics/highest-score-v1",
+      "path": "www/assets/green-soft-clay/canonical/h2h-statistics/highest-score-v1.png",
+      "sha256": "82457189670699df4ab70a44f29e85f6c14233177d732a6f9ad164eb5306fe9c"
+    },
+    {
+      "slotId": "canonical/h2h-statistics/max-win-margin-v1",
+      "path": "www/assets/green-soft-clay/canonical/h2h-statistics/max-win-margin-v1.png",
+      "sha256": "473eb985d4f6e876134c8597f3fac345a3ba938b2094d1cec6055354355bd24c"
+    },
+    {
+      "slotId": "canonical/h2h-statistics/versus-v1",
+      "path": "www/assets/green-soft-clay/canonical/h2h-statistics/versus-v1.png",
+      "sha256": "c4b26891699042c903f204c3551b9d6bf526642dd96c90bcc630e648dde54534"
+    },
+    {
+      "slotId": "canonical/h2h-statistics/worst-loss-margin-v1",
+      "path": "www/assets/green-soft-clay/canonical/h2h-statistics/worst-loss-margin-v1.png",
+      "sha256": "d318a8ea88f1fb22ba8e49a05b126846789bb57c34fe564841261710b429ab21"
+    },
+    {
+      "slotId": "canonical/hotseat-room-identity/hotseat-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-menu-v1.png",
+      "sha256": "de933f7fe0b272d177f4cd4521dc859af2045eed8ce879f3084055f3500ad0fc"
+    },
+    {
+      "slotId": "canonical/hotseat-room-identity/hotseat-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/hotseat-room-identity/hotseat-room-v1.png",
+      "sha256": "f1f006758f2b8fffde82401d6f89a4fc8ce3a72749114c1ad4833c3390954021"
+    },
+    {
+      "slotId": "canonical/hotseat-winner/hotseat-winner-v1",
+      "path": "www/assets/green-soft-clay/canonical/hotseat-winner/hotseat-winner-v1.png",
+      "sha256": "4020edd452e925903508af646e4f56ec55320982fa573e3a97a25aefe4d7824b"
+    },
+    {
+      "slotId": "canonical/invite-friend-room-identity/invite-friend-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-menu-v1.png",
+      "sha256": "ae634e3928fef02d57d8dc13f5415ff5de76e1451575a92a155319fd1c5b77e4"
+    },
+    {
+      "slotId": "canonical/invite-friend-room-identity/invite-friend-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/invite-friend-room-identity/invite-friend-room-v1.png",
+      "sha256": "30894f35a73c1ae1e1ca27267c2342e7c2aac46753c3d8ccffcc5bfaaa0dd356"
+    },
+    {
+      "slotId": "canonical/leaderboard-controls/empty-loading-v1",
+      "path": "www/assets/green-soft-clay/canonical/leaderboard-controls/empty-loading-v1.png",
+      "sha256": "7b0c89808cd5185fb53e16a52320f1e575fbeeb691efad255971f5ca9aee67ba"
+    },
+    {
+      "slotId": "canonical/leaderboard-controls/global-v1",
+      "path": "www/assets/green-soft-clay/canonical/leaderboard-controls/global-v1.png",
+      "sha256": "3a9aa67230a1d53d6e1e05dac1b8f8ca4a738f92cb3cf07d495bde165ac2519a"
+    },
+    {
+      "slotId": "canonical/leaderboard-controls/local-v1",
+      "path": "www/assets/green-soft-clay/canonical/leaderboard-controls/local-v1.png",
+      "sha256": "44e60c1c9a9166f77294a9d3197bdb4cfd41c64d283753288635498de39d5630"
+    },
+    {
+      "slotId": "canonical/leaderboard-room-identity/leaderboard-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-menu-v1.png",
+      "sha256": "a18d1f54fffc1de4047a066629313eef85d9a5f6934eee3cbd1a7cdc8a77a72b"
+    },
+    {
+      "slotId": "canonical/leaderboard-room-identity/leaderboard-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/leaderboard-room-identity/leaderboard-room-v1.png",
+      "sha256": "8acfb917163a7cf02142c1d0c5613c850cd5e882b8a586caead1d282c0d7aa0e"
+    },
+    {
+      "slotId": "canonical/online-players-room-identity/online-players-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-menu-v1.png",
+      "sha256": "330662c03ccc96c84ddd920834bb16a73ee5cc8ff4143cd9fcbaf0089ea6623f"
+    },
+    {
+      "slotId": "canonical/online-players-room-identity/online-players-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/online-players-room-identity/online-players-room-v1.png",
+      "sha256": "319f2407117c1ec539af88248b48ee2c2daaf544342dbf36c13ed2697f2bd189"
+    },
+    {
+      "slotId": "canonical/online-random-room-identity/online-random-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-menu-v1.png",
+      "sha256": "a1593092e3f0634f2f07d824b9fc3173eb654f9f30690e3d20fbdf33a27aceb4"
+    },
+    {
+      "slotId": "canonical/online-random-room-identity/online-random-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/online-random-room-identity/online-random-room-v1.png",
+      "sha256": "4a35ca20523d6ed8929f4179767841eee53dd1d15665078cf7e175a957a5820a"
+    },
+    {
+      "slotId": "canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png",
+      "sha256": "f21cece394a0184082aaaa7ed7fa327d3beedd360c1f01383002965bd96191bb"
+    },
+    {
+      "slotId": "canonical/quarterly-league-room-identity/quarterly-league-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png",
+      "sha256": "87a0a07b5abf5abc9dfa58a5265665fd2d1b81f62c48e692cfa0ffe4657a7ed4"
+    },
+    {
+      "slotId": "canonical/quarterly-navigation/tab-champions-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-champions-v1.png",
+      "sha256": "a4274e7e793e34f7c7797d2b6eceda11850de2949ab62d072e7841f5698d1a8b"
+    },
+    {
+      "slotId": "canonical/quarterly-navigation/tab-hall-of-fame-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-hall-of-fame-v1.png",
+      "sha256": "7bc6e75d502f439ee5f545424d132900d2eaaedb259d7bbb8382f1463d429f81"
+    },
+    {
+      "slotId": "canonical/quarterly-navigation/tab-league-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-league-v1.png",
+      "sha256": "f40a3b7929a00158136f08df1520492d0a3917dfd3082a82c36a6167c72b27a2"
+    },
+    {
+      "slotId": "canonical/quarterly-navigation/tab-medals-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-navigation/tab-medals-v1.png",
+      "sha256": "75db6fa1bf822490fc0f6de3b205e3636d181008ddab448396a1ea20d7ca0c81"
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-alltime-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-alltime-v1.png",
+      "sha256": "1869fdb9830f450a557d73e4bbf05467041e74753ded2ebf48a01f3ba8ef0ad6"
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-amater-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-amater-v1.png",
+      "sha256": "2e561163a4986d4364b6bb2c2eae4fc29f633c26b2ea97342dd17bdd32a3966c"
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-legenda-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-legenda-v1.png",
+      "sha256": "1f244905698bef7e89b64ffede9579d6970b222284af9bd8de1cf94b8c1ad020"
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-majstor-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-majstor-v1.png",
+      "sha256": "eb47e9946a7d8f5682ae1d5251b61613561b59151038cc840d0bbc5795ee7f2e"
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-profi-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-profi-v1.png",
+      "sha256": "651a21a08d820944d4bbb3b4fb0a05b41f75b801f14cf4546a2dee6f1282aa09"
+    },
+    {
+      "slotId": "canonical/quarterly-rank-badges/rank-titan-v1",
+      "path": "www/assets/green-soft-clay/canonical/quarterly-rank-badges/rank-titan-v1.png",
+      "sha256": "04805a105fa8ee538833d42c7e7ae9830e6d36ee8260941f7a32dcf0477b872f"
+    },
+    {
+      "slotId": "canonical/rewarded-video/rewarded-video-active-inline-v1",
+      "path": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+      "sha256": "d1988cf91e07f1b94ee0036d2f1dba6bf7f37899015cf8852b5d9651e4de901e"
+    },
+    {
+      "slotId": "canonical/rewarded-video/rewarded-video-active-v1",
+      "path": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-active-v1.png",
+      "sha256": "4d5c8e280f9a612cb7cc07bd22347a8a82898bbfae1dc20c34116b86d244f019"
+    },
+    {
+      "slotId": "canonical/rewarded-video/rewarded-video-unavailable-inline-v1",
+      "path": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+      "sha256": "2b33901e2ad67380351ae71eed751e13374342b171a6b9f6f25cb995cb58a38f"
+    },
+    {
+      "slotId": "canonical/rewarded-video/rewarded-video-unavailable-v1",
+      "path": "www/assets/green-soft-clay/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+      "sha256": "81637ce7fda39163eb7c01cf95115e21b6fa8b4bfbc6aae5acce211921a9281b"
+    },
+    {
+      "slotId": "canonical/rules-page-illustrations/account-server-v1",
+      "path": "www/assets/green-soft-clay/canonical/rules-page-illustrations/account-server-v1.png",
+      "sha256": "a1092f5af79c8a73982147c78713de0e0fe7b92cfe0bdf7557babb9ba6cfab7a"
+    },
+    {
+      "slotId": "canonical/rules-page-illustrations/multiplayer-competitions-v1",
+      "path": "www/assets/green-soft-clay/canonical/rules-page-illustrations/multiplayer-competitions-v1.png",
+      "sha256": "efa52e4b24c8d78602efb812bba4cde8c36fdf4b345fb683337386cd44cbe50b"
+    },
+    {
+      "slotId": "canonical/rules-page-illustrations/rules-scoring-v1",
+      "path": "www/assets/green-soft-clay/canonical/rules-page-illustrations/rules-scoring-v1.png",
+      "sha256": "58d0c32e0cd9c8a92e97a95b6ccb4468df19adde7901ef2052e42a45a3ea00ca"
+    },
+    {
+      "slotId": "canonical/rules-page-illustrations/stats-leaderboards-v1",
+      "path": "www/assets/green-soft-clay/canonical/rules-page-illustrations/stats-leaderboards-v1.png",
+      "sha256": "41b88e864d1933b43ba9081c5ebba6d6844e23afc3fba71f5cac45ecb6969b7a"
+    },
+    {
+      "slotId": "canonical/rules-room-identity/rules-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/rules-room-identity/rules-room-menu-v1.png",
+      "sha256": "d00302c37418b3f87b8d4077a54a6c1742e1d78199dd1065e32dc3685a742d1a"
+    },
+    {
+      "slotId": "canonical/rules-room-identity/rules-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/rules-room-identity/rules-room-v1.png",
+      "sha256": "48527b7eb726778604fc25ba437d0d350a3ab97708c7c4d3dd8ad19c537a8ae4"
+    },
+    {
+      "slotId": "canonical/settings-controls/display-theme-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png",
+      "sha256": "9c9332adbc012cbd3211bf4c909437d09cc1a10ee960d683e00fdea81ea5669a"
+    },
+    {
+      "slotId": "canonical/settings-controls/language-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-controls/language-v1.png",
+      "sha256": "ea983bc0e7b24162e7682897fdd6cbe4da45a5383664297eb76a29fb70f0b742"
+    },
+    {
+      "slotId": "canonical/settings-controls/music-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-controls/music-v1.png",
+      "sha256": "8c81adfd83a6389ef5c5f55ab098e36610e1a11427731bbaad1edfb9468bd88f"
+    },
+    {
+      "slotId": "canonical/settings-controls/privacy-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-controls/privacy-v1.png",
+      "sha256": "4118758bdf0cc8798654c48f4d15a05e28124426d61f3d4f404d629dada3a48b"
+    },
+    {
+      "slotId": "canonical/settings-controls/profile-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-controls/profile-v1.png",
+      "sha256": "4d9dbbce33cecc87901eabdb67719b9f8253526a8f5df7340fb9dfda50b901c4"
+    },
+    {
+      "slotId": "canonical/settings-controls/sound-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-controls/sound-v1.png",
+      "sha256": "0b5a470fb79fc8e8805a4a627a88d4639aafc68ee631ff1d9f9ab0c8561a7ce4"
+    },
+    {
+      "slotId": "canonical/settings-controls/terms-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-controls/terms-v1.png",
+      "sha256": "07cebe403288e99f12c63e1f3afa2fb5de884cc6387514f82e28e7de71c2ebc5"
+    },
+    {
+      "slotId": "canonical/settings-controls/vibration-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-controls/vibration-v1.png",
+      "sha256": "893e80c00e4cf4432bd7fcd9cba2deeeee96807faf7ce95c7421c28ee6b871c0"
+    },
+    {
+      "slotId": "canonical/settings-room-identity/settings-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-room-identity/settings-room-menu-v1.png",
+      "sha256": "9018529478652929f353e24edf8c02edb1193896791e39b3284b664862915201"
+    },
+    {
+      "slotId": "canonical/settings-room-identity/settings-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/settings-room-identity/settings-room-v1.png",
+      "sha256": "ab4a2390a61348440cd594ade5aef57c0c1a3a05c0b3f6007b5783630f5ab3c9"
+    },
+    {
+      "slotId": "canonical/solo-results/finish-claim-v1",
+      "path": "www/assets/green-soft-clay/canonical/solo-results/finish-claim-v1.png",
+      "sha256": "f7102115b111f605f9bf38d25ff7a0d5aedd9bb812814fee79e1771eeb5ef09e"
+    },
+    {
+      "slotId": "canonical/solo-results/finish-score-mark-v1",
+      "path": "www/assets/green-soft-clay/canonical/solo-results/finish-score-mark-v1.png",
+      "sha256": "722f391eb7d85e41b537212d81d680f1f2fc152dbe42fe5e45bba2f8960d33ce"
+    },
+    {
+      "slotId": "canonical/solo-results/personal-best-v1",
+      "path": "www/assets/green-soft-clay/canonical/solo-results/personal-best-v1.png",
+      "sha256": "573a9df91281784f5b8739e7ae55ec137093e37fdea8e8fbdc0beecb7273b76d"
+    },
+    {
+      "slotId": "canonical/solo-room-identity/solo-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/solo-room-identity/solo-room-menu-v1.png",
+      "sha256": "71ea4a39070b18d03403818a26689add95223ccbd952736282ddaf4031bd4ee5"
+    },
+    {
+      "slotId": "canonical/solo-room-identity/solo-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/solo-room-identity/solo-room-v1.png",
+      "sha256": "d697e38721762c01fcf90a13475ff67dc7413b677765c70865ff3453e589ceb4"
+    },
+    {
+      "slotId": "canonical/statistics-overview/all-time-points-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/all-time-points-v1.png",
+      "sha256": "670e8f0a5773e56b423cc205a0dc10ca3454d4591f0b6a57a1304acc6fbd933c"
+    },
+    {
+      "slotId": "canonical/statistics-overview/average-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/average-v1.png",
+      "sha256": "fdc3b6eae21540d3003eadc697c24862aa69667293bc0fa75790499ba59b2a12"
+    },
+    {
+      "slotId": "canonical/statistics-overview/draws-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/draws-v1.png",
+      "sha256": "ac875bb7e77abcc37b672a2e5a46251c001a36fa219906595669b6fe820aac82"
+    },
+    {
+      "slotId": "canonical/statistics-overview/fire-streak-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/fire-streak-v1.png",
+      "sha256": "9d9cb7a4189caf38d4cbb0b166a8f2cebed7aab5a969763de3c55763db7a3847"
+    },
+    {
+      "slotId": "canonical/statistics-overview/games-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/games-v1.png",
+      "sha256": "41c1f718f4af64d8286d3f39caa7a90d3a2b07240130a53a1939b8e68619ddb7"
+    },
+    {
+      "slotId": "canonical/statistics-overview/losses-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/losses-v1.png",
+      "sha256": "e0f872aa3fc25541c9b5fb394dfbca40137f8c99c7ae510b890c1502243cd3fc"
+    },
+    {
+      "slotId": "canonical/statistics-overview/power-index-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/power-index-v1.png",
+      "sha256": "aca987078b4173c89cdae4d44b8ab471792558d24bd52ec5c86b0f5519910fe1"
+    },
+    {
+      "slotId": "canonical/statistics-overview/record-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/record-v1.png",
+      "sha256": "9e3cca29bc7ec413863ca360b07de2f322cef1e2d35deab686a35a8957e6380b"
+    },
+    {
+      "slotId": "canonical/statistics-overview/trophies-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/trophies-v1.png",
+      "sha256": "b698d3624653518ba0bb7014ee94e411d73da87fd8e3fa0b52f7c26fc635880e"
+    },
+    {
+      "slotId": "canonical/statistics-overview/wins-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-overview/wins-v1.png",
+      "sha256": "56c08c3ffcd753a10d87b81b721086dbd1415f9e13ed246a36bd7b05b8f950c4"
+    },
+    {
+      "slotId": "canonical/statistics-room-identity/statistics-room-menu-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-menu-v1.png",
+      "sha256": "e4ab3a61aecdb9e14e84159a11b4e5ca1608e87996d663114eedf903ab0654fa"
+    },
+    {
+      "slotId": "canonical/statistics-room-identity/statistics-room-v1",
+      "path": "www/assets/green-soft-clay/canonical/statistics-room-identity/statistics-room-v1.png",
+      "sha256": "1b410b9c5af60dfa552122a9eb2ba70abb05bb4f3fdfc4acd7ed0868679611f0"
+    },
+    {
+      "slotId": "canonical/tournament-awards/champion-trophy-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png",
+      "sha256": "2a0cdbd77a321ce9964213a91087c8c2375660bb94ad4e4da9cd75588ccf01f5"
+    },
+    {
+      "slotId": "canonical/tournament-awards/finalist-silver-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png",
+      "sha256": "eb430e12e61b44f35cb9aa33a1e9913daee5e28cfcd74535f9ded37e1137d2eb"
+    },
+    {
+      "slotId": "canonical/tournament-navigation/tab-bracket-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-bracket-v1.png",
+      "sha256": "b1161e4553c41bfae427e560d8a019eef524cf1563633ccc76e9bc46193340b2"
+    },
+    {
+      "slotId": "canonical/tournament-navigation/tab-hall-of-fame-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-hall-of-fame-v1.png",
+      "sha256": "087f94672a7abfade8de55a02edcfbc057b4b2fbeea88f15a2a04520f2636b3c"
+    },
+    {
+      "slotId": "canonical/tournament-navigation/tab-info-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-navigation/tab-info-v1.png",
+      "sha256": "4494345f66e40818e6ab05ffe284684b181a54689fecf8218a1ed5c5f77ad687"
+    },
+    {
+      "slotId": "canonical/tournament-states/state-match-active-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-states/state-match-active-v1.png",
+      "sha256": "f1c9fd5f222b98abaf44eafc798dd1f68163fd4d3bc15a7dc0a35bb3db254ce6"
+    },
+    {
+      "slotId": "canonical/tournament-states/state-match-complete-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-states/state-match-complete-v1.png",
+      "sha256": "dcee565b9bea8039126569cc2f17c2c57520924cfe3cd283f7a2d756d12b6225"
+    },
+    {
+      "slotId": "canonical/tournament-states/state-register-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-states/state-register-v1.png",
+      "sha256": "ef258055abb163198b8a4e6090941950fb3d423e60642e7865ca18c609064d96"
+    },
+    {
+      "slotId": "canonical/tournament-states/state-registration-locked-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-states/state-registration-locked-v1.png",
+      "sha256": "b03455b6457234098c56a2fc50f3aa3c63ec05ba90a4cdeb618730303bdebc38"
+    },
+    {
+      "slotId": "canonical/tournament-states/state-start-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-states/state-start-v1.png",
+      "sha256": "39d478e2cc5a6a8d34e6c68c130ff089778ef3d599ae88df11179dbc02c05778"
+    },
+    {
+      "slotId": "canonical/tournament-states/state-unregister-v1",
+      "path": "www/assets/green-soft-clay/canonical/tournament-states/state-unregister-v1.png",
+      "sha256": "22ca79f68b2ff31e62dfab66091634f06fd21a0b664e24349e56008ad94f9ce5"
+    },
+    {
+      "slotId": "canonical/treasury-controls/status-active-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-controls/status-active-v1.png",
+      "sha256": "5aef6096dcda567757171ad5c4f18eae143875429e7e80513f28f1fa437ff802"
+    },
+    {
+      "slotId": "canonical/treasury-controls/status-insufficient-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-controls/status-insufficient-v1.png",
+      "sha256": "ad2fd1981551494955699c2fc991ff131133296f636aeacfa15360ff7e94c061"
+    },
+    {
+      "slotId": "canonical/treasury-controls/status-locked-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-controls/status-locked-v1.png",
+      "sha256": "39cd8935b7ddc8853c961e210b4edaf9bf91b3a1e6d52fedd515e685d3e2c358"
+    },
+    {
+      "slotId": "canonical/treasury-controls/status-owned-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-controls/status-owned-v1.png",
+      "sha256": "0afb2cf2183ad566f2924d04dcfad0efa7ce18a0751102397f9625d3b365a27f"
+    },
+    {
+      "slotId": "canonical/treasury-controls/tab-effects-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-controls/tab-effects-v1.png",
+      "sha256": "939931a4c6945357936f703318baaa0c894121a620a9cd86bf9f021f3e736d7e"
+    },
+    {
+      "slotId": "canonical/treasury-controls/tab-skins-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-controls/tab-skins-v1.png",
+      "sha256": "8f8dedd2ad601223cdf51591a6a483bcf60302960468032ba26a7f1baeb93814"
+    },
+    {
+      "slotId": "canonical/treasury-controls/tab-themes-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-controls/tab-themes-v1.png",
+      "sha256": "99cd75792d315f53ffa8657486f726724a5080ac338e3f0201cbd8a43ecb5a02"
+    },
+    {
+      "slotId": "canonical/treasury-controls/tab-trophies-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-controls/tab-trophies-v1.png",
+      "sha256": "256552dff0d241d35ae99afa76529b8d03befa5ca2f721e490fa3c884e9baf16"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-black-hole-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-black-hole-v1.png",
+      "sha256": "bbbb447badf67a4fbac5f090053bb9b370086c08e8ccf5f93d15bb9ac318ec4d"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-bubbles-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-bubbles-v1.png",
+      "sha256": "890a5258cae23659100282a7e05fccc8b2e4abff175076018f999916337557e7"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-cosmic-dust-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-cosmic-dust-v1.png",
+      "sha256": "3edf5384d8b8b4213e2157c450e57f50b231b5ff8c01199196c540f60660ddbb"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-dragon-fire-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-dragon-fire-v1.png",
+      "sha256": "4a6482e7c8c2c6ed6ebeebfaa89e8a42c5c91c5d75fd08e8b09bbe0e425d3a7b"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-drones-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-drones-v1.png",
+      "sha256": "b282dcd67ea4ee389d14f19a34486dfe4b9b78ed5143a21c53bc731b1e769e4f"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-fireflies-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireflies-v1.png",
+      "sha256": "dc82529cbccba0b5d3f0eb60ebdba454332a42b3ffb2eaaa8ab57db84985efc5"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-fireworks-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-fireworks-v1.png",
+      "sha256": "8727c9a78c8fb04c3950c720bac8b757422fbfd507c76a77983d656b10f1ca1a"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-ice-age-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-ice-age-v1.png",
+      "sha256": "c8160a9ca34e5f4c92c5983b62ce21787913a60d1c98162714d611aa01906bd3"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-neon-pulse-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-neon-pulse-v1.png",
+      "sha256": "3ab788d23fe0c19d02805aafc45c2bb263915900923fca965d90b2c23a9704e3"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-royal-yamb-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-royal-yamb-v1.png",
+      "sha256": "dede200a1b39a61576bb551e35fbf85e9b3938ae333c6e3113c0f790af387493"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-supernova-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-supernova-v1.png",
+      "sha256": "2672f0b807ef0770601ca8f17693bb780bc098b883e22e6e16b793ebca671d09"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-thunder-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-thunder-v1.png",
+      "sha256": "19cf59b5d750fb8dc59e8e090ac0649894683eb5e9781c5e5da3f4982b46e749"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-ufo-abduction-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-ufo-abduction-v1.png",
+      "sha256": "ab6c825ecdf6bb4cce45387d23cded27f2f9a7d37d3f5527fa83fe892b905cc1"
+    },
+    {
+      "slotId": "canonical/treasury-effect-previews/preview-wedding-v1",
+      "path": "www/assets/green-soft-clay/canonical/treasury-effect-previews/preview-wedding-v1.png",
+      "sha256": "617081095a973f8b2c202d114829f15bc8b7bd980ae6808d4585f04ae8003e43"
+    },
+    {
+      "slotId": "canonical/undo-token/undo-token-front-v1",
+      "path": "www/assets/green-soft-clay/canonical/undo-token/undo-token-front-v1.png",
+      "sha256": "7d9b1b6303cbc8ecdc55838c9bbb45db1d81aa29f37fed203cb4fbc8304d9f20"
+    },
+    {
+      "slotId": "canonical/undo-token/undo-token-inline-v1",
+      "path": "www/assets/green-soft-clay/canonical/undo-token/undo-token-inline-v1.png",
+      "sha256": "960421686be8bcb1b9731dd8cb534dee61e66d565899d535af44a48000ccd732"
+    },
+    {
+      "slotId": "daily/reward-video-v3",
+      "path": "www/assets/green-soft-clay/daily/reward-video-v3.png",
+      "sha256": "ae01fd5ba5251e7947328cc9600adc3168385339029b7105cbba29be9d1437ad"
+    },
+    {
+      "slotId": "ducats-undo-free-v3",
+      "path": "www/assets/green-soft-clay/ducats-undo-free-v3.png",
+      "sha256": "5e21d4756d42165bef706257749f4e65b39821fb302852a0da8e0bcfa82e958e"
+    },
+    {
+      "slotId": "global-chat-empty-v1",
+      "path": "www/assets/green-soft-clay/global-chat-empty-v1.png",
+      "sha256": "107a1d13229eb836b45a20ffe5502ad3c598ab93c9a81b83f5a90809b3e24783"
+    },
+    {
+      "slotId": "global-chat-send-v1",
+      "path": "www/assets/green-soft-clay/global-chat-send-v1.png",
+      "sha256": "d10f3db0831d99f9b34504bd48f0f64b49f5521710ee2e998ddd89477d34b426"
+    },
+    {
+      "slotId": "invite/accepted-v1",
+      "path": "www/assets/green-soft-clay/invite/accepted-v1.png",
+      "sha256": "dc90636ed9aabdacf4f61a70d49c1056dbdaeee46bedb3b1e838b29aaa22925a"
+    },
+    {
+      "slotId": "invite/empty-v1",
+      "path": "www/assets/green-soft-clay/invite/empty-v1.png",
+      "sha256": "be936013867a9a3946bac39846ec254c2bc77ee9241901c55625648a74aff6b9"
+    },
+    {
+      "slotId": "invite/send-v1",
+      "path": "www/assets/green-soft-clay/invite/send-v1.png",
+      "sha256": "232862a11b63bf8e637980184c56289c584fd1cd45f71ed6298e08e0053e1628"
+    },
+    {
+      "slotId": "invite/sent-v1",
+      "path": "www/assets/green-soft-clay/invite/sent-v1.png",
+      "sha256": "809b913c55e33e080f238c0a71b5b3ff002bb3237f49d584be434d171f286994"
+    },
+    {
+      "slotId": "online-add-friend-v1",
+      "path": "www/assets/green-soft-clay/online-add-friend-v1.png",
+      "sha256": "61dc2f1a57f475a2279f48337590784f527edcf2044e53c52df43f1814ef0dda"
+    },
+    {
+      "slotId": "online-duel-v1",
+      "path": "www/assets/green-soft-clay/online-duel-v1.png",
+      "sha256": "38b68fc8f6c5033aa993ab569864967c56fefced373e075d151e30ff343317ea"
+    },
+    {
+      "slotId": "online-players-state-v1",
+      "path": "www/assets/green-soft-clay/online-players-state-v1.png",
+      "sha256": "0ee96acc12409963fa3c9799da9f703097c77c09b219f652d270db370d1d4193"
+    },
+    {
+      "slotId": "online-spectate-v1",
+      "path": "www/assets/green-soft-clay/online-spectate-v1.png",
+      "sha256": "7bd46544d38104aa8a100da3c52e29eff7128c0efb9ed40c0159e5c28c30ec75"
+    },
+    {
+      "slotId": "opponent/disconnected-v1",
+      "path": "www/assets/green-soft-clay/opponent/disconnected-v1.png",
+      "sha256": "e67b2ae2c7d93d5c58e82a6ba4b9748c350ea6c8bee544a5cfe6e101ee9006ee"
+    },
+    {
+      "slotId": "opponent/found-v1",
+      "path": "www/assets/green-soft-clay/opponent/found-v1.png",
+      "sha256": "a0b49794775cf0fd2d9a84ee7964273838479ef15ae068f30c2a0db824d0f568"
+    },
+    {
+      "slotId": "opponent/reconnected-v1",
+      "path": "www/assets/green-soft-clay/opponent/reconnected-v1.png",
+      "sha256": "fd9cf0dfab285c9dfe8867308d9e7027518f67a96011e9730e9c5e7ba0231391"
+    },
+    {
+      "slotId": "opponent/scanning-v1",
+      "path": "www/assets/green-soft-clay/opponent/scanning-v1.png",
+      "sha256": "5542f6cad09efbdf1b378757ed480047ad29db6df5f31c4cd5bc7ce7bba85a1d"
+    },
+    {
+      "slotId": "opponent/vs-v1",
+      "path": "www/assets/green-soft-clay/opponent/vs-v1.png",
+      "sha256": "b7ec5cb43a04ae446474cbc55a9461d355563b9bc302003693b66ae43427c932"
+    },
+    {
+      "slotId": "rules/pages/communication-v1",
+      "path": "www/assets/green-soft-clay/rules/pages/communication-v1.png",
+      "sha256": "50ed1ec25dbf9c1de01059ad2d4c15cf5ec230b69c29c370a2ba7e0c901ae05d"
+    },
+    {
+      "slotId": "rules/pages/economy-treasury-v3",
+      "path": "www/assets/green-soft-clay/rules/pages/economy-treasury-v3.png",
+      "sha256": "495fe82e49141fb40dcb195c6f1f2c7d0000511d9ea38a6753e61d3db85eb330"
+    },
+    {
+      "slotId": "runtime/menu/ducats-undo-free-v3",
+      "path": "www/assets/green-soft-clay/runtime/menu/ducats-undo-free-v3.png",
+      "sha256": "abc64117d03bb50f91aac1125437d652b6b6378f2b81faf45a75cf6da252d8d5"
+    },
+    {
+      "slotId": "runtime/menu/treasury-free-v3",
+      "path": "www/assets/green-soft-clay/runtime/menu/treasury-free-v3.png",
+      "sha256": "3a92e917701b9d6864ce9eb0e43510049791e0f9528c74113411c344a06fd31f"
+    },
+    {
+      "slotId": "solo/finish-reward-video-v3",
+      "path": "www/assets/green-soft-clay/solo/finish-reward-video-v3.png",
+      "sha256": "a4f0abc60ba91a5fbcb1acd5926e0ffcd8db7977bd94b1a98b18dd05d6106564"
+    },
+    {
+      "slotId": "splash-title-soft-clay-v1",
+      "path": "www/assets/green-soft-clay/splash-title-soft-clay-v1.png",
+      "sha256": "2773c5e488ce046fb2a83266ebfaee4d4597733169dd4bacdf353a046226a6d3"
+    },
+    {
+      "slotId": "treasury-free-v3",
+      "path": "www/assets/green-soft-clay/treasury-free-v3.png",
+      "sha256": "1eb9f123daa7f62831010f376d446f458235065b7afee55231a8c2a007026a3a"
+    },
+    {
+      "slotId": "treasury/reward-video-v3",
+      "path": "www/assets/green-soft-clay/treasury/reward-video-v3.png",
+      "sha256": "509456022dbef450dda16e9d0cca1fdc32e26b73022422e590d1af4e9fbdc486"
+    }
+  ]
+}

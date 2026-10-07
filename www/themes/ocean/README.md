@@ -2,7 +2,7 @@
 
 Svetla mediteranska Soft Clay / neomorfna tema. Koristi originalnu obalsku pozadinu, hladne plave površine, reljefne marine ikonice i koralne/zlatne akcente, bez promene rasporeda ili logike igre.
 
-Aktivni asset: `../../assets/ocean-neumorphic-bg-v2.png`.
+Aktivni asset: `../../assets/theme-backgrounds/winter-v13.png`.
 
 V2 koristi čisti glineni reljef bez realističnog horizonta, vode ili pejzažne perspektive. V1 je sačuvana samo za poređenje.
 

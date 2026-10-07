@@ -1350,7 +1350,7 @@ class EffectManager {
         const isGreenTheme = this.isGreenThemeActive();
         const greenDucatSprite = isGreenTheme
             ? await this.loadGreenDucatParticleSprite()
-            : null;
+            : await this.loadThemeDucatParticleSprite();
         if (runId !== this.royalYambRunId || !canvas.isConnected) return;
 
         const start = performance.now();
@@ -1741,6 +1741,25 @@ class EffectManager {
         return this.greenDucatParticleSpritePromise;
     }
 
+    loadThemeDucatParticleSprite() {
+        const theme = ['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna']
+            .find(id => document.body?.classList.contains(`${id}-theme`));
+        if (!theme) return Promise.resolve(null);
+        this.themeDucatParticleSpritePromises ||= {};
+        if (this.themeDucatParticleSpritePromises[theme]) return this.themeDucatParticleSpritePromises[theme];
+        this.themeDucatParticleSpritePromises[theme] = new Promise(resolve => {
+            const image = new Image();
+            image.decoding = 'async';
+            image.onload = () => resolve(image);
+            image.onerror = () => {
+                delete this.themeDucatParticleSpritePromises[theme];
+                resolve(null);
+            };
+            image.src = `assets/theme-packs/${theme}/canonical/ducat/ducat-particle-v1.png`;
+        });
+        return this.themeDucatParticleSpritePromises[theme];
+    }
+
     getGoldRainSprites() {
         if (this.goldRainSprites) return this.goldRainSprites;
 
@@ -1922,7 +1941,9 @@ class EffectManager {
         const sparkCount = reducedMotion ? 14 : (isCompact ? 26 : 48);
         const rand = (min, max) => min + Math.random() * (max - min);
         const ease = t => t * t * (3 - 2 * t);
-        const greenDucatSprite = isGreenTheme ? await this.loadGreenDucatParticleSprite() : null;
+        const greenDucatSprite = isGreenTheme
+            ? await this.loadGreenDucatParticleSprite()
+            : await this.loadThemeDucatParticleSprite();
         if (runId !== this.goldRainRunId) return;
 
         this.clearEffectTimeouts('gold_rain');
@@ -1977,7 +1998,7 @@ class EffectManager {
             }, totalDuration, 'gold_rain');
             return;
         }
-        const sprites = isGreenTheme
+        const sprites = greenDucatSprite
             ? { coin: greenDucatSprite, spark: this.getGreenGoldRainSparkSprite() }
             : this.getGoldRainSprites();
 
@@ -2002,7 +2023,7 @@ class EffectManager {
 
         const makeCoinParticle = () => {
             const roll = Math.random();
-            const isDukat = isGreenTheme || roll < 0.78;
+            const isDukat = Boolean(greenDucatSprite) || roll < 0.78;
             const isCrown = !isDukat && roll > 0.93;
             const delay = rand(0, emitDuration);
             const preferredFallDuration = rand(reducedMotion ? 2600 : 2800, reducedMotion ? 3900 : 5000);
@@ -3686,6 +3707,7 @@ class ShopManager {
         this.container.innerHTML = '';
         const groupedItems = this.groupByCategory();
         const isGreenTreasury = document.body.matches('body:not(:is(.light-theme, .medium-theme, .winter-theme, .neon-theme, .amethyst-theme, .easter-theme, .desert-theme, .moon-theme, .severna-theme))');
+        const isEasterTreasury = document.body.classList.contains('easter-theme');
 
         for (const [categoryName, items] of Object.entries(groupedItems)) {
             const section = document.createElement('div');
@@ -3696,7 +3718,7 @@ class ShopManager {
                 ? `<span class="riznica-category-fallback" aria-hidden="true">${categoryName.match(/^[^\s]+/)?.[0] || ''}</span><img class="riznica-category-soft-clay-icon" data-theme-src="assets/easter-soft-clay/treasury/collection-${categoryMeta.type}-v2.png?v=2" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-desert-soft-clay-icon" data-theme-src="assets/desert-soft-clay/treasury/collection-${categoryMeta.type}.png?v=3" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-nebula-soft-clay-icon" data-theme-src="assets/severna-soft-clay/treasury/collection-${categoryMeta.type}.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="riznica-category-green-soft-clay-icon" data-theme-src="assets/green-soft-clay/canonical/collection-medals/collection-${categoryMeta.type}-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><span>${categoryMeta.label}</span>`
                 : usesGreenCategoryMark
                     ? `<span class="riznica-green-category-mark" aria-hidden="true"></span><span>${categoryName.replace(/^[^\p{L}\p{N}]+\s*/u, '')}</span>`
-                    : categoryName;
+                    : (isEasterTreasury ? categoryName.replace(/^[^\p{L}\p{N}]+\s*/u, '') : categoryName);
             section.innerHTML = `<div class="category-header" ${categoryMeta ? `data-treasury-collection="${categoryMeta.type}"` : ''} ${usesGreenCategoryMark ? `data-green-category="${this.type}"` : ''}>${categoryHtml}</div>`;
             
             const grid = document.createElement('div');
@@ -3723,6 +3745,8 @@ class ShopManager {
                     visualHtml = `<div class="effect-preview-box ${item.cssClass}">${greenClayEffect ? '' : (item.innerHtml || '')}</div>`;
                 } else if (this.type === 'trophy' && item.easterIcon) {
                     visualHtml = `<div class="icon riznica-trophy-visual"><span class="riznica-trophy-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-trophy-soft-clay-icon" src="${this.getThemedTrophyCardSource(item)}" loading="lazy" fetchpriority="low" alt="" aria-hidden="true" decoding="async"></div>`;
+                } else if (this.type === 'theme' && item.id === 'easter') {
+                    visualHtml = `<div class="icon riznica-easter-theme-visual"><span class="riznica-easter-theme-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-easter-theme-icon" data-theme-src="assets/easter-soft-clay/settings/display-theme-v2.png?v=opt2" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else if (this.type === 'theme' && item.id === 'dark') {
                     visualHtml = `<div class="icon riznica-green-theme-visual"><span class="riznica-green-theme-fallback" aria-hidden="true">${item.icon}</span><img class="riznica-green-theme-icon" data-theme-src="assets/green-soft-clay/canonical/settings-controls/display-theme-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"></div>`;
                 } else {

@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "themeId": "easter",
+  "themeName": "Vaskrs Soft Clay",
+  "status": "locked",
+  "visualIdentity": {
+    "material": "matte 3D Soft Clay relief",
+    "palette": "warm porcelain, thematic lavender, muted blush, sage and restrained gold",
+    "shapeLanguage": "rounded clay badges, pills and softly inset cards",
+    "contrast": "deep plum ink on light surfaces and warm cream ink on purple actions",
+    "motion": "calm pulse or short lift only; decorative motion disabled by reduced-motion"
+  },
+  "inventory": {
+    "runtimeRoot": "www/assets/easter-soft-clay",
+    "pngCount": 156,
+    "totalBytes": 16054350,
+    "families": {
+      "canonical": 6,
+      "root": 20,
+      "daily": 4,
+      "economy": 3,
+      "game": 2,
+      "hotseat": 1,
+      "invite": 4,
+      "leaderboard": 3,
+      "opponent": 5,
+      "ql": 9,
+      "rules": 6,
+      "runtime": 15,
+      "settings": 8,
+      "solo": 4,
+      "statistics": 19,
+      "tournament": 9,
+      "treasury": 38
+    }
+  },
+  "canonical": {
+    "ducat": "assets/easter-soft-clay/canonical/ducat/ducat-inline-v1.png",
+    "roomIdentity": {
+      "leaderboard": "assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png",
+      "treasury": "assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png"
+    },
+    "competitionMedals": {
+      "gold": "assets/easter-soft-clay/canonical/competition-medals/gold-v1.png",
+      "silver": "assets/easter-soft-clay/canonical/competition-medals/silver-v1.png",
+      "bronze": "assets/easter-soft-clay/canonical/competition-medals/bronze-v1.png"
+    },
+    "medalConsumers": ["top-list", "tournament", "quarterly-league", "power-index", "fire-streak"]
+  },
+  "foundation": {
+    "background": "www/assets/theme-backgrounds/easter-v6-1.png",
+    "backgroundBytes": 1849355,
+    "splash": "www/assets/easter-soft-clay/splash-title-soft-clay-v1.png"
+  },
+  "delivery": {
+    "startupPngCount": 17,
+    "startupTransferBudgetBytes": 5242880,
+    "startupDecodedBudgetBytes": 25165824,
+    "roomHydration": "on demand",
+    "treasuryWarmupConcurrency": 4
+  },
+  "retiredRuntime": [
+    "www/assets/easter-neumorphic-bg-v1.png",
+    "www/assets/easter-neumorphic-bg-v2.png",
+    "www/assets/easter-neumorphic-bg-v3.png",
+    "www/assets/easter-neumorphic-bg-v4.png",
+    "www/assets/easter-soft-clay/ql/rank-alltime-v2.png",
+    "www/assets/easter-soft-clay/ql/rank-alltime.png",
+    "www/assets/easter-soft-clay/ql/rank-amater-v2.png",
+    "www/assets/easter-soft-clay/ql/rank-amater-v3.png",
+    "www/assets/easter-soft-clay/ql/rank-amater.png",
+    "www/assets/easter-soft-clay/ql/rank-legenda.png",
+    "www/assets/easter-soft-clay/ql/rank-majstor-v2.png",
+    "www/assets/easter-soft-clay/ql/rank-majstor-v3.png",
+    "www/assets/easter-soft-clay/ql/rank-majstor.png",
+    "www/assets/easter-soft-clay/ql/rank-profi-v2.png",
+    "www/assets/easter-soft-clay/ql/rank-profi-v3.png",
+    "www/assets/easter-soft-clay/ql/rank-profi.png",
+    "www/assets/easter-soft-clay/ql/rank-titan-v2.png",
+    "www/assets/easter-soft-clay/ql/rank-titan-v3.png",
+    "www/assets/easter-soft-clay/ql/rank-titan.png",
+    "www/assets/easter-soft-clay/ql/tab-hall-of-fame.png",
+    "www/assets/easter-soft-clay/tournament/podium-silver-v2.png",
+    "www/assets/easter-soft-clay/statistics/wins-v2.png",
+    "www/assets/easter-soft-clay/statistics/fire-streak-v2.png",
+    "www/assets/easter-soft-clay/leaderboard-pro-v2.png",
+    "www/assets/easter-soft-clay/treasury-pro-v2.png",
+    "www/assets/easter-soft-clay/runtime/menu/leaderboard-pro-v2.png",
+    "www/assets/easter-soft-clay/runtime/menu/treasury-pro-v2.png",
+    "www/assets/easter-soft-clay/economy/ducat.png",
+    "www/assets/easter-soft-clay/leaderboard/medal-gold-v4.png",
+    "www/assets/easter-soft-clay/leaderboard/medal-silver-v4.png",
+    "www/assets/easter-soft-clay/leaderboard/medal-bronze-v4.png",
+    "www/assets/easter-soft-clay/ql/medal-gold-v2.png",
+    "www/assets/easter-soft-clay/ql/medal-silver-v2.png",
+    "www/assets/easter-soft-clay/ql/medal-bronze-v2.png",
+    "www/assets/easter-soft-clay/statistics/power-index/gold-v3.png",
+    "www/assets/easter-soft-clay/statistics/power-index/silver-v3.png",
+    "www/assets/easter-soft-clay/statistics/power-index/bronze-v3.png",
+    "www/assets/easter-soft-clay/statistics/fire-streak/gold-v3.png",
+    "www/assets/easter-soft-clay/statistics/fire-streak/silver-v3.png",
+    "www/assets/easter-soft-clay/statistics/fire-streak/bronze-v3.png",
+    "www/assets/easter-soft-clay/tournament/podium-gold-v2.png",
+    "www/assets/easter-soft-clay/tournament/podium-silver-v3.png",
+    "www/assets/easter-soft-clay/tournament/podium-bronze-v2.png",
+    "www/assets/easter-soft-clay/tournament/finalist-silver-v3.png"
+  ],
+  "contracts": {
+    "intro": "approved room icon only, no decorative text; Quarterly League may retain its dedicated identity",
+    "states": "loading, empty and error states use theme PNG identities rather than emoji stand-ins",
+    "safeZone": "interactive content remains above device safe-area insets",
+    "localization": "Serbian and English content must preserve layout and contrast",
+    "isolation": "all visual overrides are scoped to body.easter-theme or a theme-easter intro",
+    "regression": "Green, Desert and Severna assets and behavior remain unchanged"
+  }
+}

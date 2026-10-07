@@ -1,10 +1,12 @@
-# Vaskr Neumorphic UI Theme Pack
+# Vaskrs Soft Clay UI Theme Pack
+
+Zaključani inventar, vizuelni DNK, budžeti učitavanja i povučene putanje nalaze se u `asset-registry.json` i automatski se proveravaju skriptom `scripts/check-easter-asset-coverage.js`.
 
 Ovo je kompletan paket za Vaskršnju temu. Tema se aktivira samo kroz `body.easter-theme` odnosno kada je `localStorage.yamb_theme` podešen na `easter`.
 
 ## Šta paket pokriva
 
-- pozadina: `www/assets/easter-neumorphic-bg-v1.png`
+- pozadina: `www/assets/theme-backgrounds/easter-v6-1.png`
 - glavni meni: Vaskr badges & pills ikonice za sobe, specijalne akcije i donji meni
 - tabla za igranje: neumorphic tabla, kockice, polja, HUD i kontrolna zona bez promene dimenzija table
 - UI komponente: kartice, fontovi, inputi, modali, obaveštenja, chat, riznica, stats, pravila i top lista
@@ -15,6 +17,8 @@ Ovo je kompletan paket za Vaskršnju temu. Tema se aktivira samo kroz `body.east
 - QA preview: `www/themes/easter/qa-preview.html` za lokalne screenshotove bez logovanja
 - QA splash preview: `www/themes/easter/qa-splash.html` za izolovanu proveru login/citat ekrana
 - QA game-over preview: `www/themes/easter/qa-gameover.html` za proveru završnog ekrana i kontrasta akcija
+
+Za lokalni vizuelni prolaz otvoriti `themes/easter/qa-preview.html` uz fragment stanja. Novi probni prikazi koriste stvarne UI prikazivače, bez prijave ili slanja podataka serveru: `#rules-1` do `#rules-6`, `#invite`, `#streak`, `#power`, `#tournament-qf`, `#tournament-sf`, `#tournament-final` i `#league-winner`. Dodati `?lang=en` pre fragmenta za engleski tekst. Probni podaci nisu potvrda rada online servisa; svako stanje treba vizuelno proveriti na uskoj i visokoj mobilnoj veličini.
 
 ## Pravila za dalje izmene
 

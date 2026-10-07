@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-06",
+  "useCase": "stylized-concept",
+  "generationMode": "built-in image_gen, one original prompt per theme",
+  "promptDocument": "docs/theme-background-prompts-v1.md",
+  "reviewContactSheet": "docs/theme-backgrounds-v1-contact-sheet.png",
+  "scope": "Archived first-pass backgrounds, all rejected by user; none is linked or shipped as an active theme background.",
+  "themes": [
+    {
+      "themeId": "light",
+      "nameSr": "Svetlo Zlato",
+      "direction": "Soft Satin / Brushed Pearl",
+      "masterPath": "source-assets/theme-backgrounds-v1/light-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/light-background-v1.png",
+      "masterDimensionsPx": [
+        940,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1374342,
+      "masterSha256": "b74f4f7a5fc9419502c6ef87cbdbd4b54f889cd2acfeb0766e41145c204a8a72",
+      "candidateSha256": "184f20c85f8084d71aa42f68cffc5ba8e972d5267d3f239e27cd2bd067c0f8a2",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "medium",
+      "nameSr": "Trula Višnja",
+      "direction": "Felt / Soft Velvet",
+      "masterPath": "source-assets/theme-backgrounds-v1/medium-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/medium-background-v1.png",
+      "masterDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1766713,
+      "masterSha256": "40e5015af9e4d5d3af917876df7b683cb7901b35e03197bfcbd34fdac9f2cdc0",
+      "candidateSha256": "defd6677341a4573c2ecef9202c64e3207b6260fab718a280c9ef37e656a6147",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "winter",
+      "nameSr": "Plavi Okean",
+      "direction": "Frosted Glass / Glassmorphism hybrid",
+      "masterPath": "source-assets/theme-backgrounds-v1/winter-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/winter-background-v1.png",
+      "masterDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1771391,
+      "masterSha256": "ae841f15bbc2b8c416b065b6b5211248cc3d2b7ae97ba8356abda14ff0d73000",
+      "candidateSha256": "093ea7a00bfac8f9b307bb6821f80e8aee253f4c566bd8fa796094829fa09c70",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "neon",
+      "nameSr": "Neon Cyber",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "masterPath": "source-assets/theme-backgrounds-v1/neon-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/neon-background-v1.png",
+      "masterDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1358048,
+      "masterSha256": "11d05cd7e390f07536f388a95e565095cb2da52d351e0989495d61e70643f99c",
+      "candidateSha256": "73ecef38c56395ac4da1dd034ef2936d89bfea3984441e9214c660d15cab74e3",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "amethyst",
+      "nameSr": "Kraljevski Ametist",
+      "direction": "Soft Satin / Brushed Pearl",
+      "masterPath": "source-assets/theme-backgrounds-v1/amethyst-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/amethyst-background-v1.png",
+      "masterDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1512200,
+      "masterSha256": "d0e2d52e065e65e8b887cad4426a71875b34ad81e3dfe7149a66a8816d907f2d",
+      "candidateSha256": "e78bb29348ac9f8b661bf127a10e572556fe327ac7013b3c84ea72b530338c2d",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "easter",
+      "nameSr": "Vaskršnja",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "masterPath": "source-assets/theme-backgrounds-v1/easter-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/easter-background-v1.png",
+      "masterDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1404337,
+      "masterSha256": "c52383338445c1eb2f4c835508f976ec71b2f5afc4c503497dafc3cd3b06bd11",
+      "candidateSha256": "81ed1f59933f86f3697839ec576e05e758a49d26af89f4f518caa927d3d17310",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "desert",
+      "nameSr": "Pustinjsko Staklo",
+      "direction": "Relief",
+      "masterPath": "source-assets/theme-backgrounds-v1/desert-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/desert-background-v1.png",
+      "masterDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1866972,
+      "masterSha256": "3aa38225d2799a1193fb091fbe27a3ee522dad43d578c227f6a7557b8a78f8e1",
+      "candidateSha256": "81800860700e67f9ca47d48c6d4aaf59905cc8196483286bdff832b6d71cf3d3",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "moon",
+      "nameSr": "Mesečev Sjaj",
+      "direction": "Frosted Glass / Glassmorphism hybrid",
+      "masterPath": "source-assets/theme-backgrounds-v1/moon-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/moon-background-v1.png",
+      "masterDimensionsPx": [
+        940,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1605079,
+      "masterSha256": "0e1bebd6da9bce674f1d7573f7fd2d83b89fbddb8dcf4b735cc95dfb8cf06ff4",
+      "candidateSha256": "f7d3caa87f60a6fee5c3b617c2e876c5f1da45676f80b55d5f2e548b3d08c81a",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "severna",
+      "nameSr": "Severna Maglina",
+      "direction": "Frosted Glass / Glassmorphism hybrid",
+      "masterPath": "source-assets/theme-backgrounds-v1/severna-background-master-v1.png",
+      "candidatePath": "source-assets/theme-backgrounds-v1/standardized/severna-background-v1.png",
+      "masterDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateDimensionsPx": [
+        941,
+        1672
+      ],
+      "candidateColorMode": "RGB",
+      "candidateBytes": 1897178,
+      "masterSha256": "64f33783ce86463376f5c356c9bf9fea9c504bb4ed19d0ae916a116247e5745d",
+      "candidateSha256": "905644f7cd278f5e97c98386178791e93d8aab563b2ddcf7aaa203a80b71348f",
+      "reviewStatus": "rejected-do-not-use",
+      "runtimeLinked": false
+    }
+  ]
+}

@@ -216,7 +216,7 @@ class PowerIndexLeaderboard {
             : podiumTheme === 'green'
                 ? `assets/green-soft-clay/canonical/competition-medals/general-podium-${podiumTone}-v1.png?v=1`
             : podiumTheme === 'easter'
-                ? `assets/easter-soft-clay/statistics/power-index/${podiumTone}-v3.png?v=1`
+                ? `assets/easter-soft-clay/canonical/competition-medals/${podiumTone}-v1.png?v=1`
                 : `assets/desert-soft-clay/statistics/power-index/${podiumTone}-v3.png?v=1`;
         const legacyRank = rank === 1 ? '⚡' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `<span style="color: var(--text-muted);">${rank}.</span>`;
         const podiumRank = podiumTone

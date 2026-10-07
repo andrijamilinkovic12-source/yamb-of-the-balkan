@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "createdOn": "2026-10-06",
+  "sourceDefinitions": "docs/theme-definitions.json",
+  "sourcePrompts": "docs/theme-background-prompts-v6.md",
+  "reviewPage": "docs/theme-backgrounds-v6-review.html",
+  "contactSheet": "docs/theme-backgrounds-v6-contact-sheet.png",
+  "status": "Five accepted backgrounds. Light Gold and Dark Cherry V6 need less Mediterranean architecture; Blue Ocean V6 and V7 are rejected. Desert Glass and Moonlight V6 remain as comparison references for V8. No new runtime links.",
+  "easterVariants": [
+    {
+      "version": 1,
+      "path": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png",
+      "label": "Prva verzija: prolećna soba, više predmeta",
+      "status": "accepted-locked",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1849355,
+      "sha256": "3c6479fa5e6e25cf5743c15dcc5935c62731967ae66f8a27235768c0a6973944"
+    },
+    {
+      "version": 2,
+      "path": "source-assets/theme-backgrounds-v6/easter-background-master-v6.png",
+      "label": "Druga verzija: pročišćena soba i dva jajeta",
+      "status": "rejected-after-comparison",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1384067,
+      "sha256": "d177aedd014dc0fb9f2354c9e8bf94189fa84e0ac3d4a362e5cad8aa0d355b91"
+    }
+  ],
+  "accepted": [
+    {
+      "themeId": "dark",
+      "nameSr": "Zelena",
+      "path": "www/assets/green-clay-balkan-diorama-v4.png",
+      "status": "accepted-locked"
+    },
+    {
+      "themeId": "neon",
+      "nameSr": "Neon Cyber",
+      "path": "source-assets/theme-backgrounds-v4/neon-background-master-v4.png",
+      "status": "accepted-locked",
+      "sha256": "92f4561e7386ddc0e01bd3c5fe8201848ea4f4501948b4d95265fb69dd631292"
+    },
+    {
+      "themeId": "severna",
+      "nameSr": "Severna Maglina",
+      "path": "source-assets/theme-backgrounds-v4/severna-background-master-v4.png",
+      "status": "accepted-locked",
+      "sha256": "efb770cad71d5953226ede546ff93cc92d5c0ea871659d34917813c73c9edcf2"
+    },
+    {
+      "themeId": "easter",
+      "nameSr": "Vaskršnja — verzija 1",
+      "path": "source-assets/theme-backgrounds-v6/easter-background-variant-1-v6.png",
+      "status": "accepted-locked",
+      "sha256": "3c6479fa5e6e25cf5743c15dcc5935c62731967ae66f8a27235768c0a6973944"
+    },
+    {
+      "themeId": "amethyst",
+      "nameSr": "Kraljevski Ametist — V6",
+      "path": "source-assets/theme-backgrounds-v6/amethyst-background-master-v6.png",
+      "status": "accepted-locked",
+      "sha256": "14bbb54b3d17fdff7b6cb1094dc5631fb89326725f514dcef037651a6633b3ae"
+    }
+  ],
+  "themes": [
+    {
+      "themeId": "light",
+      "nameSr": "Svetlo Zlato",
+      "style": "3D Soft Neomorphism",
+      "directionId": "smooth_rubber_matte_plastic",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "sceneType": "Gradsko dvorište iz povišenog ugla",
+      "masterPath": "source-assets/theme-backgrounds-v6/light-background-master-v6.png",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1666835,
+      "sha256": "2aa32e85872372cf17606bab06a63ff93f837af47cadf491b8c7456580163e54",
+      "reviewStatus": "revision-requested",
+      "reviewFeedback": "Dopadljiva kompozicija i svetlo; smanjiti mediteranski stil kuca.",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "medium",
+      "nameSr": "Trula Višnja",
+      "style": "3D Soft Neomorphism",
+      "directionId": "clay",
+      "direction": "Clay",
+      "sceneType": "Enterijer stare sobe",
+      "masterPath": "source-assets/theme-backgrounds-v6/medium-background-master-v6.png",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1687151,
+      "sha256": "48499fb40dd8fd41ecda3ce28bc2e7893c7e143254364e44be07b9553a336c6c",
+      "reviewStatus": "revision-requested",
+      "reviewFeedback": "Dopadljiv enterijer; zameniti mediteranske krovove i kuce iza prozora.",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "winter",
+      "nameSr": "Plavi Okean",
+      "style": "3D Soft Neomorphism",
+      "directionId": "smooth_rubber_matte_plastic",
+      "direction": "Smooth Rubber / Matte Plastic",
+      "sceneType": "Otvoreni pogled na more",
+      "masterPath": "source-assets/theme-backgrounds-v6/winter-background-master-v6.png",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1591687,
+      "sha256": "db4aa50159e663256f70d85800dd76badde0ae123a4a19b3c63c7d83d5cef4b0",
+      "reviewStatus": "rejected-by-user",
+      "reviewFeedback": "Zameniti grckim ostrvskim kadrom sa belim kucama, plavim prozorima i otvorenim morem.",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "desert",
+      "nameSr": "Pustinjsko Staklo",
+      "style": "3D Soft Neomorphism",
+      "directionId": "clay",
+      "direction": "Clay",
+      "sceneType": "Blizak geološki kadar",
+      "masterPath": "source-assets/theme-backgrounds-v6/desert-background-master-v6.png",
+      "width": 941,
+      "height": 1672,
+      "sizeBytes": 1546594,
+      "sha256": "baa708220296ee5baef782606e47be0513f6ac9950d2b7708f9f2945e50c5f5b",
+      "reviewStatus": "direction-liked-more-variants-requested",
+      "reviewFeedback": "Pravac se dopada; korisnik zeli dodatne verzije pre konacnog izbora.",
+      "runtimeLinked": false
+    },
+    {
+      "themeId": "moon",
+      "nameSr": "Mesečev Sjaj",
+      "style": "3D Soft Neomorphism",
+      "directionId": "clay",
+      "direction": "Clay",
+      "sceneType": "Lunarna osmatračnica spolja",
+      "masterPath": "source-assets/theme-backgrounds-v6/moon-background-master-v6.png",
+      "width": 940,
+      "height": 1672,
+      "sizeBytes": 1532834,
+      "sha256": "3cc8ff977135bea105401cbaad3d3e3e4bfd130cfc7899476a9844de289e2b52",
+      "reviewStatus": "direction-liked-more-variants-requested",
+      "reviewFeedback": "Pravac se dopada; korisnik zeli dodatne verzije pre konacnog izbora.",
+      "runtimeLinked": false
+    }
+  ]
+}

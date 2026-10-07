@@ -39,6 +39,7 @@ class RiznicaManager {
 
         this.isIntroPlaying = true;
         this.applyIntroTheme(overlay);
+        const isEasterIntro = overlay.classList.contains('theme-easter');
         if (overlay.classList.contains('theme-easter')) {
             this.warmTrophyAssets('easter');
         } else if (overlay.classList.contains('theme-desert')) {
@@ -58,7 +59,7 @@ class RiznicaManager {
 
         if (isSoftClayIntro) {
             const introLabel = lang === 'en' || lang === 'en-GB' ? 'TREASURY' : 'RIZNICA';
-            this.setEasterIntroTitle(introText, introLabel);
+            if (!isEasterIntro) this.setEasterIntroTitle(introText, introLabel);
 
             let completed = false;
             const openBehindOverlayAt = 3650;

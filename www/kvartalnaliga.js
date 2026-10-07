@@ -13,6 +13,9 @@ class KvartalnaLigaManager {
         this.leaderboardPageSize = 50;
         this.leaderboardPages = new Map();
         this.leaderboardRequestSerial = 0;
+        this.hofLoadTimeout = null;
+        this.hofLoadPending = false;
+        this.hofLoadFailed = false;
         
         this.selfHeal(); // <-- Pametna funkcija za čišćenje
         this.init();
@@ -269,10 +272,7 @@ class KvartalnaLigaManager {
             'rank-majstor': '-v4',
             'rank-legenda': '-v2',
             'rank-titan': '-v4',
-            'rank-alltime': '-v3',
-            'medal-gold': '-v2',
-            'medal-silver': '-v2',
-            'medal-bronze': '-v2'
+            'rank-alltime': '-v3'
         };
         const fileSuffix = visualTheme === 'severna'
             ? (severnaVersions[assetName] || '')
@@ -283,6 +283,10 @@ class KvartalnaLigaManager {
         if (visualTheme === 'green' && ['medal-gold', 'medal-silver', 'medal-bronze'].includes(assetName)) {
             const tier = assetName.replace('medal-', '');
             return `assets/green-soft-clay/canonical/competition-medals/quarterly-league-${tier}-v1.png?v=1${retrySuffix}`;
+        }
+        if (visualTheme === 'easter' && ['medal-gold', 'medal-silver', 'medal-bronze'].includes(assetName)) {
+            const tier = assetName.replace('medal-', '');
+            return `assets/easter-soft-clay/canonical/competition-medals/${tier}-v1.png?v=1${retrySuffix}`;
         }
         if (visualTheme === 'green' && ['rank-amater', 'rank-profi', 'rank-majstor', 'rank-legenda', 'rank-titan', 'rank-alltime'].includes(assetName)) {
             return `assets/green-soft-clay/canonical/quarterly-rank-badges/${assetName}-v1.png?v=1${retrySuffix}`;
@@ -672,24 +676,59 @@ class KvartalnaLigaManager {
     }
 
     fetchHallOfFame() {
-        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        const list = document.getElementById('hof-list');
+        if (!list) return;
+        if (this.hofLoadTimeout) clearTimeout(this.hofLoadTimeout);
+        this.hofLoadTimeout = null;
+        this.hofLoadPending = true;
+        this.hofLoadFailed = false;
 
-        if (!window.app || !window.app.socket) {
-            document.getElementById('hof-list').innerHTML = `<li role="alert" style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
+        const showUnavailable = () => {
+            this.hofLoadTimeout = null;
+            this.hofLoadPending = false;
+            this.hofLoadFailed = true;
+            if (list.isConnected) this.renderHofStatus(list);
+        };
+
+        if (!window.app || !window.app.socket || !window.app.socket.connected) {
+            showUnavailable();
             return;
         }
         
         window.app.socket.off('hall_of_fame_data'); 
         window.app.socket.on('hall_of_fame_data', (data) => {
+            if (this.hofLoadTimeout) clearTimeout(this.hofLoadTimeout);
+            this.hofLoadTimeout = null;
+            this.hofLoadPending = false;
+            this.hofLoadFailed = false;
             this.hofData = data;
-            this.renderHofMedals();
+            if (document.getElementById('hof-tab-champions')?.classList.contains('is-active')) {
+                this.renderHofChampions();
+            } else {
+                this.renderHofMedals();
+            }
         });
+        this.hofLoadTimeout = setTimeout(showUnavailable, 8000);
         window.app.socket.emit('get_hall_of_fame');
+    }
+
+    renderHofStatus(list) {
+        const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
+        if (this.hofLoadFailed) {
+            list.innerHTML = `<li role="alert" style="text-align:center; color: var(--danger); font-size: 0.85rem; padding: 15px;">${gt('league_no_conn', 'Nema konekcije sa serverom.')}</li>`;
+            return true;
+        }
+        if (this.hofLoadPending) {
+            list.innerHTML = `<li role="status" aria-live="polite" style="text-align:center; color: var(--text-muted); font-size: 0.85rem; padding: 15px;">${gt('hof_loading', 'Učitavanje Dvorane slavnih...')}</li>`;
+            return true;
+        }
+        return false;
     }
 
     renderHofMedals() {
         const list = document.getElementById('hof-list');
         if (!list) return;
+        if (this.renderHofStatus(list)) return;
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const medalGoldIcon = this.getQlAssetSource('medal-gold');
         const medalSilverIcon = this.getQlAssetSource('medal-silver');
@@ -725,6 +764,7 @@ class KvartalnaLigaManager {
     renderHofChampions() {
         const list = document.getElementById('hof-list');
         if (!list) return;
+        if (this.renderHofStatus(list)) return;
         const gt = (key, fallback) => (typeof t === 'function' && t(key) !== key) ? t(key) : fallback;
         const championsTabIcon = this.getQlAssetSource('tab-champions');
 
@@ -898,7 +938,9 @@ class KvartalnaLigaManager {
         } else {
             const label = gt('league_no_conn', 'Učitavanje nije uspelo.');
             const retryLabel = gt('btn_retry', 'Pokušaj ponovo');
-            item.innerHTML = `<span>${this.escapeHtml(label)}</span><br><button type="button" style="margin-top:7px; padding:6px 10px; border-radius:8px; cursor:pointer;" onclick="window.kvartalnaLiga.loadLeaguePage('${rankId}')">${this.escapeHtml(retryLabel)}</button>`;
+            const lines = String(label).split(/<br\s*\/?>/i).map(line => line.replace(/<[^>]*>/g, ''));
+            const message = lines.map((line, index) => `<span${index ? ' class="league-page-status-detail"' : ''}>${this.escapeHtml(line)}</span>`).join('<br>');
+            item.innerHTML = `${message}<br><button type="button" style="margin-top:7px; padding:6px 10px; border-radius:8px; cursor:pointer;" onclick="window.kvartalnaLiga.loadLeaguePage('${rankId}')">${this.escapeHtml(retryLabel)}</button>`;
         }
         listEl.appendChild(item);
     }
