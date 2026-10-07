@@ -1,0 +1,15 @@
+{
+  "generatedFolder": "01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+  "roles": ["treasury", "tournament", "economy"],
+  "themes": {
+    "light": ["exec-5e6f486e-a4c6-4f6e-a7a6-c92f61b75cde.png", "exec-f208adb8-a1b3-49ab-b7e7-dd1e995e4601.png", "exec-14784e62-421e-43df-ab6a-5108cdb6f48f.png"],
+    "medium": ["exec-8a4e0819-f2d7-45fc-8066-651f85ba3308.png", "exec-0e81045f-a490-449b-a5a3-61885ad9b10d.png", "exec-0993dbe8-d061-4693-91b3-ede8fad725e3.png"],
+    "winter": ["exec-ee911ea7-9d68-4be4-84e9-44371144c61d.png", "exec-c0e6d568-c621-4c4a-98d7-d42353085bf4.png", "exec-5a7940ab-9328-4aa6-a815-1d20440a598a.png"],
+    "neon": ["exec-29bbaddc-020e-4e02-8ff0-1dd327e241ee.png", "exec-d77fcc80-d2e9-434d-a4fd-86b491661f4c.png", "exec-61401969-9896-4789-824c-24759f6dfe02.png"],
+    "amethyst": ["exec-052ee23e-10dd-42e2-b4d5-a7e5af5525f1.png", "exec-dbb7a9ea-f23b-46f5-99cd-b78dc7c1380b.png", "exec-eed2c7c9-05b1-4741-ba39-c96b40a00d52.png"],
+    "easter": ["exec-b20b3320-3500-40d3-a524-b545bbe35f9f.png", "exec-d1d1a874-8c99-44ff-ac2a-135710201d27.png", "exec-3439a5d4-8e4f-4909-85ae-b7a5092a1875.png"],
+    "desert": ["exec-050e92b0-4ba5-4e55-953a-14ee9c58c7fc.png", "exec-88d1d794-387a-4c13-a508-d88f531d705c.png", "exec-e55a2479-2931-406e-88de-5550c763a61a.png"],
+    "moon": ["exec-3e05fc7e-f6b8-4d48-9c9e-2519eca49dd6.png", "exec-dd116d45-6a17-44f0-866a-dd0fafa8f87b.png", "exec-f9fe3364-0a4e-4f77-83d9-0cf62454ba6d.png"],
+    "severna": ["exec-c4e760ae-79d4-4ef5-824c-98f4d0df2baa.png", "exec-87d55ad3-3c3e-4860-ad7d-73cf6e9378c0.png", "exec-26b88d6a-d640-4f5a-8535-626b4dff0609.png"]
+  }
+}

@@ -1,0 +1,30 @@
+﻿{
+    "theme":  "amethyst",
+    "generatedFolder":  "01a1116e-ca3a-72c0-864c-166cc3b5e76a",
+    "roles":  {
+                  "treasury":  {
+                                   "master":  "treasury-master-v1.png",
+                                   "source":  "exec-052ee23e-10dd-42e2-b4d5-a7e5af5525f1.png",
+                                   "outputs":  [
+                                                   "runtime/menu/treasury-free-v3.png",
+                                                   "treasury-free-v3.png"
+                                               ]
+                               },
+                  "tournament":  {
+                                     "master":  "tournament-master-v1.png",
+                                     "source":  "exec-dbb7a9ea-f23b-46f5-99cd-b78dc7c1380b.png",
+                                     "outputs":  [
+                                                     "canonical/tournament-awards/champion-trophy-v1.png",
+                                                     "canonical/tournament-awards/champion-trophy-room-v1.png"
+                                                 ]
+                                 },
+                  "economy":  {
+                                  "master":  "economy-master-v1.png",
+                                  "source":  "exec-eed2c7c9-05b1-4741-ba39-c96b40a00d52.png",
+                                  "outputs":  [
+                                                  "runtime/menu/ducats-undo-free-v3.png",
+                                                  "ducats-undo-free-v3.png"
+                                              ]
+                              }
+              }
+}

@@ -711,36 +711,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 15643
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 52549
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 16492
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 56988
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -1031,12 +1043,15 @@
           "sizeBytes": 232887
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 125719
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -1295,36 +1310,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 255899
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/light/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 41391
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/light/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 99555
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/light/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 251903
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -1463,28 +1488,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/light/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 146950
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/light/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 156177
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/light/rewarded-video-v1/two-coins-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 148423
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -1495,20 +1529,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/light/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 264670
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/light/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/light/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 47593
         }
       }
     },
@@ -2211,36 +2251,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 17970
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 65027
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 18619
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 66316
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -2531,12 +2583,15 @@
           "sizeBytes": 279698
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 121847
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -2795,36 +2850,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 284893
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 45091
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 132785
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 215383
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -2963,28 +3028,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 125761
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 158245
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/rewarded-video-v1/two-coins-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 197127
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -2995,20 +3069,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 272471
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/medium/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/medium/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 62092
         }
       }
     },
@@ -3711,36 +3791,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 14055
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 46314
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 16005
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 53737
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -4031,12 +4123,15 @@
           "sizeBytes": 220849
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 104274
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -4295,36 +4390,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 183788
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 32690
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 97722
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 227737
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -4463,28 +4568,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 133681
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 129519
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/rewarded-video-v1/two-coins-master-v2.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 153894
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -4495,20 +4609,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 219271
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/winter/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/winter/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 47194
         }
       }
     },
@@ -5211,36 +5331,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 17333
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 59330
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 19222
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 65567
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -5531,12 +5663,15 @@
           "sizeBytes": 248052
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 105465
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -5795,36 +5930,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 183474
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 30407
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 127741
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 232563
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -5963,28 +6108,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 135412
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 164654
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/rewarded-video-v1/two-coins-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 164728
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -5995,20 +6149,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 282601
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/neon/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/neon/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 60325
         }
       }
     },
@@ -6711,36 +6871,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 18373
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 59575
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 19570
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 64116
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -7031,12 +7203,15 @@
           "sizeBytes": 232442
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 101352
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -7295,36 +7470,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 164618
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 29132
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 126314
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 239312
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -7463,28 +7648,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 139477
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 162263
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/rewarded-video-v1/two-coins-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 172016
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -7495,20 +7689,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 277273
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/amethyst/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/amethyst/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 60761
         }
       }
     },
@@ -8211,36 +8411,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 15867
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 52729
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 17118
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 56997
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -8531,12 +8743,15 @@
           "sizeBytes": 209461
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 95041
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -8795,36 +9010,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 188903
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 31925
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 118953
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 217901
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -8963,28 +9188,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 127096
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 106029
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/rewarded-video-v1/two-coins-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 129923
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -8995,20 +9229,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 181089
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/easter/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/easter/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 55781
         }
       }
     },
@@ -9711,36 +9951,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 19670
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 65540
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 20784
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 70028
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -10031,12 +10283,15 @@
           "sizeBytes": 228217
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 125582
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -10295,36 +10550,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 195524
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 33555
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 154677
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 228743
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -10463,28 +10728,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 131331
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 192901
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/rewarded-video-v1/two-coins-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 170537
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -10495,20 +10769,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 335001
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/desert/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/desert/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 72598
         }
       }
     },
@@ -11211,36 +11491,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 14310
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 48548
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 15682
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 54203
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -11531,12 +11823,15 @@
           "sizeBytes": 166716
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 102153
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -11795,36 +12090,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 222460
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 37175
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 99988
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 197246
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -11963,28 +12268,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 111875
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 126930
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/rewarded-video-v1/two-coins-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 156231
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -11995,20 +12309,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 222597
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/moon/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/moon/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 47633
         }
       }
     },
@@ -12711,36 +13031,48 @@
           "sizeBytes": null
         },
         "canonical/rewarded-video/rewarded-video-active-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 17971
         },
         "canonical/rewarded-video/rewarded-video-active-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-active-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/rewarded-video-v1/active-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 60035
         },
         "canonical/rewarded-video/rewarded-video-unavailable-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (rules)",
+            "www/game.js:getRewardedVideoPackSources (rules)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 19412
         },
         "canonical/rewarded-video/rewarded-video-unavailable-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/rewarded-video/rewarded-video-unavailable-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/rewarded-video-v1/unavailable-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (economy)",
+            "www/game.js:getRewardedVideoPackSources (economy)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 64969
         },
         "canonical/rules-page-illustrations/account-server-v1": {
           "stage": "defined",
@@ -13031,12 +13363,15 @@
           "sizeBytes": 214425
         },
         "canonical/tournament-awards/champion-trophy-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/tournament-awards/champion-trophy-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/tournament-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-turnir, #tournament-screen, #tournament-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 117034
         },
         "canonical/tournament-awards/finalist-silver-v1": {
           "stage": "defined",
@@ -13295,36 +13630,46 @@
           "sizeBytes": null
         },
         "canonical/undo-token/undo-token-front-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/undo-token/undo-token-front-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy header)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 183132
         },
         "canonical/undo-token/undo-token-inline-v1": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/canonical/undo-token/undo-token-inline-v1.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/undo-token-v1/undo-token-front-master-v1.png",
+          "consumerRefs": [
+            "www/theme-undo-token-pack.js:sync (economy tab, balance and reward)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 31687
         },
         "daily/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/daily/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (daily-challenge)",
+            "www/game.js:getRewardedVideoPackSources (daily-challenge)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 143805
         },
         "ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/game.js:playEasterRoomIntro(economy)",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 243288
         },
         "global-chat-empty-v1": {
           "stage": "defined",
@@ -13463,28 +13808,37 @@
           "sizeBytes": null
         },
         "runtime/menu/ducats-undo-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/runtime/menu/ducats-undo-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/economy-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .main-economy-card",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 142635
         },
         "runtime/menu/treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/runtime/menu/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#main-menu .spec-riznica",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 132255
         },
         "solo/finish-reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/solo/finish-reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/rewarded-video-v1/two-coins-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (game-over)",
+            "www/game.js:getRewardedVideoPackSources (game-over)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 145135
         },
         "splash-title-soft-clay-v1": {
           "stage": "defined",
@@ -13495,20 +13849,26 @@
           "sizeBytes": null
         },
         "treasury-free-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/treasury-free-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/main-rooms-v1/treasury-master-v1.png",
+          "consumerRefs": [
+            "www/index.html:#riznica-screen, #riznica-intro",
+            "www/theme-main-room-icons.js:syncIcons"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 226690
         },
         "treasury/reward-video-v3": {
-          "stage": "defined",
-          "productionPath": null,
-          "masterPath": null,
-          "consumerRefs": [],
+          "stage": "linked",
+          "productionPath": "www/assets/theme-packs/severna/treasury/reward-video-v3.png",
+          "masterPath": "source-assets/theme-icon-packs/severna/rewarded-video-v1/one-coin-master-v1.png",
+          "consumerRefs": [
+            "www/theme-rewarded-video-pack.js:sync (treasury)",
+            "www/game.js:getRewardedVideoPackSources (treasury)"
+          ],
           "opticalBoundsPx": null,
-          "sizeBytes": null
+          "sizeBytes": 68261
         }
       }
     }

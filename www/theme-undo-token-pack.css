@@ -1,0 +1,14 @@
+body.theme-undo-token-pack-active .theme-undo-token-pack-legacy { display: none !important; }
+body.theme-undo-token-pack-active .theme-undo-token-pack-image {
+    display: inline-block !important;
+    object-fit: contain;
+    flex: 0 0 auto;
+    vertical-align: middle;
+    pointer-events: none;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.18));
+}
+body.theme-undo-token-pack-active #economy-header-undo-icon.hidden + .theme-undo-token-pack-image--header { display: none !important; }
+body.theme-undo-token-pack-active .theme-undo-token-pack-image--header { width: 46px; height: 46px; }
+body.theme-undo-token-pack-active .theme-undo-token-pack-image--tab { width: 40px; height: 40px; }
+body.theme-undo-token-pack-active .theme-undo-token-pack-image--balance { width: 1.25em; height: 1.25em; }
+body.theme-undo-token-pack-active .theme-undo-token-pack-image--reward { width: 1.05em; height: 1.05em; }

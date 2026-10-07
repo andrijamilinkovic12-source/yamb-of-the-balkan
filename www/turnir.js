@@ -1420,13 +1420,13 @@ class TournamentManager {
             && !document.body.classList.contains('easter-theme')
             && !document.body.classList.contains('desert-theme')
             && !document.body.classList.contains('severna-theme');
-        const journeyTrophySrc = isEasterTheme
+        const journeyTrophySrc = window.app?.getMainRoomPackSource?.(activeTheme, 'tournament') || (isEasterTheme
             ? 'assets/easter-soft-clay/tournament-pro-v4.png?v=1'
             : (isDesertTheme
                 ? 'assets/desert-soft-clay/tournament-pro.png?v=4'
                 : (isGreenTheme
                     ? 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1'
-                    : 'assets/tournament-trophy-yotb.svg'));
+                    : 'assets/tournament-trophy-yotb.svg')));
         const selectorHtml = savedChampionships.length > 1
             ? `
                 <div class="tourney-journey-picker" aria-label="${this.escapeAttr(tt('tourney_champion_pick_title') || 'Izaberi titulu')}">

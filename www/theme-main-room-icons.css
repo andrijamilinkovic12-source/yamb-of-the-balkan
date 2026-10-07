@@ -37,7 +37,11 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon.theme-main-room-icon-host::before,
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .mode-icon.theme-main-room-icon-host::after,
-body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-online-icon-wrap.theme-main-room-icon-host::before {
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-online-icon-wrap.theme-main-room-icon-host::before,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-economy-icon-wrap.theme-main-room-icon-host::before,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-economy-icon-wrap.theme-main-room-icon-host::after,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .btn-special-square.theme-main-room-icon-host::before,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .btn-special-square.theme-main-room-icon-host::after {
     content: none !important;
     display: none !important;
 }
@@ -52,10 +56,29 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
     margin: auto;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-global-chat-btn > .theme-main-room-icon,
-body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-online-icon-wrap > .theme-main-room-icon {
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-online-icon-wrap > .theme-main-room-icon,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-economy-icon-wrap > .theme-main-room-icon {
     width: 52px !important;
     height: 52px !important;
     flex-basis: 52px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .btn-special-square > .theme-main-room-icon {
+    width: min(64px, 82%) !important;
+    height: min(64px, 82%) !important;
+    flex-basis: auto !important;
+    margin: auto;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #riznica-intro .riznica-intro-gem-green.theme-main-room-icon,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-intro .tournament-intro-mark-green.theme-main-room-icon {
+    display: block !important;
+    width: clamp(210px, 34vmin, 290px) !important;
+    height: clamp(210px, 34vmin, 290px) !important;
+    flex-basis: auto !important;
+    object-fit: contain !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #riznica-intro .riznica-intro-gem:not(.theme-main-room-icon),
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-intro .tournament-intro-mark:not(.theme-main-room-icon) {
+    display: none !important;
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-league-watermark-zone {
     position: absolute !important;
@@ -70,6 +93,30 @@ body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.ea
 }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #main-menu .main-league-watermark-zone::before { content: none !important; }
 .theme-main-league-watermark { display: block; width: 100%; height: 100%; object-fit: contain; }
+
+/* The same tournament trophy appears at several scales outside the room entrance. */
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-hof-trophy-green.theme-main-room-icon,
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) .modal-context-tourney-winner .tourney-prize-result-icon-green.theme-main-room-icon {
+    width: 104px !important;
+    height: 104px !important;
+    flex-basis: 104px !important;
+    margin: 0 auto 10px;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-registration-green-soft-clay-icon.theme-main-room-icon {
+    width: 96px !important;
+    height: 96px !important;
+    flex-basis: 96px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-screen .tourney-round-trophy-green.theme-main-room-icon {
+    width: 28px !important;
+    height: 28px !important;
+    flex-basis: 28px !important;
+}
+body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #tournament-intro .tournament-intro-wins-icon-green.theme-main-room-icon {
+    width: 30px !important;
+    height: 30px !important;
+    flex-basis: 30px !important;
+}
 
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen .green-invite-header-icon.theme-main-room-icon { display: none !important; }
 body:is(.light-theme,.medium-theme,.winter-theme,.neon-theme,.amethyst-theme,.easter-theme,.desert-theme,.moon-theme,.severna-theme) #waiting-screen:is(.is-friend-invite,.is-hosting-invite) .green-opponent-header-icon.theme-main-room-icon { display: none !important; }

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "updatedOn": "2026-10-07",
   "activeThemeId": null,
-  "workState": "main-room-icons-linked-nine-five-dot-ducat-packs-created",
-  "activeWorkPackage": "Svih devet nezelenih tema ima po 24 PNG ikone glavnih soba (216 povezanih slotova) i po pet novih PNG prikaza dukata (45 slotova). Svaki dukat ima tacno pet tacaka. Prednji, umanjeni i prikaz za cestice povezani su u runtime; levi i desni ugao su kreirani za buduce animacije. Vizuelni QA u aplikaciji predstoji. Zelena ostaje zakljucana.",
+  "workState": "nine-rewarded-video-packs-linked-pending-runtime-visual-qa",
+  "activeWorkPackage": "Svih devet nezelenih tema ima 15 povezanih ikona glavnih soba, kanonske dukate, Undo token i sedam povezanih PNG uloga za nagradni video po temi (63 fajla). Nagradni video ima aktivno i nedostupno stanje u dve veličine, jednu nagradu za Dnevni izazov i Riznicu i dva dukata za Solo; svaki dukat ima pet tačaka. Zelena ostaje zaključana. Putanje, dimenzije, RGBA i automatsko mapiranje prolaze; vizuelna provera u stvarnoj aplikaciji i na telefonu, te ostale porodice kataloga, predstoje.",
   "requiredSurfaceIds": [
     "splash-login",
     "main-menu",

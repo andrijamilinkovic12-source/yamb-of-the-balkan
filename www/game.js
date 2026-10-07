@@ -1811,13 +1811,7 @@ class YambApp {
             easter: {
                 title: lang === 'en' ? 'Easter Theme' : 'Vaskrs tema',
                 background: 'assets/theme-backgrounds/easter-v6-1.png',
-                icons: [
-                    'assets/easter-soft-clay/mode-solo-pro-v2.png?v=1',
-                    'assets/easter-soft-clay/mode-opponent-pro-v2.png?v=2',
-                    'assets/easter-soft-clay/canonical/room-identity/treasury-chest-v1.png?v=1',
-                    'assets/easter-soft-clay/tournament-pro-v4.png?v=1',
-                    'assets/easter-soft-clay/canonical/room-identity/leaderboard-podium-v1.png?v=1'
-                ],
+                icons: [],
                 assets: [
                     'assets/easter-soft-clay/global-chat-pro-v6.png?v=1',
                     'assets/easter-soft-clay/global-chat-send-pro-v2.png?v=opt2',
@@ -1927,13 +1921,7 @@ class YambApp {
             desert: {
                 title: lang === 'en' ? 'Desert Glass' : 'Pustinjsko staklo',
                 background: 'assets/theme-backgrounds/desert-v8-2.png',
-                icons: [
-                    'assets/desert-soft-clay/mode-solo-pro.png?v=1',
-                    'assets/desert-soft-clay/mode-opponent-pro.png?v=1',
-                    'assets/desert-soft-clay/treasury-pro.png?v=4',
-                    'assets/desert-soft-clay/tournament-pro.png?v=4',
-                    'assets/desert-soft-clay/leaderboard-pro-v2.png?v=1'
-                ],
+                icons: [],
                 assets: [
                     'assets/desert-soft-clay/global-chat-pro-v2.png?v=1',
                     'assets/desert-soft-clay/global-chat-send-pro-v2.png?v=opt2',
@@ -2068,13 +2056,7 @@ class YambApp {
             severna: {
                 title: lang === 'en' ? 'Northern Nebula' : 'Severna maglina',
                 background: 'assets/theme-backgrounds/severna-v4.png',
-                icons: [
-                    'assets/severna-soft-clay/mode-solo-pro-v6.png?v=1',
-                    'assets/severna-soft-clay/mode-opponent-pro-v6.png?v=1',
-                    'assets/severna-soft-clay/treasury-pro-v7.png?v=1',
-                    'assets/severna-soft-clay/tournament-pro-v7.png?v=1',
-                    'assets/severna-soft-clay/leaderboard-pro-v8.png?v=1'
-                ],
+                icons: [],
                 assets: [
                     'assets/severna-soft-clay/global-chat-pro-v6.png?v=1',
                     'assets/severna-soft-clay/online-players-pro-v5.png?v=1',
@@ -2165,10 +2147,16 @@ class YambApp {
 
         const pack = packs[theme];
         if (!pack) return null;
+        // The transition screen must show the same room identities as the menu.
+        const featuredRoomIds = ['solo', 'online-random', 'treasury', 'tournament', 'leaderboard'];
+        const roomIcons = theme === 'dark'
+            ? pack.icons
+            : featuredRoomIds.map(roomId => this.getMainRoomPackSource(theme, roomId, 'menu'));
         return {
             ...text,
             ...pack,
-            assets: [...new Set([pack.background, ...pack.icons, ...pack.assets])]
+            icons: roomIcons,
+            assets: [...new Set([pack.background, ...roomIcons, ...pack.assets])]
         };
     }
 
@@ -2188,8 +2176,31 @@ class YambApp {
             dailyChallenge: 'daily' }[roomId] || roomId;
         const roles = ['solo', 'hotseat', 'online-random', 'invite-friend', 'daily', 'global-chat',
             'leaderboard', 'online-players', 'quarterly-league', 'rules', 'settings', 'statistics'];
+        if (role === 'treasury') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}treasury-free-v3.png`;
+        if (role === 'economy') return `assets/theme-packs/${theme}/${variant === 'menu' ? 'runtime/menu/' : ''}ducats-undo-free-v3.png`;
+        if (role === 'tournament') return `assets/theme-packs/${theme}/canonical/tournament-awards/champion-trophy${variant === 'menu' ? '' : '-room'}-v1.png`;
         if (!roles.includes(role)) return '';
         return `assets/theme-packs/${theme}/canonical/${role}-room-identity/${role}-room${variant === 'menu' ? '-menu' : ''}-v1.png`;
+    }
+
+    getRewardedVideoPackSources(theme, roomId) {
+        if (!['light', 'medium', 'winter', 'neon', 'amethyst', 'easter', 'desert', 'moon', 'severna'].includes(theme)) return [];
+        const root = `assets/theme-packs/${theme}/`;
+        const files = {
+            economy: [
+                'canonical/rewarded-video/rewarded-video-active-v1.png',
+                'canonical/rewarded-video/rewarded-video-unavailable-v1.png'
+            ],
+            rules: [
+                'canonical/rewarded-video/rewarded-video-active-inline-v1.png',
+                'canonical/rewarded-video/rewarded-video-unavailable-inline-v1.png'
+            ],
+            dailyChallenge: ['daily/reward-video-v3.png'],
+            treasury: ['treasury/reward-video-v3.png'],
+            solo: ['solo/finish-reward-video-v3.png']
+        };
+        const role = roomId === 'daily' ? 'dailyChallenge' : roomId === 'riznica' ? 'treasury' : roomId;
+        return (files[role] || []).map(path => root + path);
     }
 
     getThemeSplashSource(theme) {
@@ -2227,19 +2238,21 @@ class YambApp {
         if (!pack) return [];
         const root = this.getThemeAssetRoot(theme);
         const splash = this.getThemeSplashSource(theme);
-        const leagueWatermarks = {
-            dark: 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png?v=1',
-            easter: 'assets/easter-soft-clay/runtime/menu/quarterly-league-yotb-ql-pro-v3.png?v=1',
-            desert: 'assets/desert-soft-clay/runtime/menu/quarterly-league-yotb-ql-pro-v2.png?v=1',
-            severna: 'assets/severna-soft-clay/quarterly-league-yotb-ql-pro-v6.png?v=1'
-        };
+        const leagueWatermark = theme === 'dark'
+            ? 'assets/green-soft-clay/canonical/quarterly-league-room-identity/quarterly-league-room-menu-v1.png?v=1'
+            : this.getMainRoomPackSource(theme, 'quarterly-league', 'menu');
+        const menuRoomIds = ['solo', 'hotseat', 'online-random', 'invite-friend', 'daily',
+            'global-chat', 'leaderboard', 'online-players', 'quarterly-league', 'rules',
+            'settings', 'statistics', 'treasury', 'tournament', 'economy'];
+        const menuPackSources = theme === 'dark' ? []
+            : menuRoomIds.map(roomId => this.getMainRoomPackSource(theme, roomId, 'menu'));
         const mainMenuAsset = /\/(?:daily-challenge|leaderboard-(?:pro|free)|statistics-(?:pro|free)|settings-(?:pro|free)|rules-(?:pro|free)|global-chat-(?:pro|free)|online-players-(?:pro|free)|quarterly-league|ducats-undo|mode-(?:solo|hotseat|opponent|invite)|treasury-(?:pro|free)|tournament-(?:pro|free)|canonical\/tournament-awards\/champion-trophy|canonical\/statistics-room-identity\/statistics-room-menu|canonical\/leaderboard-room-identity\/leaderboard-room-menu|canonical\/daily-room-identity\/daily-room-menu|canonical\/settings-room-identity\/settings-room-menu|canonical\/rules-room-identity\/rules-room-menu|canonical\/global-chat-room-identity\/global-chat-room-menu|canonical\/online-players-room-identity\/online-players-room-menu|canonical\/solo-room-identity\/solo-room-menu|canonical\/hotseat-room-identity\/hotseat-room-menu|canonical\/online-random-room-identity\/online-random-room-menu|canonical\/invite-friend-room-identity\/invite-friend-room-menu)[^/]*\.png(?:\?|$)/i;
         const menuRoot = document.getElementById('main-menu');
         const menuSources = menuRoot
             ? this.collectThemeSourcesFromRoot(theme, menuRoot)
             : [...pack.assets, ...(pack.menuAssets || [])].filter(source => source.startsWith(root) && mainMenuAsset.test(source)
                 && !source.includes('/canonical/quarterly-league-room-identity/quarterly-league-room-v1.png'));
-        return [...new Set([pack.background, splash, leagueWatermarks[theme], ...menuSources].filter(Boolean))];
+        return [...new Set([pack.background, splash, leagueWatermark, ...menuPackSources, ...menuSources].filter(Boolean))];
     }
 
     getThemeRoomSources(theme, roomId) {
@@ -2325,6 +2338,7 @@ class YambApp {
         const sources = [...new Set([
             ...this.getThemeRoomSources(theme, roomId),
             ...this.collectThemeSourcesFromRoot(theme, roomRoot),
+            ...this.getRewardedVideoPackSources(theme, roomId),
             roomIcon
         ].filter(Boolean))];
         this.hydrateThemeImageSources(theme, { sources });
@@ -4456,7 +4470,7 @@ class YambApp {
                         if (this.effectMgr) this.effectMgr.trigger('gold_rain');
                         const championTitle = gt('tourney_champion_title') || "ŠAMPION TURNIRA 🏆";
                         this.modal.alert(
-                            `<img class="tourney-prize-result-icon tourney-prize-result-icon-easter" data-theme-src="assets/easter-soft-clay/tournament-pro-v4.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-desert" data-theme-src="assets/desert-soft-clay/tournament-pro.png?v=4" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-nebula" data-theme-src="assets/severna-soft-clay/tournament-pro-v7.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async"><img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
+                            `<img class="tourney-prize-result-icon-green" data-theme-src="assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1" loading="lazy" alt="" aria-hidden="true" decoding="async">${gt('tourney_prize_winner') || `ČESTITAMO! Osvojili ste turnir i glavnu nagradu od 44.000 ${dukatIconHtml()}!`}`,
                             (localStorage.getItem('yamb_theme') || 'dark') === 'dark'
                                 ? championTitle.replace(/\s*🏆/gu, '') : championTitle,
                             { contextClass: 'tourney-winner' }
@@ -9069,7 +9083,7 @@ class YambApp {
                 && !document.body.classList.contains('easter-theme')
                 && !document.body.classList.contains('desert-theme')
                 && !document.body.classList.contains('severna-theme');
-            const trophySrc = isEasterTheme
+            const trophySrc = (isWinner && this.getMainRoomPackSource(activeTheme, 'tournament')) || (isEasterTheme
                 ? (isWinner
                     ? 'assets/easter-soft-clay/tournament-pro-v4.png?v=1'
                     : 'assets/easter-soft-clay/canonical/competition-medals/silver-v1.png?v=1')
@@ -9081,7 +9095,7 @@ class YambApp {
                         ? (isWinner
                             ? 'assets/green-soft-clay/canonical/tournament-awards/champion-trophy-v1.png?v=1'
                             : 'assets/green-soft-clay/canonical/tournament-awards/finalist-silver-v1.png?v=1')
-                        : 'assets/tournament-trophy-yotb.svg'));
+                        : 'assets/tournament-trophy-yotb.svg')));
             const rewardLabel = this.formatTourneyDukatAmount(ceremonyData.reward);
             const coinIcon = (typeof dukatIconHtml === 'function') ? dukatIconHtml() : 'dukata';
             const title = isWinner
